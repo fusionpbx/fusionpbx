@@ -1,0 +1,7 @@
+<extension name="extension-intercom" app_uuid="1b224444-de8b-448d-b2d1-19feaac3effa" enabled="false">
+	<condition field="destination_number" expression="^\*8(\d{2,7})$">
+		<action application="set" data="dialed_extension=$1"/>
+		<action application="export" data="sip_auto_answer=true"/>
+		<action application="bridge" data="user/${dialed_extension}@${domain_name}"/>
+	</condition>
+</extension>

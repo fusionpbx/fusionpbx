@@ -1,0 +1,8 @@
+<!-- voicemail main extension, used when * is pressed from an external number -->
+<extension name="vmain" app_uuid="d085a1e3-c53a-4480-9ca6-6a362899a681">
+	<condition field="destination_number" expression="^vmain$|^4000$|^\*98$">
+		<action application="answer"/>
+		<action application="sleep" data="1000"/>
+		<action application="voicemail" data="check default ${domain_name}"/>  
+	</condition>
+</extension>

@@ -1,0 +1,11 @@
+<extension name="global" continue="true" app_uuid="34dd307b-fffe-4ead-990c-3d070e288126">
+	<condition field="${call_debug}" expression="^true$" break="never">
+		<action application="info"/>
+	</condition>
+	<condition>
+		<action application="hash" data="insert/${domain_name}-spymap/${caller_id_number}/${uuid}"/>
+		<action application="hash" data="insert/${domain_name}-last_dial/${caller_id_number}/${destination_number}"/>
+		<action application="hash" data="insert/${domain_name}-last_dial/global/${uuid}"/>
+		<action application="set" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
+	</condition>
+</extension>

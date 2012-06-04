@@ -1,0 +1,5 @@
+RewriteEngine	On
+
+
+RewriteRule     ^([A-Fa-f0-9]{12})(\.(xml|cfg))?$                        mod/provision/index.php?mac=$1 [QSA]
+RewriteRule     ^([A-Fa-f0-9]{2}[:-][A-Fa-f0-9]{2}[:-][A-Fa-f0-9]{2}[:-][A-Fa-f0-9]{2}[:-][A-Fa-f0-9]{2}[:-][A-Fa-f0-9]{2}[:-])(\.(xml|cfg))?$                        mod/provision/index.php?mac=$1 [QSA]

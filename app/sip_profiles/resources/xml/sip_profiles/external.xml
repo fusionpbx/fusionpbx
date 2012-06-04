@@ -1,0 +1,23 @@
+<profile name="{v_sip_profile_name}">
+	<!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files --> 
+	<!--aliases are other names that will work as a valid profile name for this profile-->
+	<aliases>
+		<!-- 
+		<alias name="outbound"/>
+		<alias name="nat"/>
+		-->
+	</aliases>
+
+	<!-- Outbound Registrations -->
+	<gateways>
+		<X-PRE-PROCESS cmd="include" data="{v_sip_profile_name}/*.xml"/>
+	</gateways>
+
+	<domains>
+		<domain name="all" alias="false" parse="true"/>
+	</domains>
+
+	<settings>
+{v_sip_profile_settings}
+	</settings>
+</profile>

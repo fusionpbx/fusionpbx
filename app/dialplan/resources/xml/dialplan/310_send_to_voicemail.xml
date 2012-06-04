@@ -1,0 +1,9 @@
+<extension name="send_to_voicemail" app_uuid="001d5dab-e0c6-4352-8f06-e9986ee7b0d8">
+	<condition field="destination_number" expression="^\*99(\d{2,7})$">
+		<action application="answer"/>
+		<action application="sleep" data="1000"/>
+		<action application="set" data="dialed_extension=$1"/>
+		<action application="export" data="dialed_extension=$1"/>
+		<action application="voicemail" data="default ${domain_name} ${dialed_extension}"/>
+	</condition>
+</extension>

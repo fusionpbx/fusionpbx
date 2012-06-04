@@ -1,0 +1,1 @@
+CREATE TABLE v_fifo_agent_call_logs ( fifo_agent_call_log_id INTEGER PRIMARY KEY, v_id TEXT, resolution_code TEXT, transaction_id TEXT, action_item TEXT, uuid TEXT, notes TEXT, add_user TEXT, add_date TEXT );

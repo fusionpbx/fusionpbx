@@ -1,0 +1,3 @@
+<FilesMatch "\.(db|sqlite)$">
+	Deny from all
+</FilesMatch>

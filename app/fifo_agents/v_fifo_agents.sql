@@ -1,0 +1,1 @@
+CREATE TABLE v_fifo_agents (fifo_agent_id INTEGER PRIMARY KEY, v_id NUMBER, fifo_name TEXT, agent_username TEXT, agent_priority TEXT, agent_status TEXT, agent_status_epoch NUMBER, agent_last_call NUMBER, agent_last_uuid TEXT, agent_contact_number NUMBER)

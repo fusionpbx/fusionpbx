@@ -1,0 +1,6 @@
+<extension name="eavesdrop" app_uuid="e944af7e-8fcc-429b-a32f-0dcdce1585d8" enabled="false">
+	<condition field="destination_number" expression="^\*88(\d{2,7})$|^\*0(.*)$">
+		<action application="answer"/>
+		<action application="eavesdrop" data="${hash(select/${domain_name}-spymap/$1)}"/>
+	</condition>
+</extension>

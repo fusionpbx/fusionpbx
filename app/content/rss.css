@@ -1,0 +1,44 @@
+rss {
+	display: block;
+	font-family: verdana, arial;
+}
+
+title {
+	display: block;
+	margin: 5px;
+	padding: 2px;
+	color: #77A3EF;
+	border-bottom: 1px solid #77A3EF;
+}
+
+link {
+	display: block;
+	font-size: small;
+	padding-left: 10px;
+}
+
+description {
+	display: block;
+	font-size: small;
+	padding-left: 10px;
+}
+
+item {
+	display: block;
+	padding: 2px 30px 2px 30px;
+}
+
+description {
+	display: block;
+	background-color: #FCFCFC;
+	margin: 20px;
+	text-align: left;
+	padding: 5px;
+	color: #7f7f7f;
+	border: 1px solid #EEEEEE;
+}
+
+/* all hidden elements */
+language, lastBuildDate, ttl, guid, category, pubDate, copyright, webmaster, comments {
+	display: none;
+}

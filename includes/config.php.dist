@@ -1,0 +1,62 @@
+<?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
+
+//-----------------------------------------------------
+// settings:
+//-----------------------------------------------------
+
+	//set the database type
+		$db_type = 'sqlite'; //sqlite, mysql, pgsql, others with a manually created PDO connection
+
+	//sqlite: the dbfilename and db_file_path are automatically assigned however the values can be overidden by setting the values here.
+		$dbfilename = 'fusionpbx.db'; //host name/ip address + '.db' is the default database filename
+		$db_file_path = '\fusionpbx\Program\www\localhost\fusionpbx\secure'; //the path is determined by a php variable
+
+	//mysql: database connection information
+		//$db_host = '';
+		//$db_port = '';
+		//$db_name = '';
+		//$db_username = '';
+		//$db_password = '';
+
+	//pgsql: database connection information
+		//$db_host = ''; //set the host only if the database is not local
+		//$db_port = '';
+		//$db_name = '';
+		//$db_username = '';
+		//$db_password = '';
+
+	//set the host ip or name that the will be used to communicate with the phone system
+		$host = '127.0.0.1';
+
+	//show errors
+		ini_set('display_errors', '1');
+		//error_reporting (E_ALL); // Report everything
+		//error_reporting (E_ALL ^ E_NOTICE); // Report everything
+		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
+
+
+?>

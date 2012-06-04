@@ -1,0 +1,166 @@
+<?php
+	//application details
+		$apps[$x]['name'] = "Gateways";
+		$apps[$x]['uuid'] = '297ab33e-2c2f-8196-552c-f3567d2caaf8';
+		$apps[$x]['category'] = 'Switch';;
+		$apps[$x]['subcategory'] = '';
+		$apps[$x]['version'] = '';
+		$apps[$x]['license'] = 'Mozilla Public License 1.1';
+		$apps[$x]['url'] = 'http://www.fusionpbx.com';
+		$apps[$x]['description']['en'] = 'Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.';
+
+	//menu details
+		$apps[$x]['menu'][0]['title']['en'] = 'Gateways';
+		$apps[$x]['menu'][0]['uuid'] = '237a512a-f8fe-1ce4-b5d7-e71c401d7159';
+		$apps[$x]['menu'][0]['parent_uuid'] = 'bc96d773-ee57-0cdd-c3ac-2d91aba61b55';
+		$apps[$x]['menu'][0]['category'] = 'internal';
+		$apps[$x]['menu'][0]['path'] = '/app/gateways/v_gateways.php';
+		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
+
+	//permission details
+		$apps[$x]['permissions'][0]['name'] = 'gateways_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][1]['name'] = 'gateways_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][2]['name'] = 'gateways_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][3]['name'] = 'gateways_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+
+	//schema details
+		$y = 0; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = 'v_gateways';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'id';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'gateway_id';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'serial';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'integer';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'gateway_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'v_id';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'gateway';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'username';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'password';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'distinct_to';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'auth_username';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'realm';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'from_user';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'from_domain';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'proxy';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'register_proxy';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'outbound_proxy';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'expire_seconds';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'register';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'register_transport';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'retry_seconds';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'extension';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ping';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'caller_id_in_from';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'supress_cng';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_cid_type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'extension_in_contact';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'context';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'profile';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'enabled';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+
+?>

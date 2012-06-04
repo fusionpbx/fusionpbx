@@ -1,0 +1,54 @@
+<settings>
+<phone-settings>
+<update_policy>auto_update</update_policy>
+<firmware_status>http://{domain_name}{v_project_path}/app/provision/?mac={v_mac}&amp;filename_firmware-{v_mac}.xml</firmware_status>
+<date_us_format>off</date_us_format>
+<time_24_format>on</time_24_format>
+<challenge_response>off</challenge_response>
+<filter_registrar>off</filter_registrar>
+<logon_wizard>off</logon_wizard>
+<message_led_other>off</message_led_other>
+<user_phone>off</user_phone>
+<intercom_enabled>on</intercom_enabled>
+<http_user>admin</http_user>
+<http_pass>admin</http_pass>
+<web_logout_timer>5</web_logout_timer>
+<admin_mode_password>0000</admin_mode_password>
+<admin_mode_password_confirm>0000</admin_mode_password_confirm>
+<admin_mode>on</admin_mode>
+<language>English</language>
+<ntp_server>{domain_name}</ntp_server>
+<timezone>AUS+10</timezone>
+<dst>3600 25.09 02:00:00 04.05 03:00:00</dst>
+<tone_scheme>US</tone_scheme>
+<ring_sound>Ringer9</ring_sound>
+<no_dnd>off</no_dnd>
+<call_waiting>on</call_waiting>
+<user_realname idx="1">{v_line1_displayname}</user_realname>
+<user_name idx="1">{v_line1_user_id}</user_name>
+<user_host idx="1">{domain_name}</user_host>
+<user_pname idx="1">{v_line1_user_password}</user_pname>
+<user_ringer idx="1">Ringer9</user_ringer>
+<user_mailbox idx="1">4000</user_mailbox>
+<user_srtp idx="1" perm="">off</user_srtp>
+</phone-settings>
+<function-keys>
+<fkey context="active" idx="0">line</fkey>
+<fkey context="active" idx="1">blf sip:1002@{domain_name}</fkey>
+<fkey context="active" idx="2">blf sip:1003@{domain_name}</fkey>
+<fkey context="active" idx="3">blf sip:1004@{domain_name}</fkey>
+<fkey context="active" idx="4">blf sip:1005@{domain_name}</fkey>
+<fkey context="active" idx="5">blf sip:1006@{domain_name}</fkey>
+<fkey context="active" idx="6">line</fkey>
+<fkey context="active" idx="7">blf sip:1007@{domain_name}</fkey>
+<fkey context="active" idx="8">blf sip:1008@{domain_name}</fkey>
+<fkey context="active" idx="9">blf sip:1009@{domain_name}</fkey>
+<fkey context="active" idx="10">blf sip:1010@{domain_name}</fkey>
+<fkey context="active" idx="11">blf sip:1011@{domain_name}</fkey>
+</function-keys>
+<dialplan>
+<!-- Handset Dialplan Mask, VERY similar to Cisco format... -->
+<template Timeout="0" User="phone" match="0" rewrite="" scheme="sip"/>
+<template Timeout="8" User="phone" match="1*" rewrite="" scheme="sip"/>
+</dialplan>
+</settings>
