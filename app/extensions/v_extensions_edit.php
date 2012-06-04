@@ -96,6 +96,7 @@ else {
 			$nibble_account = check_str($_POST["nibble_account"]);
 			$mwi_account = check_str($_POST["mwi_account"]);
 			$sip_bypass_media = check_str($_POST["sip_bypass_media"]);
+			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
 	}
@@ -181,6 +182,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($auth_acl) == 0) { $msg .= "Please provide: Auth ACL<br>\n"; }
 		//if (strlen($cidr) == 0) { $msg .= "Please provide: CIDR<br>\n"; }
 		//if (strlen($sip_force_contact) == 0) { $msg .= "Please provide: SIP Force Contact<br>\n"; }
+		//if (strlen($dial_string) == 0) { $msg .= "Please provide: Dial String<br>\n"; }
 		if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (strlen($description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -281,6 +283,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "mwi_account, ";
 					}
 					$sql .= "sip_bypass_media, ";
+					$sql .= "dial_string, ";
 					$sql .= "enabled, ";
 					$sql .= "description ";
 					$sql .= ")";
@@ -335,6 +338,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "'$mwi_account', ";
 					}
 					$sql .= "'$sip_bypass_media', ";
+					$sql .= "'$dial_string', ";
 					$sql .= "'$enabled', ";
 					$sql .= "'$description' ";
 					$sql .= ")";
@@ -464,6 +468,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			$sql .= "mwi_account = '$mwi_account', ";
 			$sql .= "sip_bypass_media = '$sip_bypass_media', ";
+			$sql .= "dial_string = '$dial_string', ";
 			$sql .= "enabled = '$enabled', ";
 			$sql .= "description = '$description' ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -546,6 +551,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$nibble_account = $row["nibble_account"];
 			$mwi_account = $row["mwi_account"];
 			$sip_bypass_media = $row["sip_bypass_media"];
+			$dial_string = $row["dial_string"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
 			break; //limit to 1 row
@@ -795,7 +801,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Emergency Caller ID Number:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -1250,6 +1256,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo "Choose whether to send the media stream point to point or in transparent proxy mode.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    Dial String:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='dial_string' maxlength='255' value=\"$dial_string\">\n";
+	echo "<br />\n";
+	echo "Location of the endpoint.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -1690,6 +1690,10 @@ function save_extension_xml() {
 				$extension = $row['extension'];
 				$extension = str_replace(" ", "_", $extension);
 				$extension = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension);
+				$dial_string = $row['dial_string'];
+				if (strlen($dial_string) == 0) {
+					$dial_string = "{sip_invite_domain=\${domain_name},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}";
+				}
 
 				$tmp_xml .= "<include>\n";
 				$cidr = '';
@@ -1748,6 +1752,7 @@ function save_extension_xml() {
 				if (strlen($row['directory_exten_visible']) > 0) {
 					$tmp_xml .= "      <param name=\"directory-exten-visible\" value=\"" . $row['directory_exten_visible'] . "\"/>\n";
 				}
+				$tmp_xml .= "      <param name=\"dial-string\" value=\"" . $dial_string . "\"/>\n";
 				$tmp_xml .= "    </params>\n";
 				$tmp_xml .= "    <variables>\n";
 				if (strlen($row['call_group']) > 0) {
@@ -1866,7 +1871,7 @@ function save_extension_xml() {
 			$tmp_xml .= "	<domain name=\"".$user_context."\">\n";
 		}
 		$tmp_xml .= "		<params>\n";
-		$tmp_xml .= "			<param name=\"dial-string\" value=\"{sip_invite_domain=\${domain_name},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}\"/>\n";
+		//$tmp_xml .= "			<param name=\"dial-string\" value=\"{sip_invite_domain=\${domain_name},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}\"/>\n";
 		$tmp_xml .= "		</params>\n";
 		$tmp_xml .= "\n";
 		$tmp_xml .= "		<variables>\n";

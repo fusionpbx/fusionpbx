@@ -415,7 +415,7 @@ include "root.php";
 
 			/*if (!$extension_xml_condensed) { <--- what do I do with this??
 				$fout = fopen($_SESSION['switch']['extensions']['dir']."/v_".$extension.".xml","w");
-				$tmp_xml .= "<include>\n";
+				$xml .= "<include>\n";
 			}*/
 			if (strlen($this->cidr)) {
 				$this->cidr = " cidr=\"" . $this->cidr . "\"";
@@ -423,85 +423,85 @@ include "root.php";
 			if (strlen($this->number_alias)) {
 				$this->number_alias = " number-alias=\"".$this->number_alias."\"";
 			}
-			if($single)	$tmp_xml  = "<include>\n";
-			else		$tmp_xml  = "";
-			$tmp_xml .= "  <user id=\"".$this->extension."\"".$this->cidr."".$this->number_alias.">\n";
-			$tmp_xml .= "    <params>\n";
-			$tmp_xml .= "      <param name=\"password\" value=\"" . $this->password . "\"/>\n";
-			$tmp_xml .= "      <param name=\"vm-enabled\" value=\"".$this->vm_enabled."\"/>\n";
+			if($single)	$xml  = "<include>\n";
+			else		$xml  = "";
+			$xml .= "  <user id=\"".$this->extension."\"".$this->cidr."".$this->number_alias.">\n";
+			$xml .= "    <params>\n";
+			$xml .= "      <param name=\"password\" value=\"" . $this->password . "\"/>\n";
+			$xml .= "      <param name=\"vm-enabled\" value=\"".$this->vm_enabled."\"/>\n";
 
 			if ($this->vm_enabled=="true"){
-				$tmp_xml .= "      <param name=\"vm-password\" value=\"" . $this->vm_password . "\"/>\n";
+				$xml .= "      <param name=\"vm-password\" value=\"" . $this->vm_password . "\"/>\n";
 				if(strlen($this->vm_mailto)) {
-					$tmp_xml .= "      <param name=\"vm-email-all-messages\" value=\"true\"/>\n";
-					$tmp_xml .= "      <param name=\"vm-attach-file\" value=\"".$this->vm_attach_file."\"/>\n";
-					$tmp_xml .= "      <param name=\"vm-keep-local-after-email\" value=\"".$this->vm_keep_local_after_email."\"/>\n";
-					$tmp_xml .= "      <param name=\"vm-mailto\" value=\"" . $this->vm_mailto . "\"/>\n";
+					$xml .= "      <param name=\"vm-email-all-messages\" value=\"true\"/>\n";
+					$xml .= "      <param name=\"vm-attach-file\" value=\"".$this->vm_attach_file."\"/>\n";
+					$xml .= "      <param name=\"vm-keep-local-after-email\" value=\"".$this->vm_keep_local_after_email."\"/>\n";
+					$xml .= "      <param name=\"vm-mailto\" value=\"" . $this->vm_mailto . "\"/>\n";
 				}
 			}
 			if (strlen($this->mwi_account)) {
-				$tmp_xml .= "      <param name=\"MWI-Account\" value=\"" . $this->mwi_account . "\"/>\n";
+				$xml .= "      <param name=\"MWI-Account\" value=\"" . $this->mwi_account . "\"/>\n";
 			}
 			if (strlen($this->auth_acl)) {
-				$tmp_xml .= "      <param name=\"auth-acl\" value=\"" . $this->auth_acl . "\"/>\n";
+				$xml .= "      <param name=\"auth-acl\" value=\"" . $this->auth_acl . "\"/>\n";
 			}
-			$tmp_xml .= "    </params>\n";
+			$xml .= "    </params>\n";
 			
-			$tmp_xml .= "    <variables>\n";
+			$xml .= "    <variables>\n";
 			if (strlen($this->hold_music)) {
-				$tmp_xml .= "      <variable name=\"hold_music\" value=\"" . $this->hold_music . "\"/>\n";
+				$xml .= "      <variable name=\"hold_music\" value=\"" . $this->hold_music . "\"/>\n";
 			}
 			if (strlen($this->toll_allow)){
-				$tmp_xml .= "      <variable name=\"toll_allow\" value=\"" . $this->toll_allow . "\"/>\n";
+				$xml .= "      <variable name=\"toll_allow\" value=\"" . $this->toll_allow . "\"/>\n";
 			}
 			if (strlen($this->accountcode)){
-				$tmp_xml .= "      <variable name=\"accountcode\" value=\"" . $this->accountcode . "\"/>\n";
+				$xml .= "      <variable name=\"accountcode\" value=\"" . $this->accountcode . "\"/>\n";
 			}
-			$tmp_xml .= "      <variable name=\"user_context\" value=\"" . $this->user_context . "\"/>\n";
+			$xml .= "      <variable name=\"user_context\" value=\"" . $this->user_context . "\"/>\n";
 			if (strlen($this->effective_caller_id_name)) {
-				$tmp_xml .= "      <variable name=\"effective_caller_id_name\" value=\"" . $this->effective_caller_id_name . "\"/>\n";
+				$xml .= "      <variable name=\"effective_caller_id_name\" value=\"" . $this->effective_caller_id_name . "\"/>\n";
 			}
 			if (strlen($this->outbound_caller_id_number)) {
-				$tmp_xml .= "      <variable name=\"effective_caller_id_number\" value=\"" . $this->effective_caller_id_number . "\"/>\n";
+				$xml .= "      <variable name=\"effective_caller_id_number\" value=\"" . $this->effective_caller_id_number . "\"/>\n";
 			}
 			if (strlen($this->outbound_caller_id_name)) {
-				$tmp_xml .= "      <variable name=\"outbound_caller_id_name\" value=\"" . $this->outbound_caller_id_name . "\"/>\n";
+				$xml .= "      <variable name=\"outbound_caller_id_name\" value=\"" . $this->outbound_caller_id_name . "\"/>\n";
 			}
 			if (strlen($this->outbound_caller_id_number)) {
-				$tmp_xml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . $this->outbound_caller_id_number . "\"/>\n";
+				$xml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . $this->outbound_caller_id_number . "\"/>\n";
 			}
 			if (!strlen($this->limit_max)) {//**validation
 				$this->limit_max=5;
 			}
-			$tmp_xml .= "      <variable name=\"limit_max\" value=\"" . $this->limit_max . "\"/>\n";
+			$xml .= "      <variable name=\"limit_max\" value=\"" . $this->limit_max . "\"/>\n";
 			if (strlen($this->limit_destination)) {
-				$tmp_xml .= "      <variable name=\"limit_destination\" value=\"" . $this->limit_destination . "\"/>\n";
+				$xml .= "      <variable name=\"limit_destination\" value=\"" . $this->limit_destination . "\"/>\n";
 			}
 			if (strlen($this->sip_force_contact)) {
-				$tmp_xml .= "      <variable name=\"sip-force-contact\" value=\"" . $this->sip_force_contact . "\"/>\n";
+				$xml .= "      <variable name=\"sip-force-contact\" value=\"" . $this->sip_force_contact . "\"/>\n";
 			}
 			if (strlen($this->sip_force_expires)) {
-				$tmp_xml .= "      <variable name=\"sip-force-expires\" value=\"" . $this->sip_force_expires . "\"/>\n";
+				$xml .= "      <variable name=\"sip-force-expires\" value=\"" . $this->sip_force_expires . "\"/>\n";
 			}
 			if (strlen($this->nibble_account)) {
-				$tmp_xml .= "      <variable name=\"nibble_account\" value=\"" . $this->nibble_account . "\"/>\n";
+				$xml .= "      <variable name=\"nibble_account\" value=\"" . $this->nibble_account . "\"/>\n";
 			}
 			switch ($this->sip_bypass_media) {
 				case "bypass-media":
-						$tmp_xml .= "      <variable name=\"bypass_media\" value=\"true\"/>\n";
+						$xml .= "      <variable name=\"bypass_media\" value=\"true\"/>\n";
 						break;
 				case "bypass-media-after-bridge":
-						$tmp_xml .= "      <variable name=\"bypass_media_after_bridge\" value=\"true\"/>\n";
+						$xml .= "      <variable name=\"bypass_media_after_bridge\" value=\"true\"/>\n";
 						break;
 				case "proxy-media":
-						$tmp_xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
+						$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
 						break;
 			}
-			$tmp_xml .= "    </variables>\n";
-			$tmp_xml .= "  </user>\n";
-			if($single) { $tmp_xml .= "</include>\n"; }
+			$xml .= "    </variables>\n";
+			$xml .= "  </user>\n";
+			if($single) { $xml .= "</include>\n"; }
 
-			return $tmp_xml;
+			return $xml;
 		}
 
 		function xml_save_all() {
@@ -536,8 +536,7 @@ include "root.php";
 					closedir($dh);
 				}
 
-			$sql = "";
-			$sql .= "select * from v_extensions ";
+			$sql = "select * from v_extensions ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
 			$sql .= "order by call_group asc ";
 			$prep_statement = $db->prepare(check_sql($sql));
@@ -546,7 +545,7 @@ include "root.php";
 			$extension_xml_condensed = false;
 			if ($extension_xml_condensed) {
 				$fout = fopen($_SESSION['switch']['extensions']['dir']."/v_extensions.xml","w");
-				$tmp_xml = "<include>\n";
+				$xml = "<include>\n";
 			}
 			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
 				$call_group = $row['call_group'];
@@ -567,105 +566,105 @@ include "root.php";
 				if ($row['enabled'] != "false") {
 					//$this->import_sql($row);//Do I need to be worried about ghost values? Maybe I should make a new object?
 					//if (strlen($switch_account_code)) $this->accountcode=$switch_account_code;
-					//$tmp_xml.=$this->generate_xml(1);
+					//$xml.=$this->generate_xml(1);
 
 					$one_row=new fs_directory;
 					$one_row->import_sql($row);//make a new object to flush ghost rows. And we can call this as static.
 					if (strlen($switch_account_code)) $one_row->accountcode=$switch_account_code;
-					$tmp_xml.=$one_row->generate_xml(false);
+					$xml.=$one_row->generate_xml(false);
 
 					if (!$extension_xml_condensed) {
-						$tmp_xml .= "</include>\n";
-						fwrite($fout, $tmp_xml);
-						unset($tmp_xml);
+						$xml .= "</include>\n";
+						fwrite($fout, $xml);
+						unset($xml);
 						fclose($fout);
 					}
 				}
 			}
 			unset ($prep_statement);
 			if ($extension_xml_condensed) {
-				$tmp_xml .= "</include>\n";
-				fwrite($fout, $tmp_xml);
-				unset($tmp_xml);
+				$xml .= "</include>\n";
+				fwrite($fout, $xml);
+				unset($xml);
 				fclose($fout);
 			}
 
 			//define the group members
-				$tmp_xml = "<!--\n";
-				$tmp_xml .= "	NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE\n";
-				$tmp_xml .= "\n";
-				$tmp_xml .= "	FreeSWITCH works off the concept of users and domains just like email.\n";
-				$tmp_xml .= "	You have users that are in domains for example 1000@domain.com.\n";
-				$tmp_xml .= "\n";
-				$tmp_xml .= "	When freeswitch gets a register packet it looks for the user in the directory\n";
-				$tmp_xml .= "	based on the from or to domain in the packet depending on how your sofia profile\n";
-				$tmp_xml .= "	is configured.  Out of the box the default domain will be the IP address of the\n";
-				$tmp_xml .= "	machine running FreeSWITCH.  This IP can be found by typing \"sofia status\" at the\n";
-				$tmp_xml .= "	CLI.  You will register your phones to the IP and not the hostname by default.\n";
-				$tmp_xml .= "	If you wish to register using the domain please open vars.xml in the root conf\n";
-				$tmp_xml .= "	directory and set the default domain to the hostname you desire.  Then you would\n";
-				$tmp_xml .= "	use the domain name in the client instead of the IP address to register\n";
-				$tmp_xml .= "	with FreeSWITCH.\n";
-				$tmp_xml .= "\n";
-				$tmp_xml .= "	NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE\n";
-				$tmp_xml .= "-->\n";
-				$tmp_xml .= "\n";
-				$tmp_xml .= "<include>\n";
-				$tmp_xml .= "	<!--the domain or ip (the right hand side of the @ in the addr-->\n";
+				$xml = "<!--\n";
+				$xml .= "	NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE\n";
+				$xml .= "\n";
+				$xml .= "	FreeSWITCH works off the concept of users and domains just like email.\n";
+				$xml .= "	You have users that are in domains for example 1000@domain.com.\n";
+				$xml .= "\n";
+				$xml .= "	When freeswitch gets a register packet it looks for the user in the directory\n";
+				$xml .= "	based on the from or to domain in the packet depending on how your sofia profile\n";
+				$xml .= "	is configured.  Out of the box the default domain will be the IP address of the\n";
+				$xml .= "	machine running FreeSWITCH.  This IP can be found by typing \"sofia status\" at the\n";
+				$xml .= "	CLI.  You will register your phones to the IP and not the hostname by default.\n";
+				$xml .= "	If you wish to register using the domain please open vars.xml in the root conf\n";
+				$xml .= "	directory and set the default domain to the hostname you desire.  Then you would\n";
+				$xml .= "	use the domain name in the client instead of the IP address to register\n";
+				$xml .= "	with FreeSWITCH.\n";
+				$xml .= "\n";
+				$xml .= "	NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE\n";
+				$xml .= "-->\n";
+				$xml .= "\n";
+				$xml .= "<include>\n";
+				$xml .= "	<!--the domain or ip (the right hand side of the @ in the addr-->\n";
 				if ($extension_dir_name == "default") { 
-					$tmp_xml .= "	<domain name=\"\$\${domain}\">\n";
+					$xml .= "	<domain name=\"\$\${domain}\">\n";
 				}
 				else {
-					$tmp_xml .= "	<domain name=\"".$extension_dir_name."\">\n";
+					$xml .= "	<domain name=\"".$extension_dir_name."\">\n";
 				}
-				$tmp_xml .= "		<params>\n";
-				$tmp_xml .= "			<param name=\"dial-string\" value=\"{sip_invite_domain=\${domain_name},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}\"/>\n";
-				$tmp_xml .= "		</params>\n";
-				$tmp_xml .= "\n";
-				$tmp_xml .= "		<variables>\n";
-				$tmp_xml .= "			<variable name=\"record_stereo\" value=\"true\"/>\n";
-				$tmp_xml .= "			<variable name=\"default_gateway\" value=\"\$\${default_provider}\"/>\n";
-				$tmp_xml .= "			<variable name=\"default_areacode\" value=\"\$\${default_areacode}\"/>\n";
-				$tmp_xml .= "			<variable name=\"transfer_fallback_extension\" value=\"operator\"/>\n";
-				$tmp_xml .= "			<variable name=\"export_vars\" value=\"domain_name\"/>\n";
-				$tmp_xml .= "		</variables>\n";
-				$tmp_xml .= "\n";
-				$tmp_xml .= "		<groups>\n";
-				$tmp_xml .= "			<group name=\"".$extension_dir_name."\">\n";
-				$tmp_xml .= "			<users>\n";
-				$tmp_xml .= "				<X-PRE-PROCESS cmd=\"include\" data=\"".$extension_dir_name."/*.xml\"/>\n";
-				$tmp_xml .= "			</users>\n";
-				$tmp_xml .= "			</group>\n";
-				$tmp_xml .= "\n";
+				$xml .= "		<params>\n";
+				//$xml .= "			<param name=\"dial-string\" value=\"{sip_invite_domain=\${domain_name},presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}\"/>\n";
+				$xml .= "		</params>\n";
+				$xml .= "\n";
+				$xml .= "		<variables>\n";
+				$xml .= "			<variable name=\"record_stereo\" value=\"true\"/>\n";
+				$xml .= "			<variable name=\"default_gateway\" value=\"\$\${default_provider}\"/>\n";
+				$xml .= "			<variable name=\"default_areacode\" value=\"\$\${default_areacode}\"/>\n";
+				$xml .= "			<variable name=\"transfer_fallback_extension\" value=\"operator\"/>\n";
+				$xml .= "			<variable name=\"export_vars\" value=\"domain_name\"/>\n";
+				$xml .= "		</variables>\n";
+				$xml .= "\n";
+				$xml .= "		<groups>\n";
+				$xml .= "			<group name=\"".$extension_dir_name."\">\n";
+				$xml .= "			<users>\n";
+				$xml .= "				<X-PRE-PROCESS cmd=\"include\" data=\"".$extension_dir_name."/*.xml\"/>\n";
+				$xml .= "			</users>\n";
+				$xml .= "			</group>\n";
+				$xml .= "\n";
 				$previous_call_group = "";
 				foreach ($call_group_array as $key => $value) {
 					$call_group = $key;
 					$extension_list = $value;
 					if (strlen($call_group) > 0) {
 						if ($previous_call_group != $call_group) {
-							$tmp_xml .= "			<group name=\"$call_group\">\n";
-							$tmp_xml .= "				<users>\n";
-							$tmp_xml .= "					<!--\n";
-							$tmp_xml .= "					type=\"pointer\" is a pointer so you can have the\n";
-							$tmp_xml .= "					same user in multiple groups.  It basically means\n";
-							$tmp_xml .= "					to keep searching for the user in the directory.\n";
-							$tmp_xml .= "					-->\n";
+							$xml .= "			<group name=\"$call_group\">\n";
+							$xml .= "				<users>\n";
+							$xml .= "					<!--\n";
+							$xml .= "					type=\"pointer\" is a pointer so you can have the\n";
+							$xml .= "					same user in multiple groups.  It basically means\n";
+							$xml .= "					to keep searching for the user in the directory.\n";
+							$xml .= "					-->\n";
 							$extension_array = explode(",", $extension_list);
 							foreach ($extension_array as &$tmp_extension) {
-								$tmp_xml .= "					<user id=\"$tmp_extension\" type=\"pointer\"/>\n";
+								$xml .= "					<user id=\"$tmp_extension\" type=\"pointer\"/>\n";
 							}
-							$tmp_xml .= "				</users>\n";
-							$tmp_xml .= "			</group>\n";
-							$tmp_xml .= "\n";
+							$xml .= "				</users>\n";
+							$xml .= "			</group>\n";
+							$xml .= "\n";
 						}
 						$previous_call_group = $call_group;
 					}
 					unset($call_group);
 				}
-				$tmp_xml .= "		</groups>\n";
-				$tmp_xml .= "\n";
-				$tmp_xml .= "	</domain>\n";
-				$tmp_xml .= "</include>";
+				$xml .= "		</groups>\n";
+				$xml .= "\n";
+				$xml .= "	</domain>\n";
+				$xml .= "</include>";
 
 			//remove invalid characters from the file names
 				$extension_dir_name = str_replace(" ", "_", $extension_dir_name);
@@ -673,8 +672,8 @@ include "root.php";
 
 			//write the xml file
 				$fout = fopen($extension_parent_dir."/".$extension_dir_name.".xml","w");
-				fwrite($fout, $tmp_xml);
-				unset($tmp_xml);
+				fwrite($fout, $xml);
+				unset($xml);
 				fclose($fout);
 
 			//syncrhonize the phone directory
