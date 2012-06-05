@@ -209,8 +209,7 @@ include "root.php";
 						$this->connect();
 					}
 				//get data from the database
-					$sql = "";
-					$sql .= " select * from ".$this->table." ";
+					$sql = " select * from ".$this->table." ";
 					if ($this->where) {
 						$i = 0;
 						foreach($this->where as $row) {
@@ -223,20 +222,17 @@ include "root.php";
 							$i++;
 						}
 					}
-					if ($this->order_by) {
+					if (count($this->order_by) > 0) {
 						$sql .= "order by ";
 						$i = 1;
 						foreach($this->order_by as $row) {
 							if (count($this->order_by) == $i) {
-								$sql .= $row['name']." ";
+								$sql .= $row['name']." ".$row['order']." ";
 							}
 							else {
-								$sql .= $row['name'].", ";
+								$sql .= $row['name']." ".$row['order'].", ";
 							}
 							$i++;
-						}
-						if ($this->order_type) {
-							$sql .= $this->order_type." ";
 						}
 					}
 					if ($this->limit) {

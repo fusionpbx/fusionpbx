@@ -59,6 +59,7 @@ include "root.php";
 		public $ivr_menu_option_param;
 		public $ivr_menu_option_order;
 		public $ivr_menu_option_description;
+		public $order_by; //array
 
 		public function __construct() {
 			require_once "includes/classes/database.php";
@@ -150,9 +151,6 @@ include "root.php";
 			}
 			if (isset($this->order_by)) {
 				$database->order_by = $this->order_by;
-			}
-			if (isset($this->order_type)) {
-				$database->order_type = $this->order_type;
 			}
 			return $database->find();
 		}
