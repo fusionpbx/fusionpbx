@@ -1,0 +1,6 @@
+<extension name="hot-desking-logout" app_uuid="97e920d9-dddc-458f-bae0-837a48c3f401" enabled="false">
+	<condition field="destination_number" expression="^\*073$" >
+		<action application="set" data="direction=in" />
+		<action application="lua" data="dial_string.lua" />
+	</condition>
+</extension>
