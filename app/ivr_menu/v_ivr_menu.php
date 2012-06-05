@@ -38,12 +38,12 @@ require_once "includes/paging.php";
 
 //get the http values and set them as variables
 	if (isset($_GET["order_by"])) {
-		$order_by = check_str($_GET["order_by"]);
-		$order = check_str($_GET["order"]);
+		$order_by['0']['name'] = check_str($_GET["order_by"]);
+		$order_by['0']['order'] = check_str($_GET["order"]);
 	}
 	else {
-		$order_by = '';
-		$order = '';
+		$order_by['0']['name'] = 'ivr_menu_name';
+		$order_by['0']['order'] = 'asc';
 	}
 
 //show the content
@@ -90,9 +90,8 @@ require_once "includes/paging.php";
 
 	//get the list from the db
 		if (isset($order_by)) {
-			if (strlen($order_by) > 0) {
+			if (count($order_by) > 0) {
 				$ivr->order_by = $order_by;
-				$ivr->order_type = $order;
 			}
 		}
 		$result = $ivr->find();
@@ -106,11 +105,11 @@ require_once "includes/paging.php";
 		echo "<div align='center'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
-		echo th_order_by('ivr_menu_name', 'Name', $order_by, $order);
-		echo th_order_by('ivr_menu_extension', 'Extension', $order_by, $order);
-		echo th_order_by('ivr_menu_direct_dial', 'Direct Dial', $order_by, $order);
-		echo th_order_by('ivr_menu_enabled', 'Enabled', $order_by, $order);
-		echo th_order_by('ivr_menu_description', 'Description', $order_by, $order);
+		echo th_order_by('ivr_menu_name', 'Name', $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_extension', 'Extension', $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_direct_dial', 'Direct Dial', $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_enabled', 'Enabled', $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_description', 'Description', $order_by[0]['name'], $order_by[0]['order']);
 		echo "<td align='right' width='42'>\n";
 		if (permission_exists('ivr_menu_add')) {
 			echo "	<a href='v_ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
@@ -139,7 +138,6 @@ require_once "includes/paging.php";
 			} //end foreach
 			unset($sql, $result, $row_count);
 		} //end if results
-
 
 		echo "<tr>\n";
 		echo "<td colspan='6' align='left'>\n";
