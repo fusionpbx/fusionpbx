@@ -12,7 +12,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en'] = 'Hot Desking';
 		$apps[$x]['menu'][0]['uuid'] = 'baa57691-37d4-4c7d-b227-f2929202b480';
-		$apps[$x]['menu'][0]['parent_uuid'] = 'bc96d773-ee57-0cdd-c3ac-2d91aba61b55';
+		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/app/hot_desking/index.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
