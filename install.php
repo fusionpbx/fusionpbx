@@ -1226,7 +1226,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		}
 
 	//login the user account
-			$_SESSION["username"] = $admin_username;
+		$_SESSION["username"] = $admin_username;
 
 	//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 		$sql = "SELECT * FROM v_group_users ";
