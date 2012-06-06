@@ -45,7 +45,7 @@
 				}
 
 		//get the $apps array from the installed apps from the core and mod directories
-			$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/app/dialplan/resources/xml/dialplan/*.xml");
+			$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/xml/dialplan/*.xml");
 			foreach ($xml_list as &$xml_file) {
 				//get and parse the xml
 					$xml_string = file_get_contents($xml_file);
