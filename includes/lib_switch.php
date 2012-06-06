@@ -2630,12 +2630,12 @@ function save_hunt_group_xml() {
 								$tmp .= "session:execute(\"set\", \"transfer_ringback=\${hold_music}\"); --set to music\n";
 							}
 							else {
-								$tmp .= "session:execute(\"set\", \"ringback=\$\${".$row['hunt_group_ringback']."}\"); --set to ringtone\n";
-								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${".$row['hunt_group_ringback']."}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"ringback=\${".$row['hunt_group_ringback']."}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"transfer_ringback=\${".$row['hunt_group_ringback']."}\"); --set to ringtone\n";
 							}
 							if ($row['hunt_group_ringback'] == "ring"){
-								$tmp .= "session:execute(\"set\", \"ringback=\$\${us-ring}\"); --set to ringtone\n";
-								$tmp .= "session:execute(\"set\", \"transfer_ringback=\$\${us-ring}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"ringback=\${us-ring}\"); --set to ringtone\n";
+								$tmp .= "session:execute(\"set\", \"transfer_ringback=\${us-ring}\"); --set to ringtone\n";
 							}
 						}
 						else {
