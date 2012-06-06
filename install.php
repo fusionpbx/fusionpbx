@@ -1210,7 +1210,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 				//print_r($install->result);
 
 			//create the dialplan/default.xml for single tenant or dialplan/domain.xml
-				require_once "includes/classes/dialplan.php";
+				require_once "includes/classes/switch_dialplan.php";
 				$dialplan = new dialplan;
 				$dialplan->domain_uuid = $_SESSION["domain_uuid"];
 				$dialplan->domain = $domain_name;
