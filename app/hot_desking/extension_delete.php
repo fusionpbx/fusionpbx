@@ -40,8 +40,8 @@ if (count($_GET)>0) {
 
 //delete the extension
 	if (strlen($id)>0) {
-		$sql .= "update v_extensions ";
-		$sql .= "set unique_id = null, ";
+		$sql = "update v_extensions set ";
+		$sql .= "unique_id = null, ";
 		$sql .= "dial_user = null, ";
 		$sql .= "dial_domain = null, ";
 		$sql .= "dial_string = null ";
