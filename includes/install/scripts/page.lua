@@ -54,6 +54,7 @@ if ( session:ready() ) then
 		caller_id_number = session:getVariable("caller_id_number");
 		extension_table = explode(",",extension_list);
 		sip_from_user = session:getVariable("sip_from_user");
+		mute = session:getVariable("mute");
 
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
@@ -77,6 +78,17 @@ if ( session:ready() ) then
 		caller_id_number = effective_caller_id_number;
 	end
 
+	--set conference flags
+	if (mute) then
+		if (mute == "false") then
+			flags = "flags{}";
+		else
+			flags = "flags{mute}";
+		end
+	else
+		flags = "flags{mute}";
+	end
+
 	--if the pin number is provided then require it
 	if (pin_number) then
 		min_digits = string.len(pin_number);
@@ -91,6 +103,7 @@ if ( session:ready() ) then
 		end
 	end
 
+	destination_count = 0;
 	api = freeswitch.API();
 	for index,value in pairs(extension_table) do
 		if (string.find(value, "-") == nill) then
@@ -109,8 +122,9 @@ if ( session:ready() ) then
 						--this extension is the caller that initated the page
 					else
 						--originate the call
-						cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+flags{mute} inline";
+						cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
 						api:executeString(cmd_string);
+						destination_count = destination_count + 1;
 					end
 					--freeswitch.consoleLog("NOTICE", "cmd_string "..cmd_string.."\n");
 				else
@@ -123,8 +137,9 @@ if ( session:ready() ) then
 							--this extension is the caller that initated the page
 						else
 							--originate the call
-							cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+flags{mute} inline";
+							cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
 							api:executeString(cmd_string);
+							destination_count = destination_count + 1;
 						end
 					end
 				end
@@ -133,6 +148,10 @@ if ( session:ready() ) then
 	end
 
 	--send main call to the conference room
-	session:execute("conference", "page-"..destination_number.."@page+flags{endconf}");
+	if (destination_count > 0) then
+		session:execute("conference", "page-"..destination_number.."@page+flags{endconf}");
+	else
+		session:execute("playback", "tone_stream://%(500,500,480,620);loops=3");
+	end
 
 end
