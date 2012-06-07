@@ -2547,8 +2547,6 @@ function save_hunt_group_xml() {
 					$tmp .= "domain_name = session:getVariable(\"domain_name\");\n";
 					$tmp .= "caller_id_name = session:getVariable(\"caller_id_name\");\n";
 					$tmp .= "caller_id_number = session:getVariable(\"caller_id_number\");\n";
-					$tmp .= "effective_caller_id_name = session:getVariable(\"effective_caller_id_name\");\n";
-					$tmp .= "effective_caller_id_number = session:getVariable(\"effective_caller_id_number\");\n";
 					$tmp .= "outbound_caller_id_name = session:getVariable(\"outbound_caller_id_name\");\n";
 					$tmp .= "outbound_caller_id_number = session:getVariable(\"outbound_caller_id_number\");\n";
 					$tmp .= "\n";
@@ -2607,19 +2605,16 @@ function save_hunt_group_xml() {
 							$tmp .=	"\n";
 						}
 
-					//set caller id prefix
+					//set caller id
+						$tmp .= "if outbound_caller_id_number then\n";
+						$tmp .= "	caller_id_number = outbound_caller_id_number;\n";
+						$tmp .= "end\n";
 						if (strlen($row['hunt_group_cid_name_prefix'])> 0) {
 							$tmp .= "if caller_id_name then\n";
-							$tmp .= "	session:setVariable(\"caller_id_name\", \"".$row['hunt_group_cid_name_prefix']."\"..caller_id_name);\n";
-							$tmp .= "end\n";
-							$tmp .= "if effective_caller_id_name then\n";
-							$tmp .= "	session:setVariable(\"effective_caller_id_name\", \"".$row['hunt_group_cid_name_prefix']."\"..effective_caller_id_name);\n";
-							$tmp .= "elseif caller_id_name then\n";
-							$tmp .= "	--effective_caller_id_name missing, set to caller_id_name\n";
-							$tmp .= "	session:setVariable(\"effective_caller_id_name\", \"".$row['hunt_group_cid_name_prefix']."\"..caller_id_name);\n";
+							$tmp .= "	caller_id_name = \"".$row['hunt_group_cid_name_prefix']."\"..caller_id_name;\n";
 							$tmp .= "end\n";
 							$tmp .= "if outbound_caller_id_name then\n";
-							$tmp .= "	session:setVariable(\"outbound_caller_id_name\", \"".$row['hunt_group_cid_name_prefix']."\"..outbound_caller_id_name);\n";
+							$tmp .= "	caller_id_name = \"".$row['hunt_group_cid_name_prefix']."\"..outbound_caller_id_name;\n";
 							$tmp .= "end\n";
 						}
 
@@ -2722,7 +2717,7 @@ function save_hunt_group_xml() {
 							$bridge_array = outbound_route_to_bridge ($ent['destination_data']);
 							$destination_data = $bridge_array[0];
 							$tmp_sub_array["application"] = "bridge";
-							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout,origination_caller_id_name=\"..outbound_caller_id_name..\",origination_caller_id_number=\"..outbound_caller_id_number..\"]".$destination_data."\"";
+							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout,origination_caller_id_name=\"..caller_id_name..\",origination_caller_id_number=\"..caller_id_number..\"]".$destination_data."\"";
 							$tmp_array[$i] = $tmp_sub_array;
 							unset($tmp_sub_array);
 							unset($destination_data);
