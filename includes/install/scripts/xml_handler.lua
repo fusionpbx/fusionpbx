@@ -142,7 +142,7 @@
 					if (string.len(row.dial_string) > 0) then
 						dial_string = row.dial_string;
 					else
-						dial_string = "{sip_invite_domain=${domain_name},presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(${dialed_user}@${dialed_domain})}";
+						dial_string = "{sip_invite_domain=${domain_name},presence_id=${dialed_user}@${domain_name}}${sofia_contact(${dialed_user}@${domain_name})}";
 					end
 			end);
 
@@ -180,7 +180,19 @@
 			table.insert(xml, [[<document type="freeswitch/xml">]]);
 			table.insert(xml, [[	<section name="directory">]]);
 			table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
-			table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[>]]);
+			if (number_alias) then
+				if (cidr) then
+					table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[>]]);
+				else
+					table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
+				end
+			else
+				if (cidr) then
+					table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. [[>]]);
+				else
+					table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
+				end
+			end
 			table.insert(xml, [[			<params>]]);
 			table.insert(xml, [[				<param name="password" value="]] .. password .. [["/>]]);
 			table.insert(xml, [[				<param name="vm-enabled" value="]] .. vm_enabled .. [["/>]]);
