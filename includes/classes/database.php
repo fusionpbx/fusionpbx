@@ -209,7 +209,7 @@ include "root.php";
 						$this->connect();
 					}
 				//get data from the database
-					$sql = " select * from ".$this->table." ";
+					$sql = "select * from ".$this->table." ";
 					if ($this->where) {
 						$i = 0;
 						foreach($this->where as $row) {
@@ -256,7 +256,7 @@ include "root.php";
 					}
 				//add data to the database
 					$sql = "insert into ".$this->table;
-					$sql .= "(";
+					$sql .= " (";
 					$i = 1;
 					foreach($this->fields as $name => $value) {
 						if (count($this->fields) == $i) {
@@ -372,7 +372,7 @@ include "root.php";
 						$this->connect();
 					}
 				//get the number of rows
-					$sql = " select count(*) as num_rows from ".$this->table;
+					$sql = "select count(*) as num_rows from ".$this->table." ";
 					if ($this->where) {
 						$i = 0;
 						foreach($this->where as $row) {

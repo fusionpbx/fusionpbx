@@ -122,8 +122,7 @@ else {
 	echo "	<br />";
 
 	//get the number of rows in the dialplan
-	$sql = "";
-	$sql .= " select count(*) as num_rows from v_dialplans ";
+	$sql = "select count(*) as num_rows from v_dialplans ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($app_uuid) == 0) {
 		//hide inbound routes
@@ -154,9 +153,8 @@ else {
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page;
 
-	$sql = "";
-	$sql .= " select * from v_dialplans ";
-	$sql .= " where domain_uuid = '$domain_uuid' ";
+	$sql = "select * from v_dialplans ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($app_uuid) == 0) {
 		//hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
@@ -214,8 +212,7 @@ else {
 		foreach($result as $row) {
 			$app_uuid = $row['app_uuid'];
 			if (strlen($row['dialplan_number']) == 0) {
-				$sql = "";
-				$sql .= "select * from v_dialplan_details ";
+				$sql = "select * from v_dialplan_details ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and dialplan_uuid = '".$row['dialplan_uuid']."' ";
 				$sql .= "and dialplan_detail_type = 'destination_number' ";
@@ -230,7 +227,7 @@ else {
 						$row['dialplan_number'] = $dialplan_number;
 					//update the extension number
 						$sql = "update v_dialplans set ";
-						$sql .= "dialplan_number = '$dialplan_number', ";
+						$sql .= "dialplan_number = '$dialplan_number' ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
 						$sql .= "and dialplan_uuid = '".$row['dialplan_uuid']."'";
 						$db->exec($sql);
@@ -339,10 +336,13 @@ else {
 	echo "</div>";
 	echo "<br><br>";
 
-require_once "includes/footer.php";
-unset ($result_count);
-unset ($result);
-unset ($key);
-unset ($val);
-unset ($c);
+//include the footer
+	require_once "includes/footer.php";
+
+//unset the variables
+	unset ($result_count);
+	unset ($result);
+	unset ($key);
+	unset ($val);
+	unset ($c);
 ?>
