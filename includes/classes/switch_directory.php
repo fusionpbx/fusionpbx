@@ -60,7 +60,6 @@ include "root.php";
 		public $sip_bypass_media;
 		public $enabled;
 		public $description;
-		public $number_alias;
 
 		// get domain_uuid
 			public function get_domain_uuid() {
