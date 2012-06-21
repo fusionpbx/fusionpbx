@@ -86,7 +86,8 @@ if ($action == "update") {
 if ((!isset($_REQUEST['submit'])) || ($_REQUEST['submit'] != 'Save')) {
 	// If we arent saving a Profile Display the form.
 	include "profile_edit.php";	
-	goto end;
+	require_once "includes/footer.php";
+	exit;
 }
 
 foreach ($_REQUEST as $field => $data){
@@ -103,7 +104,8 @@ if (strlen($error) > 0) {
 	include "errors.php";
 	$profile = $request;
 	include "profile_edit.php";	
-	goto end;
+	require_once "includes/footer.php";
+	exit;
 }
 
 // Save New Entry
@@ -162,7 +164,6 @@ if ($action == "add" && permission_exists('xmpp_add')) {
 	$sql .= ") ";
 	$db->exec(check_sql($sql));
 
-	goto writeout;
 } 
 elseif ($action == "update" && permission_exists('xmpp_edit')) {
 	$sql = "";
@@ -194,18 +195,13 @@ elseif ($action == "update" && permission_exists('xmpp_edit')) {
 	$sql .= "where xmpp_profile_uuid = '" . $request['id'] . "' ";
 	$db->exec(check_sql($sql));
 	$xmpp_profile_uuid = $request['id'];
-
-	goto writeout;
 } 
-
-writeout:
 
 //prepare the xmpp files to be written. delete all jingle files that are prefixed with v_ and have a file extension of .xml
 $jingle_list = glob($_SESSION['switch']['conf']['dir'] . "/jingle_profiles/*v_*.xml");
 foreach($jingle_list as $name => $value) {
 	unlink($value);
 }
-
 
 if ($request['enabled'] == "true") {
 	//prepare the xml
@@ -238,7 +234,6 @@ if ($fp) {
 
 include "update_complete.php";
 
-end:
 //show the footer
 require_once "includes/footer.php";
 

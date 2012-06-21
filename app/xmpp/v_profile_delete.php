@@ -88,7 +88,6 @@ if ($fp) {
 
 include "update_complete.php";
 
-end:
 //show the footer
 require_once "includes/footer.php";
 

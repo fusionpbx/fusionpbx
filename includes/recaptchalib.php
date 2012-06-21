@@ -54,8 +54,6 @@ function _recaptcha_qsencode ($data) {
         return $req;
 }
 
-
-
 /**
  * Submits an HTTP POST to a reCAPTCHA server
  * @param string $host
@@ -91,8 +89,6 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
         return $response;
 }
 
-
-
 /**
  * Gets the challenge HTML (javascript and non-javascript version).
  * This is called from the browser, and the resulting reCAPTCHA HTML widget
@@ -106,7 +102,10 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
 {
 	if ($pubkey == null || $pubkey == '') {
-		die ("To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>");
+		require_once "includes/header.php";
+		echo "To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>";
+		require_once "includes/footer.php";
+		exit;
 	}
 	
 	if ($use_ssl) {
@@ -128,9 +127,6 @@ function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
 	</noscript>';
 }
 
-
-
-
 /**
  * A ReCaptchaResponse is returned from recaptcha_check_answer()
  */
@@ -138,7 +134,6 @@ class ReCaptchaResponse {
         var $is_valid;
         var $error;
 }
-
 
 /**
   * Calls an HTTP POST function to verify if the user's guess was correct
@@ -158,8 +153,6 @@ function recaptcha_check_answer ($privkey, $remoteip, $challenge, $response, $ex
 	if ($remoteip == null || $remoteip == '') {
 		die ("For security reasons, you must pass the remote ip to reCAPTCHA");
 	}
-
-	
 	
         //discard spam submissions
         if ($challenge == null || strlen($challenge) == 0 || $response == null || strlen($response) == 0) {
@@ -220,7 +213,6 @@ function _recaptcha_aes_encrypt($val,$ky) {
 	$val=_recaptcha_aes_pad($val);
 	return mcrypt_encrypt($enc, $ky, $val, $mode, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 }
-
 
 function _recaptcha_mailhide_urlbase64 ($x) {
 	return strtr(base64_encode ($x), '+/', '-_');
