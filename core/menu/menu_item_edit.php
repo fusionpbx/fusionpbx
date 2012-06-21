@@ -210,7 +210,12 @@ else {
 				else {
 					$sql .= "menu_item_parent_uuid = '$menu_item_parent_uuid', ";
 				}
-				$sql .= "menu_item_order = '$menu_item_order', ";
+				if (strlen($menu_item_parent_uuid) == 0) {
+					$sql .= "menu_item_order = '0', ";
+				}
+				else {
+					$sql .= "menu_item_order = '$menu_item_order', ";
+				}
 				$sql .= "menu_item_mod_user = '".$_SESSION["username"]."', ";
 				$sql .= "menu_item_mod_date = now() ";
 				$sql .= "where menu_uuid = '$menu_uuid' ";
