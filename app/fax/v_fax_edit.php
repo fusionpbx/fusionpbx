@@ -228,111 +228,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-				//create the dialplan entry for fax
-					$dialplan_name = $fax_name;
-					$dialplan_order ='333';
-					$dialplan_context = $_SESSION['context'];
-					$dialplan_enabled = 'true';
-					$dialplan_description = $fax_description;
-					$app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';			
-					dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
-
-					//<!-- default ${domain_name} -->
-					//<condition field="destination_number" expression="^\*9978$">
-					$dialplan_detail_tag = 'condition'; //condition, action, antiaction
-					$dialplan_detail_type = 'destination_number';
-					$dialplan_detail_data = '^'.$fax_extension.'$';
-					$dialplan_detail_order = '000';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="system" data="$switch_scripts_dir/emailfax.sh USER DOMAIN {$_SESSION['switch']['scripts']['dir']}/fax/inbox/9872/${last_fax}.tif"/>
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
-					$dialplan_detail_data .= "email=".$fax_email." ";
-					$dialplan_detail_data .= "extension=".$fax_extension." ";
-					$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
-					$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
-					$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
-					$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
-					$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
-
-					$dialplan_detail_order = '010';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="answer" />
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'answer';
-					$dialplan_detail_data = '';
-					$dialplan_detail_order = '010';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					////<action application="set" data="fax_enable_t38=true"/>
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'fax_enable_t38=true';
-					$dialplan_detail_order = '015';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					////<action application="set" data="fax_enable_t38_request=true"/>
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'fax_enable_t38_request=true';
-					$dialplan_detail_order = '020';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="set" data="last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}"/>
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}';
-					$dialplan_detail_order = '025';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="playback" data="silence_stream://2000"/>
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'playback';
-					$dialplan_detail_data = 'silence_stream://2000';
-					$dialplan_detail_order = '030';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="rxfax" data="$switch_storage_dir/fax/inbox/${last_fax}.tif"/>
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'rxfax';
-					if (count($_SESSION["domains"]) > 1) {
-						$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/${last_fax}.tif';
-					}
-					else {
-						$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/${last_fax}.tif';
-					}
-					$dialplan_detail_order = '035';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					//<action application="hangup"/>
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'hangup';
-					$dialplan_detail_data = '';
-					$dialplan_detail_order = '040';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-				//save the xml
-					save_dialplan_xml();
-
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
-
-				//redirect the browser
-					require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax.php\">\n";
-					echo "<div align='center'>\n";
-					echo "Add Complete\n";
-					echo "</div>\n";
-					require_once "includes/footer.php";
-					return;
-			} //if ($action == "add")
+				//set the dialplan action
+					$dialplan_type = "add";
+			}
 
 			if ($action == "update" && permission_exists('fax_extension_edit')) {
 				//update the fax extension in the database
+					$dialplan_type = "";
 					$sql = "update v_fax set ";
 					$sql .= "fax_extension = '$fax_extension', ";
 					$sql .= "fax_name = '$fax_name', ";
@@ -351,83 +253,195 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "and fax_uuid = '$fax_uuid' ";
 					$db->exec(check_sql($sql));
 					unset($sql);
+			}
 
-				//udpate the fax dialplan
-					$sql = "update v_dialplans set ";
-					$sql .= "dialplan_name = '$fax_name', ";
-					if (strlen($dialplan_order) > 0) {
-						$sql .= "dialplan_order = '333', ";
+			//if there are no variables in the vars table then add them
+				if ($dialplan_type != "add") {
+					$sql = "select count(*) as num_rows from v_dialplans ";
+					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] == 0) {
+							$dialplan_type = "add";
+						}
+						else {
+							$dialplan_type = "update";
+						}
 					}
-					$sql .= "dialplan_context = '".$_SESSION['context']."', ";
-					$sql .= "dialplan_enabled = 'true', ";
-					$sql .= "dialplan_description = '$fax_description' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-					$db->query($sql);
-					unset($sql);
+				}
 
-				//update dialplan detail condition
-					$sql = "";
-					$sql = "update v_dialplan_details set ";
-					$sql .= "dialplan_detail_data = '^".$fax_extension."$' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_detail_tag = 'condition' ";
-					$sql .= "and dialplan_detail_type = 'destination_number' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-					$db->query($sql);
-					unset($sql);
+				if ($dialplan_type == "add") {
+					//add the dialplan entry for fax
+						$dialplan_name = $fax_name;
+						$dialplan_order ='333';
+						$dialplan_context = $_SESSION['context'];
+						$dialplan_enabled = 'true';
+						$dialplan_description = $fax_description;
+						$app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';			
+						dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
-				//update dialplan detail action
-					if (count($_SESSION["domains"]) > 1) {
-						$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/${last_fax}.tif';
-					}
-					else {
-						$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/${last_fax}.tif';
-					}
-					$sql = "";
-					$sql = "update v_dialplan_details set ";
-					$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_detail_tag = 'action' ";
-					$sql .= "and dialplan_detail_type = 'rxfax' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-					$db->query($sql);
+						//<!-- default ${domain_name} -->
+						//<condition field="destination_number" expression="^\*9978$">
+							$dialplan_detail_tag = 'condition'; //condition, action, antiaction
+							$dialplan_detail_type = 'destination_number';
+							$dialplan_detail_data = '^'.$fax_extension.'$';
+							$dialplan_detail_order = '000';
+							$dialplan_detail_group = '';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-				//update dialplan detail action
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
-					$dialplan_detail_data .= "email=".$fax_email." ";
-					$dialplan_detail_data .= "extension=".$fax_extension." ";
-					$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
-					$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
-					$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
-					$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
-					$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
-					$sql = "update v_dialplan_details set ";
-					$sql .= "dialplan_detail_data = '".check_str($dialplan_detail_data)."' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_detail_tag = 'action' ";
-					$sql .= "and dialplan_detail_type = 'set' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-					$sql .= "and dialplan_detail_data like 'api_hangup_hook=%' ";
-					$db->query(check_sql($sql));
+						//<action application="system" data="$switch_scripts_dir/emailfax.sh USER DOMAIN {$_SESSION['switch']['scripts']['dir']}/fax/inbox/9872/${last_fax}.tif"/>
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'set';
+							$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
+							$dialplan_detail_data .= "email=".$fax_email." ";
+							$dialplan_detail_data .= "extension=".$fax_extension." ";
+							$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
+							$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
+							$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
+							$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
+							$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
 
-				//save the xml
-					save_dialplan_xml();
+							$dialplan_detail_order = '010';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
+						//<action application="answer" />
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'answer';
+							$dialplan_detail_data = '';
+							$dialplan_detail_order = '010';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-				//redirect the browser
-					require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax.php\">\n";
-					echo "<div align='center'>\n";
+						//<action application="set" data="fax_enable_t38=true"/>
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'set';
+							$dialplan_detail_data = 'fax_enable_t38=true';
+							$dialplan_detail_order = '015';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						//<action application="set" data="fax_enable_t38_request=true"/>
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'set';
+							$dialplan_detail_data = 'fax_enable_t38_request=true';
+							$dialplan_detail_order = '020';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						//<action application="set" data="last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}"/>
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'set';
+							$dialplan_detail_data = 'last_fax=${caller_id_number}-${strftime(%Y-%m-%d-%H-%M-%S)}';
+							$dialplan_detail_order = '025';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						//<action application="playback" data="silence_stream://2000"/>
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'playback';
+							$dialplan_detail_data = 'silence_stream://2000';
+							$dialplan_detail_order = '030';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						//<action application="rxfax" data="$switch_storage_dir/fax/inbox/${last_fax}.tif"/>
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'rxfax';
+							if (count($_SESSION["domains"]) > 1) {
+								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/${last_fax}.tif';
+							}
+							else {
+								$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/${last_fax}.tif';
+							}
+							$dialplan_detail_order = '035';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						//<action application="hangup"/>
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'hangup';
+							$dialplan_detail_data = '';
+							$dialplan_detail_order = '040';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+				}
+				if ($dialplan_type == "update") {
+					//udpate the fax dialplan entry
+						$sql = "update v_dialplans set ";
+						$sql .= "dialplan_name = '$fax_name', ";
+						if (strlen($dialplan_order) > 0) {
+							$sql .= "dialplan_order = '333', ";
+						}
+						$sql .= "dialplan_context = '".$_SESSION['context']."', ";
+						$sql .= "dialplan_enabled = 'true', ";
+						$sql .= "dialplan_description = '$fax_description' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+						$db->query($sql);
+						unset($sql);
+
+					//update dialplan detail condition
+						$sql = "update v_dialplan_details set ";
+						$sql .= "dialplan_detail_data = '^".$fax_extension."$' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and dialplan_detail_tag = 'condition' ";
+						$sql .= "and dialplan_detail_type = 'destination_number' ";
+						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+						$db->query($sql);
+						unset($sql);
+
+					//update dialplan detail action
+						if (count($_SESSION["domains"]) > 1) {
+							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'].'/'.$fax_extension.'/inbox/${last_fax}.tif';
+						}
+						else {
+							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/${last_fax}.tif';
+						}
+						$sql = "";
+						$sql = "update v_dialplan_details set ";
+						$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and dialplan_detail_tag = 'action' ";
+						$sql .= "and dialplan_detail_type = 'rxfax' ";
+						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+						$db->query($sql);
+
+					//update dialplan detail action
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
+						$dialplan_detail_data .= "email=".$fax_email." ";
+						$dialplan_detail_data .= "extension=".$fax_extension." ";
+						$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
+						$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
+						$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
+						$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
+						$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
+						$sql = "update v_dialplan_details set ";
+						$sql .= "dialplan_detail_data = '".check_str($dialplan_detail_data)."' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+						$sql .= "and dialplan_detail_tag = 'action' ";
+						$sql .= "and dialplan_detail_type = 'set' ";
+						$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+						$sql .= "and dialplan_detail_data like 'api_hangup_hook=%' ";
+						$db->query(check_sql($sql));
+				}
+
+			//save the xml
+				save_dialplan_xml();
+
+			//apply settings reminder
+				$_SESSION["reload_xml"] = true;
+
+			//redirect the browser
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax.php\">\n";
+				echo "<div align='center'>\n";
+				if ($action == "update" && permission_exists('fax_extension_edit')) {
 					echo "Update Complete\n";
-					echo "</div>\n";
-					require_once "includes/footer.php";
-					return;
-			} //if ($action == "update")
+				}
+				if ($action == "add" && permission_exists('fax_extension_add')) {
+					echo "Add Complete\n";
+				}
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
+
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
