@@ -1555,7 +1555,7 @@ function save_setting_xml() {
 			$xml .= "\n";
 			$xml .= "//set system dir variables\n";
 			$xml .= "	\$switch_storage_dir = \"".$_SESSION['switch']['storage']['dir']."\";\n";
-			$xml .= "	\$tmp_dir = \"".$tmp_dir."\";\n";
+			$xml .= "	\$tmp_dir = \"".$_SESSION['server']['temp']['dir']."\";\n";
 			$xml .= "	\$v_secure = \"".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure"."\";\n";
 			$xml .= "\n";
 			$xml .= "?>";
