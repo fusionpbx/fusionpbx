@@ -297,11 +297,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
 							$dialplan_detail_data .= "email=".$fax_email." ";
 							$dialplan_detail_data .= "extension=".$fax_extension." ";
-							$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
-							$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
-							$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
-							$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
-							$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
+							if ($db_type == "pgsql" || $db_type == "mysql") {
+								$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
+								$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
+								$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
+								$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
+								$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
+							}
+							if ($db_type == "sqlite") {
+								$dialplan_detail_data .= "name=\\\\\${last_fax} ";
+								$dialplan_detail_data .= "messages='result: \\\\\${fax_result_text} sender:\\\\\${fax_remote_station_id} pages:\\\\\${fax_document_total_pages}' ";
+								$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
+								$dialplan_detail_data .= "caller_id_name='\\\\\${caller_id_name}' ";
+								$dialplan_detail_data .= "caller_id_number=\\\\\${caller_id_number} ";
+							}
 
 							$dialplan_detail_order = '010';
 							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
@@ -407,11 +416,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan_detail_data = "api_hangup_hook=system ".PHP_BINDIR."/".PHP_BIN." ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php ";
 						$dialplan_detail_data .= "email=".$fax_email." ";
 						$dialplan_detail_data .= "extension=".$fax_extension." ";
-						$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
-						$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
-						$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
-						$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
-						$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
+						if ($db_type == "pgsql" || $db_type == "mysql") {
+							$dialplan_detail_data .= "name=\\\\\\\${last_fax} ";
+							$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
+							$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
+							$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
+							$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
+						}
+						if ($db_type == "sqlite") {
+							$dialplan_detail_data .= "name=\\\\\${last_fax} ";
+							$dialplan_detail_data .= "messages='result: \\\\\${fax_result_text} sender:\\\\\${fax_remote_station_id} pages:\\\\\${fax_document_total_pages}' ";
+							$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
+							$dialplan_detail_data .= "caller_id_name='\\\\\${caller_id_name}' ";
+							$dialplan_detail_data .= "caller_id_number=\\\\\${caller_id_number} ";
+						}
 						$sql = "update v_dialplan_details set ";
 						$sql .= "dialplan_detail_data = '".check_str($dialplan_detail_data)."' ";
 						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
