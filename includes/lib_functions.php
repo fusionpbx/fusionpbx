@@ -39,7 +39,7 @@
 					$string = sqlite_escape_string($string);
 				}
 				else {
-					$string = str_replace("''","'",$string);
+					$string = str_replace("'","''",$string);
 				}
 			}
 			if ($db_type == "pgsql") {
