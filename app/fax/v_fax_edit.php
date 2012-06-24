@@ -236,6 +236,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//update the fax extension in the database
 					$dialplan_type = "";
 					$sql = "update v_fax set ";
+					if (strlen($dialplan_uuid) > 0) {
+						$sql .= "dialplan_uuid = '".$dialplan_uuid."', ";
+					}
 					$sql .= "fax_extension = '$fax_extension', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
@@ -279,7 +282,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan_context = $_SESSION['context'];
 						$dialplan_enabled = 'true';
 						$dialplan_description = $fax_description;
-						$app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';			
+						$app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 						dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
 						//<!-- default ${domain_name} -->
@@ -392,7 +395,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						else {
 							$dialplan_detail_data = $_SESSION['switch']['storage']['dir'].'/fax/'.$fax_extension.'/inbox/${last_fax}.tif';
 						}
-						$sql = "";
 						$sql = "update v_dialplan_details set ";
 						$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
 						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -448,8 +450,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (strlen($_GET['id']) > 0 && $_POST["persistformvar"] != "true") {
 		$fax_uuid = check_str($_GET["id"]);
-		$sql = "";
-		$sql .= "select * from v_fax ";
+		$sql = "select * from v_fax ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and fax_uuid = '$fax_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -471,6 +472,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_description = $row["fax_description"];
 		}
 		unset ($prep_statement);
+	}
+
+//set the dialplan_uuid
+	if (strlen($dialplan_uuid) == 0) {
+		$dialplan_uuid = uuid();
 	}
 
 //show the header
