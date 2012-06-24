@@ -94,6 +94,12 @@ if (!function_exists('get_db_field_names')) {
 }
 
 if ($db_type == "sqlite") {
+
+	//set the document_root
+		if (strlen($document_root) == 0) {
+			$document_root = $_SERVER["DOCUMENT_ROOT"];
+		}
+
 	//prepare the database connection
 		if (strlen($db_name) == 0) {
 			//if (strlen($_SERVER["SERVER_NAME"]) == 0) { $_SERVER["SERVER_NAME"] = "http://localhost"; }
@@ -107,8 +113,7 @@ if ($db_type == "sqlite") {
 			$db_name_short = $db_name;
 		}
 
-		$filepath = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
-		$db_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
+		$db_path = $document_root.PROJECT_PATH.'/secure';
 		$db_path = realpath($db_path);
 		if (file_exists($db_path.'/'.$db_name)) {
 			//echo "database file exists<br>";
