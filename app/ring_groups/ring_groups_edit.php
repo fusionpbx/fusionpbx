@@ -227,7 +227,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan_detail_group = '1';
 								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-								//<condition destination_number="500" />
+								//<action application="set" data="ring_group_uuid="/>
 								$dialplan_detail_tag = 'action'; //condition, action, antiaction
 								$dialplan_detail_type = 'set';
 								$dialplan_detail_data = 'ring_group_uuid='.$ring_group_uuid;
@@ -235,13 +235,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan_detail_group = '1';
 								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-								//<action application="answer" />
+								//<action application="set" data="ringback=${us-ring}"/>
+								$dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan_detail_type = 'set';
+								$dialplan_detail_data = 'ringback=${us-ring}';
+								$dialplan_detail_order = '020';
+								$dialplan_detail_group = '1';
+								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+								//<action application="lua" data="ring_group.lua"/>
 								$dialplan_detail_tag = 'action'; //condition, action, antiaction
 								//$dialplan_detail_type = 'transfer';
 								//$dialplan_detail_data = $ring_group_extension . ' LUA ring_group.lua';
 								$dialplan_detail_type = 'lua';
 								$dialplan_detail_data = 'ring_group.lua';
-								$dialplan_detail_order = '020';
+								$dialplan_detail_order = '030';
 								$dialplan_detail_group = '1';
 								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
