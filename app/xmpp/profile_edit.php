@@ -77,7 +77,7 @@ function hide_advanced_config() {
 			Password:
 		</td>
 		<td class='vtable' align='left'>
-			<input class='formfld' type='profile_password' name='profile_password' id='profile_password' maxlength='50' onfocus="document.getElementById('show_profile_password').innerHTML = 'Password: '+document.getElementById('profile_password').value;" value="<?php echo $profile['profile_password'];?>"> 
+			<input class='formfld' type='password' name='profile_password' id='profile_password' maxlength='50' onfocus="document.getElementById('show_profile_password').innerHTML = 'Password: '+document.getElementById('profile_password').value;" value="<?php echo $profile['profile_password'];?>"> 
 			<br />
 			<span onclick="document.getElementById('show_profile_password').innerHTML = ''">Enter the password here. </span><span id='show_profile_password'></span> 
 		</td>
@@ -105,7 +105,7 @@ function hide_advanced_config() {
 			<input class='formfld' type='text' name='xmpp_server' maxlength='255' value="<?php echo $profile['xmpp_server'];?>"> 
 			<br /> 
 			Enter alternate XMPP server if the server is not the same as the one in the Username<br />
-			Example GoogleTalk is: xmpp-server1.l.google.com
+			Example GoogleTalk is: talk.google.com
 		</td> 
 	</tr> 
 
