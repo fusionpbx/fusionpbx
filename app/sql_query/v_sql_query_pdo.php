@@ -23,7 +23,17 @@
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
  */
- 
+require_once "root.php";
+require_once "includes/require.php";
+require_once "includes/checkauth.php";
+if (if_group("admin") || if_group("superadmin")) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
  //set the default values
 	if (isset($db_file_path) > 0) {
 		$db_path = $db_file_path;
@@ -31,27 +41,23 @@
 	}
  
 //get the db connection information
-/*
-	if ($db) {
-		$sql = "";
-		$sql .= "select * from v_db ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and db_uuid = '".$_REQUEST['id']."' ";
+	if (strlen($_REQUEST['id']) > 0) {
+		$sql = "select * from v_databases ";
+		$sql .= "where database_uuid = '".$_REQUEST['id']."' ";
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$db_type = $row["db_type"];
-			$db_host = $row["db_host"];
-			$db_port = $row["db_port"];
-			$db_name = $row["db_name"];
-			$db_username = $row["db_username"];
-			$db_password = $row["db_password"];
-			$db_path = $row["db_path"];
+			$db_type = $row["database_type"];
+			$db_host = $row["database_host"];
+			$db_port = $row["database_port"];
+			$db_name = $row["database_name"];
+			$db_username = $row["database_username"];
+			$db_password = $row["database_password"];
+			$db_path = $row["database_path"];
 			break;
 		}
 	}
-*/
 
 //unset the database connection
 	unset($db);
@@ -221,5 +227,16 @@ if ($db_type == "pgsql") {
 		die();
 	}
 } //end if db_type pgsql
+
+if ($db_type == "odbc") {
+	//database connection
+		try {
+			unset($db);
+			$db = new PDO("odbc:$db_name", "$db_username", "$db_password");
+		}
+		catch (PDOException $e) {
+		   echo 'Connection failed: ' . $e->getMessage();
+		}
+} //end if db_type odbc
 
 ?>

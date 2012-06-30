@@ -60,8 +60,7 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "";
-		$sql .= " select count(*) as num_rows from v_databases ";
+		$sql = "select count(*) as num_rows from v_databases ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -84,10 +83,9 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the  list
-		$sql = "";
-		$sql .= " select * from v_databases ";
+		$sql = "select * from v_databases ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -110,7 +108,7 @@ require_once "includes/paging.php";
 	//echo th_order_by('database_path', 'Path', $order_by, $order);
 	echo th_order_by('database_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='21'>\n";
-	//echo "	<a href='db_edit.php' alt='add'>$v_link_label_add</a>\n";
+	//echo "	<a href='database_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -125,7 +123,7 @@ require_once "includes/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_path']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['database_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_sql_query.php?id=".$row['db_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='v_sql_query.php?id=".$row['database_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
