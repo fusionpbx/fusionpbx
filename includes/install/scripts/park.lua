@@ -224,6 +224,3 @@
 				cmd = "luarun park_monitor.lua "..uuid.." "..domain_name.." "..park_extension.." "..park_timeout_type.." "..park_timeout_seconds.." "..park_timeout_destination;
 				result = api:executeString(cmd);
 		end
-
---close the database connection
-	dbh:release();
