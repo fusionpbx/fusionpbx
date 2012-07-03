@@ -3005,311 +3005,313 @@ function save_dialplan_xml() {
 			unlink($value);
 		}
 
-	$sql = "select * from v_dialplans ";
-	$sql .= "where dialplan_enabled = 'true' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($result as &$row) {
-			$tmp = "";
-			$tmp .= "\n";
+	//if dialplan dir exists then build and save the dialplan xml
+		if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
+			$sql = "select * from v_dialplans ";
+			$sql .= "where dialplan_enabled = 'true' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+				foreach ($result as &$row) {
+					$tmp = "";
+					$tmp .= "\n";
 
-			$dialplan_continue = '';
-			if ($row['dialplan_continue'] == "true") {
-				$dialplan_continue = "continue=\"true\"";
-			}
+					$dialplan_continue = '';
+					if ($row['dialplan_continue'] == "true") {
+						$dialplan_continue = "continue=\"true\"";
+					}
 
-			$tmp = "<extension name=\"".$row['dialplan_name']."\" $dialplan_continue>\n";
+					$tmp = "<extension name=\"".$row['dialplan_name']."\" $dialplan_continue>\n";
 
-			$sql = " select * from v_dialplan_details ";
-			$sql .= " where dialplan_uuid = '".$row['dialplan_uuid']."' ";
-			$sql .= " and domain_uuid = '".$row['domain_uuid']."' ";
-			$sql .= " order by dialplan_detail_group asc, dialplan_detail_order asc ";
-			$prep_statement_2 = $db->prepare($sql);
-			if ($prep_statement_2) {
-				$prep_statement_2->execute();
-				$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-				$result_count2 = count($result2);
-				unset ($prep_statement_2, $sql);
+					$sql = " select * from v_dialplan_details ";
+					$sql .= " where dialplan_uuid = '".$row['dialplan_uuid']."' ";
+					$sql .= " and domain_uuid = '".$row['domain_uuid']."' ";
+					$sql .= " order by dialplan_detail_group asc, dialplan_detail_order asc ";
+					$prep_statement_2 = $db->prepare($sql);
+					if ($prep_statement_2) {
+						$prep_statement_2->execute();
+						$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+						$result_count2 = count($result2);
+						unset ($prep_statement_2, $sql);
 
-				//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
-					$details = '';
-					$previous_tag = '';
-					$details[$group]['condition_count'] = '';
-					//conditions
-						$x = 0;
-						$y = 0;
-						foreach($result2 as $row2) {
-							if ($row2['dialplan_detail_tag'] == "condition") {
-								//get the group
-									$group = $row2['dialplan_detail_group'];
-								//get the generic type
-									switch ($row2['dialplan_detail_type']) {
-									case "hour":
-										$type = 'time';
-										break;
-									case "minute":
-										$type = 'time';
-										break;
-									case "minute-of-day":
-										$type = 'time';
-										break;
-									case "mday":
-										$type = 'time';
-										break;
-									case "mweek":
-										$type = 'time';
-										break;
-									case "mon":
-										$type = 'time';
-										break;
-									case "yday":
-										$type = 'time';
-										break;
-									case "year":
-										$type = 'time';
-										break;
-									case "wday":
-										$type = 'time';
-										break;
-									case "week":
-										$type = 'time';
-										break;
-									default:
-										$type = 'default';
-									}
-
-								//add the conditions to the details array
-									$details[$group]['condition-'.$x]['dialplan_detail_tag'] = $row2['dialplan_detail_tag'];
-									$details[$group]['condition-'.$x]['dialplan_detail_type'] = $row2['dialplan_detail_type'];
-									$details[$group]['condition-'.$x]['dialplan_uuid'] = $row2['dialplan_uuid'];
-									$details[$group]['condition-'.$x]['dialplan_detail_order'] = $row2['dialplan_detail_order'];
-									$details[$group]['condition-'.$x]['field'][$y]['type'] = $row2['dialplan_detail_type'];
-									$details[$group]['condition-'.$x]['field'][$y]['data'] = $row2['dialplan_detail_data'];
-									$details[$group]['condition-'.$x]['dialplan_detail_break'] = $row2['dialplan_detail_break'];
-									$details[$group]['condition-'.$x]['dialplan_detail_group'] = $row2['dialplan_detail_group'];
-									$details[$group]['condition-'.$x]['dialplan_detail_inline'] = $row2['dialplan_detail_inline'];
-									if ($type == "time") {
-										$y++;
-									}
-							}
-							if ($type == "default") {
-								$x++;
+						//create a new array that is sorted into groups and put the tags in order conditions, actions, anti-actions
+							$details = '';
+							$previous_tag = '';
+							$details[$group]['condition_count'] = '';
+							//conditions
+								$x = 0;
 								$y = 0;
-							}
-						}
+								foreach($result2 as $row2) {
+									if ($row2['dialplan_detail_tag'] == "condition") {
+										//get the group
+											$group = $row2['dialplan_detail_group'];
+										//get the generic type
+											switch ($row2['dialplan_detail_type']) {
+											case "hour":
+												$type = 'time';
+												break;
+											case "minute":
+												$type = 'time';
+												break;
+											case "minute-of-day":
+												$type = 'time';
+												break;
+											case "mday":
+												$type = 'time';
+												break;
+											case "mweek":
+												$type = 'time';
+												break;
+											case "mon":
+												$type = 'time';
+												break;
+											case "yday":
+												$type = 'time';
+												break;
+											case "year":
+												$type = 'time';
+												break;
+											case "wday":
+												$type = 'time';
+												break;
+											case "week":
+												$type = 'time';
+												break;
+											default:
+												$type = 'default';
+											}
 
-					//actions
-						$x = 0;
-						foreach($result2 as $row2) {
-							if ($row2['dialplan_detail_tag'] == "action") {
-								$group = $row2['dialplan_detail_group'];
-								foreach ($row2 as $key => $val) {
-									$details[$group]['action-'.$x][$key] = $val;
-								}
-							}
-							$x++;
-						}
-					//anti-actions
-						$x = 0;
-						foreach($result2 as $row2) {
-							if ($row2['dialplan_detail_tag'] == "anti-action") {
-								$group = $row2['dialplan_detail_group'];
-								foreach ($row2 as $key => $val) {
-									$details[$group]['anti-action-'.$x][$key] = $val;
-								}
-							}
-							$x++;
-						}
-					unset($result2);
-			}
-
-			$i=1;
-			if ($result_count2 > 0) {
-				foreach($details as $group) {
-					$current_count = 0;
-					$x = 0;
-					foreach($group as $ent) {
-						$close_condition_tag = true;
-						if (empty($ent)) {
-							$close_condition_tag = false;
-						}
-						$current_tag = $ent['dialplan_detail_tag'];
-						$c = 0;
-						if ($ent['dialplan_detail_tag'] == "condition") {
-							//get the generic type
-								switch ($ent['dialplan_detail_type']) {
-								case "hour":
-									$type = 'time';
-									break;
-								case "minute":
-									$type = 'time';
-									break;
-								case "minute-of-day":
-									$type = 'time';
-									break;
-								case "mday":
-									$type = 'time';
-									break;
-								case "mweek":
-									$type = 'time';
-									break;
-								case "mon":
-									$type = 'time';
-									break;
-								case "yday":
-									$type = 'time';
-									break;
-								case "year":
-									$type = 'time';
-									break;
-								case "wday":
-									$type = 'time';
-									break;
-								case "week":
-									$type = 'time';
-									break;
-								default:
-									$type = 'default';
-								}
-
-							//set the attribute and expression
-								$condition_attribute = '';
-								foreach($ent['field'] as $field) {
-									if ($type == "time") {
-										if (strlen($field['type']) > 0) {
-											$condition_attribute .= $field['type'].'="'.$field['data'].'" ';
-										}
-										$condition_expression = '';
+										//add the conditions to the details array
+											$details[$group]['condition-'.$x]['dialplan_detail_tag'] = $row2['dialplan_detail_tag'];
+											$details[$group]['condition-'.$x]['dialplan_detail_type'] = $row2['dialplan_detail_type'];
+											$details[$group]['condition-'.$x]['dialplan_uuid'] = $row2['dialplan_uuid'];
+											$details[$group]['condition-'.$x]['dialplan_detail_order'] = $row2['dialplan_detail_order'];
+											$details[$group]['condition-'.$x]['field'][$y]['type'] = $row2['dialplan_detail_type'];
+											$details[$group]['condition-'.$x]['field'][$y]['data'] = $row2['dialplan_detail_data'];
+											$details[$group]['condition-'.$x]['dialplan_detail_break'] = $row2['dialplan_detail_break'];
+											$details[$group]['condition-'.$x]['dialplan_detail_group'] = $row2['dialplan_detail_group'];
+											$details[$group]['condition-'.$x]['dialplan_detail_inline'] = $row2['dialplan_detail_inline'];
+											if ($type == "time") {
+												$y++;
+											}
 									}
 									if ($type == "default") {
+										$x++;
+										$y = 0;
+									}
+								}
+
+							//actions
+								$x = 0;
+								foreach($result2 as $row2) {
+									if ($row2['dialplan_detail_tag'] == "action") {
+										$group = $row2['dialplan_detail_group'];
+										foreach ($row2 as $key => $val) {
+											$details[$group]['action-'.$x][$key] = $val;
+										}
+									}
+									$x++;
+								}
+							//anti-actions
+								$x = 0;
+								foreach($result2 as $row2) {
+									if ($row2['dialplan_detail_tag'] == "anti-action") {
+										$group = $row2['dialplan_detail_group'];
+										foreach ($row2 as $key => $val) {
+											$details[$group]['anti-action-'.$x][$key] = $val;
+										}
+									}
+									$x++;
+								}
+							unset($result2);
+					}
+
+					$i=1;
+					if ($result_count2 > 0) {
+						foreach($details as $group) {
+							$current_count = 0;
+							$x = 0;
+							foreach($group as $ent) {
+								$close_condition_tag = true;
+								if (empty($ent)) {
+									$close_condition_tag = false;
+								}
+								$current_tag = $ent['dialplan_detail_tag'];
+								$c = 0;
+								if ($ent['dialplan_detail_tag'] == "condition") {
+									//get the generic type
+										switch ($ent['dialplan_detail_type']) {
+										case "hour":
+											$type = 'time';
+											break;
+										case "minute":
+											$type = 'time';
+											break;
+										case "minute-of-day":
+											$type = 'time';
+											break;
+										case "mday":
+											$type = 'time';
+											break;
+										case "mweek":
+											$type = 'time';
+											break;
+										case "mon":
+											$type = 'time';
+											break;
+										case "yday":
+											$type = 'time';
+											break;
+										case "year":
+											$type = 'time';
+											break;
+										case "wday":
+											$type = 'time';
+											break;
+										case "week":
+											$type = 'time';
+											break;
+										default:
+											$type = 'default';
+										}
+
+									//set the attribute and expression
 										$condition_attribute = '';
-										if (strlen($field['type']) > 0) {
-											$condition_attribute = 'field="'.$field['type'].'" ';
+										foreach($ent['field'] as $field) {
+											if ($type == "time") {
+												if (strlen($field['type']) > 0) {
+													$condition_attribute .= $field['type'].'="'.$field['data'].'" ';
+												}
+												$condition_expression = '';
+											}
+											if ($type == "default") {
+												$condition_attribute = '';
+												if (strlen($field['type']) > 0) {
+													$condition_attribute = 'field="'.$field['type'].'" ';
+												}
+												$condition_expression = '';
+												if (strlen($field['data']) > 0) {
+													$condition_expression = 'expression="'.$field['data'].'" ';
+												}
+											}
 										}
-										$condition_expression = '';
-										if (strlen($field['data']) > 0) {
-											$condition_expression = 'expression="'.$field['data'].'" ';
+
+									//get the condition break attribute
+										$condition_break = '';
+										if (strlen($ent['dialplan_detail_break']) > 0) {
+											$condition_break = "break=\"".$ent['dialplan_detail_break']."\" ";
+										}
+
+									//get the count
+										$count = 0;
+										foreach($details as $group2) {
+											foreach($group2 as $ent2) {
+												if ($ent2['dialplan_detail_group'] == $ent['dialplan_detail_group'] && $ent2['dialplan_detail_tag'] == "condition") {
+													$count++;
+												}
+											}
+										}
+
+									//use the correct type of dialplan_detail_tag open or self closed
+										if ($count == 1) { //single condition
+											//start dialplan_detail_tag
+											$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break.">\n";
+										}
+										else { //more than one condition
+											$current_count++;
+											if ($current_count < $count) {
+												//all tags should be self-closing except the last one
+												$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break."/>\n";
+											}
+											else {
+												//for the last dialplan_detail_tag use the start dialplan_detail_tag
+												$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break.">\n";
+											}
+										}
+								}
+								//actions
+									if ($ent['dialplan_detail_tag'] == "action") {
+										//get the action inline attribute
+										$action_inline = '';
+										if (strlen($ent['dialplan_detail_inline']) > 0) {
+											$action_inline = "inline=\"".$ent['dialplan_detail_inline']."\"";
+										}
+										if (strlen($ent['dialplan_detail_data']) > 0) {
+											$tmp .= "       <action application=\"".$ent['dialplan_detail_type']."\" data=\"".$ent['dialplan_detail_data']."\" $action_inline/>\n";
+										}
+										else {
+											$tmp .= "       <action application=\"".$ent['dialplan_detail_type']."\" $action_inline/>\n";
 										}
 									}
-								}
-
-							//get the condition break attribute
-								$condition_break = '';
-								if (strlen($ent['dialplan_detail_break']) > 0) {
-									$condition_break = "break=\"".$ent['dialplan_detail_break']."\" ";
-								}
-
-							//get the count
-								$count = 0;
-								foreach($details as $group2) {
-									foreach($group2 as $ent2) {
-										if ($ent2['dialplan_detail_group'] == $ent['dialplan_detail_group'] && $ent2['dialplan_detail_tag'] == "condition") {
-											$count++;
+								//anti-actions
+									if ($ent['dialplan_detail_tag'] == "anti-action") {
+										if (strlen($ent['dialplan_detail_data']) > 0) {
+											$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\" data=\"".$ent['dialplan_detail_data']."\"/>\n";
+										}
+										else {
+											$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\"/>\n";
 										}
 									}
-								}
-
-							//use the correct type of dialplan_detail_tag open or self closed
-								if ($count == 1) { //single condition
-									//start dialplan_detail_tag
-									$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break.">\n";
-								}
-								else { //more than one condition
-									$current_count++;
-									if ($current_count < $count) {
-										//all tags should be self-closing except the last one
-										$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break."/>\n";
-									}
-									else {
-										//for the last dialplan_detail_tag use the start dialplan_detail_tag
-										$tmp .= "   <condition ".$condition_attribute."".$condition_expression."".$condition_break.">\n";
-									}
-								}
-						}
-						//actions
-							if ($ent['dialplan_detail_tag'] == "action") {
-								//get the action inline attribute
-								$action_inline = '';
-								if (strlen($ent['dialplan_detail_inline']) > 0) {
-									$action_inline = "inline=\"".$ent['dialplan_detail_inline']."\"";
-								}
-								if (strlen($ent['dialplan_detail_data']) > 0) {
-									$tmp .= "       <action application=\"".$ent['dialplan_detail_type']."\" data=\"".$ent['dialplan_detail_data']."\" $action_inline/>\n";
-								}
-								else {
-									$tmp .= "       <action application=\"".$ent['dialplan_detail_type']."\" $action_inline/>\n";
-								}
+								//set the previous dialplan_detail_tag
+									$previous_tag = $ent['dialplan_detail_tag'];
+								$i++;
+							} //end foreach
+							if ($close_condition_tag == true) {
+								$tmp .= "   </condition>\n";
 							}
-						//anti-actions
-							if ($ent['dialplan_detail_tag'] == "anti-action") {
-								if (strlen($ent['dialplan_detail_data']) > 0) {
-									$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\" data=\"".$ent['dialplan_detail_data']."\"/>\n";
-								}
-								else {
-									$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\"/>\n";
-								}
-							}
-						//set the previous dialplan_detail_tag
-							$previous_tag = $ent['dialplan_detail_tag'];
-						$i++;
-					} //end foreach
-					if ($close_condition_tag == true) {
-						$tmp .= "   </condition>\n";
-					}
-					$x++;
-				}
-				if ($condition_count > 0) {
-					$condition_count = $result_count2;
-				}
-				unset($sql, $result_count2, $result2, $row_count2);
-			} //end if results
-			$tmp .= "</extension>\n";
-
-			$dialplan_order = $row['dialplan_order'];
-			if (strlen($dialplan_order) == 0) { $dialplan_order = "000".$dialplan_order; }
-			if (strlen($dialplan_order) == 1) { $dialplan_order = "00".$dialplan_order; }
-			if (strlen($dialplan_order) == 2) { $dialplan_order = "0".$dialplan_order; }
-			if (strlen($dialplan_order) == 4) { $dialplan_order = "999"; }
-			if (strlen($dialplan_order) == 5) { $dialplan_order = "999"; }
-
-			//remove invalid characters from the file names
-			$dialplan_name = $row['dialplan_name'];
-			$dialplan_name = str_replace(" ", "_", $dialplan_name);
-			$dialplan_name = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $dialplan_name);
-
-			$dialplan_filename = $dialplan_order."_v_".$dialplan_name.".xml";
-			if (strlen($row['dialplan_context']) > 0) {
-				if (!is_dir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'])) {
-					mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'],0755,true);
-				}
-				if ($row['dialplan_context'] == "public") {
-					if (count($_SESSION['domains']) > 1) {
-						if (!is_dir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
-							mkdir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'],0755,true);
+							$x++;
 						}
-						file_put_contents($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."/".$dialplan_filename, $tmp);
+						if ($condition_count > 0) {
+							$condition_count = $result_count2;
+						}
+						unset($sql, $result_count2, $result2, $row_count2);
+					} //end if results
+					$tmp .= "</extension>\n";
+
+					$dialplan_order = $row['dialplan_order'];
+					if (strlen($dialplan_order) == 0) { $dialplan_order = "000".$dialplan_order; }
+					if (strlen($dialplan_order) == 1) { $dialplan_order = "00".$dialplan_order; }
+					if (strlen($dialplan_order) == 2) { $dialplan_order = "0".$dialplan_order; }
+					if (strlen($dialplan_order) == 4) { $dialplan_order = "999"; }
+					if (strlen($dialplan_order) == 5) { $dialplan_order = "999"; }
+
+					//remove invalid characters from the file names
+					$dialplan_name = $row['dialplan_name'];
+					$dialplan_name = str_replace(" ", "_", $dialplan_name);
+					$dialplan_name = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $dialplan_name);
+
+					$dialplan_filename = $dialplan_order."_v_".$dialplan_name.".xml";
+					if (strlen($row['dialplan_context']) > 0) {
+						if (!is_dir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'])) {
+							mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'],0755,true);
+						}
+						if ($row['dialplan_context'] == "public") {
+							if (count($_SESSION['domains']) > 1) {
+								if (!is_dir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
+									mkdir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'],0755,true);
+								}
+								file_put_contents($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."/".$dialplan_filename, $tmp);
+							}
+							else {
+								file_put_contents($_SESSION['switch']['dialplan']['dir']."/public/".$dialplan_filename, $tmp);
+							}
+						}
+						else {
+							if (!is_dir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'])) {
+								mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'],0755,true);
+							}
+							file_put_contents($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context']."/".$dialplan_filename, $tmp);
+						}
 					}
-					else {
-						file_put_contents($_SESSION['switch']['dialplan']['dir']."/public/".$dialplan_filename, $tmp);
-					}
-				}
-				else {
-					if (!is_dir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'])) {
-						mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'],0755,true);
-					}
-					file_put_contents($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context']."/".$dialplan_filename, $tmp);
-				}
+					unset($dialplan_filename);
+					unset($tmp);
+				} //end while
+
+				//apply settings reminder
+					$_SESSION["reload_xml"] = true;
 			}
-
-			unset($dialplan_filename);
-			unset($tmp);
-		} //end while
-	}
-
-	//apply settings reminder
-		$_SESSION["reload_xml"] = true;
+		} //end if (is_dir($_SESSION['switch']['dialplan']['dir']))
 }
 
 
