@@ -75,9 +75,6 @@
 		x = x + 1;
 	end);
 
---close the database connection
-	dbh:release();
-
 --app_data
 	--freeswitch.consoleLog("notice", "Debug:\n" .. app_data .. "\n");
 
