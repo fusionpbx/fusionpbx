@@ -193,10 +193,13 @@ else {
 								}
 							}
 
+						//create a mac address with back slashes for backwards compatability
+							$mac_dash = substr($phone_mac_address, 0,2).'-'.substr($phone_mac_address, 2,2).'-'.substr($phone_mac_address, 4,2).'-'.substr($phone_mac_address, 6,2).'-'.substr($phone_mac_address, 8,2).'-'.substr($phone_mac_address, 10,2);
+
 						//lookup the provisioning information for this MAC address.
 							$sql2 = "select * from v_extensions ";
-							$sql2 .= "where provisioning_list like '%$phone_mac_address%' ";
-							$sql2 .= "and domain_uuid = '$domain_uuid' ";
+							$sql2 .= "where domain_uuid = '$domain_uuid' ";
+							$sql2 .= "and (provisioning_list like '%|".$phone_mac_address.":%' or provisioning_list like '%|".$mac_dash.":%') ";
 							$sql2 .= "and enabled = 'true' ";
 							$prep_statement_2 = $db->prepare(check_sql($sql2));
 							$prep_statement_2->execute();

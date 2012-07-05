@@ -295,10 +295,13 @@ require_once "includes/require.php";
 			$file_contents = str_replace("{v_time_zone_offset}", $time_zone_offset, $file_contents);
 		}
 
+	//create a mac address with back slashes for backwards compatability
+		$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+
 	//lookup the provisioning information for this MAC address.
 		$sql = "select * from v_extensions ";
-		$sql .= "where provisioning_list like '%|".$mac.":%' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and (provisioning_list like '%|".$mac.":%' or provisioning_list like '%|".$mac_dash.":%') ";
 		$sql .= "and enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
