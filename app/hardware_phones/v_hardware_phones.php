@@ -59,8 +59,7 @@ echo "</td>\n";
 echo "</tr>\n";
 echo "</tr></table>\n";
 
-$sql = "";
-$sql .= " select * from v_hardware_phones ";
+$sql = "select * from v_hardware_phones ";
 $sql .= " where domain_uuid = '$domain_uuid' ";
 if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 $prep_statement = $db->prepare(check_sql($sql));
@@ -75,8 +74,7 @@ if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 $offset = $rows_per_page * $page; 
 
-$sql = "";
-$sql .= " select * from v_hardware_phones ";
+$sql = " select * from v_hardware_phones ";
 $sql .= " where domain_uuid = '$domain_uuid' ";
 if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 $sql .= " limit $rows_per_page offset $offset ";
@@ -106,23 +104,24 @@ if (permission_exists('phone_add')) {
 echo "</td>\n";
 echo "<tr>\n";
 
-if ($result_count == 0) { //no results
-}
-else { //received results
+if ($result_count > 0) { //no results
 	foreach($result as $row) {
+		$phone_mac_address = $row[phone_mac_address];
+		$phone_mac_address = substr($phone_mac_address, 0,2).'-'.substr($phone_mac_address, 2,2).'-'.substr($phone_mac_address, 4,2).'-'.substr($phone_mac_address, 6,2).'-'.substr($phone_mac_address, 8,2).'-'.substr($phone_mac_address, 10,2);
+
 		echo "<tr >\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row[phone_mac_address]."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row[phone_template]."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row[phone_vendor]."&nbsp;</td>\n";
-		//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[phone_model]."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' width='10px'>".$row[phone_provision_enable]."&nbsp;</td>\n";
-		echo "	<td valign='top' class='row_stylebg'>".$row[phone_description]."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$phone_mac_address."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phone_template']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phone_vendor']."&nbsp;</td>\n";
+		//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phone_mode'l]."&nbsp;</td>\n";
+		echo "	<td valign='top' class='".$row_style[$c]."' width='10px'>".$row['phone_provision_enable']."&nbsp;</td>\n";
+		echo "	<td valign='top' class='row_stylebg'>".$row['phone_description']."&nbsp;</td>\n";
 		echo "	<td valign='top' align='right'>\n";
 		if (permission_exists('phone_edit')) {
-			echo "		<a href='v_hardware_phones_edit.php?id=".$row[hardware_phone_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='v_hardware_phones_edit.php?id=".$row['hardware_phone_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 		}
 		if (permission_exists('phone_delete')) {
-			echo "		<a href='v_hardware_phones_delete.php?id=".$row[hardware_phone_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='v_hardware_phones_delete.php?id=".$row['hardware_phone_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
