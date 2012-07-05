@@ -33,7 +33,7 @@ require_once "includes/require.php";
 	$phone_template = '';
 
 //get any system -> variables defined in the 'provision;
-	$sql .= "select * from v_vars ";
+	$sql = "select * from v_vars ";
 	$sql .= "where var_enabled = 'true' ";
 	$sql .= "and var_cat = 'Provision' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -53,7 +53,7 @@ require_once "includes/require.php";
 	if (strlen($password) > 0) {
 		//deny access if the password doesn't match
 			if ($password != $_REQUEST['password']) {
-				//Log the failed auth attempt to the system, to be available for fail2ban.
+				//log the failed auth attempt to the system, to be available for fail2ban.
 				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".$_REQUEST['mac']);
 				closelog();
@@ -73,24 +73,55 @@ require_once "includes/require.php";
 		}
 	}
 
-//define variables from HTTP GET
+//define PHP variables from the HTTP values
 	$mac = $_REQUEST['mac'];
+	$file = $_REQUEST['file'];
 	if (strlen($_REQUEST['template']) > 0) {
 		$phone_template = $_REQUEST['template'];
 	}
 
-	if(empty($mac)){//check alternate MAC source
-		if($_SERVER['HTTP_USER_AGENT'][strlen($_SERVER['HTTP_USER_AGENT'])-17-1]==" ") {
-			$mac= substr($_SERVER['HTTP_USER_AGENT'],-17);
-			}//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
-		}//check alternates
+//check alternate MAC source
+	if (empty($mac)){
+		if($_SERVER['HTTP_USER_AGENT'][strlen($_SERVER['HTTP_USER_AGENT'])-17-1] == " ") {
+			$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+		} //Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
+	}//check alternates
 
+//prepare the mac address
 	$mac = strtolower($mac);
-	$mac = str_replace(":", "-", $mac);
-	if (strlen($mac) == 12) { 
-		$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+	$mac = preg_replace('#[^a-fA-F0-9./]#', '', $mac);
+
+//use the mac address to find the vendor
+	switch (substr($mac, 0, 6)) {
+	case "00085d":
+		$phone_vendor = "aastra";
+		break;
+	case "000e08":
+		$phone_vendor = "linksys";
+		break;
+	case "0004f2":
+		$phone_vendor = "polycom";
+		break;
+	case "00907a":
+		$phone_vendor = "polycom";
+		break;
+	case "001873":
+		$phone_vendor = "cisco";
+		break;
+	case "00045a":
+		$phone_vendor = "linksys";
+		break;
+	case "000625":
+		$phone_vendor = "linksys";
+		break;
+	case "001565":
+		$phone_vendor = "yealink";
+		break;
+	case "000413":
+		$phone_vendor = "snom";
+	default:
+		$phone_vendor = "";
 	}
-	$file = $_REQUEST['file'];
 
 //check to see if the mac_address exists in v_hardware_phones
 	if (mac_exists_in_v_hardware_phones($db, $mac)) {
@@ -106,7 +137,9 @@ require_once "includes/require.php";
 					$prep_statement_2->execute();
 					$row = $prep_statement_2->fetch();
 					$phone_label = $row["phone_label"];
-					$phone_vendor = $row["phone_vendor"];
+					if (strlen($row["phone_vendor"]) > 0) {
+						$phone_vendor = $row["phone_vendor"];
+					}
 					$phone_model = $row["phone_model"];
 					$phone_firmware_version = $row["phone_firmware_version"];
 					$phone_provision_enable = $row["phone_provision_enable"];
@@ -142,37 +175,6 @@ require_once "includes/require.php";
 			}
 	}
 	else {
-		//mac does not exist in v_hardware_phones add it to the table
-		//use the mac address to find the vendor
-			switch (substr($mac, 0, 8)) {
-			case "00-08-5d":
-				$phone_vendor = "aastra";
-				break;
-			case "00-0e-08":
-				$phone_vendor = "linksys";
-				break;
-			case "00-04-f2":
-				$phone_vendor = "polycom";
-				break;
-			case "00-90-7a":
-				$phone_vendor = "polycom";
-				break;
-			case "00-18-73":
-				$phone_vendor = "cisco";
-				break;
-			case "00-04-5a":
-				$phone_vendor = "linksys";
-				break;
-			case "00-06-25":
-				$phone_vendor = "linksys";
-				break;
-			case "00-15-65":
-				$phone_vendor = "yealink";
-				break;
-			default:
-				$phone_vendor = "";
-			}
-
 		//use the user_agent to pre-assign a template for 1-hit provisioning. Enter the a unique string to match in the user agent, and the template it should match.
 			$template_list=array(  
 					"Linksys/SPA-2102"=>"linksys/spa2102",
@@ -187,7 +189,7 @@ require_once "includes/require.php";
 			}
 			unset($template_list);
 
-		//the mac address does not exist in the table so add it
+		//mac address does not exist in the table so add it
 			$hardware_phone_uuid = uuid();
 			$sql = "insert into v_hardware_phones ";
 			$sql .= "(";
@@ -297,6 +299,7 @@ require_once "includes/require.php";
 		$sql = "select * from v_extensions ";
 		$sql .= "where provisioning_list like '%|".$mac.":%' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
+		$sql .= "and enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -333,6 +336,19 @@ require_once "includes/require.php";
 			//$description = $row["description"];
 		}
 		unset ($prep_statement);
+
+	//set the mac address in the correct format
+		switch ($phone_vendor) {
+		case "aastra":
+			$mac = strtoupper($mac);
+			break;
+		case "snom":
+			$mac = strtoupper($mac);
+			$mac = str_replace("-", "", $mac);
+		default:
+			$mac = strtolower($mac);
+			$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+		}
 
 	//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 		$file_contents = str_replace("{v_mac}", $mac, $file_contents);

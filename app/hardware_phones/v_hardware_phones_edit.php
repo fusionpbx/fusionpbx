@@ -48,6 +48,7 @@ require_once "includes/require.php";
 	if (count($_POST)>0) {
 		$phone_mac_address = check_str($_POST["phone_mac_address"]);
 		$phone_mac_address = strtolower($phone_mac_address);
+		$phone_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $phone_mac_address);
 		$phone_label = check_str($_POST["phone_label"]);
 		$phone_vendor = check_str($_POST["phone_vendor"]);
 		$phone_model = check_str($_POST["phone_model"]);
@@ -58,6 +59,40 @@ require_once "includes/require.php";
 		$phone_password = check_str($_POST["phone_password"]);
 		$phone_time_zone = check_str($_POST["phone_time_zone"]);
 		$phone_description = check_str($_POST["phone_description"]);
+	}
+
+//use the mac address to find the vendor
+	if (strlen($phone_vendor) == 0) {
+		switch (substr($phone_mac_address, 0, 6)) {
+		case "00085d":
+			$phone_vendor = "aastra";
+			break;
+		case "000e08":
+			$phone_vendor = "linksys";
+			break;
+		case "0004f2":
+			$phone_vendor = "polycom";
+			break;
+		case "00907a":
+			$phone_vendor = "polycom";
+			break;
+		case "001873":
+			$phone_vendor = "cisco";
+			break;
+		case "00045a":
+			$phone_vendor = "linksys";
+			break;
+		case "000625":
+			$phone_vendor = "linksys";
+			break;
+		case "001565":
+			$phone_vendor = "yealink";
+			break;
+		case "000413":
+			$phone_vendor = "snom";
+		default:
+			$phone_vendor = "";
+		}
 	}
 
 //add or update the database
@@ -183,8 +218,7 @@ require_once "includes/require.php";
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$hardware_phone_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_hardware_phones ";
+		$sql = "select * from v_hardware_phones ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and hardware_phone_uuid = '$hardware_phone_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -192,7 +226,7 @@ require_once "includes/require.php";
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$phone_mac_address = $row["phone_mac_address"];
-			$phone_mac_address = strtolower($phone_mac_address);
+			$phone_mac_address = substr($phone_mac_address, 0,2).'-'.substr($phone_mac_address, 2,2).'-'.substr($phone_mac_address, 4,2).'-'.substr($phone_mac_address, 6,2).'-'.substr($phone_mac_address, 8,2).'-'.substr($phone_mac_address, 10,2);
 			$phone_label = $row["phone_label"];
 			$phone_vendor = $row["phone_vendor"];
 			$phone_model = $row["phone_model"];
@@ -203,7 +237,6 @@ require_once "includes/require.php";
 			$phone_password = $row["phone_password"];
 			$phone_time_zone = $row["phone_time_zone"];
 			$phone_description = $row["phone_description"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -213,14 +246,11 @@ require_once "includes/require.php";
 
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "	  <br>";
 
-
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 

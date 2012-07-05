@@ -62,7 +62,6 @@ else {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		$phone_mac_address = $row["phone_mac_address"];
-		$phone_mac_address = strtolower($phone_mac_address);
 		$phone_label = $row["phone_label"];
 		$phone_vendor = $row["phone_vendor"];
 		$phone_model = $row["phone_model"];
@@ -73,6 +72,53 @@ else {
 		$phone_password = $row["phone_password"];
 		$phone_time_zone = $row["phone_time_zone"];
 		$phone_description = $row["phone_description"];
+
+		//use the mac address to find the vendor
+			if (strlen($phone_vendor) == 0) {
+				switch (substr($phone_mac_address, 0, 6)) {
+				case "00085d":
+					$phone_vendor = "aastra";
+					break;
+				case "000e08":
+					$phone_vendor = "linksys";
+					break;
+				case "0004f2":
+					$phone_vendor = "polycom";
+					break;
+				case "00907a":
+					$phone_vendor = "polycom";
+					break;
+				case "001873":
+					$phone_vendor = "cisco";
+					break;
+				case "00045a":
+					$phone_vendor = "linksys";
+					break;
+				case "000625":
+					$phone_vendor = "linksys";
+					break;
+				case "001565":
+					$phone_vendor = "yealink";
+					break;
+				case "000413":
+					$phone_vendor = "snom";
+				default:
+					$phone_vendor = "";
+				}
+			}
+
+		//set the mac address in the correct format
+			switch ($phone_vendor) {
+			case "aastra":
+				$mac = strtoupper($mac);
+				break;
+			case "snom":
+				$mac = strtoupper($mac);
+				$mac = str_replace("-", "", $mac);
+			default:
+				$mac = strtolower($mac);
+				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+			}
 
 		//loop through the provision template directory
 			$provision_template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$phone_template;
@@ -151,6 +197,7 @@ else {
 							$sql2 = "select * from v_extensions ";
 							$sql2 .= "where provisioning_list like '%$phone_mac_address%' ";
 							$sql2 .= "and domain_uuid = '$domain_uuid' ";
+							$sql2 .= "and enabled = 'true' ";
 							$prep_statement_2 = $db->prepare(check_sql($sql2));
 							$prep_statement_2->execute();
 							$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);

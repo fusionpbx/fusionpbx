@@ -916,18 +916,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<option value=''></option>\n";
 
 	foreach($result as $row) {
+		$phone_mac_address = $row['phone_mac_address'];
+		$phone_mac_address = substr($phone_mac_address, 0,2).'-'.substr($phone_mac_address, 2,2).'-'.substr($phone_mac_address, 4,2).'-'.substr($phone_mac_address, 6,2).'-'.substr($phone_mac_address, 8,2).'-'.substr($phone_mac_address, 10,2);
 		if ($row['phone_mac_address'] == $select_mac_address) {
-			echo "<option value='".$row['phone_mac_address']."' selected>".$row['phone_mac_address']." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
+			echo "<option value='".$row['phone_mac_address']."' selected>".$phone_mac_address." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
 		}
 		else {
-			echo "<option value='".$row['phone_mac_address']."'>".$row['phone_mac_address']." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
+			echo "<option value='".$row['phone_mac_address']."'>".$phone_mac_address." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
 		}
-		//$row[phone_mac_address]
-		//$row[phone_vendor]
-		//$row[phone_model]
-		//$row[phone_provision_enable]
-		//$row[phone_description]
-		//$row[hardware_phone_uuid]
 	} //end foreach
 	unset($sql, $result, $row_count);
 	echo "</select>\n";
