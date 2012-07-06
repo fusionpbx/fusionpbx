@@ -42,6 +42,7 @@
 	local key    = params:getHeader("key");
 	local user   = params:getHeader("user");
 	local user_context = params:getHeader("variable_user_context");
+	local call_context = params:getHeader("Caller-Context");
 	local destination_number = params:getHeader("Caller-Destination-Number");
 	local caller_id_number = params:getHeader("Caller-Caller-ID-Number");
 
@@ -297,21 +298,208 @@
 
 --handle the dialplan
 	if (XML_REQUEST["section"] == "dialplan") then
-		--freeswitch.consoleLog("notice", "[xml_handler] Dialplan: " .. purpose .. " " .. profile .."\n");
-		XML_STRING_disabled = [[
-			<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-			<document type="freeswitch/xml">
-				<section name="dialplan" description="">
-					<context name="www.fusionpbx.com">
-						<extension name="example" continue="true">
-							<condition break="never">
-								<action application="info" data=""/>
-							</condition>
-						</extension>
-					</context>
-				</section>
-			</document>
-		]]
+		if (debug["params"]) then
+			freeswitch.consoleLog("notice", "[xml_handler] Params:\n" .. params:serialize() .. "\n");
+		end
+		--set the xml array and then concatenate the array to a string
+			local xml = {}
+			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+			table.insert(xml, [[<document type="freeswitch/xml">]]);
+			table.insert(xml, [[	<section name="dialplan" description="">]]);
+			table.insert(xml, [[		<context name="]] .. call_context .. [[">]]);
+
+		--set defaults
+			previous_dialplan_uuid = "";
+			previous_dialplan_detail_group = "";
+			previous_dialplan_detail_tag = "";
+			dialplan_tag_status = "closed";
+			condition_tag_status = "closed";
+
+		--get the dialplan and related details
+			sql = "select * from v_dialplans as d, v_dialplan_details as s ";
+			sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
+			sql = sql .. "and d.dialplan_enabled = 'true' ";
+			sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
+			sql = sql .. "order by ";
+			sql = sql .. "d.dialplan_order asc, ";
+			sql = sql .. "d.dialplan_name asc, ";
+			sql = sql .. "s.dialplan_detail_group asc, ";
+			sql = sql .. "CASE s.dialplan_detail_tag ";
+			sql = sql .. "WHEN 'condition' THEN 1 ";
+			sql = sql .. "WHEN 'action' THEN 2 ";
+			sql = sql .. "WHEN 'anti-action' THEN 3 ";
+			sql = sql .. "ELSE 100 END, ";
+			sql = sql .. "s.dialplan_detail_order asc ";
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+			end
+			x = 0;
+			dbh:query(sql, function(row)
+				--get the dialplan
+					--domain_uuid = row.domain_uuid;
+					dialplan_uuid = row.dialplan_uuid;
+					--app_uuid = row.app_uuid;
+					--dialplan_context = row.dialplan_context;
+					dialplan_name = row.dialplan_name;
+					--dialplan_number = row.dialplan_number;
+					dialplan_continue = row.dialplan_continue;
+					--dialplan_order = row.dialplan_order;
+					--dialplan_enabled = row.dialplan_enabled;
+					--dialplan_description = row.dialplan_description;
+				--get the dialplan details
+					--dialplan_detail_uuid = row.dialplan_detail_uuid;
+					dialplan_detail_tag = row.dialplan_detail_tag;
+					dialplan_detail_type = row.dialplan_detail_type;
+					dialplan_detail_data = row.dialplan_detail_data;
+					dialplan_detail_break = row.dialplan_detail_break;
+					dialplan_detail_inline = row.dialplan_detail_inline;
+					dialplan_detail_group = row.dialplan_detail_group;
+					--dialplan_detail_order = row.dialplan_detail_order;
+
+				--remove $$ and replace with $
+					dialplan_detail_data = dialplan_detail_data:gsub("%$%$", "$");
+
+				--get the dialplan  detail inline
+					detail_inline = "";
+					if (dialplan_detail_inline) then
+						if (string.len(dialplan_detail_inline) > 0) then
+							detail_inline = [[ inline="]] .. dialplan_detail_inline .. [["]];
+						end
+					end
+
+				--close the tags
+					if (condition_tag_status ~= "closed") then
+						if (previous_dialplan_uuid ~= dialplan_uuid) then
+							table.insert(xml, [[				</condition>]]);
+							table.insert(xml, [[			</extension>]]);
+							dialplan_tag_status = "closed";
+							condition_tag_status = "closed";
+						else
+							if (previous_dialplan_detail_group ~= dialplan_detail_group and previous_dialplan_detail_tag == "condition") then
+								table.insert(xml, [[			</condition>]]);
+								condition_tag_status = "closed";
+							end
+						end
+					end
+
+				--open the tags
+					if (dialplan_tag_status == "closed") then
+						table.insert(xml, [[			<extension name="]] .. dialplan_name .. [[" continue="]] .. dialplan_continue .. [[">]]);
+						dialplan_tag_status = "open";
+					end
+					if (dialplan_detail_tag == "condition") then
+						--determine the type of condition
+							if (dialplan_detail_type == "hour") then
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "minute") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "minute-of-day") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "mday") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "mweek") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "mon") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "yday") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "year") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "wday") then 
+								condition_type = 'time';
+							elseif (dialplan_detail_type == "week") then 
+								condition_type = 'time';
+							else
+								condition_type = 'default';
+							end
+
+						--get the condition break attribute
+							condition_break = "";
+							if (dialplan_detail_break) then
+								if (string.len(dialplan_detail_break) > 0) then
+									condition_break = [[ break="]] .. dialplan_detail_break .. [["]];
+								end
+							end
+
+						if (condition_tag_status == "open") then
+							if (previous_dialplan_detail_tag == "condition") then
+								--add the condition ending
+								if (condition) then
+									if (string.len(condition) > 0) then
+										table.insert(xml, condition .. [[ />]]);
+									end
+								end
+							end
+							if (previous_dialplan_detail_tag == "action" or previous_dialplan_detail_tag == "anti-action") then
+								table.insert(xml, [[				</condition>]]);
+								condition_tag_status = "closed";
+								condition_type = "";
+								condition_attribute = "";
+								condition_expression = "";
+							end
+						end
+
+						--condition tag but leave off the ending
+						if (condition_type == "default") then
+							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]];
+						elseif (condition_type == "time") then
+							if (condition_attribute) then
+								condition_attribute = condition_attribute .. dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
+							else
+								condition_attribute = dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
+							end
+							condition_expression = "";
+							condition = "";
+						end
+						condition_tag_status = "open";
+					end
+					if (dialplan_detail_tag == "action" or dialplan_detail_tag == "anti-action") then
+						if (previous_dialplan_detail_tag == "condition") then
+							--add the condition ending
+							if (condition_type == "time") then
+								condition = [[				<condition ]] .. condition_attribute;
+							end
+							table.insert(xml, condition .. condition_break .. [[>]]);
+						end
+					end
+					if (dialplan_detail_tag == "action") then
+						table.insert(xml, [[					<action application="]] .. dialplan_detail_type .. [[" data="]] .. dialplan_detail_data .. [["]] .. detail_inline .. [[/>]]);
+					end
+					if (dialplan_detail_tag == "anti-action") then
+						table.insert(xml, [[					<anti-action application="]] .. dialplan_detail_type .. [[" data="]] .. dialplan_detail_data .. [["]] .. detail_inline .. [[/>]]);
+					end
+
+				--save the previous group
+					previous_dialplan_detail_group = dialplan_detail_group;
+
+				--save the previous tag
+					previous_dialplan_detail_tag = dialplan_detail_tag;
+
+				--save the previous dialplan_uuid
+					previous_dialplan_uuid = dialplan_uuid;
+
+				--increment the x
+					x = x + 1;
+			end);
+
+		--close the extension tag if it was left open
+			if (dialplan_tag_status == "open") then
+				table.insert(xml, [[				</condition>]]);
+				table.insert(xml, [[			</extension>]]);
+			end
+
+		--set the xml array and then concatenate the array to a string
+			table.insert(xml, [[		</context>]]);
+			table.insert(xml, [[	</section>]]);
+			table.insert(xml, [[</document>]]);
+			XML_STRING = table.concat(xml, "\n");
+
+		--send the xml to the console
+			if (debug["xml_string"]) then
+				local file = assert(io.open("/tmp/dialplan.xml", "w"));
+				file:write(XML_STRING);
+				file:close();
+			end
 	end
 
 --send debug info to the console
