@@ -3,6 +3,6 @@
 	<condition field="destination_number" expression="^\*97$">
 		<action application="answer"/>
 		<action application="sleep" data="1000"/>
-		<action application="voicemail" data="check default ${domain_name} ${sip_from_user}"/>
+		<action application="voicemail" data="check default ${domain_name} ${caller_id_number}"/>
 	</condition>
 </extension>

@@ -133,10 +133,10 @@ function process_xml_cdr($db, $leg, $xml_string) {
 	//store the call leg
 		$database->fields['leg'] = $leg;
 
-	//store the call direction.
+	//store the call direction
 		$database->fields['direction'] = check_str(urldecode($xml->variables->call_direction));
 
-	//store post dial delay, in milliseconds.
+	//store post dial delay, in milliseconds
 		$database->fields['pdd_ms'] = check_str(urldecode($xml->variables->progress_mediamsec) + urldecode($xml->variables->progressmsec));
 
 	//get break down the date to year, month and day
@@ -145,23 +145,30 @@ function process_xml_cdr($db, $leg, $xml_string) {
 		$tmp_month = date("M", $tmp_time);
 		$tmp_day = date("d", $tmp_time);
 
-	//find the domain_uuid by using the domain_name
+	//get the domain values from the xml
 		$domain_name = check_str(urldecode($xml->variables->domain_name));
-		$sql = "select domain_uuid from v_domains ";
-		if (strlen($domain_name) == 0 && $context != 'public' && $context != 'default') {
-			$sql .= "where domain_name = '".$context."' ";
-		}
-		else {
-			$sql .= "where domain_name = '".$domain_name."' ";
-		}
-		$row = $db->query($sql)->fetch();
-		$domain_uuid = $row['domain_uuid'];
+		$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
+
+	//get the domain_uuid with the domain_name
 		if (strlen($domain_uuid) == 0) {
-			$sql = "select domain_name, domain_uuid from v_domains ";
+			$sql = "select domain_uuid from v_domains ";
+			if (strlen($domain_name) == 0 && $context != 'public' && $context != 'default') {
+				$sql .= "where domain_name = '".$context."' ";
+			}
+			else {
+				$sql .= "where domain_name = '".$domain_name."' ";
+			}
 			$row = $db->query($sql)->fetch();
 			$domain_uuid = $row['domain_uuid'];
-			if (strlen($domain_name) == 0) { $domain_name = $row['domain_name']; }
+			if (strlen($domain_uuid) == 0) {
+				$sql = "select domain_name, domain_uuid from v_domains ";
+				$row = $db->query($sql)->fetch();
+				$domain_uuid = $row['domain_uuid'];
+				if (strlen($domain_name) == 0) { $domain_name = $row['domain_name']; }
+			}
 		}
+
+	//set values in the database
 		$database->domain_uuid = $domain_uuid;
 		$database->fields['domain_uuid'] = $domain_uuid;
 		$database->fields['domain_name'] = $domain_name;
