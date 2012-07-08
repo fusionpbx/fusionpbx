@@ -25,6 +25,8 @@
 */
 
 //if the recordings directory doesn't exist then create it
-	if (!is_readable($_SESSION['switch']['recordings']['dir'])) { mkdir($_SESSION['switch']['recordings']['dir'],0777,true); }
+	if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+		if (!is_readable($_SESSION['switch']['recordings']['dir'])) { mkdir($_SESSION['switch']['recordings']['dir'],0777,true); }
+	}
 
 ?>
