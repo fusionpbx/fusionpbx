@@ -70,22 +70,22 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 		}
 		$tmp .= "\n";
 		$tmp .= "--database connection info\n";
-		if (strlen($db_type) > 0) {	
+		if (strlen($db_type) > 0) {
 			$tmp .= "	db_type = \"".$db_type."\";\n";
 		}
-		if (strlen($db_name) > 0) {	
+		if (strlen($db_name) > 0) {
 			$tmp .= "	db_name = \"".$db_name."\";\n";
 		}
-		if (strlen($db_path) > 0) {	
+		if (strlen($db_path) > 0) {
 			$tmp .= "	db_path = \"".$db_path."\";\n";
 		}
-		if (strlen($dsn_name) > 0) {	
+		if (strlen($dsn_name) > 0) {
 			$tmp .= "	dsn_name = \"".$dsn_name."\";\n";
 		}
-		if (strlen($dsn_username) > 0) {	
+		if (strlen($dsn_username) > 0) {
 			$tmp .= "	dsn_username = \"".$dsn_username."\";\n";
 		}
-		if (strlen($dsn_password) > 0) {	
+		if (strlen($dsn_password) > 0) {
 			$tmp .= "	dsn_password = \"".$dsn_password."\";\n";
 		}
 		$tmp .= "\n";
@@ -104,22 +104,22 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 		$tmp .= "	var recordings_dir = \"".$_SESSION['switch']['recordings']['dir']."\";\n";
 		$tmp .= "\n";
 		$tmp = "//database connection info\n";
-		if (strlen($db_type) > 0) {	
+		if (strlen($db_type) > 0) {
 			$tmp .= "	var db_type = \"".$db_type."\";\n";
 		}
-		if (strlen($db_name) > 0) {	
+		if (strlen($db_name) > 0) {
 			$tmp .= "	var db_name = \"".$db_name."\";\n";
 		}
-		if (strlen($db_path) > 0) {	
+		if (strlen($db_path) > 0) {
 			$tmp .= "	var db_path = \"".$db_path."\";\n";
 		}
-		if (strlen($dsn_name) > 0) {	
+		if (strlen($dsn_name) > 0) {
 			$tmp .= "	var dsn_name = \"".$dsn_name."\";\n";
 		}
-		if (strlen($dsn_username) > 0) {	
+		if (strlen($dsn_username) > 0) {
 			$tmp .= "	var dsn_username = \"".$dsn_username."\";\n";
 		}
-		if (strlen($dsn_password) > 0) {	
+		if (strlen($dsn_password) > 0) {
 			$tmp .= "	var dsn_password = \"".$dsn_password."\";\n";
 		}
 		$tmp .= "\n";
