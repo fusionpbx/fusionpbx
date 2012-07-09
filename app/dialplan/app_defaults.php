@@ -43,32 +43,32 @@
 					fwrite($fh, $file_default_contents);
 					fclose($fh);
 				}
+	}
 
-		//get the $apps array from the installed apps from the core and mod directories
-			$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/xml/dialplan/*.xml");
-			foreach ($xml_list as &$xml_file) {
-				//get and parse the xml
-					$xml_string = file_get_contents($xml_file);
-				//get the order number prefix from the file name
-					$name_array = explode('_', basename($xml_file));
-					if (is_numeric($name_array[0])) {
-						$dialplan_order = $name_array[0];
-					}
-					else {
-						$dialplan_order = 0;
-					}
-				//dialplan class
-					require_once "includes/classes/switch_dialplan.php";
-					$dialplan = new dialplan;
-					$dialplan->domain_uuid = $domain_uuid;
-					$dialplan->dialplan_order = $dialplan_order;
-					$dialplan->dialplan_context = $context;
-					if ($display_type == "text") {
-						$dialplan->display_type = 'text';
-					}
-					$dialplan->xml = $xml_string;
-					$dialplan->import();
+//get the $apps array from the installed apps from the core and mod directories
+	$xml_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/xml/dialplan/*.xml");
+	foreach ($xml_list as &$xml_file) {
+		//get and parse the xml
+			$xml_string = file_get_contents($xml_file);
+		//get the order number prefix from the file name
+			$name_array = explode('_', basename($xml_file));
+			if (is_numeric($name_array[0])) {
+				$dialplan_order = $name_array[0];
 			}
+			else {
+				$dialplan_order = 0;
+			}
+		//dialplan class
+			require_once "includes/classes/switch_dialplan.php";
+			$dialplan = new dialplan;
+			$dialplan->domain_uuid = $domain_uuid;
+			$dialplan->dialplan_order = $dialplan_order;
+			$dialplan->dialplan_context = $context;
+			if ($display_type == "text") {
+				$dialplan->display_type = 'text';
+			}
+			$dialplan->xml = $xml_string;
+			$dialplan->import();
 	}
 
 ?>
