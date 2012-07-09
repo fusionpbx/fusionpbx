@@ -1,5 +1,7 @@
-<extension name="directory" app_uuid="a223dc70-28a1-4979-834e-8af813cd8ea6">
-	<condition field="destination_number" expression="^\*411$">
-		<action application="directory" data="default ${domain_name} ${domain_name}"/> 
-	</condition>
-</extension>
+<context name="{v_context}">
+	<extension name="directory" app_uuid="a223dc70-28a1-4979-834e-8af813cd8ea6">
+		<condition field="destination_number" expression="^\*411$">
+			<action application="directory" data="default ${domain_name} ${domain_name}"/> 
+		</condition>
+	</extension>
+</context>
