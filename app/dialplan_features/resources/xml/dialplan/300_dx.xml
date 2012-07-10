@@ -1,6 +1,6 @@
 <!-- In call Transfer for phones without a transfer button -->
 <context name="features">
-	<extension name="dx">
+	<extension name="dx" app_uuid="ddcf7740-78ca-4035-8c19-e2df10cebf67">
 		<condition field="destination_number" expression="^dx$">
 			<action application="answer"/>
 			<action application="read" data="11 11 'tone_stream://%(10000,0,350,440)' digits 5000 #"/>

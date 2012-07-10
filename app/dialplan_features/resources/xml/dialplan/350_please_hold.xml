@@ -1,5 +1,5 @@
 <context name="features">
-	<extension name="please_hold">
+	<extension name="please_hold" app_uuid="c3ea29d1-db41-421e-91b7-b0984e50bcae">
 		<condition field="destination_number" expression="^(10[01][0-9])$">
 			<action application="set" data="transfer_ringback=$${hold_music}"/>
 			<action application="answer"/>

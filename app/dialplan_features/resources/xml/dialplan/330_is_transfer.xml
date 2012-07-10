@@ -1,5 +1,5 @@
 <context name="features">
-	<extension name="is_transfer">
+	<extension name="is_transfer" app_uuid="da8e22c7-9e07-4ff5-a28b-faf35ba8d411">
 		<condition field="destination_number" expression="^is_transfer$"/>
 		<condition field="${digits}" expression="^(\d+)$">
 			<action application="transfer" data="-aleg ${digits} XML default"/>

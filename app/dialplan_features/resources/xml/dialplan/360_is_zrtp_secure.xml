@@ -1,5 +1,5 @@
 <context name="features">
-	<extension name="is_zrtp_secure" continue="true">
+	<extension name="is_zrtp_secure" app_uuid="951808c2-b778-404d-bd17-50b5df4b88f4" continue="true">
 		<condition field="${zrtp_secure_media_confirmed}" expression="^true$">
 			<action application="sleep" data="1000"/>
 			<action application="playback" data="misc/call_secured.wav"/>

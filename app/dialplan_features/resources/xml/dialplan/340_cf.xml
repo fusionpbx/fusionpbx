@@ -1,6 +1,6 @@
 <!-- Used to transfer both legs into a conference -->
 <context name="features">
-	<extension name="cf">
+	<extension name="cf" app_uuid="f13df3df-bfb4-4c11-bee1-6548cd983729">
 		<condition field="destination_number" expression="^cf$">
 			<action application="answer"/>
 			<action application="transfer" data="-both 30${dialed_extension:2} XML default"/>

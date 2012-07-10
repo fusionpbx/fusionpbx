@@ -1,6 +1,6 @@
 <!-- Only Truly consider it secure if its TLS and SRTP -->
 <context name="features">
-	<extension name="is_secure" continue="true">
+	<extension name="is_secure" app_uuid="b57306e0-36df-4048-b182-7ad0f69d8c03" continue="true">
 		<condition field="${sip_via_protocol}" expression="tls"/>
 		<condition field="${sip_secure_media_confirmed}" expression="^true$">
 			<action application="sleep" data="1000"/>
