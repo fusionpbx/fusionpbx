@@ -35,6 +35,7 @@ include "root.php";
 			public $xml;
 			public $json;
 			public $display_type;
+			public $default_context;
 
 			//dialplans
 			public $dialplan_name;
@@ -222,6 +223,10 @@ include "root.php";
 
 			public function import() {
 				if (strlen($this->xml) > 0) {
+					//replace the variables
+						$this->xml = str_replace("{v_context}", $this->default_context, $this->xml);
+						$this->xml = str_replace("{v_pin_number}", generate_password(8, 1), $this->xml);
+						$this->xml = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $this->xml);
 					//convert the xml string to an xml object
 						$xml = simplexml_load_string($this->xml);
 					//convert to json
@@ -233,29 +238,31 @@ include "root.php";
 					//convert to an array
 						$dialplan = json_decode($json, true);
 				}
+
 				//ensure the condition array uniform
-					if (!is_array($dialplan['condition'][0])) {
-						$tmp = $dialplan['condition'];
-						unset($dialplan['condition']);
-						$dialplan['condition'][0] = $tmp;
+					if (!is_array($dialplan['extension']['condition'][0])) {
+						$tmp = $dialplan['extension']['condition'];
+						unset($dialplan['extension']['condition']);
+						$dialplan['extension']['condition'][0] = $tmp;
 					}
 				//check if the dialplan app uuid exists
-					$this->app_uuid = $dialplan['@attributes']['app_uuid'];
+					$this->app_uuid = $dialplan['extension']['@attributes']['app_uuid'];
 					if ($this->app_uuid_exists()) {
 						//dialplan entry already exists do nothing
 					}
 					else {
 						//get the attributes
 							$this->dialplan_uuid = uuid();
-							$this->dialplan_name = $dialplan['@attributes']['name'];
+							$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
+							$this->dialplan_context = $dialplan['@attributes']['name'];
 							if ($this->display_type == "text") {
 								echo "	".$this->dialplan_name.":		added\n";
 							}
-							if (strlen($dialplan['@attributes']['continue']) > 0) {
-								$this->dialplan_continue = $dialplan['@attributes']['continue'];
+							if (strlen($dialplan['extension']['@attributes']['continue']) > 0) {
+								$this->dialplan_continue = $dialplan['extension']['@attributes']['continue'];
 							}
-							if (strlen($dialplan['@attributes']['enabled']) > 0) {
-								$this->dialplan_enabled = $dialplan['@attributes']['enabled'];
+							if (strlen($dialplan['extension']['@attributes']['enabled']) > 0) {
+								$this->dialplan_enabled = $dialplan['extension']['@attributes']['enabled'];
 							}
 							else {
 								$this->dialplan_enabled = "true";
@@ -266,7 +273,7 @@ include "root.php";
 							$x = 0;
 							$group = 0;
 							$order = 5;
-							foreach ($dialplan['condition'] as &$row) {
+							foreach ($dialplan['extension']['condition'] as &$row) {
 								unset($this->dialplan_detail_break);
 								unset($this->dialplan_detail_inline);
 								$this->dialplan_detail_tag = 'condition';
@@ -301,9 +308,6 @@ include "root.php";
 										$this->dialplan_detail_tag = 'action';
 										$this->dialplan_detail_type = $row2['@attributes']['application'];
 										$this->dialplan_detail_data = $row2['@attributes']['data'];
-										$this->dialplan_detail_data = str_replace("{v_pin_number}", generate_password(8, 1), $this->dialplan_detail_data);
-										$this->dialplan_detail_data = str_replace("{v_context}", $this->dialplan_context, $this->dialplan_detail_data);
-										$this->dialplan_detail_data = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $this->dialplan_detail_data);
 										if (strlen($row2['@attributes']['inline']) > 0) {
 											$this->dialplan_detail_inline = $row2['@attributes']['inline'];
 										}
@@ -316,9 +320,6 @@ include "root.php";
 										$this->dialplan_detail_tag = 'anti-action';
 										$this->dialplan_detail_type = $row2['@attributes']['application'];
 										$this->dialplan_detail_data = $row2['@attributes']['data'];
-										$this->dialplan_detail_data = str_replace("{v_pin_number}", generate_password(8, 1), $this->dialplan_detail_data);
-										$this->dialplan_detail_data = str_replace("{v_context}", $this->dialplan_context, $this->dialplan_detail_data);
-										$this->dialplan_detail_data = str_replace("{v_switch_recordings_dir}", $_SESSION['switch']['recordings']['dir'], $this->dialplan_detail_data);
 										$this->dialplan_detail_group = $group;
 										$this->dialplan_detail_order = $order;
 										$this->dialplan_detail_add();
