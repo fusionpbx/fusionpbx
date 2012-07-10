@@ -170,7 +170,7 @@ else
 		end
 		--freeswitch.consoleLog("NOTICE", "sched_api_time "..sched_api_time.."\n");
 
-		--wakeup call has been scheduled	
+		--wakeup call has been scheduled
 			session:streamFile("phrase:wakeup-scheduled");
 			session:say(wakeup_time, "en", "number", "ITERATED");
 

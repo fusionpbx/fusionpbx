@@ -68,7 +68,7 @@ recording_prefix = "";
 				--set a default recording_name
 				recording_name = "temp_"..session:get_uuid()..".wav";
 			end
-		
+
 		--prompt for the recording
 			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/begin_recording.wav");
 			session:execute("set", "playback_terminators=#");
