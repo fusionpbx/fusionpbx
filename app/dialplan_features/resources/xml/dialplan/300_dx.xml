@@ -1,0 +1,10 @@
+<!-- In call Transfer for phones without a transfer button -->
+<context name="features">
+	<extension name="dx">
+		<condition field="destination_number" expression="^dx$">
+			<action application="answer"/>
+			<action application="read" data="11 11 'tone_stream://%(10000,0,350,440)' digits 5000 #"/>
+			<action application="execute_extension" data="is_transfer XML features"/>
+		</condition>
+	</extension>
+</context>

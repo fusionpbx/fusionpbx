@@ -1,0 +1,9 @@
+<!-- Used to transfer both legs into a conference -->
+<context name="features">
+	<extension name="cf">
+		<condition field="destination_number" expression="^cf$">
+			<action application="answer"/>
+			<action application="transfer" data="-both 30${dialed_extension:2} XML default"/>
+		</condition>
+	</extension>
+</context>

@@ -1,0 +1,11 @@
+<context name="features">
+	<extension name="xfer_vm">
+		<condition field="destination_number" expression="^xfer_vm$">
+			<action application="read" data="2 6 'tone_stream://%(10000,0,350,440)' digits 30000 #"/>
+			<action application="set" data="origination_cancel_key=#"/>
+			<action application="set" data="domain_name=${transfer_context}"/>
+			<action application="export" data="domain_name=${transfer_context}"/>
+			<action application="transfer" data="-bleg *99${digits} XML ${transfer_context}"/>
+		</condition>
+	</extension>
+</context>
