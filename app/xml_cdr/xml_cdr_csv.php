@@ -35,6 +35,7 @@ else {
 }
 
 //additional includes
+	$rows_per_page = 0;
 	require_once "xml_cdr_inc.php";
 
 //set the http headers

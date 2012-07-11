@@ -162,34 +162,39 @@ else {
 //set the default
 	$num_rows = '0';
 
-//get the number of rows in the v_xml_cdr 
-	$sql = "select count(*) as num_rows from v_xml_cdr ";
-	$sql .= $sql_where;
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] > 0) {
-			$num_rows = $row['num_rows'];
-		}
-		else {
-			$num_rows = '0';
-		}
-	}
-	unset($prep_statement, $result);
+//page results if rows_per_page is greater than zero
+	if ($rows_per_page > 0) {
+		//get the number of rows in the v_xml_cdr 
+			$sql = "select count(*) as num_rows from v_xml_cdr ";
+			$sql .= $sql_where;
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					$num_rows = $row['num_rows'];
+				}
+				else {
+					$num_rows = '0';
+				}
+			}
+			unset($prep_statement, $result);
 
-//prepare to page the results
-	$rows_per_page = 150;
-	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+		//prepare to page the results
+			//$rows_per_page = 150; //set on the page that includes this page
+			$page = $_GET['page'];
+			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
+			list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
+			$offset = $rows_per_page * $page;
+	}
 
 //get the results from the db
 	$sql = "select * from v_xml_cdr ";
 	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
+	if ($rows_per_page > 0) {
+		$sql .= " limit $rows_per_page offset $offset ";
+	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);

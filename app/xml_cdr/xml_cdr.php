@@ -40,8 +40,9 @@ else {
 //additional includes
 	require_once "includes/header.php";
 	require_once "includes/paging.php";
-	
+
 //xml cdr include
+	$rows_per_page = 100;
 	require_once "xml_cdr_inc.php";
 
 //page title and description
