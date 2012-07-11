@@ -2224,15 +2224,15 @@ function outbound_route_to_bridge ($destination_number) {
 							$pattern = '/'.$dialplan_detail_data.'/';
 							preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
 							if (count($matches) == 0) {
-									$regex_match = false;
+								$regex_match = false;
 							}
 							else {
-									$regex_match = true;
-									$regex_match_1 = $matches[1][0];
-									$regex_match_2 = $matches[2][0];
-									$regex_match_3 = $matches[3][0];
-									$regex_match_4 = $matches[4][0];
-									$regex_match_5 = $matches[5][0];
+								$regex_match = true;
+								$regex_match_1 = $matches[1][0];
+								$regex_match_2 = $matches[2][0];
+								$regex_match_3 = $matches[3][0];
+								$regex_match_4 = $matches[4][0];
+								$regex_match_5 = $matches[5][0];
 							}
 					}
 				}
@@ -2378,7 +2378,7 @@ function save_hunt_group_xml() {
 									//update the hunt groups table with the database
 										$sql = "update v_hunt_groups ";
 										$sql .= "set dialplan_uuid = '".$dialplan_uuid."' ";
-										$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+										$sql .= "where domain_uuid = '".$domain_uuid."' ";
 										$sql .= "and hunt_group_uuid = '".$row['hunt_group_uuid']."' ";
 										$db->query($sql);
 										unset($sql);
@@ -2386,7 +2386,7 @@ function save_hunt_group_xml() {
 
 								require_once "includes/classes/switch_dialplan.php";
 								$dialplan = new dialplan;
-								$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->app_uuid = $app_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_name = $row['hunt_group_name'];
@@ -2419,7 +2419,7 @@ function save_hunt_group_xml() {
 								$sql .= "dialplan_context = '$context', ";
 								$sql .= "dialplan_enabled = '$enabled', ";
 								$sql .= "dialplan_description = '$description' ";
-								$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+								$sql .= "where domain_uuid = '".$domain_uuid."' ";
 								$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 								$db->query($sql);
 								unset($sql);
@@ -2435,7 +2435,7 @@ function save_hunt_group_xml() {
 							if ($action == 'add' || $action == 'update') {
 								require_once "includes/classes/switch_dialplan.php";
 								$dialplan = new dialplan;
-								$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'destination_number';
@@ -2448,11 +2448,11 @@ function save_hunt_group_xml() {
 								unset($dialplan);
 
 								$dialplan = new dialplan;
-								$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'lua';
-								$dialplan->dialplan_detail_data = 'v_huntgroup_'.$_SESSION['domain_name'].'_'.$row['hunt_group_extension'].'.lua';
+								$dialplan->dialplan_detail_data = 'v_huntgroup_'.$_SESSION['domains'][$domain_uuid]['domain_name'].'_'.$row['hunt_group_extension'].'.lua';
 								//$dialplan->dialplan_detail_break = '';
 								//$dialplan->dialplan_detail_inline = '';
 								$dialplan->dialplan_detail_group = '1';
@@ -2461,7 +2461,7 @@ function save_hunt_group_xml() {
 								unset($dialplan);
 
 								$dialplan = new dialplan;
-								$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'destination_number';
@@ -2474,7 +2474,7 @@ function save_hunt_group_xml() {
 								unset($dialplan);
 
 								$dialplan = new dialplan;
-								$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'set';
@@ -2490,7 +2490,7 @@ function save_hunt_group_xml() {
 								$hunt_group_timeout_destination = $row['hunt_group_timeout_destination'];
 								if ($hunt_group_timeout_type == "voicemail") { $hunt_group_timeout_destination = '*99'.$hunt_group_timeout_destination; }
 								$dialplan = new dialplan;
-								$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'set';
@@ -2503,7 +2503,7 @@ function save_hunt_group_xml() {
 								unset($dialplan);
 
 								$dialplan = new dialplan;
-								$dialplan->domain_uuid = $_SESSION['domain_uuid'];
+								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'fifo';
@@ -2516,8 +2516,6 @@ function save_hunt_group_xml() {
 								unset($dialplan);
 							}
 
-						//save the dialplan xml files
-							save_dialplan_xml();
 					} //end if strlen hunt_group_uuid; add the Hunt Group to the dialplan
 
 				//get the list of destinations then build the Hunt Group Lua
@@ -2890,6 +2888,9 @@ function save_hunt_group_xml() {
 							}
 						}
 		} //end while
+
+	//save the dialplan xml files
+		save_dialplan_xml();
 
 	//apply settings reminder
 		$_SESSION["reload_xml"] = true;
