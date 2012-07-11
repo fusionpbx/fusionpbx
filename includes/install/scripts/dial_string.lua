@@ -71,6 +71,11 @@ if ( session:ready() ) then
 		max_digits = 15;
 		unique_id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
 
+	--add the unique_id value to the dial_string
+		if (string.len(dial_string) > 0) then
+			dial_string = string.gsub(dial_string, '{v_unique_id}', unique_id);
+		end
+
 	--authenticate the user
 		if (pin_number) then
 			--get the pin number from the caller
