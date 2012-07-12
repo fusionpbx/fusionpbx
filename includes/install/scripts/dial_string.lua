@@ -49,10 +49,10 @@
 
 if ( session:ready() ) then
 	session:answer();
-	domain_name = session:getVariable("domain_name");
 	pin_number = session:getVariable("pin_number");
 	sounds_dir = session:getVariable("sounds_dir");
 	sip_from_user = session:getVariable("sip_from_user");
+	sip_from_host = session:getVariable("sip_from_host");
 	direction = session:getVariable("direction"); --in, out, both
 	extension = tostring(session:getVariable("extension")); --true, false
 	dial_string = tostring(session:getVariable("dial_string"));
@@ -109,7 +109,7 @@ if ( session:ready() ) then
 			freeswitch.consoleLog("NOTICE", "sql: ".. sql .. "\n");
 		end
 		dbh:query(sql, function(row)
-			--domain_uuid = row.domain_uuid;
+			db_domain_uuid = row.domain_uuid;
 			db_extension_uuid = row.extension_uuid;
 			db_dial_string = row.dial_string;
 			db_dial_user = row.dial_user;
@@ -128,31 +128,18 @@ if ( session:ready() ) then
 			--add the dial string
 				if (direction == "in") then
 					if (string.len(dial_string) == 0) then
-						dial_string = [[{sip_invite_domain=]] .. domain_name .. [[,presence_id=]] .. sip_from_user .. [[@]] .. domain_name .. [[}${sofia_contact(]] .. sip_from_user .. [[@]] .. domain_name .. [[)}]];
+						dial_string = [[{sip_invite_domain=]] .. sip_from_host .. [[,presence_id=]] .. sip_from_user .. [[@]] .. sip_from_host .. [[}${sofia_contact(]] .. sip_from_user .. [[@]] .. sip_from_host .. [[)}]];
 					end
-					if (string.len(db_dial_user) > 0) then
-						sql = "UPDATE v_extensions SET ";
-						sql = sql .. "dial_string = null, ";
-						sql = sql .. "dial_user = null, ";
-						sql = sql .. "dial_domain = null ";
-						sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
-						if (debug["sql"]) then
-							freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
-						end
-						dbh:query(sql);
-						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-deleted.wav");
-					else
-						sql = "UPDATE v_extensions SET ";
-						sql = sql .. "dial_string = '" .. dial_string .."', ";
-						sql = sql .. "dial_user = '" .. sip_from_user .."', ";
-						sql = sql .. "dial_domain = '" .. domain_name .."' ";
-						sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
-						if (debug["sql"]) then
-							freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
-						end
-						dbh:query(sql);
-						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
+					sql = "UPDATE v_extensions SET ";
+					sql = sql .. "dial_string = '" .. dial_string .."', ";
+					sql = sql .. "dial_user = '" .. sip_from_user .."', ";
+					sql = sql .. "dial_domain = '" .. sip_from_host .."' ";
+					sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
+					if (debug["sql"]) then
+						freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
 					end
+					dbh:query(sql);
+					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
 				end
 			--remove the dialstring
 				if (direction == "out") then
@@ -185,12 +172,12 @@ if ( session:ready() ) then
 					else
 						--if the dial string is empty then set the dial string
 						if (string.len(dial_string) == 0) then
-							dial_string = [[{sip_invite_domain=]] .. domain_name .. [[,presence_id=]] .. sip_from_user .. [[@]] .. domain_name .. [[}${sofia_contact(]] .. sip_from_user .. [[@]] .. domain_name .. [[)}]];
+							dial_string = [[{sip_invite_domain=]] .. sip_from_host .. [[,presence_id=]] .. sip_from_user .. [[@]] .. sip_from_host .. [[}${sofia_contact(]] .. sip_from_user .. [[@]] .. sip_from_host .. [[)}]];
 						end
 						sql = "UPDATE v_extensions SET ";
 						sql = sql .. "dial_string = '" .. dial_string .."', ";
 						sql = sql .. "dial_user = '" .. sip_from_user .."', ";
-						sql = sql .. "dial_domain = '" .. domain_name .."' ";
+						sql = sql .. "dial_domain = '" .. sip_from_host .."' ";
 						sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
 						if (debug["sql"]) then
 							freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
@@ -207,7 +194,7 @@ if ( session:ready() ) then
 
 	--log to the console
 		if (debug["var"]) then
-			freeswitch.consoleLog("NOTICE", "domain_name: ".. domain_name .. "\n");
+			freeswitch.consoleLog("NOTICE", "sip_from_host: ".. sip_from_host .. "\n");
 			freeswitch.consoleLog("NOTICE", "extension_uuid: ".. extension_uuid .. "\n");
 			freeswitch.consoleLog("NOTICE", "dial_string: ".. dial_string .. "\n");
 		end
