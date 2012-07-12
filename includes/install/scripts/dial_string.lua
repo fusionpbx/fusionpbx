@@ -112,6 +112,8 @@ if ( session:ready() ) then
 			--domain_uuid = row.domain_uuid;
 			db_extension_uuid = row.extension_uuid;
 			db_dial_string = row.dial_string;
+			db_dial_user = row.dial_user;
+			db_dial_domain = row.dial_domain;
 		end);
 
 		--check to see if the pin number is correct
@@ -128,16 +130,29 @@ if ( session:ready() ) then
 					if (string.len(dial_string) == 0) then
 						dial_string = [[{sip_invite_domain=]] .. domain_name .. [[,presence_id=]] .. sip_from_user .. [[@]] .. domain_name .. [[}${sofia_contact(]] .. sip_from_user .. [[@]] .. domain_name .. [[)}]];
 					end
-					sql = "UPDATE v_extensions SET ";
-					sql = sql .. "dial_string = '" .. dial_string .."', ";
-					sql = sql .. "dial_user = '" .. sip_from_user .."', ";
-					sql = sql .. "dial_domain = '" .. domain_name .."' ";
-					sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
-					if (debug["sql"]) then
-						freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
+					if (string.len(db_dial_user) > 0) then
+						sql = "UPDATE v_extensions SET ";
+						sql = sql .. "dial_string = null, ";
+						sql = sql .. "dial_user = null, ";
+						sql = sql .. "dial_domain = null ";
+						sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
+						end
+						dbh:query(sql);
+						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-deleted.wav");
+					else
+						sql = "UPDATE v_extensions SET ";
+						sql = sql .. "dial_string = '" .. dial_string .."', ";
+						sql = sql .. "dial_user = '" .. sip_from_user .."', ";
+						sql = sql .. "dial_domain = '" .. domain_name .."' ";
+						sql = sql .. "WHERE extension_uuid = '" .. db_extension_uuid .."' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("NOTICE", "[dial_string] sql: ".. sql .. "\n");
+						end
+						dbh:query(sql);
+						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
 					end
-					dbh:query(sql);
-					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
 				end
 			--remove the dialstring
 				if (direction == "out") then
