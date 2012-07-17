@@ -54,6 +54,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'database_driver';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'db_type';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select the database driver.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'database_type';
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'db_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';

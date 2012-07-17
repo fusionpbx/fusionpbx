@@ -44,6 +44,7 @@ else {
 	}
 
 //clear the values
+	$database_driver = '';
 	$database_type = '';
 	$database_host = '';
 	$database_port = '';
@@ -55,6 +56,7 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
+		$database_driver = check_str($_POST["database_driver"]);
 		$database_type = check_str($_POST["database_type"]);
 		$database_host = check_str($_POST["database_host"]);
 		$database_port = check_str($_POST["database_port"]);
@@ -73,6 +75,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
+		//if (strlen($database_driver) == 0) { $msg .= "Please provide: Driver<br>\n"; }
 		//if (strlen($database_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
 		//if (strlen($database_host) == 0) { $msg .= "Please provide: Host<br>\n"; }
 		//if (strlen($database_port) == 0) { $msg .= "Please provide: Port<br>\n"; }
@@ -97,66 +100,79 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
 		if ($action == "add") {
-			$database_uuid = uuid();
-			$sql = "insert into v_databases ";
-			$sql .= "(";
-			//$sql .= "domain_uuid, ";
-			$sql .= "database_uuid, ";
-			$sql .= "database_type, ";
-			$sql .= "database_host, ";
-			$sql .= "database_port, ";
-			$sql .= "database_name, ";
-			$sql .= "database_username, ";
-			$sql .= "database_password, ";
-			$sql .= "database_path, ";
-			$sql .= "database_description ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			//$sql .= "'$domain_uuid', ";
-			$sql .= "'$database_uuid', ";
-			$sql .= "'$database_type', ";
-			$sql .= "'$database_host', ";
-			$sql .= "'$database_port', ";
-			$sql .= "'$database_name', ";
-			$sql .= "'$database_username', ";
-			$sql .= "'$database_password', ";
-			$sql .= "'$database_path', ";
-			$sql .= "'$database_description' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			//add the data
+				$database_uuid = uuid();
+				$sql = "insert into v_databases ";
+				$sql .= "(";
+				//$sql .= "domain_uuid, ";
+				$sql .= "database_uuid, ";
+				$sql .= "database_driver, ";
+				$sql .= "database_type, ";
+				$sql .= "database_host, ";
+				$sql .= "database_port, ";
+				$sql .= "database_name, ";
+				$sql .= "database_username, ";
+				$sql .= "database_password, ";
+				$sql .= "database_path, ";
+				$sql .= "database_description ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				//$sql .= "'$domain_uuid', ";
+				$sql .= "'$database_uuid', ";
+				$sql .= "'$database_driver', ";
+				$sql .= "'$database_type', ";
+				$sql .= "'$database_host', ";
+				$sql .= "'$database_port', ";
+				$sql .= "'$database_name', ";
+				$sql .= "'$database_username', ";
+				$sql .= "'$database_password', ";
+				$sql .= "'$database_path', ";
+				$sql .= "'$database_description' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=databases.php\">\n";
-			echo "<div align='center'>\n";
-			echo "Add Complete\n";
-			echo "</div>\n";
-			require_once "includes/footer.php";
-			return;
+			//set the defaults
+				require_once "app_defaults.php";
+
+			//redirect the browser
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=databases.php\">\n";
+				echo "<div align='center'>\n";
+				echo "Add Complete\n";
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
 		} //if ($action == "add")
 
 		if ($action == "update") {
-			$sql = "update v_databases set ";
-			$sql .= "database_type = '$database_type', ";
-			$sql .= "database_host = '$database_host', ";
-			$sql .= "database_port = '$database_port', ";
-			$sql .= "database_name = '$database_name', ";
-			$sql .= "database_username = '$database_username', ";
-			$sql .= "database_password = '$database_password', ";
-			$sql .= "database_path = '$database_path', ";
-			$sql .= "database_description = '$database_description' ";
-			$sql .= "where database_uuid = '$database_uuid' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			//udpate the database
+				$sql = "update v_databases set ";
+				$sql .= "database_type = '$database_type', ";
+				$sql .= "database_driver = '$database_driver', ";
+				$sql .= "database_host = '$database_host', ";
+				$sql .= "database_port = '$database_port', ";
+				$sql .= "database_name = '$database_name', ";
+				$sql .= "database_username = '$database_username', ";
+				$sql .= "database_password = '$database_password', ";
+				$sql .= "database_path = '$database_path', ";
+				$sql .= "database_description = '$database_description' ";
+				$sql .= "where database_uuid = '$database_uuid' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=databases.php\">\n";
-			echo "<div align='center'>\n";
-			echo "Update Complete\n";
-			echo "</div>\n";
-			require_once "includes/footer.php";
-			return;
+			//set the defaults
+				require_once "app_defaults.php";
+
+			//redirect the browser
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=databases.php\">\n";
+				echo "<div align='center'>\n";
+				echo "Update Complete\n";
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true") 
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -170,6 +186,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$database_driver = $row["database_driver"];
 			$database_type = $row["database_type"];
 			$database_host = $row["database_host"];
 			$database_port = $row["database_port"];
@@ -213,36 +230,72 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Driver:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='database_driver'>\n";
+	echo "	<option value=''></option>\n";
+	if ($database_driver == "sqlite") {
+		echo "	&nbsp; &nbsp;<option value='sqlite' selected='selected'>sqlite</option>\n";
+	}
+	else {
+		echo "	&nbsp; &nbsp;<option value='sqlite'>sqlite</option>\n";
+	}
+	if ($database_driver == "pgsql") {
+		echo "	&nbsp; &nbsp;<option value='pgsql' selected='selected'>pgsql</option>\n";
+	}
+	else {
+		echo "	&nbsp; &nbsp;<option value='pgsql'>pgsql</option>\n";
+	}
+	if ($database_driver == "mysql") {
+		echo "	&nbsp; &nbsp;<option value='mysql' selected='selected'>mysql</option>\n";
+	}
+	else {
+		echo "	&nbsp; &nbsp;<option value='mysql'>mysql</option>\n";
+	}
+	if ($database_driver == "odbc") {
+		echo "	&nbsp; &nbsp;<option value='odbc' selected='selected'>odbc</option>\n";
+	}
+	else {
+		echo "	&nbsp; &nbsp;<option value='odbc'>odbc</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo "Select the database driver.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	Type:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='database_type'>\n";
 	echo "	<option value=''></option>\n";
 	if ($database_type == "sqlite") {
-		echo "	<option value='sqlite' selected='selected'>sqlite</option>\n";
+		echo "	&nbsp; &nbsp;<option value='sqlite' selected='selected'>sqlite</option>\n";
 	}
 	else {
-		echo "	<option value='sqlite'>sqlite</option>\n";
-	}
-	if ($database_type == "odbc") {
-		echo "	<option value='odbc' selected='selected'>odbc</option>\n";
-	}
-	else {
-		echo "	<option value='odbc'>odbc</option>\n";
+		echo "	&nbsp; &nbsp;<option value='sqlite'>sqlite</option>\n";
 	}
 	if ($database_type == "pgsql") {
-		echo "	<option value='pgsql' selected='selected'>pgsql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='pgsql' selected='selected'>pgsql</option>\n";
 	}
 	else {
-		echo "	<option value='pgsql'>pgsql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='pgsql'>pgsql</option>\n";
 	}
 	if ($database_type == "mysql") {
-		echo "	<option value='mysql' selected='selected'>mysql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mysql' selected='selected'>mysql</option>\n";
 	}
 	else {
-		echo "	<option value='mysql'>mysql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mysql'>mysql</option>\n";
 	}
-
+	if ($database_type == "mssql") {
+		echo "	&nbsp; &nbsp;<option value='mssql' selected='selected'>mssql</option>\n";
+	}
+	else {
+		echo "	&nbsp; &nbsp;<option value='mssql'>mssql</option>\n";
+	}
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo "Select the database type.\n";
