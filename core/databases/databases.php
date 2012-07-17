@@ -83,9 +83,9 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the  list
-		$sql = " select * from v_databases ";
+		$sql = "select * from v_databases ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -100,6 +100,7 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
+	echo th_order_by('database_driver', 'Driver', $order_by, $order);
 	echo th_order_by('database_type', 'Type', $order_by, $order);
 	echo th_order_by('database_host', 'Host', $order_by, $order);
 	//echo th_order_by('database_port', 'Port', $order_by, $order);
@@ -115,6 +116,7 @@ require_once "includes/paging.php";
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_driver']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_host']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_port']."&nbsp;</td>\n";
