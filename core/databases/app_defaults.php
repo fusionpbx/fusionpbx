@@ -51,7 +51,7 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 
 	//get the odbc information
 		$sql = "select count(*) as num_rows from v_databases ";
-		$sql .= "where database_type = 'odbc' ";
+		$sql .= "where database_driver = 'odbc' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
