@@ -311,7 +311,9 @@ require_once "includes/require.php";
 			$provisioning_list_array = explode("|", $provisioning_list);
 			foreach ($provisioning_list_array as &$prov_row) {
 				$prov_row_array = explode(":", $prov_row);
-				if ($prov_row_array[0] == $mac) {
+				$prov_mac = strtolower($prov_row_array[0]);
+				$prov_mac = preg_replace('#[^a-fA-F0-9./]#', '', $prov_mac);
+				if ($prov_mac == $mac) {
 					$line_number = $prov_row_array[1];
 					$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
 					$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["effective_caller_id_name"], $file_contents);
