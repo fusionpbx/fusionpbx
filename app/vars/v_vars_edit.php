@@ -66,7 +66,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		if (strlen($var_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		if (strlen($var_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
+		//if (strlen($var_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
 		//if (strlen($var_cat) == 0) { $msg .= "Please provide: Category<br>\n"; }
 		if (strlen($var_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		if (strlen($var_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
