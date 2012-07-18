@@ -404,21 +404,16 @@ include "root.php";
 							$database->fields['dialplan_enabled'] = $this->ivr_menu_enabled;
 							$database->fields['dialplan_description'] = $this->ivr_menu_description;
 							$database->fields['app_uuid'] = $this->app_uuid;
-							if ($this->dialplan_uuid) {
-								$database->where[0]['name'] = 'domain_uuid';
-								$database->where[0]['value'] = $this->domain_uuid;
-								$database->where[0]['operator'] = '=';
-								$database->where[1]['name'] = 'dialplan_uuid';
-								$database->where[1]['value'] = $this->dialplan_uuid;
-								$database->where[1]['operator'] = '=';
-								$database->update();
-							}
-							else {
-								$this->dialplan_uuid = uuid();
-								$database->fields['domain_uuid'] = $this->domain_uuid;
-								$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
-								$database->add();
-							}
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->where[0]['name'] = 'domain_uuid';
+							$database->where[0]['value'] = $this->domain_uuid;
+							$database->where[0]['operator'] = '=';
+							$database->where[1]['name'] = 'dialplan_uuid';
+							$database->where[1]['value'] = $this->dialplan_uuid;
+							$database->where[1]['operator'] = '=';
+							$database->delete();
+							$database->add();
 
 						//delete the old dialplan details to prepare for new details 
 							$database = new database;
