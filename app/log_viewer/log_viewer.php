@@ -40,6 +40,12 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
+//set a default line number value (off)
+	if ($_POST['ln'] == '') { $_POST['ln'] = 0; }
+
+//set a default ordinal (descending)
+	if ($_POST['ord'] == '') { $_POST['ord'] = "asc"; }
+
 //set a default file size
 	if (strlen($_POST['fs']) == 0) { $_POST['fs'] = "32"; }
 
@@ -70,12 +76,14 @@ echo "		<td align=\"left\" valign='middle' width='100%'>\n";
 echo "			<b>Log Viewer</b><br />\n";
 echo "		</td>\n";
 echo "		<form action=\"log_viewer.php\" method=\"POST\">\n";
-echo "		<td width='145px' align='right' valign='middle' nowrap='nowrap'>\n";
-echo "				<input type=\"text\" class=\"formfld\" name=\"fs\" value=\"".$_POST['fs']."\">\n";
-echo "				<input type=\"submit\" class=\"btn\" name=\"submit\" value=\"reload\">\n";
+echo "		<td align='right' valign='middle' nowrap>\n";
+echo "				<label for='ln' style='margin-right: 30px;'><input type='checkbox' name='ln' id='ln' value='1' ".(($_POST['ln'] == 1) ? 'checked' : null)."> Show Line Numbers</label>";
+echo "				<label for='ord' style='margin-right: 30px;'><input type='checkbox' name='ord' id='ord' value='desc' ".(($_POST['ord'] == 'desc') ? 'checked' : null)."> Sort Descending</label>";
+echo "				Display <input type=\"text\" class=\"formfld\" style=\"width: 50px; text-align: center;\" name=\"fs\" value=\"".$_POST['fs']."\" onclick=\"this.select();\"> KB";
+echo "				<input type=\"submit\" class=\"btn\" style=\"margin-left: 30px;\" name=\"submit\" value=\"reload\">";
 echo "		</td>\n";
 echo "		</form>\n";
-echo "		<td width='125px' align='right' valign='middle' nowrap='nowrap'>\n";
+echo "		<td width='125' align='right' valign='middle' nowrap='nowrap'>\n";
 if (permission_exists('log_download')) {
 	echo "			<input type='button' class='btn' value='download logs' onclick=\"document.location.href='log_viewer.php?a=download&t=logs';\" />\n";
 }
@@ -133,15 +141,18 @@ if (permission_exists('log_view')) {
 
 	$file_size = filesize($log_file);
 
+	/*
+	// removed: duplicate of above
 	if (isset($_POST['submit'])) {
 		if (strlen($_POST['fs']) == 0) { $_POST['fs'] = "32"; }
 	}
+	*/
 
 	echo "<table style=\"width: 100%\;\" width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">";
 	echo "<tbody><tr><th colspan=\"2\" style=\"text-alight: left\;\">Syntax Highlighted</th></tr>";
 	echo "<tr><td style=\"text-align: left;\" class=\"row_stylebg\">";
 
-	$user_filesize = '32000';
+	$user_filesize = '32768';
 	if (isset($_POST['submit'])) {
 		if (!is_numeric($_POST['fs'])){
 			echo "<font color=\"red\" face=\"bold\" size =\"5\">";
@@ -151,12 +162,12 @@ if (permission_exists('log_view')) {
 			$user_filesize='1000';
 		}
 		else {
-			$user_filesize = $_POST['fs'] * 1000;
+			$user_filesize = $_POST['fs'] * 1024;
 		}
 	}
 
 	//echo "Log File Size: " . $file_size . " bytes. <br />";
-	echo "Viewing the last " . $user_filesize . " of " . $file_size . " bytes. <br /><hr />"; 
+	echo "<div align='right'>Displaying the last " . number_format($user_filesize,0,'.',',') . " of " . number_format($file_size,0,'.',',') . " bytes. </div><br><hr>";
 
 	$file = fopen($log_file, "r") or exit("Unable to open file!");
 
@@ -218,23 +229,33 @@ if (permission_exists('log_view')) {
 					}
 				}
 
-				echo "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">" ;
-				/* testing to see if style is what crashes firefox on large logfiles...
-				echo "<p style=\"font-weight: {$v1[type]};
-				color: {$v1[color]};
-				font-family:{$v1[font]};\">";*/
-				echo $log_line;
-				echo "</font><br>";
+				$ary_output[] = "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">".$log_line."</font><br>";
 				$noprint = true;
 			}
 		}
+
 		if ($noprint !== true){
 			//more firefox workaround...
 			//echo "<p style=\"background-color:$background_color;color:$default_color;font-wieght:$default_type;font-family:$default_font\">";
-			echo "<font color=\"$default_color\" face=\"$default_font\">" ;
-			echo $log_line;
-			//echo "</p>";	
-			echo "</font><br>";
+
+			$ary_output[] = "<font color=\"$default_color\" face=\"$default_font\">".$log_line."</font><br>";
+		}
+	}
+
+	// output according to ordinal selected
+	if ($_POST['ord'] == 'desc') {
+		$ary_output = array_reverse($ary_output);
+		$adj_index = 0;
+	}
+	else {
+		$adj_index = 1;
+	}
+	foreach ($ary_output as $index => $line) {
+		if ($line != '<font color="white" face="monospace"></font><br>') {
+			if ($_POST['ln']) {
+				$line_num = "<span style='font-family: courier; color: #aaa; font-size: 10px;'>".($index + $adj_index)."&nbsp;&nbsp;&nbsp;</span>";
+			}
+			echo $line_num." ".$line;
 		}
 	}
 
