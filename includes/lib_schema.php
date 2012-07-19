@@ -416,7 +416,17 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 												}
 											}
 											if ($db_type == "mysql") {
-												$sql_update .= "ALTER TABLE ".$table_name." modify ".$field_name." ".$field_type.";\n";
+												$type = explode("(", $db_field_type);
+												if ($type[0] == $field_type) {
+													//do nothing
+												}
+												elseif ($field_type == "numeric" && $type[0] == "decimal") {
+													//do nothing
+												}
+												else {
+													$sql_update .= "ALTER TABLE ".$table_name." modify ".$field_name." ".$field_type.";\n";
+												}
+												unset($type);
 											}
 											if ($db_type == "sqlite") {
 												//a change has been made to the field type
