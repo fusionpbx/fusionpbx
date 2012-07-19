@@ -34,40 +34,22 @@ else {
 	return;
 }
 
-//get data from the db
-	if (strlen($_REQUEST["id"])> 0) {
-		$user_uuid = $_REQUEST["id"];
-	}
-	else {
-		if (strlen($_SESSION["username"]) > 0) {
-			$username = $_SESSION["username"];
-		}
-	}
+//set the username from v_users
+	$username = $_SESSION["username"];
+	$user_uuid = $_SESSION["user_uuid"];
 
 //required to be a superadmin to update an account that is a member of the superadmin group
 	$superadmin_list = superadmin_list($db);
-	if (if_superadmin($superadmin_list, $_SESSION['user_uuid'])) {
+	if (if_superadmin($superadmin_list, $user_uuid)) {
 		if (!if_group("superadmin")) { 
 			echo "access denied";
 			return;
 		}
 	}
 
-//get the username from v_users
-	$sql = "select * from v_users ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and user_uuid = '$user_uuid' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$username = $row["username"];
-	}
-	unset ($prep_statement);
-
 //get the user settings
 	$sql = "select * from v_user_settings ";
-	$sql .= "where user_uuid = '".$_SESSION["user_uuid"]."' ";
+	$sql .= "where user_uuid = '".$user_uuid."' ";
 	$sql .= "and user_setting_enabled = 'true' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
@@ -88,7 +70,7 @@ else {
 	}
 
 if (count($_POST)>0 && $_POST["persistform"] != "1") {
-	$user_uuid = check_str($_REQUEST["id"]);
+
 	$password = check_str($_POST["password"]);
 	$confirm_password = check_str($_POST["confirm_password"]);
 	$user_status = check_str($_POST["user_status"]);
@@ -96,16 +78,16 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	$user_time_zone = check_str($_POST["user_time_zone"]);
 	$group_member = check_str($_POST["group_member"]);
 
-	//if (strlen($password) == 0) { $msgerror .= "Password cannot be blank.<br>\n"; }
-	if (strlen($username) == 0) { $msgerror .= "Please provide the username.<br>\n"; }
-	if ($password != $confirm_password) { $msgerror .= "Passwords did not match.<br>\n"; }
-	//if (strlen($user_time_zone) == 0) { $msgerror .= "Please provide an time zone.<br>\n"; }
+	$msg = '';
+	//if (strlen($password) == 0) { $msg .= "Password cannot be blank.<br>\n"; }
+	if ($password != $confirm_password) { $msg .= "Passwords did not match.<br>\n"; }
+	//if (strlen($user_time_zone) == 0) { $msg .= "Please provide an time zone.<br>\n"; }
 
-	if (strlen($msgerror) > 0) {
+	if (strlen($msg) > 0) {
 		require_once "includes/header.php";
 		echo "<div align='center'>";
 		echo "<table><tr><td>";
-		echo $msgerror;
+		echo $msg;
 		echo "</td></tr></table>";
 		echo "<br />\n";
 		require_once "includes/persistform.php";
@@ -172,16 +154,11 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	//if the template has not been assigned by the superadmin
 		//if (strlen($_SESSION['domain']['template']['name']) == 0) {
 			//set the session theme for the active user
-			//if ($_SESSION["username"] == $username) {
 			//	$_SESSION['domain']['template']['name'] = $user_template_name;
-			//}
 		//}
 
 	//sql update
 		$sql  = "update v_users set ";
-		if (if_group("admin") && strlen($_POST["username"])> 0) {
-			$sql .= "username = '$username', ";
-		}
 		if (strlen($password) > 0 && $confirm_password == $password) {
 			//salt used with the password to create a one way hash
 				$salt = generate_password('20', '4');
@@ -189,32 +166,27 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 				$sql .= "password = '".md5($salt.$password)."', ";
 				$sql .= "salt = '".$salt."', ";
 		}
-		$sql .= "user_status = '$user_status', ";
-		//$sql .= "user_template_name = '$user_template_name', ";
-		$sql .= "user_time_zone = '$user_time_zone' ";
-		if (strlen($user_uuid)> 0) {
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and user_uuid = '$user_uuid' ";
-		}
-		else {
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and username = '$username' ";
-		}
+		$sql .= "user_status = '$user_status' ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and user_uuid = '$user_uuid' ";
 		if (permission_exists("user_account_settings_edit")) {
 			$count = $db->exec(check_sql($sql));
 		}
 
-	//update the user_status
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		$switch_cmd .= "callcenter_config agent set status ".$username."@".$_SESSION['domain_name']." '".$user_status."'";
-		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+	//if call center app is installed then update the user_status
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_center')) {
+			//update the user_status
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$switch_cmd .= "callcenter_config agent set status ".$username."@".$_SESSION['domain_name']." '".$user_status."'";
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 
-	//update the user state
-		$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
-		$response = event_socket_request($fp, $cmd);
+			//update the user state
+				$cmd = "api callcenter_config agent set state ".$username."@".$_SESSION['domain_name']." Waiting";
+				$response = event_socket_request($fp, $cmd);
+		}
 
 	//clear the template so it will rebuild in case the template was changed
-		$_SESSION["template_content"] = '';
+		//$_SESSION["template_content"] = '';
 
 	//redirect the browser
 		require_once "includes/header.php";
@@ -226,16 +198,12 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 else {
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and username = '$username' ";
+	$sql .= "and user_uuid = '$user_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$user_uuid = $row["user_uuid"];
-		if (if_group("admin")) {
-			$username = $row["username"];
-		}
-		$password = $row["password"];
+	foreach ($result as $row) {
+		//$password = $row["password"];
 		$user_status = $row["user_status"];
 		break; //limit to 1 row
 	}
@@ -251,8 +219,6 @@ else {
 //show the content
 	$table_width ='width="100%"';
 	echo "<form method='post' action=''>";
-	echo "<br />\n";
-
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr>\n";
@@ -313,8 +279,7 @@ else {
 		echo "		Status:\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
-		$cmd = "'".PROJECT_PATH."/app/calls_active/v_calls_exec.php?cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$_SESSION['domain_name']."+'+this.value";
-		echo "		<select id='user_status' name='user_status' class='formfld' style='' onchange=\"send_cmd($cmd);\">\n";
+		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		if ($user_status == "Available") {
 			echo "		<option value='Available' selected='selected'>Available</option>\n";
@@ -428,8 +393,6 @@ else {
 	echo "<table $table_width>";
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
-	echo "			<input type='hidden' name='id' value=\"$user_uuid\">";
-	echo "			<input type='hidden' name='username' value=\"$username\">";
 	echo "			<input type='submit' name='submit' class='btn' value='Save'>";
 	echo "		</td>";
 	echo "	</tr>";
