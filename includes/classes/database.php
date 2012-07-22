@@ -216,8 +216,16 @@ include "root.php";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$tmp = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($tmp as &$row) {
-						$result['name'][] = $row['name'];
+					if ($this->type == "pgsql" || $this->type == "sqlite") {
+						foreach ($tmp as &$row) {
+							$result['name'][] = $row['name'];
+						}
+					}
+					if ($this->type == "mysql") {
+						foreach ($tmp as &$row) {
+							$table_array = array_values($row);
+							$result['name'][] = $table_array[0];
+						}
 					}
 					return $result;
 			}
@@ -267,6 +275,7 @@ include "root.php";
 
 				//get the table info
 					$table_info = $this->table_info();
+
 				//set the list of fields
 					if ($this->type == "sqlite") {
 						foreach($table_info as $row) {
@@ -280,9 +289,10 @@ include "root.php";
 					}
 					if ($this->type == "mysql") {
 						foreach($table_info as $row) {
-							$result['name'][] = $row['name'];
+							$result['name'][] = $row['Field'];
 						}
 					}
+
 				//return the result array
 					return $result;
 			}
