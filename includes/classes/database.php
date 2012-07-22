@@ -29,6 +29,7 @@ include "root.php";
 	if (!class_exists('database')) {
 		class database {
 			public $db;
+			public $name; //database name
 			public $result;
 			public $type;
 			public $table;
@@ -190,6 +191,100 @@ include "root.php";
 						die();
 					}
 				}
+			}
+
+			public function tables() {
+				//connect to the database if needed
+					if (!$this->db) {
+						$this->connect();
+					}
+					if ($this->type == "sqlite") {
+						$sql = "SELECT name FROM sqlite_master ";
+						$sql .= "WHERE type='table' ";
+						$sql .= "order by name;";
+					}
+					if ($this->type == "pgsql") {
+						$sql = "select table_name as name ";
+						$sql .= "from information_schema.tables ";
+						$sql .= "where table_schema='public' ";
+						$sql .= "and table_type='BASE TABLE' ";
+						$sql .= "order by table_name ";
+					}
+					if ($this->type == "mysql") {
+						$sql = "show tables";
+					}
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$tmp = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($tmp as &$row) {
+						$result['name'][] = $row['name'];
+					}
+					return $result;
+			}
+
+			public function table_info() {
+				//public $db;
+				//public $type;
+				//public $table;
+				//public $name;
+
+				//connect to the database if needed
+					if (!$this->db) {
+						$this->connect();
+					}
+				//get the table info
+					if (strlen($this->table) == 0) { return false; }
+					if ($this->type == "sqlite") {
+						$sql = "PRAGMA table_info(".$this->table.");";
+					}
+					if ($this->type == "pgsql") {
+						$sql = "SELECT ordinal_position, ";
+						$sql .= "column_name, ";
+						$sql .= "data_type, ";
+						$sql .= "column_default, ";
+						$sql .= "is_nullable, ";
+						$sql .= "character_maximum_length, ";
+						$sql .= "numeric_precision ";
+						$sql .= "FROM information_schema.columns ";
+						$sql .= "WHERE table_name = '".$this->table."' ";
+						$sql .= "and table_catalog = '".$this->name."' ";
+						$sql .= "ORDER BY ordinal_position; ";
+					}
+					if ($this->type == "mysql") {
+						$sql = "describe ".$this->table.";";
+					}
+					$prep_statement = $this->db->prepare($sql);
+					$prep_statement->execute();
+				//set the result array
+					return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			}
+
+			public function fields() {
+				//public $db;
+				//public $type;
+				//public $table;
+				//public $name;
+
+				//get the table info
+					$table_info = $this->table_info();
+				//set the list of fields
+					if ($this->type == "sqlite") {
+						foreach($table_info as $row) {
+							$result['name'][] = $row['name'];
+						}
+					}
+					if ($this->type == "pgsql") {
+						foreach($table_info as $row) {
+							$result['name'][] = $row['column_name'];
+						}
+					}
+					if ($this->type == "mysql") {
+						foreach($table_info as $row) {
+							$result['name'][] = $row['name'];
+						}
+					}
+				//return the result array
+					return $result;
 			}
 
 			//public function disconnect() {
