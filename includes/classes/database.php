@@ -30,8 +30,11 @@ include "root.php";
 		class database {
 			public $db;
 			public $name; //database name
+			public $username;
+			public $password;
 			public $result;
 			public $type;
+			public $driver;
 			public $table;
 			public $where; //array
 			public $order_by; //array
@@ -43,43 +46,50 @@ include "root.php";
 			public $sql;
 
 			public function connect() {
-				//include config.php
-					include "root.php";
-					include "includes/config.php";
 
-				//set defaults
-					if (isset($db_type) > 0) { $this->db_type = $db_type; }
-					if (isset($db_host) > 0) { $this->db_host = $db_host; }
-					if (isset($db_port) > 0) { $this->db_port = $db_port; }
-					if (isset($db_name) > 0) { $this->db_name = $db_name; }
-					if (isset($db_username) > 0) { $this->db_username = $db_username; }
-					if (isset($db_password) > 0) { $this->db_password = $db_password; }
-					if (isset($db_path) > 0) { $this->db_path = $db_path; }
-					if (isset($db_name) > 0) { $this->db_name = $db_name; }
+				if (strlen($this->type) == 0 && strlen($this->name) == 0) {
+					//include config.php
+						include "root.php";
+						include "includes/config.php";
 
-				//backwards compatibility
-					if (isset($dbtype) > 0) { $db_type = $dbtype; }
-					if (isset($dbhost) > 0) { $db_host = $dbhost; }
-					if (isset($dbport) > 0) { $db_port = $dbport; }
-					if (isset($dbname) > 0) { $db_name = $dbname; }
-					if (isset($dbusername) > 0) { $db_username = $dbusername; }
-					if (isset($dbpassword) > 0) { $db_password = $dbpassword; }
-					if (isset($dbfilepath) > 0) { $db_path = $db_file_path; }
-					if (isset($dbfilename) > 0) { $db_name = $dbfilename; }
+					//backwards compatibility
+						if (strlen($dbtype) > 0) { $db_type = $dbtype; }
+						if (strlen($dbhost) > 0) { $db_host = $dbhost; }
+						if (strlen($dbport) > 0) { $db_port = $dbport; }
+						if (strlen($dbname) > 0) { $db_name = $dbname; }
+						if (strlen($dbusername) > 0) { $db_username = $dbusername; }
+						if (strlen($dbpassword) > 0) { $db_password = $dbpassword; }
+						if (strlen($dbfilepath) > 0) { $db_path = $db_file_path; }
+						if (strlen($dbfilename) > 0) { $db_name = $dbfilename; }
 
-				if ($this->db_type == "sqlite") {
-					if (strlen($this->db_name) == 0) {
+					//set defaults
+						if (strlen($db_type) > 0) { $this->driver = $db_type; }
+						if (strlen($db_type) > 0) { $this->type = $db_type; }
+						if (strlen($db_host) > 0) { $this->host = $db_host; }
+						if (strlen($db_port) > 0) { $this->port = $db_port; }
+						if (strlen($db_name) > 0) { $this->name = $db_name; }
+						if (strlen($db_username) > 0) { $this->username = $db_username; }
+						if (strlen($db_password) > 0) { $this->password = $db_password; }
+						if (strlen($db_path) > 0) { $this->path = $db_path; }
+						if (strlen($db_name) > 0) { $this->name = $db_name; }
+				}
+				if (strlen($this->driver) == 0) {
+					$this->driver = $this->type;
+				}
+
+				if ($this->driver == "sqlite") {
+					if (strlen($this->name) == 0) {
 						$server_name = $_SERVER["SERVER_NAME"];
 						$server_name = str_replace ("www.", "", $server_name);
 						$db_name_short = $server_name;
-						$this->db_name = $server_name.'.db';
+						$this->name = $server_name.'.db';
 					}
 					else {
-						$db_name_short = $this->db_name;
+						$db_name_short = $this->name;
 					}
-					$this->db_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
-					$this->db_path = realpath($this->db_path);
-					if (file_exists($this->db_path.'/'.$this->db_name)) {
+					$this->path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
+					$this->path = realpath($this->path);
+					if (file_exists($this->path.'/'.$this->name)) {
 						//echo "main file exists<br>";
 					}
 					else {
@@ -88,7 +98,7 @@ include "root.php";
 						try {
 							//$db = new PDO('sqlite2:example.db'); //sqlite 2
 							//$db = new PDO('sqlite::memory:'); //sqlite 3
-							$db = new PDO('sqlite:'.$this->db_path.'/'.$this->db_name); //sqlite 3
+							$db = new PDO('sqlite:'.$this->path.'/'.$this->name); //sqlite 3
 							$db->beginTransaction();
 						}
 						catch (PDOException $error) {
@@ -114,19 +124,19 @@ include "root.php";
 						unset ($file_contents, $sql);
 						$db->commit();
 
-						if (is_writable($this->db_path.'/'.$this->db_name)) {
+						if (is_writable($this->path.'/'.$this->name)) {
 							//is writable - use database in current location
 						}
 						else { 
 							//not writable
-							echo "The database ".$this->db_path."/".$this->db_name." is not writeable.";
+							echo "The database ".$this->path."/".$this->name." is not writeable.";
 							exit;
 						}
 					}
 					try {
 						//$db = new PDO('sqlite2:example.db'); //sqlite 2
 						//$db = new PDO('sqlite::memory:'); //sqlite 3
-						$this->db = new PDO('sqlite:'.$this->db_path.'/'.$this->db_name); //sqlite 3
+						$this->db = new PDO('sqlite:'.$this->path.'/'.$this->name); //sqlite 3
 
 						//add additional functions to SQLite so that they are accessible inside SQL
 						//bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
@@ -142,27 +152,27 @@ include "root.php";
 					}
 				}
 
-				if ($this->db_type == "mysql") {
+				if ($this->driver == "mysql") {
 					try {
 						//required for mysql_real_escape_string
 							if (function_exists(mysql_connect)) {
-								$mysql_connection = mysql_connect($this->db_host, $this->db_username, $this->db_password);
+								$mysql_connection = mysql_connect($this->host, $this->username, $this->password);
 							}
 						//mysql pdo connection
-							if (strlen($this->db_host) == 0 && strlen($this->db_port) == 0) {
+							if (strlen($this->host) == 0 && strlen($this->port) == 0) {
 								//if both host and port are empty use the unix socket
-								$this->db = new PDO("mysql:host=$this->db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$this->db_name", $this->db_username, $this->db_password);
+								$this->db = new PDO("mysql:host=$this->host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$this->name", $this->username, $this->password);
 							}
 							else {
-								if (strlen($this->db_port) == 0) {
+								if (strlen($this->port) == 0) {
 									//leave out port if it is empty
-									$this->db = new PDO("mysql:host=$this->db_host;dbname=$this->db_name;", $this->db_username, $this->db_password, array(
+									$this->db = new PDO("mysql:host=$this->host;dbname=$this->name;", $this->username, $this->password, array(
 									PDO::ATTR_ERRMODE,
 									PDO::ERRMODE_EXCEPTION
 									));
 								}
 								else {
-									$this->db = new PDO("mysql:host=$this->db_host;port=$this->db_port;dbname=$this->db_name;", $this->db_username, $this->db_password, array(
+									$this->db = new PDO("mysql:host=$this->host;port=$this->port;dbname=$this->name;", $this->username, $this->password, array(
 									PDO::ATTR_ERRMODE,
 									PDO::ERRMODE_EXCEPTION
 									));
@@ -175,21 +185,31 @@ include "root.php";
 					}
 				}
 
-				if ($this->db_type == "pgsql") {
+				if ($this->driver == "pgsql") {
 					//database connection
 					try {
-						if (strlen($this->db_host) > 0) {
-							if (strlen($this->db_port) == 0) { $this->db_port = "5432"; }
-							$this->db = new PDO("pgsql:host=$this->db_host port=$this->db_port dbname=$this->db_name user=$this->db_username password=$this->db_password");
+						if (strlen($this->host) > 0) {
+							if (strlen($this->port) == 0) { $this->port = "5432"; }
+							$this->db = new PDO("pgsql:host=$this->host port=$this->port dbname=$this->name user=$this->username password=$this->password");
 						}
 						else {
-							$this->db = new PDO("pgsql:dbname=$this->db_name user=$this->db_username password=$this->db_password");
+							$this->db = new PDO("pgsql:dbname=$this->name user=$this->username password=$this->password");
 						}
 					}
 					catch (PDOException $error) {
 						print "error: " . $error->getMessage() . "<br/>";
 						die();
 					}
+				}
+
+				if ($this->driver == "odbc") {
+					//database connection
+						try {
+							$this->db = new PDO("odbc:".$this->name, $this->username, $this->password);
+						}
+						catch (PDOException $e) {
+							echo 'Connection failed: ' . $e->getMessage();
+						}
 				}
 			}
 
@@ -213,10 +233,13 @@ include "root.php";
 					if ($this->type == "mysql") {
 						$sql = "show tables";
 					}
+					if ($this->type == "mssql") {
+						$sql = "SELECT * FROM sys.Tables";
+					}
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$tmp = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if ($this->type == "pgsql" || $this->type == "sqlite") {
+					if ($this->type == "pgsql" || $this->type == "sqlite" || $this->type == "mssql") {
 						foreach ($tmp as &$row) {
 							$result['name'][] = $row['name'];
 						}
@@ -259,7 +282,10 @@ include "root.php";
 						$sql .= "ORDER BY ordinal_position; ";
 					}
 					if ($this->type == "mysql") {
-						$sql = "describe ".$this->table.";";
+						$sql = "DESCRIBE ".$this->table.";";
+					}
+					if ($this->type == "mssql") {
+						$sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$this->table."'";
 					}
 					$prep_statement = $this->db->prepare($sql);
 					$prep_statement->execute();
@@ -290,6 +316,11 @@ include "root.php";
 					if ($this->type == "mysql") {
 						foreach($table_info as $row) {
 							$result['name'][] = $row['Field'];
+						}
+					}
+					if ($this->type == "mssql") {
+						foreach($table_info as $row) {
+							$result['name'][] = $row['COLUMN_NAME'];
 						}
 					}
 
