@@ -2182,7 +2182,7 @@ function save_var_xml() {
 }
 
 function outbound_route_to_bridge ($destination_number) {
-	global $domain_uuid, $db;
+	global $db;
 
 	$destination_number = trim($destination_number);
 	if (is_numeric($destination_number)) {
@@ -2195,7 +2195,7 @@ function outbound_route_to_bridge ($destination_number) {
 	}
 
 	$sql = "select * from v_dialplans ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	$sql .= "and dialplan_enabled = 'true' ";
 	$sql .= "order by dialplan_order asc ";

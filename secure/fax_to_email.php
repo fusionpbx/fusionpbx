@@ -111,13 +111,13 @@ if (defined('STDIN')) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		$domain_uuid = $row["domain_uuid"];
+		$_SESSION["domain_uuid"] = $row["domain_uuid"];
 	}
 	unset ($prep_statement);
 
 //get the fax details from the database
 	$sql = "select * from v_fax ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
 	$sql .= "and fax_extension = '$fax_extension' ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
