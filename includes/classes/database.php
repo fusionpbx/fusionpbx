@@ -29,12 +29,14 @@ include "root.php";
 	if (!class_exists('database')) {
 		class database {
 			public $db;
+			public $driver;
+			public $type;
+			public $host;
+			public $port;
 			public $name; //database name
 			public $username;
 			public $password;
-			public $result;
-			public $type;
-			public $driver;
+			public $path;
 			public $table;
 			public $where; //array
 			public $order_by; //array
@@ -44,6 +46,7 @@ include "root.php";
 			public $fields;
 			public $count;
 			public $sql;
+			public $result;
 
 			public function connect() {
 
@@ -71,7 +74,6 @@ include "root.php";
 						if (strlen($db_username) > 0) { $this->username = $db_username; }
 						if (strlen($db_password) > 0) { $this->password = $db_password; }
 						if (strlen($db_path) > 0) { $this->path = $db_path; }
-						if (strlen($db_name) > 0) { $this->name = $db_name; }
 				}
 				if (strlen($this->driver) == 0) {
 					$this->driver = $this->type;
@@ -241,13 +243,13 @@ include "root.php";
 					$tmp = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if ($this->type == "pgsql" || $this->type == "sqlite" || $this->type == "mssql") {
 						foreach ($tmp as &$row) {
-							$result['name'][] = $row['name'];
+							$result[]['name'] = $row['name'];
 						}
 					}
 					if ($this->type == "mysql") {
 						foreach ($tmp as &$row) {
 							$table_array = array_values($row);
-							$result['name'][] = $table_array[0];
+							$result[]['name'] = $table_array[0];
 						}
 					}
 					return $result;
@@ -305,22 +307,22 @@ include "root.php";
 				//set the list of fields
 					if ($this->type == "sqlite") {
 						foreach($table_info as $row) {
-							$result['name'][] = $row['name'];
+							$result[]['name'] = $row['name'];
 						}
 					}
 					if ($this->type == "pgsql") {
 						foreach($table_info as $row) {
-							$result['name'][] = $row['column_name'];
+							$result[]['name'] = $row['column_name'];
 						}
 					}
 					if ($this->type == "mysql") {
 						foreach($table_info as $row) {
-							$result['name'][] = $row['Field'];
+							$result[]['name'] = $row['Field'];
 						}
 					}
 					if ($this->type == "mssql") {
 						foreach($table_info as $row) {
-							$result['name'][] = $row['COLUMN_NAME'];
+							$result[]['name'] = $row['COLUMN_NAME'];
 						}
 					}
 
