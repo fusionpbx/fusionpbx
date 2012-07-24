@@ -200,7 +200,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$db->exec(check_sql($sql));
 						unset($sql);
 					}
-					
+
 				//if it does not exist in the dialplan then add it
 					$sql = "select count(*) as num_rows from v_dialplans ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -260,7 +260,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$_SESSION["reload_xml"] = true;
 						}
 					}
-				
+
 				//redirect the browser
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=ring_groups_edit.php?id=$ring_group_uuid\">\n";
