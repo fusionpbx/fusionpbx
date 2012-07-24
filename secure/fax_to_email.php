@@ -38,6 +38,7 @@ if (defined('STDIN')) {
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
 	require_once "includes/require.php";
+	require_once "includes/lib_switch.php";
 	include "class.phpmailer.php";
 	include "class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 
