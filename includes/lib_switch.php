@@ -2197,7 +2197,7 @@ function outbound_route_to_bridge ($destination_number) {
 	$sql = "select * from v_dialplans ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-	$sql .= "and dialplan_enabled = true ";
+	$sql .= "and dialplan_enabled = 'true' ";
 	$sql .= "order by dialplan_order asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();

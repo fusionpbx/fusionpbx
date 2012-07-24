@@ -38,7 +38,6 @@ if (defined('STDIN')) {
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
 	require_once "includes/require.php";
-	require_once "includes/lib_switch.php";
 	include "class.phpmailer.php";
 	include "class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 
@@ -106,21 +105,19 @@ if (defined('STDIN')) {
 	//echo "cd $dir_fax; /usr/bin/tiff2png ".$dir_fax.'/'.$fax_name.".png\n";
 
 //get the fax details from the database
-	$sql = "";
-	$sql .= "select * from v_domains ";
+	$sql = "select * from v_domains ";
 	$sql .= "where domain_name = '".$domain_name."' ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		$_SESSION['domain_uuid'] = $row["domain_uuid"];
+		$domain_uuid = $row["domain_uuid"];
 	}
 	unset ($prep_statement);
 
 //get the fax details from the database
-	$sql = "";
-	$sql .= "select * from v_fax ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select * from v_fax ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and fax_extension = '$fax_extension' ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
