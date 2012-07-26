@@ -82,20 +82,30 @@ echo "<td align='left'>\n";
 echo "	<strong>UserName:</strong>\n";
 echo "</td>\n";
 echo "<td>\n";
-echo "  <input type=\"text\" style='width: 125px;' class='formfld' name=\"username\">\n";
+echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"username\">\n";
 echo "</td>\n";
 echo "</tr>\n";
-echo "\n";
+
 echo "<tr>\n";
 echo "<td align='left'>\n";
 echo "	<strong>Password:</strong>\n";
 echo "</td>\n";
-echo "\n";
 echo "<td align='left'>\n";
-echo "	<input type=\"password\" style='width: 125px;' class='formfld' name=\"password\">\n";
+echo "	<input type=\"password\" style='width: 150px;' class='formfld' name=\"password\">\n";
 echo "</td>\n";
 echo "</tr>\n";
-echo "\n";
+
+if ($_SESSION['security']['login']['domain_name'] == "true") {
+	echo "<tr>\n";
+	echo "<td align='left'>\n";
+	echo "	<strong>Domain:</strong>\n";
+	echo "</td>\n";
+	echo "<td>\n";
+	echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+}
+
 echo "<tr>\n";
 echo "<td>\n";
 echo "</td>\n";

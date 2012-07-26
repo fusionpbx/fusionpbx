@@ -44,6 +44,20 @@ session_start();
 				exit;
 			}
 
+		//get the domain name
+			if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
+				$domain_name = check_str($_REQUEST["domain_name"]);
+				$_SESSION["domain_name"] = $domain_name;
+				foreach ($_SESSION['domains'] as &$row) {
+					if ($row['domain_name'] == $domain_name) {
+						$domain_uuid = $row["domain_uuid"];
+						$_SESSION["domain_uuid"] = $row["domain_uuid"];
+						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
+						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
+					}
+				}
+			}
+
 		//check the username and password if they don't match then redirect to the login
 			$sql = "select * from v_users ";
 			$sql .= "where domain_uuid=:domain_uuid ";
