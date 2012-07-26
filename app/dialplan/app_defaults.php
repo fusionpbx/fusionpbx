@@ -24,6 +24,26 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//if there is more than one domain then set the default context to the domain name
+	if (count($_SESSION['domains']) > 1) {
+		$sql = "select * from v_dialplans ";
+		$sql .= "where dialplan_context = 'default' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
+			$dialplan_uuid = $row["dialplan_uuid"];
+			$dialplan_context = $_SESSION['domains'][$domain_uuid]['domain_name'];
+			$sql = "update v_dialplans set ";
+			$sql .= "dialplan_context = '$dialplan_context' ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+	}
+
 //only run the following code if the directory exists
 	if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
 		//write the dialplan/default.xml if it does not exist
