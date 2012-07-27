@@ -41,8 +41,7 @@ else {
 	}
 
 //get the data 
-	$sql = "";
-	$sql .= "select * from v_gateways ";
+	$sql = "select * from v_gateways ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and gateway_uuid = '$gateway_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));

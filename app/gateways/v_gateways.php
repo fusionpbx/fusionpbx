@@ -88,10 +88,11 @@ echo "		<br>";
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "  <tr>\n";
-echo "    <td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>Gateways\n";
-echo "        </strong></span></span>\n";
+echo "    <td align='left'><span class=\"vexpl\">\n";
+echo "        <strong>Gateways</strong></span>\n";
 echo "    </td>\n";
 echo "    <td align='right'>";
+echo "        <input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_gateways.php'\" value='Refresh'>\n";
 echo "    </td>\n";
 echo "  </tr>\n";
 echo "  <tr>\n";
