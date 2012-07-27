@@ -53,16 +53,14 @@ else {
 			}
 
 		//delete the fax entry
-			$sql = "";
-			$sql .= "delete from v_fax ";
+			$sql = "delete from v_fax ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and fax_uuid = '$fax_uuid' ";
 			$db->query($sql);
 			unset($sql);
 
 		//delete the dialplan entry
-			$sql = "";
-			$sql .= "delete from v_dialplans ";
+			$sql = "delete from v_dialplans ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 			//echo $sql."<br>\n";
@@ -70,8 +68,7 @@ else {
 			unset($sql);
 
 		//delete the dialplan details
-			$sql = "";
-			$sql .= "delete from v_dialplan_details ";
+			$sql = "delete from v_dialplan_details ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 			//echo $sql."<br>\n";
@@ -87,7 +84,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

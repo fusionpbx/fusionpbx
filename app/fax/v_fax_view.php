@@ -86,10 +86,10 @@ else {
 
 //set the fax directory
 	if (count($_SESSION["domains"]) > 1) {
-		$v_fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 	}
 	else {
-		$v_fax_dir = $_SESSION['switch']['storage']['dir'].'/fax';
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax';
 	}
 
 //delete a fax
@@ -97,12 +97,12 @@ else {
 		$file_name = substr(check_str($_GET['filename']), 0, -4);
 		$file_ext = substr(check_str($_GET['filename']), -3);
 		if ($_GET['type'] == "fax_inbox") {
-			unlink($v_fax_dir.'/'.$fax_extension.'/inbox/'.$file_name.".tif");
-			unlink($v_fax_dir.'/'.$fax_extension.'/inbox/'.$file_name.".pdf");
+			unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$file_name.".tif");
+			unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$file_name.".pdf");
 		}
 		if ($_GET['type'] == "fax_sent") {
-			unlink($v_fax_dir.'/'.$fax_extension.'/sent/'.$file_name.".tif");
-			unlink($v_fax_dir.'/'.$fax_extension.'/sent/'.$file_name.".pdf");
+			unlink($fax_dir.'/'.$fax_extension.'/sent/'.$file_name.".tif");
+			unlink($fax_dir.'/'.$fax_extension.'/sent/'.$file_name.".pdf");
 		}
 		unset($file_name);
 		unset($file_ext);
@@ -113,13 +113,13 @@ else {
 		session_cache_limiter('public');
 		//test to see if it is in the inbox or sent directory.
 		if ($_GET['type'] == "fax_inbox") {
-			if (file_exists($v_fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']))) {
-				$tmp_faxdownload_file = "".$v_fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
+			if (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']))) {
+				$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
 			}
 		}
 		else if ($_GET['type'] == "fax_sent") {
-			if  (file_exists($v_fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']))) {
-				$tmp_faxdownload_file = "".$v_fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
+			if  (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']))) {
+				$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
 			}
 		}
 		//let's see if we found it.
@@ -162,18 +162,18 @@ else {
 //get the fax extension
 	if (strlen($fax_extension) > 0) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
-			$dir_fax_inbox = $v_fax_dir.'/'.$fax_extension.'/inbox';
-			$dir_fax_sent = $v_fax_dir.'/'.$fax_extension.'/sent';
-			$dir_fax_temp = $v_fax_dir.'/'.$fax_extension.'/temp';
+			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
+			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
+			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
 				mkdir($_SESSION['switch']['storage']['dir']);
 				chmod($dir_fax_sent,0774);
 			}
-			if (!is_dir($v_fax_dir.'/'.$fax_extension)) {
-				mkdir($v_fax_dir.'/'.$fax_extension,0774,true);
-				chmod($v_fax_dir.'/'.$fax_extension,0774);
+			if (!is_dir($fax_dir.'/'.$fax_extension)) {
+				mkdir($fax_dir.'/'.$fax_extension,0774,true);
+				chmod($fax_dir.'/'.$fax_extension,0774);
 			}
 			if (!is_dir($dir_fax_inbox)) { 
 				mkdir($dir_fax_inbox,0774,true); 
@@ -295,7 +295,7 @@ else {
 				exec($_SESSION['switch']['bin']['dir']."/tiff2pdf -f -o ".$fax_name.".pdf ".$dir_fax_sent.$fax_name.".tif");
 			}
 
-		header("Location: v_fax_view.php?id=".$fax_uuid."&msg=".$response);
+		header("Location: fax_view.php?id=".$fax_uuid."&msg=".$response);
 		exit;
 	} //end upload and send fax
 
@@ -303,10 +303,10 @@ else {
 	if ($_GET['a'] == "del") {
 		$fax_extension = check_str($_GET["fax_extension"]);
 		if ($_GET['type'] == "fax_inbox" && permission_exists('fax_inbox_delete')) {
-			unlink($v_fax_dir.'/'.$fax_extension.'/inbox/'.check_str($_GET['filename']));
+			unlink($fax_dir.'/'.$fax_extension.'/inbox/'.check_str($_GET['filename']));
 		}
 		if ($_GET['type'] == "fax_sent" && permission_exists('fax_sent_delete')) {
-			unlink($v_fax_dir.'/'.$fax_extension.'/sent/'.check_str($_GET['filename']));
+			unlink($fax_dir.'/'.$fax_extension.'/sent/'.check_str($_GET['filename']));
 		}
 	}
 
@@ -315,12 +315,12 @@ else {
 		session_cache_limiter('public');
 		//test to see if it is in the inbox or sent directory.
 			if ($_GET['type'] == "fax_inbox" && permission_exists('fax_inbox_view')) {
-				if (file_exists($v_fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']))) {
-					$tmp_faxdownload_file = "".$v_fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
+				if (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']))) {
+					$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
 				}
 			}else if ($_GET['type'] == "fax_sent" && permission_exists('fax_sent_view')) {
-				if  (file_exists($v_fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']))) {
-					$tmp_faxdownload_file = "".$v_fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
+				if  (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']))) {
+					$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
 				}
 			}
 		//check to see if it was found.
@@ -376,9 +376,9 @@ else {
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
 	if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
-		echo "			<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='v_fax_edit.php?id=$fax_uuid'\" value='Settings'>\n";
+		echo "			<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='fax_edit.php?id=$fax_uuid'\" value='Settings'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_fax.php'\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='Back'>\n";
 	echo "		</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -521,14 +521,14 @@ else {
 						//}
 						echo "<tr>\n";
 						echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
-						echo "	  <a href=\"v_fax_view.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
+						echo "	  <a href=\"fax_view.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
 						echo "    	$file_name";
 						echo "	  </a>";
 						echo "  </td>\n";
 
 						echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
 						if (file_exists($dir_fax_inbox.'/'.$file_name.".pdf")) {
-							echo "	  <a href=\"v_fax_view.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
+							echo "	  <a href=\"fax_view.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
 							echo "    	PDF";
 							echo "	  </a>";
 						}
@@ -539,7 +539,7 @@ else {
 
 						//echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
 						//if (file_exists($dir_fax_inbox.'/'.$file_name.".jpg")) {
-						//	echo "	  <a href=\"v_fax_view.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=jpg&ext=".$fax_extension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
+						//	echo "	  <a href=\"fax_view.php?id=".$fax_uuid."&a=download&type=fax_inbox&t=jpg&ext=".$fax_extension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
 						//	echo "    	jpg";
 						//	echo "	  </a>";
 						//}
@@ -560,7 +560,7 @@ else {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_inbox_delete')) {
-							echo "        <td><a href=\"v_fax_view.php?id=".$fax_uuid."&type=fax_inbox&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
+							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_inbox&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";
@@ -658,13 +658,13 @@ else {
 						}
 						echo "<tr>\n";
 						echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
-						echo "	  <a href=\"v_fax_view.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
+						echo "	  <a href=\"fax_view.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file)."\">\n";
 						echo "    	$file";
 						echo "	  </a>";
 						echo "  </td>\n";
 						echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
 						if (file_exists($dir_fax_sent.'/'.$file_name.".pdf")) {
-							echo "	  <a href=\"v_fax_view.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
+							echo "	  <a href=\"fax_view.php?id=".$fax_uuid."&a=download&type=fax_sent&t=bin&ext=".urlencode($fax_extension)."&filename=".urlencode($file_name).".pdf\">\n";
 							echo "    	PDF";
 							echo "	  </a>";
 						}
@@ -674,7 +674,7 @@ else {
 						echo "  </td>\n";
 						//echo "  <td class='".$row_style[$c]."' ondblclick=\"\">\n";
 						//if (file_exists($dir_fax_sent.'/'.$file_name.".jpg")) {
-						//	echo "	  <a href=\"v_fax_view.php?id=".$fax_uuid."&a=download&type=fax_sent&t=jpg&ext=".$fax_extension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
+						//	echo "	  <a href=\"fax_view.php?id=".$fax_uuid."&a=download&type=fax_sent&t=jpg&ext=".$fax_extension."&filename=".$file_name.".jpg\" target=\"_blank\">\n";
 						//	echo "    	jpg";
 						//	echo "	  </a>";
 						//}
@@ -694,7 +694,7 @@ else {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_sent_delete')) {
-							echo "        <td><a href=\"v_fax_view.php?id=".$fax_uuid."&type=fax_sent&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
+							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_sent&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";

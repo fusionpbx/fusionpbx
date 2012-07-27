@@ -41,27 +41,27 @@ else {
 
 //set the fax directory
 	if (count($_SESSION["domains"]) > 1) {
-		$v_fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
 	}
 	else {
-		$v_fax_dir = $_SESSION['switch']['storage']['dir'].'/fax';
+		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax';
 	}
 
 //get the fax extension
 	if (strlen($fax_extension) > 0) {
 		//set the fax directories. example /usr/local/freeswitch/storage/fax/329/inbox
-			$dir_fax_inbox = $v_fax_dir.'/'.$fax_extension.'/inbox';
-			$dir_fax_sent = $v_fax_dir.'/'.$fax_extension.'/sent';
-			$dir_fax_temp = $v_fax_dir.'/'.$fax_extension.'/temp';
+			$dir_fax_inbox = $fax_dir.'/'.$fax_extension.'/inbox';
+			$dir_fax_sent = $fax_dir.'/'.$fax_extension.'/sent';
+			$dir_fax_temp = $fax_dir.'/'.$fax_extension.'/temp';
 
 		//make sure the directories exist
 			if (!is_dir($_SESSION['switch']['storage']['dir'])) {
 				mkdir($_SESSION['switch']['storage']['dir']);
 				chmod($dir_fax_sent,0774);
 			}
-			if (!is_dir($v_fax_dir.'/'.$fax_extension)) {
-				mkdir($v_fax_dir.'/'.$fax_extension,0774,true);
-				chmod($v_fax_dir.'/'.$fax_extension,0774);
+			if (!is_dir($fax_dir.'/'.$fax_extension)) {
+				mkdir($fax_dir.'/'.$fax_extension,0774,true);
+				chmod($fax_dir.'/'.$fax_extension,0774);
 			}
 			if (!is_dir($dir_fax_inbox)) {
 				mkdir($dir_fax_inbox,0774,true);
@@ -101,7 +101,7 @@ else {
 		$fax_description = check_str($_POST["fax_description"]);
 	}
 
-//delete the user from the v_fax_users
+//delete the user from the fax users
 	if ($_GET["a"] == "delete" && permission_exists("fax_extension_delete")) {
 		//set the variables
 			$user_uuid = check_str($_REQUEST["user_uuid"]);
@@ -114,13 +114,13 @@ else {
 			$db->exec(check_sql($sql));
 		//redirect the browser
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax_edit.php?id=$fax_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
 			echo "<div align='center'>Delete Complete</div>";
 			require_once "includes/footer.php";
 			return;
 	}
 
-//add the user to the v_fax_users
+//add the user to the fax users
 	if (strlen($_REQUEST["user_uuid"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
 		//set the variables
 			$user_uuid = check_str($_REQUEST["user_uuid"]);
@@ -143,7 +143,7 @@ else {
 			$db->exec($sql_insert);
 		//redirect the browser
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax_edit.php?id=$fax_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
 			echo "<div align='center'>Add Complete</div>";
 			require_once "includes/footer.php";
 			return;
@@ -432,7 +432,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the browser
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fax.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
 				echo "<div align='center'>\n";
 				if ($action == "update" && permission_exists('fax_extension_edit')) {
 					echo "Update Complete\n";
@@ -493,7 +493,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap><b>Fax Edit</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_fax.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'>\n";
+	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='Copy'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='Back'>\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
@@ -592,7 +595,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".$field['username']."</td>\n";
 				echo "				<td>\n";
-				echo "					<a href='v_fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "					<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
