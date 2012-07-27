@@ -166,8 +166,7 @@ if (defined('STDIN')) {
 	if (strlen($fax_forward_number) > 0) {
 		if (file_exists($dir_fax."/".$fax_name.".tif")) {
 			//get the event socket information
-				$sql = "";
-				$sql .= "select * from v_settings ";
+				$sql = "select * from v_settings ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
