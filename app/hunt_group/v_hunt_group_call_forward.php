@@ -52,8 +52,7 @@ if (permission_exists('hunt_group_call_forward')) {
 		echo "	<br />";
 	}
 
-	$sql = "";
-	$sql .= "select * from v_hunt_groups ";
+	$sql = "select * from v_hunt_groups ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and hunt_group_type <> 'dnd' ";
 	$sql .= "and hunt_group_type <> 'call_forward' ";
@@ -90,10 +89,7 @@ if (permission_exists('hunt_group_call_forward')) {
 		echo "</tr>\n";
 	}
 
-	if ($result_count == 0) {
-		//no results
-	}
-	else { //received results
+	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['hunt_group_extension']."</td>\n";
@@ -103,9 +99,8 @@ if (permission_exists('hunt_group_call_forward')) {
 			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['hunt_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
+		}
 		unset($sql, $result, $row_count);
-
 	} //end if results
 
 	if ($is_included == "true" && $result_count == 0) {

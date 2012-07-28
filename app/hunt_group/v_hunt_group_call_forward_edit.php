@@ -61,8 +61,7 @@ function destination_select($select_name, $select_value, $select_default) {
 	$hunt_group_uuid = $_REQUEST["id"];
 
 //hunt_group information used to determine if this is an add or an update
-	$sql = "";
-	$sql .= "select * from v_hunt_groups ";
+	$sql = "select * from v_hunt_groups ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and hunt_group_uuid = '$hunt_group_uuid' ";
 	if (!(permission_exists('hunt_group_add') || permission_exists('hunt_group_edit'))) {
@@ -303,8 +302,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 
 		//insert the v_hunt_group_destinations
+			$hunt_group_destination_uuid = uuid();
 			$sql = "insert into v_hunt_group_destinations ";
 			$sql .= "(";
+			$sql .= "hunt_group_destination_uuid, ";
 			$sql .= "domain_uuid, ";
 			$sql .= "hunt_group_uuid, ";
 			$sql .= "destination_data, ";
@@ -317,6 +318,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
+			$sql .= "'$hunt_group_destination_uuid', ";
 			$sql .= "'$domain_uuid', ";
 			$sql .= "'$call_forward_uuid', ";
 			$sql .= "'$destination_data', ";
@@ -339,7 +341,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//redirect the user
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"3;url=/mod/hunt_group/v_hunt_group_call_forward.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/hunt_group/v_hunt_group_call_forward.php\">\n";
 		echo "<div align='center'>\n";
 		echo "Update Complete<br />\n";
 		echo "</div>\n";
@@ -351,8 +353,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "includes/header.php";
 
 //pre-populate the form
-	$sql = "";
-	$sql .= "select * from v_hunt_groups ";
+	$sql = "select * from v_hunt_groups ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and hunt_group_type = 'call_forward' ";
 	$sql .= "and hunt_group_extension = '$hunt_group_extension' ";
@@ -382,8 +383,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 		if ($row["hunt_group_type"] == 'call_forward') {
-			$sql = "";
-			$sql .= "select * from v_hunt_group_destinations ";
+			$sql = "select * from v_hunt_group_destinations ";
 			$sql .= "where hunt_group_uuid = '$hunt_group_uuid' ";
 			$prep_statement_2 = $db->prepare(check_sql($sql));
 			$prep_statement_2->execute();
