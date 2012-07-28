@@ -45,15 +45,22 @@ session_start();
 			}
 
 		//get the domain name
+			$username_array = explode("@", check_str($_REQUEST["username"]));
+			if (count($username_array) > 1) {
+				$domain_name = $username_array[count($username_array) -1];
+				$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+			}
 			if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
 				$domain_name = check_str($_REQUEST["domain_name"]);
-				$_SESSION["domain_name"] = $domain_name;
+			}
+			if (count($username_array) > 1 || strlen(check_str($_REQUEST["domain_name"])) > 0) {
 				foreach ($_SESSION['domains'] as &$row) {
 					if ($row['domain_name'] == $domain_name) {
 						$domain_uuid = $row["domain_uuid"];
 						$_SESSION["domain_uuid"] = $row["domain_uuid"];
 						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
 						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
+						$_SESSION["domain_name"] = $domain_name;
 					}
 				}
 			}
