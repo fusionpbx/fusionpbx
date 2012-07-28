@@ -236,7 +236,7 @@ include "root.php";
 						$sql = "show tables";
 					}
 					if ($this->type == "mssql") {
-						$sql = "SELECT * FROM sys.Tables";
+						$sql = "SELECT * FROM sys.Tables order by name asc";
 					}
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
