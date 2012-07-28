@@ -58,16 +58,20 @@ if (count($_POST)>0) {
 
 		function db_field_exists() {
 			global $db;
-			$sql = "select * from v_virtual_table_fields ";
+			$sql = "select count(*) as num_rows from v_virtual_table_fields ";
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
 			$sql .= "and virtual_table_uuid ='$this->virtual_table_uuid' ";
 			$sql .= "and virtual_field_name = '$this->virtual_field_name' ";
-			$row = $db->query($sql)->fetch(PDO::FETCH_ASSOC);
-			if (is_array($row)) {
-				return true;
-			}
-			else {
-				return false;
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 		}
 
@@ -75,6 +79,7 @@ if (count($_POST)>0) {
 			global $db;
 			$sql = "insert into v_virtual_table_fields ";
 			$sql .= "(";
+			$sql .= "virtual_table_field_uuid, ";
 			$sql .= "domain_uuid, ";
 			$sql .= "virtual_table_uuid, ";
 			$sql .= "virtual_field_label, ";
@@ -90,6 +95,7 @@ if (count($_POST)>0) {
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
+			$sql .= "'".uuid()."', ";
 			$sql .= "'$this->domain_uuid', ";
 			$sql .= "'$this->virtual_table_uuid', ";
 			$sql .= "'$this->virtual_field_label', ";
@@ -113,7 +119,7 @@ if (count($_POST)>0) {
 	class v_virtual_table_data {
 		var $domain_uuid;
 		var $virtual_table_uuid;
-		var $virtual_data_row_id;
+		var $virtual_data_row_uuid;
 		var $virtual_field_name;
 		var $virtual_data_field_value;
 		var $last_insert_id;
@@ -139,7 +145,7 @@ if (count($_POST)>0) {
 			$sql = "insert into v_virtual_table_data ";
 			$sql .= "(";
 			$sql .= "domain_uuid, ";
-			$sql .= "virtual_data_row_id, ";
+			$sql .= "virtual_data_row_uuid, ";
 			$sql .= "virtual_table_uuid, ";
 			$sql .= "virtual_field_name, ";
 			$sql .= "virtual_data_field_value, ";
@@ -149,7 +155,7 @@ if (count($_POST)>0) {
 			$sql .= "values ";
 			$sql .= "(";
 			$sql .= "'$this->domain_uuid', ";
-			$sql .= "'$this->virtual_data_row_id', ";
+			$sql .= "'$this->virtual_data_row_uuid', ";
 			$sql .= "'$this->virtual_table_uuid', ";
 			$sql .= "'$this->virtual_field_name', ";
 			$sql .= "'$this->virtual_data_field_value', ";
@@ -164,7 +170,7 @@ if (count($_POST)>0) {
 		function db_update() {
 			global $db;
 			$sql  = "update v_virtual_table_data set ";
-			$sql .= "virtual_data_row_id = '$this->virtual_data_row_id', ";
+			$sql .= "virtual_data_row_uuid = '$this->virtual_data_row_uuid', ";
 			$sql .= "virtual_field_name = '$this->virtual_field_name', ";
 			$sql .= "virtual_data_field_value = '$this->virtual_data_field_value', ";
 			$sql .= "virtual_data_add_user = '".$_SESSION["username"]."', ";
@@ -172,7 +178,6 @@ if (count($_POST)>0) {
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
 			$sql .= "and virtual_table_data_uuid = '$this->virtual_table_data_uuid' ";
 			$db->exec($sql);
-			$this->last_insert_id = $db->lastInsertId($id);
 			unset($sql);
 		}
 	}
@@ -197,9 +202,8 @@ if (count($_POST)>0) {
 
 			echo "<div align='center'>\n";
 			echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
-
 			echo "<tr>\n";
-			echo "<td width='30%' nowrap align='left' valign='top'><b>Import Results</b></td>\n";
+			echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import Results</b></td>\n";
 			echo "<td width='70%' align='right' valign='top'>\n";
 			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
 			echo "	<br /><br />\n";
@@ -258,10 +262,10 @@ if (count($_POST)>0) {
 								$data->domain_uuid = $domain_uuid;
 								$data->virtual_table_uuid = $virtual_table_uuid;
 								if ($x == 0) {
-									$virtual_data_row_id = $data->db_unique_id();
-//									echo "id: ".$virtual_data_row_id."<br />\n";
+									$virtual_data_row_uuid = uuid();
+									//echo "id: ".$virtual_data_row_uuid."<br />\n";
 								}
-								$data->virtual_data_row_id = $virtual_data_row_id;
+								$data->virtual_data_row_uuid = $virtual_data_row_uuid;
 								$data->virtual_field_name = $virtual_field_name;
 								$data->virtual_data_field_value = $virtual_field_value;
 								$data->db_insert();
@@ -295,7 +299,7 @@ if (count($_POST)>0) {
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr>\n";
-	echo "<td width='30%' nowrap align='left' valign='top'><b>Import</b></td>\n";
+	echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
 	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
 	echo "	<br /><br />\n";
@@ -309,12 +313,11 @@ if (count($_POST)>0) {
 	echo "      <br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Data:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -325,7 +328,7 @@ if (count($_POST)>0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Delimiter:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -339,7 +342,7 @@ if (count($_POST)>0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Enclosure:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -352,13 +355,11 @@ if (count($_POST)>0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='submit' name='import' class='btn' value='Import'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
-
 	echo "</table>";
 
 	echo "	</td>";
@@ -367,7 +368,6 @@ if (count($_POST)>0) {
 	echo "</div>";
 
 	echo "</form>";
-
 
 require_once "includes/footer.php";
 ?>
