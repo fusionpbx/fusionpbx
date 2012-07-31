@@ -64,9 +64,9 @@
 		ring_group_timeout_app = row.ring_group_timeout_app;
 		ring_group_timeout_data = row.ring_group_timeout_data;
 		ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
-		
+
 		if (string.len(ring_group_cid_name_prefix) > 0) then
-			caller_id_name = ring_group_cid_name_prefix .. "#" .. caller_id_name;
+			origination_caller_id_name = ring_group_cid_name_prefix .. "#" .. caller_id_name;
 		end
 
 		if (row.ring_group_strategy == "sequence") then
@@ -76,9 +76,9 @@
 			delimiter = ",";
 		end
 		if (x == 0) then
-			app_data = "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		else
-			app_data = app_data .. delimiter .. "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = app_data .. delimiter .. "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		end
 		x = x + 1;
 	end);
