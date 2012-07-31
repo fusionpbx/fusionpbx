@@ -1140,17 +1140,17 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				echo "<optgroup label='Recordings'>\n";
 				while($file = readdir($dh)) {
 					if($file != "." && $file != ".." && $file[0] != '.') {
-						if(is_readable($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
+						if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
 							//this is a directory
 						}
 						else {
 							if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$file) {
 								$tmp_selected = true;
 								if ($select_type == "dialplan") {
-									echo "		<option value='playback:".$_SESSION['switch']['recordings']['dir']."/".$file."' selected>".$file."</option>\n";
+									echo "		<option value='playback:".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
 								}
 								if ($select_type == "ivr") {
-									echo "		<option value='menu-exec-app:playback ".$_SESSION['switch']['recordings']['dir']."/".$file."' selected>".$file."</option>\n";
+									echo "		<option value='menu-exec-app:playback ".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
 								}
 							}
 							else {
