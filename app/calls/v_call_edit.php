@@ -439,6 +439,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($row["hunt_group_type"] == 'call_forward' || $row["hunt_group_type"] == 'follow_me_sequence' || $row["hunt_group_type"] == 'follow_me_simultaneous') {
 			$sql = "select * from v_hunt_group_destinations ";
 			$sql .= "where hunt_group_uuid = '$hunt_group_uuid' ";
+			$sql .= "order by destination_order asc ";
 			$prep_statement_2 = $db->prepare(check_sql($sql));
 			$prep_statement_2->execute();
 			$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
