@@ -42,11 +42,13 @@
 --get the variables
 	domain_name = session:getVariable("domain_name");
 	ring_group_uuid = session:getVariable("ring_group_uuid");
+	caller_id_name = session:getVariable("caller_id_name");
+	caller_id_number = session:getVariable("caller_id_number");
 
 --get the extension list
 	sql = 
 	[[ SELECT g.ring_group_extension_uuid, e.extension_uuid, e.extension, 
-	r.ring_group_strategy, r.ring_group_timeout_sec, r.ring_group_timeout_app, r.ring_group_timeout_data
+	r.ring_group_strategy, r.ring_group_timeout_sec, r.ring_group_timeout_app, r.ring_group_timeout_data, r.ring_group_cid_name_prefix
 	FROM v_ring_groups as r, v_ring_group_extensions as g, v_extensions as e 
 	where g.ring_group_uuid = r.ring_group_uuid 
 	and g.ring_group_uuid = ']]..ring_group_uuid..[[' 
@@ -61,6 +63,12 @@
 		ring_group_timeout_sec = row.ring_group_timeout_sec;
 		ring_group_timeout_app = row.ring_group_timeout_app;
 		ring_group_timeout_data = row.ring_group_timeout_data;
+		ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
+		
+		if (string.len(ring_group_cid_name_prefix) > 0) then
+			caller_id_name = ring_group_cid_name_prefix .. "#" .. caller_id_name;
+		end
+
 		if (row.ring_group_strategy == "sequence") then
 			delimiter = "|";
 		end
@@ -68,9 +76,9 @@
 			delimiter = ",";
 		end
 		if (x == 0) then
-			app_data = "[leg_timeout="..ring_group_timeout_sec.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		else
-			app_data = app_data .. delimiter .. "[leg_timeout="..ring_group_timeout_sec.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = app_data .. delimiter .. "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		end
 		x = x + 1;
 	end);

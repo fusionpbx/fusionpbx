@@ -65,6 +65,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the context.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_cid_name_prefix';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the caller ID prefix.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_strategy';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select the strategy.';

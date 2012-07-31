@@ -70,6 +70,7 @@ else {
 		$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 		$ring_group_timeout_sec = check_str($_POST["ring_group_timeout_sec"]);
 		$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
+		$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
 		$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
 		$ring_group_description = check_str($_POST["ring_group_description"]);
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -93,6 +94,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($ring_group_strategy) == 0) { $msg .= "Please provide: Strategy<br>\n"; }
 		if (strlen($ring_group_timeout_sec) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
 		if (strlen($ring_group_timeout_app) == 0) { $msg .= "Please provide: Timeout Action<br>\n"; }
+		//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Prefix<br>\n"; }
 		if (strlen($ring_group_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (strlen($ring_group_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -136,6 +138,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "ring_group_timeout_sec, ";
 					$sql .= "ring_group_timeout_app, ";
 					$sql .= "ring_group_timeout_data, ";
+					$sql .= "ring_group_cid_name_prefix, ";
 					$sql .= "ring_group_enabled, ";
 					$sql .= "ring_group_description, ";
 					$sql .= "dialplan_uuid ";
@@ -151,6 +154,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$ring_group_timeout_sec', ";
 					$sql .= "'$ring_group_timeout_app', ";
 					$sql .= "'$ring_group_timeout_data', ";
+					$sql .= "'$ring_group_cid_name_prefix', ";
 					$sql .= "'$ring_group_enabled', ";
 					$sql .= "'$ring_group_description', ";
 					$sql .= "'$dialplan_uuid' ";
@@ -170,6 +174,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "ring_group_timeout_sec = '$ring_group_timeout_sec', ";
 				$sql .= "ring_group_timeout_app = '$ring_group_timeout_app', ";
 				$sql .= "ring_group_timeout_data = '$ring_group_timeout_data', ";
+				$sql .= "ring_group_cid_name_prefix = '$ring_group_cid_name_prefix', ";
 				$sql .= "ring_group_enabled = '$ring_group_enabled', ";
 				$sql .= "ring_group_description = '$ring_group_description' ";
 				//$sql .= "dialplan_uuid = '$dialplan_uuid' ";
@@ -295,6 +300,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$ring_group_timeout_sec = $row["ring_group_timeout_sec"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
+			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
 			$ring_group_enabled = $row["ring_group_enabled"];
 			$ring_group_description = $row["ring_group_description"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -476,6 +482,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	switch_select_destination("dialplan", "", "ring_group_timeout_action", $ring_group_timeout_action, "", "");
 	echo "	<br />\n";
 	echo "	Select the timeout destination.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	CID Prefix:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='$ring_group_cid_name_prefix'>\n";
+	echo "<br />\n";
+	echo "Set a prefix on the caller ID name. \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
