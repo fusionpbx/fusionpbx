@@ -24,6 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
+require_once "includes/classes/switch_dialplan.php";
 
 //define the directory class
 	class switch_ivr_menu {
@@ -159,8 +160,11 @@ include "root.php";
 
 			//add the ivr menu
 				if (strlen($this->ivr_menu_option_action) == 0) {
-
 					if (strlen($this->ivr_menu_extension) > 0) {
+						//ensure the dialplan_uuid has a uuid
+							if (strlen($this->dialplan_uuid) == 0) {
+								$this->dialplan_uuid = uuid();
+							}
 						//add the dialplan
 							$database = new database;
 							if ($this->db) {
@@ -248,7 +252,7 @@ include "root.php";
 						}
 
 					//add the ivr menu
-						$ivr_menu_uuid = uuid();
+						$this->ivr_menu_uuid = uuid();
 						$database = new database;
 						if ($this->db) {
 							$database->db = $this->db;
@@ -288,7 +292,6 @@ include "root.php";
 
 			//add the ivr menu option
 				if (strlen($this->ivr_menu_option_action) > 0) {
-					$ivr_menu_uuid = uuid();
 					$database = new database;
 					if ($this->db) {
 						$database->db = $this->db;
@@ -357,7 +360,9 @@ include "root.php";
 						}
 
 					//update the ivr menu
-						$ivr_menu_uuid = uuid();
+						if (strlen($this->dialplan_uuid) == 0) {
+							$this->dialplan_uuid = uuid();
+						}
 						$database = new database;
 						$database->table = "v_ivr_menus";
 						$database->fields['ivr_menu_uuid'] = $this->ivr_menu_uuid;
@@ -394,8 +399,14 @@ include "root.php";
 						$database->where[1]['operator'] = '=';
 						$database->update();
 
-					if (strlen($this->ivr_menu_extension) > 0) {
-						//update the dialplan
+					//check to see if the dialplan entry exists
+						$dialplan = new dialplan;
+						$dialplan->domain_uuid = $_SESSION["domain_uuid"];
+						$dialplan->dialplan_uuid = $this->dialplan_uuid;
+						$dialplan_exists = $dialplan->dialplan_exists();
+
+					//if the dialplan entry does not exist then add it
+						if (!$dialplan_exists) {
 							$database = new database;
 							$database->table = "v_dialplans";
 							$database->fields['dialplan_name'] = $this->ivr_menu_name;
@@ -406,25 +417,40 @@ include "root.php";
 							$database->fields['app_uuid'] = $this->app_uuid;
 							$database->fields['domain_uuid'] = $this->domain_uuid;
 							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
-							$database->where[0]['name'] = 'domain_uuid';
-							$database->where[0]['value'] = $this->domain_uuid;
-							$database->where[0]['operator'] = '=';
-							$database->where[1]['name'] = 'dialplan_uuid';
-							$database->where[1]['value'] = $this->dialplan_uuid;
-							$database->where[1]['operator'] = '=';
-							$database->delete();
 							$database->add();
+						}
+					//if the dialplan entry exists then update it
+						if ($dialplan_exists && strlen($this->ivr_menu_extension) > 0) {
+							//update the dialplan
+								$database = new database;
+								$database->table = "v_dialplans";
+								$database->fields['dialplan_name'] = $this->ivr_menu_name;
+								$database->fields['dialplan_order'] = '333';
+								$database->fields['dialplan_context'] = $_SESSION['context'];
+								$database->fields['dialplan_enabled'] = $this->ivr_menu_enabled;
+								$database->fields['dialplan_description'] = $this->ivr_menu_description;
+								$database->fields['app_uuid'] = $this->app_uuid;
+								$database->fields['domain_uuid'] = $this->domain_uuid;
+								$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+								$database->where[0]['name'] = 'domain_uuid';
+								$database->where[0]['value'] = $this->domain_uuid;
+								$database->where[0]['operator'] = '=';
+								$database->where[1]['name'] = 'dialplan_uuid';
+								$database->where[1]['value'] = $this->dialplan_uuid;
+								$database->where[1]['operator'] = '=';
+								$database->update();
 
-						//delete the old dialplan details to prepare for new details 
-							$database = new database;
-							$database->table = "v_dialplan_details";
-							$database->where[0]['name'] = 'domain_uuid';
-							$database->where[0]['value'] = $this->domain_uuid;
-							$database->where[0]['operator'] = '=';
-							$database->where[1]['name'] = 'dialplan_uuid';
-							$database->where[1]['value'] = $this->dialplan_uuid;
-							$database->where[1]['operator'] = '=';
-							$database->delete();
+							//delete the old dialplan details to prepare for new details 
+								$database = new database;
+								$database->table = "v_dialplan_details";
+								$database->where[0]['name'] = 'domain_uuid';
+								$database->where[0]['value'] = $this->domain_uuid;
+								$database->where[0]['operator'] = '=';
+								$database->where[1]['name'] = 'dialplan_uuid';
+								$database->where[1]['value'] = $this->dialplan_uuid;
+								$database->where[1]['operator'] = '=';
+								$database->delete();
+						}
 
 						//add the dialplan details
 							$detail_data = '^'.$this->ivr_menu_extension.'$';
@@ -494,7 +520,6 @@ include "root.php";
 								$database->fields['dialplan_detail_order'] = '030';
 								$database->add();
 							}
-					}
 				}
 
 			//update the ivr menu option

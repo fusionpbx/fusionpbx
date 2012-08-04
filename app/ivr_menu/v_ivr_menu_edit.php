@@ -199,8 +199,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//add the data
 				if ($action == "add" && permission_exists('ivr_menu_add')) {
-					$ivr->ivr_menu_uuid = uuid();
-					$ivr->dialplan_uuid = uuid();
 					$ivr->add();
 
 					//synchronize the xml config

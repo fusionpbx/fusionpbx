@@ -221,6 +221,25 @@ include "root.php";
 				unset($prep_statement, $result);
 			}
 
+			public function dialplan_exists() {
+				global $db;
+				$sql = "select count(*) as num_rows from v_dialplans ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and dialplan_uuid = '".$this->dialplan_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['num_rows'] > 0) {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+				unset($prep_statement, $result);
+			}
+
 			public function import() {
 				if (strlen($this->xml) > 0) {
 					//replace the variables
