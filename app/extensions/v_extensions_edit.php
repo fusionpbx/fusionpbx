@@ -1181,7 +1181,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='NDLB-connectile-dysfunction'>Rewrite contact IP and port</option>\n";
 	}
 	if ($sip_force_contact == "NDLB-connectile-dysfunction-2.0") { 
-		echo "    <option value='NDLB-connectile-dysfunction' selected='selected'>Rewrite contact IP and port 2.0</option>\n";
+		echo "    <option value='NDLB-connectile-dysfunction-2.0' selected='selected'>Rewrite contact IP and port 2.0</option>\n";
 	}
 	else {
 		echo "    <option value='NDLB-connectile-dysfunction-2.0'>Rewrite contact IP and port 2.0</option>\n";
