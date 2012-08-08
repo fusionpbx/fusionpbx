@@ -847,6 +847,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 	//list hunt groups
 		$sql = "select * from v_hunt_groups ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and hunt_group_enabled = 'true' ";
 		$sql .= "and ( ";
 		$sql .= "hunt_group_type = 'simultaneous' ";
 		$sql .= "or hunt_group_type = 'sequence' ";
@@ -2323,6 +2324,7 @@ function save_hunt_group_xml() {
 		$x = 0;
 
 		$sql = "select * from v_hunt_groups ";
+		$sql .= "where hunt_group_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
