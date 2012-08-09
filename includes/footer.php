@@ -70,7 +70,6 @@ require_once "includes/require.php";
 	require_once "includes/menu.php";
 
 //prepare the template to display the output
-	$custom_title = '';
 	$custom_head = '';
 	$output = str_replace ("<!--{title}-->", $custom_title, $template); //<!--{title}--> defined in each individual page
 	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page

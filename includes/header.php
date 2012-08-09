@@ -66,7 +66,7 @@ require_once "includes/require.php";
 	ob_start();
 
 // get the content
-	if (isset($content)) {
+	if (isset($_GET["c"])) {
 		$content = $_GET["c"]; //link
 	}
 	else {
@@ -74,8 +74,7 @@ require_once "includes/require.php";
 	}
 
 //get the parent id
-	$sql = "";
-	$sql .= "select * from v_menu_items ";
+	$sql = "select * from v_menu_items ";
 	$sql .= "where menu_uuid = '".$_SESSION['domain']['menu']['uuid']."' ";
 	$sql .= "and menu_item_link = '".$_SERVER["SCRIPT_NAME"]."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -88,8 +87,7 @@ require_once "includes/require.php";
 	unset($result);
 
 //get the content
-	$sql = "";
-	$sql .= "select * from v_rss ";
+	$sql = "select * from v_rss ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and rss_category = 'content' ";
 	if (strlen($content) == 0) {
@@ -98,34 +96,30 @@ require_once "includes/require.php";
 	else {
 		$sql .= "and rss_link = '".$content."' ";
 	}
-	$sql .= "and length(rss_del_date) = 0 ";
-	$sql .= "or domain_uuid = '$domain_uuid' ";
-	$sql .= "and rss_category = 'content' ";
-	if (strlen($content) == 0) {
-		$sql .= "and rss_link = '".$_SERVER["PHP_SELF"]."' ";
-	}
-	else {
-		$sql .= "and rss_link = '".$content."' ";
-	}
-	$sql .= "and rss_del_date is null ";
+	$sql .= "and (length(rss_del_date) = 0 ";
+	$sql .= "or rss_del_date is null) ";
 	$sql .= "order by rss_order asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$result_count = count($result);
 
-	$customtitle = '';
+	$custom_title = '';
 	foreach($result as $row) {
-		$template_rss_sub_category = $row[rss_sub_category];
-		if (strlen($row[rss_group]) == 0) {
+		$template_rss_sub_category = $row['rss_sub_category'];
+		if (strlen($row['rss_group']) == 0) {
 			//content is public
-			$content_from_db = &$row[rss_description];
-			$customtitle = $row[rss_title];
+			$content_from_db = &$row['rss_description'];
+			if (strlen($row['rss_title']) > 0) {
+				$custom_title = $row['rss_title'];
+			}
 		}
 		else {
 			if (if_group($row[rss_group])) { //viewable only to designated group
 				$content_from_db = &$row[rss_description];
-				$customtitle = $row[rss_title];
+				if (strlen($row['rss_title']) > 0) {
+					$custom_title = $row['rss_title'];
+				}
 			}
 		}
 	} //end foreach
