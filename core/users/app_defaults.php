@@ -129,6 +129,7 @@
 					//get the user_uuid
 						$sql = "select user_uuid from v_users ";
 						$sql .= "where username = '".$row['username']."' ";
+						$sql .= "and user_enabled = 'true' ";
 						$prep_statement_sub = $db->prepare($sql);
 						$prep_statement_sub->execute();
 						$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
@@ -144,6 +145,7 @@
 				else {
 					//get the number of users
 						$sql = "select count(*) as num_rows from v_users ";
+						$sql .= "where user_enabled = 'true' ";
 						$prep_statement_sub = $db->prepare($sql);
 						$prep_statement_sub->execute();
 						$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
@@ -152,6 +154,7 @@
 					if ($num_rows == 1) {
 						//get the user_uuid
 							$sql = "select user_uuid from v_users ";
+							$sql .= "and user_enabled = 'true' ";
 							$prep_statement_sub = $db->prepare($sql);
 							$prep_statement_sub->execute();
 							$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
@@ -166,4 +169,25 @@
 				}
 			}
 	}
+
+//if there are no permissions listed in v_group_permissions then set the default permissions
+	$sql = "select count(*) as count from v_users ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and user_enabled is null ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
+	unset ($prep_statement);
+	if ($sub_result['count'] > 0) {
+		//send output
+			if ($display_type == "text") {
+				echo "	Users:	set enabled=true\n";
+			}
+		//set the user_enabled to true
+			$sql = "update v_users set ";
+			$sql .= "user_enabled = 'true' ";
+			$db->exec($sql);
+			unset($sql);
+	}
+
 ?>

@@ -85,11 +85,11 @@ echo "	<td align=\"center\">\n";
 	echo "</tr>\n";
 
 //get the user list from the database
-	$sql = "";
-	$sql .= " select * from v_users ";
-	$sql .= " where domain_uuid = '$domain_uuid' ";
+	$sql = " select * from v_users ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and user_enabled = 'true' ";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
-		$sql .= " and $field_name = '$field_value' ";
+		$sql .= "and $field_name = '$field_value' ";
 	}
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -104,11 +104,11 @@ echo "	<td align=\"center\">\n";
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page; 
 
-	$sql = "";
-	$sql .= " select * from v_users ";
-	$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql = "select * from v_users ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and user_enabled = 'true' ";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
-		$sql .= " and $field_name like '%$field_value%' ";
+		$sql .= "and $field_name like '%$field_value%' ";
 	}
 	if (strlen($order_by)> 0) { 
 		$sql .= "order by $order_by $order "; 

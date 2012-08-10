@@ -159,10 +159,10 @@ if (!function_exists('sync_directory')) {
 				//print_r($username_array);
 				foreach ($username_array as &$username) {
 					if (strlen($username) > 0) {
-						$sql = "";
-						$sql .= "select * from v_users ";
+						$sql = "select * from v_users ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
 						$sql .= "and username = '$username' ";
+						$sql .= "and user_enabled = 'true' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$tmp_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);

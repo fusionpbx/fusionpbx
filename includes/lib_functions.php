@@ -554,6 +554,7 @@
 			$sql = "select * from v_users ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
 			$sql .= "and username = '".$username."' ";
+			//$sql .= "and user_enabled = 'true' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -574,6 +575,7 @@
 				$sql = "select * from v_users ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and username = '$username' ";
+				//$sql .= "and user_enabled = 'true' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);

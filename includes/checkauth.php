@@ -69,6 +69,7 @@ session_start();
 			$sql = "select * from v_users ";
 			$sql .= "where domain_uuid=:domain_uuid ";
 			$sql .= "and username=:username ";
+			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 			$prep_statement->bindParam(':username', check_str($_REQUEST["username"]));

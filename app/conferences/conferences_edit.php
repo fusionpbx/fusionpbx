@@ -394,6 +394,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<table width='52%'>\n";
 			$sql = "SELECT * FROM v_conference_users as e, v_users as u ";
 			$sql .= "where e.user_uuid = u.user_uuid  ";
+			$sql .= "and u.user_enabled = 'true' ";
 			$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and e.conference_uuid = '".$conference_uuid."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
@@ -413,6 +414,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<br />\n";
 			$sql = "SELECT * FROM v_users ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and user_enabled = 'true' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			echo "			<select name=\"user_uuid\" class='frm'>\n";

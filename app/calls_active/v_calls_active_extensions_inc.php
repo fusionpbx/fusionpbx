@@ -51,10 +51,10 @@ else {
 	$row_style["1"] = "row_style1";
 
 //get the user status
-	$sql = "";
-	$sql .= "select e.extension, u.username, u.user_status ";
+	$sql = "select e.extension, u.username, u.user_status ";
 	$sql .= "from v_users as u, v_extensions as e ";
 	$sql .= "where e.domain_uuid = '$domain_uuid' ";
+	$sql .= "and u.user_enabled = 'true' ";
 	$sql .= "and u.domain_uuid = '$domain_uuid' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {

@@ -697,6 +697,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<table width='52%'>\n";
 		$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
 		$sql .= "where e.user_uuid = u.user_uuid  ";
+		$sql .= "and u.user_enabled = 'true' ";
 		$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and e.extension_uuid = '".$extension_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -716,6 +717,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<br />\n";
 		$sql = "SELECT * FROM v_users ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and user_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		echo "			<select name=\"user_uuid\" class='frm'>\n";
@@ -984,7 +986,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Voicemail Enabled:\n";
@@ -999,7 +1001,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='true'>true</option>\n";
 	}
 	if ($vm_enabled == "false") { 
-		echo "    <option value='false' selected >false</option>\n";
+		echo "    <option value='false' selected='selected'>false</option>\n";
 	}
 	else {
 		echo "    <option value='false'>false</option>\n";

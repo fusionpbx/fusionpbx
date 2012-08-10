@@ -160,6 +160,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'user_enabled';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'user_add_user';
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'useradduser';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';

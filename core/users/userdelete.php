@@ -38,10 +38,10 @@ else {
 	$user_uuid = check_str($_GET["id"]);
 
 //get the username from v_users
-	$sql = "";
-	$sql .= "select * from v_users ";
+	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and user_uuid = '$user_uuid' ";
+	$sql .= "and user_enabled = 'true' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);

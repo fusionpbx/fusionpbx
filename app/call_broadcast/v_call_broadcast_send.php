@@ -259,14 +259,16 @@ require_once "includes/header.php";
 
 	if (strlen($group_name) > 0) {
 		$sql = " select * from v_users as u, v_group_users as m ";
-		$sql .= " where u.user_uuid = m.user_uuid ";
-		$sql .= " and m.group_name = '".$group_name."' ";
-		$sql .= " and u.user_category = '".$user_category."' ";
+		$sql .= "where u.user_uuid = m.user_uuid ";
+		$sql .= "and u.user_enabled = 'true' ";
+		$sql .= "and m.group_name = '".$group_name."' ";
+		$sql .= "and u.user_category = '".$user_category."' ";
 		//echo $sql."<br />";
 	}
 	else {
-		$sql = " select * from v_users as u ";
-		$sql .= " where u.user_category = '".$user_category."' ";
+		$sql = "select * from v_users as u ";
+		$sql .= "where u.user_category = '".$user_category."' ";
+		$sql .= "and u.user_enabled = 'true' ";
 		//echo $sql."<br />";
 	}
 	$prep_statement = $db->prepare(check_sql($sql));

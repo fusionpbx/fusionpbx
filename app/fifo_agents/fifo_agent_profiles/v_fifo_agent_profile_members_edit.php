@@ -241,6 +241,7 @@ if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 	//generate the user list
 		$sql = "SELECT * FROM v_users ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and user_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 

@@ -65,8 +65,9 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	//username is already used.
 	if (strlen($request['username']) != 0) {
 		$sql = "SELECT * FROM v_users ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		$sql .= " and username = '" . $request['username'] . "' ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and username = '" . $request['username'] . "' ";
+		$sql .= "and user_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		if (count($prep_statement->fetchAll(PDO::FETCH_NAMED)) > 0) {

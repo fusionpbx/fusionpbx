@@ -304,7 +304,7 @@ function event_socket_request($fp, $cmd) {
 				$response .= $buffer;
 			}
 
-			if ($contentlength == 0) { //if content length is already don't process again
+			if ($contentlength == 0) { //if the content has length don't process again
 				if (strlen(trim($buffer)) > 0) { //run only if buffer has content
 					$temparray = explode(":", trim($buffer));
 					if ($temparray[0] == "Content-Length") {
@@ -315,7 +315,7 @@ function event_socket_request($fp, $cmd) {
 
 			usleep(20); //allow time for reponse
 
-			//optional because of script timeout //don't let while loop become endless
+			//prevent an endless loop //optional because of script timeout
 			if ($i > 1000000) { break; }
 
 			if ($contentlength > 0) { //is contentlength set
@@ -1932,9 +1932,6 @@ function save_extension_xml() {
 		//syncrhonize the phone directory
 			sync_directory();
 
-		//apply settings reminder
-			$_SESSION["reload_xml"] = true;
-
 		//$cmd = "api reloadxml";
 		//event_socket_request_cmd($cmd);
 		//unset($cmd);
@@ -2895,8 +2892,6 @@ function save_hunt_group_xml() {
 	//save the dialplan xml files
 		save_dialplan_xml();
 
-	//apply settings reminder
-		$_SESSION["reload_xml"] = true;
 } //end huntgroup function lua
 
 
@@ -3433,6 +3428,7 @@ if (!function_exists('sync_directory')) {
 		//get a list of extensions and the users assigned to them
 			$sql = "select * from v_extensions ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and extension_enabled = 'true'; ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$x = 0;
@@ -3448,6 +3444,7 @@ if (!function_exists('sync_directory')) {
 						$sql = "select * from v_users ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
 						$sql .= "and username = '$username' ";
+						$sql .= "and user_enabled = 'true' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$tmp_result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -3560,8 +3557,6 @@ if (!function_exists('sync_directory')) {
 			fwrite($fout, $tmp);
 			fclose($fout);
 
-		//apply settings reminder
-			$_SESSION["reload_xml"] = true;
 	} //end sync_directory
 } //end if function exists
 
@@ -3672,8 +3667,7 @@ if (!function_exists('save_ivr_menu_xml')) {
 					$tmp .= "		max-timeouts=\"$ivr_menu_max_timeouts\"\n";
 					$tmp .= "		digit-len=\"$ivr_menu_digit_len\">\n";
 
-					$sub_sql = "";
-					$sub_sql .= "select * from v_ivr_menu_options ";
+					$sub_sql = "select * from v_ivr_menu_options ";
 					$sub_sql .= "where ivr_menu_uuid = '$ivr_menu_uuid' ";
 					$sub_sql .= "and domain_uuid = '$domain_uuid' ";
 					$sub_sql .= "order by ivr_menu_option_order asc "; 
@@ -4174,11 +4168,12 @@ if (!function_exists('save_call_center_xml')) {
 				fwrite($fout, $file_contents);
 				fclose($fout);
 
-			//syncrhonize the configuration
+			//save the dialplan xml files
 				save_dialplan_xml();
 
 			//apply settings reminder
 				$_SESSION["reload_xml"] = true;
+
 		}
 	}
 }

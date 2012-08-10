@@ -51,6 +51,7 @@ else {
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and user_uuid = '$user_uuid' ";
+	$sql .= "and user_enabled = 'true' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -118,12 +119,15 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	$user_time_zone = check_str($_POST["user_time_zone"]);
 	$contact_uuid = check_str($_POST["contact_uuid"]);
 	$group_member = check_str($_POST["group_member"]);
+	$user_enabled = check_str($_POST["user_enabled"]);
 
 	//if (strlen($password) == 0) { $msg_error .= "Password cannot be blank.<br>\n"; }
 	//if (strlen($username) == 0) { $msg_error .= "Please provide the username.<br>\n"; }
 	if ($password != $confirm_password) { $msg_error .= "Passwords did not match.<br>\n"; }
 	//if (strlen($contact_uuid) == 0) { $msg_error .= "Please provide an email.<br>\n"; }
 	//if (strlen($user_time_zone) == 0) { $msg_error .= "Please provide an time zone.<br>\n"; }
+	if (strlen($user_enabled) == 0) { $msg_error .= "Please provide an enable or disable the user.<br>\n"; }
+
 	if ($msg_error) {
 		require_once "includes/header.php";
 		echo "<div align='center'>";
@@ -240,6 +244,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 				$sql .= "salt = '".$salt."', ";
 		}
 		$sql .= "user_status = '$user_status', ";
+		$sql .= "user_enabled = '$user_enabled', ";
 		if (strlen($contact_uuid) == 0) {
 			$sql .= "contact_uuid = null ";
 		}
@@ -294,9 +299,10 @@ else {
 		}
 	}
 	else {
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and username = '$username' ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and username = '$username' ";
 	}
+	$sql .= "and user_enabled = 'true' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -585,6 +591,31 @@ else {
 	echo "		Select the default time zone.<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    Enabled:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='user_enabled'>\n";
+	echo "    <option value=''></option>\n";
+	if ($user_enabled == "true" || $user_enabled == "") { 
+		echo "    <option value='true' selected='selected'>true</option>\n";
+	}
+	else {
+		echo "    <option value='true'>true</option>\n";
+	}
+	if ($user_enabled == "false") { 
+		echo "    <option value='false' selected='selected'>false</option>\n";
+	}
+	else {
+		echo "    <option value='false'>false</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo "Enable/disable this user.\n";
+	echo "</td>\n";
+	echo "</tr>\n";	
 
 	echo "	</table>";
 	echo "<br>";

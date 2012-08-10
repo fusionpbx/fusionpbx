@@ -329,6 +329,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//---- Begin Select List --------------------
 	$sql = "SELECT * FROM v_users ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and user_enabled = 'true' ";
 	$sql .= "order by username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
