@@ -87,7 +87,6 @@ echo "	<td align=\"center\">\n";
 //get the user list from the database
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
 		$sql .= "and $field_name = '$field_value' ";
 	}
@@ -106,7 +105,6 @@ echo "	<td align=\"center\">\n";
 
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
 		$sql .= "and $field_name like '%$field_value%' ";
 	}
