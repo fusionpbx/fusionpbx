@@ -32,6 +32,7 @@
 		<param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
 		<param name="outbound-codec-prefs" value="$${outbound_codec_prefs}"/>
 		<param name="hold-music" value="$${hold_music}"/>
+		<param name="zrtp-passthru" value="true"/>
 		<param name="rtp-timer-name" value="soft"/>
 		<!--<param name="enable-100rel" value="true"/>-->
 		<!--<param name="disable-srv503" value="true"/>-->                
