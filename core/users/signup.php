@@ -110,7 +110,8 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= "password, ";
 	$sql .= "salt, ";
 	$sql .= "user_add_date, ";
-	$sql .= "user_add_user ";
+	$sql .= "user_add_user, ";
+	$sql .= "user_enabled ";
 	$sql .= ") ";
 	$sql .= "values ";
 	$sql .= "(";
@@ -121,7 +122,8 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= "'".md5($salt.$password)."', ";
 	$sql .= "'".$salt."', ";
 	$sql .= "now(), ";
-	$sql .= "'".$_SESSION["username"]."' ";
+	$sql .= "'".$_SESSION["username"]."', ";
+	$sql .= "'true' ";
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);

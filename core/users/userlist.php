@@ -85,9 +85,9 @@ echo "	<td align=\"center\">\n";
 	echo "</tr>\n";
 
 //get the user list from the database
-	$sql = " select * from v_users ";
+	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and user_enabled = 'true' ";
+	$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
 		$sql .= "and $field_name = '$field_value' ";
 	}
@@ -106,7 +106,7 @@ echo "	<td align=\"center\">\n";
 
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and user_enabled = 'true' ";
+	$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
 		$sql .= "and $field_name like '%$field_value%' ";
 	}
@@ -136,6 +136,7 @@ echo "	<td align=\"center\">\n";
 	echo th_order_by('username', 'Username', $order_by, $order);
 	//echo th_order_by('user_email', 'Email', $order_by, $order);
 	//echo th_order_by('user_template_name', 'Template', $order_by, $order);
+	echo "<th>Enabled</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('user_add')) {
 		echo "	<a href='signup.php' alt='add'>$v_link_label_add</a>\n";
@@ -148,6 +149,7 @@ echo "	<td align=\"center\">\n";
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['username']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_email']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('user_edit')) {
 				echo "		<a href='usersupdate.php?id=".$row['user_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
