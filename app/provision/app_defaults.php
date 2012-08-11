@@ -56,28 +56,35 @@
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$sql = "insert into v_default_settings ";
-			$sql .= "(";
-			$sql .= "default_setting_uuid, ";
-			$sql .= "default_setting_category, ";
-			$sql .= "default_setting_subcategory, ";
-			$sql .= "default_setting_name, ";
-			$sql .= "default_setting_value, ";
-			$sql .= "default_setting_enabled, ";
-			$sql .= "default_setting_description ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'provision', ";
-			$sql .= "'".check_str($row['var_name'])."', ";
-			$sql .= "'var', ";
-			$sql .= "'".check_str($row['var_value'])."', ";
-			$sql .= "'".check_str($row['var_enabled'])."', ";
-			$sql .= "'".check_str($row['var_description'])."' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			//set the variable
+				$var_name = check_str($row['var_name']);
+			//remove the 'v_' prefix from the variable name
+				if (substr($var_name, 0, 2) == "v_") {
+					$var_name = substr($var_name, 2);
+				}
+			//add the provision variable to the default settings table
+				$sql = "insert into v_default_settings ";
+				$sql .= "(";
+				$sql .= "default_setting_uuid, ";
+				$sql .= "default_setting_category, ";
+				$sql .= "default_setting_subcategory, ";
+				$sql .= "default_setting_name, ";
+				$sql .= "default_setting_value, ";
+				$sql .= "default_setting_enabled, ";
+				$sql .= "default_setting_description ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'provision', ";
+				$sql .= "'".$var_name."', ";
+				$sql .= "'var', ";
+				$sql .= "'".check_str($row['var_value'])."', ";
+				$sql .= "'".check_str($row['var_enabled'])."', ";
+				$sql .= "'".check_str($row['var_description'])."' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
 		}
 		//delete the provision variables from system -> variables
 		//$sql = "delete from v_vars ";
