@@ -50,7 +50,7 @@ else {
 		$default_setting_name = check_str($_POST["default_setting_name"]);
 		$default_setting_value = check_str($_POST["default_setting_value"]);
 		$default_setting_enabled = check_str($_POST["default_setting_enabled"]);
-		$default_setting_description = check_str($_POST["default_setting_description"]);		
+		$default_setting_description = check_str($_POST["default_setting_description"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -122,7 +122,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "default_setting_name = '$default_setting_name', ";
 				$sql .= "default_setting_value = '$default_setting_value', ";
 				$sql .= "default_setting_enabled = '$default_setting_enabled', ";
-				$sql .= "default_setting_description = '$default_setting_description' ";	
+				$sql .= "default_setting_description = '$default_setting_description' ";
 				$sql .= "where default_setting_uuid = '$default_setting_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
