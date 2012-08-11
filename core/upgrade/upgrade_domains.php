@@ -110,6 +110,7 @@
 	$v_prep_statement->execute();
 	$main_result = $v_prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	$domain_count = count($main_result);
+	$domains_processed = 1;
 	foreach ($main_result as &$row) {
 		//get the values from database and set them as php variables
 			$domain_uuid = $row["domain_uuid"];
@@ -174,12 +175,16 @@
 			foreach ($default_list as &$default_path) {
 				include($default_path);
 			}
-		// synchronize the dialplan
-			if (function_exists('save_dialplan_xml')) {
-				save_dialplan_xml();
-			}
+
+		//track of the number of domains processed
+			$domains_processed++;
 	}
 	unset ($v_prep_statement);
+
+//synchronize the dialplan
+	if (function_exists('save_dialplan_xml')) {
+		save_dialplan_xml();
+	}
 
 //clear the session variables
 	unset($_SESSION['domain']);
