@@ -39,21 +39,6 @@ else {
 	$row_count = 0;
 	$tmp_array = '';
 
-//get any system -> variables defined in the 'provision;
-	$sql = "select * from v_vars ";
-	$sql .= "where var_enabled = 'true' ";
-	$sql .= "and var_cat = 'Provision' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$provision_variables_array = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($provision_variables_array as &$row) {
-		if ($row[var_name] == "password") {
-			$var_name = $row[var_name];
-			$var_value = $row[var_value];
-			$$var_name = $var_value;
-		}
-	}
-
 //get the hardware phone list
 	$sql = "select * from v_hardware_phones ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -186,11 +171,10 @@ else {
 								$file_contents = str_replace("{v_server1_address}", $server1_address, $file_contents);
 								$file_contents = str_replace("{v_proxy1_address}", $proxy1_address, $file_contents);
 
-						//replace the dynamic provision variables that are defined in the system -> variables page
-							foreach ($provision_variables_array as &$row) {
-								if (substr($var_name, 0, 2) == "v_") {
-									$file_contents = str_replace('{'.$row[var_name].'}', $row[var_value], $file_contents);
-								}
+						//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings';
+							//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
+							foreach($_SESSION['provision'] as $key=>$value) {
+								$file_contents = str_replace('{v_'.$key.'}', $value['var'], $file_contents);
 							}
 
 						//create a mac address with back slashes for backwards compatability

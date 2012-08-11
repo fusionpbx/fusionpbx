@@ -32,27 +32,10 @@ require_once "includes/require.php";
 	$tmp_array = '';
 	$phone_template = '';
 
-//get any system -> variables defined in the 'provision;
-	$sql = "select * from v_vars ";
-	$sql .= "where var_enabled = 'true' ";
-	$sql .= "and var_cat = 'Provision' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$provision_variables_array = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($provision_variables_array as &$row) {
-			if ($row['var_name'] == "password") {
-				$var_name = $row['var_name'];
-				$var_value = $row['var_value'];
-				$$var_name = $var_value;
-			}
-		}
-	}
-
 //if password was defined in the system -> variables page then require the password.
-	if (strlen($password) > 0) {
+	if (strlen($_SESSION['provision']['password']['var']) > 0) {
 		//deny access if the password doesn't match
-			if ($password != $_REQUEST['password']) {
+			if ($_SESSION['provision']['password']['var'] != $_REQUEST['password']) {
 				//log the failed auth attempt to the system, to be available for fail2ban.
 				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".$_REQUEST['mac']);
@@ -376,15 +359,13 @@ require_once "includes/require.php";
 			$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
 		}
 
-	//replace the dynamic provision variables that are defined in the system -> variables page
-		foreach ($provision_variables_array as &$row) {
-			if (substr($var_name, 0, 2) == "v_") {
-				$file_contents = str_replace('{'.$row[var_name].'}', $row[var_value], $file_contents);
-			}
+	//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings'
+		//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
+		foreach($_SESSION['provision'] as $key=>$value) {
+			$file_contents = str_replace('{v_'.$key.'}', $value['var'], $file_contents);
 		}
 
 //deliver the customized config over HTTP/HTTPS
-
 	//need to make sure content-type is correct
 	$cfg_ext = ".cfg";
 	if ($phone_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {

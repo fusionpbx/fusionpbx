@@ -48,4 +48,43 @@
 	}
 	unset($prep_statement, $result);
 
+//move the dynamic provision variables that from v_vars table to v_default_settings
+	if (count($_SESSION['provision']) == 0 && $domains_processed == 1) {
+		$sql = "select * from v_vars ";
+		$sql .= "where var_cat = 'Provision' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$sql = "insert into v_default_settings ";
+			$sql .= "(";
+			$sql .= "default_setting_uuid, ";
+			$sql .= "default_setting_category, ";
+			$sql .= "default_setting_subcategory, ";
+			$sql .= "default_setting_name, ";
+			$sql .= "default_setting_value, ";
+			$sql .= "default_setting_enabled, ";
+			$sql .= "default_setting_description ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'provision', ";
+			$sql .= "'".check_str($row['var_name'])."', ";
+			$sql .= "'var', ";
+			$sql .= "'".check_str($row['var_value'])."', ";
+			$sql .= "'".check_str($row['var_enabled'])."', ";
+			$sql .= "'".check_str($row['var_description'])."' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+		//delete the provision variables from system -> variables
+		//$sql = "delete from v_vars ";
+		//$sql .= "where var_cat = 'Provision' ";
+		//echo $sql ."\n";
+		//$db->exec(check_sql($sql));
+		//echo "$var_name $var_value \n";
+	}
+
 ?>
