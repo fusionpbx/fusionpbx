@@ -108,7 +108,7 @@ else {
 		unset($file_ext);
 	}
 
-//download a fax
+//download the fax
 	if ($_GET['a'] == "download") {
 		session_cache_limiter('public');
 		//test to see if it is in the inbox or sent directory.
@@ -310,53 +310,6 @@ else {
 		}
 	}
 
-//download the fax
-	if ($_GET['a'] == "download") {
-		session_cache_limiter('public');
-		//test to see if it is in the inbox or sent directory.
-			if ($_GET['type'] == "fax_inbox" && permission_exists('fax_inbox_view')) {
-				if (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']))) {
-					$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
-				}
-			}else if ($_GET['type'] == "fax_sent" && permission_exists('fax_sent_view')) {
-				if  (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']))) {
-					$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
-				}
-			}
-		//check to see if it was found.
-			if (strlen($tmp_faxdownload_file) > 0) {
-				$fd = fopen($tmp_faxdownload_file, "rb");
-				if ($_GET['t'] == "bin") {
-					header("Content-Type: application/force-download");
-					header("Content-Type: application/octet-stream");
-					header("Content-Type: application/download");
-					header("Content-Description: File Transfer");
-					header('Content-Disposition: attachment; filename="'.check_str($_GET['filename']).'"');
-				}
-				else {
-					$file_ext = substr(check_str($_GET['filename']), -3);
-					if ($file_ext == "tif") {
-						header("Content-Type: image/tiff");
-					} else if ($file_ext == "png") {
-						header("Content-Type: image/png");
-					} else if ($file_ext == "jpg") {
-						header('Content-Type: image/jpeg');
-					} else if ($file_ext == "pdf") {
-						header("Content-Type: application/pdf");
-					}
-				}
-				header('Accept-Ranges: bytes');
-				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-				header("Content-Length: " . filesize($tmp_faxdownload_file));
-				fpassthru($fd);
-			}
-			else {
-				echo "File not found.";
-			}
-		//exit the code execution
-			exit;
-	}
 
 //show the header
 	require_once "includes/header.php";
