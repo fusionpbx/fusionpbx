@@ -49,7 +49,7 @@ else {
 		$domain_description = check_str($_POST["domain_description"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -75,20 +75,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add") {
-				$sql = "insert into v_domains ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "domain_name, ";
-				$sql .= "domain_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$domain_name', ";
-				$sql .= "'$domain_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+				$sql = "select count(*) as num_rows from v_domains ";
+				$sql .= "where domain_name = '$domain_name' ";
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+				$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['num_rows'] == 0) {
+						$sql = "insert into v_domains ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "domain_name, ";
+						$sql .= "domain_description ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'$domain_name', ";
+						$sql .= "'$domain_description' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+				}
 			}
 
 			if ($action == "update") {
@@ -137,7 +146,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$domain_name = $row["domain_name"];
 			$domain_description = $row["domain_description"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
