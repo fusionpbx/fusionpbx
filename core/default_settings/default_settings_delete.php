@@ -39,8 +39,7 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_default_settings ";
+	$sql = "delete from v_default_settings ";
 	$sql .= "where default_setting_uuid = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -48,7 +47,7 @@ if (strlen($id)>0) {
 }
 
 require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings_edit.php\">\n";
+echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings.php\">\n";
 echo "<div align='center'>\n";
 echo "Delete Complete\n";
 echo "</div>\n";
