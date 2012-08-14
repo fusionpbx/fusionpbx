@@ -88,11 +88,12 @@
 
 --session actions
 	if (session:ready()) then
-		session:answer();
 		session:execute("set", "hangup_after_bridge=true");
 		session:execute("set", "continue_on_fail=true");
 		session:execute("bridge", app_data);
-		session:execute(ring_group_timeout_app, ring_group_timeout_data);
+		if (not session:answered()) then
+			session:execute(ring_group_timeout_app, ring_group_timeout_data);
+		end
 	end
 
 --actions
