@@ -25,31 +25,35 @@
 */
 
 //if there are multiple domains then update the public dir path to include the domain
-	if (count($_SESSION["domains"]) > 1) {
-		if (is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) {
-			//clear out the old xml files
-				$v_needle = '_v_';
-				if($dh = opendir($_SESSION['switch']['dialplan']['dir'].'/public')) {
-					$files = Array();
-					while($file = readdir($dh)) {
-						if($file != "." && $file != ".." && $file[0] != '.') {
-							if(is_dir($dir . "/" . $file)) {
-								//this is a directory
-							} else {
-								if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-									unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$file);
+	if ($domains_processed == 1) {
+		if (count($_SESSION["domains"]) > 1) {
+			if (is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) {
+				//clear out the old xml files
+					$v_needle = '_v_';
+					if($dh = opendir($_SESSION['switch']['dialplan']['dir'].'/public')) {
+						$files = Array();
+						while($file = readdir($dh)) {
+							if($file != "." && $file != ".." && $file[0] != '.') {
+								if(is_dir($dir . "/" . $file)) {
+									//this is a directory
+								} else {
+									if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
+										unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$file);
+									}
 								}
 							}
 						}
+						closedir($dh);
 					}
-					closedir($dh);
-				}
+			}
 		}
 	}
 
 //if the public directory doesn't exist then create it
-	if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
-		if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) { mkdir($_SESSION['switch']['dialplan']['dir'].'/public',0777,true); }
+	if ($domains_processed == 1) {
+		if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
+			if (!is_dir($_SESSION['switch']['dialplan']['dir'].'/public')) { mkdir($_SESSION['switch']['dialplan']['dir'].'/public',0777,true); }
+		}
 	}
 
 //if multiple domains then make sure that the dialplan/public/domain_name.xml file exists
@@ -70,6 +74,6 @@
 				unset($xml,$file);
 			}
 		}
-	}
+		}
 
 ?>

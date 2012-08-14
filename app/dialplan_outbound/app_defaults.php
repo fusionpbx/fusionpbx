@@ -25,14 +25,16 @@
 */
 
 //make sure that enum uses sofia internal in the enum.conf.xml file
-	$file_contents = file_get_contents($switch_conf_dir."/autoload_configs/enum.conf.xml");
-	$file_contents_new = str_replace("service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/\${use_profile}/\$1", "service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/internal/\$1", $file_contents);
-	if ($file_contents != $file_contents_new) {
-		$fout = fopen($switch_conf_dir."/autoload_configs/enum.conf.xml","w");
-		fwrite($fout, $file_contents_new);
-		fclose($fout);
-		if ($display_type == "text") {
-			echo "	enum.conf.xml: 	updated\n";
+	if ($domains_processed == 1) {
+		$file_contents = file_get_contents($switch_conf_dir."/autoload_configs/enum.conf.xml");
+		$file_contents_new = str_replace("service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/\${use_profile}/\$1", "service=\"E2U+SIP\" regex=\"sip:(.*)\" replace=\"sofia/internal/\$1", $file_contents);
+		if ($file_contents != $file_contents_new) {
+			$fout = fopen($switch_conf_dir."/autoload_configs/enum.conf.xml","w");
+			fwrite($fout, $file_contents_new);
+			fclose($fout);
+			if ($display_type == "text") {
+				echo "	enum.conf.xml: 	updated\n";
+			}
 		}
 	}
 

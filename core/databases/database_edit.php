@@ -163,6 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 			//set the defaults
+				$domains_processed = 1;
 				require_once "app_defaults.php";
 
 			//redirect the browser

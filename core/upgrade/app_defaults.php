@@ -27,7 +27,9 @@
 if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 
 	//if the resource scripts resource directory does not exist then create it
-		if (!is_dir($_SESSION['switch']['scripts']['dir']."/resources")) { mkdir($_SESSION['switch']['scripts']['dir']."/resources",0755,true); }
+		if ($domains_processed == 1) {
+			if (!is_dir($_SESSION['switch']['scripts']['dir']."/resources")) { mkdir($_SESSION['switch']['scripts']['dir']."/resources",0755,true); }
+		}
 
 }
 ?>
