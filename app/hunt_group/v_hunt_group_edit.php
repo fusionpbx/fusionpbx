@@ -469,12 +469,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <select class='formfld' name='hunt_group_ringback'>\n";
 	echo "	 <option value=''></option>\n";
-	if ($hunt_group_ringback == "ring") { 
-		echo "	 <option value='us-ring' selected='selected'>us-ring</option>\n";
-	}
-	else {
-		echo "	 <option value='us-ring'>us-ring</option>\n";
-	}
 	if ($hunt_group_ringback == "us-ring") { 
 		echo "	 <option value='us-ring' selected='selected'>us-ring</option>\n";
 	}
@@ -507,7 +501,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	 </select>\n";
 	echo "<br />\n";
-	echo "Defines what the caller will hear while destination is being called. The choices are music (music on hold) ring (ring tone.) default: music \n";
+	echo "Defines what the caller will hear while the destination is being called. The choices are music (music on hold) ring (ring tone.) default: music \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -9,8 +9,8 @@
 			<action application="bind_meta_app" data="2 ab s record_session::$${recordings_dir}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.wav"/>
 			<action application="bind_meta_app" data="3 b s execute_extension::cf XML features"/>
 			<action application="bind_meta_app" data="4 b s execute_extension::att_xfer XML features"/>
-			<action application="set" data="ringback=${us-ring}"/>
-			<action application="set" data="transfer_ringback=$${hold_music}"/>
+			<!--<action application="set" data="ringback=${us-ring}"/>-->
+			<!--<action application="set" data="transfer_ringback=$${hold_music}"/>-->
 			<action application="set" data="call_timeout=30"/>
 			<action application="set" data="hangup_after_bridge=true"/>
 			<!--<action application="set" data="continue_on_fail=NORMAL_TEMPORARY_FAILURE,USER_BUSY,NO_ANSWER,TIMEOUT,NO_ROUTE_DESTINATION"/> -->

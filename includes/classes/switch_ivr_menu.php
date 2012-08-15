@@ -52,6 +52,7 @@ require_once "includes/classes/switch_dialplan.php";
 		public $ivr_menu_max_timeouts;
 		public $ivr_menu_digit_len;
 		public $ivr_menu_direct_dial;
+		public $ivr_menu_ringback;
 		public $ivr_menu_enabled;
 		public $ivr_menu_description;
 		public $ivr_menu_option_uuid;
@@ -228,6 +229,36 @@ require_once "includes/classes/switch_dialplan.php";
 							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
 							$database->fields['dialplan_detail_uuid'] = uuid();
 							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'set';
+							if ($this->ivr_menu_ringback == "music" || $this->ivr_menu_ringback == "") {
+								$database->fields['dialplan_detail_data'] = 'ringback=${hold_music}';
+							}
+							else {
+								$database->fields['dialplan_detail_data'] = 'ringback=${'.$this->ivr_menu_ringback.'}';
+							}
+							$database->fields['dialplan_detail_order'] = '025';
+							$database->add();
+
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'set';
+							if ($this->ivr_menu_ringback == "music" || $this->ivr_menu_ringback == "") {
+								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${hold_music}';
+							}
+							else {
+								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${'.$this->ivr_menu_ringback.'}';
+							}
+							$database->fields['dialplan_detail_order'] = '030';
+							$database->add();
+
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 							$database->fields['dialplan_detail_type'] = 'ivr';
 							if (count($_SESSION["domains"]) > 1) {
 								$database->fields['dialplan_detail_data'] = $_SESSION['domain_name'].'-'.$this->ivr_menu_name;
@@ -235,7 +266,7 @@ require_once "includes/classes/switch_dialplan.php";
 							else {
 								$database->fields['dialplan_detail_data'] = $this->ivr_menu_name;
 							}
-							$database->fields['dialplan_detail_order'] = '025';
+							$database->fields['dialplan_detail_order'] = '035';
 							$database->add();
 
 							if (strlen($this->ivr_menu_exit_app) > 0) {
@@ -246,7 +277,7 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 								$database->fields['dialplan_detail_type'] = $this->ivr_menu_exit_app;
 								$database->fields['dialplan_detail_data'] = $this->ivr_menu_exit_data;
-								$database->fields['dialplan_detail_order'] = '030';
+								$database->fields['dialplan_detail_order'] = '040';
 								$database->add();
 							}
 						}
@@ -284,7 +315,7 @@ require_once "includes/classes/switch_dialplan.php";
 						$database->fields['ivr_menu_digit_len'] = $this->ivr_menu_digit_len;
 						$database->fields['ivr_menu_digit_len'] = $this->ivr_menu_digit_len;
 						$database->fields['ivr_menu_direct_dial'] = $this->ivr_menu_direct_dial;
-						$database->fields['ivr_menu_direct_dial'] = $this->ivr_menu_direct_dial;
+						$database->fields['ivr_menu_ringback'] = $this->ivr_menu_ringback;
 						$database->fields['ivr_menu_enabled'] = $this->ivr_menu_enabled;
 						$database->fields['ivr_menu_description'] = $this->ivr_menu_description;
 						$database->add();
@@ -388,7 +419,7 @@ require_once "includes/classes/switch_dialplan.php";
 						$database->fields['ivr_menu_digit_len'] = $this->ivr_menu_digit_len;
 						$database->fields['ivr_menu_digit_len'] = $this->ivr_menu_digit_len;
 						$database->fields['ivr_menu_direct_dial'] = $this->ivr_menu_direct_dial;
-						$database->fields['ivr_menu_direct_dial'] = $this->ivr_menu_direct_dial;
+						$database->fields['ivr_menu_ringback'] = $this->ivr_menu_ringback;
 						$database->fields['ivr_menu_enabled'] = $this->ivr_menu_enabled;
 						$database->fields['ivr_menu_description'] = $this->ivr_menu_description;
 						$database->where[0]['name'] = 'domain_uuid';
@@ -499,6 +530,36 @@ require_once "includes/classes/switch_dialplan.php";
 							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
 							$database->fields['dialplan_detail_uuid'] = uuid();
 							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'set';
+							if ($this->ivr_menu_ringback == "music" || $this->ivr_menu_ringback == "") {
+								$database->fields['dialplan_detail_data'] = 'ringback=${hold_music}';
+							}
+							else {
+								$database->fields['dialplan_detail_data'] = 'ringback=${'.$this->ivr_menu_ringback.'}';
+							}
+							$database->fields['dialplan_detail_order'] = '025';
+							$database->add();
+
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'set';
+							if ($this->ivr_menu_ringback == "music" || $this->ivr_menu_ringback == "") {
+								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${hold_music}';
+							}
+							else {
+								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${'.$this->ivr_menu_ringback.'}';
+							}
+							$database->fields['dialplan_detail_order'] = '030';
+							$database->add();
+
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 							$database->fields['dialplan_detail_type'] = 'ivr';
 							if (count($_SESSION["domains"]) > 1) {
 								$database->fields['dialplan_detail_data'] = $_SESSION['domain_name'].'-'.$this->ivr_menu_name;
@@ -506,7 +567,7 @@ require_once "includes/classes/switch_dialplan.php";
 							else {
 								$database->fields['dialplan_detail_data'] = $this->ivr_menu_name;
 							}
-							$database->fields['dialplan_detail_order'] = '025';
+							$database->fields['dialplan_detail_order'] = '035';
 							$database->add();
 
 							if (strlen($this->ivr_menu_exit_app) > 0) {
@@ -517,7 +578,7 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 								$database->fields['dialplan_detail_type'] = $this->ivr_menu_exit_app;
 								$database->fields['dialplan_detail_data'] = $this->ivr_menu_exit_data;
-								$database->fields['dialplan_detail_order'] = '030';
+								$database->fields['dialplan_detail_order'] = '040';
 								$database->add();
 							}
 				}

@@ -112,6 +112,7 @@ if (count($_POST)>0) {
 	$ivr_menu_max_timeouts = check_str($_POST["ivr_menu_max_timeouts"]);
 	$ivr_menu_digit_len = check_str($_POST["ivr_menu_digit_len"]);
 	$ivr_menu_direct_dial = check_str($_POST["ivr_menu_direct_dial"]);
+	$ivr_menu_ringback = check_str($_POST["ivr_menu_ringback"]);
 	$ivr_menu_enabled = check_str($_POST["ivr_menu_enabled"]);
 	$ivr_menu_description = check_str($_POST["ivr_menu_description"]);
 
@@ -150,6 +151,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($ivr_menu_max_timeouts) == 0) { $msg .= "Please provide: Max Timeouts<br>\n"; }
 		if (strlen($ivr_menu_digit_len) == 0) { $msg .= "Please provide: Digit Length<br>\n"; }
 		if (strlen($ivr_menu_direct_dial) == 0) { $msg .= "Please provide: Direct Dial<br>\n"; }
+		//if (strlen($ivr_menu_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
 		if (strlen($ivr_menu_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (strlen($ivr_menu_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -193,7 +195,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$ivr->ivr_menu_digit_len = $ivr_menu_digit_len;
 				$ivr->ivr_menu_digit_len = $ivr_menu_digit_len;
 				$ivr->ivr_menu_direct_dial = $ivr_menu_direct_dial;
-				$ivr->ivr_menu_direct_dial = $ivr_menu_direct_dial;
+				$ivr->ivr_menu_ringback = $ivr_menu_ringback;
 				$ivr->ivr_menu_enabled = $ivr_menu_enabled;
 				$ivr->ivr_menu_description = $ivr_menu_description;
 
@@ -268,6 +270,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$ivr_menu_max_timeouts = $row["ivr_menu_max_timeouts"];
 			$ivr_menu_digit_len = $row["ivr_menu_digit_len"];
 			$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
+			$ivr_menu_ringback = $row["ivr_menu_ringback"];
 			$ivr_menu_enabled = $row["ivr_menu_enabled"];
 			$ivr_menu_description = $row["ivr_menu_description"];
 
@@ -290,6 +293,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($ivr_menu_max_timeouts) == 0) { $ivr_menu_max_timeouts = '3'; }
 	if (strlen($ivr_menu_digit_len) == 0) { $ivr_menu_digit_len = '5'; }
 	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
+	if (strlen($ivr_menu_ringback) == 0) { $ivr_menu_ringback = 'music'; }
 	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
 
 //content
@@ -607,6 +611,49 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo "Define whether callers can dial directly to extensions and feature codes.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	 Ring Back:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	 <select class='formfld' name='ivr_menu_ringback'>\n";
+	echo "	 <option value=''></option>\n";
+	if ($ivr_menu_ringback == "us-ring") { 
+		echo "	 <option value='us-ring' selected='selected'>us-ring</option>\n";
+	}
+	else {
+		echo "	 <option value='us-ring'>us-ring</option>\n";
+	}
+	if ($ivr_menu_ringback == "fr-ring") { 
+		echo "	 <option value='fr-ring' selected='selected'>fr-ring</option>\n";
+	}
+	else {
+		echo "	 <option value='fr-ring'>fr-ring</option>\n";
+	}
+	if ($ivr_menu_ringback == "uk-ring") { 
+		echo "	 <option value='uk-ring' selected='selected'>uk-ring</option>\n";
+	}
+	else {
+		echo "	 <option value='uk-ring'>uk-ring</option>\n";
+	}
+	if ($ivr_menu_ringback == "rs-ring") { 
+		echo "	 <option value='rs-ring' selected='selected'>rs-ring</option>\n";
+	}
+	else {
+		echo "	 <option value='rs-ring'>rs-ring</option>\n";
+	}
+	if ($ivr_menu_ringback == "music") { 
+		echo "	 <option value='music' selected='selected'>music</option>\n";
+	}
+	else {
+		echo "	 <option value='music'>music</option>\n";
+	}
+	echo "	 </select>\n";
+	echo "<br />\n";
+	echo "Defines what the caller will hear while the destination is being called. The choices are music (music on hold) ring (ring tone.) default: music \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
