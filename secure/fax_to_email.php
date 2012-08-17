@@ -23,7 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "v_config_cli.php";
+
 if (defined('STDIN')) {
 	//get the document root php file must be executed with the full path
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
@@ -227,20 +227,23 @@ if (defined('STDIN')) {
 		//prepare the mail object
 			$mail = new PHPMailer();
 			$mail->IsSMTP(); // set mailer to use SMTP
-			if ($v_smtp_auth == "true") {
-				$mail->SMTPAuth = $v_smtp_auth; // turn on/off SMTP authentication
+			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
+				$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var']; // turn on/off SMTP authentication
 			}
-			$mail->Host   = $v_smtp_host;
-			if (strlen($v_smtp_secure)>0) {
-				$mail->SMTPSecure = $v_smtp_secure;
+			$mail->Host = $_SESSION['email']['smtp_host']['var'];
+			if ($_SESSION['email']['smtp_secure']['var'] == "none") {
+				$_SESSION['email']['smtp_secure']['var'] = '';
 			}
-			if ($v_smtp_username) {
-				$mail->Username = $v_smtp_username;
-				$mail->Password = $v_smtp_password;
+			if (strlen($_SESSION['email']['smtp_secure']['var']) > 0) {
+				$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
+			}
+			if ($_SESSION['email']['smtp_username']['var']) {
+				$mail->Username = $_SESSION['email']['smtp_username']['var'];
+				$mail->Password = $_SESSION['email']['smtp_password']['var'];
 			}
 			$mail->SMTPDebug  = 2;
-			$mail->From       = $v_smtp_from;
-			$mail->FromName   = $v_smtp_from_name;
+			$mail->From       = $_SESSION['email']['smtp_from']['var'];
+			$mail->FromName   = $_SESSION['email']['smtp_from_name']['var'];
 			$mail->Subject    = $tmp_subject;
 			$mail->AltBody    = $tmp_text_plain;
 			$mail->MsgHTML($tmp_text_html);
@@ -256,8 +259,8 @@ if (defined('STDIN')) {
 			}
 
 		//output to the log
-			echo "v_smtp_from: $v_smtp_from\n";
-			echo "v_smtp_from_name: $v_smtp_from_name\n";
+			echo "smtp_from: ".$_SESSION['email']['smtp_from']['var']."\n";
+			echo "smtp_from_name: ".$_SESSION['email']['smtp_from_name']['var']."\n";
 			echo "tmp_subject: $tmp_subject\n";
 
 		//add teh attachments
@@ -309,24 +312,24 @@ if (defined('STDIN')) {
 			} else {
 				// create an instruction log to email messages once the connection to the mail server has been restored
 					$fp = fopen($fax_to_email_queue_dir."/failed_fax_emails.log", "a");
-					fwrite($fp, PHP_BINDIR."/php ".$v_secure."/fax_to_email.php email=$fax_email extension=$fax_extension name=$fax_name messages='$fax_messages' retry=yes\n");
+					fwrite($fp, PHP_BINDIR."/php ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php email=$fax_email extension=$fax_extension name=$fax_name messages='$fax_messages' retry=yes\n");
 					fclose($fp);
 				// create a script to do the delayed mailing
-					$fp = fopen($tmp_dir."/failed_fax_emails.sh", "w");
-					fwrite($fp, "rm ".$tmp_dir."/fax_email_retry.sh\n");
-					fwrite($fp, "mv ".$fax_to_email_queue_dir."/failed_fax_emails.log ".$tmp_dir."/fax_email_retry.sh\n");
-					fwrite($fp, "chmod 777 ".$tmp_dir."/fax_email_retry.sh\n");
-					fwrite($fp, $tmp_dir."/fax_email_retry.sh\n");
+					$fp = fopen($_SESSION['server']['temp']['dir']."/failed_fax_emails.sh", "w");
+					fwrite($fp, "rm ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
+					fwrite($fp, "mv ".$fax_to_email_queue_dir."/failed_fax_emails.log ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
+					fwrite($fp, "chmod 777 ".$_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
+					fwrite($fp, $_SESSION['server']['temp']['dir']."/fax_email_retry.sh\n");
 					fclose($fp);
-					$tmp_response = exec("chmod 777 ".$tmp_dir."/failed_fax_emails.sh");
+					$tmp_response = exec("chmod 777 ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh");
 				// note we use batch in order to execute when system load is low.  Alternatively this could be replaced with AT.
-					$tmp_response = exec("batch -f ".$tmp_dir."/failed_fax_emails.sh now + 3 minutes");
+					$tmp_response = exec("batch -f ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh now + 3 minutes");
 			}
 		}
 	}
 
 //open the file for writing
-	$fp = fopen($tmp_dir."/fax_to_email.log", "w");
+	$fp = fopen($_SESSION['server']['temp']['dir']."/fax_to_email.log", "w");
 //get the output from the buffer
 	$content = ob_get_contents();
 //clean the buffer

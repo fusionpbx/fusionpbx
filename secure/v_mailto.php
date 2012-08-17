@@ -24,17 +24,19 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "v_config_cli.php";
 
 //set the include path
-	if(defined('STDIN')) {
+	if (defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
 		preg_match("/^(.*)\/secure\/.*$/", $document_root, $matches);
 		$document_root = $matches[1];
 		set_include_path($document_root);
-		//require_once "includes/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 	}
+
+//includes
+	if (!defined('STDIN')) { include "root.php"; }
+	require_once "includes/require.php";
 
 //set init settings
 	ini_set('max_execution_time',1800); //30 minutes
@@ -117,16 +119,19 @@ include "v_config_cli.php";
 	$mail = new PHPMailer();
 
 	$mail->IsSMTP();						// set mailer to use SMTP
-	if ($v_smtp_auth == "true") {
-		$mail->SMTPAuth = $v_smtp_auth;		// turn on/off SMTP authentication
+	if ($_SESSION['email']['smtp_auth']['var'] == "true") {
+		$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var'];		// turn on/off SMTP authentication
 	}
-	$mail->Host   = $v_smtp_host;
-	if (strlen($v_smtp_secure)>0) {
-		$mail->SMTPSecure = $v_smtp_secure;
+	$mail->Host   = $_SESSION['email']['smtp_host']['var'];
+	if ($_SESSION['email']['smtp_secure']['var'] == "none") {
+		$_SESSION['email']['smtp_secure']['var'] = '';
 	}
-	if ($v_smtp_username) {
-		$mail->Username = $v_smtp_username;
-		$mail->Password = $v_smtp_password;
+	if (strlen($_SESSION['email']['smtp_secure']['var']) > 0) {
+		$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
+	}
+	if ($_SESSION['email']['smtp_username']['var']) {
+		$mail->Username = $_SESSION['email']['smtp_username']['var'];
+		$mail->Password = $_SESSION['email']['smtp_password']['var'];
 	}
 	$mail->SMTPDebug  = 2;
 
@@ -139,8 +144,8 @@ include "v_config_cli.php";
 	//echo "Body: ".$body."\n";
 
 //add to, from, fromname, and subject to the email
-	$mail->From       = $v_smtp_from;
-	$mail->FromName   = $v_smtp_from_name;
+	$mail->From       = $_SESSION['email']['smtp_from']['var'] ;
+	$mail->FromName   = $_SESSION['email']['smtp_from_name']['var'];
 	$mail->Subject    = $subject;
 
 	$to = trim($to, "<> ");

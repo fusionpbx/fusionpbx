@@ -1528,42 +1528,13 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 
 function save_setting_xml() {
 	global $db, $domain_uuid, $host, $config;
- 
+
 	$sql = "select * from v_settings ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($result as &$row) {
-			$fout = fopen($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/v_config_cli.php","w");
-			$xml = "<?php\n";
-			$xml .= "\n";
-			$xml .= "error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED ); //hide notices and warnings\n";
-			$xml .= "\n";
-			$xml .= "//set the email variables\n";
-			$xml .= "	\$v_smtp_host = \"".$row["smtp_host"]."\";\n";
-			if ($row["smtp_secure"] == "none") {
-				$xml .= "	\$v_smtp_secure = \"\";\n";
-			}
-			else {
-				$xml .= "	\$v_smtp_secure = \"".$row["smtp_secure"]."\";\n";
-			}
-			$xml .= "	\$v_smtp_auth = \"".$row["smtp_auth"]."\";\n";
-			$xml .= "	\$v_smtp_username = \"".$row["smtp_username"]."\";\n";
-			$xml .= "	\$v_smtp_password = \"".$row["smtp_password"]."\";\n";
-			$xml .= "	\$v_smtp_from = \"".$row["smtp_from"]."\";\n";
-			$xml .= "	\$v_smtp_from_name = \"".$row["smtp_from_name"]."\";\n";
-			$xml .= "\n";
-			$xml .= "//set system dir variables\n";
-			$xml .= "	\$switch_storage_dir = \"".$_SESSION['switch']['storage']['dir']."\";\n";
-			$xml .= "	\$tmp_dir = \"".$_SESSION['server']['temp']['dir']."\";\n";
-			$xml .= "	\$v_secure = \"".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure"."\";\n";
-			$xml .= "\n";
-			$xml .= "?>";
-			fwrite($fout, $xml);
-			unset($xml);
-			fclose($fout);
-
 			$fout = fopen($_SESSION['switch']['conf']['dir']."/directory/default/default.xml","w");
 			$xml = "<include>\n";
 			$xml .= "  <user id=\"default\"> <!--if id is numeric mailbox param is not necessary-->\n";
