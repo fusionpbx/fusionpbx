@@ -267,48 +267,86 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			closedir($handle);
 		}
 		echo "		</select>\n";
+	} elseif ($category == "email" && $subcategory == "smtp_auth" && $name == "var" ) {
+		echo "    <select class='formfld' name='default_setting_value'>\n";
+		echo "    <option value=''></option>\n";
+		if ($row['default_setting_value'] == "true") { 
+		echo "    <option value='true' selected='selected'>true</option>\n";
+		}
+		else {
+		echo "    <option value='true'>true</option>\n";
+		}
+		if ($row['default_setting_value'] == "false") { 
+		echo "    <option value='false' selected='selected'>false</option>\n";
+		}
+		else {
+		echo "    <option value='false'>false</option>\n";
+		}
+		echo "    </select>\n";
+	} elseif ($category == "email" && $subcategory == "smtp_secure" && $name == "var" ) {
+		echo "    <select class='formfld' name='default_setting_value'>\n";
+		echo "    <option value=''></option>\n";
+		if ($row['default_setting_value'] == "none") { 
+		echo "    <option value='none' selected='selected'>none</option>\n";
+		}
+		else {
+		echo "    <option value='none'>none</option>\n";
+		}
+		if ($row['default_setting_value'] == "tls") { 
+		echo "    <option value='tls' selected='selected'>tls</option>\n";
+		}
+		else {
+		echo "    <option value='tls'>tls</option>\n";
+		}
+		if ($row['default_setting_value'] == "ssl") { 
+		echo "    <option value='ssl' >ssl</option>\n";
+		}
+		else {
+		echo "    <option value='ssl'>ssl</option>\n";
+		}
+		echo "    </select>\n";
 	} elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
-			echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
-			echo "		<option value=''></option>\n";
-			//$list = DateTimeZone::listAbbreviations();
-			$time_zone_identifiers = DateTimeZone::listIdentifiers();
-			$previous_category = '';
-			$x = 0;
-			foreach ($time_zone_identifiers as $key => $val) {
-				$time_zone = explode("/", $val);
-				$category = $time_zone[0];
-				if ($category != $previous_category) {
-					if ($x > 0) {
-						echo "		</optgroup>\n";
-					}
-					echo "		<optgroup label='".$category."'>\n";
+		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value=''></option>\n";
+		//$list = DateTimeZone::listAbbreviations();
+		$time_zone_identifiers = DateTimeZone::listIdentifiers();
+		$previous_category = '';
+		$x = 0;
+		foreach ($time_zone_identifiers as $key => $val) {
+			$time_zone = explode("/", $val);
+			$category = $time_zone[0];
+			if ($category != $previous_category) {
+				if ($x > 0) {
+					echo "		</optgroup>\n";
 				}
-				if (strlen($val) > 0) {
-					$time_zone_offset = get_time_zone_offset($val)/3600;
-					$time_zone_offset_hours = floor($time_zone_offset);
-					$time_zone_offset_minutes = ($time_zone_offset - $time_zone_offset_hours) * 60;
-					$time_zone_offset_minutes = number_pad($time_zone_offset_minutes, 2);
-					if ($time_zone_offset > 0) {
-						$time_zone_offset_hours = number_pad($time_zone_offset_hours, 2);
-						$time_zone_offset_hours = "+".$time_zone_offset_hours;
-					}
-					else {
-						$time_zone_offset_hours = str_replace("-", "", $time_zone_offset_hours);
-						$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
-					}
-				}
-				if ($val == $row['default_setting_value']) {
-					echo "			<option value='".$val."' selected='selected'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+				echo "		<optgroup label='".$category."'>\n";
+			}
+			if (strlen($val) > 0) {
+				$time_zone_offset = get_time_zone_offset($val)/3600;
+				$time_zone_offset_hours = floor($time_zone_offset);
+				$time_zone_offset_minutes = ($time_zone_offset - $time_zone_offset_hours) * 60;
+				$time_zone_offset_minutes = number_pad($time_zone_offset_minutes, 2);
+				if ($time_zone_offset > 0) {
+					$time_zone_offset_hours = number_pad($time_zone_offset_hours, 2);
+					$time_zone_offset_hours = "+".$time_zone_offset_hours;
 				}
 				else {
-					echo "			<option value='".$val."'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+					$time_zone_offset_hours = str_replace("-", "", $time_zone_offset_hours);
+					$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
 				}
-				$previous_category = $category;
-				$x++;
 			}
-			echo "		</select>\n";
+			if ($val == $row['default_setting_value']) {
+				echo "			<option value='".$val."' selected='selected'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+			}
+			else {
+				echo "			<option value='".$val."'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+			}
+			$previous_category = $category;
+			$x++;
+		}
+		echo "		</select>\n";
 	} else {
-			echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"$default_setting_value\">\n";
+		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}
 	echo "<br />\n";
 	echo "Enter the value.\n";
