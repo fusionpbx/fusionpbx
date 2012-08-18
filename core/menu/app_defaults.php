@@ -85,7 +85,7 @@
 			//get the menu_uuid
 				$menu_uuid = $field['menu_uuid'];
 			//check each menu to see if there are items in the menu assigned to it
-				$sql .= "select count(*) as count from v_menu_item_groups ";
+				$sql = "select count(*) as count from v_menu_item_groups ";
 				$sql .= "where menu_uuid = '$menu_uuid' ";
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
