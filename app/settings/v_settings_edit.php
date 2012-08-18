@@ -61,8 +61,8 @@ else {
 
 //get the http values and set them as php variables
 	if (count($_POST)>0) {
-		$numbering_plan = check_str($_POST["numbering_plan"]);
-		$default_gateway = check_str($_POST["default_gateway"]);
+		//$numbering_plan = check_str($_POST["numbering_plan"]);
+		//$default_gateway = check_str($_POST["default_gateway"]);
 		$event_socket_ip_address = check_str($_POST["event_socket_ip_address"]);
 		if (strlen($event_socket_ip_address) == 0) { $event_socket_ip_address = '127.0.0.1'; }
 		$event_socket_port = check_str($_POST["event_socket_port"]);
@@ -71,14 +71,14 @@ else {
 		$xml_rpc_auth_realm = check_str($_POST["xml_rpc_auth_realm"]);
 		$xml_rpc_auth_user = check_str($_POST["xml_rpc_auth_user"]);
 		$xml_rpc_auth_pass = check_str($_POST["xml_rpc_auth_pass"]);
-		$admin_pin = check_str($_POST["admin_pin"]);
-		$smtp_host = check_str($_POST["smtp_host"]);
-		$smtp_secure = check_str($_POST["smtp_secure"]);
-		$smtp_auth = check_str($_POST["smtp_auth"]);
-		$smtp_username = check_str($_POST["smtp_username"]);
-		$smtp_password = check_str($_POST["smtp_password"]);
-		$smtp_from = check_str($_POST["smtp_from"]);
-		$smtp_from_name = check_str($_POST["smtp_from_name"]);
+		//$admin_pin = check_str($_POST["admin_pin"]);
+		//$smtp_host = check_str($_POST["smtp_host"]);
+		//$smtp_secure = check_str($_POST["smtp_secure"]);
+		//$smtp_auth = check_str($_POST["smtp_auth"]);
+		//$smtp_username = check_str($_POST["smtp_username"]);
+		//$smtp_password = check_str($_POST["smtp_password"]);
+		//$smtp_from = check_str($_POST["smtp_from"]);
+		//$smtp_from_name = check_str($_POST["smtp_from_name"]);
 		$mod_shout_decoder = check_str($_POST["mod_shout_decoder"]);
 		$mod_shout_volume = check_str($_POST["mod_shout_volume"]);
 	}
@@ -123,7 +123,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "add" && permission_exists('settings_edit')) {
 				$sql = "insert into v_settings ";
 				$sql .= "(";
-				$sql .= "numbering_plan, ";
 				$sql .= "event_socket_ip_address, ";
 				$sql .= "event_socket_port, ";
 				$sql .= "event_socket_password, ";
@@ -131,20 +130,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "xml_rpc_auth_realm, ";
 				$sql .= "xml_rpc_auth_user, ";
 				$sql .= "xml_rpc_auth_pass, ";
-				$sql .= "admin_pin, ";
-				$sql .= "smtp_host, ";
-				$sql .= "smtp_secure, ";
-				$sql .= "smtp_auth, ";
-				$sql .= "smtp_username, ";
-				$sql .= "smtp_password, ";
-				$sql .= "smtp_from, ";
-				$sql .= "smtp_from_name, ";
 				$sql .= "mod_shout_decoder, ";
 				$sql .= "mod_shout_volume ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'$numbering_plan', ";
 				$sql .= "'$event_socket_ip_address', ";
 				$sql .= "'$event_socket_port', ";
 				$sql .= "'$event_socket_password', ";
@@ -152,14 +142,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$xml_rpc_auth_realm', ";
 				$sql .= "'$xml_rpc_auth_user', ";
 				$sql .= "'$xml_rpc_auth_pass', ";
-				$sql .= "'$admin_pin', ";
-				$sql .= "'$smtp_host', ";
-				$sql .= "'$smtp_secure', ";
-				$sql .= "'$smtp_auth', ";
-				$sql .= "'$smtp_username', ";
-				$sql .= "'$smtp_password', ";
-				$sql .= "'$smtp_from', ";
-				$sql .= "'$smtp_from_name', ";
 				$sql .= "'$mod_shout_decoder', ";
 				$sql .= "'$mod_shout_volume' ";
 				$sql .= ")";
@@ -180,7 +162,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			if ($action == "update" && permission_exists('settings_edit')) {
 				$sql = "update v_settings set ";
-				$sql .= "numbering_plan = '$numbering_plan', ";
 				$sql .= "event_socket_ip_address = '$event_socket_ip_address', ";
 				$sql .= "event_socket_port = '$event_socket_port', ";
 				$sql .= "event_socket_password = '$event_socket_password', ";
@@ -188,14 +169,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "xml_rpc_auth_realm = '$xml_rpc_auth_realm', ";
 				$sql .= "xml_rpc_auth_user = '$xml_rpc_auth_user', ";
 				$sql .= "xml_rpc_auth_pass = '$xml_rpc_auth_pass', ";
-				$sql .= "admin_pin = '$admin_pin', ";
-				$sql .= "smtp_host = '$smtp_host', ";
-				$sql .= "smtp_secure = '$smtp_secure', ";
-				$sql .= "smtp_auth = '$smtp_auth', ";
-				$sql .= "smtp_username = '$smtp_username', ";
-				$sql .= "smtp_password = '$smtp_password', ";
-				$sql .= "smtp_from = '$smtp_from', ";
-				$sql .= "smtp_from_name = '$smtp_from_name', ";
 				$sql .= "mod_shout_decoder = '$mod_shout_decoder', ";
 				$sql .= "mod_shout_volume = '$mod_shout_volume' ";
 				$db->exec(check_sql($sql));
@@ -224,7 +197,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
-				$numbering_plan = $row["numbering_plan"];
 				$event_socket_ip_address = $row["event_socket_ip_address"];
 				$event_socket_port = $row["event_socket_port"];
 				$event_socket_password = $row["event_socket_password"];
@@ -232,14 +204,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$xml_rpc_auth_realm = $row["xml_rpc_auth_realm"];
 				$xml_rpc_auth_user = $row["xml_rpc_auth_user"];
 				$xml_rpc_auth_pass = $row["xml_rpc_auth_pass"];
-				$admin_pin = $row["admin_pin"];
-				$smtp_host = $row["smtp_host"];
-				$smtp_secure = $row["smtp_secure"];
-				$smtp_auth = $row["smtp_auth"];
-				$smtp_username = $row["smtp_username"];
-				$smtp_password = $row["smtp_password"];
-				$smtp_from = $row["smtp_from"];
-				$smtp_from_name = $row["smtp_from_name"];
 				$mod_shout_decoder = $row["mod_shout_decoder"];
 				$mod_shout_volume = $row["mod_shout_volume"];
 				break; //limit to 1 row
@@ -270,17 +234,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td align='left' width='30%' nowrap><b>Setting Update</b></td>\n";
 	}
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='javascript:history.go(-1)'\" value='Back'></td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Numbering Plan:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='numbering_plan' maxlength='255' value=\"$numbering_plan\">\n";
-	echo "<br />\n";
-	echo "Enter the numbering plan. example: US\n";
-	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
@@ -360,17 +313,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Admin PIN Number:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='admin_pin' id='admin_pin' onfocus=\"document.getElementById('show_admin_pin').innerHTML = 'Password: '+document.getElementById('admin_pin').value;\" onblur=\"document.getElementById('show_admin_pin').innerHTML = ''\" maxlength='50' value=\"$admin_pin\">\n";
-	echo "<br />\n";
-	echo "<span id='show_admin_pin'></span>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
+	/*
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    SMTP Host:\n";
@@ -481,6 +424,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "Enter the SMTP From Name.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	*/
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
