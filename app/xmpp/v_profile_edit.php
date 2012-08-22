@@ -197,12 +197,6 @@ elseif ($action == "update" && permission_exists('xmpp_edit')) {
 	$xmpp_profile_uuid = $request['id'];
 } 
 
-//prepare the xmpp files to be written. delete all jingle files that are prefixed with v_ and have a file extension of .xml
-$jingle_list = glob($_SESSION['switch']['conf']['dir'] . "/jingle_profiles/*v_*.xml");
-foreach($jingle_list as $name => $value) {
-	unlink($value);
-}
-
 if ($request['enabled'] == "true") {
 	//prepare the xml
 	include "client_template.php";

@@ -59,8 +59,7 @@ foreach ($result as &$row) {
 $profile = $profiles_array[0];
 unset ($prep_statement);
 
-$sql = "";
-$sql .= "delete from v_xmpp ";
+$sql = "delete from v_xmpp ";
 $sql .= "where domain_uuid = '$domain_uuid' ";
 $sql .= "and xmpp_profile_uuid = '$profile_id' ";
 $db->exec(check_sql($sql));
