@@ -40,7 +40,6 @@ require_once "includes/paging.php";
 
 //connect to event socket
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
 if ($fp) {
 	if (strlen($_GET["a"]) > 0) {
 		if ($_GET["a"] == "reload") {
@@ -49,31 +48,29 @@ if ($fp) {
 			$msg = '<strong>Reload:</strong><pre>'.$response.'</pre>';
 		}
 	}
+}
 
-	if (!function_exists('switch_dingaling_status')) {
-		function switch_dingaling_status($profile_username, $result_type = 'xml') {
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			$cmd = 'api dingaling status';
-			$response = trim(event_socket_request($fp, $cmd));
-			$response = explode("\n", $response);
-
-			$x = 0;
-			foreach ($response as $row) {
-				if ($x > 1) {
-					$dingaling = explode("|", $row);
-					if ($profile_username == trim($dingaling[0])) {
-						return trim($dingaling[1]);
-					}
+if (!function_exists('switch_dingaling_status')) {
+	function switch_dingaling_status($fp, $profile_username, $result_type = 'xml') {
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		$cmd = 'api dingaling status';
+		$response = trim(event_socket_request($fp, $cmd));
+		$response = explode("\n", $response);
+		$x = 0;
+		foreach ($response as $row) {
+			if ($x > 1) {
+				$dingaling = explode("|", $row);
+				if ($profile_username == trim($dingaling[0])) {
+					return trim($dingaling[1]);
 				}
-				$x++;
 			}
+			$x++;
 		}
 	}
 }
 
-//get a list of assigned extensions for this user
-$sql = "";
-$sql .= "select * from v_xmpp ";
+//get a list of the xmpp accounts
+$sql = "select * from v_xmpp ";
 $sql .= "where domain_uuid = '$domain_uuid' ";
 $prep_statement = $db->prepare(check_sql($sql));
 $prep_statement->execute();
@@ -81,7 +78,7 @@ $x = 0;
 $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 foreach ($result as &$row) {
 	$profiles_array[$x] = $row;
-	$profiles_array[$x]['status'] = switch_dingaling_status($row['username'].'/talk');
+	$profiles_array[$x]['status'] = switch_dingaling_status($fp, $row['username'].'/talk');
 	$x++;
 }
 unset ($prep_statement);
