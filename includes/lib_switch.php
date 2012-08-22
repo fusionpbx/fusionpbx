@@ -3399,7 +3399,7 @@ if (!function_exists('sync_directory')) {
 		//get a list of extensions and the users assigned to them
 			$sql = "select * from v_extensions ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and extension_enabled = 'true'; ";
+			$sql .= "and enabled = 'true'; ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$x = 0;

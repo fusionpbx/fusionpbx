@@ -4887,13 +4887,6 @@
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/secure/v_config_cli.php</path> 
-		<last_mod>Tue, 29 Jun 2010 08:34:19 GMT</last_mod> 
-		<md5>6e1e710fe517b4a624d0fad75313d1bb</md5> 
-		<size>1109</size> 
-	</src> 
-	<src> 
-		<type>file</type> 
 		<path>/secure/v_mailto.php</path> 
 		<last_mod>Tue, 29 Jun 2010 08:34:19 GMT</last_mod> 
 		<md5>9d33605176da0905309c7f62f58d9eb4</md5> 
