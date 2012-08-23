@@ -2292,7 +2292,6 @@ function save_hunt_group_xml() {
 		$x = 0;
 
 		$sql = "select * from v_hunt_groups ";
-		$sql .= "where hunt_group_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -2372,7 +2371,7 @@ function save_hunt_group_xml() {
 
 						if ($action == 'update') {
 							//update the huntgroup fifo
-								$dialplan_name = $row['hunt_group_name'].'.park';
+								$dialplan_name = $row['hunt_group_name'];
 								$dialplan_order = '330';
 								$context = $row['hunt_group_context'];
 								if ($row['hunt_group_enabled'] == "false") {
