@@ -50,7 +50,14 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		$src_cid_number = $_REQUEST['src_cid_number'];
 		$dest_cid_name = $_REQUEST['dest_cid_name'];
 		$dest_cid_number = $_REQUEST['dest_cid_number'];
+		$auto_answer = $_REQUEST['auto_answer']; //true,false
 		$rec = $_REQUEST['rec']; //true,false
+		if ($auto_answer == "true") {
+			$sip_auto_answer = "sip_auto_answer=true,"; 
+		}
+		else {
+			$sip_auto_answer = '';
+		}
 		if (strlen($cid_number) == 0) { $cid_number = $src;}
 		if (strlen($_SESSION['context']) > 0) {
 			$context = $_SESSION['context'];
@@ -83,7 +90,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	//source should see the destination caller id
 		if (strlen($src) < 7) {
-			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			$source = "{".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
 		}
 		else {
 			$bridge_array = outbound_route_to_bridge ($src);
@@ -250,8 +257,33 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	</td>\n";
 	echo "</tr>\n";
 
+	echo" <tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    Auto Answer:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='auto_answer'>\n";
+	echo "    <option value=''></option>\n";
+	if ($auto_answer == "true") {
+		echo "    <option value='true' selected='selected'>true</option>\n";
+	}
+	else {
+		echo "    <option value='true'>true</option>\n";
+	}
+	if ($auto_answer == "false") {
+		echo "    <option value='false' selected='selected'>false</option>\n";
+	}
+	else {
+		echo "    <option value='false'>false</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo "Select whether to enable auto answer.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    Record:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
