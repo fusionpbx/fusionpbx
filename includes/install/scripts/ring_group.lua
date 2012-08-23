@@ -67,6 +67,8 @@
 
 		if (string.len(ring_group_cid_name_prefix) > 0) then
 			origination_caller_id_name = ring_group_cid_name_prefix .. "#" .. caller_id_name;
+		else
+			origination_caller_id_name = caller_id_name;
 		end
 
 		if (row.ring_group_strategy == "sequence") then
