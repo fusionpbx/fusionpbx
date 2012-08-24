@@ -154,6 +154,12 @@ else {
 	$param .= "&write_codec=$write_codec";
 	$param .= "&remote_media_ip=$remote_media_ip";
 	$param .= "&network_addr=$network_addr";
+	if (isset($order_by)) {
+		$param .= "&order_by=".$order_by;
+	}
+	if (isset($order)) {
+		$param .= "&order=".$order;
+	}
 
 //create the sql query to get the xml cdr records
 	if (strlen($order_by) == 0)  { $order_by  = "start_epoch"; }
