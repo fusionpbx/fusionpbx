@@ -131,10 +131,10 @@ else {
 
 		if (permission_exists('outbound_route_any_gateway')) {
 			//get the domain_uuid for gateway
-				$sql = "";
-				$sql .= "select * from v_gateways ";
+				$sql = "select * from v_gateways ";
 				$sql .= "where gateway_uuid = '$gateway_uuid' ";
 				$sql .= "and gateway = '$gateway_name' ";
+				$sql .= "and enabled = 'true' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -144,10 +144,10 @@ else {
 				}
 				unset ($prep_statement);
 			//get the domain_uuid for gateway_2
-				$sql = "";
-				$sql .= "select * from v_gateways ";
+				$sql = "select * from v_gateways ";
 				$sql .= "where gateway_uuid = '$gateway_2_id' ";
 				$sql .= "and gateway = '$gateway_2_name' ";
+				$sql .= "and enabled = 'true' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -157,10 +157,10 @@ else {
 				}
 				unset ($prep_statement);
 			//get the domain_uuid for gateway_3
-				$sql = "";
-				$sql .= "select * from v_gateways ";
+				$sql = "select * from v_gateways ";
 				$sql .= "where gateway_uuid = '$gateway_3_id' ";
 				$sql .= "and gateway = '$gateway_3_name' ";
+				$sql .= "and enabled = 'true' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -441,6 +441,13 @@ else {
 
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
+					$dialplan_detail_data = 'sip_h_X-Tag=';
+					$dialplan_detail_order = '012';
+					$dialplan_detail_group = '';
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+					$dialplan_detail_tag = 'action'; //condition, action, antiaction
+					$dialplan_detail_type = 'set';
 					$dialplan_detail_data = 'call_direction=outbound';
 					$dialplan_detail_order = '015';
 					$dialplan_detail_group = '';
@@ -666,13 +673,13 @@ function type_onchange(dialplan_detail_type) {
 	//set the onchange
 	if (if_group("superadmin")) { $onchange = "onchange='changeToInput(this);'"; } else { $onchange = ''; }
 
-	$sql = "";
-	$sql .= " select * from v_gateways ";
+	$sql = "select * from v_gateways ";
+	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
 		$sql .= " order by domain_uuid = '$domain_uuid' ";
 	}
 	else {
-		$sql .= " where domain_uuid = '$domain_uuid' ";
+		$sql .= " and domain_uuid = '$domain_uuid' ";
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -724,13 +731,14 @@ function type_onchange(dialplan_detail_type) {
 	echo "    Alternate 1:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$sql = "";
-	$sql .= " select * from v_gateways ";
+
+	$sql = "select * from v_gateways ";
+	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= " order by domain_uuid = '$domain_uuid' ";
+		$sql .= "order by domain_uuid = '$domain_uuid' ";
 	}
 	else {
-		$sql .= " where domain_uuid = '$domain_uuid' ";
+		$sql .= "and domain_uuid = '$domain_uuid' ";
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -782,13 +790,14 @@ function type_onchange(dialplan_detail_type) {
 	echo "    Alternate 2:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$sql = "";
-	$sql .= " select * from v_gateways ";
+
+	$sql = "select * from v_gateways ";
+	$sql .= "where enabled = 'true' ";
 	if (permission_exists('outbound_route_any_gateway')) {
-		$sql .= " order by domain_uuid = '$domain_uuid' ";
+		$sql .= "order by domain_uuid = '$domain_uuid' ";
 	}
 	else {
-		$sql .= " where domain_uuid = '$domain_uuid' ";
+		$sql .= "and domain_uuid = '$domain_uuid' ";
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
