@@ -50,7 +50,7 @@ else {
 		$virtual_table_name = check_str($_POST["virtual_table_name"]);
 		$virtual_table_auth = check_str($_POST["virtual_table_auth"]);
 		$virtual_table_captcha = check_str($_POST["virtual_table_captcha"]);
-		$virtual_table_parent_id = check_str($_POST["virtual_table_parent_id"]);
+		$virtual_table_parent_uuid = check_str($_POST["virtual_table_parent_uuid"]);
 		$virtual_table_description = check_str($_POST["virtual_table_description"]);
 	}
 
@@ -68,7 +68,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($virtual_table_name) == 0) { $msg .= "Please provide: Table Name<br>\n"; }
 		//if (strlen($virtual_table_auth) == 0) { $msg .= "Please provide: Authentication<br>\n"; }
 		//if (strlen($virtual_table_captcha) == 0) { $msg .= "Please provide: Captcha<br>\n"; }
-		//if (strlen($virtual_table_parent_id) == 0) { $msg .= "Please provide: Parent Table<br>\n"; }
+		//if (strlen($virtual_table_parent_uuid) == 0) { $msg .= "Please provide: Parent Table<br>\n"; }
 		//if (strlen($virtual_table_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
@@ -96,7 +96,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "virtual_table_name, ";
 				$sql .= "virtual_table_auth, ";
 				$sql .= "virtual_table_captcha, ";
-				$sql .= "virtual_table_parent_id, ";
+				$sql .= "virtual_table_parent_uuid, ";
 				$sql .= "virtual_table_description ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -108,7 +108,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$virtual_table_name', ";
 				$sql .= "'$virtual_table_auth', ";
 				$sql .= "'$virtual_table_captcha', ";
-				$sql .= "'$virtual_table_parent_id', ";
+				if (strlen($virtual_table_parent_uuid) == 0) {
+					$sql .= "null, ";
+				}
+				else {
+					$sql .= "'$virtual_table_parent_uuid', ";
+				}
 				$sql .= "'$virtual_table_description' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -131,7 +136,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "virtual_table_name = '$virtual_table_name', ";
 				$sql .= "virtual_table_auth = '$virtual_table_auth', ";
 				$sql .= "virtual_table_captcha = '$virtual_table_captcha', ";
-				$sql .= "virtual_table_parent_id = '$virtual_table_parent_id', ";
+				if (strlen($virtual_table_parent_uuid) == 0) {
+					$sql .= "virtual_table_parent_uuid = null, ";
+				}
+				else {
+					$sql .= "virtual_table_parent_uuid = '$virtual_table_parent_uuid', ";
+				}
 				$sql .= "virtual_table_description = '$virtual_table_description' ";
 				$sql .= "where virtual_table_uuid = '$virtual_table_uuid'";
 				$db->exec(check_sql($sql));
@@ -164,7 +174,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$virtual_table_name = $row["virtual_table_name"];
 			$virtual_table_auth = $row["virtual_table_auth"];
 			$virtual_table_captcha = $row["virtual_table_captcha"];
-			$virtual_table_parent_id = $row["virtual_table_parent_id"];
+			$virtual_table_parent_uuid = $row["virtual_table_parent_uuid"];
 			$virtual_table_description = $row["virtual_table_description"];
 			break; //limit to 1 row
 		}
@@ -297,7 +307,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	echo "			<select name='virtual_table_parent_id' class='formfld'>\n";
+	echo "			<select name='virtual_table_parent_uuid' class='formfld'>\n";
 	echo "			<option value=''></option>\n";
 	$sql = "";
 	$sql .= "select * from v_virtual_tables ";
@@ -306,7 +316,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		if ($row["virtual_table_uuid"] == $virtual_table_parent_id) {
+		if ($row["virtual_table_uuid"] == $virtual_table_parent_uuid) {
 			echo "			<option value='".$row["virtual_table_uuid"]."' selected>".$row["virtual_table_name"]."</option>\n";
 		}
 		else {
