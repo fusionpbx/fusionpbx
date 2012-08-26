@@ -1609,7 +1609,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 	if ($_POST["install_step"] == "2" && $_POST["db_type"] == "pgsql") {
 		if (strlen($db_host) == 0) { $db_host = 'localhost'; }
 		if (strlen($db_port) == 0) { $db_port = '5432'; }
-		//if (strlen($db_name) == 0) { $db_name = 'fusionpbx'; }
+		if (strlen($db_name) == 0) { $db_name = 'fusionpbx'; }
 
 		echo "<div id='page' align='center'>\n";
 		echo "<form method='post' name='frm' action=''>\n";
