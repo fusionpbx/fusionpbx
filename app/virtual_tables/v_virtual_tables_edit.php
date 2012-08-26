@@ -46,6 +46,8 @@ else {
 //get the http post variables
 	if (count($_POST)>0) {
 		$virtual_table_category = check_str($_POST["virtual_table_category"]);
+		$virtual_table_category_other = check_str($_POST["virtual_table_category_other"]);
+		if (strlen($virtual_table_category_other) == 0) { $virtual_table_category = $virtual_table_category_other; }
 		$virtual_table_label = check_str($_POST["virtual_table_label"]);
 		$virtual_table_name = check_str($_POST["virtual_table_name"]);
 		$virtual_table_auth = check_str($_POST["virtual_table_auth"]);
@@ -161,8 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$virtual_table_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_virtual_tables ";
+		$sql = "select * from v_virtual_tables ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -223,7 +224,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Table Category:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='virtual_table_category' maxlength='255' value=\"$virtual_table_category\">\n";
+	//echo "	<input class='formfld' type='text' name='virtual_table_category' maxlength='255' value=\"$virtual_table_category\">\n";
+	$table_name = 'v_virtual_tables';$field_name = 'virtual_table_category';$sql_where_optional = "";$field_current_value = $virtual_table_category;
+	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
 	echo "<br />\n";
 	echo "Enter the category.\n";
 	echo "</td>\n";
