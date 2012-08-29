@@ -160,7 +160,7 @@ foreach($settings_array as $name => $value) {
 	if (strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 		//get the user extension list
 			unset($_SESSION['user']['extension']);
-			$sql = "select e.extension, e.user_context, e.extension_uuid from v_extensions as e, v_extension_users as u ";
+			$sql = "select e.extension, e.user_context, e.extension_uuid, e.outbound_caller_id_name, e.outbound_caller_id_number from v_extensions as e, v_extension_users as u ";
 			$sql .= "where e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and e.extension_uuid = u.extension_uuid ";
 			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
@@ -172,6 +172,8 @@ foreach($settings_array as $name => $value) {
 				foreach($result as $row) {
 					$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
 					$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
+					$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
+					$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
 					$_SESSION['user_context'] = $row["user_context"];
 					$x++;
 				}

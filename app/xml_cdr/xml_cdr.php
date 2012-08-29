@@ -45,6 +45,21 @@ else {
 	$rows_per_page = 100;
 	require_once "xml_cdr_inc.php";
 
+//javascript function: send_cmd
+	echo "<script type=\"text/javascript\">\n";
+	echo "function send_cmd(url) {\n";
+	echo "	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari\n";
+	echo "		xmlhttp=new XMLHttpRequest();\n";
+	echo "	}\n";
+	echo "	else {// code for IE6, IE5\n";
+	echo "		xmlhttp=new ActiveXObject(\"Microsoft.XMLHTTP\");\n";
+	echo "	}\n";
+	echo "	xmlhttp.open(\"GET\",url,true);\n";
+	echo "	xmlhttp.send(null);\n";
+	echo "	document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
+	echo "}\n";
+	echo "</script>\n";
+
 //page title and description
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -351,7 +366,7 @@ else {
 				$tmp_name = $row['uuid']."_1.mp3";
 			}
 			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+				echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 				echo 	$row['caller_id_name'].' ';
 				echo "	  </a>";
 			}
@@ -361,33 +376,45 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+				echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 				if (is_numeric($row['caller_id_number'])) {
 					echo 	format_phone($row['caller_id_number']).' ';
 				}
 				else {
+					echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 					echo 	$row['caller_id_number'].' ';
+					echo "</a>\n";
 				}
 				echo "	  </a>";
 			}
 			else {
 				if (is_numeric($row['caller_id_number'])) {
+					echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 					echo 	format_phone($row['caller_id_number']).' ';
+					echo "</a>\n";
 				}
 				else {
+					echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 					echo 	$row['caller_id_number'].' ';
+					echo "</a>\n";
 				}
 			}
 			echo "	</td>\n";
+
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 			if (is_numeric($row['destination_number'])) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".format_phone($row['destination_number'])."</td>\n";
+				echo format_phone($row['destination_number'])."\n";
 			}
 			else {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number']."</td>\n";
+				echo "		".$row['destination_number']."\n";
 			}
+			echo "		</a>\n";
+			echo "	</td>\n";
+
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_start_epoch."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['end_stamp']."</td>\n";
-			
+
 			//If they cancelled, show the ring time, not the bill time.
 			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
 

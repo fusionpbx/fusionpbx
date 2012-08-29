@@ -40,6 +40,21 @@ require_once "includes/paging.php";
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//javascript function: send_cmd
+	echo "<script type=\"text/javascript\">\n";
+	echo "function send_cmd(url) {\n";
+	echo "	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari\n";
+	echo "		xmlhttp=new XMLHttpRequest();\n";
+	echo "	}\n";
+	echo "	else {// code for IE6, IE5\n";
+	echo "		xmlhttp=new ActiveXObject(\"Microsoft.XMLHTTP\");\n";
+	echo "	}\n";
+	echo "	xmlhttp.open(\"GET\",url,true);\n";
+	echo "	xmlhttp.send(null);\n";
+	echo "	document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;\n";
+	echo "}\n";
+	echo "</script>\n";
+
 //show the content
 	//echo "<div align='center'>";
 	//echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -60,7 +75,7 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = " select count(*) as num_rows from v_contact_phones ";
+		$sql = "select count(*) as num_rows from v_contact_phones ";
 		$sql .= " where domain_uuid = '$domain_uuid' ";
 		$sql .= " and contact_uuid = '$contact_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -85,7 +100,7 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the contact list
-		$sql = " select * from v_contact_phones ";
+		$sql = "select * from v_contact_phones ";
 		$sql .= " where domain_uuid = '$domain_uuid' ";
 		$sql .= " and contact_uuid = '$contact_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -114,8 +129,16 @@ require_once "includes/paging.php";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phone_type']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".format_phone($row['phone_number'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".$row['phone_number']."&destination_number=".$row['phone_number']."\">CDR</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+			echo "		".format_phone($row['phone_number'])."</a>&nbsp;\n";
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>\n";
+			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">Call</a>\n";
+			echo "		&nbsp;\n";
+			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".$row['phone_number']."&destination_number=".$row['phone_number']."\">CDR</a>\n";
+			echo "		&nbsp;\n";
+			echo "	</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<a href='contact_phones_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "		<a href='contact_phones_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
