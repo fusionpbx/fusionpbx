@@ -1603,7 +1603,7 @@ function save_setting_xml() {
 		unset ($prep_statement);
 	}
 
-	//apply settings reminder
+	//apply settings
 		$_SESSION["reload_xml"] = true;
 
 	//$cmd = "api reloadxml";
@@ -1638,7 +1638,6 @@ function save_extension_xml() {
 			$prep_statement->execute();
 			$i = 0;
 			$extension_xml_condensed = false;
-
 			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
 				$call_group = $row['call_group'];
 				$call_group = str_replace(";", ",", $call_group);
@@ -1905,9 +1904,8 @@ function save_extension_xml() {
 		//syncrhonize the phone directory
 			sync_directory();
 
-		//$cmd = "api reloadxml";
-		//event_socket_request_cmd($cmd);
-		//unset($cmd);
+		//apply settings
+			$_SESSION["reload_xml"] = true;
 	}
 }
 
@@ -2070,7 +2068,7 @@ function save_gateway_xml() {
 		} //end foreach
 		unset($prep_statement);
 
-	//apply settings reminder
+	//apply settings
 		$_SESSION["reload_xml"] = true;
 
 }
@@ -2106,7 +2104,7 @@ function save_module_xml() {
 	unset($xml);
 	fclose($fout);
 
-	//apply settings reminder
+	//apply settings
 		$_SESSION["reload_xml"] = true;
 
 	//$cmd = "api reloadxml";
@@ -2144,7 +2142,7 @@ function save_var_xml() {
 	unset($xml);
 	fclose($fout);
 
-	//apply settings reminder
+	//apply settings
 		$_SESSION["reload_xml"] = true;
 
 	//$cmd = "api reloadxml";
@@ -3279,7 +3277,7 @@ function save_dialplan_xml() {
 					unset($tmp);
 				} //end while
 
-				//apply settings reminder
+				//apply settings
 					$_SESSION["reload_xml"] = true;
 			}
 		} //end if (is_dir($_SESSION['switch']['dialplan']['dir']))
@@ -3686,7 +3684,7 @@ if (!function_exists('save_ivr_menu_xml')) {
 		}
 		save_dialplan_xml();
 
-		//apply settings reminder
+		//apply settings
 			$_SESSION["reload_xml"] = true;
 	}
 }
@@ -4143,7 +4141,7 @@ if (!function_exists('save_call_center_xml')) {
 			//save the dialplan xml files
 				save_dialplan_xml();
 
-			//apply settings reminder
+			//apply settings
 				$_SESSION["reload_xml"] = true;
 
 		}
@@ -4185,7 +4183,7 @@ if (!function_exists('switch_conf_xml')) {
 			fwrite($fout, $file_contents);
 			fclose($fout);
 
-		//apply settings reminder
+		//apply settings
 			$_SESSION["reload_xml"] = true;
 	}
 }
@@ -4217,7 +4215,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			fwrite($fout, $file_contents);
 			fclose($fout);
 
-		//apply settings reminder
+		//apply settings
 			$_SESSION["reload_xml"] = true;
 	}
 }
@@ -4279,7 +4277,7 @@ if (!function_exists('save_sip_profile_xml')) {
 				unset($sql, $result, $row_count);
 			} //end if results
 
-		//apply settings reminder
+		//apply settings
 			$_SESSION["reload_xml"] = true;
 	}
 }
