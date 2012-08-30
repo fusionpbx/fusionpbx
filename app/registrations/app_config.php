@@ -14,7 +14,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '17dbfd56-291d-8c1c-bc43-713283a9dd5a';
 		$apps[$x]['menu'][0]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/registrations/v_status_registrations.php?show_reg=1&profile=internal';
+		$apps[$x]['menu'][0]['path'] = '/app/registrations/status_registrations.php?show_reg=1&profile=internal';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
