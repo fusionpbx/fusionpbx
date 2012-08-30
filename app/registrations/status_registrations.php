@@ -162,7 +162,7 @@ require_once "includes/checkauth.php";
 					//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['user']."&nbsp;</td>\n";
 					//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['contact']."&nbsp;</td>\n";
 					echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-user']."&nbsp;</td>\n";
-					echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['agent']."&nbsp;</td>\n";
+					echo "	<td class='".$row_style[$c]."'>&nbsp;".htmlentities($row['agent'])."&nbsp;</td>\n";
 					//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['host']."&nbsp;</td>\n";
 					echo "	<td class='".$row_style[$c]."'>&nbsp;<a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
 					echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['network-port']."&nbsp;</td>\n";
