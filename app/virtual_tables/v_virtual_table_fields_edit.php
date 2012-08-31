@@ -176,8 +176,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$virtual_table_uuid = $_GET["virtual_table_uuid"];
 		$virtual_table_field_uuid = $_GET["id"];
 
-		$sql = "";
-		$sql .= "select * from v_virtual_table_fields ";
+		$sql = "select * from v_virtual_table_fields ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
 		$sql .= "and virtual_table_field_uuid = '$virtual_table_field_uuid' ";
@@ -328,6 +327,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	else {
 		echo "	<option value='hidden'>Hidden</option>\n";
+	}
+	if ($virtual_field_type == "uuid") { 
+		echo "	<option value='uuid' selected='selected'>UUID</option>\n";
+	}
+	else {
+		echo "	<option value='uuid'>UUID</option>\n";
 	}
 	//if ($virtual_field_type == "ipv4") { 
 	//	echo "	<option value='ipv4' selected='selected'>IP version 4</option>\n";
