@@ -58,15 +58,14 @@ $order = $_GET["order"];
 	echo "</tr>\n";
 	echo "</tr></table>\n";
 
-	if (strlen($order_by) == 0) { 
+	if (strlen($order_by) == 0) {
 		$order_by = 'virtual_field_order';
 		$order = 'asc';
 	}
 
-	$sql = "";
-	$sql .= " select * from v_virtual_table_fields ";
-	$sql .= " where domain_uuid = '$domain_uuid' ";
-	$sql .= " and virtual_table_uuid = '$virtual_table_uuid' ";
+	$sql = "select * from v_virtual_table_fields ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -80,7 +79,6 @@ $order = $_GET["order"];
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo th_order_by('virtual_field_label', 'Label', $order_by, $order);
 	echo th_order_by('virtual_field_name', 'Name', $order_by, $order);
@@ -97,13 +95,10 @@ $order = $_GET["order"];
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count == 0) {
-		//no results
-	}
-	else { //received results
+	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_label']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_type']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_column']."</td>\n";
