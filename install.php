@@ -934,8 +934,8 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 			$sql .= "username, ";
 			$sql .= "password, ";
 			$sql .= "salt, ";
-			$sql .= "user_add_date, ";
-			$sql .= "user_add_user ";
+			$sql .= "add_date, ";
+			$sql .= "add_user ";
 			$sql .= ") ";
 			$sql .= "values ";
 			$sql .= "(";

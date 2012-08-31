@@ -631,8 +631,8 @@
 					$sql .= "password, ";
 					$sql .= "salt, ";
 					if (strlen($user_email) > 0) { $sql .= "user_email, "; }
-					$sql .= "user_add_date, ";
-					$sql .= "user_add_user ";
+					$sql .= "add_date, ";
+					$sql .= "add_user ";
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
