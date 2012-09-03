@@ -49,7 +49,7 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' width='50%' nowrap><b>Conferences</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>Conferences</b></td>\n";
 	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -96,7 +96,7 @@ require_once "includes/paging.php";
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
 		$offset = $rows_per_page * $page; 
 
-	//get the  list
+	//get the list
 		if (if_group("superadmin") || if_group("admin")) {
 			//show all extensions
 			$sql = "select * from v_conferences ";
@@ -110,7 +110,7 @@ require_once "includes/paging.php";
 			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
 		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
@@ -133,7 +133,7 @@ require_once "includes/paging.php";
 	echo th_order_by('conference_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('conference_add')) {
-		echo "	<a href='conferences_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='conference_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "	&nbsp;\n";
@@ -155,10 +155,10 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['conference_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('conference_edit')) {
-				echo "		<a href='conferences_edit.php?id=".$row['conference_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='conference_edit.php?id=".$row['conference_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('conference_delete')) {
-				echo "		<a href='conferences_delete.php?id=".$row['conference_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='conference_delete.php?id=".$row['conference_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -175,7 +175,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('conference_add')) {
-		echo "			<a href='conferences_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='conference_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "			&nbsp;\n";
