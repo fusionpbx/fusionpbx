@@ -128,8 +128,12 @@ else {
 
 	//get the  list
 		$sql = "select * from v_domains ";
-		$sql .= "order by domain_name asc ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) == 0) {
+			$sql .= "order by domain_name asc ";
+		}
+		else {
+			$sql .= "order by $order_by $order "; 
+		}
 		$sql .= " limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
