@@ -40,11 +40,11 @@ if (count($_GET)>0) {
 
 	//get the menu uuid
 		$menu_uuid = check_str($_GET["id"]);
-		$menu_item_id = check_str($_GET["menu_item_id"]);
+		$menu_item_uuid = check_str($_GET["menu_item_uuid"]);
 
 	//delete the item in the menu
 		$sql  = "delete from v_menu_items ";
-		$sql .= "where menu_item_id = '$menu_item_id' ";
+		$sql .= "where menu_item_uuid = '$menu_item_uuid' ";
 		$sql .= "and menu_uuid = '$menu_uuid' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
