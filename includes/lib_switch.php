@@ -2150,7 +2150,7 @@ function save_var_xml() {
 	//unset($cmd);
 }
 
-function outbound_route_to_bridge ($destination_number) {
+function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	global $db;
 
 	$destination_number = trim($destination_number);
@@ -2164,7 +2164,7 @@ function outbound_route_to_bridge ($destination_number) {
 	}
 
 	$sql = "select * from v_dialplans ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$sql .= "and app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
 	$sql .= "and dialplan_enabled = 'true' ";
 	$sql .= "order by dialplan_order asc ";
@@ -2182,7 +2182,7 @@ function outbound_route_to_bridge ($destination_number) {
 		//get the extension number using the dialplan_uuid
 			$sql = "select * ";
 			$sql .= "from v_dialplan_details ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 			$sql .= "order by dialplan_detail_order asc ";
 			$sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
@@ -2230,7 +2230,7 @@ function outbound_route_to_bridge ($destination_number) {
 	unset ($prep_statement);
 }
 //$destination_number = '1231234';
-//$bridge_array = outbound_route_to_bridge ($destination_number);
+//$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
 //foreach ($bridge_array as &$bridge) {
 //	echo "bridge: ".$bridge."<br />";
 //}
@@ -2682,7 +2682,7 @@ function save_hunt_group_xml() {
 							$tmp_sub_array["application"] = "bridge";
 							$tmp_sub_array["type"] = "sip uri";
 							//$destination_data = "{user=foo}loopback/".$ent['destination_data']."/default/XML";
-							$bridge_array = outbound_route_to_bridge ($ent['destination_data']);
+							$bridge_array = outbound_route_to_bridge ($domain_uuid, $ent['destination_data']);
 							$destination_data = $bridge_array[0];
 							$tmp_sub_array["application"] = "bridge";
 							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout,origination_caller_id_name=\"..caller_id_name..\",origination_caller_id_number=\"..caller_id_number..\"]".$destination_data."\"";

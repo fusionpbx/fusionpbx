@@ -181,7 +181,7 @@ if (defined('STDIN')) {
 			//send the command with event socket
 				if ($fp) {
 					//prepare the fax originate command
-						$route_array = outbound_route_to_bridge($fax_forward_number);
+						$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_forward_number);
 						$fax_file = $dir_fax."/".$fax_name.".tif";
 						if (count($route_array) == 0) {
 							//send the internal call to the registered extension

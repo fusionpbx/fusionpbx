@@ -47,7 +47,7 @@ else {
 	if (count($_POST)>0) {
 		$virtual_table_category = check_str($_POST["virtual_table_category"]);
 		$virtual_table_category_other = check_str($_POST["virtual_table_category_other"]);
-		if (strlen($virtual_table_category_other) == 0) { $virtual_table_category = $virtual_table_category_other; }
+		if (strlen($virtual_table_category_other) > 0) { $virtual_table_category = $virtual_table_category_other; }
 		$virtual_table_label = check_str($_POST["virtual_table_label"]);
 		$virtual_table_name = check_str($_POST["virtual_table_name"]);
 		$virtual_table_auth = check_str($_POST["virtual_table_auth"]);

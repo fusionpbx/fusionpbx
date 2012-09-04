@@ -148,7 +148,7 @@ function cmd_async($cmd) {
 						$phone1 = str_replace(".", "", $phone1);
 
 					//get the correct gateway
-						$bridge_array = outbound_route_to_bridge ($phone1);
+						$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $phone1);
 
 					//prepare the string
 						$channel_variables = "ignore_early_media=true,origination_number=$phone1,origination_caller_id_name='$broadcast_caller_id_name',origination_caller_id_number=$broadcast_caller_id_number";

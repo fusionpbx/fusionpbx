@@ -93,7 +93,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			$source = "{".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
 		}
 		else {
-			$bridge_array = outbound_route_to_bridge ($src);
+			$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $src);
 			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}".$bridge_array[0];
 		}
 
@@ -120,7 +120,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 						unset ($prep_statement);
 				}
 			}
-			$bridge_array = outbound_route_to_bridge ($dest);
+			$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $dest);
 			$destination = "{origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number}".$bridge_array[0];
 			if (permission_exists('click_to_call_call')) {
 				$switch_cmd = "api originate $source &bridge($destination)";

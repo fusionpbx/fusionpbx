@@ -254,7 +254,7 @@ else {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				//prepare the fax originate command
-					$route_array = outbound_route_to_bridge($fax_number);
+					$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_number);
 					$fax_file = $dir_fax_temp."/".$fax_name.".tif";
 					if (count($route_array) == 0) {
 						//send the internal call to the registered extension
