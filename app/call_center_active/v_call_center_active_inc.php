@@ -168,10 +168,8 @@ else {
 					if (if_group("admin") || if_group("superadmin")) {
 						echo "<td valign='top' class='".$row_style[$c]."'>";
 
-						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")"; 
-
-						//url encode any plus signs in caller id
-						$orig_command = str_replace("+", "%2B", $orig_command);
+						$q_caller_number = urlencode($caller_number);
+						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")"; 
 
 						//debug
 						//echo $orig_command;
