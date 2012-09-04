@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -86,6 +87,165 @@ else {
 		echo "</div>\n";
 	}
 	else {
+	
+		//get the agent list
+
+			//show the title
+				echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+				echo "  <tr>\n";
+				echo "	<td align='left'><b>Agents</b><br />\n";
+				echo "		List all the agents.<br />\n";
+				echo "	</td>\n";
+				echo "  </tr>\n";
+				echo "</table>\n";
+				echo "<br />\n";
+
+			//send the event socket command and get the response
+				//callcenter_config queue list tiers [queue_name] | 
+				$switch_cmd = 'callcenter_config queue list tiers '.$queue_name;
+				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+				$result = str_to_named_array($event_socket_str, '|');
+
+			//prepare the result for array_multisort
+				$x = 0;
+				foreach ($result as $row) {
+					$tier_result[$x]['level'] = $row['level'];
+					$tier_result[$x]['position'] = $row['position'];
+					$tier_result[$x]['agent'] = $row['agent'];
+					$tier_result[$x]['state'] = trim($row['state']);
+					$tier_result[$x]['queue'] = $row['queue'];
+					$x++;
+				}
+
+			//sort the array //SORT_ASC, SORT_DESC, SORT_REGULAR, SORT_NUMERIC, SORT_STRING
+				array_multisort($tier_result, SORT_ASC);
+
+			//send the event socket command and get the response
+				//callcenter_config queue list agents [queue_name] [status] | 
+				$switch_cmd = 'callcenter_config queue list agents '.$queue_name;
+				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+				$agent_result = str_to_named_array($event_socket_str, '|');
+
+			//list the agents
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+				echo "<tr>\n";
+				echo "<th>Name</th>\n";
+				echo "<th>Extension</th>\n";
+				echo "<th>Status</th>\n";
+				echo "<th>State</th>\n";
+				//echo "<th>Offered Call</th>\n";
+				echo "<th>Status Change</th>\n";
+				echo "<th>Missed</th>\n";
+				echo "<th>Answered</th>\n";
+				echo "<th>Tier State</th>\n";
+				echo "<th>Tier Level</th>\n";
+				echo "<th>Tier Position</th>\n";
+				echo "<th>Options</th>\n";
+				echo "</tr>\n";
+				foreach ($tier_result as $tier_row) {
+					//$queue = $tier_row['queue'];
+					//$queue = str_replace('@'.$_SESSION['domain_name'], '', $queue);
+					$agent = $tier_row['agent'];
+					//$agent = str_replace('@'.$_SESSION['domain_name'], '', $agent);
+					$tier_state = $tier_row['state'];
+					$tier_level = $tier_row['level'];
+					$tier_position = $tier_row['position'];
+
+					foreach ($agent_result as $agent_row) {
+						if ($tier_row['agent'] == $agent_row['name']) {
+							$name = $agent_row['name'];
+							$name = str_replace('@'.$_SESSION['domain_name'], '', $name);
+							//$system = $agent_row['system'];
+							$a_uuid = $agent_row['uuid'];
+							//$type = $agent_row['type'];
+							$contact = $agent_row['contact'];
+							$a_exten = preg_replace("/user\//", "", $contact);
+							$a_exten = preg_replace("/@.*/", "", $a_exten);
+							$a_exten = preg_replace("/{.*}/", "", $a_exten);
+							$status = $agent_row['status'];
+							$state = $agent_row['state'];
+							$max_no_answer = $agent_row['max_no_answer'];
+							$wrap_up_time = $agent_row['wrap_up_time'];
+							$reject_delay_time = $agent_row['reject_delay_time'];
+							$busy_delay_time = $agent_row['busy_delay_time'];
+							$last_bridge_start = $agent_row['last_bridge_start'];
+							$last_bridge_end = $agent_row['last_bridge_end'];
+							//$last_offered_call = $agent_row['last_offered_call'];
+							$last_status_change = $agent_row['last_status_change'];
+							$no_answer_count = $agent_row['no_answer_count'];
+							$calls_answered = $agent_row['calls_answered'];
+							$talk_time = $agent_row['talk_time'];
+							$ready_time = $agent_row['ready_time'];
+
+							$last_offered_call_seconds = time() - $last_offered_call;
+							$last_offered_call_length_hour = floor($last_offered_call_seconds/3600);
+							$last_offered_call_length_min = floor($last_offered_call_seconds/60 - ($last_offered_call_length_hour * 60));
+							$last_offered_call_length_sec = $last_offered_call_seconds - (($last_offered_call_length_hour * 3600) + ($last_offered_call_length_min * 60));
+							$last_offered_call_length_min = sprintf("%02d", $last_offered_call_length_min);
+							$last_offered_call_length_sec = sprintf("%02d", $last_offered_call_length_sec);
+							$last_offered_call_length = $last_offered_call_length_hour.':'.$last_offered_call_length_min.':'.$last_offered_call_length_sec;
+
+							$last_status_change_seconds = time() - $last_status_change;
+							$last_status_change_length_hour = floor($last_status_change_seconds/3600);
+							$last_status_change_length_min = floor($last_status_change_seconds/60 - ($last_status_change_length_hour * 60));
+							$last_status_change_length_sec = $last_status_change_seconds - (($last_status_change_length_hour * 3600) + ($last_status_change_length_min * 60));
+							$last_status_change_length_min = sprintf("%02d", $last_status_change_length_min);
+							$last_status_change_length_sec = sprintf("%02d", $last_status_change_length_sec);
+							$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
+
+							echo "<tr>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$name."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$a_exten."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
+							//echo "<td valign='top' class='".$row_style[$c]."'>".$last_offered_call_length."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$last_status_change_length."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$no_answer_count."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$calls_answered."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_state."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_level."</td>\n";
+							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_position."</td>\n";
+
+							if (if_group("admin") || if_group("superadmin")) {
+
+								echo "<td valign='top' class='".$row_style[$c]."'>";
+
+								//need to check state to so only waiting gets call, and trying/answer gets eavesdrop
+								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
+									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$a_uuid.")";
+							
+							//debug
+							//echo $orig_command;
+							//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=originate+".$orig_command.")');}\">eavesdrop</a>&nbsp;\n";
+
+									$xfer_command = $a_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
+									//$xfer_command = $a_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
+									$xfer_command = urlencode($xfer_command);
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">transfer</a>&nbsp;\n";
+								}
+								else {
+									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$a_exten."@".$_SESSION['domain_name'].")";
+	
+									 echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=originate+".$orig_call.")');}\">Click to Call</a>&nbsp;\n";
+								}
+								echo "</td>";
+							}
+						}
+					}
+					echo "</tr>\n";
+
+					if ($c==0) { $c=1; } else { $c=0; }
+				}
+				echo "</table>\n\n";
+				echo "</br>";
+
+		//add vertical spacing
+			echo "<br />\n";
+			echo "<br />\n";
+			echo "<br />\n";
+
+	
 		//get the queue list
 			//send the event socket command and get the response
 				//callcenter_config queue list members [queue_name]
@@ -186,138 +346,14 @@ else {
 				} //end if uuid_exists
 			}
 			echo "</table>\n";
+			echo "</br>";
+			echo "<b>Total Waiting is {$q_waiting}. Total Trying is {$q_trying}. Total Answered is {$q_answered}.\n</b>";
 
 		//add vertical spacing
 			echo "<br />\n";
 			echo "<br />\n";
 			echo "<br />\n";
 
-		//get the agent list
 
-			//show the title
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
-				echo "  <tr>\n";
-				echo "	<td align='left'><b>Agents</b><br />\n";
-				echo "		List all the agents.<br />\n";
-				echo "	</td>\n";
-				echo "  </tr>\n";
-				echo "</table>\n";
-				echo "<br />\n";
-
-			//send the event socket command and get the response
-				//callcenter_config queue list tiers [queue_name] | 
-				$switch_cmd = 'callcenter_config queue list tiers '.$queue_name;
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-				$result = str_to_named_array($event_socket_str, '|');
-
-			//prepare the result for array_multisort
-				$x = 0;
-				foreach ($result as $row) {
-					$tier_result[$x]['level'] = $row['level'];
-					$tier_result[$x]['position'] = $row['position'];
-					$tier_result[$x]['agent'] = $row['agent'];
-					$tier_result[$x]['state'] = trim($row['state']);
-					$tier_result[$x]['queue'] = $row['queue'];
-					$x++;
-				}
-
-			//sort the array //SORT_ASC, SORT_DESC, SORT_REGULAR, SORT_NUMERIC, SORT_STRING
-				array_multisort($tier_result, SORT_ASC);
-
-			//send the event socket command and get the response
-				//callcenter_config queue list agents [queue_name] [status] | 
-				$switch_cmd = 'callcenter_config queue list agents '.$queue_name;
-				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-				$agent_result = str_to_named_array($event_socket_str, '|');
-
-			//list the agents
-				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-				echo "<tr>\n";
-				echo "<th>Name</th>\n";
-				echo "<th>Contact</th>\n";
-				echo "<th>Status</th>\n";
-				echo "<th>State</th>\n";
-				//echo "<th>Offered Call</th>\n";
-				echo "<th>Status Change</th>\n";
-				echo "<th>Missed</th>\n";
-				echo "<th>Answered</th>\n";
-				echo "<th>Tier State</th>\n";
-				echo "<th>Tier Level</th>\n";
-				echo "<th>Tier Position</th>\n";
-				echo "</tr>\n";
-				foreach ($tier_result as $tier_row) {
-					//$queue = $tier_row['queue'];
-					//$queue = str_replace('@'.$_SESSION['domain_name'], '', $queue);
-					$agent = $tier_row['agent'];
-					//$agent = str_replace('@'.$_SESSION['domain_name'], '', $agent);
-					$tier_state = $tier_row['state'];
-					$tier_level = $tier_row['level'];
-					$tier_position = $tier_row['position'];
-
-					foreach ($agent_result as $agent_row) {
-						if ($tier_row['agent'] == $agent_row['name']) {
-							$name = $agent_row['name'];
-							$name = str_replace('@'.$_SESSION['domain_name'], '', $name);
-							//$system = $agent_row['system'];
-							//$uuid = $agent_row['uuid'];
-							//$type = $agent_row['type'];
-							$contact = $agent_row['contact'];
-							$status = $agent_row['status'];
-							$state = $agent_row['state'];
-							$max_no_answer = $agent_row['max_no_answer'];
-							$wrap_up_time = $agent_row['wrap_up_time'];
-							$reject_delay_time = $agent_row['reject_delay_time'];
-							$busy_delay_time = $agent_row['busy_delay_time'];
-							$last_bridge_start = $agent_row['last_bridge_start'];
-							$last_bridge_end = $agent_row['last_bridge_end'];
-							//$last_offered_call = $agent_row['last_offered_call'];
-							$last_status_change = $agent_row['last_status_change'];
-							$no_answer_count = $agent_row['no_answer_count'];
-							$calls_answered = $agent_row['calls_answered'];
-							$talk_time = $agent_row['talk_time'];
-							$ready_time = $agent_row['ready_time'];
-
-							$last_offered_call_seconds = time() - $last_offered_call;
-							$last_offered_call_length_hour = floor($last_offered_call_seconds/3600);
-							$last_offered_call_length_min = floor($last_offered_call_seconds/60 - ($last_offered_call_length_hour * 60));
-							$last_offered_call_length_sec = $last_offered_call_seconds - (($last_offered_call_length_hour * 3600) + ($last_offered_call_length_min * 60));
-							$last_offered_call_length_min = sprintf("%02d", $last_offered_call_length_min);
-							$last_offered_call_length_sec = sprintf("%02d", $last_offered_call_length_sec);
-							$last_offered_call_length = $last_offered_call_length_hour.':'.$last_offered_call_length_min.':'.$last_offered_call_length_sec;
-
-							$last_status_change_seconds = time() - $last_status_change;
-							$last_status_change_length_hour = floor($last_status_change_seconds/3600);
-							$last_status_change_length_min = floor($last_status_change_seconds/60 - ($last_status_change_length_hour * 60));
-							$last_status_change_length_sec = $last_status_change_seconds - (($last_status_change_length_hour * 3600) + ($last_status_change_length_min * 60));
-							$last_status_change_length_min = sprintf("%02d", $last_status_change_length_min);
-							$last_status_change_length_sec = sprintf("%02d", $last_status_change_length_sec);
-							$last_status_change_length = $last_status_change_length_hour.':'.$last_status_change_length_min.':'.$last_status_change_length_sec;
-
-							echo "<tr>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$name."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$contact."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
-							//echo "<td valign='top' class='".$row_style[$c]."'>".$last_offered_call_length."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$last_status_change_length."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$no_answer_count."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$calls_answered."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_state."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_level."</td>\n";
-							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_position."</td>\n";
-						}
-					}
-					echo "</tr>\n";
-
-					if ($c==0) { $c=1; } else { $c=0; }
-				}
-				echo "</table>\n\n";
-				echo "</br>";
-				echo "<b>Total Waiting is {$q_waiting}. Total Trying is {$q_trying}. Total Answered is {$q_answered}.\n</b>";
-
-		//add vertical spacing
-			echo "<br />\n";
-			echo "<br />\n";
-			echo "<br />\n";
 	}
 ?>

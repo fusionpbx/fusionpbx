@@ -52,6 +52,10 @@ else {
 		//authorized;
 	} elseif (stristr($switch_cmd, 'eavesdrop') == true) {
 		//authorized;
+	} elseif (stristr($switch_cmd, 'bridge') == true) {
+		//authorized;
+	} elseif (stristr($switch_cmd, 'uuid_transfer') == true) {
+		//authorized;
 	} else {
 		//not found. this command is not authorized
 		echo "access denied";
