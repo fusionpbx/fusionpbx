@@ -270,7 +270,7 @@ else {
 	echo "<table width='100%' cellpadding='6' cellspacing='0'>";
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap><b>Menu Item Edit</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."\" value='Back'><br /><br /></td>\n";
+	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='Back'><br /><br /></td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>";
