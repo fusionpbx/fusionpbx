@@ -120,18 +120,20 @@ else {
 		if ($_POST["persistformvar"] != "true") {
 			//add a menu item
 				if ($action == "add" && permission_exists('menu_add')) {
-					$sql = "SELECT menu_item_order FROM v_menu_items ";
-					$sql .= "where menu_uuid = '$menu_uuid' ";
-					$sql .= "and menu_item_parent_uuid  = '$menu_item_parent_uuid' ";
-					$sql .= "order by menu_item_order desc ";
-					$sql .= "limit 1 ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					foreach ($result as &$row) {
-						$highest_menu_item_order = $row[menu_item_order];
+					if (strlen($menu_item_parent_uuid) == 0) {
+						$sql = "SELECT menu_item_order FROM v_menu_items ";
+						$sql .= "where menu_uuid = '$menu_uuid' ";
+						$sql .= "and menu_item_parent_uuid = '$menu_item_parent_uuid' ";
+						$sql .= "order by menu_item_order desc ";
+						$sql .= "limit 1 ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						foreach ($result as &$row) {
+							$highest_menu_item_order = $row['menu_item_order'];
+						}
+						unset($prep_statement);
 					}
-					unset($prep_statement);
 
 					$menu_item_uuid = uuid();
 					$sql = "insert into v_menu_items ";
@@ -144,7 +146,9 @@ else {
 					$sql .= "menu_item_protected, ";
 					$sql .= "menu_item_uuid, ";
 					$sql .= "menu_item_parent_uuid, ";
-					$sql .= "menu_item_order, ";
+					if (strlen($menu_item_parent_uuid) == 0) {
+						$sql .= "menu_item_order, ";
+					}
 					$sql .= "menu_item_add_user, ";
 					$sql .= "menu_item_add_date ";
 					$sql .= ")";
@@ -159,11 +163,11 @@ else {
 					$sql .= "'".$menu_item_uuid."', ";
 					if (strlen($menu_item_parent_uuid) == 0) {
 						$sql .= "null, ";
+						$sql .= "'".($highest_menu_item_order+1)."', ";
 					}
 					else {
 						$sql .= "'$menu_item_parent_uuid', ";
 					}
-					$sql .= "'".($highest_menu_item_order+1)."', ";
 					$sql .= "'".$_SESSION["username"]."', ";
 					$sql .= "now() ";
 					$sql .= ")";
@@ -181,11 +185,11 @@ else {
 					$sql .= "menu_item_protected = '$menu_item_protected', ";
 					if (strlen($menu_item_parent_uuid) == 0) {
 						$sql .= "menu_item_parent_uuid = null, ";
+						$sql .= "menu_item_order = '$menu_item_order', ";
 					}
 					else {
 						$sql .= "menu_item_parent_uuid = '$menu_item_parent_uuid', ";
 					}
-					$sql .= "menu_item_order = '$menu_item_order', ";
 					$sql .= "menu_item_mod_user = '".$_SESSION["username"]."', ";
 					$sql .= "menu_item_mod_date = now() ";
 					$sql .= "where menu_uuid = '$menu_uuid' ";
@@ -396,10 +400,12 @@ else {
 	echo "</tr>\n";
 
 	if ($action == "update") {
-		echo "	<tr>";
-		echo "		<td class='vncell'>Menu Order:</td>";
-		echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='$menu_item_order'></td>";
-		echo "	</tr>";
+		if ($menu_item_parent_uuid == "") {
+			echo "	<tr>";
+			echo "		<td class='vncell'>Menu Order:</td>";
+			echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='$menu_item_order'></td>";
+			echo "	</tr>";
+		}
 		//echo "	<tr>";
 		//echo "		<td class='vncell'>Added By:</td>";
 		//echo "		<td class='vtable'>$menu_item_add_user &nbsp;</td>";

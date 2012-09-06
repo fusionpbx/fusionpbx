@@ -44,7 +44,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 		$sql = "select * from v_menu_items ";
 		$sql .= "where menu_uuid = '".$menu_uuid."' ";
 		$sql .= "and menu_item_parent_uuid = '".$menu_item_uuid."' ";
-		$sql .= "order by menu_item_order, menu_item_title asc ";
+		$sql .= "order by menu_item_title, menu_item_order asc ";
 		$prep_statement_2 = $db->prepare($sql);
 		$prep_statement_2->execute();
 		$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
@@ -87,10 +87,10 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 				//display the main body of the list
 					switch ($menu_item_category) {
 						case "internal":
-							$menu_item_title = "<a href='".PROJECT_PATH."/$menu_item_link'>$menu_item_title</a>";
+							$menu_item_title = "<a href='".PROJECT_PATH . $menu_item_link."'>$menu_item_title</a>";
 							break;
 						case "external":
-							if (substr($menu_item_link, 0,1) == "/") {
+							if (substr($menu_item_link,0,1) == "/") {
 								$menu_item_link = PROJECT_PATH . $menu_item_link;
 							}
 							$menu_item_title = "<a href='$menu_item_link' target='_blank'>$menu_item_title</a>";
@@ -266,7 +266,7 @@ $order = $_GET["order"];
 			//add the type link based on the typd of the menu
 				switch ($menu_item_category) {
 					case "internal":
-						$menu_item_title = "<a href='".PROJECT_PATH."/$menu_item_link'>$menu_item_title</a>";
+						$menu_item_title = "<a href='".PROJECT_PATH . $menu_item_link."'>$menu_item_title</a>";
 						break;
 					case "external":
 						if (substr($menu_item_link, 0,1) == "/") {
