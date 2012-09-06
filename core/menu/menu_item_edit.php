@@ -60,26 +60,6 @@ else {
 			return;
 	}
 
-//add a group to the menu
-	if ($_REQUEST["a"] != "delete" && strlen($group_name) > 0 && permission_exists('menu_add')) {
-		//add the group to the menu
-			if (strlen($menu_item_uuid) > 0) {
-				$sql_insert = "insert into v_menu_item_groups ";
-				$sql_insert .= "(";
-				$sql_insert .= "menu_uuid, ";
-				$sql_insert .= "menu_item_uuid, ";
-				$sql_insert .= "group_name ";
-				$sql_insert .= ")";
-				$sql_insert .= "values ";
-				$sql_insert .= "(";
-				$sql_insert .= "'".$menu_uuid."', ";
-				$sql_insert .= "'".$menu_item_uuid."', ";
-				$sql_insert .= "'".$group_name."' ";
-				$sql_insert .= ")";
-				$db->exec($sql_insert);
-			}
-	}
-
 //action add or update
 	if (isset($_REQUEST["menu_item_uuid"])) {
 		if (strlen($_REQUEST["menu_item_uuid"]) > 0) {
@@ -138,93 +118,114 @@ else {
 
 		//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('menu_add')) {
-				$sql = "SELECT menu_item_order FROM v_menu_items ";
-				$sql .= "where menu_uuid = '$menu_uuid' ";
-				$sql .= "and menu_item_parent_uuid  = '$menu_item_parent_uuid' ";
-				$sql .= "order by menu_item_order desc ";
-				$sql .= "limit 1 ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$highest_menu_item_order = $row[menu_item_order];
-				}
-				unset($prep_statement);
+			//add a menu item
+				if ($action == "add" && permission_exists('menu_add')) {
+					$sql = "SELECT menu_item_order FROM v_menu_items ";
+					$sql .= "where menu_uuid = '$menu_uuid' ";
+					$sql .= "and menu_item_parent_uuid  = '$menu_item_parent_uuid' ";
+					$sql .= "order by menu_item_order desc ";
+					$sql .= "limit 1 ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($result as &$row) {
+						$highest_menu_item_order = $row[menu_item_order];
+					}
+					unset($prep_statement);
 
-				$sql = "insert into v_menu_items ";
-				$sql .= "(";
-				$sql .= "menu_uuid, ";
-				$sql .= "menu_item_title, ";
-				$sql .= "menu_item_link, ";
-				$sql .= "menu_item_category, ";
-				$sql .= "menu_item_description, ";
-				$sql .= "menu_item_protected, ";
-				$sql .= "menu_item_uuid, ";
-				$sql .= "menu_item_parent_uuid, ";
-				$sql .= "menu_item_order, ";
-				$sql .= "menu_item_add_user, ";
-				$sql .= "menu_item_add_date ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$menu_uuid', ";
-				$sql .= "'$menu_item_title', ";
-				$sql .= "'$menu_item_link', ";
-				$sql .= "'$menu_item_category', ";
-				$sql .= "'$menu_item_description', ";
-				$sql .= "'$menu_item_protected', ";
-				$sql .= "'".uuid()."', ";
-				if (strlen($menu_item_parent_uuid) == 0) {
-					$sql .= "null, ";
+					$menu_item_uuid = uuid();
+					$sql = "insert into v_menu_items ";
+					$sql .= "(";
+					$sql .= "menu_uuid, ";
+					$sql .= "menu_item_title, ";
+					$sql .= "menu_item_link, ";
+					$sql .= "menu_item_category, ";
+					$sql .= "menu_item_description, ";
+					$sql .= "menu_item_protected, ";
+					$sql .= "menu_item_uuid, ";
+					$sql .= "menu_item_parent_uuid, ";
+					$sql .= "menu_item_order, ";
+					$sql .= "menu_item_add_user, ";
+					$sql .= "menu_item_add_date ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$menu_uuid', ";
+					$sql .= "'$menu_item_title', ";
+					$sql .= "'$menu_item_link', ";
+					$sql .= "'$menu_item_category', ";
+					$sql .= "'$menu_item_description', ";
+					$sql .= "'$menu_item_protected', ";
+					$sql .= "'".$menu_item_uuid."', ";
+					if (strlen($menu_item_parent_uuid) == 0) {
+						$sql .= "null, ";
+					}
+					else {
+						$sql .= "'$menu_item_parent_uuid', ";
+					}
+					$sql .= "'".($highest_menu_item_order+1)."', ";
+					$sql .= "'".$_SESSION["username"]."', ";
+					$sql .= "now() ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 				}
-				else {
-					$sql .= "'$menu_item_parent_uuid', ";
-				}
-				$sql .= "'".($highest_menu_item_order+1)."', ";
-				$sql .= "'".$_SESSION["username"]."', ";
-				$sql .= "now() ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
 
+			//update the menu item
+				if ($action == "update" && permission_exists('menu_edit')) {
+					$sql  = "update v_menu_items set ";
+					$sql .= "menu_item_title = '$menu_item_title', ";
+					$sql .= "menu_item_link = '$menu_item_link', ";
+					$sql .= "menu_item_category = '$menu_item_category', ";
+					$sql .= "menu_item_description = '$menu_item_description', ";
+					$sql .= "menu_item_protected = '$menu_item_protected', ";
+					if (strlen($menu_item_parent_uuid) == 0) {
+						$sql .= "menu_item_parent_uuid = null, ";
+					}
+					else {
+						$sql .= "menu_item_parent_uuid = '$menu_item_parent_uuid', ";
+					}
+					$sql .= "menu_item_order = '$menu_item_order', ";
+					$sql .= "menu_item_mod_user = '".$_SESSION["username"]."', ";
+					$sql .= "menu_item_mod_date = now() ";
+					$sql .= "where menu_uuid = '$menu_uuid' ";
+					$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
+					$count = $db->exec(check_sql($sql));
+				}
+
+			//add a group to the menu
+				if ($_REQUEST["a"] != "delete" && strlen($group_name) > 0 && permission_exists('menu_add')) {
+					//add the group to the menu
+						if (strlen($menu_item_uuid) > 0) {
+							$sql_insert = "insert into v_menu_item_groups ";
+							$sql_insert .= "(";
+							$sql_insert .= "menu_uuid, ";
+							$sql_insert .= "menu_item_uuid, ";
+							$sql_insert .= "group_name ";
+							$sql_insert .= ")";
+							$sql_insert .= "values ";
+							$sql_insert .= "(";
+							$sql_insert .= "'".$menu_uuid."', ";
+							$sql_insert .= "'".$menu_item_uuid."', ";
+							$sql_insert .= "'".$group_name."' ";
+							$sql_insert .= ")";
+							$db->exec($sql_insert);
+						}
+				}
+
+			//redirect the user
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_item_edit.php?id=$menu_uuid&menu_item_uuid=$menu_item_uuid&menu_uuid=$menu_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "Add Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
-			}
-
-			if ($action == "update" && permission_exists('menu_edit')) {
-				$sql  = "update v_menu_items set ";
-				$sql .= "menu_item_title = '$menu_item_title', ";
-				$sql .= "menu_item_link = '$menu_item_link', ";
-				$sql .= "menu_item_category = '$menu_item_category', ";
-				$sql .= "menu_item_description = '$menu_item_description', ";
-				$sql .= "menu_item_protected = '$menu_item_protected', ";
-				if (strlen($menu_item_parent_uuid) == 0) {
-					$sql .= "menu_item_parent_uuid = null, ";
-				}
-				else {
-					$sql .= "menu_item_parent_uuid = '$menu_item_parent_uuid', ";
-				}
-				$sql .= "menu_item_order = '$menu_item_order', ";
-				$sql .= "menu_item_mod_user = '".$_SESSION["username"]."', ";
-				$sql .= "menu_item_mod_date = now() ";
-				$sql .= "where menu_uuid = '$menu_uuid' ";
-				$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
-				$count = $db->exec(check_sql($sql));
-
-				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_item_edit.php?id=$menu_uuid&menu_item_uuid=$menu_item_uuid&menu_uuid=$menu_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "Edit Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
-			}
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_item_edit.php?id=$menu_uuid&menu_item_uuid=$menu_item_uuid&menu_uuid=$menu_uuid\">\n";
+					echo "<div align='center'>\n";
+					if ($action == "add") {
+						echo "Add Complete\n";
+					}
+					if ($action == "update") {
+						echo "Edit Complete\n";
+					}
+					echo "</div>\n";
+					require_once "includes/footer.php";
+					return;
 		} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -267,10 +268,9 @@ else {
 
 	echo "<form method='post' action=''>";
 	echo "<table width='100%' cellpadding='6' cellspacing='0'>";
-
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap><b>Menu Item Edit</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.history.back();\" value='Back'><br /><br /></td>\n";
+	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."\" value='Back'><br /><br /></td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>";
