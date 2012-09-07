@@ -42,8 +42,8 @@
   <Debug_Server ua="na"></Debug_Server>
   <Debug_Level ua="na">0</Debug_Level> <!-- options: 0/1/2/3 -->
   <Layer_2_Logging ua="na">No</Layer_2_Logging>
-  <Primary_NTP_Server ua="na"></Primary_NTP_Server>
-  <Secondary_NTP_Server ua="na"></Secondary_NTP_Server>
+  <Primary_NTP_Server ua="na">{v_ntp_server_primary}</Primary_NTP_Server>
+  <Secondary_NTP_Server ua="na">{v_ntp_server_secondary}</Secondary_NTP_Server>
 
   <!-- VLAN Settings -->
 
@@ -2125,7 +2125,7 @@
 
   <Set_Local_Date__mm_dd_ ua="na"></Set_Local_Date__mm_dd_>
   <Set_Local_Time__HH_mm_ ua="na"></Set_Local_Time__HH_mm_>
-  <Time_Zone ua="na">GMT-{v_time_zone_offset}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
+  <Time_Zone ua="na">GMT{v_time_zone_offset}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
   <Time_Offset__HH_mm_ ua="na"></Time_Offset__HH_mm_>
   <Ignore_DHCP_Time_Offset ua="na">Yes</Ignore_DHCP_Time_Offset>
   <Daylight_Saving_Time_Rule ua="na"></Daylight_Saving_Time_Rule>
