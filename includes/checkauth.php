@@ -65,6 +65,9 @@ session_start();
 				}
 			}
 
+		//get the username
+			$username = check_str($_REQUEST["username"]);
+
 		//check the username and password if they don't match then redirect to the login
 			$sql = "select * from v_users ";
 			$sql .= "where domain_uuid=:domain_uuid ";
@@ -72,7 +75,7 @@ session_start();
 			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-			$prep_statement->bindParam(':username', check_str($_REQUEST["username"]));
+			$prep_statement->bindParam(':username', $username);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			if (count($result) == 0) {
@@ -108,19 +111,18 @@ session_start();
 			$_SESSION["username"] = check_str($_REQUEST["username"]);
 			foreach ($result as &$row) {
 				//allow the user to choose a template only if the template has not been assigned by the superadmin
-				if (strlen($_SESSION['domain']['template']['name']) == 0) {
-					$_SESSION['domain']['template']['name'] = $row["user_template_name"];
-				}
-				$_SESSION["time_zone"]["user"] = '';
-				if (strlen($row["user_time_zone"]) > 0) {
-					//user defined time zone
-					$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
-				}
+					if (strlen($_SESSION['domain']['template']['name']) == 0) {
+						$_SESSION['domain']['template']['name'] = $row["user_template_name"];
+					}
+				//user defined time zone
+					$_SESSION["time_zone"]["user"] = '';
+					if (strlen($row["user_time_zone"]) > 0) {
+						//user defined time zone
+						$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
+					}
 				// add the user_uuid to the session
-				$_SESSION['user_uuid'] = $row['user_uuid'];
-				break;
+					$_SESSION['user_uuid'] = $row['user_uuid'];
 			}
-			//echo "username: ".$_SESSION["username"]." and password are correct";
 
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
 			$sql = "SELECT * FROM v_group_users ";
