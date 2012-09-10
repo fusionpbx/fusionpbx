@@ -191,6 +191,7 @@ else {
 								$db->exec(check_sql($sql));
 								unset($sql);
 							}
+							unset($address_array);
 
 						//add the contact phone numbers
 							$x = 0;
@@ -275,6 +276,7 @@ else {
 								$db->exec(check_sql($sql));
 								unset($sql);
 							}
+							unset($phone_array);
 						//save the results into an array
 							$results[] = $data;
 						//clear the array
