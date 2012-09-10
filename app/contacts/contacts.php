@@ -50,7 +50,7 @@ require_once "includes/paging.php";
 	echo "	<td align=\"center\">\n";
 	echo "		<br>";
 
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "	<td align=\"left\" valign=\"top\"><strong>Contacts</strong><br>\n";
 	echo "		The contact is a list of individuals and organizations.\n";
@@ -61,6 +61,11 @@ require_once "includes/paging.php";
 	echo "			<input class=\"btn\" type=\"submit\" name=\"submit\" value=\"Search All\">\n";
 	echo "		</form>\n";
 	echo "	</td>\n";
+	if (permission_exists('contacts_add')) {
+		echo "	<td align=\"right\" valign=\"top\" width=\"50px\">\n";
+		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='contact_import.php'\" value='Import'>\n";
+		echo "	</td>\n";
+	}
 	echo "	</tr>\n";
 	echo "</table>\n";
 
@@ -114,8 +119,8 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the  list
-		$sql = " select * from v_contacts ";
-		$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql = "select * from v_contacts ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		if (strlen($search_all) > 0) {
 			if (is_numeric($search_all)) {
 				$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones where phone_number like '%".$search_all."%') \n";
@@ -140,7 +145,7 @@ require_once "includes/paging.php";
 			}
 		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
