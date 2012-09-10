@@ -225,17 +225,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='address_type'>\n";
 	echo "	<option value=''></option>\n";
-	if ($address_type == "Home") { 
-		echo "	<option value='Home' SELECTED >home</option>\n";
+	if (strtolower($address_type) == "home") { 
+		echo "	<option value='home' selected='selected'>home</option>\n";
 	}
 	else {
-		echo "	<option value='Home'>home</option>\n";
+		echo "	<option value='home'>home</option>\n";
 	}
-	if ($address_type == "Work") { 
-		echo "	<option value='Work' SELECTED >work</option>\n";
+	if (strtolower($address_type) == "work") { 
+		echo "	<option value='work' selected='selected'>work</option>\n";
 	}
 	else {
-		echo "	<option value='Work'>work</option>\n";
+		echo "	<option value='work'>work</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
