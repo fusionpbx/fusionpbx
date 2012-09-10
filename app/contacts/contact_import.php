@@ -277,6 +277,8 @@ else {
 							}
 						//save the results into an array
 							$results[] = $data;
+						//clear the array
+							unset($data);
 					}
 					//increment $x
 						$x++;
