@@ -110,7 +110,7 @@ echo "<div align='center'>";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
 echo "	<td align='left'><b>Interactive Conference</b><br>\n";
-echo "		Use this to monitor and interact with the members of the <strong>$conference_display_name</strong> conference.\n";
+echo "		Use this to monitor and interact with the members of the conference.\n";
 echo "	</td>\n";
 echo "	</tr>\n";
 echo "</table>\n";

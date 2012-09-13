@@ -76,6 +76,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the conference extension number.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_session_enabled';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enable or disable conference sessions.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_pin_number';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Optional pin number to secure access to the conference.';
@@ -98,7 +102,7 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select whether to enable or disable the conference.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enable or disable the conference.';
 
 		$y = 1; //table array index
 		$z = 0; //field array index
