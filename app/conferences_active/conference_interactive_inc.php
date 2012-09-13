@@ -126,18 +126,18 @@ else {
 		}
 		if (permission_exists('conferences_active_record')) {
 			if (file_exists($_SESSION['switch']['recordings']['dir']."/".$conference_name."-tmp.wav")) {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=norecord');\">Stop Record</a>&nbsp;\n";
+				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=norecord');\">Stop Record</a>&nbsp;\n";
 			}
 			else {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=record');\">Start Record</a>&nbsp;\n";
+				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=record');\">Start Record</a>&nbsp;\n";
 			}
 		}
 		if (permission_exists('conferences_active_lock')) {
 			if ($locked == "true") {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\">Unlock</a>&nbsp;\n";
+				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\">Unlock</a>&nbsp;\n";
 			}
 			else {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\">Lock</a>&nbsp;\n";
+				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\">Lock</a>&nbsp;\n";
 			}
 		}
 		echo "</td>\n";
@@ -218,39 +218,39 @@ else {
 				echo "<td valign='top' class='".$row_style[$c]."' style='text-align:right;'>\n";
 				//energy
 					if (permission_exists('conferences_active_energy')) {
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\">+energy</a>&nbsp;\n";
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\">-energy</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\">+energy</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\">-energy</a>&nbsp;\n";
 					}
 				//volume
 					if (permission_exists('conferences_active_volume')) {
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?direction=up&cmd=conference&name=".$conference_name."%&data=volume_in&id=".$id."');\">+vol</a>&nbsp;\n";
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_in&id=".$id."');\">-vol</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."%&data=volume_in&id=".$id."');\">+vol</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_in&id=".$id."');\">-vol</a>&nbsp;\n";
 					}
 					if (permission_exists('conferences_active_gain')) {
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\">+gain</a>&nbsp;\n";
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\">-gain</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\">+gain</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\">-gain</a>&nbsp;\n";
 					}
 				//mute and unmute
 					if (permission_exists('conferences_active_mute')) {
 						if ($flag_can_speak == "true"){
-							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=mute&id=".$id."');\">mute</a>&nbsp;\n";
+							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute&id=".$id."');\">mute</a>&nbsp;\n";
 						}
 						else {
-							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=unmute&id=".$id."');\">unmute</a>&nbsp;\n";
+							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unmute&id=".$id."');\">unmute</a>&nbsp;\n";
 						}
 					}
 				//deaf and undeaf
 					if (permission_exists('conferences_active_deaf')) {
 						if ($flag_can_hear == "true"){
-							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=deaf&id=".$id."');\">deaf</a>&nbsp;\n";
+							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=deaf&id=".$id."');\">deaf</a>&nbsp;\n";
 						}
 						else {
-							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=undeaf&id=".$id."');\">undeaf</a>&nbsp;\n";
+							echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=undeaf&id=".$id."');\">undeaf</a>&nbsp;\n";
 						}
 					}
 				//kick someone from the conference
 					if (permission_exists('conferences_active_kick')) {
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_conference_exec.php?cmd=conference&name=".$conference_name."&data=kick&id=".$id."');\">kick</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick&id=".$id."');\">kick</a>&nbsp;\n";
 					}
 				echo "	&nbsp;";
 				echo "</td>\n";

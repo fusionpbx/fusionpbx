@@ -71,7 +71,7 @@ if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test
 }
 
 var requestTime = function() {
-	var url = 'v_conferences_active_inc.php';
+	var url = 'conferences_active_inc.php';
 	new loadXmlHttp(url, 'ajax_reponse');
 	setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, 1777);
 }
