@@ -21,15 +21,24 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$call_flow_extension = check_str($_POST["call_flow_extension"]);
-		$call_flow_feature_code = check_str($_POST["call_flow_feature_code"]);
-		$call_flow_status = check_str($_POST["call_flow_status"]);
-		$call_flow_app = check_str($_POST["call_flow_app"]);
-		$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
-		$call_flow_data = check_str($_POST["call_flow_data"]);
-		$call_flow_anti_app = check_str($_POST["call_flow_anti_app"]);
-		$call_flow_anti_data = check_str($_POST["call_flow_anti_data"]);
-		$call_flow_description = check_str($_POST["call_flow_description"]);
+		//set the variables from the http values
+			$call_flow_extension = check_str($_POST["call_flow_extension"]);
+			$call_flow_feature_code = check_str($_POST["call_flow_feature_code"]);
+			$call_flow_status = check_str($_POST["call_flow_status"]);
+			$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
+			$call_flow_destination = check_str($_POST["call_flow_destination"]);
+			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
+			$call_flow_description = check_str($_POST["call_flow_description"]);
+
+		//seperate the action and the param
+			$destination_array = explode(":", $call_flow_destination);
+			$call_flow_app = array_shift($destination_array);
+			$call_flow_data = join(':', $destination_array);
+
+		//seperate the action and the param call_flow_anti_app
+			$alternate_destination_array = explode(":", $call_flow_alternate_destination);
+			$call_flow_anti_app = array_shift($alternate_destination_array);
+			$call_flow_anti_data = join(':', $alternate_destination_array);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -110,8 +119,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "call_flow_extension = '$call_flow_extension', ";
 				$sql .= "call_flow_feature_code = '$call_flow_feature_code', ";
 				$sql .= "call_flow_status = '$call_flow_status', ";
-				$sql .= "call_flow_app = '$call_flow_app', ";
+				
 				$sql .= "call_flow_pin_number = '$call_flow_pin_number', ";
+				$sql .= "call_flow_app = '$call_flow_app', ";
 				$sql .= "call_flow_data = '$call_flow_data', ";
 				$sql .= "call_flow_anti_app = '$call_flow_anti_app', ";
 				$sql .= "call_flow_anti_data = '$call_flow_anti_data', ";
@@ -142,16 +152,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
-			$call_flow_extension = $row["call_flow_extension"];
-			$call_flow_feature_code = $row["call_flow_feature_code"];
-			$call_flow_status = $row["call_flow_status"];
-			$call_flow_app = $row["call_flow_app"];
-			$call_flow_pin_number = $row["call_flow_pin_number"];
-			$call_flow_data = $row["call_flow_data"];
-			$call_flow_anti_app = $row["call_flow_anti_app"];
-			$call_flow_anti_data = $row["call_flow_anti_data"];
-			$call_flow_description = $row["call_flow_description"];
-			break; //limit to 1 row
+			//set the php variables
+				$call_flow_extension = $row["call_flow_extension"];
+				$call_flow_feature_code = $row["call_flow_feature_code"];
+				$call_flow_status = $row["call_flow_status"];
+				$call_flow_app = $row["call_flow_app"];
+				$call_flow_pin_number = $row["call_flow_pin_number"];
+				$call_flow_data = $row["call_flow_data"];
+				$call_flow_anti_app = $row["call_flow_anti_app"];
+				$call_flow_anti_data = $row["call_flow_anti_data"];
+				$call_flow_description = $row["call_flow_description"];
+
+			//if superadmin show both the app and data
+				if (if_group("superadmin")) {
+					$destination_label = $call_flow_app.':'.$call_flow_data;
+				}
+				else {
+					$destination_label = $call_flow_data;
+				}
+
+			//if superadmin show both the app and data
+				if (if_group("superadmin")) {
+					$alternate_destination_label = $call_flow_anti_app.':'.$call_flow_anti_data;
+				}
+				else {
+					$alternate_destination_label = $call_flow_anti_data;
+				}
 		}
 		unset ($prep_statement);
 	}
@@ -175,13 +201,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	Extension:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"$call_flow_extension\">\n";
 	echo "<br />\n";
-	echo "\n";
+	echo "Enter the extension number.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -192,7 +218,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"$call_flow_feature_code\">\n";
 	echo "<br />\n";
-	echo "\n";
+	echo "Enter the feature code.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -204,31 +230,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='call_flow_status'>\n";
 	echo "	<option value=''></option>\n";
 	if ($call_flow_status == "true") { 
-		echo "	<option value='true' SELECTED >on</option>\n";
+		echo "	<option value='true' selected='selected'>on</option>\n";
 	}
 	else {
 		echo "	<option value='true'>on</option>\n";
 	}
 	if ($call_flow_status == "false") { 
-		echo "	<option value='false' SELECTED >off</option>\n";
+		echo "	<option value='false' selected='selected'>off</option>\n";
 	}
 	else {
 		echo "	<option value='false'>off</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Application:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_app' maxlength='255' value=\"$call_flow_app\">\n";
-	echo "<br />\n";
-	echo "\n";
+	echo "Select the status.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -239,40 +254,43 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"$call_flow_pin_number\">\n";
 	echo "<br />\n";
-	echo "\n";
+	echo "Enter the pin number\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Application Data:\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	Destination:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_data' maxlength='255' value=\"$call_flow_data\">\n";
+	$select_value = '';
+	//set the selected value
+	if (strlen($call_flow_app.$call_flow_data) > 0) {
+		$select_value = $call_flow_app.':'.$call_flow_data;
+	}
+	//show the destination list
+	//switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='')
+	switch_select_destination("dialplan", $destination_label, "call_flow_destination", $select_value, "", $call_flow_data);
+	unset($select_value);
 	echo "<br />\n";
-	echo "\n";
+	echo "Select the destination.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Alternate  Application:\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	Alternate Destination:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_anti_app' maxlength='255' value=\"$call_flow_anti_app\">\n";
+	//switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='')
+	$select_value = '';
+	if (strlen($call_flow_anti_app.$call_flow_anti_data) > 0) {
+		$select_value = $call_flow_anti_app.':'.$call_flow_anti_data;
+	}
+	switch_select_destination("dialplan", $alternate_destination_label, "call_flow_alternate_destination", $select_value, "", $call_flow_anti_data);
+	unset($select_value);
 	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Application Data:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_flow_anti_data' maxlength='255' value=\"$call_flow_anti_data\">\n";
-	echo "<br />\n";
-	echo "\n";
+	echo "Select the alternate destination.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -283,9 +301,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"$call_flow_description\">\n";
 	echo "<br />\n";
-	echo "\n";
+	echo "Enter the description.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
