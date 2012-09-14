@@ -65,8 +65,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
-		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_dialplans';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'dialplan_uuid';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
