@@ -74,6 +74,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the feature code.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_flow_context';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the context.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_flow_status';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select the status.';

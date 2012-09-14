@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
@@ -25,6 +49,7 @@ else {
 			$call_flow_name = check_str($_POST["call_flow_name"]);
 			$call_flow_extension = check_str($_POST["call_flow_extension"]);
 			$call_flow_feature_code = check_str($_POST["call_flow_feature_code"]);
+			$call_flow_context = check_str($_POST["call_flow_context"]);
 			$call_flow_status = check_str($_POST["call_flow_status"]);
 			$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
 			$call_flow_destination = check_str($_POST["call_flow_destination"]);
@@ -53,6 +78,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($call_flow_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 		if (strlen($call_flow_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
 		//if (strlen($call_flow_feature_code) == 0) { $msg .= "Please provide: Feature Code<br>\n"; }
+		if (strlen($call_flow_context) == 0) { $msg .= "Please provide: Context<br>\n"; }
 		//if (strlen($call_flow_status) == 0) { $msg .= "Please provide: Status<br>\n"; }
 		//if (strlen($call_flow_app) == 0) { $msg .= "Please provide: Application<br>\n"; }
 		//if (strlen($call_flow_pin_number) == 0) { $msg .= "Please provide: PIN Number<br>\n"; }
@@ -88,6 +114,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_name, ";
 					$sql .= "call_flow_extension, ";
 					$sql .= "call_flow_feature_code, ";
+					$sql .= "call_flow_context, ";
 					$sql .= "call_flow_status, ";
 					$sql .= "call_flow_app, ";
 					$sql .= "call_flow_pin_number, ";
@@ -104,6 +131,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$call_flow_name', ";
 					$sql .= "'$call_flow_extension', ";
 					$sql .= "'$call_flow_feature_code', ";
+					$sql .= "'$call_flow_context', ";
 					$sql .= "'$call_flow_status', ";
 					$sql .= "'$call_flow_app', ";
 					$sql .= "'$call_flow_pin_number', ";
@@ -127,6 +155,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_name = '$call_flow_name', ";
 					$sql .= "call_flow_extension = '$call_flow_extension', ";
 					$sql .= "call_flow_feature_code = '$call_flow_feature_code', ";
+					$sql .= "call_flow_context = '$call_flow_context', ";
 					$sql .= "call_flow_status = '$call_flow_status', ";
 					$sql .= "call_flow_pin_number = '$call_flow_pin_number', ";
 					$sql .= "call_flow_app = '$call_flow_app', ";
@@ -187,7 +216,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								//<action application="lua" data="call_flow.lua"/>
 								$dialplan_detail_tag = 'action'; //condition, action, antiaction
 								//$dialplan_detail_type = 'transfer';
-								//$dialplan_detail_data = $ring_group_extension . ' LUA call_flow.lua';
+								//$dialplan_detail_data = $call_flow_extension . ' LUA call_flow.lua';
 								$dialplan_detail_type = 'lua';
 								$dialplan_detail_data = 'call_flow.lua';
 								$dialplan_detail_order = '030';
@@ -233,6 +262,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$call_flow_name = $row["call_flow_name"];
 				$call_flow_extension = $row["call_flow_extension"];
 				$call_flow_feature_code = $row["call_flow_feature_code"];
+				$call_flow_context = $row["call_flow_context"];
 				$call_flow_status = $row["call_flow_status"];
 				$call_flow_app = $row["call_flow_app"];
 				$call_flow_pin_number = $row["call_flow_pin_number"];
@@ -259,6 +289,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset ($prep_statement);
 	}
+
+	//set the context for users that are not in the superadmin group
+		if (strlen($call_flow_context) == 0) {
+			if (!if_group("superadmin")) {
+				if (count($_SESSION["domains"]) > 1) {
+					$call_flow_context = $_SESSION['domain_name'];
+				}
+				else {
+					$call_flow_context = "default";
+				}
+			}
+		}
 
 //show the header
 	require_once "includes/header.php";
@@ -308,6 +350,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"$call_flow_feature_code\">\n";
 	echo "<br />\n";
 	echo "Enter the feature code.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Context:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_flow_context' maxlength='255' value=\"$call_flow_context\">\n";
+	echo "<br />\n";
+	echo "Enter the context.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
