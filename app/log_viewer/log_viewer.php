@@ -150,16 +150,13 @@ if (permission_exists('log_view')) {
 
 	echo "<table style=\"width: 100%\;\" width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">";
 	echo "<tbody><tr><th colspan=\"2\" style=\"text-alight: left\;\">Syntax Highlighted</th></tr>";
-	echo "<tr><td style=\"text-align: left;\" class=\"row_stylebg\">";
+	echo "<tr><td style=\"text-align: left;background-color: #000000;\">";
 
 	$user_filesize = '32768';
 	if (isset($_POST['submit'])) {
 		if (!is_numeric($_POST['fs'])){
-			echo "<font color=\"red\" face=\"bold\" size =\"5\">";
-			echo "Just what do you think you're doing, Dave?<br>";
-			echo "</font>";
 			//should generate log warning here...
-			$user_filesize='1000';
+			$user_filesize=1024 * 32;
 		}
 		else {
 			$user_filesize = $_POST['fs'] * 1024;
@@ -167,7 +164,7 @@ if (permission_exists('log_view')) {
 	}
 
 	//echo "Log File Size: " . $file_size . " bytes. <br />";
-	echo "<div align='right'>Displaying the last " . number_format($user_filesize,0,'.',',') . " of " . number_format($file_size,0,'.',',') . " bytes. </div><br><hr>";
+	echo "<div style=\"text-align: right;color: #FFFFFF;\">Displaying the last " . number_format($user_filesize,0,'.',',') . " of " . number_format($file_size,0,'.',',') . " bytes. </div><br><hr>";
 
 	$file = fopen($log_file, "r") or exit("Unable to open file!");
 
