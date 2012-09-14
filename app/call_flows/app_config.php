@@ -62,6 +62,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_dialplans';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'dialplan_uuid';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_flow_name';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the name.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_flow_extension';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the extension number.';

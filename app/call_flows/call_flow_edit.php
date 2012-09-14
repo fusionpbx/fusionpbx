@@ -22,6 +22,7 @@ else {
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
 		//set the variables from the http values
+			$call_flow_name = check_str($_POST["call_flow_name"]);
 			$call_flow_extension = check_str($_POST["call_flow_extension"]);
 			$call_flow_feature_code = check_str($_POST["call_flow_feature_code"]);
 			$call_flow_status = check_str($_POST["call_flow_status"]);
@@ -49,7 +50,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($call_flow_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
+		if (strlen($call_flow_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
+		if (strlen($call_flow_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
 		//if (strlen($call_flow_feature_code) == 0) { $msg .= "Please provide: Feature Code<br>\n"; }
 		//if (strlen($call_flow_status) == 0) { $msg .= "Please provide: Status<br>\n"; }
 		//if (strlen($call_flow_app) == 0) { $msg .= "Please provide: Application<br>\n"; }
@@ -74,71 +76,146 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('call_flow_add')) {
-				$sql = "insert into v_call_flows ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "call_flow_uuid, ";
-				$sql .= "call_flow_extension, ";
-				$sql .= "call_flow_feature_code, ";
-				$sql .= "call_flow_status, ";
-				$sql .= "call_flow_app, ";
-				$sql .= "call_flow_pin_number, ";
-				$sql .= "call_flow_data, ";
-				$sql .= "call_flow_anti_app, ";
-				$sql .= "call_flow_anti_data, ";
-				$sql .= "call_flow_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$call_flow_extension', ";
-				$sql .= "'$call_flow_feature_code', ";
-				$sql .= "'$call_flow_status', ";
-				$sql .= "'$call_flow_app', ";
-				$sql .= "'$call_flow_pin_number', ";
-				$sql .= "'$call_flow_data', ";
-				$sql .= "'$call_flow_anti_app', ";
-				$sql .= "'$call_flow_anti_data', ";
-				$sql .= "'$call_flow_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=call_flows.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Add Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
+				//prepare the uuids
+					$call_flow_uuid = uuid();
+					$dialplan_uuid = uuid();
+				//add the call flow
+					$sql = "insert into v_call_flows ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "call_flow_uuid, ";
+					$sql .= "dialplan_uuid, ";
+					$sql .= "call_flow_name, ";
+					$sql .= "call_flow_extension, ";
+					$sql .= "call_flow_feature_code, ";
+					$sql .= "call_flow_status, ";
+					$sql .= "call_flow_app, ";
+					$sql .= "call_flow_pin_number, ";
+					$sql .= "call_flow_data, ";
+					$sql .= "call_flow_anti_app, ";
+					$sql .= "call_flow_anti_data, ";
+					$sql .= "call_flow_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$domain_uuid', ";
+					$sql .= "'".$call_flow_uuid."', ";
+					$sql .= "'".$dialplan_uuid."', ";
+					$sql .= "'$call_flow_name', ";
+					$sql .= "'$call_flow_extension', ";
+					$sql .= "'$call_flow_feature_code', ";
+					$sql .= "'$call_flow_status', ";
+					$sql .= "'$call_flow_app', ";
+					$sql .= "'$call_flow_pin_number', ";
+					$sql .= "'$call_flow_data', ";
+					$sql .= "'$call_flow_anti_app', ";
+					$sql .= "'$call_flow_anti_data', ";
+					$sql .= "'$call_flow_description' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('call_flow_edit')) {
-				$sql = "update v_call_flows set ";
-				$sql .= "call_flow_extension = '$call_flow_extension', ";
-				$sql .= "call_flow_feature_code = '$call_flow_feature_code', ";
-				$sql .= "call_flow_status = '$call_flow_status', ";
-				
-				$sql .= "call_flow_pin_number = '$call_flow_pin_number', ";
-				$sql .= "call_flow_app = '$call_flow_app', ";
-				$sql .= "call_flow_data = '$call_flow_data', ";
-				$sql .= "call_flow_anti_app = '$call_flow_anti_app', ";
-				$sql .= "call_flow_anti_data = '$call_flow_anti_data', ";
-				$sql .= "call_flow_description = '$call_flow_description' ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and call_flow_uuid = '$call_flow_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=call_flows.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Update Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
+				//prepare the uuids
+					if (strlen($dialplan_uuid) == 0) {
+						$dialplan_uuid = uuid();
+					}
+				//add the call flow
+					$sql = "update v_call_flows set ";
+					$sql .= "dialplan_uuid = '$dialplan_uuid', ";
+					$sql .= "call_flow_name = '$call_flow_name', ";
+					$sql .= "call_flow_extension = '$call_flow_extension', ";
+					$sql .= "call_flow_feature_code = '$call_flow_feature_code', ";
+					$sql .= "call_flow_status = '$call_flow_status', ";
+					$sql .= "call_flow_pin_number = '$call_flow_pin_number', ";
+					$sql .= "call_flow_app = '$call_flow_app', ";
+					$sql .= "call_flow_data = '$call_flow_data', ";
+					$sql .= "call_flow_anti_app = '$call_flow_anti_app', ";
+					$sql .= "call_flow_anti_data = '$call_flow_anti_data', ";
+					$sql .= "call_flow_description = '$call_flow_description' ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and call_flow_uuid = '$call_flow_uuid'";
+					$db->exec(check_sql($sql));
+					unset($sql);
 			} //if ($action == "update")
+
+			if ($action == "add" || $action == "update") {
+/*
+				//if it does not exist in the dialplan then add it
+					$sql = "select count(*) as num_rows from v_dialplans ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] == 0) {
+							//create the dialplan entry for fax
+								$dialplan_name = $call_flow_name;
+								$dialplan_order ='333';
+								$dialplan_context = $call_flow_context;
+								$dialplan_enabled = 'true';
+								$dialplan_description = $call_flow_description;
+								$app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
+								dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
+
+								//<condition destination_number="500" />
+								$dialplan_detail_tag = 'condition'; //condition, action, antiaction
+								$dialplan_detail_type = 'destination_number';
+								$dialplan_detail_data = '^'.$call_flow_extension.'$';
+								$dialplan_detail_order = '000';
+								$dialplan_detail_group = '1';
+								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+								//<action application="set" data="call_flow_uuid="/>
+								$dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan_detail_type = 'set';
+								$dialplan_detail_data = 'call_flow_uuid='.$call_flow_uuid;
+								$dialplan_detail_order = '010';
+								$dialplan_detail_group = '1';
+								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+								//<action application="set" data="ringback=${us-ring}"/>
+								//$dialplan_detail_tag = 'action'; //condition, action, antiaction
+								//$dialplan_detail_type = 'set';
+								//$dialplan_detail_data = 'ringback=${us-ring}';
+								//$dialplan_detail_order = '020';
+								//$dialplan_detail_group = '1';
+								//dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+								//<action application="lua" data="call_flow.lua"/>
+								$dialplan_detail_tag = 'action'; //condition, action, antiaction
+								//$dialplan_detail_type = 'transfer';
+								//$dialplan_detail_data = $ring_group_extension . ' LUA call_flow.lua';
+								$dialplan_detail_type = 'lua';
+								$dialplan_detail_data = 'call_flow.lua';
+								$dialplan_detail_order = '030';
+								$dialplan_detail_group = '1';
+								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+							//save the xml
+								save_dialplan_xml();
+
+							//apply settings reminder
+								$_SESSION["reload_xml"] = true;
+						}
+					}
+*/
+				//redirect the browser
+					require_once "includes/header.php";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=call_flows.php\">\n";
+					echo "<div align='center'>\n";
+					if ($action == "add") {
+						echo "Add Complete\n";
+					}
+					if ($action == "update") {
+						echo "Update Complete\n";
+					}
+					echo "</div>\n";
+					require_once "includes/footer.php";
+					return;
+			}
 		} //if ($_POST["persistformvar"] != "true") 
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -153,6 +230,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
 			//set the php variables
+				$call_flow_name = $row["call_flow_name"];
 				$call_flow_extension = $row["call_flow_extension"];
 				$call_flow_feature_code = $row["call_flow_feature_code"];
 				$call_flow_status = $row["call_flow_status"];
@@ -198,6 +276,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>Call Flow</b></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_flows.php'\" value='Back'></td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Name:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"$call_flow_name\">\n";
+	echo "<br />\n";
+	echo "Enter the name.\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
