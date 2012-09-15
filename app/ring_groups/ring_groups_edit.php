@@ -110,16 +110,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-	//set the context for users that are not in the superadmin group
-		if (!if_group("superadmin")) {
-			if (count($_SESSION["domains"]) > 1) {
-				$ring_group_context = $_SESSION['domain_name'];
-			}
-			else {
-				$ring_group_context = "default";
-			}
-		}
-
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add") {
@@ -314,8 +304,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //set defaults
 	if (strlen($ring_group_timeout_sec) == 0) { $ring_group_timeout_sec = '30'; }
 	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
-	if (if_group("superadmin")) {
-		if (strlen($ring_group_context) == 0) { 
+
+//set the context for users that are not in the superadmin group
+	if (strlen($ring_group_context) == 0) {
+		if (!if_group("superadmin")) {
 			if (count($_SESSION["domains"]) > 1) {
 				$ring_group_context = $_SESSION['domain_name'];
 			}
