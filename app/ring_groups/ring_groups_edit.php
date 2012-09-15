@@ -64,21 +64,33 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$ring_group_name = check_str($_POST["ring_group_name"]);
-		$ring_group_extension = check_str($_POST["ring_group_extension"]);
-		$ring_group_context = check_str($_POST["ring_group_context"]);
-		$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
-		$ring_group_timeout_sec = check_str($_POST["ring_group_timeout_sec"]);
-		$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
-		$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
-		$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
-		$ring_group_description = check_str($_POST["ring_group_description"]);
-		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-		//$ring_group_timeout_action = "transfer:1001 XML default";
-		$ring_group_timeout_array = explode(":", $ring_group_timeout_action);
-		$ring_group_timeout_app = array_shift($ring_group_timeout_array);
-		$ring_group_timeout_data = join(':', $ring_group_timeout_array);
-		$extension_uuid = check_str($_POST["extension_uuid"]);
+		//set variables from http values
+			$ring_group_name = check_str($_POST["ring_group_name"]);
+			$ring_group_extension = check_str($_POST["ring_group_extension"]);
+			$ring_group_context = check_str($_POST["ring_group_context"]);
+			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
+			$ring_group_timeout_sec = check_str($_POST["ring_group_timeout_sec"]);
+			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
+			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
+			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
+			$ring_group_description = check_str($_POST["ring_group_description"]);
+			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+			//$ring_group_timeout_action = "transfer:1001 XML default";
+			$ring_group_timeout_array = explode(":", $ring_group_timeout_action);
+			$ring_group_timeout_app = array_shift($ring_group_timeout_array);
+			$ring_group_timeout_data = join(':', $ring_group_timeout_array);
+			$extension_uuid = check_str($_POST["extension_uuid"]);
+
+		//set the context for users that are not in the superadmin group
+			if (!if_group("superadmin")) {
+				if (count($_SESSION["domains"]) > 1) {
+					$ring_group_context = $_SESSION['domain_name'];
+				}
+				else {
+					$ring_group_context = "default";
+				}
+			}
+
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -307,13 +319,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //set the context for users that are not in the superadmin group
 	if (strlen($ring_group_context) == 0) {
-		if (!if_group("superadmin")) {
-			if (count($_SESSION["domains"]) > 1) {
-				$ring_group_context = $_SESSION['domain_name'];
-			}
-			else {
-				$ring_group_context = "default";
-			}
+		if (count($_SESSION["domains"]) > 1) {
+			$ring_group_context = $_SESSION['domain_name'];
+		}
+		else {
+			$ring_group_context = "default";
 		}
 	}
 
