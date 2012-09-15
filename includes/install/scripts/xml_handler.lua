@@ -145,7 +145,7 @@
 					if (string.len(row.dial_string) > 0) then
 						dial_string = row.dial_string;
 					else
-						dial_string = "{sip_invite_domain=${domain_name},presence_id=${dialed_user}@${domain_name}}${sofia_contact(*/${dialed_user}@${domain_name})}";
+						dial_string = "{sip_invite_domain=${domain_name},presence_id=${dialed_user}@${domain_name}}${sofia_contact(${dialed_user}@${domain_name})}";
 					end
 			end);
 
