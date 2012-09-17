@@ -55,6 +55,7 @@ else {
 			$call_flow_destination = check_str($_POST["call_flow_destination"]);
 			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
 			$call_flow_description = check_str($_POST["call_flow_description"]);
+			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 
 		//seperate the action and the param
 			$destination_array = explode(":", $call_flow_destination);
@@ -65,6 +66,17 @@ else {
 			$alternate_destination_array = explode(":", $call_flow_alternate_destination);
 			$call_flow_anti_app = array_shift($alternate_destination_array);
 			$call_flow_anti_data = join(':', $alternate_destination_array);
+
+		//set the context for users that are not in the superadmin group
+			if (!if_group("superadmin")) {
+				if (count($_SESSION["domains"]) > 1) {
+					$call_flow_context = $_SESSION['domain_name'];
+				}
+				else {
+					$call_flow_context = "default";
+				}
+			}
+
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -170,8 +182,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			} //if ($action == "update")
 
 			if ($action == "add" || $action == "update") {
-/*
-				//if it does not exist in the dialplan then add it
+
+				//if the dialplan entry does not exist then add it
 					$sql = "select count(*) as num_rows from v_dialplans ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
@@ -189,39 +201,122 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 								dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
-								//<condition destination_number="500" />
-								$dialplan_detail_tag = 'condition'; //condition, action, antiaction
-								$dialplan_detail_type = 'destination_number';
-								$dialplan_detail_data = '^'.$call_flow_extension.'$';
-								$dialplan_detail_order = '000';
-								$dialplan_detail_group = '1';
-								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+							//dialplan group 1
+								require_once "includes/classes/switch_dialplan.php";
+
+								//<condition destination_number="300" break="on-true"/>
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'destination_number';
+								$dialplan->dialplan_detail_data = '^'.$call_flow_feature_code.'$';
+								$dialplan->dialplan_detail_break = 'on-true';
+								//$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '1';
+								$dialplan->dialplan_detail_order = '000';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
 
 								//<action application="set" data="call_flow_uuid="/>
-								$dialplan_detail_tag = 'action'; //condition, action, antiaction
-								$dialplan_detail_type = 'set';
-								$dialplan_detail_data = 'call_flow_uuid='.$call_flow_uuid;
-								$dialplan_detail_order = '010';
-								$dialplan_detail_group = '1';
-								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'set';
+								$dialplan->dialplan_detail_data = 'call_flow_uuid='.$call_flow_uuid;
+								//$dialplan->dialplan_detail_break = '';
+								//$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '1';
+								$dialplan->dialplan_detail_order = '010';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
 
-								//<action application="set" data="ringback=${us-ring}"/>
-								//$dialplan_detail_tag = 'action'; //condition, action, antiaction
-								//$dialplan_detail_type = 'set';
-								//$dialplan_detail_data = 'ringback=${us-ring}';
-								//$dialplan_detail_order = '020';
-								//$dialplan_detail_group = '1';
-								//dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+								//<action application="set" data="feature_code=true"/>
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'set';
+								$dialplan->dialplan_detail_data = 'feature_code=true';
+								//$dialplan->dialplan_detail_break = '';
+								//$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '1';
+								$dialplan->dialplan_detail_order = '020';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
 
 								//<action application="lua" data="call_flow.lua"/>
-								$dialplan_detail_tag = 'action'; //condition, action, antiaction
-								//$dialplan_detail_type = 'transfer';
-								//$dialplan_detail_data = $call_flow_extension . ' LUA call_flow.lua';
-								$dialplan_detail_type = 'lua';
-								$dialplan_detail_data = 'call_flow.lua';
-								$dialplan_detail_order = '030';
-								$dialplan_detail_group = '1';
-								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'lua';
+								$dialplan->dialplan_detail_data = 'call_flow.lua';
+								//$dialplan->dialplan_detail_break = '';
+								//$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '1';
+								$dialplan->dialplan_detail_order = '030';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
+
+							//dialplan group 2
+								//<condition destination_number="301"/>
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'destination_number';
+								$dialplan->dialplan_detail_data = '^'.$call_flow_extension.'$';
+								//$dialplan->dialplan_detail_break = '';
+								//$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '000';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
+
+								//<action application="set" data="call_flow_uuid="/>
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'set';
+								$dialplan->dialplan_detail_data = 'call_flow_uuid='.$call_flow_uuid;
+								//$dialplan->dialplan_detail_break = '';
+								//$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '010';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
+
+								//<action application="set" data="ringback=${us-ring}"/>
+								//$dialplan = new dialplan;
+								//$dialplan->domain_uuid = $domain_uuid;
+								//$dialplan->dialplan_uuid = $dialplan_uuid;
+								//$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								//$dialplan->dialplan_detail_type = 'set';
+								//$dialplan->dialplan_detail_data = 'ringback=${us-ring}';
+								//$dialplan->dialplan_detail_break = '';
+								//$dialplan->dialplan_detail_inline = '';
+								//$dialplan->dialplan_detail_group = '2';
+								//$dialplan->dialplan_detail_order = '020';
+								//$dialplan->dialplan_detail_add();
+								//unset($dialplan);
+
+								//<action application="lua" data="call_flow.lua"/>
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'lua';
+								//$dialplan->dialplan_detail_data = $call_flow_extension . ' LUA call_flow.lua';
+								$dialplan->dialplan_detail_data = 'call_flow.lua';
+								//$dialplan->dialplan_detail_break = '';
+								//$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '030';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
 
 							//save the xml
 								save_dialplan_xml();
@@ -230,7 +325,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$_SESSION["reload_xml"] = true;
 						}
 					}
-*/
+
 				//redirect the browser
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=call_flows.php\">\n";
@@ -270,6 +365,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$call_flow_anti_app = $row["call_flow_anti_app"];
 				$call_flow_anti_data = $row["call_flow_anti_data"];
 				$call_flow_description = $row["call_flow_description"];
+				$dialplan_uuid = $row["dialplan_uuid"];
 
 			//if superadmin show both the app and data
 				if (if_group("superadmin")) {
@@ -292,13 +388,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//set the context for users that are not in the superadmin group
 		if (strlen($call_flow_context) == 0) {
-			if (!if_group("superadmin")) {
-				if (count($_SESSION["domains"]) > 1) {
-					$call_flow_context = $_SESSION['domain_name'];
-				}
-				else {
-					$call_flow_context = "default";
-				}
+			if (count($_SESSION["domains"]) > 1) {
+				$call_flow_context = $_SESSION['domain_name'];
+			}
+			else {
+				$call_flow_context = "default";
 			}
 		}
 
@@ -354,7 +448,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	Context:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -451,6 +545,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
 		echo "				<input type='hidden' name='call_flow_uuid' value='$call_flow_uuid'>\n";
+		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
 	echo "		</td>\n";
