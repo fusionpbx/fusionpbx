@@ -204,7 +204,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='default_setting_subcategory' maxlength='255' value=\"$default_setting_subcategory\">\n";
 	echo "<br />\n";
-	echo "Enter the category.\n";
+	echo "Enter the subcategory.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
