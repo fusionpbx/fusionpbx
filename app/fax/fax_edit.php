@@ -291,7 +291,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($dialplan_type == "add") {
 					//add the dialplan entry for fax
 						$dialplan_name = $fax_name;
-						$dialplan_order ='333';
+						$dialplan_order ='310';
 						$dialplan_context = $_SESSION['context'];
 						$dialplan_enabled = 'true';
 						$dialplan_description = $fax_description;
