@@ -40,6 +40,12 @@ require_once "includes/paging.php";
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//set defaults
+	if (strlen($order_by) == 0) { 
+		$order_by = 'last_mod_date';
+		$order = 'desc';
+	}
+
 //show the content
 	//echo "<div align='center'>";
 	//echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
