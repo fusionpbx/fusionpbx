@@ -10,6 +10,7 @@
 		$apps[$x]['description']['en-us'] = 'To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['fr'] = '';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
@@ -20,6 +21,7 @@
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Fax Server';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Fax de servidor';
 		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['fr'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
