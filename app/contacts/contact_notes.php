@@ -60,9 +60,9 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = " select count(*) as num_rows from v_contact_notes ";
-		$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= " and contact_uuid = '$contact_uuid' ";
+		$sql = "select count(*) as num_rows from v_contact_notes ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_uuid = '$contact_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -118,7 +118,7 @@ require_once "includes/paging.php";
 	else {
 		foreach($result as $row) {
 			$contact_note = $row['contact_note'];
-			//$contact_note = str_replace("\n","<br />",$contact_note);
+			$contact_note = str_replace("\n","<br />",$contact_note);
 
 			echo "<tr>\n";
 			echo "<th>\n";
