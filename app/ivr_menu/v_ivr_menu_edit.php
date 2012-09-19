@@ -33,7 +33,7 @@ else {
 	echo "access denied";
 	exit;
 }
-/*
+
 function recur_sounds_dir($dir) {
 	global $dir_array;
 	global $dir_path;
@@ -82,7 +82,6 @@ function recur_sounds_dir($dir) {
 	}
 	closedir($dir_list);
 }
-*/
 
 //action add or update
 if (isset($_REQUEST["id"])) {
