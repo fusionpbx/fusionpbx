@@ -480,17 +480,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_flow_status'>\n";
 	echo "	<option value=''></option>\n";
-	if ($call_flow_status == "true") { 
-		echo "	<option value='true' selected='selected'>on</option>\n";
+	if ($call_flow_status == "true") {
+		if (strlen($call_flow_label) > 0) {
+			echo "	<option value='true' selected='selected'>$call_flow_label</option>\n";
+		}
+		else {
+			echo "	<option value='true' selected='selected'>true</option>\n";
+		}
 	}
 	else {
-		echo "	<option value='true'>on</option>\n";
+		if (strlen($call_flow_label) > 0) {
+			echo "	<option value='true'>$call_flow_label</option>\n";
+		}
+		else {
+			echo "	<option value='true'>true</option>\n";
+		}
 	}
-	if ($call_flow_status == "false") { 
-		echo "	<option value='false' selected='selected'>off</option>\n";
+	if ($call_flow_status == "false") {
+		if (strlen($call_flow_anti_label) > 0) {
+			echo "	<option value='false' selected='selected'>$call_flow_anti_label</option>\n";
+		}
+		else {
+			echo "	<option value='false' selected='selected'>false</option>\n";
+		}
 	}
 	else {
-		echo "	<option value='false'>off</option>\n";
+		if (strlen($call_flow_anti_label) > 0) {
+			echo "	<option value='false'>$call_flow_anti_label</option>\n";
+		}
+		else {
+			echo "	<option value='false'>false</option>\n";
+		}
 	}
 	echo "	</select>\n";
 	echo "<br />\n";

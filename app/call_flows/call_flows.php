@@ -123,10 +123,10 @@ require_once "includes/paging.php";
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($row['call_flow_status'] != "false") {
-				echo "On";
+				echo $row['call_flow_label'];
 			}
 			else {
-				echo "Off";
+				echo $row['call_flow_anti_label'];
 			}
 			echo 		"&nbsp;\n";
 			echo "	</td>\n";
