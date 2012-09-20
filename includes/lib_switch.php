@@ -2672,6 +2672,7 @@ function save_hunt_group_xml() {
 						if ($ent['destination_type'] == "voicemail") {
 							$tmp_sub_array["application"] = "voicemail";
 							$tmp_sub_array["type"] = "voicemail";
+							$tmp .= "	session:answer();\n";
 							$tmp .= "	session:execute(\"voicemail\", \"default \${domain_name} ".$ent['destination_data']."\");\n";
 							//$tmp_sub_array["application"] = "voicemail";
 							//$tmp_sub_array["data"] = "default \${domain_name} ".$ent['destination_data'];
@@ -2810,6 +2811,9 @@ function save_hunt_group_xml() {
 							if ($row['hunt_group_type'] != 'dnd') {
 								$tmp .= "	originate_disposition = session:getVariable(\"originate_disposition\");\n";
 								$tmp .= "	if originate_disposition ~= \"SUCCESS\" then\n";
+							}
+							if ($row['hunt_group_timeout_type'] == "voicemail") {
+								$tmp .= "			session:answer();\n";
 							}
 							$tmp .= "			session:execute(\"".$hunt_group_timeout_type."\", \"".$hunt_group_timeout_destination."\");\n";
 							if ($row['hunt_group_type'] != 'dnd') {
