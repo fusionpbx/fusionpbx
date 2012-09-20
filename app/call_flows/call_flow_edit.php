@@ -52,7 +52,9 @@ else {
 			$call_flow_context = check_str($_POST["call_flow_context"]);
 			$call_flow_status = check_str($_POST["call_flow_status"]);
 			$call_flow_pin_number = check_str($_POST["call_flow_pin_number"]);
+			$call_flow_label = check_str($_POST["call_flow_label"]);
 			$call_flow_destination = check_str($_POST["call_flow_destination"]);
+			$call_flow_anti_label = check_str($_POST["call_flow_anti_label"]);
 			$call_flow_alternate_destination = check_str($_POST["call_flow_alternate_destination"]);
 			$call_flow_description = check_str($_POST["call_flow_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -92,9 +94,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($call_flow_feature_code) == 0) { $msg .= "Please provide: Feature Code<br>\n"; }
 		if (strlen($call_flow_context) == 0) { $msg .= "Please provide: Context<br>\n"; }
 		//if (strlen($call_flow_status) == 0) { $msg .= "Please provide: Status<br>\n"; }
-		//if (strlen($call_flow_app) == 0) { $msg .= "Please provide: Application<br>\n"; }
 		//if (strlen($call_flow_pin_number) == 0) { $msg .= "Please provide: PIN Number<br>\n"; }
+		//if (strlen($call_flow_status) == 0) { $msg .= "Please provide: Status<br>\n"; }
+		//if (strlen($call_flow_label) == 0) { $msg .= "Please provide: Destination Label<br>\n"; }
+		//if (strlen($call_flow_app) == 0) { $msg .= "Please provide: Application<br>\n"; }
 		//if (strlen($call_flow_data) == 0) { $msg .= "Please provide: Application Data<br>\n"; }
+		//if (strlen($call_flow_anti_label) == 0) { $msg .= "Please provide: Alternate Destination Label<br>\n"; }
 		//if (strlen($call_flow_anti_app) == 0) { $msg .= "Please provide: Alternate  Application<br>\n"; }
 		//if (strlen($call_flow_anti_data) == 0) { $msg .= "Please provide: Application Data<br>\n"; }
 		//if (strlen($call_flow_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
@@ -128,9 +133,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_feature_code, ";
 					$sql .= "call_flow_context, ";
 					$sql .= "call_flow_status, ";
-					$sql .= "call_flow_app, ";
 					$sql .= "call_flow_pin_number, ";
+					$sql .= "call_flow_label, ";
+					$sql .= "call_flow_app, ";
 					$sql .= "call_flow_data, ";
+					$sql .= "call_flow_anti_label, ";
 					$sql .= "call_flow_anti_app, ";
 					$sql .= "call_flow_anti_data, ";
 					$sql .= "call_flow_description ";
@@ -145,9 +152,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$call_flow_feature_code', ";
 					$sql .= "'$call_flow_context', ";
 					$sql .= "'$call_flow_status', ";
-					$sql .= "'$call_flow_app', ";
 					$sql .= "'$call_flow_pin_number', ";
+					$sql .= "'$call_flow_label', ";
+					$sql .= "'$call_flow_app', ";
 					$sql .= "'$call_flow_data', ";
+					$sql .= "'$call_flow_anti_label', ";
 					$sql .= "'$call_flow_anti_app', ";
 					$sql .= "'$call_flow_anti_data', ";
 					$sql .= "'$call_flow_description' ";
@@ -170,8 +179,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "call_flow_context = '$call_flow_context', ";
 					$sql .= "call_flow_status = '$call_flow_status', ";
 					$sql .= "call_flow_pin_number = '$call_flow_pin_number', ";
+					$sql .= "call_flow_label = '$call_flow_label', ";
 					$sql .= "call_flow_app = '$call_flow_app', ";
 					$sql .= "call_flow_data = '$call_flow_data', ";
+					$sql .= "call_flow_anti_label = '$call_flow_anti_label', ";
 					$sql .= "call_flow_anti_app = '$call_flow_anti_app', ";
 					$sql .= "call_flow_anti_data = '$call_flow_anti_data', ";
 					$sql .= "call_flow_description = '$call_flow_description' ";
@@ -210,7 +221,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'destination_number';
-								$dialplan->dialplan_detail_data = '^'.$call_flow_feature_code.'$';
+								$dialplan->dialplan_detail_data = '^'.str_replace('*', '\*', $call_flow_feature_code).'$';
 								$dialplan->dialplan_detail_break = 'on-true';
 								//$dialplan->dialplan_detail_inline = '';
 								$dialplan->dialplan_detail_group = '1';
@@ -359,9 +370,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$call_flow_feature_code = $row["call_flow_feature_code"];
 				$call_flow_context = $row["call_flow_context"];
 				$call_flow_status = $row["call_flow_status"];
+				$call_flow_label = $row["call_flow_label"];
 				$call_flow_app = $row["call_flow_app"];
 				$call_flow_pin_number = $row["call_flow_pin_number"];
 				$call_flow_data = $row["call_flow_data"];
+				$call_flow_anti_label = $row["call_flow_anti_label"];
 				$call_flow_anti_app = $row["call_flow_anti_app"];
 				$call_flow_anti_data = $row["call_flow_anti_data"];
 				$call_flow_description = $row["call_flow_description"];
@@ -495,6 +508,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Destination Label:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"$call_flow_label\">\n";
+	echo "<br />\n";
+	echo "Enter the destination label\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	Destination:\n";
 	echo "</td>\n";
@@ -510,6 +534,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($select_value);
 	echo "<br />\n";
 	echo "Select the destination.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Alternate Label:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_flow_anti_label' maxlength='255' value=\"$call_flow_anti_label\">\n";
+	echo "<br />\n";
+	echo "Enter the alternate destination label\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
