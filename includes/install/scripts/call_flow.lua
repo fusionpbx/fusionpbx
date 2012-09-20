@@ -138,7 +138,7 @@ if (session:ready()) then
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
 				--show in the console
-					freeswitch.consoleLog("notice", "Call Flow: status=true uuid="..call_flow_uuid.."\n");
+					freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_label..",status=true,uuid="..call_flow_uuid.."\n");
 			else
 				--set presence in - turn lamp on
 					event = freeswitch.Event("PRESENCE_IN");
@@ -163,7 +163,7 @@ if (session:ready()) then
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
 				--show in the console
-					freeswitch.consoleLog("notice", "Call Flow: status=false uuid="..call_flow_uuid.."\n");
+					freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_anti_label..",status=false,uuid="..call_flow_uuid.."\n");
 			end
 			dbh:query("UPDATE v_call_flows SET call_flow_status = '"..toggle.."' WHERE call_flow_uuid = '"..call_flow_uuid.."'");
 	else 
