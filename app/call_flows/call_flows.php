@@ -102,7 +102,7 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('call_flow_status', 'Status', $order_by, $order);
-	echo th_order_by('call_flow_name', 'Name', $order_by, $order);
+	//echo th_order_by('call_flow_name', 'Name', $order_by, $order);
 	echo th_order_by('call_flow_extension', 'Extension', $order_by, $order);
 	echo th_order_by('call_flow_feature_code', 'Feature Code', $order_by, $order);
 	//echo "<th>Destination</th>\n";
@@ -130,7 +130,7 @@ require_once "includes/paging.php";
 			}
 			echo 		"&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_name']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_feature_code']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_app']." ".$row['call_flow_data']."&nbsp;</td>\n";
