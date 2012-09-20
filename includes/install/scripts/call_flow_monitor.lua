@@ -25,7 +25,7 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --set the time between loops in seconds
-	sleep = 800;
+	sleep = 500;
 
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
@@ -70,9 +70,6 @@
 --monitor the call flows status
 	x = 0
 	while true do
-		--sleep a moment to prevent using unecessary resources
-			freeswitch.msleep(sleep*1000);
-
 		--get the extension list
 			sql = [[select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code, f.call_flow_status, f.call_flow_label, f.call_flow_anti_label
 			from v_call_flows as f, v_domains as d 
@@ -119,7 +116,7 @@
 						event:addHeader("alt_event_type", "dialog");
 						event:addHeader("event_count", "1");
 						event:addHeader("unique-id", call_flow_uuid);
-						event:addHeader("Presence-Call-Direction", "outbound")
+						event:addHeader("Presence-Call-Direction", "outbound");
 						event:addHeader("answer-state", "confirmed");
 						event:fire();
 					--show in the console
@@ -131,4 +128,7 @@
 			if (not file_exists(run_file)) then
 				break;
 			end
+
+		--sleep a moment to prevent using unecessary resources
+			freeswitch.msleep(sleep*1000);
 	end
