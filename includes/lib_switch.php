@@ -524,6 +524,41 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 		unset ($prep_statement);
 
+	//list call flows
+		if ($select_type == "dialplan" || $select_type == "ivr") {
+			$sql = "select * from v_call_flows ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "order by call_flow_extension asc ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			echo "<optgroup label='Call Flows'>\n";
+			foreach ($result as &$row) {
+				$call_flow_name = $row["call_flow_name"];
+				$call_flow_extension = $row["call_flow_extension"];
+				$call_flow_context = $row["call_flow_context"];
+				if ("transfer $call_flow_extension XML ".$call_flow_context == $select_value || "transfer:".$call_flow_extension." XML ".$call_flow_context == $select_value) {
+					if ($select_type == "ivr") {
+						echo "		<option value='menu-exec-app:transfer $call_flow_extension XML ".$call_flow_context."' selected='selected'>".$call_flow_extension." ".$call_flow_name."</option>\n";
+					}
+					if ($select_type == "dialplan") {
+						echo "		<option value='transfer:$call_flow_extension XML ".$call_flow_context."' selected='selected'>".$call_flow_extension." ".$call_flow_name."</option>\n";
+					}
+					$selection_found = true;
+				}
+				else {
+					if ($select_type == "ivr") {
+						echo "		<option value='menu-exec-app:transfer $call_flow_extension XML ".$call_flow_context."'>".$call_flow_extension." ".$call_flow_name."</option>\n";
+					}
+					if ($select_type == "dialplan") {
+						echo "		<option value='transfer:$call_flow_extension XML ".$call_flow_context."'>".$call_flow_extension." ".$call_flow_name."</option>\n";
+					}
+				}
+			}
+			echo "</optgroup>\n";
+			unset ($prep_statement, $call_flow_extension);
+		}
+
 	//list call groups
 		$sql = "select distinct(call_group) from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
