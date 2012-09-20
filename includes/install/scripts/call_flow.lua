@@ -67,12 +67,14 @@ if (session:ready()) then
 
 		x = 0;
 		dbh:query(sql, function(row)
-			--call_flow_name = row.call_flow_name;
+			call_flow_name = row.call_flow_name;
 			call_flow_extension = row.call_flow_extension;
 			call_flow_feature_code = row.call_flow_feature_code;
 			--call_flow_context = row.call_flow_context;
 			call_flow_status = row.call_flow_status;
 			pin_number = row.call_flow_pin_number;
+			call_flow_label = row.call_flow_label;
+			call_flow_anti_label = row.call_flow_anti_label;
 
 			if (string.len(call_flow_status) == 0) then
 				app = row.call_flow_app;
@@ -93,6 +95,7 @@ if (session:ready()) then
 			if (string.len(pin_number) > 0) then
 				min_digits = string.len(pin_number);
 				max_digits = string.len(pin_number)+1;
+				session:answer();
 				digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 				if (digits == pin_number) then
 					--pin is correct
@@ -104,7 +107,6 @@ if (session:ready()) then
 			end
 
 		--feature code - toggle the status
-			freeswitch.consoleLog("notice", "Call Flow: toggle\n");
 			if (string.len(call_flow_status) == 0) then
 				toggle = "false";
 			else
@@ -115,50 +117,60 @@ if (session:ready()) then
 				end
 			end
 			if (toggle == "true") then
-				--set the presence to terminated - blf green
+				--set the presence to terminated - turn the lamp off:
 					event = freeswitch.Event("PRESENCE_IN");
 					event:addHeader("proto", "sip");
 					event:addHeader("event_type", "presence");
 					event:addHeader("alt_event_type", "dialog");
 					event:addHeader("Presence-Call-Direction", "outbound");
 					event:addHeader("state", "Active (1 waiting)");
-
-					event:addHeader("force-status", "Empty");
-					event:addHeader("rpid", "unknown");
-					event:addHeader("channel-state", "CS_HANGUP");
-					event:addHeader("call-direction", "inbound");
-
-					event:addHeader("from", call_flow_extension.."@"..domain_name);
-					event:addHeader("login", call_flow_extension.."@"..domain_name);
-					--event:addHeader("unique-id", uuid);
+					event:addHeader("from", call_flow_feature_code.."@"..domain_name);
+					event:addHeader("login", call_flow_feature_code.."@"..domain_name);
+					event:addHeader("unique-id", call_flow_uuid);
 					event:addHeader("answer-state", "terminated");
 					event:fire();
+				--answer and play a tone
+					session:answer();
+					if (string.len(call_flow_label) > 0) then
+						api = freeswitch.API();
+						reply = api:executeString("uuid_display "..session:get_uuid().." "..call_flow_label);
+					end
+					session:execute("sleep", "2000");
+					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
 				--show in the console
-					freeswitch.consoleLog("notice", "Call Flow: "..call_flow_uuid.." On");
+					freeswitch.consoleLog("notice", "Call Flow: status=true uuid="..call_flow_uuid.."\n");
 			else
-				--set presence in - blf red
+				--set presence in - turn lamp on
 					event = freeswitch.Event("PRESENCE_IN");
 					event:addHeader("proto", "sip");
-					event:addHeader("login", call_flow_extension.."@"..domain_name);
-					event:addHeader("from", call_flow_extension.."@"..domain_name);
+					event:addHeader("login", call_flow_feature_code.."@"..domain_name);
+					event:addHeader("from", call_flow_feature_code.."@"..domain_name);
 					event:addHeader("status", "Active (1 waiting)");
 					event:addHeader("rpid", "unknown");
 					event:addHeader("event_type", "presence");
 					event:addHeader("alt_event_type", "dialog");
 					event:addHeader("event_count", "1");
-					--event:addHeader("unique-id", uuid);
-					--event:addHeader("Presence-Call-Direction", "outbound")
+					event:addHeader("unique-id", call_flow_uuid);
+					event:addHeader("Presence-Call-Direction", "outbound")
 					event:addHeader("answer-state", "confirmed");
 					event:fire();
+				--answer and play a tone
+					session:answer();
+					if (string.len(call_flow_anti_label) > 0) then
+						api = freeswitch.API();
+						reply = api:executeString("uuid_display "..session:get_uuid().." "..call_flow_anti_label);
+					end
+					session:execute("sleep", "2000");
+					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
 				--show in the console
-					freeswitch.consoleLog("notice", "Call Flow: "..call_flow_uuid.." Off");
+					freeswitch.consoleLog("notice", "Call Flow: status=false uuid="..call_flow_uuid.."\n");
 			end
 			dbh:query("UPDATE v_call_flows SET call_flow_status = '"..toggle.."' WHERE call_flow_uuid = '"..call_flow_uuid.."'");
 	else 
 		--app_data
 			freeswitch.consoleLog("notice", "Call Flow: " .. app .. " " .. data .. "\n");
 
-		--exucute the appliation
+		--exucute the application
 			session:execute(app, data);
 		--timeout application
 			--if (not session:answered()) then
