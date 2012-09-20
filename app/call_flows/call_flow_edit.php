@@ -194,11 +194,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			if ($action == "add" || $action == "update") {
 
-				//if the dialplan entry does not exist then add it
+				//delete the dialplan
 					$sql = "delete from v_dialplans ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 					$db->query(check_sql($sql));
+
+				//delete the dialplan details
+					$sql = "delete from v_dialplan_details ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+					$db->query($sql);
+					unset($sql);
 
 				//add the dialplan entry
 					$dialplan_name = $call_flow_name;
