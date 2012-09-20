@@ -105,8 +105,8 @@ require_once "includes/paging.php";
 	echo th_order_by('call_flow_name', 'Name', $order_by, $order);
 	echo th_order_by('call_flow_extension', 'Extension', $order_by, $order);
 	echo th_order_by('call_flow_feature_code', 'Feature Code', $order_by, $order);
-	echo "<th>Destination</th>\n";
-	echo "<th>Alternate Destination</th>\n";
+	//echo "<th>Destination</th>\n";
+	//echo "<th>Alternate Destination</th>\n";
 	echo th_order_by('call_flow_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('call_flow_add')) {
@@ -133,8 +133,8 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_feature_code']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_app']." ".$row['call_flow_data']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_anti_app']." ".$row['call_flow_anti_data']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_app']." ".$row['call_flow_data']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_flow_anti_app']." ".$row['call_flow_anti_data']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['call_flow_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('call_flow_edit')) {
