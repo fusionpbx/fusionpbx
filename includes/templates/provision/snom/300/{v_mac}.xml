@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
 <phone-settings e="2">
+<language perm=""></language>
 <redirect_event perm="">none</redirect_event>
 <setting_server perm="RW">http://{domain_name}{v_project_path}/app/provision/index.php?mac={mac}</setting_server>
-<use_hidden_tags perm="">on</use_hidden_tags>
+<subscribe_config perm="">off</subscribe_config>
+<pnp_config perm="">on</pnp_config>
+<use_hidden_tags perm="">off</use_hidden_tags>
 <user_realname idx="1" perm="">{v_line1_displayname}</user_realname>
 <user_name idx="1" perm="">{v_line1_user_id}</user_name>
 <user_host idx="1" perm="">{domain_name}</user_host>
@@ -35,8 +38,19 @@
 <user_mailbox idx="5" perm="">*97</user_mailbox>
 <user_srtp idx="5" perm="">off</user_srtp>
 </phone-settings>
+<firmware-settings e="2">
+<firmware perm=""></firmware>
+</firmware-settings>
 <functionKeys e="2">
+<fkey idx="0" context="active" perm="">line</fkey>
+<fkey idx="1" context="active" perm="">line</fkey>
+<fkey idx="2" context="active" perm="">keyevent F_REDIAL</fkey>
+<fkey idx="3" context="active" perm="">keyevent F_ADR_BOOK</fkey>
+<fkey idx="4" context="active" perm="">keyevent F_TRANSFER</fkey>
+<fkey idx="5" context="active" perm="">keyevent F_MUTE</fkey>
 </functionKeys>
 <tbook e="2">
 </tbook>
+<dialplan e="2">
+</dialplan>
 </settings>
