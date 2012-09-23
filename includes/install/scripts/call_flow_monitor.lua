@@ -25,7 +25,11 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --set the time between loops in seconds
-	sleep = 500;
+	sleep = 300;
+
+--set the debug level
+	debug["log"] = false;
+	debug["sql"] = false;
 
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
@@ -74,8 +78,10 @@
 			sql = [[select d.domain_name, f.call_flow_uuid, f.call_flow_extension, f.call_flow_feature_code, f.call_flow_status, f.call_flow_label, f.call_flow_anti_label
 			from v_call_flows as f, v_domains as d 
 			where f.domain_uuid = d.domain_uuid]]
-			--and call_flow_enabled = 'true' 
-			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+			--and call_flow_enabled = 'true'
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+			end
 			x = 0;
 			dbh:query(sql, function(row)
 				domain_name = row.domain_name;
@@ -103,7 +109,9 @@
 						event:addHeader("answer-state", "terminated");
 						event:fire();
 					--show in the console
-						freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_label..",status=true,uuid="..call_flow_uuid.."\n");
+						if (debug["log"]) then
+							freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_label..",status=true,uuid="..call_flow_uuid.."\n");
+						end
 				else
 					--set presence in - turn lamp on
 						event = freeswitch.Event("PRESENCE_IN");
@@ -120,7 +128,9 @@
 						event:addHeader("answer-state", "confirmed");
 						event:fire();
 					--show in the console
-						freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_anti_label..",status=false,uuid="..call_flow_uuid.."\n");
+						if (debug["log"]) then
+							freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_anti_label..",status=false,uuid="..call_flow_uuid.."\n");
+						end
 				end
 			end);
 

@@ -25,6 +25,7 @@
 */
 include "root.php";
 require_once "includes/require.php";
+require_once "includes/checkauth.php";
 if (permission_exists('xml_editor_view')) {
 	//access granted
 }
@@ -33,7 +34,7 @@ else {
 	exit;
 }
 
-$filename = $_POST["file"];
+$filename = check_str($_POST["file"]);
 $filename = str_replace ("\\", "/", $filename);
 
 $handle = fopen($filename, "r");
