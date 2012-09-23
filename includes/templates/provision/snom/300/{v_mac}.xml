@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+<phone-settings e="2">
+<redirect_event perm="">none</redirect_event>
+<setting_server perm="RW">http://{domain_name}{v_project_path}/app/provision/index.php?mac={mac}</setting_server>
+<use_hidden_tags perm="">on</use_hidden_tags>
+<user_realname idx="1" perm="">{v_line1_displayname}</user_realname>
+<user_name idx="1" perm="">{v_line1_user_id}</user_name>
+<user_host idx="1" perm="">{domain_name}</user_host>
+<user_pass idx="1" perm="">{v_line1_user_password}</user_pass>
+<user_mailbox idx="1" perm="">*97</user_mailbox>
+<user_srtp idx="1" perm="">off</user_srtp>
+<user_realname idx="2" perm="">{v_line2_displayname}</user_realname>
+<user_name idx="2" perm="">{v_line2_user_id}</user_name>
+<user_host idx="2" perm="">{domain_name}</user_host>
+<user_pass idx="2" perm="">{v_line2_user_password}</user_pass>
+<user_mailbox idx="2" perm="">*97</user_mailbox>
+<user_srtp idx="2" perm="">off</user_srtp>
+<user_realname idx="3" perm="">{v_line3_displayname}</user_realname>
+<user_name idx="3" perm="">{v_line3_user_id}</user_name>
+<user_host idx="3" perm="">{domain_name}</user_host>
+<user_pass idx="3" perm="">{v_line3_user_password}</user_pass>
+<user_mailbox idx="3" perm="">*97</user_mailbox>
+<user_srtp idx="3" perm="">off</user_srtp>
+<user_realname idx="4" perm="">{v_line4_displayname}</user_realname>
+<user_name idx="4" perm="">{v_line4_user_id}</user_name>
+<user_host idx="4" perm="">{domain_name}</user_host>
+<user_pass idx="4" perm="">{v_line4_user_password}</user_pass>
+<user_mailbox idx="4" perm="">*97</user_mailbox>
+<user_srtp idx="4" perm="">off</user_srtp>
+<user_realname idx="5" perm="">{v_line5_displayname}</user_realname>
+<user_name idx="5" perm="">{v_line5_user_id}</user_name>
+<user_pass idx="5" perm="">{v_line5_user_password}</user_pass>
+<user_host idx="5" perm="">{domain_name}</user_host>
+<user_mailbox idx="5" perm="">*97</user_mailbox>
+<user_srtp idx="5" perm="">off</user_srtp>
+</phone-settings>
+<functionKeys e="2">
+</functionKeys>
+<tbook e="2">
+</tbook>
+</settings>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+<phone-settings e="2">
+<language perm="">English</language>
+<update_policy perm="">auto_update</update_policy>
+<setting_server perm="RW">http://{domain_name}{v_project_path}/app/provision/index.php?mac={mac}</setting_server>
+<dns_domain perm="RW">local</dns_domain>
+<edit_alpha_mode perm="">abc</edit_alpha_mode>
+<headset_device perm="">headset_rj</headset_device>
+<ethernet_replug perm="">nothing</ethernet_replug>
+<firmware perm="">http://provisioning.snom.com:80/download/fw/snom320-8.7.3.10-SIP-f.bin</firmware>
+<ethernet_detect perm="">off</ethernet_detect>
+<handsfree_mode perm="">quiet</handsfree_mode>
+<away_timeout perm="">60</away_timeout>
+<attended_transfer_on_ringing perm="">off</attended_transfer_on_ringing>
+<was_never_registered perm="">off</was_never_registered>
+<user_active idx="2" perm="">off</user_active>
+<user_active idx="3" perm="">off</user_active>
+<user_active idx="4" perm="">off</user_active>
+<user_active idx="5" perm="">off</user_active>
+<user_active idx="7" perm="">off</user_active>
+<user_active idx="10" perm="">off</user_active>
+<user_realname idx="1" perm="">{v_line1_displayname}</user_realname>
+<user_name idx="1" perm="">{v_line1_user_id}</user_name>
+<user_pass idx="1" perm="">{v_line1_user_password}</user_pass>
+<user_host idx="1" perm="">{domain_name}</user_host>
+<user_srtp idx="1" perm="">off</user_srtp>
+<user_mailbox idx="1" perm="">*97</user_mailbox>
+<user_realname idx="2" perm="">{v_line2_displayname}</user_realname>
+<user_name idx="2" perm="">{v_line2_user_id}</user_name>
+<user_pass idx="2" perm="">{v_line2_user_password}</user_pass>
+<user_host idx="2" perm="">{domain_name}</user_host>
+<user_srtp idx="2" perm="">off</user_srtp>
+<user_mailbox idx="2" perm="">*97</user_mailbox>
+<user_realname idx="3" perm="">{v_line3_displayname}</user_realname>
+<user_name idx="3" perm="">{v_line3_user_id}</user_name>
+<user_pass idx="3" perm="">{v_line3_user_password}</user_pass>
+<user_host idx="3" perm="">{domain_name}</user_host>
+<user_srtp idx="3" perm="">off</user_srtp>
+<user_mailbox idx="3" perm="">*97</user_mailbox>
+<user_realname idx="4" perm="">{v_line4_displayname}</user_realname>
+<user_name idx="4" perm="">{v_line4_user_id}</user_name>
+<user_pass idx="4" perm="">{v_line4_user_password}</user_pass>
+<user_host idx="4" perm="">{domain_name}</user_host>
+<user_srtp idx="4" perm="">off</user_srtp>
+<user_mailbox idx="4" perm="">*97</user_mailbox>
+<user_realname idx="5" perm="">{v_line5_displayname}</user_realname>
+<user_name idx="5" perm="">{v_line5_user_id}</user_name>
+<user_pass idx="5" perm="">{v_line5_user_password}</user_pass>
+<user_host idx="5" perm="">{domain_name}</user_host>
+<user_srtp idx="5" perm="">off</user_srtp>
+<user_mailbox idx="5" perm="">*97</user_mailbox>
+<user_symmetrical_rtp idx="1" perm="">on</user_symmetrical_rtp>
+<user_ice idx="1" perm="">off</user_ice>
+<stun_server idx="1" perm=""></stun_server>
+<codec_priority_list idx="1" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="2" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="3" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="4" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="5" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="6" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="7" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="8" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="9" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="10" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="11" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="12" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+</phone-settings>
+<functionKeys e="2">
+<fkey idx="0" context="active" label="" perm="">line</fkey>
+<fkey idx="1" context="active" label="" perm="">line</fkey>
+<fkey idx="2" context="active" label="" perm="">line</fkey>
+<fkey idx="3" context="active" label="" perm="">line</fkey>
+<fkey idx="4" context="active" label="" perm="">line</fkey>
+<fkey idx="5" context="active" label="" perm="">line</fkey>
+<fkey idx="6" context="active" label="" perm="">line</fkey>
+<fkey idx="7" context="active" label="" perm="">line</fkey>
+<fkey idx="8" context="active" label="" perm="">line</fkey>
+<fkey idx="9" context="active" label="" perm="">line</fkey>
+<fkey idx="10" context="active" label="" perm="">line</fkey>
+<fkey idx="11" context="active" label="" perm="">line</fkey>
+</functionKeys>
+<tbook e="2">
+</tbook>
+</settings>
