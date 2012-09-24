@@ -44,7 +44,6 @@ else {
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
 	echo "		<br>";
@@ -57,8 +56,7 @@ else {
 	echo "  </tr>\n";
 	echo "</table>\n";
 
-	$sql = "";
-	$sql .= "select * from v_vars ";
+	$sql = "select * from v_vars ";
 	if (strlen($order_by)> 0) {
 		$sql .= "order by $order_by $order ";
 	}
@@ -128,8 +126,8 @@ else {
 			}
 
 			echo "<tr >\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($row['var_name'],0,32)."</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($row['var_name'],0,32)."&nbsp;</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."&nbsp;</td>\n";
 			//echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_cat']."</td>\n";
 			//echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_order']."</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_enabled']."</td>\n";
