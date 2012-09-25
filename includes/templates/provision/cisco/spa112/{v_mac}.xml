@@ -18,6 +18,8 @@
 <Display_Name_1_>{v_line1_displayname}</Display_Name_1_>
 <User_ID_1_>{v_line1_user_id}</User_ID_1_>
 <Password_1_>{v_line1_user_password}</Password_1_>
+<Use_Auth_ID_1_>No</Use_Auth_ID_1_>
+<Auth_ID_1_></Auth_ID_1_>
 <Dial_Plan_1_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
 <Line_Enable_2_>Yes</Line_Enable_2_>
 <Mailbox_ID_2_>*97</Mailbox_ID_2_>
@@ -26,6 +28,8 @@
 <Display_Name_2_>{v_line2_displayname}</Display_Name_2_>
 <User_ID_2_>{v_line2_user_id}</User_ID_2_>
 <Password_2_>{v_line2_user_password}</Password_2_>
+<Use_Auth_ID_2_>No</Use_Auth_ID_2_>
+<Auth_ID_1_></Auth_ID_2_>
 <Dial_Plan_2_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
 <Time_Zone>GMT-07:00</Time_Zone>
 </flat-profile>
