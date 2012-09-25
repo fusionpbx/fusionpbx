@@ -11,6 +11,7 @@
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr'] = '';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
@@ -18,10 +19,11 @@
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = 'Fax Server';
+		$apps[$x]['menu'][0]['title']['en'] = 'Fax Server';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Fax de servidor';
-		$apps[$x]['menu'][0]['title']['de'] = '';
-		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = 'Faxserver';
+		$apps[$x]['menu'][0]['title']['de-ch'] = 'Faxserver';
+		$apps[$x]['menu'][0]['title']['de-at'] = 'Faxserver';
 		$apps[$x]['menu'][0]['title']['fr'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
