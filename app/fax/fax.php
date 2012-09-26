@@ -37,7 +37,9 @@ require_once "includes/header.php";
 require_once "includes/paging.php";
 
 //prepare the languages
+	echo "<!--\n";
 	require_once "app_languages.php";
+	echo "-->\n";
 	foreach($content as $key => $value) {
 		$content[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
@@ -47,11 +49,11 @@ require_once "includes/paging.php";
 	$order = check_str($_GET["order"]);
 
 //show the content
-	echo "<div align='center'>";
+	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
-	echo "		<br>";
+	echo "		<br>\n";
 	echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "			<tr>\n";
 	echo "				<td align='left'>\n";
@@ -61,7 +63,7 @@ require_once "includes/paging.php";
 	echo "				</td>\n";
 	echo "			</tr>\n";
 	echo "		</table>\n";
-	echo "		<br />";
+	echo "		<br />\n";
 
 	if (if_group("superadmin") || if_group("admin")) {
 		//show all fax extensions
