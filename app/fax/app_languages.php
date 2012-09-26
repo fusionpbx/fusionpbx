@@ -1,16 +1,16 @@
-<?php
+ï»¿<?php
 
 	$content['title']['en-us'] = 'Fax Server';
 	$content['title']['pt-pt'] = 'Servidor de Fax';
 
 	$content['description']['en-us'] = 'To receive a FAX setup a fax extension and then direct the incoming to it.';
-	$content['description']['pt-pt'] = 'Para receber um FAX, configure uma extensão de fax e encaminhe o tráfego de entrada para essa extensão.';
+	$content['description']['pt-pt'] = 'Para receber um FAX, configure uma extensÃ£o de fax e encaminhe o trÃ¡fego de entrada para essa extensÃ£o.';
 
 	$content['confirm-delete']['en-us'] = 'Are you sure you want to delete this?';
 	$content['confirm-delete']['pt-pt'] = 'Tem a certeza que pretende apagar?';
 
 	$content['label-extension']['en-us'] = 'Extension';
-	$content['label-extension']['pt-pt'] = 'Extensão';
+	$content['label-extension']['pt-pt'] = 'ExtensÃ£o';
 
 	$content['label-name']['en-us'] = 'Name';
 	$content['label-name']['pt-pt'] = 'Nome';
@@ -22,10 +22,10 @@
 	$content['label-upload']['pt-pt'] = 'Carregar';
 
 	$content['button-back']['en-us'] = 'Back';
-	$content['button-back']['pt-pt'] = 'Voltar atrás';
+	$content['button-back']['pt-pt'] = 'Voltar atrÃ¡s';
 
 	$content['button-settings']['en-us'] = 'Settings';
-	$content['button-settings']['pt-pt'] = 'Configurações';
+	$content['button-settings']['pt-pt'] = 'ConfiguraÃ§Ãµes';
 
 	$content['button-send']['en-us'] = 'Send';
 	$content['button-send']['pt-pt'] = 'Enviar';
