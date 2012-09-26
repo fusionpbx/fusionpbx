@@ -36,6 +36,12 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
+//prepare the languages
+	require_once "app_languages.php";
+	foreach($content as $key => $value) {
+		$content[$key] = $value[$_SESSION['domain']['language']['code']]."\n";
+	}
+
 //get the http get values and set them as php variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
@@ -139,7 +145,7 @@ require_once "includes/paging.php";
 				echo "		<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('fax_extension_delete')) {
-				echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$content['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
