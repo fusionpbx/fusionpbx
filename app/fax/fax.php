@@ -39,7 +39,7 @@ require_once "includes/paging.php";
 //prepare the languages
 	require_once "app_languages.php";
 	foreach($content as $key => $value) {
-		$content[$key] = $value[$_SESSION['domain']['language']['code']]."\n";
+		$content[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //get the http get values and set them as php variables
