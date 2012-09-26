@@ -3,7 +3,7 @@
 	$content['title']['en-us'] = 'Fax Server';
 	$content['title']['pt-pt'] = '';
 
-	$content['description']['en-us'] = 'To receive a FAX setup a fax extension and then direct the incoming to it.'
+	$content['description']['en-us'] = 'To receive a FAX setup a fax extension and then direct the incoming to it.';
 	$content['description']['pt-pt'] = '';
 
 	$content['confirm-delete']['en-us'] = 'Are you sure you want to delete this?';
