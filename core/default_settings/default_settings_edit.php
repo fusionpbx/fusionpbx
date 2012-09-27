@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('default_setting_add') || permission_exists('default_setting_edit')) {
 	//access granted
 }
 else {
@@ -82,7 +82,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('default_setting_add')) {
 				$sql = "insert into v_default_settings ";
 				$sql .= "(";
 				$sql .= "default_setting_uuid, ";
@@ -115,7 +115,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('default_setting_edit')) {
 				$sql = "update v_default_settings set ";
 				$sql .= "default_setting_category = '$default_setting_category', ";
 				$sql .= "default_setting_subcategory = '$default_setting_subcategory', ";
@@ -140,7 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$default_setting_uuid = $_GET["id"];
+		$default_setting_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_default_settings ";
 		$sql .= "where default_setting_uuid = '$default_setting_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -166,7 +166,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
+	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";

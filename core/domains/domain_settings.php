@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('domain_setting_view')) {
 	//access granted
 }
 else {
@@ -49,20 +49,20 @@ require_once "includes/paging.php";
 
 	//echo "<table width='100%' border='0'>\n";
 	//echo "	<tr>\n";
-	//echo "		<td width='50%' nowrap><b>Domain Settings</b></td>\n";
+	//echo "		<td width='50%' align='left' nowrap='nowrap'><b>Domain Settings</b></td>\n";
 	//echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	//echo "	</tr>\n";
 	//echo "	<tr>\n";
-	//echo "		<td colspan='2'>\n";
+	//echo "		<td align='left' colspan='2'>\n";
 	//echo "			Settings used for each domain.<br /><br />\n";
 	//echo "		</td>\n";
 	//echo "	</tr>\n";
 	//echo "</table>\n";
 
 	//prepare to page the results
-		$sql = " select count(*) as num_rows from v_domain_settings ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		$sql .= " and domain_uuid = '$domain_uuid' ";
+		$sql = "select count(*) as num_rows from v_domain_settings ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -84,13 +84,11 @@ require_once "includes/paging.php";
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
 		$offset = $rows_per_page * $page; 
 
-	//get the domain list
-		$sql = "";
-		$sql .= " select * from v_domain_settings ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		$sql .= " and domain_uuid = '$domain_uuid' ";
+	//get the list
+		$sql = "select * from v_domain_settings ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -119,7 +117,13 @@ require_once "includes/paging.php";
 				echo th_order_by('domain_setting_enabled', 'Enabled', $order_by, $order);
 				echo th_order_by('domain_setting_description', 'Description', $order_by, $order);
 				echo "<td align='right' width='42'>\n";
-				echo "	<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+				if (permission_exists('domain_setting_add')) {
+					echo "	<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+				}
+				else {
+					echo "	&nbsp;\n";
+				}
+
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
@@ -149,8 +153,12 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
+			if (permission_exists('domain_setting_edit')) {
 			echo "		<a href='domain_settings_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('domain_setting_delete')) {
 			echo "		<a href='domain_settings_delete.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$previous_category = $row['domain_setting_category'];
@@ -166,7 +174,12 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('domain_setting_add')) {
+		echo "			<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	}
+	else {
+		echo "			&nbsp;\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

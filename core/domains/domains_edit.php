@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('domain_add') || permission_exists('domain_edit')) {
 	//access granted
 }
 else {
@@ -74,7 +74,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add") {
+			if ($action == "add" && permission_exists('domain_add')) {
 				$sql = "select count(*) as num_rows from v_domains ";
 				$sql .= "where domain_name = '$domain_name' ";
 				$prep_statement = $db->prepare($sql);
@@ -100,7 +100,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 			}
 
-			if ($action == "update") {
+			if ($action == "update" && permission_exists('domain_edit')) {
 				$sql = "update v_domains set ";
 				$sql .= "domain_name = '$domain_name', ";
 				$sql .= "domain_description = '$domain_description' ";
@@ -158,7 +158,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
+	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";

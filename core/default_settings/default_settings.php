@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('default_setting_view')) {
 	//access granted
 }
 else {
@@ -60,8 +60,7 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "";
-		$sql .= " select count(*) as num_rows from v_default_settings ";
+		$sql = "select count(*) as num_rows from v_default_settings ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -83,16 +82,15 @@ require_once "includes/paging.php";
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
 		$offset = $rows_per_page * $page; 
 
-	//get the domain list
-		$sql = "";
-		$sql .= " select * from v_default_settings ";
+	//get the list
+		$sql = "select * from v_default_settings ";
 		if (strlen($order_by) == 0) {
 			$sql .= "order by default_setting_category, default_setting_subcategory asc ";
 		}
 		else {
 			$sql .= "order by $order_by $order ";
 		}
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -120,7 +118,12 @@ require_once "includes/paging.php";
 				echo th_order_by('default_setting_enabled', 'Enabled', $order_by, $order);
 				echo th_order_by('default_setting_description', 'Description', $order_by, $order);
 				echo "<td align='right' width='42'>\n";
-				echo "	<a href='default_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+				if (permission_exists('default_setting_add')) {
+					echo "	<a href='default_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+				}
+				else {
+					echo "	&nbsp;\n";
+				}
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
@@ -133,8 +136,7 @@ require_once "includes/paging.php";
 			$subcategory = $row['default_setting_subcategory'];
 			$name = $row['default_setting_name'];
 			if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
-				$sql = "";
-				$sql .= "select * from v_menus ";
+				$sql = "select * from v_menus ";
 				$sql .= "where menu_uuid = '".$row['default_setting_value']."' ";
 				$sub_prep_statement = $db->prepare(check_sql($sql));
 				$sub_prep_statement->execute();
@@ -150,8 +152,12 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='default_settings_edit.php?id=".$row['default_setting_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='default_settings_delete.php?id=".$row['default_setting_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('default_setting_edit')) {
+				echo "		<a href='default_setting_edit.php?id=".$row['default_setting_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('default_setting_delete')) {
+				echo "		<a href='default_setting_delete.php?id=".$row['default_setting_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			$previous_category = $row['default_setting_category'];
@@ -167,7 +173,12 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='default_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('default_setting_add')) {
+		echo "			<a href='default_setting_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
+	else {
+		echo "			&nbsp;\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

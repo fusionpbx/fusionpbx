@@ -36,7 +36,6 @@ else {
 
 $filename = check_str($_POST["file"]);
 $filename = str_replace ("\\", "/", $filename);
-
 $handle = fopen($filename, "r");
 if ($handle) {
 	while (!feof($handle)) {

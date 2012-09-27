@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('domain_view')) {
 	//access granted
 }
 else {
@@ -34,46 +34,48 @@ else {
 	exit;
 }
 
-//change the tenant
-	if (strlen($_GET["domain_uuid"]) > 0 && $_GET["domain_change"] == "true") {
-		//get the domain_uuid
-			$sql = "select * from v_domains ";
-			$sql .= "order by domain_name asc ";
-			$prep_statement = $db->prepare($sql);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $row) {
-				if (count($result) == 0) {
-					$_SESSION["domain_uuid"] = $row["domain_uuid"];
-					$_SESSION["domain_name"] = $row['domain_name'];
-				}
-				else {
-					if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+//change the domain
+	if (strlen(check_str($_GET["domain_uuid"])) > 0 && check_str($_GET["domain_change"]) == "true") {
+		if (permission_exists('domain_select')) {
+			//get the domain_uuid
+				$sql = "select * from v_domains ";
+				$sql .= "order by domain_name asc ";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($result as $row) {
+					if (count($result) == 0) {
 						$_SESSION["domain_uuid"] = $row["domain_uuid"];
 						$_SESSION["domain_name"] = $row['domain_name'];
 					}
-					$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-					$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
+					else {
+						if ($row['domain_name'] == $domain_array[0] || $row['domain_name'] == 'www.'.$domain_array[0]) {
+							$_SESSION["domain_uuid"] = $row["domain_uuid"];
+							$_SESSION["domain_name"] = $row['domain_name'];
+						}
+						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
+						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
+					}
 				}
-			}
-			unset($result, $prep_statement);
+				unset($result, $prep_statement);
 
-		//update the domain session variables
-			$domain_uuid = check_str($_GET["domain_uuid"]);
-			$_SESSION['domain_uuid'] = $domain_uuid;
-			$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-			$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
-		//clear the menu session so that it is regenerated for the selected domain
-			$_SESSION["menu"] = '';
-		//clear the extension array so that it is regenerated for the selected domain
-			unset($_SESSION['extension_array']);
-		//set the context
-			if (count($_SESSION["domains"]) > 1) {
-				$_SESSION["context"] = $_SESSION["domain_name"];
-			}
-			else {
-				$_SESSION["context"] = 'default';
-			}
+			//update the domain session variables
+				$domain_uuid = check_str($_GET["domain_uuid"]);
+				$_SESSION['domain_uuid'] = $domain_uuid;
+				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
+				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
+			//clear the menu session so that it is regenerated for the selected domain
+				$_SESSION["menu"] = '';
+			//clear the extension array so that it is regenerated for the selected domain
+				unset($_SESSION['extension_array']);
+			//set the context
+				if (count($_SESSION["domains"]) > 1) {
+					$_SESSION["context"] = $_SESSION["domain_name"];
+				}
+				else {
+					$_SESSION["context"] = 'default';
+				}
+		}
 	}
 
 //includes
@@ -151,7 +153,12 @@ else {
 	echo th_order_by('domain_name', 'Domain', $order_by, $order);
 	echo th_order_by('domain_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='domains_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('domain_add')) {
+		echo "	<a href='domains_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
+	else {
+		echo "	&nbsp;\n";
+	}
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -161,15 +168,18 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='domains_edit.php?id=".$row['domain_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='domains_delete.php?id=".$row['domain_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('domain_edit')) {
+				echo "		<a href='domains_edit.php?id=".$row['domain_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('domain_delete')) {
+				echo "		<a href='domains_delete.php?id=".$row['domain_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
-
 
 	echo "<tr>\n";
 	echo "<td colspan='3' align='left'>\n";
@@ -178,7 +188,12 @@ else {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='domains_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('domain_add')) {
+		echo "			<a href='domains_edit.php' alt='add'>$v_link_label_add</a>\n";
+	}
+	else {
+		echo "			&nbsp;\n";
+	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

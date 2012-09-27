@@ -421,7 +421,7 @@ function confirmdelete(url) {
 				</td>
 				<td width='50%' class='' align='right' valign='middle'>
 					<?php
-					if (if_group("superadmin") && count($_SESSION['domains']) > 1) {
+					if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
 						//$tmp_style = "style=\"opacity:0.7;filter:alpha(opacity=70)\" ";
 						//$tmp_style .= "onmouseover=\"this.style.opacity=1;this.filters.alpha.opacity=90\" ";
 						//$tmp_style .= "onmouseout=\"this.style.opacity=0.7;this.filters.alpha.opacity=70\" ";
