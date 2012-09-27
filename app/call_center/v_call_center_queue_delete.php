@@ -47,22 +47,28 @@ if (strlen($id) > 0) {
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
+			$queue_name = $row['queue_name'];
 			$dialplan_uuid = $row['dialplan_uuid'];
 		}
+
+	//delete the tier from the database
+		$sql = "delete from v_call_center_tiers ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and queue_name = '$queue_name' ";
+		$db->query($sql);
+		unset($sql);
 
 	//delete the call center queue
 		$sql = "delete from v_call_center_queues ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
+		$db->query($sql);
 		unset($sql);
 
 	//delete the dialplan entry
 		$sql = "delete from v_dialplans ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		//echo $sql."<br>\n";
 		$db->query($sql);
 		unset($sql);
 
@@ -70,7 +76,6 @@ if (strlen($id) > 0) {
 		$sql = "delete from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		//echo $sql."<br>\n";
 		$db->query($sql);
 		unset($sql);
 

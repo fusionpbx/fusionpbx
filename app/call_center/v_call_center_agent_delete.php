@@ -39,8 +39,7 @@ if (count($_GET)>0) {
 }
 
 //get the agent details
-	$sql = "";
-	$sql .= "select * from v_call_center_agents ";
+	$sql = "select * from v_call_center_agents ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and call_center_agent_uuid = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -63,8 +62,7 @@ if (count($_GET)>0) {
 
 //delete the agent from the db
 	if (strlen($id)>0) {
-		$sql = "";
-		$sql .= "delete from v_call_center_agents ";
+		$sql = "delete from v_call_center_agents ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_center_agent_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -82,4 +80,3 @@ if (count($_GET)>0) {
 	return;
 
 ?>
-

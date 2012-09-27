@@ -40,8 +40,7 @@ else {
 	}
 
 //get the agent details
-	$sql = "";
-	$sql .= "select * from v_call_center_tiers ";
+	$sql = "select * from v_call_center_tiers ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and call_center_tier_uuid = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -68,8 +67,7 @@ else {
 
 //delete the tier from the database
 	if (strlen($id)>0) {
-		$sql = "";
-		$sql .= "delete from v_call_center_tiers ";
+		$sql = "delete from v_call_center_tiers ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_center_tier_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
