@@ -119,7 +119,7 @@ require_once "includes/paging.php";
 				echo th_order_by('default_setting_description', 'Description', $order_by, $order);
 				echo "<td align='right' width='42'>\n";
 				if (permission_exists('default_setting_add')) {
-					echo "	<a href='default_settings_edit.php' alt='add'>$v_link_label_add</a>\n";
+					echo "	<a href='default_setting_edit.php' alt='add'>$v_link_label_add</a>\n";
 				}
 				else {
 					echo "	&nbsp;\n";
