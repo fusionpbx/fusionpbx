@@ -194,15 +194,15 @@ require_once "includes/classes/switch_dialplan.php";
 							$database->fields['dialplan_detail_order'] = '005';
 							$database->add();
 
-							//$database->table = "v_dialplan_details";
-							//$database->fields['domain_uuid'] = $this->domain_uuid;
-							//$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
-							//$database->fields['dialplan_detail_uuid'] = uuid();
-							//$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-							//$database->fields['dialplan_detail_type'] = 'answer';
-							//$database->fields['dialplan_detail_data'] = '';
-							//$database->fields['dialplan_detail_order'] = '010';
-							//$database->add();
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'answer';
+							$database->fields['dialplan_detail_data'] = '';
+							$database->fields['dialplan_detail_order'] = '010';
+							$database->add();
 
 							$database->table = "v_dialplan_details";
 							$database->fields['domain_uuid'] = $this->domain_uuid;
@@ -495,15 +495,15 @@ require_once "includes/classes/switch_dialplan.php";
 							$database->fields['dialplan_detail_order'] = '005';
 							$database->add();
 
-							//$database->table = "v_dialplan_details";
-							//$database->fields['domain_uuid'] = $this->domain_uuid;
-							//$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
-							//$database->fields['dialplan_detail_uuid'] = uuid();
-							//$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-							//$database->fields['dialplan_detail_type'] = 'answer';
-							//$database->fields['dialplan_detail_data'] = '';
-							//$database->fields['dialplan_detail_order'] = '010';
-							//$database->add();
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'answer';
+							$database->fields['dialplan_detail_data'] = '';
+							$database->fields['dialplan_detail_order'] = '010';
+							$database->add();
 
 							$database->table = "v_dialplan_details";
 							$database->fields['domain_uuid'] = $this->domain_uuid;
