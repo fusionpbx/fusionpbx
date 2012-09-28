@@ -80,74 +80,83 @@
 
 --handle the directory
 	if (XML_REQUEST["section"] == "directory" and key and user and domain_name) then
-		--get the extension from the database
-			sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and extension = '" .. user .. "' and enabled = 'true' ";
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-			end
-			dbh:query(sql, function(row)
-				--general
-					domain_uuid = row.domain_uuid;
-					extension = row.extension;
-					cidr = "";
-					if (string.len(row.cidr) > 0) then
-						cidr = [[ cidr="]] .. row.cidr .. [["]];
-					end
-					number_alias = "";
-					if (string.len(row.number_alias) > 0) then
-						number_alias = [[ number-alias="]] .. row.number_alias .. [["]];
-					end
-				--params
-					password = row.password;
-					vm_enabled = "true";
-					if (string.len(row.vm_enabled) > 0) then
-						vm_enabled = row.vm_enabled;
-					end
-					vm_password = row.vm_password;
-					vm_attach_file = "true";
-					if (string.len(row.vm_attach_file) > 0) then
-						vm_attach_file = row.vm_attach_file;
-					end
-					vm_keep_local_after_email = "true";
-					if (string.len(row.vm_keep_local_after_email) > 0) then
-						vm_keep_local_after_email = row.vm_keep_local_after_email;
-					end
-					if (string.len(row.vm_mailto) > 0) then
-						vm_mailto = row.vm_mailto;
-					else
-						vm_mailto = "";
-					end
-					mwi_account = row.mwi_account;
-					auth_acl = row.auth_acl;
-				--variables
-					sip_from_user = row.extension;
-					call_group = row.call_group;
-					hold_music = row.hold_music;
-					toll_allow = row.toll_allow;
-					accountcode = row.accountcode;
-					user_context = row.user_context;
-					effective_caller_id_name = row.effective_caller_id_name;
-					effective_caller_id_number = row.effective_caller_id_number;
-					outbound_caller_id_name = row.outbound_caller_id_name;
-					outbound_caller_id_number = row.outbound_caller_id_number;
-					emergency_caller_id_number = row.emergency_caller_id_number;
-					directory_full_name = row.directory_full_name;
-					directory_visible = row.directory_visible;
-					directory_exten_visible = row.directory_exten_visible;
-					limit_max = row.limit_max;
-					limit_destination = row.limit_destination;
-					sip_force_contact = row.sip_force_contact;
-					sip_force_expires = row.sip_force_expires;
-					nibble_account = row.nibble_account;
-					sip_bypass_media = row.sip_bypass_media;
 
-				--set the dial_string
-					if (string.len(row.dial_string) > 0) then
-						dial_string = row.dial_string;
-					else
-						dial_string = "{sip_invite_domain=${domain_name},presence_id=${dialed_user}@${domain_name}}${sofia_contact(${dialed_user}@${domain_name})}";
-					end
-			end);
+		--prevent processing for invalid user
+			continue = true;
+			if (user == "*97") then
+				continue = false;
+			end
+
+		--get the extension from the database
+			if (continue) then
+				sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and extension = '" .. user .. "' and enabled = 'true' ";
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				end
+				dbh:query(sql, function(row)
+					--general
+						domain_uuid = row.domain_uuid;
+						extension = row.extension;
+						cidr = "";
+						if (string.len(row.cidr) > 0) then
+							cidr = [[ cidr="]] .. row.cidr .. [["]];
+						end
+						number_alias = "";
+						if (string.len(row.number_alias) > 0) then
+							number_alias = [[ number-alias="]] .. row.number_alias .. [["]];
+						end
+					--params
+						password = row.password;
+						vm_enabled = "true";
+						if (string.len(row.vm_enabled) > 0) then
+							vm_enabled = row.vm_enabled;
+						end
+						vm_password = row.vm_password;
+						vm_attach_file = "true";
+						if (string.len(row.vm_attach_file) > 0) then
+							vm_attach_file = row.vm_attach_file;
+						end
+						vm_keep_local_after_email = "true";
+						if (string.len(row.vm_keep_local_after_email) > 0) then
+							vm_keep_local_after_email = row.vm_keep_local_after_email;
+						end
+						if (string.len(row.vm_mailto) > 0) then
+							vm_mailto = row.vm_mailto;
+						else
+							vm_mailto = "";
+						end
+						mwi_account = row.mwi_account;
+						auth_acl = row.auth_acl;
+					--variables
+						sip_from_user = row.extension;
+						call_group = row.call_group;
+						hold_music = row.hold_music;
+						toll_allow = row.toll_allow;
+						accountcode = row.accountcode;
+						user_context = row.user_context;
+						effective_caller_id_name = row.effective_caller_id_name;
+						effective_caller_id_number = row.effective_caller_id_number;
+						outbound_caller_id_name = row.outbound_caller_id_name;
+						outbound_caller_id_number = row.outbound_caller_id_number;
+						emergency_caller_id_number = row.emergency_caller_id_number;
+						directory_full_name = row.directory_full_name;
+						directory_visible = row.directory_visible;
+						directory_exten_visible = row.directory_exten_visible;
+						limit_max = row.limit_max;
+						limit_destination = row.limit_destination;
+						sip_force_contact = row.sip_force_contact;
+						sip_force_expires = row.sip_force_expires;
+						nibble_account = row.nibble_account;
+						sip_bypass_media = row.sip_bypass_media;
+
+					--set the dial_string
+						if (string.len(row.dial_string) > 0) then
+							dial_string = row.dial_string;
+						else
+							dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+						end
+				end);
+			end
 
 		--outbound hot desking - get the extension variables
 			sql = "SELECT * FROM v_extensions WHERE dial_domain = '" .. domain_name .. "' and dial_user = '" .. user .. "' and enabled = 'true' ";
@@ -156,6 +165,7 @@
 			end
 			dbh:query(sql, function(row)
 				--variables
+				extension_uuid = row.extension_uuid;
 				domain_uuid = row.domain_uuid;
 				sip_from_user = row.extension;
 				call_group = row.call_group;
@@ -188,15 +198,15 @@
 				table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
 				if (number_alias) then
 					if (cidr) then
-						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[>]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[ uuid="]] .. extension_uuid .. [[">]]);
 					else
-						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[ uuid="]] .. extension_uuid .. [[">]]);
 					end
 				else
 					if (cidr) then
-						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. [[>]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. [[ uuid="]] .. extension_uuid .. [[">]]);
 					else
-						table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [[" uuid="]] .. extension_uuid .. [[">]]);
 					end
 				end
 				table.insert(xml, [[			<params>]]);
@@ -401,7 +411,7 @@
 
 				--open the tags
 					if (dialplan_tag_status == "closed") then
-						table.insert(xml, [[			<extension name="]] .. dialplan_name .. [[" continue="]] .. dialplan_continue .. [[">]]);
+						table.insert(xml, [[			<extension name="]] .. dialplan_name .. [[" continue="]] .. dialplan_continue .. [["  uuid="]] .. dialplan_uuid .. [[">]]);
 						dialplan_tag_status = "open";
 					end
 					if (dialplan_detail_tag == "condition") then
@@ -513,7 +523,7 @@
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
-				local file = assert(io.open("/tmp/dialplan.xml", "w"));
+				local file = assert(io.open("/tmp/dialplan-" .. call_context .. ".xml", "w"));
 				file:write(XML_STRING);
 				file:close();
 			end
