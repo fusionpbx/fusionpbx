@@ -222,6 +222,18 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'do_not_disturb';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_forward_all';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_forward_busy';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
