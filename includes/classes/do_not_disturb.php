@@ -28,20 +28,20 @@ include "root.php";
 //define the dnd class
 	class do_not_disturb {
 		public $domain_uuid;
-		public $dnd_uuid;
 		public $domain_name;
 		public $extension;
-		public $dnd_enabled;
+		public $enabled;
+		private $dial_string;
 
 		//update the user_status
-		public function dnd_status() {
+		public function user_status() {
 			global $db;
-			if ($this->dnd_enabled == "true") {
+			if ($this->enabled == "true") {
 				//update the call center status
 					$user_status = "Logged Out";
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp) {
-						$switch_cmd .= "callcenter_config agent set status ".$_SESSION['username']."@".$domain_name." '".$user_status."'";
+						$switch_cmd .= "callcenter_config agent set status ".$_SESSION['username']."@".$this->domain_name." '".$user_status."'";
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 
@@ -49,121 +49,38 @@ include "root.php";
 					$user_status = "Do Not Disturb";
 					$sql  = "update v_users set ";
 					$sql .= "user_status = '$user_status' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 					$sql .= "and username = '".$_SESSION['username']."' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 			}
-		} //function
+		}
 
-		public function dnd_add() {
+		public function set() {
 			global $db;
-			$hunt_group_extension = $this->extension;
-			$huntgroup_name = 'dnd_'.$this->extension;
-			$hunt_group_type = 'dnd';
-			$hunt_group_context = $_SESSION['context'];
-			$hunt_group_timeout = '1';
-			$hunt_group_timeout_destination = $this->extension;
-			$hunt_group_timeout_type = 'voicemail';
-			$hunt_group_ring_back = 'us-ring';
-			//$hunt_group_cid_name_prefix = '';
-			//$hunt_group_pin = '';
-			//$hunt_group_call_prompt = 'false';
-			$huntgroup_caller_announce = 'false';
-			//$hunt_group_user_list = '';
-			$hunt_group_enabled = $this->dnd_enabled;
-			$hunt_group_description = 'dnd '.$this->extension;
+			//update the extension
+				if ($this->enabled == "true") {
+					$this->dial_string = "loopback/*99".$this->extension;
+				}
+				else {
+					$this->dial_string = "";
+				}
+				$sql  = "update v_extensions set ";
+				$sql .= "do_not_disturb = '".$this->enabled."', ";
+				$sql .= "dial_string = '".$this->dial_string."', ";
+				$sql .= "dial_domain = '".$this->domain_name."' ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and extension = '".$this->extension."' ";
+				if ($this->debug) {
+					echo $sql."<br />";
+				}
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-			$sql = "insert into v_hunt_groups ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "hunt_group_uuid, ";
-			$sql .= "hunt_group_extension, ";
-			$sql .= "hunt_group_name, ";
-			$sql .= "hunt_group_type, ";
-			$sql .= "hunt_group_context, ";
-			$sql .= "hunt_group_timeout, ";
-			$sql .= "hunt_group_timeout_destination, ";
-			$sql .= "hunt_group_timeout_type, ";
-			$sql .= "hunt_group_ringback, ";
-			//$sql .= "hunt_group_cid_name_prefix, ";
-			//$sql .= "hunt_group_pin, ";
-			$sql .= "hunt_group_call_prompt, ";
-			$sql .= "hunt_group_caller_announce, ";
-			//$sql .= "hunt_group_user_list, ";
-			$sql .= "hunt_group_enabled, ";
-			$sql .= "hunt_group_description ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$this->domain_uuid', ";
-			$sql .= "'$this->dnd_uuid', ";
-			$sql .= "'$hunt_group_extension', ";
-			$sql .= "'$huntgroup_name', ";
-			$sql .= "'$hunt_group_type', ";
-			$sql .= "'$hunt_group_context', ";
-			$sql .= "'$hunt_group_timeout', ";
-			$sql .= "'$hunt_group_timeout_destination', ";
-			$sql .= "'$hunt_group_timeout_type', ";
-			$sql .= "'$hunt_group_ring_back', ";
-			//$sql .= "'$hunt_group_cid_name_prefix', ";
-			//$sql .= "'$hunt_group_pin', ";
-			$sql .= "'$hunt_group_call_prompt', ";
-			$sql .= "'$huntgroup_caller_announce', ";
-			//$sql .= "'$hunt_group_user_list', ";
-			$sql .= "'$hunt_group_enabled', ";
-			$sql .= "'$hunt_group_description' ";
-			$sql .= ")";
-			if ($this->debug) {
-				echo $sql."<br />";
-			}
-			$db->exec(check_sql($sql));
-			unset($sql);
+			//syncrhonize configuration
+				save_extension_xml();
 		} //function
 
-		public function dnd_update() {
-			global $db;
-
-			$hunt_group_extension = $this->extension;
-			$huntgroup_name = 'dnd_'.$this->extension;
-			$hunt_group_type = 'dnd';
-			$hunt_group_context = $_SESSION['context'];
-			$hunt_group_timeout = '1';
-			$hunt_group_timeout_destination = $this->extension;
-			$hunt_group_timeout_type = 'voicemail';
-			$hunt_group_ring_back = 'us-ring';
-			//$hunt_group_cid_name_prefix = '';
-			//$hunt_group_pin = '';
-			//$hunt_group_call_prompt = 'false';
-			$huntgroup_caller_announce = 'false';
-			//$hunt_group_user_list = '';
-			$hunt_group_enabled = $this->dnd_enabled;
-			$hunt_group_description = 'dnd '.$this->extension;
-
-			$sql = "update v_hunt_groups set ";
-			$sql .= "hunt_group_extension = '$hunt_group_extension', ";
-			$sql .= "hunt_group_name = '$huntgroup_name', ";
-			$sql .= "hunt_group_type = '$hunt_group_type', ";
-			$sql .= "hunt_group_context = '$hunt_group_context', ";
-			$sql .= "hunt_group_timeout = '$hunt_group_timeout', ";
-			$sql .= "hunt_group_timeout_destination = '$hunt_group_timeout_destination', ";
-			$sql .= "hunt_group_timeout_type = '$hunt_group_timeout_type', ";
-			$sql .= "hunt_group_ringback = '$hunt_group_ring_back', ";
-			//$sql .= "hunt_group_cid_name_prefix = '$hunt_group_cid_name_prefix', ";
-			//$sql .= "hunt_group_pin = '$hunt_group_pin', ";
-			$sql .= "hunt_group_call_prompt = '$hunt_group_call_prompt', ";
-			$sql .= "hunt_group_caller_announce = 'false', ";
-			//$sql .= "hunt_group_user_list = '$hunt_group_user_list', ";
-			$sql .= "hunt_group_enabled = '$hunt_group_enabled', ";
-			$sql .= "hunt_group_description = '$hunt_group_description' ";
-			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and hunt_group_uuid = '$this->dnd_uuid' ";
-			if ($this->debug) {
-				echo $sql."<br />";
-			}
-			$db->exec(check_sql($sql));
-			unset($sql);
-		} //function
 	} //class
 
 ?>
