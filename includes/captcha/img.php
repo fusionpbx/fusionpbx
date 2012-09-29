@@ -95,7 +95,6 @@ function imagettfbbox_custom($size, $angle, $font, $text) {
   return $bbox;
 }
 
-
 // Create the image
 $size = imagettfbbox_custom($fontsize, 0, $font, $text);
 $width = $size[2] + $size[0] + 8;

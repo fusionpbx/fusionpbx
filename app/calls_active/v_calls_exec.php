@@ -47,10 +47,10 @@ else {
 
 //http get variables set to php variables
 	if (count($_GET)>0) {
-		$switch_cmd = trim($_GET["cmd"]);
-		$action = trim($_GET["action"]);
-		$data = trim($_GET["data"]);
-		$direction = trim($_GET["direction"]);
+		$switch_cmd = trim(check_str($_GET["cmd"]));
+		$action = trim(check_str($_GET["action"]));
+		$data = trim(check_str($_GET["data"]));
+		$direction = trim(check_str($_GET["direction"]));
 		$username = $_SESSION['username'];
 	}
 
@@ -72,7 +72,6 @@ else {
 		echo "access denied";
 		exit;
 	}
-
 
 if (count($_GET)>0) {
 

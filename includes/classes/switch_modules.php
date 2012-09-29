@@ -142,8 +142,8 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'CID Lookup';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'Lookup caller id info.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_cluechoo":
 						$mod['module_label'] = 'Cluechoo';
@@ -645,8 +645,8 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'XML RPC';
 						$mod['module_category'] = 'XML Interfaces';
 						$mod['module_description'] = 'XML Remote Procedure Calls. Issue commands from your web application.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					default:
 						$mod['module_category'] = 'Auto';

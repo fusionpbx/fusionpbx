@@ -39,11 +39,11 @@ else {
 
 //get the http values and set them as php variables
 	if (count($_GET)>0) {
-		$cmd = trim($_GET["cmd"]);
-		$name = trim($_GET["name"]);
-		$data = trim($_GET["data"]);
-		$id = trim($_GET["id"]);
-		$direction = trim($_GET["direction"]);
+		$cmd = trim(check_str($_GET["cmd"]));
+		$name = trim(check_str($_GET["name"]));
+		$data = trim(check_str($_GET["data"]));
+		$id = trim(check_str($_GET["id"]));
+		$direction = trim(check_str($_GET["direction"]));
 	}
 
 //authorized commands

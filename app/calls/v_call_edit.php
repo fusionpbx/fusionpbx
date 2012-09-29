@@ -56,8 +56,7 @@ function destination_select($select_name, $select_value, $select_default) {
 	$extension_uuid = $_REQUEST["id"];
 
 //get the extension number
-	$sql = "";
-	$sql .= "select * from v_extensions ";
+	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and extension_uuid = '$extension_uuid' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
@@ -91,8 +90,14 @@ function destination_select($select_name, $select_value, $select_default) {
 			$effective_caller_id_number = $row["effective_caller_id_number"];
 			$outbound_caller_id_name = $row["outbound_caller_id_name"];
 			$outbound_caller_id_number = $row["outbound_caller_id_number"];
+			$do_not_disturb = $row["do_not_disturb"];
+			$call_forward_all = $row["call_forward_all"];
+			$call_forward_busy = $row["call_forward_busy"];
 			$description = $row["description"];
 			break; //limit to 1 row
+		}
+		if (strlen($do_not_disturb) == 0) {
+			$do_not_disturb = "false";
 		}
 	}
 	unset ($prep_statement);
@@ -217,7 +222,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//set the default action to add
 		$call_forward_action = "add";
-		$dnd_action = "add";
 		$follow_me_action = "add";
 
 	//get the hunt group timeout
@@ -278,10 +282,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$follow_me_action = "update";
 				$follow_me_uuid = $row["hunt_group_uuid"];
 			}
-			if ($row["hunt_group_type"] == 'dnd') {
-				$dnd_action = "update";
-				$dnd_uuid = $row["hunt_group_uuid"];
-			}
 		}
 		unset ($prep_statement);
 
@@ -309,6 +309,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$call_forward->call_forward_update();
 			}
 			unset($call_forward);
+
+			//synchronize the xml config
+				save_hunt_group_xml();
+
+			//synchronize the xml config
+				save_dialplan_xml();
 		}
 
 	//follow me config
@@ -353,6 +359,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$follow_me->follow_me_update();
 			}
 			unset($follow_me);
+
+			//synchronize the xml config
+				save_hunt_group_xml();
+
+			//synchronize the xml config
+				save_dialplan_xml();
 		}
 
 	//do not disturb (dnd) config
@@ -361,26 +373,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dnd->domain_uuid = $_SESSION['domain_uuid'];
 			$dnd->domain_name = $_SESSION['domain_name'];
 			$dnd->extension = $extension;
-			$dnd->dnd_enabled = $dnd_enabled;
-			if ($dnd_enabled == "true") {
-				if ($dnd_action == "add") {
-					$dnd->dnd_uuid = uuid();
-					$dnd->dnd_add();
-				}
-			}
-			if ($dnd_action == "update") {
-				$dnd->dnd_uuid = $dnd_uuid;
-				$dnd->dnd_update();
-			}
-			$dnd->dnd_status();
+			$dnd->enabled = $dnd_enabled;
+			$dnd->set();
+			$dnd->user_status();
 			unset($dnd);
 		}
-
-	//synchronize the xml config
-		save_hunt_group_xml();
-
-	//synchronize the xml config
-		save_dialplan_xml();
 
 	//redirect the user
 		require_once "includes/header.php";
@@ -432,9 +429,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$follow_me_enabled = $hunt_group_enabled;
 			$follow_me_type = 'follow_me_sequence';
 		}
-		if ($row["hunt_group_type"] == 'dnd') {
-			$dnd_enabled = $hunt_group_enabled;
-		}
 
 		if ($row["hunt_group_type"] == 'call_forward' || $row["hunt_group_type"] == 'follow_me_sequence' || $row["hunt_group_type"] == 'follow_me_simultaneous') {
 			$sql = "select * from v_hunt_group_destinations ";
@@ -478,6 +472,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 	}
 	unset ($prep_statement);
+
+//set the default
+	if (!isset($dnd_enabled)) {
+		//set the value from the database
+		$dnd_enabled = $do_not_disturb;
+	}
 
 //show the content
 	echo "<div align='center'>";

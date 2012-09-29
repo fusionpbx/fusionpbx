@@ -41,17 +41,17 @@ require_once "includes/header.php";
 
 if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])) {
 	//get the http variables and set them as variables
-		$src = $_REQUEST['src'];
-		$dest = $_REQUEST['dest'];
-		$ringback = $_REQUEST['ringback'];
+		$src = check_str($_REQUEST['src']);
+		$dest = check_str($_REQUEST['dest']);
+		$ringback = check_str($_REQUEST['ringback']);
 		$src = str_replace(array('.', '(', ')', '-', ' '), '', $src);
 		$dest = str_replace(array('.', '(', ')', '-', ' '), '', $dest);
-		$src_cid_name = $_REQUEST['src_cid_name'];
-		$src_cid_number = $_REQUEST['src_cid_number'];
-		$dest_cid_name = $_REQUEST['dest_cid_name'];
-		$dest_cid_number = $_REQUEST['dest_cid_number'];
-		$auto_answer = $_REQUEST['auto_answer']; //true,false
-		$rec = $_REQUEST['rec']; //true,false
+		$src_cid_name = check_str($_REQUEST['src_cid_name']);
+		$src_cid_number = check_str($_REQUEST['src_cid_number']);
+		$dest_cid_name = check_str($_REQUEST['dest_cid_name']);
+		$dest_cid_number = check_str($_REQUEST['dest_cid_number']);
+		$auto_answer = check_str($_REQUEST['auto_answer']); //true,false
+		$rec = check_str($_REQUEST['rec']); //true,false
 		if ($auto_answer == "true") {
 			$sip_auto_answer = "sip_auto_answer=true,"; 
 		}
@@ -105,8 +105,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			if (strlen($src) < 7) {
 				if (strlen($dest_cid_number) == 0) {
 					//get the caller id from the extension caller id comes from the extension (the source number)
-						$sql = "";
-						$sql .= "select * from v_extensions ";
+						$sql = "select * from v_extensions ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
 						$sql .= "and extension = '$src' ";
 						$prep_statement = $db->prepare(check_sql($sql));

@@ -36,9 +36,9 @@ else {
 
 //get the html values and set them as variables
 	if (count($_POST)>0) {
-		$shell_cmd = trim($_POST["shell_cmd"]);
-		$php_cmd = trim($_POST["php_cmd"]);
-		$switch_cmd = trim($_POST["switch_cmd"]);
+		$shell_cmd = trim(check_str($_POST["shell_cmd"]));
+		$php_cmd = trim(check_str($_POST["php_cmd"]));
+		$switch_cmd = trim(check_str($_POST["switch_cmd"]));
 	}
 
 //show the header

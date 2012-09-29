@@ -100,7 +100,7 @@ session_start();
 			if ($auth_failed) {
 				//log the failed auth attempt to the system, to be available for fail2ban.
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".$_REQUEST["username"]);
+					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".check_str($_REQUEST["username"]));
 					closelog();
 				//redirect the user to the login page
 					$php_self = $_SERVER["PHP_SELF"];

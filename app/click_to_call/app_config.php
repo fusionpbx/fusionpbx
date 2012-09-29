@@ -10,11 +10,11 @@
 		$apps[$x]['description']['en'] = 'Originate calls with a URL.';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Click to Call';
-		$apps[$x]['menu'][0]['uuid'] = 'f862556f-9ddd-2697-fdf4-bed08ec63aa5';
-		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
-		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/click_to_call/click_to_call.php';
+		//$apps[$x]['menu'][0]['title']['en'] = 'Click to Call';
+		//$apps[$x]['menu'][0]['uuid'] = 'f862556f-9ddd-2697-fdf4-bed08ec63aa5';
+		//$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
+		//$apps[$x]['menu'][0]['category'] = 'internal';
+		//$apps[$x]['menu'][0]['path'] = '/app/click_to_call/click_to_call.php';
 		//$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
