@@ -1,8 +1,0 @@
-<?php
-//Configs for this module... they'll need to be moved to the database
-
-// Get a key from https://www.google.com/recaptcha/admin/create
-$publickey = "";
-$privatekey = "";
-
-?>
