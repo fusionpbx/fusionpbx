@@ -34,23 +34,24 @@ else {
 	exit;
 }
 
-function destination_select($select_name, $select_value, $select_default) {
-	if (strlen($select_value) == 0) { $select_value = $select_default; }
-	echo "	<select class='formfld' style='width: 45px;' name='$select_name'>\n";
-	echo "	<option value=''></option>\n";
+//define the destination_select function
+	function destination_select($select_name, $select_value, $select_default) {
+		if (strlen($select_value) == 0) { $select_value = $select_default; }
+		echo "	<select class='formfld' style='width: 45px;' name='$select_name'>\n";
+		echo "	<option value=''></option>\n";
 
-	$i=5;
-	while($i<=100) {
-		if ($select_value == $i) {
-			echo "	<option value='$i' selected='selected'>$i</option>\n";
+		$i=5;
+		while($i<=100) {
+			if ($select_value == $i) {
+				echo "	<option value='$i' selected='selected'>$i</option>\n";
+			}
+			else {
+				echo "	<option value='$i'>$i</option>\n";
+			}
+			$i=$i+5;
 		}
-		else {
-			echo "	<option value='$i'>$i</option>\n";
-		}
-		$i=$i+5;
+		echo "</select>\n";
 	}
-	echo "</select>\n";
-}
 
 //get the extension_uuid
 	$extension_uuid = $_REQUEST["id"];
@@ -286,9 +287,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 
 	//include the classes
-		include "includes/classes/call_forward.php";
-		include "includes/classes/follow_me.php";
-		include "includes/classes/do_not_disturb.php";
+		include "includes/classes/switch_call_forward.php";
+		include "includes/classes/switch_follow_me.php";
+		include "includes/classes/switch_do_not_disturb.php";
 
 	//call forward config
 		if (permission_exists('call_forward')) {

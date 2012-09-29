@@ -57,8 +57,7 @@ $order = $_GET["order"];
 		echo "		<br />";
 	}
 
-	$sql = "";
-	$sql .= " select * from v_extensions ";
+	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
@@ -96,8 +95,7 @@ $order = $_GET["order"];
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page; 
 
-	$sql = "";
-	$sql .= " select * from v_extensions ";
+	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and enabled = 'true' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
@@ -129,7 +127,6 @@ $order = $_GET["order"];
 	$result_count = count($result);
 	unset ($prep_statement, $sql);
 
-
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -141,27 +138,24 @@ $order = $_GET["order"];
 	echo "<th>Description</th>\n";
 	echo "</tr>\n";
 
-	if ($result_count == 0) {
-		//no results
-	}
-	else { //received results
+	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[extension]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if (permission_exists('call_forward')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('follow_me')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=follow_me' alt='Follow Me'>Follow Me</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=follow_me' alt='Follow Me'>Follow Me</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=do_not_disturb' alt='Do Not Disturb'>Do Not Disturb</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=do_not_disturb' alt='Do Not Disturb'>Do Not Disturb</a> \n";
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row[description]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['description']."&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
@@ -191,6 +185,5 @@ $order = $_GET["order"];
 	if ($is_included != "true") {
 		require_once "includes/footer.php";
 	}
-
 
 ?>
