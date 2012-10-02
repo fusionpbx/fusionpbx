@@ -198,15 +198,15 @@
 				table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
 				if (number_alias) then
 					if (cidr) then
-						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[ uuid="]] .. extension_uuid .. [[">]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[>]]);
 					else
-						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[ uuid="]] .. extension_uuid .. [[">]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
 					end
 				else
 					if (cidr) then
-						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. [[ uuid="]] .. extension_uuid .. [[">]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. [[>]]);
 					else
-						table.insert(xml, [[			<user id="]] .. extension .. [[" uuid="]] .. extension_uuid .. [[">]]);
+						table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
 					end
 				end
 				table.insert(xml, [[			<params>]]);
@@ -339,6 +339,8 @@
 			previous_dialplan_uuid = "";
 			previous_dialplan_detail_group = "";
 			previous_dialplan_detail_tag = "";
+			previous_dialplan_detail_type = "";
+			previous_dialplan_detail_data = "";
 			dialplan_tag_status = "closed";
 			condition_tag_status = "closed";
 
@@ -386,7 +388,7 @@
 				--remove $$ and replace with $
 					dialplan_detail_data = dialplan_detail_data:gsub("%$%$", "$");
 
-				--get the dialplan  detail inline
+				--get the dialplan detail inline
 					detail_inline = "";
 					if (dialplan_detail_inline) then
 						if (string.len(dialplan_detail_inline) > 0) then
@@ -411,7 +413,7 @@
 
 				--open the tags
 					if (dialplan_tag_status == "closed") then
-						table.insert(xml, [[			<extension name="]] .. dialplan_name .. [[" continue="]] .. dialplan_continue .. [["  uuid="]] .. dialplan_uuid .. [[">]]);
+						table.insert(xml, [[			<extension name="]] .. dialplan_name .. [[" continue="]] .. dialplan_continue .. [[" uuid="]] .. dialplan_uuid .. [[">]]);
 						dialplan_tag_status = "open";
 					end
 					if (dialplan_detail_tag == "condition") then
@@ -450,10 +452,10 @@
 
 						if (condition_tag_status == "open") then
 							if (previous_dialplan_detail_tag == "condition") then
-								--add the condition ending
+								--add the condition self closing tag
 								if (condition) then
 									if (string.len(condition) > 0) then
-										table.insert(xml, condition .. [[ />]]);
+										table.insert(xml, condition .. [[/>]]);
 									end
 								end
 							end
@@ -468,7 +470,7 @@
 
 						--condition tag but leave off the ending
 						if (condition_type == "default") then
-							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]];
+							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] .. condition_break;
 						elseif (condition_type == "time") then
 							if (condition_attribute) then
 								condition_attribute = condition_attribute .. dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
@@ -476,7 +478,9 @@
 								condition_attribute = dialplan_detail_type .. [[="]] .. dialplan_detail_data .. [[" ]];
 							end
 							condition_expression = "";
-							condition = "";
+							condition = ""; --prevents a duplicate time condition
+						else
+							condition = [[				<condition field="]] .. dialplan_detail_type .. [[" expression="]] .. dialplan_detail_data .. [["]] ..  condition_break;
 						end
 						condition_tag_status = "open";
 					end
@@ -484,9 +488,15 @@
 						if (previous_dialplan_detail_tag == "condition") then
 							--add the condition ending
 							if (condition_type == "time") then
-								condition = [[				<condition ]] .. condition_attribute;
+								condition = [[				<condition ]] .. condition_attribute .. condition_break;
+								condition_attribute = ""; --prevents the condition attribute from being used on every condition
+							else
+								if (previous_dialplan_detail_type) then
+									condition = [[				<condition field="]] .. previous_dialplan_detail_type .. [[" expression="]] .. previous_dialplan_detail_data .. [["]] .. condition_break;
+								end
 							end
-							table.insert(xml, condition .. condition_break .. [[>]]);
+							table.insert(xml, condition .. [[>]]);
+							condition = ""; --prevents duplicate time conditions
 						end
 					end
 					if (dialplan_detail_tag == "action") then
@@ -496,14 +506,12 @@
 						table.insert(xml, [[					<anti-action application="]] .. dialplan_detail_type .. [[" data="]] .. dialplan_detail_data .. [["]] .. detail_inline .. [[/>]]);
 					end
 
-				--save the previous group
-					previous_dialplan_detail_group = dialplan_detail_group;
-
-				--save the previous tag
-					previous_dialplan_detail_tag = dialplan_detail_tag;
-
-				--save the previous dialplan_uuid
+				--save the previous values
 					previous_dialplan_uuid = dialplan_uuid;
+					previous_dialplan_detail_group = dialplan_detail_group;
+					previous_dialplan_detail_tag = dialplan_detail_tag;
+					previous_dialplan_detail_type = dialplan_detail_type;
+					previous_dialplan_detail_data = dialplan_detail_data;
 
 				--increment the x
 					x = x + 1;
