@@ -35,10 +35,10 @@ require_once "includes/require.php";
 //if password was defined in the system -> variables page then require the password.
 	if (strlen($_SESSION['provision']['password']['var']) > 0) {
 		//deny access if the password doesn't match
-			if ($_SESSION['provision']['password']['var'] != $_REQUEST['password']) {
+			if ($_SESSION['provision']['password']['var'] != check_str($_REQUEST['password'])) {
 				//log the failed auth attempt to the system, to be available for fail2ban.
 				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".$_REQUEST['mac']);
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 				closelog();
 
 				usleep(rand(1000000,3500000));//1-3.5 seconds.
@@ -49,7 +49,7 @@ require_once "includes/require.php";
 
 //send a request to a remote server to validate the MAC address and secret
 	if (strlen($_SERVER['auth_server']) > 0) {
-		$result = send_http_request($_SERVER['auth_server'], 'mac='.$_REQUEST['mac'].'&secret='.$_REQUEST['secret']);
+		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
 		if ($result == "false") {
 			echo "access denied";
 			exit;
@@ -57,10 +57,10 @@ require_once "includes/require.php";
 	}
 
 //define PHP variables from the HTTP values
-	$mac = $_REQUEST['mac'];
-	$file = $_REQUEST['file'];
-	if (strlen($_REQUEST['template']) > 0) {
-		$phone_template = $_REQUEST['template'];
+	$mac = check_str($_REQUEST['mac']);
+	$file = check_str($_REQUEST['file']);
+	if (strlen(check_str($_REQUEST['template'])) > 0) {
+		$phone_template = check_str($_REQUEST['template']);
 	}
 
 //check alternate MAC source
@@ -71,8 +71,14 @@ require_once "includes/require.php";
 	}//check alternates
 
 //prepare the mac address
-	$mac = strtolower($mac);
-	$mac = preg_replace('#[^a-fA-F0-9./]#', '', $mac);
+	//normalize the mac address to lower case
+		$mac = strtolower($mac);
+	//replace all non hexadecimal values and validate the mac address
+		$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+		if (strlen($mac) != 12) {
+			echo "invalid mac address";
+			exit;
+		}
 
 //use the mac address to find the vendor
 	switch (substr($mac, 0, 6)) {
@@ -107,7 +113,7 @@ require_once "includes/require.php";
 	}
 
 //check to see if the mac_address exists in v_hardware_phones
-	if (mac_exists_in_v_hardware_phones($db, $mac)) {
+	if (mac_exists_in_hardware_phones($db, $mac)) {
 		//get the phone_template
 			if (strlen($phone_template) == 0) {
 				$sql = "SELECT * FROM v_hardware_phones ";
@@ -375,28 +381,29 @@ require_once "includes/require.php";
 	}
 	echo $file_contents;
 
-function mac_exists_in_v_hardware_phones($db, $mac) {
-	global $domain_uuid;
-	$sql = "SELECT count(*) as count FROM v_hardware_phones ";
-	$sql .= "where domain_uuid=:domain_uuid ";
-	$sql .= "and phone_mac_address=:mac ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-		$prep_statement->bindParam(':mac', $mac);
-		$prep_statement->execute();
-		$row = $prep_statement->fetch();
-		$count = $row['count'];
-		if ($row['count'] > 0) {
-			return true;
+//define the function which checks to see if the mac address exists in the table
+	function mac_exists_in_hardware_phones($db, $mac) {
+		global $domain_uuid;
+		$sql = "SELECT count(*) as count FROM v_hardware_phones ";
+		$sql .= "where domain_uuid=:domain_uuid ";
+		$sql .= "and phone_mac_address=:mac ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+			$prep_statement->bindParam(':mac', $mac);
+			$prep_statement->execute();
+			$row = $prep_statement->fetch();
+			$count = $row['count'];
+			if ($row['count'] > 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		else {
 			return false;
 		}
 	}
-	else {
-		return false;
-	}
-}
 
 ?>
