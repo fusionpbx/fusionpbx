@@ -7,16 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en-us'] = 'To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.';
-		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
-		$apps[$x]['description']['de-ch'] = '';
-		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = '';
-		$apps[$x]['description']['fr-ca'] = '';
-		$apps[$x]['description']['fr-ch'] = '';
-		$apps[$x]['description']['pt-pt'] = '';
-		$apps[$x]['description']['pt-br'] = '';
+		$apps[$x]['description']['en'] = 'To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.';
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en'] = 'Fax Server';
