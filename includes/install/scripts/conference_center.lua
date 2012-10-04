@@ -84,7 +84,7 @@ if ( session:ready() ) then
 			pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 		end
 	--get the conference sessions
-		sql = [[SELECT * FROM v_conference_sessions as s, v_meeting_pins as p
+		sql = [[SELECT * FROM v_conference_rooms as s, v_meeting_pins as p
 			WHERE s.domain_uuid = ']] .. domain_uuid ..[['
 			AND s.meeting_uuid = p.meeting_uuid
 			AND p.member_pin = ']] .. pin_number ..[['
@@ -93,8 +93,8 @@ if ( session:ready() ) then
 			freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
 		end
 		status = dbh:query(sql, function(row)
-			conference_session_uuid = row["conference_session_uuid"];
-			conference_uuid = row["conference_uuid"];
+			conference_room_uuid = row["conference_room_uuid"];
+			conference_center_uuid = row["conference_center_uuid"];
 			meeting_uuid = row["meeting_uuid"];
 			max_members = row["max_members"];
 			wait_mod = row["wait_mod"];
@@ -108,7 +108,7 @@ if ( session:ready() ) then
 			description = row["description"];
 		end);
 
-	if (conference_uuid ~= nil) then
+	if (conference_center_uuid ~= nil) then
 		--set a conference parameter
 			--conference <confname> set <parameter_name> <value>
 
