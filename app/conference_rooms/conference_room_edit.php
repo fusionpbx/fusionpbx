@@ -2,7 +2,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('conference_session_add') || permission_exists('conference_session_edit')) {
+if (permission_exists('conference_room_add') || permission_exists('conference_room_edit')) {
 	//access granted
 }
 else {
@@ -13,7 +13,7 @@ else {
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$conference_session_uuid = check_str($_REQUEST["id"]);
+		$conference_room_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -21,7 +21,7 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$conference_uuid = check_str($_POST["conference_uuid"]);
+		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
 		$member_pin = check_str($_POST["member_pin"]);
 		$member_type = check_str($_POST["member_type"]);
 		$user_uuid = check_str($_POST["user_uuid"]);
@@ -40,11 +40,11 @@ else {
 	}
 
 //delete the user from the v_extension_users
-	if ($_GET["a"] == "delete" && permission_exists('conference_session_add') && permission_exists('conference_session_edit')) {
+	if ($_GET["a"] == "delete" && permission_exists('conference_room_add') && permission_exists('conference_room_edit')) {
 		if (strlen($_REQUEST["meeting_user_uuid"]) > 0) {
 			//set the variables
 				$meeting_user_uuid = check_str($_REQUEST["meeting_user_uuid"]);
-				$conference_session_uuid = check_str($_REQUEST["conference_session_uuid"]);
+				$conference_room_uuid = check_str($_REQUEST["conference_room_uuid"]);
 			//delete the extension from the ring_group
 				$sql = "delete from v_meeting_users ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -55,7 +55,7 @@ else {
 		if (strlen($_REQUEST["meeting_pin_uuid"]) > 0) {
 			//set the variables
 				$meeting_pin_uuid = check_str($_REQUEST["meeting_pin_uuid"]);
-				$conference_session_uuid = check_str($_REQUEST["conference_session_uuid"]);
+				$conference_room_uuid = check_str($_REQUEST["conference_room_uuid"]);
 			//delete the extension from the ring_group
 				$sql = "delete from v_meeting_pins ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -65,7 +65,7 @@ else {
 		}
 		//redirect the browser
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_session_edit.php?id=$conference_session_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_room_edit.php?id=$conference_room_uuid\">\n";
 			echo "<div align='center'>Delete Complete</div>";
 			require_once "includes/footer.php";
 			return;
@@ -75,11 +75,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$conference_session_uuid = check_str($_POST["conference_session_uuid"]);
+		$conference_room_uuid = check_str($_POST["conference_room_uuid"]);
 	}
 
 	//check for all required data
-		//if (strlen($conference_uuid) == 0) { $msg .= "Please provide: Conference UUID<br>\n"; }
+		//if (strlen($conference_center_uuid) == 0) { $msg .= "Please provide: Conference UUID<br>\n"; }
 		//if (strlen($max_members) == 0) { $msg .= "Please provide: Max Members<br>\n"; }
 		//if (strlen($wait_mod) == 0) { $msg .= "Please provide: Wait for the Moderator<br>\n"; }
 		if (strlen($announce) == 0) { $msg .= "Please provide: Announce<br>\n"; }
@@ -105,7 +105,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 
-			if ($action == "add" && permission_exists('conference_session_add')) {
+			if ($action == "add" && permission_exists('conference_room_add')) {
 				//add a meeting
 					$meeting_uuid = uuid();
 					$sql = "insert into v_meetings ";
@@ -130,12 +130,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 
 				//add a conference session
-					$conference_session_uuid = uuid();
-					$sql = "insert into v_conference_sessions ";
+					$conference_room_uuid = uuid();
+					$sql = "insert into v_conference_rooms ";
 					$sql .= "(";
 					$sql .= "domain_uuid, ";
-					$sql .= "conference_session_uuid, ";
-					$sql .= "conference_uuid, ";
+					$sql .= "conference_room_uuid, ";
+					$sql .= "conference_center_uuid, ";
 					$sql .= "meeting_uuid, ";
 					$sql .= "max_members, ";
 					$sql .= "wait_mod, ";
@@ -150,8 +150,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'$domain_uuid', ";
-					$sql .= "'$conference_session_uuid', ";
-					$sql .= "'$conference_uuid', ";
+					$sql .= "'$conference_room_uuid', ";
+					$sql .= "'$conference_center_uuid', ";
 					$sql .= "'$meeting_uuid', ";
 					$sql .= "'$max_members', ";
 					$sql .= "'$wait_mod', ";
@@ -168,13 +168,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			} //if ($action == "add")
 
-			if ($action == "update" && permission_exists('conference_session_edit')) {
+			if ($action == "update" && permission_exists('conference_room_edit')) {
 				//get the meeting_uuid
 					if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-						$conference_session_uuid = check_str($_GET["id"]);
-						$sql = "select * from v_conference_sessions ";
+						$conference_room_uuid = check_str($_GET["id"]);
+						$sql = "select * from v_conference_rooms ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and conference_session_uuid = '$conference_session_uuid' ";
+						$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll();
@@ -194,8 +194,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 
 				//update conferences sessions
-					$sql = "update v_conference_sessions set ";
-					$sql .= "conference_uuid = '$conference_uuid', ";
+					$sql = "update v_conference_rooms set ";
+					$sql .= "conference_center_uuid = '$conference_center_uuid', ";
 					//$sql .= "meeting_uuid = '$meeting_uuid', ";
 					$sql .= "max_members = '$max_members', ";
 					$sql .= "wait_mod = '$wait_mod', ";
@@ -205,7 +205,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "enabled = '$enabled', ";
 					$sql .= "description = '$description' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and conference_session_uuid = '$conference_session_uuid' ";
+					$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
 					//echo $sql; //exit;
 					$db->exec(check_sql($sql));
 					unset($sql);
@@ -260,7 +260,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the user
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_session_edit.php?id=$conference_session_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_room_edit.php?id=$conference_room_uuid\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -272,15 +272,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$conference_session_uuid = check_str($_GET["id"]);
-		$sql = "select * from v_conference_sessions ";
+		$conference_room_uuid = check_str($_GET["id"]);
+		$sql = "select * from v_conference_rooms ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_session_uuid = '$conference_session_uuid' ";
+		$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
-			$conference_uuid = $row["conference_uuid"];
+			$conference_center_uuid = $row["conference_center_uuid"];
 			$meeting_uuid = $row["meeting_uuid"];
 			$max_members = $row["max_members"];
 			$wait_mod = $row["wait_mod"];
@@ -323,7 +323,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($meeting_uuid) > 0) {
 		echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='View'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_sessions.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_rooms.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -332,7 +332,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Conference Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_uuid'>\n";
+	echo "	<select class='formfld' name='conference_center_uuid'>\n";
 	$sql = "select * from v_conferences ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "order by conference_name asc ";
@@ -341,11 +341,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$x = 0;
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		if ($conference_uuid == $row["conference_uuid"]) {
-			echo "		<option value='".$row["conference_uuid"]."' selected='selected'>".$row["conference_name"]."</option>\n";
+		if ($conference_center_uuid == $row["conference_center_uuid"]) {
+			echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_name"]."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row["conference_uuid"]."'>".$row["conference_name"]."</option>\n";
+			echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_name"]."</option>\n";
 		}
 		$x++;
 	}
@@ -374,7 +374,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".$field['username']."</td>\n";
 			echo "				<td style='width : 25px;' align='right'>\n";
-			echo "					<a href='conference_session_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_session_uuid=".$conference_session_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
@@ -420,7 +420,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "				<td class='vtable'>".$field['member_pin']."</td>\n";
 			echo "				<td class='vtable'>".$field['member_type']."</td>\n";
 			echo "				<td style='width : 25px;' align='right'>\n";
-			echo "					<a href='conference_session_edit.php?meeting_pin_uuid=".$field['meeting_pin_uuid']."&conference_session_uuid=".$conference_session_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "					<a href='conference_room_edit.php?meeting_pin_uuid=".$field['meeting_pin_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
@@ -559,7 +559,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	/*
-	if ($action == "update" && permission_exists('conference_session_edit')) {
+	if ($action == "update" && permission_exists('conference_room_edit')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	Created:\n";
@@ -627,7 +627,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_session_uuid' value='$conference_session_uuid'>\n";
+		echo "				<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
 	echo "		</td>\n";

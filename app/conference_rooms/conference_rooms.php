@@ -2,7 +2,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('conference_session_view')) {
+if (permission_exists('conference_room_view')) {
 	//access granted
 }
 else {
@@ -31,7 +31,7 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_conference_sessions ";
+		$sql = "select count(*) as num_rows from v_conference_rooms ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
@@ -55,7 +55,7 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the list
-		$sql = "select * from v_conference_sessions ";
+		$sql = "select * from v_conference_rooms ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= "limit $rows_per_page offset $offset ";
@@ -72,7 +72,7 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	//echo th_order_by('conference_uuid', 'Conference UUID', $order_by, $order);
+	//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
 	//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
 	echo th_order_by('max_members', 'Max Members', $order_by, $order);
 	echo th_order_by('wait_mod', 'Wait for Moderator', $order_by, $order);
@@ -84,8 +84,8 @@ require_once "includes/paging.php";
 	echo th_order_by('enabled', 'Enabled', $order_by, $order);
 	echo th_order_by('description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('conference_session_add')) {
-		echo "	<a href='conference_session_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('conference_room_add')) {
+		echo "	<a href='conference_room_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "	&nbsp;\n";
@@ -96,7 +96,7 @@ require_once "includes/paging.php";
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_uuid']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_uuid']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['meeting_uuid']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['max_members']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['wait_mod']."&nbsp;</td>\n";
@@ -108,11 +108,11 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('conference_session_edit')) {
-				echo "		<a href='conference_session_edit.php?id=".$row['conference_session_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			if (permission_exists('conference_room_edit')) {
+				echo "		<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
-			if (permission_exists('conference_session_delete')) {
-				echo "		<a href='conference_session_delete.php?id=".$row['conference_session_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('conference_room_delete')) {
+				echo "		<a href='conference_room_delete.php?id=".$row['conference_room_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -128,8 +128,8 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('conference_session_add')) {
-		echo "			<a href='conference_session_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('conference_room_add')) {
+		echo "			<a href='conference_room_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "			&nbsp;\n";
