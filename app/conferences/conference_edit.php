@@ -50,7 +50,6 @@ else {
 		$conference_extension = check_str($_POST["conference_extension"]);
 		$conference_pin_number = check_str($_POST["conference_pin_number"]);
 		$conference_profile = check_str($_POST["conference_profile"]);
-		$conference_session_enabled = check_str($_POST["conference_session_enabled"]);
 		$conference_flags = check_str($_POST["conference_flags"]);
 		$conference_order = check_str($_POST["conference_order"]);
 		$conference_description = check_str($_POST["conference_description"]);
@@ -122,7 +121,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($conference_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
 		//if (strlen($conference_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
 		if (strlen($conference_profile) == 0) { $msg .= "Please provide: Profile<br>\n"; }
-		if (strlen($conference_session_enabled) == 0) { $msg .= "Please provide: Sessions<br>\n"; }
 		//if (strlen($conference_flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
 		//if (strlen($conference_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
 		//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
@@ -156,7 +154,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "conference_extension, ";
 					$sql .= "conference_pin_number, ";
 					$sql .= "conference_profile, ";
-					$sql .= "conference_session_enabled, ";
 					$sql .= "conference_flags, ";
 					$sql .= "conference_order, ";
 					$sql .= "conference_description, ";
@@ -171,7 +168,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$conference_extension', ";
 					$sql .= "'$conference_pin_number', ";
 					$sql .= "'$conference_profile', ";
-					$sql .= "'$conference_session_enabled', ";
 					$sql .= "'$conference_flags', ";
 					$sql .= "'$conference_order', ";
 					$sql .= "'$conference_description', ";
@@ -197,27 +193,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan_detail_group = '2';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					if ($conference_session_enabled == "true") {
-						//<action application="lua" />
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'lua';
-						$dialplan_detail_data = 'conference.lua';
-						$dialplan_detail_order = '020';
-						$dialplan_detail_group = '2';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-					}
-					else {
-						//<action application="conference" />
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'conference';
-						$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
-						$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
-						$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
-						$dialplan_detail_order = '020';
-						$dialplan_detail_group = '2';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					//<action application="answer" />
+					$dialplan_detail_tag = 'action'; //condition, action, antiaction
+					$dialplan_detail_type = 'answer';
+					$dialplan_detail_data = '';
+					$dialplan_detail_order = '010';
+					$dialplan_detail_group = '2';
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					}
+					//<action application="answer" />
+					$dialplan_detail_tag = 'action'; //condition, action, antiaction
+					$dialplan_detail_type = 'conference';
+					$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
+					$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
+					$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
+					$dialplan_detail_order = '020';
+					$dialplan_detail_group = '2';
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 				//save the xml
 					save_dialplan_xml();
@@ -242,7 +234,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "conference_extension = '$conference_extension', ";
 					$sql .= "conference_pin_number = '$conference_pin_number', ";
 					$sql .= "conference_profile = '$conference_profile', ";
-					$sql .= "conference_session_enabled = '$conference_session_enabled', ";
 					$sql .= "conference_flags = '$conference_flags', ";
 					$sql .= "conference_order = '$conference_order', ";
 					$sql .= "conference_description = '$conference_description', ";
@@ -277,22 +268,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 
 				//update dialplan detail action
-					if ($conference_session_enabled == "true") {
-						$dialplan_detail_type = 'lua';
-						$dialplan_detail_data = 'conference.lua';
-					}
-					else {
-						$dialplan_detail_type = 'conference';
-						$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
-						$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
-						$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
-					}
+					$pin_number = ''; if (strlen($conference_pin_number) > 0) { $pin_number = "+".$conference_pin_number; }
+					$flags = ''; if (strlen($conference_flags) > 0) { $flags = "+flags{".$conference_flags."}"; }
+					$dialplan_detail_data = $conference_name.'-'.$_SESSION['domain_name']."@".$conference_profile.$pin_number.$flags;
 					$sql = "update v_dialplan_details set ";
-					$sql .= "dialplan_detail_type = '".$dialplan_detail_type."', ";
 					$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and dialplan_detail_tag = 'action' ";
-					$sql .= "and (dialplan_detail_type = 'conference' or dialplan_detail_type = 'lua') ";
+					$sql .= "and dialplan_detail_type = 'conference' ";
 					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 					$db->query($sql);
 
@@ -329,7 +312,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$conference_extension = $row["conference_extension"];
 			$conference_pin_number = $row["conference_pin_number"];
 			$conference_profile = $row["conference_profile"];
-			$conference_session_enabled = $row["conference_session_enabled"];
 			$conference_flags = $row["conference_flags"];
 			$conference_order = $row["conference_order"];
 			$conference_description = $row["conference_description"];
@@ -341,7 +323,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //set defaults
 	if (strlen($conference_enabled) == 0) { $conference_enabled = "true"; }
-	if (strlen($conference_session_enabled) == 0) { $conference_session_enabled = "false"; }
 
 //show the header
 	require_once "includes/header.php";
@@ -465,31 +446,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo "Conference Profile is a collection of settings for the conference.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Sessions:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_session_enabled'>\n";
-	echo "	<option value=''></option>\n";
-	if ($conference_session_enabled == "true") { 
-		echo "	<option value='true' selected='selected'>true</option>\n";
-	}
-	else {
-		echo "	<option value='true'>true</option>\n";
-	}
-	if ($conference_session_enabled == "false") { 
-		echo "	<option value='false' selected='selected'>false</option>\n";
-	}
-	else {
-		echo "	<option value='false'>false</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "Select whether to enable or disable the conference sessions.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -76,10 +76,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the conference extension number.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_session_enabled';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enable or disable conference sessions.';
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_pin_number';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Optional pin number to secure access to the conference.';
