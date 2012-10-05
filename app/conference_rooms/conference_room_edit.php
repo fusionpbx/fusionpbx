@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
@@ -39,7 +63,7 @@ else {
 		$member_pin = preg_replace('{\D}', '', $member_pin);
 	}
 
-//delete the user from the v_extension_users
+//delete the user
 	if ($_GET["a"] == "delete" && permission_exists('conference_room_add') && permission_exists('conference_room_edit')) {
 		if (strlen($_REQUEST["meeting_user_uuid"]) > 0) {
 			//set the variables
@@ -56,7 +80,7 @@ else {
 			//set the variables
 				$meeting_pin_uuid = check_str($_REQUEST["meeting_pin_uuid"]);
 				$conference_room_uuid = check_str($_REQUEST["conference_room_uuid"]);
-			//delete the extension from the ring_group
+			//delete the pin number
 				$sql = "delete from v_meeting_pins ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and meeting_pin_uuid = '$meeting_pin_uuid' ";
@@ -129,7 +153,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-				//add a conference session
+				//add a conference room
 					$conference_room_uuid = uuid();
 					$sql = "insert into v_conference_rooms ";
 					$sql .= "(";
@@ -146,7 +170,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "created_by, ";
 					$sql .= "enabled, ";
 					$sql .= "description ";
-					$sql .= ")";
+					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'$domain_uuid', ";
@@ -165,7 +189,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
-
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('conference_room_edit')) {
@@ -193,7 +216,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 
-				//update conferences sessions
+				//update the conference room
 					$sql = "update v_conference_rooms set ";
 					$sql .= "conference_center_uuid = '$conference_center_uuid', ";
 					//$sql .= "meeting_uuid = '$meeting_uuid', ";
@@ -209,7 +232,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//echo $sql; //exit;
 					$db->exec(check_sql($sql));
 					unset($sql);
-
 			} //if ($action == "update")
 
 			//assign the user to the meeting
@@ -318,7 +340,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference Sessions</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference Room</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	if (strlen($meeting_uuid) > 0) {
 		echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='View'>\n";
@@ -333,19 +355,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_uuid'>\n";
-	$sql = "select * from v_conferences ";
+	$sql = "select * from v_conference_centers ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "order by conference_name asc ";
+	$sql .= "order by conference_center_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$x = 0;
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
 		if ($conference_center_uuid == $row["conference_center_uuid"]) {
-			echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_name"]."</option>\n";
+			echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_center_name"]."</option>\n";
 		}
 		else {
-			echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_name"]."</option>\n";
+			echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_center_name"]."</option>\n";
 		}
 		$x++;
 	}
@@ -398,7 +420,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	unset($sql, $result);
 	echo "			<br>\n";
-	echo "			Assign the user to the conference session.\n";
+	echo "			Assign the user to the conference room.\n";
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
@@ -410,6 +432,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<table border='0' style='width : 235px;'>\n";
 		$sql = "SELECT * FROM v_meeting_pins ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and meeting_uuid = '".$meeting_uuid."' ";
 		$sql .= "order by member_pin asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();

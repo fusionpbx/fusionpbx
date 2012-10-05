@@ -119,7 +119,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 		if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
 		if (strlen($conference_center_profile) == 0) { $msg .= "Please provide: Profile<br>\n"; }
-		//if (strlen($conference_session_enabled) == 0) { $msg .= "Please provide: Sessions<br>\n"; }
 		//if (strlen($conference_center_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
 		//if (strlen($conference_center_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($conference_center_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
