@@ -22,7 +22,7 @@
 	$content['label-upload']['pt-pt'] = 'Carregar';
 
 	$content['button-back']['en-us'] = 'Back';
-	$content['button-back']['pt-pt'] = 'Voltar atrás';
+	$content['button-back']['pt-pt'] = 'Voltar';
 
 	$content['button-settings']['en-us'] = 'Settings';
 	$content['button-settings']['pt-pt'] = 'Configurações';
