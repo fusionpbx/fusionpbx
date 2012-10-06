@@ -49,7 +49,7 @@
 	$content_calls['lable-ring5']['pt-pt'] = '5º Numero a Tocar';
         
         $content_calls['lable-ringorder']['en-us'] = 'Ring Order';
-	$content_calls['lable-ringorder']['pt-pt'] = 'Ordem de chamada';
+	$content_calls['lable-ringorder']['pt-pt'] = 'Pedido de chamada';
         
         $content_calls['check-sequence']['en-us'] = 'sequence';
 	$content_calls['ckeck-sequence']['pt-pt'] = 'sequêncial';

@@ -26,6 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+include "app_languages.php";
 if (permission_exists('conference_add') || permission_exists('conference_edit')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($content_conferences as $key => $value) {
+		$content_conferences[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
@@ -74,7 +79,7 @@ else {
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences_edit.php?id=$conference_uuid\">\n";
-			echo "<div align='center'>Delete Complete</div>";
+			echo "<div align='center'>".$content_conferences['confirm-delete']."</div>";
 			require_once "includes/footer.php";
 			return;
 	}
@@ -103,7 +108,7 @@ else {
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences_edit.php?id=$conference_uuid\">\n";
-			echo "<div align='center'>Add Complete</div>";
+			echo "<div align='center'>".$content_conferences['confirm-add']."</div>";
 			require_once "includes/footer.php";
 			return;
 	}
@@ -117,14 +122,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
-		if (strlen($conference_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		if (strlen($conference_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
+		if (strlen($conference_name) == 0) { $msg .= "".$content_conferences['confirm-name']."<br>\n"; }
+		if (strlen($conference_extension) == 0) { $msg .= "".$content_conferences['confirm-extension']."<br>\n"; }
 		//if (strlen($conference_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
-		if (strlen($conference_profile) == 0) { $msg .= "Please provide: Profile<br>\n"; }
+		if (strlen($conference_profile) == 0) { $msg .= "".$content_conferences['confirm-profile']."<br>\n"; }
 		//if (strlen($conference_flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
 		//if (strlen($conference_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
 		//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
-		if (strlen($conference_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
+		if (strlen($conference_enabled) == 0) { $msg .= "".$content_conferences['confirm-enabled']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -221,7 +226,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences.php\">\n";
 					echo "<div align='center'>\n";
-					echo "Add Complete\n";
+					echo "".$content_conferences['confirm-add']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -289,7 +294,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences.php\">\n";
 					echo "<div align='center'>\n";
-					echo "Update Complete\n";
+					echo "".$content_conferences['confirm-update']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -338,47 +343,52 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conferences.php'\" value='Back'></td>\n";
+	if ($action == "add") {
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$content_conferences['label-confadd']."</b></td>\n";
+	}
+	if ($action == "update") {
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$content_conferences['label-confedit']."</b></td>\n";
+	}
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conferences.php'\" value='".$content_conferences['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Conferences is used to setup conference rooms with a name, description, and optional pin number. \n";
-	echo "Click on <a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".str_replace(" ", "-", $conference_name)."'>Active Conference</a> \n";
-	echo "to monitor and interact with the conference room.<br /><br />\n";
+	echo "".$content_conferences['description']." \n";
+	echo "Click on <a href='".PROJECT_PATH."/app/conferences_active/v_conference_interactive.php?c=".str_replace(" ", "-", $conference_name)."'>".$content_conferences['title3']."</a> \n";
+	echo "".$content_conferences['description3']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$content_conferences['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_name' maxlength='255' value=\"$conference_name\">\n";
 	echo "<br />\n";
-	echo "Enter the conference name.\n";
+	echo "".$content_conferences['label-nameinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Extension:\n";
+	echo "	".$content_conferences['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"$conference_extension\">\n";
 	echo "<br />\n";
-	echo "Enter the conference extension number.\n";
+	echo "".$content_conferences['label-extensioninfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Pin Number:\n";
+	echo "	".$content_conferences['label-pin'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"$conference_pin_number\">\n";
 	echo "<br />\n";
-	echo "Optional pin number to secure access to the conference.\n";
+	echo "".$content_conferences['label-pininfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -402,7 +412,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".$field['username']."</td>\n";
 				echo "				<td>\n";
-				echo "					<a href='conferences_edit.php?id=".$conference_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "					<a href='conferences_edit.php?id=".$conference_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$content_conferences['confirm-delete2']."')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
@@ -421,10 +431,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
 			}
 			echo "			</select>";
-			echo "			<input type=\"submit\" class='btn' value=\"Add\">\n";
+			echo "			<input type=\"submit\" class='btn' value=\"".$content_conferences['button-add']."\">\n";
 			unset($sql, $result);
 			echo "			<br>\n";
-			echo "			Assign the users that are can manage this conference extension.\n";
+			echo "			".$content_conferences['label-addinfo']."\n";
 			echo "			<br />\n";
 			echo "		</td>";
 			echo "	</tr>";
@@ -433,7 +443,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Profile:\n";
+	echo "	".$content_conferences['tabel-profile'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='conference_profile'>\n";
@@ -445,7 +455,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($conference_profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Conference Profile is a collection of settings for the conference.\n";
+	echo "".$content_conferences['label-profileinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -456,13 +466,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"$conference_flags\">\n";
 	echo "<br />\n";
-	echo "Optional conference flags. examples: mute|deaf|waste|moderator\n";
+	echo "".$content_conferences['label-flagsinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Order:\n";
+	echo "	".$content_conferences['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='conference_order' class='formfld'>\n";
@@ -478,13 +488,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "              </select>\n";
 	echo "<br />\n";
-	echo "Enter the order number.\n";
+	echo "".$content_conferences['label-orderinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Enabled:\n";
+	echo "	".$content_conferences['tabel-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_enabled'>\n";
@@ -503,18 +513,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select whether to enable or disable the conference.\n";
+	echo "".$content_conferences['label-enabledinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$content_conferences['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_description' maxlength='255' value=\"$conference_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo "".$content_conferences['label-descriptioninfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -524,7 +534,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
 		echo "				<input type='hidden' name='conference_uuid' value='$conference_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$content_conferences['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

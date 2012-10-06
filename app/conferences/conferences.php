@@ -26,6 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+include "app_languages.php";
 if (permission_exists('conference_view')) {
 	//access granted
 }
@@ -33,6 +34,11 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($content_conferences as $key => $value) {
+		$content_conferences[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
+    
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -49,14 +55,14 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>Conferences</b></td>\n";
+	echo "		<td align='left' width='50%' nowrap><b>".$content_conferences['title']."</b></td>\n";
 	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			Conferences is used to setup conference rooms with a name, description, and optional pin number. \n";
+	echo "			".$content_conferences['description']." \n";
 	if (permission_exists('conferences_active_advanced_view')) {
-		echo "			Show <a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>Active Conferences</a> and then select a conference to monitor and interact with it.<br /><br />\n";
+		echo "			Show <a href='".PROJECT_PATH."/app/conferences_active/v_conferences_active.php'>".$content_conferences['title2']."</a> ".$content_conferences['description2']."<br /><br />\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -124,13 +130,13 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('conference_name', 'Name', $order_by, $order);
-	echo th_order_by('conference_extension', 'Extension', $order_by, $order);
-	echo th_order_by('conference_profile', 'Profile', $order_by, $order);
+	echo th_order_by('conference_name', $content_conferences['tabel-name'], $order_by, $order);
+	echo th_order_by('conference_extension', $content_conferences['tabel-extension'], $order_by, $order);
+	echo th_order_by('conference_profile', $content_conferences['tabel-profile'], $order_by, $order);
 	//echo th_order_by('conference_flags', 'Flags', $order_by, $order);
-	echo th_order_by('conference_order', 'Order', $order_by, $order);
-	echo th_order_by('conference_enabled', 'Enabled', $order_by, $order);
-	echo th_order_by('conference_description', 'Description', $order_by, $order);
+	echo th_order_by('conference_order', $content_conferences['tabel-order'], $order_by, $order);
+	echo th_order_by('conference_enabled', $content_conferences['tabel-enabled'], $order_by, $order);
+	echo th_order_by('conference_description', $content_conferences['tabel-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('conference_add')) {
 		echo "	<a href='conference_edit.php' alt='add'>$v_link_label_add</a>\n";
