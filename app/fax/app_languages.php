@@ -16,7 +16,7 @@
 	$content['label-name']['pt-pt'] = 'Nome';
 
 	$content['label-email']['en-us'] = 'Email';
-	$content['label-email']['pt-pt'] = 'Email';
+	$content['label-email']['pt-pt'] = 'E-mail';
 
 	$content['label-upload']['en-us'] = 'Upload';
 	$content['label-upload']['pt-pt'] = 'Carregar';
