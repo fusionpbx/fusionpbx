@@ -26,8 +26,13 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+include "app_languages.php";
 if (permission_exists('extensions_active_assigned_view')) {
 
+        foreach($content_calls_active as $key => $value) {
+		$content_calls_active[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
+    
 	//http get and set variables
 		if (strlen($_GET['url']) > 0) {
 			$url = $_GET['url'];
@@ -44,7 +49,7 @@ if (permission_exists('extensions_active_assigned_view')) {
 			//hide the user_status when it is set to false
 		}
 		else {
-			echo "<th>Status</th>\n";
+			echo "<th>".$content_calls_active['label-status']."</th>\n";
 		}
 		echo "<th>Time</th>\n";
 		//echo "<th>Direction</th>\n";
