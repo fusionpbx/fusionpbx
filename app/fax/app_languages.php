@@ -146,5 +146,5 @@
         
         $content_fax['tabel-size']['en-us'] = 'Size';
 	$content_fax['tabel-size']['pt-pt'] = 'Tamanho';
-
+        
 ?>
