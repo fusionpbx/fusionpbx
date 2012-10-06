@@ -44,7 +44,7 @@
         
         //fax_copy
         $content_fax['confirm-copy']['en-us'] = 'Copy Complete';
-	$content_fax['confirm-copy']['pt-pt'] = 'Copia Completa';
+	$content_fax['confirm-copy']['pt-pt'] = 'Cópia Completa';
         
         //fax_delete
         $content_fax['confirm-delete']['en-us'] = 'Delete Complete';
@@ -94,19 +94,19 @@
 	$content_fax['label-calleridname']['pt-pt'] = 'Nome de Origem';
         
         $content_fax['label-calleridnumber']['en-us'] = 'Caller ID Number';
-	$content_fax['label-calleridnumber']['pt-pt'] = 'Numero de Origem';
+	$content_fax['label-calleridnumber']['pt-pt'] = 'Número de Origem';
         
         $content_fax['label-calleridnameinfo']['en-us'] = 'Enter the Caller ID name here.';
-	$content_fax['label-calleridnameinfo']['pt-pt'] = 'Insira aqui o nome de Origem.';
+	$content_fax['label-calleridnameinfo']['pt-pt'] = 'Insira aqui o nome de origem.';
         
         $content_fax['label-calleridnumberinfo']['en-us'] = 'Enter the Caller ID number here.';
-	$content_fax['label-calleridnumberinfo']['pt-pt'] = 'Insira aqui o numero de Origem.';
+	$content_fax['label-calleridnumberinfo']['pt-pt'] = 'Insira aqui o número de origem.';
         
         $content_fax['label-forward']['en-us'] = 'Forward Number';
-	$content_fax['label-forward']['pt-pt'] = 'Numero de Encaminhamento';
+	$content_fax['label-forward']['pt-pt'] = 'Número de Encaminhamento';
         
         $content_fax['label-forwardinfo']['en-us'] = 'Enter the forward number here. Used to forward the fax to a registered extension or external number.';
-	$content_fax['label-forwardinfo']['pt-pt'] = 'Insira aqui o número de encaminhamento. Usado para encaminhar o fax para uma extensão registrada ou número externo.';
+	$content_fax['label-forwardinfo']['pt-pt'] = 'Insira aqui o número de encaminhamento. Utilizado para encaminhar o fax para uma extensão registada ou número externo.';
         
         $content_fax['label-userlist']['en-us'] = 'User List';
 	$content_fax['label-userlist']['pt-pt'] = 'Lista de utilizadores';
@@ -127,7 +127,7 @@
 	$content_fax['description3']['pt-pt'] = 'Ao enviar um fax, pode ver o estado da transmissão, visualizando os logs da tab Status ou assistindo a resposta através da consola.';
         
         $content_fax['label-faxnumber']['en-us'] = 'Fax Number';
-	$content_fax['label-faxnumber']['pt-pt'] = 'Numero de Fax';
+	$content_fax['label-faxnumber']['pt-pt'] = 'Número de Fax';
         
         $content_fax['label-faxnumberinfo']['en-us'] = 'Enter the number here.';
 	$content_fax['label-faxnumberinfo']['pt-pt'] = 'Insira aqui o numero.';
