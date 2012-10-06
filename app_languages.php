@@ -22,7 +22,7 @@
 	$content_calls['table-description']['pt-pt'] = 'Descrição';
         
         $content_calls['lable-callforward']['en-us'] = 'Call Forward';
-	$content_calls['lable-callforward']['pt-pt'] = 'Encaminhamento de Chamada';
+	$content_calls['lable-callforward']['pt-pt'] = 'Encaminhamento de Chamadas';
         
         $content_calls['lable-followme']['en-us'] = 'Follow Me';
 	$content_calls['lable-followme']['pt-pt'] = 'Segue-me';
