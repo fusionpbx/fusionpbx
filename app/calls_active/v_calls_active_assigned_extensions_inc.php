@@ -51,16 +51,16 @@ if (permission_exists('extensions_active_assigned_view')) {
 		else {
 			echo "<th>".$content_calls_active['label-status']."</th>\n";
 		}
-		echo "<th>Time</th>\n";
+		echo "<th>".$content_calls_active['label-time']."</th>\n";
 		//echo "<th>Direction</th>\n";
 		//echo "<th>Profile</th>\n";
-		echo "<th>CID Name</th>\n";
-		echo "<th>CID Number</th>\n";
-		echo "<th>Dest</th>\n";
-		echo "<th>Application</th>\n";
-		echo "<th>Secure</th>\n";
-		echo "<th>Name</th>\n";
-		echo "<th>Options</th>\n";
+		echo "<th>".$content_calls_active['label-cidname']."</th>\n";
+		echo "<th>".$content_calls_active['label-cidnum']."</th>\n";
+		echo "<th>".$content_calls_active['label-dest']."</th>\n";
+		echo "<th>".$content_calls_active['label-app']."</th>\n";
+		echo "<th>".$content_calls_active['label-secure']."</th>\n";
+		echo "<th>".$content_calls_active['label-name']."</th>\n";
+		echo "<th>".$content_calls_active['label-opt']."</th>\n";
 		echo "</tr>\n";
 		foreach ($_SESSION['extension_array'] as $row) {
 			$domain_uuid = $row['domain_uuid'];
@@ -161,20 +161,20 @@ if (permission_exists('extensions_active_assigned_view')) {
 						echo "</td>\n";
 						echo "<td valign='top' class='".$row_style[$c]."' $style_alternate>\n";
 							//transfer
-								echo "	<a href='javascript:void(0);' style='color: #444444;' onMouseover=\"document.getElementById('form_label').innerHTML='<strong>Transfer To</strong>';\" onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">transfer</a>&nbsp;\n";
+								echo "	<a href='javascript:void(0);' style='color: #444444;' onMouseover=\"document.getElementById('form_label').innerHTML='<strong>".$content_calls_active['label-transfer']."</strong>';\" onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">".$content_calls_active['label-transf']."</a>&nbsp;\n";
 							//park
-								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">park</a>&nbsp;\n";
+								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">".$content_calls_active['label-park']."</a>&nbsp;\n";
 							//hangup
-								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to hangup this call?');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">hangup</a>&nbsp;\n";
+								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$content_calls_active['confirm-hangup']."');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">".$content_calls_active['label-hangup']."</a>&nbsp;\n";
 							//record start/stop
 								$tmp_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
 								if (file_exists($tmp_file)) {
 									//stop
-									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_extensions_&name='+escape('$cid_num'));\">stop record</a>&nbsp;\n";
+									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_extensions_&name='+escape('$cid_num'));\">".$content_calls_active['label-stop']."</a>&nbsp;\n";
 								}
 								else {
 									//start
-									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_extensions_');\">start record</a>&nbsp;\n";
+									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_extensions_');\">".$content_calls_active['label-start']."</a>&nbsp;\n";
 								}
 							echo "	&nbsp;";
 						echo "</td>\n";

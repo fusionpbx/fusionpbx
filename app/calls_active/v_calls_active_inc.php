@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+include "app_languages.php";
 if (permission_exists('calls_active_view')) {
 	//access granted
 }
@@ -34,17 +35,21 @@ else {
 	exit;
 }
 
+        foreach($content_calls_active as $key => $value) {
+		$content_calls_active[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
+
 //set the command
 	$switch_cmd = 'show channels';
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 //if the connnection is available then run it and return the results
 	if (!$fp) {
-		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+		$msg = "<div align='center'>".$content_calls_active['confirm-socket']."<br /></div>"; 
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>Message</th>\n";
+		echo "<th align='left'>".$content_calls_active['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -74,25 +79,25 @@ else {
 			//echo "<th>ID</th>\n";
 			//echo "<th>UUID</th>\n";
 			//echo "<th>Dir</th>\n";
-			echo "<th>Profile</th>\n";
-			echo "<th>Created</th>\n";
+			echo "<th>".$content_calls_active['label-profile']."</th>\n";
+			echo "<th>".$content_calls_active['label-created']."</th>\n";
 			//echo "<th>Created Epoch</th>\n";
 			//echo "<th>Name</th>\n";
-			echo "<th>Number</th>\n";
+			echo "<th>".$content_calls_active['label-num']."</th>\n";
 			//echo "<th>State</th>\n";
-			echo "<th>CID Name</th>\n";
-			echo "<th>CID Number</th>\n";
+			echo "<th>".$content_calls_active['label-cidname']."</th>\n";
+			echo "<th>".$content_calls_active['label-cidnum']."</th>\n";
 			//echo "<th>IP Addr</th>\n";
-			echo "<th>Dest</th>\n";
-			echo "<th>Application</th>\n";
+			echo "<th>".$content_calls_active['label-dest']."</th>\n";
+			echo "<th>".$content_calls_active['label-app']."</th>\n";
 			//echo "<th>Dialplan</th>\n";
 			//echo "<th>Context</th>\n";
-			echo "<th>Read / Write Codec</th>\n";
+			echo "<th>".$content_calls_active['label-codec']."</th>\n";
 			//echo "<th>Read Rate</th>\n";
 			//echo "<th>Write Codec</th>\n";
 			//echo "<th>Write Rate</th>\n";
-			echo "<th>Secure</th>\n";
-			echo "<th>Options</th>\n";
+			echo "<th>".$content_calls_active['label-secure']."</th>\n";
+			echo "<th>".$content_calls_active['label-opt']."</th>\n";
 			echo "</tr>\n";
 
 			foreach ($result_array as $row) {
@@ -143,22 +148,22 @@ else {
 				echo "<td valign='top' class='".$row_style[$c]."'>$secure &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."' style='text-align:center;'>\n";
 				//transfer
-					echo "	<a href='javascript:void(0);' onMouseover=\"document.getElementById('form_label').innerHTML='<strong>Transfer To</strong>';\" onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">xfer</a>&nbsp;\n";
+					echo "	<a href='javascript:void(0);' onMouseover=\"document.getElementById('form_label').innerHTML='<strong>".$content_calls_active['label-transfer']."</strong>';\" onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">".$content_calls_active['label-transf']."</a>&nbsp;\n";
 				//park
-					echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">park</a>&nbsp;\n";
+					echo "	<a href='javascript:void(0);' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">".$content_calls_active['label-park']."</a>&nbsp;\n";
 				//hangup
-					echo "	<a href='javascript:void(0);' onclick=\"confirm_response = confirm('Do you really want to hangup this call?');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">hangup</a>&nbsp;\n";
+					echo "	<a href='javascript:void(0);' onclick=\"confirm_response = confirm('".$content_calls_active['confirm-hangup']."');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">".$content_calls_active['label-hangup']."</a>&nbsp;\n";
 				//record start/stop
 					$tmp_dir = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d");
 					mkdir($tmp_dir, 0777, true);
 					$tmp_file = $tmp_dir."/".$uuid.".wav";
 					if (file_exists($tmp_file)) {
 						//stop
-						echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_calls_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_calls_&name='+escape('$cid_num'));\">stop rec</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_calls_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_calls_&name='+escape('$cid_num'));\">".$content_calls_active['label-stop']."</a>&nbsp;\n";
 					}
 					else {
 						//start
-						echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_calls_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_calls_');\">rec</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_calls_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_calls_');\">".$content_calls_active['label-start']."</a>&nbsp;\n";
 					}
 				echo "	&nbsp;";
 				echo "</td>\n";

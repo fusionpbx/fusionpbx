@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('fax_extension_view')) {
 	//access granted
 }
@@ -33,6 +34,11 @@ else {
 	echo "access denied";
 	exit;
 }
+
+         //prepare the languages
+	foreach($content_fax as $key => $value) {
+		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get the fax_extension and save it as a variable
 	if (strlen($_REQUEST["fax_extension"]) > 0) {
@@ -154,7 +160,7 @@ else {
 			fpassthru($fd);
 		}
 		else {
-			echo "File not found.";
+			echo "".$content_fax['label-file']."";
 		}
 		exit;
 	}
@@ -325,13 +331,13 @@ else {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "		<td align='left' width='30%'>\n";
-	echo "			<span class=\"vexpl\"><span class=\"red\"><strong>Fax Server</strong></span>\n";
+	echo "			<span class=\"vexpl\"><span class=\"red\"><strong>".$content_fax['title']."</strong></span>\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
 	if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
-		echo "			<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='fax_edit.php?id=$fax_uuid'\" value='Settings'>\n";
+		echo "			<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='fax_edit.php?id=$fax_uuid'\" value='".$content_fax['button-settings']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$content_fax['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -343,33 +349,33 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='left'>\n";
 	//pkg_add -r ghostscript8-nox11; rehash
-	echo "			To send a fax you can upload a .tif file or if ghost script has been installed then you can also send a fax by uploading a PDF. \n";
-	echo "			When sending a fax you can view status of the transmission by viewing the logs from the Status tab or by watching the response from the console.\n";
+	echo "			".$content_fax['description2']." \n";
+	echo "			".$content_fax['description3']."\n";
 	echo "			<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "		Fax Number:\n";
+	echo "		".$content_fax['label-faxnumber'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<input type=\"text\" name=\"fax_number\" class='formfld' style='' value=\"\">\n";
 	echo "<br />\n";
-	echo "Enter the Number here.\n";
+	echo "".$content_fax['label-faxnumberinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Upload:\n";
+	echo "	".$content_fax['label-upload'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input name=\"id\" type=\"hidden\" value=\"\$id\">\n";
 	echo "	<input name=\"type\" type=\"hidden\" value=\"fax_send\">\n";
 	echo "	<input name=\"fax_file\" type=\"file\" class=\"btn\" id=\"fax_file\">\n";
 	echo "	<br />\n";
-	echo "	Select the file to upload and send as a fax.\n";
+	echo "	".$content_fax['label-uploadinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -379,7 +385,7 @@ else {
 	echo "			<input type=\"hidden\" name=\"fax_caller_id_number\" value=\"".$fax_caller_id_number."\">\n";
 	echo "			<input type=\"hidden\" name=\"fax_extension\" value=\"".$fax_extension."\">\n";
 	echo "			<input type=\"hidden\" name=\"id\" value=\"".$fax_uuid."\">\n";
-	echo "			<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"Send\">\n";
+	echo "			<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$content_fax['button-send']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
@@ -399,7 +405,7 @@ else {
 		echo "		</td>\n";
 		echo "		<td align='right'>";
 		if ($v_path_show) {
-			echo "<b>location:</b>&nbsp;";
+			echo "<b>".$content_fax['label-location'].":</b>&nbsp;";
 			echo $dir_fax_inbox."&nbsp; &nbsp; &nbsp;";
 		}
 		echo "		</td>\n";
@@ -414,10 +420,10 @@ else {
 		echo "	<div id=\"\">\n";
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
-		echo "		<th width=\"60%\" class=\"listhdrr\">File Name (download)</td>\n";
-		echo "		<th width=\"10%\" class=\"listhdrr\">View</td>\n";
-		echo "		<th width=\"20%\" class=\"listhdr\">Last Modified</td>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size</td>\n";
+		echo "		<th width=\"60%\" class=\"listhdrr\">".$content_fax['tabel-file']."</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdrr\">".$content_fax['tabel-view']."</td>\n";
+		echo "		<th width=\"20%\" class=\"listhdr\">".$content_fax['tabel-modified']."</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size".$content_fax['tabel-size']."</td>\n";
 		echo "	</tr>";
 
 
@@ -513,7 +519,7 @@ else {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_inbox_delete')) {
-							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_inbox&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
+							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_inbox&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('".$content_fax['confirm-delete']."')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";
@@ -542,7 +548,7 @@ else {
 		echo "		</td>\n";
 		echo "		<td align='right'>\n";
 		if ($v_path_show) {
-			echo "<b>location: </b>\n";
+			echo "<b>".$content_fax['label-location'].": </b>\n";
 			echo $dir_fax_sent."&nbsp; &nbsp; &nbsp;\n";
 		}
 		echo "		</td>\n";
@@ -551,10 +557,10 @@ else {
 		echo "\n";
 		echo "    <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "    <tr>\n";
-		echo "		<th width=\"60%\">File Name (download)</td>\n";
-		echo "		<th width=\"10%\">View</td>\n";
-		echo "		<th width=\"20%\">Last Modified</td>\n";
-		echo "		<th width=\"10%\" nowrap>Size</td>\n";
+		echo "		<th width=\"60%\">".$content_fax['tabel-file']."</td>\n";
+		echo "		<th width=\"10%\">".$content_fax['tabel-view']."</td>\n";
+		echo "		<th width=\"20%\">".$content_fax['tabel-modified']."</td>\n";
+		echo "		<th width=\"10%\" nowrap>".$content_fax['tabel-size']."</td>\n";
 		echo "		</tr>";
 
 		if ($handle = opendir($dir_fax_sent)) {
@@ -647,7 +653,7 @@ else {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_sent_delete')) {
-							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_sent&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a></td>\n";
+							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_sent&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('".$content_fax['confirm-delete']."')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";

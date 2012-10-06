@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "includes/Logging.php";
 
 if (permission_exists('fax_extension_view')) {
 	//access granted
@@ -38,11 +39,8 @@ require_once "includes/header.php";
 require_once "includes/paging.php";
 
 //prepare the languages
-	echo "<!--\n";
-	require_once "app_languages.php";
-	echo "-->\n";
-	foreach($content as $key => $value) {
-		$content[$key] = $value[$_SESSION['domain']['language']['code']];
+	foreach($content_fax as $key => $value) {
+		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //get the http get values and set them as php variables
@@ -59,7 +57,7 @@ require_once "includes/paging.php";
 	echo "			<tr>\n";
 	echo "				<td align='left'>\n";
 	echo "					<p><span class=\"vexpl\"><span class=\"red\"><strong>FAX<br></strong></span>\n";
-	echo "					To receive a FAX setup a fax extension and then direct the incoming to it.\n";
+	echo "					".$content_fax['description']."\n";
 	echo "					</p>\n";
 	echo "				</td>\n";
 	echo "			</tr>\n";
@@ -125,10 +123,10 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('fax_extension', 'Extension', $order_by, $order);
-	echo th_order_by('fax_name', 'Name', $order_by, $order);
-	echo th_order_by('fax_email', 'Email', $order_by, $order);
-	echo th_order_by('fax_description', 'Description', $order_by, $order);
+	echo th_order_by('fax_extension', $content_fax['label-extension'], $order_by, $order);
+	echo th_order_by('fax_name', $content_fax['label-name'], $order_by, $order);
+	echo th_order_by('fax_email', $content_fax['label-email'], $order_by, $order);
+	echo th_order_by('fax_description', $content_fax['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('fax_extension_add')) {
 		echo "	<a href='fax_edit.php' alt='add'>$v_link_label_add</a>\n";
@@ -148,7 +146,7 @@ require_once "includes/paging.php";
 				echo "		<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('fax_extension_delete')) {
-				echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$content['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$content_fax['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

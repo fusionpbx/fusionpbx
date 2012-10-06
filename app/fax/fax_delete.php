@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('fax_extension_delete')) {
 	//access granted
 }
@@ -33,6 +34,11 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        //prepare the languages
+	foreach($content_fax as $key => $value) {
+		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get the http get value and set it as a php variable
 	if (count($_GET)>0) {
@@ -86,7 +92,7 @@ else {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo "".$content_fax['confirm-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
