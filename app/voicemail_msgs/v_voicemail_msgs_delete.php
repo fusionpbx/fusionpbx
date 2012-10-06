@@ -26,6 +26,7 @@
 include "root.php";
 require "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('voicemail_delete')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($contentvoicemail_msgs as $key => $value) {
+		$contentvoicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get the http get values
 	if (count($_GET)>0) {
@@ -46,7 +51,7 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
+		$msg = "<div align='center'>".$contentvoicemail_msgs['confirm-socket']."<br /></div>";
 	}
 
 //show the error message or show the content
@@ -55,7 +60,7 @@ else {
 		echo "<div align='center'>\n";
 		echo "	<table width='40%'>\n";
 		echo "		<tr>\n";
-		echo "			<th align='left'>Message</th>\n";
+		echo "			<th align='left'>".$contentvoicemail_msgs['label-message']."</th>\n";
 		echo "		</tr>\n";
 		echo "		<tr>\n";
 		echo "			<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -71,17 +76,17 @@ else {
 	$response = trim(event_socket_request($fp, $cmd));
 	echo $xml_response;
 	if (strcmp($response,"+OK")==0) {
-		$msg = "Complete";
+		$msg = "".$contentvoicemail_msgs['confirm-complete']."";
 	}
 	else {
-		$msg = "Failed";
+		$msg = "".$contentvoicemail_msgs['confirm-failed']."";
 	}
 
 //redirect the user
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_msgs.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete $msg\n";
+	echo "".$contentvoicemail_msgs['confirm-delete2']." $msg\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;

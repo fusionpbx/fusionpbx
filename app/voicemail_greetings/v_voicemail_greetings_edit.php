@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('voicemail_greetings_add') || permission_exists('voicemail_greetings_edit')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($contentvoicemail_greetings as $key => $value) {
+		$contentvoicemail_greetings[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
@@ -63,7 +68,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($greeting_name) == 0) { $msg .= "Please provide: Greeting Name (play)<br>\n"; }
+		if (strlen($greeting_name) == 0) { $msg .= "".$contentvoicemail_greetings['confirm-name']."<br>\n"; }
 		//if (strlen($greeting_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
@@ -102,7 +107,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=".$user_id."\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo "".$contentvoicemail_greetings['confirm-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -143,7 +148,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=".$user_id."\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo "".$contentvoicemail_greetings['confirm-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -186,33 +191,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>Add Greeting</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$contentvoicemail_greetings['label-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>Edit Greeting</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$contentvoicemail_greetings['label-edit']['en-us']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_greetings.php?id=".$user_id."'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_greetings.php?id=".$user_id."'\" value='".$contentvoicemail_greetings['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Greeting Name:\n";
+	echo "    ".$contentvoicemail_greetings['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='greeting_name' maxlength='255' value=\"$greeting_name\">\n";
 	echo "<br />\n";
-	echo "Greeting Name. example: greeting_x\n";
+	echo "".$contentvoicemail_greetings['label-nameinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Description:\n";
+	echo "    ".$contentvoicemail_greetings['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='greeting_description' maxlength='255' value=\"$greeting_description\">\n";
 	echo "<br />\n";
-	echo "You may enter a description here for your reference (not parsed).\n";
+	echo "".$contentvoicemail_greetings['label-descriptioninfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -221,7 +226,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='greeting_uuid' value='$greeting_uuid'>\n";
 	}
 	echo "				<input type='hidden' name='user_id' value='$user_id'>\n";
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$contentvoicemail_greetings['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

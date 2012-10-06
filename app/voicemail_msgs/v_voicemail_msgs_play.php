@@ -27,6 +27,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('voicemail_view')) {
 	//access granted
 }
@@ -34,6 +35,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($contentvoicemail_msgs as $key => $value) {
+		$contentvoicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get the http get values
 	$uuid = $_GET['uuid'];
@@ -48,7 +53,7 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
+		$msg = "<div align='center'>".$contentvoicemail_msgs['confirm-socket']."<br /></div>";
 	}
 	
 //show the error message or show the content
@@ -57,7 +62,7 @@ else {
 		echo "<div align='center'>\n";
 		echo "	<table width='40%'>\n";
 		echo "		<tr>\n";
-		echo "			<th align='left'>Message</th>\n";
+		echo "			<th align='left'>".$contentvoicemail_msgs['label-message']."</th>\n";
 		echo "		</tr>\n";
 		echo "		<tr>\n";
 		echo "			<td class='row_style1'><strong>$msg</strong></td>\n";

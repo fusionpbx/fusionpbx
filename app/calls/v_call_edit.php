@@ -26,6 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+	
+	foreach($content_calls as $key => $value) {
+		$content_calls[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
 
 //define the destination_select function
 	function destination_select($select_name, $select_value, $select_default) {
@@ -384,7 +389,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/calls/v_calls.php\">\n";
 		echo "<div align='center'>\n";
-		echo "Update Complete<br />\n";
+		echo "".$content_calls['confirm-update']."<br />\n";
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
@@ -491,21 +496,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap>\n";
-	echo "	<b>Calls</b>\n";
+	echo "	<b>".$content_calls['title']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_calls.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_calls.php'\" value='".$content_calls['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "	Directs incoming calls for extension  $extension.<br /><br />\n";
+	echo "	".$content_calls['description']."  $extension.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	<strong>Call Forward:</strong>\n";
+	echo "	<strong>".$content_calls['lable-callforward'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('follow_me_enabled').checked=true;";
@@ -513,16 +518,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$on_click .= "document.getElementById('dnd_enabled').checked=false;";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true;";
 	if ($call_forward_enabled == "true") {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_enabled' onclick=\"$on_click\" value='true' checked='checked'/> Enabled \n";
+		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_enabled' onclick=\"$on_click\" value='true' checked='checked'/> ".$content_calls['lable-enabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_enabled' onclick=\"$on_click\" value='true' /> Enable \n";
+		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_enabled' onclick=\"$on_click\" value='true' /> ".$content_calls['lable-enable']." \n";
 	}
 	if ($call_forward_enabled == "false" || $call_forward_enabled == "") {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_disabled' onclick=\"\" value='false' checked='checked' /> Disabled \n";
+		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_disabled' onclick=\"\" value='false' checked='checked' /> ".$content_calls['lable-disabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_disabled' onclick=\"\" value='false' /> Disable \n";
+		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_disabled' onclick=\"\" value='false' /> ".$content_calls['lable-disable']." \n";
 	}
 	unset($on_click);
 	echo "<br />\n";
@@ -533,7 +538,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Number:\n";
+	echo "	".$content_calls['lable-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_forward_number' maxlength='255' value=\"$call_forward_number\">\n";
@@ -550,7 +555,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	<strong>Follow Me:</strong>\n";
+	echo "	<strong>".$content_calls['lable-followme'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('call_forward_enabled').checked=true;";
@@ -558,16 +563,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$on_click .= "document.getElementById('dnd_enabled').checked=false;";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true;";
 	if ($follow_me_enabled == "true") {
-		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_enabled' value='true' onclick=\"$on_click\" checked='checked'/> Enabled \n";
+		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_enabled' value='true' onclick=\"$on_click\" checked='checked'/> ".$content_calls['lable-enabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_enabled' value='true' onclick=\"$on_click\" /> Enable \n";
+		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_enabled' value='true' onclick=\"$on_click\" /> ".$content_calls['lable-enable']." \n";
 	}
 	if ($follow_me_enabled == "false" || $follow_me_enabled == "") {
-		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_disabled' value='false' onclick=\"\" checked='checked' /> Disabled \n";
+		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_disabled' value='false' onclick=\"\" checked='checked' /> ".$content_calls['lable-disabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_disabled' value='false' onclick=\"\" /> Disable \n";
+		echo "	<input type='radio' name='follow_me_enabled' id='follow_me_disabled' value='false' onclick=\"\" /> ".$content_calls['lable-disable']." \n";
 	}
 	unset($on_click);
 	echo "<br />\n";
@@ -577,7 +582,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Ring 1st Number:\n";
+	echo "	".$content_calls['lable-ring1'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_1' maxlength='255' value=\"$destination_data_1\">\n";
@@ -590,7 +595,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Ring 2nd Number:\n";
+	echo "	".$content_calls['lable-ring2'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_2' maxlength='255' value=\"$destination_data_2\">\n";
@@ -603,7 +608,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Ring 3rd Number:\n";
+	echo "	".$content_calls['lable-ring3'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_3' maxlength='255' value=\"$destination_data_3\">\n";
@@ -616,7 +621,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Ring 4th Number:\n";
+	echo "	".$content_calls['lable-ring4'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_4' maxlength='255' value=\"$destination_data_4\">\n";
@@ -629,7 +634,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Ring 5th Number:\n";
+	echo "	".$content_calls['lable-ring5'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_5' maxlength='255' value=\"$destination_data_5\">\n";
@@ -642,7 +647,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Ring Order:\n";
+	echo "	".$content_calls['lable-ringorder'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
     echo "<select class='formfld' name='follow_me_type'>\n";
@@ -667,7 +672,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Prompt to accept the call:\n";
+	echo "	".$content_calls['lable-prompt'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "<select class='formfld' name='hunt_group_call_prompt'>\n";
@@ -698,7 +703,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	<strong>Do Not Disturb:</strong>\n";
+	echo "	<strong>".$content_calls['lable-dnd'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('call_forward_enabled').checked=true;";
@@ -706,16 +711,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$on_click .= "document.getElementById('follow_me_enabled').checked=true;";
 	$on_click .= "document.getElementById('follow_me_disabled').checked=true;";
 	if ($dnd_enabled == "true") {
-		echo "	<input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\" checked='checked'/> Enabled \n";
+		echo "	<input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\" checked='checked'/> ".$content_calls['lable-enabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\"/> Enable \n";
+		echo "	<input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\"/> ".$content_calls['lable-enable']." \n";
 	}
 	if ($dnd_enabled == "false" || $dnd_enabled == "") {
-		echo "	<input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" checked='checked' /> Disabled \n";
+		echo "	<input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" checked='checked' /> ".$content_calls['lable-disabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" /> Disable \n";
+		echo "	<input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" /> ".$content_calls['lable-disable']." \n";
 	}
 	echo "	<br />\n";
 	echo "</td>\n";
@@ -738,7 +743,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='id' value='$extension_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$content_calls['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

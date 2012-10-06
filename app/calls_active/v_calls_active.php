@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+include "app_languages.php";
 if (permission_exists('calls_active_view')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($content_calls_active as $key => $value) {
+		$content_calls_active[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
 
 $conference_name = trim($_REQUEST["c"]);
 $tmp_conference_name = str_replace("_", " ", $conference_name);
@@ -110,8 +115,8 @@ echo "<div align='center'>";
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "	<td align='left'><b>Active Calls</b><br>\n";
-echo "		Use this to monitor and interact with the active calls.\n";
+echo "	<td align='left'><b>".$content_calls_active['title']."</b><br>\n";
+echo "		".$content_calls_active['description']."\n";
 echo "	</td>\n";
 echo "	<td align='right'>\n";
 

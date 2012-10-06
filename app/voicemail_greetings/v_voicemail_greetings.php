@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('voicemail_greetings_view')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($contentvoicemail_greetings as $key => $value) {
+		$contentvoicemail_greetings[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 require_once "includes/paging.php";
 
@@ -221,20 +226,20 @@ require_once "includes/paging.php";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width=\"50%\">\n";
-	echo "			<strong>Voicemail Greetings:</strong><br>\n";
+	echo "			<strong>".$contentvoicemail_greetings['title'].":</strong><br>\n";
 	echo "		</td>";
 	echo "		<td width='50%' align='right'>\n";
-	echo "			<label for=\"file\">File to Upload:</label>\n";
+	echo "			<label for=\"file\">".$contentvoicemail_greetings['label-upload'].":</label>\n";
 	echo "			<input name=\"file\" type=\"file\" class=\"btn\" id=\"file\">\n";
 	echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
-	echo "			<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"Save\">\n";
+	echo "			<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$contentvoicemail_greetings['button-save']."\">\n";
 	echo "			&nbsp;&nbsp;&nbsp;\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='".$contentvoicemail_greetings['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			Select the active greeting message to play for extension $user_id. <br />\n";
+	echo "			".$contentvoicemail_greetings['description']." $user_id. <br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -310,11 +315,11 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>Choose</th>\n";
-	echo th_order_by('greeting_name', 'Name', $order_by, $order);
-	echo "<th align='right'>Download</th>\n";
-	echo "<th width=\"50px\" class=\"listhdr\" nowrap=\"nowrap\">Size</th>\n";
-	echo th_order_by('greeting_description', 'Description', $order_by, $order);
+	echo "<th>".$contentvoicemail_greetings['table-choose']."</th>\n";
+	echo th_order_by('greeting_name', $contentvoicemail_greetings['table-name'], $order_by, $order);
+	echo "<th align='right'>".$contentvoicemail_greetings['table-download']."</th>\n";
+	echo "<th width=\"50px\" class=\"listhdr\" nowrap=\"nowrap\">".$contentvoicemail_greetings['table-size']."</th>\n";
+	echo th_order_by('greeting_description', $contentvoicemail_greetings['table-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	//if (permission_exists('voicemail_greetings_add')) {
 	//	echo "	<a href='v_voicemail_greetings_edit.php?&user_id=".$user_id."' alt='add'>$v_link_label_add</a>\n";

@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+include "app_languages.php";
 if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
 	//access granted
 }
@@ -37,7 +38,11 @@ require_once "includes/header.php";
 require_once "includes/paging.php";
 
 $order_by = $_GET["order_by"];
-$order = $_GET["order"];
+$order = $_GET["order"]; 
+
+        foreach($content_calls as $key => $value) {
+		$content_calls[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
 
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -48,9 +53,9 @@ $order = $_GET["order"];
 	if ($is_included != "true") {
 		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "		<tr>\n";
-		echo "		<td align='left'><b>Calls</b><br>\n";
-		echo "			Use the links to configure call forward follow me, or do no disturb.\n";
-		echo "			The following list the extensions that have been assigned to this user account. \n";
+		echo "		<td align='left'><b>".$content_calls['title']."</b><br>\n";
+		echo "			".$content_calls['description2']."\n";
+		echo "			".$content_calls['description3']." \n";
 		echo "		</td>\n";
 		echo "		</tr>\n";
 		echo "		</table>\n";
@@ -133,9 +138,9 @@ $order = $_GET["order"];
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>Extension</th>\n";
-	echo "<th>Tools</th>\n";
-	echo "<th>Description</th>\n";
+	echo "<th>".$content_calls['table-extension']."</th>\n";
+	echo "<th>".$content_calls['table-tools']."</th>\n";
+	echo "<th>".$content_calls['table-description']."</th>\n";
 	echo "</tr>\n";
 
 	if ($result_count > 0) {
@@ -144,15 +149,15 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if (permission_exists('call_forward')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=call_forward' alt='Call Forward'>".$content_calls['lable-callforward']."</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('follow_me')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=follow_me' alt='Follow Me'>Follow Me</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=follow_me' alt='Follow Me'>".$content_calls['lable-followme']."</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=do_not_disturb' alt='Do Not Disturb'>Do Not Disturb</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=do_not_disturb' alt='Do Not Disturb'>".$content_calls['lable-dnd']."</a> \n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['description']."&nbsp;</td>\n";
