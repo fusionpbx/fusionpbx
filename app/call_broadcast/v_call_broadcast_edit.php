@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('call_broadcast_edit')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($content_broadcast as $key => $value) {
+		$content_broadcast[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
 
 //set the action with add or update
 	if (isset($_REQUEST["id"])) {
@@ -65,7 +70,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($broadcast_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
+		if (strlen($broadcast_name) == 0) { $msg .= "".$content_broadcast['confirm-name']."<br>\n"; }
 		//if (strlen($broadcast_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		//if (strlen($broadcast_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
 		//if (strlen($broadcast_concurrent_limit) == 0) { $msg .= "Please provide: Concurrent Limit<br>\n"; }
@@ -138,7 +143,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo "".$content_broadcast['confirm-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -174,7 +179,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo "".$content_broadcast['confirm-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -225,46 +230,46 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td width='30%' align='left' nowrap='nowrap'><b>Call Broadcast</b></td>\n";
+		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content_broadcast['label-callbroadcast']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td width='30%' align='left' nowrap='nowrap'><b>Call Broadcast Edit</b></td>\n";
+		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content_broadcast['label-callbroadcastedit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='v_call_broadcast.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='v_call_broadcast.php'\" value='".$content_broadcast['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Name:\n";
+	echo "	".$content_broadcast['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"$broadcast_name\">\n";
 	echo "<br />\n";
-	echo "Enter a name here.\n";
+	echo "".$content_broadcast['label-nameinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Timeout:\n";
+	echo "	".$content_broadcast['label-timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_timeout' maxlength='255' value=\"$broadcast_timeout\">\n";
 	echo "<br />\n";
-	echo "Limit the length of the call. Leave this empty for no limit.\n";
+	echo "".$content_broadcast['label-timeoutinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Concurrent Limit:\n";
+	echo "	".$content_broadcast['label-concurrentlimit'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_concurrent_limit' maxlength='255' value=\"$broadcast_concurrent_limit\">\n";
 	echo "<br />\n";
-	echo "Limit the approximate number of concurrent calls. Leave this empty for no limit.\n";
+	echo "".$content_broadcast['label-concurrentlimitinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -300,23 +305,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Caller ID Name:\n";
+	echo "	".$content_broadcast['label-calleridname'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"$broadcast_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "Applicable if the provider allow the Caller ID Name to be set. default: anonymous\n";
+	echo "".$content_broadcast['label-calleridnameinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Caller ID Number:\n";
+	echo "	".$content_broadcast['label-calleridnumber'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_number' maxlength='255' value=\"$broadcast_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000\n";
+	echo "".$content_broadcast['label-calleridnumberinfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 /*
@@ -349,34 +354,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Destination Number:\n";
+	echo "	".$content_broadcast['label-destination'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"$broadcast_destination_data\">\n";
 	echo "<br />\n";
-	echo "Send the call to the extension an IVR Menu, Conference Room, or any other number. <br /><br />\n";
+	echo "".$content_broadcast['label-destinationinfo']." <br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Phone Number List:\n";
+	echo "	".$content_broadcast['label-phone'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>$broadcast_phone_numbers</textarea>\n";
 	echo "<br />\n";
-	echo "Optional, set a list of phone numbers one per row in the following format: 123-123-1234|Last Name, First Name <br /><br />\n";
+	echo "".$content_broadcast['label-phoneinfo']." <br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Description:\n";
+	echo "	".$content_broadcast['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_description' maxlength='255' value=\"$broadcast_description\">\n";
 	echo "<br />\n";
-	echo "Enter a description here.\n";
+	echo "".$content_broadcast['label-descriptioninfo']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -384,10 +389,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
 		echo "			<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
-		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_call_broadcast_send.php?call_broadcast_uuid=$call_broadcast_uuid'\" value='Send Broadcast'>\n";
+		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_call_broadcast_send.php?call_broadcast_uuid=$call_broadcast_uuid'\" value='".$content_broadcast['button-send']."'>\n";
 	}
 
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$content_broadcast."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

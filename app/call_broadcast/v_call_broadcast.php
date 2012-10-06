@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('call_broadcast_view')) {
 	//access granted
 }
@@ -33,6 +34,11 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($content_broadcast as $key => $value) {
+		$content_broadcast[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
+
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -50,7 +56,7 @@ require_once "includes/paging.php";
 	echo "		<br>";
 
 	echo "<table width='100%' border='0'><tr>\n";
-	echo "<td width='50%' nowrap='nowrap' align='left'><b>Call Broadcast List</b></td>\n";
+	echo "<td width='50%' nowrap='nowrap' align='left'><b>".$content_broadcast['title']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr></table>\n";
 
@@ -87,9 +93,9 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('broadcast_name', 'Name', $order_by, $order);
-	echo th_order_by('broadcast_concurrent_limit', 'Concurrent Limit', $order_by, $order);
-	echo th_order_by('broadcast_description', 'Description', $order_by, $order);
+	echo th_order_by('broadcast_name', $content_broadcast['label-name'], $order_by, $order);
+	echo th_order_by('broadcast_concurrent_limit', $content_broadcast['label-concurrentlimit'], $order_by, $order);
+	echo th_order_by('broadcast_description', $content_broadcast['label-description'], $order_by, $order);
 	//echo th_order_by('recordingid', 'Recording', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('call_broadcast_add')) {
@@ -110,7 +116,7 @@ require_once "includes/paging.php";
 				echo "		<a href='v_call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('call_broadcast_delete')) {
-				echo "		<a href='v_call_broadcast_delete.php?id=".$row['call_broadcast_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='v_call_broadcast_delete.php?id=".$row['call_broadcast_uuid']."' alt='delete' onclick=\"return confirm('".$content_broadcast['confirm-deleteinfo']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

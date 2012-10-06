@@ -26,6 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('call_broadcast_send')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($content_broadcast as $key => $value) {
+		$content_broadcast[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
 
 //set the max execution time to 1 hour
 	ini_set(max_execution_time,3600);
@@ -117,7 +122,7 @@ function cmd_async($cmd) {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>Message</th>\n";
+		echo "<th align='left'>".$content_broadcast['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -196,12 +201,12 @@ function cmd_async($cmd) {
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "<td class='row_style1' align='center'>\n";
-				echo "	<strong>Call Broadcast $broadcast_name has been started.</strong>\n";
+				echo "	<strong>".$content_broadcast['label-callbroadcast']." $broadcast_name ".$content_broadcast['label-hasbeen']."</strong>\n";
 				echo "	<br /><br />\n";
 				echo "	<table width='100%'>\n";
 				echo "	<tr>\n";
 				echo "	<td align='center'>\n";
-				echo "		<a href='".PROJECT_PATH."/app/calls_active/v_calls_active.php'>View Calls</a>\n";
+				echo "		<a href='".PROJECT_PATH."/app/calls_active/v_calls_active.php'>".$content_broadcast['label-viewcalls']."</a>\n";
 				echo "	</td>\n";
 				echo "	</table>\n";
 				echo "</td>\n";

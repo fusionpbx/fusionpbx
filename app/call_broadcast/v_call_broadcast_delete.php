@@ -26,6 +26,7 @@
 require "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+require_once "app_languages.php";
 if (permission_exists('call_broadcast_delete')) {
 	//access granted
 }
@@ -33,6 +34,10 @@ else {
 	echo "access denied";
 	exit;
 }
+
+        foreach($content_broadcast as $key => $value) {
+		$content_broadcast[$key] = $value[$_SESSION['domain']['language']['code']];                
+	}
 
 //get the id
 	if (count($_GET)>0) {
@@ -53,7 +58,7 @@ else {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo "".$content_broadcast['confirm-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
