@@ -247,10 +247,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($sub_result as $sub_row) {
 			if (strtolower($row['domain_setting_value']) == strtolower($sub_row["menu_uuid"])) {
-				echo "		<option value='".$sub_row["menu_uuid"]."' selected='selected'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
+				echo "		<option value='".strtolower($sub_row["menu_uuid"])."' selected='selected'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 			}
 			else {
-				echo "		<option value='".$sub_row["menu_uuid"]."'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."</option>\n";
+				echo "		<option value='".strtolower($sub_row["menu_uuid"])."'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."</option>\n";
 			}
 		}
 		unset ($sub_prep_statement);
