@@ -34,16 +34,22 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
 
-$order_by = $_GET["order_by"];
-$order = $_GET["order"]; 
+//get the https values and set as variables
+$order_by = check_str($_GET["order_by"]);
+$order = check_str($_GET["order"]); 
 
-        foreach($content_calls as $key => $value) {
+//add multi-lingual support
+	echo "<!--\n";
+	require_once "app_languages.php";
+	echo "-->\n";
+	foreach($content_calls as $key => $value) {
 		$content_calls[$key] = $value[$_SESSION['domain']['language']['code']];                
 	}
 
+//begin the content
+	require_once "includes/header.php";
+	require_once "includes/paging.php";
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";

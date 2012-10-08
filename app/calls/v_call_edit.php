@@ -59,7 +59,7 @@ else {
 	}
 
 //get the extension_uuid
-	$extension_uuid = $_REQUEST["id"];
+	$extension_uuid = check_str($_REQUEST["id"]);
 
 //get the extension number
 	$sql = "select * from v_extensions ";
