@@ -26,8 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "includes/Logging.php";
-
 if (permission_exists('fax_extension_view')) {
 	//access granted
 }
