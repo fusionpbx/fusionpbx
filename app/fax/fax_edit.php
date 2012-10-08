@@ -543,6 +543,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$content_fax['label-destination-number'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' value=\"$fax_destination_number\">\n";
+	echo "<br />\n";
+	echo "	".$content_fax['description-destinationa-number']."\n";
+	echo "Enter the fax destination number.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$content_fax['label-email'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
