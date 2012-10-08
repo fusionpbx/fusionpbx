@@ -31,12 +31,15 @@ if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php"))
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
 require_once "includes/header.php";
-require_once "app_languages.php";
 
 echo "<br />";
 echo "<br />";
 
-        foreach($content as $key => $value) {
+//add multi-lingual support
+	echo "<!--\n";
+	require_once "app_languages.php";
+	echo "-->\n";
+	foreach($content as $key => $value) {
 		$content[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
