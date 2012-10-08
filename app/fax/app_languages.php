@@ -12,6 +12,9 @@
 	$content_fax['label-extension']['en-us'] = 'Extension';
 	$content_fax['label-extension']['pt-pt'] = 'Extensão';
 
+	$content_fax['label-destination-number']['en-us'] = 'Destination Number';
+	$content_fax['label-destination-number']['pt-pt'] = '';
+
 	$content_fax['label-name']['en-us'] = 'Name';
 	$content_fax['label-name']['pt-pt'] = 'Nome';
 
@@ -77,6 +80,9 @@
 
 	$content_fax['label-extensioninfo']['en-us'] = 'Enter the fax extension here.';
 	$content_fax['label-extensioninfo']['pt-pt'] = 'Insira aqui a extensão do fax';
+
+	$content_fax['description-destination-number']['en-us'] = 'Destination Number';
+	$content_fax['description-destination-number']['pt-pt'] = '';
 
 	$content_fax['label-emailinfo']['en-us'] = 'Enter the email address to send the FAX to.';
 	$content_fax['label-emailinfo']['pt-pt'] = 'Insira o endereço de e-mail para enviar o fax.';
