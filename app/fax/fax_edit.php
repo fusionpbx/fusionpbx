@@ -26,7 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete')) {
 	//access granted
 }
@@ -35,7 +34,8 @@ else {
 	exit;
 }
 
-        //prepare the languages
+//add multi-lingual support
+	require_once "app_languages.php";
 	foreach($content_fax as $key => $value) {
 		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
