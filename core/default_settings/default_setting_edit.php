@@ -299,7 +299,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='tls'>tls</option>\n";
 		}
 		if ($row['default_setting_value'] == "ssl") { 
-		echo "    <option value='ssl' >ssl</option>\n";
+		echo "    <option value='ssl' selected='selected'>ssl</option>\n";
 		}
 		else {
 		echo "    <option value='ssl'>ssl</option>\n";

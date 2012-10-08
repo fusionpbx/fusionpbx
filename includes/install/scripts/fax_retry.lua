@@ -1,3 +1,18 @@
+--include the lua script
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	include = assert(loadfile(scripts_dir .. "/resources/config.lua"));
+	include();
+
+--connect to the database
+	--ODBC - data source name
+		if (dsn_name) then
+			dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
+		end
+	--FreeSWITCH core db handler
+		if (db_type == "sqlite") then
+			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
+		end
+
 --set default variables
 	fax_retry_sleep = 10;
 	fax_retry_limit = 3;
@@ -20,10 +35,19 @@
 	--variable_fax_transfer_rate: 14400
 
 -- set channel variables to lua variables
+	domain_uuid = env:getHeader("domain_uuid");
 	uuid = env:getHeader("uuid");
 	fax_success = env:getHeader("fax_success");
+	fax_result_code = env:getHeader("fax_result_code");
 	fax_result_text = env:getHeader("fax_result_text");
 	fax_ecm_used = env:getHeader("fax_ecm_used");
+	fax_local_station_id = env:getHeader("fax_local_station_id");
+	fax_document_transferred_pages = env:getHeader("fax_document_transferred_pages");
+	fax_document_total_pages = env:getHeader("fax_document_total_pages");
+	fax_image_resolution = env:getHeader("fax_image_resolution");
+	fax_image_size = env:getHeader("fax_image_size");
+	fax_bad_rows = env:getHeader("fax_bad_rows");
+	fax_transfer_rate = env:getHeader("fax_transfer_rate");
 	fax_retry_attempts = tonumber(env:getHeader("fax_retry_attempts"));
 	fax_retry_limit = tonumber(env:getHeader("fax_retry_limit"));
 	fax_retry_sleep = tonumber(env:getHeader("fax_retry_sleep"));
