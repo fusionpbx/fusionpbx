@@ -21,13 +21,13 @@
         $content_calls['table-description']['en-us'] = 'Description';
 	$content_calls['table-description']['pt-pt'] = 'Descrição';
         
-        $content_calls['lable-callforward']['en-us'] = 'Call Forward';
-	$content_calls['lable-callforward']['pt-pt'] = 'Encaminhamento de Chamadas';
+        $content_calls['label-callforward']['en-us'] = 'Call Forward';
+	$content_calls['label-callforward']['pt-pt'] = 'Encaminhamento de Chamadas';
         
-        $content_calls['lable-followme']['en-us'] = 'Follow Me';
-	$content_calls['lable-followme']['pt-pt'] = 'Segue-me';
+        $content_calls['label-followme']['en-us'] = 'Follow Me';
+	$content_calls['label-followme']['pt-pt'] = 'Segue-me';
         
-        $content_calls['lable-dnd']['en-us'] = 'Do Not Disturb';
-	$content_calls['lable-dnd']['pt-pt'] = 'Não Perturbar';
+        $content_calls['label-dnd']['en-us'] = 'Do Not Disturb';
+	$content_calls['label-dnd']['pt-pt'] = 'Não Perturbar';
 
 ?>

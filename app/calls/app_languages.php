@@ -12,44 +12,44 @@
         $content_calls['description3']['en-us'] = 'The following list the extensions that have been assigned to this user account.';
 	$content_calls['description3']['pt-pt'] = 'A tabela a seguir lista as extensões que foram atribuídas a esta conta de utilizador.';   
         
-        $content_calls['lable-callforward']['en-us'] = 'Call Forward';
-	$content_calls['lable-callforward']['pt-pt'] = 'Encaminhamento de Chamadas';
+        $content_calls['label-callforward']['en-us'] = 'Call Forward';
+	$content_calls['label-callforward']['pt-pt'] = 'Encaminhamento de Chamadas';
         
-        $content_calls['lable-enabled']['en-us'] = 'Enabled';
-	$content_calls['lable-enabled']['pt-pt'] = 'Activo';
+        $content_calls['label-enabled']['en-us'] = 'Enabled';
+	$content_calls['label-enabled']['pt-pt'] = 'Activo';
         
-        $content_calls['lable-enable']['en-us'] = 'Enable';
-	$content_calls['lable-enable']['pt-pt'] = 'Activar';
+        $content_calls['label-enable']['en-us'] = 'Enable';
+	$content_calls['label-enable']['pt-pt'] = 'Activar';
         
-        $content_calls['lable-disabled']['en-us'] = 'Disabled';
-	$content_calls['lable-disabled']['pt-pt'] = 'Desactivo';
+        $content_calls['label-disabled']['en-us'] = 'Disabled';
+	$content_calls['label-disabled']['pt-pt'] = 'Desactivo';
         
-        $content_calls['lable-disable']['en-us'] = 'Disabled';
-	$content_calls['lable-disable']['pt-pt'] = 'Desactivar';
+        $content_calls['label-disable']['en-us'] = 'Disabled';
+	$content_calls['label-disable']['pt-pt'] = 'Desactivar';
         
-        $content_calls['lable-number']['en-us'] = 'Number';
-	$content_calls['lable-number']['pt-pt'] = 'Número';
+        $content_calls['label-number']['en-us'] = 'Number';
+	$content_calls['label-number']['pt-pt'] = 'Número';
         
-        $content_calls['lable-followme']['en-us'] = 'Follow Me';
-	$content_calls['lable-followme']['pt-pt'] = 'Segue-me';
+        $content_calls['label-followme']['en-us'] = 'Follow Me';
+	$content_calls['label-followme']['pt-pt'] = 'Segue-me';
         
-        $content_calls['lable-ring1']['en-us'] = 'Ring 1st Number';
-	$content_calls['lable-ring1']['pt-pt'] = '1º Número a Tocar';
+        $content_calls['label-ring1']['en-us'] = 'Ring 1st Number';
+	$content_calls['label-ring1']['pt-pt'] = '1º Número a Tocar';
         
-        $content_calls['lable-ring2']['en-us'] = 'Ring 2st Number';
-	$content_calls['lable-ring2']['pt-pt'] = '2º Número a Tocar';
+        $content_calls['label-ring2']['en-us'] = 'Ring 2st Number';
+	$content_calls['label-ring2']['pt-pt'] = '2º Número a Tocar';
         
-        $content_calls['lable-ring3']['en-us'] = 'Ring 3st Number';
-	$content_calls['lable-ring3']['pt-pt'] = '3º Número a Tocar';
+        $content_calls['label-ring3']['en-us'] = 'Ring 3st Number';
+	$content_calls['label-ring3']['pt-pt'] = '3º Número a Tocar';
         
-        $content_calls['lable-ring4']['en-us'] = 'Ring 4st Number';
-	$content_calls['lable-ring4']['pt-pt'] = '4º Número a Tocar';
+        $content_calls['label-ring4']['en-us'] = 'Ring 4st Number';
+	$content_calls['label-ring4']['pt-pt'] = '4º Número a Tocar';
         
-        $content_calls['lable-ring5']['en-us'] = 'Ring 5st Number';
-	$content_calls['lable-ring5']['pt-pt'] = '5º Número a Tocar';
+        $content_calls['label-ring5']['en-us'] = 'Ring 5st Number';
+	$content_calls['label-ring5']['pt-pt'] = '5º Número a Tocar';
         
-        $content_calls['lable-ringorder']['en-us'] = 'Ring Order';
-	$content_calls['lable-ringorder']['pt-pt'] = 'Pedir Chamada';
+        $content_calls['label-ringorder']['en-us'] = 'Ring Order';
+	$content_calls['label-ringorder']['pt-pt'] = 'Pedir Chamada';
         
         $content_calls['check-sequence']['en-us'] = 'sequence';
 	$content_calls['ckeck-sequence']['pt-pt'] = 'sequêncial';
@@ -57,8 +57,8 @@
         $content_calls['check-simultaneous']['en-us'] = 'simultaneous';
 	$content_calls['ckeck-simultaneous']['pt-pt'] = 'simultâneo';
         
-        $content_calls['lable-prompt']['en-us'] = 'Prompt to accept the call';
-	$content_calls['lable-prompt']['pt-pt'] = 'Perguntar para aceitar a chamada';
+        $content_calls['label-prompt']['en-us'] = 'Prompt to accept the call';
+	$content_calls['label-prompt']['pt-pt'] = 'Perguntar para aceitar a chamada';
         
         $content_calls['check-true']['en-us'] = 'true';
 	$content_calls['ckeck-true']['pt-pt'] = 'verdadeiro';
@@ -66,8 +66,8 @@
         $content_calls['check-false']['en-us'] = 'false';
 	$content_calls['ckeck-false']['pt-pt'] = 'falso';   
         
-        $content_calls['lable-dnd']['en-us'] = 'Do Not Disturb';
-	$content_calls['lable-dnd']['pt-pt'] = 'Não Perturbar';
+        $content_calls['label-dnd']['en-us'] = 'Do Not Disturb';
+	$content_calls['label-dnd']['pt-pt'] = 'Não Perturbar';
         
         $content_calls['button-back']['en-us'] = 'Back';
 	$content_calls['button-back']['pt-pt'] = 'Voltar';
