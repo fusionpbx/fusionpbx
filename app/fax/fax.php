@@ -36,7 +36,8 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
-//prepare the languages
+//add multi-lingual support
+	require_once "app_languages.php";
 	foreach($content_fax as $key => $value) {
 		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
