@@ -322,7 +322,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($max_members) == 0) { $max_members = 0; }
 	if (strlen($wait_mod) == 0) { $wait_mod = 'false'; }
 	if (strlen($announce) == 0) { $announce = 'true'; }
-	if (strlen($enter_sound) == 0) { $enter_sound = 'tone_stream://%(200,0,500,600,700)'; }
+	if ($action == "add") {
+		if (strlen($enter_sound) == 0) { $enter_sound = 'tone_stream://%(200,0,500,600,700)'; }
+	}
 	if (strlen($mute) == 0) { $mute = 'false'; }
 	if (strlen($enabled) == 0) { $enabled = 'true'; }
 
