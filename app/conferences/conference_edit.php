@@ -366,7 +366,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_name' maxlength='255' value=\"$conference_name\">\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-nameinfo']."\n";
+	echo "".$content_conferences['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -377,7 +377,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"$conference_extension\">\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-extensioninfo']."\n";
+	echo "".$content_conferences['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -388,7 +388,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"$conference_pin_number\">\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-pininfo']."\n";
+	echo "".$content_conferences['description-pin']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -434,7 +434,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<input type=\"submit\" class='btn' value=\"".$content_conferences['button-add']."\">\n";
 			unset($sql, $result);
 			echo "			<br>\n";
-			echo "			".$content_conferences['label-addinfo']."\n";
+			echo "			".$content_conferences['description-useradd']."\n";
 			echo "			<br />\n";
 			echo "		</td>";
 			echo "	</tr>";
@@ -455,7 +455,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($conference_profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-profileinfo']."\n";
+	echo "".$content_conferences['description-profile']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -466,7 +466,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"$conference_flags\">\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-flagsinfo']."\n";
+	echo "".$content_conferences['description-flags']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -488,7 +488,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "              </select>\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-orderinfo']."\n";
+	echo "".$content_conferences['description-order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -513,7 +513,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-enabledinfo']."\n";
+	echo "".$content_conferences['description-confenable']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -524,7 +524,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_description' maxlength='255' value=\"$conference_description\">\n";
 	echo "<br />\n";
-	echo "".$content_conferences['label-descriptioninfo']."\n";
+	echo "".$content_conferences['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

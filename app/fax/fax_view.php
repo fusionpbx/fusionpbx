@@ -362,7 +362,7 @@ else {
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<input type=\"text\" name=\"fax_number\" class='formfld' style='' value=\"\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-faxnumberinfo']."\n";
+	echo "".$content_fax['description-faxnumber']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

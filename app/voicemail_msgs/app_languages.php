@@ -66,8 +66,8 @@
         $contentvoicemail_msgs['label-enabled']['en-us'] = 'Voicemail Enabled';
 	$contentvoicemail_msgs['label-enabled']['pt-pt'] = 'Correio de Voz Ativado';
         
-        $contentvoicemail_msgs['label-enabledinfo']['en-us'] = 'Enable/disable voicemail for this extension.';
-	$contentvoicemail_msgs['label-enabledinfo']['pt-pt'] = 'Ativar/desativar o correio de voz para esta extensão.';  
+        $contentvoicemail_msgs['description-confenable']['en-us'] = 'Enable/disable voicemail for this extension.';
+	$contentvoicemail_msgs['description-confenable']['pt-pt'] = 'Ativar/desativar o correio de voz para esta extensão.';
         
         $contentvoicemail_msgs['check-true']['en-us'] = 'true';
 	$contentvoicemail_msgs['ckeck-true']['pt-pt'] = 'verdade';

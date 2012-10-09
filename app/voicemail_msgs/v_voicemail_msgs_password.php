@@ -329,7 +329,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo " ".$contentvoicemail_msgs['label-enabledinfo']."\n";
+	echo " ".$contentvoicemail_msgs['description-confenable']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";	
 

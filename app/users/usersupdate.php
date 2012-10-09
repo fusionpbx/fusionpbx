@@ -391,7 +391,7 @@ else {
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
-	echo "		".$contentusers['label-infotime']."<br />\n";
+	echo "		".$contentusers['description-timezone']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>";

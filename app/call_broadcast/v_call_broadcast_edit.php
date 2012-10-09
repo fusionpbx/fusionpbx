@@ -247,7 +247,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"$broadcast_name\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-nameinfo']."\n";
+	echo "".$content_broadcast['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -258,7 +258,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_timeout' maxlength='255' value=\"$broadcast_timeout\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-timeoutinfo']."\n";
+	echo "".$content_broadcast['description-timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -269,7 +269,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_concurrent_limit' maxlength='255' value=\"$broadcast_concurrent_limit\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-concurrentlimitinfo']."\n";
+	echo "".$content_broadcast['description-concurrentlimit']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -310,7 +310,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"$broadcast_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-calleridnameinfo']."\n";
+	echo "".$content_broadcast['description-calleridname']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -321,7 +321,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_number' maxlength='255' value=\"$broadcast_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-calleridnumberinfo']."\n";
+	echo "".$content_broadcast['description-calleridnumber']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 /*
@@ -359,7 +359,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"$broadcast_destination_data\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-destinationinfo']." <br /><br />\n";
+	echo "".$content_broadcast['description-destination']." <br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -370,7 +370,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>$broadcast_phone_numbers</textarea>\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-phoneinfo']." <br /><br />\n";
+	echo "".$content_broadcast['description-phone']." <br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -381,7 +381,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_description' maxlength='255' value=\"$broadcast_description\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['label-descriptioninfo']."\n";
+	echo "".$content_broadcast['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

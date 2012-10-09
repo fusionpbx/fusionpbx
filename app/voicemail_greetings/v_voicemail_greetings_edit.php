@@ -206,7 +206,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='greeting_name' maxlength='255' value=\"$greeting_name\">\n";
 	echo "<br />\n";
-	echo "".$contentvoicemail_greetings['label-nameinfo']."\n";
+	echo "".$contentvoicemail_greetings['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -217,7 +217,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='greeting_description' maxlength='255' value=\"$greeting_description\">\n";
 	echo "<br />\n";
-	echo "".$contentvoicemail_greetings['label-descriptioninfo']."\n";
+	echo "".$contentvoicemail_greetings['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";

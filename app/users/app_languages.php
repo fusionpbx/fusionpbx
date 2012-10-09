@@ -54,8 +54,8 @@
     $contentusers['label-time']['en-us'] = 'Time Zone';
     $contentusers['label-time']['pt-pt'] = 'Fuso Horário';
 
-    $contentusers['label-infotime']['en-us'] = 'Select the default time zone.';
-    $contentusers['label-infotime']['pt-pt'] = 'Selecione o fuso horário padrão.';
+    $contentusers['description-timezone']['en-us'] = 'Select the default time zone.';
+    $contentusers['description-timezone']['pt-pt'] = 'Selecione o fuso horário padrão.';
 
     $contentusers['confirm-password']['en-us'] = 'Passwords did not match.';
     $contentusers['confirm-password']['pt-pt'] = 'As palavras chave não coincidem.';

@@ -526,7 +526,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_name' maxlength='255' value=\"$fax_name\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-nameinfo']."\n";
+	echo "".$content_fax['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -537,7 +537,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_extension' maxlength='255' value=\"$fax_extension\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-extensioninfo']."\n";
+	echo "".$content_fax['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -560,7 +560,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
 	echo "<br />\n";
-	echo "	".$content_fax['label-emailinfo']."\n";
+	echo "	".$content_fax['description-email']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -571,7 +571,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_pin_number' maxlength='255' value=\"$fax_pin_number\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-pininfo']."\n";
+	echo "".$content_fax['description-pin']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -582,7 +582,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value=\"$fax_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-calleridnameinfo']."\n";
+	echo "".$content_fax['description-calleridname']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -593,7 +593,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' value=\"$fax_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-calleridnumberinfo']."\n";
+	echo "".$content_fax['description-calleridnumber']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -604,7 +604,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".format_phone($fax_forward_number)."\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-forwardinfo']."\n";
+	echo "".$content_fax['description-forwardnumber']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -648,7 +648,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<input type=\"submit\" class='btn' value=\"".$content_fax['button-add']."\">\n";
 			unset($sql, $result);
 			echo "			<br>\n";
-			echo "			".$content_fax['label-addinfo']."\n";
+			echo "			".$content_fax['description-useradd']."\n";
 			echo "			<br />\n";
 			echo "		</td>";
 			echo "	</tr>";
@@ -662,7 +662,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_description' maxlength='255' value=\"$fax_description\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['label-descriptioninfo']."\n";
+	echo "".$content_fax['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";

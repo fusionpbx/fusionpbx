@@ -56,14 +56,14 @@
         $contentvoicemail_greetings['label-name']['en-us'] = 'Greeting Name';
 	$contentvoicemail_greetings['label-name']['pt-pt'] = 'Nome da Saudação';
         
-        $contentvoicemail_greetings['label-nameinfo']['en-us'] = 'Greeting Name. example: greeting_x';
-	$contentvoicemail_greetings['label-nameinfo']['pt-pt'] = 'Nome da Saudação. exemplo: saudação_x';
+        $contentvoicemail_greetings['description-name']['en-us'] = 'Greeting Name. example: greeting_x';
+	$contentvoicemail_greetings['description-name']['pt-pt'] = 'Nome da Saudação. exemplo: saudação_x';
         
         $contentvoicemail_greetings['label-description']['en-us'] = 'Description';
 	$contentvoicemail_greetings['label-description']['pt-pt'] = 'Descrição';
         
-        $contentvoicemail_greetings['label-descriptioninfo']['en-us'] = 'You may enter a description here for your reference (not parsed).';
-	$contentvoicemail_greetings['label-descriptioninfo']['pt-pt'] = 'Pode inserir aqui uma descrição para referência.';
+        $contentvoicemail_greetings['description-info']['en-us'] = 'You may enter a description here for your reference (not parsed).';
+	$contentvoicemail_greetings['description-info']['pt-pt'] = 'Pode inserir aqui uma descrição para referência.';
         
         
 ?>
