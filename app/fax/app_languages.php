@@ -81,8 +81,8 @@
 	$content_fax['description-extension']['en-us'] = 'Enter the fax extension here.';
 	$content_fax['description-extension']['pt-pt'] = 'Insira aqui a extensão do fax';
 
-	$content_fax['description-destination-number']['en-us'] = 'Destination Number';
-	$content_fax['description-destination-number']['pt-pt'] = 'Número de Destino';
+	$content_fax['description-destination-number']['en-us'] = 'Enter the fax destination number';
+	$content_fax['description-destination-number']['pt-pt'] = 'Insira o número de fax para onde pretende enviar';
 
 	$content_fax['description-email']['en-us'] = 'Enter the email address to send the FAX to.';
 	$content_fax['description-email']['pt-pt'] = 'Insira o endereço de e-mail para enviar o fax.';
