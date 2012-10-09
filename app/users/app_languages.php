@@ -36,20 +36,20 @@
     $content_users['label-infostatus']['en-us'] = 'Select a the user status.';
     $content_users['label-infostatus']['pt-pt'] = 'Selecione um estado para o utilizador.';
 
-    $content_users['check-availablestatus']['en-us'] = 'Available';
-    $content_users['check-availablestatus']['pt-pt'] = 'Disponível';
+    $content_users['check-available-status']['en-us'] = 'Available';
+    $content_users['check-available-status']['pt-pt'] = 'Disponível';
 
-    $content_users['check-availableondemandstatus']['en-us'] = 'Available (On Demand)';
-    $content_users['check-availableondemandstatus']['pt-pt'] = 'Disponível (A pedido)';
+    $content_users['check-available-ondemand-status']['en-us'] = 'Available (On Demand)';
+    $content_users['check-available-ondemand-status']['pt-pt'] = 'Disponível (A pedido)';
 
-    $content_users['check-logedoutstatus']['en-us'] = 'Logged Out';
-    $content_users['check-logedoutstatus']['pt-pt'] = 'Desligado';
+    $content_users['check-loggedout-status']['en-us'] = 'Logged Out';
+    $content_users['check-loggedout-status']['pt-pt'] = 'Desligado';
 
-    $content_users['check-onbreakstatus']['en-us'] = 'On Break';
-    $content_users['check-onbreakstatus']['pt-pt'] = 'Em Pausa';
+    $content_users['check-onbreak-status']['en-us'] = 'On Break';
+    $content_users['check-onbreak-status']['pt-pt'] = 'Em Pausa';
 
-    $content_users['check-donotdisturbstatus']['en-us'] = 'Do Not Disturb';
-    $content_users['check-donotdisturbstatus']['pt-pt'] = 'Não Perturbar';
+    $content_users['check-do-not-disturb-status']['en-us'] = 'Do Not Disturb';
+    $content_users['check-do-not-disturb-status']['pt-pt'] = 'Não Perturbar';
 
     $content_users['label-time']['en-us'] = 'Time Zone';
     $content_users['label-time']['pt-pt'] = 'Fuso Horário';

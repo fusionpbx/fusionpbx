@@ -230,10 +230,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content_broadcast['label-callbroadcast']."</b></td>\n";
+		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content_broadcast['label-call-broadcast']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content_broadcast['label-callbroadcastedit']."</b></td>\n";
+		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content_broadcast['label-call-broadcast-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='v_call_broadcast.php'\" value='".$content_broadcast['button-back']."'>\n";
@@ -264,12 +264,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_broadcast['label-concurrentlimit'].":\n";
+	echo "	".$content_broadcast['label-concurrent-limit'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_concurrent_limit' maxlength='255' value=\"$broadcast_concurrent_limit\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['description-concurrentlimit']."\n";
+	echo "".$content_broadcast['description-concurrent-limit']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -305,23 +305,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_broadcast['label-calleridname'].":\n";
+	echo "	".$content_broadcast['label-callerid-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"$broadcast_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['description-calleridname']."\n";
+	echo "".$content_broadcast['description-callerid-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_broadcast['label-calleridnumber'].":\n";
+	echo "	".$content_broadcast['label-callerid-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_number' maxlength='255' value=\"$broadcast_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "".$content_broadcast['description-calleridnumber']."\n";
+	echo "".$content_broadcast['description-callerid-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 /*

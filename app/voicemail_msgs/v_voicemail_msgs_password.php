@@ -35,8 +35,8 @@ else {
 	exit;
 }
 
-        foreach($contentvoicemail_msgs as $key => $value) {
-		$contentvoicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
+        foreach($content_voicemail_msgs as $key => $value) {
+		$content_voicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //set the action as an add or update
@@ -119,7 +119,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
 		//if (strlen($password) == 0) { $msg .= "Please provide: Password<br>\n"; }
 		//if (strlen($mailbox) == 0) { $msg .= "Please provide: Mailbox<br>\n"; }
-		if (strlen($vm_password) == 0) { $msg .= "".$contentvoicemail_msgs['confirm-password']."<br>\n"; }
+		if (strlen($vm_password) == 0) { $msg .= "".$content_voicemail_msgs['confirm-password']."<br>\n"; }
 		//if (strlen($accountcode) == 0) { $msg .= "Please provide: Account Code<br>\n"; }
 		//if (strlen($effective_caller_id_name) == 0) { $msg .= "Please provide: Effective Caller ID Name<br>\n"; }
 		//if (strlen($effective_caller_id_number) == 0) { $msg .= "Please provide: Effective Caller ID Number<br>\n"; }
@@ -189,7 +189,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_msgs.php\">\n";
 				echo "<div align='center'>\n";
-				echo "".$contentvoicemail_msgs['confirm-update']."\n";
+				echo "".$content_voicemail_msgs['confirm-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -271,18 +271,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td width='30%' nowrap valign='top' align='left'><b>".$contentvoicemail_msgs['label-voicemail']." $extension</b></td>\n";
-	echo "	<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_msgs.php'\" value='".$contentvoicemail_msgs['button-back']."'><br /><br /></td>\n";
+	echo "	<td width='30%' nowrap valign='top' align='left'><b>".$content_voicemail_msgs['label-voicemail']." $extension</b></td>\n";
+	echo "	<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_msgs.php'\" value='".$content_voicemail_msgs['button-back']."'><br /><br /></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$contentvoicemail_msgs['label-password'].":\n";
+	echo "    ".$content_voicemail_msgs['label-password'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='password' name='vm_password' id='password' onfocus=\"document.getElementById('show_password').innerHTML = 'Password: '+document.getElementById('password').value;\" autocomplete='off' maxlength='50' value=\"$vm_password\">\n";
 	echo "<br />\n";
-	echo "<span onclick=\"document.getElementById('show_password').innerHTML = ''\">".$contentvoicemail_msgs['label-passwordinfo']." </span><span id='show_password'></span>\n";
+	echo "<span onclick=\"document.getElementById('show_password').innerHTML = ''\">".$content_voicemail_msgs['description-password']." </span><span id='show_password'></span>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -310,7 +310,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$contentvoicemail_msgs['label-enabled'].":\n";
+	echo "    ".$content_voicemail_msgs['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='vm_enabled'>\n";
@@ -329,24 +329,24 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo " ".$contentvoicemail_msgs['description-confenable']."\n";
+	echo " ".$content_voicemail_msgs['description-confenable']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";	
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$contentvoicemail_msgs['label-mail'].":\n";
+	echo "    ".$content_voicemail_msgs['label-mail'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='vm_mailto' maxlength='255' value=\"$vm_mailto\">\n";
 	echo "<br />\n";
-	echo "".$contentvoicemail_msgs['label-mailinfo']."\n";
+	echo "".$content_voicemail_msgs['description-email']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$contentvoicemail_msgs['label-attach'].":\n";
+	echo "    ".$content_voicemail_msgs['label-attach'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='vm_attach_file'>\n";
@@ -365,13 +365,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "".$contentvoicemail_msgs['label-attachinfo']."\n";
+	echo "".$content_voicemail_msgs['description-email-attachment']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$contentvoicemail_msgs['label-vm'].":\n";
+	echo "    ".$content_voicemail_msgs['label-vm'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='vm_keep_local_after_email'>\n";
@@ -390,7 +390,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "".$contentvoicemail_msgs['label-vminfo']." \n";
+	echo "".$content_voicemail_msgs['description-keep-local']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -410,7 +410,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='extension_uuid' value='$extension_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$contentvoicemail_msgs['button-save']."'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$content_voicemail_msgs['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

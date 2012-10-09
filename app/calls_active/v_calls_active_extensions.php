@@ -239,34 +239,34 @@ else {
 	echo "			<select id='agent_status' name='agent_status' class='formfld' style='width:125px' nowrap='nowrap' onchange=\"send_cmd($cmd);\">\n";
 	echo "				<option value='                '></option>\n";
 	if ($user_status == "Available") {
-		echo "		<option value='Available' selected='selected'>".$content_calls_active['check-availablestatus']."</option>\n";
+		echo "		<option value='Available' selected='selected'>".$content_calls_active['check-available-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Available'>".$content_calls_active['check-availablestatus']."</option>\n";
+		echo "		<option value='Available'>".$content_calls_active['check-available-status']."</option>\n";
 	}
 	if ($user_status == "Available (On Demand)") {
-		echo "		<option value='Available_On_Demand' selected='selected'>".$content_calls_active['check-availableondemandstatus']."</option>\n";
+		echo "		<option value='Available_On_Demand' selected='selected'>".$content_calls_active['check-available-ondemand-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Available_On_Demand'>".$content_calls_active['check-availableondemandstatus']."</option>\n";
+		echo "		<option value='Available_On_Demand'>".$content_calls_active['check-available-ondemand-status']."</option>\n";
 	}
 	if ($user_status == "Logged Out") {
-		echo "		<option value='Logged_Out' selected='selected'>".$content_calls_active['check-logedoutstatus']."</option>\n";
+		echo "		<option value='Logged_Out' selected='selected'>".$content_calls_active['check-loggedout-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Logged_Out'>".$content_calls_active['check-logedoutstatus']."</option>\n";
+		echo "		<option value='Logged_Out'>".$content_calls_active['check-loggedout-status']."</option>\n";
 	}
 	if ($user_status == "On Break") {
-		echo "		<option value='On_Break' selected='selected'>".$content_calls_active['check-onbreakstatus']."</option>\n";
+		echo "		<option value='On_Break' selected='selected'>".$content_calls_active['check-onbreak-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='On_Break'>".$content_calls_active['check-onbreakstatus']."</option>\n";
+		echo "		<option value='On_Break'>".$content_calls_active['check-onbreak-status']."</option>\n";
 	}
 	if ($user_status == "Do Not Disturb") {
-		echo "		<option value='Do_Not_Disturb' selected='selected'>".$content_calls_active['check-donotdisturbstatus']."</option>\n";
+		echo "		<option value='Do_Not_Disturb' selected='selected'>".$content_calls_active['check-do-not-disturb-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Do_Not_Disturb'>".$content_calls_active['check-donotdisturbstatus']."</option>\n";
+		echo "		<option value='Do_Not_Disturb'>".$content_calls_active['check-do-not-disturb-status']."</option>\n";
 	}
 	echo "			</select>\n";
 	echo "		</td>\n";

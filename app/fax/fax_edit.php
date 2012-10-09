@@ -577,23 +577,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-calleridname'].":\n";
+	echo "	".$content_fax['label-callerid-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value=\"$fax_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-calleridname']."\n";
+	echo "".$content_fax['description-callerid-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-calleridnumber'].":\n";
+	echo "	".$content_fax['label-callerid-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' value=\"$fax_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-calleridnumber']."\n";
+	echo "".$content_fax['description-callerid-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

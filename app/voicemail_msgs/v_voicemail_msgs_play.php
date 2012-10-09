@@ -36,8 +36,8 @@ else {
 	exit;
 }
 
-        foreach($contentvoicemail_msgs as $key => $value) {
-		$contentvoicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
+        foreach($content_voicemail_msgs as $key => $value) {
+		$content_voicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //get the http get values
@@ -53,7 +53,7 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>".$contentvoicemail_msgs['confirm-socket']."<br /></div>";
+		$msg = "<div align='center'>".$content_voicemail_msgs['confirm-socket']."<br /></div>";
 	}
 	
 //show the error message or show the content
@@ -62,7 +62,7 @@ else {
 		echo "<div align='center'>\n";
 		echo "	<table width='40%'>\n";
 		echo "		<tr>\n";
-		echo "			<th align='left'>".$contentvoicemail_msgs['label-message']."</th>\n";
+		echo "			<th align='left'>".$content_voicemail_msgs['label-message']."</th>\n";
 		echo "		</tr>\n";
 		echo "		<tr>\n";
 		echo "			<td class='row_style1'><strong>$msg</strong></td>\n";

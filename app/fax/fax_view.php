@@ -375,7 +375,7 @@ else {
 	echo "	<input name=\"type\" type=\"hidden\" value=\"fax_send\">\n";
 	echo "	<input name=\"fax_file\" type=\"file\" class=\"btn\" id=\"fax_file\">\n";
 	echo "	<br />\n";
-	echo "	".$content_fax['label-uploadinfo']."\n";
+	echo "	".$content_fax['description-upload']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

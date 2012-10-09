@@ -54,9 +54,9 @@ if (permission_exists('extensions_active_assigned_view')) {
 		echo "<th>".$content_calls_active['label-time']."</th>\n";
 		//echo "<th>Direction</th>\n";
 		//echo "<th>Profile</th>\n";
-		echo "<th>".$content_calls_active['label-cidname']."</th>\n";
-		echo "<th>".$content_calls_active['label-cidnum']."</th>\n";
-		echo "<th>".$content_calls_active['label-dest']."</th>\n";
+		echo "<th>".$content_calls_active['label-cid-name']."</th>\n";
+		echo "<th>".$content_calls_active['label-cid-number']."</th>\n";
+		echo "<th>".$content_calls_active['label-destination']."</th>\n";
 		echo "<th>".$content_calls_active['label-app']."</th>\n";
 		echo "<th>".$content_calls_active['label-secure']."</th>\n";
 		echo "<th>".$content_calls_active['label-name']."</th>\n";

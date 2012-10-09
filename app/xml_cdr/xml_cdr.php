@@ -156,7 +156,7 @@ else {
 				echo "	</tr>\n";
 
 				echo "	<tr>\n";
-				echo "		<td align=\"left\">".$content_cdr['label-cidname'].":</td>\n";
+				echo "		<td align=\"left\">".$content_cdr['label-cid-name'].":</td>\n";
 				echo "		<td align=\"left\"><input type='text' class='formfld' name='caller_id_name' style='width:100%' value='$caller_id_name'></td>\n";
 				echo "	</tr>\n";
 

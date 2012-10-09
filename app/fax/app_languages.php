@@ -27,8 +27,8 @@
 	$content_fax['label-upload']['en-us'] = 'Upload';
 	$content_fax['label-upload']['pt-pt'] = 'Carregar';
 
-	$content_fax['label-uploadinfo']['en-us'] = 'Select the file to upload and send as a fax.';
-	$content_fax['label-uploadinfo']['pt-pt'] = 'Selecione o ficheiro para fazer o upload e enviar por fax.';
+	$content_fax['description-upload']['en-us'] = 'Select the file to upload and send as a fax.';
+	$content_fax['description-upload']['pt-pt'] = 'Selecione o ficheiro para fazer o upload e enviar por fax.';
 
 	$content_fax['button-back']['en-us'] = 'Back';
 	$content_fax['button-back']['pt-pt'] = 'Voltar';
@@ -96,17 +96,17 @@
 	$content_fax['description-pin']['en-us'] = 'Enter the PIN number here.';
 	$content_fax['description-pin']['pt-pt'] = 'Insira aqui o número do PIN.';
 
-	$content_fax['label-calleridname']['en-us'] = 'Caller ID Name';
-	$content_fax['label-calleridname']['pt-pt'] = 'Nome de Origem';
+	$content_fax['label-callerid-name']['en-us'] = 'Caller ID Name';
+	$content_fax['label-callerid-name']['pt-pt'] = 'Nome de Origem';
 
-	$content_fax['label-calleridnumber']['en-us'] = 'Caller ID Number';
-	$content_fax['label-calleridnumber']['pt-pt'] = 'Número de Origem';
+	$content_fax['label-callerid-number']['en-us'] = 'Caller ID Number';
+	$content_fax['label-callerid-number']['pt-pt'] = 'Número de Origem';
 
-	$content_fax['description-calleridname']['en-us'] = 'Enter the Caller ID name here.';
-	$content_fax['description-calleridname']['pt-pt'] = 'Insira aqui o nome de origem.';
+	$content_fax['description-callerid-name']['en-us'] = 'Enter the Caller ID name here.';
+	$content_fax['description-callerid-name']['pt-pt'] = 'Insira aqui o nome de origem.';
 
-	$content_fax['description-calleridnumber']['en-us'] = 'Enter the Caller ID number here.';
-	$content_fax['description-calleridnumber']['pt-pt'] = 'Insira aqui o número de origem.';
+	$content_fax['description-callerid-number']['en-us'] = 'Enter the Caller ID number here.';
+	$content_fax['description-callerid-number']['pt-pt'] = 'Insira aqui o número de origem.';
 
 	$content_fax['label-forward']['en-us'] = 'Forward Number';
 	$content_fax['label-forward']['pt-pt'] = 'Número de Encaminhamento';

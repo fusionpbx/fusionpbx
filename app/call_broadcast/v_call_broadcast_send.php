@@ -201,7 +201,7 @@ function cmd_async($cmd) {
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "<td class='row_style1' align='center'>\n";
-				echo "	<strong>".$content_broadcast['label-callbroadcast']." $broadcast_name ".$content_broadcast['label-hasbeen']."</strong>\n";
+				echo "	<strong>".$content_broadcast['label-call-broadcast']." $broadcast_name ".$content_broadcast['label-hasbeen']."</strong>\n";
 				echo "	<br /><br />\n";
 				echo "	<table width='100%'>\n";
 				echo "	<tr>\n";

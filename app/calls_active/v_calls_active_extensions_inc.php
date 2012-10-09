@@ -340,9 +340,9 @@ else {
 					echo "<th>".$content_calls_active['label-time']."</th>\n";
 					if (if_group("admin") || if_group("superadmin")) {
 						if (strlen(($_GET['rows'])) == 0) {
-							echo "<th>".$content_calls_active['label-cidname']."</th>\n";
-							echo "<th>".$content_calls_active['label-cidnum']."</th>\n";
-							echo "<th>".$content_calls_active['label-dest']."</th>\n";
+							echo "<th>".$content_calls_active['label-cid-name']."</th>\n";
+							echo "<th>".$content_calls_active['label-cid-number']."</th>\n";
+							echo "<th>".$content_calls_active['label-destination']."</th>\n";
 							echo "<th>".$content_calls_active['label-app']."</th>\n";
 							echo "<th>".$content_calls_active['label-secure']."</th>\n";
 						}
@@ -508,9 +508,9 @@ else {
 							echo "<th>".$content_calls_active['label-time']."</th>\n";
 							if (if_group("admin") || if_group("superadmin")) {
 								if ($_GET['rows'] == 0) {
-									echo "<th>".$content_calls_active['label-cidname']."</th>\n";
-									echo "<th>".$content_calls_active['label-cidnum']."</th>\n";
-									echo "<th>".$content_calls_active['label-dest']."</th>\n";
+									echo "<th>".$content_calls_active['label-cid-name']."</th>\n";
+									echo "<th>".$content_calls_active['label-cid-number']."</th>\n";
+									echo "<th>".$content_calls_active['label-destination']."</th>\n";
 									echo "<th>".$content_calls_active['label-app']."</th>\n";
 									echo "<th>".$content_calls_active['label-secure']."</th>\n";
 								}
@@ -535,8 +535,8 @@ else {
 					echo "<tr>\n";
 					echo "<th valign='top'>".$content_calls_active['label-parkext']."</th>\n";
 					echo "<th valign='top'>".$content_calls_active['label-time']."</th>\n";
-					echo "<th valign='top'>".$content_calls_active['label-cidname']."</th>\n";
-					echo "<th valign='top'>".$content_calls_active['label-cidnum']."</th>\n";
+					echo "<th valign='top'>".$content_calls_active['label-cid-name']."</th>\n";
+					echo "<th valign='top'>".$content_calls_active['label-cid-number']."</th>\n";
 					echo "</tr>\n";
 					foreach ($valet_array as $row) {
 						if (strlen($row['extension']) > 0) {

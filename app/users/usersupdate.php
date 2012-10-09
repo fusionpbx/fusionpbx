@@ -290,34 +290,34 @@ else {
 		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		if ($user_status == "Available") {
-			echo "		<option value='Available' selected='selected'>".$content_users['check-availablestatus']."</option>\n";
+			echo "		<option value='Available' selected='selected'>".$content_users['check-available-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Available'>".$content_users['check-availablestatus']."</option>\n";
+			echo "		<option value='Available'>".$content_users['check-available-status']."</option>\n";
 		}
 		if ($user_status == "Available (On Demand)") {
-			echo "		<option value='Available (On Demand)' selected='selected'>".$content_users['check-availableondemandstatus']."</option>\n";
+			echo "		<option value='Available (On Demand)' selected='selected'>".$content_users['check-available-ondemand-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Available (On Demand)'>".$content_users['check-availableondemandstatus']."</option>\n";
+			echo "		<option value='Available (On Demand)'>".$content_users['check-available-ondemand-status']."</option>\n";
 		}
 		if ($user_status == "Logged Out") {
-			echo "		<option value='Logged Out' selected='selected'>".$content_users['check-logedoutstatus']."</option>\n";
+			echo "		<option value='Logged Out' selected='selected'>".$content_users['check-loggedout-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Logged Out'>".$content_users['check-logedoutstatus']."</option>\n";
+			echo "		<option value='Logged Out'>".$content_users['check-loggedout-status']."</option>\n";
 		}
 		if ($user_status == "On Break") {
-			echo "		<option value='On Break' selected='selected'>".$content_users['check-onbreakstatus']."</option>\n";
+			echo "		<option value='On Break' selected='selected'>".$content_users['check-onbreak-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='On Break'>".$content_users['check-onbreakstatus']."</option>\n";
+			echo "		<option value='On Break'>".$content_users['check-onbreak-status']."</option>\n";
 		}
 		if ($user_status == "Do Not Disturb") {
-			echo "		<option value='Do Not Disturb' selected='selected'>".$content_users['check-donotdisturbstatus']."</option>\n";
+			echo "		<option value='Do Not Disturb' selected='selected'>".$content_users['check-do-not-disturb-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Do Not Disturb'>".$content_users['check-donotdisturbstatus']."</option>\n";
+			echo "		<option value='Do Not Disturb'>".$content_users['check-do-not-disturb-status']."</option>\n";
 		}
 		echo "		</select>\n";
 		echo "		<br />\n";

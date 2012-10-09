@@ -35,8 +35,8 @@ else {
 	exit;
 }
 
-        foreach($contentvoicemail_greetings as $key => $value) {
-		$contentvoicemail_greetings[$key] = $value[$_SESSION['domain']['language']['code']];
+        foreach($content_voicemail_greetings as $key => $value) {
+		$content_voicemail_greetings[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 if (count($_GET)>0) {
@@ -81,7 +81,7 @@ if (strlen($id)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=$user_id\">\n";
 	echo "<div align='center'>\n";
-	echo "".$contentvoicemail_greetings['confirm-delete2']."\n";
+	echo "".$content_voicemail_greetings['confirm-delete2']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;

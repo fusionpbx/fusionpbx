@@ -48,7 +48,7 @@ else {
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$content_cdr['label-callstatistics']."</b></td>\n";
+	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$content_cdr['label-call-statistics']."</b></td>\n";
 	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' value='CSV' onclick=\"document.location.href='xml_cdr_statistics_csv.php';\">\n";
 	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='".$content_cdr['button-back']."'>\n";
@@ -56,7 +56,7 @@ else {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$content_cdr['label-callstatisticsdescription']." \n";
+	echo "			".$content_cdr['label-call-statistics-description']." \n";
 	echo "			<br />\n";
 	echo "			<br />\n";
 	echo "		</td>\n";
@@ -159,7 +159,7 @@ else {
 	echo "	<th nowrap='nowrap'>".$content_cdr['table-time']."</th>\n";
 	echo "	<th>Volume</th>\n";
 	echo "	<th>".$content_cdr['table-minutes']."</th>\n";
-	echo "	<th>".$content_cdr['table-callsminutes']."</th>\n";
+	echo "	<th>".$content_cdr['table-calls-per-minute']."</th>\n";
 	echo "	<th>".$content_cdr['table-missed']."</th>\n";
 	echo "	<th>ASR</th>\n";
 	echo "	<th>ALOC</th>\n";
@@ -185,7 +185,7 @@ else {
 			echo "	<th nowrap='nowrap'>".$content_cdr['table-time']."</th>\n";
 			echo "	<th>Volume</th>\n";
 			echo "	<th>".$content_cdr['table-minutes']."</th>\n";
-			echo "	<th nowrap='nowrap'>".$content_cdr['table-callsminutes']."</th>\n";
+			echo "	<th nowrap='nowrap'>".$content_cdr['table-calls-per-minute']."</th>\n";
 			echo "	<th>".$content_cdr['table-missed']."</th>\n";
 			echo "	<th>ASR</th>\n";
 			echo "	<th>ALOC</th>\n";

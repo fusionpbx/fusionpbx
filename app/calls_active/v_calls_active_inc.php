@@ -85,10 +85,10 @@ else {
 			//echo "<th>Name</th>\n";
 			echo "<th>".$content_calls_active['label-num']."</th>\n";
 			//echo "<th>State</th>\n";
-			echo "<th>".$content_calls_active['label-cidname']."</th>\n";
-			echo "<th>".$content_calls_active['label-cidnum']."</th>\n";
+			echo "<th>".$content_calls_active['label-cid-name']."</th>\n";
+			echo "<th>".$content_calls_active['label-cid-number']."</th>\n";
 			//echo "<th>IP Addr</th>\n";
-			echo "<th>".$content_calls_active['label-dest']."</th>\n";
+			echo "<th>".$content_calls_active['label-destination']."</th>\n";
 			echo "<th>".$content_calls_active['label-app']."</th>\n";
 			//echo "<th>Dialplan</th>\n";
 			//echo "<th>Context</th>\n";

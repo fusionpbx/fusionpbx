@@ -7,14 +7,14 @@
     $content_broadcast['label-name']['en-us'] = 'Name';
     $content_broadcast['label-name']['pt-pt'] = 'Nome';
 
-    $content_broadcast['label-concurrentlimit']['en-us'] = 'Concurrent Limit';
-    $content_broadcast['label-concurrentlimit']['pt-pt'] = 'Limite de concorrencia';
+    $content_broadcast['label-concurrent-limit']['en-us'] = 'Concurrent Limit';
+    $content_broadcast['label-concurrent-limit']['pt-pt'] = 'Limite de concorrencia';
 
     $content_broadcast['label-description']['en-us'] = 'Description';
     $content_broadcast['label-description']['pt-pt'] = 'Descrição';
 
-    $content_broadcast['confirm-deleteinfo']['en-us'] = 'Do you really want to delete this?';
-    $content_broadcast['confirm-deleteinfo']['pt-pt'] = 'Deseja realmente eliminar isto?';
+    $content_broadcast['confirm-delete-info']['en-us'] = 'Do you really want to delete this?';
+    $content_broadcast['confirm-delete-info']['pt-pt'] = 'Deseja realmente eliminar isto?';
 
     //v_call_broadcast_delete
     $content_broadcast['confirm-delete']['en-us'] = 'Delete Complete';
@@ -30,11 +30,11 @@
     $content_broadcast['confirm-update']['en-us'] = 'Update Complete';
     $content_broadcast['confirm-update']['pt-pt'] = 'Actualização Completa';
 
-    $content_broadcast['label-callbroadcast']['en-us'] = 'Call Broadcast';
-    $content_broadcast['label-callbroadcast']['pt-pt'] = 'Chamada Broadcast';
+    $content_broadcast['label-call-broadcast']['en-us'] = 'Call Broadcast';
+    $content_broadcast['label-call-broadcast']['pt-pt'] = 'Chamada Broadcast';
 
-    $content_broadcast['label-callbroadcastedit']['en-us'] = 'Call Broadcast Edit';
-    $content_broadcast['label-callbroadcastedit']['pt-pt'] = 'Editar Chamada Broadcast';
+    $content_broadcast['label-call-broadcast-edit']['en-us'] = 'Call Broadcast Edit';
+    $content_broadcast['label-call-broadcast-edit']['pt-pt'] = 'Editar Chamada Broadcast';
 
     $content_broadcast['button-back']['en-us'] = 'Back';
     $content_broadcast['button-back']['pt-pt'] = 'Voltar';
@@ -48,20 +48,20 @@
     $content_broadcast['description-timeout']['en-us'] = 'Limit the length of the call. Leave this empty for no limit.';
     $content_broadcast['description-timeout']['pt-pt'] = 'Limitar a duração da chamada. Deixe em branco para não ter limite.';
 
-    $content_broadcast['description-concurrentlimit']['en-us'] = 'Limit the approximate number of concurrent calls. Leave this empty for no limit.';
-    $content_broadcast['description-concurrentlimit']['pt-pt'] = 'Limitar o número de chamadas simultâneas. Deixe em branco para não ter limite.';
+    $content_broadcast['description-concurrent-limit']['en-us'] = 'Limit the approximate number of concurrent calls. Leave this empty for no limit.';
+    $content_broadcast['description-concurrent-limit']['pt-pt'] = 'Limitar o número de chamadas simultâneas. Deixe em branco para não ter limite.';
 
-    $content_broadcast['label-calleridname']['en-us'] = 'Caller ID Name';
-    $content_broadcast['label-calleridname']['pt-pt'] = 'Nome de Origem';
+    $content_broadcast['label-callerid-name']['en-us'] = 'Caller ID Name';
+    $content_broadcast['label-callerid-name']['pt-pt'] = 'Nome de Origem';
 
-    $content_broadcast['label-calleridnumber']['en-us'] = 'Caller ID Number';
-    $content_broadcast['label-calleridnumber']['pt-pt'] = 'Numero de Origem';
+    $content_broadcast['label-callerid-number']['en-us'] = 'Caller ID Number';
+    $content_broadcast['label-callerid-number']['pt-pt'] = 'Numero de Origem';
 
-    $content_broadcast['description-calleridname']['en-us'] = 'Applicable if the provider allow the Caller ID Name to be set. default: anonymous';
-    $content_broadcast['description-calleridname']['pt-pt'] = 'Aplicável se o provedor permitir o nome de origem para serem enviadas as chamadas. padrão: anonymous';
+    $content_broadcast['description-callerid-name']['en-us'] = 'Applicable if the provider allow the Caller ID Name to be set. default: anonymous';
+    $content_broadcast['description-callerid-name']['pt-pt'] = 'Aplicável se o provedor permitir o nome de origem para serem enviadas as chamadas. padrão: anonymous';
 
-    $content_broadcast['description-calleridnumber']['en-us'] = 'Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000';
-    $content_broadcast['description-calleridnumber']['pt-pt'] = 'Aplicável se o provedor permitir o numero de origem para serem enviadas as chamadas. padrão: 0000000000';
+    $content_broadcast['description-callerid-number']['en-us'] = 'Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000';
+    $content_broadcast['description-callerid-number']['pt-pt'] = 'Aplicável se o provedor permitir o numero de origem para serem eninationviadas as chamadas. padrão: 0000000000';
 
     $content_broadcast['label-destination']['en-us'] = 'Destination Number';
     $content_broadcast['label-destination']['pt-pt'] = 'Numero de Destino';
