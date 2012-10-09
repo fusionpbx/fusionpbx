@@ -354,7 +354,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
 	echo "".$content_conferences['description']." \n";
-	echo "Click on <a href='".PROJECT_PATH."/app/conferences_active/v_conference_interactive.php?c=".str_replace(" ", "-", $conference_name)."'>".$content_conferences['title3']."</a> \n";
+	echo "Click on <a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".str_replace(" ", "-", $conference_name)."'>".$content_conferences['title3']."</a> \n";
 	echo "".$content_conferences['description3']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
