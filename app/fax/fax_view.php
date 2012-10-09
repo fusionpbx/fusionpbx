@@ -420,10 +420,10 @@ else {
 		echo "	<div id=\"\">\n";
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
-		echo "		<th width=\"60%\" class=\"listhdrr\">".$content_fax['tabel-file']."</td>\n";
-		echo "		<th width=\"10%\" class=\"listhdrr\">".$content_fax['tabel-view']."</td>\n";
-		echo "		<th width=\"20%\" class=\"listhdr\">".$content_fax['tabel-modified']."</td>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size".$content_fax['tabel-size']."</td>\n";
+		echo "		<th width=\"60%\" class=\"listhdrr\">".$content_fax['table-file']."</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdrr\">".$content_fax['table-view']."</td>\n";
+		echo "		<th width=\"20%\" class=\"listhdr\">".$content_fax['table-modified']."</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size".$content_fax['table-size']."</td>\n";
 		echo "	</tr>";
 
 
@@ -557,10 +557,10 @@ else {
 		echo "\n";
 		echo "    <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "    <tr>\n";
-		echo "		<th width=\"60%\">".$content_fax['tabel-file']."</td>\n";
-		echo "		<th width=\"10%\">".$content_fax['tabel-view']."</td>\n";
-		echo "		<th width=\"20%\">".$content_fax['tabel-modified']."</td>\n";
-		echo "		<th width=\"10%\" nowrap>".$content_fax['tabel-size']."</td>\n";
+		echo "		<th width=\"60%\">".$content_fax['table-file']."</td>\n";
+		echo "		<th width=\"10%\">".$content_fax['table-view']."</td>\n";
+		echo "		<th width=\"20%\">".$content_fax['table-modified']."</td>\n";
+		echo "		<th width=\"10%\" nowrap>".$content_fax['table-size']."</td>\n";
 		echo "		</tr>";
 
 		if ($handle = opendir($dir_fax_sent)) {

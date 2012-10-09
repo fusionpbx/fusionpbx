@@ -74,17 +74,17 @@
         $content_cdr['label-summary']['en-us'] = 'Summary';
 	$content_cdr['label-summary']['pt-pt'] = 'Sumario';
         
-        $content_cdr['tabel-direction']['en-us'] = 'Direction';
-	$content_cdr['tabel-direction']['pt-pt'] = 'Direcção';
+        $content_cdr['table-direction']['en-us'] = 'Direction';
+	$content_cdr['table-direction']['pt-pt'] = 'Direcção';
         
-        $content_cdr['tabel-name']['en-us'] = 'Name (play)';
-	$content_cdr['tabel-name']['pt-pt'] = 'None (executar)';
+        $content_cdr['table-name']['en-us'] = 'Name (play)';
+	$content_cdr['table-name']['pt-pt'] = 'None (executar)';
         
-        $content_cdr['tabel-download']['en-us'] = 'Number (download)';
-	$content_cdr['tabel-download']['pt-pt'] = 'Numero (descarregar)';
+        $content_cdr['table-download']['en-us'] = 'Number (download)';
+	$content_cdr['table-download']['pt-pt'] = 'Numero (descarregar)';
         
-        $content_cdr['tabel-end']['en-us'] = 'End';
-	$content_cdr['tabel-end']['pt-pt'] = 'Final';
+        $content_cdr['table-end']['en-us'] = 'End';
+	$content_cdr['table-end']['pt-pt'] = 'Final';
         
         $content_cdr['label-channel']['en-us'] = 'Channel Data';
 	$content_cdr['label-channel']['pt-pt'] = 'Dados de Canal';
@@ -120,25 +120,25 @@
         $content_cdr['label-callstatisticsdescription']['en-us'] = 'Call Detail Records Statics summarize the call information.';
 	$content_cdr['label-callstatisticsdescription']['pt-pt'] = 'As Estatisticas dos Detalhes da Gravação de Chamadas resumem as informações da chamada.';
         
-        $content_cdr['tabel-hours']['en-us'] = 'Hours';
-	$content_cdr['tabel-hours']['pt-pt'] = 'Horas';
+        $content_cdr['table-hours']['en-us'] = 'Hours';
+	$content_cdr['table-hours']['pt-pt'] = 'Horas';
         
-        $content_cdr['tabel-date']['en-us'] = 'Date';
-	$content_cdr['tabel-date']['pt-pt'] = 'Data';
+        $content_cdr['table-date']['en-us'] = 'Date';
+	$content_cdr['table-date']['pt-pt'] = 'Data';
         
-        $content_cdr['tabel-time']['en-us'] = 'Time';
-	$content_cdr['tabel-time']['pt-pt'] = 'Tempo';
+        $content_cdr['table-time']['en-us'] = 'Time';
+	$content_cdr['table-time']['pt-pt'] = 'Tempo';
         
-        $content_cdr['tabel-minutes']['en-us'] = 'Minutes';
-	$content_cdr['tabel-minutes']['pt-pt'] = 'Minutos';
+        $content_cdr['table-minutes']['en-us'] = 'Minutes';
+	$content_cdr['table-minutes']['pt-pt'] = 'Minutos';
         
-        $content_cdr['tabel-callsminutes']['en-us'] = 'Calls Per Min';
-	$content_cdr['tabel-callsminutes']['pt-pt'] = 'Chamadas por minuto';
+        $content_cdr['table-callsminutes']['en-us'] = 'Calls Per Min';
+	$content_cdr['table-callsminutes']['pt-pt'] = 'Chamadas por minuto';
         
-        $content_cdr['tabel-missed']['en-us'] = 'Missed';
-	$content_cdr['tabel-missed']['pt-pt'] = 'Perdidas';
+        $content_cdr['table-missed']['en-us'] = 'Missed';
+	$content_cdr['table-missed']['pt-pt'] = 'Perdidas';
         
-        $content_cdr['tabel-days']['en-us'] = 'Days';
-	$content_cdr['tabel-days']['pt-pt'] = 'Dias';
+        $content_cdr['table-days']['en-us'] = 'Days';
+	$content_cdr['table-days']['pt-pt'] = 'Dias';
 
 ?>

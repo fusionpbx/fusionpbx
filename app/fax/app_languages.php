@@ -141,16 +141,16 @@
 	$content_fax['label-location']['en-us'] = 'location';
 	$content_fax['label-location']['pt-pt'] = 'localização';
 
-	$content_fax['tabel-file']['en-us'] = 'File Name (download)';
-	$content_fax['tabel-file']['pt-pt'] = 'Nome do Ficheiro (descarregado)';
+	$content_fax['table-file']['en-us'] = 'File Name (download)';
+	$content_fax['table-file']['pt-pt'] = 'Nome do Ficheiro (descarregado)';
 
-	$content_fax['tabel-view']['en-us'] = 'View';
-	$content_fax['tabel-view']['pt-pt'] = 'Visualizar';
+	$content_fax['table-view']['en-us'] = 'View';
+	$content_fax['table-view']['pt-pt'] = 'Visualizar';
 
-	$content_fax['tabel-modified']['en-us'] = 'Last Modified';
-	$content_fax['tabel-modified']['pt-pt'] = 'Última alteração';
+	$content_fax['table-modified']['en-us'] = 'Last Modified';
+	$content_fax['table-modified']['pt-pt'] = 'Última alteração';
 
-	$content_fax['tabel-size']['en-us'] = 'Size';
-	$content_fax['tabel-size']['pt-pt'] = 'Tamanho';
+	$content_fax['table-size']['en-us'] = 'Size';
+	$content_fax['table-size']['pt-pt'] = 'Tamanho';
 
 ?>

@@ -152,14 +152,14 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>".$content_cdr['tabel-direction']."</th>\n";
+	echo "<th>".$content_cdr['table-direction']."</th>\n";
 	//echo "<th>Language</th>\n";
 	//echo "<th>Context</th>\n";
-	echo "<th>".$content_cdr['tabel-name']."</th>\n";
-	echo "<th>".$content_cdr['tabel-download']."</th>\n";
+	echo "<th>".$content_cdr['table-name']."</th>\n";
+	echo "<th>".$content_cdr['table-download']."</th>\n";
 	echo "<th>".$content_cdr['label-destination']."</th>\n";
 	echo "<th>".$content_cdr['label-start']."</th>\n";
-	echo "<th>".$content_cdr['tabel-end']."</th>\n";
+	echo "<th>".$content_cdr['table-end']."</th>\n";
 	echo "<th>".$content_cdr['label-length']."</th>\n";
 	echo "<th>".$content_cdr['label-status']."</th>\n";
 	echo "</tr>\n";

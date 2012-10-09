@@ -16,23 +16,23 @@
         $content_conferences['description2']['en-us'] = 'and then select a conference to monitor and interact with it.';
 	$content_conferences['description2']['pt-pt'] = 'e selecione uma conferência para monitorizar e interagir com ele.';
         
-        $content_conferences['tabel-name']['en-us'] = 'Name';
-	$content_conferences['tabel-name']['pt-pt'] = 'Nome'; 
+        $content_conferences['table-name']['en-us'] = 'Name';
+	$content_conferences['table-name']['pt-pt'] = 'Nome';
         
-        $content_conferences['tabel-extension']['en-us'] = 'Extension';
-	$content_conferences['tabel-extension']['pt-pt'] = 'Extensão'; 
+        $content_conferences['table-extension']['en-us'] = 'Extension';
+	$content_conferences['table-extension']['pt-pt'] = 'Extensão';
         
-        $content_conferences['tabel-profile']['en-us'] = 'Profile';
-	$content_conferences['tabel-profile']['pt-pt'] = 'Perfil';
+        $content_conferences['table-profile']['en-us'] = 'Profile';
+	$content_conferences['table-profile']['pt-pt'] = 'Perfil';
         
-        $content_conferences['tabel-order']['en-us'] = 'Order';
-	$content_conferences['tabel-order']['pt-pt'] = 'Ordem';
+        $content_conferences['table-order']['en-us'] = 'Order';
+	$content_conferences['table-order']['pt-pt'] = 'Ordem';
         
-        $content_conferences['tabel-enabled']['en-us'] = 'Enabled';
-	$content_conferences['tabel-enabled']['pt-pt'] = 'Activo';
+        $content_conferences['table-enabled']['en-us'] = 'Enabled';
+	$content_conferences['table-enabled']['pt-pt'] = 'Activo';
         
-        $content_conferences['tabel-description']['en-us'] = 'Description';
-	$content_conferences['tabel-description']['pt-pt'] = 'Descrição';
+        $content_conferences['table-description']['en-us'] = 'Description';
+	$content_conferences['table-description']['pt-pt'] = 'Descrição';
         
         //conferences_delete
         $content_conferences['confirm-delete']['en-us'] = 'Delete Complete';
