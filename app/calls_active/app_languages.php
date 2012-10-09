@@ -78,7 +78,6 @@
     $content_calls_active['label-start']['en-us'] = 'start record';
     $content_calls_active['label-start']['pt-pt'] = 'iniciar a gravação';
 
-
     //v_calls_active_extensions_inc
     $content_calls_active['confirm-socket']['en-us'] = 'Connection to Event Socket failed.';
     $content_calls_active['confirm-socket']['pt-pt'] = 'Conexão com socket falhou.';

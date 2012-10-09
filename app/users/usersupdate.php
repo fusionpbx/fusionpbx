@@ -263,7 +263,7 @@ else {
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$content_users['label-confirmpassword'].":</td>";
+	echo "		<td class='vncell'>".$content_users['label-confirm-password'].":</td>";
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' value=\"\"></td>";
 	echo "	</tr>";
 
@@ -321,7 +321,7 @@ else {
 		}
 		echo "		</select>\n";
 		echo "		<br />\n";
-		echo "		".$content_users['label-infostatus']."<br />\n";
+		echo "		".$content_users['description-status']."<br />\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 	}

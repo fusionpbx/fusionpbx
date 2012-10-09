@@ -21,8 +21,8 @@
     $content_users['label-password']['en-us'] = 'Password';
     $content_users['label-password']['pt-pt'] = 'Palavra passe';
 
-    $content_users['label-confirmpassword']['en-us'] = 'Confirm Password';
-    $content_users['label-confirmpassword']['pt-pt'] = 'Confirme Palavra Chave';
+    $content_users['label-confirm-password']['en-us'] = 'Confirm Password';
+    $content_users['label-confirm-password']['pt-pt'] = 'Confirme Palavra Chave';
 
     $content_users['label-extension']['en-us'] = 'Extension';
     $content_users['label-extension']['pt-pt'] = 'Extensão';
@@ -33,8 +33,8 @@
     $content_users['label-status']['en-us'] = 'Status';
     $content_users['label-status']['pt-pt'] = 'Estado';
 
-    $content_users['label-infostatus']['en-us'] = 'Select a the user status.';
-    $content_users['label-infostatus']['pt-pt'] = 'Selecione um estado para o utilizador.';
+    $content_users['description-status']['en-us'] = 'Select a the user status.';
+    $content_users['description-status']['pt-pt'] = 'Selecione um estado para o utilizador.';
 
     $content_users['check-available-status']['en-us'] = 'Available';
     $content_users['check-available-status']['pt-pt'] = 'Disponível';
