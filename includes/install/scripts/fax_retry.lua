@@ -78,7 +78,7 @@
 	end
 	if (uuid) then
 		freeswitch.consoleLog("INFO","uuid: '" .. uuid .. "'\n");
-	}
+	end
 	if (fax_ecm_used) then
 		freeswitch.consoleLog("INFO","fax_ecm_used: '" .. fax_ecm_used .. "'\n");
 	end
