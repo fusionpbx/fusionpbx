@@ -1,3 +1,7 @@
+--set default variables
+	fax_retry_sleep = 300;
+	fax_retry_limit = 5;
+
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
 	include = assert(loadfile(scripts_dir .. "/resources/config.lua"));
@@ -13,9 +17,6 @@
 			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
 		end
 
---set default variables
-	fax_retry_sleep = 10;
-	fax_retry_limit = 3;
 
 -- show all channel variables
 	--dat = env:serialize()            
@@ -69,16 +70,36 @@
 	if (fax_success) then
 		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
 	end
-	freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
-	freeswitch.consoleLog("INFO","fax_file: '" .. fax_file .. "'\n");
-	freeswitch.consoleLog("INFO","uuid: '" .. uuid .. "'\n");
-	freeswitch.consoleLog("INFO","fax_ecm_used: '" .. fax_ecm_used .. "'\n");
-	freeswitch.consoleLog("INFO","fax_retry_attempts: " .. fax_retry_attempts.. "\n");
-	freeswitch.consoleLog("INFO","fax_retry_limit: " .. fax_retry_limit.. "\n");
-	freeswitch.consoleLog("INFO","fax_retry_sleep: " .. fax_retry_sleep.. "\n");
-	freeswitch.consoleLog("INFO","fax_uri: '" .. fax_uri.. "'\n");
-	freeswitch.consoleLog("INFO","origination_caller_id_name: " .. origination_caller_id_name .. "\n");
-	freeswitch.consoleLog("INFO","origination_caller_id_number: " .. origination_caller_id_number .. "\n");
+	if (fax_result_text) then
+		freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
+	end
+	if (fax_file) then
+		freeswitch.consoleLog("INFO","fax_file: '" .. fax_file .. "'\n");
+	end
+	if (uuid) then
+		freeswitch.consoleLog("INFO","uuid: '" .. uuid .. "'\n");
+	}
+	if (fax_ecm_used) then
+		freeswitch.consoleLog("INFO","fax_ecm_used: '" .. fax_ecm_used .. "'\n");
+	end
+	if (fax_retry_attempts) then
+		freeswitch.consoleLog("INFO","fax_retry_attempts: " .. fax_retry_attempts.. "\n");
+	end
+	if (fax_retry_limit) then
+		freeswitch.consoleLog("INFO","fax_retry_limit: " .. fax_retry_limit.. "\n");
+	end
+	if (fax_retry_sleep) then
+		freeswitch.consoleLog("INFO","fax_retry_sleep: " .. fax_retry_sleep.. "\n");
+	end
+	if (fax_uri) then
+		freeswitch.consoleLog("INFO","fax_uri: '" .. fax_uri.. "'\n");
+	end
+	if (origination_caller_id_name) then
+		freeswitch.consoleLog("INFO","origination_caller_id_name: " .. origination_caller_id_name .. "\n");
+	end
+	if (origination_caller_id_number) then
+		freeswitch.consoleLog("INFO","origination_caller_id_number: " .. origination_caller_id_number .. "\n");
+	end
 
 -- if the fax failed then try again
 	if (fax_success == "0") then
