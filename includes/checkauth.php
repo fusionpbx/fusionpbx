@@ -121,7 +121,7 @@ session_start();
 						$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
 					}
 				// add the user_uuid to the session
-					$_SESSION['user_uuid'] = $row['user_uuid'];
+					$_SESSION["user_uuid"] = $row["user_uuid"];
 			}
 
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
