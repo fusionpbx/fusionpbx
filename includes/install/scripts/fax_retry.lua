@@ -66,7 +66,9 @@
 	end
 
 -- send the selected variables to the console
-	freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
+	if (fax_success) then
+		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
+	end
 	freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
 	freeswitch.consoleLog("INFO","fax_file: '" .. fax_file .. "'\n");
 	freeswitch.consoleLog("INFO","uuid: '" .. uuid .. "'\n");
@@ -82,8 +84,8 @@
 	if (fax_success == "0") then
 		if (fax_retry_attempts < fax_retry_limit) then 
 			-- sleep
-  			freeswitch.msleep(fax_retry_sleep * 1000);
-  			--increment the retry attempts
+			freeswitch.msleep(fax_retry_sleep * 1000);
+			--increment the retry attempts
 			fax_retry_attempts = fax_retry_attempts + 1;
 			cmd = "originate {origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_attempts="..fax_retry_attempts..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."',fax_use_ecm=off,api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
 			--cmd = "sofia/internal/"..fax_number.."@"..domain_name.." &txfax('"..fax_file.."') XML default ";
