@@ -26,10 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 
-require_once "includes/Logging.php";
-// Logging class initialization
-$log = new Logging();
-
 // set path and name of log file (optional)
 $log->lfile('/tmp/mylog.txt');
 
