@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
+		$apps[$x]['description']['en-us'] = 'The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'O dialplan é usado para configurar destinos de chamada com base nas condições e contexto. Você pode usar o dialplan para enviar chamadas para gateways, atendedores automáticos, números externos, para scripts, ou qualquer destino.';
 		$apps[$x]['description']['pt-br'] = '';
-                
+
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Dialplan';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';

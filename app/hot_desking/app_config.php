@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'Login into hot desking with an ID and your voicemail password to direct your calls to a remote extension. Then make and receive calls as if you were at your extension.';
+		$apps[$x]['description']['en-us'] = 'Login into hot desking with an ID and your voicemail password to direct your calls to a remote extension. Then make and receive calls as if you were at your extension.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Entrar em desking quente com um ID e sua senha de correio de voz para encaminhar as chamadas para um ramal remoto. Em seguida, fazer e receber ligações como se estivesse em sua extensão.';
 		$apps[$x]['description']['pt-br'] = '';
-                
+
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Hot Desking';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';

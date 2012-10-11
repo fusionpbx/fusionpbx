@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'Used Configure SIP extensions.';
+		$apps[$x]['description']['en-us'] = 'Used Configure SIP extensions.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';

@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'Used to define external destination numbers.';
+		$apps[$x]['description']['en-us'] = 'Used to define external destination numbers.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
@@ -54,6 +54,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index

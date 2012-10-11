@@ -6,7 +6,7 @@
 		$apps[$x]['subcategory'] = '';
 		$apps[$x]['version'] = '';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'Upgrade the database schema.';
+		$apps[$x]['description']['en-us'] = 'Upgrade the database schema.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
@@ -19,7 +19,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Upgrade Schema';
-                $apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';

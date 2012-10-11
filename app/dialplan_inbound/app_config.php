@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'The public dialplan is used to route incoming calls to destinations based on one or more conditions and context.';
+		$apps[$x]['description']['en-us'] = 'The public dialplan is used to route incoming calls to destinations based on one or more conditions and context.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';

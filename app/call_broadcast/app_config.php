@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'Schedule to immediately make multiple calls to the extension an IVR Menu, Conference Room, or any other number.';
+		$apps[$x]['description']['en-us'] = 'Schedule to immediately make multiple calls to the extension an IVR Menu, Conference Room, or any other number.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
@@ -19,7 +19,7 @@
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-                $apps[$x]['menu'][0]['title']['en-us'] = 'Call Broadcast';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Call Broadcast';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';

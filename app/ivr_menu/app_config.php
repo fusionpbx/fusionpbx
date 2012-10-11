@@ -7,7 +7,7 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-                $apps[$x]['description']['en-us'] = 'The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, IVR menus, hunt groups, FAX extensions, and more.';
+		$apps[$x]['description']['en-us'] = 'The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, IVR menus, hunt groups, FAX extensions, and more.';
 		$apps[$x]['description']['es-mx'] = '';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
@@ -17,7 +17,7 @@
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'O menu IVR toca uma gravação ou uma frase pré-definida, que apresenta o chamador com opções para escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, correio de voz, menus IVR, grupos de busca, extensões de fax, e muito mais.';
 		$apps[$x]['description']['pt-br'] = '';
-                
+
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'IVR Menu';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
