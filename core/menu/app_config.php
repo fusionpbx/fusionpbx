@@ -38,7 +38,7 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][1]['title']['en-us'] = 'System';
-                $apps[$x]['menu'][1]['title']['es-mx'] = '';
+		$apps[$x]['menu'][1]['title']['es-mx'] = '';
 		$apps[$x]['menu'][1]['title']['de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
@@ -57,7 +57,7 @@
 		$apps[$x]['menu'][1]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][2]['title']['en-us'] = 'Accounts';
-                $apps[$x]['menu'][2]['title']['es-mx'] = '';
+		$apps[$x]['menu'][2]['title']['es-mx'] = '';
 		$apps[$x]['menu'][2]['title']['de'] = '';
 		$apps[$x]['menu'][2]['title']['de-ch'] = '';
 		$apps[$x]['menu'][2]['title']['de-at'] = '';
@@ -84,7 +84,7 @@
 		$apps[$x]['menu'][3]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][4]['title']['en-us'] = 'Status';
-                $apps[$x]['menu'][4]['title']['es-mx'] = '';
+		$apps[$x]['menu'][4]['title']['es-mx'] = '';
 		$apps[$x]['menu'][4]['title']['de'] = '';
 		$apps[$x]['menu'][4]['title']['de-ch'] = '';
 		$apps[$x]['menu'][4]['title']['de-at'] = '';
@@ -103,7 +103,7 @@
 		$apps[$x]['menu'][4]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][5]['title']['en-us'] = 'Advanced';
-                $apps[$x]['menu'][5]['title']['es-mx'] = '';
+		$apps[$x]['menu'][5]['title']['es-mx'] = '';
 		$apps[$x]['menu'][5]['title']['de'] = '';
 		$apps[$x]['menu'][5]['title']['de-ch'] = '';
 		$apps[$x]['menu'][5]['title']['de-at'] = '';
@@ -280,6 +280,44 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'group_name';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+
+		$y = 3; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = 'v_menu_languages';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'menu_language_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		//$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'menu_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'menu_guid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_menus';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'menu_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'menu_item_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'menu_item_guid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_menu_items';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'menu_item_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'menu_language';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ment_item_title';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 
