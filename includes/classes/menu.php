@@ -132,7 +132,7 @@
 												$sql .= "menu_item_uuid, ";
 												$sql .= "menu_uuid, ";
 												$sql .= "menu_language, ";
-												$sql .= "menu_item_title, ";
+												$sql .= "menu_item_title ";
 												$sql .= ") ";
 												$sql .= "values ";
 												$sql .= "(";
