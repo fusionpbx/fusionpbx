@@ -7,10 +7,28 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = 'AJAX tool to view and manage all active callers in a conference room.';
+                $apps[$x]['description']['en-us'] = 'AJAX tool to view and manage all active callers in a conference room.';
+		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = 'A ferramenta AJAX permite visualizar e gerir todas as chamadas ativas numa sala de conferências.';
+		$apps[$x]['description']['pt-br'] = '';
 	
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Active Conferences';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Active Conferences';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Conferencias Activas';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '2d857bbb-43b9-b8f7-a138-642868e0453a';
 		$apps[$x]['menu'][0]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][0]['category'] = 'internal';

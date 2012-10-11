@@ -8,10 +8,10 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = '';
+		$apps[$x]['description']['en-us'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Servers';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Servers';
 		$apps[$x]['menu'][0]['uuid'] = 'f35ee905-1f30-7529-7420-35fc77e47882';
 		$apps[$x]['menu'][0]['parent_uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][0]['category'] = 'internal';
@@ -56,11 +56,11 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the name.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the description.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 
 		$y = 1; //table array index
@@ -73,26 +73,26 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_setting_category';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the category.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the category.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_setting_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the name.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_setting_value';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the value.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the value.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_setting_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'server_setting_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 */
 ?>

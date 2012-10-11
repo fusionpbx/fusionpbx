@@ -7,10 +7,28 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = '';
+		$apps[$x]['description']['en-us'] = '';
+                $apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = '';
+		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'App Manager';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'App Manager';                
+                $apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Gestor de Aplicações';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = 'ef00f229-7890-00c2-bf23-fed5b8fa9fe7';
 		$apps[$x]['menu'][0]['parent_uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][0]['category'] = 'internal';

@@ -7,10 +7,29 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = '';
+                $apps[$x]['description']['en-us'] = '';
+		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = '';
+		$apps[$x]['description']['pt-br'] = '';
+                
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'SIP Profiles';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'SIP Profiles';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Perfis de SIP';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '47014b1d-13ad-921c-313d-ca42c0424b37';
 		$apps[$x]['menu'][0]['parent_uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][0]['category'] = 'internal';
@@ -43,11 +62,11 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the SIP Profile name.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the SIP Profile name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the description.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 
 		$y = 1; //table array index
@@ -67,18 +86,18 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_setting_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the name.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_setting_value';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the value.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the value.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_setting_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Choose to enable or disable this.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Choose to enable or disable this.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_profile_setting_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the description.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 ?>

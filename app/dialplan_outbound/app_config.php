@@ -7,10 +7,28 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = 'Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.';
-
+                $apps[$x]['description']['en-us'] = 'Outbound dialplans have one or more conditions that are matched to attributes of a call. When a call matches the conditions the call is then routed to the gateway.';
+		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = 'Dialplans de saída tem uma ou mais condições que são compatíveis com os atributos de uma chamada. Quando uma chamada coincide com as condições da chamada é então encaminhado para o gateway.';
+		$apps[$x]['description']['pt-br'] = '';
+                
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Outbound Routes';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Outbound Routes';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Rotas de Saida';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '17e14094-1d57-1106-db2a-a787d34015e9';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'b94e8bd9-9eb5-e427-9c26-ff7a6c21552a';
 		$apps[$x]['menu'][0]['category'] = 'internal';

@@ -7,10 +7,28 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = 'List all the queues that are currently active with one or more callers.';
+                $apps[$x]['description']['en-us'] = 'List all the queues that are currently active with one or more callers.';
+		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = 'Liste todas as filas que estão atualmente ativas com um ou mais interlocutores.';
+		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Active Queues';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Active Queues';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Filas Activas';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '450f1225-9187-49ac-a119-87bc26025f7d';
 		$apps[$x]['menu'][0]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][0]['category'] = 'internal';

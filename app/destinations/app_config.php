@@ -7,10 +7,28 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = 'Used to define external destination numbers.';
+                $apps[$x]['description']['en-us'] = 'Used to define external destination numbers.';
+		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = 'Utilizado para definir os números de destino externos.';
+		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Destinations';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Destinations';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Destinos';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = 'fd2a708a-ff03-c707-c19d-5a4194375eba';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
@@ -54,22 +72,22 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'destination_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the name.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the name.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'destination_context';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the context.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the context.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'destination_extension';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the extension.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the extension.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'destination_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'destination_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the description.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 ?>

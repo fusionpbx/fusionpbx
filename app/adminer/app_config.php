@@ -7,10 +7,28 @@
 		$apps[$x]['version'] = '3.2.2';
 		$apps[$x]['license'] = 'http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0';
 		$apps[$x]['url'] = 'http://www.adminer.org/';
-		$apps[$x]['description']['en'] = 'Adminer (formerly phpMinAdmin) is a full-featured database management tool written in PHP. Adminer is available for MySQL, PostgreSQL, SQLite, MS SQL and Oracle.';
-	
+                $apps[$x]['description']['en-us'] = 'Adminer (formerly phpMinAdmin) is a full-featured database management tool written in PHP. Adminer is available for MySQL, PostgreSQL, SQLite, MS SQL and Oracle.';
+		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = 'Adminer (anteriormente phpMinAdmin) é uma completa ferramenta de gestão de banco de dados escrito em PHP. Adminer está disponível para MySQL, PostgreSQL, SQLite, MS SQL e Oracle.';
+		$apps[$x]['description']['pt-br'] = '';
+                
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Adminer';
+                $apps[$x]['menu'][0]['title']['en-us'] = 'Adminer';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Administrador';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '1f59d07b-b4f7-4f9e-bde9-312cf491d66e';
 		$apps[$x]['menu'][0]['parent_uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][0]['category'] = 'external';

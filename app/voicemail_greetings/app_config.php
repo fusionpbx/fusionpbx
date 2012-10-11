@@ -7,10 +7,19 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = 'Manager voicemail greetings for extensions.';
+                $apps[$x]['description']['en-us'] = 'Manager voicemail greetings for extensions.';
+		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-ch'] = '';
+		$apps[$x]['description']['de-at'] = '';
+		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ch'] = '';
+		$apps[$x]['description']['pt-pt'] = 'Gestor de saudações de correio de voz para extensões.';
+		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		//$apps[$x]['menu'][0]['title']['en'] = 'Voicemail Greetings';
+		//$apps[$x]['menu'][0]['title']['en-us'] = 'Voicemail Greetings';
 		//$apps[$x]['menu'][0]['uuid'] = '71197938-224b-3a90-c076-3979cabb3ee9';
 		//$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		//$apps[$x]['menu'][0]['category'] = 'internal';
@@ -63,7 +72,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'serial';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'integer';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'INT NOT NULL AUTO_INCREMENT';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'voicemail_greeting_uuid';
@@ -72,7 +81,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
@@ -81,23 +90,23 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'v_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'user_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'greeting_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'greeting_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 
 ?>
