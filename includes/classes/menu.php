@@ -84,52 +84,69 @@
 									$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 									if (count($result) == 0) {
 										//insert the default menu into the database
-										$sql = "insert into v_menu_items ";
-										$sql .= "(";
-										$sql .= "menu_item_uuid, ";
-										$sql .= "menu_uuid, ";
-										//$sql .= "menu_item_language, ";
-										$sql .= "menu_item_title, ";
-										$sql .= "menu_item_link, ";
-										$sql .= "menu_item_category, ";
-										if (strlen($menu_item_order) > 0) {
-												$sql .= "menu_item_order, ";
-										}
-										if (strlen($menu_item_parent_uuid) > 0) {
-												$sql .= "menu_item_parent_uuid, ";
-										}
-										$sql .= "menu_item_description ";
-										$sql .= ") ";
-										$sql .= "values ";
-										$sql .= "(";
-										$sql .= "'".$menu_item_uuid."', ";
-										$sql .= "'".$this->menu_uuid."', ";
-										//$sql .= "'$menu_item_language', ";
-										$sql .= "'$menu_item_title', ";
-										$sql .= "'$menu_item_path', ";
-										$sql .= "'$menu_item_category', ";
-										if (strlen($menu_item_order) > 0) {
-												$sql .= "'$menu_item_order', ";
-										}
-										if (strlen($menu_item_parent_uuid) > 0) {
-												$sql .= "'$menu_item_parent_uuid', ";
-										}
-										$sql .= "'$menu_item_description' ";
-										$sql .= ")";
-										if ($menu_item_uuid == $menu_item_parent_uuid) {
-												//echo $sql."<br />\n";
-										}
-										else {
+											$sql = "insert into v_menu_items ";
+											$sql .= "(";
+											$sql .= "menu_item_uuid, ";
+											$sql .= "menu_uuid, ";
+											//$sql .= "menu_item_language, ";
+											$sql .= "menu_item_title, ";
+											$sql .= "menu_item_link, ";
+											$sql .= "menu_item_category, ";
+											if (strlen($menu_item_order) > 0) {
+													$sql .= "menu_item_order, ";
+											}
+											if (strlen($menu_item_parent_uuid) > 0) {
+													$sql .= "menu_item_parent_uuid, ";
+											}
+											$sql .= "menu_item_description ";
+											$sql .= ") ";
+											$sql .= "values ";
+											$sql .= "(";
+											$sql .= "'".$menu_item_uuid."', ";
+											$sql .= "'".$this->menu_uuid."', ";
+											//$sql .= "'$menu_item_language', ";
+											$sql .= "'$menu_item_title', ";
+											$sql .= "'$menu_item_path', ";
+											$sql .= "'$menu_item_category', ";
+											if (strlen($menu_item_order) > 0) {
+													$sql .= "'$menu_item_order', ";
+											}
+											if (strlen($menu_item_parent_uuid) > 0) {
+													$sql .= "'$menu_item_parent_uuid', ";
+											}
+											$sql .= "'$menu_item_description' ";
+											$sql .= ")";
+											if ($menu_item_uuid == $menu_item_parent_uuid) {
+													//echo $sql."<br />\n";
+											}
+											else {
+													$db->exec(check_sql($sql));
+											}
+											unset($sql);
+										//set the menu languages
+											foreach ($menu["title"] as $menu_language => $menu_item_title) {
+												$menu_language_uuid = uuid();
+												$sql = "insert into v_menu_languages ";
+												$sql .= "(";
+												$sql .= "menu_language_uuid, ";
+												$sql .= "menu_item_uuid, ";
+												$sql .= "menu_uuid, ";
+												$sql .= "menu_language, ";
+												$sql .= "menu_item_title, ";
+												$sql .= ") ";
+												$sql .= "values ";
+												$sql .= "(";
+												$sql .= "'".$menu_language_uuid."', ";
+												$sql .= "'".$menu_item_uuid."', ";
+												$sql .= "'".$this->menu_uuid."', ";
+												$sql .= "'$menu_language', ";
+												$sql .= "'$menu_item_title' ";
+												$sql .= ")";
 												$db->exec(check_sql($sql));
-										}
-										unset($sql);
+												unset($sql);
+											}
 									}
 								}
-
-						//set the variables
-							foreach ($menu["title"] as $key => $value) {
-								echo $key ." ".$value."\n";
-							}
 						}
 					}
 
