@@ -179,7 +179,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'>\n";
 	if (permission_exists('menu_restore')) {
-		echo "	<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='menu_restore_default.php?menu_uuid=$menu_uuid&menu_uuid=$menu_uuid';\" />";
+		echo "	<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='menu_restore_default.php?menu_uuid=$menu_uuid&menu_language=$menu_language';\" />";
 	}
 	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='menu.php'\" value='Back'></td>\n";
 	echo "</tr>\n";

@@ -126,6 +126,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "where default_setting_uuid = '$default_setting_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
+                                
+                                $sql = "update v_domain_settings set ";
+				$sql .= "domain_setting_value = '$default_setting_value' ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+                                $sql .= "and domain_setting_subcategory = 'menu' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings.php\">\n";

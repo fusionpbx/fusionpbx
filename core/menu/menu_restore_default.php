@@ -36,12 +36,14 @@ else {
 
 //get the http value and set as a php variable
 	$menu_uuid = check_str($_REQUEST["menu_uuid"]);
+        $menu_language = check_str($_REQUEST["menu_language"]);
 
 //menu restore default
 	require_once "includes/classes/menu.php";
 	$menu = new menu;
 	$menu->db = $db;
 	$menu->menu_uuid = $menu_uuid;
+        $menu->menu_language = $menu_language;
 	$menu->delete();
 	$menu->restore();
 

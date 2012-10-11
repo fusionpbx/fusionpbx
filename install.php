@@ -34,7 +34,7 @@ require_once "includes/lib_functions.php";
 
 //add the menu uuid
 	$menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
-
+        $menu_uuid_pt = '1a2b789b-64a0-4a45-84eb-7ebf4f9c576b';
 //error reporting
 	ini_set('display_errors', '1');
 	//error_reporting (E_ALL); // Report everything
@@ -671,6 +671,12 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$tmp[$x]['subcategory'] = 'menu';
 		$tmp[$x]['enabled'] = 'true';
 		$x++;
+               /* $tmp[$x]['name'] = 'uuid';
+		$tmp[$x]['value'] = $menu_uuid_pt;
+		$tmp[$x]['category'] = 'domain';
+		$tmp[$x]['subcategory'] = 'menu';
+		$tmp[$x]['enabled'] = 'true';
+		$x++;*/
 		$tmp[$x]['name'] = 'name';
 		$tmp[$x]['category'] = 'domain';
 		$tmp[$x]['subcategory'] = 'time_zone';
@@ -833,6 +839,12 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$tmp[$x]['subcategory'] = 'menu';
 		$tmp[$x]['enabled'] = 'true';
 		$x++;
+                /*$tmp[$x]['name'] = 'uuid';
+		$tmp[$x]['value'] = $menu_uuid_pt;
+		$tmp[$x]['category'] = 'domain';
+		$tmp[$x]['subcategory'] = 'menu';
+		$tmp[$x]['enabled'] = 'true';
+		$x++;*/
 		$tmp[$x]['name'] = 'name';
 		$tmp[$x]['value'] = $install_template_name;
 		$tmp[$x]['category'] = 'domain';
@@ -1133,37 +1145,52 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		require "includes/require.php";
 
 	//set the defaults
-		$menu_name = 'default';
-		$menu_language = 'en';
-		$menu_description = '';
+                $x = 0;
+		$tmp[$x]['menu_name'] = 'default';
+		$tmp[$x]['menu_language'] = 'en';
+		$tmp[$x]['menu_description'] = '';
+                $tmp[$x]['menu_uuid'] = $menu_uuid;
+                $x++;
+                $tmp[$x]['menu_name'] = 'portuguese';
+		$tmp[$x]['menu_language'] = 'pt-pt';
+		$tmp[$x]['menu_description'] = '';
+                $tmp[$x]['menu_uuid'] = $menu_uuid_pt;
+                
+                
 	//add the parent menu
-		$sql = "insert into v_menus ";
-		$sql .= "(";
-		$sql .= "menu_uuid, ";
-		$sql .= "menu_name, ";
-		$sql .= "menu_language, ";
-		$sql .= "menu_description ";
-		$sql .= ") ";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'".$menu_uuid."', ";
-		$sql .= "'$menu_name', ";
-		$sql .= "'$menu_language', ";
-		$sql .= "'$menu_description' ";
-		$sql .= ");";
-		if ($v_debug) {
-			fwrite($fp, $sql."\n");
-		}
-		$db->exec(check_sql($sql));
-		unset($sql);
+		foreach($tmp as $row) {
+                    $sql = "insert into v_menus ";
+                    $sql .= "(";
+                    $sql .= "menu_uuid, ";
+                    $sql .= "menu_name, ";
+                    $sql .= "menu_language, ";
+                    $sql .= "menu_description ";
+                    $sql .= ") ";
+                    $sql .= "values ";
+                    $sql .= "(";
+                    $sql .= "'".$row['menu_uuid']."', ";
+                    $sql .= "'".$row['menu_name']."', ";
+                    $sql .= "'".$row['menu_language']."', ";
+                    $sql .= "'".$row['menu_description']."' ";
+                    $sql .= ");";
+                    if ($v_debug) {
+                            fwrite($fp, $sql."\n");
+                    }
+                    $db->exec(check_sql($sql));
+                    unset($sql);
+                    
+                    //add the menu items
+                    require_once "includes/classes/menu.php";
+                    $menu = new menu;
+                    $menu->db = $db;
+                    $menu->menu_uuid = $row['menu_uuid'];
+                    $menu->menu_language = $row['menu_language'];
+                    $menu->restore();
+                    unset($menu);
+                }
+		unset($tmp);
 
-	//add the menu items
-		require_once "includes/classes/menu.php";
-		$menu = new menu;
-		$menu->db = $db;
-		$menu->menu_uuid = $menu_uuid;
-		$menu->restore();
-		unset($menu);
+	
 
 	//setup the switch config directory if it exists
 		if ($switch_conf_dir != "/conf") {
