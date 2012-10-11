@@ -26,9 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 
-// set path and name of log file (optional)
-$log->lfile('/tmp/mylog.txt');
-
 //if reloadxml then run the command
 	if (isset($_SESSION["reload_xml"])) {
 		if (strlen($_SESSION["reload_xml"]) > 0) {
