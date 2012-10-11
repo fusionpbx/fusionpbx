@@ -317,7 +317,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ment_item_title';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'menu_item_title';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 
