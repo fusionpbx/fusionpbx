@@ -91,7 +91,7 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['category']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' width='35%'>".$row['description']['en']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' width='35%'>".$row['description']['en-us']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='left' nowrap='nowrap' width='42'>\n";
 			echo "		&nbsp;<a href='apps_edit.php?id=".$row['uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "		<a href='apps_delete.php?id=".$row['uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";

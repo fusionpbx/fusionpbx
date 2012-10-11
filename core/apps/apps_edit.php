@@ -130,7 +130,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$category = $row['category'];
 				$subcategory = $row['subcategory'];
 				$version = $row['version'];
-				$description = $row['description']['en'];
+				$description = $row['description']['en-us'];
 			}
 		}
 	}

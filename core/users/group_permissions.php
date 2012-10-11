@@ -219,7 +219,7 @@ require_once "includes/paging.php";
 	//list all the permissions
 		foreach($apps as $app) {
 			$app_name = $app['name'];
-			$description = $app['description']['en'];
+			$description = $app['description']['en-us'];
 
 			echo "<strong>".$app_name."</strong><br />\n";
 			echo "".$description."<br /><br />";
