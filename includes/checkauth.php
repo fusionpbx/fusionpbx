@@ -61,6 +61,12 @@ session_start();
 						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
 						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
 						$_SESSION["domain_name"] = $domain_name;
+
+                                                //domains set()
+                                                require "includes/classes/domains.php";
+                                                $domain = new domains();
+                                                $domain->db = $db;
+                                                $domain->set();
 					}
 				}
 			}
