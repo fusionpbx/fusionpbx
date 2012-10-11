@@ -34,11 +34,17 @@
 				//set the variable
 					$db = $this->db;
 				//remove the menu languages
-					$sql  = "delete from v_menu_languages as l, v_menu_items as m ";
-					$sql .= "where l.menu_uuid = '".$this->menu_uuid."' ";
-					$sql .= "and m.menu_item_uuid = l.menu_item_uuid ";
-					$sql .= "and (m.menu_item_protected <> 'true' ";
-					$sql .= "or m.menu_item_protected is null); ";
+					$sql  = "delete from v_menu_languages ";
+					//$sql .= "where l.menu_uuid = m.menu_uuid";
+					$sql .= "where menu_uuid = '".$this->menu_uuid."';";
+					//$sql .= "and m.menu_uuid = l.menu_uuid);";
+					//$sql .= "and m.menu_item_uuid = l.menu_item_uuid ";
+					//$sql .= "and (m.menu_item_protected <> 'true' ";
+					//$sql .= "or m.menu_item_protected is null)); ";
+					//echo $sql;
+					
+					//delete from v_menu_languages where exists (select * from v_menu_languages as l, v_menu_items as m where l.menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' and m.menu_item_uuid = l.menu_item_uuid and (m.menu_item_protected <> 'true' or m.menu_item_protected is null));
+					//exit;
 					$db->exec(check_sql($sql));
 				//remove the old menu
 					$sql  = "delete from v_menu_items ";
@@ -46,6 +52,7 @@
 					$sql .= "and (menu_item_protected <> 'true' ";
 					$sql .= "or menu_item_protected is null); ";
 					$db->exec(check_sql($sql));
+				
 			}
 
 		//restore the menu
@@ -144,6 +151,7 @@
 												$sql .= ")";
 												echo $sql; exit;
 												$db->exec(check_sql($sql));
+												
 												unset($sql);
 											}
 									}
@@ -197,11 +205,14 @@
 					$_SESSION['groups'][0]['group_name'] = 'public';
 				}
 
-				if (strlen($sql) == 0) { //default sql for base of the menu
-					$sql = "select * from v_menu_items ";
-					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
-					$sql .= "and menu_item_parent_uuid is null ";
-					$sql .= "and menu_item_uuid in ";
+				if (strlen($sql) == 0) { //default sql for base of the menu		   							
+					$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid from v_menu_items as i, v_menu_languages as l ";
+					$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
+					$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
+					$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "and i.menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "and i.menu_item_parent_uuid is null ";
+					$sql .= "and i.menu_item_uuid in ";
 					$sql .= "(select menu_item_uuid from v_menu_item_groups where menu_uuid = '".$this->menu_uuid."' ";
 					$sql .= "and ( ";
 					if (!isset($_SESSION['groups'])) {
@@ -222,12 +233,12 @@
 					$sql .= ") ";
 					$sql .= "and menu_item_uuid is not null ";
 					$sql .= ") ";
-					$sql .= "order by menu_item_order asc ";
+					$sql .= "order by i.menu_item_order asc ";
 				}
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $field) {
+				foreach($result as $field) {				   				    
 					$menu_tags = '';
 					switch ($field['menu_item_category']) {
 						case "internal":
@@ -290,10 +301,13 @@
 					$_SESSION['groups'][0]['group_name'] = 'public';
 				}
 
-				$sql = "select * from v_menu_items ";
-				$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
-				$sql .= "and menu_item_parent_uuid = '$menu_item_uuid' ";
-				$sql .= "and menu_item_uuid in ";
+				$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid from v_menu_items as i, v_menu_languages as l ";
+				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
+				$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
+				$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
+				$sql .= "and i.menu_uuid = '".$this->menu_uuid."' ";
+				$sql .= "and i.menu_item_parent_uuid = '$menu_item_uuid' ";				
+				$sql .= "and i.menu_item_uuid in ";
 				$sql .= "(select menu_item_uuid from v_menu_item_groups where menu_uuid = '".$this->menu_uuid."' ";
 				$sql .= "and ( ";
 				if (count($_SESSION['groups']) == 0) {
