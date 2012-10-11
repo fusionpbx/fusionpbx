@@ -72,7 +72,7 @@ require_once "includes/require.php";
 	else {
 		$content = '';
 	}
-$log->lwrite($_SESSION['domain']['menu']['uuid']);
+
 //get the parent id
 	$sql = "select * from v_menu_items ";
 	$sql .= "where menu_uuid = '".$_SESSION['domain']['menu']['uuid']."' ";
