@@ -59,9 +59,7 @@
 					foreach ($apps as $row) {
 						foreach ($row['menu'] as $menu) {
 							//set the variables
-								//$menu_item_title = $menu['title']['en'];
                                                                 $menu_item_title = $menu['title'][$this->menu_language];
-								//$menu_item_language = 'en';
 								$menu_item_uuid = $menu['uuid'];
 								$menu_item_parent_uuid = $menu['parent_uuid'];
 								$menu_item_category = $menu['category'];
