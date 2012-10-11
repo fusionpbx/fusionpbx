@@ -671,12 +671,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$tmp[$x]['subcategory'] = 'menu';
 		$tmp[$x]['enabled'] = 'true';
 		$x++;
-               /* $tmp[$x]['name'] = 'uuid';
-		$tmp[$x]['value'] = $menu_uuid_pt;
-		$tmp[$x]['category'] = 'domain';
-		$tmp[$x]['subcategory'] = 'menu';
-		$tmp[$x]['enabled'] = 'true';
-		$x++;*/
 		$tmp[$x]['name'] = 'name';
 		$tmp[$x]['category'] = 'domain';
 		$tmp[$x]['subcategory'] = 'time_zone';
@@ -839,12 +833,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		$tmp[$x]['subcategory'] = 'menu';
 		$tmp[$x]['enabled'] = 'true';
 		$x++;
-                /*$tmp[$x]['name'] = 'uuid';
-		$tmp[$x]['value'] = $menu_uuid_pt;
-		$tmp[$x]['category'] = 'domain';
-		$tmp[$x]['subcategory'] = 'menu';
-		$tmp[$x]['enabled'] = 'true';
-		$x++;*/
 		$tmp[$x]['name'] = 'name';
 		$tmp[$x]['value'] = $install_template_name;
 		$tmp[$x]['category'] = 'domain';
@@ -1147,7 +1135,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 	//set the defaults
                 $x = 0;
 		$tmp[$x]['menu_name'] = 'default';
-		$tmp[$x]['menu_language'] = 'en';
+		$tmp[$x]['menu_language'] = 'en-us';
 		$tmp[$x]['menu_description'] = '';
                 $tmp[$x]['menu_uuid'] = $menu_uuid;
                 $x++;
