@@ -7,7 +7,7 @@
   </settings>
 
   <routes>
-    <route service="E2U+SIP" regex="sip:(.*)" replace="sofia/${use_profile}/$1"/>
+    <route service="E2U+SIP" regex="sip:(.*)" replace="sofia/internal/$1"/>
     <!--<route service="E2U+XMPP" regex="XMPP:(.*)" replace="dingaling/$${xmpp_server_profile}/$1"/>-->
   </routes>
 </configuration>
