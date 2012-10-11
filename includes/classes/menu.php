@@ -94,10 +94,10 @@
 											$sql .= "menu_item_link, ";
 											$sql .= "menu_item_category, ";
 											if (strlen($menu_item_order) > 0) {
-													$sql .= "menu_item_order, ";
+												$sql .= "menu_item_order, ";
 											}
 											if (strlen($menu_item_parent_uuid) > 0) {
-													$sql .= "menu_item_parent_uuid, ";
+												$sql .= "menu_item_parent_uuid, ";
 											}
 											$sql .= "menu_item_description ";
 											$sql .= ") ";
@@ -110,18 +110,18 @@
 											$sql .= "'$menu_item_path', ";
 											$sql .= "'$menu_item_category', ";
 											if (strlen($menu_item_order) > 0) {
-													$sql .= "'$menu_item_order', ";
+												$sql .= "'$menu_item_order', ";
 											}
 											if (strlen($menu_item_parent_uuid) > 0) {
-													$sql .= "'$menu_item_parent_uuid', ";
+												$sql .= "'$menu_item_parent_uuid', ";
 											}
 											$sql .= "'$menu_item_description' ";
 											$sql .= ")";
 											if ($menu_item_uuid == $menu_item_parent_uuid) {
-													//echo $sql."<br />\n";
+												//echo $sql."<br />\n";
 											}
 											else {
-													$db->exec(check_sql($sql));
+												$db->exec(check_sql($sql));
 											}
 											unset($sql);
 										//set the menu languages
@@ -150,42 +150,81 @@
 									}
 								}
 						}
-					}
-
-				//if there are no groups listed in v_menu_item_groups under menu_uuid then add the default groups
-					$sql = "select count(*) as count from v_menu_item_groups ";
-					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
-					$prep_statement = $db->prepare($sql);
-					$prep_statement->execute();
-					$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
-					unset ($prep_statement);
-					if ($sub_result['count'] == 0) {
-						//no menu item groups found add the defaults
-							foreach($apps as $app) {
-								foreach ($app['menu'] as $sub_row) {
-									foreach ($sub_row['groups'] as $group) {
-										//add the record
-										$sql = "insert into v_menu_item_groups ";
-										$sql .= "(";
-										$sql .= "menu_uuid, ";
-										$sql .= "menu_item_uuid, ";
-										$sql .= "group_name ";
-										$sql .= ")";
-										$sql .= "values ";
-										$sql .= "(";
-										$sql .= "'".$this->menu_uuid."', ";
-										$sql .= "'".$sub_row['uuid']."', ";
-										$sql .= "'".$group."' ";
-										$sql .= ")";
-										$db->exec($sql);
-										unset($sql);
+                                        }
+                                        foreach($apps as $row) {
+						foreach ($row['permissions'] as $menu) {
+							//set the variables
+							if ($menu['groups']) {
+								foreach ($menu['groups'] as $group) {
+									//if the item uuid is not currently in the db then add it
+									$sql = "select * from v_group_permissions ";
+									$sql .= "where permission_name = '".$menu['name']."' ";
+									$sql .= "and group_name = '$group' ";
+									$prep_statement = $db->prepare(check_sql($sql));
+									if ($prep_statement) {
+										$prep_statement->execute();
+										$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+										unset ($prep_statement);
+										if (count($result) == 0) {
+											//insert the default menu into the database
+											$sql = "insert into v_group_permissions ";
+											$sql .= "(";
+											$sql .= "group_permission_uuid, ";
+											$sql .= "domain_uuid, ";
+											$sql .= "permission_name, ";
+											$sql .= "group_name ";
+											$sql .= ") ";
+											$sql .= "values ";
+											$sql .= "(";
+											$sql .= "'".uuid()."', ";
+											$sql .= "'".$_SESSION["domain_uuid"]."', ";
+											$sql .= "'".$menu['name']."', ";
+											$sql .= "'".$group."' ";
+											$sql .= ");";
+											$db->exec(check_sql($sql));
+											unset($sql);
+										}
 									}
 								}
 							}
+						}
+                                               
 					}
 
-				//save the changes to the database
-					//$db->commit();
+				//if there are no groups listed in v_menu_item_groups under menu_uuid then add the default groups
+                                        
+                                        foreach($apps as $app) {
+						foreach ($app['menu'] as $sub_row) {
+							foreach ($sub_row['groups'] as $group) {
+								$sql = "select count(*) as count from v_menu_item_groups ";
+								$sql .= "where menu_item_uuid = '".$sub_row['uuid']."' ";
+								$sql .= "and group_name = '$group' ";
+								$prep_statement = $db->prepare($sql);
+								$prep_statement->execute();
+								$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
+								unset ($prep_statement);
+								if ($sub_result['count'] == 0) {
+									//no menu item groups found add the defaults
+
+									//add the record
+									$sql = "insert into v_menu_item_groups ";
+									$sql .= "(";
+									$sql .= "menu_uuid, ";
+									$sql .= "menu_item_uuid, ";
+									$sql .= "group_name ";
+									$sql .= ")";
+									$sql .= "values ";
+									$sql .= "(";
+									$sql .= "'".$this->menu_uuid."', ";
+									$sql .= "'".$sub_row['uuid']."', ";
+									$sql .= "'".$group."' ";
+									$sql .= ")";
+									$db->exec($sql);
+									unset($sql);
+								}
+							}
+						}
+					}
 			} //end function
 
 		//create the menu
@@ -198,7 +237,7 @@
 					$_SESSION['groups'][0]['group_name'] = 'public';
 				}
 
-				if (strlen($sql) == 0) { //default sql for base of the menu		   							
+				if (strlen($sql) == 0) { //default sql for base of the menu
 					$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid from v_menu_items as i, v_menu_languages as l ";
 					$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 					$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
@@ -231,7 +270,7 @@
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $field) {				   				    
+				foreach($result as $field) {
 					$menu_tags = '';
 					switch ($field['menu_item_category']) {
 						case "internal":
