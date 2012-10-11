@@ -27,7 +27,6 @@
 //define the follow me class
 	class menu {
 		public $menu_uuid;
-		public $menu_language;
 
 		//delete items in the menu that are not protected
 			function delete() {
@@ -73,7 +72,7 @@
 					foreach ($apps as $row) {
 						foreach ($row['menu'] as $menu) {
 							//set the variables
-								$menu_item_title = $menu['title'][$this->menu_language];
+								$menu_item_title = $menu['title']['en-us'];
 								$menu_item_uuid = $menu['uuid'];
 								$menu_item_parent_uuid = $menu['parent_uuid'];
 								$menu_item_category = $menu['category'];
@@ -149,7 +148,6 @@
 												$sql .= "'$menu_language', ";
 												$sql .= "'$menu_item_title' ";
 												$sql .= ")";
-												echo $sql; exit;
 												$db->exec(check_sql($sql));
 												
 												unset($sql);
