@@ -33,17 +33,12 @@
 				//set the variable
 					$db = $this->db;
 				//remove the menu languages
-					$sql  = "delete from v_menu_languages ";
-					//$sql .= "where l.menu_uuid = m.menu_uuid";
-					$sql .= "where menu_uuid = '".$this->menu_uuid."';";
-					//$sql .= "and m.menu_uuid = l.menu_uuid);";
-					//$sql .= "and m.menu_item_uuid = l.menu_item_uuid ";
-					//$sql .= "and (m.menu_item_protected <> 'true' ";
-					//$sql .= "or m.menu_item_protected is null)); ";
-					//echo $sql;
-					
-					//delete from v_menu_languages where exists (select * from v_menu_languages as l, v_menu_items as m where l.menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' and m.menu_item_uuid = l.menu_item_uuid and (m.menu_item_protected <> 'true' or m.menu_item_protected is null));
-					//exit;
+					$sql  = "delete from v_menu_languages where menu_item_uuid ";
+					$sql .= "in (select i.menu_item_uuid from v_menu_languages l, v_menu_items i ";
+					$sql .= "where l.menu_uuid = i.menu_uuid ";
+					$sql .= "and (i.menu_item_protected <> 'true' ";
+					$sql .= "or i.menu_item_protected is null) ";
+					$sql .= "group by i.menu_item_uuid)";
 					$db->exec(check_sql($sql));
 				//remove the old menu
 					$sql  = "delete from v_menu_items ";
