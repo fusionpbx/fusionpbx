@@ -118,6 +118,11 @@
 										unset($sql);
 									}
 								}
+
+						//set the variables
+							foreach ($menu["title"] as $key => $value) {
+								echo $key ." ".$value."\n";
+							}
 						}
 					}
 
