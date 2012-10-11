@@ -126,47 +126,47 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "where default_setting_uuid = '$default_setting_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
-                                
-                                $sql = "select * from v_domain_settings ";
-                                $sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-                                $sql .= "and domain_setting_subcategory = 'menu' ";
-                                $sql .= "and domain_setting_name = 'uuid' ";
-                                $prep_statement = $db->prepare(check_sql($sql));
-                                $prep_statement->execute();
-                                $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);                                
-                                unset ($prep_statement);
-                                
-                                if(count($result)>0){
-                                    $sql = "update v_domain_settings set ";
-                                    $sql .= "domain_setting_value = '$default_setting_value' ";
-                                    $sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-                                    $sql .= "and domain_setting_subcategory = 'menu' ";
-                                    $db->exec(check_sql($sql));
-                                    unset($sql);
-                                }else{
-                                    $sql = "insert into v_domain_settings ";                                    
-                                    $sql .= "(";
-                                    $sql .= "domain_uuid, ";
-                                    $sql .= "domain_setting_uuid, ";
-                                    $sql .= "domain_setting_category, ";
-                                    $sql .= "domain_setting_subcategory, ";
-                                    $sql .= "domain_setting_name, ";
-                                    $sql .= "domain_setting_value, ";
-                                    $sql .= "domain_setting_enabled ";	
-                                    $sql .= ")";
-                                    $sql .= "values ";
-                                    $sql .= "(";
-                                    $sql .= "'".$_SESSION['domain_uuid']."', ";
-                                    $sql .= "'".uuid()."', ";
-                                    $sql .= "'domain', ";
-                                    $sql .= "'menu', ";
-                                    $sql .= "'uuid', ";
-                                    $sql .= "'$default_setting_value', ";
-                                    $sql .= "'true' ";
-                                    $sql .= ")";
-                                    $db->exec(check_sql($sql));
-                                    unset($sql);
-                                }
+
+				$sql = "select * from v_domain_settings ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and domain_setting_subcategory = 'menu' ";
+				$sql .= "and domain_setting_name = 'uuid' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);                                
+				unset ($prep_statement);
+
+				if(count($result)>0){
+					$sql = "update v_domain_settings set ";
+					$sql .= "domain_setting_value = '$default_setting_value' ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and domain_setting_subcategory = 'menu' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}else{
+					$sql = "insert into v_domain_settings ";                                    
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "domain_setting_uuid, ";
+					$sql .= "domain_setting_category, ";
+					$sql .= "domain_setting_subcategory, ";
+					$sql .= "domain_setting_name, ";
+					$sql .= "domain_setting_value, ";
+					$sql .= "domain_setting_enabled ";	
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".$_SESSION['domain_uuid']."', ";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'domain', ";
+					$sql .= "'menu', ";
+					$sql .= "'uuid', ";
+					$sql .= "'$default_setting_value', ";
+					$sql .= "'true' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
 
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings.php\">\n";

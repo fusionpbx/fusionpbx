@@ -136,20 +136,19 @@ require_once "includes/paging.php";
 			$subcategory = $row['default_setting_subcategory'];
 			$name = $row['default_setting_name'];
 			if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
-                                
-                                $sql = "select * from v_domain_settings ";
-                                $sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-                                $sql .= "and domain_setting_subcategory = 'menu' ";
-                                $sql .= "and domain_setting_name = 'uuid' ";
-                                $prep_statement = $db->prepare(check_sql($sql));
-                                $prep_statement->execute();
-                                $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-                                foreach ($result as &$row2) {
-                                        $domain_setting_value = $row2["domain_setting_value"];
-                                        break; //limit to 1 row
-                                }
-                                unset ($prep_statement);
-                                                        
+				$sql = "select * from v_domain_settings ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and domain_setting_subcategory = 'menu' ";
+				$sql .= "and domain_setting_name = 'uuid' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row2) {
+						$domain_setting_value = $row2["domain_setting_value"];
+						break; //limit to 1 row
+				}
+				unset ($prep_statement);
+
 				$sql = "select * from v_menus ";
 				$sql .= "where menu_uuid = '$domain_setting_value' ";
 				$sub_prep_statement = $db->prepare(check_sql($sql));

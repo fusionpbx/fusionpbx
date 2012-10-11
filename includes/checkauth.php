@@ -56,17 +56,19 @@ session_start();
 			if (count($username_array) > 1 || strlen(check_str($_REQUEST["domain_name"])) > 0) {
 				foreach ($_SESSION['domains'] as &$row) {
 					if ($row['domain_name'] == $domain_name) {
-						$domain_uuid = $row["domain_uuid"];
-						$_SESSION["domain_uuid"] = $row["domain_uuid"];
-						$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-						$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
-						$_SESSION["domain_name"] = $domain_name;
+						//set the domain session variables
+							$domain_uuid = $row["domain_uuid"];
+							$_SESSION["domain_uuid"] = $row["domain_uuid"];
+							$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
+							$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
+							$_SESSION["domain_name"] = $domain_name;
 
-                                                //domains set()
-                                                require "includes/classes/domains.php";
-                                                $domain = new domains();
-                                                $domain->db = $db;
-                                                $domain->set();
+						//set the setting arrays
+							//domains set()
+							require "includes/classes/domains.php";
+							$domain = new domains();
+							$domain->db = $db;
+							$domain->set();
 					}
 				}
 			}

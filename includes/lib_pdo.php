@@ -256,15 +256,15 @@ if ($db_type == "pgsql") {
 			}
 			unset($result, $prep_statement);               
 	}        
-                    
-        if (!isset($_SESSION['domain']['menu'])){
-            //domains set()
-            require "includes/classes/domains.php";
 
-            $domain = new domains();
-            $domain->db = $db;
-            $domain->set();
-        }            
+//set the setting arrays
+	if (!isset($_SESSION['domain']['menu'])){
+		//domains set()
+		require "includes/classes/domains.php";
+		$domain = new domains();
+		$domain->db = $db;
+		$domain->set();
+	}            
 
 //set the domain_uuid variable from the session
 	if (strlen($_SESSION["domain_uuid"]) > 0) { 

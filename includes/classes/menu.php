@@ -27,7 +27,7 @@
 //define the follow me class
 	class menu {
 		public $menu_uuid;
-                public $menu_language;
+		public $menu_language;
 
 		//delete items in the menu that are not protected
 			function delete() {
@@ -59,65 +59,65 @@
 					foreach ($apps as $row) {
 						foreach ($row['menu'] as $menu) {
 							//set the variables
-                                                                $menu_item_title = $menu['title'][$this->menu_language];
+								$menu_item_title = $menu['title'][$this->menu_language];
 								$menu_item_uuid = $menu['uuid'];
 								$menu_item_parent_uuid = $menu['parent_uuid'];
 								$menu_item_category = $menu['category'];
 								$menu_item_path = $menu['path'];
 								$menu_item_order = $menu['order'];
 								$menu_item_description = $menu['desc'];
-                                                                   
-                                                                //if the item uuid is not currently in the db then add it
-                                                                        $sql = "select * from v_menu_items ";
-                                                                        $sql .= "where menu_uuid = '".$this->menu_uuid."' ";
-                                                                        $sql .= "and menu_item_uuid = '$menu_item_uuid' ";
-                                                                        $prep_statement = $db->prepare(check_sql($sql));
-                                                                        if ($prep_statement) {
-                                                                                $prep_statement->execute();
-                                                                                $result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-                                                                                if (count($result) == 0) {
-                                                                                        //insert the default menu into the database
-                                                                                                $sql = "insert into v_menu_items ";
-                                                                                                $sql .= "(";
-                                                                                                $sql .= "menu_item_uuid, ";
-                                                                                                $sql .= "menu_uuid, ";
-                                                                                                //$sql .= "menu_item_language, ";
-                                                                                                $sql .= "menu_item_title, ";
-                                                                                                $sql .= "menu_item_link, ";
-                                                                                                $sql .= "menu_item_category, ";
-                                                                                                if (strlen($menu_item_order) > 0) {
-                                                                                                        $sql .= "menu_item_order, ";
-                                                                                                }
-                                                                                                if (strlen($menu_item_parent_uuid) > 0) {
-                                                                                                        $sql .= "menu_item_parent_uuid, ";
-                                                                                                }
-                                                                                                $sql .= "menu_item_description ";
-                                                                                                $sql .= ") ";
-                                                                                                $sql .= "values ";
-                                                                                                $sql .= "(";
-                                                                                                $sql .= "'".$menu_item_uuid."', ";
-                                                                                                $sql .= "'".$this->menu_uuid."', ";
-                                                                                                //$sql .= "'$menu_item_language', ";
-                                                                                                $sql .= "'$menu_item_title', ";
-                                                                                                $sql .= "'$menu_item_path', ";
-                                                                                                $sql .= "'$menu_item_category', ";
-                                                                                                if (strlen($menu_item_order) > 0) {
-                                                                                                        $sql .= "'$menu_item_order', ";
-                                                                                                }
-                                                                                                if (strlen($menu_item_parent_uuid) > 0) {
-                                                                                                        $sql .= "'$menu_item_parent_uuid', ";
-                                                                                                }
-                                                                                                $sql .= "'$menu_item_description' ";
-                                                                                                $sql .= ")";
-                                                                                                if ($menu_item_uuid == $menu_item_parent_uuid) {
-                                                                                                        //echo $sql."<br />\n";
-                                                                                                }
-                                                                                                else {
-                                                                                                        $db->exec(check_sql($sql));
-                                                                                                }
-                                                                                                unset($sql);
-                                                                                }
-                                                                        }
+
+							//if the item uuid is not currently in the db then add it
+								$sql = "select * from v_menu_items ";
+								$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
+								$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
+								$prep_statement = $db->prepare(check_sql($sql));
+								if ($prep_statement) {
+									$prep_statement->execute();
+									$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+									if (count($result) == 0) {
+										//insert the default menu into the database
+										$sql = "insert into v_menu_items ";
+										$sql .= "(";
+										$sql .= "menu_item_uuid, ";
+										$sql .= "menu_uuid, ";
+										//$sql .= "menu_item_language, ";
+										$sql .= "menu_item_title, ";
+										$sql .= "menu_item_link, ";
+										$sql .= "menu_item_category, ";
+										if (strlen($menu_item_order) > 0) {
+												$sql .= "menu_item_order, ";
+										}
+										if (strlen($menu_item_parent_uuid) > 0) {
+												$sql .= "menu_item_parent_uuid, ";
+										}
+										$sql .= "menu_item_description ";
+										$sql .= ") ";
+										$sql .= "values ";
+										$sql .= "(";
+										$sql .= "'".$menu_item_uuid."', ";
+										$sql .= "'".$this->menu_uuid."', ";
+										//$sql .= "'$menu_item_language', ";
+										$sql .= "'$menu_item_title', ";
+										$sql .= "'$menu_item_path', ";
+										$sql .= "'$menu_item_category', ";
+										if (strlen($menu_item_order) > 0) {
+												$sql .= "'$menu_item_order', ";
+										}
+										if (strlen($menu_item_parent_uuid) > 0) {
+												$sql .= "'$menu_item_parent_uuid', ";
+										}
+										$sql .= "'$menu_item_description' ";
+										$sql .= ")";
+										if ($menu_item_uuid == $menu_item_parent_uuid) {
+												//echo $sql."<br />\n";
+										}
+										else {
+												$db->exec(check_sql($sql));
+										}
+										unset($sql);
+									}
+								}
 						}
 					}
 

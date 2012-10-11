@@ -17,7 +17,6 @@
 			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
 		end
 
-
 -- show all channel variables
 	--dat = env:serialize()            
 	--freeswitch.consoleLog("INFO","info:\n" .. dat .. "\n")
