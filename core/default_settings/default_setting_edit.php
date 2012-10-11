@@ -127,12 +127,46 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
                                 
-                                $sql = "update v_domain_settings set ";
-				$sql .= "domain_setting_value = '$default_setting_value' ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+                                $sql = "select * from v_domain_settings ";
+                                $sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
                                 $sql .= "and domain_setting_subcategory = 'menu' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+                                $sql .= "and domain_setting_name = 'uuid' ";
+                                $prep_statement = $db->prepare(check_sql($sql));
+                                $prep_statement->execute();
+                                $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);                                
+                                unset ($prep_statement);
+                                
+                                if(count($result)>0){
+                                    $sql = "update v_domain_settings set ";
+                                    $sql .= "domain_setting_value = '$default_setting_value' ";
+                                    $sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+                                    $sql .= "and domain_setting_subcategory = 'menu' ";
+                                    $db->exec(check_sql($sql));
+                                    unset($sql);
+                                }else{
+                                    $sql = "insert into v_domain_settings ";                                    
+                                    $sql .= "(";
+                                    $sql .= "domain_uuid, ";
+                                    $sql .= "domain_setting_uuid, ";
+                                    $sql .= "domain_setting_category, ";
+                                    $sql .= "domain_setting_subcategory, ";
+                                    $sql .= "domain_setting_name, ";
+                                    $sql .= "domain_setting_value, ";
+                                    $sql .= "domain_setting_enabled ";	
+                                    $sql .= ")";
+                                    $sql .= "values ";
+                                    $sql .= "(";
+                                    $sql .= "'".$_SESSION['domain_uuid']."', ";
+                                    $sql .= "'".uuid()."', ";
+                                    $sql .= "'domain', ";
+                                    $sql .= "'menu', ";
+                                    $sql .= "'uuid', ";
+                                    $sql .= "'$default_setting_value', ";
+                                    $sql .= "'true' ";
+                                    $sql .= ")";
+                                    $db->exec(check_sql($sql));
+                                    unset($sql);
+                                }
 
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings.php\">\n";
@@ -237,6 +271,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
+                
+                $sql = "select * from v_domain_settings ";
+                $sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+                $sql .= "and domain_setting_subcategory = 'menu' ";
+                $sql .= "and domain_setting_name = 'uuid' ";
+                $prep_statement = $db->prepare(check_sql($sql));
+                $prep_statement->execute();
+                $result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+                foreach ($result as &$row2) {
+			$domain_setting_value = $row2["domain_setting_value"];
+			break; //limit to 1 row
+		}
+                unset ($prep_statement);
+                
 		$sql = "";
 		$sql .= "select * from v_menus ";
 		$sql .= "order by menu_language, menu_name asc ";
@@ -244,7 +292,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sub_prep_statement->execute();
 		$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($sub_result as $sub_row) {
-			if (strtolower($row['default_setting_value']) == strtolower($sub_row["menu_uuid"])) {
+			if (strtolower($domain_setting_value) == strtolower($sub_row["menu_uuid"])) {
 				echo "		<option value='".strtolower($sub_row["menu_uuid"])."' selected='selected'>".$sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 			}
 			else {
