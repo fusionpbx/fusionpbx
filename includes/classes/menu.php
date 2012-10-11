@@ -39,6 +39,13 @@
 					$sql .= "and (menu_item_protected <> 'true' ";
 					$sql .= "or menu_item_protected is null); ";
 					$db->exec(check_sql($sql));
+				//remove the menu languages
+					$sql  = "delete from v_menu_languages as l, v_menu_items as m ";
+					$sql .= "where l.menu_uuid = '".$this->menu_uuid."' ";
+					$sql .= "and m.menu_item_uuid = l.menu_item_uuid ";
+					$sql .= "and (m.menu_item_protected <> 'true' ";
+					$sql .= "or m.menu_item_protected is null); ";
+					$db->exec(check_sql($sql));
 			}
 
 		//restore the menu
