@@ -48,6 +48,7 @@ else {
 		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
 		$member_pin = check_str($_POST["member_pin"]);
 		$member_type = check_str($_POST["member_type"]);
+		$record = check_str($_POST["record"]);
 		$user_uuid = check_str($_POST["user_uuid"]);
 		$max_members = check_str($_POST["max_members"]);
 		$wait_mod = check_str($_POST["wait_mod"]);
@@ -161,6 +162,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "conference_room_uuid, ";
 					$sql .= "conference_center_uuid, ";
 					$sql .= "meeting_uuid, ";
+					$sql .= "record, ";
 					$sql .= "max_members, ";
 					$sql .= "wait_mod, ";
 					$sql .= "announce, ";
@@ -177,6 +179,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$conference_room_uuid', ";
 					$sql .= "'$conference_center_uuid', ";
 					$sql .= "'$meeting_uuid', ";
+					$sql .= "'$record', ";
 					$sql .= "'$max_members', ";
 					$sql .= "'$wait_mod', ";
 					$sql .= "'$announce', ";
@@ -220,6 +223,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_conference_rooms set ";
 					$sql .= "conference_center_uuid = '$conference_center_uuid', ";
 					//$sql .= "meeting_uuid = '$meeting_uuid', ";
+					$sql .= "record = '$record', ";
 					$sql .= "max_members = '$max_members', ";
 					$sql .= "wait_mod = '$wait_mod', ";
 					$sql .= "announce = '$announce', ";
@@ -304,6 +308,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$conference_center_uuid = $row["conference_center_uuid"];
 			$meeting_uuid = $row["meeting_uuid"];
+			$record = $row["record"];
 			$max_members = $row["max_members"];
 			$wait_mod = $row["wait_mod"];
 			$announce = $row["announce"];
@@ -319,6 +324,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //set default values
+	if (strlen($record) == 0) { $record = 'false'; }
 	if (strlen($max_members) == 0) { $max_members = 0; }
 	if (strlen($wait_mod) == 0) { $wait_mod = 'false'; }
 	if (strlen($announce) == 0) { $announce = 'true'; }
@@ -485,6 +491,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Record:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='record'>\n";
+	echo "	<option value=''></option>\n";
+	if ($record == "true") { 
+		echo "	<option value='true' selected='selected'>true</option>\n";
+	}
+	else {
+		echo "	<option value='true'>true</option>\n";
+	}
+	if ($record == "false") { 
+		echo "	<option value='false' selected='selected'>false</option>\n";
+	}
+	else {
+		echo "	<option value='false'>false</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

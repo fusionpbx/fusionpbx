@@ -170,6 +170,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Meeting UUID';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'record';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'recording';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select whether to record the conference.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'max_members';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Limit number of people in the conference.';
