@@ -48,7 +48,6 @@ else {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$conference_center_name = check_str($_POST["conference_center_name"]);
 		$conference_center_extension = check_str($_POST["conference_center_extension"]);
-		$conference_center_profile = check_str($_POST["conference_center_profile"]);
 		$conference_center_description = check_str($_POST["conference_center_description"]);
 		$conference_center_enabled = check_str($_POST["conference_center_enabled"]);
 
@@ -118,7 +117,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
 		if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 		if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-		if (strlen($conference_center_profile) == 0) { $msg .= "Please provide: Profile<br>\n"; }
 		//if (strlen($conference_center_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
 		//if (strlen($conference_center_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($conference_center_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
@@ -149,7 +147,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "dialplan_uuid, ";
 					$sql .= "conference_center_name, ";
 					$sql .= "conference_center_extension, ";
-					$sql .= "conference_center_profile, ";
 					$sql .= "conference_center_description, ";
 					$sql .= "conference_center_enabled ";
 					$sql .= ")";
@@ -160,7 +157,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$dialplan_uuid', ";
 					$sql .= "'$conference_center_name', ";
 					$sql .= "'$conference_center_extension', ";
-					$sql .= "'$conference_center_profile', ";
 					$sql .= "'$conference_center_description', ";
 					$sql .= "'$conference_center_enabled' ";
 					$sql .= ")";
@@ -213,7 +209,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_conference_centers set ";
 					$sql .= "conference_center_name = '$conference_center_name', ";
 					$sql .= "conference_center_extension = '$conference_center_extension', ";
-					$sql .= "conference_center_profile = '$conference_center_profile', ";
 					$sql .= "conference_center_order = '$conference_center_order', ";
 					$sql .= "conference_center_description = '$conference_center_description', ";
 					$sql .= "conference_center_enabled = '$conference_center_enabled' ";
@@ -289,7 +284,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_center_name = $row["conference_center_name"];
 			$conference_center_extension = $row["conference_center_extension"];
-			$conference_center_profile = $row["conference_center_profile"];
 			$conference_center_order = $row["conference_center_order"];
 			$conference_center_description = $row["conference_center_description"];
 			$conference_center_enabled = $row["conference_center_enabled"];
@@ -398,24 +392,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 	}
 	*/
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Profile:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='conference_center_profile'>\n";
-	//if the profile has no value set it to default
-	if ($conference_center_profile == "") { $conference_center_profile = "default"; }
-	if ($conference_center_profile == "default") { echo "<option value='default' selected='selected'>default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
-	if ($conference_center_profile == "wideband") { echo "<option value='wideband' selected='selected'>wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
-	if ($conference_center_profile == "ultrawideband") { echo "<option value='ultrawideband' selected='selected'>ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
-	if ($conference_center_profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo "Conference Profile is a collection of settings for the conference center.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";

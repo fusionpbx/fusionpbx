@@ -131,10 +131,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the conference center extension number.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_center_profile';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Conference Profile is a collection of settings for the conference.';
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_center_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the center description.';
@@ -169,6 +165,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Meeting UUID';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'profile';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select the conference profile.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'record';
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'recording';
@@ -232,6 +232,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'meeting_uuid';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'profile';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select the conference profile.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'recording';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';

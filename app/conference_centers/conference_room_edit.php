@@ -48,6 +48,7 @@ else {
 		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
 		$member_pin = check_str($_POST["member_pin"]);
 		$member_type = check_str($_POST["member_type"]);
+		$profile = check_str($_POST["profile"]);
 		$record = check_str($_POST["record"]);
 		$user_uuid = check_str($_POST["user_uuid"]);
 		$max_members = check_str($_POST["max_members"]);
@@ -107,6 +108,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($conference_center_uuid) == 0) { $msg .= "Please provide: Conference UUID<br>\n"; }
 		//if (strlen($max_members) == 0) { $msg .= "Please provide: Max Members<br>\n"; }
 		//if (strlen($wait_mod) == 0) { $msg .= "Please provide: Wait for the Moderator<br>\n"; }
+		if (strlen($profile) == 0) { $msg .= "Please provide: Conference Profile<br>\n"; }
 		if (strlen($announce) == 0) { $msg .= "Please provide: Announce<br>\n"; }
 		//if (strlen($enter_sound) == 0) { $msg .= "Please provide: Enter Sound<br>\n"; }
 		if (strlen($mute) == 0) { $msg .= "Please provide: Mute<br>\n"; }
@@ -162,6 +164,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "conference_room_uuid, ";
 					$sql .= "conference_center_uuid, ";
 					$sql .= "meeting_uuid, ";
+					$sql .= "profile, ";
 					$sql .= "record, ";
 					$sql .= "max_members, ";
 					$sql .= "wait_mod, ";
@@ -179,6 +182,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$conference_room_uuid', ";
 					$sql .= "'$conference_center_uuid', ";
 					$sql .= "'$meeting_uuid', ";
+					$sql .= "'$profile', ";
 					$sql .= "'$record', ";
 					$sql .= "'$max_members', ";
 					$sql .= "'$wait_mod', ";
@@ -223,6 +227,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_conference_rooms set ";
 					$sql .= "conference_center_uuid = '$conference_center_uuid', ";
 					//$sql .= "meeting_uuid = '$meeting_uuid', ";
+					$sql .= "profile = '$profile', ";
 					$sql .= "record = '$record', ";
 					$sql .= "max_members = '$max_members', ";
 					$sql .= "wait_mod = '$wait_mod', ";
@@ -308,6 +313,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$conference_center_uuid = $row["conference_center_uuid"];
 			$meeting_uuid = $row["meeting_uuid"];
+			$profile = $row["profile"];
 			$record = $row["record"];
 			$max_members = $row["max_members"];
 			$wait_mod = $row["wait_mod"];
@@ -491,6 +497,24 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Profile:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='profile'>\n";
+	//if the profile has no value set it to default
+	if ($profile == "") { $profile = "default"; }
+	if ($profile == "default") { echo "<option value='default' selected='selected'>default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
+	if ($profile == "wideband") { echo "<option value='wideband' selected='selected'>wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
+	if ($profile == "ultrawideband") { echo "<option value='ultrawideband' selected='selected'>ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
+	if ($profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo "Conference Profile is a collection of settings for the conference center.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
