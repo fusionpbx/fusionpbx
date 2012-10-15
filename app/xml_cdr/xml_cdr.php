@@ -322,6 +322,7 @@ else {
 	echo th_order_by('caller_id_name', $content_cdr['label-name'], $order_by, $order);
 	echo th_order_by('caller_id_number', $content_cdr['label-number'], $order_by, $order);
 	echo th_order_by('destination_number', $content_cdr['label-destination'], $order_by, $order);
+	echo "<th>".$content_cdr['label-tools']."</th>\n";
 	echo th_order_by('start_stamp', $content_cdr['label-start'], $order_by, $order);
 	//echo th_order_by('end_stamp', 'End', $order_by, $order);
 	echo th_order_by('duration', $content_cdr['label-length'], $order_by, $order);
@@ -348,13 +349,6 @@ else {
 			$hangup_cause = strtolower($hangup_cause);
 			$hangup_cause = ucwords($hangup_cause);
 
-			echo "<tr >\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['direction']."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_language']."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['context']."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['leg']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-
 			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			$tmp_name = '';
 			if(!empty($row['recording_file']) && file_exists($row['recording_file'])){
@@ -372,39 +366,40 @@ else {
 			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
 				$tmp_name = $row['uuid']."_1.mp3";
 			}
-			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
-				echo 	$row['caller_id_name'].' ';
-				echo "	  </a>";
-			}
-			else {
-				echo 	$row['caller_id_name'].' ';
-			}
-			echo "	</td>\n";
+
+			echo "<tr >\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['direction']."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_language']."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['context']."</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['leg']."</td>\n";
+
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-				if (is_numeric($row['caller_id_number'])) {
-					echo 	format_phone($row['caller_id_number']).' ';
-				}
-				else {
-					echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-					echo 	$row['caller_id_number'].' ';
-					echo "</a>\n";
-				}
-				echo "	  </a>";
+			echo 	$row['caller_id_name'].' ';
+			echo "	</td>\n";
+
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "		&nbsp; <a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+			if (is_numeric($row['caller_id_number'])) {
+				echo "		".format_phone($row['caller_id_number']).' ';
 			}
 			else {
-				if (is_numeric($row['caller_id_number'])) {
-					echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-					echo 	format_phone($row['caller_id_number']).' ';
-					echo "</a>\n";
-				}
-				else {
-					echo "<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-					echo 	$row['caller_id_number'].' ';
-					echo "</a>\n";
-				}
+				echo "		".$row['caller_id_number'].' ';
+			}
+			echo "		</a>";
+			echo "	</td>\n";
+
+			echo "	<td valign='top' class='".$row_style[$c]."' nowrap=\"nowrap\">";
+			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+				echo "			".$content_cdr['label-play']."\n";
+				echo "		</a>\n";
+				echo "		&nbsp;\n";
+				echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+				echo "			".$content_cdr['label-download']."\n";
+				echo "		</a>\n";
+			}
+			else {
+				echo "		&nbsp;\n";
 			}
 			echo "	</td>\n";
 
