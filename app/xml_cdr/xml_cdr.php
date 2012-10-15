@@ -388,6 +388,17 @@ else {
 			echo "		</a>";
 			echo "	</td>\n";
 
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
+			if (is_numeric($row['destination_number'])) {
+				echo format_phone($row['destination_number'])."\n";
+			}
+			else {
+				echo "		".$row['destination_number']."\n";
+			}
+			echo "		</a>\n";
+			echo "	</td>\n";
+
 			echo "	<td valign='top' class='".$row_style[$c]."' nowrap=\"nowrap\">";
 			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
@@ -401,17 +412,6 @@ else {
 			else {
 				echo "		&nbsp;\n";
 			}
-			echo "	</td>\n";
-
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
-			if (is_numeric($row['destination_number'])) {
-				echo format_phone($row['destination_number'])."\n";
-			}
-			else {
-				echo "		".$row['destination_number']."\n";
-			}
-			echo "		</a>\n";
 			echo "	</td>\n";
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_start_epoch."</td>\n";
