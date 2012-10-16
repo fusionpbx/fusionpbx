@@ -173,6 +173,11 @@
 				end);
 			end
 
+		--add the domain to the recording directory
+			if (domain_count > 1) then
+				recordings_dir = recordings_dir.."/"..domain_name;
+			end
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -362,7 +367,7 @@
 						--log entry
 							freeswitch.consoleLog("INFO","conference_session_uuid: " .. conference_session_uuid .. "\n");
 						--record the conference
-							cmd = "conference "..meeting_uuid.."-"..domain_name.." record /tmp/"..conference_session_uuid..".wav";
+							cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recordings_dir.."/archive/"..os.date("%Y").."/"..os.date("%b").."/"..os.date("%d") .."/"..conference_session_uuid..".wav";
 							response = api:executeString(cmd);
 					end
 				end
