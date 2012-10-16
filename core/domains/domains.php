@@ -68,13 +68,12 @@ else {
 				$_SESSION["menu"] = '';
 			//clear the extension array so that it is regenerated for the selected domain
 				unset($_SESSION['extension_array']);
-			//set the context
-				if (count($_SESSION["domains"]) > 1) {
-					$_SESSION["context"] = $_SESSION["domain_name"];
-				}
-				else {
-					$_SESSION["context"] = 'default';
-				}
+			//set the setting arrays
+				//domains set()
+				require "includes/classes/domains.php";
+				$domain = new domains();
+				$domain->db = $db;
+				$domain->set();
 		}
 	}
 
