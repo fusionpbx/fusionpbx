@@ -110,11 +110,15 @@ require_once "includes/paging.php";
 	echo th_order_by('end_epoch', 'End', $order_by, $order);
 	echo th_order_by('moderator', 'Moderator', $order_by, $order);
 	echo th_order_by('recording', 'Recording', $order_by, $order);
-	echo "<th>Tool</th>\n";
+	echo "<th>Tools</th>\n";
 	echo "<tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
+			$tmp_year = date("Y", strtotime($row['start_epoch']));
+			$tmp_month = date("M", strtotime($row['start_epoch']));
+			$tmp_day = date("d", strtotime($row['start_epoch']));
+
 			if (defined('TIME_24HR') && TIME_24HR == 1) {
 				$start_date = date("j M Y H:i:s", $row['start_epoch']);
 				$end_date = date("j M Y H:i:s", $row['end_epoch']);
@@ -127,14 +131,38 @@ require_once "includes/paging.php";
 				$time_difference = $row['end_epoch'] - $row['start_epoch'];
 				$time_difference = gmdate("G:i:s", $time_difference);
 			}
+
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['meeting_uuid']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$time_difference."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['moderator']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recording']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='conference_session_details.php?uuid=".$row['conference_session_uuid']."'>Details</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+/*
+			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+			$tmp_name = '';
+			elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
+				$tmp_name = $row['conference_session_uuid'].".wav";
+			}
+			elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
+				$tmp_name = $row['conference_session_uuid'].".mp3";
+			}
+
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
+				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+				echo "			play\n";
+				echo "		</a>\n";
+				echo "		&nbsp;\n";
+				echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+				echo "			download\n";
+				echo "		</a>\n";
+				echo "		&nbsp;\n";
+			}
+			echo "		<a href='conference_session_details.php?uuid=".$row['conference_session_uuid']."'>Details</a>&nbsp;\n";
+			echo "	</td>\n";
+*/
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
