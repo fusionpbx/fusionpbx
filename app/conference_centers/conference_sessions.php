@@ -109,7 +109,7 @@ require_once "includes/paging.php";
 	echo th_order_by('start_epoch', 'Start', $order_by, $order);
 	echo th_order_by('end_epoch', 'End', $order_by, $order);
 	echo th_order_by('moderator', 'Moderator', $order_by, $order);
-	echo th_order_by('recording', 'Recording', $order_by, $order);
+	//echo th_order_by('recording', 'Recording', $order_by, $order);
 	echo "<th>Tools</th>\n";
 	echo "<tr>\n";
 
@@ -138,17 +138,14 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['moderator']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-/*
 			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			$tmp_name = '';
-			elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
+			if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
 				$tmp_name = $row['conference_session_uuid'].".wav";
 			}
 			elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
 				$tmp_name = $row['conference_session_uuid'].".mp3";
 			}
-
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
 				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
@@ -162,7 +159,6 @@ require_once "includes/paging.php";
 			}
 			echo "		<a href='conference_session_details.php?uuid=".$row['conference_session_uuid']."'>Details</a>&nbsp;\n";
 			echo "	</td>\n";
-*/
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
