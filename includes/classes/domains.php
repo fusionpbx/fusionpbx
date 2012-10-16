@@ -32,6 +32,14 @@
 			//set the variable
 				$db = $this->db;
 
+			//clear the sessions
+				unset($_SESSION['domain']);
+				unset($_SESSION['email']);
+				unset($_SESSION['provision']);
+				unset($_SESSION['security']);
+				unset($_SESSION['server']);
+				unset($_SESSION['switch']);
+
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
