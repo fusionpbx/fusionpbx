@@ -111,7 +111,7 @@ if ($domains_processed == 1) {
 			}
 			$tmp .= "\n";
 			$tmp .= "--additional info\n";
-			$tmp .= "	domain_count = \"".count($_SESSION["domains"])."\";\n";
+			$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
 			$tmp .= "	tmp_dir = \"".$tmp_dir."\";\n";
 			fwrite($fout, $tmp);
 			unset($tmp);
@@ -146,7 +146,7 @@ if ($domains_processed == 1) {
 			}
 			$tmp .= "\n";
 			$tmp .= "//additional info\n";
-			$tmp .= "	var domain_count = \"".count($_SESSION["domains"])."\";\n";
+			$tmp .= "	var domain_count = ".count($_SESSION["domains"]).";\n";
 			$tmp .= "	var tmp_dir = \"".$tmp_dir."\";\n";
 			fwrite($fout, $tmp);
 			unset($tmp);
