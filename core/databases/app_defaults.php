@@ -26,6 +26,7 @@
 
 //proccess this only one time
 if ($domains_processed == 1) {
+
 	//set the database driver
 		$sql = "select * from v_databases ";
 		$sql .= "where database_driver is null ";
@@ -79,6 +80,20 @@ if ($domains_processed == 1) {
 				}
 			}
 
+		//get the recordings directory
+			if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
+				$sql = "select * from v_default_settings ";
+				$sql .= "where default_setting_category = 'switch' ";
+				$sql .= "and default_setting_subcategory = 'recordings' ";
+				$sql .= "and default_setting_name = 'dir' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$recordings_dir = $row["default_setting_value"];
+				}
+			}
+
 		//config.lua
 			$fout = fopen($_SESSION['switch']['scripts']['dir']."/resources/config.lua","w");
 			$tmp = "\n";
@@ -87,7 +102,7 @@ if ($domains_processed == 1) {
 				$tmp .= "	sounds_dir = \"".$_SESSION['switch']['sounds']['dir']."\";\n";
 			}
 			if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
-				$tmp .= "	recordings_dir = \"".$_SESSION['switch']['recordings']['dir']."\";\n";
+				$tmp .= "	recordings_dir = \"".$recordings_dir."\";\n";
 			}
 			$tmp .= "\n";
 			$tmp .= "--database connection info\n";
@@ -123,7 +138,7 @@ if ($domains_processed == 1) {
 			$tmp .= "//switch directories\n";
 			$tmp .= "	var admin_pin = \"".$row["admin_pin"]."\";\n";
 			$tmp .= "	var sounds_dir = \"".$_SESSION['switch']['sounds']['dir']."\";\n";
-			$tmp .= "	var recordings_dir = \"".$_SESSION['switch']['recordings']['dir']."\";\n";
+			$tmp .= "	var recordings_dir = \"".$recordings_dir."\";\n";
 			$tmp .= "\n";
 			$tmp = "//database connection info\n";
 			if (strlen($db_type) > 0) {
