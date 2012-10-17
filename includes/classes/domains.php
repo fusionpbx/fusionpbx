@@ -111,12 +111,10 @@
 				}
 
 			//set the context
-				if (strlen($_SESSION["context"]) == 0) {
-					if (count($_SESSION["domains"]) > 1) {
-						$_SESSION["context"] = $_SESSION["domain_name"];
-					} else {
-						$_SESSION["context"] = 'default';
-					}
+				if (count($_SESSION["domains"]) > 1) {
+					$_SESSION["context"] = $_SESSION["domain_name"];
+				} else {
+					$_SESSION["context"] = 'default';
 				}
 
 			//recordings add the domain to the path if there is more than one domains
