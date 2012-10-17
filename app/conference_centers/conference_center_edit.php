@@ -209,7 +209,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_conference_centers set ";
 					$sql .= "conference_center_name = '$conference_center_name', ";
 					$sql .= "conference_center_extension = '$conference_center_extension', ";
-					$sql .= "conference_center_order = '$conference_center_order', ";
+					//$sql .= "conference_center_order = '$conference_center_order', ";
 					$sql .= "conference_center_description = '$conference_center_description', ";
 					$sql .= "conference_center_enabled = '$conference_center_enabled' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
