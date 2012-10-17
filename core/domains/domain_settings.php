@@ -145,9 +145,15 @@ require_once "includes/paging.php";
 				foreach ($sub_result as &$sub_row) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
+			}
+			elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
+				echo "		******** &nbsp;\n";
+			}
+			elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
+				echo "		******** &nbsp;\n";
 			} else {
 				echo 		$row['domain_setting_value'];
-			}	
+			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_enabled']."&nbsp;</td>\n";

@@ -345,6 +345,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$x++;
 		}
 		echo "		</select>\n";
+	}
+	elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
+		echo "	<input class='formfld' type='password' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
+	}
+	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
+		echo "	<input class='formfld' type='password' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	} else {
 		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}
