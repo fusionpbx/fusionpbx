@@ -98,14 +98,16 @@ require_once "includes/checkauth.php";
 						$registrations[$x]['status'] = $row->{'status'};
 
 					//remove unrelated domains
-						if (count($_SESSION["domains"]) > 1 && !permission_exists('registrations_all')) {
-							if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
-								unset($registrations[$x]);
+						if (count($_SESSION["domains"]) > 1) {
+							if (count($_SESSION["domains"]) > 1 && !permission_exists('registrations_all')) {
+								if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
+									unset($registrations[$x]);
+								}
 							}
-						}
-						else {
-							if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
-								unset($registrations[$x]);
+							else {
+								if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
+									unset($registrations[$x]);
+								}
 							}
 						}
 					//increment the array id
