@@ -92,7 +92,7 @@ function v_settings() {
 			$x++;
 		}
 		$program_dir = rtrim($program_dir, "/");
-	
+
 	//get the domains variables
 		$sql = "select * from v_domain_settings ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
@@ -339,7 +339,7 @@ function event_socket_request($fp, $cmd) {
 
 function event_socket_request_cmd($cmd) {
 	global $db, $domain_uuid, $host;
-  
+
 	$sql = "select * from v_settings ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -357,16 +357,11 @@ function event_socket_request_cmd($cmd) {
 	fclose($fp);
 }
 
-function byte_convert( $bytes ) {
-	if ($bytes<=0) {
-		return '0 Byte';
-	}
-
-	$convention=1000; //[1000->10^x|1024->2^x]
-	$s=array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB');
-	$e=floor(log($bytes,$convention));
-	$e=floor(log($bytes,$convention));
-	return round($bytes/pow($convention,$e),2).' '.$s[$e];
+function byte_convert($bytes, $decimals = 2) {
+	if ($bytes <= 0) { return '0 Bytes'; }
+	$convention = 1024;
+	$formattedbytes = array_reduce( array(' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', 'ZB'), create_function( '$a,$b', 'return is_numeric($a)?($a>='.$convention.'?$a/'.$convention.':number_format($a,'.$decimals.').$b):$a;' ), $bytes );
+	return $formattedbytes;
 }
 
 function lan_sip_profile() {
@@ -412,7 +407,7 @@ function ListFiles($dir) {
 			if($file != "." && $file != ".." && $file[0] != '.') {
 				if(is_dir($dir . "/" . $file)) {
 					//$inner_files = ListFiles($dir . "/" . $file); //recursive
-					if(is_array($inner_files)) $files = array_merge($files, $inner_files); 
+					if(is_array($inner_files)) $files = array_merge($files, $inner_files);
 			} else {
 					array_push($files, $file);
 					//array_push($files, $dir . "/" . $file);
@@ -1220,7 +1215,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 		foreach ($result as &$row) {
 			$extension = $row["ring_group_extension"];
-			$context = $row["ring_group_context"]; 
+			$context = $row["ring_group_context"];
 			$description = $row["ring_group_description"];
 			if ("transfer ".$extension." XML ".$context == $select_value || "transfer:".$extension." XML ".$context == $select_value) {
 				if ($select_type == "ivr") {
@@ -1356,7 +1351,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 		foreach ($result as &$row) {
 			$extension = $row["extension"];
-			$context = $row["user_context"]; 
+			$context = $row["user_context"];
 			$description = $row["description"];
 			if ("voicemail default \${domain_name} ".$extension == $select_value || "voicemail:default \${domain_name} ".$extension == $select_value) {
 				if ($select_type == "ivr") {
@@ -1492,7 +1487,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 						if ($select_type == "ivr") {
 							echo "		<option value='menu-exec-app:set ' $selected>set</option>\n";
 						}
-					//sleep	
+					//sleep
 						if ($select_value == "sleep") { $selected = "selected='selected'"; }
 						if ($select_type == "dialplan") {
 							echo "		<option value='sleep:' $selected>sleep</option>\n";
@@ -1846,7 +1841,7 @@ function save_extension_xml() {
 			}
 			unset ($prep_statement);
 
-		//prepare extension 
+		//prepare extension
 			$extension_dir_path = realpath($_SESSION['switch']['extensions']['dir']);
 			$user_context = str_replace(" ", "_", $user_context);
 			$user_context = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $user_context);
@@ -1873,7 +1868,7 @@ function save_extension_xml() {
 			$xml .= "\n";
 			$xml .= "<include>\n";
 			$xml .= "	<!--the domain or ip (the right hand side of the @ in the addr-->\n";
-			if ($user_context == "default") { 
+			if ($user_context == "default") {
 				$xml .= "	<domain name=\"\$\${domain}\">\n";
 			}
 			else {
@@ -2015,10 +2010,10 @@ function save_gateway_xml() {
 					}
 					if (strlen($row['distinct_to']) > 0) {
 						$xml .= "      <param name=\"distinct-to\" value=\"" . $row['distinct_to'] . "\"/>\n";
-					} 
+					}
 					if (strlen($row['auth_username']) > 0) {
 						$xml .= "      <param name=\"auth-username\" value=\"" . $row['auth_username'] . "\"/>\n";
-					} 
+					}
 					if (strlen($row['password']) > 0) {
 						$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
 					}
@@ -2126,7 +2121,7 @@ function save_module_xml() {
 			$xml .= "\n		<!-- ".$row['module_cat']." -->\n";
 		}
 		if ($row['module_enabled'] == "true"){
-			$xml .= "		<load module=\"".$row['module_name']."\"/>\n"; 
+			$xml .= "		<load module=\"".$row['module_name']."\"/>\n";
 		}
 		$prev_module_cat = $row['module_cat'];
 	}
@@ -2172,7 +2167,7 @@ function save_var_xml() {
 		}
 		$prev_var_cat = $row['var_cat'];
 	}
-	$xml .= "\n"; 
+	$xml .= "\n";
 	fwrite($fout, $xml);
 	unset($xml);
 	fclose($fout);
@@ -2350,7 +2345,7 @@ function save_hunt_group_xml() {
 				//add each hunt group to the dialplan
 					if (strlen($row['hunt_group_uuid']) > 0) {
 						//set default action to add
-							$action = 'add'; 
+							$action = 'add';
 						//check whether the dialplan entry exists in the database
 							$action = 'add'; //set default action to add
 							$i = 0;
@@ -2761,7 +2756,7 @@ function save_hunt_group_xml() {
 							if (count($tmp_array) > 0) {
 								foreach ($tmp_array as $tmp_row) {
 									$tmpdata = $tmp_row["data"];
-									if ($tmp_row["application"] == "voicemail") { 
+									if ($tmp_row["application"] == "voicemail") {
 										$tmpdata = "*99".$tmpdata;
 									}
 									else {
@@ -2798,7 +2793,7 @@ function save_hunt_group_xml() {
 								if (count($tmp_array) > 0) {
 									foreach ($tmp_array as $tmp_row) {
 										$tmpdata = $tmp_row["data"];
-										if ($tmp_row["application"] == "voicemail") { 
+										if ($tmp_row["application"] == "voicemail") {
 											$tmpdata = "*99".$tmpdata;
 										}
 										else {
@@ -3473,14 +3468,14 @@ if (!function_exists('sync_directory')) {
 									$user_last_name = $name_array[1];
 								}
 							}
-							
+
 							break; //limit to 1 row
 						}
-						$f1 = phone_letter_to_number(substr($user_first_name, 0,1)); 
+						$f1 = phone_letter_to_number(substr($user_first_name, 0,1));
 						$f2 = phone_letter_to_number(substr($user_first_name, 1,1));
 						$f3 = phone_letter_to_number(substr($user_first_name, 2,1));
 
-						$l1 = phone_letter_to_number(substr($user_last_name, 0,1)); 
+						$l1 = phone_letter_to_number(substr($user_last_name, 0,1));
 						$l2 = phone_letter_to_number(substr($user_last_name, 1,1));
 						$l3 = phone_letter_to_number(substr($user_last_name, 2,1));
 
@@ -3679,7 +3674,7 @@ if (!function_exists('save_ivr_menu_xml')) {
 					$sub_sql = "select * from v_ivr_menu_options ";
 					$sub_sql .= "where ivr_menu_uuid = '$ivr_menu_uuid' ";
 					$sub_sql .= "and domain_uuid = '$domain_uuid' ";
-					$sub_sql .= "order by ivr_menu_option_order asc "; 
+					$sub_sql .= "order by ivr_menu_option_order asc ";
 					$sub_prep_statement = $db->prepare(check_sql($sub_sql));
 					$sub_prep_statement->execute();
 					$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -4100,7 +4095,7 @@ if (!function_exists('save_call_center_xml')) {
 									//add the call_timeout
 									$tmp_pos = strrpos($agent_contact, "}");
 									$tmp_first = substr($agent_contact, 0, $tmp_pos);
-									$tmp_last = substr($agent_contact, $tmp_pos); 
+									$tmp_last = substr($agent_contact, $tmp_pos);
 									$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
 								}
 								else {
@@ -4195,7 +4190,7 @@ if (!function_exists('switch_conf_xml')) {
 		//get the contents of the template
 			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/switch.conf.xml");
 
-		//prepare the php variables 
+		//prepare the php variables
 			if (stristr(PHP_OS, 'WIN')) {
 				$bindir = getenv(PHPRC);
 				$v_mailer_app ='"'. $bindir."\php". '" -f  '.$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."\secure\\v_mailto.php -- ";
