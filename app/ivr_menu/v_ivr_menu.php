@@ -119,8 +119,9 @@ require_once "includes/paging.php";
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
+				$ivr_menu_name = str_replace("-", " ", $row['ivr_menu_name']);
 				echo "<tr >\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_name']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$ivr_menu_name."</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_extension']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_direct_dial']."</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_enabled']."</td>\n";

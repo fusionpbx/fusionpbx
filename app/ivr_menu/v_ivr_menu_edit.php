@@ -166,6 +166,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
+	//replace the space with a dash
+		$ivr_menu_name = str_replace(" ", "-", $ivr_menu_name);
+
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			//prepare the object
@@ -273,10 +276,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$ivr_menu_enabled = $row["ivr_menu_enabled"];
 			$ivr_menu_description = $row["ivr_menu_description"];
 
+			//replace the dash with a space
+			$ivr_menu_name = str_replace("-", " ", $ivr_menu_name);
+
 			if (strlen($ivr_menu_exit_app) > 0) {
 				$ivr_menu_exit_action = $ivr_menu_exit_app.":".$ivr_menu_exit_data;
 			}
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -526,22 +531,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</optgroup>\n";
 		}
 	//sounds
-		//$dir_path = $_SESSION['switch']['sounds']['dir'];
-		//recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
-		//echo "<optgroup label='sounds'>\n";
-		//foreach ($dir_array as $key => $value) {
-		//	if (strlen($value) > 0) {
-		//		$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
-		//		if ($ivr_menu_greet_short == $tmp_dir.'/'.$key) {
-		//			$tmp_selected = true;
-		//			echo "		<option value='$tmp_dir/$key' selected>$key</option>\n";
-		//		}
-		//		else {
-		//			echo "		<option value='$tmp_dir/$key'>$key</option>\n";
-		//		}
-		//	}
-		//}
-		//echo "</optgroup>\n";
+		$dir_path = $_SESSION['switch']['sounds']['dir'];
+		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+		echo "<optgroup label='sounds'>\n";
+		foreach ($dir_array as $key => $value) {
+			if (strlen($value) > 0) {
+				$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
+				if ($ivr_menu_greet_short == $tmp_dir.'/'.$key) {
+					$tmp_selected = true;
+					echo "		<option value='$tmp_dir/$key' selected>$key</option>\n";
+				}
+				else {
+					echo "		<option value='$tmp_dir/$key'>$key</option>\n";
+				}
+			}
+		}
+		echo "</optgroup>\n";
 	//select
 		if (if_group("superadmin")) {
 			if (!$tmp_selected) {
