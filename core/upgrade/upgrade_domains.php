@@ -72,7 +72,7 @@
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach($result as $row) {
-		if (count($result) == 0) {
+		if (count($result) == 1) {
 			$_SESSION["domain_uuid"] = $row["domain_uuid"];
 			$_SESSION["domain_name"] = $row['domain_name'];
 		}
