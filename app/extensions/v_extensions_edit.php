@@ -204,7 +204,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		else {
 			//if the user_context was not set then set the default value
-			if (strlen($user_context) == 0) { 
+			if (strlen($user_context) == 0) {
 				if (count($_SESSION["domains"]) > 1) {
 					$user_context = $_SESSION['domain_name'];
 				}
@@ -831,13 +831,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='directory_visible'>\n";
 	echo "    <option value=''></option>\n";
-	if ($directory_visible == "true" || $directory_visible == "") { 
+	if ($directory_visible == "true" || $directory_visible == "") {
 		echo "    <option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
-	if ($directory_visible == "false") { 
+	if ($directory_visible == "false") {
 		echo "    <option value='false' selected >false</option>\n";
 	}
 	else {
@@ -857,13 +857,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='directory_exten_visible'>\n";
 	echo "    <option value=''></option>\n";
-	if ($directory_exten_visible == "true" || $directory_exten_visible == "") { 
+	if ($directory_exten_visible == "true" || $directory_exten_visible == "") {
 		echo "    <option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
-	if ($directory_exten_visible == "false") { 
+	if ($directory_exten_visible == "false") {
 		echo "    <option value='false' selected >false</option>\n";
 	}
 	else {
@@ -994,13 +994,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='vm_enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($vm_enabled == "true" || $vm_enabled == "") { 
+	if ($vm_enabled == "true" || $vm_enabled == "") {
 		echo "    <option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
-	if ($vm_enabled == "false") { 
+	if ($vm_enabled == "false") {
 		echo "    <option value='false' selected='selected'>false</option>\n";
 	}
 	else {
@@ -1010,7 +1010,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 	echo "Enable/disable voicemail for this extension.\n";
 	echo "</td>\n";
-	echo "</tr>\n";	
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1030,13 +1030,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='vm_attach_file'>\n";
 	echo "    <option value=''></option>\n";
-	if ($vm_attach_file == "true") { 
+	if ($vm_attach_file == "true") {
 		echo "    <option value='true' selected >true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
-	if ($vm_attach_file == "false") { 
+	if ($vm_attach_file == "false") {
 		echo "    <option value='false' selected >false</option>\n";
 	}
 	else {
@@ -1055,13 +1055,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='vm_keep_local_after_email'>\n";
 	echo "    <option value=''></option>\n";
-	if ($vm_keep_local_after_email == "true") { 
+	if ($vm_keep_local_after_email == "true") {
 		echo "    <option value='true' selected >true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
-	if ($vm_keep_local_after_email == "false") { 
+	if ($vm_keep_local_after_email == "false") {
 		echo "    <option value='false' selected >false</option>\n";
 	}
 	else {
@@ -1098,7 +1098,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	if (if_group("superadmin")) {
-		if (strlen($user_context) == 0) { 
+		if (strlen($user_context) == 0) {
 			if (count($_SESSION["domains"]) > 1) {
 				$user_context = $_SESSION['domain_name'];
 			}
@@ -1141,9 +1141,36 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Hold Music:\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='hold_music' maxlength='255' value=\"$hold_music\">\n";
-	echo "<br />\n";
-	echo "Enter the hold music here.\n";
+	echo "    <select class='formfld' name='hold_music' id='hold_music' style='width: auto;'>\n";
+	echo "        <option value='' style='font-style: italic;'>Default</option>\n";
+	$dir_music_on_hold = $_SESSION['switch']['sounds']['dir'].'/music';
+	if (count($_SESSION['domains']) > 1) {
+		$dir_music_on_hold_category_parent_folder = $dir_music_on_hold."/".$_SESSION['domain_name'];
+	}
+	else {
+		$dir_music_on_hold_category_parent_folder = $dir_music_on_hold;
+	}
+
+	if ($handle = opendir($dir_music_on_hold_category_parent_folder)) {
+		while (false !== ($folder = readdir($handle))) {
+			if (
+				$folder != "." &&
+				$folder != ".." &&
+				$folder != "8000" &&
+				$folder != "16000" &&
+				$folder != "32000" &&
+				$folder != "48000" &&
+				is_dir($dir_music_on_hold_category_parent_folder."/".$folder)
+				) {
+				echo "<option value='".$folder."' ".(($hold_music == $folder)?'selected':null).">".(str_replace('_', ' ', $folder))."</option>\n";
+			}
+		}
+		closedir($handle);
+	}
+
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo "	Select the MOH Category here.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -1176,19 +1203,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='sip_force_contact'>\n";
 	echo "    <option value=''></option>\n";
-	if ($sip_force_contact == "NDLB-connectile-dysfunction") { 
+	if ($sip_force_contact == "NDLB-connectile-dysfunction") {
 		echo "    <option value='NDLB-connectile-dysfunction' selected='selected'>Rewrite contact IP and port</option>\n";
 	}
 	else {
 		echo "    <option value='NDLB-connectile-dysfunction'>Rewrite contact IP and port</option>\n";
 	}
-	if ($sip_force_contact == "NDLB-connectile-dysfunction-2.0") { 
+	if ($sip_force_contact == "NDLB-connectile-dysfunction-2.0") {
 		echo "    <option value='NDLB-connectile-dysfunction-2.0' selected='selected'>Rewrite contact IP and port 2.0</option>\n";
 	}
 	else {
 		echo "    <option value='NDLB-connectile-dysfunction-2.0'>Rewrite contact IP and port 2.0</option>\n";
 	}
-	if ($sip_force_contact == "NDLB-tls-connectile-dysfunction") { 
+	if ($sip_force_contact == "NDLB-tls-connectile-dysfunction") {
 		echo "    <option value='NDLB-tls-connectile-dysfunction' selected='selected'>Rewrite contact port</option>\n";
 	}
 	else {
@@ -1288,13 +1315,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($enabled == "true" || strlen($enabled) == 0) { 
+	if ($enabled == "true" || strlen($enabled) == 0) {
 		echo "    <option value='true' selected >true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
-	if ($enabled == "false") { 
+	if ($enabled == "false") {
 		echo "    <option value='false' selected >false</option>\n";
 	}
 	else {

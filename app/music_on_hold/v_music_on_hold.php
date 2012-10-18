@@ -120,7 +120,7 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_na
 					$target_folder = $dir_music_on_hold."/".$path_mod.$_POST['ulcategory']."/".$samplingrate_folder;
 				}
 			}
-			// use default ('public') folder
+			// use default folder
 			else if ($_POST['ulcategory'] == '') {
 				if (!is_dir($dir_music_on_hold."/".$samplingrate_folder)) {
 					@mkdir($dir_music_on_hold."/".$samplingrate_folder, 0777, true);
@@ -231,13 +231,12 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "		</td>\n";
 		echo "		<td nowrap>Category<br>\n";
 		echo "			<select id='ulcategory' name='ulcategory' class='formfld' style='width: auto;' onchange=\"if (this.options[this.selectedIndex].value == '_NEW_CAT_') { this.style.display='none'; document.getElementById('ulcategorynew').style.display=''; document.getElementById('ulcategory_return').style.display=''; document.getElementById('ulcategorynew').focus(); }\">\n";
+		echo "				<option value='' style='font-style: italic;'>Default</option>\n";
 
 		if (count($_SESSION['domains']) > 1) {
-			echo "			<option value='' style='font-style: italic;'>Public</option>\n";
 			$dir_music_on_hold_category_parent_folder = $dir_music_on_hold."/".$_SESSION['domain_name'];
 		}
 		else {
-			echo "			<option value='' style='font-style: italic;'>General</option>\n";
 			$dir_music_on_hold_category_parent_folder = $dir_music_on_hold;
 		}
 
@@ -275,15 +274,12 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 	}
 
-//begin public/general moh section ********************************************************************************************************************************************
+//begin default moh section ********************************************************************************************************************************************
 
+	echo "<b><i>Default</i></b>\n";
 	if (count($_SESSION['domains']) > 1) {
-		echo "<b><i>Public</i></b>&nbsp;&nbsp;- Available to All Domains\n";
+		echo "&nbsp;&nbsp;- Available to All Domains\n";
 	}
-	else {
-		echo "<b><i>General</i></b>&nbsp;&nbsp;- Uncategorized\n";
-	}
-
 	echo "<br><br>\n";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom: 3px;\">\n";
 	echo "	<tr>\n";
