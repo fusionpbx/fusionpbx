@@ -170,6 +170,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//agent set busy_delay_time
 					$cmd = "api callcenter_config agent set busy_delay_time ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_busy_delay_time;
 					$response = event_socket_request($fp, $cmd);
+				//agent set no_answer_delay_time
+					$cmd = "api callcenter_config agent set no_answer_delay_time ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_no_answer_delay_time;
+					$response = event_socket_request($fp, $cmd);
+				//agent set max_no_answer
+					$cmd = "api callcenter_config agent set max_no_answer ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_max_no_answer;
+					$response = event_socket_request($fp, $cmd);
+				//agent set wrap_up_time
+					$cmd = "api callcenter_config agent set wrap_up_time ".$agent_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']." ".$agent_wrap_up_time;
+					$response = event_socket_request($fp, $cmd);
 			}
 
 	//add or update the database
