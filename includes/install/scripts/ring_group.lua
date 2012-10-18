@@ -93,7 +93,9 @@
 		session:execute("set", "hangup_after_bridge=true");
 		session:execute("set", "continue_on_fail=true");
 		session:execute("bridge", app_data);
-		if (not session:answered()) then
+		if (session:getVariable("last_bridge_hangup_cause") == "NORMAL_CLEARING") then
+			--ring group was answered
+		else
 			session:execute(ring_group_timeout_app, ring_group_timeout_data);
 		end
 	end
