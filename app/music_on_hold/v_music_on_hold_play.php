@@ -37,6 +37,9 @@ else {
 
 $filename = base64_decode($_GET['filename']);
 $type = $_GET['type']; //moh //rec
+$category_folder = $_GET['category'];
+$samplingrate_folder = $_GET['samplingrate'];
+
 
 ?>
 <html>
@@ -56,15 +59,15 @@ $type = $_GET['type']; //moh //rec
 		$file_ext = substr($filename, -3);
 		if ($file_ext == "wav") {
 			//HTML5 method
-			echo "<audio src=\"http://localhost:8000/mod/music_on_hold/v_music_on_hold.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"autoplay\">"; 
+			echo "<audio src=\"http://localhost:8000/mod/music_on_hold/v_music_on_hold.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"autoplay\">";
 			echo "</audio>";
 
-			echo "<embed src=\"v_music_on_hold.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autostart=\"true\" width=\"200\" height=\"40\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
+			echo "<embed src=\"v_music_on_hold.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=".$type."&filename=".base64_encode($filename)."\" autostart=\"true\" width=\"200\" height=\"40\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
 
 		}
 		if ($file_ext == "mp3") {
-			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($filename)."&song_url=v_music_on_hold.php?a=download&type=".$type."&filename=".base64_encode($filename)."\">\n";
-			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=v_music_on_hold.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" />\n";
+			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($filename)."&song_url=v_music_on_hold.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=".$type."&filename=".base64_encode($filename)."\">\n";
+			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=v_music_on_hold.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=".$type."&filename=".base64_encode($filename)."\" />\n";
 			echo "<param name=\"quality\" value=\"high\"/>\n";
 			echo "<param name=\"bgcolor\" value=\"#E6E6E6\"/>\n";
 			echo "</object>\n";
