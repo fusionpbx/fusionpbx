@@ -209,6 +209,7 @@
 			sql = [[SELECT * FROM v_conference_rooms as s, v_meeting_pins as p
 				WHERE s.domain_uuid = ']] .. domain_uuid ..[['
 				AND s.meeting_uuid = p.meeting_uuid
+				AND p.domain_uuid = ']] .. domain_uuid ..[['
 				AND p.member_pin = ']] .. pin_number ..[['
 				AND enabled = 'true' ]];
 			if (debug["sql"]) then
