@@ -24,5 +24,44 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+//proccess this only one time
+if ($domains_processed == 1) {
+
+		//ensure that the language code is set
+			$sql = "select count(*) as num_rows from v_default_settings ";
+			$sql .= "where default_setting_category = 'domain' ";
+			$sql .= "and default_setting_subcategory = 'language ' ";
+			$sql .= "and default_setting_name = 'code' ";
+			if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$sql = "insert into v_default_settings ";
+					$sql .= "(";
+					$sql .= "default_setting_uuid, ";
+					$sql .= "default_setting_category, ";
+					$sql .= "default_setting_subcategory, ";
+					$sql .= "default_setting_name, ";
+					$sql .= "default_setting_value, ";
+					$sql .= "default_setting_enabled, ";
+					$sql .= "default_setting_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'domain', ";
+					$sql .= "'language', ";
+					$sql .= "'code', ";
+					$sql .= "'en-us', ";
+					$sql .= "'true', ";
+					$sql .= "'' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+			}
+}
 
 ?>
