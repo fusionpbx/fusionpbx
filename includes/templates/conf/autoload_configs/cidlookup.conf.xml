@@ -12,22 +12,24 @@
     <!-- expire is in seconds -->
     <param name="cache-expire" value="86400"/>
 
-    <param name="odbc-dsn" value="phone:phone:phone"/>
+    <param name="odbc-dsn" value="fusionpbx:username:password"/>
 
     <!-- comment out sql to not setup a database (directory) lookup -->
     <param name="sql" value="
-     SELECT name||' ('||type||')' AS name 
-      FROM phonebook p JOIN numbers n ON p.id = n.phonebook_id
-      WHERE n.number='${caller_id_number}' 
-      LIMIT 1
+SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family ||' ('||v_contact_phones.phone_type||')' AS name, v_contact_phones.phone_number AS number
+FROM v_contacts, v_contact_phones
+WHERE v_contact_phones.contact_uuid = v_contacts.contact_uuid AND v_contact_phones.phone_number = '${caller_id_number}'
+LIMIT 1
       "/>
     <!-- comment out citystate-sql to not setup a database (city/state) 
          lookup -->
+    <!--
     <param name="citystate-sql" value="
      SELECT ratecenter||' '||state as name
       FROM npa_nxx_company_ocn
       WHERE npa = ${caller_id_number:1:3} AND nxx = ${caller_id_number:4:3}
       LIMIT 1
       "/>
+     -->
   </settings>
 </configuration>
