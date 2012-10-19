@@ -44,8 +44,9 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
+		$meeting_uuid = check_str($_POST["meeting_uuid"]);
 		$member_pin = check_str($_POST["member_pin"]);
 		$member_type = check_str($_POST["member_type"]);
 		$profile = check_str($_POST["profile"]);
@@ -97,12 +98,27 @@ else {
 			return;
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
 		$conference_room_uuid = check_str($_POST["conference_room_uuid"]);
 	}
+
+	//check for a unique pin number
+		if (strlen($member_pin) > 0) {
+			$sql = "select count(*) as num_rows from v_meeting_pins ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and member_pin = '".$member_pin."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					$msg .= "Please provide a unique pin number.<br>\n";
+				}
+			}
+		}
 
 	//check for all required data
 		//if (strlen($conference_center_uuid) == 0) { $msg .= "Please provide: Conference UUID<br>\n"; }
@@ -126,7 +142,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			persistformvar($_POST);
 			echo "</div>\n";
 			require_once "includes/footer.php";
-			return;
+			exit;
 		}
 
 	//add or update the database
@@ -200,7 +216,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			if ($action == "update" && permission_exists('conference_room_edit')) {
 				//get the meeting_uuid
-					if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+					if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 						$conference_room_uuid = check_str($_GET["id"]);
 						$sql = "select * from v_conference_rooms ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -275,7 +291,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "meeting_uuid, ";
 					$sql .= "member_pin, ";
 					$sql .= "member_type ";
-					$sql .= ")";
+					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'$domain_uuid', ";
@@ -302,8 +318,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$conference_room_uuid = check_str($_GET["id"]);
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+		$conference_room_uuid = check_str($_REQUEST["id"]);
 		$sql = "select * from v_conference_rooms ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
@@ -324,7 +340,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$created_by = $row["created_by"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -707,6 +722,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
+		echo "				<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
 		echo "				<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
