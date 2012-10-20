@@ -153,7 +153,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		}
 
 		unlink($dir_music_on_hold."/".$path_mod.$samplingrate_folder."/".base64_decode($_GET['filename']));
-		header("Location: v_music_on_hold.php");
+		header("Location: music_on_hold.php");
 		exit;
 	}
 
@@ -174,7 +174,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			sleep(5); // allow time for the OS to catch up (at least Windows, anyway)
 		}
 
-		header("Location: v_music_on_hold.php");
+		header("Location: music_on_hold.php");
 		exit;
 	}
 }
@@ -305,9 +305,9 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 					$tmp_filesize = byte_convert($tmp_filesize);
 
 					echo "<tr>\n";
-					echo "	<td class='".$row_style[$c]."'><a href=\"v_music_on_hold.php?a=download&samplingrate=".$samplingrate_folder."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
+					echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&samplingrate=".$samplingrate_folder."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
 					echo "	<td class='".$row_style[$c]."'>\n";
-					echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_music_on_hold_play.php?a=download&samplingrate=".$samplingrate_folder."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+					echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&samplingrate=".$samplingrate_folder."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 								$tmp_file_array = explode("\.",$file);
 					echo "		".$tmp_file_array[0];
 					echo "		</a>";
@@ -317,7 +317,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 					echo "	<td class='".$row_style[$c]."'>".($samplingrate_folder / 1000)." kHz</td>\n";
 					echo "	<td align=\"center\" width='22' nowrap class=\"list\">\n";
 					if (permission_exists('music_on_hold_delete')) {
-						echo "	<a href=\"v_music_on_hold.php?type=moh&act=del&samplingrate=".$samplingrate_folder."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
+						echo "	<a href=\"music_on_hold.php?type=moh&act=del&samplingrate=".$samplingrate_folder."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
 					}
 					echo "	</td>\n";
 					echo "</tr>\n";
@@ -366,9 +366,9 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 						$tmp_filesize = byte_convert($tmp_filesize);
 
 						echo "<tr>\n";
-						echo "	<td class='".$row_style[$c]."'><a href=\"v_music_on_hold.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
+						echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
 						echo "	<td class='".$row_style[$c]."'>\n";
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_music_on_hold_play.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 									$tmp_file_array = explode("\.",$file);
 						echo "		".$tmp_file_array[0];
 						echo "		</a>";
@@ -378,7 +378,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 						echo "	<td class='".$row_style[$c]."'>".($samplingrate_folder / 1000)." kHz</td>\n";
 						echo "	<td align=\"center\" width='22' nowrap class=\"list\">\n";
 						if (permission_exists('music_on_hold_delete')) {
-							echo "	<a href=\"v_music_on_hold.php?type=moh&act=del&category=".$category_folder."&samplingrate=".$samplingrate_folder."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
+							echo "	<a href=\"music_on_hold.php?type=moh&act=del&category=".$category_folder."&samplingrate=".$samplingrate_folder."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
 						}
 						echo "	</td>\n";
 						echo "</tr>\n";
@@ -398,7 +398,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			echo "<tr>\n";
 			echo "	<td colspan='5' align='left' class='".$row_style[$c]."'>\n";
 			echo "		No files found.";
-			echo "		<script>document.getElementById('category_".$category_number."_delete_icon').innerHTML = \"<a href='v_music_on_hold.php?type=cat&act=del&category=".base64_encode($category_folder)."' title='Delete Category'>".$v_link_label_delete."</a>\";</script>\n";
+			echo "		<script>document.getElementById('category_".$category_number."_delete_icon').innerHTML = \"<a href='music_on_hold.php?type=cat&act=del&category=".base64_encode($category_folder)."' title='Delete Category'>".$v_link_label_delete."</a>\";</script>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
