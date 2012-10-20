@@ -90,12 +90,15 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 	if ($file_ext == 'wav' || $file_ext == 'mp3') {
 		if ($_POST['type'] == 'moh' && permission_exists('music_on_hold_add')) {
 
-			$new_file_name = str_replace(' ', '-', $_FILES['upload_file']['name']); // replace any spaces in the file_name with dashes
+			// replace any spaces in the file_name with dashes
+			$new_file_name = str_replace(' ', '-', $_FILES['upload_file']['name']);
 
-			$sampling_rate_dir = $_POST['upload_sampling_rate'] * 1000; // convert sampling rate from value passed by form
+			// convert sampling rate from value passed by form
+			$sampling_rate_dir = $_POST['upload_sampling_rate'] * 1000;
 
+			// if multi-tenant, modify directory paths
 			if (count($_SESSION['domains']) > 1) {
-				$path_mod = $_SESSION["domain_name"]."/"; // if multi-tenant, modify directory paths
+				$path_mod = $_SESSION["domain_name"]."/";
 			}
 
 			// create new category, if necessary
@@ -131,10 +134,54 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 					}
 				}
 			}
-			else { exit(); }
+			else { 
+				exit();
+			}
 
-			$savemsg = "Uploaded file to ".$target_dir."/".htmlentities($_FILES['upload_file']['name']);
-			unset($_POST['txtCommand']);
+			//build the list of categories
+				$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
+			//default category
+				$array = glob($music_on_hold_dir."/{8000,16000,32000,48000}", GLOB_ONLYDIR|GLOB_BRACE);
+			//other categories
+				//$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
+				$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
+			//list the categories
+				foreach($array as $moh_dir) {
+					//set the directory
+						$moh_dir = substr($dir, strlen($music_on_hold_dir."/"));
+					//get and set the rate
+						$sub_array = explode("/", $moh_dir);
+						$moh_rate = end($sub_array);
+					//set the name
+						$moh_name = $moh_dir;
+						if ($moh_dir == $moh_rate) {
+							$moh_name = "default/$moh_rate";
+						}
+					//build the xml
+						$moh_xml = "	<directory name=\"$name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
+						$moh_xml .= "		<param name=\"rate\" value=\"".$moh_rate."\"/>\n";
+						$moh_xml .= "		<param name=\"shuffle\" value=\"true\"/>\n";
+						$moh_xml .= "		<param name=\"channels\" value=\"1\"/>\n";
+						$moh_xml .= "		<param name=\"interval\" value=\"20\"/>\n";
+						$moh_xml .= "		<param name=\"timer-name\" value=\"soft\"/>\n";
+						$moh_xml .= "	</directory>\n";
+						$moh_xml .= "\n";
+				}
+
+			//get the contents of the template
+				$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/local_stream.conf.xml");
+
+			//replace the variable
+				$file_contents = str_replace("{v_moh_categories}", $moh_xml, $file_contents);
+				unset ($moh_xml);
+
+			//write the XML config file
+				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
+				fwrite($fout, $file_contents);
+				fclose($fout);
+
+			//set an upload message
+				$save_msg = "Uploaded file to ".$target_dir."/".htmlentities($_FILES['upload_file']['name']);
 		}
 	}
 }
