@@ -354,7 +354,6 @@ require_once "includes/require.php";
 		$file_contents = str_replace("{v_server1_address}", $server1_address, $file_contents);
 		$file_contents = str_replace("{v_proxy1_address}", $proxy1_address, $file_contents);
 		$file_contents = str_replace("{v_password}", $password, $file_contents);
-		$file_contents = str_replace("{v_time_zone_offset}", $password, $file_contents);
 
 	//cleanup any remaining variables
 		for ($i = 1; $i <= 100; $i++) {
