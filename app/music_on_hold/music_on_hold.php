@@ -37,7 +37,7 @@ else {
 
 require_once "includes/paging.php";
 
-$samplingrate_folders = Array(8000, 16000, 32000, 48000);
+$sampling_rate_dirs = Array(8000, 16000, 32000, 48000);
 $dir_music_on_hold = $_SESSION['switch']['sounds']['dir'].'/music';
 ini_set(max_execution_time,7200);
 
@@ -46,7 +46,7 @@ $order = $_GET["order"];
 
 if ($_GET['a'] == "download") {
 	$category_folder = $_GET['category'];
-	$samplingrate_folder = $_GET['samplingrate'];
+	$sampling_rate_dir = $_GET['sampling_rate'];
 
 	if ($category_folder != '') {
 		$path_mod = $category_folder."/";
@@ -58,8 +58,8 @@ if ($_GET['a'] == "download") {
 
 	session_cache_limiter('public');
 	if ($_GET['type'] = "moh") {
-		if (file_exists($dir_music_on_hold."/".$path_mod.$samplingrate_folder."/".base64_decode($_GET['filename']))) {
-			$fd = fopen($dir_music_on_hold."/".$path_mod.$samplingrate_folder."/".base64_decode($_GET['filename']), "rb");
+		if (file_exists($dir_music_on_hold."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['filename']))) {
+			$fd = fopen($dir_music_on_hold."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['filename']), "rb");
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
@@ -78,7 +78,7 @@ if ($_GET['a'] == "download") {
 			}
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
-			header("Content-Length: " . filesize($dir_music_on_hold."/".$path_mod.$samplingrate_folder."/".base64_decode($_GET['filename'])));
+			header("Content-Length: " . filesize($dir_music_on_hold."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['filename'])));
 			fpassthru($fd);
 		}
 	}
@@ -86,62 +86,61 @@ if ($_GET['a'] == "download") {
 }
 
 
-if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name'])) {
-	$file_ext = strtolower(pathinfo($_FILES['ulfile']['name'], PATHINFO_EXTENSION));
+if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['tmp_name'])) {
+	$file_ext = strtolower(pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION));
 	if ($file_ext == 'wav' || $file_ext == 'mp3') {
 		if ($_POST['type'] == 'moh' && permission_exists('music_on_hold_add')) {
 
-			$new_file_name = str_replace(' ', '-', $_FILES['ulfile']['name']); // replace any spaces in the filename with dashes
+			$new_file_name = str_replace(' ', '-', $_FILES['upload_file']['name']); // replace any spaces in the filename with dashes
 
-			$samplingrate_folder = $_POST['ulsamplingrate'] * 1000; // convert sampling rate from value passed by form
+			$sampling_rate_dir = $_POST['upload_sampling_rate'] * 1000; // convert sampling rate from value passed by form
 
 			if (count($_SESSION['domains']) > 1) {
 				$path_mod = $_SESSION["domain_name"]."/"; // if multi-tenant, modify folder paths
 			}
 
 			// create new category, if necessary
-			if ($_POST['ulcategory'] == '_NEW_CAT_' && $_POST['ulcategorynew'] != '') {
-				$new_category_name = str_replace(' ', '_', $_POST['ulcategorynew']);
-				if (!is_dir($dir_music_on_hold."/".$path_mod.$new_category_name."/".$samplingrate_folder)) {
-					@mkdir($dir_music_on_hold."/".$path_mod.$new_category_name."/".$samplingrate_folder, 0777, true);
+			if ($_POST['upload_category'] == '_NEW_CAT_' && $_POST['upload_category_new'] != '') {
+				$new_category_name = str_replace(' ', '_', $_POST['upload_category_new']);
+				if (!is_dir($dir_music_on_hold."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
+					@mkdir($dir_music_on_hold."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 0777, true);
 				}
-				if (is_dir($dir_music_on_hold."/".$path_mod.$new_category_name."/".$samplingrate_folder)) {
-					move_uploaded_file($_FILES['ulfile']['tmp_name'], $dir_music_on_hold."/".$path_mod.$new_category_name."/".$samplingrate_folder."/".$new_file_name);
-					$target_folder = $dir_music_on_hold."/".$path_mod.$new_category_name."/".$samplingrate_folder;
+				if (is_dir($dir_music_on_hold."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
+					move_uploaded_file($_FILES['upload_file']['tmp_name'], $dir_music_on_hold."/".$path_mod.$new_category_name."/".$sampling_rate_dir."/".$new_file_name);
+					$target_folder = $dir_music_on_hold."/".$path_mod.$new_category_name."/".$sampling_rate_dir;
 				}
 			}
 			// use existing category folder
-			else if ($_POST['ulcategory'] != '' && $_POST['ulcategory'] != '_NEW_CAT_') {
-				if (!is_dir($dir_music_on_hold."/".$path_mod.$_POST['ulcategory']."/".$samplingrate_folder)) {
-					@mkdir($dir_music_on_hold."/".$path_mod.$_POST['ulcategory']."/".$samplingrate_folder, 0777, true);
+			else if ($_POST['upload_category'] != '' && $_POST['upload_category'] != '_NEW_CAT_') {
+				if (!is_dir($dir_music_on_hold."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
+					@mkdir($dir_music_on_hold."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 0777, true);
 				}
-				if (is_dir($dir_music_on_hold."/".$path_mod.$_POST['ulcategory']."/".$samplingrate_folder)) {
-					move_uploaded_file($_FILES['ulfile']['tmp_name'], $dir_music_on_hold."/".$path_mod.$_POST['ulcategory']."/".$samplingrate_folder."/".$new_file_name);
-					$target_folder = $dir_music_on_hold."/".$path_mod.$_POST['ulcategory']."/".$samplingrate_folder;
+				if (is_dir($dir_music_on_hold."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
+					move_uploaded_file($_FILES['upload_file']['tmp_name'], $dir_music_on_hold."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir."/".$new_file_name);
+					$target_folder = $dir_music_on_hold."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir;
 				}
 			}
 			// use default folder
-			else if ($_POST['ulcategory'] == '') {
-				if (!is_dir($dir_music_on_hold."/".$samplingrate_folder)) {
-					@mkdir($dir_music_on_hold."/".$samplingrate_folder, 0777, true);
+			else if ($_POST['upload_category'] == '') {
+				if (!is_dir($dir_music_on_hold."/".$sampling_rate_dir)) {
+					@mkdir($dir_music_on_hold."/".$sampling_rate_dir, 0777, true);
 				}
-				if (is_dir($dir_music_on_hold."/".$samplingrate_folder)) {
-					move_uploaded_file($_FILES['ulfile']['tmp_name'], $dir_music_on_hold."/".$samplingrate_folder."/".$new_file_name);
-					$target_folder = $dir_music_on_hold."/".$samplingrate_folder;
+				if (is_dir($dir_music_on_hold."/".$sampling_rate_dir)) {
+					move_uploaded_file($_FILES['upload_file']['tmp_name'], $dir_music_on_hold."/".$sampling_rate_dir."/".$new_file_name);
+					$target_folder = $dir_music_on_hold."/".$sampling_rate_dir;
 				}
 			}
 			else { exit(); }
 
-			$savemsg = "Uploaded file to ".$target_folder."/".htmlentities($_FILES['ulfile']['name']);
+			$savemsg = "Uploaded file to ".$target_folder."/".htmlentities($_FILES['upload_file']['name']);
 			unset($_POST['txtCommand']);
 		}
 	}
 }
 
-
 if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	if ($_GET['type'] == 'moh') {
-		$samplingrate_folder = $_GET['samplingrate'];
+		$sampling_rate_dir = $_GET['sampling_rate'];
 		$category_folder = $_GET['category'];
 
 		if ($category_folder != '') {
@@ -152,7 +151,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			}
 		}
 
-		unlink($dir_music_on_hold."/".$path_mod.$samplingrate_folder."/".base64_decode($_GET['filename']));
+		unlink($dir_music_on_hold."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['filename']));
 		header("Location: music_on_hold.php");
 		exit;
 	}
@@ -165,8 +164,8 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		}
 
 		// remove sampling rate folders (if any)
-		foreach ($samplingrate_folders as $samplingrate_folder) {
-			rmdir($dir_music_on_hold."/".$path_mod.(base64_decode($category_folder))."/".$samplingrate_folder);
+		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+			rmdir($dir_music_on_hold."/".$path_mod.(base64_decode($category_folder))."/".$sampling_rate_dir);
 		}
 
 		// remove category folder
@@ -219,10 +218,10 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "	<tr>\n";
 		echo "		<td style='padding-right: 5px;' nowrap>\n";
 		echo "			File Path<br>\n";
-		echo "			<input name='ulfile' type='file' class='button' size='50' id='ulfile'><input type='button' class='button' value='Clear' onclick=\"reset_file_input('ulfile');\">\n";
+		echo "			<input name='upload_file' type='file' class='button' size='50' id='upload_file'><input type='button' class='button' value='Clear' onclick=\"reset_file_input('upload_file');\">\n";
 		echo "		</td>\n";
 		echo "		<td style='padding-right: 5px;' nowrap>Sampling<br>\n";
-		echo "			<select id='ulsamplingrate' name='ulsamplingrate' class='formfld' style='width: auto;'>\n";
+		echo "			<select id='upload_sampling_rate' name='upload_sampling_rate' class='formfld' style='width: auto;'>\n";
 		echo "				<option value='8'>8 kHz</option>\n";
 		echo "				<option value='16'>16 kHz</option>\n";
 		echo "				<option value='32'>32 kHz</option>\n";
@@ -230,7 +229,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "			</select>\n";
 		echo "		</td>\n";
 		echo "		<td nowrap>Category<br>\n";
-		echo "			<select id='ulcategory' name='ulcategory' class='formfld' style='width: auto;' onchange=\"if (this.options[this.selectedIndex].value == '_NEW_CAT_') { this.style.display='none'; document.getElementById('ulcategorynew').style.display=''; document.getElementById('ulcategory_return').style.display=''; document.getElementById('ulcategorynew').focus(); }\">\n";
+		echo "			<select id='upload_category' name='upload_category' class='formfld' style='width: auto;' onchange=\"if (this.options[this.selectedIndex].value == '_NEW_CAT_') { this.style.display='none'; document.getElementById('upload_category_new').style.display=''; document.getElementById('upload_category_return').style.display=''; document.getElementById('upload_category_new').focus(); }\">\n";
 		echo "				<option value='' style='font-style: italic;'>Default</option>\n";
 
 		if (count($_SESSION['domains']) > 1) {
@@ -260,10 +259,10 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 
 		echo "				<option value='_NEW_CAT_' style='font-style: italic;'>New...</option>\n";
 		echo "			</select>\n";
-		echo "			<input class='formfld' style='width: 150px; display: none;' type='text' name='ulcategorynew' id='ulcategorynew' maxlength='255' value=''>";
+		echo "			<input class='formfld' style='width: 150px; display: none;' type='text' name='upload_category_new' id='upload_category_new' maxlength='255' value=''>";
 		echo "		</td>\n";
 		echo "		<td>&nbsp;<br>\n";
-		echo "			<input id='ulcategory_return' type='button' class='button' style='display: none;' value='<' onclick=\"this.style.display='none'; document.getElementById('ulcategorynew').style.display='none'; document.getElementById('ulcategorynew').value=''; document.getElementById('ulcategory').style.display=''; document.getElementById('ulcategory').selectedIndex = 0;\" title='Double-Click to Select an Existing Category'>";
+		echo "			<input id='upload_category_return' type='button' class='button' style='display: none;' value='<' onclick=\"this.style.display='none'; document.getElementById('upload_category_new').style.display='none'; document.getElementById('upload_category_new').value=''; document.getElementById('upload_category').style.display=''; document.getElementById('upload_category').selectedIndex = 0;\" title='Double-Click to Select an Existing Category'>";
 		echo "		</td>\n";
 		echo "		<td style='padding-left: 5px;'>&nbsp;<br>\n";
 		echo "			<input name='submit' type='submit' class='btn' id='upload' value='Upload'>\n";
@@ -295,39 +294,35 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	foreach ($samplingrate_folders as $samplingrate_folder) {
-
-		if ($handle = opendir($dir_music_on_hold."/".$samplingrate_folder)) {
+	foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+		if ($handle = opendir($dir_music_on_hold."/".$sampling_rate_dir)) {
 			while (false !== ($file = readdir($handle))) {
-				if ($file != "." && $file != ".." && is_file($dir_music_on_hold."/".$samplingrate_folder."/".$file)) {
-
-					$tmp_filesize = filesize($dir_music_on_hold."/".$samplingrate_folder."/".$file);
+				if ($file != "." && $file != ".." && is_file($dir_music_on_hold."/".$sampling_rate_dir."/".$file)) {
+					$tmp_filesize = filesize($dir_music_on_hold."/".$sampling_rate_dir."/".$file);
 					$tmp_filesize = byte_convert($tmp_filesize);
 
 					echo "<tr>\n";
-					echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&samplingrate=".$samplingrate_folder."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
+					echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
 					echo "	<td class='".$row_style[$c]."'>\n";
-					echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&samplingrate=".$samplingrate_folder."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+					echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 								$tmp_file_array = explode("\.",$file);
 					echo "		".$tmp_file_array[0];
 					echo "		</a>";
 					echo "	</td>\n";
-					echo "	<td class='".$row_style[$c]."'>".date ("F d Y H:i:s", filemtime($dir_music_on_hold."/".$samplingrate_folder."/".$file))."</td>\n";
+					echo "	<td class='".$row_style[$c]."'>".date ("F d Y H:i:s", filemtime($dir_music_on_hold."/".$sampling_rate_dir."/".$file))."</td>\n";
 					echo "	<td class='".$row_style[$c]."'>".$tmp_filesize."</td>\n";
-					echo "	<td class='".$row_style[$c]."'>".($samplingrate_folder / 1000)." kHz</td>\n";
+					echo "	<td class='".$row_style[$c]."'>".($sampling_rate_dir / 1000)." kHz</td>\n";
 					echo "	<td align=\"center\" width='22' nowrap class=\"list\">\n";
 					if (permission_exists('music_on_hold_delete')) {
-						echo "	<a href=\"music_on_hold.php?type=moh&act=del&samplingrate=".$samplingrate_folder."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
+						echo "	<a href=\"music_on_hold.php?type=moh&act=del&sampling_rate=".$sampling_rate_dir."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
 					}
 					echo "	</td>\n";
 					echo "</tr>\n";
 					$c = ($c==0) ? 1 : 0;
-
 				}
 			}
 			closedir($handle);
 		}
-
 	}
 
 	echo "</table>\n";
@@ -339,7 +334,6 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 //begin moh categories ********************************************************************************************************************************************
 
 	foreach ($category_folders as $category_number => $category_folder) {
-
 		$c = 0;
 
 		echo "<b>".(str_replace('_', ' ', $category_folder))."</b>\n";
@@ -356,29 +350,28 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 
 		$moh_found = false;
 
-		foreach ($samplingrate_folders as $samplingrate_folder) {
-
-			if ($handle = opendir($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$samplingrate_folder)) {
+		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+			if ($handle = opendir($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$sampling_rate_dir)) {
 				while (false !== ($file = readdir($handle))) {
-					if ($file != "." && $file != ".." && is_file($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$samplingrate_folder."/".$file)) {
+					if ($file != "." && $file != ".." && is_file($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$sampling_rate_dir."/".$file)) {
 
-						$tmp_filesize = filesize($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$samplingrate_folder."/".$file);
+						$tmp_filesize = filesize($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$sampling_rate_dir."/".$file);
 						$tmp_filesize = byte_convert($tmp_filesize);
 
 						echo "<tr>\n";
-						echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
+						echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&category=".$category_folder."&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&filename=".base64_encode($file)."\">".$file."</a></td>\n";
 						echo "	<td class='".$row_style[$c]."'>\n";
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&category=".$category_folder."&samplingrate=".$samplingrate_folder."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&category=".$category_folder."&sampling_rate=".$sampling_rate_dir."&type=moh&filename=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 									$tmp_file_array = explode("\.",$file);
 						echo "		".$tmp_file_array[0];
 						echo "		</a>";
 						echo "	</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".date ("F d Y H:i:s", filemtime($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$samplingrate_folder."/".$file))."</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".date ("F d Y H:i:s", filemtime($dir_music_on_hold_category_parent_folder."/".$category_folder."/".$sampling_rate_dir."/".$file))."</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".$tmp_filesize."</td>\n";
-						echo "	<td class='".$row_style[$c]."'>".($samplingrate_folder / 1000)." kHz</td>\n";
+						echo "	<td class='".$row_style[$c]."'>".($sampling_rate_dir / 1000)." kHz</td>\n";
 						echo "	<td align=\"center\" width='22' nowrap class=\"list\">\n";
 						if (permission_exists('music_on_hold_delete')) {
-							echo "	<a href=\"music_on_hold.php?type=moh&act=del&category=".$category_folder."&samplingrate=".$samplingrate_folder."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
+							echo "	<a href=\"music_on_hold.php?type=moh&act=del&category=".$category_folder."&sampling_rate=".$sampling_rate_dir."&filename=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
 						}
 						echo "	</td>\n";
 						echo "</tr>\n";
@@ -386,12 +379,9 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 
 						$moh_found = true;
 					}
-
 				}
 				closedir($handle);
-
 			}
-
 		}
 
 		if (!$moh_found) {
