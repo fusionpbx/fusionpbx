@@ -159,7 +159,7 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 							$moh_name = "default/$moh_rate";
 						}
 					//build the xml
-						$moh_xml .= "	<directory name=\"$name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
+						$moh_xml .= "	<directory name=\"$moh_name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
 						$moh_xml .= "		<param name=\"rate\" value=\"".$moh_rate."\"/>\n";
 						$moh_xml .= "		<param name=\"shuffle\" value=\"true\"/>\n";
 						$moh_xml .= "		<param name=\"channels\" value=\"1\"/>\n";
