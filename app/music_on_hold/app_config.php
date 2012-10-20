@@ -37,6 +37,15 @@
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 
 	//permission details
+		$apps[$x]['permissions'][0]['name'] = 'music_on_hold_default_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][1]['name'] = 'music_on_hold_default_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][2]['name'] = 'music_on_hold_default_delete';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+
 		$apps[$x]['permissions'][0]['name'] = 'music_on_hold_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
@@ -48,4 +57,5 @@
 		$apps[$x]['permissions'][2]['name'] = 'music_on_hold_delete';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
+
 ?>
