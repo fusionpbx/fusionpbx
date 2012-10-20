@@ -105,7 +105,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$conference_room_uuid = check_str($_POST["conference_room_uuid"]);
 	}
 
-	//check for a unique pin number
+	//check for a unique pin number and length
 		if (strlen($member_pin) > 0) {
 			$sql = "select count(*) as num_rows from v_meeting_pins ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -116,6 +116,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] > 0) {
 					$msg .= "Please provide a unique pin number.<br>\n";
+				}
+			}
+			$sql = "select conference_center_pin_length from v_conference_centers ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if (strlen($member_pin) != $row['conference_center_pin_length']) {
+					$msg .= "Please provide a PIN number that is the required length\n";
 				}
 			}
 		}
@@ -468,8 +479,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
 		foreach($result as $field) {
+			$member_pin = $field['member_pin'];
+			if (strlen($member_pin) == 9)  {
+				$member_pin = substr($member_pin, 0, 3) ."-".  substr($member_pin, 3, 3) ."-". substr($member_pin, -3)."\n";
+			}
 			echo "			<tr>\n";
-			echo "				<td class='vtable'>".$field['member_pin']."</td>\n";
+			echo "				<td class='vtable'>".$member_pin."</td>\n";
 			echo "				<td class='vtable'>".$field['member_type']."</td>\n";
 			echo "				<td style='width : 25px;' align='right'>\n";
 			echo "					<a href='conference_room_edit.php?meeting_pin_uuid=".$field['meeting_pin_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
@@ -722,6 +737,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
+		echo "				<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
 		echo "				<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
 		echo "				<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
 	}

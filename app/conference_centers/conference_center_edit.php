@@ -300,6 +300,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //set defaults
 	if (strlen($conference_center_enabled) == 0) { $conference_center_enabled = "true"; }
+	if (strlen($conference_center_pin_length) == 0) { $conference_center_pin_length = 9; }
 
 //show the header
 	require_once "includes/header.php";
@@ -350,7 +351,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Pin Length:\n";
+	echo "	PIN Length:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_center_pin_length' maxlength='255' value=\"$conference_center_pin_length\">\n";
