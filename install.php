@@ -34,7 +34,7 @@ require_once "includes/lib_functions.php";
 
 //add the menu uuid
 	$menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286';
-	
+
 //error reporting
 	ini_set('display_errors', '1');
 	//error_reporting (E_ALL); // Report everything

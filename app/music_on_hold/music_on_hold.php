@@ -166,7 +166,6 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 						$moh_xml .= "		<param name=\"interval\" value=\"20\"/>\n";
 						$moh_xml .= "		<param name=\"timer-name\" value=\"soft\"/>\n";
 						$moh_xml .= "	</directory>\n";
-						$moh_xml .= "\n";
 				}
 
 			//get the contents of the template
