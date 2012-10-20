@@ -48,6 +48,7 @@ else {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$conference_center_name = check_str($_POST["conference_center_name"]);
 		$conference_center_extension = check_str($_POST["conference_center_extension"]);
+		$conference_center_pin_length = check_str($_POST["conference_center_pin_length"]);
 		$conference_center_description = check_str($_POST["conference_center_description"]);
 		$conference_center_enabled = check_str($_POST["conference_center_enabled"]);
 
@@ -117,6 +118,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
 		if (strlen($conference_center_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
 		if (strlen($conference_center_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
+		if (strlen($conference_center_pin_length) == 0) { $msg .= "Please provide: PIN Length<br>\n"; }
 		//if (strlen($conference_center_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
 		//if (strlen($conference_center_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($conference_center_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
@@ -147,6 +149,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "dialplan_uuid, ";
 					$sql .= "conference_center_name, ";
 					$sql .= "conference_center_extension, ";
+					$sql .= "conference_center_pin_length, ";
 					$sql .= "conference_center_description, ";
 					$sql .= "conference_center_enabled ";
 					$sql .= ")";
@@ -157,6 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$dialplan_uuid', ";
 					$sql .= "'$conference_center_name', ";
 					$sql .= "'$conference_center_extension', ";
+					$sql .= "'$conference_center_pin_length', ";
 					$sql .= "'$conference_center_description', ";
 					$sql .= "'$conference_center_enabled' ";
 					$sql .= ")";
@@ -209,6 +213,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_conference_centers set ";
 					$sql .= "conference_center_name = '$conference_center_name', ";
 					$sql .= "conference_center_extension = '$conference_center_extension', ";
+					$sql .= "conference_center_pin_length = '$conference_center_pin_length', ";
 					//$sql .= "conference_center_order = '$conference_center_order', ";
 					$sql .= "conference_center_description = '$conference_center_description', ";
 					$sql .= "conference_center_enabled = '$conference_center_enabled' ";
@@ -284,6 +289,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_center_name = $row["conference_center_name"];
 			$conference_center_extension = $row["conference_center_extension"];
+			$conference_center_pin_length = $row["conference_center_pin_length"];
 			$conference_center_order = $row["conference_center_order"];
 			$conference_center_description = $row["conference_center_description"];
 			$conference_center_enabled = $row["conference_center_enabled"];
@@ -339,6 +345,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"$conference_center_extension\">\n";
 	echo "<br />\n";
 	echo "Enter the conference center extension number.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Pin Length:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='conference_center_pin_length' maxlength='255' value=\"$conference_center_pin_length\">\n";
+	echo "<br />\n";
+	echo "Enter the required PIN length.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
