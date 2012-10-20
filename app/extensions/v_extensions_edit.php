@@ -1143,26 +1143,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='hold_music' id='hold_music' style='width: auto;'>\n";
 	echo "        <option value='' style='font-style: italic;'>Default</option>\n";
-	$dir_music_on_hold = $_SESSION['switch']['sounds']['dir'].'/music';
+	$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
 	if (count($_SESSION['domains']) > 1) {
-		$dir_music_on_hold_category_parent_folder = $dir_music_on_hold."/".$_SESSION['domain_name'];
+		$music_on_hold_category_parent_dir = $music_on_hold_dir."/".$_SESSION['domain_name'];
 	}
 	else {
-		$dir_music_on_hold_category_parent_folder = $dir_music_on_hold;
+		$music_on_hold_category_parent_dir = $music_on_hold_dir;
 	}
 
-	if ($handle = opendir($dir_music_on_hold_category_parent_folder)) {
-		while (false !== ($folder = readdir($handle))) {
+	if ($handle = opendir($music_on_hold_category_parent_dir)) {
+		while (false !== ($directory = readdir($handle))) {
 			if (
-				$folder != "." &&
-				$folder != ".." &&
-				$folder != "8000" &&
-				$folder != "16000" &&
-				$folder != "32000" &&
-				$folder != "48000" &&
-				is_dir($dir_music_on_hold_category_parent_folder."/".$folder)
+				$directory != "." &&
+				$directory != ".." &&
+				$directory != "8000" &&
+				$directory != "16000" &&
+				$directory != "32000" &&
+				$directory != "48000" &&
+				is_dir($music_on_hold_category_parent_dir."/".$directory)
 				) {
-				echo "<option value='".$folder."' ".(($hold_music == $folder)?'selected':null).">".(str_replace('_', ' ', $folder))."</option>\n";
+				echo "<option value='".$directory."' ".(($hold_music == $directory)?'selected':null).">".(str_replace('_', ' ', $directory))."</option>\n";
 			}
 		}
 		closedir($handle);
