@@ -146,9 +146,10 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 				//$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
 				$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
 			//list the categories
+				$moh_xml = "";
 				foreach($array as $moh_dir) {
 					//set the directory
-						$moh_dir = substr($dir, strlen($music_on_hold_dir."/"));
+						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
 					//get and set the rate
 						$sub_array = explode("/", $moh_dir);
 						$moh_rate = end($sub_array);
@@ -158,7 +159,7 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 							$moh_name = "default/$moh_rate";
 						}
 					//build the xml
-						$moh_xml = "	<directory name=\"$name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
+						$moh_xml .= "	<directory name=\"$name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
 						$moh_xml .= "		<param name=\"rate\" value=\"".$moh_rate."\"/>\n";
 						$moh_xml .= "		<param name=\"shuffle\" value=\"true\"/>\n";
 						$moh_xml .= "		<param name=\"channels\" value=\"1\"/>\n";
