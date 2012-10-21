@@ -393,7 +393,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Music on Hold:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='queue_moh_sound' maxlength='255' value=\"$queue_moh_sound\">\n";
+
+	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+	$moh= new switch_music_on_hold;
+	$moh->select_name = "queue_moh_sound";
+	$moh->select_value = $queue_moh_sound;
+	echo $moh->select();
+
 	echo "<br />\n";
 	echo "Enter the music on hold information.\n";
 	echo "</td>\n";
