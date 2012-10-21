@@ -623,39 +623,39 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	 Ring Back:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	 <select class='formfld' name='ivr_menu_ringback'>\n";
-	echo "	 <option value=''></option>\n";
-	if ($ivr_menu_ringback == "us-ring") { 
-		echo "	 <option value='us-ring' selected='selected'>us-ring</option>\n";
+
+	$select_options = "";
+	if ($ivr_menu_ringback == "\${us-ring}" || $ivr_menu_ringback == "us-ring") { 
+		$select_options .= "		<option value='\${us-ring}' selected='selected'>us-ring</option>\n";
 	}
 	else {
-		echo "	 <option value='us-ring'>us-ring</option>\n";
+		$select_options .= "		<option value='\${us-ring}'>us-ring</option>\n";
 	}
-	if ($ivr_menu_ringback == "fr-ring") { 
-		echo "	 <option value='fr-ring' selected='selected'>fr-ring</option>\n";
-	}
-	else {
-		echo "	 <option value='fr-ring'>fr-ring</option>\n";
-	}
-	if ($ivr_menu_ringback == "uk-ring") { 
-		echo "	 <option value='uk-ring' selected='selected'>uk-ring</option>\n";
+	if ($ivr_menu_ringback == "\${fr-ring}" || $ivr_menu_ringback == "fr-ring") {
+		$select_options .= "		<option value='\${fr-ring}' selected='selected'>fr-ring</option>\n";
 	}
 	else {
-		echo "	 <option value='uk-ring'>uk-ring</option>\n";
+		$select_options .= "		<option value='\${fr-ring}'>fr-ring</option>\n";
 	}
-	if ($ivr_menu_ringback == "rs-ring") { 
-		echo "	 <option value='rs-ring' selected='selected'>rs-ring</option>\n";
-	}
-	else {
-		echo "	 <option value='rs-ring'>rs-ring</option>\n";
-	}
-	if ($ivr_menu_ringback == "music") { 
-		echo "	 <option value='music' selected='selected'>music</option>\n";
+	if ($ivr_menu_ringback == "\${uk-ring}" || $ivr_menu_ringback == "uk-ring") { 
+		$select_options .= "		<option value='\${uk-ring}' selected='selected'>uk-ring</option>\n";
 	}
 	else {
-		echo "	 <option value='music'>music</option>\n";
+		$select_options .= "		<option value='\${uk-ring}'>uk-ring</option>\n";
 	}
-	echo "	 </select>\n";
+	if ($ivr_menu_ringback == "\${rs-ring}" || $ivr_menu_ringback == "rs-ring") { 
+		$select_options .= "		<option value='\${rs-ring}' selected='selected'>rs-ring</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${rs-ring}'>rs-ring</option>\n";
+	}
+	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+	$moh = new switch_music_on_hold;
+	$moh->select_name = "ivr_menu_ringback";
+	$moh->select_value = $ivr_menu_ringback;
+	$moh->select_options = $select_options;
+	echo $moh->select();
+
 	echo "<br />\n";
 	echo "Defines what the caller will hear while the destination is being called. The choices are music (music on hold) ring (ring tone.) default: music \n";
 	echo "</td>\n";
