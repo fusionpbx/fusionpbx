@@ -1141,34 +1141,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Hold Music:\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='hold_music' id='hold_music' style='width: auto;'>\n";
-	echo "        <option value='' style='font-style: italic;'>Default</option>\n";
-	$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
-	if (count($_SESSION['domains']) > 1) {
-		$music_on_hold_category_parent_dir = $music_on_hold_dir."/".$_SESSION['domain_name'];
-	}
-	else {
-		$music_on_hold_category_parent_dir = $music_on_hold_dir;
-	}
 
-	if ($handle = opendir($music_on_hold_category_parent_dir)) {
-		while (false !== ($directory = readdir($handle))) {
-			if (
-				$directory != "." &&
-				$directory != ".." &&
-				$directory != "8000" &&
-				$directory != "16000" &&
-				$directory != "32000" &&
-				$directory != "48000" &&
-				is_dir($music_on_hold_category_parent_dir."/".$directory)
-				) {
-				echo "<option value='".$directory."' ".(($hold_music == $directory)?'selected':null).">".(str_replace('_', ' ', $directory))."</option>\n";
-			}
-		}
-		closedir($handle);
-	}
+	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+	$moh= new switch_music_on_hold;
+	$moh->select_name = "hold_music";
+	$moh->select_value = $hold_music;
+	echo $moh->select();
 
-	echo "	</select>\n";
 	echo "	<br />\n";
 	echo "	Select the MOH Category here.\n";
 	echo "</td>\n";
