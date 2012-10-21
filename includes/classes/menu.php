@@ -46,7 +46,6 @@
 					$sql .= "and (menu_item_protected <> 'true' ";
 					$sql .= "or menu_item_protected is null); ";
 					$db->exec(check_sql($sql));
-				
 			}
 
 		//restore the menu
@@ -150,8 +149,8 @@
 									}
 								}
 						}
-                                        }
-                                        foreach($apps as $row) {
+					}
+					foreach($apps as $row) {
 						foreach ($row['permissions'] as $menu) {
 							//set the variables
 							if ($menu['groups']) {
@@ -188,12 +187,10 @@
 								}
 							}
 						}
-                                               
 					}
 
 				//if there are no groups listed in v_menu_item_groups under menu_uuid then add the default groups
-                                        
-                                        foreach($apps as $app) {
+					foreach($apps as $app) {
 						foreach ($app['menu'] as $sub_row) {
 							foreach ($sub_row['groups'] as $group) {
 								$sql = "select count(*) as count from v_menu_item_groups ";
