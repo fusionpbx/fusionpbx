@@ -234,7 +234,7 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_data'] = 'ringback=${hold_music}';
 							}
 							else {
-								$database->fields['dialplan_detail_data'] = 'ringback=${'.$this->ivr_menu_ringback.'}';
+								$database->fields['dialplan_detail_data'] = 'ringback='.$this->ivr_menu_ringback;
 							}
 							$database->fields['dialplan_detail_order'] = '025';
 							$database->add();
@@ -249,7 +249,7 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${hold_music}';
 							}
 							else {
-								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${'.$this->ivr_menu_ringback.'}';
+								$database->fields['dialplan_detail_data'] = 'transfer_ringback='.$this->ivr_menu_ringback;
 							}
 							$database->fields['dialplan_detail_order'] = '030';
 							$database->add();
@@ -535,7 +535,7 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_data'] = 'ringback=${hold_music}';
 							}
 							else {
-								$database->fields['dialplan_detail_data'] = 'ringback=${'.$this->ivr_menu_ringback.'}';
+								$database->fields['dialplan_detail_data'] = 'ringback='.$this->ivr_menu_ringback;
 							}
 							$database->fields['dialplan_detail_order'] = '025';
 							$database->add();
@@ -550,7 +550,7 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${hold_music}';
 							}
 							else {
-								$database->fields['dialplan_detail_data'] = 'transfer_ringback=${'.$this->ivr_menu_ringback.'}';
+								$database->fields['dialplan_detail_data'] = 'transfer_ringback='.$this->ivr_menu_ringback;
 							}
 							$database->fields['dialplan_detail_order'] = '030';
 							$database->add();
