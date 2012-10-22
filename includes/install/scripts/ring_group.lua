@@ -48,7 +48,7 @@
 --get the extension list
 	sql = 
 	[[ SELECT g.ring_group_extension_uuid, e.extension_uuid, e.extension, 
-	r.ring_group_strategy, r.ring_group_timeout_sec, r.ring_group_timeout_app, r.ring_group_timeout_data, r.ring_group_cid_name_prefix
+	r.ring_group_strategy, r.ring_group_timeout_sec, r.ring_group_timeout_app, r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_ringback
 	FROM v_ring_groups as r, v_ring_group_extensions as g, v_extensions as e 
 	where g.ring_group_uuid = r.ring_group_uuid 
 	and g.ring_group_uuid = ']]..ring_group_uuid..[[' 
@@ -64,6 +64,22 @@
 		ring_group_timeout_app = row.ring_group_timeout_app;
 		ring_group_timeout_data = row.ring_group_timeout_data;
 		ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
+		ring_group_ringback = row.ring_group_ringback;
+
+		if (ring_group_ringback == "${uk-ring}") then
+			ring_group_ringback = "%(400,200,400,450);%(400,2200,400,450)";
+		end
+		if (ring_group_ringback == "${us-ring}") then
+			ring_group_ringback = "%(2000, 4000, 440.0, 480.0)";
+		end
+		if (ring_group_ringback == "${fr-ring}") then
+			ring_group_ringback = "%(1500, 3500, 440.0, 0.0)";
+		end
+		if (ring_group_ringback == "${rs-ring}") then
+			ring_group_ringback = "%(1000, 4000, 425.0, 0.0)";
+		end
+		session:setVariable("ringback", ring_group_ringback);
+		session:setVariable("transfer_ringback", ring_group_ringback);
 
 		if (string.len(ring_group_cid_name_prefix) > 0) then
 			origination_caller_id_name = ring_group_cid_name_prefix .. "#" .. caller_id_name;
