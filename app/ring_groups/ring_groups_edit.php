@@ -72,6 +72,7 @@ else {
 			$ring_group_timeout_sec = check_str($_POST["ring_group_timeout_sec"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
 			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
+			$ring_group_ringback = check_str($_POST["ring_group_ringback"]);
 			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
 			$ring_group_description = check_str($_POST["ring_group_description"]);
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -107,6 +108,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($ring_group_timeout_sec) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
 		if (strlen($ring_group_timeout_app) == 0) { $msg .= "Please provide: Timeout Action<br>\n"; }
 		//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Prefix<br>\n"; }
+		//if (strlen($ring_group_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
 		if (strlen($ring_group_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (strlen($ring_group_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -141,6 +143,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "ring_group_timeout_app, ";
 					$sql .= "ring_group_timeout_data, ";
 					$sql .= "ring_group_cid_name_prefix, ";
+					$sql .= "ring_group_ringback, ";
 					$sql .= "ring_group_enabled, ";
 					$sql .= "ring_group_description, ";
 					$sql .= "dialplan_uuid ";
@@ -157,6 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$ring_group_timeout_app', ";
 					$sql .= "'$ring_group_timeout_data', ";
 					$sql .= "'$ring_group_cid_name_prefix', ";
+					$sql .= "'$ring_group_ringback', ";
 					$sql .= "'$ring_group_enabled', ";
 					$sql .= "'$ring_group_description', ";
 					$sql .= "'$dialplan_uuid' ";
@@ -177,6 +181,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "ring_group_timeout_app = '$ring_group_timeout_app', ";
 				$sql .= "ring_group_timeout_data = '$ring_group_timeout_data', ";
 				$sql .= "ring_group_cid_name_prefix = '$ring_group_cid_name_prefix', ";
+				$sql .= "ring_group_ringback = '$ring_group_ringback', ";
 				$sql .= "ring_group_enabled = '$ring_group_enabled', ";
 				$sql .= "ring_group_description = '$ring_group_description' ";
 				//$sql .= "dialplan_uuid = '$dialplan_uuid' ";
@@ -212,12 +217,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "select count(*) as num_rows from v_dialplans ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+					$db->exec(check_sql($sql));
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
 						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] == 0) {
-							//create the dialplan entry for fax
+							//add the dialplan entry
 								$dialplan_name = $ring_group_name;
 								$dialplan_order ='333';
 								$dialplan_context = $ring_group_context;
@@ -239,14 +245,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan_detail_type = 'set';
 								$dialplan_detail_data = 'ring_group_uuid='.$ring_group_uuid;
 								$dialplan_detail_order = '010';
-								$dialplan_detail_group = '1';
-								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-								//<action application="set" data="ringback=${us-ring}"/>
-								$dialplan_detail_tag = 'action'; //condition, action, antiaction
-								$dialplan_detail_type = 'set';
-								$dialplan_detail_data = 'ringback=${us-ring}';
-								$dialplan_detail_order = '020';
 								$dialplan_detail_group = '1';
 								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
@@ -303,6 +301,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
 			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
+			$ring_group_ringback = $row["ring_group_ringback"];
 			$ring_group_enabled = $row["ring_group_enabled"];
 			$ring_group_description = $row["ring_group_description"];
 			$dialplan_uuid = $row["dialplan_uuid"];
@@ -341,12 +340,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Ring Group Add</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Ring Group Edit</b></td>\n";
-	}
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>Ring Group</b></td>\n";
+
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='ring_groups.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -495,6 +490,49 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='$ring_group_cid_name_prefix'>\n";
 	echo "<br />\n";
 	echo "Set a prefix on the caller ID name. \n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	 Ring Back:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+
+	$select_options = "";
+	if ($ring_group_ringback == "\${us-ring}" || $ring_group_ringback == "us-ring") { 
+		$select_options .= "		<option value='\${us-ring}' selected='selected'>us-ring</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${us-ring}'>us-ring</option>\n";
+	}
+	if ($ring_group_ringback == "\${fr-ring}" || $ring_group_ringback == "fr-ring") {
+		$select_options .= "		<option value='\${fr-ring}' selected='selected'>fr-ring</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${fr-ring}'>fr-ring</option>\n";
+	}
+	if ($ring_group_ringback == "\${uk-ring}" || $ring_group_ringback == "uk-ring") { 
+		$select_options .= "		<option value='\${uk-ring}' selected='selected'>uk-ring</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${uk-ring}'>uk-ring</option>\n";
+	}
+	if ($ring_group_ringback == "\${rs-ring}" || $ring_group_ringback == "rs-ring") { 
+		$select_options .= "		<option value='\${rs-ring}' selected='selected'>rs-ring</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${rs-ring}'>rs-ring</option>\n";
+	}
+	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+	$moh = new switch_music_on_hold;
+	$moh->select_name = "ring_group_ringback";
+	$moh->select_value = $ring_group_ringback;
+	$moh->select_options = $select_options;
+	echo $moh->select();
+
+	echo "<br />\n";
+	echo "Defines what the caller will hear while the destination is being called.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
