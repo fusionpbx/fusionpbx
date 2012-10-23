@@ -193,57 +193,71 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 
 if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	if ($_GET['type'] == 'moh') {
-		$sampling_rate_dir = $_GET['sampling_rate'];
-		$category_dir = $_GET['category'];
+		//set the variables
+			$sampling_rate_dir = $_GET['sampling_rate'];
+			$category_dir = $_GET['category'];
 		//default category
-		if ($category_dir == "") {
-			if (!permission_exists('music_on_hold_default_delete')) {
-				echo "access denied";
-				exit;
+			if ($category_dir == "") {
+				if (!permission_exists('music_on_hold_default_delete')) {
+					echo "access denied";
+					exit;
+				}
 			}
-		}
 		//other categories
-		if ($category_dir != "") {
-			$path_mod = $category_dir."/";
+			if ($category_dir != "") {
+				$path_mod = $category_dir."/";
 
-			if (count($_SESSION['domains']) > 1) {
-				$path_mod = $_SESSION["domain_name"]."/".$path_mod;
+				if (count($_SESSION['domains']) > 1) {
+					$path_mod = $_SESSION["domain_name"]."/".$path_mod;
+				}
 			}
-		}
+		//remove the directory
+			unlink($music_on_hold_dir."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['file_name']));
 
-		unlink($music_on_hold_dir."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['file_name']));
-		header("Location: music_on_hold.php");
-		exit;
+		//reload the module
+			require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+			$moh = new switch_music_on_hold;
+			$moh->reload();
+
+		//redirect the browser
+			header("Location: music_on_hold.php");
+			exit;
 	}
 
 	if ($_GET['type'] == 'cat') {
 		$category_dir = $_GET['category'];
 		if (strlen($category_dir) > 0) {
-			if (count($_SESSION['domains']) > 1) {
-				$path_mod = $_SESSION["domain_name"]."/";
-			}
+			// adjus the path for multiple domains
+				if (count($_SESSION['domains']) > 1) {
+					$path_mod = $_SESSION["domain_name"]."/";
+				}
 
 			// remove sampling rate directories (if any)
-			foreach ($sampling_rate_dirs as $sampling_rate_dir) {
-				rmdir($music_on_hold_dir."/".$path_mod.(base64_decode($category_dir))."/".$sampling_rate_dir);
-			}
+				foreach ($sampling_rate_dirs as $sampling_rate_dir) {
+					rmdir($music_on_hold_dir."/".$path_mod.(base64_decode($category_dir))."/".$sampling_rate_dir);
+				}
 
 			// remove category directory
-			if (rmdir($music_on_hold_dir."/".$path_mod.(base64_decode($category_dir)))) {
-				sleep(5); // allow time for the OS to catch up (at least Windows, anyway)
-			}
+				if (rmdir($music_on_hold_dir."/".$path_mod.(base64_decode($category_dir)))) {
+					sleep(5); // allow time for the OS to catch up (at least Windows, anyway)
+				}
 		}
 
-		header("Location: music_on_hold.php");
-		exit;
+		//reload the module
+			require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+			$moh = new switch_music_on_hold;
+			$moh->reload();
+
+		//redirect the browser
+			header("Location: music_on_hold.php");
+			exit;
 	}
 }
-
 
 //include the header
 	require_once "includes/header.php";
 
-//begin the content
+//show the title and description
 	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/includes/javascript/reset_file_input.js'></script>\n";
 	echo "<script>\n";
 	echo "function EvalSound(soundobj) {\n";
@@ -268,8 +282,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	echo "<br><br>\n";
 	echo "\n";
 
-//begin upload moh form ********************************************************************************************************************************************
-
+//show the upload form
 	if (permission_exists('music_on_hold_add')) {
 		echo "<b>Upload Music</b>\n";
 		echo "<br><br>\n";
@@ -336,8 +349,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 	}
 
-//begin default moh section ********************************************************************************************************************************************
-
+//show the default category
 	if (permission_exists('music_on_hold_default_view')) {
 		echo "<b><i>Default</i></b>\n";
 		if (count($_SESSION['domains']) > 1) {
@@ -390,15 +402,13 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			}
 		}
 	}
-
 	echo "</table>\n";
 	if ($v_path_show) {
 		echo "<div style='font-size: 10px; text-align: right; margin-right: 25px;'><b>Location:</b> ".$music_on_hold_dir."</div>\n";
 	}
 	echo "<br><br><br><br>\n";
 
-//begin moh categories ********************************************************************************************************************************************
-
+//show additional categories
 	foreach ($category_dirs as $category_number => $category_dir) {
 		$c = 0;
 
