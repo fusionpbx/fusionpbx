@@ -36,18 +36,16 @@ else {
 
 //get the html values and set them as variables
 	if (count($_POST)>0) {
-		$shell_cmd = trim(check_str($_POST["shell_cmd"]));
-		$php_cmd = trim(check_str($_POST["php_cmd"]));
-		$switch_cmd = trim(check_str($_POST["switch_cmd"]));
+		$shell_cmd = trim($_POST["shell_cmd"]);
+		$php_cmd = trim($_POST["php_cmd"]);
+		$switch_cmd = trim($_POST["switch_cmd"]);
 	}
 
 //show the header
 	require_once "includes/header.php";
 
 //edit area
-	echo "    <script language=\"javascript\" type=\"text/javascript\" src=\"".PROJECT_PATH."/includes/edit_area/edit_area_full.js\"></script>\n";
-	echo "    <!-- -->\n";
-
+	echo "	<script language=\"javascript\" type=\"text/javascript\" src=\"".PROJECT_PATH."/includes/edit_area/edit_area_full.js\"></script>\n";
 	echo "	<script language=\"Javascript\" type=\"text/javascript\">\n";
 	echo "		// initialisation //load,\n";
 	echo "		editAreaLoader.init({\n";
@@ -61,9 +59,7 @@ else {
 	echo "			,toolbar: \"search, go_to_line,|, fullscreen, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help\" //new_document,\n";
 	echo "			,plugins: \"charmap\"\n";
 	echo "			,charmap_default: \"arrows\"\n";
-	echo "\n";
-	echo "    });\n";
-	echo "\n";
+	echo "		});\n";
 	echo "\n";
 	echo "		editAreaLoader.init({\n";
 	echo "			id: \"php_cmd\"	// id of the textarea to transform //, |, help\n";
@@ -76,8 +72,7 @@ else {
 	echo "			,toolbar: \"search, go_to_line,|, fullscreen, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help\" //new_document,\n";
 	echo "			,plugins: \"charmap\"\n";
 	echo "			,charmap_default: \"arrows\"\n";
-	echo "\n";
-	echo "    });\n";
+	echo "		});\n";
 	echo "\n";
 	echo "		editAreaLoader.init({\n";
 	echo "			id: \"switch_cmd\"	// id of the textarea to transform //, |, help\n";
@@ -90,9 +85,8 @@ else {
 	echo "			,toolbar: \"search, go_to_line,|, fullscreen, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help\" //new_document,\n";
 	echo "			,plugins: \"charmap\"\n";
 	echo "			,charmap_default: \"arrows\"\n";
-	echo "\n";
-	echo "    });\n";
-	echo "    </script>";
+	echo "		});\n";
+	echo "	</script>";
 
 //show the header
 	echo "<div align='center'>";
