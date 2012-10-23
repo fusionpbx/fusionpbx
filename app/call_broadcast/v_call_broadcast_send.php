@@ -26,7 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('call_broadcast_send')) {
 	//access granted
 }
@@ -35,8 +34,10 @@ else {
 	exit;
 }
 
-        foreach($content_broadcast as $key => $value) {
-		$content_broadcast[$key] = $value[$_SESSION['domain']['language']['code']];                
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($content_broadcast as $key => $value) {
+		$content[$key] = $value[$_SESSION['domain']['language']['code']];                
 	}
 
 //set the max execution time to 1 hour
@@ -68,8 +69,7 @@ function cmd_async($cmd) {
 	$phonetype2 = $_GET["phonetype2"];
 
 //get the call broadcast details from the database
-	$sql = "";
-	$sql .= "select * from v_call_broadcasts ";
+	$sql = "select * from v_call_broadcasts ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and call_broadcast_uuid = '$call_broadcast_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -122,7 +122,7 @@ function cmd_async($cmd) {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>".$content_broadcast['label-message']."</th>\n";
+		echo "<th align='left'>".$content['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -201,12 +201,12 @@ function cmd_async($cmd) {
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "<td class='row_style1' align='center'>\n";
-				echo "	<strong>".$content_broadcast['label-call-broadcast']." $broadcast_name ".$content_broadcast['label-hasbeen']."</strong>\n";
+				echo "	<strong>".$content['label-call-broadcast']." $broadcast_name ".$content['label-hasbeen']."</strong>\n";
 				echo "	<br /><br />\n";
 				echo "	<table width='100%'>\n";
 				echo "	<tr>\n";
 				echo "	<td align='center'>\n";
-				echo "		<a href='".PROJECT_PATH."/app/calls_active/v_calls_active.php'>".$content_broadcast['label-viewcalls']."</a>\n";
+				echo "		<a href='".PROJECT_PATH."/app/calls_active/v_calls_active.php'>".$content['label-viewcalls']."</a>\n";
 				echo "	</td>\n";
 				echo "	</table>\n";
 				echo "</td>\n";
