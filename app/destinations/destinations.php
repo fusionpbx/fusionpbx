@@ -1,4 +1,28 @@
 <?php
+/*
+	FusionPBX
+	Version: MPL 1.1
+
+	The contents of this file are subject to the Mozilla Public License Version
+	1.1 (the "License"); you may not use this file except in compliance with
+	the License. You may obtain a copy of the License at
+	http://www.mozilla.org/MPL/
+
+	Software distributed under the License is distributed on an "AS IS" basis,
+	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+	for the specific language governing rights and limitations under the
+	License.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+*/
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
@@ -30,7 +54,7 @@ require_once "includes/paging.php";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			Used to provide a simple way of directing a call through the dialplan to find its destination.<br /><br />\n";
+	echo "			Inbound destinations are the DID/DDI, DNIS or Alias for inbound calls.<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -52,7 +76,7 @@ require_once "includes/paging.php";
 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
+		$rows_per_page = 150;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
@@ -60,10 +84,10 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the  list
-		$sql = " select * from v_destinations ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
+		$sql = "select * from v_destinations ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
@@ -77,9 +101,9 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('destination_name', 'Name', $order_by, $order);
+	echo th_order_by('destination_type', 'Name', $order_by, $order);
+	echo th_order_by('destination_number', 'Destination', $order_by, $order);
 	echo th_order_by('destination_context', 'Context', $order_by, $order);
-	echo th_order_by('destination_extension', 'Extension', $order_by, $order);
 	echo th_order_by('destination_enabled', 'Enabled', $order_by, $order);
 	echo th_order_by('destination_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
@@ -89,9 +113,9 @@ require_once "includes/paging.php";
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_type']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_number']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
