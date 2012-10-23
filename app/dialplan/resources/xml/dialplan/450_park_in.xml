@@ -8,6 +8,7 @@
 			<action application="set" data="park_timeout_seconds=70" />
 			<action application="set" data="park_timeout_destination=1000" />
 			<action application="set" data="park_music=$${hold_music}" />
+			<action application="set" data="park_caller_id_prefix=" />
 			<action application="lua" data="park.lua" />
 		</condition>
 	</extension>
