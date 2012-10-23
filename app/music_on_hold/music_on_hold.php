@@ -180,6 +180,11 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 				fwrite($fout, $file_contents);
 				fclose($fout);
 
+			//reload the module
+				require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+				$moh = new switch_music_on_hold;
+				$moh->reload();
+
 			//set an upload message
 				$save_msg = "Uploaded file to ".$target_dir."/".htmlentities($_FILES['upload_file']['name']);
 		}

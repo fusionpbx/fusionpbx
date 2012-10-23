@@ -85,6 +85,21 @@ include "root.php";
 				return $select;
 		}
 
+		public function reload() {
+			//if the handle does not exist create it
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			//if the handle still does not exist show an error message
+				if (!$fp) {
+					$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
+				}
+			//send the api command to check if the module exists
+				if ($fp) {
+					$cmd = "reload mod_local_stream";
+					$switch_result = event_socket_request($fp, 'api '.$cmd);
+					unset($cmd);
+				}
+		}
+
 	}
 
 //require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
