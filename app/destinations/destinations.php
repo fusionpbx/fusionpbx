@@ -101,7 +101,7 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('destination_type', 'Name', $order_by, $order);
+	echo th_order_by('destination_type', 'Type', $order_by, $order);
 	echo th_order_by('destination_number', 'Destination', $order_by, $order);
 	echo th_order_by('destination_context', 'Context', $order_by, $order);
 	echo th_order_by('destination_enabled', 'Enabled', $order_by, $order);

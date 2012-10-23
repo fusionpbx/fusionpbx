@@ -86,7 +86,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the type.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'destination_number';
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'destination_number';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'destination_extension';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the number.';
 		$z++;
