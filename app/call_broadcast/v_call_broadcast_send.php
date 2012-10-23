@@ -36,8 +36,8 @@ else {
 
 //add multi-lingual support
 	require_once "app_languages.php";
-	foreach($content_broadcast as $key => $value) {
-		$content[$key] = $value[$_SESSION['domain']['language']['code']];                
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //set the max execution time to 1 hour
@@ -122,7 +122,7 @@ function cmd_async($cmd) {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>".$content['label-message']."</th>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -201,12 +201,12 @@ function cmd_async($cmd) {
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "<td class='row_style1' align='center'>\n";
-				echo "	<strong>".$content['label-call-broadcast']." $broadcast_name ".$content['label-hasbeen']."</strong>\n";
+				echo "	<strong>".$text['label-call-broadcast']." $broadcast_name ".$text['label-has-been']."</strong>\n";
 				echo "	<br /><br />\n";
 				echo "	<table width='100%'>\n";
 				echo "	<tr>\n";
 				echo "	<td align='center'>\n";
-				echo "		<a href='".PROJECT_PATH."/app/calls_active/v_calls_active.php'>".$content['label-viewcalls']."</a>\n";
+				echo "		<a href='".PROJECT_PATH."/app/calls_active/v_calls_active.php'>".$text['label-view-calls']."</a>\n";
 				echo "	</td>\n";
 				echo "	</table>\n";
 				echo "</td>\n";

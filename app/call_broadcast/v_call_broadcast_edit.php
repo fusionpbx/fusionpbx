@@ -36,8 +36,8 @@ else {
 
 //add multi-lingual support
 	require_once "app_languages.php";
-	foreach($content_broadcast as $key => $value) {
-		$content[$key] = $value[$_SESSION['domain']['language']['code']];                
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //set the action with add or update
@@ -71,7 +71,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($broadcast_name) == 0) { $msg .= "".$content['confirm-name']."<br>\n"; }
+		if (strlen($broadcast_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
 		//if (strlen($broadcast_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		//if (strlen($broadcast_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
 		//if (strlen($broadcast_concurrent_limit) == 0) { $msg .= "Please provide: Concurrent Limit<br>\n"; }
@@ -144,7 +144,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
 			echo "<div align='center'>\n";
-			echo "".$content['confirm-add']."\n";
+			echo "".$text['confirm-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -180,7 +180,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
 			echo "<div align='center'>\n";
-			echo "".$content['confirm-update']."\n";
+			echo "".$text['confirm-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -230,47 +230,42 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content['label-call-broadcast']."</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td width='30%' align='left' nowrap='nowrap'><b>".$content['label-call-broadcast-edit']."</b></td>\n";
-	}
+	echo "<td width='30%' align='left' nowrap='nowrap'><b>".$text['label-call-broadcast']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='v_call_broadcast.php'\" value='".$content['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='v_call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-name'].":\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_name' maxlength='255' value=\"$broadcast_name\">\n";
 	echo "<br />\n";
-	echo "".$content['description-name']."\n";
+	echo "".$text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-timeout'].":\n";
+	echo "	".$text['label-timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_timeout' maxlength='255' value=\"$broadcast_timeout\">\n";
 	echo "<br />\n";
-	echo "".$content['description-timeout']."\n";
+	echo "".$text['description-timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-concurrent-limit'].":\n";
+	echo "	".$text['label-concurrent-limit'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_concurrent_limit' maxlength='255' value=\"$broadcast_concurrent_limit\">\n";
 	echo "<br />\n";
-	echo "".$content['description-concurrent-limit']."\n";
+	echo "".$text['description-concurrent-limit']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -306,23 +301,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-callerid-name'].":\n";
+	echo "	".$text['label-caller-id-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_name' maxlength='255' value=\"$broadcast_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "".$content['description-callerid-name']."\n";
+	echo "".$text['description-caller-id-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-callerid-number'].":\n";
+	echo "	".$text['label-callerid-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_caller_id_number' maxlength='255' value=\"$broadcast_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "".$content['description-callerid-number']."\n";
+	echo "".$text['description-caller-id-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 /*
@@ -355,34 +350,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-destination'].":\n";
+	echo "	".$text['label-destination'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_destination_data' maxlength='255' value=\"$broadcast_destination_data\">\n";
 	echo "<br />\n";
-	echo "".$content['description-destination']." <br /><br />\n";
+	echo "".$text['description-destination']." <br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-phone'].":\n";
+	echo "	".$text['label-phone'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<textarea class='formfld' type='text' name='broadcast_phone_numbers' rows='10'>$broadcast_phone_numbers</textarea>\n";
 	echo "<br />\n";
-	echo "".$content['description-phone']." <br /><br />\n";
+	echo "".$text['description-phone']." <br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content['label-description'].":\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='broadcast_description' maxlength='255' value=\"$broadcast_description\">\n";
 	echo "<br />\n";
-	echo "".$content['description-info']."\n";
+	echo "".$text['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -390,10 +385,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
 		echo "			<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
-		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_call_broadcast_send.php?call_broadcast_uuid=$call_broadcast_uuid'\" value='".$content['button-send']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_call_broadcast_send.php?call_broadcast_uuid=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
 	}
 
-	echo "				<input type='submit' name='submit' class='btn' value='".$content['button-save']."'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
@@ -555,12 +550,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	*/
 
-
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
 
 require_once "includes/footer.php";
 ?>
