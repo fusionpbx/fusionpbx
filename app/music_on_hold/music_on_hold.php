@@ -406,7 +406,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	if ($v_path_show) {
 		echo "<div style='font-size: 10px; text-align: right; margin-right: 25px;'><b>Location:</b> ".$music_on_hold_dir."</div>\n";
 	}
-	echo "<br><br><br><br>\n";
+	echo "<br><br>\n";
 
 //show additional categories
 	foreach ($category_dirs as $category_number => $category_dir) {
