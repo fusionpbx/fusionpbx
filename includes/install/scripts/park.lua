@@ -170,7 +170,7 @@
 						freeswitch.consoleLog("NOTICE", "Park Status: parked "..park_extension.."\n");
 
 					--add to the database
-						dbh:query("INSERT INTO park (lot, domain, uuid) VALUES('"..park_extension.."', '"..domain_name.."', '"..uuid.."')");
+						dbh:query("INSERT INTO park (lot, domain, uuid) VALUES ('"..park_extension.."', '"..domain_name.."', '"..uuid.."')");
 
 					--set presence in
 						event = freeswitch.Event("PRESENCE_IN");

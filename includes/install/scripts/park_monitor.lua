@@ -1,8 +1,32 @@
---park_monitor.lua
-	--Date: 4 Oct. 2011
-	--Description: 
-		--if the call has been answered
-		--then send presence terminate, and delete from the database
+--	park_monitor.lua
+--	Part of FusionPBX
+--	Copyright (C) 2010 Mark J Crane <markjcrane@fusionpbx.com>
+--	All rights reserved.
+--
+--	Redistribution and use in source and binary forms, with or without
+--	modification, are permitted provided that the following conditions are met:
+--
+--	1. Redistributions of source code must retain the above copyright notice,
+--	   this list of conditions and the following disclaimer.
+--
+--	2. Redistributions in binary form must reproduce the above copyright
+--	   notice, this list of conditions and the following disclaimer in the
+--	   documentation and/or other materials provided with the distribution.
+--
+--	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+--	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+--	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+--	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+--	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+--	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+--	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+--	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+--	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+--	POSSIBILITY OF SUCH DAMAGE.
+
+--Description:
+	--if the call has been answered
+	--then send presence terminate, and delete from the database
 
 --connect to the database
 	--ODBC - data source name
@@ -54,7 +78,6 @@
 
 			--delete the lot from the database
 				dbh:query("DELETE from park WHERE lot = '"..park_extension.."' and domain = '"..domain_name.."' ");
-
 
 			--end the loop
 				break;
@@ -132,18 +155,30 @@
 				--end the loop
 					break;
 			end
-
 	end
 
 	--if the timeout was reached transfer the call
-		cmd = "uuid_getvar "..uuid.." park_status";
-		park_status = trim(api:executeString(cmd));
-		if (park_timeout_type == "transfer" and park_status == "timeout") then
-			--set the park status
-				cmd = "uuid_setvar "..uuid.." park_status unparked";
-				result = trim(api:executeString(cmd));
-				freeswitch.consoleLog("NOTICE", "Park Status: unparked\n");
-			--transfer the call when it has timed out
-				cmd = "uuid_transfer "..uuid.." "..park_timeout_destination;
-				result = trim(api:executeString(cmd));
-		end
+		--get the park status
+			cmd = "uuid_getvar "..uuid.." park_status";
+			park_status = trim(api:executeString(cmd));
+		--get and set the the caller id prefix
+			cmd = "uuid_getvar "..uuid.." park_caller_id_prefix";
+			park_caller_id_prefix = trim(api:executeString(cmd));
+			if (park_caller_id_prefix) then
+				--get the caller id name
+					cmd = "uuid_getvar "..uuid.." effective_caller_id_name";
+					caller_id_name = trim(api:executeString(cmd));
+				--set the caller id name and prefix
+					cmd = "uuid_setvar "..uuid.." effective_caller_id_name '"..park_caller_id_prefix.."#"..caller_id_name.."'";
+					result = trim(api:executeString(cmd));
+			end
+		--transfer the call to the timeout destination
+			if (park_timeout_type == "transfer" and park_status == "timeout") then
+				--set the park status
+					cmd = "uuid_setvar "..uuid.." park_status unparked";
+					result = trim(api:executeString(cmd));
+					freeswitch.consoleLog("NOTICE", "Park Status: unparked\n");
+				--transfer the call when it has timed out
+					cmd = "uuid_transfer "..uuid.." "..park_timeout_destination;
+					result = trim(api:executeString(cmd));
+			end
