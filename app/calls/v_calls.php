@@ -35,15 +35,16 @@ else {
 }
 
 //get the https values and set as variables
-$order_by = check_str($_GET["order_by"]);
-$order = check_str($_GET["order"]); 
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]); 
 
 //add multi-lingual support
+	unset($text);
 	echo "<!--\n";
-	require_once "app_languages.php";
+	require_once "app/calls/app_languages.php";
 	echo "-->\n";
 	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //begin the content
@@ -59,7 +60,7 @@ $order = check_str($_GET["order"]);
 		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "		<tr>\n";
 		echo "		<td align='left'><b>".$text['title']."</b><br>\n";
-		echo "			".$text['description2']."\n";
+		echo "			".$text['description-2']."\n";
 		echo "			".$text['description-3']." \n";
 		echo "		</td>\n";
 		echo "		</tr>\n";
@@ -154,15 +155,15 @@ $order = check_str($_GET["order"]);
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if (permission_exists('call_forward')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=call_forward' alt='Call Forward'>".$text['label-call-forward']."</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=call_forward' alt='Call Forward'>".$text['label-call-forward']."</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('follow_me')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=follow_me' alt='Follow Me'>".$text['label-follow-me']."</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=follow_me' alt='Follow Me'>".$text['label-follow-me']."</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row[extension_uuid]."&a=do_not_disturb' alt='Do Not Disturb'>".$text['label-dnd']."</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=do_not_disturb' alt='Do Not Disturb'>".$text['label-dnd']."</a> \n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['description']."&nbsp;</td>\n";
