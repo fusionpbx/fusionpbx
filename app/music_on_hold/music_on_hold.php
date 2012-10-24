@@ -91,99 +91,58 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 		if ($_POST['type'] == 'moh' && permission_exists('music_on_hold_add')) {
 
 			// replace any spaces in the file_name with dashes
-			$new_file_name = str_replace(' ', '-', $_FILES['upload_file']['name']);
+				$new_file_name = str_replace(' ', '-', $_FILES['upload_file']['name']);
 
 			// convert sampling rate from value passed by form
-			$sampling_rate_dir = $_POST['upload_sampling_rate'] * 1000;
+				$sampling_rate_dir = $_POST['upload_sampling_rate'] * 1000;
 
 			// if multi-tenant, modify directory paths
-			if (count($_SESSION['domains']) > 1) {
-				$path_mod = $_SESSION["domain_name"]."/";
-			}
+				if (count($_SESSION['domains']) > 1) {
+					$path_mod = $_SESSION["domain_name"]."/";
+				}
 
 			// create new category, if necessary
-			if ($_POST['upload_category'] == '_NEW_CAT_' && $_POST['upload_category_new'] != '') {
-				$new_category_name = str_replace(' ', '_', $_POST['upload_category_new']);
-				if (!is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
-					@mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 0777, true);
+				if ($_POST['upload_category'] == '_NEW_CAT_' && $_POST['upload_category_new'] != '') {
+					$new_category_name = str_replace(' ', '_', $_POST['upload_category_new']);
+					if (!is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
+						@mkdir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir, 0777, true);
+					}
+					if (is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
+						move_uploaded_file($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir."/".$new_file_name);
+						$target_dir = $music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir;
+					}
 				}
-				if (is_dir($music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir)) {
-					move_uploaded_file($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir."/".$new_file_name);
-					$target_dir = $music_on_hold_dir."/".$path_mod.$new_category_name."/".$sampling_rate_dir;
-				}
-			}
 			// use existing category directory
-			else if ($_POST['upload_category'] != '' && $_POST['upload_category'] != '_NEW_CAT_') {
-				if (!is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
-					@mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 0777, true);
+				else if ($_POST['upload_category'] != '' && $_POST['upload_category'] != '_NEW_CAT_') {
+					if (!is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
+						@mkdir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir, 0777, true);
+					}
+					if (is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
+						move_uploaded_file($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir."/".$new_file_name);
+						$target_dir = $music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir;
+					}
 				}
-				if (is_dir($music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir)) {
-					move_uploaded_file($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir."/".$new_file_name);
-					$target_dir = $music_on_hold_dir."/".$path_mod.$_POST['upload_category']."/".$sampling_rate_dir;
-				}
-			}
 			// use default directory
-			else if ($_POST['upload_category'] == '') {
-				if (permission_exists('music_on_hold_default_add')) {
-					if (!is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
-						@mkdir($music_on_hold_dir."/".$sampling_rate_dir, 0777, true);
-					}
-					if (is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
-						move_uploaded_file($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$sampling_rate_dir."/".$new_file_name);
-						$target_dir = $music_on_hold_dir."/".$sampling_rate_dir;
-					}
-				}
-			}
-			else { 
-				exit();
-			}
-
-			//build the list of categories
-				$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
-			//default category
-				$array = glob($music_on_hold_dir."/{8000,16000,32000,48000}", GLOB_ONLYDIR|GLOB_BRACE);
-			//other categories
-				//$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
-				$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
-			//list the categories
-				$moh_xml = "";
-				foreach($array as $moh_dir) {
-					//set the directory
-						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
-					//get and set the rate
-						$sub_array = explode("/", $moh_dir);
-						$moh_rate = end($sub_array);
-					//set the name
-						$moh_name = $moh_dir;
-						if ($moh_dir == $moh_rate) {
-							$moh_name = "default/$moh_rate";
+				else if ($_POST['upload_category'] == '') {
+					if (permission_exists('music_on_hold_default_add')) {
+						if (!is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
+							@mkdir($music_on_hold_dir."/".$sampling_rate_dir, 0777, true);
 						}
-					//build the xml
-						$moh_xml .= "	<directory name=\"$moh_name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
-						$moh_xml .= "		<param name=\"rate\" value=\"".$moh_rate."\"/>\n";
-						$moh_xml .= "		<param name=\"shuffle\" value=\"true\"/>\n";
-						$moh_xml .= "		<param name=\"channels\" value=\"1\"/>\n";
-						$moh_xml .= "		<param name=\"interval\" value=\"20\"/>\n";
-						$moh_xml .= "		<param name=\"timer-name\" value=\"soft\"/>\n";
-						$moh_xml .= "	</directory>\n";
+						if (is_dir($music_on_hold_dir."/".$sampling_rate_dir)) {
+							move_uploaded_file($_FILES['upload_file']['tmp_name'], $music_on_hold_dir."/".$sampling_rate_dir."/".$new_file_name);
+							$target_dir = $music_on_hold_dir."/".$sampling_rate_dir;
+						}
+					}
+				}
+				else { 
+					exit();
 				}
 
-			//get the contents of the template
-				$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/local_stream.conf.xml");
-
-			//replace the variable
-				$file_contents = str_replace("{v_moh_categories}", $moh_xml, $file_contents);
-				unset ($moh_xml);
-
-			//write the XML config file
-				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
-				fwrite($fout, $file_contents);
-				fclose($fout);
-
-			//reload the module
+			//build and save the XML
 				require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 				$moh = new switch_music_on_hold;
-				$moh->reload();
+				$moh->xml();
+				$moh->save();
 
 			//set an upload message
 				$save_msg = "Uploaded file to ".$target_dir."/".htmlentities($_FILES['upload_file']['name']);
@@ -214,10 +173,11 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		//remove the directory
 			unlink($music_on_hold_dir."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['file_name']));
 
-		//reload the module
+		//build and save the XML
 			require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 			$moh = new switch_music_on_hold;
-			$moh->reload();
+			$moh->xml();
+			$moh->save();
 
 		//redirect the browser
 			header("Location: music_on_hold.php");
@@ -243,10 +203,11 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 				}
 		}
 
-		//reload the module
+		//build and save the XML
 			require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 			$moh = new switch_music_on_hold;
-			$moh->reload();
+			$moh->xml();
+			$moh->save();
 
 		//redirect the browser
 			header("Location: music_on_hold.php");

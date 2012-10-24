@@ -32,6 +32,7 @@ include "root.php";
 		public $domain_name;
 		public $select_name;
 		public $select_value;
+		private $xml;
 
 		public function __construct() {
 			require_once "includes/classes/database.php";
@@ -45,7 +46,6 @@ include "root.php";
 		}
 
 		public function select() {
-
 			//build the list of categories
 				$music_on_hold_dir = $_SESSION["switch"]["sounds"]["dir"]."/music";
 				if (count($_SESSION['domains']) > 1) {
@@ -54,7 +54,7 @@ include "root.php";
 
 			//start the select
 				$select = "";
-				$select .= "	<select class='formfld' name='hold_music' id='hold_music' style='width: auto;'>\n";
+				$select .= "	<select class='formfld' name='".$this->select_name."' id='".$this->select_name."' style='width: auto;'>\n";
 				$select .= "		<option value='' style='font-style: italic;'>Default</option>\n";
 
 			//categories
@@ -100,6 +100,54 @@ include "root.php";
 				}
 		}
 
+		public function xml() {
+			//build the list of categories
+				$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
+			//default category
+				$array = glob($music_on_hold_dir."/{8000,16000,32000,48000}", GLOB_ONLYDIR|GLOB_BRACE);
+			//other categories
+				//$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
+				$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
+			//list the categories
+				$moh_xml = "";
+				foreach($array as $moh_dir) {
+					//set the directory
+						$moh_dir = substr($moh_dir, strlen($music_on_hold_dir."/"));
+					//get and set the rate
+						$sub_array = explode("/", $moh_dir);
+						$moh_rate = end($sub_array);
+					//set the name
+						$moh_name = $moh_dir;
+						if ($moh_dir == $moh_rate) {
+							$moh_name = "default/$moh_rate";
+						}
+					//build the xml
+						$moh_xml .= "	<directory name=\"$moh_name\" path=\"\$\${sounds_dir}/music/$moh_dir\">\n";
+						$moh_xml .= "		<param name=\"rate\" value=\"".$moh_rate."\"/>\n";
+						$moh_xml .= "		<param name=\"shuffle\" value=\"true\"/>\n";
+						$moh_xml .= "		<param name=\"channels\" value=\"1\"/>\n";
+						$moh_xml .= "		<param name=\"interval\" value=\"20\"/>\n";
+						$moh_xml .= "		<param name=\"timer-name\" value=\"soft\"/>\n";
+						$moh_xml .= "	</directory>\n";
+						$this->xml = $moh_xml;
+				}
+		}
+
+		public function save() {
+			//get the contents of the template
+				$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/local_stream.conf.xml");
+
+			//replace the variable
+				$file_contents = str_replace("{v_moh_categories}", $this->xml, $file_contents);
+
+			//write the XML config file
+				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/local_stream.conf.xml","w");
+				fwrite($fout, $file_contents);
+				fclose($fout);
+
+			//reload the XML
+				$this->reload();
+		}
 	}
 
 //require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
