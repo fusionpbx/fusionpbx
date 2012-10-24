@@ -44,8 +44,8 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
-		$domain_name = check_str($_POST["domain_name"]);
+	if (count($_POST) > 0) {
+		$domain_name = strtolower(check_str($_POST["domain_name"]));
 		$domain_description = check_str($_POST["domain_description"]);
 	}
 
@@ -144,7 +144,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$domain_name = $row["domain_name"];
+			$domain_name = strtolower($row["domain_name"]);
 			$domain_description = $row["domain_description"];
 		}
 		unset ($prep_statement);
