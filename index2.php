@@ -39,8 +39,8 @@ echo "<br />";
 	echo "<!--\n";
 	require_once "app_languages.php";
 	echo "-->\n";
-	foreach($content as $key => $value) {
-		$content[$key] = $value[$_SESSION['domain']['language']['code']];
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //information
@@ -55,11 +55,11 @@ echo "<br />";
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 	echo "<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>".$content['title-table']."&nbsp;</th>\n";
+	echo "	<th class='th' colspan='2' align='left'>".$text['title-table']."&nbsp;</th>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		".$content['label-name'].": \n";
+	echo "		".$text['label-name'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
 	echo "		<a href='".PROJECT_PATH."/app/users/usersupdate.php'>".$_SESSION["username"]."</a> \n";
@@ -67,10 +67,10 @@ echo "<br />";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		".$content['label-voicemail'].": \n";
+	echo "		".$text['label-voicemail'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
-	echo "		<a href='".PROJECT_PATH."/app/voicemail_msgs/v_voicemail_msgs.php'>".$content['label-view-messages']."</a> \n";
+	echo "		<a href='".PROJECT_PATH."/app/voicemail_msgs/v_voicemail_msgs.php'>".$text['label-view-messages']."</a> \n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

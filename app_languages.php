@@ -1,33 +1,33 @@
 ﻿<?php
 
-	$content['title-table']['en-us'] = 'User Information';
-	$content['title-table']['pt-pt'] = 'Informação do Utilizador';
+	$text['title-table']['en-us'] = 'User Information';
+	$text['title-table']['pt-pt'] = 'Informação do Utilizador';
 
-	$content['label-name']['en-us'] = 'User Name';
-	$content['label-name']['pt-pt'] = 'Nome do Utilizador';
+	$text['label-name']['en-us'] = 'User Name';
+	$text['label-name']['pt-pt'] = 'Nome do Utilizador';
 
-	$content['label-voicemail']['en-us'] = 'Voicemail';
-	$content['label-voicemail']['pt-pt'] = 'Correio de Voz';
+	$text['label-voicemail']['en-us'] = 'Voicemail';
+	$text['label-voicemail']['pt-pt'] = 'Correio de Voz';
 
-	$content['label-view-messages']['en-us'] = 'View Messages';
-	$content['label-view-messages']['pt-pt'] = 'Ver Mensagens';
+	$text['label-view-messages']['en-us'] = 'View Messages';
+	$text['label-view-messages']['pt-pt'] = 'Ver Mensagens';
 
-	$content_calls['table-extension']['en-us'] = 'Extension';
-	$content_calls['table-extension']['pt-pt'] = 'Extensão';
+	$text['table-extension']['en-us'] = 'Extension';
+	$text['table-extension']['pt-pt'] = 'Extensão';
 
-	$content_calls['table-tools']['en-us'] = 'Tools';
-	$content_calls['table-tools']['pt-pt'] = 'Ferramentas';
+	$text['table-tools']['en-us'] = 'Tools';
+	$text['table-tools']['pt-pt'] = 'Ferramentas';
 
-	$content_calls['table-description']['en-us'] = 'Description';
-	$content_calls['table-description']['pt-pt'] = 'Descrição';
+	$text['table-description']['en-us'] = 'Description';
+	$text['table-description']['pt-pt'] = 'Descrição';
 
-	$content_calls['label-callforward']['en-us'] = 'Call Forward';
-	$content_calls['label-callforward']['pt-pt'] = 'Encaminhamento de Chamadas';
+	$text['label-callforward']['en-us'] = 'Call Forward';
+	$text['label-callforward']['pt-pt'] = 'Encaminhamento de Chamadas';
 
-	$content_calls['label-followme']['en-us'] = 'Follow Me';
-	$content_calls['label-followme']['pt-pt'] = 'Segue-me';
+	$text['label-followme']['en-us'] = 'Follow Me';
+	$text['label-followme']['pt-pt'] = 'Segue-me';
 
-	$content_calls['label-dnd']['en-us'] = 'Do Not Disturb';
-	$content_calls['label-dnd']['pt-pt'] = 'Não Perturbar';
+	$text['label-dnd']['en-us'] = 'Do Not Disturb';
+	$text['label-dnd']['pt-pt'] = 'Não Perturbar';
 
 ?>
