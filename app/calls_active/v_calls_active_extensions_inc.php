@@ -35,8 +35,9 @@ else {
 	exit;
 }
 
-        foreach($content_calls_active as $key => $value) {
-		$content_calls_active[$key] = $value[$_SESSION['domain']['language']['code']];                
+//add multi-lingual support
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
 	}
 
 //set debug to true or false
@@ -99,11 +100,11 @@ else {
 
 //get information over event socket
 	if (!$fp) {
-		$msg = "<div align='center'>".$content_calls_active['confirm-socket']."<br /></div>"; 
+		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>"; 
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>".$content_calls_active['label-message']."</th>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -330,27 +331,27 @@ else {
 
 					echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 					echo "<tr>\n";
-					echo "<th width='50px;'>".$content_calls_active['label-ext']."</th>\n";
+					echo "<th width='50px;'>".$text['label-ext']."</th>\n";
 					if ($_SESSION['user_status_display'] == "false") {
 						//hide the user_status when it is set to false
 					}
 					else {
-						echo "<th>".$content_calls_active['label-status']."</th>\n";
+						echo "<th>".$text['label-status']."</th>\n";
 					}
-					echo "<th>".$content_calls_active['label-time']."</th>\n";
+					echo "<th>".$text['label-time']."</th>\n";
 					if (if_group("admin") || if_group("superadmin")) {
 						if (strlen(($_GET['rows'])) == 0) {
-							echo "<th>".$content_calls_active['label-cid-name']."</th>\n";
-							echo "<th>".$content_calls_active['label-cid-number']."</th>\n";
-							echo "<th>".$content_calls_active['label-destination']."</th>\n";
-							echo "<th>".$content_calls_active['label-app']."</th>\n";
-							echo "<th>".$content_calls_active['label-secure']."</th>\n";
+							echo "<th>".$text['label-cid-name']."</th>\n";
+							echo "<th>".$text['label-cid-number']."</th>\n";
+							echo "<th>".$text['label-destination']."</th>\n";
+							echo "<th>".$text['label-app']."</th>\n";
+							echo "<th>".$text['label-secure']."</th>\n";
 						}
 					}
-					echo "<th>".$content_calls_active['label-name']."</th>\n";
+					echo "<th>".$text['label-name']."</th>\n";
 					if (if_group("admin") || if_group("superadmin")) {
 						if (strlen(($_GET['rows'])) == 0) {
-							echo "<th>".$content_calls_active['label-opt']."</th>\n";
+							echo "<th>".$text['label-opt']."</th>\n";
 						}
 					}
 					echo "</tr>\n";
@@ -462,20 +463,20 @@ else {
 								if ($found_extension) {
 									echo "<td valign='top' class='".$row_style[$c]."' $style_alternate>\n";
 										//transfer
-											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">".$content_calls_active['label-transf']."</a>&nbsp;\n";
+											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">".$text['label-transfer']."</a>&nbsp;\n";
 										//park
-											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">".$content_calls_active['label-park']."</a>&nbsp;\n";
+											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">".$text['label-park']."</a>&nbsp;\n";
 										//hangup
-											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$content_calls_active['confirm-hangup']."');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">".$content_calls_active['label-hangup']."</a>&nbsp;\n";
+											echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['confirm-hangup']."');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">".$text['label-hangup']."</a>&nbsp;\n";
 										//record start/stop
 											$tmp_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
 											if (file_exists($tmp_file)) {
 												//stop
-												echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_extensions_&name='+escape('$cid_num'));\">".$content_calls_active['label-stop']."</a>&nbsp;\n";
+												echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_extensions_&name='+escape('$cid_num'));\">".$text['label-stop']."</a>&nbsp;\n";
 											}
 											else {
 												//start
-												echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_extensions_');\">".$content_calls_active['label-start']."</a>&nbsp;\n";
+												echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_extensions_');\">".$text['label-start']."</a>&nbsp;\n";
 											}
 										echo "	&nbsp;";
 									echo "</td>\n";
@@ -498,27 +499,27 @@ else {
 
 							echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 							echo "<tr>\n";
-							echo "<th>".$content_calls_active['label-ext']."</th>\n";
+							echo "<th>".$text['label-ext']."</th>\n";
 							if ($_SESSION['user_status_display'] == "false") {
 								//hide the user_status when it is set to false
 							}
 							else {
-								echo "<th>".$content_calls_active['label-status']."</th>\n";
+								echo "<th>".$text['label-status']."</th>\n";
 							}
-							echo "<th>".$content_calls_active['label-time']."</th>\n";
+							echo "<th>".$text['label-time']."</th>\n";
 							if (if_group("admin") || if_group("superadmin")) {
 								if ($_GET['rows'] == 0) {
-									echo "<th>".$content_calls_active['label-cid-name']."</th>\n";
-									echo "<th>".$content_calls_active['label-cid-number']."</th>\n";
-									echo "<th>".$content_calls_active['label-destination']."</th>\n";
-									echo "<th>".$content_calls_active['label-app']."</th>\n";
-									echo "<th>".$content_calls_active['label-secure']."</th>\n";
+									echo "<th>".$text['label-cid-name']."</th>\n";
+									echo "<th>".$text['label-cid-number']."</th>\n";
+									echo "<th>".$text['label-destination']."</th>\n";
+									echo "<th>".$text['label-app']."</th>\n";
+									echo "<th>".$text['label-secure']."</th>\n";
 								}
 							}
-							echo "<th>".$content_calls_active['label-name']."</th>\n";
+							echo "<th>".$text['label-name']."</th>\n";
 							if (if_group("admin") || if_group("superadmin")) {
 								if ($_GET['rows'] == 0) {
-									echo "<th>".$content_calls_active['label-opt']."</th>\n";
+									echo "<th>".$text['label-opt']."</th>\n";
 								}
 							}
 							echo "</tr>\n";
@@ -533,10 +534,10 @@ else {
 				//valet park
 					echo "<table width='100%' border='0' cellpadding='5' cellspacing='0'>\n";
 					echo "<tr>\n";
-					echo "<th valign='top'>".$content_calls_active['label-parkext']."</th>\n";
-					echo "<th valign='top'>".$content_calls_active['label-time']."</th>\n";
-					echo "<th valign='top'>".$content_calls_active['label-cid-name']."</th>\n";
-					echo "<th valign='top'>".$content_calls_active['label-cid-number']."</th>\n";
+					echo "<th valign='top'>".$text['label-park-ext']."</th>\n";
+					echo "<th valign='top'>".$text['label-time']."</th>\n";
+					echo "<th valign='top'>".$text['label-cid-name']."</th>\n";
+					echo "<th valign='top'>".$text['label-cid-number']."</th>\n";
 					echo "</tr>\n";
 					foreach ($valet_array as $row) {
 						if (strlen($row['extension']) > 0) {

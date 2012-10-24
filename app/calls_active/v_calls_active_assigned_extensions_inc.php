@@ -29,10 +29,11 @@ require_once "includes/checkauth.php";
 include "app_languages.php";
 if (permission_exists('extensions_active_assigned_view')) {
 
-        foreach($content_calls_active as $key => $value) {
-		$content_calls_active[$key] = $value[$_SESSION['domain']['language']['code']];                
+//add multi-lingual support
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
 	}
-    
+
 	//http get and set variables
 		if (strlen($_GET['url']) > 0) {
 			$url = $_GET['url'];
@@ -49,18 +50,18 @@ if (permission_exists('extensions_active_assigned_view')) {
 			//hide the user_status when it is set to false
 		}
 		else {
-			echo "<th>".$content_calls_active['label-status']."</th>\n";
+			echo "<th>".$text['label-status']."</th>\n";
 		}
-		echo "<th>".$content_calls_active['label-time']."</th>\n";
+		echo "<th>".$text['label-time']."</th>\n";
 		//echo "<th>Direction</th>\n";
 		//echo "<th>Profile</th>\n";
-		echo "<th>".$content_calls_active['label-cid-name']."</th>\n";
-		echo "<th>".$content_calls_active['label-cid-number']."</th>\n";
-		echo "<th>".$content_calls_active['label-destination']."</th>\n";
-		echo "<th>".$content_calls_active['label-app']."</th>\n";
-		echo "<th>".$content_calls_active['label-secure']."</th>\n";
-		echo "<th>".$content_calls_active['label-name']."</th>\n";
-		echo "<th>".$content_calls_active['label-opt']."</th>\n";
+		echo "<th>".$text['label-cid-name']."</th>\n";
+		echo "<th>".$text['label-cid-number']."</th>\n";
+		echo "<th>".$text['label-destination']."</th>\n";
+		echo "<th>".$text['label-app']."</th>\n";
+		echo "<th>".$text['label-secure']."</th>\n";
+		echo "<th>".$text['label-name']."</th>\n";
+		echo "<th>".$text['label-opt']."</th>\n";
 		echo "</tr>\n";
 		foreach ($_SESSION['extension_array'] as $row) {
 			$domain_uuid = $row['domain_uuid'];
@@ -161,20 +162,20 @@ if (permission_exists('extensions_active_assigned_view')) {
 						echo "</td>\n";
 						echo "<td valign='top' class='".$row_style[$c]."' $style_alternate>\n";
 							//transfer
-								echo "	<a href='javascript:void(0);' style='color: #444444;' onMouseover=\"document.getElementById('form_label').innerHTML='<strong>".$content_calls_active['label-transfer']."</strong>';\" onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">".$content_calls_active['label-transf']."</a>&nbsp;\n";
+								echo "	<a href='javascript:void(0);' style='color: #444444;' onMouseover=\"document.getElementById('form_label').innerHTML='<strong>".$text['label-transfer']."</strong>';\" onclick=\"send_cmd('v_calls_exec.php?cmd='+get_transfer_cmd(escape('$uuid')));\">".$text['label-transfer']."</a>&nbsp;\n";
 							//park
-								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">".$content_calls_active['label-park']."</a>&nbsp;\n";
+								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_park_cmd(escape('$uuid')));\">".$text['label-park']."</a>&nbsp;\n";
 							//hangup
-								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$content_calls_active['confirm-hangup']."');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">".$content_calls_active['label-hangup']."</a>&nbsp;\n";
+								echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['confirm-hangup']."');if (confirm_response){send_cmd('v_calls_exec.php?cmd=uuid_kill%20'+(escape('$uuid')));}\">".$text['label-hangup']."</a>&nbsp;\n";
 							//record start/stop
 								$tmp_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$uuid.".wav";
 								if (file_exists($tmp_file)) {
 									//stop
-									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_extensions_&name='+escape('$cid_num'));\">".$content_calls_active['label-stop']."</a>&nbsp;\n";
+									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=stop&prefix=active_extensions_&name='+escape('$cid_num'));\">".$text['label-stop']."</a>&nbsp;\n";
 								}
 								else {
 									//start
-									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_extensions_');\">".$content_calls_active['label-start']."</a>&nbsp;\n";
+									echo "	<a href='javascript:void(0);' style='color: #444444;' onclick=\"send_cmd('v_calls_exec.php?cmd='+get_record_cmd(escape('$uuid'), 'active_extensions_', escape('$cid_num'))+'&uuid='+escape('$uuid')+'&action=record&action2=start&prefix=active_extensions_');\">".$text['label-start']."</a>&nbsp;\n";
 								}
 							echo "	&nbsp;";
 						echo "</td>\n";

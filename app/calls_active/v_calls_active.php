@@ -35,8 +35,9 @@ else {
 	exit;
 }
 
-        foreach($content_calls_active as $key => $value) {
-		$content_calls_active[$key] = $value[$_SESSION['domain']['language']['code']];                
+//add multi-lingual support
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
 	}
 
 $conference_name = trim($_REQUEST["c"]);
@@ -115,8 +116,8 @@ echo "<div align='center'>";
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "	<td align='left'><b>".$content_calls_active['title']."</b><br>\n";
-echo "		".$content_calls_active['description']."\n";
+echo "	<td align='left'><b>".$text['title']."</b><br>\n";
+echo "		".$text['description']."\n";
 echo "	</td>\n";
 echo "	<td align='right'>\n";
 

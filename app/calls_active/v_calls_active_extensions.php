@@ -35,8 +35,9 @@ else {
 	exit;
 }
 
-        foreach($content_calls_active as $key => $value) {
-		$content_calls_active[$key] = $value[$_SESSION['domain']['language']['code']];                
+//add multi-lingual support
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
 	}
 
 //http get and set variables
@@ -206,7 +207,7 @@ echo "<div align='center'>";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
 echo "	<td align='left' colspan='2' nowrap='nowrap'>\n";
-echo "		<b>".$content_calls_active['title2']."</b><br>\n";
+echo "		<b>".$text['title-2']."</b><br>\n";
 echo "	</td>\n";
 
 //get the user status when the page loads
@@ -233,40 +234,40 @@ else {
 	echo "		<td class='' valign='bottom' align='right' style='width:200px' nowrap='nowrap'>\n";
 	//status list
 	echo "			&nbsp;";
-	echo "			<strong>".$content_calls_active['label-status']."</strong>&nbsp;\n";
+	echo "			<strong>".$text['label-status']."</strong>&nbsp;\n";
 	$cmd = "'v_calls_exec.php?action=user_status&data='+this.value+'";
 	$cmd .= "&cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$_SESSION['domain_name']."+'+this.value";
 	echo "			<select id='agent_status' name='agent_status' class='formfld' style='width:125px' nowrap='nowrap' onchange=\"send_cmd($cmd);\">\n";
 	echo "				<option value='                '></option>\n";
 	if ($user_status == "Available") {
-		echo "		<option value='Available' selected='selected'>".$content_calls_active['check-available-status']."</option>\n";
+		echo "		<option value='Available' selected='selected'>".$text['check-available-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Available'>".$content_calls_active['check-available-status']."</option>\n";
+		echo "		<option value='Available'>".$text['check-available-status']."</option>\n";
 	}
 	if ($user_status == "Available (On Demand)") {
-		echo "		<option value='Available_On_Demand' selected='selected'>".$content_calls_active['check-available-ondemand-status']."</option>\n";
+		echo "		<option value='Available_On_Demand' selected='selected'>".$text['check-available-on-demand-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Available_On_Demand'>".$content_calls_active['check-available-ondemand-status']."</option>\n";
+		echo "		<option value='Available_On_Demand'>".$text['check-available-on-demand-status']."</option>\n";
 	}
 	if ($user_status == "Logged Out") {
-		echo "		<option value='Logged_Out' selected='selected'>".$content_calls_active['check-loggedout-status']."</option>\n";
+		echo "		<option value='Logged_Out' selected='selected'>".$text['check-loggedout-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Logged_Out'>".$content_calls_active['check-loggedout-status']."</option>\n";
+		echo "		<option value='Logged_Out'>".$text['check-loggedout-status']."</option>\n";
 	}
 	if ($user_status == "On Break") {
-		echo "		<option value='On_Break' selected='selected'>".$content_calls_active['check-onbreak-status']."</option>\n";
+		echo "		<option value='On_Break' selected='selected'>".$text['check-onbreak-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='On_Break'>".$content_calls_active['check-onbreak-status']."</option>\n";
+		echo "		<option value='On_Break'>".$text['check-onbreak-status']."</option>\n";
 	}
 	if ($user_status == "Do Not Disturb") {
-		echo "		<option value='Do_Not_Disturb' selected='selected'>".$content_calls_active['check-do-not-disturb-status']."</option>\n";
+		echo "		<option value='Do_Not_Disturb' selected='selected'>".$text['check-do-not-disturb-status']."</option>\n";
 	}
 	else {
-		echo "		<option value='Do_Not_Disturb'>".$content_calls_active['check-do-not-disturb-status']."</option>\n";
+		echo "		<option value='Do_Not_Disturb'>".$text['check-do-not-disturb-status']."</option>\n";
 	}
 	echo "			</select>\n";
 	echo "		</td>\n";
@@ -274,13 +275,13 @@ else {
 
 echo "	<td align='right' nowrap='nowrap'>\n";
 echo "			&nbsp;";
-echo "			<strong>".$content_calls_active['label-transfer']."</strong>\n";
+echo "			<strong>".$text['label-transfer']."</strong>\n";
 echo "			<input type=\"text\" id=\"form_value\" name=\"form_value\" class='formfld' style='width:125px'/>\n";
 echo "	</td>\n";
 echo "	</tr>\n";
 echo "	<tr>\n";
 echo "		<td align='left' colspan='99'>\n";
-echo "			".$content_calls_active['description2']."\n";
+echo "			".$text['description-2']."\n";
 echo "		</td>\n";
 echo "	</tr>\n";
 echo "</table>\n";
