@@ -186,7 +186,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "ring_group_description = '$ring_group_description' ";
 				//$sql .= "dialplan_uuid = '$dialplan_uuid' ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and ring_group_uuid = '$ring_group_uuid'";
+				$sql .= "and ring_group_uuid = '$ring_group_uuid' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
