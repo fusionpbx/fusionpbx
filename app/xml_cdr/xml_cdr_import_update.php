@@ -63,8 +63,7 @@
 //get the list of installed apps from the core and mod directories
 	if ($xml_cdr_archive == "db") {
 		//get the xml cdr list
-			$sql = "";
-			$sql .= "select xml_cdr, uuid from v_xml_cdr ";
+			$sql = "select xml_cdr, uuid from v_xml_cdr ";
 			$sql .= "where waitsec is null ";
 			//$sql .= "limit 5000 ";
 		//start the transaction
@@ -96,8 +95,7 @@
 					$waitsec = urldecode($xml->variables->waitsec);
 				//update the database
 					if (strlen($waitsec) > 0) {
-						$sql = "";
-						$sql .= "update v_xml_cdr ";
+						$sql = "update v_xml_cdr ";
 						$sql .= "set waitsec = '$waitsec' ";
 						$sql .= "where uuid = '$uuid' ";
 						echo $sql."\n";

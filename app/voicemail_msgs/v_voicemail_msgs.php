@@ -26,7 +26,6 @@
 include "root.php";
 require "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('voicemail_view')) {
 	//access granted
 }
@@ -35,9 +34,12 @@ else {
 	exit;
 }
 
-        foreach($content_voicemail_msgs as $key => $value) {
-		$content_voicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
+
 //download the voicemail
 	if ($_GET['a'] == "download") {
 
@@ -130,15 +132,15 @@ else {
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='50%' nowrap><b>".$content_voicemail_msgs['title']."</b></td>\n";
+	echo "<td align='left' width='50%' nowrap><b>".$text['title']."</b></td>\n";
 	echo "<td align='left' width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left'>\n";
-	echo "".$content_voicemail_msgs['description']." \n";
+	echo "".$text['description']." \n";
 	if (if_group("admin") || if_group("superadmin")) {
-		echo "".$content_voicemail_msgs['description2']." \n";
-		echo "".$content_voicemail_msgs['description3']." \n";
+		echo "".$text['description-2']." \n";
+		echo "".$text['description-3']." \n";
 		echo "	<br />\n";
 		echo "	<br />\n";
 	}
@@ -148,18 +150,18 @@ else {
 
 	$tmp_msg_header = '';
 	$tmp_msg_header .= "<tr>\n";
-	$tmp_msg_header .= th_order_by('created_epoch', $content_voicemail_msgs['label-created'], $order_by, $order);
+	$tmp_msg_header .= th_order_by('created_epoch', $text['label-created'], $order_by, $order);
 	//$tmp_msg_header .= th_order_by('read_epoch', 'Read', $order_by, $order);
 	//$tmp_msg_header .= th_order_by('username', 'Ext', $order_by, $order);
 	//$tmp_msg_header .= th_order_by('domain', 'Domain', $order_by, $order);
 	//$tmp_msg_header .= th_order_by('uuid', 'UUID', $order_by, $order);
-	$tmp_msg_header .= th_order_by('cid_name', $content_voicemail_msgs['label-callerid-name'], $order_by, $order);
-	$tmp_msg_header .= th_order_by('cid_number', $content_voicemail_msgs['label-callerid-number'], $order_by, $order);
-	$tmp_msg_header .= th_order_by('in_folder', $content_voicemail_msgs['label-folder'], $order_by, $order);
+	$tmp_msg_header .= th_order_by('cid_name', $text['label-caller-id-name'], $order_by, $order);
+	$tmp_msg_header .= th_order_by('cid_number', $text['label-caller-id-number'], $order_by, $order);
+	$tmp_msg_header .= th_order_by('in_folder', $text['label-folder'], $order_by, $order);
 	//$tmp_msg_header .= "<th>Options</th>\n";
 	//$tmp_msg_header .= th_order_by('file_path', 'File Path', $order_by, $order);
-	$tmp_msg_header .= th_order_by('message_len', $content_voicemail_msgs['label-length'], $order_by, $order);
-	$tmp_msg_header .= "<th nowrap>".$content_voicemail_msgs['label-size']."</th>\n";
+	$tmp_msg_header .= th_order_by('message_len', $text['label-length'], $order_by, $order);
+	$tmp_msg_header .= "<th nowrap>".$text['label-size']."</th>\n";
 	//$tmp_msg_header .= th_order_by('flags', 'Flags', $order_by, $order);
 	//$tmp_msg_header .= th_order_by('read_flags', 'Read Flags', $order_by, $order);
 	$tmp_msg_header .= "<td align='right' width='22'>\n";
@@ -177,12 +179,12 @@ else {
 			if (strlen($value['user']) > 0) {
 				echo "<tr><td colspan='5' align='left'>\n";
 				echo "	<br />\n";
-				echo "	<b>".$content_voicemail_msgs['table-mailbox'].": ".$value['user']."</b>&nbsp;\n";
+				echo "	<b>".$text['table-mailbox'].": ".$value['user']."</b>&nbsp;\n";
 				echo "	\n";
 				echo "</td>\n";
 				echo "<td valign='bottom' align='right'>\n";
-				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/v_voicemail_greetings.php?id=".$value['user']."'\" value='".$content_voicemail_msgs['button-greetings']."'>\n";
-				echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='v_voicemail_msgs_password.php?id=".$value['extension_uuid']."'\" value='".$content_voicemail_msgs['button-settings']."'>\n";
+				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/v_voicemail_greetings.php?id=".$value['user']."'\" value='".$text['button-greetings']."'>\n";
+				echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='v_voicemail_msgs_password.php?id=".$value['extension_uuid']."'\" value='".$text['button-settings']."'>\n";
 				echo "</td>\n";
 				echo "</tr>\n";
 
@@ -267,7 +269,7 @@ else {
 						echo 	"</td>\n";
 						echo "   <td valign='top' align='center' nowrap>\n";
 						//echo "		<a href='v_voicemail_msgs_edit.php?id=".$row[voicemail_msg_id]."' alt='edit'>$v_link_label_edit</a>\n";
-						echo "			&nbsp;&nbsp;<a href='v_voicemail_msgs_delete.php?uuid=".$row['uuid']."&id=".$row['username']."' alt='delete message' title='delete message' onclick=\"return confirm('".$content_voicemail_msgs['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "			&nbsp;&nbsp;<a href='v_voicemail_msgs_delete.php?uuid=".$row['uuid']."&id=".$row['username']."' alt='delete message' title='delete message' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						echo "   </td>\n";
 						echo "</tr>\n";
 

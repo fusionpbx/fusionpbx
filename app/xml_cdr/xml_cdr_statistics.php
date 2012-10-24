@@ -26,7 +26,6 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('xml_cdr_view')) {
 	//access granted
 }
@@ -35,9 +34,10 @@ else {
 	exit;
 }
 
-        //prepare the languages
-	foreach($content_cdr as $key => $value) {
-		$content_cdr[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //additional includes
@@ -48,15 +48,15 @@ else {
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$content_cdr['label-call-statistics']."</b></td>\n";
+	echo "	<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['label-call-statistics']."</b></td>\n";
 	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' value='CSV' onclick=\"document.location.href='xml_cdr_statistics_csv.php';\">\n";
-	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='".$content_cdr['button-back']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$content_cdr['label-call-statistics-description']." \n";
+	echo "			".$text['label-call-statistics-description']." \n";
 	echo "			<br />\n";
 	echo "			<br />\n";
 	echo "		</td>\n";
@@ -154,13 +154,13 @@ else {
 //show the results
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<th>".$content_cdr['table-hours']."</th>\n";
-	echo "	<th>".$content_cdr['table-date']."</th>\n";
-	echo "	<th nowrap='nowrap'>".$content_cdr['table-time']."</th>\n";
+	echo "	<th>".$text['table-hours']."</th>\n";
+	echo "	<th>".$text['table-date']."</th>\n";
+	echo "	<th nowrap='nowrap'>".$text['table-time']."</th>\n";
 	echo "	<th>Volume</th>\n";
-	echo "	<th>".$content_cdr['table-minutes']."</th>\n";
-	echo "	<th>".$content_cdr['table-calls-per-minute']."</th>\n";
-	echo "	<th>".$content_cdr['table-missed']."</th>\n";
+	echo "	<th>".$text['table-minutes']."</th>\n";
+	echo "	<th>".$text['table-calls-per-minute']."</th>\n";
+	echo "	<th>".$text['table-missed']."</th>\n";
 	echo "	<th>ASR</th>\n";
 	echo "	<th>ALOC</th>\n";
 	echo "</tr>\n";
@@ -180,13 +180,13 @@ else {
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
-			echo "	<th nowrap='nowrap'>".$content_cdr['table-days']."</th>\n";
-			echo "	<th nowrap='nowrap'>".$content_cdr['table-date']."</th>\n";
-			echo "	<th nowrap='nowrap'>".$content_cdr['table-time']."</th>\n";
+			echo "	<th nowrap='nowrap'>".$text['table-days']."</th>\n";
+			echo "	<th nowrap='nowrap'>".$text['table-date']."</th>\n";
+			echo "	<th nowrap='nowrap'>".$text['table-time']."</th>\n";
 			echo "	<th>Volume</th>\n";
-			echo "	<th>".$content_cdr['table-minutes']."</th>\n";
-			echo "	<th nowrap='nowrap'>".$content_cdr['table-calls-per-minute']."</th>\n";
-			echo "	<th>".$content_cdr['table-missed']."</th>\n";
+			echo "	<th>".$text['table-minutes']."</th>\n";
+			echo "	<th nowrap='nowrap'>".$text['table-calls-per-minute']."</th>\n";
+			echo "	<th>".$text['table-missed']."</th>\n";
 			echo "	<th>ASR</th>\n";
 			echo "	<th>ALOC</th>\n";
 			echo "</tr>\n";

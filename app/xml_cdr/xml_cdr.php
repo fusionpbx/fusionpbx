@@ -35,9 +35,9 @@ else {
 	exit;
 }
 
-        //prepare the languages
-	foreach($content_cdr as $key => $value) {
-		$content_cdr[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //import xml_cdr files
@@ -71,12 +71,12 @@ else {
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='50%' nowrap='nowrap'><b>".$content_cdr['title']."</b></td>\n";
+	echo "<td align='left' width='50%' nowrap='nowrap'><b>".$text['title']."</b></td>\n";
 	echo "<td align='right' width='100%'>\n";
 	echo "<table>\n";
 	echo "<tr>\n";
 	echo "<td>\n";
-	echo "	<input type='button' class='btn' value='".$content_cdr['label-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
+	echo "	<input type='button' class='btn' value='".$text['label-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
 	echo "</td>\n";
 	echo "<form method='post' action='xml_cdr_csv.php'>";
 	echo "<td>\n";
@@ -108,10 +108,10 @@ else {
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
 
-	echo "".$content_cdr['description']." \n";
-	echo "".$content_cdr['description2']." \n";
-	echo "".$content_cdr['description3']." \n";
-	echo "".$content_cdr['description4']." \n";
+	echo "".$text['description']." \n";
+	echo "".$text['description2']." \n";
+	echo "".$text['description-3']." \n";
+	echo "".$text['description-4']." \n";
 	//To do an advanced search of the call detail records click on the following advanced button.
 
 	echo "<br />\n";
@@ -129,34 +129,34 @@ else {
 			echo "<td width='33.3%'>\n";
 				echo "<table width='100%' border='0'>\n";
 				echo "	<tr>\n";
-				echo "		<td align='left' width='25%'>".$content_cdr['label-description'].":</td>\n";
+				echo "		<td align='left' width='25%'>".$text['label-description'].":</td>\n";
 				echo "		<td align='left' width='75%'>\n";
 				echo "			<select name='direction' style='width:100%' class='formfld'>\n";
 				echo "			<option value=''>                                </option>\n";
 				if ($direction == "inbound") {
-					echo "			<option value='inbound' selected='selected'>".$content_cdr['label-inbound']."</option>\n";
+					echo "			<option value='inbound' selected='selected'>".$text['label-inbound']."</option>\n";
 				}
 				else {
-					echo "			<option value='inbound'>".$content_cdr['label-inbound']."</option>\n";
+					echo "			<option value='inbound'>".$text['label-inbound']."</option>\n";
 				}
 				if ($direction == "outbound") {
-					echo "			<option value='outbound' selected='selected'>".$content_cdr['label-outbound']."</option>\n";
+					echo "			<option value='outbound' selected='selected'>".$text['label-outbound']."</option>\n";
 				}
 				else {
-					echo "			<option value='outbound'>".$content_cdr['label-outbound']."</option>\n";
+					echo "			<option value='outbound'>".$text['label-outbound']."</option>\n";
 				}
 				if ($direction == "local") {
-					echo "			<option value='local' selected='selected'>".$content_cdr['label-local']."</option>\n";
+					echo "			<option value='local' selected='selected'>".$text['label-local']."</option>\n";
 				}
 				else {
-					echo "			<option value='local'>".$content_cdr['label-local']."</option>\n";
+					echo "			<option value='local'>".$text['label-local']."</option>\n";
 				}
 				echo "			</select>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 
 				echo "	<tr>\n";
-				echo "		<td align=\"left\">".$content_cdr['label-cid-name'].":</td>\n";
+				echo "		<td align=\"left\">".$text['label-cid-name'].":</td>\n";
 				echo "		<td align=\"left\"><input type='text' class='formfld' name='caller_id_name' style='width:100%' value='$caller_id_name'></td>\n";
 				echo "	</tr>\n";
 
@@ -167,11 +167,11 @@ else {
 
 				echo "<table width='100%'>\n";
 				echo "	<tr>\n";
-				echo "		<td align='left' width='25%'>".$content_cdr['label-source'].":</td>\n";
+				echo "		<td align='left' width='25%'>".$text['label-source'].":</td>\n";
 				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='caller_id_number' style='width:100%' value='$caller_id_number'></td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
-				echo "		<td align='left' width='25%'>".$content_cdr['label-destination'].":</td>\n";
+				echo "		<td align='left' width='25%'>".$text['label-destination'].":</td>\n";
 				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='destination_number' style='width:100%' value='$destination_number'></td>\n";
 				echo "	</tr>\n";
 				echo "</table>\n";
@@ -194,12 +194,12 @@ else {
 				//echo "	</tr>";
 
 				echo "	<tr>\n";
-				echo "		<td align='left' width='25%'>".$content_cdr['label-start'].":</td>\n";
+				echo "		<td align='left' width='25%'>".$text['label-start'].":</td>\n";
 				echo "		<td align='left' width='75%'><input type='text' class='formfld' name='start_stamp' style='width:100%' value='$start_stamp'></td>\n";
 				echo "	</tr>\n";
 
 				echo "	<tr>\n";
-				echo "		<td align='left' width='25%'>".$content_cdr['label-status'].":</td>\n";
+				echo "		<td align='left' width='25%'>".$text['label-status'].":</td>\n";
 				echo "		<td align='left' width='75%'>\n";
 				echo "			<select name=\"hangup_cause\" style='width:100%' class='formfld'>\n";
 				echo "			<option value='".$hangup_cause."' selected='selected'>".$hangup_cause."</option>\n";
@@ -319,17 +319,17 @@ else {
 	//echo th_order_by('default_language', 'Language', $order_by, $order);
 	//echo th_order_by('context', 'Context', $order_by, $order);
 	//echo th_order_by('leg', 'Leg', $order_by, $order);
-	echo th_order_by('caller_id_name', $content_cdr['label-name'], $order_by, $order);
-	echo th_order_by('caller_id_number', $content_cdr['label-number'], $order_by, $order);
-	echo th_order_by('destination_number', $content_cdr['label-destination'], $order_by, $order);
-	echo "<th>".$content_cdr['label-tools']."</th>\n";
-	echo th_order_by('start_stamp', $content_cdr['label-start'], $order_by, $order);
+	echo th_order_by('caller_id_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('caller_id_number', $text['label-number'], $order_by, $order);
+	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order);
+	echo "<th>".$text['label-tools']."</th>\n";
+	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order);
 	//echo th_order_by('end_stamp', 'End', $order_by, $order);
-	echo th_order_by('duration', $content_cdr['label-length'], $order_by, $order);
+	echo th_order_by('duration', $text['label-length'], $order_by, $order);
 	if (if_group("admin") || if_group("superadmin")) { 
 		echo th_order_by('pdd_ms', 'PDD', $order_by, $order); 
 	}
-	echo th_order_by('hangup_cause', $content_cdr['label-status'], $order_by, $order);
+	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order);
 	echo "</tr>\n";
 
 	if ($result_count > 0) {
@@ -402,11 +402,11 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."' nowrap=\"nowrap\">";
 			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
 				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
-				echo "			".$content_cdr['label-play']."\n";
+				echo "			".$text['label-play']."\n";
 				echo "		</a>\n";
 				echo "		&nbsp;\n";
 				echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
-				echo "			".$content_cdr['label-download']."\n";
+				echo "			".$text['label-download']."\n";
 				echo "		</a>\n";
 			}
 			else {

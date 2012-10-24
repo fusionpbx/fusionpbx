@@ -36,7 +36,7 @@ else {
 }
 
         foreach($content_voicemail_greetings as $key => $value) {
-		$content_voicemail_greetings[$key] = $value[$_SESSION['domain']['language']['code']];
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //set the action as an add or an update
@@ -68,7 +68,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($greeting_name) == 0) { $msg .= "".$content_voicemail_greetings['confirm-name']."<br>\n"; }
+		if (strlen($greeting_name) == 0) { $msg .= "".$text['confirm-name']."<br>\n"; }
 		//if (strlen($greeting_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
@@ -107,7 +107,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=".$user_id."\">\n";
 			echo "<div align='center'>\n";
-			echo "".$content_voicemail_greetings['confirm-add']."\n";
+			echo "".$text['confirm-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -148,7 +148,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=".$user_id."\">\n";
 			echo "<div align='center'>\n";
-			echo "".$content_voicemail_greetings['confirm-update']."\n";
+			echo "".$text['confirm-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -191,33 +191,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>".$content_voicemail_greetings['label-add']."</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['label-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$content_voicemail_greetings['label-edit']['en-us']."</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['label-edit']['en-us']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_greetings.php?id=".$user_id."'\" value='".$content_voicemail_greetings['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_greetings.php?id=".$user_id."'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$content_voicemail_greetings['label-name'].":\n";
+	echo "    ".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='greeting_name' maxlength='255' value=\"$greeting_name\">\n";
 	echo "<br />\n";
-	echo "".$content_voicemail_greetings['description-name']."\n";
+	echo "".$text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$content_voicemail_greetings['label-description'].":\n";
+	echo "    ".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='greeting_description' maxlength='255' value=\"$greeting_description\">\n";
 	echo "<br />\n";
-	echo "".$content_voicemail_greetings['description-info']."\n";
+	echo "".$text['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -226,7 +226,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='greeting_uuid' value='$greeting_uuid'>\n";
 	}
 	echo "				<input type='hidden' name='user_id' value='$user_id'>\n";
-	echo "				<input type='submit' name='submit' class='btn' value='".$content_voicemail_greetings['button-save']."'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

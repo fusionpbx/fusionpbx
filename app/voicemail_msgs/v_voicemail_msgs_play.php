@@ -27,7 +27,6 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('voicemail_view')) {
 	//access granted
 }
@@ -36,8 +35,10 @@ else {
 	exit;
 }
 
-        foreach($content_voicemail_msgs as $key => $value) {
-		$content_voicemail_msgs[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //get the http get values
@@ -53,7 +54,7 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>".$content_voicemail_msgs['confirm-socket']."<br /></div>";
+		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>";
 	}
 	
 //show the error message or show the content
@@ -62,7 +63,7 @@ else {
 		echo "<div align='center'>\n";
 		echo "	<table width='40%'>\n";
 		echo "		<tr>\n";
-		echo "			<th align='left'>".$content_voicemail_msgs['label-message']."</th>\n";
+		echo "			<th align='left'>".$text['label-message']."</th>\n";
 		echo "		</tr>\n";
 		echo "		<tr>\n";
 		echo "			<td class='row_style1'><strong>$msg</strong></td>\n";
