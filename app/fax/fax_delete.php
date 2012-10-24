@@ -35,9 +35,10 @@ else {
 	exit;
 }
 
-        //prepare the languages
-	foreach($content_fax as $key => $value) {
-		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //get the http get value and set it as a php variable
@@ -92,7 +93,7 @@ else {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
 	echo "<div align='center'>\n";
-	echo "".$content_fax['confirm-delete']."\n";
+	echo "".$text['confirm-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;

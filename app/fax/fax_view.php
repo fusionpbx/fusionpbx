@@ -35,9 +35,10 @@ else {
 	exit;
 }
 
-         //prepare the languages
-	foreach($content_fax as $key => $value) {
-		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //get the fax_extension and save it as a variable
@@ -160,7 +161,7 @@ else {
 			fpassthru($fd);
 		}
 		else {
-			echo "".$content_fax['label-file']."";
+			echo "".$text['label-file']."";
 		}
 		exit;
 	}
@@ -331,13 +332,13 @@ else {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "		<td align='left' width='30%'>\n";
-	echo "			<span class=\"vexpl\"><span class=\"red\"><strong>".$content_fax['title']."</strong></span>\n";
+	echo "			<span class=\"vexpl\"><span class=\"red\"><strong>".$text['title']."</strong></span>\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
 	if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
-		echo "			<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='fax_edit.php?id=$fax_uuid'\" value='".$content_fax['button-settings']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='fax_edit.php?id=$fax_uuid'\" value='".$text['button-settings']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$content_fax['button-back']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -349,33 +350,33 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='left'>\n";
 	//pkg_add -r ghostscript8-nox11; rehash
-	echo "			".$content_fax['description2']." \n";
-	echo "			".$content_fax['description3']."\n";
+	echo "			".$text['description-2']." \n";
+	echo "			".$text['description-3']."\n";
 	echo "			<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "		".$content_fax['label-faxnumber'].":\n";
+	echo "		".$text['label-fax-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "		<input type=\"text\" name=\"fax_number\" class='formfld' style='' value=\"\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-faxnumber']."\n";
+	echo "".$text['description-fax-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-upload'].":\n";
+	echo "	".$text['label-upload'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input name=\"id\" type=\"hidden\" value=\"\$id\">\n";
 	echo "	<input name=\"type\" type=\"hidden\" value=\"fax_send\">\n";
 	echo "	<input name=\"fax_file\" type=\"file\" class=\"btn\" id=\"fax_file\">\n";
 	echo "	<br />\n";
-	echo "	".$content_fax['description-upload']."\n";
+	echo "	".$text['description-upload']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -385,7 +386,7 @@ else {
 	echo "			<input type=\"hidden\" name=\"fax_caller_id_number\" value=\"".$fax_caller_id_number."\">\n";
 	echo "			<input type=\"hidden\" name=\"fax_extension\" value=\"".$fax_extension."\">\n";
 	echo "			<input type=\"hidden\" name=\"id\" value=\"".$fax_uuid."\">\n";
-	echo "			<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$content_fax['button-send']."\">\n";
+	echo "			<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-send']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
@@ -405,7 +406,7 @@ else {
 		echo "		</td>\n";
 		echo "		<td align='right'>";
 		if ($v_path_show) {
-			echo "<b>".$content_fax['label-location'].":</b>&nbsp;";
+			echo "<b>".$text['label-location'].":</b>&nbsp;";
 			echo $dir_fax_inbox."&nbsp; &nbsp; &nbsp;";
 		}
 		echo "		</td>\n";
@@ -420,10 +421,10 @@ else {
 		echo "	<div id=\"\">\n";
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
-		echo "		<th width=\"60%\" class=\"listhdrr\">".$content_fax['table-file']."</td>\n";
-		echo "		<th width=\"10%\" class=\"listhdrr\">".$content_fax['table-view']."</td>\n";
-		echo "		<th width=\"20%\" class=\"listhdr\">".$content_fax['table-modified']."</td>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size".$content_fax['table-size']."</td>\n";
+		echo "		<th width=\"60%\" class=\"listhdrr\">".$text['table-file']."</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdrr\">".$text['table-view']."</td>\n";
+		echo "		<th width=\"20%\" class=\"listhdr\">".$text['table-modified']."</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size".$text['table-size']."</td>\n";
 		echo "	</tr>";
 
 
@@ -519,7 +520,7 @@ else {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_inbox_delete')) {
-							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_inbox&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('".$content_fax['confirm-delete']."')\">$v_link_label_delete</a></td>\n";
+							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_inbox&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";
@@ -548,7 +549,7 @@ else {
 		echo "		</td>\n";
 		echo "		<td align='right'>\n";
 		if ($v_path_show) {
-			echo "<b>".$content_fax['label-location'].": </b>\n";
+			echo "<b>".$text['label-location'].": </b>\n";
 			echo $dir_fax_sent."&nbsp; &nbsp; &nbsp;\n";
 		}
 		echo "		</td>\n";
@@ -557,10 +558,10 @@ else {
 		echo "\n";
 		echo "    <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "    <tr>\n";
-		echo "		<th width=\"60%\">".$content_fax['table-file']."</td>\n";
-		echo "		<th width=\"10%\">".$content_fax['table-view']."</td>\n";
-		echo "		<th width=\"20%\">".$content_fax['table-modified']."</td>\n";
-		echo "		<th width=\"10%\" nowrap>".$content_fax['table-size']."</td>\n";
+		echo "		<th width=\"60%\">".$text['table-file']."</td>\n";
+		echo "		<th width=\"10%\">".$text['table-view']."</td>\n";
+		echo "		<th width=\"20%\">".$text['table-modified']."</td>\n";
+		echo "		<th width=\"10%\" nowrap>".$text['table-size']."</td>\n";
 		echo "		</tr>";
 
 		if ($handle = opendir($dir_fax_sent)) {
@@ -653,7 +654,7 @@ else {
 						echo "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\n";
 						echo "      <tr>\n";
 						if (permission_exists('fax_sent_delete')) {
-							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_sent&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('".$content_fax['confirm-delete']."')\">$v_link_label_delete</a></td>\n";
+							echo "        <td><a href=\"fax_view.php?id=".$fax_uuid."&type=fax_sent&a=del&fax_extension=".urlencode($fax_extension)."&filename=".urlencode($file)."\" onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a></td>\n";
 						}
 						echo "      </tr>\n";
 						echo "   </table>\n";

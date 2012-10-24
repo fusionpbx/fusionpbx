@@ -36,8 +36,8 @@ else {
 
 //add multi-lingual support
 	require_once "app_languages.php";
-	foreach($content_fax as $key => $value) {
-		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //get the fax_extension and save it as a variable
@@ -131,7 +131,7 @@ else {
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
-			echo "<div align='center'>".$content_fax['confirm-delete']."</div>";
+			echo "<div align='center'>".$text['confirm-delete']."</div>";
 			require_once "includes/footer.php";
 			return;
 	}
@@ -160,7 +160,7 @@ else {
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
-			echo "<div align='center'>".$content_fax['confirm-add']."</div>";
+			echo "<div align='center'>".$text['confirm-add']."</div>";
 			require_once "includes/footer.php";
 			return;
 	}
@@ -176,8 +176,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($fax_extension) == 0) { $msg .= "".$content_fax['confirm-ext']."<br>\n"; }
-		if (strlen($fax_name) == 0) { $msg .= "".$content_fax['confirm-fax']."<br>\n"; }
+		if (strlen($fax_extension) == 0) { $msg .= "".$text['confirm-ext']."<br>\n"; }
+		if (strlen($fax_name) == 0) { $msg .= "".$text['confirm-fax']."<br>\n"; }
 		//if (strlen($fax_email) == 0) { $msg .= "Please provide: Email<br>\n"; }
 		//if (strlen($fax_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
 		//if (strlen($fax_caller_id_name) == 0) { $msg .= "Please provide: Caller ID Name<br>\n"; }
@@ -454,10 +454,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
 				echo "<div align='center'>\n";
 				if ($action == "update" && permission_exists('fax_extension_edit')) {
-					echo "".$content_fax['confirm-update']."\n";
+					echo "".$text['confirm-update']."\n";
 				}
 				if ($action == "add" && permission_exists('fax_extension_add')) {
-					echo "".$content_fax['confirm-add']."\n";
+					echo "".$text['confirm-add']."\n";
 				}
 				echo "</div>\n";
 				require_once "includes/footer.php";
@@ -508,109 +508,109 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>".$content_fax['confirm-faxadd']."</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['confirm-fax-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$content_fax['confirm-faxedit']."</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['confirm-fax-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('".$content_fax['confirm-copyinfo']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='".$content_fax['button-copy']."'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$content_fax['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='".$text['button-copy']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-name'].":\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_name' maxlength='255' value=\"$fax_name\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-name']."\n";
+	echo "".$text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-extension'].":\n";
+	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_extension' maxlength='255' value=\"$fax_extension\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-extension']."\n";
+	echo "".$text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-destination-number'].":\n";
+	echo "	".$text['label-destination-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' value=\"$fax_destination_number\">\n";
 	echo "<br />\n";
-	echo " ".$content_fax['description-destination-number']."\n";
+	echo " ".$text['description-destination-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-email'].":\n";
+	echo "	".$text['label-email'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
 	echo "<br />\n";
-	echo "	".$content_fax['description-email']."\n";
+	echo "	".$text['description-email']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-pin'].":\n";
+	echo "	".$text['label-pin'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_pin_number' maxlength='255' value=\"$fax_pin_number\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-pin']."\n";
+	echo "".$text['description-pin']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-callerid-name'].":\n";
+	echo "	".$text['label-caller-id-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value=\"$fax_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-callerid-name']."\n";
+	echo "".$text['description-caller-id-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-callerid-number'].":\n";
+	echo "	".$text['label-caller-id-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' value=\"$fax_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-callerid-number']."\n";
+	echo "".$text['description-caller-id-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-forward'].":\n";
+	echo "	".$text['label-forward'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".format_phone($fax_forward_number)."\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-forwardnumber']."\n";
+	echo "".$text['description-forward-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	if (if_group("admin") || if_group("superadmin")) {
 		if ($action == "update") {
 			echo "	<tr>";
-			echo "		<td class='vncell' valign='top'>".$content_fax['label-userlist'].":</td>";
+			echo "		<td class='vncell' valign='top'>".$text['label-user-list'].":</td>";
 			echo "		<td class='vtable'>";
 
 			echo "			<table width='52%'>\n";
@@ -626,7 +626,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".$field['username']."</td>\n";
 				echo "				<td>\n";
-				echo "					<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$content_fax['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "					<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
@@ -644,10 +644,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
 			}
 			echo "			</select>";
-			echo "			<input type=\"submit\" class='btn' value=\"".$content_fax['button-add']."\">\n";
+			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 			unset($sql, $result);
 			echo "			<br>\n";
-			echo "			".$content_fax['description-useradd']."\n";
+			echo "			".$text['description-user-add']."\n";
 			echo "			<br />\n";
 			echo "		</td>";
 			echo "	</tr>";
@@ -656,12 +656,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$content_fax['label-description'].":\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='fax_description' maxlength='255' value=\"$fax_description\">\n";
 	echo "<br />\n";
-	echo "".$content_fax['description-info']."\n";
+	echo "".$text['description-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -670,7 +670,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<input type='hidden' name='fax_uuid' value='$fax_uuid'>\n";
 		echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "			<input type='submit' name='submit' class='btn' value='".$content_fax['button-save']."'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

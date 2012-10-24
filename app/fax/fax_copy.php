@@ -36,8 +36,10 @@ else {
 	exit;
 }
 
-        foreach($content_fax as $key => $value) {
-		$content_fax[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //set the http get/post variable(s) to a php variable
@@ -110,7 +112,7 @@ else {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
 	echo "<div align='center'>\n";
-	echo "".$content_fax['confirm-copy']."\n";
+	echo "".$text['confirm-copy']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
