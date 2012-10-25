@@ -1,123 +1,123 @@
 <?php
 
-    //conferences
-    $content_conferences['title']['en-us'] = 'Conferences';
-    $content_conferences['title']['pt-pt'] = 'Conferências';
+	//conferences
+	$text['title']['en-us'] = 'Conferences';
+	$text['title']['pt-pt'] = 'Conferências';
 
-    $content_conferences['description']['en-us'] = 'Conferences is used to setup conference rooms with a name, description, and optional pin number.';
-    $content_conferences['description']['pt-pt'] = 'As conferências são utilizadas para configurar salas de conferências com um nome, descrição e número pin opcional.';
+	$text['description']['en-us'] = 'Conferences is used to setup conference rooms with a name, description, and optional pin number.';
+	$text['description']['pt-pt'] = 'As conferências são utilizadas para configurar salas de conferências com um nome, descrição e número pin opcional.';
 
-    $content_conferences['title2']['en-us'] = 'Active Conferences';
-    $content_conferences['title2']['pt-pt'] = 'Conferências Activas';
+	$text['title-2']['en-us'] = 'Active Conferences';
+	$text['title-2']['pt-pt'] = 'Conferências Activas';
 
-    $content_conferences['title3']['en-us'] = 'Active Conference';
-    $content_conferences['title3']['pt-pt'] = 'Conferência Activa';
+	$text['title-3']['en-us'] = 'Active Conference';
+	$text['title-3']['pt-pt'] = 'Conferência Activa';
 
-    $content_conferences['description2']['en-us'] = 'and then select a conference to monitor and interact with it.';
-    $content_conferences['description2']['pt-pt'] = 'e selecione uma conferência para monitorizar e interagir com ele.';
+	$text['description-2']['en-us'] = 'and then select a conference to monitor and interact with it.';
+	$text['description-2']['pt-pt'] = 'e selecione uma conferência para monitorizar e interagir com ele.';
 
-    $content_conferences['table-name']['en-us'] = 'Name';
-    $content_conferences['table-name']['pt-pt'] = 'Nome';
+	$text['table-name']['en-us'] = 'Name';
+	$text['table-name']['pt-pt'] = 'Nome';
 
-    $content_conferences['table-extension']['en-us'] = 'Extension';
-    $content_conferences['table-extension']['pt-pt'] = 'Extensão';
+	$text['table-extension']['en-us'] = 'Extension';
+	$text['table-extension']['pt-pt'] = 'Extensão';
 
-    $content_conferences['table-profile']['en-us'] = 'Profile';
-    $content_conferences['table-profile']['pt-pt'] = 'Perfil';
+	$text['table-profile']['en-us'] = 'Profile';
+	$text['table-profile']['pt-pt'] = 'Perfil';
 
-    $content_conferences['table-order']['en-us'] = 'Order';
-    $content_conferences['table-order']['pt-pt'] = 'Ordem';
+	$text['table-order']['en-us'] = 'Order';
+	$text['table-order']['pt-pt'] = 'Ordem';
 
-    $content_conferences['table-enabled']['en-us'] = 'Enabled';
-    $content_conferences['table-enabled']['pt-pt'] = 'Activo';
+	$text['table-enabled']['en-us'] = 'Enabled';
+	$text['table-enabled']['pt-pt'] = 'Activo';
 
-    $content_conferences['table-description']['en-us'] = 'Description';
-    $content_conferences['table-description']['pt-pt'] = 'Descrição';
+	$text['table-description']['en-us'] = 'Description';
+	$text['table-description']['pt-pt'] = 'Descrição';
 
-    //conferences_delete
-    $content_conferences['confirm-delete']['en-us'] = 'Delete Complete';
-    $content_conferences['confirm-delete']['pt-pt'] = 'Eliminação Completa';
+	//conferences_delete
+	$text['confirm-delete']['en-us'] = 'Delete Complete';
+	$text['confirm-delete']['pt-pt'] = 'Eliminação Completa';
 
-    //conferences_add
-    $content_conferences['confirm-add']['en-us'] = 'Add Complete';
-    $content_conferences['confirm-add']['pt-pt'] = 'Adição Completa';
+	//conferences_add
+	$text['confirm-add']['en-us'] = 'Add Complete';
+	$text['confirm-add']['pt-pt'] = 'Adição Completa';
 
-    $content_conferences['confirm-update']['en-us'] = 'Update Complete';
-    $content_conferences['confirm-update']['pt-pt'] = 'Actualização Completa';
+	$text['confirm-update']['en-us'] = 'Update Complete';
+	$text['confirm-update']['pt-pt'] = 'Actualização Completa';
 
-    $content_conferences['confirm-name']['en-us'] = 'Please provide: Name';
-    $content_conferences['confirm-name']['pt-pt'] = 'Por favor, forneça: Nome';
+	$text['confirm-name']['en-us'] = 'Please provide: Name';
+	$text['confirm-name']['pt-pt'] = 'Por favor, forneça: Nome';
 
-    $content_conferences['confirm-extension']['en-us'] = 'Please provide: Extension';
-    $content_conferences['confirm-extension']['pt-pt'] = 'Por favor, forneça: Extensão';
+	$text['confirm-extension']['en-us'] = 'Please provide: Extension';
+	$text['confirm-extension']['pt-pt'] = 'Por favor, forneça: Extensão';
 
-    $content_conferences['confirm-profile']['en-us'] = 'Please provide: Profile';
-    $content_conferences['confirm-profile']['pt-pt'] = 'Por favor, forneça: Perfil';
+	$text['confirm-profile']['en-us'] = 'Please provide: Profile';
+	$text['confirm-profile']['pt-pt'] = 'Por favor, forneça: Perfil';
 
-    $content_conferences['confirm-enabled']['en-us'] = 'Please provide: Enabled';
-    $content_conferences['confirm-enabled']['pt-pt'] = 'Por favor, forneça: Ativado';
+	$text['confirm-enabled']['en-us'] = 'Please provide: Enabled';
+	$text['confirm-enabled']['pt-pt'] = 'Por favor, forneça: Ativado';
 
-    $content_conferences['label-confadd']['en-us'] = 'Conferences Add';
-    $content_conferences['label-confadd']['pt-pt'] = 'Adição de Conferências';
+	$text['label-conference-add']['en-us'] = 'Conferences Add';
+	$text['label-conference-add']['pt-pt'] = 'Adição de Conferências';
 
-    $content_conferences['label-confedit']['en-us'] = 'Conferences Edit';
-    $content_conferences['label-confedit']['pt-pt'] = 'Edição de Conferências';
+	$text['label-conference-edit']['en-us'] = 'Conferences Edit';
+	$text['label-conference-edit']['pt-pt'] = 'Edição de Conferências';
 
-    $content_conferences['button-back']['en-us'] = 'Back';
-    $content_conferences['button-back']['pt-pt'] = 'Voltar';
+	$text['button-back']['en-us'] = 'Back';
+	$text['button-back']['pt-pt'] = 'Voltar';
 
-    $content_conferences['label-extension']['en-us'] = 'Extension';
-    $content_conferences['label-extension']['pt-pt'] = 'Extensão';
+	$text['label-extension']['en-us'] = 'Extension';
+	$text['label-extension']['pt-pt'] = 'Extensão';
 
-    $content_conferences['label-name']['en-us'] = 'Name';
-    $content_conferences['label-name']['pt-pt'] = 'Nome';
+	$text['label-name']['en-us'] = 'Name';
+	$text['label-name']['pt-pt'] = 'Nome';
 
-    $content_conferences['description-name']['en-us'] = 'Enter the conference name.';
-    $content_conferences['description-name']['pt-pt'] = 'Insira o nome da conferência.';
+	$text['description-name']['en-us'] = 'Enter the conference name.';
+	$text['description-name']['pt-pt'] = 'Insira o nome da conferência.';
 
-    $content_conferences['description-extension']['en-us'] = 'Enter the conference extension number.';
-    $content_conferences['description-extension']['pt-pt'] = 'Insira a extensão da conferência';
+	$text['description-extension']['en-us'] = 'Enter the conference extension number.';
+	$text['description-extension']['pt-pt'] = 'Insira a extensão da conferência';
 
-    $content_conferences['description3']['en-us'] = 'to monitor and interact with the conference room.';
-    $content_conferences['description3']['pt-pt'] = 'para monitorizar e interagir com a sala de conferências.';
+	$text['description-3']['en-us'] = 'to monitor and interact with the conference room.';
+	$text['description-3']['pt-pt'] = 'para monitorizar e interagir com a sala de conferências.';
 
-    $content_conferences['label-pin']['en-us'] = 'Pin Number';
-    $content_conferences['label-pin']['pt-pt'] = 'Numero Pin';
+	$text['label-pin']['en-us'] = 'Pin Number';
+	$text['label-pin']['pt-pt'] = 'Numero Pin';
 
-    $content_conferences['description-pin']['en-us'] = 'Optional pin number to secure access to the conference.';
-    $content_conferences['description-pin']['pt-pt'] = 'Número de pin opcional para garantir o acesso à conferência.';
+	$text['description-pin']['en-us'] = 'Optional pin number to secure access to the conference.';
+	$text['description-pin']['pt-pt'] = 'Número de pin opcional para garantir o acesso à conferência.';
 
-    $content_conferences['confirm-delete2']['en-us'] = 'Do you really want to delete this?';
-    $content_conferences['confirm-delete2']['pt-pt'] = 'Deseja realmente apagar isto?';
+	$text['confirm-delete-2']['en-us'] = 'Do you really want to delete this?';
+	$text['confirm-delete-2']['pt-pt'] = 'Deseja realmente apagar isto?';
 
-    $content_conferences['button-add']['en-us'] = 'Add';
-    $content_conferences['button-add']['pt-pt'] = 'Adicionar';
+	$text['button-add']['en-us'] = 'Add';
+	$text['button-add']['pt-pt'] = 'Adicionar';
 
-    $content_conferences['button-save']['en-us'] = 'Save';
-    $content_conferences['button-save']['pt-pt'] = 'Gravar';
+	$text['button-save']['en-us'] = 'Save';
+	$text['button-save']['pt-pt'] = 'Gravar';
 
-    $content_conferences['label-description']['en-us'] = 'Description';
-    $content_conferences['label-description']['pt-pt'] = 'Descrição';
+	$text['label-description']['en-us'] = 'Description';
+	$text['label-description']['pt-pt'] = 'Descrição';
 
-    $content_conferences['description-info']['en-us'] = 'Enter the description.';
-    $content_conferences['description-info']['pt-pt'] = 'Insira a descrição.';
+	$text['description-info']['en-us'] = 'Enter the description.';
+	$text['description-info']['pt-pt'] = 'Insira a descrição.';
 
-    $content_conferences['description-confenable']['en-us'] = 'Select whether to enable or disable the conference.';
-    $content_conferences['description-confenable']['pt-pt'] = 'Selecione se deseja ativar ou desativar a conferência.';
+	$text['description-conference-enable']['en-us'] = 'Select whether to enable or disable the conference.';
+	$text['description-conference-enable']['pt-pt'] = 'Selecione se deseja ativar ou desativar a conferência.';
 
-    $content_conferences['description-order']['en-us'] = 'Enter the order number.';
-    $content_conferences['description-order']['pt-pt'] = 'Digite o número do pedido.';
+	$text['description-order']['en-us'] = 'Enter the order number.';
+	$text['description-order']['pt-pt'] = 'Digite o número do pedido.';
 
-    $content_conferences['label-order']['en-us'] = 'Order';
-    $content_conferences['label-order']['pt-pt'] = 'Pedido';
+	$text['label-order']['en-us'] = 'Order';
+	$text['label-order']['pt-pt'] = 'Pedido';
 
-    $content_conferences['description-useradd']['en-us'] = 'Assign the users that are can manage this conference extension.';
-    $content_conferences['description-useradd']['pt-pt'] = 'Atribuir os utilizadores que podem gerir esta extensão de conferência.';
+	$text['description-user-add']['en-us'] = 'Assign the users that are can manage this conference extension.';
+	$text['description-user-add']['pt-pt'] = 'Atribuir os utilizadores que podem gerir esta extensão de conferência.';
 
-    $content_conferences['description-profile']['en-us'] = 'Conference Profile is a collection of settings for the conference.';
-    $content_conferences['description-profile']['pt-pt'] = 'Perfil de conferência é um conjunto de definições para a conferência.';
+	$text['description-profile']['en-us'] = 'Conference Profile is a collection of settings for the conference.';
+	$text['description-profile']['pt-pt'] = 'Perfil de conferência é um conjunto de definições para a conferência.';
 
-    $content_conferences['description-flags']['en-us'] = 'Optional conference flags. examples: mute|deaf|waste|moderator';
-    $content_conferences['description-flags']['pt-pt'] = 'Flags opcionais de conferências. exemplos: mute|deaf|waste|moderator';
+	$text['description-flags']['en-us'] = 'Optional conference flags. examples: mute|deaf|waste|moderator';
+	$text['description-flags']['pt-pt'] = 'Flags opcionais de conferências. exemplos: mute|deaf|waste|moderator';
 
 ?>

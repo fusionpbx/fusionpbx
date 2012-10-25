@@ -26,7 +26,6 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-include "app_languages.php";
 if (permission_exists('conference_delete')) {
 	//access granted
 }
@@ -35,8 +34,10 @@ else {
 	exit;
 }
 
-        foreach($content_conferences as $key => $value) {
-		$content_conferences[$key] = $value[$_SESSION['domain']['language']['code']];                
+//add multi-lingual support
+	require_once "app/calls/app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
 	}
 
 if (count($_GET)>0) {
@@ -88,7 +89,7 @@ if (strlen($id)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences.php\">\n";
 	echo "<div align='center'>\n";
-	echo "".$content_conferences['confirm-delete']."\n";
+	echo "".$text['confirm-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
