@@ -683,7 +683,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) > 0) {
-			echo "	<select name='".$condition_expression_1."' id='".$condition_expression_1."' class='formfld' style='width: 60%;' >\n";
+			echo "	<select name='condition_expression_1' id='condition_expression_1' class='formfld' style='width: 60%;' >\n";
 			echo "	<option></option>\n";
 			foreach ($result as &$row) {
 				echo "		<option value='".$row["destination_number"]."'>".$row["destination_number"]."</option>\n";
