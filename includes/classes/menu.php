@@ -158,6 +158,7 @@
 									//if the item uuid is not currently in the db then add it
 									$sql = "select * from v_group_permissions ";
 									$sql .= "where permission_name = '".$menu['name']."' ";
+									$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
 									$sql .= "and group_name = '$group' ";
 									$prep_statement = $db->prepare(check_sql($sql));
 									if ($prep_statement) {
@@ -268,6 +269,16 @@
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach($result as $field) {
+					$sql2 = "select * from v_menu_languages ";
+					$sql2 .= "where menu_language = 'en-us' ";
+					$sql2 .= "and menu_item_uuid = '".$field['menu_item_uuid']."' ";
+					$prep_statement2 = $db->prepare(check_sql($sql2));
+					$prep_statement2->execute();
+					$result2 = $prep_statement2->fetchAll(PDO::FETCH_NAMED);
+					foreach($result2 as $field2) {
+						$menu_icon_name=$field2['menu_item_title'];
+					}
+					unset($prep_statement2, $sql2, $result2);
 					$menu_tags = '';
 					switch ($field['menu_item_category']) {
 						case "internal":
