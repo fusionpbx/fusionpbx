@@ -671,12 +671,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "    Destination Number:\n";
+		echo "	Destination Number:\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' style='width: 60%;' type='text' name='condition_expression_1' maxlength='255' value=\"$condition_expression_1\">\n";
-		echo "<br />\n";
-		echo "Please enter the destination number. In North America this is usually a 10 or 11 digit number.\n";
+
+		$sql = "select * from v_destinations ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and destination_type = 'inbound' ";
+		$sql .= "order by destination_number asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result) > 0) {
+			echo "	<select name='".$condition_expression_1."' id='".$condition_expression_1."' class='formfld' style='width: 60%;' >\n";
+			echo "	<option></option>\n";
+			foreach ($result as &$row) {
+				echo "		<option value='".$row["destination_number"]."'>".$row["destination_number"]."</option>\n";
+			}
+			echo "		</select>\n";
+			echo "<br />\n";
+			echo "Select the inbound destination number.\n";
+		}
+		else {
+			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"Add\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='Add'>\n";
+		}
+		unset ($prep_statement);
+
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
