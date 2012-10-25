@@ -785,9 +785,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Outbound Caller ID Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"$outbound_caller_id_name\">\n";
-	echo "<br />\n";
-	echo "Enter the external caller id name here.\n";
+	if (permission_exists('outbound_caller_id_select')) {
+		$sql = "select * from v_destinations ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and destination_type = 'inbound' ";
+		$sql .= "order by destination_number asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result) > 0) {
+			echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
+			echo "	<option></option>\n";
+			foreach ($result as &$row) {
+				if ($outbound_caller_id_name == $row["destination_caller_id_name"]) {
+					echo "		<option value='".$row["destination_caller_id_name"]."' selected='selected'>".$row["destination_caller_id_name"]."</option>\n";
+				}
+				else {
+					echo "		<option value='".$row["destination_caller_id_name"]."'>".$row["destination_caller_id_name"]."</option>\n";
+				}
+			}
+			echo "		</select>\n";
+			echo "<br />\n";
+			echo "Select the external caller id name.\n";
+		}
+		else {
+			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"Add\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='Add'>\n";
+		}
+		unset ($prep_statement);
+	}
+	else {
+		echo "    <input class='formfld' type='text' name='outbound_caller_id_name' maxlength='255' value=\"$outbound_caller_id_name\">\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -796,7 +824,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    Outbound Caller ID Number:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' value=\"$outbound_caller_id_number\">\n";
+	if (permission_exists('outbound_caller_id_select')) {
+		$sql = "select * from v_destinations ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and destination_type = 'inbound' ";
+		$sql .= "order by destination_number asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result) > 0) {
+			echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
+			echo "	<option></option>\n";
+			foreach ($result as &$row) {
+				if ($outbound_caller_id_number == $row["destination_caller_id_number"]) {
+					echo "		<option value='".$row["destination_caller_id_number"]."' selected='selected'>".$row["destination_caller_id_number"]."</option>\n";
+				}
+				else {
+					echo "		<option value='".$row["destination_caller_id_number"]."'>".$row["destination_caller_id_number"]."</option>\n";
+				}
+			}
+			echo "		</select>\n";
+			echo "<br />\n";
+			echo "Select the inbound destination number.\n";
+		}
+		else {
+			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"Add\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='Add'>\n";
+		}
+		unset ($prep_statement);
+	}
+	else {
+		echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' value=\"$outbound_caller_id_number\">\n";
+	}
 	echo "<br />\n";
 	echo "Enter the external caller id number here.\n";
 	echo "</td>\n";

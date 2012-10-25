@@ -56,6 +56,10 @@
 		$apps[$x]['permissions'][4]['name'] = 'extension_toll';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
+		$apps[$x]['permissions'][5]['name'] = 'outbound_caller_id_select';
+		//$apps[$x]['permissions'][3]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
