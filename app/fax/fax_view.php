@@ -253,7 +253,7 @@ else {
 
 			if ($fax_file_extension == ".pdf") {
 				chdir($dir_fax_temp);
-				exec("gs -q -sDEVICE=tiffg3 -r204x98 -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
+				exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1728x2156 -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
 				//exec("rm ".$dir_fax_temp.'/'.$fax_name.".pdf");
 			}
 
