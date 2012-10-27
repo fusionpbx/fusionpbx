@@ -36,6 +36,42 @@ else {
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
+//get conference array
+	$switch_cmd = "conference xml_list";
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if (!$fp) {
+		
+	}
+	else {
+		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		try {
+			$xml = new SimpleXMLElement($xml_str, true);
+		}
+		catch(Exception $e) {
+			//echo $e->getMessage();
+		}
+		foreach ($xml->conference as $row) {
+			//convert the xml object to an array
+				$json = json_encode($row);
+				$row = json_decode($json, true);
+			//set the variables
+				$conference_name = $row['@attributes']['name'];
+				$session_uuid = $row['@attributes']['uuid'];
+				$member_count = $row['@attributes']['member-count'];
+			//show the conferences that have a matching domain
+				$tmp_domain = substr($conference_name, -strlen($_SESSION['domain_name']));
+				if ($tmp_domain == $_SESSION['domain_name']) {
+					$meeting_uuid = substr($conference_name, 0, strlen($conference_name) - strlen('-'.$_SESSION['domain_name']));
+					$conference[$meeting_uuid]["conference_name"] = $conference_name;
+					$conference[$meeting_uuid]["session_uuid"] = $session_uuid;
+					$conference[$meeting_uuid]["member_count"] = $member_count;
+				}
+		}
+	}
+	//echo "<pre>\n";
+	//print_r($conference);
+	//echo "</pre>\n";
+
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
@@ -96,20 +132,23 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+
 	//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
 	//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
 	echo th_order_by('profile', 'Profile', $order_by, $order);
 	echo th_order_by('record', 'Record', $order_by, $order);
-	echo th_order_by('max_members', 'Max Members', $order_by, $order);
-	echo th_order_by('wait_mod', 'Wait for Moderator', $order_by, $order);
+	echo th_order_by('max_members', 'Max', $order_by, $order);
+	echo th_order_by('wait_mod', 'Wait Moderator', $order_by, $order);
 	echo th_order_by('announce', 'Announce', $order_by, $order);
 	//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order);
 	echo th_order_by('mute', 'Mute', $order_by, $order);
 	//echo th_order_by('created', 'Created', $order_by, $order);
 	//echo th_order_by('created_by', 'Created By', $order_by, $order);
 	echo th_order_by('enabled', 'Enabled', $order_by, $order);
+	echo "<th>Count</th>\n";
+	echo "<th>Tools</th>\n";
 	echo th_order_by('description', 'Description', $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td align='right' width='42' nowrap='nowrap'>\n";
 	if (permission_exists('conference_room_add')) {
 		echo "	<a href='conference_room_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
@@ -121,20 +160,32 @@ require_once "includes/paging.php";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
+			$meeting_uuid = $row['meeting_uuid'];
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_uuid']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['meeting_uuid']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['record']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['max_members']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['wait_mod']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['announce']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enter_sound']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['mute']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['created']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['created_by']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['record']."&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['max_members']."&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['wait_mod']."&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['announce']."&nbsp;</td>\n";
+			//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['enter_sound']."&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['mute']."&nbsp;</td>\n";
+			//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['created']."&nbsp;</td>\n";
+			//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['created_by']."&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['enabled']."&nbsp;</td>\n";
+			if (strlen($conference[$meeting_uuid]["session_uuid"])) {
+				echo "	<td valign='middle' class='".$row_style[$c]."'>".$conference[$meeting_uuid]["member_count"]."&nbsp;</td>\n";
+			}
+			else {
+				echo "	<td valign='middle' class='".$row_style[$c]."'>0</td>\n";
+			}
+			echo "	<td valign='middle' class='".$row_style[$c]."'>\n";
+			echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$row['meeting_uuid']."'>View</a>&nbsp;\n";
+			echo "		<a href='conference_sessions.php?id=".$row['meeting_uuid']."'>Sessions</a>\n";
+			
+			echo "	</td>\n";
+			echo "	<td valign='middle' class='row_stylebg' width='20%' nowrap='nowrap'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('conference_room_edit')) {
 				echo "		<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='edit'>$v_link_label_edit</a>\n";

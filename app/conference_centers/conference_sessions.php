@@ -36,6 +36,7 @@ require_once "includes/header.php";
 require_once "includes/paging.php";
 
 //set variables from the http values
+	$meeting_uuid = check_str($_GET["id"]);
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
@@ -49,7 +50,7 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>Conference Sessions</b></td>\n";
-	echo "		<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_centers.php'\" value='Back'></td>\n";
+	echo "		<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_rooms.php'\" value='Back'></td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -61,6 +62,7 @@ require_once "includes/paging.php";
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_conference_sessions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and meeting_uuid = '$meeting_uuid' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -84,6 +86,7 @@ require_once "includes/paging.php";
 	//get the list
 		$sql = "select * from v_conference_sessions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and meeting_uuid = '$meeting_uuid' ";
 		if (strlen($order_by) == 0) {
 			$sql .= "order by start_epoch desc ";
 		}

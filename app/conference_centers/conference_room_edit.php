@@ -383,7 +383,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference Room</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	if (strlen($meeting_uuid) > 0) {
-		echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='View'>\n";
+		echo "	<input type='button' class='btn' name='' alt='Session' onclick=\"window.location='conference_sessions.php?id=".$meeting_uuid."'\" value='Session'>\n";
+		echo "	<input type='button' class='btn' name='' alt='View' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='View'>\n";
 	}
 	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_rooms.php'\" value='Back'>\n";
 	echo "</td>\n";
