@@ -223,6 +223,27 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
+
+				//assign the logged in user to the meeting
+					if (strlen($_SESSION["user_uuid"]) > 0) {
+						$meeting_user_uuid = uuid();
+						$sql = "insert into v_meeting_users ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "meeting_user_uuid, ";
+						$sql .= "meeting_uuid, ";
+						$sql .= "user_uuid ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$domain_uuid', ";
+						$sql .= "'$meeting_user_uuid', ";
+						$sql .= "'$meeting_uuid', ";
+						$sql .= "'".$_SESSION["user_uuid"]."' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('conference_room_edit')) {
@@ -271,7 +292,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			} //if ($action == "update")
 
 			//assign the user to the meeting
-				if (strlen($user_uuid) > 0) {
+				if (strlen($user_uuid) > 0 && $_SESSION["user_uuid"] != $user_uuid) {
 					$meeting_user_uuid = uuid();
 					$sql = "insert into v_meeting_users ";
 					$sql .= "(";
