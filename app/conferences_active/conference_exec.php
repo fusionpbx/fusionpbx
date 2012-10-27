@@ -41,6 +41,7 @@ else {
 	if (count($_GET)>0) {
 		$cmd = trim(check_str($_GET["cmd"]));
 		$name = trim(check_str($_GET["name"]));
+		$uuid = trim(check_str($_GET["uuid"]));
 		$data = trim(check_str($_GET["data"]));
 		$id = trim(check_str($_GET["id"]));
 		$direction = trim(check_str($_GET["direction"]));
@@ -103,22 +104,21 @@ if (count($_GET)>0) {
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
 				}
 				elseif ($data == "record") {
-					$switch_cmd .= $_SESSION['switch']['recordings']['dir']."/".$name."-tmp.wav";
-					if (!file_exists($_SESSION['switch']['recordings']['dir']."/".$name."-tmp.wav")) {
+					$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+					$switch_cmd .= $recording_dir."/".$uuid.".wav";
+					if (!file_exists($recording_dir."/".$uuid.".wav")) {
 						$switch_result = event_socket_request($fp, "api ".$switch_cmd);
 					}
 				}
 				elseif ($data == "norecord") {
 					//stop recording and rename the file
-					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$name."-tmp.wav")) {
-						rename($_SESSION['switch']['recordings']['dir']."/".$name."-tmp.wav", $_SESSION['switch']['recordings']['dir']."/".$name."-".date("Y").".".date("M").".".date("d")."-".uuid().".wav");
-					}
-					$switch_cmd .= $_SESSION['switch']['recordings']['dir']."/".$name."-tmp.wav";
+					$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+					$switch_cmd .= $recording_dir."/".$uuid.".wav";
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
-				else {
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
+				//else {
+				//	$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				//}
 			}
 	}
 }

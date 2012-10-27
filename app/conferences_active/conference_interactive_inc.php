@@ -43,32 +43,32 @@ else {
 	}
 	else {
 		//get the conference_uuid from the coference_name
-		$sql = "select conference_uuid from v_conferences ";
-		$sql .= "where conference_name = '".$conference_name."' ";
-		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$conference_uuid = $row['conference_uuid'];
-		}
+			$sql = "select conference_uuid from v_conferences ";
+			$sql .= "where conference_name = '".$conference_name."' ";
+			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+			$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$conference_uuid = $row['conference_uuid'];
+			}
 
 		//show only assigned extensions
-		$sql = "select count(*) as num_rows from v_conferences as c, v_conference_users as u ";
-		$sql .= "where c.conference_uuid = u.conference_uuid ";
-		$sql .= "and c.conference_uuid = '".$conference_uuid."' ";
-		$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				echo "access denied";
-				exit;
+			$sql = "select count(*) as num_rows from v_conferences as c, v_conference_users as u ";
+			$sql .= "where c.conference_uuid = u.conference_uuid ";
+			$sql .= "and c.conference_uuid = '".$conference_uuid."' ";
+			$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+			if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+			$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					echo "access denied";
+					exit;
+				}
 			}
-		}
 	}
 
 //replace the space with underscore
@@ -102,8 +102,10 @@ else {
 			//echo $e->getMessage();
 		}
 		//$name = $xml->conference['name'];
+		$session_uuid = $xml->conference['uuid'];
 		$member_count = $xml->conference['member-count'];
 		$locked = $xml->conference['locked'];
+		$recording = $xml->conference['recording'];
 
 		$c = 0;
 		$row_style["0"] = "row_style0";
@@ -124,12 +126,30 @@ else {
 		if (permission_exists('conferences_active_record') || permission_exists('conferences_active_lock')) {
 			echo "	<strong>Conference Tools:</strong> \n";
 		}
+
+		$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+		$recording_name = '';
+		if (file_exists($recording_dir.'/'.$row['uuid'].'.wav')) {
+			$recording_name = $session_uuid.".wav";
+		}
+		elseif (file_exists($recording_dir.'/'.$row['uuid'].'.mp3')) {
+			$recording_name = $session_uuid.".mp3";
+		}
+
 		if (permission_exists('conferences_active_record')) {
-			if (file_exists($_SESSION['switch']['recordings']['dir']."/".$conference_name."-tmp.wav")) {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=norecord');\">Stop Record</a>&nbsp;\n";
+			if ($recording == "true") {
+				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&uuid=".$session_uuid."&data=norecord');\">Stop Record</a>&nbsp;\n";
 			}
 			else {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=record');\">Start Record</a>&nbsp;\n";
+				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&uuid=".$session_uuid."&data=record');\">Start Record</a>&nbsp;\n";
+			}
+		}
+		else {
+			if ($recording == "true") {
+				echo "	Recording &nbsp;";
+			}
+			else {
+				echo "	Not Recording &nbsp;";
 			}
 		}
 		if (permission_exists('conferences_active_lock')) {
