@@ -148,6 +148,7 @@ else {
 
 	$rows_per_page = 150;
 	$param = "";
+	if (strlen($app_uuid) > 0) { $param = "&app_uuid=".$app_uuid; }
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
