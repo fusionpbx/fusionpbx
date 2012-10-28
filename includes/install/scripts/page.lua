@@ -122,7 +122,7 @@ if ( session:ready() ) then
 						--this extension is the caller that initated the page
 					else
 						--originate the call
-						cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
+						cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
 						api:executeString(cmd_string);
 						destination_count = destination_count + 1;
 					end
