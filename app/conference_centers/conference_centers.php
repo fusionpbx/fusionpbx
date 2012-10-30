@@ -30,8 +30,14 @@ if (permission_exists('conference_center_view')) {
 	//access granted
 }
 else {
-	echo "access denied";
-	exit;
+	if (permission_exists('conference_room_view')) {
+		//redirect to the conference rooms
+		header( 'Location: conference_rooms.php') ;
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 }
 require_once "includes/header.php";
 require_once "includes/paging.php";
@@ -50,7 +56,7 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference Centers</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_rooms.php'\" value='back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='Rooms' onclick=\"window.location='conference_rooms.php'\" value='Rooms'></td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";

@@ -36,24 +36,6 @@
 		$apps[$x]['menu'][$y]['path'] = '/app/conference_centers/conference_centers.php';
 		$apps[$x]['menu'][$y]['groups'][] = 'admin';
 		$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['menu'][$y]['title']['en-us'] = 'Conference Rooms';
-		$apps[$x]['menu'][$y]['title']['es-mx'] = '';
-		$apps[$x]['menu'][$y]['title']['de'] = '';
-		$apps[$x]['menu'][$y]['title']['de-ch'] = '';
-		$apps[$x]['menu'][$y]['title']['de-at'] = '';
-		$apps[$x]['menu'][$y]['title']['fr'] = '';
-		$apps[$x]['menu'][$y]['title']['fr-ca'] = '';
-		$apps[$x]['menu'][$y]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][$y]['title']['pt-pt'] = '';
-		$apps[$x]['menu'][$y]['title']['pt-br'] = '';
-		$apps[$x]['menu'][$y]['uuid'] = '0daea9eb-5555-4325-be57-e3b6a30d5253';
-		$apps[$x]['menu'][$y]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
-		$apps[$x]['menu'][$y]['category'] = 'internal';
-		$apps[$x]['menu'][$y]['path'] = '/app/conference_centers/conference_rooms.php';
-		$apps[$x]['menu'][$y]['groups'][] = 'user';
-		$apps[$x]['menu'][$y]['groups'][] = 'admin';
-		$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
 
 	//permission details
 		$y = 0;

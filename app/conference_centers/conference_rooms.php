@@ -68,9 +68,6 @@ require_once "includes/paging.php";
 				}
 		}
 	}
-	//echo "<pre>\n";
-	//print_r($conference);
-	//echo "</pre>\n";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -96,7 +93,7 @@ require_once "includes/paging.php";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
-		$prep_statement->execute();
+			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] > 0) {
 				$num_rows = $row['num_rows'];
