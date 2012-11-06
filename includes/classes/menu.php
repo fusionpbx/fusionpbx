@@ -346,7 +346,7 @@
 				$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
 				$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
 				$sql .= "and i.menu_uuid = '".$this->menu_uuid."' ";
-				$sql .= "and i.menu_item_parent_uuid = '$menu_item_uuid' ";				
+				$sql .= "and i.menu_item_parent_uuid = '$menu_item_uuid' ";
 				$sql .= "and i.menu_item_uuid in ";
 				$sql .= "(select menu_item_uuid from v_menu_item_groups where menu_uuid = '".$this->menu_uuid."' ";
 				$sql .= "and ( ";
