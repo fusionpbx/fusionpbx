@@ -280,6 +280,11 @@
 						session:recordFile("/tmp/conference-"..uuid..".wav", max_len_seconds, silence_threshold, silence_secs);
 				end
 
+			--play a message that the conference is being a recorded
+				if (record == "true") then
+					session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
+				end
+
 			--wait for moderator
 				if (wait_mod == "true") then
 					if (conference_exists) then
@@ -371,6 +376,10 @@
 							freeswitch.consoleLog("INFO","conference_session_uuid: " .. conference_session_uuid .. "\n");
 						--record the conference
 							cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recordings_dir.."/archive/"..os.date("%Y").."/"..os.date("%b").."/"..os.date("%d") .."/"..conference_session_uuid..".wav";
+							response = api:executeString(cmd);
+						--play a message that the conference is being a recorded
+							cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
+							freeswitch.consoleLog("notice", "[conference] ".. cmd .."\n");
 							response = api:executeString(cmd);
 					end
 				end
