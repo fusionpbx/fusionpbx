@@ -40,7 +40,7 @@ require_once "includes/paging.php";
 	$switch_cmd = "conference xml_list";
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		
+		//connection to even socket failed
 	}
 	else {
 		$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
@@ -88,8 +88,13 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_conference_rooms ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meeting_users as u ";
+		$sql .= "where r.domain_uuid = '$domain_uuid' ";
+		$sql .= "and r.meeting_uuid = u.meeting_uuid ";
+		if (!if_group("admin") && !if_group("superadmin")) {
+			$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
+		}
+		//$sql .= "and r.meeting_uuid = 'fbd2214a-39db-4a93-bd84-3fd830f63dba' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -112,8 +117,12 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the list
-		$sql = "select * from v_conference_rooms ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql = "select * from v_conference_rooms as r, v_meeting_users as u ";
+		$sql .= "where r.domain_uuid = '$domain_uuid' ";
+		$sql .= "and r.meeting_uuid = u.meeting_uuid ";
+		if (!if_group("admin") && !if_group("superadmin")) {
+			$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
+		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));

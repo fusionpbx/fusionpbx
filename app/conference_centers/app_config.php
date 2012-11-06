@@ -34,15 +34,16 @@
 		$apps[$x]['menu'][$y]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][$y]['category'] = 'internal';
 		$apps[$x]['menu'][$y]['path'] = '/app/conference_centers/conference_centers.php';
-		$apps[$x]['menu'][$y]['groups'][] = 'admin';
 		$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['menu'][$y]['groups'][] = 'admin';
+		$apps[$x]['menu'][$y]['groups'][] = 'user';
 
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_center_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_center_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -51,7 +52,6 @@
 		$apps[$x]['permissions'][$y]['name'] = 'conference_center_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_center_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -60,6 +60,7 @@
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -68,6 +69,7 @@
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -76,6 +78,7 @@
 		$apps[$x]['permissions'][$y]['name'] = 'conference_session_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 
 	//schema details
