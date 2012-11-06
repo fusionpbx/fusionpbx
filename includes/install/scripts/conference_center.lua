@@ -354,7 +354,7 @@
 					--set as the moderator
 						flags = flags .. "|moderator";
 					--when the moderator leaves end the conference
-						flags = flags .. "|endconf";
+						--flags = flags .. "|endconf";
 					--set the moderator controls
 						session:execute("set","conference_controls=moderator");
 				end
