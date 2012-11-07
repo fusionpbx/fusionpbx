@@ -33,8 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
+//additional includes
+	require_once "includes/header.php";
+	require_once "includes/paging.php";
 
 //if the $_GET array exists then process it
 	if (count($_GET) > 0) {
@@ -116,7 +124,7 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>Conference Rooms</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title']."</b></td>\n";
 	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -175,19 +183,19 @@ require_once "includes/paging.php";
 
 	//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
 	//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
-	echo th_order_by('profile', 'Profile', $order_by, $order);
-	echo th_order_by('record', 'Record', $order_by, $order);
+	echo th_order_by('profile', $text['label-profile'], $order_by, $order);
+	echo th_order_by('record', $text['label-record'], $order_by, $order);
 	//echo th_order_by('max_members', 'Max', $order_by, $order);
-	echo th_order_by('wait_mod', 'Wait Moderator', $order_by, $order);
-	echo th_order_by('announce', 'Announce', $order_by, $order);
+	echo th_order_by('wait_mod', $text['label-wait-moderator'], $order_by, $order);
+	echo th_order_by('announce', $text['label-announce'], $order_by, $order);
 	//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order);
-	echo th_order_by('mute', 'Mute', $order_by, $order);
+	echo th_order_by('mute', $text['label-mute'], $order_by, $order);
 	//echo th_order_by('created', 'Created', $order_by, $order);
 	//echo th_order_by('created_by', 'Created By', $order_by, $order);
-	echo th_order_by('enabled', 'Enabled', $order_by, $order);
-	echo "<th>Count</th>\n";
-	echo "<th>Tools</th>\n";
-	echo th_order_by('description', 'Description', $order_by, $order);
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
+	echo "<th>".$text['label-count']."</th>\n";
+	echo "<th>".$text['label-tools']."</th>\n";
+	echo th_order_by('description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42' nowrap='nowrap'>\n";
 	if (permission_exists('conference_room_add')) {
 		echo "	<a href='conference_room_edit.php' alt='add'>$v_link_label_add</a>\n";
@@ -207,29 +215,29 @@ require_once "includes/paging.php";
 			echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."'>";
 			if ($row['record'] == "true") {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=false\">".$row['record']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=false\">".$text['label-true']."</a>";
 			}
 			else {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=true\">".$row['record']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=true\">".$text['label-false']."</a>";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['max_members']."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."'>";
 			if ($row['wait_mod'] == "true") {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&wait_mod=false\">".$row['wait_mod']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&wait_mod=false\">".$text['label-true']."</a>";
 			}
 			else {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&wait_mod=true\">".$row['wait_mod']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&wait_mod=true\">".$text['label-false']."</a>";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."'>";
 			if ($row['announce'] == "true") {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&announce=false\">".$row['announce']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&announce=false\">".$text['label-true']."</a>";
 			}
 			else {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&announce=true\">".$row['announce']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&announce=true\">".$text['label-false']."</a>";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
@@ -237,10 +245,10 @@ require_once "includes/paging.php";
 			//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['enter_sound']."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."'>";
 			if ($row['mute'] == "true") {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=false\">".$row['mute']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=false\">".$text['label-true']."</a>";
 			}
 			else {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=true\">".$row['mute']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=true\">".$text['label-false']."</a>";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
@@ -248,10 +256,10 @@ require_once "includes/paging.php";
 			//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['created_by']."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."'>";
 			if ($row['enabled'] == "true") {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=false\">".$row['enabled']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=false\">".$text['label-true']."</a>";
 			}
 			else {
-				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=true\">".$row['enabled']."</a>";
+				echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=true\">".$text['label-false']."</a>";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
@@ -262,8 +270,8 @@ require_once "includes/paging.php";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>0</td>\n";
 			}
 			echo "	<td valign='middle' class='".$row_style[$c]."'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$row['meeting_uuid']."'>View</a>&nbsp;\n";
-			echo "		<a href='conference_sessions.php?id=".$row['meeting_uuid']."'>Sessions</a>\n";
+			echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$row['meeting_uuid']."'>".$text['label-view']."</a>&nbsp;\n";
+			echo "		<a href='conference_sessions.php?id=".$row['meeting_uuid']."'>".$text['label-sessions']."</a>\n";
 			
 			echo "	</td>\n";
 			echo "	<td valign='middle' class='row_stylebg' width='20%' nowrap='nowrap'>".$row['description']."&nbsp;</td>\n";
