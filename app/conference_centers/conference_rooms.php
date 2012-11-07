@@ -124,7 +124,7 @@ else {
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title']."</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
 	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";

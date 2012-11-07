@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -341,7 +347,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_room_edit.php?id=$conference_room_uuid\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['confirm-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -401,19 +407,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference Room</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	if (strlen($meeting_uuid) > 0) {
-		echo "	<input type='button' class='btn' name='' alt='Session' onclick=\"window.location='conference_sessions.php?id=".$meeting_uuid."'\" value='Session'>\n";
-		echo "	<input type='button' class='btn' name='' alt='View' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='View'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".$meeting_uuid."'\" value='".$text['button-sessions']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='".$text['button-view']."'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_rooms.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Conference Name:\n";
+	echo "	".$text['label-conference-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_uuid'>\n";
@@ -441,7 +447,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>Users:</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-users'].":</td>";
 	echo "		<td class='vtable' align='left'>";
 	if ($action == "update") {
 		echo "			<table border='0' style='width : 235px;'>\n";
@@ -458,12 +464,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".$field['username']."</td>\n";
 			echo "				<td style='width : 25px;' align='right'>\n";
-			echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
 		echo "			</table>\n";
 	}
+
 	echo "			<br />\n";
 	$sql = "SELECT * FROM v_users ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -478,17 +485,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "			</select>";
 	if ($action == "update") {
-		echo "			<input type=\"submit\" class='btn' value=\"Add\">\n";
+		echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 	}
 	unset($sql, $result);
 	echo "			<br>\n";
-	echo "			Assign the user to the conference room.\n";
+	echo "			".$text['description-users']."\n";
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>PIN Numbers:</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-member-pin'].":</td>";
 	echo "		<td class='vtable' align='left'>";
 	if ($action == "update") {
 		echo "			<table border='0' style='width : 235px;'>\n";
@@ -507,9 +514,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".$member_pin."</td>\n";
-			echo "				<td class='vtable'>".$field['member_type']."</td>\n";
+			echo "				<td class='vtable'>";
+			if ($field['member_type'] == "moderator") {
+				echo $text['label-member-type-moderator'];
+			}
+			else {
+				echo $text['label-member-type-participant'];
+			}
+			echo "</td>\n";
 			echo "				<td style='width : 25px;' align='right'>\n";
-			echo "					<a href='conference_room_edit.php?meeting_pin_uuid=".$field['meeting_pin_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "					<a href='conference_room_edit.php?meeting_pin_uuid=".$field['meeting_pin_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
@@ -523,36 +537,36 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "				</td>\n";
 	echo "				<td>\n";
 	echo "					<select class='formfld' name='member_type' style='width : 100px;'>\n";
-	if ($mute == "participant") { 
-		echo "				<option value='participant' selected='selected'>participant</option>\n";
+	if ($member_type == "participant") {
+		echo "				<option value='participant' selected='selected'>".$text['label-member-type-participant']."</option>\n";
 	}
 	else {
-		echo "				<option value='participant'>participant</option>\n";
+		echo "				<option value='participant'>".$text['label-member-type-participant']."</option>\n";
 	}
-	if ($mute == "moderator") { 
-		echo "				<option value='moderator' selected='selected'>moderator</option>\n";
+	if ($member_type == "moderator") { 
+		echo "				<option value='moderator' selected='selected'>".$text['label-member-type-moderator']."</option>\n";
 	}
 	else {
-		echo "				<option value='moderator'>moderator</option>\n";
+		echo "				<option value='moderator'>".$text['label-member-type-moderator']."</option>\n";
 	}
 	echo "					</select>\n";
 	echo "				</td>\n";
 	if ($action == "update") {
 		echo "				<td>\n";
-		echo "					<input type=\"submit\" class='btn' value=\"Add\">\n";
+		echo "					<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 		echo "				</td>\n";
 	}
 	echo "				</tr>\n";
 	echo "			</table>\n";
 	unset($sql, $result);
-	echo "			Pin numbers for the moderators or participants.\n";
+	echo "			".$text['description-member-pin'].".\n";
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Profile:\n";
+	echo "	".$text['label-profile'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='profile'>\n";
@@ -564,28 +578,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Conference Profile is a collection of settings for the conference center.\n";
+	echo $text['description-profile']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Record:\n";
+	echo "	".$text['label-record'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='record'>\n";
 	echo "	<option value=''></option>\n";
 	if ($record == "true") { 
-		echo "	<option value='true' selected='selected'>true</option>\n";
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($record == "false") { 
-		echo "	<option value='false' selected='selected'>false</option>\n";
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -595,7 +609,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Max Members:\n";
+	echo "	".$text['label-max-members'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='max_members' maxlength='255' value='$max_members'>\n";
@@ -606,22 +620,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Wait for Moderator:\n";
+	echo "	".$text['label-wait-for-moderator'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='wait_mod'>\n";
 	echo "	<option value=''></option>\n";
 	if ($announce == "true") { 
-		echo "	<option value='true' selected='selected'>true</option>\n";
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($announce == "false") { 
-		echo "	<option value='false' selected='selected'>false</option>\n";
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -631,22 +645,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Announce:\n";
+	echo "	".$text['label-announce'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='announce'>\n";
 	echo "	<option value=''></option>\n";
 	if ($announce == "true") { 
-		echo "	<option value='true' selected='selected'>true</option>\n";
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($announce == "false") { 
-		echo "	<option value='false' selected='selected'>false</option>\n";
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -656,7 +670,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Enter Sound:\n";
+	echo "	".$text['label-enter-sound'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='enter_sound' maxlength='255' value=\"$enter_sound\">\n";
@@ -667,22 +681,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Mute:\n";
+	echo "	".$text['label-mute'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='mute'>\n";
 	echo "	<option value=''></option>\n";
 	if ($mute == "true") { 
-		echo "	<option value='true' selected='selected'>true</option>\n";
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($mute == "false") { 
-		echo "	<option value='false' selected='selected'>false</option>\n";
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -723,22 +737,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Enabled:\n";
+	echo "	".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='enabled'>\n";
 	echo "	<option value=''></option>\n";
 	if ($enabled == "true") { 
-		echo "	<option value='true' selected='selected'>true</option>\n";
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($enabled == "false") { 
-		echo "	<option value='false' selected='selected'>false</option>\n";
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -748,7 +762,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"$description\">\n";
@@ -763,7 +777,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
 		echo "				<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
