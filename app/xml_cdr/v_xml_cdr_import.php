@@ -211,9 +211,11 @@ function process_xml_cdr($db, $leg, $xml_string) {
 		}
 
 	//insert xml_cdr into the db
-		$database->add();
-		if ($debug) {
-			echo $database->sql."\n";
+		if (strlen($start_stamp) > 0) {
+			$database->add();
+			if ($debug) {
+				echo $database->sql."\n";
+			}
 		}
 
 	//insert the values
