@@ -24,13 +24,14 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
---ser the defaults
-	search_type = "last_name";
+--set the defaults
 	digit_max_length = 3;
 	timeout_pin = 5000;
 	timeout_transfer = 5000;
 	max_tries = 3;
 	digit_timeout = 5000;
+	search_limit = 4;
+	search_count = 0;
 
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
@@ -126,43 +127,8 @@
 		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
 	end
 
---define the call back function
-	function dtmf_callback(s, type, obj, arg)
-		if (arg) then
-			--io.write("type: " .. type .. "\n" .. "arg: " .. arg .. "\n");
-		else
-			--io.write("type: " .. type .. "\n");
-		end
-		if (type == "dtmf") then
-			--io.write("digit: [" .. obj['digit'] .. "]\nduration: [" .. obj['duration'] .. "]\n");
-				--console_log( "info", "digit: "..obj['digit'].."\n" );
-				if ( obj['digit'] == "#" ) then
-					--console_log( "info", "detected pound sign.\n" );
-					exit = true;
-					return( false );
-				end
-				if ( obj['digit'] == "*" ) then
-					--console_log( "info", "detected pound sign.\n" );
-					exit = true;
-					return( false );
-				end
-				if (dtmf_digits) then
-					dtmf_digits = dtmf_digits .. obj['digit'];
-				else
-					dtmf_digits = obj['digit'];
-				end
-				if ( string.len(dtmf_digits) >= digit_max_length ) then
-					exit = true;
-					return( false );
-				end
-				return( true );
-		else
-			--io.write(obj:serialize("xml"));
-		end
-	end
-
---define prompt_select_entry function 
-	function prompt_select_entry()
+--define select_entry function 
+	function select_entry()
 		dtmf_digits = "";
 		digit_timeout = "500";
 		max_digits = 1;
@@ -178,8 +144,8 @@
 		return dtmf_digits;
 	end
 
---define prompt_select_entry function 
-	function prompt_for_name(search_type)
+--define prompt_for_name function 
+	function prompt_for_name()
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
 		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-enter_person_first_or_last.wav", "", "\\d+");
@@ -187,158 +153,119 @@
 	end
 
 --define the directory_search function
-function directory_search(search_type)
+	function directory_search()
 
-	--clear values
-		dtmf_search = 0;
-		--dtmf_digits = '';
+		--get the digits for the name
+			dtmf_digits = prompt_for_name();
 
-	--get the digits for the name
-		dtmf_digits = prompt_for_name(search_type);
-		dtmf_search = dtmf_digits;
-		freeswitch.consoleLog("notice", "[directory] dtmf_digits: " .. dtmf_digits .. "\n");
+		--show the dtmf digits 
+			freeswitch.consoleLog("notice", "[directory] first 3 letters of first or last name: " .. dtmf_digits .. "\n");
 
-	--toggle the search type
-		if (dtmf_search == "1") then
-			--console_log( "info", "press 1 detected: " .. dtmf_digits .. "\n" );
-			--console_log( "info", "press 1 detected: " .. search_type .. "\n" );
-			if (search_type == "last_name") then
-				--console_log( "info", "press 1 detected last_name: " .. search_type .. "\n" );
-				search_type = "first_name";
-			else
-				--console_log( "info", "press 1 detected first_name: " .. search_type .. "\n" );
-				search_type = "last_name";
-			end
-			dtmf_search = "";
-			dtmf_digits = "";
-			directory_search(search_type);
-			--return;
-		end
+		--loop through the extensions to find matches
+			search_dtmf_digits = dtmf_digits;
+			found = false;
+			for key,row in pairs(directory) do
 
-	--show the dtmf digits 
-		freeswitch.consoleLog("notice", "[directory] first 3 letters of first or last name: " .. dtmf_digits .. "\n");
-
-	--notes
-		--session:execute("say", "en name_spelled pronounced mark");
-		--<action application="say" data="en name_spelled iterated ${destination_number}"/>
-		--session:execute("say", "en number iterated 12345");
-		--session:execute("say", "en number pronounced 1001");
-		--session:execute("say", "en short_date_time pronounced [timestamp]");
-		--session:execute("say", "en CURRENT_TIME pronounced CURRENT_TIME");
-		--session:execute("say", "en CURRENT_DATE pronounced CURRENT_DATE");
-		--session:execute("say", "en CURRENT_DATE_TIME pronounced CURRENT_DATE_TIME");
-
-	--get the extensions from the database
-		sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true'); ";
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
-		end
-		x = 1;
-		directory = {}
-		dbh:query(sql, function(row)
-			--show all key value pairs
-				--for key, val in pairs(row) do
-				--	freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. val .. "\n");
+				--if (row.first_name and row.last_name) then
+				--	freeswitch.consoleLog("notice", "[directory] ext: " .. row.extension .. " context " .. row.context .. " name " .. row.first_name .. " "..row.first_name_digits.." ".. row.last_name .. " "..row.last_name_digits.." "..row.directory_exten_visible.."\n");
+				--else
+				--	freeswitch.consoleLog("notice", "[directory] ext: " .. row.extension .. " context " .. row.context .. "\n");
 				--end
-			--add the entire row to the directory table array
-				--directory[x] = row;
-			--variables
-				effective_caller_id_name = row.effective_caller_id_name;
-				if (row.directory_full_name) then
-					name = row.directory_full_name;
-				else
-					if (row.directory_full_name) then
-						name = row.effective_caller_id_name;
+
+				if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
+					if (row.first_name and row.last_name) then
+						--announce the first and last names
+							session:execute("say", "en name_spelled pronounced "..row.first_name);
+							--session:execute("sleep", "500");
+							session:execute("say", "en name_spelled pronounced "..row.last_name);
+
+						--announce the extension number
+							if (row.directory_exten_visible == "false") then
+								--invisible extension number
+							else
+								session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-at_extension.wav");
+								session:execute("say", "en number pronounced "..row.extension);
+							end
+
+						--select this entry press 1
+							dtmf_digits = select_entry();
+
+						--if 1 is pressed then transfer the call
+							if (dtmf_digits == "1") then
+								session:execute("transfer", row.extension.." XML "..row.context);
+							end
 					end
+					found = true;
 				end
-				if (name) then
-					name_table = explode(" ",name);
-					first_name = name_table[1];
-					last_name = name_table[2];
-					if (first_name) then
-						if (string.len(first_name) > 0) then
-							--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
-							first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1))..dialpad_to_digit(string.sub(first_name, 2, 2))..dialpad_to_digit(string.sub(first_name, 3, 3));
-						end
-					end
-					if (last_name) then
-						if (string.len(last_name) > 0) then
-							--freeswitch.consoleLog("notice", "[directory] last_name: --" .. last_name .. "--\n");
-							last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1))..dialpad_to_digit(string.sub(last_name, 2, 2))..dialpad_to_digit(string.sub(last_name, 3, 3));
-						end
-					end
-
+			end
+			if (found ~= true) then
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-no_matching_results.wav");
+				search_count = search_count + 1;
+				if (search_count < search_limit) then 
+					directory_search();
 				end
-			--add the row to the array
-				table.insert(directory, {extension=row.extension,context=row.user_context,first_name=name_table[1],last_name=name_table[2],first_name_digits=first_name_digits,last_name_digits=last_name_digits,directory_exten_visible=row.directory_exten_visible});
-
-			--increment x
-				x = x + 1;
-		end);
-
-	--show the results
-		for key,row in ipairs(directory) do
-			if (row.first_name and row.last_name) then
-				freeswitch.consoleLog("notice", "[directory] mmm3 ext: " .. row.extension .. " context " .. row.context .. " name " .. row.first_name .. " "..row.first_name_digits.." ".. row.last_name .. " "..row.last_name_digits.." "..row.directory_exten_visible.."\n");
-			else
-				freeswitch.consoleLog("notice", "[directory] mmm3 ext: " .. row.extension .. " context " .. row.context .. "\n");
 			end
-		end
-
-	--session:execute("set", "tts_engine=flite");
-	--session:execute("set", "tts_voice=rms");  --rms --kal --awb --slt
-	--session:execute("set", "playback_terminators=#");
-	--session:speak("flite","kal","Thanks for.. calling");
-
-	search_dtmf_digits = dtmf_digits;
-	for key,row in pairs(directory) do
-
-		--if (row.first_name and row.last_name) then
-		--	freeswitch.consoleLog("notice", "[directory] mmm3 ext: " .. row.extension .. " context " .. row.context .. " name " .. row.first_name .. " "..row.first_name_digits.." ".. row.last_name .. " "..row.last_name_digits.." "..row.directory_exten_visible.."\n");
-		--else
-		--	freeswitch.consoleLog("notice", "[directory] mmm3 ext: " .. row.extension .. " context " .. row.context .. "\n");
-		--end
-
-		if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
-
-			--say first name and last name is at extension 1001
-			--session:execute("speak", row.first_name);
-			--session:execute("speak", row.last_name);
-			if (row.first_name and row.last_name) then
-				--announce the first and last names
-					--session:execute("sleep", "2000");
-					session:execute("say", "en name_spelled pronounced "..row.first_name);
-					--session:execute("sleep", "500");
-					session:execute("say", "en name_spelled pronounced "..row.last_name);
-
-				--announce the extension number
-					if (row.directory_exten_visible == "false") then
-						--invisible extension number
-					else
-						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-at_extension.wav");
-						session:execute("say", "en number pronounced "..row.extension);
-					end
-
-				--select this entry press 1
-					dtmf_digits = prompt_select_entry();
-					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = prompt_select_entry();
-					end
-
-				--if 1 is pressed then transfer the call
-					if (dtmf_digits == "1") then
-						--console_log( "info", "directory: call transfered to: " .. row.extension .. "\n" );
-						session:execute("transfer", row.extension.." XML "..row.context);
-					end
-			end
-		end
 	end
-end
 
-if ( session:ready() ) then
-	--call the directory search function
-		directory_search(search_type);
+--get the extensions from the database
+	sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' AND enabled = 'true' AND (directory_visible is null or directory_visible = 'true'); ";
+	if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[directory] SQL: " .. sql .. "\n");
+	end
+	x = 1;
+	directory = {}
+	dbh:query(sql, function(row)
+		--show all key value pairs
+			--for key, val in pairs(row) do
+			--	freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. val .. "\n");
+			--end
+		--add the entire row to the directory table array
+			--directory[x] = row;
+		--variables
+			effective_caller_id_name = row.effective_caller_id_name;
+			if (row.directory_full_name) then
+				name = row.directory_full_name;
+			else
+				if (row.directory_full_name) then
+					name = row.effective_caller_id_name;
+				end
+			end
+			if (name) then
+				name_table = explode(" ",name);
+				first_name = name_table[1];
+				last_name = name_table[2];
+				if (first_name) then
+					if (string.len(first_name) > 0) then
+						--freeswitch.consoleLog("notice", "[directory] first_name: --" .. first_name .. "--\n");
+						first_name_digits = dialpad_to_digit(string.sub(first_name, 1, 1))..dialpad_to_digit(string.sub(first_name, 2, 2))..dialpad_to_digit(string.sub(first_name, 3, 3));
+					end
+				end
+				if (last_name) then
+					if (string.len(last_name) > 0) then
+						--freeswitch.consoleLog("notice", "[directory] last_name: --" .. last_name .. "--\n");
+						last_name_digits = dialpad_to_digit(string.sub(last_name, 1, 1))..dialpad_to_digit(string.sub(last_name, 2, 2))..dialpad_to_digit(string.sub(last_name, 3, 3));
+					end
+				end
 
-	--end the call
-		--session:hangup("NORMAL_CLEARING");
-end
+			end
+		--add the row to the array
+			table.insert(directory, {extension=row.extension,context=row.user_context,first_name=name_table[1],last_name=name_table[2],first_name_digits=first_name_digits,last_name_digits=last_name_digits,directory_exten_visible=row.directory_exten_visible});
+
+		--increment x
+			x = x + 1;
+	end);
+
+--call the directory search function
+	if (session:ready()) then
+		directory_search();
+	end
+
+--notes
+	--session:execute("say", "en name_spelled pronounced mark");
+	--<action application="say" data="en name_spelled iterated ${destination_number}"/>
+	--session:execute("say", "en number iterated 12345");
+	--session:execute("say", "en number pronounced 1001");
+	--session:execute("say", "en short_date_time pronounced [timestamp]");
+	--session:execute("say", "en CURRENT_TIME pronounced CURRENT_TIME");
+	--session:execute("say", "en CURRENT_DATE pronounced CURRENT_DATE");
+	--session:execute("say", "en CURRENT_DATE_TIME pronounced CURRENT_DATE_TIME");
