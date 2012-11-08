@@ -180,77 +180,9 @@
 
 --define prompt_select_entry function 
 	function prompt_for_name(search_type)
-		--dtmf_digits = "";
-		min_digits=0; max_digits=3; max_tries = 1; digit_timeout = "500";
-		--if (search_type == "last_name") then
-			--dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", "phrase:directory_intro:last_name:en", "", "\\d+");
-			--dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-enter_person.wav", "", "\\d+");
-			--if (string.len(dtmf_digits) > 0) then
-			--	dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-			--end
-			--if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-enter_person_first_or_last.wav", "", "\\d+");
-				if (string.len(dtmf_digits) > 0) then
-					dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-				end
-			--end
-			--if (string.len(dtmf_digits) == 0) then
-			--	dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-last_name.wav", "", "\\d+");
-			--	if (string.len(dtmf_digits) > 0) then
-			--		dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-			--	end
-			--end
-			--if (string.len(dtmf_digits) == 0) then
-			--	dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-to_search_by.wav", "", "\\d+");
-			--	if (string.len(dtmf_digits) > 0) then
-			--		dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-			--	end
-			--end
-			--if (string.len(dtmf_digits) == 0) then
-			--	dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-first_name.wav", "", "\\d+");
-			--	if (string.len(dtmf_digits) > 0) then
-			--		dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-			--	end
-			--end
-		--end
-		--if (search_type == "first_name") then
-		--	--dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", "phrase:directory_intro:first_name:en", "", "\\d+");
-		--	dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-enter_person.wav", "", "\\d+");
-		--	if (string.len(dtmf_digits) > 0) then
-		--		dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-		--	end
-		--	if (string.len(dtmf_digits) == 0) then
-		--		dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-first_name.wav", "", "\\d+");
-		--		if (string.len(dtmf_digits) > 0) then
-		--			dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-		--		end
-		--	end
-		--	if (string.len(dtmf_digits) == 0) then
-		--		dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-to_search_by.wav", "", "\\d+");
-		--		if (string.len(dtmf_digits) > 0) then
-		--			dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-		--		end
-		--	end
-		--	if (string.len(dtmf_digits) == 0) then
-		--		dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-last_name.wav", "", "\\d+");
-		--		if (string.len(dtmf_digits) > 0) then
-		--			dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-		--		end
-		--	end
-		--end
-		--if (string.len(dtmf_digits) == 0) then
-		--	dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-press.wav", "", "\\d+");
-		--	if (string.len(dtmf_digits) > 0) then
-		--		dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-		--	end
-		--end
-		--if (string.len(dtmf_digits) == 0) then
-		--	digit_timeout = "3000";
-		--	dtmf_digits = session:playAndGetDigits(min_digits, 1, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/digits/1.wav", "", "\\d+");
-		--	if (string.len(dtmf_digits) > 0) then
-		--		dtmf_digits = dtmf_digits .. session:getDigits(max_digits-1, "#", 5000);
-		--	end
-		--end
+		dtmf_digits = "";
+		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
+		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-enter_person_first_or_last.wav", "", "\\d+");
 		return dtmf_digits;
 	end
 
@@ -259,13 +191,10 @@ function directory_search(search_type)
 
 	--clear values
 		dtmf_search = 0;
-		dtmf_digits = '';
+		--dtmf_digits = '';
 
 	--get the digits for the name
 		dtmf_digits = prompt_for_name(search_type);
-		if (string.len(dtmf_digits) > 0) then
-			dtmf_digits = prompt_for_name(search_type);
-		end
 		dtmf_search = dtmf_digits;
 		freeswitch.consoleLog("notice", "[directory] dtmf_digits: " .. dtmf_digits .. "\n");
 
