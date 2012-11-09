@@ -276,30 +276,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Captcha:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='virtual_table_captcha'>\n";
-	echo "	<option value=''></option>\n";
-	if ($virtual_table_captcha == "yes") { 
-		echo "	<option value='yes' SELECTED >yes</option>\n";
-	}
-	else {
-		echo "	<option value='yes'>yes</option>\n";
-	}
-	if ($virtual_table_captcha == "no") { 
-		echo "	<option value='no' SELECTED >no</option>\n";
-	}
-	else {
-		echo "	<option value='no'>no</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "Choose whether to require captcha.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	//echo "<tr>\n";
+	//echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	//echo "	Captcha:\n";
+	//echo "</td>\n";
+	//echo "<td class='vtable' align='left'>\n";
+	//echo "	<select class='formfld' name='virtual_table_captcha'>\n";
+	//echo "	<option value=''></option>\n";
+	//if ($virtual_table_captcha == "yes") { 
+	//	echo "	<option value='yes' SELECTED >yes</option>\n";
+	//}
+	//else {
+	//	echo "	<option value='yes'>yes</option>\n";
+	//}
+	//if ($virtual_table_captcha == "no") { 
+	//	echo "	<option value='no' SELECTED >no</option>\n";
+	//}
+	//else {
+	//	echo "	<option value='no'>no</option>\n";
+	//}
+	//echo "	</select>\n";
+	//echo "<br />\n";
+	//echo "Choose whether to require captcha.\n";
+	//echo "</td>\n";
+	//echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -344,6 +344,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='virtual_table_uuid' value='$virtual_table_uuid'>\n";
 	}
+	echo "				<input type='hidden' name='virtual_table_captcha' value='$virtual_table_captcha'>\n";
 	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
