@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '6be94b46-2126-947f-2365-0bea23651a6b';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/virtual_tables/v_virtual_tables.php';
+		$apps[$x]['menu'][0]['path'] = '/app/virtual_tables/virtual_tables.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
