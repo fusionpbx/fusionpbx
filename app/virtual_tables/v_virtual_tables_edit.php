@@ -122,7 +122,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_tables.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_tables.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -150,7 +150,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_tables.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_tables.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -204,11 +204,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'>\n";
 	if (strlen($virtual_table_uuid) > 0) {
-		echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='v_virtual_table_data_view.php?id=".$row[virtual_table_uuid]."'\" value='View'>&nbsp;&nbsp;\n";
-		echo "		<input type='button' class='btn' name='' alt='import' onclick=\"window.location='v_virtual_tables_import.php?id=".$row[virtual_table_uuid]."'\" value='Import'>&nbsp;&nbsp;\n";
+		echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='virtual_table_data_view.php?id=".$row[virtual_table_uuid]."'\" value='View'>&nbsp;&nbsp;\n";
+		echo "		<input type='button' class='btn' name='' alt='import' onclick=\"window.location='virtual_tables_import.php?id=".$row[virtual_table_uuid]."'\" value='Import'>&nbsp;&nbsp;\n";
 	}
 	include "export/index.php";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_tables.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_tables.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -351,7 +351,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 	if ($action == "update") {
-		require "v_virtual_table_fields.php";
+		require "virtual_table_fields.php";
 	}
 
 	echo "	</td>";

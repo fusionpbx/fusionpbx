@@ -53,7 +53,7 @@ if (strlen($id)>0) {
 }
 
 //redirect the user
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_tables.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_tables.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

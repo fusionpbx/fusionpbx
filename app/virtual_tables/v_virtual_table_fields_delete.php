@@ -53,7 +53,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_tables_edit.php?id=$virtual_table_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_tables_edit.php?id=$virtual_table_uuid\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

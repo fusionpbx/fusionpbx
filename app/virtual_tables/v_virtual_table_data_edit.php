@@ -350,10 +350,10 @@ else {
 
 		//set the meta redirect
 			if (strlen($virtual_data_parent_row_uuid) == 0) {
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_table_data_edit.php?id=$virtual_table_uuid&virtual_data_row_uuid=$virtual_data_row_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_table_data_edit.php?id=$virtual_table_uuid&virtual_data_row_uuid=$virtual_data_row_uuid\">\n";
 			}
 			else {
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid\">\n";
 			}
 
 		//show a message to the user before the redirect
@@ -490,8 +490,8 @@ else {
 	echo "	</b>\n";
 	echo "	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 	if ($action == "update" && permission_exists('virtual_tables_data_edit')) {
-		echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid'\" value='Add'>\n";
-		//echo "	<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Do you really want to delete this?')){window.location='v_virtual_table_data_delete.php?id=".$virtual_table_uuid."&?virtual_data_row_uuid=".$virtual_data_row_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid';}\" value='Delete'>\n";
+		echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid'\" value='Add'>\n";
+		//echo "	<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Do you really want to delete this?')){window.location='virtual_table_data_delete.php?id=".$virtual_table_uuid."&?virtual_data_row_uuid=".$virtual_data_row_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid';}\" value='Delete'>\n";
 	}
 	echo "			<br />\n";
 	echo "			$virtual_table_description\n";
@@ -503,28 +503,28 @@ else {
 		echo "<td align='center' valign='top' nowrap='nowrap'>\n";
 
 		if ($action == "update" && permission_exists('virtual_tables_data_edit')) {
-			//echo "		<input type='button' class='btn' name='' alt='first' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$first_virtual_data_row_uuid."'\" value='First'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='first' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$first_virtual_data_row_uuid."'\" value='First'>\n";
 			if (strlen($previous_virtual_data_row_uuid) == 0) {
 				echo "		<input type='button' class='btn' name='' alt='prev' disabled='disabled' value='Prev'>\n";
 			}
 			else {
-				echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$previous_virtual_data_row_uuid."&search_all=$search_all&n=".($n-1)."'\" value='Prev ".$previous_record_id."'>\n";
+				echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$previous_virtual_data_row_uuid."&search_all=$search_all&n=".($n-1)."'\" value='Prev ".$previous_record_id."'>\n";
 			}
 			echo "		<input type='button' class='btn' name='' alt='prev' value='".$record_number_array[$virtual_data_row_uuid]." of $total_records'>\n";
 			if (strlen($next_virtual_data_row_uuid) == 0) {
 				echo "		<input type='button' class='btn' name='' alt='next' disabled='disabled' value='Next'>\n";
 			}
 			else {
-				echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$next_virtual_data_row_uuid."&search_all=$search_all&n=".($n+1)."'\" value='Next ".$next_record_id."'>\n";
+				echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$next_virtual_data_row_uuid."&search_all=$search_all&n=".($n+1)."'\" value='Next ".$next_record_id."'>\n";
 			}
-			//echo "		<input type='button' class='btn' name='' alt='last' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$last_virtual_data_row_uuid."'\" value='Last'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='last' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_uuid&virtual_data_row_uuid=".$last_virtual_data_row_uuid."'\" value='Last'>\n";
 		}
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "</td>\n";
 
-		echo "<form method='GET' name='frm_search' action='v_virtual_table_data_edit.php'>\n";
+		echo "<form method='GET' name='frm_search' action='virtual_table_data_edit.php'>\n";
 		echo "<td width='45%' align='right' valign='top' nowrap='nowrap'>\n";
 		echo "	<input type='hidden' name='virtual_table_uuid' value='$virtual_table_uuid'>\n";
 		//echo "	<input type='hidden' name='id' value='$virtual_table_uuid'>\n";
@@ -535,14 +535,14 @@ else {
 		echo "</td>\n";
 		echo "</form>\n";
 		echo "<td width='5%' align='right' valign='top' nowrap='nowrap'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_table_data_view.php?id=$virtual_table_uuid'\" value='Back'>\n";
+		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_table_data_view.php?id=$virtual_table_uuid'\" value='Back'>\n";
 		echo "</td>\n";
 	}
 	else {
 		echo "	<td width='50%' align='right'>\n";
-		//echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid'\" value='Prev'>\n";
-		//echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid'\" value='Next'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid'\" value='Back'>\n";
+		//echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid'\" value='Prev'>\n";
+		//echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid'\" value='Next'>\n";
+		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid'\" value='Back'>\n";
 		echo "	</td>\n";
 	}
 	echo "  </tr>\n";
@@ -967,10 +967,10 @@ else {
 				$_GET["virtual_data_parent_row_uuid"] = $virtual_data_row_uuid;
 
 				//show button
-				//echo "<input type='button' class='btn' name='' alt='".$virtual_table_label."' onclick=\"window.location='v_virtual_table_data_view.php?id=".$row["virtual_table_uuid"]."&virtual_data_parent_row_uuid=".$virtual_data_row_uuid."'\" value='".$virtual_table_label."'>\n";
+				//echo "<input type='button' class='btn' name='' alt='".$virtual_table_label."' onclick=\"window.location='virtual_table_data_view.php?id=".$row["virtual_table_uuid"]."&virtual_data_parent_row_uuid=".$virtual_data_row_uuid."'\" value='".$virtual_table_label."'>\n";
 
 				//show list
-				require_once "v_virtual_table_data_view.php";
+				require_once "virtual_table_data_view.php";
 				echo "	</td>";
 				echo "	</tr>";
 			}

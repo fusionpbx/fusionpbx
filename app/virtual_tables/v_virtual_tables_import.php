@@ -205,7 +205,7 @@ if (count($_POST)>0) {
 			echo "<tr>\n";
 			echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import Results</b></td>\n";
 			echo "<td width='70%' align='right' valign='top'>\n";
-			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
+			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
 			echo "	<br /><br />\n";
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -301,7 +301,7 @@ if (count($_POST)>0) {
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
+	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
 	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";

@@ -90,7 +90,7 @@ $order = $_GET["order"];
 	echo th_order_by('virtual_field_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('virtual_tables_view')) {
-		echo "	<a href='v_virtual_table_fields_edit.php?virtual_table_uuid=".$virtual_table_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='virtual_table_fields_edit.php?virtual_table_uuid=".$virtual_table_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -108,10 +108,10 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('virtual_tables_edit')) {
-				echo "		<a href='v_virtual_table_fields_edit.php?virtual_table_uuid=".$row['virtual_table_uuid']."&id=".$row['virtual_table_field_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='virtual_table_fields_edit.php?virtual_table_uuid=".$row['virtual_table_uuid']."&id=".$row['virtual_table_field_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('virtual_tables_delete')) {
-				echo "		<a href='v_virtual_table_fields_delete.php?virtual_table_uuid=".$row['virtual_table_uuid']."&id=".$row['virtual_table_field_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='virtual_table_fields_delete.php?virtual_table_uuid=".$row['virtual_table_uuid']."&id=".$row['virtual_table_field_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -128,7 +128,7 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('virtual_tables_add')) {
-		echo "			<a href='v_virtual_table_fields_edit.php?virtual_table_uuid=".$virtual_table_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='virtual_table_fields_edit.php?virtual_table_uuid=".$virtual_table_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

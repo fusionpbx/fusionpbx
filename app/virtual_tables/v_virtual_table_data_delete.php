@@ -86,10 +86,10 @@ if (count($_GET)>0) {
 
 	//set the meta redirect
 		if (strlen($virtual_data_parent_row_uuid) == 0) {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_table_data_view.php?id=$virtual_table_uuid&virtual_data_row_uuid=$virtual_data_row_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_table_data_view.php?id=$virtual_table_uuid&virtual_data_row_uuid=$virtual_data_row_uuid\">\n";
 		}
 		else {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid\">\n";
 		}
 
 	//show a message to the user before the redirect

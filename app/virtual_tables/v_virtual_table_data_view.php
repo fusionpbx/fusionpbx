@@ -302,7 +302,7 @@ if (strlen($_GET["id"]) > 0) {
 	}
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('virtual_tables_data_add')) {
-		echo "	<a href='v_virtual_table_data_edit.php?virtual_table_uuid=".$virtual_table_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='virtual_table_data_edit.php?virtual_table_uuid=".$virtual_table_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -356,14 +356,14 @@ if (strlen($_GET["id"]) > 0) {
 		echo "<td valign='top' align='right' nowrap='nowrap'>\n";
 		if (permission_exists('virtual_tables_data_edit')) {
 			if (strlen($virtual_data_parent_row_uuid) == 0) {
-				echo "	<a href='v_virtual_table_data_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_data_row_uuid=".$row['virtual_data_row_uuid']."&search_all=$search_all' alt='edit'>$v_link_label_edit</a>\n";
+				echo "	<a href='virtual_table_data_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_data_row_uuid=".$row['virtual_data_row_uuid']."&search_all=$search_all' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			else {
-				echo "	<a href='v_virtual_table_data_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_data_row_uuid=".$row['virtual_data_row_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "	<a href='virtual_table_data_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_data_row_uuid=".$row['virtual_data_row_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 		}
 		if (permission_exists('virtual_tables_data_delete')) {
-			echo"	<a href='v_virtual_table_data_delete.php?virtual_data_row_uuid=".$row['virtual_data_row_uuid']."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_table_uuid=".$virtual_table_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo"	<a href='virtual_table_data_delete.php?virtual_data_row_uuid=".$row['virtual_data_row_uuid']."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_table_uuid=".$virtual_table_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 		}
 		echo "</td>\n";
 
@@ -380,7 +380,7 @@ if (strlen($_GET["id"]) > 0) {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('virtual_tables_data_add')) {
-		echo "			<a href='v_virtual_table_data_edit.php?virtual_table_uuid=".$virtual_table_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='virtual_table_data_edit.php?virtual_table_uuid=".$virtual_table_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
