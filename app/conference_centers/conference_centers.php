@@ -39,8 +39,16 @@ else {
 		exit;
 	}
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
+//additional includes
+	require_once "includes/header.php";
+	require_once "includes/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
@@ -55,15 +63,17 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference Centers</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='Rooms' onclick=\"window.location='conference_rooms.php'\" value='Rooms'></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-conference-centers']."</b></td>\n";
+	echo "<td width='70%' align='right'>\n";
+	if (permission_exists('conferences_active_advanced_view')) {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php'\" value='".$text['button-view']."'>\n";
+	}
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-rooms']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-rooms']."'>\n";
+	echo "</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			Conference Center are a location that can have one or more conference rooms.\n";
-	if (permission_exists('conferences_active_advanced_view')) {
-		echo "			Show <a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>Active Conferences</a> and then select a conference to monitor and interact with it.<br /><br />\n";
-	}
+	echo "			".$text['description-conference-centers']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -130,11 +140,11 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('conference_center_name', 'Name', $order_by, $order);
-	echo th_order_by('conference_center_extension', 'Extension', $order_by, $order);
+	echo th_order_by('conference_center_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('conference_center_extension', $text['label-extension'], $order_by, $order);
 	//echo th_order_by('conference_center_order', 'Order', $order_by, $order);
-	echo th_order_by('conference_center_enabled', 'Enabled', $order_by, $order);
-	echo th_order_by('conference_center_description', 'Description', $order_by, $order);
+	echo th_order_by('conference_center_enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('conference_center_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('conference_center_add')) {
 		echo "	<a href='conference_center_edit.php' alt='add'>$v_link_label_add</a>\n";
@@ -157,10 +167,10 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['conference_center_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('conference_center_edit')) {
-				echo "		<a href='conference_center_edit.php?id=".$row['conference_center_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='conference_center_edit.php?id=".$row['conference_center_uuid']."' alt='".$text['label-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('conference_center_delete')) {
-				echo "		<a href='conference_center_delete.php?id=".$row['conference_center_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='conference_center_delete.php?id=".$row['conference_center_uuid']."' alt='".$text['label-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

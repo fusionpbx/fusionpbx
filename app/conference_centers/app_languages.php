@@ -4,11 +4,50 @@
 		$text['title-conference-centers']['en-us'] = 'Conference Centers';
 		$text['title-conference-centers']['pt-pt'] = '';
 
+		$text['description-conference-centers']['en-us'] = 'Conference Centers are a group of conference rooms. They can be organized by cost center, geographically, or other criteria.';
+		$text['description-conference-centers']['pt-pt'] = '';
+
+		$text['title-conference-center']['en-us'] = 'Conference Center';
+		$text['title-conference-center']['pt-pt'] = '';
+
+		$text['description-conference-center']['en-us'] = 'Conference Center is used to setup one or more conference rooms with a name, extension number, a required pin number length, and a description.';
+		$text['description-conference-center']['pt-pt'] = '';
+
+		$text['label-name']['en-us'] = 'Name';
+		$text['label-name']['pt-pt'] = '';
+
+		$text['label-extension']['en-us'] = 'Extension';
+		$text['label-extension']['pt-pt'] = '';
+
+		$text['label-pin-length']['en-us'] = 'PIN Length';
+		$text['label-pin-length']['pt-pt'] = '';
+
+		$text['label-delete']['en-us'] = 'Delete';
+		$text['label-delete']['pt-pt'] = '';
+
+		$text['label-edit']['en-us'] = 'Edit';
+		$text['label-edit']['pt-pt'] = '';
+
+		$text['description-name']['en-us'] = 'Enter the conference center name.';
+		$text['description-name']['pt-pt'] = '';
+
+		$text['description-extension']['en-us'] = 'Enter the conference center extension number.';
+		$text['description-extension']['pt-pt'] = '';
+
+		$text['description-pin-length']['en-us'] = 'Enter the required PIN length.';
+		$text['description-pin-length']['pt-pt'] = '';
+
+		$text['description-enabled']['en-us'] = 'Select whether to enable or disable the conference center.';
+		$text['description-enabled']['pt-pt'] = '';
+
+		$text['description-description']['en-us'] = 'Enter the description.';
+		$text['description-description']['pt-pt'] = '';
+
 	//conference rooms
 		$text['title-conference-rooms']['en-us'] = 'Conference Rooms';
 		$text['title-conference-rooms']['pt-pt'] = '';
 
-		$text['title-conference-room']['en-us'] = 'Conference Room3';
+		$text['title-conference-room']['en-us'] = 'Conference Room';
 		$text['title-conference-room']['pt-pt'] = '';
 
 		$text['label-profile']['en-us'] = 'Profile';
@@ -51,6 +90,9 @@
 		$text['label-description']['pt-pt'] = 'Descrição';
 
 	//conference room edit
+		$text['button-rooms']['en-us'] = 'Rooms';
+		$text['button-rooms']['pt-pt'] = '';
+
 		$text['button-sessions']['en-us'] = 'Sessions';
 		$text['button-sessions']['pt-pt'] = '';
 

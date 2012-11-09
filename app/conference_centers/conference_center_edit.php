@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -310,110 +316,63 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
+	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Conference Center</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_centers.php'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-conference-center']."</b></td>\n";
+	echo "<td width='70%' align='right'>\n";
+	if (permission_exists('conferences_active_advanced_view')) {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php'\" value='".$text['button-view']."'>\n";
+	}
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_centers.php'\" value='".$text['button-back']."'>\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Conference Center is used to setup one or more conference rooms with a name, description, and optional pin number. \n";
-	echo "Click on <a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".str_replace(" ", "-", $conference_center_name)."'>Active Conference</a> \n";
-	echo "to monitor and interact with the conference room.<br /><br />\n";
+	echo "	".$text['description-conference-center']."\n";
+	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_center_name' maxlength='255' value=\"$conference_center_name\">\n";
-	echo "<br />\n";
-	echo "Enter the conference center name.\n";
+	echo "	<br />\n";
+	echo "	".$text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Extension:\n";
+	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"$conference_center_extension\">\n";
-	echo "<br />\n";
-	echo "Enter the conference center extension number.\n";
+	echo "	<br />\n";
+	echo " ".$text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	PIN Length:\n";
+	echo "	".$text['label-pin-length'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_center_pin_length' maxlength='255' value=\"$conference_center_pin_length\">\n";
-	echo "<br />\n";
-	echo "Enter the required PIN length.\n";
+	echo "	<br />\n";
+	echo "	".$text['description-pin-length']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	/*
-	if (if_group("admin") || if_group("superadmin")) {
-		if ($action == "update") {
-			echo "	<tr>";
-			echo "		<td class='vncell' valign='top'>User List:</td>";
-			echo "		<td class='vtable'>";
-
-			echo "			<table width='52%'>\n";
-			$sql = "SELECT * FROM v_conference_center_users as e, v_users as u ";
-			$sql .= "where e.user_uuid = u.user_uuid  ";
-			$sql .= "and u.user_enabled = 'true' ";
-			$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and e.conference_center_uuid = '".$conference_center_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			$result_count = count($result);
-			foreach($result as $field) {
-				echo "			<tr>\n";
-				echo "				<td class='vtable'>".$field['username']."</td>\n";
-				echo "				<td>\n";
-				echo "					<a href='conference_center_edit.php?id=".$conference_center_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-				echo "				</td>\n";
-				echo "			</tr>\n";
-			}
-			echo "			</table>\n";
-
-			echo "			<br />\n";
-			$sql = "SELECT * FROM v_users ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and user_enabled = 'true' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			echo "			<select name=\"user_uuid\" class='frm'>\n";
-			echo "			<option value=\"\"></option>\n";
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $field) {
-				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
-			}
-			echo "			</select>";
-			echo "			<input type=\"submit\" class='btn' value=\"Add\">\n";
-			unset($sql, $result);
-			echo "			<br>\n";
-			echo "			Assign the users that are can manage this conference center extension.\n";
-			echo "			<br />\n";
-			echo "		</td>";
-			echo "	</tr>";
-		}
-	}
-	*/
-
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Enabled:\n";
+	echo "	".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_enabled'>\n";
@@ -431,19 +390,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<option value='false'>false</option>\n";
 	}
 	echo "	</select>\n";
-	echo "<br />\n";
-	echo "Select whether to enable or disable the conference center.\n";
+	echo "	<br />\n";
+	echo "	".$text['description-enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_center_description' maxlength='255' value=\"$conference_center_description\">\n";
-	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo "	<br />\n";
+	echo "	".$text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -453,7 +412,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
 		echo "				<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
