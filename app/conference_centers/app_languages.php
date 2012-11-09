@@ -150,4 +150,77 @@
 		$text['button-save']['en-us'] = 'Save';
 		$text['button-save']['pt-pt'] = 'Guardar';
 
+	//Conference Sessions
+		$text['title-conference-sessions']['en-us'] = 'Conference Sessions';
+		$text['title-conference-sessions']['pt-pt'] = '';
+
+		$text['description-conference-sessions']['en-us'] = 'Conference Sessions are log details about the conferences.';
+		$text['description-conference-sessions']['pt-pt'] = '';
+
+		$text['label-time']['en-us'] = 'Time';
+		$text['label-time']['pt-pt'] = '';
+
+		$text['label-start']['en-us'] = 'Start';
+		$text['label-start']['pt-pt'] = '';
+
+		$text['label-end']['en-us'] = 'End';
+		$text['label-end']['pt-pt'] = '';
+
+		$text['label-profile']['en-us'] = 'Profile';
+		$text['label-profile']['pt-pt'] = '';
+
+		$text['label-recording']['en-us'] = 'Recording';
+		$text['label-recording']['pt-pt'] = '';
+
+		$text['label-tools']['en-us'] = 'Tools';
+		$text['label-tools']['pt-pt'] = '';
+
+		$text['label-details']['en-us'] = 'Details';
+		$text['label-details']['pt-pt'] = '';
+
+		$text['label-play']['en-us'] = 'Play';
+		$text['label-play']['pt-pt'] = '';
+
+		$text['label-download']['en-us'] = 'Download';
+		$text['label-download']['pt-pt'] = '';
+
+	//Conference Sessions Details
+		$text['title-conference-session-details']['en-us'] = 'Conference Session Details';
+		$text['title-conference-session-details']['pt-pt'] = '';
+
+		$text['description-conference-session-details']['en-us'] = 'Conference Sessions are log details of the conferences calls.';
+		$text['description-conference-session-details']['pt-pt'] = '';
+
+		$text['label-username']['en-us'] = 'Username';
+		$text['label-username']['pt-pt'] = '';
+
+		$text['label-uuid']['en-us'] = 'UUID';
+		$text['label-uuid']['pt-pt'] = '';
+
+		$text['label-caller-id-name']['en-us'] = 'Caller ID Name';
+		$text['label-caller-id-name']['pt-pt'] = '';
+
+		$text['label-caller-id-number']['en-us'] = 'Caller ID Number';
+		$text['label-caller-id-number']['pt-pt'] = '';
+
+		$text['label-moderator']['en-us'] = 'Moderator';
+		$text['label-moderator']['pt-pt'] = '';
+
+		$text['label-network-address']['en-us'] = 'Network Address';
+		$text['label-network-address']['pt-pt'] = '';
+
+		$text['label-time']['en-us'] = 'Time';
+		$text['label-time']['pt-pt'] = '';
+
+		$text['label-start']['en-us'] = 'Start';
+		$text['label-start']['pt-pt'] = '';
+
+		$text['label-end']['en-us'] = 'End';
+		$text['label-end']['pt-pt'] = '';
+
+		$text['label-details']['en-us'] = 'Details';
+		$text['label-details']['pt-pt'] = '';
+
+		$text['label-cdr']['en-us'] = 'CDR';
+		$text['label-cdr']['pt-pt'] = '';
 ?>

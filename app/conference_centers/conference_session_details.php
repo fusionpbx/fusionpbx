@@ -32,8 +32,16 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
+//additional includes
+	require_once "includes/header.php";
+	require_once "includes/paging.php";
 
 //set variables from the http values
 	$order_by = check_str($_GET["order_by"]);
@@ -49,12 +57,12 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>Conference Session Details</b></td>\n";
-	echo "		<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conference_sessions.php'\" value='Back'></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference-session-details']."</b></td>\n";
+	echo "		<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_sessions.php'\" value='".$text['button-back']."'></td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			Conference Sessions are log details about the conferences.<br /><br />\n";
+	echo "			".$text['description-conference-session-details']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -109,16 +117,16 @@ require_once "includes/paging.php";
 	echo "<tr>\n";
 	//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
 	//echo th_order_by('conference_uuid', 'Conference UUID', $order_by, $order);
-	//echo th_order_by('username', 'Username', $order_by, $order);
-	//echo th_order_by('uuid', 'UUID', $order_by, $order);
-	echo th_order_by('caller_id_name', 'Caller ID Name', $order_by, $order);
-	echo th_order_by('caller_id_number', 'Caller ID Number', $order_by, $order);
-	echo th_order_by('moderator', 'Moderator', $order_by, $order);
-	echo th_order_by('network_addr', 'Network Address', $order_by, $order);
-	echo "<th>Time</th>\n";
-	echo th_order_by('start_epoch', 'Start', $order_by, $order);
-	echo th_order_by('end_epoch', 'End', $order_by, $order);
-	echo "<th>Details</th>\n";
+	//echo th_order_by('username', $text['label-username'], $order_by, $order);
+	//echo th_order_by('uuid', $text['label-uuid'], $order_by, $order);
+	echo th_order_by('caller_id_name', $text['label-caller-id-name'], $order_by, $order);
+	echo th_order_by('caller_id_number', $text['label-caller-id-number'], $order_by, $order);
+	echo th_order_by('moderator', $text['label-moderator'], $order_by, $order);
+	echo th_order_by('network_addr', $text['label-network-address'], $order_by, $order);
+	echo "<th>".$text['label-time']."</th>\n";
+	echo th_order_by('start_epoch', $text['label-start'], $order_by, $order);
+	echo th_order_by('end_epoch', $text['label-end'], $order_by, $order);
+	echo "<th>".$text['label-details']."</th>\n";
 	echo "<tr>\n";
 
 	if ($result_count > 0) {
@@ -145,7 +153,7 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$time_difference."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."'>CDR</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."'>".$text['label-cdr']."</a>&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
