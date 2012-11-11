@@ -107,7 +107,9 @@ else {
 			$fax_destination_number = $fax_extension;
 		}
 		if (strlen($fax_forward_number) > 3) {
-			$fax_forward_number = preg_replace("~[^0-9]~", "",$fax_forward_number);
+			//$fax_forward_number = preg_replace("~[^0-9]~", "",$fax_forward_number);
+			$fax_forward_number = str_replace(" ", "", $fax_forward_number);
+			$fax_forward_number = str_replace("-", "", $fax_forward_number);
 		}
 		if (strripos($fax_forward_number, '$1') === false) {
 			$fax_prefix = ''; //not found
@@ -601,7 +603,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-forward'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".format_phone($fax_forward_number)."\">\n";
+	if (is_numeric($fax_forward_number)) {
+		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".format_phone($fax_forward_number)."\">\n";
+	}
+	else {
+		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".$fax_forward_number."\">\n";
+	}
 	echo "<br />\n";
 	echo "".$text['description-forward-number']."\n";
 	echo "</td>\n";
