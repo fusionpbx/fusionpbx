@@ -289,6 +289,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'virtual_field_search_by';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'virtual_field_column';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
@@ -305,12 +309,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'virtual_field_description';
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'virtual_field_desc';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'virtual_field_value';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'virtual_field_value';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'virtual_field_description';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'virtual_field_desc';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 

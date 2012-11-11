@@ -55,6 +55,7 @@ if (count($_POST)>0) {
 	$virtual_field_type = check_str($_POST["virtual_field_type"]);
 	$virtual_field_value = check_str($_POST["virtual_field_value"]);
 	$virtual_field_list_hidden = check_str($_POST["virtual_field_list_hidden"]);
+	$virtual_field_search_by = check_str($_POST["virtual_field_search_by"]);
 	$virtual_field_column = check_str($_POST["virtual_field_column"]);
 	$virtual_field_required = check_str($_POST["virtual_field_required"]);
 	$virtual_field_order = check_str($_POST["virtual_field_order"]);
@@ -76,6 +77,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($virtual_field_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
 		//if (strlen($virtual_field_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
 		if (strlen($virtual_field_list_hidden) == 0) { $msg .= "Please provide: List Visibility<br>\n"; }
+		//if (strlen($virtual_field_search_by) == 0) { $msg .= "Please provide: Search By<br>\n"; }
 		if (strlen($virtual_field_column) == 0) { $msg .= "Please provide: Column<br>\n"; }
 		if (strlen($virtual_field_required) == 0) { $msg .= "Please provide: Required<br>\n"; }
 		if (strlen($virtual_field_order) == 0) { $msg .= "Please provide: Field Order<br>\n"; }
@@ -108,6 +110,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "virtual_field_type, ";
 			$sql .= "virtual_field_value, ";
 			$sql .= "virtual_field_list_hidden, ";
+			$sql .= "virtual_field_search_by, ";
 			$sql .= "virtual_field_column, ";
 			$sql .= "virtual_field_required, ";
 			$sql .= "virtual_field_order, ";
@@ -124,6 +127,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$virtual_field_type', ";
 			$sql .= "'$virtual_field_value', ";
 			$sql .= "'$virtual_field_list_hidden', ";
+			$sql .= "'$virtual_field_search_by', ";
 			$sql .= "'$virtual_field_column', ";
 			$sql .= "'$virtual_field_required', ";
 			$sql .= "'$virtual_field_order', ";
@@ -149,6 +153,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "virtual_field_type = '$virtual_field_type', ";
 			$sql .= "virtual_field_value = '$virtual_field_value', ";
 			$sql .= "virtual_field_list_hidden = '$virtual_field_list_hidden', ";
+			$sql .= "virtual_field_search_by = '$virtual_field_search_by', ";
 			$sql .= "virtual_field_column = '$virtual_field_column', ";
 			$sql .= "virtual_field_required = '$virtual_field_required', ";
 			$sql .= "virtual_field_order = '$virtual_field_order', ";
@@ -189,6 +194,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$virtual_field_type = $row["virtual_field_type"];
 			$virtual_field_value = $row["virtual_field_value"];
 			$virtual_field_list_hidden = $row["virtual_field_list_hidden"];
+			$virtual_field_search_by = $row["virtual_field_search_by"];
 			$virtual_field_column = $row["virtual_field_column"];
 			$virtual_field_required = $row["virtual_field_required"];
 			$virtual_field_order = $row["virtual_field_order"];
@@ -451,6 +457,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo "Choose whether the field is hidden from the list.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
+	echo "	Search By:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='virtual_field_search_by'>\n";
+	echo "	<option value=''></option>\n";
+	if ($virtual_field_search_by == "yes") { 
+		echo "	<option value='yes'  selected='selected'>yes</option>\n";
+	}
+	else {
+		echo "	<option value='yes'>yes</option>\n";
+	}
+	if ($virtual_field_search_by == "no") { 
+		echo "	<option value='no' selected='selected'>no</option>\n";
+	}
+	else {
+		echo "	<option value='no'>no</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo "Choose whether the field will be used for searches.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
