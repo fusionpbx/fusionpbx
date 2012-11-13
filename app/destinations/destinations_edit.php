@@ -51,6 +51,7 @@ else {
 		$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
 		$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
 		$destination_context = check_str($_POST["destination_context"]);
+		$fax_uuid = check_str($_POST["fax_uuid"]);
 		$destination_enabled = check_str($_POST["destination_enabled"]);
 		$destination_description = check_str($_POST["destination_description"]);
 	}
@@ -99,6 +100,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "destination_caller_id_name, ";
 				$sql .= "destination_caller_id_number, ";
 				$sql .= "destination_context, ";
+				$sql .= "fax_uuid, ";
 				$sql .= "destination_enabled, ";
 				$sql .= "destination_description ";
 				$sql .= ")";
@@ -114,6 +116,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$destination_caller_id_name', ";
 				$sql .= "'$destination_caller_id_number', ";
 				$sql .= "'$destination_context', ";
+				$sql .= "'$fax_uuid', ";
 				$sql .= "'$destination_enabled', ";
 				$sql .= "'$destination_description' ";
 				$sql .= ")";
@@ -139,6 +142,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "destination_caller_id_name = '$destination_caller_id_name', ";
 				$sql .= "destination_caller_id_number = '$destination_caller_id_number', ";
 				$sql .= "destination_context = '$destination_context', ";
+				$sql .= "fax_uuid = '$fax_uuid', ";
 				$sql .= "destination_enabled = '$destination_enabled', ";
 				$sql .= "destination_description = '$destination_description' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -173,6 +177,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$destination_caller_id_name = $row["destination_caller_id_name"];
 			$destination_caller_id_number = $row["destination_caller_id_number"];
 			$destination_context = $row["destination_context"];
+			$fax_uuid = $row["fax_uuid"];
 			$destination_enabled = $row["destination_enabled"];
 			$destination_description = $row["destination_description"];
 			break; //limit to 1 row
@@ -277,27 +282,53 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	Fax Destination:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	$sql = "select * from v_fax ";
+	$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+	$sql .= "order by fax_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	echo "	<select name='fax_uuid' id='fax_uuid' class='formfld' style='".$select_style."'>\n";
+	foreach ($result as &$row) {
+		if ($row["fax_uuid"] == $fax_uuid) {
+			echo "		<option value='".$row["fax_uuid"]."' selected='selected'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
+		}
+		else {
+			echo "		<option value='".$row["fax_uuid"]."'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
+		}
+	}
+	echo "	</select>\n";
+	unset ($prep_statement, $extension);
+	echo "	<br />\n";
+	echo "	Select the fax destination to enable fax detection.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	Enabled:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($destination_enabled == "true") { 
-		echo "	<option value='true'  selected='selected'>true</option>\n";
+	if ($destination_enabled == "true") {
+		echo "	<option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($destination_enabled == "false") { 
-		echo "	<option value='false'  selected='selected'>false</option>\n";
+	if ($destination_enabled == "false") {
+		echo "	<option value='false' selected='selected'>false</option>\n";
 	}
 	else {
 		echo "	<option value='false'>false</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
