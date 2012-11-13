@@ -1931,9 +1931,6 @@ function save_extension_xml() {
 				fclose($fout);
 			}
 
-		//syncrhonize the phone directory
-			sync_directory();
-
 		//apply settings
 			$_SESSION["reload_xml"] = true;
 	}
