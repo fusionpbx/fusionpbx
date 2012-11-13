@@ -228,8 +228,8 @@ function build_menu() {
 
 		$menu_selected = false;
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/v_features.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/v_fax.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/v_fax_edit.php") { $menu_selected = true; }
+		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/fax.php") { $menu_selected = true; }
+		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/fax_edit.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/v_hunt_group.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/v_hunt_group_edit.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/v_hunt_group_destinations.php") { $menu_selected = true; }
