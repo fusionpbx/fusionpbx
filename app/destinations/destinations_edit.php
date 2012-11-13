@@ -293,6 +293,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	echo "	<select name='fax_uuid' id='fax_uuid' class='formfld' style='".$select_style."'>\n";
+	echo "	<option value=''></option>\n";
 	foreach ($result as &$row) {
 		if ($row["fax_uuid"] == $fax_uuid) {
 			echo "		<option value='".$row["fax_uuid"]."' selected='selected'>".$row["fax_extension"]." ".$row["fax_name"]."</option>\n";
