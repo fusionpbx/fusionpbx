@@ -100,7 +100,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "destination_caller_id_name, ";
 				$sql .= "destination_caller_id_number, ";
 				$sql .= "destination_context, ";
-				$sql .= "fax_uuid, ";
+				if (strlen($fax_uuid) > 0) {
+					$sql .= "fax_uuid, ";
+				}
 				$sql .= "destination_enabled, ";
 				$sql .= "destination_description ";
 				$sql .= ")";
@@ -116,7 +118,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$destination_caller_id_name', ";
 				$sql .= "'$destination_caller_id_number', ";
 				$sql .= "'$destination_context', ";
-				$sql .= "'$fax_uuid', ";
+				if (strlen($fax_uuid) > 0) {
+					$sql .= "'$fax_uuid', ";
+				}
 				$sql .= "'$destination_enabled', ";
 				$sql .= "'$destination_description' ";
 				$sql .= ")";
