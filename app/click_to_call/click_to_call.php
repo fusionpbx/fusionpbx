@@ -25,14 +25,20 @@
 	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
+
 */
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
+//require_once "includes/checkauth.php";
 if (permission_exists('click_to_call_view')) {
 	//access granted
 }
 else {
+
 	echo "access denied";
 	exit;
 }
@@ -45,25 +51,30 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		$dest = check_str($_REQUEST['dest']);
 		$ringback = check_str($_REQUEST['ringback']);
 		$src = str_replace(array('.', '(', ')', '-', ' '), '', $src);
-		$dest = str_replace(array('.', '(', ')', '-', ' '), '', $dest);
+		if (strpbrk($dest, '@') != FALSE) {
+			$dest = str_replace(array('(', ')', ' '), '', $dest); //don't strip periods or dashes in sip-uri calls
+		}
+		else {
+			$dest = str_replace(array('.', '(', ')', '-', ' '), '', $dest); //strip the periods for phone numbers.
+		}
 		$src_cid_name = check_str($_REQUEST['src_cid_name']);
 		$src_cid_number = check_str($_REQUEST['src_cid_number']);
 		$dest_cid_name = check_str($_REQUEST['dest_cid_name']);
 		$dest_cid_number = check_str($_REQUEST['dest_cid_number']);
-		$auto_answer = check_str($_REQUEST['auto_answer']); //true,false
 		$rec = check_str($_REQUEST['rec']); //true,false
-		if ($auto_answer == "true") {
-			$sip_auto_answer = "sip_auto_answer=true,"; 
-		}
-		else {
-			$sip_auto_answer = '';
-		}
 		if (strlen($cid_number) == 0) { $cid_number = $src;}
 		if (strlen($_SESSION['context']) > 0) {
 			$context = $_SESSION['context'];
 		}
 		else {
 			$context = 'default';
+		}
+
+		//woraround for TBDialout on Thunderbird
+		//seems it can only handle the first %NUM%
+		if ($dest == "%NUM%"){
+			//echo "Thnuderbird fix, dest now = $src_cid_number <br>";
+			$dest = $src_cid_number;
 		}
 
 	//translate ringback
@@ -90,7 +101,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	//source should see the destination caller id
 		if (strlen($src) < 7) {
-			$source = "{".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
 		}
 		else {
 			$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $src);
@@ -99,13 +110,22 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	//destination needs to see the source caller id
 		if (strlen($dest) < 7) {
-			$switch_cmd = "api originate $source &transfer('".$dest." XML ".$context."')";
+			if (strpbrk($dest, '@') != FALSE) {
+				echo "Found an @ 2<br><br>";
+				$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,call_direction=outbound}sofia/external/$dest)";
+				echo "$switch_cmd";
+			}
+			else {
+				$switch_cmd = "api originate $source &transfer('".$dest." XML ".$context."')";
+			}
 		}
 		else {
+
 			if (strlen($src) < 7) {
 				if (strlen($dest_cid_number) == 0) {
 					//get the caller id from the extension caller id comes from the extension (the source number)
-						$sql = "select * from v_extensions ";
+						$sql = "";
+						$sql .= "select * from v_extensions ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
 						$sql .= "and extension = '$src' ";
 						$prep_statement = $db->prepare(check_sql($sql));
@@ -122,7 +142,17 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $dest);
 			$destination = "{origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number}".$bridge_array[0];
 			if (permission_exists('click_to_call_call')) {
-				$switch_cmd = "api originate $source &bridge($destination)";
+				if (strpbrk($dest, '@') != FALSE) {
+                                	//call a sip uri
+					//echo "Found an @ 4, do nothing for now<br><br>";
+					$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,call_direction=outbound}sofia/external/$dest)";
+					//echo "<br>SWITCH-CMD: $switch_cmd<br>";
+
+				}
+				else {
+					//regular call
+					$switch_cmd = "api originate $source &bridge($destination)";
+				}
 			}
 		}
 
@@ -207,7 +237,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"src_cid_name\" value='$src_cid_name' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the name to show to the source caller.\n";
+	echo "		Enter the Caller ID name to send to your phone.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
@@ -216,7 +246,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"src_cid_number\" value='$src_cid_number' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the number to show to the source caller.\n";
+	echo "		Enter the Caller ID number to send to your phone (you probably want this to be the same as the destination number).\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
@@ -225,7 +255,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"dest_cid_name\" value='$dest_cid_name' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the name to send to the destination callee.\n";
+	echo "		Enter the Caller ID name to send to the destination number.\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
@@ -234,7 +264,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"dest_cid_number\" value='$dest_cid_number' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the number to show to the destination callee.\n";
+	echo "		Enter the Caller ID number to send to the destination number (you probably want this to be your phone number).\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
@@ -243,7 +273,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"src\" value='$src' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the number to call from.\n";
+	echo "		Enter your phone number.  This can be an extension on the system, or another number (eg: mobile phone).\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
@@ -252,37 +282,12 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"dest\" value='$dest' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the number to call.\n";
+	echo "		Enter the number to call. This can be an extension on the system, another number, or a sip uri.  Sip URI's are of the form 5551234567@voip.example.com:5080 (5080 for freeswitch, or 5060 for other systems).\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
-	echo" <tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Auto Answer:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='auto_answer'>\n";
-	echo "    <option value=''></option>\n";
-	if ($auto_answer == "true") {
-		echo "    <option value='true' selected='selected'>true</option>\n";
-	}
-	else {
-		echo "    <option value='true'>true</option>\n";
-	}
-	if ($auto_answer == "false") {
-		echo "    <option value='false' selected='selected'>false</option>\n";
-	}
-	else {
-		echo "    <option value='false'>false</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo "Select whether to enable auto answer.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    Record:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -345,7 +350,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Defines what the caller will hear while destination is being called. The choices are music (music on hold) ring (ring tone.)\n";
+	echo "Defines what the you will hear while destination is being called. The choices are music (music on hold) ring (ring tone.)\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
