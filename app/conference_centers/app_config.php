@@ -65,6 +65,7 @@
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -74,6 +75,7 @@
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_session_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
