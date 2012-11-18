@@ -50,7 +50,6 @@ if ($_GET['a'] == "download") {
 
 	if ($category_dir != '') {
 		$path_mod = $category_dir."/";
-
 		if (count($_SESSION['domains']) > 1) {
 			$path_mod = $_SESSION["domain_name"]."/".$path_mod;
 		}

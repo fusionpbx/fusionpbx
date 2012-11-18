@@ -106,8 +106,12 @@ include "root.php";
 			//default category
 				$array = glob($music_on_hold_dir."/{8000,16000,32000,48000}", GLOB_ONLYDIR|GLOB_BRACE);
 			//other categories
-				//$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
-				$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
+				if (count($_SESSION['domains']) > 1) {
+					$array = array_merge($array, glob($music_on_hold_dir."/*/*/*", GLOB_ONLYDIR));
+				}
+				else {
+					$array = array_merge($array, glob($music_on_hold_dir."/*/*", GLOB_ONLYDIR));
+				}
 			//list the categories
 				$moh_xml = "";
 				foreach($array as $moh_dir) {
