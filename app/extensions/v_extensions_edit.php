@@ -1353,20 +1353,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <select class='formfld' name='enabled'>\n";
 	echo "    <option value=''></option>\n";
 	if ($enabled == "true" || strlen($enabled) == 0) {
-		echo "    <option value='true' selected >true</option>\n";
+		echo "    <option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "    <option value='true'>true</option>\n";
 	}
 	if ($enabled == "false") {
-		echo "    <option value='false' selected >false</option>\n";
+		echo "    <option value='false' selected='selected'>false</option>\n";
 	}
 	else {
 		echo "    <option value='false'>false</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
