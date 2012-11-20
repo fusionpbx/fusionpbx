@@ -1155,6 +1155,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Hold Music:\n";
+	echo "</td>\n";
+	echo "<td width=\"70%\" class='vtable' align='left'>\n";
+	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+	$moh= new switch_music_on_hold;
+	$moh->select_name = "hold_music";
+	$moh->select_value = $hold_music;
+	echo $moh->select();
+	echo "	<br />\n";
+	echo "	Select the MOH Category here.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	if (if_group("superadmin")) {
 		if (strlen($user_context) == 0) {
 			if (count($_SESSION["domains"]) > 1) {
@@ -1193,23 +1208,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
 	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
-
-	echo "<tr>\n";
-	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Hold Music:\n";
-	echo "</td>\n";
-	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-
-	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-	$moh= new switch_music_on_hold;
-	$moh->select_name = "hold_music";
-	$moh->select_value = $hold_music;
-	echo $moh->select();
-
-	echo "	<br />\n";
-	echo "	Select the MOH Category here.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
