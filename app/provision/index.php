@@ -378,6 +378,7 @@ require_once "includes/require.php";
 	} else {
 		header ("content-type: text/xml");
 	}
+	header ("Content-Length: ".strlen($file_contents));
 	echo $file_contents;
 
 //define the function which checks to see if the mac address exists in the table
