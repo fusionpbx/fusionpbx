@@ -308,7 +308,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//redirect the user
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/calls/v_calls.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/calls/calls.php\">\n";
 		echo "<div align='center'>\n";
 		echo "".$text['confirm-update']."<br />\n";
 		echo "</div>\n";
@@ -390,7 +390,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<b>".$text['title']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_calls.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='calls.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

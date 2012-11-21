@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '';
 		$apps[$x]['menu'][0]['parent_uuid'] = '';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/calls/v_calls.php';
+		$apps[$x]['menu'][0]['path'] = '/app/calls/calls.php';
 		$apps[$x]['menu'][0]['groups'][] = 'user';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';

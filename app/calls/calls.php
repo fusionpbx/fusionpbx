@@ -155,15 +155,15 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if (permission_exists('call_forward')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=call_forward' alt='Call Forward'>".$text['label-call-forward']."</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&a=call_forward' alt='Call Forward'>".$text['label-call-forward']."</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('follow_me')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=follow_me' alt='Follow Me'>".$text['label-follow-me']."</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&a=follow_me' alt='Follow Me'>".$text['label-follow-me']."</a> \n";
 				echo "		&nbsp;&nbsp;\n";
 			}
 			if (permission_exists('do_not_disturb')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/v_call_edit.php?id=".$row['extension_uuid']."&a=do_not_disturb' alt='Do Not Disturb'>".$text['label-dnd']."</a> \n";
+				echo "		<a href='".PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&a=do_not_disturb' alt='Do Not Disturb'>".$text['label-dnd']."</a> \n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['description']."&nbsp;</td>\n";

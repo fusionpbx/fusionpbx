@@ -82,7 +82,7 @@ echo "<br />";
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/v_calls.php")) {
 		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
 			$is_included = "true";
-			require_once "app/calls/v_calls.php";
+			require_once "app/calls/calls.php";
 		}
 	}
 
