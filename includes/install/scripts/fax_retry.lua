@@ -107,10 +107,35 @@
 			freeswitch.msleep(fax_retry_sleep * 1000);
 			--increment the retry attempts
 			fax_retry_attempts = fax_retry_attempts + 1;
-			cmd = "originate {origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_attempts="..fax_retry_attempts..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."',fax_use_ecm=off,api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
+			fax_params = ",fax_use_ecm=off";
+			--fax_enable_t38=false
+			--fax_enable_t38_request=false
+			--fax_disable_v17
+			cmd = "originate {origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_attempts="..fax_retry_attempts..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'"..fax_params..",api_hangup_hook='lua fax_retry.lua'}"..fax_uri.." &txfax('"..fax_file.."')";
 			--cmd = "sofia/internal/"..fax_number.."@"..domain_name.." &txfax('"..fax_file.."') XML default ";
 			freeswitch.consoleLog("INFO","retry cmd: " .. cmd .. "\n");
 			api = freeswitch.API();
 			reply = api:executeString(cmd);
+		else
+		--	from = "";
+		--	to = "";
+		--	subject = "FAX Status: failed";
+		--	body = [[file: ]] .. fax_file";
+		--	freeswitch.email("",
+		--		"",
+		--		"To: "..to.."\nFrom: "..from.."\nSubject:" .. subject,
+		--		body
+		--		);
 		end
+	else
+		--send email notice when the fax was sent succesffully
+		--from = "";
+		--to = "";
+		--subject = "FAX Status: succeeded";
+		--body = [[file: ]] .. fax_file";
+		--freeswitch.email("",
+		--	"",
+		--	"To: "..to.."\nFrom: "..from.."\nSubject:" .. subject,
+		--	body
+		--	);
 	end
