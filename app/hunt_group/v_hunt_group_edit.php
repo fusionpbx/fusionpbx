@@ -108,7 +108,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($hunt_group_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
 		if (strlen($hunt_group_timeout_destination) == 0) { $msg .= "Please provide: Timeout Destination<br>\n"; }
 		if (strlen($hunt_group_timeout_type) == 0) { $msg .= "Please provide: Timeout Type<br>\n"; }
-		if (strlen($hunt_group_ringback) == 0) { $msg .= "Please provide: Ring Back<br>\n"; }
+		//if (strlen($hunt_group_ringback) == 0) { $msg .= "Please provide: Ring Back<br>\n"; }
 		//if (strlen($hunt_group_cid_name_prefix) == 0) { $msg .= "Please provide: CID Prefix<br>\n"; }
 		//if (strlen($hunt_group_pin) == 0) { $msg .= "Please provide: PIN<br>\n"; }
 		if (strlen($hunt_group_caller_announce) == 0) { $msg .= "Please provide: Caller Announce<br>\n"; }
