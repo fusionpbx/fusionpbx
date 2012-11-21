@@ -67,7 +67,7 @@ include "root.php";
 				}
 				$sql  = "update v_extensions set ";
 				$sql .= "do_not_disturb = '".$this->enabled."', ";
-				$sql .= "dial_string = '".$this->dial_string."', ";
+//				$sql .= "dial_string = '".$this->dial_string."', ";
 				$sql .= "dial_domain = '".$this->domain_name."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and extension = '".$this->extension."' ";

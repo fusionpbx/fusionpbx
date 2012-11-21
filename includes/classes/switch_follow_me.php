@@ -30,95 +30,50 @@ include "root.php";
 		public $domain_uuid;
 		public $db_type;
 		public $follow_me_uuid;
-		public $extension;
 		public $follow_me_enabled;
-		public $follow_me_type;
-		public $hunt_group_call_prompt;
-		public $hunt_group_timeout;
 
 		public $destination_data_1;
 		public $destination_type_1;
+		public $destination_delay_1;
 		public $destination_timeout_1;
 
 		public $destination_data_2;
 		public $destination_type_2;
+		public $destination_delay_2;
 		public $destination_timeout_2;
 
 		public $destination_data_3;
 		public $destination_type_3;
+		public $destination_delay_3;
 		public $destination_timeout_3;
 
 		public $destination_data_4;
 		public $destination_type_4;
+		public $destination_delay_4;
 		public $destination_timeout_4;
 
 		public $destination_data_5;
 		public $destination_type_5;
+		public $destination_delay_5;
 		public $destination_timeout_5;
 
-		public $destination_profile = 'internal';
-		public $destination_timeout = '';
+		public $destination_timeout = 0;
 		public $destination_order = 1;
-		public $destination_enabled = 'true';
-		public $destination_description = 'follow me';
 
 		public function follow_me_add() {
 			global $db;
 
-			$hunt_group_extension = $this->extension;
-			$hunt_group_name = 'follow_me_'.$this->extension;
-			$hunt_group_type = $this->follow_me_type;
-			$hunt_group_context = $_SESSION['context'];
-			$hunt_group_timeout = $this->hunt_group_timeout;
-			$hunt_group_timeout_destination = $this->extension;
-			$hunt_group_timeout_type = 'voicemail';
-			$hunt_group_ring_back = 'us-ring';
-			//$hunt_group_cid_name_prefix = '';
-			//$hunt_group_pin = '';
-			$huntgroup_caller_announce = 'false';
-			//$hunt_group_user_list = '';
-			$hunt_group_enabled = $this->follow_me_enabled;
-			$hunt_group_description = 'follow me '.$this->extension;
-
-			$sql = "insert into v_hunt_groups ";
+			$sql = "insert into v_follow_me ";
 			$sql .= "(";
 			$sql .= "domain_uuid, ";
-			$sql .= "hunt_group_uuid, ";
-			$sql .= "hunt_group_extension, ";
-			$sql .= "hunt_group_name, ";
-			$sql .= "hunt_group_type, ";
-			$sql .= "hunt_group_context, ";
-			$sql .= "hunt_group_timeout, ";
-			$sql .= "hunt_group_timeout_destination, ";
-			$sql .= "hunt_group_timeout_type, ";
-			$sql .= "hunt_group_ringback, ";
-			$sql .= "hunt_group_cid_name_prefix, ";
-			$sql .= "hunt_group_pin, ";
-			$sql .= "hunt_group_call_prompt, ";
-			$sql .= "hunt_group_caller_announce, ";
-			$sql .= "hunt_group_user_list, ";
-			$sql .= "hunt_group_enabled, ";
-			$sql .= "hunt_group_description ";
+			$sql .= "follow_me_uuid, ";
+			$sql .= "follow_me_enabled ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
 			$sql .= "'$this->domain_uuid', ";
 			$sql .= "'$this->follow_me_uuid', ";
-			$sql .= "'$hunt_group_extension', ";
-			$sql .= "'$hunt_group_name', ";
-			$sql .= "'$hunt_group_type', ";
-			$sql .= "'$hunt_group_context', ";
-			$sql .= "'$hunt_group_timeout', ";
-			$sql .= "'$hunt_group_timeout_destination', ";
-			$sql .= "'$hunt_group_timeout_type', ";
-			$sql .= "'$hunt_group_ring_back', ";
-			$sql .= "'$hunt_group_cid_name_prefix', ";
-			$sql .= "'$hunt_group_pin', ";
-			$sql .= "'$hunt_group_call_prompt', ";
-			$sql .= "'$huntgroup_caller_announce', ";
-			$sql .= "'$hunt_group_user_list', ";
-			$sql .= "'$hunt_group_enabled', ";
-			$sql .= "'$hunt_group_description' ";
+			$sql .= "'$this->follow_me_enabled' ";
 			$sql .= ")";
 			if ($v_debug) {
 				echo $sql."<br />";
@@ -131,39 +86,10 @@ include "root.php";
 		public function follow_me_update() {
 			global $db;
 
-			$hunt_group_extension = $this->extension;
-			$hunt_group_name = 'follow_me_'.$this->extension;
-			$hunt_group_type = $this->follow_me_type;
-			$hunt_group_context = $_SESSION['context'];
-			$hunt_group_timeout = $this->hunt_group_timeout;
-			$hunt_group_timeout_destination = $this->extension;
-			$hunt_group_timeout_type = 'voicemail';
-			$hunt_group_ring_back = 'us-ring';
-			//$hunt_group_cid_name_prefix = '';
-			//$hunt_group_pin = '';
-			$huntgroup_caller_announce = 'false';
-			//$hunt_group_user_list = '';
-			$hunt_group_enabled = $this->follow_me_enabled;
-			$hunt_group_description = 'follow me '.$this->extension;
-
-			$sql = "update v_hunt_groups set ";
-			$sql .= "hunt_group_extension = '$hunt_group_extension', ";
-			$sql .= "hunt_group_name = '$hunt_group_name', ";
-			$sql .= "hunt_group_type = '$hunt_group_type', ";
-			$sql .= "hunt_group_context = '$hunt_group_context', ";
-			$sql .= "hunt_group_timeout = '$hunt_group_timeout', ";
-			$sql .= "hunt_group_timeout_destination = '$hunt_group_timeout_destination', ";
-			$sql .= "hunt_group_timeout_type = '$hunt_group_timeout_type', ";
-			$sql .= "hunt_group_ringback = '$hunt_group_ring_back', ";
-			$sql .= "hunt_group_cid_name_prefix = '$hunt_group_cid_name_prefix', ";
-			$sql .= "hunt_group_pin = '$hunt_group_pin', ";
-			$sql .= "hunt_group_call_prompt = '$this->hunt_group_call_prompt', ";
-			$sql .= "hunt_group_caller_announce = '$huntgroup_caller_announce', ";
-			$sql .= "hunt_group_user_list = '$hunt_group_user_list', ";
-			$sql .= "hunt_group_enabled = '$hunt_group_enabled', ";
-			$sql .= "hunt_group_description = '$hunt_group_description' ";
+			$sql = "update follow_me set ";
+			$sql .= "follow_me_enabled = '$this->follow_me_enabled' ";
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and hunt_group_uuid = '$this->follow_me_uuid' ";
+			$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 			$this->follow_me_destinations();
@@ -172,24 +98,21 @@ include "root.php";
 		public function follow_me_destinations() {
 			global $db;
 
-			//delete related v_hunt_group_destinations
-				$sql = "delete from v_hunt_group_destinations where hunt_group_uuid = '$this->follow_me_uuid' ";
+			//delete related follow me destinations
+				$sql = "delete from v_follow_me_destinations where follow_me_uuid = '$this->follow_me_uuid' ";
 				$db->exec(check_sql($sql));
 
-			//insert the v_hunt_group_destinations set destination_data_1
+			//insert the follow me destinations
 				if (strlen($this->destination_data_1) > 0) {
-					$sql = "insert into v_hunt_group_destinations ";
+					$sql = "insert into v_follow_me_destinations ";
 					$sql .= "(";
-					$sql .= "hunt_group_destination_uuid, ";
+					$sql .= "follow_me_destination_uuid, ";
 					$sql .= "domain_uuid, ";
-					$sql .= "hunt_group_uuid, ";
-					$sql .= "destination_data, ";
-					$sql .= "destination_type, ";
-					$sql .= "destination_profile, ";
-					$sql .= "destination_timeout, ";
-					$sql .= "destination_order, ";
-					$sql .= "destination_enabled, ";
-					$sql .= "destination_description ";
+					$sql .= "follow_me_uuid, ";
+					$sql .= "follow_me_destination, ";
+					$sql .= "follow_me_timeout, ";
+					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
@@ -197,30 +120,24 @@ include "root.php";
 					$sql .= "'$this->domain_uuid', ";
 					$sql .= "'$this->follow_me_uuid', ";
 					$sql .= "'$this->destination_data_1', ";
-					$sql .= "'$this->destination_type_1', ";
-					$sql .= "'$this->destination_profile', ";
 					$sql .= "'$this->destination_timeout_1', ";
-					$sql .= "'$this->destination_order', ";
-					$sql .= "'$this->destination_enabled', ";
-					$sql .= "'$this->destination_description' ";
+					$sql .= "'$this->destination_delay_1', ";
+					$sql .= "'1' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					$this->destination_order++;
 					unset($sql);
 				}
 				if (strlen($this->destination_data_2) > 0) {
-					$sql = "insert into v_hunt_group_destinations ";
+					$sql = "insert into v_follow_me_destinations ";
 					$sql .= "(";
-					$sql .= "hunt_group_destination_uuid, ";
+					$sql .= "follow_me_destination_uuid, ";
 					$sql .= "domain_uuid, ";
-					$sql .= "hunt_group_uuid, ";
-					$sql .= "destination_data, ";
-					$sql .= "destination_type, ";
-					$sql .= "destination_profile, ";
-					$sql .= "destination_timeout, ";
-					$sql .= "destination_order, ";
-					$sql .= "destination_enabled, ";
-					$sql .= "destination_description ";
+					$sql .= "follow_me_uuid, ";
+					$sql .= "follow_me_destination, ";
+					$sql .= "follow_me_timeout, ";
+					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
@@ -228,30 +145,24 @@ include "root.php";
 					$sql .= "'$this->domain_uuid', ";
 					$sql .= "'$this->follow_me_uuid', ";
 					$sql .= "'$this->destination_data_2', ";
-					$sql .= "'$this->destination_type_2', ";
-					$sql .= "'$this->destination_profile', ";
 					$sql .= "'$this->destination_timeout_2', ";
-					$sql .= "'$this->destination_order', ";
-					$sql .= "'$this->destination_enabled', ";
-					$sql .= "'$this->destination_description' ";
+					$sql .= "'$this->destination_delay_2', ";
+					$sql .= "'2' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					$this->destination_order++;
 					unset($sql);
 				}
 				if (strlen($this->destination_data_3) > 0) {
-					$sql = "insert into v_hunt_group_destinations ";
+					$sql = "insert into v_follow_me_destinations ";
 					$sql .= "(";
-					$sql .= "hunt_group_destination_uuid, ";
+					$sql .= "follow_me_destination_uuid, ";
 					$sql .= "domain_uuid, ";
-					$sql .= "hunt_group_uuid, ";
-					$sql .= "destination_data, ";
-					$sql .= "destination_type, ";
-					$sql .= "destination_profile, ";
-					$sql .= "destination_timeout, ";
-					$sql .= "destination_order, ";
-					$sql .= "destination_enabled, ";
-					$sql .= "destination_description ";
+					$sql .= "follow_me_uuid, ";
+					$sql .= "follow_me_destination, ";
+					$sql .= "follow_me_timeout, ";
+					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
@@ -259,30 +170,24 @@ include "root.php";
 					$sql .= "'$this->domain_uuid', ";
 					$sql .= "'$this->follow_me_uuid', ";
 					$sql .= "'$this->destination_data_3', ";
-					$sql .= "'$this->destination_type_3', ";
-					$sql .= "'$this->destination_profile', ";
 					$sql .= "'$this->destination_timeout_3', ";
-					$sql .= "'$this->destination_order', ";
-					$sql .= "'$this->destination_enabled', ";
-					$sql .= "'$this->destination_description' ";
+					$sql .= "'$this->destination_delay_3', ";
+					$sql .= "'3' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					$this->destination_order++;
 					unset($sql);
 				}
 				if (strlen($this->destination_data_4) > 0) {
-					$sql = "insert into v_hunt_group_destinations ";
+					$sql = "insert into v_follow_me_destinations ";
 					$sql .= "(";
-					$sql .= "hunt_group_destination_uuid, ";
+					$sql .= "follow_me_destination_uuid, ";
 					$sql .= "domain_uuid, ";
-					$sql .= "hunt_group_uuid, ";
-					$sql .= "destination_data, ";
-					$sql .= "destination_type, ";
-					$sql .= "destination_profile, ";
-					$sql .= "destination_timeout, ";
-					$sql .= "destination_order, ";
-					$sql .= "destination_enabled, ";
-					$sql .= "destination_description ";
+					$sql .= "follow_me_uuid, ";
+					$sql .= "follow_me_destination, ";
+					$sql .= "follow_me_timeout, ";
+					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
@@ -290,30 +195,24 @@ include "root.php";
 					$sql .= "'$this->domain_uuid', ";
 					$sql .= "'$this->follow_me_uuid', ";
 					$sql .= "'$this->destination_data_4', ";
-					$sql .= "'$this->destination_type_4', ";
-					$sql .= "'$this->destination_profile', ";
 					$sql .= "'$this->destination_timeout_4', ";
-					$sql .= "'$this->destination_order', ";
-					$sql .= "'$this->destination_enabled', ";
-					$sql .= "'$this->destination_description' ";
+					$sql .= "'$this->destination_delay_4', ";
+					$sql .= "'4' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					$this->destination_order++;
 					unset($sql);
 				}
 				if (strlen($this->destination_data_5) > 0) {
-					$sql = "insert into v_hunt_group_destinations ";
+					$sql = "insert into v_follow_me_destinations ";
 					$sql .= "(";
-					$sql .= "hunt_group_destination_uuid, ";
+					$sql .= "follow_me_destination_uuid, ";
 					$sql .= "domain_uuid, ";
-					$sql .= "hunt_group_uuid, ";
-					$sql .= "destination_data, ";
-					$sql .= "destination_type, ";
-					$sql .= "destination_profile, ";
-					$sql .= "destination_timeout, ";
-					$sql .= "destination_order, ";
-					$sql .= "destination_enabled, ";
-					$sql .= "destination_description ";
+					$sql .= "follow_me_uuid, ";
+					$sql .= "follow_me_destination, ";
+					$sql .= "follow_me_timeout, ";
+					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
@@ -321,18 +220,59 @@ include "root.php";
 					$sql .= "'$this->domain_uuid', ";
 					$sql .= "'$this->follow_me_uuid', ";
 					$sql .= "'$this->destination_data_5', ";
-					$sql .= "'$this->destination_type_5', ";
-					$sql .= "'$this->destination_profile', ";
 					$sql .= "'$this->destination_timeout_5', ";
-					$sql .= "'$this->destination_order', ";
-					$sql .= "'$this->destination_enabled', ";
-					$sql .= "'$this->destination_description' ";
+					$sql .= "'$this->destination_delay_5', ";
+					$sql .= "'5' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					$this->destination_order++;
 					unset($sql);
 				}
 		} //function
+
+		public function set() {
+			global $db;
+			//update the extension
+				if ($this->follow_me_enabled == "true") {
+					$sql = "select * from v_follow_me_destinations ";
+					$sql .= "where follow_me_uuid = '$this->follow_me_uuid' ";
+					$sql .= "order by follow_me_order asc ";
+					$prep_statement_2 = $db->prepare(check_sql($sql));
+					$prep_statement_2->execute();
+					$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+					$dial_string = "{group_confirm_key=exec,group_confirm_file=lua confirm.lua,sip_invite_domain=".$_SESSION['domain_name']."}";
+					foreach ($result as &$row) {
+						$dial_string .= "[presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
+						$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
+						$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
+						if (extension_exists($row["follow_me_destination"])) {
+							$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
+						}
+						else {
+							$dial_string .= "loopback/".$row["follow_me_destination"].",";
+						}
+					}
+					$this->dial_string = trim($dial_string, ",");
+				}
+				else {
+//					$this->dial_string = "";
+				}
+				$sql  = "update v_extensions set ";
+				$sql .= "do_not_disturb = 'false', ";
+				$sql .= "dial_string = '".$this->dial_string."', ";
+				$sql .= "dial_domain = '".$_SESSION['domain_name']."' ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
+				if ($this->debug) {
+					echo $sql."<br />";
+				}
+				$db->exec($sql);
+				unset($sql);
+
+			//syncrhonize configuration
+				save_extension_xml();
+		}
+
 	} //class
 
 ?>

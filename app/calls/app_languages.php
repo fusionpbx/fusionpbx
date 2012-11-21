@@ -21,6 +21,9 @@
 	$text['label-enable']['en-us'] = 'Enable';
 	$text['label-enable']['pt-pt'] = 'Activar';
 
+	$text['label-disable']['en-us'] = 'Disable';
+	$text['label-disable']['pt-pt'] = 'Desactivo';
+
 	$text['label-disabled']['en-us'] = 'Disabled';
 	$text['label-disabled']['pt-pt'] = 'Desactivo';
 
@@ -47,6 +50,12 @@
 
 	$text['label-ring-order']['en-us'] = 'Ring Order';
 	$text['label-ring-order']['pt-pt'] = 'Pedir Chamada';
+
+	$text['label-ring-delay']['en-us'] = 'Delay';
+	$text['label-ring-delay']['pt-pt'] = '';
+
+	$text['label-ring-timeout']['en-us'] = 'Timeout';
+	$text['label-ring-timeout']['pt-pt'] = '';
 
 	$text['check-sequence']['en-us'] = 'sequence';
 	$text['ckeck-sequence']['pt-pt'] = 'sequêncial';

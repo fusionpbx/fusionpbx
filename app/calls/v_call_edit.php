@@ -46,15 +46,15 @@ else {
 		echo "	<select class='formfld' style='width: 45px;' name='$select_name'>\n";
 		echo "	<option value=''></option>\n";
 
-		$i=5;
-		while($i<=100) {
+		$i = 0;
+		while($i <= 100) {
 			if ($select_value == $i) {
 				echo "	<option value='$i' selected='selected'>$i</option>\n";
 			}
 			else {
 				echo "	<option value='$i'>$i</option>\n";
 			}
-			$i=$i+5;
+			$i = $i + 5;
 		}
 		echo "</select>\n";
 	}
@@ -100,7 +100,7 @@ else {
 			$do_not_disturb = $row["do_not_disturb"];
 			$call_forward_all = $row["call_forward_all"];
 			$call_forward_busy = $row["call_forward_busy"];
-			$description = $row["description"];
+			$follow_me_uuid = $row["follow_me_uuid"];
 			break; //limit to 1 row
 		}
 		if (strlen($do_not_disturb) == 0) {
@@ -116,21 +116,28 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$call_forward_enabled = check_str($_POST["call_forward_enabled"]);
 			$call_forward_number = check_str($_POST["call_forward_number"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
-			$follow_me_type = check_str($_POST["follow_me_type"]);
-			$destination_data_1 = check_str($_POST["destination_data_1"]);
-			$destination_timeout_1 = check_str($_POST["destination_timeout_1"]);
-			$destination_data_2 = check_str($_POST["destination_data_2"]);
-			$destination_timeout_2 = check_str($_POST["destination_timeout_2"]);
-			$destination_data_3 = check_str($_POST["destination_data_3"]);
-			$destination_timeout_3 = check_str($_POST["destination_timeout_3"]);
-			$destination_data_4 = check_str($_POST["destination_data_4"]);
-			$destination_timeout_4 = check_str($_POST["destination_timeout_4"]);
-			$destination_data_5 = check_str($_POST["destination_data_5"]);
-			$destination_timeout_5 = check_str($_POST["destination_timeout_5"]);
-			$dnd_enabled = check_str($_POST["dnd_enabled"]);
-			$hunt_group_call_prompt = check_str($_POST["hunt_group_call_prompt"]);
 
-			if (strlen($follow_me_type) == 0) { $follow_me_type = "follow_me_sequence"; }
+			$destination_data_1 = check_str($_POST["destination_data_1"]);
+			$destination_delay_1 = check_str($_POST["destination_delay_1"]);
+			$destination_timeout_1 = check_str($_POST["destination_timeout_1"]);
+
+			$destination_data_2 = check_str($_POST["destination_data_2"]);
+			$destination_delay_2 = check_str($_POST["destination_delay_2"]);
+			$destination_timeout_2 = check_str($_POST["destination_timeout_2"]);
+
+			$destination_data_3 = check_str($_POST["destination_data_3"]);
+			$destination_delay_3 = check_str($_POST["destination_delay_3"]);
+			$destination_timeout_3 = check_str($_POST["destination_timeout_3"]);
+
+			$destination_data_4 = check_str($_POST["destination_data_4"]);
+			$destination_delay_4 = check_str($_POST["destination_delay_4"]);
+			$destination_timeout_4 = check_str($_POST["destination_timeout_4"]);
+
+			$destination_data_5 = check_str($_POST["destination_data_5"]);
+			$destination_delay_5 = check_str($_POST["destination_delay_5"]);
+			$destination_timeout_5 = check_str($_POST["destination_timeout_5"]);
+
+			$dnd_enabled = check_str($_POST["dnd_enabled"]);
 
 			if (strlen($call_forward_number) > 0) {
 				$call_forward_number = preg_replace("~[^0-9]~", "",$call_forward_number);
@@ -150,49 +157,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (strlen($destination_data_5) > 0) {
 				$destination_data_5 = preg_replace("~[^0-9]~", "",$destination_data_5);
 			}
-
-			//set the default
-				if (strlen($hunt_group_call_prompt) == 0) {
-					$hunt_group_call_prompt = 'false';
-				}
-
-			//destination_1
-				if (strlen($destination_data_1) > 0) {
-					if (extension_exists($destination_data_1)) {
-						$destination_type_1 = 'extension';
-					}
-					else {
-						$destination_type_1 = 'sip uri';
-					}
-				}
-			//destination_2
-				if (extension_exists($destination_data_2)) {
-					$destination_type_2 = 'extension';
-				}
-				else {
-					$destination_type_2 = 'sip uri';
-				}
-			//destination_3
-				if (extension_exists($destination_data_3)) {
-					$destination_type_3 = 'extension';
-				}
-				else {
-					$destination_type_3 = 'sip uri';
-				}
-			//destination_4
-				if (extension_exists($destination_data_4)) {
-					$destination_type_4 = 'extension';
-				}
-				else {
-					$destination_type_4 = 'sip uri';
-				}
-			//destination_5
-				if (extension_exists($destination_data_5)) {
-					$destination_type_5 = 'extension';
-				}
-				else {
-					$destination_type_5 = 'sip uri';
-				}
 		}
 
 		//check for all required data
@@ -229,68 +193,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//set the default action to add
 		$call_forward_action = "add";
-		$follow_me_action = "add";
 
-	//get the hunt group timeout
-		//add the destination timeouts together to create the hunt group timeout
-			if ($follow_me_type == "follow_me_sequence") {
-				if (strlen($destination_data_1) > 0) {
-					$hunt_group_timeout = $destination_timeout_1;
-				}
-				if (strlen($destination_data_2) > 0) {
-					$hunt_group_timeout = $hunt_group_timeout + $destination_timeout_2;
-				}
-				if (strlen($destination_data_3) > 0) {
-					$hunt_group_timeout = $hunt_group_timeout + $destination_timeout_3;
-				}
-				if (strlen($destination_data_4) > 0) {
-					$hunt_group_timeout = $hunt_group_timeout + $destination_timeout_4;
-				}
-				if (strlen($destination_data_5) > 0) {
-					$hunt_group_timeout = $hunt_group_timeout + $destination_timeout_5;
-				}
-			}
-		//find the highest timeout and set that as the hunt_group_timeout
-			if ($follow_me_type == "follow_me_simultaneous") {
-				if (strlen($destination_data_1) > 0) {
-					$hunt_group_timeout = $destination_timeout_1;
-				}
-				if (strlen($destination_data_2) > 0 && $hunt_group_timeout < $destination_timeout_2) {
-					$hunt_group_timeout = $destination_timeout_2;
-				}
-				if (strlen($destination_data_3) > 0 && $hunt_group_timeout < $destination_timeout_3) {
-					$hunt_group_timeout = $destination_timeout_3;
-				}
-				if (strlen($destination_data_4) > 0 && $hunt_group_timeout < $destination_timeout_4) {
-					$hunt_group_timeout = $destination_timeout_4;
-				}
-				if (strlen($destination_data_5) > 0 && $hunt_group_timeout < $destination_timeout_5) {
-					$hunt_group_timeout = $destination_timeout_5;
-				}
-			}
-
-	//hunt_group information used to determine if this is an add or an update
-		$sql = "select * from v_hunt_groups ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and hunt_group_extension = '$extension' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			if ($row["hunt_group_type"] == 'call_forward') {
-				$call_forward_action = "update";
-				$call_forward_uuid = $row["hunt_group_uuid"];
-			}
-			if ($row["hunt_group_type"] == 'follow_me_sequence') {
-				$follow_me_action = "update";
-				$follow_me_uuid = $row["hunt_group_uuid"];
-			}
-			if ($row["hunt_group_type"] == 'follow_me_simultaneous') {
-				$follow_me_action = "update";
-				$follow_me_uuid = $row["hunt_group_uuid"];
-			}
+	//determine if this is an add or an update
+		if (strlen($follow_me_uuid) == 0) {
+			$follow_me_action = "add";
 		}
-		unset ($prep_statement);
+		else {
+			$follow_me_action = "update";
+		}
 
 	//include the classes
 		include "includes/classes/switch_call_forward.php";
@@ -325,50 +235,60 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//follow me config
+
 		if (permission_exists('follow_me')) {
 			$follow_me = new follow_me;
 			$follow_me->domain_uuid = $_SESSION['domain_uuid'];
 			$follow_me->db_type = $db_type;
-			$follow_me->extension = $extension;
 			$follow_me->follow_me_enabled = $follow_me_enabled;
-			$follow_me->follow_me_type = $follow_me_type;
-			$follow_me->hunt_group_call_prompt = $hunt_group_call_prompt;
-			$follow_me->hunt_group_timeout = $hunt_group_timeout;
 
 			$follow_me->destination_data_1 = $destination_data_1;
 			$follow_me->destination_type_1 = $destination_type_1;
+			$follow_me->destination_delay_1 = $destination_delay_1;
 			$follow_me->destination_timeout_1 = $destination_timeout_1;
 
 			$follow_me->destination_data_2 = $destination_data_2;
 			$follow_me->destination_type_2 = $destination_type_2;
+			$follow_me->destination_delay_2 = $destination_delay_2;
 			$follow_me->destination_timeout_2 = $destination_timeout_2;
 
 			$follow_me->destination_data_3 = $destination_data_3;
 			$follow_me->destination_type_3 = $destination_type_3;
+			$follow_me->destination_delay_3 = $destination_delay_3;
 			$follow_me->destination_timeout_3 = $destination_timeout_3;
 
 			$follow_me->destination_data_4 = $destination_data_4;
 			$follow_me->destination_type_4 = $destination_type_4;
+			$follow_me->destination_delay_4 = $destination_delay_4;
 			$follow_me->destination_timeout_4 = $destination_timeout_4;
 
 			$follow_me->destination_data_5 = $destination_data_5;
 			$follow_me->destination_type_5 = $destination_type_5;
+			$follow_me->destination_delay_5 = $destination_delay_5;
 			$follow_me->destination_timeout_5 = $destination_timeout_5;
 
 			if ($follow_me_enabled == "true") {
 				if ($follow_me_action == "add") {
-					$follow_me->follow_me_uuid = uuid();
+					$follow_me_uuid = uuid();
+
+					$sql = "update v_extensions set ";
+					$sql .= "follow_me_uuid = '$follow_me_uuid' ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and extension_uuid = '$extension_uuid' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+					$follow_me->follow_me_uuid = $follow_me_uuid;
 					$follow_me->follow_me_add();
+					$follow_me->set();
 				}
 			}
 			if ($follow_me_action == "update") {
 				$follow_me->follow_me_uuid = $follow_me_uuid;
 				$follow_me->follow_me_update();
+				$follow_me->set();
 			}
 			unset($follow_me);
-
-			//synchronize the xml config
-				save_hunt_group_xml();
 
 			//synchronize the xml config
 				save_dialplan_xml();
@@ -401,82 +321,52 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "includes/header.php";
 
 //pre-populate the form
-	$sql = "select * from v_hunt_groups ";
-	$sql .= "where hunt_group_extension = '$extension' ";
-	$sql .= "and domain_uuid = '$domain_uuid' ";
+	$sql = "select * from v_follow_me ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and follow_me_uuid = '$follow_me_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		$hunt_group_uuid = $row["hunt_group_uuid"];
-		$hunt_group_extension = $row["hunt_group_extension"];
-		$huntgroup_name = $row["hunt_group_name"];
-		$hunt_group_type = $row["hunt_group_type"];
-		$hunt_group_context = $row["hunt_group_context"];
-		$hunt_group_timeout = $row["hunt_group_timeout"];
-		$hunt_group_timeout_destination = $row["hunt_group_timeout_destination"];
-		$hunt_group_timeout_type = $row["hunt_group_timeout_type"];
-		$hunt_group_ring_back = $row["hunt_group_ringback"];
-		$hunt_group_cid_name_prefix = $row["hunt_group_cid_name_prefix"];
-		$hunt_group_pin = $row["hunt_group_pin"];
-		$hunt_group_call_prompt = $row["hunt_group_call_prompt"];
-		$huntgroup_caller_announce = $row["hunt_group_caller_announce"];
-		$hunt_group_user_list = $row["hunt_group_user_list"];
-		$hunt_group_enabled = $row["hunt_group_enabled"];
-		$hunt_group_description = $row["hunt_group_description"];
+		$follow_me_enabled = $row["follow_me_enabled"];
 
-		if ($row["hunt_group_type"] == 'call_forward') {
-			$call_forward_enabled = $hunt_group_enabled;
-		}
-		if ($row["hunt_group_type"] == 'follow_me_simultaneous') {
-			$follow_me_enabled = $hunt_group_enabled;
-			$follow_me_type = 'follow_me_simultaneous';
-		}
-		if ($row["hunt_group_type"] == 'follow_me_sequence') {
-			$follow_me_enabled = $hunt_group_enabled;
-			$follow_me_type = 'follow_me_sequence';
-		}
-
-		if ($row["hunt_group_type"] == 'call_forward' || $row["hunt_group_type"] == 'follow_me_sequence' || $row["hunt_group_type"] == 'follow_me_simultaneous') {
-			$sql = "select * from v_hunt_group_destinations ";
-			$sql .= "where hunt_group_uuid = '$hunt_group_uuid' ";
-			$sql .= "order by destination_order asc ";
-			$prep_statement_2 = $db->prepare(check_sql($sql));
-			$prep_statement_2->execute();
-			$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-			$x=1;
-			foreach ($result2 as &$row2) {
-				if ($row["hunt_group_type"] == 'call_forward') {
-					if (strlen($row2["destination_data"]) > 0) {
-						$call_forward_number = $row2["destination_data"];
-					}
-				}
-				if ($row["hunt_group_type"] == 'follow_me_sequence' || $row["hunt_group_type"] == 'follow_me_simultaneous') {
-					if ($x == 1) {
-						$destination_data_1 = $row2["destination_data"];
-						$destination_timeout_1 = $row2["destination_timeout"];
-					}
-					if ($x == 2) {
-						$destination_data_2 = $row2["destination_data"];
-						$destination_timeout_2 = $row2["destination_timeout"];
-					}
-					if ($x == 3) {
-						$destination_data_3 = $row2["destination_data"];
-						$destination_timeout_3 = $row2["destination_timeout"];
-					}
-					if ($x == 4) {
-						$destination_data_4 = $row2["destination_data"];
-						$destination_timeout_4 = $row2["destination_timeout"];
-					}
-					if ($x == 5) {
-						$destination_data_5 = $row2["destination_data"];
-						$destination_timeout_5 = $row2["destination_timeout"];
-					}
-					$x++;
-				}
+		$sql = "select * from v_follow_me_destinations ";
+		$sql .= "where follow_me_uuid = '$follow_me_uuid' ";
+		$sql .= "order by follow_me_order asc ";
+		$prep_statement_2 = $db->prepare(check_sql($sql));
+		$prep_statement_2->execute();
+		$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
+		$x = 1;
+		foreach ($result2 as &$row2) {
+			//$call_forward_number = $row2["destination_data"];
+			if ($x == 1) {
+				$destination_data_1 = $row2["follow_me_destination"];
+				$destination_delay_1 = $row2["follow_me_delay"];
+				$destination_timeout_1 = $row2["follow_me_timeout"];
 			}
-			unset ($prep_statement_2);
+			if ($x == 2) {
+				$destination_data_2 = $row2["follow_me_destination"];
+				$destination_delay_2 = $row2["follow_me_delay"];
+				$destination_timeout_2 = $row2["follow_me_timeout"];
+			}
+			if ($x == 3) {
+				$destination_data_3 = $row2["follow_me_destination"];
+				$destination_delay_3 = $row2["follow_me_delay"];
+				$destination_timeout_3 = $row2["follow_me_timeout"];
+			}
+			if ($x == 4) {
+				$destination_data_4 = $row2["follow_me_destination"];
+				$destination_delay_4 = $row2["follow_me_delay"];
+				$destination_timeout_4 = $row2["follow_me_timeout"];
+			}
+			if ($x == 5) {
+				$destination_data_5 = $row2["follow_me_destination"];
+				$destination_delay_5 = $row2["follow_me_delay"];
+				$destination_timeout_5 = $row2["follow_me_timeout"];
+			}
+			$x++;
 		}
+		unset ($prep_statement_2);
 	}
 	unset ($prep_statement);
 
@@ -496,7 +386,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'>\n";
 	echo "	<b>".$text['title']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
@@ -510,7 +400,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	<strong>".$text['label-call-forward'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -538,7 +428,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -555,7 +445,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	<strong>".$text['label-follow-me'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -582,12 +472,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-ring-1'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_1' maxlength='255' value=\"$destination_data_1\">\n";
-	echo "	Sec \n"; 
+	echo "	".$text['label-ring-delay']."\n"; 
+	destination_select('destination_delay_1', $destination_delay_1, '0');
+	echo "	".$text['label-ring-timeout']."\n"; 
 	destination_select('destination_timeout_1', $destination_timeout_1, '10');
 	//echo "<br />\n";
 	//echo "This number rings first.\n";
@@ -595,12 +487,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-ring-2'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_2' maxlength='255' value=\"$destination_data_2\">\n";
-	echo "	Sec \n"; 
+	echo "	".$text['label-ring-delay']."\n"; 
+	destination_select('destination_delay_2', $destination_delay_2, '0');
+	echo "	".$text['label-ring-timeout']."\n"; 
 	destination_select('destination_timeout_2', $destination_timeout_2, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
@@ -608,12 +502,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-ring-3'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_3' maxlength='255' value=\"$destination_data_3\">\n";
-	echo "	Sec \n"; 
+	echo "	".$text['label-ring-delay']."\n"; 
+	destination_select('destination_delay_3', $destination_delay_3, '0');
+	echo "	".$text['label-ring-timeout']."\n"; 
 	destination_select('destination_timeout_3', $destination_timeout_3, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
@@ -621,12 +517,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-ring-4'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_4' maxlength='255' value=\"$destination_data_4\">\n";
-	echo "	Sec \n"; 
+	echo "	".$text['label-ring-delay']."\n"; 
+	destination_select('destination_delay_4', $destination_delay_4, '0');
+	echo "	".$text['label-ring-timeout']."\n"; 
 	destination_select('destination_timeout_4', $destination_timeout_4, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
@@ -634,63 +532,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-ring-5'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_5' maxlength='255' value=\"$destination_data_5\">\n";
-	echo "	Sec \n"; 
+	echo "	".$text['label-ring-delay']."\n"; 
+	destination_select('destination_delay_5', $destination_delay_5, '0');
+	echo "	".$text['label-ring-timeout']."\n"; 
 	destination_select('destination_timeout_5', $destination_timeout_5, '30');
-	//echo "<br />\n";
-	//echo "Enter the destination number.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-ring-order'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-    echo "<select class='formfld' name='follow_me_type'>\n";
-	echo "<option value=''></option>\n";
-	if ($follow_me_type == "follow_me_sequence") {
-		echo "<option value='follow_me_sequence' selected='selected'>sequence</option>\n";
-	}
-	else {
-		echo "<option value='follow_me_sequence'>sequence</option>\n";
-	}
-	if ($follow_me_type == "follow_me_simultaneous") {
-		echo "<option value='follow_me_simultaneous' selected='selected'>simultaneous</option>\n";
-	}
-	else {
-		echo "<option value='follow_me_simultaneous'>simultaneous</option>\n";
-	}
-    echo "</select>\n";
-	//echo "<br />\n";
-	//echo "Enter the destination number.\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-prompt'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "<select class='formfld' name='hunt_group_call_prompt'>\n";
-	echo "<option value=''></option>\n";
-	if ($hunt_group_call_prompt == "true") {
-		echo "<option value='true' selected='selected'>true</option>\n";
-	}
-	else {
-		echo "<option value='true'>true</option>\n";
-	}
-	if ($hunt_group_call_prompt == "false") {
-		echo "<option value='false' selected='selected'>false</option>\n";
-	}
-	else {
-		echo "<option value='false'>false</option>\n";
-	}
-	echo "</select>\n";
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
 	echo "</td>\n";
@@ -703,7 +553,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	<strong>".$text['label-dnd'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
