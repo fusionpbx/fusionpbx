@@ -118,7 +118,6 @@ session_start();
 					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($php_self)."&msg=".urlencode($msg));
 					exit;
 			}
-			$_SESSION["username"] = check_str($_REQUEST["username"]);
 			foreach ($result as &$row) {
 				//allow the user to choose a template only if the template has not been assigned by the superadmin
 					if (strlen($_SESSION['domain']['template']['name']) == 0) {
@@ -130,8 +129,13 @@ session_start();
 						//user defined time zone
 						$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
 					}
-				// add the user_uuid to the session
+				// add session variables
 					$_SESSION["user_uuid"] = $row["user_uuid"];
+					$_SESSION["username"] = check_str($_REQUEST["username"]);
+				// user session array
+					$_SESSION["user"]["username"] = $row["username"];
+					$_SESSION["user"]["user_uuid"] = $row["user_uuid"];
+					$_SESSION["user"]["contact_uuid"] = $row["contact_uuid"];
 			}
 
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
