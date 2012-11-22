@@ -374,7 +374,7 @@ else {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input name=\"id\" type=\"hidden\" value=\"\$id\">\n";
 	echo "	<input name=\"type\" type=\"hidden\" value=\"fax_send\">\n";
-	echo "	<input name=\"fax_file\" type=\"file\" class=\"btn\" id=\"fax_file\">\n";
+	echo "	<input name=\"fax_file\" type=\"file\" class=\"btn\" id=\"fax_file\" accept=\"image/tiff,application/pdf\">\n";
 	echo "	<br />\n";
 	echo "	".$text['description-upload']."\n";
 	echo "</td>\n";
