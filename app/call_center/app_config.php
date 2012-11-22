@@ -397,7 +397,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'max_wait_time_with_no_agent_time_reached';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'queue_max_wait_time_with_no_agent_time_reached';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;

@@ -54,6 +54,7 @@ else {
 		$queue_time_base_score = check_str($_POST["queue_time_base_score"]);
 		$queue_max_wait_time = check_str($_POST["queue_max_wait_time"]);
 		$queue_max_wait_time_with_no_agent = check_str($_POST["queue_max_wait_time_with_no_agent"]);
+		$queue_max_wait_time_with_no_agent_time_reached = check_str($_POST["queue_max_wait_time_with_no_agent_time_reached"]);
 		$queue_tier_rules_apply = check_str($_POST["queue_tier_rules_apply"]);
 		$queue_tier_rule_wait_second = check_str($_POST["queue_tier_rule_wait_second"]);
 		$queue_tier_rule_wait_multiply_level = check_str($_POST["queue_tier_rule_wait_multiply_level"]);
@@ -89,6 +90,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($queue_time_base_score) == 0) { $msg .= "Please provide: Time Base Score<br>\n"; }
 		//if (strlen($queue_max_wait_time) == 0) { $msg .= "Please provide: Max Wait Time<br>\n"; }
 		//if (strlen($queue_max_wait_time_with_no_agent) == 0) { $msg .= "Please provide: Max Wait Time with no Agent<br>\n"; }
+		//if (strlen($queue_max_wait_time_with_no_agent_time_reached) == 0) { $msg .= "Please provide: Max Wait Time with no Agent Time Reached.<br>\n"; }
 		//if (strlen($queue_tier_rules_apply) == 0) { $msg .= "Please provide: Tier Rules Apply<br>\n"; }
 		//if (strlen($queue_tier_rule_wait_second) == 0) { $msg .= "Please provide: Tier Rule Wait Second<br>\n"; }
 		//if (strlen($queue_tier_rule_wait_multiply_level) == 0) { $msg .= "Please provide: Tier Rule Wait Multiply Level<br>\n"; }
@@ -128,6 +130,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_time_base_score, ";
 				$sql .= "queue_max_wait_time, ";
 				$sql .= "queue_max_wait_time_with_no_agent, ";
+				$sql .= "queue_max_wait_time_with_no_agent_time_reached, ";
 				$sql .= "queue_tier_rules_apply, ";
 				$sql .= "queue_tier_rule_wait_second, ";
 				$sql .= "queue_tier_rule_wait_multiply_level, ";
@@ -150,6 +153,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$queue_time_base_score', ";
 				$sql .= "'$queue_max_wait_time', ";
 				$sql .= "'$queue_max_wait_time_with_no_agent', ";
+				$sql .= "'$queue_max_wait_time_with_no_agent_time_reached', ";
 				$sql .= "'$queue_tier_rules_apply', ";
 				$sql .= "'$queue_tier_rule_wait_second', ";
 				$sql .= "'$queue_tier_rule_wait_multiply_level', ";
@@ -187,6 +191,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_time_base_score = '$queue_time_base_score', ";
 				$sql .= "queue_max_wait_time = '$queue_max_wait_time', ";
 				$sql .= "queue_max_wait_time_with_no_agent = '$queue_max_wait_time_with_no_agent', ";
+				$sql .= "queue_max_wait_time_with_no_agent_time_reached = '$queue_max_wait_time_with_no_agent_time_reached', ";
 				$sql .= "queue_tier_rules_apply = '$queue_tier_rules_apply', ";
 				$sql .= "queue_tier_rule_wait_second = '$queue_tier_rule_wait_second', ";
 				$sql .= "queue_tier_rule_wait_multiply_level = '$queue_tier_rule_wait_multiply_level', ";
@@ -219,8 +224,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$call_center_queue_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_call_center_queues ";
+		$sql = "select * from v_call_center_queues ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_center_queue_uuid = '$call_center_queue_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -235,6 +239,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$queue_time_base_score = $row["queue_time_base_score"];
 			$queue_max_wait_time = $row["queue_max_wait_time"];
 			$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
+			$queue_max_wait_time_with_no_agent_time_reached = $row["queue_max_wait_time_with_no_agent_time_reached"];
 			$queue_timeout_action = $row["queue_timeout_action"];
 			$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
 			$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
@@ -254,7 +259,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($queue_moh_sound) == 0) { $queue_moh_sound = "\$\${hold_music}"; }
 	if (strlen($queue_time_base_score) == 0) { $queue_time_base_score = "system"; }
 	if (strlen($queue_max_wait_time) == 0) { $queue_max_wait_time = "0"; }
-	if (strlen($queue_max_wait_time_with_no_agent) == 0) { $queue_max_wait_time_with_no_agent = "0"; }
+	if (strlen($queue_max_wait_time_with_no_agent) == 0) { $queue_max_wait_time_with_no_agent = "30"; }
+	if (strlen($queue_max_wait_time_with_no_agent_time_reached) == 0) { $queue_max_wait_time_with_no_agent_time_reached = "60"; }
 	if (strlen($queue_tier_rules_apply) == 0) { $queue_tier_rules_apply = "false"; }
 	if (strlen($queue_tier_rule_wait_second) == 0) { $queue_tier_rule_wait_second = "300"; }
 	if (strlen($queue_tier_rule_wait_multiply_level) == 0) { $queue_tier_rule_wait_multiply_level = "true"; }
@@ -465,6 +471,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	Max Wait Time with no Agent time reached:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='queue_max_wait_time_with_no_agent_time_reached' maxlength='255' value='$queue_max_wait_time_with_no_agent_time_reached'>\n";
+	echo "<br />\n";
+	echo "Enter the max wait time with no agent time reached.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "    Timeout Action:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -633,7 +650,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
 
 require_once "includes/footer.php";
 ?>
