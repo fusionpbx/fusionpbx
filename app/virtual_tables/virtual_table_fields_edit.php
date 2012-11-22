@@ -370,18 +370,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "	<option value='pin_number'>PIN Number</option>\n";
 	}
-	//if ($virtual_field_type == "upload_image") { 
-	//	echo "	<option value='upload_image' selected='selected'>Upload Image</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='upload_image'>Upload Image</option>\n";
-	//}
-	//if ($virtual_field_type == "upload_file") { 
-	//	echo "	<option value='upload_file' selected='selected'>Upload File</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='upload_file'>Upload File</option>\n";
-	//}
+	if ($virtual_field_type == "image") { 
+		echo "	<option value='image' selected='selected'>Upload Image</option>\n";
+	}
+	else {
+		echo "	<option value='image'>Upload Image</option>\n";
+	}
+	if ($virtual_field_type == "file") { 
+		echo "	<option value='upload_file' selected='selected'>Upload File</option>\n";
+	}
+	else {
+		echo "	<option value='file'>Upload File</option>\n";
+	}
 	//if ($virtual_field_type == "yesno") { 
 	//	echo "	<option value='yesno' selected='selected'>Yes or No</option>\n";
 	//}
