@@ -367,7 +367,7 @@
 				}
 				$sql .= ") ";
 				$sql .= ") ";
-				$sql .= "order by menu_item_title, menu_item_order asc ";
+				$sql .= "order by l.menu_item_title, i.menu_item_order asc ";
 				$prep_statement_2 = $db->prepare($sql);
 				$prep_statement_2->execute();
 				$result_2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
