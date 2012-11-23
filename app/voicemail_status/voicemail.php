@@ -76,8 +76,7 @@ $order = $_GET["order"];
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
 	echo "<tr>\n";
 
-	$sql = "";
-	$sql .= "select * from v_extensions ";
+	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -171,7 +170,7 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('voicemail_status_delete')) {
-				echo "		<a href='v_voicemail_prefs_delete.php?id=".$row['extension_uuid']."' alt='".$text['confirm-prefs-delete-alt']."' title='".$text['confirm-prefs-delete-title']."' onclick=\"return confirm('".$text['confirm-prefs-delete']."')\">$v_link_label_delete</a>\n";
+				echo "		<a href='voicemail_prefs_delete.php?id=".$row['extension_uuid']."' alt='".$text['confirm-prefs-delete-alt']."' title='".$text['confirm-prefs-delete-title']."' onclick=\"return confirm('".$text['confirm-prefs-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

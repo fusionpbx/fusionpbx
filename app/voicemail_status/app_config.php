@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = 'ff4ccd3d-e295-7875-04b4-54eb0c74adc5';
 		$apps[$x]['menu'][0]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/voicemail_status/v_voicemail.php';
+		$apps[$x]['menu'][0]['path'] = '/app/voicemail_status/voicemail.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 

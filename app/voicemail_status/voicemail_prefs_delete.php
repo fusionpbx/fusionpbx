@@ -53,7 +53,7 @@ if (count($_GET)>0) {
 //redirect the user
 	require "includes/require.php";
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Voicemail Preferences set to default\n";
 	echo "</div>\n";
