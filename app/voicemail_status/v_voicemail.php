@@ -35,6 +35,11 @@ else {
 }
 require_once "includes/header.php";
 require_once "includes/paging.php";
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
@@ -49,8 +54,8 @@ $order = $_GET["order"];
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "	<td align='left'><b>Voicemail</b><br>\n";
-	echo "		Show details about the voicemail settings including the voicemail count, and voicemail to email address.\n";
+	echo "	<td align='left'><b>".$text['title-voicemail']."</b><br>\n";
+	echo "		".$text['description-voicemail']."\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -64,11 +69,11 @@ $order = $_GET["order"];
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo th_order_by('extension', 'Extension', $order_by, $order);
-	echo th_order_by('vm_mailto', 'Voicemail Mail To', $order_by, $order);
-	echo "<th>Messages</th>\n";
-	echo th_order_by('enabled', 'Enabled', $order_by, $order);
-	echo th_order_by('description', 'Description', $order_by, $order);
+	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('vm_mailto', $text['label-voicemail'], $order_by, $order);
+	echo "<th>".$text['label-messages']."</th>\n";
+	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('description', $text['label-description'], $order_by, $order);
 	echo "<tr>\n";
 
 	$sql = "";
@@ -170,7 +175,7 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('voicemail_status_delete')) {
-				echo "		<a href='v_voicemail_prefs_delete.php?id=".$row['extension_uuid']."' alt='restore default preferences' title='restore default preferences' onclick=\"return confirm('Are you sure you want remove the voicemail name and greeting?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='v_voicemail_prefs_delete.php?id=".$row['extension_uuid']."' alt='".$text['confirm-prefs-delete-alt']."' title='".$text['confirm-prefs-delete-title']."' onclick=\"return confirm('".$text['confirm-prefs-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
