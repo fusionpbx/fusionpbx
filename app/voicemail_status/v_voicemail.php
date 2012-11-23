@@ -114,8 +114,7 @@ $order = $_GET["order"];
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page; 
 
-	$sql = "";
-	$sql .= "select * from v_extensions ";
+	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -151,11 +150,8 @@ $order = $_GET["order"];
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-//		echo "<pre>\n";
-//		print_r($row);
-//		echo "</pre>\n";
-			$sql = "";
-			$sql .= "select count(*) as count from voicemail_msgs ";
+
+			$sql = "select count(*) as count from voicemail_msgs ";
 			$sql .= "where domain = '".$_SESSION['domains'][$domain_uuid]['domain_name']."' ";
 			$sql .= "and username = '".$row['extension']."' ";
 //			$prep_statement = $db->prepare(check_sql($sql));
