@@ -256,11 +256,41 @@ else {
 				exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1728x2156 -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
 				//exec("rm ".$dir_fax_temp.'/'.$fax_name.".pdf");
 			}
+		//get some more info to send the fax
+			$mailfrom_address = $_SESSION['email']['smtp_from']['var'];
+
+			$sql = "select fax_email from v_fax where fax_uuid = '".$fax_uuid."'; ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+			$mailto_address_fax = $result["fax_email"];
+			echo $mailto_address_fax;
+
+			$sql = "select contact_uuid from v_users where user_uuid = '".$_SESSION['user_uuid']."'; ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+			//print_r($result);
+
+			$sql = "select contact_email from v_contacts where contact_uuid = '".$result["contact_uuid"]."'; ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+			//print_r($result);
+			$mailto_address_user = $result["contact_email"];
+			echo $mailto_address_user;
+
+			if ($mailto_address_user != $mailto_address_fax) {
+				$mailto_address = "'".$mailto_address_fax."\,".$mailto_address_user."'";
+			}		
+			else {
+			$mailto_address = $mailto_address_user;
+			}
 
 		//send the fax
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
-				//prepare the fax originate command
+				//prepare the fax  command
 					$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_number);
 					$fax_file = $dir_fax_temp."/".$fax_name.".tif";
 					if (count($route_array) == 0) {
@@ -273,7 +303,7 @@ else {
 							$fax_uri = $route_array[0];
 							$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
 					}
-					$cmd = "api originate {origination_caller_id_name='".$fax_caller_id_name."',origination_caller_id_number='".$fax_caller_id_number."',fax_ident='".$fax_caller_id_number."',fax_header='".$fax_caller_id_name."',fax_uri=".$fax_uri.",fax_file='".$fax_file."',fax_retry_attempts=1,fax_retry_limit=20,fax_retry_sleep=180,fax_verbose=true,fax_use_ecm=off,".$t38."api_hangup_hook='lua fax_retry.lua'}".$fax_uri." &txfax('".$fax_file."')";
+					$cmd = "api originate {mailto_address='".$mailto_address."',mailfrom_address='".$mailfrom_address."',origination_caller_id_name='".$fax_caller_id_name."',origination_caller_id_number='".$fax_caller_id_number."',fax_ident='".$fax_caller_id_number."',fax_header='".$fax_caller_id_name."',fax_uri=".$fax_uri.",fax_file='".$fax_file."',fax_retry_attempts=1,fax_retry_limit=20,fax_retry_sleep=180,fax_verbose=true,fax_use_ecm=off,".$t38."api_hangup_hook='lua fax_retry.lua'}".$fax_uri." &txfax('".$fax_file."')";
 				//send the command to event socket
 					$response = event_socket_request($fp, $cmd);
 					$response = str_replace("\n", "", $response);
