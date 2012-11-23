@@ -303,11 +303,16 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "		<td style='padding-left: 5px;'>&nbsp;<br>\n";
 		echo "			<input name='submit' type='submit' class='btn' id='upload' value='Upload'>\n";
 		echo "		</td>\n";
-		echo "	<tr>\n";
+		echo "	</tr>\n";
 		echo "</table>\n";
 		echo "</form>\n";
 		echo "<br><br>\n";
 	}
+
+//set the row styles
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
 //show the default category
 	if (permission_exists('music_on_hold_default_view')) {
@@ -326,10 +331,6 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">Sampling</th>\n";
 		echo "		<td width='22px' align=\"center\"></td>\n";
 		echo "	</tr>";
-
-		$c = 0;
-		$row_style["0"] = "row_style0";
-		$row_style["1"] = "row_style1";
 
 		foreach ($sampling_rate_dirs as $sampling_rate_dir) {
 			if ($handle = opendir($music_on_hold_dir."/".$sampling_rate_dir)) {
@@ -361,8 +362,9 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 				closedir($handle);
 			}
 		}
+		echo "</table>\n";
 	}
-	echo "</table>\n";
+
 	if ($v_path_show) {
 		echo "<div style='font-size: 10px; text-align: right; margin-right: 25px;'><b>Location:</b> ".$music_on_hold_dir."</div>\n";
 	}
@@ -434,7 +436,6 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			echo "<div style='font-size: 10px; text-align: right; margin-right: 25px;'><b>Location:</b> ".$music_on_hold_category_parent_dir."/".$category_dir."</div>\n";
 		}
 		echo "<br><br>\n";
-
 	}
 
 //include the footer
