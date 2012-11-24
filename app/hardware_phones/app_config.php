@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = 'f9dce498-b7f9-740f-e592-9e8ff3dac2a0';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'bc96d773-ee57-0cdd-c3ac-2d91aba61b55';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/hardware_phones/v_hardware_phones.php';
+		$apps[$x]['menu'][0]['path'] = '/app/hardware_phones/hardware_phones.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 

@@ -173,7 +173,7 @@ require_once "includes/require.php";
 
 					//redirect the user
 						require_once "includes/header.php";
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hardware_phones.php\">\n";
+						echo "<meta http-equiv=\"refresh\" content=\"2;url=hardware_phones.php\">\n";
 						echo "<div align='center'>\n";
 						echo "Add Complete\n";
 						echo "</div>\n";
@@ -205,7 +205,7 @@ require_once "includes/require.php";
 
 					//redirect the user
 						require_once "includes/header.php";
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hardware_phones.php\">\n";
+						echo "<meta http-equiv=\"refresh\" content=\"2;url=hardware_phones.php\">\n";
 						echo "<div align='center'>\n";
 						echo "Update Complete\n";
 						echo "</div>\n";
@@ -261,7 +261,7 @@ require_once "includes/require.php";
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap='nowrap' align='left'><b>Hardware Phone Edit</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_hardware_phones.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='hardware_phones.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left'>\n";

@@ -99,7 +99,7 @@ echo th_order_by('phone_provision_enable', 'Enabled', $order_by, $order);
 echo th_order_by('phone_description', 'Description', $order_by, $order);
 echo "<td align='right' width='42'>\n";
 if (permission_exists('phone_add')) {
-	echo "	<a href='v_hardware_phones_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "	<a href='hardware_phone_edit.php' alt='add'>$v_link_label_add</a>\n";
 }
 echo "</td>\n";
 echo "<tr>\n";
@@ -118,10 +118,10 @@ if ($result_count > 0) { //no results
 		echo "	<td valign='top' class='row_stylebg'>".$row['phone_description']."&nbsp;</td>\n";
 		echo "	<td valign='top' align='right'>\n";
 		if (permission_exists('phone_edit')) {
-			echo "		<a href='v_hardware_phones_edit.php?id=".$row['hardware_phone_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='hardware_phone_edit.php?id=".$row['hardware_phone_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 		}
 		if (permission_exists('phone_delete')) {
-			echo "		<a href='v_hardware_phones_delete.php?id=".$row['hardware_phone_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='hardware_phone_delete.php?id=".$row['hardware_phone_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
@@ -138,7 +138,7 @@ echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 echo "		<td width='33.3%' align='right'>\n";
 if (permission_exists('phone_add')) {
-	echo "			<a href='v_hardware_phones_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='hardware_phone_edit.php' alt='add'>$v_link_label_add</a>\n";
 }
 echo "		</td>\n";
 echo "	</tr>\n";
