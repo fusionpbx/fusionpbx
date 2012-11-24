@@ -39,8 +39,7 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_servers ";
+	$sql = "delete from v_servers ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and server_uuid = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -49,7 +48,7 @@ if (strlen($id)>0) {
 }
 
 require_once "includes/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=v_servers.php\">\n";
+echo "<meta http-equiv=\"refresh\" content=\"2;url=servers.php\">\n";
 echo "<div align='center'>\n";
 echo "Delete Complete\n";
 echo "</div>\n";

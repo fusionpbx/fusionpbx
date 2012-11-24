@@ -91,7 +91,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_servers.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=servers.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -109,7 +109,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_servers.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=servers.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -122,8 +122,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$server_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_servers ";
+		$sql = "select * from v_servers ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and server_uuid = '$server_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -158,7 +157,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>Server Edit</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_servers.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='servers.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2'>\n";
@@ -199,7 +198,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 	if ($action == "update") {
-		require "v_server_settings.php";
+		require "server_settings.php";
 	}
 
 	echo "	</td>";

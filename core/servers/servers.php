@@ -60,8 +60,7 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "";
-		$sql .= " select count(*) as num_rows from v_servers ";
+		$sql = " select count(*) as num_rows from v_servers ";
 		$sql .= " where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
@@ -85,11 +84,10 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the  list
-		$sql = "";
-		$sql .= " select * from v_servers ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
+		$sql = "select * from v_servers ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -107,7 +105,7 @@ require_once "includes/paging.php";
 	echo th_order_by('server_name', 'Server Name', $order_by, $order);
 	echo th_order_by('server_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_servers_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "	<a href='servers_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -118,8 +116,8 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['server_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['server_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_servers_edit.php?id=".$row[server_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_servers_delete.php?id=".$row[server_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='servers_edit.php?id=".$row[server_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='servers_delete.php?id=".$row[server_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -135,7 +133,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_servers_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='servers_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

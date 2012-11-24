@@ -60,10 +60,9 @@ require_once "includes/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "";
-		$sql .= " select count(*) as num_rows from v_server_settings ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		$sql .= " and server_uuid = '$server_uuid' ";
+		$sql = "select count(*) as num_rows from v_server_settings ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and server_uuid = '$server_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -86,10 +85,9 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the server list
-		$sql = "";
-		$sql .= " select * from v_server_settings ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		$sql .= " and server_uuid = '$server_uuid' ";
+		$sql = "select * from v_server_settings ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and server_uuid = '$server_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= " limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -110,7 +108,7 @@ require_once "includes/paging.php";
 	echo th_order_by('server_setting_name', 'Name', $order_by, $order);
 	echo th_order_by('server_setting_value', 'Value', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='v_server_settings_edit.php?server_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	echo "	<a href='server_settings_edit.php?server_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -121,8 +119,8 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['server_setting_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['server_setting_value']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_server_settings_edit.php?server_uuid=".$row['server_uuid']."&id=".$row['server_setting_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='v_server_settings_delete.php?server_uuid=".$row['server_uuid']."&id=".$row['server_setting_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='server_settings_edit.php?server_uuid=".$row['server_uuid']."&id=".$row['server_setting_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='server_settings_delete.php?server_uuid=".$row['server_uuid']."&id=".$row['server_setting_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -138,7 +136,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='v_server_settings_edit.php?server_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='server_settings_edit.php?server_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
