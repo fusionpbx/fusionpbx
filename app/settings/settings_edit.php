@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	exit;
 }
 	
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //get the number of rows in v_extensions 
 	$sql = " select count(*) as num_rows from v_settings ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -230,85 +237,85 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td align='left' width='30%' nowrap><b>Setting Add</b></td>\n";
 	}
 	if ($action == "update") {
-	echo "<td align='left' width='30%' nowrap><b>Setting Update</b></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='javascript:history.go(-1)'\" value='Back'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Event Socket IP Address:\n";
+	echo "    ".$text['label-event-socket-ip']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_ip_address' maxlength='255' value=\"$event_socket_ip_address\">\n";
 	echo "<br />\n";
-	echo "Enter the event socket IP address. default: 127.0.0.1\n";
+	echo $text['description-event-socket-ip']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Event Socket Port:\n";
+	echo "    ".$text['label-event-socket-port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='event_socket_port' maxlength='255' value=\"$event_socket_port\">\n";
 	echo "<br />\n";
-	echo "Enter the event socket port. default: 8021\n";
+	echo $text['description-event-socket-port']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Event Socket Password:\n";
+	echo "    ".$text['label-event-socket-pw']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='password' name='event_socket_password' id='event_socket_password' onfocus=\"document.getElementById('show_event_socket_password').innerHTML = 'Password: '+document.getElementById('event_socket_password').value;\" onblur=\"//document.getElementById('show_event_socket_password').innerHTML = ''\" maxlength='50' value=\"$event_socket_password\">\n";
 	echo "<br />\n";
-	echo "Enter the event socket password. <span id='show_event_socket_password'></span>\n";
+	echo $text['description-event-socket-pw']."<span id='show_event_socket_password'></span>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    XML RPC HTTP Port:\n";
+	echo "    ".$text['label-xml-rpc-port']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_http_port' maxlength='255' value=\"$xml_rpc_http_port\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC HTTP Port. default: 8787\n";
+	echo $text['description-xml-rpc-port']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    XML RPC Auth Realm:\n";
+	echo "    ".$text['label-xml-rpc-realm']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_auth_realm' maxlength='255' value=\"$xml_rpc_auth_realm\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC Auth Realm. default: freeswitch\n";
+	echo $text['description-xml-rpc-realm']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    XML RPC Auth User:\n";
+	echo "    ".$text['label-xml-rpc-user']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='xml_rpc_auth_user' maxlength='255' value=\"$xml_rpc_auth_user\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC Auth User. default: xmlrpc\n";
+	echo $text['description-xml-rpc-user']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    XML RPC Auth Password:\n";
+	echo "    ".$text['label-xml-rpc-pw']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='password' name='xml_rpc_auth_pass' id='xml_rpc_auth_pass' onfocus=\"document.getElementById('show_xml_rpc_auth_pass').innerHTML = 'Password: '+document.getElementById('xml_rpc_auth_pass').value;\" onblur=\"//document.getElementById('show_xml_rpc_auth_pass').innerHTML = ''\" maxlength='50' value=\"$xml_rpc_auth_pass\">\n";
 	echo "<br />\n";
-	echo "Enter the XML RPC Auth Password. <span id='show_xml_rpc_auth_pass'></span>\n";
+	echo $text['description-xml-rpc-pw']." <span id='show_xml_rpc_auth_pass'></span>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -427,23 +434,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Mod Shout Decoder:\n";
+	echo "    ".$text['label-shout-decoder']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='mod_shout_decoder' maxlength='255' value=\"$mod_shout_decoder\">\n";
 	echo "<br />\n";
-	echo "Enter the Decoder. default: i386\n";
+	echo $text['description-shout-decoder']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Mod Shout Volume:\n";
+	echo "    ".$text['label-shout-volume']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='mod_shout_volume' maxlength='255' value=\"$mod_shout_volume\">\n";
 	echo "<br />\n";
-	echo "Enter Mod Shout Volume.\n";
+	echo $text['description-shout-volume']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	if (permission_exists('settings_edit')) {
