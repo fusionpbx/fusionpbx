@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 
 include "root.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 require_once "includes/paging.php";
 
@@ -230,10 +237,8 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
 	echo "			<p><span class=\"vexpl\">\n";
-	echo "			<strong>Music on Hold</strong><br><br>\n";
-	echo "			Music on hold can be in WAV or MP3 format. To play an MP3 file you must have\n";
-	echo "			mod_shout enabled on the 'Modules' tab. You can adjust the volume of the MP3\n";
-	echo "			audio from the 'Settings' tab. For best performance upload 16 bit, 8/16/32/48 kHz <i>mono</i> WAV files.\n";
+	echo "			<strong>".$text['label-moh']."</strong><br><br>\n";
+	echo "			".$text['desc-moh']."\n";
 	echo "			</span></p>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -244,17 +249,17 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 
 //show the upload form
 	if (permission_exists('music_on_hold_add')) {
-		echo "<b>Upload Music</b>\n";
+		echo "<b>".$text['label-upload-moh']."</b>\n";
 		echo "<br><br>\n";
 		echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' id='frmUpload' onSubmit=''>\n";
 		echo "<input name='type' type='hidden' value='moh'>\n";
 		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "	<tr>\n";
 		echo "		<td style='padding-right: 5px;' nowrap>\n";
-		echo "			File Path<br>\n";
-		echo "			<input name='upload_file' type='file' class='button' size='50' id='upload_file'><input type='button' class='button' value='Clear' onclick=\"reset_file_input('upload_file');\">\n";
+		echo "			".$text['label-file-path']."<br>\n";
+		echo "			<input name='upload_file' type='file' class='button' size='50' id='upload_file'><input type='button' class='button' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file');\">\n";
 		echo "		</td>\n";
-		echo "		<td style='padding-right: 5px;' nowrap>Sampling<br>\n";
+		echo "		<td style='padding-right: 5px;' nowrap>".$text['label-sampling']."<br>\n";
 		echo "			<select id='upload_sampling_rate' name='upload_sampling_rate' class='formfld' style='width: auto;'>\n";
 		echo "				<option value='8'>8 kHz</option>\n";
 		echo "				<option value='16'>16 kHz</option>\n";
@@ -262,10 +267,10 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "				<option value='48'>48 kHz</option>\n";
 		echo "			</select>\n";
 		echo "		</td>\n";
-		echo "		<td nowrap>Category<br>\n";
+		echo "		<td nowrap>".$text['label-category']."<br>\n";
 		echo "			<select id='upload_category' name='upload_category' class='formfld' style='width: auto;' onchange=\"if (this.options[this.selectedIndex].value == '_NEW_CAT_') { this.style.display='none'; document.getElementById('upload_category_new').style.display=''; document.getElementById('upload_category_return').style.display=''; document.getElementById('upload_category_new').focus(); }\">\n";
 		if (permission_exists('music_on_hold_default_add')) {
-			echo "				<option value='' style='font-style: italic;'>Default</option>\n";
+			echo "				<option value='' style='font-style: italic;'>".$text['opt-default']."</option>\n";
 		}
 
 		if (count($_SESSION['domains']) > 1) {
@@ -293,15 +298,15 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 			closedir($handle);
 		}
 
-		echo "				<option value='_NEW_CAT_' style='font-style: italic;'>New...</option>\n";
+		echo "				<option value='_NEW_CAT_' style='font-style: italic;'>".$text['opt-new']."</option>\n";
 		echo "			</select>\n";
 		echo "			<input class='formfld' style='width: 150px; display: none;' type='text' name='upload_category_new' id='upload_category_new' maxlength='255' value=''>";
 		echo "		</td>\n";
 		echo "		<td>&nbsp;<br>\n";
-		echo "			<input id='upload_category_return' type='button' class='button' style='display: none;' value='<' onclick=\"this.style.display='none'; document.getElementById('upload_category_new').style.display='none'; document.getElementById('upload_category_new').value=''; document.getElementById('upload_category').style.display=''; document.getElementById('upload_category').selectedIndex = 0;\" title='Double-Click to Select an Existing Category'>";
+		echo "			<input id='upload_category_return' type='button' class='button' style='display: none;' value='<' onclick=\"this.style.display='none'; document.getElementById('upload_category_new').style.display='none'; document.getElementById('upload_category_new').value=''; document.getElementById('upload_category').style.display=''; document.getElementById('upload_category').selectedIndex = 0;\" title='".$text['message-click-select']."'>";
 		echo "		</td>\n";
 		echo "		<td style='padding-left: 5px;'>&nbsp;<br>\n";
-		echo "			<input name='submit' type='submit' class='btn' id='upload' value='Upload'>\n";
+		echo "			<input name='submit' type='submit' class='btn' id='upload' value='".$text['button-upload']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";
 		echo "</table>\n";
@@ -316,19 +321,19 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 
 //show the default category
 	if (permission_exists('music_on_hold_default_view')) {
-		echo "<b><i>Default</i></b>\n";
+		echo "<b><i>".$text['label-default']."</i></b>\n";
 		if (count($_SESSION['domains']) > 1) {
-			echo "&nbsp;&nbsp;- Available to All Domains\n";
+			echo "&nbsp;&nbsp;- ".$text['message-available-to-all']."\n";
 		}
 
 		echo "<br><br>\n";
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom: 3px;\">\n";
 		echo "	<tr>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">Download</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">Play</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdr\">Uploaded</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">File Size</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">Sampling</th>\n";
+		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-download']."</th>\n";
+		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-play']."</th>\n";
+		echo "		<th width=\"30%\" class=\"listhdr\">".$text['label-uploaded']."</th>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
 		echo "		<td width='22px' align=\"center\"></td>\n";
 		echo "	</tr>";
 
@@ -366,7 +371,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	}
 
 	if ($v_path_show) {
-		echo "<div style='font-size: 10px; text-align: right; margin-right: 25px;'><b>Location:</b> ".$music_on_hold_dir."</div>\n";
+		echo "<div style='font-size: 10px; text-align: right; margin-right: 25px;'><b>".$text['label-location'].":</b> ".$music_on_hold_dir."</div>\n";
 	}
 	echo "<br><br>\n";
 
@@ -378,11 +383,11 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom: 3px;\">\n";
 		echo "	<tr>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">Download</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">Play</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdr\">Uploaded</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">File Size</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">Sampling</th>\n";
+		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-download']."</th>\n";
+		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-play']."</th>\n";
+		echo "		<th width=\"30%\" class=\"listhdr\">".$text['label-uploaded']."</th>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
 		echo "		<td width='22px' align=\"center\" style=\"padding: 2px;\"><span id='category_".$category_number."_delete_icon'></span></td>\n";
 		echo "	</tr>";
 
@@ -409,7 +414,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 						echo "	<td class='".$row_style[$c]."'>".($sampling_rate_dir / 1000)." kHz</td>\n";
 						echo "	<td align=\"center\" width='22' nowrap=\"nowrap\" class=\"list\">\n";
 						if (permission_exists('music_on_hold_delete')) {
-							echo "	<a href=\"music_on_hold.php?type=moh&act=del&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&file_name=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>\n";
+							echo "	<a href=\"music_on_hold.php?type=moh&act=del&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&file_name=".base64_encode($file)."\" onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>\n";
 						}
 						echo "	</td>\n";
 						echo "</tr>\n";
@@ -425,8 +430,8 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		if (!$moh_found) {
 			echo "<tr>\n";
 			echo "	<td colspan='5' align='left' class='".$row_style[$c]."'>\n";
-			echo "		No files found.";
-			echo "		<script>document.getElementById('category_".$category_number."_delete_icon').innerHTML = \"<a href='music_on_hold.php?type=cat&act=del&category=".base64_encode($category_dir)."' title='Delete Category'>".$v_link_label_delete."</a>\";</script>\n";
+			echo "		".$text['message-nofiles']."";
+			echo "		<script>document.getElementById('category_".$category_number."_delete_icon').innerHTML = \"<a href='music_on_hold.php?type=cat&act=del&category=".base64_encode($category_dir)."' title='".$text['label-delete-category']."'>".$v_link_label_delete."</a>\";</script>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 		}
