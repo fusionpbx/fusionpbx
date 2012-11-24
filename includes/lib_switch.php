@@ -639,6 +639,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		unset ($prep_statement);
 
 	//list destinations
+		/*
 		$sql = "select * from v_destinations ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and destination_enabled = 'true' ";
@@ -678,7 +679,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			echo "</optgroup>\n";
 		}
 		unset ($prep_statement);
-
+		*/
 	//list extensions
 		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
