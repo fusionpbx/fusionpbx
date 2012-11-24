@@ -253,7 +253,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//redirect the user
 		if (isset($action)) {
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_gateways.php\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=gateways.php\">\n";
 			echo "<div align='center'>\n";
 			if ($action == "add") {
 				echo "Add Complete\n";
@@ -354,8 +354,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>";
 	echo "		<td width='50%' align='right'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";
-	echo "			<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='v_gateways_copy.php?id=".$gateway_uuid."';}\" value='Copy'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_gateways.php'\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='gateways_copy.php?id=".$gateway_uuid."';}\" value='Copy'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='gateways.php'\" value='Back'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "	<tr>";

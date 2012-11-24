@@ -39,8 +39,7 @@ if (strlen($_GET["id"])>0) {
 		$id = $_GET["id"];
 
 	//get the gateway name
-		$sql = "";
-		$sql .= "select * from v_gateways ";
+		$sql = "select * from v_gateways ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and gateway_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -112,7 +111,7 @@ if (strlen($_GET["id"])>0) {
 
 //redirect the users
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_gateways.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=gateways.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

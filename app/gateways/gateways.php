@@ -92,7 +92,7 @@ echo "    <td align='left'><span class=\"vexpl\">\n";
 echo "        <strong>Gateways</strong></span>\n";
 echo "    </td>\n";
 echo "    <td align='right'>";
-echo "        <input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_gateways.php'\" value='Refresh'>\n";
+echo "        <input type='button' class='btn' name='' alt='back' onclick=\"window.location='gateways.php'\" value='Refresh'>\n";
 echo "    </td>\n";
 echo "  </tr>\n";
 echo "  <tr>\n";
@@ -107,8 +107,7 @@ echo "</table>";
 echo "<br />\n";
 echo "<br />\n";
 
-$sql = "";
-$sql .= " select * from v_gateways ";
+$sql = "select * from v_gateways ";
 $sql .= "where domain_uuid = '$domain_uuid' ";
 if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 $prep_statement = $db->prepare(check_sql($sql));
@@ -124,8 +123,7 @@ if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 $offset = $rows_per_page * $page; 
 
-$sql = "";
-$sql .= " select * from v_gateways ";
+$sql = "select * from v_gateways ";
 $sql .= "where domain_uuid = '$domain_uuid' ";
 if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 $sql .= " limit $rows_per_page offset $offset ";
@@ -153,7 +151,7 @@ echo th_order_by('enabled', 'Enabled', $order_by, $order);
 echo th_order_by('description', 'Gateway Description', $order_by, $order);
 echo "<td align='right' width='42'>\n";
 if (permission_exists('gateways_add')) {
-	echo "	<a href='v_gateways_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "	<a href='gateway_edit.php' alt='add'>$v_link_label_add</a>\n";
 }
 echo "</td>\n";
 echo "<tr>\n";
@@ -173,7 +171,7 @@ else { //received results
 				if ($response == "Invalid Gateway!") {
 					//not running
 					echo "	<td valign='top' class='".$row_style[$c]."'>Stopped</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'><a href='v_gateways.php?a=start&gateway=".$row["gateway"]."&profile=".$row["profile"]."' alt='start'>Start</a></td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'><a href='gateways.php?a=start&gateway=".$row["gateway"]."&profile=".$row["profile"]."' alt='start'>Start</a></td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
 				}
 				else {
@@ -182,7 +180,7 @@ else { //received results
 						$xml = new SimpleXMLElement($response);
 						$state = $xml->state;
 						echo "	<td valign='top' class='".$row_style[$c]."'>Running</td>\n";
-						echo "	<td valign='top' class='".$row_style[$c]."'><a href='v_gateways.php?a=stop&gateway=".$row["gateway"]."&profile=".$row["profile"]."' alt='stop'>Stop</a></td>\n";
+						echo "	<td valign='top' class='".$row_style[$c]."'><a href='gateways.php?a=stop&gateway=".$row["gateway"]."&profile=".$row["profile"]."' alt='stop'>Stop</a></td>\n";
 						echo "	<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
 					}
 					catch(Exception $e) {
@@ -201,10 +199,10 @@ else { //received results
 		echo "	<td valign='top' class='row_stylebg'>".$row["description"]."</td>\n";
 		echo "	<td valign='top' align='right'>\n";
 		if (permission_exists('gateways_edit')) {
-			echo "		<a href='v_gateways_edit.php?id=".$row["gateway_uuid"]."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='gateway_edit.php?id=".$row["gateway_uuid"]."' alt='edit'>$v_link_label_edit</a>\n";
 		}
 		if (permission_exists('gateways_delete')) {
-			echo "		<a href='v_gateways_delete.php?id=".$row["gateway_uuid"]."' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
+			echo "		<a href='gateway_delete.php?id=".$row["gateway_uuid"]."' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
@@ -221,7 +219,7 @@ echo "			<td width='33.3%' nowrap>&nbsp;</td>\n";
 echo "			<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 echo "			<td width='33.3%' align='right'>\n";
 if (permission_exists('gateways_add')) {
-	echo "				<a href='v_gateways_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "				<a href='gateway_edit.php' alt='add'>$v_link_label_add</a>\n";
 }
 echo "			</td>\n";
 echo "		</tr>\n";

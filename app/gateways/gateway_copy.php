@@ -150,7 +150,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_gateways.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=gateways.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Copy Complete\n";
 	echo "</div>\n";
