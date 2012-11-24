@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get and prepare the conference name
 	$conference_name = check_str(trim($_REQUEST["c"]));
@@ -109,8 +116,8 @@ var record_count = 0;
 echo "<div align='center'>";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "	<td align='left'><b>Interactive Conference</b><br>\n";
-echo "		Use this to monitor and interact with the members of the conference.\n";
+echo "	<td align='left'><b>".$text['label-interactive']."</b><br>\n";
+echo "		".$text['description-interactive']."\n";
 echo "	</td>\n";
 echo "	</tr>\n";
 echo "</table>\n";

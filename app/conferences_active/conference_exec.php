@@ -25,6 +25,18 @@
 	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
+
+	The Original Code is FusionPBX
+
+	The Initial Developer of the Original Code is
+	Mark J Crane <markjcrane@fusionpbx.com>
+	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	the Initial Developer. All Rights Reserved.
+
+	Contributor(s):
+	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
+
 */
 include "root.php";
 require_once "includes/require.php";
@@ -36,6 +48,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get the http values and set them as php variables
 	if (count($_GET)>0) {
@@ -52,13 +70,13 @@ else {
 		//authorized;
 	} else {
 		//not found. this command is not authorized
-		echo "access denied";
+		echo $text['message-denied'];
 		exit;
 	}
 
 //check if the domain is in the switch_cmd
 	if(stristr($name, $_SESSION['domain_name']) === FALSE) {
-		echo "access denied";
+		echo $text['message-denied'];
 		exit;
 	}
 

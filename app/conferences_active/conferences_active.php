@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 
 require_once "includes/header.php";
 ?><script type="text/javascript">
@@ -90,8 +98,8 @@ echo "<div align='center'>";
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 echo "  <tr>\n";
-echo "	<td align='left'><b>Active Conferences</b><br>\n";
-echo "		List all the conferences that are currently active with one or more members.\n";
+echo "	<td align='left'><b>".$text['label-active']."</b><br>\n";
+echo "		".$text['description-active']."\n";
 echo "	</td>\n";
 echo "  </tr>\n";
 echo "</table>\n";

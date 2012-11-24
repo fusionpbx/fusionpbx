@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,16 +35,22 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 $tmp_conference_name = str_replace("_", " ", $conference_name);
 
 $switch_cmd = 'conference xml_list';
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 if (!$fp) {
-	$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+	$msg = "<div align='center'>".$text['message-connection']."<br /></div>"; 
 	echo "<div align='center'>\n";
 	echo "<table width='40%'>\n";
 	echo "<tr>\n";
-	echo "<th align='left'>Message</th>\n";
+	echo "<th align='left'>".$text['label-message']."</th>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -66,8 +73,8 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>Name</th>\n";
-	echo "<th>Member Count</th>\n";
+	echo "<th>".$text['label-name']."</th>\n";
+	echo "<th>".$text['label-member-count']."</th>\n";
 	echo "<th>&nbsp;</th>\n";
 	echo "</tr>\n";
 
@@ -96,7 +103,7 @@ else {
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$conference_display_name."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$member_count."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'><a href='conference_interactive.php?c=".$conference_name."'>view</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'><a href='conference_interactive.php?c=".$conference_name."'>".$text['button-view']."</a></td>\n";
 				echo "</tr>\n";
 
 				if ($c==0) { $c=1; } else { $c=0; }
