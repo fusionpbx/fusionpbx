@@ -54,7 +54,7 @@ if (strlen($id)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fifo_edit.php?id=".$dialplan_uuid."\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=fifo_edit.php?id=".$dialplan_uuid."\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

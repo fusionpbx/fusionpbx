@@ -121,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				save_dialplan_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fifo.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=fifo.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -147,7 +147,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				save_dialplan_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_fifo.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=fifo.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -198,7 +198,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "        <strong>Queues</strong><br />\n";
 	echo "        </span>\n";
 	echo "    </td>\n";
-	echo "    <td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_fifo.php'\" value='Back'></td>\n";
+	echo "    <td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='fifo.php'\" value='Back'></td>\n";
 	echo "  </tr>\n";
 	echo "  <tr>\n";
 	echo "    <td align='left' colspan='2'>\n";
@@ -387,7 +387,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<th align='center'>Order</th>\n";
 			echo "<td align='right' width='42'>\n";
 			if (permission_exists('fifo_add')) {
-				echo "	<a href='v_fifo_details_edit.php?id2=".$dialplan_uuid."' alt='add'>$v_link_label_add</a>\n";
+				echo "	<a href='fifo_detail_edit.php?id2=".$dialplan_uuid."' alt='add'>$v_link_label_add</a>\n";
 			}
 			echo "</td>\n";
 			echo "<tr>\n";
@@ -401,10 +401,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row[dialplan_detail_order]."</td>\n";
 					echo "	<td valign='top' align='right'>\n";
 					if (permission_exists('fifo_edit')) {
-						echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='edit'>$v_link_label_edit</a>\n";
+						echo "		<a href='fifo_detail_edit.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='edit'>$v_link_label_edit</a>\n";
 					}
 					if (permission_exists('fifo_delete')) {
-						echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+						echo "		<a href='fifo_detail_delete.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 					}
 					echo "	</td>\n";
 					echo "</tr>\n";
@@ -434,10 +434,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row[dialplan_detail_order]."</td>\n";
 					echo "	<td valign='top' align='right'>\n";
 					if (permission_exists('fifo_edit')) {
-						echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='edit'>$v_link_label_edit</a>\n";
+						echo "		<a href='fifo_detail_edit.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='edit'>$v_link_label_edit</a>\n";
 					}
 					if (permission_exists('fifo_delete')) {
-						echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+						echo "		<a href='fifo_detail_delete.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 					}
 					echo "	</td>\n";
 					echo "</tr>\n";
@@ -470,10 +470,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row[dialplan_detail_order]."</td>\n";
 					echo "	<td valign='top' align='right'>\n";
 					if (permission_exists('fifo_edit')) {
-						echo "		<a href='v_fifo_details_edit.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='edit'>$v_link_label_edit</a>\n";
+						echo "		<a href='fifo_detail_edit.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='edit'>$v_link_label_edit</a>\n";
 					}
 					if (permission_exists('fifo_delete')) {
-						echo "		<a href='v_fifo_details_delete.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+						echo "		<a href='fifo_detail_delete.php?id=".$row[dialplan_detail_uuid]."&id2=".$dialplan_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 					}
 					echo "	</td>\n";
 					echo "</tr>\n";
@@ -490,7 +490,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 			echo "		<td width='33.3%' align='right'>\n";
 			if (permission_exists('fifo_add')) {
-				echo "			<a href='v_fifo_details_edit.php?id2=".$dialplan_uuid."' alt='add'>$v_link_label_add</a>\n";
+				echo "			<a href='fifo_details_edit.php?id2=".$dialplan_uuid."' alt='add'>$v_link_label_add</a>\n";
 			}
 			echo "		</td>\n";
 			echo "	</tr>\n";
