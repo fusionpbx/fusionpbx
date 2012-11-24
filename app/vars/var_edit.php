@@ -119,7 +119,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//redirect the user
 					require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=vars.php\">\n";
 					echo "<div align='center'>\n";
 					echo "Add Complete\n";
 					echo "</div>\n";
@@ -147,7 +147,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//redirect the user
 					require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_vars.php\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=vars.php\">\n";
 					echo "<div align='center'>\n";
 					echo "Update Complete\n";
 					echo "</div>\n";
@@ -160,8 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$var_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_vars ";
+		$sql = "select * from v_vars ";
 		$sql .= "where var_uuid = '$var_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -199,7 +198,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td width='30%' align='left' nowrap><b>Variable Edit</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_vars.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='vars.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";

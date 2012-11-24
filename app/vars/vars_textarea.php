@@ -91,7 +91,7 @@ if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 <table width="90%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td>
-			<form action="v_vars.php" method="post" name="iform" id="iform">
+			<form action="vars.php" method="post" name="iform" id="iform">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td width='100%'><span class="vexpl"><span class="red"><strong>Variables<br>
@@ -128,7 +128,7 @@ if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 					<input type="hidden" name="a" value="save" />
 					<?php
 					if (permission_exists('variables_edit')) {
-						echo "<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='v_vars.php?a=default&f=vars.xml';\" />";
+						echo "<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='vars.php?a=default&f=vars.xml';\" />";
 					}
 					?>
 				</td>
