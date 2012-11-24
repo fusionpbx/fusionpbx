@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 
 if (count($_POST)>0) {
@@ -87,7 +94,7 @@ if (count($_POST)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsslist.php\">\n";
 	echo "<div align='center'>";
-	echo "Update Complete";
+	echo $text['message-update'];
 	echo "</div>";
 	require_once "includes/footer.php";
 	return;
@@ -172,8 +179,8 @@ else {
 	echo "<table width='100%' cellpadding='6' cellspacing='0'>";
 
 	echo "<tr>\n";
-	echo "<td width='30%' nowrap valign='top'><b>Content Edit</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='rsslist.php'\" value='Back'><br /><br /></td>\n";
+	echo "<td width='30%' nowrap valign='top'><b>".$text['label-content-edit']."</b></td>\n";
+	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='rsslist.php'\" value='".$text['button-back']."'><br /><br /></td>\n";
 	echo "</tr>\n";
 
 	//echo "	<tr>";
@@ -185,16 +192,16 @@ else {
 	//echo "		<td class='vtable'><input type='text' class='formfld' name='rss_sub_category' value='$rss_sub_category'></td>";
 	//echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncellreq' nowrap>Title:</td>";
+	echo "		<td width='30%' class='vncellreq' nowrap>".$text['label-title'].":</td>";
 	echo "		<td width='70%' class='vtable' width='100%'><input type='text' class='formfld' name='rss_title' value='$rss_title'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Link:</td>";
+	echo "		<td class='vncellreq'>".$text['label-link'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='rss_link' value='$rss_link'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Group:</td>";
+	echo "		<td class='vncellreq'>".$text['label-group'].":</td>";
 	echo "		<td class='vtable'>";
 	//echo "            <input type='text' class='formfld' name='menuparentid' value='$menuparentid'>";
 
@@ -254,7 +261,7 @@ else {
 	*/
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Type:</td>";
+	echo "		<td class='vncellreq'>".$text['label-type'].":</td>";
 	echo "		<td class='vtable'>";
 	echo "            <select name=\"rss_optional_1\" class='formfld'>\n";
 	if ($rss_optional_1 == "text/html") { echo "<option value=\"text/html\" selected>text/html</option>\n"; }
@@ -268,7 +275,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='rss_order' class='formfld'>\n";
@@ -296,10 +303,10 @@ else {
 
 	echo "	<tr>";
 	echo "		<td  class='' colspan='2' align='left'>";
-	echo "            <strong>Content:</strong> ";
+	echo "            <strong>".$text['label-content'].":</strong> ";
 	if ($rss_optional_1 == "text/html") {
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/tiny_mce')) {
-			echo "            &nbsp; &nbsp; &nbsp; editor &nbsp; <a href='#' title='toggle' onclick=\"toogleEditorMode('rss_description'); return false;\">on/off</a><br>";
+			echo "            &nbsp; &nbsp; &nbsp; editor &nbsp; <a href='#' title='toggle' onclick=\"toogleEditorMode('rss_description'); return false;\">".$text['label-on-off']."</a><br>";
 		}
 		echo "            <textarea name='rss_description'  id='rss_description' class='formfld' cols='20' style='width: 100%' rows='12' >$rss_description</textarea>";
 	}
@@ -370,7 +377,7 @@ else {
 	//echo "<input type=\"button\" value=\"Load\" onclick=\"ajaxLoad('rss_description', ajaxresponse);\" />";
 
 	echo "          <input type='hidden' name='rss_uuid' value='$rss_uuid'>";
-	echo "          <input type='submit' class='btn' name='submit' value='Save'>";
+	echo "          <input type='submit' class='btn' name='submit' value='".$text['button-save']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";

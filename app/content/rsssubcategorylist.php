@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -35,6 +36,11 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 require_once "includes/header.php";
 
@@ -188,8 +194,8 @@ else { //received results
 } //end if results
 
 echo "</table>\n";
-echo "<input type='button' class='btn' name='' onclick=\"window.location='rss_sub_categorysearch.php'\" value='Search'>&nbsp; &nbsp;\n";
-echo "<input type='button' class='btn' name='' onclick=\"window.location='rss_sub_categoryadd.php'\" value='Add'>&nbsp; &nbsp;\n";
+echo "<input type='button' class='btn' name='' onclick=\"window.location='rss_sub_categorysearch.php'\" value='".$text['button-search']."'>&nbsp; &nbsp;\n";
+echo "<input type='button' class='btn' name='' onclick=\"window.location='rss_sub_categoryadd.php'\" value='".$text['button-add-title']."'>&nbsp; &nbsp;\n";
 echo "</div>";
 
 echo "<br><br>";

@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 
 if (count($_GET)>0) {
 	$rss_uuid = check_str($_GET["rss_uuid"]);
@@ -51,7 +59,7 @@ if (count($_GET)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsssublist.php?rss_uuid=$rss_uuid\">\n";
 	echo "<div align='center'>";
-	echo "Delete Completed";
+	echo $text['message-delete-done'];
 	echo "</div>";
 	require_once "includes/footer.php";
 	return;

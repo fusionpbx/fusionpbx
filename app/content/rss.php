@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 return; //disable
 include "root.php";
@@ -35,6 +36,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //include module specific information
 if (strlen($mod_config_path)==0) {
@@ -71,9 +78,9 @@ if ($content_type == "rss") {
 	echo "<rss version=\"2.0\">\n";
 	echo "<channel>\n";
 
-	echo "<title>$module_title RSS Feed</title>\n";
+	echo "<title>$module_title ".$text['title-rss']."</title>\n";
 	//echo "<link>http://www.xul.fr/</link>\n";
-	echo "<description>Task List for RSS...</description>\n";
+	echo "<description>".$text['description-rss']."</description>\n";
 	echo "<language>en-US</language>\n";
 	//echo "<copyright></copyright>\n";
 	//echo "<image>\n";

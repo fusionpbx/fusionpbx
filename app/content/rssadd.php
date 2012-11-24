@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 if (count($_POST)>0) {
 
@@ -99,7 +106,7 @@ if (count($_POST)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsslist.php\">\n";
 	echo "<div align='center'>";
-	echo "Add Complete";
+	echo $text['message-add'];
 	echo "</div>";
 	require_once "includes/footer.php";
 	return;
@@ -142,7 +149,7 @@ if (count($_POST)>0) {
 
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap valign='top'><b>Content Add</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='rsslist.php'\" value='Back'><br /><br /></td>\n";
+	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='rsslist.php'\" value='".$text['button-back']."'><br /><br /></td>\n";
 	echo "</tr>\n";
 	//echo "	<tr>";
 	//echo "		<td class='vncellreq'>Category:</td>";
@@ -173,7 +180,7 @@ if (count($_POST)>0) {
 	$prep_statement->execute();
 
 	echo "<select name=\"rss_group\" class='formfld'>\n";
-	echo "<option value=\"\">public</option>\n";
+	echo "<option value=\"\">".$text['button-public']."</option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	//$count = count($result);
 	foreach($result as $field) {
@@ -236,7 +243,7 @@ if (count($_POST)>0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='rss_order' class='formfld'>\n";
@@ -264,9 +271,9 @@ if (count($_POST)>0) {
 	echo "	<tr>";
 	//echo "		<td  class='vncellreq' valign='top'></td>";
 	echo "		<td  class='' colspan='2' align='left'>";
-	echo "            <strong>Content:</strong> ";
+	echo "            <strong>".$text['label-content'].":</strong> ";
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/tiny_mce')) {
-		echo "            &nbsp; &nbsp; &nbsp; editor &nbsp; <a href='#' title='toggle' onclick=\"toogleEditorMode('rss_description'); return false;\">on/off</a><br>";
+		echo "            &nbsp; &nbsp; &nbsp; editor &nbsp; <a href='#' title='toggle' onclick=\"toogleEditorMode('rss_description'); return false;\">".$text['label-on-off']."</a><br>";
 	}
 	else {
 		echo "            <textarea name='rss_description'  id='rss_description' class='formfld' cols='20' style='width: 100%' rows='12' ></textarea>";
@@ -330,7 +337,7 @@ if (count($_POST)>0) {
 
 	echo "	<tr>";
 	echo "		<td class='' colspan='2' align='right'>";
-	echo "          <input type='submit' class='btn' name='submit' value='Add $module_title'>\n";
+	echo "          <input type='submit' class='btn' name='submit' value='".$text['button-add-title']." $module_title'>\n";
 	echo "      </td>";
 	echo "	</tr>";
 	echo "</table>";

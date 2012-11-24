@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 $rss_uuid = $_GET["rss_uuid"];
 $order_by = $_GET["order_by"];
@@ -48,7 +55,7 @@ require_once "includes/header.php";
 	echo "	<td align=\"left\">\n";
 
 	echo "      <br>";
-	echo "      <b>$module_title Details</b>";
+	echo "      <b>$module_title ".$text['label-details']."</b>";
 	$sql = "";
 	$sql .= "select * from v_rss ";
 	$sql .= "where domain_uuid = '$domain_uuid'  ";
@@ -81,10 +88,10 @@ require_once "includes/header.php";
 			  //echo "<td valign='top'>".$row[rss_category]."</td>";
 			  
 			  echo "<tr>";
-			  echo "    <td valign='top'>Title: &nbsp;</td>";
+			  echo "    <td valign='top'>".$text['label-title'].": &nbsp;</td>";
 			  echo "    <td valign='top'><b>".$row[rss_title]."</b></td>";
 			  echo "    <td valign='top' align='right'>";
-			  echo "        <input type='button' class='btn' name='' onclick=\"window.location='rssupdate.php?rss_uuid=".$row[rss_uuid]."'\" value='Update'>";
+			  echo "        <input type='button' class='btn' name='' onclick=\"window.location='rssupdate.php?rss_uuid=".$row[rss_uuid]."'\" value='".$text['button-update']."'>";
 			  echo "    </td>";
 			  $rss_description = $row[rss_description];
 			  //$rss_description = str_replace ("\r\n", "<br>", $rss_description);
@@ -93,24 +100,24 @@ require_once "includes/header.php";
 			  
 			  
 			  echo "<tr>";
-			  echo "    <td valign='top'>Template: &nbsp;</td>";
+			  echo "    <td valign='top'>".$text['label-template'].": &nbsp;</td>";
 			  echo "     <td valign='top'>".$row[rss_sub_category]."</td>";
 			  echo "</tr>";
 
 			  echo "<tr>";
-			  echo "    <td valign='top'>Group: &nbsp;</td>";
+			  echo "    <td valign='top'>".$text['label-group'].": &nbsp;</td>";
 			  echo "     <td valign='top'>".$row[rss_group]."</td>";
 			  echo "</tr>";
 			  
 			  if (strlen($row[rss_order]) > 0) {
 				  echo "<tr>";
-				  echo "    <td valign='top'>Order: &nbsp;</td>";
+				  echo "    <td valign='top'>".text['label-order'].": &nbsp;</td>";
 				  echo "     <td valign='top'>".$row[rss_order]."</td>";
 				  echo "</tr>";
 			  }
 
 			  //echo "<td valign='top'>".$row[rss_link]."</td>";
-			  echo "    <td valign='top'>Description: &nbsp;</td>";
+			  echo "    <td valign='top'>".$text['label-description'].": &nbsp;</td>";
 			  echo "    <td valign='top' colspan='2'>".$rss_description."</td>";
 			  //echo "<td valign='top'>".$row[rss_img]."</td>";
 
@@ -380,12 +387,12 @@ require_once "includes/header.php";
 					//echo "<td valign='top'>".$row[rss_sub_add_user]."</td>";
 
 					echo "<td valign='top'>";
-					echo "  <input type='button' class='btn' name='' onclick=\"if (confirm('Are you sure you wish to continue?')) { window.location='rsssubdelete.php?rss_uuid=".$row[rss_uuid]."&rss_sub_uuid=".$row[rss_sub_uuid]."' }\" value='Delete'>";
+					echo "  <input type='button' class='btn' name='' onclick=\"if (confirm('".$text['message-confirm-delete']."')) { window.location='rsssubdelete.php?rss_uuid=".$row[rss_uuid]."&rss_sub_uuid=".$row[rss_sub_uuid]."' }\" value='".$text['button-delete']."'>";
 					echo "</td>";
 
 					echo "<td valign='top' align='right'>";
 					echo "  &nbsp;";
-					echo "  <input type='button' class='btn' name='' onclick=\"window.location='rsssubupdate.php?rss_uuid=".$rss_uuid."&rss_sub_uuid=".$row[rss_sub_uuid]."'\" value='Update'>";
+					echo "  <input type='button' class='btn' name='' onclick=\"window.location='rsssubupdate.php?rss_uuid=".$rss_uuid."&rss_sub_uuid=".$row[rss_sub_uuid]."'\" value='".$text['button-update']."'>";
 					echo "  &nbsp; \n";
 					//echo "  <a href='rsssubupdate.php?rss_uuid=".$rss_uuid."&rss_sub_uuid=".$row[rss_sub_uuid]."'>Update</a>&nbsp;";
 					echo "</td>";
@@ -428,7 +435,7 @@ require_once "includes/header.php";
 
 	//echo "<input type='button' class='btn' name='' onclick=\"window.location='rsssubsearch.php'\" value='Search'>&nbsp; &nbsp;\n";
 	if ($rss_sub_show == 1) {
-		echo "<input type='button' class='btn' name='' onclick=\"window.location='rsssubadd.php?rss_uuid=".$rss_uuid."'\" value='Add $rss_sub_title'>&nbsp; &nbsp;\n";
+		echo "<input type='button' class='btn' name='' onclick=\"window.location='rsssubadd.php?rss_uuid=".$rss_uuid."'\" value='".$text['button-add-title']." $rss_sub_title'>&nbsp; &nbsp;\n";
 	}
 	echo "</div>";
 

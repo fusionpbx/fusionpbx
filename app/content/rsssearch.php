@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 return; //disabled
 
@@ -36,6 +37,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 if (count($_POST)>0) {
 	$rss_uuid = check_str($_POST["rss_uuid"]);
@@ -115,7 +122,7 @@ if (count($_POST)>0) {
 	$row_style["0"] = "background-color: #F5F5DC;";
 	$row_style["1"] = "background-color: #FFFFFF;";
 
-	echo "<b>Search Results</b><br>";
+	echo "<b>".$text['label-search']."</b><br>";
 	echo "<div align='left'>\n";
 	echo "<table border='0' cellpadding='1' cellspacing='1'>\n";
 	echo "<tr><td colspan='100%'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>";
@@ -126,10 +133,10 @@ if (count($_POST)>0) {
 	else { //received results
 
 		echo "<tr>";
-		  echo "<th nowrap>&nbsp; &nbsp; ID&nbsp; &nbsp; </th>";
-		  echo "<th nowrap>&nbsp; &nbsp; Category&nbsp; &nbsp; </th>";
-		  echo "<th nowrap>&nbsp; &nbsp; Sub Category&nbsp; &nbsp; </th>";
-		  echo "<th nowrap>&nbsp; &nbsp; Title&nbsp; &nbsp; </th>";
+		  echo "<th nowrap>&nbsp; &nbsp; ".$text['label-id']."&nbsp; &nbsp; </th>";
+		  echo "<th nowrap>&nbsp; &nbsp; ".$text['label-category']."&nbsp; &nbsp; </th>";
+		  echo "<th nowrap>&nbsp; &nbsp; ".$text['label-sub-category']."&nbsp; &nbsp; </th>";
+		  echo "<th nowrap>&nbsp; &nbsp; ".$text['label-title']."&nbsp; &nbsp; </th>";
 		  //echo "<th nowrap>&nbsp; &nbsp; rss_link&nbsp; &nbsp; </th>";
 		  //echo "<th nowrap>&nbsp; &nbsp; rss_description&nbsp; &nbsp; </th>";
 		  //echo "<th nowrap>&nbsp; &nbsp; rss_img&nbsp; &nbsp; </th>";
@@ -207,7 +214,7 @@ if (count($_POST)>0) {
 	echo "		<td><input type='text' class='txt' name='rss_uuid'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td>Category:</td>";
+	echo "		<td>".$text['label-category'].":</td>";
 	echo "		<td><input type='text' class='txt' name='rss_category'></td>";
 	echo "	</tr>";
 	//echo "	<tr>";
@@ -215,15 +222,15 @@ if (count($_POST)>0) {
 	//echo "		<td><input type='text' class='txt' name='rss_sub_category'></td>";
 	//echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td>Title:</td>";
+	echo "		<td>".$text['label-title'].":</td>";
 	echo "		<td><input type='text' class='txt' name='rss_title'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td>Link:</td>";
+	echo "		<td>".$text['label-link'].":</td>";
 	echo "		<td><input type='text' class='txt' name='rss_link'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td>Desc:</td>";
+	echo "		<td>".$text['label-description'].":</td>";
 	echo "		<td><input type='text' class='txt' name='rss_description'></td>";
 	echo "	</tr>";
 	//echo "	<tr>";
@@ -259,7 +266,7 @@ if (count($_POST)>0) {
 	//echo "		<td><input type='text' class='txt' name='rss_add_user'></td>";
 	//echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td colspan='2' align='right'><input type='submit' name='submit' class='btn' value='Search'></td>";
+	echo "		<td colspan='2' align='right'><input type='submit' name='submit' class='btn' value='".$text['button-search']."'></td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";

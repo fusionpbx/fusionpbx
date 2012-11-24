@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 $rss_uuid = $_GET["rss_uuid"];
 
@@ -52,10 +59,10 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 	$rss_sub_add_user = check_str($_POST["rss_sub_add_user"]);
 
 	$msg = '';
-	if (strlen($rss_uuid) == 0) { $msg .= "Error missing rss_uuid.<br>\n"; }
-	if (strlen($rss_sub_uuid) == 0) { $msg .= "Error missing rss_sub_uuid.<br>\n"; }
+	if (strlen($rss_uuid) == 0) { $msg .= $text['message-error-missing']." rss_uuid.<br>\n"; }
+	if (strlen($rss_sub_uuid) == 0) { $msg .= $text['message-error-missing']." rss_sub_uuid.<br>\n"; }
 	//if (strlen($rss_sub_title) == 0) { $msg .= "Please provide a title.<br>\n"; }
-	if (strlen($rss_sub_description) == 0) { $msg .= "Please provide a description.<br>\n"; }
+	if (strlen($rss_sub_description) == 0) { $msg .= $text['message-description']."<br>\n"; }
 
 	if (strlen($msg) > 0) {
 		require_once "includes/persistform.php";
@@ -101,7 +108,7 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsssublist.php?rss_uuid=$rss_uuid&rss_sub_uuid=$rss_sub_uuid\">\n";
 	echo "<div align='center'>";
-	echo "Update Complete";
+	echo $text['message-update'];
 	echo "</div>";
 	require_once "includes/footer.php";
 	return;
@@ -151,15 +158,15 @@ else {
 	//echo "		<td><input type='text' name='rss_uuid' class='txt' value='$rss_uuid'></td>";
 	//echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td nowrap>Sub Title:</td>";
+	echo "		<td nowrap>".$text['label-sub-title'].":</td>";
 	echo "		<td width='100%'><input type='text' name='rss_sub_title' class='txt' value='$rss_sub_title'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td>Sub Link:</td>";
+	echo "		<td>".$text['label-sub-link'].":</td>";
 	echo "		<td><input type='text' name='rss_sub_link' class='txt' value='$rss_sub_link'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td valign='top'>Description:</td>";
+	echo "		<td valign='top'>".$text['label-description'].":</td>";
 	echo "		<td>";
 	echo "            <textarea name='rss_sub_description' rows='12' class='txt'>$rss_sub_description</textarea>";
 	echo "        </td>";
@@ -190,7 +197,7 @@ else {
 	echo "		    <input type='hidden' name='rss_uuid' value='$rss_uuid'>";
 	echo "		    <input type='hidden' name='persistform' value='0'>";
 	echo "          <input type='hidden' name='rss_sub_uuid' value='$rss_sub_uuid'>";
-	echo "          <input type='submit' name='submit' class='btn' value='Update'>";
+	echo "          <input type='submit' name='submit' class='btn' value='".$text['button-update']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";

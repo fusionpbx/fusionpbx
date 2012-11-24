@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 if (!function_exists('th_order_by')) {
 	//html table header order by
@@ -72,7 +79,7 @@ $order = $_GET["order"];
 	echo "<table width='100%'>";
 	echo "<tr>";
 	echo "<td align='left'>";
-	echo "      <b>$module_title List</b>";
+	echo "      <b>$module_title ".$text['label-list']."</b>";
 	echo "</td>";
 	echo "<td align='right'>";
 	//echo "      <input type='button' class='btn' name='' onclick=\"window.location='rssadd.php'\" value='Add $module_title'>&nbsp; &nbsp;\n";
@@ -107,11 +114,11 @@ $order = $_GET["order"];
 	echo "<div align='left'>\n";
 	echo "<table width='100%' border='0' cellpadding='2' cellspacing='0'>\n";
 	echo "<tr>";
-	echo th_order_by('rss_title', 'Title', $order_by, $order);
-	echo th_order_by('rss_link', 'Link', $order_by, $order);
+	echo th_order_by('rss_title', $text['label-title'], $order_by, $order);
+	echo th_order_by('rss_link', $text['label-link'], $order_by, $order);
 	//echo th_order_by('rss_sub_category', 'Template', $order_by, $order);
-	echo th_order_by('rss_group', 'Group', $order_by, $order);
-	echo th_order_by('rss_order', 'Order', $order_by, $order);
+	echo th_order_by('rss_group', $text['label-group'], $order_by, $order);
+	echo th_order_by('rss_order', $text['label-order'], $order_by, $order);
 	if ($result_count == 0) { //no results
 		echo "<td align='right' width='21'>\n";
 	}
@@ -163,8 +170,8 @@ $order = $_GET["order"];
 				//echo "</td>";
 
 				echo "	<td valign='top' align='right'>\n";
-				echo "		<a href='rssupdate.php?rss_uuid=".$row[rss_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
-				echo "		<a href='rssdelete.php?rss_uuid=".$row[rss_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='rssupdate.php?rss_uuid=".$row[rss_uuid]."' alt='".$text['label-edit']."'>$v_link_label_edit</a>\n";
+				echo "		<a href='rssdelete.php?rss_uuid=".$row[rss_uuid]."' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "	</td>\n";
 
 				//echo "<td valign='top' align='right' class='".$row_style[$c]."'>";

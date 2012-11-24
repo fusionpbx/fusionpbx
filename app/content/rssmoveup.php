@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //move down more than one level at a time
 //update v_rss set rss_order = (rss_order+1) where rss_order > 2 or rss_order = 2
@@ -66,7 +73,7 @@ if (count($_GET)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"1;url=rsslist.php?rss_uuid=$rss_uuid\">\n";
 	echo "<div align='center'>";
-	echo "Item Moved Up";
+	echo $text['message-item-up'];
 	echo "</div>";
 	require_once "includes/footer.php";
 	return;

@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 
 $rss_uuid = $_GET["rss_uuid"];
 
@@ -89,7 +97,7 @@ if (count($_POST)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsssublist.php?rss_uuid=$rss_uuid\">\n";
 	echo "<div align='center'>";
-	echo "Add Complete";
+	echo $text['message-add'];
 	echo "</div>";
 	require_once "includes/footer.php";
 	return;
@@ -109,7 +117,7 @@ if (count($_POST)>0) {
 	echo "<form method='post' action=''>";
 	echo "<table width='100%'>";
 	echo "	<tr>";
-	echo "		<td nowrap>Title:</td>";
+	echo "		<td nowrap>".$text['label-title'].":</td>";
 	echo "		<td width='100%'><input type='text' class='txt' name='rss_sub_title'></td>";
 	echo "	</tr>";
 	//echo "	<tr>";
@@ -117,7 +125,7 @@ if (count($_POST)>0) {
 	//echo "		<td><input type='text' class='txt' name='rss_sub_link'></td>";
 	//echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td valign='top'>Description:</td>";
+	echo "		<td valign='top'>".$text['label-description'].":</td>";
 	echo "        <td>";
 	echo "		    <textarea class='txt' rows='12' name='rss_sub_description'></textarea>";
 	echo "        </td>";
@@ -158,7 +166,7 @@ if (count($_POST)>0) {
 	//echo "	</tr>";    echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
 	echo "		    <input type='hidden' name='rss_uuid' value='$rss_uuid'>";
-	echo "          <input type='submit' name='submit' class='btn' value='Add'>";
+	echo "          <input type='submit' name='submit' class='btn' value='".text['button-add-title']."'>";
 	echo "      </td>";
 	echo "	</tr>";
 	echo "</table>";

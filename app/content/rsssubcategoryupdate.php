@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 if (count($_POST)>0) {
 	$rss_sub_category_uuid = check_str($_POST["rss_sub_category_uuid"]);
@@ -58,7 +65,7 @@ if (count($_POST)>0) {
 	//edit: make sure the meta redirect url is correct 
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"5;url=rss_sub_categorylist.php\">\n";
-	echo "Update Complete";
+	echo $text['message-update'];
 	require_once "includes/footer.php";
 	return;
 }
@@ -117,7 +124,7 @@ echo "	</tr>";
 echo "	<tr>";
 echo "		<td colspan='2' align='right'>";
 echo "     <input type='hidden' name='rss_sub_category_uuid' value='$rss_sub_category_uuid'>";
-echo "     <input type='submit' name='submit' value='Update'>";
+echo "     <input type='submit' name='submit' value='".$text['button-update']."'>";
 echo "		</td>";
 echo "	</tr>";
 echo "</table>";

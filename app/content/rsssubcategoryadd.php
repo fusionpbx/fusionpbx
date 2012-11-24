@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,6 +35,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 if (count($_POST)>0) {
 	$rss_sub_category_uuid = uuid();
@@ -68,7 +75,7 @@ if (count($_POST)>0) {
 
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"5;url=rss_sub_categorylist.php\">\n";
-	echo "Add Complete";
+	echo $text['message-add'];
 	require_once "includes/footer.php";
 	return;
 }
@@ -83,7 +90,7 @@ echo "      <br>";
 echo "<form method='post' action=''>";
 echo "<table>";
 echo "	<tr>";
-echo "		<td>RSS Category:</td>";
+echo "		<td>".$text['label-rss-category'].":</td>";
 echo "		<td><input type='text' name='rss_category'></td>";
 echo "	</tr>";
 echo "	<tr>";
@@ -103,7 +110,7 @@ echo "		<td>rss_add_date:</td>";
 echo "		<td><input type='text' name='rss_add_date'></td>";
 echo "	</tr>\n";
 echo "	<tr>";
-echo "		<td colspan='2' align='right'><input type='submit' name='submit' value='Add'></td>";
+echo "		<td colspan='2' align='right'><input type='submit' name='submit' value='".$text['button-add-title']."'></td>";
 echo "	</tr>";
 echo "</table>";
 echo "</form>";
