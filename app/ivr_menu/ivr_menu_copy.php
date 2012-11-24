@@ -40,7 +40,7 @@ else {
 		$ivr_menu_uuid = $_GET["id"];
 	}
 
-//get the v_ivr_menus data 
+//get the ivr_menus data 
 	$sql = "select * from v_ivr_menus ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and ivr_menu_uuid = '$ivr_menu_uuid' ";
@@ -80,7 +80,7 @@ else {
 	$prep_statement->execute();
 	$result_options = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
-//copy the v_ivr_menus
+//copy the ivr_menus
 	$ivr_menu_uuid = uuid();
 	$sql = "insert into v_ivr_menus ";
 	$sql .= "(";
@@ -174,7 +174,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Copy Complete\n";
 	echo "</div>\n";

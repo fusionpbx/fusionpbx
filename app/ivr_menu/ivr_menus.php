@@ -112,7 +112,7 @@ require_once "includes/paging.php";
 		echo th_order_by('ivr_menu_description', 'Description', $order_by[0]['name'], $order_by[0]['order']);
 		echo "<td align='right' width='42'>\n";
 		if (permission_exists('ivr_menu_add')) {
-			echo "	<a href='v_ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -128,10 +128,10 @@ require_once "includes/paging.php";
 				echo "	<td valign='top' class='row_stylebg'>".$row['ivr_menu_description']."&nbsp;</td>\n";
 				echo "	<td valign='top' align='right'>\n";
 				if (permission_exists('ivr_menu_edit')) {
-					echo "		<a href='v_ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "		<a href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('ivr_menu_delete')) {
-					echo "		<a href='v_ivr_menu_delete.php?id=".$row['ivr_menu_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					echo "		<a href='ivr_menu_delete.php?id=".$row['ivr_menu_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -148,7 +148,7 @@ require_once "includes/paging.php";
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 		echo "		<td width='33.3%' align='right'>\n";
 		if (permission_exists('ivr_menu_add')) {
-			echo "			<a href='v_ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "			<a href='ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";

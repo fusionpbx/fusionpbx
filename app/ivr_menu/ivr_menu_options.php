@@ -62,11 +62,10 @@ require_once "includes/paging.php";
 	echo "</tr>\n";
 	echo "</table>\n";
 
-//get the number of rows in v_ivr_menu_options
-	$sql = "";
-	$sql .= " select count(*) as num_rows from v_ivr_menu_options ";
-	$sql .= " where domain_uuid = '$domain_uuid' ";
-	$sql .= " and ivr_menu_uuid = '$ivr_menu_uuid' ";
+//get the number of rows in ivr_menu_options
+	$sql = "select count(*) as num_rows from v_ivr_menu_options ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and ivr_menu_uuid = '$ivr_menu_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -89,8 +88,7 @@ require_once "includes/paging.php";
 	$offset = $rows_per_page * $_GET['page'];
 
 //get the menu options
-	$sql = "";
-	$sql .= "select * from v_ivr_menu_options ";
+	$sql = "select * from v_ivr_menu_options ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and ivr_menu_uuid = '$ivr_menu_uuid' ";
 	$sql .= "order by ivr_menu_option_digits, ivr_menu_option_order asc "; 
@@ -112,7 +110,7 @@ require_once "includes/paging.php";
 	echo "<th>Description</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo "	<a href='v_ivr_menu_options_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='ivr_menu_options_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -140,10 +138,10 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_option_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('ivr_menu_edit')) {
-				echo "		<a href='v_ivr_menu_options_edit.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='ivr_menu_options_edit.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('ivr_menu_delete')) {
-				echo "		<a href='v_ivr_menu_options_delete.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='ivr_menu_options_delete.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -160,7 +158,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo "			<a href='v_ivr_menu_options_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='ivr_menu_options_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

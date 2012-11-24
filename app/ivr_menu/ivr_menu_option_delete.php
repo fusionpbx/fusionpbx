@@ -56,7 +56,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

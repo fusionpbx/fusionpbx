@@ -213,7 +213,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 					//redirect the user
 						require_once "includes/header.php";
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu.php\">\n";
+						echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu.php\">\n";
 						echo "<div align='center'>\n";
 						echo "Add Complete\n";
 						echo "</div>\n";
@@ -233,7 +233,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 					//redirect the user
 						require_once "includes/header.php";
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu.php\">\n";
+						echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu.php\">\n";
 						echo "<div align='center'>\n";
 						echo "Update Complete\n";
 						echo "</div>\n";
@@ -341,8 +341,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' width='30%' nowrap='nowrap' align='left'><b>IVR Menu Edit</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='v_ivr_menu_copy.php?id=".$ivr_menu_uuid."';}\" value='Copy'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_ivr_menu.php'\" value='Back'>\n";
+	echo "		<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='ivr_menu_copy.php?id=".$ivr_menu_uuid."';}\" value='Copy'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='ivr_menu.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -853,7 +853,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 	if ($action == "update") {
-		require "v_ivr_menu_options.php";
+		require "ivr_menu_options.php";
 	}
 
 	echo "	</td>";

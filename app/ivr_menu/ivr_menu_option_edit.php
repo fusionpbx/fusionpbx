@@ -121,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				save_ivr_menu_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -137,7 +137,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				save_ivr_menu_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -150,8 +150,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$ivr_menu_option_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_ivr_menu_options ";
+		$sql = "select * from v_ivr_menu_options ";
 		$sql .= "where ivr_menu_option_uuid = '$ivr_menu_option_uuid' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -201,7 +200,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap='nowrap' align='left'><b>IVR Menu Option Edit</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_ivr_menu_edit.php?id=$ivr_menu_uuid'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='ivr_menu_edit.php?id=$ivr_menu_uuid'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left'>\n";
