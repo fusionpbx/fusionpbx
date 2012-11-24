@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -35,6 +35,12 @@ else {
 }
 require_once "includes/header.php";
 require_once "includes/paging.php";
+
+//add multi-lingual support
+require_once "app_languages.php";
+foreach($text as $key => $value) {
+	$text[$key] = $value[$_SESSION['domain']['language']['code']];
+}
 
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
@@ -79,8 +85,8 @@ $order = $_GET["order"];
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($dialplan_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
+		if (strlen($domain_uuid) == 0) { $msg .= "".$text['label-required-domain_uuid']."<br>\n"; }
+		if (strlen($dialplan_name) == 0) { $msg .= "".$text['label-required-dialplan_name']."<br>\n"; }
 		//if (strlen($condition_field_1) == 0) { $msg .= "Please provide: Condition Field<br>\n"; }
 		//if (strlen($condition_expression_1) == 0) { $msg .= "Please provide: Condition Expression<br>\n"; }
 		//if (strlen($action_application_1) == 0) { $msg .= "Please provide: Action Application<br>\n"; }
@@ -472,7 +478,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1\">\n";
 	echo "<div align='center'>\n";
-	echo "Update Complete\n";
+	echo "".$text['confirm-update-complete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
@@ -722,18 +728,17 @@ echo "<div align='center'>\n";
 
 echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>Time Conditions\n";
+echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>".$text['title-time-condition-add']."\n";
 echo "			</strong></span></span>\n";
 echo "		</td>\n";
 echo "		<td align='right'>\n";
-echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='Back'>\n";
+echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
 echo "		</td>\n";
 echo "	</tr>\n";
 echo "	<tr>\n";
 echo "		<td align='left' colspan='2'>\n";
 echo "			<span class=\"vexpl\">\n";
-echo "			Time conditions route calls based on time conditions. You can use time conditions to \n";
-echo "			send calls to gateways, auto attendants, external numbers, to scripts, or any destination.\n";
+echo "			".$text['description-time-condition-add']."\n";
 echo "			</span>\n";
 echo "		</td>\n";
 echo "	</tr>\n";
@@ -746,12 +751,12 @@ echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 
 echo "<tr>\n";
 echo "<td width='20%' class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    Name:\n";
+echo "    ".$text['label-name'].":\n";
 echo "</td>\n";
 echo "<td width='80%' class='vtable' align='left'>\n";
 echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
 echo "	<br />\n";
-echo "	Enter the name for the time condition.\n";
+echo "	".$text['description-name']."\n";
 echo "<br />\n";
 echo "\n";
 echo "</td>\n";
@@ -759,12 +764,12 @@ echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	Extension:\n";
+echo "	".$text['label-extension'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<input class='formfld' style='width: 60%;' type='text' name='dialplan_number' id='dialplan_number' maxlength='255' value=\"$dialplan_number\">\n";
 echo "	<br />\n";
-echo "	Enter the extension number.<br />\n";
+echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
@@ -795,86 +800,86 @@ echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "    Template:\n";
+echo "    ".$text['label-template'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<select class='formfld' name='template2' id='template' onchange='template_onchange(this);' style='width: 60%;'>\n";
 echo "		<option value=''></option>\n";
-echo "	<optgroup label='Office'>\n";
-echo "		<option value='Office Hours Mon-Fri 8am-5pm'>Office Hours Mon-Fri 8am-5pm</option>\n";
-echo "		<option value='Office Hours Mon-Fri 9am-6pm'>Office Hours Mon-Fri 9am-6pm</option>\n";
+echo "	<optgroup label='".$text['label-optgroup-office']."'>\n";
+echo "		<option value='Office Hours Mon-Fri 8am-5pm'>".$text['label-option-office-8am-5pm']."</option>\n";
+echo "		<option value='Office Hours Mon-Fri 9am-6pm'>".$text['label-option-office-9am-6pm']."</option>\n";
 echo "	</optgroup>\n";
-echo "	<optgroup label='US Holidays'>\n";
-echo "		<option value=\"New Year's Day\">New Year's Day</option>\n";
-echo "		<option value='Martin Luther King Jr Day'>Martin Luther King Jr Day</option>\n";
-echo "		<option value='Presidents Day'>Presidents Day</option>\n";
-echo "		<option value='Memorial Day'>Memorial Day</option>\n";
-echo "		<option value='Independence Day'>Independence Day</option>\n";
-echo "		<option value='Labor Day'>Labor Day</option>\n";
-echo "		<option value='Columbus Day'>Columbus Day</option>\n";
-echo "		<option value=\"Veteran's Day\">Veteran's Day</option>\n";
-echo "		<option value='Thanksgiving'>Thanksgiving</option>\n";
-echo "		<option value='Christmas'>Christmas</option>\n";
+echo "	<optgroup label='".$text['label-optgroup-us-holidays']."'>\n";
+echo "		<option value=\"New Year's Day\">".$text['label-option-us-holidays-new-year']."</option>\n";
+echo "		<option value='Martin Luther King Jr Day'>".$text['label-option-us-holidays-martin-luther-king']."</option>\n";
+echo "		<option value='Presidents Day'>".$text['label-option-us-holidays-president']."</option>\n";
+echo "		<option value='Memorial Day'>".$text['label-option-us-holidays-memorial']."</option>\n";
+echo "		<option value='Independence Day'>".$text['label-option-us-holidays-independence']."</option>\n";
+echo "		<option value='Labor Day'>".$text['label-option-us-holidays-labor']."</option>\n";
+echo "		<option value='Columbus Day'>".$text['label-option-us-holidays-columbus']."</option>\n";
+echo "		<option value=\"Veteran's Day\">".$text['label-option-us-holidays-veteran']."</option>\n";
+echo "		<option value='Thanksgiving'>".$text['label-option-us-holidays-thanksgiving']."</option>\n";
+echo "		<option value='Christmas'>".$text['label-option-us-holidays-christmas']."</option>\n";
 echo "	</optgroup>\n";
 echo "</select>\n";
 echo "<br />\n";
-echo "The templates provides a list of preset time conditions.\n";
+echo "".$text['description-template']."\n";
 echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	Day of Month:\n";
+echo "	".$text['label-day-of-month'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_mday' id='condition_mday' maxlength='255' value=\"$condition_mday\">\n";
 echo "	<br />\n";
-echo "	Enter the day of the month. 1-31 <i>mday</i><br />\n";
+echo "	".$text['description-day-of-month']." 1-31 <i>mday</i><br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	Day of Week:\n";
+echo "	".$text['label-day-of-week'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_wday' id='condition_wday' maxlength='255' value=\"$condition_wday\">\n";
 echo "	<br />\n";
-echo "	Enter the day of the week. 1-7 (Sun=1, Mon=2, Tues=3) <i>wday</i>\n";
+echo "	".$text['description-day-of-week']." <i>wday</i>\n";
 echo "	<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	Minute of Day:\n";
+echo "	".$text['label-minute-of-day'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_minute_of_day' id='condition_minute_of_day' maxlength='255' value=\"$condition_minute_of_day\">\n";
 echo "	<br />\n";
-echo "	Enter the minute of the day. 1-1440 (midnight = 1, 8am=480, 9am=540, 6pm=1080) <i>minute-of-day</i><br />\n";
+echo "	".$text['description-minute-of-day']." <i>minute-of-day</i><br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	Month:\n";
+echo "	".$text['label-month'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_mon' id='condition_mon' maxlength='255' value=\"$condition_mon\">\n";
 echo "	<br />\n";
-echo "	Enter the month. 1-12 (Jan=1, Feb=2, Mar=3, April=4, May=5, Jun=6, July=7 etc.) <i>mon</i><br />\n";
+echo "	".$text['description-month']." <i>mon</i><br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	Week of Month:\n";
+echo "	".$text['label-week-of-month'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_mweek' id='condition_mweek' maxlength='255' value=\"$condition_mweek\">\n";
 echo "	<br />\n";
-echo "	Enter the week of the month. 1-6 <i>mweek</i><br />\n";
+echo "	".$text['description-week-of-month']." 1-6 <i>mweek</i><br />\n";
 echo "	<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
@@ -886,9 +891,9 @@ echo "</tr>\n";
 	echo "	<div id=\"show_advanced_box\">\n";
 	echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "		<tr>\n";
-	echo "		<td width=\"20%\" valign=\"top\" class=\"vncell\">Show Advanced:</td>\n";
+	echo "		<td width=\"20%\" valign=\"top\" class=\"vncell\">".$text['label-show-advanced'].":</td>\n";
 	echo "		<td width=\"80%\" class=\"vtable\">\n";
-	echo "			<input type=\"button\" class='btn' onClick=\"show_advanced_config()\" value=\"Advanced\"></input></a>\n";
+	echo "			<input type=\"button\" class='btn' onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input></a>\n";
 	echo "		</td>\n";
 	echo "		</tr>\n";
 	echo "		</table>\n";
@@ -904,60 +909,60 @@ echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td width='20%' class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Day of Year:\n";
+	echo "	".$text['label-day-of-year'].":\n";
 	echo "</td>\n";
 	echo "<td width='80%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_yday' id='condition_yday' maxlength='255' value=\"$condition_yday\">\n";
 	echo "	<br />\n";
-	echo "	Enter the day of the year. 1-365 <i>yday</i>\n";
+	echo "	".$text['description-day-of-year']." 1-365 <i>yday</i>\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Hour:\n";
+	echo "	".$text['label-hour'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_hour' id='condition_hour' maxlength='255' value=\"$condition_hour\">\n";
 	echo "	<br />\n";
-	echo "	Enter the hour. 0-23 <i>hour</i>\n";
+	echo "	".$text['description-hour']." 0-23 <i>hour</i>\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Minute:\n";
+	echo "	".$text['label-minute'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_minute' id='condition_minute' maxlength='255' value=\"$condition_minute\">\n";
 	echo "	<br />\n";
-	echo "	Enter the minute. 0-59 <i>minute</i>\n";
+	echo "	".$text['description-minute']." 0-59 <i>minute</i>\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Week:\n";
+	echo "	".$text['label-week'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_week' id='condition_week' maxlength='255' value=\"$condition_week\">\n";
 	echo "	<br />\n";
-	echo "	Enter the week. 1-52 <i>week</i>\n";
+	echo "	".$text['description-week']." 1-52 <i>week</i>\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Year:\n";
+	echo "	".$text['label-year'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' style='width: 60%;' type='text' name='condition_year' id='condition_year' maxlength='255' value=\"$condition_year\">\n";
 	echo "	<br />\n";
-	echo "	Enter the year. 0-9999 <i>year</i>\n";
+	echo "	".$text['description-year']." 0-9999 <i>year</i>\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -971,7 +976,7 @@ echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    Action when True:\n";
+echo "    ".$text['label-action-when-true'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 
@@ -983,7 +988,7 @@ echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "    Action when False:\n";
+echo "    ".$text['label-action-when-false'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 
@@ -996,7 +1001,7 @@ echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    Order:\n";
+echo "    ".$text['label-order'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "              <select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
@@ -1018,7 +1023,7 @@ echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    Enabled:\n";
+echo "    ".$text['label-enabled'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
@@ -1042,7 +1047,7 @@ echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "    Description:\n";
+echo "    ".$text['label-description'].":\n";
 echo "</td>\n";
 echo "<td colspan='4' class='vtable' align='left'>\n";
 echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
@@ -1056,7 +1061,7 @@ echo "	<td colspan='5' align='right'>\n";
 if ($action == "update") {
 	echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 }
-echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";
+echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 echo "	</td>\n";
 echo "</tr>";
 
