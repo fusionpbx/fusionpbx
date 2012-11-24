@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -69,9 +69,5 @@
 	$text['description-enabled']['en-us'] ='Select to enable or disable the ring group.';
 	$text['description-description']['en-us'] = 'Enter the description';
 	$text['label-extensions']['en-us'] = 'Extensions';
-
-	
-
-
 
 ?>
