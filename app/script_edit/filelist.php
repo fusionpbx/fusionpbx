@@ -35,100 +35,97 @@ else {
 	exit;
 }
 
-//add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+//add css and javascript
+	require_once "header.php";
+
+//define function is_file
+	function is_file($filename) {
+		//if (@filesize($filename) > 0) { return true; } else { return false; }
 	}
 
-require_once "header.php";
-
-function isfile($filename) {
-	//if (@filesize($filename) > 0) { return true; } else { return false; }
-}
-
-function space($count) {
-	$r=''; $i=0;
-	while($i < $count) {
-		$r .= '     ';
-		$i++;
+//define function space
+	function space($count) {
+		$r=''; $i=0;
+		while($i < $count) {
+			$r .= '     ';
+			$i++;
+		}
+		return $r;
 	}
-	return $r;
-}
 
-function recur_dir($dir) {
-	clearstatcache();
-	$htmldirlist = '';
-	$htmlfilelist = '';
-	$dirlist = opendir($dir);
-	$dir_array = array();
-	while (false !== ($file = readdir($dirlist))) { 
-		if ($file != "." AND $file != ".."){
-			$newpath = $dir.'/'.$file;
+//define function recure_dir
+	function recur_dir($dir) {
+		clearstatcache();
+		$htmldirlist = '';
+		$htmlfilelist = '';
+		$dirlist = opendir($dir);
+		$dir_array = array();
+		while (false !== ($file = readdir($dirlist))) { 
+			if ($file != "." AND $file != ".."){
+				$newpath = $dir.'/'.$file;
+				$level = explode('/',$newpath);
+				if (substr($newpath, -4) == ".svn") {
+					//ignore .svn dir and subdir
+				}
+				elseif (substr($newpath, -3) == ".db") {
+					//ignore .db files
+				}
+				else {
+					$dir_array[] = $newpath;
+				}
+				if ($x > 1000) { break; };
+				$x++;
+			}
+		}
+
+		asort($dir_array);
+		foreach ($dir_array as $newpath){
 			$level = explode('/',$newpath);
-			if (substr($newpath, -4) == ".svn") {
-				//ignore .svn dir and subdir
-			}
-			elseif (substr($newpath, -3) == ".db") {
-				//ignore .db files
-			}
-			else {
-				$dir_array[] = $newpath;
-			}
-			if ($x > 1000) { break; };
-			$x++;
-		}
-	}
 
-	asort($dir_array);
-	foreach ($dir_array as $newpath){
-		$level = explode('/',$newpath);
-
-		if (is_dir($newpath)) {
-			/*$mod_array[] = array(
-				'level'=>count($level)-1,
-				'path'=>$newpath,
-				'name'=>end($level),
-				'type'=>'dir',
-				'mod_time'=>filemtime($newpath),
-				'size'=>'');
-				$mod_array[] = recur_dir($newpath);
-			*/
-			$dirname = end($level);
-			$htmldirlist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><a onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\" border='0'> $dirname </a><DIV style='display:none'>\n";
-			//$htmldirlist .= space(count($level))."   <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
-			//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='foldernew.php?folder=".urlencode($newpath)."' title=''>New Folder </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-			//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-			//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='filenew.php?folder=".urlencode($newpath)."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-			//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-			//$htmldirlist .= space(count($level))."   </DIV></TD></TR></TABLE>\n";
-			//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/gear.png\"><a href='fileoptions.php?folder=".urlencode($newpath)."' title=''>Options </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
-			//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
-			$htmldirlist .= recur_dir($newpath);
-			$htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
-		}
-		else {
-			/*$mod_array[] = array(
+			if (is_dir($newpath)) {
+				/*$mod_array[] = array(
 					'level'=>count($level)-1,
 					'path'=>$newpath,
 					'name'=>end($level),
-					'type'=>'file',
+					'type'=>'dir',
 					'mod_time'=>filemtime($newpath),
-					'size'=>filesize($newpath));
-			*/
-			$filename = end($level);
-			$filesize = round(filesize($newpath)/1024, 2);
-			$htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.title='".$newpath."';parent.document.getElementById('file').value='".urlencode($newpath)."'; parent.window.frames['frame_'+'edit1'].editArea.previous= new Array(); parent.window.frames['frame_'+'edit1'].editArea.switchClassSticky(document.getElementById('undo'), 'editAreaButtonDisabled', true); makeRequest('fileread.php','file=".urlencode($newpath)."'); window.setTimeout('parent.my_setSelectionRange(\'edit1\')','100');\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'> $filename </a><DIV style='display:none'>\n";
-			$htmlfilelist .=  space(count($level))."</DIV></TD></TR></TABLE>\n";
+					'size'=>'');
+					$mod_array[] = recur_dir($newpath);
+				*/
+				$dirname = end($level);
+				$htmldirlist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><a onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\" border='0'> $dirname </a><DIV style='display:none'>\n";
+				//$htmldirlist .= space(count($level))."   <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
+				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='foldernew.php?folder=".urlencode($newpath)."' title=''>New Folder </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
+				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
+				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='filenew.php?folder=".urlencode($newpath)."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
+				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
+				//$htmldirlist .= space(count($level))."   </DIV></TD></TR></TABLE>\n";
+				//$htmldirlist .= space(count($level))."       <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/gear.png\"><a href='fileoptions.php?folder=".urlencode($newpath)."' title=''>Options </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
+				//$htmldirlist .= space(count($level))."       </DIV></TD></TR></TABLE>\n";
+				$htmldirlist .= recur_dir($newpath);
+				$htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
+			}
+			else {
+				/*$mod_array[] = array(
+						'level'=>count($level)-1,
+						'path'=>$newpath,
+						'name'=>end($level),
+						'type'=>'file',
+						'mod_time'=>filemtime($newpath),
+						'size'=>filesize($newpath));
+				*/
+				$filename = end($level);
+				$filesize = round(filesize($newpath)/1024, 2);
+				$htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.title='".$newpath."';parent.document.getElementById('file').value='".urlencode($newpath)."'; parent.window.frames['frame_'+'edit1'].editArea.previous= new Array(); parent.window.frames['frame_'+'edit1'].editArea.switchClassSticky(document.getElementById('undo'), 'editAreaButtonDisabled', true); makeRequest('fileread.php','file=".urlencode($newpath)."'); window.setTimeout('parent.my_setSelectionRange(\'edit1\')','100');\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'> $filename </a><DIV style='display:none'>\n";
+				$htmlfilelist .=  space(count($level))."</DIV></TD></TR></TABLE>\n";
+			}
 		}
+		closedir($dirlist);
+		return $htmldirlist ."\n". $htmlfilelist;
 	}
-	closedir($dirlist);
-	return $htmldirlist ."\n". $htmlfilelist;
-}
 
 echo "<script type=\"text/javascript\" language=\"javascript\">\n";
 echo "    function makeRequest(url, strpost) {\n";
-//echo "        alert(url); \n";
 echo "        var http_request = false;\n";
 echo "\n";
 echo "        if (window.XMLHttpRequest) { // Mozilla, Safari, ...\n";
