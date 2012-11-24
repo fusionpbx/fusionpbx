@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -37,7 +38,11 @@ else {
 	echo "access denied";
 	exit;
 }
-
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 require_once "includes/header.php";
 
 echo "<br />";
@@ -68,7 +73,7 @@ echo "<br />";
 //system information
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 	echo "<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>System Information</th>\n";
+	echo "	<th class='th' colspan='2' align='left'>".$text['title-sys-info']."</th>\n";
 	echo "</tr>\n";
 	if (permission_exists('system_view_info')) {
 		echo "<tr>\n";
@@ -86,7 +91,7 @@ echo "<br />";
 		if (strlen($tmp_result) > 0) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		Operating System: \n";
+			echo "		".$text['label-os']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "		".$tmp_result." \n";
@@ -136,11 +141,11 @@ echo "<br />";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
-				echo "	<th colspan='2' align='left' valign='top'>Memory Information</th>\n";
+				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	Memory Status:\n";
+				echo "	".$text['label-mem']."\n";
 				echo "	</td>\n";
 				echo "	<td class=\"row_style1\">\n";
 				echo "	<pre>\n";
@@ -165,11 +170,11 @@ echo "<br />";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
-				echo "	<th colspan='2' align='left' valign='top'>Memory Information</th>\n";
+				echo "	<th colspan='2' align='left' valign='top'>".$text['title-mem']."</th>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	Memory Status:\n";
+				echo "	".$text['label-mem']."\n";
 				echo "	</td>\n";
 				echo "	<td class=\"row_style1\">\n";
 				echo "	<pre>\n";
@@ -197,11 +202,11 @@ echo "<br />";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
-				echo "	<th class='th' colspan='2' align='left' valign='top'>CPU Information</th>\n";
+				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	CPU Status:\n";
+				echo "	".$text['label-cpu']."\n";
 				echo "	</td>\n";
 				echo "	<td class=\"row_style1\">\n";
 				echo "	<pre>\n";
@@ -234,11 +239,11 @@ echo "<br />";
 			if (strlen($shell_result) > 0) {
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 				echo "<tr>\n";
-				echo "	<th class='th' colspan='2' align='left' valign='top'>CPU Information</th>\n";
+				echo "	<th class='th' colspan='2' align='left' valign='top'>".$text['title-cpu']."</th>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-				echo "	CPU Status:\n";
+				echo "	".$text['label-cpu']."\n";
 				echo "	</td>\n";
 				echo "	<td class=\"row_style1\">\n";
 				echo "	<pre>\n";
@@ -260,11 +265,11 @@ echo "<br />";
 		if (stristr(PHP_OS, 'Linux') || stristr(PHP_OS, 'FreeBSD')) {
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 			echo "<tr>\n";
-			echo "	<th class='th' colspan='2' align='left'>Drive Information</th>\n";
+			echo "	<th class='th' colspan='2' align='left'>".$text['title-drive']."</th>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		Drive Space: \n";
+			echo "		".$text['label-drive']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "<pre>\n";
@@ -286,11 +291,11 @@ echo "<br />";
 
 			echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 			echo "<tr>\n";
-			echo "	<th class='th' colspan='2' align='left'>Drive Space</th>\n";
+			echo "	<th class='th' colspan='2' align='left'>".$text['label-drive']."</th>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		Capacity: \n";
+			echo "		".$text['label-drive-capacity']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "		$disksize mb\n";
@@ -299,7 +304,7 @@ echo "<br />";
 
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		Free Space: \n";
+			echo "		".$text['label-drive-free']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "		$disksizefree mb\n";
@@ -308,7 +313,7 @@ echo "<br />";
 
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		Percent Free: \n";
+			echo "		".$text['label-drive-percent']." \n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "		$diskpercentavailable% \n";
