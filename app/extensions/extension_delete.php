@@ -40,16 +40,14 @@ if (count($_GET)>0) {
 
 //delete the extension
 	if (strlen($id)>0) {
-		$sql = "";
-		$sql .= "delete from v_extensions ";
+		$sql = "delete from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and extension_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
 
-		$sql = "";
-		$sql .= "delete from v_extension_users ";
+		$sql = "delete from v_extension_users ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and extension_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -62,7 +60,7 @@ if (count($_GET)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
 	echo "<br />\n";
 	echo "<div align='center'>\n";
 	echo "	<table width='40%'>\n";

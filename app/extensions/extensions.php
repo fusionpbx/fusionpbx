@@ -60,8 +60,7 @@ require_once "includes/paging.php";
 		echo "<br />";
 
 	//get the number of rows in v_extensions 
-		$sql = "";
-		$sql .= " select count(*) as num_rows from v_extensions ";
+		$sql = "select count(*) as num_rows from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
@@ -85,8 +84,7 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $_GET['page']; 
 
 	//get the extension list
-		$sql = "";
-		$sql .= " select * from v_extensions ";
+		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (isset($order_by)) {
 			$sql .= "order by $order_by $order ";
@@ -115,7 +113,7 @@ require_once "includes/paging.php";
 		echo th_order_by('description', 'Description', $order_by, $order);
 		echo "<td align='right' width='42'>\n";
 		if (permission_exists('extension_add')) {
-			echo "	<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='extension_edit.php' alt='add'>$v_link_label_add</a>\n";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -130,10 +128,10 @@ require_once "includes/paging.php";
 				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
 				echo "	<td valign='top' align='right'>\n";
 				if (permission_exists('extension_edit')) {
-					echo "		<a href='v_extensions_edit.php?id=".$row['extension_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "		<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('extension_delete')) {
-					echo "		<a href='v_extensions_delete.php?id=".$row['extension_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					echo "		<a href='extension_delete.php?id=".$row['extension_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -150,7 +148,7 @@ require_once "includes/paging.php";
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 		echo "		<td width='33.3%' align='right'>\n";
 		if (permission_exists('extension_add')) {
-			echo "			<a href='v_extensions_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "			<a href='extension_edit.php' alt='add'>$v_link_label_add</a>\n";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";

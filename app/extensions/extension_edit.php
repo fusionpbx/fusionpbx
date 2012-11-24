@@ -114,7 +114,7 @@ else {
 			$db->exec(check_sql($sql));
 		//redirect the browser
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions_edit.php?id=$extension_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
 			echo "<div align='center'>Delete Complete</div>";
 			require_once "includes/footer.php";
 			return;
@@ -143,7 +143,7 @@ else {
 			$db->exec($sql_insert);
 		//redirect the browser
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions_edit.php?id=$extension_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
 			echo "<div align='center'>Add Complete</div>";
 			require_once "includes/footer.php";
 			return;
@@ -368,7 +368,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "<div align='center'>\n";
 				if (count($generated_users) == 0) {
 					//action add
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+						echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
 						echo "	<table width='40%'>\n";
 						echo "		<tr>\n";
 						echo "			<th align='left'>Message</th>\n";
@@ -486,7 +486,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//show the action and redirect the user
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
 				echo "<br />\n";
 				echo "<div align='center'>\n";
 
@@ -605,8 +605,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='Save'>\n";
-	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='v_extensions_copy.php?id=".$extension_uuid."';}\" value='Copy'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_extensions.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='extension_copy.php?id=".$extension_uuid."';}\" value='Copy'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='extensions.php'\" value='Back'>\n";
 	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -708,7 +708,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".$field['username']."</td>\n";
 			echo "				<td>\n";
-			echo "					<a href='v_extensions_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "					<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}

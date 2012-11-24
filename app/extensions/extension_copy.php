@@ -42,8 +42,7 @@ else {
 
 //get the v_extensions data 
 	$extension_uuid = $_GET["id"];
-	$sql = "";
-	$sql .= "select * from v_extensions ";
+	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and extension_uuid = '$extension_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -141,7 +140,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_extensions.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Copy Complete\n";
 	echo "</div>\n";
