@@ -35,8 +35,11 @@ else {
 }
 require_once "includes/header.php";
 require_once "includes/paging.php";
+
 //add multi-lingual support
+	echo "<!--\n";
 	require_once "app_languages.php";
+	echo "-->\n";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
@@ -47,7 +50,6 @@ $order = $_GET["order"];
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
 	echo "		<br>";

@@ -50,16 +50,22 @@ if (count($_GET)>0) {
 		unset($sql);
 	}
 
+//add multi-lingual support
+	echo "<!--\n";
+	require_once "app_languages.php";
+	echo "-->\n";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //redirect the user
 	require "includes/require.php";
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Voicemail Preferences set to default\n";
+	echo $text['label-prefs-delete']."\n";
 	echo "</div>\n";
-	require "includes/require.php";
 	require_once "includes/footer.php";
 	return;
 
 ?>
-
