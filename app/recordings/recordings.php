@@ -86,8 +86,7 @@ require_once "includes/paging.php";
 //build a list of recordings
 	$config_recording_list = '|';
 	$i = 0;
-	$sql = "";
-	$sql .= "select * from v_recordings ";
+	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -185,8 +184,7 @@ require_once "includes/paging.php";
 	echo "	</table>\n";
 	echo "</form>";
 
-	$sql = "";
-	$sql .= "select * from v_recordings ";
+	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -202,8 +200,7 @@ require_once "includes/paging.php";
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page; 
 
-	$sql = "";
-	$sql .= "select * from v_recordings ";
+	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= " limit $rows_per_page offset $offset ";
@@ -225,7 +222,7 @@ require_once "includes/paging.php";
 	echo th_order_by('recording_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('recordings_add')) {
-		echo "	<a href='v_recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -237,12 +234,12 @@ require_once "includes/paging.php";
 
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "		<a href=\"v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($row['recording_filename'])."\">\n";
+			echo "		<a href=\"recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($row['recording_filename'])."\">\n";
 			echo $row['recording_filename'];
 			echo "	  </a>";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('v_recordings_play.php?a=download&type=moh&filename=".base64_encode($row['recording_filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('recordings_play.php?a=download&type=moh&filename=".base64_encode($row['recording_filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			echo $row['recording_name'];
 			echo "	  </a>";
 			echo 	"</td>\n";
@@ -252,10 +249,10 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='30%'>".$row['recording_description']."</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('recordings_edit')) {
-				echo "		<a href='v_recordings_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='recordings_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('recordings_delete')) {
-				echo "		<a href='v_recordings_delete.php?id=".$row['recording_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='recordings_delete.php?id=".$row['recording_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -272,7 +269,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('recordings_add')) {
-		echo "			<a href='v_recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

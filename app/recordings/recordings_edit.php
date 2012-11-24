@@ -107,7 +107,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_recordings.php\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=recordings.php\">\n";
 			echo "<div align='center'>\n";
 			echo "Add Complete\n";
 			echo "</div>\n";
@@ -117,8 +117,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if ($action == "update" && permission_exists('recordings_edit')) {
 			//get the original filename
-				$sql = "";
-				$sql .= "select * from v_recordings ";
+				$sql = "select * from v_recordings ";
 				$sql .= "where recording_uuid = '$recording_uuid' ";
 				$sql .= "and domain_uuid = '$domain_uuid' ";
 				//echo "sql: ".$sql."<br />\n";
@@ -151,7 +150,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_recordings.php\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=recordings.php\">\n";
 			echo "<div align='center'>\n";
 			echo "Update Complete\n";
 			echo "</div>\n";
@@ -164,8 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$recording_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_recordings ";
+		$sql = "select * from v_recordings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and recording_uuid = '$recording_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -204,7 +202,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap><b>Edit Recording</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_recordings.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='recordings.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
