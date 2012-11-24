@@ -56,24 +56,24 @@ include "root.php";
 						include "includes/config.php";
 
 					//backwards compatibility
-						if (strlen($dbtype) > 0) { $db_type = $dbtype; }
-						if (strlen($dbhost) > 0) { $db_host = $dbhost; }
-						if (strlen($dbport) > 0) { $db_port = $dbport; }
-						if (strlen($dbname) > 0) { $db_name = $dbname; }
-						if (strlen($dbusername) > 0) { $db_username = $dbusername; }
-						if (strlen($dbpassword) > 0) { $db_password = $dbpassword; }
-						if (strlen($dbfilepath) > 0) { $db_path = $db_file_path; }
-						if (strlen($dbfilename) > 0) { $db_name = $dbfilename; }
+						if (isset($dbtype)) { $db_type = $dbtype; }
+						if (isset($dbhost)) { $db_host = $dbhost; }
+						if (isset($dbport)) { $db_port = $dbport; }
+						if (isset($dbname)) { $db_name = $dbname; }
+						if (isset($dbusername)) { $db_username = $dbusername; }
+						if (isset($dbpassword)) { $db_password = $dbpassword; }
+						if (isset($dbfilepath)) { $db_path = $db_file_path; }
+						if (isset($dbfilename)) { $db_name = $dbfilename; }
 
 					//set defaults
-						if (strlen($db_type) > 0) { $this->driver = $db_type; }
-						if (strlen($db_type) > 0) { $this->type = $db_type; }
-						if (strlen($db_host) > 0) { $this->host = $db_host; }
-						if (strlen($db_port) > 0) { $this->port = $db_port; }
-						if (strlen($db_name) > 0) { $this->name = $db_name; }
-						if (strlen($db_username) > 0) { $this->username = $db_username; }
-						if (strlen($db_password) > 0) { $this->password = $db_password; }
-						if (strlen($db_path) > 0) { $this->path = $db_path; }
+						if (isset($db_type)) { $this->driver = $db_type; }
+						if (isset($db_type)) { $this->type = $db_type; }
+						if (isset($db_host)) { $this->host = $db_host; }
+						if (isset($db_port)) { $this->port = $db_port; }
+						if (isset($db_name)) { $this->name = $db_name; }
+						if (isset($db_username)) { $this->username = $db_username; }
+						if (isset($db_password)) { $this->password = $db_password; }
+						if (isset($db_path)) { $this->path = $db_path; }
 				}
 				if (strlen($this->driver) == 0) {
 					$this->driver = $this->type;
