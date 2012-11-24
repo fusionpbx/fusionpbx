@@ -35,7 +35,8 @@ else {
 	exit;
 }
 
-        foreach($content_voicemail_greetings as $key => $value) {
+//add multi-lingual support
+	foreach($content_voicemail_greetings as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
@@ -105,7 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=".$user_id."\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$user_id."\">\n";
 			echo "<div align='center'>\n";
 			echo "".$text['confirm-add']."\n";
 			echo "</div>\n";
@@ -115,11 +116,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if ($action == "update" && permission_exists('voicemail_greetings_edit')) {
 			//get the original filename
-				$sql = "";
-				$sql .= "select * from v_voicemail_greetings ";
+				$sql = "select * from v_voicemail_greetings ";
 				$sql .= "where greeting_uuid = '$greeting_uuid' ";
 				$sql .= "and domain_uuid = '$domain_uuid' ";
-				//echo "sql: ".$sql."<br />\n";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -131,9 +130,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//if file name is not the same then rename the file
 				if ($greeting_name != $greeting_name_orig) {
-					//echo "orig: ".$v_voicemail_greetings_dir.'/'.$filename_orig."<br />\n";
-					//echo "new: ".$v_voicemail_greetings_dir.'/'.$greeting_name."<br />\n";
-					rename($v_voicemail_greetings_dir.'/'.$greeting_name_orig, $v_voicemail_greetings_dir.'/'.$greeting_name);
+					//echo "orig: ".$voicemail_greetings_dir.'/'.$filename_orig."<br />\n";
+					//echo "new: ".$voicemail_greetings_dir.'/'.$greeting_name."<br />\n";
+					rename($voicemail_greetings_dir.'/'.$greeting_name_orig, $voicemail_greetings_dir.'/'.$greeting_name);
 				}
 
 			//update the database with the new data
@@ -146,7 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=".$user_id."\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$user_id."\">\n";
 			echo "<div align='center'>\n";
 			echo "".$text['confirm-update']."\n";
 			echo "</div>\n";
@@ -159,8 +158,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$greeting_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_voicemail_greetings ";
+		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and greeting_uuid = '$greeting_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -196,7 +194,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap><b>".$text['label-edit']['en-us']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_greetings.php?id=".$user_id."'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_greetings.php?id=".$user_id."'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";

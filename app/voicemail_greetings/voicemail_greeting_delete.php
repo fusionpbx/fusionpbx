@@ -46,8 +46,7 @@ if (count($_GET)>0) {
 
 if (strlen($id)>0) {
 	//get the greeting filename
-		$sql = "";
-		$sql .= "select * from v_voicemail_greetings ";
+		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where greeting_uuid = '$id' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_id = '$user_id' ";
@@ -61,8 +60,7 @@ if (strlen($id)>0) {
 		unset ($prep_statement);
 
 	//delete recording from the database
-		$sql = "";
-		$sql .= "delete from v_voicemail_greetings ";
+		$sql = "delete from v_voicemail_greetings ";
 		$sql .= "where greeting_uuid = '$id' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_id = '$user_id' ";
@@ -79,7 +77,7 @@ if (strlen($id)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_greetings.php?id=$user_id\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=$user_id\">\n";
 	echo "<div align='center'>\n";
 	echo "".$text['confirm-delete-2']."\n";
 	echo "</div>\n";

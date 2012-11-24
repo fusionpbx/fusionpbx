@@ -137,8 +137,7 @@ require_once "includes/paging.php";
 //build a list of voicemail greetings
 	$config_voicemail_greeting_list = '|';
 	$i = 0;
-	$sql = "";
-	$sql .= "select * from v_voicemail_greetings ";
+	$sql = "select * from v_voicemail_greetings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and user_id = '$user_id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -271,8 +270,7 @@ require_once "includes/paging.php";
 	*/
 
 	//get the number of rows in v_extensions 
-		$sql = "";
-		$sql .= " select count(*) as num_rows from v_voicemail_greetings ";
+		$sql = "select count(*) as num_rows from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_id = '$user_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -297,8 +295,7 @@ require_once "includes/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the greetings list
-		$sql = "";
-		$sql .= "select * from v_voicemail_greetings ";
+		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_id = '$user_id' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -322,7 +319,7 @@ require_once "includes/paging.php";
 	echo th_order_by('greeting_description', $text['table-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	//if (permission_exists('voicemail_greetings_add')) {
-	//	echo "	<a href='v_voicemail_greetings_edit.php?&user_id=".$user_id."' alt='add'>$v_link_label_add</a>\n";
+	//	echo "	<a href='voicemail_greetings_edit.php?&user_id=".$user_id."' alt='add'>$v_link_label_add</a>\n";
 	//}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -347,11 +344,11 @@ require_once "includes/paging.php";
 			echo 	"</td>\n";
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "		<a href=\"v_voicemail_greetings.php?id=$user_id&a=download&type=rec&t=bin&filename=".base64_encode($row['greeting_name'])."\">\n";
+			echo "		<a href=\"voicemail_greetings.php?id=$user_id&a=download&type=rec&t=bin&filename=".base64_encode($row['greeting_name'])."\">\n";
 			echo "		download";
 			echo "		</a>";
 			//echo "		&nbsp;\n";
-			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_voicemail_greetings_play.php?id=$user_id&a=download&type=rec&filename=".base64_encode($row['greeting_name'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_greetings_play.php?id=$user_id&a=download&type=rec&filename=".base64_encode($row['greeting_name'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			//echo "		play";
 			//echo "		</a>";
 			echo 	"</td>\n";
@@ -364,10 +361,10 @@ require_once "includes/paging.php";
 
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('voicemail_greetings_edit')) {
-				echo "		<a href='v_voicemail_greetings_edit.php?id=".$row['greeting_uuid']."&user_id=".$user_id."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='voicemail_greetings_edit.php?id=".$row['greeting_uuid']."&user_id=".$user_id."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('voicemail_greetings_delete')) {
-				echo "		<a href='v_voicemail_greetings_delete.php?id=".$row['greeting_uuid']."&user_id=".$user_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='voicemail_greetings_delete.php?id=".$row['greeting_uuid']."&user_id=".$user_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -384,7 +381,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	//if (permission_exists('voicemail_greetings_add')) {
-	//	echo "			<a href='v_voicemail_greetings_edit.php?user_id=".$user_id."' alt='add'>$v_link_label_add</a>\n";
+	//	echo "			<a href='voicemail_greetings_edit.php?user_id=".$user_id."' alt='add'>$v_link_label_add</a>\n";
 	//}
 	echo "		</td>\n";
 	echo "	</tr>\n";
