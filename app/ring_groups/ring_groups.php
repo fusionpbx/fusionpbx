@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 require_once "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -49,12 +57,12 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>Ring Groups</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title']."</b></td>\n";
 	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			A ring group is a set of extensions that can be called with a ring strategy.<br /><br />\n";
+	echo "			".$text['description']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -101,15 +109,15 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('ring_group_name', 'Name', $order_by, $order);
-	echo th_order_by('ring_group_extension', 'Extension', $order_by, $order);
+	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('ring_group_extension', $text['label-extension'], $order_by, $order);
 	//echo th_order_by('ring_group_context', 'Context', $order_by, $order);
 	//echo th_order_by('ring_group_strategy', 'Strategy', $order_by, $order);
 	//echo th_order_by('ring_group_timeout_sec', 'Timeout', $order_by, $order);
 	//echo th_order_by('ring_group_timeout_app', 'Timeout App', $order_by, $order);
 	//echo th_order_by('ring_group_timeout_data', 'Timeout Data', $order_by, $order);
-	echo th_order_by('ring_group_enabled', 'Enabled', $order_by, $order);
-	echo th_order_by('ring_group_description', 'Description', $order_by, $order);
+	echo th_order_by('ring_group_enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('ring_group_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	echo "	<a href='ring_groups_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
@@ -129,7 +137,7 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<a href='ring_groups_edit.php?id=".$row['ring_group_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='ring_groups_delete.php?id=".$row['ring_group_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='ring_groups_delete.php?id=".$row['ring_group_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
