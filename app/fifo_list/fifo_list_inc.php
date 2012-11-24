@@ -96,7 +96,7 @@ if ($fp) {
 				echo "<td valign='top' class='".$row_style[$c]."'>".$caller_count."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$waiting_count."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$importance."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'><a href='v_fifo_interactive.php?c=".$name."'>view</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>view</a></td>\n";
 				echo "</tr>\n";
 		}
 		else {
@@ -108,7 +108,7 @@ if ($fp) {
 					echo "<td valign='top' class='".$row_style[$c]."'>".$caller_count."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$waiting_count."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$importance."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'><a href='v_fifo_interactive.php?c=".$name."'>view</a></td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>view</a></td>\n";
 					echo "</tr>\n";
 				}
 		}
