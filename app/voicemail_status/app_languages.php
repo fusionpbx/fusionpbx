@@ -1,4 +1,5 @@
 ﻿<?php
+
 	$text['title-voicemail']['en-us'] = 'Voicemail';
 	$text['description-voicemail']['en-us'] = 'Show details about the voicemail settings including the voicemail count, and voicemail to email address.';
 
