@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "header.php";
 
 echo "<div align='left'>";
@@ -53,13 +60,13 @@ echo "  <table width='' class='border'>";
 //echo "  <tr><th>Options</th></tr>\n";
 //echo "  <tr><td colspan='1'><img src='images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 
-echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.location='clipupdate.php?id='+document.getElementById('clip_uuid').value;\" value='Edit Clip'></td></tr>\n";
-echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.location='clipadd.php'\" value='Add Clip'></td></tr>\n";
+echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.location='clipupdate.php?id='+document.getElementById('clip_uuid').value;\" value='".$text['button-edit-clip']."'></td></tr>\n";
+echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.location='clipadd.php'\" value='".$text['button-add-clip']."'></td></tr>\n";
 //echo "  <tr><td><input type='button' class='btn' name='' onclick=\"window.location='clipadd.php'\" value='  Search  '></td></tr>\n";
-echo "  <tr><td><input type='button' class='btn' name='' onclick=\"if (confirm('Are you sure you want to delete the selected clip?')){ window.location='clipdelete.php?id='+document.getElementById('clip_uuid').value; }\" value='  Delete   '></td></tr>\n";
+echo "  <tr><td><input type='button' class='btn' name='' onclick=\"if (confirm('".$text['message-delete-clip']."')){ window.location='clipdelete.php?id='+document.getElementById('clip_uuid').value; }\" value='".$text['button-delete']."'></td></tr>\n";
 echo "  <tr><td><br><br><br><br><br><br><br><br><br><br><br></td></tr>\n";
 
-echo "  <tr><td><input type='button' class='btn' name='' onclick='javascript:self.close();' value='   Close    '></td></tr>\n";
+echo "  <tr><td><input type='button' class='btn' name='' onclick='javascript:self.close();' value='".$text['button-close']."'></td></tr>\n";
 echo "  </table>";
 
 echo "</td>\n";

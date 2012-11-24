@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get the uuid from http values
 	$clip_uuid = check_str($_GET["id"]);
@@ -49,7 +56,7 @@ else {
 //redirect the browser
 	require_once "header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
-	echo "Delete Complete";
+	echo $text['message-delete'];
 	require_once "footer.php";
 	return;
 

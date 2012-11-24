@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 echo "<html>\n";
 echo "<head>\n";
 echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
@@ -89,7 +97,7 @@ echo "	<title></title>";
 	echo "        }\n";
 	echo "\n";
 	echo "        if (!http_request) {\n";
-	echo "            alert('Giving up :( Cannot create an XMLHTTP instance');\n";
+	echo "            alert('".$text['message-give-up']."');\n";
 	echo "            return false;\n";
 	echo "        }\n";
 	echo "        http_request.onreadystatechange = function() { returnContent(http_request); };\n";
@@ -114,7 +122,7 @@ echo "	<title></title>";
 	echo "                  parent.editAreaLoader.setValue('edit1', http_request.responseText); \n";
 	echo "            }\n";
 	echo "            else {\n";
-	echo "                alert('There was a problem with the request.');\n";
+	echo "                alert('".$text['message-problem']."');\n";
 	echo "            }\n";
 	echo "        }\n";
 	echo "    }\n";

@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 if (count($_POST)>0) {
 	$clip_name = check_str($_POST["clip_name"]);
@@ -68,7 +75,7 @@ if (count($_POST)>0) {
 
 	require_once "header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
-	echo "Add Complete";
+	echo $text['message-add'];
 	require_once "footer.php";
 	return;
 }
@@ -90,29 +97,29 @@ if (count($_POST)>0) {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td>Folder:</td>";
+	echo "		<td>".$text['label-folder']."</td>";
 	echo "		<td><input type='text' class='txt' name='clip_folder'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td colspan='2'>Before Selection:<br>";
+	echo "		<td colspan='2'>".$text['label-before-selection']."<br>";
 	echo "		  <textarea name='clip_text_start' class='txt'></textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td colspan='2'>After Selection:<br>";
+	echo "		<td colspan='2'>".$text['label-after-selection']."<br>";
 	echo "		  <textarea name='clip_text_end' class='txt'></textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td colspan='2'>Notes:<br>";
+	echo "		<td colspan='2'>".$text['label-notes']."<br>";
 	echo "		  <textarea name='clip_desc' class='txt'></textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
-	echo "		<td colspan='2' align='right'><input type='submit' name='submit' value='Add'></td>";
+	echo "		<td colspan='2' align='right'><input type='submit' name='submit' value='".$text['button-add']."'></td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";

@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -34,11 +35,17 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 $filename = $_POST["file"]; //filename with the path
 $filename = str_replace ("\\", "/", $filename);
 $content = $_POST["content"];
 
-$handle = fopen($filename, 'wb') or die("Error!!");
+$handle = fopen($filename, 'wb') or die($text['message-error']);
 fwrite($handle, $content);
 fclose($handle);
 

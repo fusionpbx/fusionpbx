@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/checkauth.php";
@@ -32,6 +33,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "admin/edit/header.php";
 echo "<div align='left'>";
 echo "<table width='175'  border='0' cellpadding='0' cellspacing='2'>\n";
@@ -90,8 +98,8 @@ else { //received results
 echo "</table>\n";
 
 echo "<table width='175'><tr><td align='right'>\n"; 
-echo "<input type='button' class='btn' name='' onclick=\"window.location='clipsearch.php'\" value='Search'>&nbsp; &nbsp;\n";
-echo "<input type='button' class='btn' name='' onclick=\"window.location='clipadd.php'\" value='Add'>&nbsp; &nbsp;\n";
+echo "<input type='button' class='btn' name='' onclick=\"window.location='clipsearch.php'\" value='".$text['button-search']."'>&nbsp; &nbsp;\n";
+echo "<input type='button' class='btn' name='' onclick=\"window.location='clipadd.php'\" value='".$text['button-add']."'>&nbsp; &nbsp;\n";
 echo "</td></tr><table>\n";
 echo "</div>";
 

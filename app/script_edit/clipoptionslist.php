@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,11 @@ else {
 	echo "access denied";
 	exit;
 }
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 echo "<html>";
 echo "<head>";
@@ -81,7 +87,7 @@ function space($count) {
 	echo "        }\n";
 	echo "\n";
 	echo "        if (!http_request) {\n";
-	echo "            alert('Giving up :( Cannot create an XMLHTTP instance');\n";
+	echo "            alert('".$text['message-give-up']."');\n";
 	echo "            return false;\n";
 	echo "        }\n";
 	echo "        http_request.onreadystatechange = function() { returnContent(http_request); };\n";
@@ -105,7 +111,7 @@ function space($count) {
 	echo "                  parent.editAreaLoader.setValue('edit1', http_request.responseText); \n";
 	echo "            }\n";
 	echo "            else {\n";
-	echo "                alert('There was a problem with the request.');\n";
+	echo "                alert('".$text['message-problem']."');\n";
 	echo "            }\n";
 	echo "        }\n";
 	echo "    }\n";
@@ -153,7 +159,7 @@ echo "<body>";
 
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\" valign='top' nowrap>\n";
-	echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a onclick=\"window.open('clipoptions.php','Clip Options','left=20,top=20,width=500,height=500,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> Clip Library</a><DIV style=''>\n"; //display:none
+	echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a onclick=\"window.open('clipoptions.php','Clip Options','left=20,top=20,width=500,height=500,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> ".$text['label-clip-library']."</a><DIV style=''>\n"; //display:none
 
 	$sql = "select * from v_clips ";
 	$sql .= "order by clip_folder ";

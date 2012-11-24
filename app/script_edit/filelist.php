@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "header.php";
 
 function isfile($filename) {
@@ -140,7 +148,7 @@ echo "            }\n";
 echo "        }\n";
 echo "\n";
 echo "        if (!http_request) {\n";
-echo "            alert('Giving up :( Cannot create an XMLHTTP instance');\n";
+echo "            alert('".$text['message-give-up']."');\n";
 echo "            return false;\n";
 echo "        }\n";
 echo "        http_request.onreadystatechange = function() { returnContent(http_request); };\n";
@@ -179,7 +187,7 @@ echo "\n";
 //echo "\n";
 echo "            }\n";
 echo "            else {\n";
-echo "                alert('There was a problem with the request.');\n";
+echo "                alert('".$text['message-problem']."');\n";
 echo "            }\n";
 echo "        }\n";
 echo "\n";
@@ -227,7 +235,7 @@ echo "	<td align=\"left\" valign='top' nowrap>\n";
 //echo "      <br>";
 
 echo "\n";
-echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"if (typeof(clipwin)!='undefined') { clipwin.close(); } clipwin = window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> Files </a><DIV style=''>\n"; //display:none
+echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><a href='javascript:void(0);' onclick=\"if (typeof(clipwin)!='undefined') { clipwin.close(); } clipwin = window.open('fileoptions.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."','null','left=20,top=20,width=310,height=300,toolbar=0,resizable=0');\" style='text-decoration:none;' title=''><IMG SRC=\"images/folder.gif\" border='0'> ".$text['label-files']." </a><DIV style=''>\n"; //display:none
 //echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Files </A><DIV style=''>\n"; //display:none
 
 echo recur_dir($_SESSION['switch']['scripts']['dir']);

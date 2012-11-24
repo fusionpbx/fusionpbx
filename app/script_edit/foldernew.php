@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 $folder = $_GET["folder"];
 $folder = str_replace ("\\", "/", $folder);
@@ -50,7 +57,7 @@ else { //display form
 	echo "<form method='get' action=''>";
 	echo "<table>";
 	echo "	<tr>";
-	echo "		<td>Path:</td>";
+	echo "		<td>".$text['label-path']."</td>";
 	echo "	</tr>";   
 	echo "	<tr>";
 	echo "		<td>".$folder."</td>";
@@ -61,7 +68,7 @@ else { //display form
 
 	echo "<table>";
 	echo "	<tr>";
-	echo "	  <td>Folder Name:</td>";
+	echo "	  <td>".$text['label-folder-name']."</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
@@ -71,7 +78,7 @@ else { //display form
 	echo "	<tr>";
 	echo "		<td colspan='1' align='right'>";
 	echo "      <input type='hidden' name='folder' value='$folder'>";
-	echo "		  <input type='submit' value='New Folder'>";
+	echo "		  <input type='submit' value='".$text['button-new-folder']."'>";
 	echo "    </td>";
 	echo "	</tr>";
 	echo "</table>";

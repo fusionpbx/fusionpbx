@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "header.php";
 
 function isfile($filename) {
@@ -125,7 +133,7 @@ echo "            }\n";
 echo "        }\n";
 echo "\n";
 echo "        if (!http_request) {\n";
-echo "            alert('Giving up :( Cannot create an XMLHTTP instance');\n";
+echo "            alert('".$text['message-give-up']."');\n";
 echo "            return false;\n";
 echo "        }\n";
 echo "        http_request.onreadystatechange = function() { returnContent(http_request); };\n";
@@ -162,7 +170,7 @@ echo "\n";
 //echo "\n";
 echo "            }\n";
 echo "            else {\n";
-echo "                alert('There was a problem with the request.');\n";
+echo "                alert('".$text['message-problem']."');\n";
 echo "            }\n";
 echo "        }\n";
 echo "\n";
@@ -211,7 +219,7 @@ echo "<table  width='100%' height='100%' border='0' cellpadding='0' cellspacing=
 echo "<tr class='border'>\n";
 echo "	<td align=\"left\" valign='top' nowrap>\n";
 echo "\n";    
-echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><IMG SRC=\"images/folder.gif\" border='0'> Files <DIV style=''>\n"; //display:none
+echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><IMG SRC=\"images/folder.gif\" border='0'> ".$text['label-files']." <DIV style=''>\n"; //display:none
 //echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><A onClick=\"Toggle(this, '')\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\"> Files </A><DIV style=''>\n"; //display:none
 
 //echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this, '')\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";

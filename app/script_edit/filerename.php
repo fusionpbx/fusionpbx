@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 $folder = $_GET["folder"];
 //$folder = str_replace ("\\", "/", $folder);
@@ -57,7 +64,7 @@ else { //display form
 	echo "<form method='get' action=''>";
 	echo "<table>";
 	echo "	<tr>";
-	echo "		<td>Path:</td>";
+	echo "		<td>".$text['label-path']."</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td>".$folder.$filename."</td>";
@@ -66,7 +73,7 @@ else { //display form
 	echo "		<td><br></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td>Original file name:</td>";
+	echo "		<td>".$text['label-file-name-orig']."</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td>".$filename."</td>";
@@ -77,7 +84,7 @@ else { //display form
 
 	echo "<table>";
 	echo "	<tr>";
-	echo "	  <td>Rename file to:</td>";
+	echo "	  <td>".$text['label-rename-file-to']."</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
@@ -88,7 +95,7 @@ else { //display form
 	echo "	  <td colspan='1' align='right'>";
 	echo "          <input type='hidden' name='folder' value='$folder'>";
 	echo "          <input type='hidden' name='filename' value='$filename'>";
-	echo "		    <input type='submit' value='Rename File'>";
+	echo "		    <input type='submit' value='".$text['button-rename-file']."'>";
 	echo "    </td>";
 	echo "	</tr>";
 	echo "</table>";

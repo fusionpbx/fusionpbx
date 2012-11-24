@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 $folder = $_GET["folder"];
 $folder = str_replace ("\\", "/", $folder);
@@ -65,7 +72,7 @@ else {
 
 	echo "<table>";
 	echo "	<tr>";
-	echo "	  <td>File Name:</td>";
+	echo "	  <td>".$text['label-file-name']."</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
@@ -75,7 +82,7 @@ else {
 	echo "	<tr>";
 	echo "		<td colspan='1' align='right'>";
 	echo "      <input type='hidden' name='folder' value='$folder'>";
-	echo "		  <input type='submit' value='New File'>";
+	echo "		  <input type='submit' value='".$text['button-new-file']."'>";
 	echo "    </td>";
 	echo "	</tr>";
 	echo "</table>";

@@ -22,7 +22,14 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 echo "<html>";
 echo "<head>";
@@ -69,7 +76,7 @@ echo "<SCRIPT language=\"JavaScript\">\n";
 echo "<!--\n";
 echo "function confirmdelete(url)\n";
 echo "{\n";
-echo " var confirmed = confirm(\"Are you sure want to delete this.\");\n";
+echo " var confirmed = confirm($text['button-delete-this']);\n";
 echo " if (confirmed == true) {\n";
 echo "      window.location=url;\n";
 echo " }\n";
