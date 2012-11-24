@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
@@ -66,8 +73,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($recording_filename) == 0) { $msg .= "Please provide: Filename (download)<br>\n"; }
-		if (strlen($recording_name) == 0) { $msg .= "Please provide: Recording Name (play)<br>\n"; }
+		if (strlen($recording_filename) == 0) { $msg .= $text['label-edit-file']."<br>\n"; }
+		if (strlen($recording_name) == 0) { $msg .= $text['label-edit-recording']."<br>\n"; }
 		//if (strlen($recording_uuid) == 0) { $msg .= "Please provide: recording_uuid<br>\n"; }
 		//if (strlen($recording_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -109,7 +116,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=recordings.php\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo $text['message-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -152,7 +159,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=recordings.php\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -197,33 +204,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>Add Recording</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['title-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>Edit Recording</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['title-edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='recordings.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='recordings.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Filename (download):\n";
+	echo "    ".$text['label-file'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='recording_filename' maxlength='255' value=\"$recording_filename\">\n";
 	echo "<br />\n";
-	echo "Name of the file. example.wav\n";
+	echo $text['message-file']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Recording Name (play):\n";
+	echo "    ".$text['label-recording'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='recording_name' maxlength='255' value=\"$recording_name\">\n";
 	echo "<br />\n";
-	echo "Recording Name. example: recordingx\n";
+	echo $text['description-recording']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -245,7 +252,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='recording_description' maxlength='255' value=\"$recording_description\">\n";
 	echo "<br />\n";
-	echo "You may enter a description here for your reference (not parsed).\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -253,7 +260,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='recording_uuid' value='$recording_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
