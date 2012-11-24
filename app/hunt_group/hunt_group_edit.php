@@ -182,7 +182,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//redirect the user
 					require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hunt_group.php\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_group.php\">\n";
 					echo "<div align='center'>\n";
 					echo "Add Complete\n";
 					echo "</div>\n";
@@ -256,7 +256,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//rediret the user
 					require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hunt_group.php\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_group.php\">\n";
 					echo "<div align='center'>\n";
 					echo "Update Complete\n";
 					echo "</div>\n";
@@ -321,8 +321,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</span>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='v_hunt_group_copy.php?id=".$hunt_group_uuid."';}\" value='Copy'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_hunt_group.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='hunt_group_copy.php?id=".$hunt_group_uuid."';}\" value='Copy'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='hunt_group.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -659,8 +659,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</table>\n";
 		echo "<br />\n";
 
-		$sql = "";
-		$sql .= " select * from v_hunt_group_destinations ";
+		$sql = " select * from v_hunt_group_destinations ";
 		$sql .= " where domain_uuid = '$domain_uuid' ";
 		$sql .= " and hunt_group_uuid = '$hunt_group_uuid' ";
 		$sql .= " order by destination_order, destination_data asc";
@@ -686,7 +685,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<th align='center'>Description</th>\n";
 		echo "<td align='right' width='42'>\n";
 		if (permission_exists('hunt_group_add')) {
-			echo "	<a href='v_hunt_group_destinations_edit.php?id2=".$hunt_group_uuid."' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='hunt_group_destination_edit.php?id2=".$hunt_group_uuid."' alt='add'>$v_link_label_add</a>\n";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -701,10 +700,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['destination_description']."&nbsp;</td>\n";
 				echo "	<td valign='top' align='right'>\n";
 				if (permission_exists('hunt_group_edit')) {
-					echo "		<a href='v_hunt_group_destinations_edit.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "		<a href='hunt_group_destination_edit.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='edit'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('hunt_group_delete')) {
-					echo "		<a href='v_hunt_group_destinations_delete.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					echo "		<a href='hunt_group_destination_delete.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -721,7 +720,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 		echo "		<td width='33.3%' align='right'>\n";
 		if (permission_exists('hunt_group_add')) {
-			echo "			<a href='v_hunt_group_destinations_edit.php?id2=".$hunt_group_uuid."' alt='add'>$v_link_label_add</a>\n";
+			echo "			<a href='hunt_group_destination_edit.php?id2=".$hunt_group_uuid."' alt='add'>$v_link_label_add</a>\n";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";

@@ -43,8 +43,7 @@ require_once "includes/paging.php";
 	}
 
 //get the v_hunt_group data 
-	$sql = "";
-	$sql .= "select * from v_hunt_groups ";
+	$sql = "select * from v_hunt_groups ";
 	$sql .= "where hunt_group_uuid = '$hunt_group_uuid' ";
 	$sql .= "and domain_uuid = '$domain_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -109,8 +108,7 @@ require_once "includes/paging.php";
 		unset($sql);
 
 	//get the the hunt group destinations
-		$sql = "";
-		$sql .= "select * from v_hunt_group_destinations ";
+		$sql = "select * from v_hunt_group_destinations ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and hunt_group_uuid = '$hunt_group_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -158,7 +156,7 @@ require_once "includes/paging.php";
 
 	//redirect the user
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hunt_group.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_group.php\">\n";
 		echo "<div align='center'>\n";
 		echo "Copy Complete\n";
 		echo "</div>\n";

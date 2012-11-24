@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '632f87de-7f86-b68f-c629-4c2d2b3ce545';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/hunt_group/v_hunt_group.php';
+		$apps[$x]['menu'][0]['path'] = '/app/hunt_group/hunt_groups.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 

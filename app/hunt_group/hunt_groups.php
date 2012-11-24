@@ -111,7 +111,7 @@ echo th_order_by('hunt_group_name', 'Enabled', $order_by, $order);
 echo th_order_by('hunt_group_description', 'Description', $order_by, $order);
 echo "<td align='right' width='42'>\n";
 if (permission_exists('hunt_group_add')) {
-	echo "	<a href='v_hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "	<a href='hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
 }
 echo "</td>\n";
 echo "<tr>\n";
@@ -125,10 +125,10 @@ if ($result_count > 0) {
 		echo "   <td valign='top' class='row_stylebg' width='40%'>".$row['hunt_group_description']."&nbsp;</td>\n";
 		echo "   <td valign='top' align='right'>\n";
 		if (permission_exists('hunt_group_edit')) {
-			echo "		<a href='v_hunt_group_edit.php?id=".$row['hunt_group_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='hunt_group_edit.php?id=".$row['hunt_group_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 		}
 		if (permission_exists('hunt_group_delete')) {
-			echo "		<a href='v_hunt_group_delete.php?id=".$row['hunt_group_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='hunt_group_delete.php?id=".$row['hunt_group_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 		}
 		echo "   </td>\n";
 		echo "</tr>\n";
@@ -145,7 +145,7 @@ echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 echo "		<td width='33.3%' align='right'>\n";
 if (permission_exists('hunt_group_add')) {
-	echo "			<a href='v_hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='hunt_group_edit.php' alt='add'>$v_link_label_add</a>\n";
 }
 echo "		</td>\n";
 echo "	</tr>\n";

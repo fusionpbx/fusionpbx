@@ -341,7 +341,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//redirect the user
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/hunt_group/v_hunt_group_call_forward.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/hunt_group/hunt_group_call_forward.php\">\n";
 		echo "<div align='center'>\n";
 		echo "Update Complete<br />\n";
 		echo "</div>\n";
@@ -415,7 +415,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<b>Hunt Group Call Forward</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_hunt_group_call_forward.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='hunt_group_call_forward.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

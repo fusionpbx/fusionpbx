@@ -94,7 +94,7 @@ if (permission_exists('hunt_group_call_forward')) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['hunt_group_extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/hunt_group/v_hunt_group_call_forward_edit.php?id=".$row['hunt_group_uuid']."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
+			echo "		<a href='".PROJECT_PATH."/app/hunt_group/hunt_group_call_forward_edit.php?id=".$row['hunt_group_uuid']."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['hunt_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";

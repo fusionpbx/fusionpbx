@@ -43,8 +43,7 @@ if (count($_GET)>0) {
 
 if (strlen($id)>0) {
 	//delete the data
-		$sql = "";
-		$sql .= "delete from v_hunt_group_destinations ";
+		$sql = "delete from v_hunt_group_destinations ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and hunt_group_destination_uuid = '$id' ";
 		$sql .= "and hunt_group_uuid = '$hunt_group_uuid' ";
@@ -57,7 +56,7 @@ if (strlen($id)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_hunt_group_edit.php?id=".$hunt_group_uuid."\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_group_edit.php?id=".$hunt_group_uuid."\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";
