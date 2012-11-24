@@ -101,7 +101,7 @@ else {
 	//echo th_order_by('recordingid', 'Recording', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('call_broadcast_add')) {
-		echo "	<a href='v_call_broadcast_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='call_broadcast_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -115,10 +115,10 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['broadcast_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('call_broadcast_edit')) {
-				echo "		<a href='v_call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('call_broadcast_delete')) {
-				echo "		<a href='v_call_broadcast_delete.php?id=".$row['call_broadcast_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete-info']."')\">$v_link_label_delete</a>\n";
+				echo "		<a href='call_broadcast_delete.php?id=".$row['call_broadcast_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete-info']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -136,7 +136,7 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('call_broadcast_add')) {
-		echo "		<a href='v_call_broadcast_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "		<a href='call_broadcast_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

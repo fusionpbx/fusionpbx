@@ -34,7 +34,7 @@
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
-		$apps[$x]['menu'][0]['path'] = '/app/call_broadcast/v_call_broadcast.php';
+		$apps[$x]['menu'][0]['path'] = '/app/call_broadcast/call_broadcast.php';
 	
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'call_broadcast_view';

@@ -57,7 +57,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=call_broadcast.php\">\n";
 	echo "<div align='center'>\n";
 	echo "".$text['confirm-delete']."\n";
 	echo "</div>\n";

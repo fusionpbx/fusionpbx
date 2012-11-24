@@ -142,7 +142,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_broadcast.php\">\n";
 			echo "<div align='center'>\n";
 			echo "".$text['confirm-add']."\n";
 			echo "</div>\n";
@@ -178,7 +178,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_broadcast.php\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_broadcast.php\">\n";
 			echo "<div align='center'>\n";
 			echo "".$text['confirm-update']."\n";
 			echo "</div>\n";
@@ -191,8 +191,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$call_broadcast_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_call_broadcasts ";
+		$sql = "select * from v_call_broadcasts ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_broadcast_uuid = '$call_broadcast_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -232,7 +231,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' nowrap='nowrap'><b>".$text['label-call-broadcast']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='v_call_broadcast.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -385,7 +384,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
 		echo "			<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
-		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_call_broadcast_send.php?call_broadcast_uuid=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_broadcast_send.php?call_broadcast_uuid=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
 	}
 
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -408,7 +407,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 		echo "</table>\n";
 
-		echo "<form method='get' name='frm' action='v_call_broadcast_send.php'>\n";
+		echo "<form method='get' name='frm' action='call_broadcast_send.php'>\n";
 
 		echo "<div align='center'>\n";
 		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
