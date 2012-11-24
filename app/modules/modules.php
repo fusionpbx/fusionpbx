@@ -120,7 +120,7 @@ if (strlen($_GET["a"]) > 0) {
 	$tmp_module_header .= "<th>Enabled</th>\n";
 	//$tmp_module_header .= "<th>Default Enabled</th>\n";
 	$tmp_module_header .= "<td align='right' width='42'>\n";
-	$tmp_module_header .= "	<a href='v_modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+	$tmp_module_header .= "	<a href='modules_edit.php' alt='add'>$v_link_label_add</a>\n";
 	$tmp_module_header .= "</td>\n";
 	$tmp_module_header .= "<tr>\n";
 
@@ -138,7 +138,7 @@ if (strlen($_GET["a"]) > 0) {
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='right'>\n";
 					if (permission_exists('modules_add')) {
-						echo "			<a href='v_modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+						echo "			<a href='modules_edit.php' alt='add'>$v_link_label_add</a>\n";
 					}
 					echo "		</td>\n";
 					echo "	</tr>\n";
@@ -160,7 +160,7 @@ if (strlen($_GET["a"]) > 0) {
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_description"]."&nbsp;</td>\n";
 			if ($mod->active($row["module_name"])) {
 				echo "   <td valign='top' class='".$row_style[$c]."'>Running</td>\n";
-				echo "   <td valign='top' class='".$row_style[$c]."'><a href='v_modules.php?a=stop&m=".$row["module_name"]."' alt='stop'>Stop</a></td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='stop'>Stop</a></td>\n";
 			}
 			else {
 				if ($row['module_enabled']=="true") {
@@ -169,16 +169,16 @@ if (strlen($_GET["a"]) > 0) {
 				else {
 					echo "   <td valign='top' class='".$row_style[$c]."'>Stopped $notice</td>\n";
 				}
-				echo "   <td valign='top' class='".$row_style[$c]."'><a href='v_modules.php?a=start&m=".$row["module_name"]."' alt='start'>Start</a></td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".$row["module_name"]."' alt='start'>Start</a></td>\n";
 			}
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_enabled"]."</td>\n";
 			//echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_default_enabled"]."</td>\n";
 			echo "   <td valign='top' align='right'>\n";
 			if (permission_exists('modules_edit')) {
-				echo "		<a href='v_modules_edit.php?id=".$row["module_uuid"]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='modules_edit.php?id=".$row["module_uuid"]."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('modules_delete')) {
-				echo "		<a href='v_modules_delete.php?id=".$row["module_uuid"]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='modules_delete.php?id=".$row["module_uuid"]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "   </td>\n";
 			echo "</tr>\n";
@@ -197,7 +197,7 @@ if (strlen($_GET["a"]) > 0) {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('modules_add')) {
-		echo "			<a href='v_modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='modules_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

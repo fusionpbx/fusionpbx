@@ -110,7 +110,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				save_module_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_modules.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=modules.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -133,7 +133,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				save_module_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_modules.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=modules.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -146,8 +146,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$module_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_modules ";
+		$sql = "select * from v_modules ";
 		$sql .= "where module_uuid = '$module_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -186,7 +185,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap><b>Module Update</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_modules.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='modules.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
