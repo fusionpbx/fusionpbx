@@ -27,6 +27,10 @@
 	
 	$text['label-enabled']['en-us'] = 'Enabled';
 	
+	$text['label-true']['en-us'] = 'true';
+	
+	$text['label-false']['en-us'] = 'false';
+	
 	$text['label-description']['en-us'] = 'Description';
 //end: Basic
 

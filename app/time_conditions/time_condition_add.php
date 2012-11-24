@@ -1028,16 +1028,16 @@ echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
 if ($dialplan_enabled == "true") { 
-	echo "    <option value='true' SELECTED >true</option>\n";
+	echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
 }
 else {
-	echo "    <option value='true'>true</option>\n";
+	echo "    <option value='true'>".$text['label-true']."</option>\n";
 }
 if ($dialplan_enabled == "false") { 
-	echo "    <option value='false' SELECTED >false</option>\n";
+	echo "    <option value='false' SELECTED >".$text['label-false']."</option>\n";
 }
 else {
-	echo "    <option value='false'>false</option>\n";
+	echo "    <option value='false'>".$text['label-false']."</option>\n";
 }
 echo "    </select>\n";
 echo "<br />\n";

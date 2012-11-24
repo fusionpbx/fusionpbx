@@ -65,7 +65,11 @@
 	
 	$text['label-year']['en-us'] = 'Year';
 	$text['description-year']['en-us'] = 'Enter the year.';
-//end: show_advanced	
+//end: show_advanced
+
+	$text['label-true']['en-us'] = 'true';
+	
+	$text['label-false']['en-us'] = 'false';
 	
 	$text['label-action-when-true']['en-us'] = 'Action when True';
 	
