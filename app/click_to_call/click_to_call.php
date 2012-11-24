@@ -43,6 +43,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
 
 if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])) {
@@ -211,7 +217,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<tr>\n";
 	echo "	<td align='left'>\n";
 	echo "		<span class=\"vexpl\" class=\"red\">\n";
-	echo "			<strong>Click to Call</strong>\n";
+	echo "			<strong>".$text['label-click2call']."</strong>\n";
 	echo "		</span>\n";
 	echo "	</td>\n";
 	echo "	<td align='right'>\n";
@@ -221,7 +227,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<tr>\n";
 	echo "	<td align='left' colspan='2'>\n";
 	echo "		<span class=\"vexpl\">\n";
-	echo "			Provide the following information to make a call from the source number to the destination number.\n";
+	echo "			".$text['desc-click2call']."\n";
 	echo "		</span>\n";
 	echo "	</td>\n";
 	echo "\n";
@@ -233,130 +239,130 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "<form>\n";
 	echo "<table border='0' width='100%' cellpadding='6' cellspacing='0'\n";
 	echo "<tr>\n";
-	echo "	<td class='vncellreq' width='40%'>Source Caller ID Name:</td>\n";
+	echo "	<td class='vncellreq' width='40%'>".$text['label-src-caller-id-nam'].":</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"src_cid_name\" value='$src_cid_name' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the Caller ID name to send to your phone.\n";
+	echo "		".$text['desc-src-caller-id-nam']."\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "	<td class='vncellreq'>Source Caller ID Number:</td>\n";
+	echo "	<td class='vncellreq'>".$text['label-src-caller-id-num'].":</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"src_cid_number\" value='$src_cid_number' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the Caller ID number to send to your phone (you probably want this to be the same as the destination number).\n";
+	echo "		".$text['desc-src-caller-id-num']."\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "	<td class='vncell' width='40%'>Destination Caller ID Name:</td>\n";
+	echo "	<td class='vncell' width='40%'>".$text['label-dest-caller-id-nam'].":</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"dest_cid_name\" value='$dest_cid_name' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the Caller ID name to send to the destination number.\n";
+	echo "		".$text['desc-dest-caller-id-nam']."\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "	<td class='vncell'>Destination Caller ID Number:</td>\n";
+	echo "	<td class='vncell'>".$text['label-dest-caller-id-num'].":</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"dest_cid_number\" value='$dest_cid_number' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the Caller ID number to send to the destination number (you probably want this to be your phone number).\n";
+	echo "		".$text['desc-dest-caller-id-num']."\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "	<td class='vncellreq'>Source Number:</td>\n";
+	echo "	<td class='vncellreq'>".$text['label-src-num'].":</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"src\" value='$src' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter your phone number.  This can be an extension on the system, or another number (eg: mobile phone).\n";
+	echo "		".$text['desc-src-num']."\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "	<td class='vncellreq'>Destination Number:</td>\n";
+	echo "	<td class='vncellreq'>".$text['label-dest-num'].":</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input name=\"dest\" value='$dest' class='formfld'>\n";
 	echo "		<br />\n";
-	echo "		Enter the number to call. This can be an extension on the system, another number, or a sip uri.  Sip URI's are of the form 5551234567@voip.example.com:5080 (5080 for freeswitch, or 5060 for other systems).\n";
+	echo "		".$text['desc-dest-num']."\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Record:\n";
+	echo "    ".$text['label-record'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='rec'>\n";
 	echo "    <option value=''></option>\n";
 	if ($rec == "true") { 
-		echo "    <option value='true' selected='selected'>true</option>\n";
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($rec == "false") { 
-		echo "    <option value='false' selected='selected'>false</option>\n";
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Select whether to record the call.\n";
+	echo $text['desc-record']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Ring Back:\n";
+	echo "    ".$text['label-ringback'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='ringback'>\n";
 	echo "    <option value=''></option>\n";
 	if ($ringback == "us-ring") { 
-		echo "    <option value='us-ring' selected='selected'>us-ring</option>\n";
+		echo "    <option value='us-ring' selected='selected'>".$text['opt-usring']."</option>\n";
 	}
 	else {
-		echo "    <option value='us-ring'>us-ring</option>\n";
+		echo "    <option value='us-ring'>".$text['opt-usring']."</option>\n";
 	}
 	if ($ringback == "fr-ring") { 
-		echo "    <option value='fr-ring' selected='selected'>fr-ring</option>\n";
+		echo "    <option value='fr-ring' selected='selected'>".$text['opt-frring']."</option>\n";
 	}
 	else {
-		echo "    <option value='fr-ring'>fr-ring</option>\n";
+		echo "    <option value='fr-ring'>".$text['opt-frring']."</option>\n";
 	}
 	if ($ringback == "uk-ring") { 
-		echo "    <option value='uk-ring' selected='selected'>uk-ring</option>\n";
+		echo "    <option value='uk-ring' selected='selected'>".$text['opt-ukring']."</option>\n";
 	}
 	else {
-		echo "    <option value='uk-ring'>uk-ring</option>\n";
+		echo "    <option value='uk-ring'>".$text['opt-ukring']."/option>\n";
 	}
 	if ($ringback == "rs-ring") { 
-		echo "    <option value='rs-ring' selected='selected'>rs-ring</option>\n";
+		echo "    <option value='rs-ring' selected='selected'>".$text['opt-rsring']."</option>\n";
 	}
 	else {
-		echo "    <option value='rs-ring'>rs-ring</option>\n";
+		echo "    <option value='rs-ring'>".$text['opt-rsring']."</option>\n";
 	}
 	if ($ringback == "music") { 
-		echo "    <option value='music' selected='selected'>music</option>\n";
+		echo "    <option value='music' selected='selected'>".$text['opt-moh']."</option>\n";
 	}
 	else {
-		echo "    <option value='music'>music</option>\n";
+		echo "    <option value='music'>".$text['opt-moh']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Defines what the you will hear while destination is being called. The choices are music (music on hold) ring (ring tone.)\n";
+	echo $text['desc-ringback']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
-	echo "		<input type=\"submit\" class='btn' value=\"Call\">\n";
+	echo "		<input type=\"submit\" class='btn' value=\"".$text['button-call']."\">\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
