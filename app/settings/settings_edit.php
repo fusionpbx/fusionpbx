@@ -35,8 +35,7 @@ else {
 }
 	
 //get the number of rows in v_extensions 
-	$sql = "";
-	$sql .= " select count(*) as num_rows from v_settings ";
+	$sql = " select count(*) as num_rows from v_settings ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$num_rows = 0;
 	if ($prep_statement) {
@@ -152,7 +151,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					save_setting_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_settings_edit.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=settings_edit.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -178,7 +177,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					save_setting_xml();
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_settings_edit.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=settings_edit.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";

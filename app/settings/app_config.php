@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '148ea42a-3711-3d64-181b-07a6a3c3ed60';
 		$apps[$x]['menu'][0]['parent_uuid'] = '02194288-6d56-6d3e-0b1a-d53a2bc10788';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/settings/v_settings_edit.php';
+		$apps[$x]['menu'][0]['path'] = '/app/settings/settings_edit.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 	
 	//permission details
