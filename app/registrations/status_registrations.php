@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -36,6 +37,12 @@ require_once "includes/checkauth.php";
 		exit;
 	}
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //request form values and set them as variables
 	$sip_profile_name = trim($_REQUEST["profile"]);
 
@@ -47,7 +54,7 @@ require_once "includes/checkauth.php";
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>"; 
 	}
 
 //show the error message or show the content
@@ -55,7 +62,7 @@ require_once "includes/checkauth.php";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>Message</th>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -67,7 +74,7 @@ require_once "includes/checkauth.php";
 		//get sofia status profile information including registrations
 			$cmd = "api sofia xmlstatus profile ".$sip_profile_name." reg";
 			$xml_response = trim(event_socket_request($fp, $cmd));
-			if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>Invalid Profile!</error_msg>"; }
+			if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
 			$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
 			$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
 			try {
@@ -125,7 +132,7 @@ require_once "includes/checkauth.php";
 			echo "	<b>Registrations: ".count($registrations)."</b>\n";
 			echo "</td>\n";
 			echo "<td colspan='1' align='right'>\n";
-			echo "  <input type='button' class='btn' value='back' onclick=\"history.back();\" />\n";
+			echo "  <input type='button' class='btn' value='".$text['button-back']."' onclick=\"history.back();\" />\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
@@ -133,19 +140,19 @@ require_once "includes/checkauth.php";
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
 			echo "<tr>\n";
 			if (count($_SESSION["domains"]) > 1) {
-				echo "	<th>Domain</th>\n";
+				echo "	<th>".$text['label-domain']."</th>\n";
 			}
 			//echo "	<th>User</th>\n";
 			//echo "	<th class='vncell'>Caller ID</th>\n";
-			echo "	<th>User</th>\n";
+			echo "	<th>".$text['label-user']."</th>\n";
 			//echo "	<th class='vncell'>Contact</th>\n";
 			//echo "	<th class='vncell'>sip-auth-user</th>\n";
-			echo "	<th>Agent</th>\n";
+			echo "	<th>".$text['label-agent']."</th>\n";
 			//echo "	<th class='vncell'>Host</th>\n";
-			echo "	<th>IP</th>\n";
-			echo "	<th>Port</th>\n";
+			echo "	<th>".$text['label-ip']."</th>\n";
+			echo "	<th>".$text['label-port']."</th>\n";
 			//echo "	<th class='vncell'>mwi-account</th>\n";
-			echo "	<th>Status</th>\n";
+			echo "	<th>".$text['label-status']."</th>\n";
 			echo "</tr>\n";
 
 		//order the array
