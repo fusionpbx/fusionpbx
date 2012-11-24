@@ -37,7 +37,7 @@ function hide_advanced_config() {
 					</td>		<td width='50%' align='right'> 
 						<input type='submit' name='submit' class='btn' value='Save'> 
 						<!-- <input type='button' class='btn' name='' alt='copy' onclick="if (confirm('Do you really want to copy this?')){window.location='v_gateways_copy.php?id=1';}" value='Copy'>  -->
-						<input type='button' class='btn' name='' alt='back' onclick="window.location='v_xmpp.php'" value='Back'> 
+						<input type='button' class='btn' name='' alt='back' onclick="window.location='xmpp.php'" value='Back'> 
 					</td> 
 				</tr>
 				<tr>

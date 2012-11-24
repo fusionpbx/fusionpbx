@@ -1,4 +1,4 @@
-<meta http-equiv="refresh" content="2;url=v_xmpp.php">
+<meta http-equiv="refresh" content="2;url=xmpp.php">
 <div align='center'>
 <?php 
 if ($action == "add") {
