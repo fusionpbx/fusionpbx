@@ -30,7 +30,7 @@ if (permission_exists('inbound_route_add')) {
 	//access granted
 }
 else {
-	echo "access denied";
+	echo $text['label-access-denied'];
 	exit;
 }
 require_once "includes/header.php";

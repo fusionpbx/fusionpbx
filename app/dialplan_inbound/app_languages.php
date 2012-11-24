@@ -2,9 +2,10 @@
 
 	$text['title-dialplan-inbound-add']['en-us'] = 'Inbound Call Routing';
 	$text['description-dialplan-inbound-add']['en-us'] = 'The public dialplan is used to route incoming calls to destinations based on one or more conditions and context. It can send incoming calls to an auto attendant, huntgroup, extension, external number, or a script.';
-
+	
+	$text['label-access-denied']['en-us'] = 'access denied';
+	
 	$text['button-back']['en-us'] = 'Back';
-	$text['button-advanced']['en-us'] = 'Advanced';
 
 //begin: Basic
 	$text['button-basic']['en-us'] = 'Basic';
@@ -30,6 +31,8 @@
 //end: Basic
 
 //begin: Advanced
+	$text['button-advanced']['en-us'] = 'Advanced';
+	
 	$text['label-condition_1']['en-us'] = 'Condition 1';
 
 	$text['label-condition_2']['en-us'] = 'Condition 2';
