@@ -45,6 +45,7 @@
 	$text['button-back']['en-us'] = 'Back';
 	$text['description-name']['en-us'] = 'Enter the name.';
 	$text['description-extension']['en-us'] = 'Enter the extension.';
+	$text['label-context']['en-us'] = 'Context';
 	$text['description-enter-context']['en-us'] = 'Enter the context.';
 	$text['label-strategy']['en-us'] = 'Strategy';
 	$text['dropdown-sequence']['en-us'] = 'sequence';

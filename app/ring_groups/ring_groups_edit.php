@@ -382,7 +382,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (if_group("superadmin")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	Context:\n";
+		echo "	",$text['label-context'],":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ring_group_context' maxlength='255' value=\"$ring_group_context\">\n";
