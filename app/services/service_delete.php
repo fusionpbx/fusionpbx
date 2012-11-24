@@ -40,8 +40,7 @@ if (count($_GET)>0) {
 
 //delete the data
 	if (strlen($id)>0) {
-		$sql = "";
-		$sql .= "delete from v_services ";
+		$sql = "delete from v_services ";
 		$sql .= "where service_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -50,7 +49,7 @@ if (count($_GET)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_services.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=services.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

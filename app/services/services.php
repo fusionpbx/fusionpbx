@@ -41,8 +41,7 @@ $order = $_GET["order"];
 
 if (strlen($_GET["a"]) > 0) {
 	$service_uuid = $_GET["id"];
-	$sql = "";
-	$sql .= "select * from v_services ";
+	$sql = "select * from v_services ";
 	$sql .= "where service_uuid = '$service_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -69,7 +68,7 @@ if (strlen($_GET["a"]) > 0) {
 	}
 
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"5;url=v_services.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"5;url=services.php\">\n";
 	echo "<div align='center'>\n";
 	echo $msg."\n";
 	echo "</div>\n";
@@ -107,8 +106,7 @@ if (strlen($_GET["a"]) > 0) {
 	echo "</tr>\n";
 	echo "</tr></table>\n";
 
-	$sql = "";
-	$sql .= " select * from v_services ";
+	$sql = "select * from v_services ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -122,8 +120,7 @@ if (strlen($_GET["a"]) > 0) {
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page; 
 
-	$sql = "";
-	$sql .= " select * from v_services ";
+	$sql = "select * from v_services ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -145,7 +142,7 @@ if (strlen($_GET["a"]) > 0) {
 	echo "<th>Action</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('services_add')) {
-		echo "	<a href='v_services_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='services_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -169,18 +166,18 @@ if (strlen($_GET["a"]) > 0) {
 			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if (is_process_running($pid)) {
-				echo "		<a href='v_services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>Stop</a>";
+				echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>Stop</a>";
 			}
 			else {
-				echo "		<a href='v_services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
+				echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
 			}
 			echo "</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('services_edit')) {
-				echo "		<a href='v_services_edit.php?id=".$row[service_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='service_edit.php?id=".$row[service_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('services_delete')) {
-				echo "		<a href='v_services_delete.php?id=".$row[service_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='service_delete.php?id=".$row[service_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -197,7 +194,7 @@ if (strlen($_GET["a"]) > 0) {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('services_add')) {
-		echo "			<a href='v_services_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='service_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
