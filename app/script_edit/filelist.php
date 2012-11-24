@@ -38,11 +38,6 @@ else {
 //add css and javascript
 	require_once "header.php";
 
-//define function is_file
-	function is_file($filename) {
-		//if (@filesize($filename) > 0) { return true; } else { return false; }
-	}
-
 //define function space
 	function space($count) {
 		$r=''; $i=0;
@@ -83,15 +78,16 @@ else {
 			$level = explode('/',$newpath);
 
 			if (is_dir($newpath)) {
-				/*$mod_array[] = array(
-					'level'=>count($level)-1,
-					'path'=>$newpath,
-					'name'=>end($level),
-					'type'=>'dir',
-					'mod_time'=>filemtime($newpath),
-					'size'=>'');
-					$mod_array[] = recur_dir($newpath);
-				*/
+
+				//$mod_array[] = array(
+					//'level'=>count($level)-1,
+					//'path'=>$newpath,
+					//'name'=>end($level),
+					//'type'=>'dir',
+					//'mod_time'=>filemtime($newpath),
+					//'size'=>'');
+					//$mod_array[] = recur_dir($newpath);
+
 				$dirname = end($level);
 				$htmldirlist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><a onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/folder.gif\" border='0'> $dirname </a><DIV style='display:none'>\n";
 				//$htmldirlist .= space(count($level))."   <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap><A onClick=\"Toggle(this)\"><IMG SRC=\"images/plus.gif\"> <IMG SRC=\"images/gear.png\"> Tools </A><DIV style='display:none'>\n";
@@ -106,14 +102,15 @@ else {
 				$htmldirlist .= space(count($level))."</DIV></TD></TR></TABLE>\n";
 			}
 			else {
-				/*$mod_array[] = array(
-						'level'=>count($level)-1,
-						'path'=>$newpath,
-						'name'=>end($level),
-						'type'=>'file',
-						'mod_time'=>filemtime($newpath),
-						'size'=>filesize($newpath));
-				*/
+
+				//$mod_array[] = array(
+					//	'level'=>count($level)-1,
+					//	'path'=>$newpath,
+					//	'name'=>end($level),
+					//	'type'=>'file',
+					//	'mod_time'=>filemtime($newpath),
+					//	'size'=>filesize($newpath));
+
 				$filename = end($level);
 				$filesize = round(filesize($newpath)/1024, 2);
 				$htmlfilelist .= space(count($level))."<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><a href='javascript:void(0);' onclick=\"parent.document.title='".$newpath."';parent.document.getElementById('file').value='".urlencode($newpath)."'; parent.window.frames['frame_'+'edit1'].editArea.previous= new Array(); parent.window.frames['frame_'+'edit1'].editArea.switchClassSticky(document.getElementById('undo'), 'editAreaButtonDisabled', true); makeRequest('fileread.php','file=".urlencode($newpath)."'); window.setTimeout('parent.my_setSelectionRange(\'edit1\')','100');\" title='$filesize KB'><IMG SRC=\"images/file.png\" border='none'> $filename </a><DIV style='display:none'>\n";
