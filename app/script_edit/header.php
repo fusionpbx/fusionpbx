@@ -76,7 +76,7 @@ echo "<SCRIPT language=\"JavaScript\">\n";
 echo "<!--\n";
 echo "function confirmdelete(url)\n";
 echo "{\n";
-echo " var confirmed = confirm($text['button-delete-this']);\n";
+echo " var confirmed = confirm(".$text['button-delete-this'].");\n";
 echo " if (confirmed == true) {\n";
 echo "      window.location=url;\n";
 echo " }\n";
