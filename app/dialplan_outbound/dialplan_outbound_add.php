@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -33,6 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //show the header
 	require_once "includes/header.php";
@@ -179,10 +186,10 @@ else {
 //process the http form values
 	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//check for all required data
-			if (strlen($gateway) == 0) { $msg .= "Please provide: Gateway Name<br>\n"; }
+			if (strlen($gateway) == 0) { $msg .= $text['message-provide'].": ".$text['label-gateway-name']."<br>\n"; }
 			//if (strlen($gateway_2) == 0) { $msg .= "Please provide: Alternat 1<br>\n"; }
 			//if (strlen($gateway_3) == 0) { $msg .= "Please provide: Alternat 2<br>\n"; }
-			if (strlen($dialplan_expression) == 0) { $msg .= "Please provide: Dialplan Expression<br>\n"; }
+			if (strlen($dialplan_expression) == 0) { $msg .= $text['message-provide'].": ".$text['label-dialplan-expression']."<br>\n"; }
 			//if (strlen($dialplan_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
 			//if (strlen($condition_field_1) == 0) { $msg .= "Please provide: Condition Field<br>\n"; }
 			//if (strlen($condition_expression_1) == 0) { $msg .= "Please provide: Condition Expression<br>\n"; }
@@ -244,90 +251,90 @@ else {
 					}
 					switch ($dialplan_expression) {
 					case "^(\d{7})$":
-						$label = "7 digits";
+						$label = $text['label-7d'];
 						$abbrv = "7d";
 						break;
 					case "^(\d{8})$":
-						$label = "8 digits";
+						$label = $text['label-8d'];
 						$abbrv = "8d";
 						break;
 					case "^(\d{9})$":
-						$label = "9 digits";
+						$label = $text['label-9d'];
 						$abbrv = "9d";
 						break;
 					case "^(\d{10})$":
-						$label = "10 digits";
+						$label = $text['label-10d'];
 						$abbrv = "10d";
 						break;
 					case "^\+?(\d{11})$":
-						$label = "11 digits";
+						$label = $text['label-11d'];
 						$abbrv = "11d";
 						break;
 					case "^(\d{12})$":
-						$label = "12 digits";
+						$label = $text['label-12d'];
 						$abbrv = "12d";
 						break;
 					case "^(\d{13})$":
-						$label = "13 digits";
+						$label = $text['label-13d'];
 						$abbrv = "13d";
 						break;
 					case "^(\d{14})$":
-						$label = "14 digits";
+						$label = $text['label-14d'];
 						$abbrv = "14d";
 						break;
 					case "^(\d{12,15})$":
-						$label = "International";
+						$label = $text['label-int'];
 						$abbrv = "Intl";
 						break;
 					case "^(311)$":
-						$label = "311";
+						$label = $text['label-311'];
 						$abbrv = "311";
 						break;
 					case "^(411)$":
-						$label = "411";
+						$label = $text['label-411'];
 						$abbrv = "411";
 						break;
 					case "^(911)$":
-						$label = "911";
+						$label = $text['label-911'];
 						$abbrv = "911";
 						break;
 					case "^9(\d{3})$":
-						$label = "dial 9, 3 digits";
+						$label = $text['label-9d3'];
 						$abbrv = "9.3d";
 						break;
 					case "^9(\d{4})$":
-						$label = "dial 9, 4 digits";
+						$label = $text['label-9d4'];
 						$abbrv = "9.4d";
 						break;	
 					case "^9(\d{7})$":
-						$label = "dial 9, 7 digits";
+						$label = $text['label-9d7'];
 						$abbrv = "9.7d";
 						break;
 					case "^9(\d{10})$":
-						$label = "dial 9, 10 digits";
+						$label = $text['label-9d10'];
 						$abbrv = "9.10d";
 						break;
 					case "^9(\d{11})$":
-						$label = "dial 9, 11 digits";
+						$label = $text['label-9d11'];
 						$abbrv = "9.11d";
 						break;
 					case "^9(\d{12})$":
-						$label = "dial 9, 12 digits";
+						$label = $text['label-9d12'];
 						$abbrv = "9.Intl";
 						break;
 					case "^9(\d{13})$":
-						$label = "dial 9, 13 digits";
+						$label = $text['label-9d13'];
 						$abbrv = "9.13d";
 						break;
 					case "^9(\d{14})$":
-						$label = "dial 9, 14 digits";
+						$label = $text['label-9d14'];
 						break;
 					case "^9(\d{12,15})$":
-						$label = "dial 9, International";
+						$label = $text['label-9d15'];
 						$abbrv = "9.Intl";
 						break;
 					case "^1?(8(00|55|66|77|88)[2-9]\d{6})$":
-						$label = "toll free";
+						$label = $text['label-800'];
 						$abbrv = "tollfree";
 						break;
 					default:
@@ -561,7 +568,7 @@ else {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -612,18 +619,17 @@ function type_onchange(dialplan_detail_type) {
 
 	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>Outbound Routes\n";
+	echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>".$text['label-outbound-routes']."\n";
 	echo "			</strong></span></span>\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			<span class=\"vexpl\">\n";
-	echo "				Outbound dialplans have one or more conditions that are matched to attributes of a call. \n";
-	echo "				When a call matches the conditions the call is then routed to the gateway.\n";
+	echo "				".$text['description-outbound-routes']."\n";
 	echo "			</span>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -636,7 +642,7 @@ function type_onchange(dialplan_detail_type) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Gateway:\n";
+	echo "    ".$text['label-gateway'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	
@@ -687,7 +693,7 @@ function type_onchange(dialplan_detail_type) {
 	unset ($prep_statement, $sql);
 	echo "<select name=\"gateway\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
 	echo "<option value=''></option>\n";
-	echo "<optgroup label='SIP Gateways'>";
+	echo "<optgroup label='".$text['label-gateway']."'>";
 	$previous_domain_uuid = '';
 	foreach($result as $row) {
 		if (permission_exists('outbound_route_any_gateway')) {
@@ -714,21 +720,21 @@ function type_onchange(dialplan_detail_type) {
 	}
 	unset($sql, $result, $row_count);
 	echo "</optgroup>";
-	echo "	<optgroup label='Additional Options'>";
+	echo "	<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
 	echo "<br />\n";
-	echo "Select the gateway to use with this outbound route.\n";
+	echo $text['message-add-options']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Alternate 1:\n";
+	echo "    ".$text['label-alt1'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -746,7 +752,7 @@ function type_onchange(dialplan_detail_type) {
 	unset ($prep_statement, $sql);
 	echo "<select name=\"gateway_2\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
 	echo "<option value=''></option>\n";
-	echo "<optgroup label='SIP Gateways'>";
+	echo "<optgroup label='".$text['label-sip-gateway']."'>";
 	$previous_domain_uuid = '';
 	foreach($result as $row) {
 		if (permission_exists('outbound_route_any_gateway')) {
@@ -773,21 +779,21 @@ function type_onchange(dialplan_detail_type) {
 	}
 	unset($sql, $result, $row_count, $previous_domain_uuid);
 	echo "</optgroup>";
-	echo "<optgroup label='Additional Options'>";
+	echo "<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
 	echo "<br />\n";
-	echo "Select another gateway as an alternative to use if the first one fails.\n";
+	echo $text['message-add-options1']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Alternate 2:\n";
+	echo "    ".$text['label-alt2'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -805,7 +811,7 @@ function type_onchange(dialplan_detail_type) {
 	unset ($prep_statement, $sql);
 	echo "<select name=\"gateway_3\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
 	echo "<option value=''></option>\n";
-	echo "<optgroup label='SIP Gateways'>";
+	echo "<optgroup label='".$text['label-sip-gateway']."'>";
 	$previous_domain_uuid = '';
 	foreach($result as $row) {
 		if (permission_exists('outbound_route_any_gateway')) {
@@ -832,89 +838,89 @@ function type_onchange(dialplan_detail_type) {
 	}
 	unset($sql, $result, $row_count, $previous_domain_uuid);
 	echo "</optgroup>";
-	echo "<optgroup label='Additional Options'>";
+	echo "<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
 	echo "<br />\n";
-	echo "Select another gateway as an alternative to use if the second one fails.\n";
+	echo $text['message-add-options2']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 
 	echo "<tr>\n";
-	echo "  <td valign=\"top\" class=\"vncellreq\">Dialplan Expression:</td>\n";
+	echo "  <td valign=\"top\" class=\"vncellreq\">".$text['label-dialplan-expression'].":</td>\n";
 	echo "  <td align='left' class=\"vtable\">";
 	echo "    <textarea name=\"dialplan_expression\" id=\"dialplan_expression\" class=\"formfld\" style='width: 60%;' cols=\"30\" rows=\"4\" wrap=\"off\"></textarea>\n";
 	echo "    <br>\n";
 	echo "    <select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"document.getElementById('dialplan_expression').value += document.getElementById('dialplan_expression_select').value + '\\n';\" class='formfld' style='width: 60%;'>\n";
 	echo "    <option></option>\n";
-	echo "    <option value='^(\\d{2})\$'>2 digits</option>\n";
-	echo "    <option value='^(\\d{3})\$'>3 digits</option>\n";
-	echo "    <option value='^(\\d{4})\$'>4 digits</option>\n";
-	echo "    <option value='^(\\d{5})\$'>5 digits</option>\n";
-	echo "    <option value='^(\\d{6})\$'>6 digits</option>\n";
-	echo "    <option value='^(\\d{7})\$'>7 digits local</option>\n";
-	echo "    <option value='^(\\d{8})\$'>8 digits</option>\n";
-	echo "    <option value='^(\\d{9})\$'>9 digits</option>\n";
-	echo "    <option value='^(\\d{10})\$'>10 digits long distance</option>\n";
-	echo "    <option value='^\+?(\\d{11})\$'>11 digits long distance</option>\n";
-	echo "    <option value='^(\\d{12})\$'>12 digits</option>\n";
-	echo "    <option value='^(\\d{13})\$'>13 digits</option>\n";
-	echo "    <option value='^(\\d{14})\$'>14 digits</option>\n";
-	echo "    <option value='^(\\d{15})\$'>15 digits International</option>\n";
-	echo "    <option value='^(311)\$'>311 information</option>\n";
-	echo "    <option value='^(411)\$'>411 information</option>\n";
-	echo "    <option value='^(911)\$'>911 emergency</option>\n";
-	echo "    <option value='^1?(8(00|55|66|77|88)[2-9]\\d{6})\$'>toll free</option>\n";
-	echo "    <option value='^9(\\d{2})\$'>Dial 9 then 2 digits</option>\n";
-	echo "    <option value='^9(\\d{3})\$'>Dial 9 then 3 digits</option>\n";
-	echo "    <option value='^9(\\d{4})\$'>Dial 9 then 4 digits</option>\n";
-	echo "    <option value='^9(\\d{5})\$'>Dial 9 then 5 digits</option>\n";
-	echo "    <option value='^9(\\d{6})\$'>Dial 9 then 6 digits</option>\n";
-	echo "    <option value='^9(\\d{7})\$'>Dial 9 then 7 digits</option>\n";
-	echo "    <option value='^9(\\d{8})\$'>Dial 9 then 8 digits</option>\n";
-	echo "    <option value='^9(\\d{9})\$'>Dial 9 then 9 digits</option>\n";
-	echo "    <option value='^9(\\d{10})\$'>Dial 9 then 10 digits</option>\n";
-	echo "    <option value='^9(\\d{11})\$'>Dial 9 then 11 digits</option>\n";
-	echo "    <option value='^9(\\d{12})\$'>Dial 9 then 12 digits</option>\n";
-	echo "    <option value='^9(\\d{13})\$'>Dial 9 then 13 digits</option>\n";
-	echo "    <option value='^9(\\d{14})\$'>Dial 9 then 14 digits</option>\n";
-	echo "    <option value='^9(\\d{15})\$'>Dial 9 then 15 digits</option>\n";
+	echo "    <option value='^(\\d{2})\$'>".$text['label-2d']."</option>\n";
+	echo "    <option value='^(\\d{3})\$'>".$text['label-3d']."</option>\n";
+	echo "    <option value='^(\\d{4})\$'>".$text['label-4d']."</option>\n";
+	echo "    <option value='^(\\d{5})\$'>".$text['label-5d']."</option>\n";
+	echo "    <option value='^(\\d{6})\$'>".$text['label-6d']."</option>\n";
+	echo "    <option value='^(\\d{7})\$'>".$text['label-7d']."</option>\n";
+	echo "    <option value='^(\\d{8})\$'>".$text['label-8d']."</option>\n";
+	echo "    <option value='^(\\d{9})\$'>".$text['label-9d']."</option>\n";
+	echo "    <option value='^(\\d{10})\$'>".$text['label-10d']."</option>\n";
+	echo "    <option value='^\+?(\\d{11})\$'>".$text['label-11d']."</option>\n";
+	echo "    <option value='^(\\d{12})\$'>".$text['label-12d']."</option>\n";
+	echo "    <option value='^(\\d{13})\$'>".$text['label-13d']."</option>\n";
+	echo "    <option value='^(\\d{14})\$'>".$text['label-14d']."</option>\n";
+	echo "    <option value='^(\\d{15})\$'>".$text['label-int']."</option>\n";
+	echo "    <option value='^(311)\$'>".$text['label-311']."</option>\n";
+	echo "    <option value='^(411)\$'>".$text['label-411']."</option>\n";
+	echo "    <option value='^(911)\$'>".$text['label-911']."</option>\n";
+	echo "    <option value='^1?(8(00|55|66|77|88)[2-9]\\d{6})\$'>".$text['label-800']."</option>\n";
+	echo "    <option value='^9(\\d{2})\$'>".$text['label-9d2']."</option>\n";
+	echo "    <option value='^9(\\d{3})\$'>".$text['label-9d3']."</option>\n";
+	echo "    <option value='^9(\\d{4})\$'>".$text['label-9d4']."</option>\n";
+	echo "    <option value='^9(\\d{5})\$'>".$text['label-9d5']."</option>\n";
+	echo "    <option value='^9(\\d{6})\$'>".$text['label-9d6']."</option>\n";
+	echo "    <option value='^9(\\d{7})\$'>".$text['label-9d7']."</option>\n";
+	echo "    <option value='^9(\\d{8})\$'>".$text['label-9d8']."</option>\n";
+	echo "    <option value='^9(\\d{9})\$'>".$text['label-9d9']."</option>\n";
+	echo "    <option value='^9(\\d{10})\$'>".$text['label-9d10']."</option>\n";
+	echo "    <option value='^9(\\d{11})\$'>".$text['label-9d11']."</option>\n";
+	echo "    <option value='^9(\\d{12})\$'>".$text['label-9d12']."</option>\n";
+	echo "    <option value='^9(\\d{13})\$'>".$text['label-9d13']."</option>\n";
+	echo "    <option value='^9(\\d{14})\$'>".$text['label-9d14']."</option>\n";
+	echo "    <option value='^9(\\d{15})\$'>".$text['label-9d15']."</option>\n";
 	echo "    </select>\n";
 	echo "    <span class=\"vexpl\">\n";
 	echo "    <br />\n";
-	echo "    Shortcut to create the outbound dialplan entries for this Gateway. \n";
+	echo "    ".$text['description-shortcut']." \n";
 	echo "    </span></td>\n";
 	echo "</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Prefix:\n";
+	echo "    ".$text['label-prefix'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='prefix_number' maxlength='255' value=\"$prefix_number\">\n";
 	echo "<br />\n";
-	echo "Enter a prefix number to add to the beginning of the destination number.\n";
+	echo $text['description-enter-prefix']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Limit:\n";
+	echo "    ".$text['label-limit'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
 	echo "<br />\n";
-	echo "Enter limit to restrict the number of outbound calls.\n";
+	echo $text['description-limit']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
@@ -931,43 +937,43 @@ function type_onchange(dialplan_detail_type) {
 	}
 	echo "              </select>\n";
 	echo "<br />\n";
-	echo "Select the order number. The order number determines the order of the outbound routes when there is more than one.\n";
+	echo $text['description-order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Enabled:\n";
+	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
 	//echo "    <option value=''></option>\n";
 	if ($dialplan_enabled == "true") { 
-		echo "    <option value='true' selected='selected'>true</option>\n";
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($dialplan_enabled == "false") { 
-		echo "    <option value='false' selected='selected'>false</option>\n";
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Choose to enable or disable the outbound route.\n";
+	echo $text['description-enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Description:\n";
+	echo "    ".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
 	echo "<br />\n";
-	echo "Enter a description for the outbound route.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -976,7 +982,7 @@ function type_onchange(dialplan_detail_type) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "		<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";
 
