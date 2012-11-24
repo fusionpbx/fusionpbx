@@ -38,8 +38,8 @@ else {
 }
 
 //authorized referrer
-	if(stristr($_SERVER["HTTP_REFERER"], '/v_calls_active_extensions.php') === false) {
-		if(stristr($_SERVER["HTTP_REFERER"], '/v_calls_active.php') === false) {
+	if(stristr($_SERVER["HTTP_REFERER"], '/calls_active_extensions.php') === false) {
+		if(stristr($_SERVER["HTTP_REFERER"], '/calls_active.php') === false) {
 			echo " access denied";
 			exit;
 		}

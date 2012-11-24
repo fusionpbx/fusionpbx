@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = 'eba3d07f-dd5c-6b7b-6880-493b44113ade';
 		$apps[$x]['menu'][0]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/calls_active/v_calls_active.php';
+		$apps[$x]['menu'][0]['path'] = '/app/calls_active/calls_active.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][1]['title']['en-us'] = 'Active Extensions';
@@ -48,7 +48,7 @@
 		$apps[$x]['menu'][1]['uuid'] = '6dd85c19-cb6b-5cca-bf32-499bbe936f79';
 		$apps[$x]['menu'][1]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][1]['category'] = 'internal';
-		$apps[$x]['menu'][1]['path'] = '/app/calls_active/v_calls_active_extensions.php';
+		$apps[$x]['menu'][1]['path'] = '/app/calls_active/calls_active_extensions.php';
 		//$apps[$x]['menu'][1]['groups'][] = 'user';
 		$apps[$x]['menu'][1]['groups'][] = 'admin';
 		$apps[$x]['menu'][1]['groups'][] = 'superadmin';

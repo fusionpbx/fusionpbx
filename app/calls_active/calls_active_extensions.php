@@ -168,7 +168,7 @@ if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test
 
 var requestTime = function() {
 	<?php
-	echo "var url = 'v_calls_active_extensions_inc.php?". $_SERVER["QUERY_STRING"]."';\n";
+	echo "var url = 'calls_active_extensions_inc.php?". $_SERVER["QUERY_STRING"]."';\n";
 	echo "new loadXmlHttp(url, 'ajax_reponse');\n";
 	if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "900"; }
 	echo "setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, ".$_SESSION["ajax_refresh_rate"].");";
@@ -235,7 +235,7 @@ else {
 	//status list
 	echo "			&nbsp;";
 	echo "			<strong>".$text['label-status']."</strong>&nbsp;\n";
-	$cmd = "'v_calls_exec.php?action=user_status&data='+this.value+'";
+	$cmd = "'calls_exec.php?action=user_status&data='+this.value+'";
 	$cmd .= "&cmd=callcenter_config+agent+set+status+".$_SESSION['username']."@".$_SESSION['domain_name']."+'+this.value";
 	echo "			<select id='agent_status' name='agent_status' class='formfld' style='width:125px' nowrap='nowrap' onchange=\"send_cmd($cmd);\">\n";
 	echo "				<option value='                '></option>\n";
