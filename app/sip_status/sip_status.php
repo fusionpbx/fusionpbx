@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
 require_once "includes/require.php";
@@ -36,7 +37,11 @@ else {
 	echo "access denied";
 	exit;
 }
-
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 //define variables
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -71,13 +76,13 @@ require_once "includes/header.php";
 $msg = $_GET["savemsg"];
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 if (!$fp) {
-	$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+	$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>"; 
 }
 if (strlen($msg) > 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='40%'>\n";
 	echo "<tr>\n";
-	echo "<th align='left'>Message</th>\n";
+	echo "<th align='left'>".$text['label-message']."</th>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td class='row_style1'><strong>$msg</strong></td>\n";
@@ -100,7 +105,7 @@ if (strlen($msg) > 0) {
 		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='50%'>\n";
-		echo "  <b>sofia status</b> \n";
+		echo "  <b>".$text['title-sofia-status']."</b> \n";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
 		echo "  <input type='button' class='btn' value='Reload ACL' onclick=\"document.location.href='cmd.php?cmd=api+reloadacl';\" />\n";
@@ -174,7 +179,7 @@ if (strlen($msg) > 0) {
 					echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 					echo "<tr>\n";
 					echo "<td width='50%'>\n";
-					echo "  <b>sofia status profile $sip_profile_name</b> \n";
+					echo "  <b>".$text['title-sofia-status-profile']." $sip_profile_name</b> \n";
 					echo "</td>\n";
 					echo "<td width='50%' align='right'>\n";
 					echo "  <input type='button' class='btn' value='registrations' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/v_status_registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
@@ -246,7 +251,7 @@ if (strlen($msg) > 0) {
 	if ($fp && permission_exists('sip_status_switch_status')) {
 		$cmd = "api status";
 		$response = event_socket_request($fp, $cmd);
-		echo "<b>status</b><br />\n";
+		echo "<b>".$text['title-status']."</b><br />\n";
 		echo "<pre style=\"font-size: 9pt;\">";
 		echo trim($response);
 		echo "</pre>\n";
