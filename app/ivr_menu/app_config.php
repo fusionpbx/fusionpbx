@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '72259497-a67b-e5aa-cac2-0f2dcef16308';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/ivr_menu/ivr_menu.php';
+		$apps[$x]['menu'][0]['path'] = '/app/ivr_menu/ivr_menus.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
