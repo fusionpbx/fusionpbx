@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -35,6 +35,12 @@ else {
 }
 require_once "includes/header.php";
 require_once "includes/paging.php";
+
+//add multi-lingual support
+require_once "app_languages.php";
+foreach($text as $key => $value) {
+	$text[$key] = $value[$_SESSION['domain']['language']['code']];
+}
 
 //get the http get values and set them as php variables
 	$order_by = $_GET["order_by"];
@@ -78,7 +84,7 @@ require_once "includes/paging.php";
 				$condition_expression_1 = '^'.$condition_expression_1.'$';
 			}
 			else {
-				$msg .= "The destination number must be numeric.<br>\n";
+				$msg .= "".$text['label-destination-must-be-num']."<br>\n";
 			}
 		}
 		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
@@ -88,11 +94,11 @@ require_once "includes/paging.php";
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($dialplan_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
-		if (strlen($condition_field_1) == 0) { $msg .= "Please provide: Condition Field<br>\n"; }
-		if (strlen($condition_expression_1) == 0) { $msg .= "Please provide: Condition Expression<br>\n"; }
-		if (strlen($action_application_1) == 0) { $msg .= "Please provide: Action Application<br>\n"; }
+		if (strlen($domain_uuid) == 0) { $msg .= "".$text['label-required-domain_uuid']."<br>\n"; }
+		if (strlen($dialplan_name) == 0) { $msg .= "".$text['label-required-dialplan_name']."<br>\n"; }
+		if (strlen($condition_field_1) == 0) { $msg .= "".$text['label-required-condition_field_1']."<br>\n"; }
+		if (strlen($condition_expression_1) == 0) { $msg .= "".$text['label-required-condition_expression_1']."<br>\n"; }
+		if (strlen($action_application_1) == 0) { $msg .= "".$text['label-required-action_application_1']."<br>\n"; }
 		//if (strlen($limit) == 0) { $msg .= "Please provide: Limit<br>\n"; }
 		//if (strlen($dialplan_enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
 		//if (strlen($dialplan_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
@@ -423,7 +429,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4\">\n";
 		echo "<div align='center'>\n";
-		echo "Update Complete\n";
+		echo "".$text['confirm-update-complete']."\n";
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
@@ -474,23 +480,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>Inbound Call Routing\n";
+	echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>".$text['title-dialplan-inbound-add']."\n";
 	echo "			</strong></span></span>\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
 	if (permission_exists("inbound_route_edit") && $action == "advanced") {
-		echo "			<input type='button' class='btn' name='' alt='basic' onclick=\"window.location='dialplan_inbound_add.php?action=basic'\" value='Basic'>\n";
+		echo "			<input type='button' class='btn' name='' alt='basic' onclick=\"window.location='dialplan_inbound_add.php?action=basic'\" value='".$text['button-basic']."'>\n";
 	}
 	else {
-		echo "			<input type='button' class='btn' name='' alt='advanced' onclick=\"window.location='dialplan_inbound_add.php?action=advanced'\" value='Advanced'>\n";
+		echo "			<input type='button' class='btn' name='' alt='advanced' onclick=\"window.location='dialplan_inbound_add.php?action=advanced'\" value='".$text['button-advanced']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			<span class=\"vexpl\">\n";
-	echo "			The public dialplan is used to route incoming calls to destinations based on one or more conditions and context. It can send incoming calls to an auto attendant, huntgroup, extension, external number, or a script.\n";
+	echo "			".$text['description-dialplan-inbound-add']."\n";
 	echo "		</span>\n";
 	echo "		<br />\n";
 	echo "			</span>\n";
@@ -505,19 +511,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Name:\n";
+	echo "    ".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
 	echo "<br />\n";
-	echo "Please enter an inbound route name.<br />\n";
+	echo "".$text['description-name']."<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	if (permission_exists("inbound_route_edit") && $action == "advanced") {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Condition 1:\n";
+		echo "	".$text['label-condition_1'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		?>
@@ -554,7 +560,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		<?php
 		echo "	<table style='width: 60%;' border='0'>\n";
 		echo "	<tr>\n";
-		echo "	<td style='width: 62px;'>Field:</td>\n";
+		echo "	<td style='width: 62px;'>".$text['label-field'].":</td>\n";
 		echo "	<td style='width: 35%;' nowrap='nowrap'>\n";
 
 		echo "    <select class='formfld' name='condition_field_1' id='condition_field_1' onchange='changeToInput_condition_field_1(this);this.style.visibility = \"hidden\";' style='width:85%'>\n";
@@ -579,7 +585,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='back' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='<'>\n";
 		echo "    <br />\n";
 		echo "	</td>\n";
-		echo "	<td style='width: 73px;'>&nbsp; Expression:</td>\n";
+		echo "	<td style='width: 73px;'>&nbsp; ".$text['label-expression'].":</td>\n";
 		echo "	<td>\n";
 		echo "		<input class='formfld' type='text' name='condition_expression_1' maxlength='255' style='width:100%' value=\"$condition_expression_1\">\n";
 		echo "	</td>\n";
@@ -591,14 +597,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Condition 2:\n";
+		echo "	".$text['label-condition_2'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
 		echo "	<table style='width: 60%;' border='0'>\n";
 		echo "	<tr>\n";
 		echo "	<td align='left' style='width: 62px;'>\n";
-		echo "		Field:\n";
+		echo "		".$text['label-field'].":\n";
 		echo "	</td>\n";
 		echo "	<td style='width: 35%;' align='left' nowrap='nowrap'>\n";
 		?>
@@ -656,7 +662,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<br />\n";
 		echo "	</td>\n";
 		echo "	<td style='width: 73px;' align='left'>\n";
-		echo "		&nbsp; Expression:\n";
+		echo "		&nbsp; ".$text['label-expression'].":\n";
 		echo "	</td>\n";
 		echo "	<td>\n";
 		echo "		<input class='formfld' type='text' name='condition_expression_2' maxlength='255' style='width:100%' value=\"$condition_expression_2\">\n";
@@ -670,7 +676,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Destination Number:\n";
+		echo "	".$text['label-destination-number'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
@@ -689,10 +695,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			echo "		</select>\n";
 			echo "<br />\n";
-			echo "Select the inbound destination number.\n";
+			echo "".$text['label-select-inbound-destination-number']."\n";
 		}
 		else {
-			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"Add\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='Add'>\n";
+			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"Add\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 		}
 		unset ($prep_statement);
 
@@ -703,10 +709,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	if (permission_exists("inbound_route_edit") && $action=="advanced") {
-		echo "    Action 1:\n";
+		echo "    ".$text['label-action_1'].":\n";
 	}
 	else {
-		echo "    Action:\n";
+		echo "    ".$text['label-action'].":\n";
 	}
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
@@ -723,7 +729,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (permission_exists("inbound_route_edit") && $action=="advanced") {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "    Action 2:\n";
+		echo "    ".$text['label-action_2'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
@@ -736,7 +742,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Limit:\n";
+	echo "    ".$text['label-limit'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
@@ -747,7 +753,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='public_order' class='formfld' style='width: 60%;'>\n";
@@ -769,7 +775,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Enabled:\n";
+	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
@@ -793,7 +799,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Description:\n";
+	echo "    ".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
@@ -807,7 +813,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";
 
