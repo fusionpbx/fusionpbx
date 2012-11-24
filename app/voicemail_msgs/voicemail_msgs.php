@@ -184,7 +184,7 @@ else {
 				echo "</td>\n";
 				echo "<td valign='bottom' align='right'>\n";
 				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/v_voicemail_greetings.php?id=".$value['user']."'\" value='".$text['button-greetings']."'>\n";
-				echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='v_voicemail_msgs_password.php?id=".$value['extension_uuid']."'\" value='".$text['button-settings']."'>\n";
+				echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='voicemail_msgs_password.php?id=".$value['extension_uuid']."'\" value='".$text['button-settings']."'>\n";
 				echo "</td>\n";
 				echo "</tr>\n";
 
@@ -256,20 +256,20 @@ else {
 						echo "   <td valign='top' class='".$row_style[$c]."' $style>".$row['cid_number']."</td>\n";
 						echo "   <td valign='top' class='".$row_style[$c]."' $style>".$row['in_folder']."</td>\n";
 						echo "	<td valign='top' class='".$row_style[$c]."' $style>\n";
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('v_voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['uuid']."&id=".$row['username']."&ext=".$file_ext."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['uuid']."&id=".$row['username']."&ext=".$file_ext."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 						echo "		$tmp_message_len";
 						echo "		</a>";
 						echo "	</td>\n";
 						//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[flags]."&nbsp;</td>\n";
 						//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[read_flags]."</td>\n";
 						echo "	<td valign='top' class='".$row_style[$c]."'  $style nowrap=\"nowrap\">";
-						echo "		<a href=\"v_voicemail_msgs.php?a=download&type=vm&t=bin&uuid=".$row['uuid']."\">\n";
+						echo "		<a href=\"voicemail_msgs.php?a=download&type=vm&t=bin&uuid=".$row['uuid']."\">\n";
 						echo $tmp_filesize;
 						echo "		</a>";
 						echo 	"</td>\n";
 						echo "   <td valign='top' align='center' nowrap>\n";
-						//echo "		<a href='v_voicemail_msgs_edit.php?id=".$row[voicemail_msg_id]."' alt='edit'>$v_link_label_edit</a>\n";
-						echo "			&nbsp;&nbsp;<a href='v_voicemail_msgs_delete.php?uuid=".$row['uuid']."&id=".$row['username']."' alt='delete message' title='delete message' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						//echo "		<a href='voicemail_msgs_edit.php?id=".$row[voicemail_msg_id]."' alt='edit'>$v_link_label_edit</a>\n";
+						echo "			&nbsp;&nbsp;<a href='voicemail_msgs_delete.php?uuid=".$row['uuid']."&id=".$row['username']."' alt='delete message' title='delete message' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						echo "   </td>\n";
 						echo "</tr>\n";
 

@@ -188,7 +188,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the user
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_voicemail_msgs.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_msgs.php\">\n";
 				echo "<div align='center'>\n";
 				echo "".$text['confirm-update']."\n";
 				echo "</div>\n";
@@ -273,7 +273,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' nowrap valign='top' align='left'><b>".$text['label-voicemail']." $extension</b></td>\n";
-	echo "	<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_voicemail_msgs.php'\" value='".$text['button-back']."'><br /><br /></td>\n";
+	echo "	<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_msgs.php'\" value='".$text['button-back']."'><br /><br /></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";

@@ -100,12 +100,12 @@ else {
 		}
 	//embed html tag to play the wav file
 		if ($file_ext == "wav") {
-			echo "<embed src=\"v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid."\" autostart=true width=200 height=40 name=\"sound".$uuid."\" enablejavascript=\"true\">\n";
+			echo "<embed src=\"voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid."\" autostart=true width=200 height=40 name=\"sound".$uuid."\" enablejavascript=\"true\">\n";
 		}
 	//object html tag to add flash player that can play the mp3 file
 		if ($file_ext == "mp3") {
-			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($uuid)."&song_url=".urlencode(PROJECT_PATH."/v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\">\n";
-			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=".urlencode(PROJECT_PATH."/v_voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\" />\n";
+			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($uuid)."&song_url=".urlencode(PROJECT_PATH."/voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\">\n";
+			echo "<param name=\"movie\" value=\"slim.swf?autoplay=true&song_url=".urlencode(PROJECT_PATH."/voicemail_msgs.php?a=download&type=".$type."&uuid=".$uuid)."\" />\n";
 			echo "<param name=\"quality\" value=\"high\"/>\n";
 			echo "<param name=\"bgcolor\" value=\"#E6E6E6\"/>\n";
 			echo "</object>\n";
