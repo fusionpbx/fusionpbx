@@ -173,7 +173,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			//prepare the object
 				require_once "includes/classes/database.php";
-				require_once "includes/classes/switch_ivr_menu.php";
+				require_once "/app/ivr_menu/resources/classes/switch_ivr_menu.php";
 				$ivr = new switch_ivr_menu;
 				$ivr->domain_uuid = $_SESSION["domain_uuid"];
 				$ivr->ivr_menu_name = $ivr_menu_name;
@@ -246,7 +246,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$ivr_menu_uuid = $_GET["id"];
-		require_once "includes/classes/switch_ivr_menu.php";
+		require_once "/app/ivr_menu/resources/classes/switch_ivr_menu.php";
 		$ivr = new switch_ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->ivr_menu_uuid = $ivr_menu_uuid;
