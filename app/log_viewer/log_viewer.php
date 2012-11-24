@@ -35,6 +35,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //define variables
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -73,19 +79,19 @@ echo "<div align='center'>\n";
 echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 echo "	<tr>\n";
 echo "		<td align=\"left\" valign='middle' width='100%'>\n";
-echo "			<b>Log Viewer</b><br />\n";
+echo "			<b>".$text['label-log-viewer']."</b><br />\n";
 echo "		</td>\n";
 echo "		<form action=\"log_viewer.php\" method=\"POST\">\n";
 echo "		<td align='right' valign='middle' nowrap>\n";
-echo "				<label for='ln' style='margin-right: 30px;'><input type='checkbox' name='ln' id='ln' value='1' ".(($_POST['ln'] == 1) ? 'checked' : null)."> Show Line Numbers</label>";
-echo "				<label for='ord' style='margin-right: 30px;'><input type='checkbox' name='ord' id='ord' value='desc' ".(($_POST['ord'] == 'desc') ? 'checked' : null)."> Sort Descending</label>";
-echo "				Display <input type=\"text\" class=\"formfld\" style=\"width: 50px; text-align: center;\" name=\"fs\" value=\"".$_POST['fs']."\" onclick=\"this.select();\"> KB";
-echo "				<input type=\"submit\" class=\"btn\" style=\"margin-left: 30px;\" name=\"submit\" value=\"reload\">";
+echo "				<label for='ln' style='margin-right: 30px;'><input type='checkbox' name='ln' id='ln' value='1' ".(($_POST['ln'] == 1) ? 'checked' : null)."> ".$text['label-line-num']."</label>";
+echo "				<label for='ord' style='margin-right: 30px;'><input type='checkbox' name='ord' id='ord' value='desc' ".(($_POST['ord'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
+echo "				Display <input type=\"text\" class=\"formfld\" style=\"width: 50px; text-align: center;\" name=\"fs\" value=\"".$_POST['fs']."\" onclick=\"this.select();\"> ".$text['label-kb']."";
+echo "				<input type=\"submit\" class=\"btn\" style=\"margin-left: 30px;\" name=\"submit\" value=\"".$text['button-reload']."\">";
 echo "		</td>\n";
 echo "		</form>\n";
 echo "		<td width='125' align='right' valign='middle' nowrap='nowrap'>\n";
 if (permission_exists('log_download')) {
-	echo "			<input type='button' class='btn' value='download logs' onclick=\"document.location.href='log_viewer.php?a=download&t=logs';\" />\n";
+	echo "			<input type='button' class='btn' value='".$text['button-download']."' onclick=\"document.location.href='log_viewer.php?a=download&t=logs';\" />\n";
 }
 echo "		</td>\n";
 echo "	</tr>\n";
@@ -149,7 +155,7 @@ if (permission_exists('log_view')) {
 	*/
 
 	echo "<table style=\"width: 100%\;\" width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">";
-	echo "<tbody><tr><th colspan=\"2\" style=\"text-alight: left\;\">Syntax Highlighted</th></tr>";
+	echo "<tbody><tr><th colspan=\"2\" style=\"text-alight: left\;\">".$text['label-syntax']."</th></tr>";
 	echo "<tr><td style=\"text-align: left;background-color: #000000;\">";
 
 	$user_filesize = '32768';
@@ -164,7 +170,7 @@ if (permission_exists('log_view')) {
 	}
 
 	//echo "Log File Size: " . $file_size . " bytes. <br />";
-	echo "<div style=\"text-align: right;color: #FFFFFF;\">Displaying the last " . number_format($user_filesize,0,'.',',') . " of " . number_format($file_size,0,'.',',') . " bytes. </div><br><hr>";
+	echo "<div style=\"text-align: right;color: #FFFFFF;\">".$text['label-displaying']." " . number_format($user_filesize,0,'.',',') . " of " . number_format($file_size,0,'.',',') . " ".$text['label-bytes'].". </div><br><hr>";
 
 	$file = fopen($log_file, "r") or exit("Unable to open file!");
 
@@ -184,13 +190,13 @@ if (permission_exists('log_view')) {
 				//set an offset on fopen
 				$bytecount=$file_size-$default_fsize;
 				fseek($file, $bytecount);
-				echo "opening at " . $bytecount . " bytes<br>";
+				echo $text['label-open-at']." " . $bytecount . " ".$text['label-bytes']."<br>";
 		}
 			else {
 				//open the file
 				$bytecount='0';
 				fseek($file, 0);
-				echo "<br>opening entire file<br>";
+				echo "<br>".$text['label-open-file']."<br>";
 			}
 		}
 	}
@@ -199,13 +205,13 @@ if (permission_exists('log_view')) {
 			//set an offset on fopen
 			$bytecount=$file_size-$default_fsize;
 			fseek($file, $bytecount);
-			echo "opening at " . $bytecount . " bytes<br>";
+			echo $text['label-open-at']." " . $bytecount . " ".$text['label-bytes']."<br>";
 		}
 		else {
 			//open the file
 			$bytecount='0';
 			fseek($file, 0);
-			echo "<br>opening entire file<br>";
+			echo "<br>".$text['label-open-file']."<br>";
 		}
 	}
 
