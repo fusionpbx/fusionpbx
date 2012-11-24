@@ -123,7 +123,7 @@ require_once "includes/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_path']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['database_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='v_sql_query.php?id=".$row['database_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='sql_query.php?id=".$row['database_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }

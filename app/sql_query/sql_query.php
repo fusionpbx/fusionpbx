@@ -38,7 +38,7 @@ else {
 	require_once "includes/header.php";
 
 //pdo voicemail database connection
-	require_once "v_sql_query_pdo.php";
+	require_once "sql_query_pdo.php";
 
 //show the content
 	//edit area
@@ -66,19 +66,19 @@ else {
 	echo "	<td align=\"left\">\n";
 	echo "		<br>";
 
-	echo "<form method='post' target='frame' action='v_sql_query_result.php' >";
+	echo "<form method='post' target='frame' action='sql_query_result.php' >";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap><b>SQL Query</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	if (strlen($_REQUEST['id']) > 0) {
-		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='v_sql_backup.php?id=".$_REQUEST['id']."'\" value='Backup'>\n";
+		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='sql_backup.php?id=".$_REQUEST['id']."'\" value='Backup'>\n";
 	}
 	else {
-		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='v_sql_backup.php'\" value='Backup'>\n";
+		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='sql_backup.php'\" value='Backup'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='v_sql_query_db.php'\" value='Database'>\n";
+	echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='sql_query_db.php'\" value='Database'>\n";
 	echo "	<input type='button' class='btn' name='' alt='back' onClick=\"history.back()\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";

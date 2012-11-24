@@ -36,7 +36,7 @@ else {
 
 //pdo database connection
 	if (strlen($_REQUEST['id']) > 0) {
-		require_once "v_sql_query_pdo.php";
+		require_once "sql_query_pdo.php";
 	}
 
 //set the headers
