@@ -36,16 +36,4 @@
 	$text['label-drive-capacity']['en-us'] = 'Capacity:';
 	$text['label-drive-free']['en-us'] = 'Free Space:';
 	$text['label-drive-percent']['en-us'] = 'Percent Free:';
-
-
-	$text['label-extension']['en-us'] = 'Extension';
-	$text['label-voicemail']['en-us'] = 'Voicemail Mail To';
-	$text['label-messages']['en-us'] = 'Messages';
-	$text['label-enabled']['en-us'] = 'Enabled';
-	$text['label-description']['en-us'] = 'Description';
-
-	$text['confirm-prefs-delete-alt']['en-us']= 'restore default preferences';
-	$text['confirm-prefs-delete-title']['en-us']='restore default preferences';
-	$text['confirm-prefs-delete']['en-us'] = 'Are you sure you want to remove the voicemail name and greeting?';
-
 ?>
