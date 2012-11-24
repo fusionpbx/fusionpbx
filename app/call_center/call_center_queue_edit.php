@@ -172,7 +172,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the user
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_center_queue.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_queues.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -211,7 +211,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the user
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_center_queue.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_queue.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -290,12 +290,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "<td width='70%' align='right'>\n";
 	if ($action == "update") {
-		echo "  <input type='button' class='btn' value='View' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/v_call_center_active.php?queue_name=$queue_name';\" />\n";
+		echo "  <input type='button' class='btn' value='View' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=$queue_name';\" />\n";
 		echo "  <input type='button' class='btn' value='Load' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+$queue_name@".$_SESSION['domain_name']."';\" />\n";
 		echo "  <input type='button' class='btn' value='Unload' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+$queue_name@".$_SESSION['domain_name']."';\" />\n";
 		echo "  <input type='button' class='btn' value='Reload' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+$queue_name@".$_SESSION['domain_name']."';\" />\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_call_center_queue.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_center_queues.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

@@ -132,7 +132,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			save_call_center_xml();
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_center_tier.php\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_tiers.php\">\n";
 			echo "<div align='center'>\n";
 			echo "Add Complete\n";
 			echo "</div>\n";
@@ -155,7 +155,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			save_call_center_xml();
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_center_tier.php\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_tiers.php\">\n";
 			echo "<div align='center'>\n";
 			echo "Update Complete\n";
 			echo "</div>\n";
@@ -168,8 +168,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$call_center_tier_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_call_center_tiers ";
+		$sql = "select * from v_call_center_tiers ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_center_tier_uuid = '$call_center_tier_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -207,7 +206,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>Call Center Tier Edit</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='v_call_center_tier.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_center_tiers.php'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
@@ -432,7 +431,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
 
 require_once "includes/footer.php";
 ?>

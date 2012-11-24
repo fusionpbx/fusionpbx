@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '6c072b29-5b6c-49fc-008e-95e24c77de99';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/call_center/v_call_center_queue.php';
+		$apps[$x]['menu'][0]['path'] = '/app/call_center/call_center_queues.php';
 		$apps[$x]['menu'][0]['groups'][] = 'agent';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
@@ -50,7 +50,7 @@
 		$apps[$x]['menu'][1]['uuid'] = '597c483a-51a9-f95a-8d54-ea7d87ada2b8';
 		$apps[$x]['menu'][1]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][1]['category'] = 'internal';
-		$apps[$x]['menu'][1]['path'] = '/app/call_center/v_call_center_agent_status.php';
+		$apps[$x]['menu'][1]['path'] = '/app/call_center/call_center_agent_status.php';
 		$apps[$x]['menu'][1]['groups'][] = 'agent_admin';
 		$apps[$x]['menu'][1]['groups'][] = 'admin';
 		$apps[$x]['menu'][1]['groups'][] = 'superadmin';

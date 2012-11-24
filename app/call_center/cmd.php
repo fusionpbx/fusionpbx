@@ -52,6 +52,6 @@ if ($rdr == "false") {
 	echo $response;
 }
 else {
-	header("Location: v_call_center_queue.php?savemsg=".urlencode($response));
+	header("Location: call_center_queues.php?savemsg=".urlencode($response));
 }
 ?>

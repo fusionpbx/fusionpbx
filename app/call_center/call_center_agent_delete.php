@@ -72,7 +72,7 @@ if (count($_GET)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=v_call_center_agent.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_agents.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";
