@@ -75,7 +75,7 @@ if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test
 }
 
 var requestTime = function() {
-	var url = 'v_call_center_active_inc.php?queue_name=<?php echo $queue_name; ?>';
+	var url = 'call_center_active_inc.php?queue_name=<?php echo $queue_name; ?>';
 	new loadXmlHttp(url, 'ajax_response');
 	<?php
 	if (strlen($_SESSION["ajax_refresh_rate"]) == 0) { $_SESSION["ajax_refresh_rate"] = "1777"; }

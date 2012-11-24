@@ -216,18 +216,18 @@ else {
 							
 							//debug
 							//echo $orig_command;
-							//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=originate+".$orig_command.")');}\">eavesdrop</a>&nbsp;\n";
+							//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">eavesdrop</a>&nbsp;\n";
 
 									$xfer_command = $a_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
 									//$xfer_command = $a_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
 									$xfer_command = urlencode($xfer_command);
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">transfer</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">transfer</a>&nbsp;\n";
 								}
 								else {
 									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$a_exten."@".$_SESSION['domain_name'].")";
 	
-									 echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=originate+".$orig_call.")');}\">Click to Call</a>&nbsp;\n";
+									 echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_call.")');}\">Click to Call</a>&nbsp;\n";
 								}
 								echo "</td>";
 							}
@@ -333,9 +333,9 @@ else {
 
 						//debug
 						//echo $orig_command;
-						//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
+						//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 
-						echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('v_call_center_exec.php?cmd=originate+".$orig_command.")');}\">eavesdrop</a>&nbsp;\n";
+						echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">eavesdrop</a>&nbsp;\n";
 
 
 						echo "</td>";

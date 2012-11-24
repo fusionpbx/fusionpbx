@@ -59,9 +59,8 @@ $order = $_GET["order"];
 	echo "</tr>\n";
 	echo "</tr></table>\n";
 
-	$sql = "";
-	$sql .= " select * from v_call_center_queues ";
-	$sql .= " where domain_uuid = '$domain_uuid' ";
+	$sql = "select * from v_call_center_queues ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -75,9 +74,8 @@ $order = $_GET["order"];
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page; 
 
-	$sql = "";
-	$sql .= " select * from v_call_center_queues ";
-	$sql .= " where domain_uuid = '$domain_uuid' ";
+	$sql = "select * from v_call_center_queues ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$sql .= " limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -110,7 +108,7 @@ $order = $_GET["order"];
 	//echo th_order_by('queue_tier_rule_wait_multiply_level', 'Tier Rule Wait Multiply Level', $order_by, $order);
 	echo th_order_by('queue_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	//echo "	<a href='v_call_center_queue_edit.php' alt='add'>$v_link_label_add</a>\n";
+	//echo "	<a href='call_center_queue_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -135,10 +133,10 @@ $order = $_GET["order"];
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_multiply_level]."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_description]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/call_center_active/v_call_center_active.php?queue_name=".$row[queue_name]."' alt='edit'>$v_link_label_edit</a>\n";
-			//echo "		<a href='v_call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='v_call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='v_call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' }\" value='x'>\n";
+			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."' alt='edit'>$v_link_label_edit</a>\n";
+			//echo "		<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'\" value='e'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' }\" value='x'>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -153,7 +151,7 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	//echo "			<a href='v_call_center_queue_edit.php' alt='add'>$v_link_label_add</a>\n";
+	//echo "			<a href='call_center_queue_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

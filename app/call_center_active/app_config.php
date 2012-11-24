@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '7fb0dd87-e984-9980-c512-2c76b887aeb2';
 		$apps[$x]['menu'][0]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/call_center_active/v_call_center_queue.php';
+		$apps[$x]['menu'][0]['path'] = '/app/call_center_active/call_center_queue.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
