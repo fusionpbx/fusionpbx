@@ -162,10 +162,14 @@ require_once "includes/classes/switch_dialplan.php";
 			//add the ivr menu
 				if (strlen($this->ivr_menu_option_action) == 0) {
 					if (strlen($this->ivr_menu_extension) > 0) {
+						//set the ivr menu uuid
+							$this->ivr_menu_uuid = uuid();
+
 						//ensure the dialplan_uuid has a uuid
 							if (strlen($this->dialplan_uuid) == 0) {
 								$this->dialplan_uuid = uuid();
 							}
+
 						//add the dialplan
 							$database = new database;
 							if ($this->db) {
@@ -288,7 +292,6 @@ require_once "includes/classes/switch_dialplan.php";
 						}
 
 					//add the ivr menu
-						$this->ivr_menu_uuid = uuid();
 						$database = new database;
 						if ($this->db) {
 							$database->db = $this->db;
@@ -560,6 +563,7 @@ require_once "includes/classes/switch_dialplan.php";
 							$database->fields['dialplan_detail_order'] = '030';
 							$database->add();
 
+							/*
 							$database->table = "v_dialplan_details";
 							$database->fields['domain_uuid'] = $this->domain_uuid;
 							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
@@ -573,6 +577,27 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_data'] = $this->ivr_menu_name;
 							}
 							$database->fields['dialplan_detail_order'] = '035';
+							$database->add();
+							*/
+
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'set';
+							$database->fields['dialplan_detail_data'] = 'ivr_menu_uuid='.$this->ivr_menu_uuid;
+							$database->fields['dialplan_detail_order'] = '035';
+							$database->add();
+
+							$database->table = "v_dialplan_details";
+							$database->fields['domain_uuid'] = $this->domain_uuid;
+							$database->fields['dialplan_uuid'] = $this->dialplan_uuid;
+							$database->fields['dialplan_detail_uuid'] = uuid();
+							$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+							$database->fields['dialplan_detail_type'] = 'lua';
+							$database->fields['dialplan_detail_data'] = 'ivr_menu.lua';
+							$database->fields['dialplan_detail_order'] = '040';
 							$database->add();
 
 							if (strlen($this->ivr_menu_exit_app) > 0) {
