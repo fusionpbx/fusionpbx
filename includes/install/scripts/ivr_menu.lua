@@ -45,7 +45,13 @@
 	caller_id_name = session:getVariable("caller_id_name");
 	caller_id_number = session:getVariable("caller_id_number");
 
---get the ivr menu
+--check if a file exists
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
+
+--get the ivr menu from the database
 	sql = [[SELECT * FROM v_ivr_menus 
 		WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
 		AND ivr_menu_enabled = 'true' ]];
@@ -76,42 +82,75 @@
 		ivr_menu_ringback = row["ivr_menu_ringback"];
 	end);
 
-hash = {
-	["main"] = undef,
-	["name"] = ivr_menu_name,
-	["greet_long"] = ivr_menu_greet_long,
-	["greet_short"] = ivr_menu_greet_short,
-	["invalid_sound"] = ivr_menu_invalid_sound,
-	["exit_sound"] = ivr_menu_exit_sound,
-	["confirm_macro"] = ivr_menu_confirm_macro,
-	["confirm_key"] = ivr_menu_confirm_key,
-	["tts_engine"] = ivr_menu_tts_engine,
-	["tts_voice"] = ivr_menu_tts_voice,
-	["max_timeouts"] = ivr_menu_max_timeouts,
-	["confirm_attempts"] = ivr_menu_confirm_attempts,
-	["inter_digit_timeout"] = ivr_menu_inter_digit_timeout,
-	["digit_len"] = ivr_menu_digit_len,
-	["timeout"] = ivr_menu_timeout,
-	["max_failures"] = ivr_menu_max_failures
-} 
+--get the sounds dir, language, dialect and voice
+	sounds_dir = session:getVariable("sounds_dir");
+	default_language = session:getVariable("default_language");
+	default_dialect = session:getVariable("default_dialect");
+	default_voice = session:getVariable("default_voice");
+	if (not default_language) then default_language = 'en'; end
+	if (not default_dialect) then default_dialect = 'us'; end
+	if (not default_voice) then default_voice = 'callie'; end
 
-top = freeswitch.IVRMenu(
-	hash["main"],
-	hash["name"],
-	hash["greet_long"],
-	hash["greet_short"],
-	hash["invalid_sound"],
-	hash["exit_sound"],
-	hash["confirm_macro"],
-	hash["confirm_key"],
-	hash["tts_engine"],
-	hash["tts_voice"],
-	hash["max_timeouts"],
-	hash["confirm_attempts"],
-	hash["inter_digit_timeout"],
-	hash["digit_len"],
-	hash["timeout"],
-	hash["max_failures"]);
+--make the path relative
+	if (string.sub(ivr_menu_greet_long,0,71) == "$${sounds_dir}/${default_language}/${default_dialect}/${default_voice}/") then
+		ivr_menu_greet_long = string.sub(ivr_menu_greet_long,72);
+	end
+	if (string.sub(ivr_menu_greet_short,0,71) == "$${sounds_dir}/${default_language}/${default_dialect}/${default_voice}/") then
+		ivr_menu_greet_short = string.sub(ivr_menu_greet_short,72);
+	end
+
+--adjust the file path
+	if (not ivr_menu_greet_short) then
+		ivr_menu_greet_short = ivr_menu_greet_long;
+	end
+	if (not file_exists(ivr_menu_greet_long)) then
+		if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_long)) then
+			ivr_menu_greet_long = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_long;
+		end
+	end
+	if (not file_exists(ivr_menu_greet_short)) then
+		if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short)) then
+			ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short;
+		end
+	end
+
+--prepare the ivr menu data
+	hash = {
+		["main"] = undef,
+		["name"] = ivr_menu_name,
+		["greet_long"] = ivr_menu_greet_long,
+		["greet_short"] = ivr_menu_greet_short,
+		["invalid_sound"] = ivr_menu_invalid_sound,
+		["exit_sound"] = ivr_menu_exit_sound,
+		["confirm_macro"] = ivr_menu_confirm_macro,
+		["confirm_key"] = ivr_menu_confirm_key,
+		["tts_engine"] = ivr_menu_tts_engine,
+		["tts_voice"] = ivr_menu_tts_voice,
+		["max_timeouts"] = ivr_menu_max_timeouts,
+		["confirm_attempts"] = ivr_menu_confirm_attempts,
+		["inter_digit_timeout"] = ivr_menu_inter_digit_timeout,
+		["digit_len"] = ivr_menu_digit_len,
+		["timeout"] = ivr_menu_timeout,
+		["max_failures"] = ivr_menu_max_failures
+	} 
+
+	top = freeswitch.IVRMenu(
+		hash["main"],
+		hash["name"],
+		hash["greet_long"],
+		hash["greet_short"],
+		hash["invalid_sound"],
+		hash["exit_sound"],
+		hash["confirm_macro"],
+		hash["confirm_key"],
+		hash["tts_engine"],
+		hash["tts_voice"],
+		hash["max_timeouts"],
+		hash["confirm_attempts"],
+		hash["inter_digit_timeout"],
+		hash["digit_len"],
+		hash["timeout"],
+		hash["max_failures"]);
 
 --get the ivr menu options
 	sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
