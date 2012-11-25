@@ -449,13 +449,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<optgroup label='sounds'>\n";
 		foreach ($dir_array as $key => $value) {
 			if (strlen($value) > 0) {
-				$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
-				if ($ivr_menu_greet_long == $tmp_dir.'/'.$key) {
-					$tmp_selected = true;
-					echo "		<option value='$tmp_dir/$key' selected>$key</option>\n";
+				if (substr($ivr_menu_greet_long, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+					$ivr_menu_greet_long = substr($ivr_menu_greet_long, 71);
 				}
-				else {
-					echo "		<option value='$tmp_dir/$key'>$key</option>\n";
+				if ($ivr_menu_greet_long == $key) {
+					$tmp_selected = true;
+					echo "		<option value='$key' selected='selected'>$key</option>\n";
+				} else {
+					echo "		<option value='$key'>$key</option>\n";
 				}
 			}
 		}
@@ -465,12 +466,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (!$tmp_selected) {
 				echo "<optgroup label='selected'>\n";
 				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long)) {
-					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long."' selected>".$ivr_menu_greet_long."</option>\n";
+					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
 				} elseif (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
-					$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
-					echo "		<option value='".$tmp_dir."/".$ivr_menu_greet_long."' selected>".$ivr_menu_greet_long."</option>\n";
+					echo "		<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
 				} else {
-					echo "		<option value='".$ivr_menu_greet_long."' selected>".$ivr_menu_greet_long."</option>\n";
+					echo "		<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
 				}
 
 				echo "</optgroup>\n";
@@ -478,7 +478,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($tmp_selected);
 		}
 	echo "		</select>\n";
-
 	echo "<br />\n";
 	echo "The long greeting is played when entering the menu.\n";
 	echo "</td>\n";
@@ -531,13 +530,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<optgroup label='sounds'>\n";
 		foreach ($dir_array as $key => $value) {
 			if (strlen($value) > 0) {
-				$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
-				if ($ivr_menu_greet_short == $tmp_dir.'/'.$key) {
-					$tmp_selected = true;
-					echo "		<option value='$tmp_dir/$key' selected>$key</option>\n";
+				if (substr($ivr_menu_greet_short, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+					$ivr_menu_greet_short = substr($ivr_menu_greet_short, 71);
 				}
-				else {
-					echo "		<option value='$tmp_dir/$key'>$key</option>\n";
+				if ($ivr_menu_greet_short == $key) {
+					$tmp_selected = true;
+					echo "		<option value='$key' selected='selected'>$key</option>\n";
+				} else {
+					echo "		<option value='$key'>$key</option>\n";
 				}
 			}
 		}
@@ -547,12 +547,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (!$tmp_selected) {
 				echo "<optgroup label='selected'>\n";
 				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_short)) {
-					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_short."' selected>".$ivr_menu_greet_short."</option>\n";
+					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
 				} elseif (substr($ivr_menu_greet_short, -3) == "wav" || substr($ivr_menu_greet_short, -3) == "mp3") {
-					$tmp_dir = "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}";
-					echo "		<option value='".$tmp_dir."/".$ivr_menu_greet_short."' selected>".$ivr_menu_greet_short."</option>\n";
+					echo "		<option value='".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
 				} else {
-					echo "		<option value='".$ivr_menu_greet_short."' selected>".$ivr_menu_greet_short."</option>\n";
+					echo "		<option value='".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
 				}
 				echo "</optgroup>\n";
 			}
