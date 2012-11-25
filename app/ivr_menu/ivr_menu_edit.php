@@ -298,6 +298,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($ivr_menu_digit_len) == 0) { $ivr_menu_digit_len = '5'; }
 	if (strlen($ivr_menu_direct_dial) == 0) { $ivr_menu_direct_dial = 'false'; }
 	if (strlen($ivr_menu_enabled) == 0) { $ivr_menu_enabled = 'true'; }
+	if (!isset($ivr_menu_exit_action)) { $ivr_menu_exit_action = ''; }
 
 //content
 	require_once "includes/header.php";
