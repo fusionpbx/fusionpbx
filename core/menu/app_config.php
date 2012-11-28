@@ -69,7 +69,7 @@
 		$apps[$x]['menu'][2]['uuid'] = 'bc96d773-ee57-0cdd-c3ac-2d91aba61b55';
 		$apps[$x]['menu'][2]['parent_uuid'] = '';
 		$apps[$x]['menu'][2]['category'] = 'internal';
-		$apps[$x]['menu'][2]['path'] = '/app/extensions/v_extensions.php';
+		$apps[$x]['menu'][2]['path'] = '/app/extensions/extensions.php';
 		$apps[$x]['menu'][2]['order'] = '10';
 		$apps[$x]['menu'][2]['groups'][] = 'admin';
 		$apps[$x]['menu'][2]['groups'][] = 'superadmin';
