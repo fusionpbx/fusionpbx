@@ -1,7 +1,7 @@
 --contribtors: Mark J. Crane, James O. Rose
 
 --set default variables
-	fax_retry_sleep = 10;
+	fax_retry_sleep = 30;
 	fax_retry_limit = 4;
 	fax_busy_limit = 3;
 	api = freeswitch.API();
@@ -132,7 +132,8 @@
 
 			else
 				--the fax failed completely. send a message
-				freeswitch.consoleLog("INFO","FAX TRIED ["..fax_retry_attempts.."] of [4]: GIVING UP\n");
+				freeswitch.consoleLog("INFO","FAX_RETRY FAILED: TRIED ["..fax_retry_attempts.."] of [4]: GIVING UP\n");
+				freeswitch.consoleLog("INFO", "FAX_RETRY_STATS FAILURE: GATEWAY[".. fax_uri .."], tried 5 combinations without success");
 
 				email_address = email_address:gsub("\\,", ",");
 		
@@ -149,14 +150,31 @@
 
 
 			end
-			freeswitch.consoleLog("INFO","retry cmd: " .. cmd .. "\n");
 			api = freeswitch.API();
-			reply = api:executeString(cmd);
+			if ( not cmd ) then
+				freeswitch.consoleLog("INFO","Last Fallthrough (5th) of FAX_RETRY.lua: \n");
+			else
+				freeswitch.consoleLog("INFO","retry cmd: " .. cmd .. "\n");
+				reply = api:executeString(cmd);
+			end
 		end
 
 	else
 		--Huzah! Success!
-			
+		if (fax_retry_attempts == 0) then
+			fax_trial = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
+		elseif (fax_retry_attempts == 1) then
+			fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=false";
+		elseif (fax_retry_attempts == 2) then
+			fax_trial = "fax_use_ecm=true,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+		elseif (fax_retry_attempts == 3) then
+			fax_trial = "fax_use_ecm=true,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=true";
+		elseif (fax_retry_attempts == 4) then
+			fax_trial = "fax_use_ecm=false,fax_enable_t38=false,fax_enable_t38_request=false,fax_disable_v17=false";
+		else	
+			fax_trial = "fax_retry had an issue and tried more than 5 times"
+		end
+		freeswitch.consoleLog("INFO", "FAX_RETRY_STATS SUCCESS: GATEWAY[".. fax_uri .."] VARS[" .. fax_trial .. "]");
 		email_address = email_address:gsub("\\,", ",");
 
 		freeswitch.email("",
