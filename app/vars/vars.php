@@ -86,7 +86,7 @@ else {
 	$tmp_var_header .= "<th>Description</th>\n";
 	$tmp_var_header .= "<td align='right' width='42'>\n";
 	if (permission_exists('variables_add')) {
-		$tmp_var_header .= "	<a href='vars_edit.php' alt='add'>$v_link_label_add</a>\n";
+		$tmp_var_header .= "	<a href='var_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	$tmp_var_header .= "</td>\n";
 	$tmp_var_header .= "<tr>\n";
@@ -107,7 +107,7 @@ else {
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='right'>\n";
 					if (permission_exists('variables_add')) {
-						echo "			<a href='vars_edit.php' alt='add'>$v_link_label_add</a>\n";
+						echo "			<a href='var_edit.php' alt='add'>$v_link_label_add</a>\n";
 					}
 					echo "		</td>\n";
 					echo "	</tr>\n";
@@ -133,10 +133,10 @@ else {
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$var_description."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('variables_edit')) {
-				echo "		<a href='vars_edit.php?id=".$row['var_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='var_edit.php?id=".$row['var_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('variables_delete')) {
-				echo "		<a href='vars_delete.php?id=".$row['var_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='var_delete.php?id=".$row['var_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -155,7 +155,7 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('variables_add')) {
-		echo "			<a href='vars_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='var_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
