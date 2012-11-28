@@ -133,7 +133,7 @@
 			else
 				--the fax failed completely. send a message
 				freeswitch.consoleLog("INFO","FAX_RETRY FAILED: TRIED ["..fax_retry_attempts.."] of [4]: GIVING UP\n");
-				freeswitch.consoleLog("INFO", "FAX_RETRY_STATS FAILURE: GATEWAY[".. fax_uri .."], tried 5 combinations without success");
+				freeswitch.consoleLog("INFO", "FAX_RETRY_STATS FAILURE: GATEWAY[".. fax_uri .."], tried 5 combinations without success\n");
 
 				email_address = email_address:gsub("\\,", ",");
 		
@@ -174,7 +174,7 @@
 		else	
 			fax_trial = "fax_retry had an issue and tried more than 5 times"
 		end
-		freeswitch.consoleLog("INFO", "FAX_RETRY_STATS SUCCESS: GATEWAY[".. fax_uri .."] VARS[" .. fax_trial .. "]");
+		freeswitch.consoleLog("INFO", "FAX_RETRY_STATS SUCCESS: GATEWAY[".. fax_uri .."] VARS[" .. fax_trial .. "]\n");
 		email_address = email_address:gsub("\\,", ",");
 
 		freeswitch.email("",
