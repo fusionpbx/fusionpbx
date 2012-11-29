@@ -169,9 +169,6 @@ else {
 			unset($sql);
 	}
 
-//synchronize the xml config
-	save_ivr_menu_xml();
-
 //redirect the user
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";

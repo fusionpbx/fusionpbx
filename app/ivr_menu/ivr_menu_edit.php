@@ -206,6 +206,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//run the add method in the ivr menu class
 						$ivr->add();
 
+					//synchronize the xml config
+						save_dialplan_xml();
+
 					//redirect the user
 						require_once "includes/header.php";
 						echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";
