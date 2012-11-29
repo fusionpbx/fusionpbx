@@ -925,7 +925,7 @@
 				XML_STRING = table.concat(xml, "\n");
 
 			--set the cache
-				XML_STRING = XML_STRING:gsub("\\\\\\%$", "\\\\\\\\\\%$");
+				XML_STRING = XML_STRING:gsub("\\", "\\\\");
 				result = trim(api:execute("memcache", "set " .. call_context .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["dialplan"]));
 
 			--send the xml to the console
