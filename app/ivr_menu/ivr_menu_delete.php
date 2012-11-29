@@ -39,7 +39,6 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-
 	//include the ivr menu class
 		require_once "includes/classes/database.php";
 		require_once "resources/classes/switch_ivr_menu.php";
@@ -47,9 +46,6 @@ if (strlen($id)>0) {
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->ivr_menu_uuid = $id;
 		$ivr->delete();
-
-	//synchronize the xml config
-		save_ivr_menu_xml();
 
 	//synchronize the xml config
 		save_dialplan_xml();

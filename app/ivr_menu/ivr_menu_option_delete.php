@@ -49,9 +49,6 @@ else {
 			$ivr->domain_uuid = $_SESSION["domain_uuid"];
 			$ivr->ivr_menu_option_uuid = $id;
 			$ivr->delete();
-
-		//synchronize the xml config
-			save_ivr_menu_xml();
 	}
 
 //redirect the user

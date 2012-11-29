@@ -113,36 +113,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$ivr->ivr_menu_option_description = $ivr_menu_option_description;
 
 			if ($action == "add" && permission_exists('ivr_menu_add')) {
-				$ivr_menu_option_uuid = uuid();
-				$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;
-				$ivr->add();
+				//run the add method in the ivr menu class
+					$ivr_menu_option_uuid = uuid();
+					$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;
+					$ivr->add();
 
-				//synchronize the xml config
-				save_ivr_menu_xml();
-
-				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "Add Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
+				//redirect the user
+					require_once "includes/header.php";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
+					echo "<div align='center'>\n";
+					echo "Add Complete\n";
+					echo "</div>\n";
+					require_once "includes/footer.php";
+					return;
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('ivr_menu_edit')) {
-				$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;
-				$ivr->update();
+				//run the update method in the ivr menu class
+					$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;
+					$ivr->update();
 
-				//synchronize the xml config
-				save_ivr_menu_xml();
-
-				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "Update Complete\n";
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
+				//redirect the user
+					require_once "includes/header.php";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
+					echo "<div align='center'>\n";
+					echo "Update Complete\n";
+					echo "</div>\n";
+					require_once "includes/footer.php";
+					return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
