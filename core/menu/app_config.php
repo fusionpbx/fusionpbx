@@ -96,7 +96,7 @@
 		$apps[$x]['menu'][4]['uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
 		$apps[$x]['menu'][4]['parent_uuid'] = '';
 		$apps[$x]['menu'][4]['category'] = 'internal';
-		$apps[$x]['menu'][4]['path'] = '/app/calls_active/v_calls_active_extensions.php';
+		$apps[$x]['menu'][4]['path'] = '/app/calls_active/calls_active_extensions.php';
 		$apps[$x]['menu'][4]['order'] = '25';
 		$apps[$x]['menu'][4]['groups'][] = 'user';
 		$apps[$x]['menu'][4]['groups'][] = 'admin';

@@ -2178,7 +2178,7 @@
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/mod/calls_active/v_calls_active_extensions.php</path> 
+		<path>/mod/calls_active/calls_active_extensions.php</path> 
 		<last_mod>Mon, 30 Aug 2010 18:05:51 GMT</last_mod> 
 		<md5>bc748bd109faf4bb24dc6fbf0499dd60</md5> 
 		<size>7747</size> 
