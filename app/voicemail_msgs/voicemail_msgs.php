@@ -183,7 +183,7 @@ else {
 				echo "	\n";
 				echo "</td>\n";
 				echo "<td valign='bottom' align='right'>\n";
-				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$value['user']."'\" value='".$text['button-greetings']."'>\n";
+				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/v_voicemail_greetings.php?id=".$value['user']."'\" value='".$text['button-greetings']."'>\n";
 				echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='voicemail_msgs_password.php?id=".$value['extension_uuid']."'\" value='".$text['button-settings']."'>\n";
 				echo "</td>\n";
 				echo "</tr>\n";
@@ -222,14 +222,13 @@ else {
 								$extension_uuid = $value['extension_uuid'];
 								break;
 							}
-							$x++;
 						}
 
-						$tmp_filesize = filesize($row[file_path]);
+						$tmp_filesize = filesize($row['file_path']);
 						$tmp_filesize = byte_convert($tmp_filesize);
-						$file_ext = substr($row[file_path], -3);
+						$file_ext = substr($row['file_path'], -3);
 
-						$tmp_message_len = $row[message_len];
+						$tmp_message_len = $row['message_len'];
 						if ($tmp_message_len < 60 ) {
 							$tmp_message_len = $tmp_message_len. " sec";
 						}
@@ -237,7 +236,7 @@ else {
 							$tmp_message_len = round(($tmp_message_len/60), 2). " min";
 						}
 
-						if ($row[read_epoch] == 0) {
+						if ($row['read_epoch'] == 0) {
 							$style = "style=\"font-weight: bold;\"";
 						}
 						else {
@@ -248,10 +247,10 @@ else {
 						echo "   <td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">";
 						echo date("j M Y g:i a",$row['created_epoch']);
 						echo "</td>\n";
-						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row[read_epoch]."</td>\n";
-						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row[username]."</td>\n";
-						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row[domain]."</td>\n";
-						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row[uuid]."</td>\n";
+						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."</td>\n";
+						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row['username']."</td>\n";
+						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row['domain']."</td>\n";
+						//echo "   <td valign='top' class='".$row_style[$c]."'>".$row['uuid']."</td>\n";
 						echo "   <td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">".$row['cid_name']."</td>\n";
 						echo "   <td valign='top' class='".$row_style[$c]."' $style>".$row['cid_number']."</td>\n";
 						echo "   <td valign='top' class='".$row_style[$c]."' $style>".$row['in_folder']."</td>\n";
