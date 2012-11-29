@@ -183,7 +183,7 @@ else {
 				echo "	\n";
 				echo "</td>\n";
 				echo "<td valign='bottom' align='right'>\n";
-				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/v_voicemail_greetings.php?id=".$value['user']."'\" value='".$text['button-greetings']."'>\n";
+				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$value['user']."'\" value='".$text['button-greetings']."'>\n";
 				echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='voicemail_msgs_password.php?id=".$value['extension_uuid']."'\" value='".$text['button-settings']."'>\n";
 				echo "</td>\n";
 				echo "</tr>\n";
