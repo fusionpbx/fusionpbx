@@ -24,16 +24,9 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
---to do list
-	--adding gateways
-		--to an array
-		--then add to the sip profiles
-	--system variables
-		--replace ${var} and $${var}.
-
 --set defaults
 	expire = {}
-	expire["directory"] = "90";
+	expire["directory"] = "30";
 	expire["dialplan"] = "300";
 	expire["sofia.conf"] = "3600";
 
