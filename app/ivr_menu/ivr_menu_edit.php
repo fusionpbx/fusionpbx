@@ -203,13 +203,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//add the data
 				if ($action == "add" && permission_exists('ivr_menu_add')) {
-					$ivr->add();
-
-					//synchronize the xml config
-						save_ivr_menu_xml();
-
-					//synchronize the xml config
-						save_dialplan_xml();
+					//run the add method in the ivr menu class
+						$ivr->add();
 
 					//redirect the user
 						require_once "includes/header.php";
@@ -222,14 +217,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 			//update the data
 				if ($action == "update" && permission_exists('ivr_menu_edit')) {
-					$ivr->ivr_menu_uuid = $ivr_menu_uuid;
-					$ivr->update();
-
-					//synchronize the xml config
-						save_ivr_menu_xml();
-
-					//synchronize the xml config
-						save_dialplan_xml();
+					//run the update method in the ivr menu class
+						$ivr->ivr_menu_uuid = $ivr_menu_uuid;
+						$ivr->update();
 
 					//redirect the user
 						require_once "includes/header.php";
