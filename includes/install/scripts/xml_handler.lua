@@ -30,7 +30,7 @@
 	expire["dialplan"] = "300";
 	expire["sofia.conf"] = "3600";
 
---set the debug level
+--set the debug options
 	debug["params"] = false;
 	debug["sql"] = false;
 	debug["xml_request"] = false;
@@ -283,9 +283,9 @@
 							--loop through the var array
 								for line in (vars.."\n"):gmatch"(.-)\n" do
 									if (line) then
+										pos = string.find(line, "=", 0, true);
 										--name = string.sub( line, 0, pos-1);
 										--value = string.sub( line, pos+1);
-										pos = string.find(line, "=", 0, true);
 										sip_profile_setting_value = sip_profile_setting_value:gsub("%$%${"..string.sub( line, 0, pos-1).."}", string.sub( line, pos+1));
 									end
 								end
