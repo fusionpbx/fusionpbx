@@ -925,8 +925,8 @@
 				XML_STRING = table.concat(xml, "\n");
 
 			--set the cache
-				XML_STRING = XML_STRING:gsub("\\", "\\\\");
-				result = trim(api:execute("memcache", "set " .. call_context .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["dialplan"]));
+				tmp = XML_STRING:gsub("\\", "\\\\");
+				result = trim(api:execute("memcache", "set " .. call_context .. " '"..tmp:gsub("'", "&#39;").."' "..expire["dialplan"]));
 
 			--send the xml to the console
 				if (debug["xml_string"]) then
@@ -942,7 +942,6 @@
 		else
 			--replace the &#39 back to a single quote
 				XML_STRING = XML_STRING:gsub("&#39;", "'");
-				freeswitch.consoleLog("notice", "[xml_handler] dialplan: "..XML_STRING.."\n");
 
 			--send to the console
 				if (debug["cache"]) then
