@@ -24,6 +24,13 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--set the debug options
+	debug["action"] = false;
+	debug["sql"] = false;
+	debug["regex"] = false;
+	debug["dtmf"] = false;
+	debug["tries"] = false;
+
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
 	include = assert(loadfile(scripts_dir .. "/resources/config.lua"));
@@ -44,6 +51,14 @@
 	ivr_menu_uuid = session:getVariable("ivr_menu_uuid");
 	caller_id_name = session:getVariable("caller_id_name");
 	caller_id_number = session:getVariable("caller_id_number");
+
+--set default variable(s)
+	tries = 0;
+
+--add the trim function
+	function trim(s)
+		return s:gsub("^%s+", ""):gsub("%s+$", "")
+	end
 
 --check if a file exists
 	function file_exists(name)
@@ -100,7 +115,9 @@
 	end
 
 --adjust the file path
-	if (not ivr_menu_greet_short) then
+	if (ivr_menu_greet_short) then
+		--do nothing
+	else
 		ivr_menu_greet_short = ivr_menu_greet_long;
 	end
 	if (not file_exists(ivr_menu_greet_long)) then
@@ -114,53 +131,90 @@
 		end
 	end
 
---prepare the ivr menu data
-	hash = {
-		["main"] = undef,
-		["name"] = ivr_menu_name,
-		["greet_long"] = ivr_menu_greet_long,
-		["greet_short"] = ivr_menu_greet_short,
-		["invalid_sound"] = ivr_menu_invalid_sound,
-		["exit_sound"] = ivr_menu_exit_sound,
-		["confirm_macro"] = ivr_menu_confirm_macro,
-		["confirm_key"] = ivr_menu_confirm_key,
-		["tts_engine"] = ivr_menu_tts_engine,
-		["tts_voice"] = ivr_menu_tts_voice,
-		["max_timeouts"] = ivr_menu_max_timeouts,
-		["confirm_attempts"] = ivr_menu_confirm_attempts,
-		["inter_digit_timeout"] = ivr_menu_inter_digit_timeout,
-		["digit_len"] = ivr_menu_digit_len,
-		["timeout"] = ivr_menu_timeout,
-		["max_failures"] = ivr_menu_max_failures
-	} 
+--prepare the api object
+	api = freeswitch.API();
 
-	top = freeswitch.IVRMenu(
-		hash["main"],
-		hash["name"],
-		hash["greet_long"],
-		hash["greet_short"],
-		hash["invalid_sound"],
-		hash["exit_sound"],
-		hash["confirm_macro"],
-		hash["confirm_key"],
-		hash["tts_engine"],
-		hash["tts_voice"],
-		hash["max_timeouts"],
-		hash["confirm_attempts"],
-		hash["inter_digit_timeout"],
-		hash["digit_len"],
-		hash["timeout"],
-		hash["max_failures"]);
+--define the ivr menu
+	function menu()
+		--increment the tries
+		tries = tries + 1;
 
---get the ivr menu options
-	sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
-	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+		dtmf_digits = "";
+		min_digits = 1;
+		if (tries == 1) then
+			freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_long .. "\n");
+			dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, 1, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_long, "", "\\d+");
+		else
+			freeswitch.consoleLog("notice", "[ivr_menu] greet long: " .. ivr_menu_greet_short .. "\n");
+			dtmf_digits = session:playAndGetDigits(min_digits, ivr_menu_digit_len, ivr_menu_max_timeouts, ivr_menu_timeout, ivr_menu_confirm_key, ivr_menu_greet_short, "", "\\d+");
+		end
+		if (string.len(dtmf_digits) > 0) then
+			freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
+			menu_options(dtmf_digits);
+		end
+
+		if (tries <= tonumber(ivr_menu_max_failures)) then
+			--log the dtmf digits
+				if (debug["tries"]) then
+					freeswitch.consoleLog("notice", "[ivr_menu] tries: " .. tries .. "\n");
+				end
+			--run the menu again
+				menu();
+		end
 	end
-	status = dbh:query(sql, function(row)
-		 --top:bindAction("menu-exec-app", "playback /tmp/swimp.raw", "2");
-		top:bindAction(row.ivr_menu_option_action, row.ivr_menu_option_param, row.ivr_menu_option_digits);
-	end);
 
---execute the ivr menu
-	top:execute(session, ivr_menu_name);
+	function menu_options(digits)
+		--remove the pound sign
+			digits = digits:gsub("#", "");
+
+		--log the dtmf digits
+			if (debug["dtmf"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] dtmf: " .. digits .. "\n");
+			end
+
+		--get the ivr menu options
+			sql = [[SELECT * FROM v_ivr_menu_options WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[[' ORDER BY ivr_menu_option_order asc ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[ivr_menu] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(row)
+				--check for matching options
+					if (api:execute("regex", row.ivr_menu_option_digits.."|"..digits)) then
+						if (row.ivr_menu_option_action == "menu-exec-app") then
+							--get the action and data
+								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
+								action = string.sub( row.ivr_menu_option_param, 0, pos-1);
+								data = string.sub( row.ivr_menu_option_param, pos+1);
+
+							--check if the option uses a regex
+								regex = string.find(row.ivr_menu_option_digits, "(", 0, true);
+								if (regex) then
+									--get the regex result
+										result = trim(api:execute("regex", digits.."|"..row.ivr_menu_option_digits.."|\$1"));
+										if (debug["regex"]) then
+											freeswitch.consoleLog("notice", "[ivr_menu] regex "..digits.."|"..row.ivr_menu_option_digits.."|\$1\n");
+											freeswitch.consoleLog("notice", "[ivr_menu] result: "..result.."\n");
+										end
+
+									--replace the $1 and the domain name
+										data = data:gsub("$1", result);
+										data = data:gsub("${domain_name}", domain_name);
+
+									--send to the log
+										if (debug["action"]) then
+											freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
+										end
+
+									--execute
+										session:execute(action, data);
+								end --if regex
+						end --if menu-exex-app
+					end --if regex match
+			end); --end results
+	end --end function
+
+--answer the session
+	if ( session:ready() ) then
+		session:answer();
+		menu();
+	end
