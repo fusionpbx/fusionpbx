@@ -60,7 +60,7 @@ if (wakeup_number) then
 			min_digits = 1;
 			max_digits = 1;
 			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:wakeup-call", "", "\\d+");
-		
+
 		--reschedule the call for snooze
 			if (digits == "2") then
 				freeswitch.consoleLog("NOTICE", "wakeup call: snooze selected - rescheduled the call\n");

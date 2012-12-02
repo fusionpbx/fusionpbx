@@ -33,8 +33,8 @@
 
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	include = assert(loadfile(scripts_dir .. "/resources/config.lua"));
-	include();
+	include = assert(loadfile(scripts_dir .. "/resources/config.lua")); include();
+	include = loadfile(scripts_dir .. "/resources/local.lua"); if (include ~= nil) then include(); end
 
 --connect to the database
 	--ODBC - data source name
@@ -179,7 +179,7 @@
 			end
 			status = dbh:query(sql, function(row)
 				--check for matching options
-					if (api:execute("regex", row.ivr_menu_option_digits.."|"..digits)) then
+					if (api:execute("regex", digits.."|"..row.ivr_menu_option_digits)) then
 						if (row.ivr_menu_option_action == "menu-exec-app") then
 							--get the action and data
 								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
