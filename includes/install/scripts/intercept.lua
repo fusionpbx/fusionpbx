@@ -22,24 +22,39 @@
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
-max_tries = "3";
-digit_timeout = "5000";
+--user defined variables
+	max_tries = "3";
+	digit_timeout = "5000";
+	extension = argv[1];
 
-extension = argv[1];
+--set the debug options
+	debug["sql"] = false;
 
---database
-	--connect to the database
-		--local dbh = freeswitch.Dbh("dsn","user","pass"); -- when using ODBC
-		local dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+--include the lua script
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	include = assert(loadfile(scripts_dir .. "/resources/config.lua")); include();
+	include = loadfile(scripts_dir .. "/resources/local.lua"); if (include ~= nil) then include(); end
 
-	--exits the script if we didn't connect properly
+--connect to the database
+	--ODBC - data source name
+		if (switch_dsn_name) then
+			dbh = freeswitch.Dbh(switch_dsn_name,switch_dsn_username,switch_dsn_password);
+		end
+	--FreeSWITCH core db handler
+		if (db_type == "sqlite") then
+			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
+		end
+	--exit the script if we didn't connect properly
 		assert(dbh:connected());
 
 if ( session:ready() ) then
-	session:answer( );
-	pin_number = session:getVariable("pin_number");
-	sounds_dir = session:getVariable("sounds_dir");
-	domain_name = session:getVariable("domain_name");
+	--answer the session
+		session:answer();
+
+	--get session variables
+		pin_number = session:getVariable("pin_number");
+		sounds_dir = session:getVariable("sounds_dir");
+		domain_name = session:getVariable("domain_name");
 
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
@@ -66,23 +81,31 @@ if ( session:ready() ) then
 		if (pin_number) then
 			min_digits = string.len(pin_number);
 			max_digits = string.len(pin_number)+1;
-			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/please_enter_the_pin_number.wav", "", "\\d+");
+			--digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/please_enter_the_pin_number.wav", "", "\\d+");
+			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 			if (digits == pin_number) then
 				--pin is correct
 			else
-				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/your_pin_number_is_incorect_goodbye.wav");
+				--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/your_pin_number_is_incorect_goodbye.wav");
+				session:streamFile("phrase:voicemail_fail_auth:#");
 				session:hangup("NORMAL_CLEARING");
 				return;
 			end
 		end
 
-	--check the database to get the uuid
-		--intercept
-			sql = "select call_uuid as uuid from channels where presence_id = '"..extension.."@"..domain_name.."' and callstate = 'RINGING' ";
+	--check the database to get the uuid of a ringing call
+		sql = "select call_uuid as uuid from channels ";
+		sql = sql .. "where callstate = 'RINGING' ";
+		if (extension) then
+			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
+		end
+		if (debug["sql"]) then
+			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
+		end
 		dbh:query(sql, function(result)
-			for key, val in pairs(result) do
-				freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
-			end
+			--for key, val in pairs(result) do
+			--	freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
+			--end
 			uuid = result.uuid;
 		end);
 
