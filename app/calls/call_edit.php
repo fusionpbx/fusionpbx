@@ -203,9 +203,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//include the classes
-		include "includes/classes/switch_call_forward.php";
-		include "includes/classes/switch_follow_me.php";
-		include "includes/classes/switch_do_not_disturb.php";
+		include "resources/classes/switch_call_forward.php";
+		include "resources/classes/switch_follow_me.php";
+		include "resources/classes/switch_do_not_disturb.php";
 
 	//call forward config
 		if (permission_exists('call_forward')) {
