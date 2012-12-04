@@ -200,16 +200,25 @@
 										data = data:gsub("$1", result);
 										data = data:gsub("${domain_name}", domain_name);
 
-									--send to the log
-										if (debug["action"]) then
-											freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
-										end
 								end --if regex
-
-							--execute
-								session:execute(action, data);
 						end --if menu-exex-app
 					end --if regex match
+
+				--execute
+					if (action) then
+						if (string.len(action) > 0) then
+							--send to the log
+								if (debug["action"]) then
+									freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
+								end
+							--run the action
+								session:execute(action, data);
+						end
+					end
+
+				--clear the variables
+					action = "";
+					data = "";
 			end); --end results
 	end --end function
 
