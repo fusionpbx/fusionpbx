@@ -33,6 +33,7 @@ include "root.php";
 		public $domain_name;
 		public $select_name;
 		public $select_value;
+		public $select_options;
 		private $xml;
 
 		public function __construct() {
@@ -80,7 +81,8 @@ include "root.php";
 						}
 						$select .= "		<option value='".$moh_value."' ".(($this->select_value == $moh_value)?'selected="selected"':null).">".(str_replace('_', ' ', $moh_name))."</option>\n";
 				}
-
+			//add additional options
+				$select .= $this->select_options;
 			//end the select and return it
 				$select .= "	</select>\n";
 				return $select;
