@@ -44,7 +44,7 @@ License BSD/Apache/LGPL
 //-----------------------------------------------------------------------------------
 
 PHPMailer
-http://phpmailer.worxware.com/
+http://code.google.com/a/apache-extras.org/p/phpmailer/
 License: LGPL
 
 //-----------------------------------------------------------------------------------
