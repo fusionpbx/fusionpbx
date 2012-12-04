@@ -114,13 +114,13 @@
 	}
 
 //send the email
-	include "class.phpmailer.php";
-	include "class.smtp.php";				// optional, gets called from within class.phpmailer.php if not already loaded
+	include "resources/phpmailer/class.phpmailer.php";
+	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 	$mail = new PHPMailer();
 
-	$mail->IsSMTP();						// set mailer to use SMTP
+	$mail->IsSMTP(); // set mailer to use SMTP
 	if ($_SESSION['email']['smtp_auth']['var'] == "true") {
-		$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var'];		// turn on/off SMTP authentication
+		$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var']; // turn on/off SMTP authentication
 	}
 	$mail->Host   = $_SESSION['email']['smtp_host']['var'];
 	if ($_SESSION['email']['smtp_secure']['var'] == "none") {

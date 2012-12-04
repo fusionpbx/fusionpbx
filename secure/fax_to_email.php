@@ -38,8 +38,8 @@ if (defined('STDIN')) {
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
 	require_once "includes/require.php";
-	include "class.phpmailer.php";
-	include "class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
+	include "resources/phpmailer/class.phpmailer.php";
+	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 
 //set php ini values
 	ini_set(max_execution_time,900); //15 minutes
