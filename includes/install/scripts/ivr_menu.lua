@@ -204,10 +204,10 @@
 										if (debug["action"]) then
 											freeswitch.consoleLog("notice", "[ivr_menu] action: " .. action .. " data: ".. data .. "\n");
 										end
-
-									--execute
-										session:execute(action, data);
 								end --if regex
+
+							--execute
+								session:execute(action, data);
 						end --if menu-exex-app
 					end --if regex match
 			end); --end results
