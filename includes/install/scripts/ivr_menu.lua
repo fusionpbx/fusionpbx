@@ -179,7 +179,7 @@
 			end
 			status = dbh:query(sql, function(row)
 				--check for matching options
-					if (api:execute("regex", digits.."|"..row.ivr_menu_option_digits)) then
+					if (api:execute("regex", digits.."|"..row.ivr_menu_option_digits) == "true") then
 						if (row.ivr_menu_option_action == "menu-exec-app") then
 							--get the action and data
 								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
