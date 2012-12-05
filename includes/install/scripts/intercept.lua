@@ -98,6 +98,8 @@ if ( session:ready() ) then
 		sql = sql .. "where callstate = 'RINGING' ";
 		if (extension) then
 			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
+		else
+			sql = sql .. "and context = '"..domain_name.."' ";
 		end
 		if (debug["sql"]) then
 			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
