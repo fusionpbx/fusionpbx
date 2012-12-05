@@ -130,8 +130,7 @@
 			ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short;
 		end
 	end
-	--ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-that_was_an_invalid_entry.wav";
-	--session:streamFile(ivr_menu_invalid_entry);
+	ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-that_was_an_invalid_entry.wav";
 
 --prepare the api object
 	api = freeswitch.API();
@@ -223,6 +222,17 @@
 					action = "";
 					data = "";
 			end); --end results
+
+		--execute
+			if (action) then
+				if (string.len(action) == 0) then
+					session:streamFile(ivr_menu_invalid_entry);
+					menu();
+				end
+			else
+				session:streamFile(ivr_menu_invalid_entry);
+				menu();
+			end
 	end --end function
 
 --answer the session
