@@ -130,6 +130,8 @@
 			ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short;
 		end
 	end
+	--ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-that_was_an_invalid_entry.wav";
+	--session:streamFile(ivr_menu_invalid_entry);
 
 --prepare the api object
 	api = freeswitch.API();
@@ -138,7 +140,6 @@
 	function menu()
 		--increment the tries
 		tries = tries + 1;
-
 		dtmf_digits = "";
 		min_digits = 1;
 		if (tries == 1) then
@@ -151,15 +152,15 @@
 		if (string.len(dtmf_digits) > 0) then
 			freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
 			menu_options(dtmf_digits);
-		end
-
-		if (tries <= tonumber(ivr_menu_max_failures)) then
-			--log the dtmf digits
-				if (debug["tries"]) then
-					freeswitch.consoleLog("notice", "[ivr_menu] tries: " .. tries .. "\n");
-				end
-			--run the menu again
-				menu();
+		else
+			if (tries <= tonumber(ivr_menu_max_failures)) then
+				--log the dtmf digits
+					if (debug["tries"]) then
+						freeswitch.consoleLog("notice", "[ivr_menu] tries: " .. tries .. "\n");
+					end
+				--run the menu again
+					menu();
+			end
 		end
 	end
 
@@ -179,6 +180,9 @@
 			end
 			status = dbh:query(sql, function(row)
 				--check for matching options
+					if (tonumber(row.ivr_menu_option_digits) ~= nil) then
+						row.ivr_menu_option_digits = "^"..row.ivr_menu_option_digits.."$";
+					end
 					if (api:execute("regex", digits.."|"..row.ivr_menu_option_digits) == "true") then
 						if (row.ivr_menu_option_action == "menu-exec-app") then
 							--get the action and data
@@ -199,7 +203,6 @@
 									--replace the $1 and the domain name
 										data = data:gsub("$1", result);
 										data = data:gsub("${domain_name}", domain_name);
-
 								end --if regex
 						end --if menu-exex-app
 					end --if regex match
