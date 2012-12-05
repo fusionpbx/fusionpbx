@@ -99,7 +99,9 @@ if ( session:ready() ) then
 		if (extension) then
 			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
 		else
-			sql = sql .. "and context = '"..domain_name.."' ";
+			if (domain_count > 1) then
+				sql = sql .. "and context = '"..domain_name.."' ";
+			end
 		end
 		if (debug["sql"]) then
 			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
