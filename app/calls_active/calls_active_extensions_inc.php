@@ -35,11 +35,6 @@ else {
 	exit;
 }
 
-//add multi-lingual support
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
-	}
-
 //set debug to true or false
 	$debug = false;
 
