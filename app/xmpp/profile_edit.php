@@ -66,7 +66,7 @@ function hide_advanced_config() {
 			Username:
 		</td>
 		<td class='vtable' align='left'>
-			<input class='formfld' type='text' name='profile_username' maxlength='255' value="<?php echo $profile['profile_username'];?>">
+			<input class='formfld' type='text' name='profile_username' autocomplete='off' maxlength='255' value="<?php echo $profile['profile_username'];?>">
 			<br />
 			Enter the XMPP username here.
 		</td>
@@ -77,7 +77,7 @@ function hide_advanced_config() {
 			Password:
 		</td>
 		<td class='vtable' align='left'>
-			<input class='formfld' type='password' name='profile_password' id='profile_password' maxlength='50' onfocus="document.getElementById('show_profile_password').innerHTML = 'Password: '+document.getElementById('profile_password').value;" value="<?php echo $profile['profile_password'];?>"> 
+			<input class='formfld' type='password' name='profile_password' autocomplete='off' id='profile_password' maxlength='50' onfocus="document.getElementById('show_profile_password').innerHTML = 'Password: '+document.getElementById('profile_password').value;" value="<?php echo $profile['profile_password'];?>"> 
 			<br />
 			<span onclick="document.getElementById('show_profile_password').innerHTML = ''">Enter the password here. </span><span id='show_profile_password'></span> 
 		</td>
