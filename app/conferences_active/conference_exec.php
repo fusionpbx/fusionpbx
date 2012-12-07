@@ -49,12 +49,6 @@ else {
 	exit;
 }
 
-//add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
-
 //get the http values and set them as php variables
 	if (count($_GET)>0) {
 		$cmd = trim(check_str($_GET["cmd"]));
@@ -70,75 +64,80 @@ else {
 		//authorized;
 	} else {
 		//not found. this command is not authorized
-		echo $text['message-denied'];
+		echo "access denied";
 		exit;
 	}
 
 //check if the domain is in the switch_cmd
 	if(stristr($name, $_SESSION['domain_name']) === FALSE) {
-		echo $text['message-denied'];
+		echo "access denied";
 		exit;
 	}
 
-if (count($_GET)>0) {
-	if (strlen($cmd) > 0) {
-		//prepare the switch cmd
-			$switch_cmd = $cmd . " ";
-			$switch_cmd .= $name . " ";
-			$switch_cmd .= $data . " ";
-			if (strlen($id) > 0) {
-				$switch_cmd .= " ".$id;
-			}
+//execute the command
+	if (count($_GET) > 0) {
+		if (strlen($cmd) > 0) {
+			//prepare the switch cmd
+				$switch_cmd = $cmd . " ";
+				$switch_cmd .= $name . " ";
+				$switch_cmd .= $data . " ";
+				if (strlen($id) > 0) {
+					$switch_cmd .= " ".$id;
+				}
 
-		//connect to event socket
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				if ($data == "energy") {
-					//conference 3001-example-domain.org energy 103
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					$result_array = explode("=",$switch_result);
-					$tmp_value = $result_array[1];
-					if ($direction == "up") { $tmp_value = $tmp_value + 100; }
-					if ($direction == "down") { $tmp_value = $tmp_value - 100; }
-					//echo "energy $tmp_value<br />\n";
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
-				}
-				elseif ($data == "volume_in") {
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					$result_array = explode("=",$switch_result);
-					$tmp_value = $result_array[1];
-					if ($direction == "up") { $tmp_value = $tmp_value + 1; }
-					if ($direction == "down") { $tmp_value = $tmp_value - 1; }
-					//echo "volume $tmp_value<br />\n";
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
-				}
-				elseif ($data == "volume_out") {
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					$result_array = explode("=",$switch_result);
-					$tmp_value = $result_array[1];
-					if ($direction == "up") { $tmp_value = $tmp_value + 1; }
-					if ($direction == "down") { $tmp_value = $tmp_value - 1; }
-					//echo "volume $tmp_value<br />\n";
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
-				}
-				elseif ($data == "record") {
-					$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
-					$switch_cmd .= $recording_dir."/".$uuid.".wav";
-					if (!file_exists($recording_dir."/".$uuid.".wav")) {
+			//connect to event socket
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					if ($data == "energy") {
+						//conference 3001-example-domain.org energy 103
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$result_array = explode("=",$switch_result);
+						$tmp_value = $result_array[1];
+						if ($direction == "up") { $tmp_value = $tmp_value + 100; }
+						if ($direction == "down") { $tmp_value = $tmp_value - 100; }
+						//echo "energy $tmp_value<br />\n";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+					}
+					elseif ($data == "volume_in") {
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$result_array = explode("=",$switch_result);
+						$tmp_value = $result_array[1];
+						if ($direction == "up") { $tmp_value = $tmp_value + 1; }
+						if ($direction == "down") { $tmp_value = $tmp_value - 1; }
+						//echo "volume $tmp_value<br />\n";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+					}
+					elseif ($data == "volume_out") {
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						$result_array = explode("=",$switch_result);
+						$tmp_value = $result_array[1];
+						if ($direction == "up") { $tmp_value = $tmp_value + 1; }
+						if ($direction == "down") { $tmp_value = $tmp_value - 1; }
+						//echo "volume $tmp_value<br />\n";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd.' '.$tmp_value);
+					}
+					elseif ($data == "record") {
+						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+						$switch_cmd .= $recording_dir."/".$uuid.".wav";
+						if (!file_exists($recording_dir."/".$uuid.".wav")) {
+							$switch_result = event_socket_request($fp, "api ".$switch_cmd);
+						}
+					}
+					elseif ($data == "norecord") {
+						//stop recording and rename the file
+						$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
+						$switch_cmd .= $recording_dir."/".$uuid.".wav";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+					elseif ($data == "kick") {
 						$switch_result = event_socket_request($fp, "api ".$switch_cmd);
 					}
+					//else {
+					//	$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					//}
+					//echo $switch_cmd."<br\n>";
 				}
-				elseif ($data == "norecord") {
-					//stop recording and rename the file
-					$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
-					$switch_cmd .= $recording_dir."/".$uuid.".wav";
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
-				//else {
-				//	$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				//}
-			}
+		}
 	}
-}
 
 ?>
