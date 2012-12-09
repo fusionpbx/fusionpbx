@@ -376,6 +376,48 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$dnd_enabled = $do_not_disturb;
 	}
 
+
+//prepare the autocomplete
+	echo "<script src=\"/includes/jquery/jquery-1.8.3.js\"></script>\n";
+	echo "<script src=\"/includes/jquery/jquery-ui-1.9.2.min.js\"></script>\n";
+	echo "<link rel=\"stylesheet\" href=\"/includes/jquery/jquery-ui.css\" />\n";
+	echo "<script type=\"text/javascript\">\n";
+	echo "\$(function() {\n";
+	echo "	var extensions = [\n";
+
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "order by extension, number_alias asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		if (strlen($number_alias) == 0) {
+			echo "		\"".$row["extension"]."\",\n";
+		}
+		else {
+			echo "		\"".$row["number_alias"]."\",\n";
+		}
+	}
+	echo "	];\n";
+	echo "	\$(\"#destination_data_1\").autocomplete({\n";
+	echo "		source: extensions\n";
+	echo "	});\n";
+	echo "	\$(\"#destination_data_2\").autocomplete({\n";
+	echo "		source: extensions\n";
+	echo "	});\n";
+	echo "	\$(\"#destination_data_3\").autocomplete({\n";
+	echo "		source: extensions\n";
+	echo "	});\n";
+	echo "	\$(\"#destination_data_4\").autocomplete({\n";
+	echo "		source: extensions\n";
+	echo "	});\n";
+	echo "	\$(\"#destination_data_5\").autocomplete({\n";
+	echo "		source: extensions\n";
+	echo "	});\n";
+	echo "});\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
@@ -476,7 +518,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-ring-1'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_data_1' maxlength='255' value=\"$destination_data_1\">\n";
+
+	echo "	<input class='formfld' type='text' name='destination_data_1' id='destination_data_1' maxlength='255' value=\"$destination_data_1\">\n";
+
 	echo "	".$text['label-ring-delay']."\n"; 
 	destination_select('destination_delay_1', $destination_delay_1, '0');
 	echo "	".$text['label-ring-timeout']."\n"; 
@@ -491,7 +535,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-ring-2'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_data_2' maxlength='255' value=\"$destination_data_2\">\n";
+	echo "	<input class='formfld' type='text' name='destination_data_2' id='destination_data_2' maxlength='255' value=\"$destination_data_2\">\n";
 	echo "	".$text['label-ring-delay']."\n"; 
 	destination_select('destination_delay_2', $destination_delay_2, '0');
 	echo "	".$text['label-ring-timeout']."\n"; 
@@ -506,7 +550,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-ring-3'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_data_3' maxlength='255' value=\"$destination_data_3\">\n";
+	echo "	<input class='formfld' type='text' name='destination_data_3' id='destination_data_3' maxlength='255' value=\"$destination_data_3\">\n";
 	echo "	".$text['label-ring-delay']."\n"; 
 	destination_select('destination_delay_3', $destination_delay_3, '0');
 	echo "	".$text['label-ring-timeout']."\n"; 
@@ -521,7 +565,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-ring-4'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_data_4' maxlength='255' value=\"$destination_data_4\">\n";
+	echo "	<input class='formfld' type='text' name='destination_data_4' id='destination_data_4' maxlength='255' value=\"$destination_data_4\">\n";
 	echo "	".$text['label-ring-delay']."\n"; 
 	destination_select('destination_delay_4', $destination_delay_4, '0');
 	echo "	".$text['label-ring-timeout']."\n"; 
@@ -536,7 +580,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-ring-5'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_data_5' maxlength='255' value=\"$destination_data_5\">\n";
+	echo "	<input class='formfld' type='text' name='destination_data_5' id='destination_data_5' maxlength='255' value=\"$destination_data_5\">\n";
 	echo "	".$text['label-ring-delay']."\n"; 
 	destination_select('destination_delay_5', $destination_delay_5, '0');
 	echo "	".$text['label-ring-timeout']."\n"; 
