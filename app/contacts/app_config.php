@@ -226,12 +226,15 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'phone_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the  telephone type.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the phone type.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'phone_number';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the telephone number.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the phone number.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'phone_extension';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the extension.';
 
 		$y = 3; //table array index
 		$apps[$x]['db'][$y]['table'] = 'v_contact_notes';
