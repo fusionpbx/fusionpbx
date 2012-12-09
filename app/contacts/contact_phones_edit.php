@@ -51,6 +51,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 	if (count($_POST)>0) {
 		$phone_type = check_str($_POST["phone_type"]);
 		$phone_number = check_str($_POST["phone_number"]);
+		$phone_extension = check_str($_POST["phone_extension"]);
 
 		//remove any phone number formatting
 		$phone_number = preg_replace('{\D}', '', $phone_number);
@@ -90,7 +91,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_uuid, ";
 			$sql .= "contact_phone_uuid, ";
 			$sql .= "phone_type, ";
-			$sql .= "phone_number ";
+			$sql .= "phone_number, ";
+			$sql .= "phone_extension ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
@@ -98,7 +100,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$contact_uuid', ";
 			$sql .= "'$contact_phone_uuid', ";
 			$sql .= "'$phone_type', ";
-			$sql .= "'$phone_number' ";
+			$sql .= "'$phone_number', ";
+			$sql .= "'$phone_extension' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -116,7 +119,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql = "update v_contact_phones set ";
 			$sql .= "contact_uuid = '$contact_uuid', ";
 			$sql .= "phone_type = '$phone_type', ";
-			$sql .= "phone_number = '$phone_number' ";
+			$sql .= "phone_number = '$phone_number', ";
+			$sql .= "phone_extension = '$phone_extension' ";
 			$sql .= "where domain_uuid = '$domain_uuid'";
 			$sql .= "and contact_phone_uuid = '$contact_phone_uuid'";
 			$db->exec(check_sql($sql));
@@ -136,8 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$contact_phone_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_contact_phones ";
+		$sql = "select * from v_contact_phones ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and contact_phone_uuid = '$contact_phone_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -146,7 +149,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$phone_type = $row["phone_type"];
 			$phone_number = $row["phone_number"];
-			break; //limit to 1 row
+			$phone_extension = $row["phone_extension"];
 		}
 		unset ($prep_statement);
 	}
@@ -165,23 +168,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' align='left' border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Contacts Phone Add</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Contacts Phone Edit</b></td>\n";
-	}
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>Contacts Phone</b></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Telephone Numbers<br /><br />\n";
+	//echo "Phone Numbers<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Telephone Type.:\n";
+	echo "	Type.:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='phone_type'>\n";
@@ -284,20 +282,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Enter the  telephone type.\n";
+	echo "Enter the phone type.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Telephone Number:\n";
+	echo "	Phone Number:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' value=\"$phone_number\">\n";
 	echo "<br />\n";
-	echo "Enter the telephone number.\n";
+	echo "Enter the phone number.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Extension:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='phone_extension' maxlength='255' value=\"$phone_extension\">\n";
+	echo "<br />\n";
+	echo "Enter the extension.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "				<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
