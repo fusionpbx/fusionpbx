@@ -235,6 +235,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'phone_extension';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the extension.';
+		$z++;
 
 		$y = 3; //table array index
 		$apps[$x]['db'][$y]['table'] = 'v_contact_notes';
