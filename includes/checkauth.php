@@ -45,30 +45,32 @@ session_start();
 			}
 
 		//get the domain name
-			$username_array = explode("@", check_str($_REQUEST["username"]));
-			if (count($username_array) > 1) {
-				$domain_name = $username_array[count($username_array) -1];
-				$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
-			}
-			if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
-				$domain_name = check_str($_REQUEST["domain_name"]);
-			}
-			if (count($username_array) > 1 || strlen(check_str($_REQUEST["domain_name"])) > 0) {
-				foreach ($_SESSION['domains'] as &$row) {
-					if ($row['domain_name'] == $domain_name) {
-						//set the domain session variables
-							$domain_uuid = $row["domain_uuid"];
-							$_SESSION["domain_uuid"] = $row["domain_uuid"];
-							$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-							$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
-							$_SESSION["domain_name"] = $domain_name;
+			if (count($_SESSION["domains"]) > 1) {
+				$username_array = explode("@", check_str($_REQUEST["username"]));
+				if (count($username_array) > 1) {
+					$domain_name = $username_array[count($username_array) -1];
+					$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+				}
+				if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
+					$domain_name = check_str($_REQUEST["domain_name"]);
+				}
+				if (count($username_array) > 1 || strlen(check_str($_REQUEST["domain_name"])) > 0) {
+					foreach ($_SESSION['domains'] as &$row) {
+						if ($row['domain_name'] == $domain_name) {
+							//set the domain session variables
+								$domain_uuid = $row["domain_uuid"];
+								$_SESSION["domain_uuid"] = $row["domain_uuid"];
+								$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
+								$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
+								$_SESSION["domain_name"] = $domain_name;
 
-						//set the setting arrays
-							//domains set()
-							require "includes/classes/domains.php";
-							$domain = new domains();
-							$domain->db = $db;
-							$domain->set();
+							//set the setting arrays
+								//domains set()
+								require "includes/classes/domains.php";
+								$domain = new domains();
+								$domain->db = $db;
+								$domain->set();
+						}
 					}
 				}
 			}
@@ -76,36 +78,131 @@ session_start();
 		//get the username
 			$username = check_str($_REQUEST["username"]);
 
-		//check the username and password if they don't match then redirect to the login
-			$sql = "select * from v_users ";
-			//$sql .= "where domain_uuid='".$domain_uuid."' ";
-			//$sql .= "and username='".$username."' ";
-			$sql .= "where domain_uuid=:domain_uuid ";
-			$sql .= "and username=:username ";
-			$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-			$prep_statement->bindParam(':username', $username);
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			if (count($result) == 0) {
-				$auth_failed = true;
-			}
-			else {
-				foreach ($result as &$row) {
-					//get the salt from the database
-						$salt = $row["salt"];
-					//if salt is not defined then use the default salt for backwards compatibility
-						if (strlen($salt) == 0) {
-							$salt = 'e3.7d.12';
+		//ldap authentication
+			if ($_SESSION["ldap"]["authentication"]["text"] == "true") {
+				//use ldap to validate the user credentials
+					if ($_SESSION["ldap"]["authentication"]["text"] == "true") {
+						if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
+							$domain_name = check_str($_REQUEST["domain_name"]);
+							$username .= "@".$domain_name;
 						}
-					//compare the password provided by the user with the one in the database
-						if (md5($salt.check_str($_REQUEST["password"])) != $row["password"]) {
+						$ad = ldap_connect("ldap://".$_SESSION["ldap"]["server_host"]["text"].":".$_SESSION["ldap"]["server_port"]["numeric"])
+							or die("Couldn't connect to AD!");
+						ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
+						$bd = ldap_bind($ad,$username,check_str($_REQUEST["password"]));
+						if ($bd) {
+							//echo "success\n";
+							$auth_failed = false;
+						}
+						else {
+							//echo "failed\n";
 							$auth_failed = true;
 						}
-					//end the loop
-						break;
-				}
+					}
+
+				//check to see if the user exists
+					$sql = "select * from v_users ";
+					$sql .= "where username=:username ";
+					if (count($_SESSION["domains"]) > 1) {
+						$sql .= "and domain_uuid=:domain_uuid ";
+					}
+					$prep_statement = $db->prepare(check_sql($sql));
+					if (count($_SESSION["domains"]) > 1) {
+						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+					}
+					$prep_statement->bindParam(':username', $username);
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (count($result) == 0) {
+						//salt used with the password to create a one way hash
+							$salt = generate_password('20', '4');
+							$password = generate_password('20', '4');
+
+						//prepare the uuids
+							$user_uuid = uuid();
+							$contact_uuid = uuid();
+
+						//add the user
+							$sql = "insert into v_users ";
+							$sql .= "(";
+							$sql .= "domain_uuid, ";
+							$sql .= "user_uuid, ";
+							$sql .= "contact_uuid, ";
+							$sql .= "username, ";
+							$sql .= "password, ";
+							$sql .= "salt, ";
+							$sql .= "add_date, ";
+							$sql .= "add_user, ";
+							$sql .= "user_enabled ";
+							$sql .= ") ";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'$domain_uuid', ";
+							$sql .= "'$user_uuid', ";
+							$sql .= "'$contact_uuid', ";
+							$sql .= "'".$username."', ";
+							$sql .= "'".md5($salt.$password)."', ";
+							$sql .= "'".$salt."', ";
+							$sql .= "now(), ";
+							$sql .= "'".$username."', ";
+							$sql .= "'true' ";
+							$sql .= ")";
+							$db->exec(check_sql($sql));
+							unset($sql);
+
+						//add the user to group user
+							$group_name = 'user';
+							$sql = "insert into v_group_users ";
+							$sql .= "(";
+							$sql .= "group_user_uuid, ";
+							$sql .= "domain_uuid, ";
+							$sql .= "group_name, ";
+							$sql .= "user_uuid ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'$domain_uuid', ";
+							$sql .= "'$group_name', ";
+							$sql .= "'$user_uuid' ";
+							$sql .= ")";
+							$db->exec(check_sql($sql));
+							unset($sql);
+					}
+			}
+		//database authentication
+			else {
+				//check the username and password if they don't match then redirect to the login
+					$sql = "select * from v_users ";
+					//$sql .= "where domain_uuid='".$domain_uuid."' ";
+					//$sql .= "and username='".$username."' ";
+					$sql .= "where domain_uuid=:domain_uuid ";
+					$sql .= "and username=:username ";
+					$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+					$prep_statement->bindParam(':username', $username);
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					if (count($result) == 0) {
+						$auth_failed = true;
+					}
+					else {
+						foreach ($result as &$row) {
+							//get the salt from the database
+								$salt = $row["salt"];
+							//if salt is not defined then use the default salt for backwards compatibility
+								if (strlen($salt) == 0) {
+									$salt = 'e3.7d.12';
+								}
+							//compare the password provided by the user with the one in the database
+								if (md5($salt.check_str($_REQUEST["password"])) != $row["password"]) {
+									$auth_failed = true;
+								}
+							//end the loop
+								break;
+						}
+					}
 			}
 			if ($auth_failed) {
 				//log the failed auth attempt to the system, to be available for fail2ban.
