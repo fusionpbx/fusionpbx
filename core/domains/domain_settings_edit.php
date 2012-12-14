@@ -68,7 +68,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
 		//if (strlen($domain_setting_category) == 0) { $msg .= "Please provide: Category<br>\n"; }
 		//if (strlen($domain_setting_subcategory) == 0) { $msg .= "Please provide: Subcategory<br>\n"; }
-		//if (strlen($domain_setting_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
+		//if (strlen($domain_setting_name) == 0) { $msg .= "Please provide: Type<br>\n"; }
 		//if (strlen($domain_setting_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
 		//if (strlen($domain_setting_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (strlen($domain_setting_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
@@ -219,12 +219,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	Type:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='domain_setting_name' maxlength='255' value=\"$domain_setting_name\">\n";
 	echo "<br />\n";
-	echo "Enter the name.\n";
+	echo "Enter the type.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
