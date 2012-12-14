@@ -113,7 +113,7 @@ require_once "includes/paging.php";
 				echo "	<b>".ucfirst($row['default_setting_category'])."</b>&nbsp;</td></tr>\n";
 				echo "<tr>\n";
 				echo th_order_by('default_setting_subcategory', 'Category', $order_by, $order);
-				echo th_order_by('default_setting_name', 'Name', $order_by, $order);
+				echo th_order_by('default_setting_name', 'Type', $order_by, $order);
 				echo th_order_by('default_setting_value', 'Value', $order_by, $order);
 				echo th_order_by('default_setting_enabled', 'Enabled', $order_by, $order);
 				echo th_order_by('default_setting_description', 'Description', $order_by, $order);
