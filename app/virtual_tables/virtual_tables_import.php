@@ -146,6 +146,7 @@ if (count($_POST)>0) {
 			global $db;
 			$sql = "insert into v_virtual_table_data ";
 			$sql .= "(";
+			$sql .= "virtual_table_data_uuid, ";
 			$sql .= "domain_uuid, ";
 			$sql .= "virtual_data_row_uuid, ";
 			$sql .= "virtual_table_uuid, ";
@@ -156,6 +157,7 @@ if (count($_POST)>0) {
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
+			$sql .= "'".uuid()."', ";
 			$sql .= "'$this->domain_uuid', ";
 			$sql .= "'$this->virtual_data_row_uuid', ";
 			$sql .= "'$this->virtual_table_uuid', ";
