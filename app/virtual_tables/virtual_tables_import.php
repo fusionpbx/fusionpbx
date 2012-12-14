@@ -260,7 +260,7 @@ if (count($_POST)>0) {
 								$virtual_field_name = str_replace("-", "_", $virtual_field_name);
 								$virtual_field_name = strtolower($virtual_field_name);
 
-								$virtual_field_value = $val;
+								$virtual_field_value = trim($val);
 
 								$data = new v_virtual_table_data;
 								$data->domain_uuid = $domain_uuid;
