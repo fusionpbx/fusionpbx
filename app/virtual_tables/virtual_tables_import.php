@@ -87,6 +87,7 @@ if (count($_POST)>0) {
 			$sql .= "virtual_field_type, ";
 			$sql .= "virtual_field_value, ";
 			$sql .= "virtual_field_list_hidden, ";
+			$sql .= "virtual_field_search_by, ";
 			$sql .= "virtual_field_column, ";
 			$sql .= "virtual_field_required, ";
 			$sql .= "virtual_field_order, ";
@@ -103,6 +104,7 @@ if (count($_POST)>0) {
 			$sql .= "'$this->virtual_field_type', ";
 			$sql .= "'$this->virtual_field_value', ";
 			$sql .= "'$this->virtual_field_list_hidden', ";
+			$sql .= "'no', ";
 			$sql .= "'$this->virtual_field_column', ";
 			$sql .= "'$this->virtual_field_required', ";
 			$sql .= "'$this->virtual_field_order', ";
