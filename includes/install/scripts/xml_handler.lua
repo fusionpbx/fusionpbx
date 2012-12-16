@@ -74,7 +74,11 @@
 	end
 
 --get the params and set them as variables
+	local domain_uuid = params:getHeader("variable_domain_uuid");
 	local domain_name = params:getHeader("domain");
+	if (domain_name == nil) then
+		local domain_name = params:getHeader("variable_domain_name");
+	end
 	local purpose   = params:getHeader("purpose");
 	local profile   = params:getHeader("profile");
 	local key    = params:getHeader("key");
@@ -83,23 +87,27 @@
 	local call_context = params:getHeader("Caller-Context");
 	local destination_number = params:getHeader("Caller-Destination-Number");
 	local caller_id_number = params:getHeader("Caller-Caller-ID-Number");
+	local hunt_context = params:getHeader("Hunt-Context");
+	if (hunt_context ~= nil) then
+		call_context = hunt_context;
+	end
 
 --prepare the api object
 	api = freeswitch.API();
 
 --get the domain_uuid
-	if (domain_name ~= nil) then
-		sql = "SELECT domain_uuid FROM v_domains ";
-		sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-		end
-		status = dbh:query(sql, function(rows)
-			domain_uuid = rows["domain_uuid"];
-		end);
-	end
 	if (domain_uuid == nil) then
-		domain_uuid = "00000000-0000-0000-0000-000000000000";
+		--get the domain_uuid
+			if (domain_name ~= nil) then
+				sql = "SELECT domain_uuid FROM v_domains ";
+				sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				end
+				status = dbh:query(sql, function(rows)
+					domain_uuid = rows["domain_uuid"];
+				end);
+			end
 	end
 
 --handle the configuration
@@ -602,9 +610,7 @@
 					table.insert(xml, [[			</params>]]);
 					table.insert(xml, [[			<variables>]]);
 					table.insert(xml, [[				<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
-					if (user_context ~= "default" and user_context ~= "public" and user_context ~= "features") then
-						table.insert(xml, [[				<variable name="domain_name" value="]] .. user_context .. [["/>]]);
-					end
+					table.insert(xml, [[				<variable name="domain_name" value="]] .. domain_name .. [["/>]]);
 					table.insert(xml, [[				<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
 					table.insert(xml, [[				<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
 					if (string.len(call_group) > 0) then
@@ -744,9 +750,13 @@
 				sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
 				sql = sql .. "and d.dialplan_enabled = 'true' ";
 				sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
+				if (call_context ~= "public") then
+					sql = sql .. "and d.domain_uuid = '" .. domain_uuid .. "' ";
+				end
 				sql = sql .. "order by ";
 				sql = sql .. "d.dialplan_order asc, ";
 				sql = sql .. "d.dialplan_name asc, ";
+				sql = sql .. "d.dialplan_uuid asc, ";
 				sql = sql .. "s.dialplan_detail_group asc, ";
 				sql = sql .. "CASE s.dialplan_detail_tag ";
 				sql = sql .. "WHEN 'condition' THEN 1 ";
