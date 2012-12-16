@@ -75,7 +75,13 @@
 
 --get the params and set them as variables
 	local domain_uuid = params:getHeader("variable_domain_uuid");
+	if (domain_uuid == nil) then
+		local domain_uuid = params:getHeader("domain_uuid");
+	end
 	local domain_name = params:getHeader("domain");
+	if (domain_name == nil) then
+		local domain_name = params:getHeader("domain_name");
+	end
 	if (domain_name == nil) then
 		local domain_name = params:getHeader("variable_domain_name");
 	end
