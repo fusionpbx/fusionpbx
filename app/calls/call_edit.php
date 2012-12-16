@@ -98,8 +98,10 @@ else {
 			$outbound_caller_id_name = $row["outbound_caller_id_name"];
 			$outbound_caller_id_number = $row["outbound_caller_id_number"];
 			$do_not_disturb = $row["do_not_disturb"];
-			$call_forward_all = $row["call_forward_all"];
-			$call_forward_busy = $row["call_forward_busy"];
+			$forward_all_destination = $row["forward_all_destination"];
+			$forward_all_enabled = $row["forward_all_enabled"];
+			$forward_busy_destination = $row["forward_busy_destination"];
+			$forward_busy_enabled = $row["forward_busy_enabled"];
 			$follow_me_uuid = $row["follow_me_uuid"];
 			break; //limit to 1 row
 		}
@@ -113,8 +115,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//get http post variables and set them to php variables
 		if (count($_POST)>0) {
-			$call_forward_enabled = check_str($_POST["call_forward_enabled"]);
-			$call_forward_number = check_str($_POST["call_forward_number"]);
+			$forward_all_enabled = check_str($_POST["forward_all_enabled"]);
+			$forward_all_destination = check_str($_POST["forward_all_destination"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
 
 			$destination_data_1 = check_str($_POST["destination_data_1"]);
@@ -139,8 +141,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			$dnd_enabled = check_str($_POST["dnd_enabled"]);
 
-			if (strlen($call_forward_number) > 0) {
-				$call_forward_number = preg_replace("~[^0-9]~", "",$call_forward_number);
+			if (strlen($forward_all_destination) > 0) {
+				$forward_all_destination = preg_replace("~[^0-9]~", "",$forward_all_destination);
 			}
 			if (strlen($destination_data_1) > 0) {
 				$destination_data_1 = preg_replace("~[^0-9]~", "",$destination_data_1);
@@ -160,8 +162,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 		//check for all required data
-			//if (strlen($call_forward_enabled) == 0) { $msg .= "Please provide: Call Forward<br>\n"; }
-			//if (strlen($call_forward_number) == 0) { $msg .= "Please provide: Number<br>\n"; }
+			//if (strlen($forward_all_enabled) == 0) { $msg .= "Please provide: Call Forward<br>\n"; }
+			//if (strlen($forward_all_destination) == 0) { $msg .= "Please provide: Number<br>\n"; }
 			//if (strlen($follow_me_enabled) == 0) { $msg .= "Please provide: Follow Me<br>\n"; }
 			//if (strlen($destination_data_1) == 0) { $msg .= "Please provide: 1st Number<br>\n"; }
 			//if (strlen($destination_timeout_1) == 0) { $msg .= "Please provide: sec<br>\n"; }
@@ -211,31 +213,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (permission_exists('call_forward')) {
 			$call_forward = new call_forward;
 			$call_forward->domain_uuid = $_SESSION['domain_uuid'];
-			$call_forward->db_type = $db_type;
-			$call_forward->extension = $extension;
-			$call_forward->call_forward_number = $call_forward_number;
-			$call_forward->call_forward_enabled = $call_forward_enabled;
-			if ($call_forward_enabled == "true") {
-				if ($call_forward_action == "add") {
-					$call_forward->call_forward_uuid = uuid();
-					$call_forward->call_forward_add();
-				}
-			}
-			if ($call_forward_action == "update") {
-				$call_forward->call_forward_uuid = $call_forward_uuid;
-				$call_forward->call_forward_update();
-			}
+			$call_forward->extension_uuid = $extension_uuid;
+			$call_forward->forward_all_destination = $forward_all_destination;
+			$call_forward->forward_all_enabled = $forward_all_enabled;
+			$call_forward->update();
 			unset($call_forward);
-
-			//synchronize the xml config
-				save_hunt_group_xml();
-
-			//synchronize the xml config
-				save_dialplan_xml();
 		}
 
 	//follow me config
-
 		if (permission_exists('follow_me')) {
 			$follow_me = new follow_me;
 			$follow_me->domain_uuid = $_SESSION['domain_uuid'];
@@ -289,9 +274,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$follow_me->set();
 			}
 			unset($follow_me);
-
-			//synchronize the xml config
-				save_dialplan_xml();
 		}
 
 	//do not disturb (dnd) config
@@ -338,7 +320,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
 		$x = 1;
 		foreach ($result2 as &$row2) {
-			//$call_forward_number = $row2["destination_data"];
 			if ($x == 1) {
 				$destination_data_1 = $row2["follow_me_destination"];
 				$destination_delay_1 = $row2["follow_me_delay"];
@@ -375,7 +356,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//set the value from the database
 		$dnd_enabled = $do_not_disturb;
 	}
-
 
 //prepare the autocomplete
 	echo "<script src=\"/includes/jquery/jquery-1.8.3.js\"></script>\n";
@@ -450,17 +430,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$on_click .= "document.getElementById('follow_me_disabled').checked=true;";
 	$on_click .= "document.getElementById('dnd_enabled').checked=false;";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true;";
-	if ($call_forward_enabled == "true") {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_enabled' onclick=\"$on_click\" value='true' checked='checked'/> ".$text['label-enabled']." \n";
+	if ($forward_all_enabled == "true") {
+		echo "	<input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' checked='checked'/> ".$text['label-enabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_enabled' onclick=\"$on_click\" value='true' /> ".$text['label-enable']." \n";
+		echo "	<input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' /> ".$text['label-enable']." \n";
 	}
-	if ($call_forward_enabled == "false" || $call_forward_enabled == "") {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_disabled' onclick=\"\" value='false' checked='checked' /> ".$text['label-disabled']." \n";
+	if ($forward_all_enabled == "false" || $forward_all_enabled == "") {
+		echo "	<input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"\" value='false' checked='checked' /> ".$text['label-disabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='call_forward_enabled' id='call_forward_disabled' onclick=\"\" value='false' /> ".$text['label-disable']." \n";
+		echo "	<input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"\" value='false' /> ".$text['label-disable']." \n";
 	}
 	unset($on_click);
 	echo "<br />\n";
@@ -474,7 +454,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_forward_number' maxlength='255' value=\"$call_forward_number\">\n";
+	echo "	<input class='formfld' type='text' name='forward_all_destination' maxlength='255' value=\"$forward_all_destination\">\n";
 	echo "<br />\n";
 	//echo "Enter the call forward number.\n";
 	echo "</td>\n";
@@ -491,7 +471,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<strong>".$text['label-follow-me'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$on_click = "document.getElementById('call_forward_enabled').checked=true;";
+	$on_click = "document.getElementById('forward_all_enabled').checked=true;";
 	$on_click .= "document.getElementById('call_forward_disabled').checked=true;";
 	$on_click .= "document.getElementById('dnd_enabled').checked=false;";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true;";
@@ -601,7 +581,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<strong>".$text['label-dnd'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$on_click = "document.getElementById('call_forward_enabled').checked=true;";
+	$on_click = "document.getElementById('forward_all_enabled').checked=true;";
 	$on_click .= "document.getElementById('call_forward_disabled').checked=true;";
 	$on_click .= "document.getElementById('follow_me_enabled').checked=true;";
 	$on_click .= "document.getElementById('follow_me_disabled').checked=true;";
