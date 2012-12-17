@@ -213,10 +213,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (permission_exists('call_forward')) {
 			$call_forward = new call_forward;
 			$call_forward->domain_uuid = $_SESSION['domain_uuid'];
+			$call_forward->domain_name = $_SESSION['domain_name'];
 			$call_forward->extension_uuid = $extension_uuid;
 			$call_forward->forward_all_destination = $forward_all_destination;
 			$call_forward->forward_all_enabled = $forward_all_enabled;
-			$call_forward->update();
+			$call_forward->set();
 			unset($call_forward);
 		}
 
@@ -224,6 +225,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (permission_exists('follow_me')) {
 			$follow_me = new follow_me;
 			$follow_me->domain_uuid = $_SESSION['domain_uuid'];
+			$follow_me->domain_name = $_SESSION['domain_name'];
+			$follow_me->extension_uuid = $extension_uuid;
 			$follow_me->db_type = $db_type;
 			$follow_me->follow_me_enabled = $follow_me_enabled;
 
@@ -270,8 +273,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			if ($follow_me_action == "update") {
 				$follow_me->follow_me_uuid = $follow_me_uuid;
-				$follow_me->follow_me_update();
 				$follow_me->set();
+				$follow_me->follow_me_update();
 			}
 			unset($follow_me);
 		}
@@ -281,7 +284,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dnd = new do_not_disturb;
 			$dnd->domain_uuid = $_SESSION['domain_uuid'];
 			$dnd->domain_name = $_SESSION['domain_name'];
-			$dnd->extension = $extension;
+			$dnd->extension_uuid = $extension_uuid;
 			$dnd->enabled = $dnd_enabled;
 			$dnd->set();
 			$dnd->user_status();
@@ -417,7 +420,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "	".$text['description']."  $extension.<br /><br />\n";
+	echo "	".$text['description']." $extension.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -444,8 +447,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	unset($on_click);
 	echo "<br />\n";
-	echo "<br />\n";
-	//echo "Enable or disable call forward.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -456,7 +457,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='forward_all_destination' maxlength='255' value=\"$forward_all_destination\">\n";
 	echo "<br />\n";
-	//echo "Enter the call forward number.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -472,7 +472,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('forward_all_enabled').checked=true;";
-	$on_click .= "document.getElementById('call_forward_disabled').checked=true;";
+	$on_click .= "document.getElementById('forward_all_disabled').checked=true;";
 	$on_click .= "document.getElementById('dnd_enabled').checked=false;";
 	$on_click .= "document.getElementById('dnd_disabled').checked=true;";
 	if ($follow_me_enabled == "true") {
@@ -582,7 +582,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('forward_all_enabled').checked=true;";
-	$on_click .= "document.getElementById('call_forward_disabled').checked=true;";
+	$on_click .= "document.getElementById('forward_all_disabled').checked=true;";
 	$on_click .= "document.getElementById('follow_me_enabled').checked=true;";
 	$on_click .= "document.getElementById('follow_me_disabled').checked=true;";
 	if ($dnd_enabled == "true") {

@@ -31,6 +31,8 @@ include "root.php";
 		public $db_type;
 		public $follow_me_uuid;
 		public $follow_me_enabled;
+		private $extension;
+		private $dial_string_update = false;
 
 		public $destination_data_1;
 		public $destination_type_1;
@@ -61,42 +63,46 @@ include "root.php";
 		public $destination_order = 1;
 
 		public function follow_me_add() {
-			global $db;
+			//set the global variable
+				global $db;
 
-			$sql = "insert into v_follow_me ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "follow_me_uuid, ";
-			$sql .= "follow_me_enabled ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$this->domain_uuid', ";
-			$sql .= "'$this->follow_me_uuid', ";
-			$sql .= "'$this->follow_me_enabled' ";
-			$sql .= ")";
-			if ($v_debug) {
-				echo $sql."<br />";
-			}
-			$db->exec(check_sql($sql));
-			unset($sql);
-			$this->follow_me_destinations();
+			//add a new follow me
+				$sql = "insert into v_follow_me ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "follow_me_uuid, ";
+				$sql .= "follow_me_enabled ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$this->domain_uuid', ";
+				$sql .= "'$this->follow_me_uuid', ";
+				$sql .= "'$this->follow_me_enabled' ";
+				$sql .= ")";
+				if ($v_debug) {
+					echo $sql."<br />";
+				}
+				$db->exec(check_sql($sql));
+				unset($sql);
+				$this->follow_me_destinations();
 		} //end function
 
 		public function follow_me_update() {
-			global $db;
-
-			$sql = "update follow_me set ";
-			$sql .= "follow_me_enabled = '$this->follow_me_enabled' ";
-			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-			$this->follow_me_destinations();
+			//set the global variable
+				global $db;
+			//update follow me table
+				$sql = "update v_follow_me set ";
+				$sql .= "follow_me_enabled = '$this->follow_me_enabled' ";
+				$sql .= "where domain_uuid = '$this->domain_uuid' ";
+				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+				$this->follow_me_destinations();
 		} //end function
 
 		public function follow_me_destinations() {
-			global $db;
+			//set the global variable
+				global $db;
 
 			//delete related follow me destinations
 				$sql = "delete from v_follow_me_destinations where follow_me_uuid = '$this->follow_me_uuid' ";
@@ -231,11 +237,45 @@ include "root.php";
 		} //function
 
 		public function set() {
-			global $db;
+			//set the global variable
+				global $db;
+
+			//determine whether to update the dial string
+				$sql = "select * from v_extensions ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (count($result) > 0) {
+					foreach ($result as &$row) {
+						$this->extension = $row["extension"];
+					}
+				}
+
+			//determine whether to update the dial string
+				$sql = "select * from v_follow_me ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (count($result) > 0) {
+					foreach ($result as &$row) {
+						if ($this->follow_me_enabled == "false" && $row["follow_me_enabled"] == "true") {
+							$this->dial_string_update = true;
+						}
+					}
+				}
+				unset ($prep_statement);
+				if ($this->follow_me_enabled == "true") {
+					$this->dial_string_update = true;
+				}
+
 			//update the extension
 				if ($this->follow_me_enabled == "true") {
 					$sql = "select * from v_follow_me_destinations ";
-					$sql .= "where follow_me_uuid = '$this->follow_me_uuid' ";
+					$sql .= "where follow_me_uuid = '".$this->follow_me_uuid."' ";
 					$sql .= "order by follow_me_order asc ";
 					$prep_statement_2 = $db->prepare(check_sql($sql));
 					$prep_statement_2->execute();
@@ -255,11 +295,12 @@ include "root.php";
 					$this->dial_string = trim($dial_string, ",");
 				}
 				else {
-//					$this->dial_string = "";
+					$this->dial_string = '';
 				}
 				$sql  = "update v_extensions set ";
-				$sql .= "do_not_disturb = 'false', ";
-				$sql .= "dial_string = '".$this->dial_string."', ";
+				if ($this->dial_string_update) {
+					$sql .= "dial_string = '".$this->dial_string."', ";
+				}
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
@@ -269,8 +310,19 @@ include "root.php";
 				$db->exec($sql);
 				unset($sql);
 
+			//delete extension from memcache
+				if ($this->dial_string_update) {
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp) {
+						$switch_cmd .= "memcache delete ".$this->extension."@".$this->domain_name;
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+				}
+
 			//syncrhonize configuration
-				save_extension_xml();
+				if ($this->dial_string_update) {
+					save_extension_xml();
+				}
 		}
 
 	} //class
