@@ -30,7 +30,7 @@ include "root.php";
 		public $domain_uuid;
 		public $db_type;
 		public $follow_me_uuid;
-		public $cid_name_prefix;
+		//public $cid_name_prefix;
 		public $call_prompt;
 		public $follow_me_enabled;
 		private $extension;
@@ -73,7 +73,7 @@ include "root.php";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
 				$sql .= "follow_me_uuid, ";
-				$sql .= "cid_name_prefix, ";
+				//$sql .= "cid_name_prefix, ";
 				$sql .= "call_prompt, ";
 				$sql .= "follow_me_enabled ";
 				$sql .= ")";
@@ -81,7 +81,7 @@ include "root.php";
 				$sql .= "(";
 				$sql .= "'$this->domain_uuid', ";
 				$sql .= "'$this->follow_me_uuid', ";
-				$sql .= "'$this->cid_name_prefix', ";
+				//$sql .= "'$this->cid_name_prefix', ";
 				$sql .= "'$this->call_prompt', ";
 				$sql .= "'$this->follow_me_enabled' ";
 				$sql .= ")";
@@ -99,7 +99,7 @@ include "root.php";
 			//update follow me table
 				$sql = "update v_follow_me set ";
 				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
-				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
+				//$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
 				$sql .= "call_prompt = '$this->call_prompt' ";
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
@@ -270,7 +270,7 @@ include "root.php";
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
-						$cid_name_prefix = $row["cid_name_prefix"];
+						//$cid_name_prefix = $row["cid_name_prefix"];
 						$call_prompt = $row["call_prompt"];
 						if ($this->follow_me_enabled == "false" && $row["follow_me_enabled"] == "true") {
 							$this->dial_string_update = true;
@@ -294,9 +294,9 @@ include "root.php";
 					if ($this->call_prompt == "true") {
 						$dial_string .= ",call_prompt=true";
 					}
-					if (strlen($this->cid_name_prefix) > 0) {
-						$dial_string .= ",cid_name_prefix=".$this->cid_name_prefix;
-					}
+					//if (strlen($this->cid_name_prefix) > 0) {
+					//	$dial_string .= ",effective_caller_id_name=".$this->cid_name_prefix."#123";
+					//}
 					$dial_string .= "}";
 					foreach ($result as &$row) {
 						$dial_string .= "[presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
