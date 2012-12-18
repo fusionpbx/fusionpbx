@@ -117,6 +117,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (count($_POST)>0) {
 			$forward_all_enabled = check_str($_POST["forward_all_enabled"]);
 			$forward_all_destination = check_str($_POST["forward_all_destination"]);
+			$cid_name_prefix = check_str($_POST["cid_name_prefix"]);
+			$call_prompt = check_str($_POST["call_prompt"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
 
 			$destination_data_1 = check_str($_POST["destination_data_1"]);
@@ -228,6 +230,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$follow_me->domain_name = $_SESSION['domain_name'];
 			$follow_me->extension_uuid = $extension_uuid;
 			$follow_me->db_type = $db_type;
+			$follow_me->cid_name_prefix = $cid_name_prefix;
+			$follow_me->call_prompt = $call_prompt;
 			$follow_me->follow_me_enabled = $follow_me_enabled;
 
 			$follow_me->destination_data_1 = $destination_data_1;
@@ -313,6 +317,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
+		$cid_name_prefix = $row["cid_name_prefix"];
+		$call_prompt = $row["call_prompt"];
 		$follow_me_enabled = $row["follow_me_enabled"];
 
 		$sql = "select * from v_follow_me_destinations ";
@@ -567,6 +573,42 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	destination_select('destination_timeout_5', $destination_timeout_5, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-cid-prefix'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='cid_name_prefix' maxlength='255' value='$cid_name_prefix'>\n";
+	echo "<br />\n";
+	echo $text['description-cid-prefix']." \n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo $text['label-call-prompt'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "<select class='formfld' name='call_prompt'>\n";
+	//echo "<option value=''></option>\n";
+	if ($call_prompt == "true") {
+		echo "<option value='true' selected='selected'>true</option>\n";
+	}
+	else {
+		echo "<option value='true'>true</option>\n";
+	}
+	if ($call_prompt == "false") {
+		echo "<option value='false' selected='selected'>false</option>\n";
+	}
+	else {
+		echo "<option value='false'>false</option>\n";
+	}
+	echo "</select>\n";
+	echo "<br />\n";
+	echo $text['description-call-prompt']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

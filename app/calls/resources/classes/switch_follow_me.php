@@ -30,6 +30,8 @@ include "root.php";
 		public $domain_uuid;
 		public $db_type;
 		public $follow_me_uuid;
+		public $cid_name_prefix;
+		public $call_prompt;
 		public $follow_me_enabled;
 		private $extension;
 		private $dial_string_update = false;
@@ -62,9 +64,6 @@ include "root.php";
 		public $destination_timeout = 0;
 		public $destination_order = 1;
 
-		public $cid_name_prefix;
-		public $call_prompt;
-
 		public function follow_me_add() {
 			//set the global variable
 				global $db;
@@ -74,12 +73,16 @@ include "root.php";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
 				$sql .= "follow_me_uuid, ";
+				$sql .= "cid_name_prefix, ";
+				$sql .= "call_prompt, ";
 				$sql .= "follow_me_enabled ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
 				$sql .= "'$this->domain_uuid', ";
 				$sql .= "'$this->follow_me_uuid', ";
+				$sql .= "'$this->cid_name_prefix', ";
+				$sql .= "'$this->call_prompt', ";
 				$sql .= "'$this->follow_me_enabled' ";
 				$sql .= ")";
 				if ($v_debug) {
@@ -267,6 +270,8 @@ include "root.php";
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
+						$cid_name_prefix = $row["cid_name_prefix"];
+						$call_prompt = $row["call_prompt"];
 						if ($this->follow_me_enabled == "false" && $row["follow_me_enabled"] == "true") {
 							$this->dial_string_update = true;
 						}
@@ -286,11 +291,11 @@ include "root.php";
 					$prep_statement_2->execute();
 					$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
 					$dial_string = "{group_confirm_key=exec,group_confirm_file=lua confirm.lua,sip_invite_domain=".$_SESSION['domain_name'];
-					if ($this->dial_string == "true") {
-						$this->dial_string .= ",call_prompt=true";
+					if ($this->call_prompt == "true") {
+						$dial_string .= ",call_prompt=true";
 					}
 					if (strlen($this->cid_name_prefix) > 0) {
-						$this->dial_string .= ",cid_name_prefix=".$this->cid_name_prefix;
+						$dial_string .= ",cid_name_prefix=".$this->cid_name_prefix;
 					}
 					$dial_string .= "}";
 					foreach ($result as &$row) {
