@@ -101,7 +101,17 @@ if ($_SESSION['security']['login']['domain_name'] == "true") {
 	echo "	<strong>Domain:</strong>\n";
 	echo "</td>\n";
 	echo "<td>\n";
-	echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
+	if (count($_SESSION['login']['domain']) > 0) {
+		echo "    <select style='width: 150px;' class='formfld' name='domain_name'>\n";
+		echo "    <option value=''></option>\n";
+		foreach ($_SESSION['login']['domain'] as &$row) {
+			echo "    <option value='$row'>$row</option>\n";
+		}
+		echo "    </select>\n";
+	}
+	else {
+		echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 }
@@ -115,18 +125,7 @@ echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";
 echo "</form>";
-
-//if (strlen($msg) == 0) {
-//    echo "<br><a href='loginpasswordchange.php'>Change Password</a>";
-//}
-//else {
-//    echo "<br><a href='loginpasswordforgot.php'>Forgot Password</a>";
-//}
-
 echo "</div>";
-
-//echo "<br><br>";
-
 
 include "includes/footer.php";
 ?>
