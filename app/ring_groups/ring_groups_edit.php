@@ -491,12 +491,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-cid'].":\n";
+	echo "	".$text['label-cid-prefix'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='$ring_group_cid_name_prefix'>\n";
 	echo "<br />\n";
-	echo $text['description-cid']." \n";
+	echo $text['description-cid-prefix']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
