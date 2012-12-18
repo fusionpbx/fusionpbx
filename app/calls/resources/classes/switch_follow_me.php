@@ -62,6 +62,9 @@ include "root.php";
 		public $destination_timeout = 0;
 		public $destination_order = 1;
 
+		public $cid_name_prefix;
+		public $call_prompt;
+
 		public function follow_me_add() {
 			//set the global variable
 				global $db;
@@ -92,7 +95,9 @@ include "root.php";
 				global $db;
 			//update follow me table
 				$sql = "update v_follow_me set ";
-				$sql .= "follow_me_enabled = '$this->follow_me_enabled' ";
+				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
+				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
+				$sql .= "call_prompt = '$this->call_prompt' ";
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
 				$db->exec(check_sql($sql));
@@ -280,7 +285,14 @@ include "root.php";
 					$prep_statement_2 = $db->prepare(check_sql($sql));
 					$prep_statement_2->execute();
 					$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-					$dial_string = "{group_confirm_key=exec,group_confirm_file=lua confirm.lua,sip_invite_domain=".$_SESSION['domain_name']."}";
+					$dial_string = "{group_confirm_key=exec,group_confirm_file=lua confirm.lua,sip_invite_domain=".$_SESSION['domain_name'];
+					if ($this->dial_string == "true") {
+						$this->dial_string .= ",call_prompt=true";
+					}
+					if (strlen($this->cid_name_prefix) > 0) {
+						$this->dial_string .= ",cid_name_prefix=".$this->cid_name_prefix;
+					}
+					$dial_string .= "}";
 					foreach ($result as &$row) {
 						$dial_string .= "[presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 						$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
@@ -323,8 +335,7 @@ include "root.php";
 				if ($this->dial_string_update) {
 					save_extension_xml();
 				}
-		}
-
+		} //function
 	} //class
 
 ?>
