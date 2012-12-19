@@ -79,24 +79,22 @@ session_start();
 			$username = check_str($_REQUEST["username"]);
 
 		//ldap authentication
-			if ($_SESSION["ldap"]["authentication"]["text"] == "true") {
+			if ($_SESSION["ldap"]["authentication"]["boolean"] == "true") {
 				//use ldap to validate the user credentials
-					if ($_SESSION["ldap"]["authentication"]["text"] == "true") {
-						if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
-							$domain_name = check_str($_REQUEST["domain_name"]);
-						}
-						$ad = ldap_connect("ldap://".$_SESSION["ldap"]["server_host"]["text"].":".$_SESSION["ldap"]["server_port"]["numeric"])
-							or die("Couldn't connect to AD!");
-						ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
-						$bd = ldap_bind($ad,$username."@".$domain_name,check_str($_REQUEST["password"]));
-						if ($bd) {
-							//echo "success\n";
-							$auth_failed = false;
-						}
-						else {
-							//echo "failed\n";
-							$auth_failed = true;
-						}
+					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
+						$domain_name = check_str($_REQUEST["domain_name"]);
+					}
+					$ad = ldap_connect("ldap://".$_SESSION["ldap"]["server_host"]["text"].":".$_SESSION["ldap"]["server_port"]["numeric"])
+						or die("Couldn't connect to AD!");
+					ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
+					$bd = ldap_bind($ad,$username."@".$domain_name,check_str($_REQUEST["password"]));
+					if ($bd) {
+						//echo "success\n";
+						$auth_failed = false;
+					}
+					else {
+						//echo "failed\n";
+						$auth_failed = true;
 					}
 
 				//check to see if the user exists
