@@ -95,16 +95,16 @@ echo "	<input type=\"password\" style='width: 150px;' class='formfld' name=\"pas
 echo "</td>\n";
 echo "</tr>\n";
 
-if ($_SESSION['security']['login']['domain_name'] == "true") {
+if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
 	echo "<tr>\n";
 	echo "<td align='left'>\n";
 	echo "	<strong>Domain:</strong>\n";
 	echo "</td>\n";
 	echo "<td>\n";
-	if (count($_SESSION['login']['domain']) > 0) {
+	if (count($_SESSION['login']['domain_name']) > 0) {
 		echo "    <select style='width: 150px;' class='formfld' name='domain_name'>\n";
 		echo "    <option value=''></option>\n";
-		foreach ($_SESSION['login']['domain'] as &$row) {
+		foreach ($_SESSION['login']['domain_name'] as &$row) {
 			echo "    <option value='$row'>$row</option>\n";
 		}
 		echo "    </select>\n";
