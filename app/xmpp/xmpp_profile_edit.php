@@ -77,7 +77,7 @@ if ($action == "update") {
  	$profile['auto_login'] = "true";
  	$profile['sasl_type'] = "md5";
  	$profile['tls_enable'] = "true";
- 	$profile['usr_rtp_timer'] = "true";
+ 	$profile['use_rtp_timer'] = "true";
  	$profile['vad'] = "none";
 	$profile['candidate_acl'] = "wan.auto";
  	$profile['local_network_acl'] = "localnet.auto";
@@ -126,7 +126,7 @@ if ($action == "add" && permission_exists('xmpp_add')) {
  	$sql .= "sasl_type, ";
  	$sql .= "xmpp_server, ";
  	$sql .= "tls_enable, ";
- 	$sql .= "usr_rtp_timer, ";
+ 	$sql .= "use_rtp_timer, ";
  	$sql .= "default_exten, ";
  	$sql .= "vad, ";
  	$sql .= "avatar, ";
@@ -153,7 +153,7 @@ if ($action == "add" && permission_exists('xmpp_add')) {
  	$sql .= "'" . $request['sasl_type'] . "', ";
  	$sql .= "'" . $request['xmpp_server'] . "', ";
  	$sql .= "'" . $request['tls_enable'] . "', ";
- 	$sql .= "'" . $request['usr_rtp_timer'] . "', ";
+ 	$sql .= "'" . $request['use_rtp_timer'] . "', ";
  	$sql .= "'" . $request['default_exten'] . "', ";
  	$sql .= "'" . $request['vad'] . "', ";
  	$sql .= "'" . $request['avatar'] . "', ";
@@ -184,7 +184,7 @@ elseif ($action == "update" && permission_exists('xmpp_edit')) {
 	$sql .= "sasl_type = '" . $request['sasl_type'] . "', ";
 	$sql .= "xmpp_server = '" . $request['xmpp_server'] . "', ";
 	$sql .= "tls_enable = '" . $request['tls_enable'] . "', ";
-	$sql .= "usr_rtp_timer = '" . $request['usr_rtp_timer'] . "', ";
+	$sql .= "use_rtp_timer = '" . $request['use_rtp_timer'] . "', ";
 	$sql .= "default_exten = '" . $request['default_exten'] . "', ";
 	$sql .= "vad = '" . $request['vad'] . "', ";
 	$sql .= "avatar = '" . $request['avatar'] . "', ";

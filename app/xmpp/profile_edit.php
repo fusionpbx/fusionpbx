@@ -202,8 +202,8 @@ function hide_advanced_config() {
 					</td> 
 					<td class='vtable' align='left'> 
 						<select class='formfld' name='use_rtp_timer'> 
-						<option value='true' <?php if($profile['tls_enable'] == "true") echo "selected='selected'"; ?>>true</option> 
-						<option value='false' <?php if($profile['tls_enable'] == "false") echo "selected='selected'"; ?>>false</option> 
+						<option value='true' <?php if($profile['use_rtp_timer'] == "true") echo "selected='selected'"; ?>>true</option> 
+						<option value='false' <?php if($profile['use_rtp_timer'] == "false") echo "selected='selected'"; ?>>false</option> 
 						</select> 
 						<br /> 
 						Disable to trade async for more calls
