@@ -126,7 +126,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text'; 
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'usr_rtp_timer';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'use_rtp_timer';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'usr_rtp_timer';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text'; 
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
