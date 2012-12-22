@@ -171,7 +171,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'virtual_table_name_value_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'virtual_table_name_value_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'virtual_table_data_types_name_value_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
