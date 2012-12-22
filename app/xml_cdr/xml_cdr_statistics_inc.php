@@ -131,14 +131,19 @@ else {
 
 //call info hour by hour
 	for ($i = 0; $i <= 23; $i++) {
-		$stats[$i]['start_epoch'] = $time - 3600*$i;
-		$stats[$i]['stop_epoch'] = $stats[$i]['start_epoch'] + 3600;
+		$start_epoch = $time - 3600*$i;
+		$stop_epoch = $start_epoch + 3600;
+		$stats[$i]['hours'] = $i + 1;
+		$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
+		$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
+		$stats[$i]['start_epoch'] = $start_epoch;
+		$stats[$i]['stop_epoch'] = $stop_epoch;
 		$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 		$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 		$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
 		$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
 		$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / 60;
-		
+
 		//answer / seizure ratio
 		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$where .= "and billsec = '0' ";
@@ -152,8 +157,13 @@ else {
 
 //call info for a day
 	$i = 24;
-	$stats[$i]['start_epoch'] = time() - $seconds_day;
-	$stats[$i]['stop_epoch'] = time();
+	$start_epoch = time() - $seconds_day;
+	$stop_epoch = time();
+	$stats[$i]['hours'] = 24;
+	$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
+	$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
+	$stats[$i]['start_epoch'] = $start_epoch;
+	$stats[$i]['stop_epoch'] = $stop_epoch;
 	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
@@ -168,8 +178,13 @@ else {
 	$i++;
 
 //call info for a week
-	$stats[$i]['start_epoch'] = time() - $seconds_week;
-	$stats[$i]['stop_epoch'] = time();
+	$start_epoch = time() - $seconds_week;
+	$stop_epoch = time();
+	$stats[$i]['hours'] = 24 * 7;
+	$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
+	$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
+	$stats[$i]['start_epoch'] = $start_epoch;
+	$stats[$i]['stop_epoch'] = $stop_epoch;
 	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
@@ -184,8 +199,13 @@ else {
 	$i++;
 
 //call info for a month
-	$stats[$i]['start_epoch'] = time() - $seconds_month;
-	$stats[$i]['stop_epoch'] = time();
+	$start_epoch = time() - $seconds_month;
+	$stop_epoch = time();
+	$stats[$i]['hours'] = 24 * 30;
+	$stats[$i]['start_stamp'] = date('Y-m-d h:n:s', $start_epoch);
+	$stats[$i]['stop_stamp'] = date('Y-m-d h:n:s', $stop_epoch);
+	$stats[$i]['start_epoch'] = $start_epoch;
+	$stats[$i]['stop_epoch'] = $stop_epoch;
 	$stats[$i]['volume'] = get_call_volume_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['seconds'] = get_call_seconds_between($stats[$i]['start_epoch'], $stats[$i]['stop_epoch'], '');
 	$stats[$i]['minutes'] = $stats[$i]['seconds'] / 60;
