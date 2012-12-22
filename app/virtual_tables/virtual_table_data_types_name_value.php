@@ -60,7 +60,7 @@ require_once "includes/paging.php";
 	echo "</tr></table>\n";
 
 	//$sql = "";
-	//$sql .= " select * from v_virtual_table_data_types_name_value ";
+	//$sql .= " select * from v_virtual_table_name_values ";
 	//$sql .= " where domain_uuid = '$domain_uuid' ";
 	//$sql .= " and virtual_table_field_uuid = '$virtual_table_field_uuid' ";
 	//if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -77,7 +77,7 @@ require_once "includes/paging.php";
 	//$offset = $rows_per_page * $page; 
 
 	$sql = "";
-	$sql .= " select * from v_virtual_table_data_types_name_value ";
+	$sql .= " select * from v_virtual_table_name_values ";
 	$sql .= " where domain_uuid = '$domain_uuid' ";
 	$sql .= " and virtual_table_field_uuid = '$virtual_table_field_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -108,10 +108,10 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[virtual_data_types_name]."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[virtual_data_types_value]."</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='virtual_table_data_types_name_value_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_table_field_uuid=".$row[virtual_table_field_uuid]."&id=".$row[virtual_table_data_types_name_value_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='virtual_table_data_types_name_value_delete.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_table_field_uuid=".$row[virtual_table_field_uuid]."&id=".$row[virtual_table_data_types_name_value_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='virtual_table_data_types_name_value_edit.php?id=".$row[virtual_table_data_types_name_value_uuid]."'\" value='e'>\n";
-			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='virtual_table_data_types_name_value_delete.php?id=".$row[virtual_table_data_types_name_value_uuid]."' }\" value='x'>\n";
+			echo "		<a href='virtual_table_data_types_name_value_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_table_field_uuid=".$row[virtual_table_field_uuid]."&id=".$row[virtual_table_name_value_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='virtual_table_data_types_name_value_delete.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_table_field_uuid=".$row[virtual_table_field_uuid]."&id=".$row[virtual_table_name_value_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='virtual_table_data_types_name_value_edit.php?id=".$row[virtual_table_name_value_uuid]."'\" value='e'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='virtual_table_data_types_name_value_delete.php?id=".$row[virtual_table_name_value_uuid]."' }\" value='x'>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }

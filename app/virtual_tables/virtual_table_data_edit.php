@@ -740,7 +740,7 @@ else {
 							echo "<input type='hidden' name=\"".$x."field_name\" value=\"".$row['virtual_field_name']."\">\n";
 
 							$sqlselect = "SELECT virtual_data_types_name, virtual_data_types_value ";
-							$sqlselect .= "FROM v_virtual_table_data_types_name_value ";
+							$sqlselect .= "FROM v_virtual_table_name_values ";
 							$sqlselect .= "where domain_uuid = '".$domain_uuid."' ";
 							$sqlselect .= "and virtual_table_field_uuid = '".$row[virtual_table_field_uuid]."' ";
 							$prep_statement_2 = $db->prepare($sqlselect);
@@ -766,7 +766,7 @@ else {
 							echo "<input type='hidden' name='".$x."field_name' value='".$row['virtual_field_name']."'>\n";
 
 							$sqlselect = "SELECT virtual_data_types_name, virtual_data_types_value ";
-							$sqlselect .= "FROM v_virtual_table_data_types_name_value ";
+							$sqlselect .= "FROM v_virtual_table_name_values ";
 							$sqlselect .= "where domain_uuid = '".$domain_uuid."' ";
 							$sqlselect .= "and virtual_table_field_uuid = '".$row[virtual_table_field_uuid]."' ";
 							$prep_statement_2 = $db->prepare($sqlselect);
