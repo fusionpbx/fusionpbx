@@ -56,6 +56,7 @@ foreach($text as $key => $value) {
 		$condition_expression_1 = check_str($_POST["condition_expression_1"]);
 		$condition_field_2 = check_str($_POST["condition_field_2"]);
 		$condition_expression_2 = check_str($_POST["condition_expression_2"]);
+		$destination_uuid = check_str($_POST["destination_uuid"]);
 
  		$action_1 = check_str($_POST["action_1"]);
 		//$action_1 = "transfer:1001 XML default";
@@ -73,6 +74,23 @@ foreach($text as $key => $value) {
 		//$action_data_1 = check_str($_POST["action_data_1"]);
 		//$action_application_2 = check_str($_POST["action_application_2"]);
 		//$action_data_2 = check_str($_POST["action_data_2"]);
+
+		//use the destination_uuid to set the condition_expression_1
+		if (strlen($destination_uuid) > 0) {
+			$sql = "select * from v_destinations ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and destination_uuid = '$destination_uuid' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			if (count($result) > 0) {
+				foreach ($result as &$row) {
+					$condition_expression_1 = $row["destination_number"];
+					$fax_uuid = $row["fax_uuid"];
+				}
+			}
+			unset ($prep_statement);
+		}
 
 		if (if_group("superadmin") && $action == "advanced") {
 			//allow users in the superadmin group advanced control
@@ -334,6 +352,54 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 		}
 
+	//set fax_uuid
+		if (strlen($fax_uuid) > 0) {
+			//get the fax information
+				$sql = "select * from v_fax ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and fax_uuid = '".$fax_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$fax_extension = $row["fax_extension"];
+					$fax_destination_number = $row["fax_destination_number"];
+					$fax_name = $row["fax_name"];
+					$fax_email = $row["fax_email"];
+					$fax_pin_number = $row["fax_pin_number"];
+					$fax_caller_id_name = $row["fax_caller_id_name"];
+					$fax_caller_id_number = $row["fax_caller_id_number"];
+					$fax_forward_number = $row["fax_forward_number"];
+					$fax_description = $row["fax_description"];
+				}
+				unset ($prep_statement);
+
+			//add the dialplan fax detection
+				$dialplan_detail_uuid = uuid();
+				$sql = "insert into v_dialplan_details ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "dialplan_uuid, ";
+				$sql .= "dialplan_detail_uuid, ";
+				$sql .= "dialplan_detail_tag, ";
+				$sql .= "dialplan_detail_type, ";
+				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_order ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'$dialplan_uuid', ";
+				$sql .= "'$dialplan_detail_uuid', ";
+				$sql .= "'action', ";
+				$sql .= "'tone_detect', ";
+				$sql .= "'fax 1100 r +5000 transfer ".$fax_extension." XML ".$_SESSION["context"]." 1', ";
+				$sql .= "'75' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+		}
+
 	//set answer
 		$tmp_app = false;
 		if ($action_application_1 == "ivr") { $tmp_app = true; }
@@ -360,7 +426,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'answer', ";
 			$sql .= "'', ";
-			$sql .= "'80' ";
+			$sql .= "'85' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -470,7 +536,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "		<br>";
@@ -508,7 +573,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-name'].":\n";
@@ -688,10 +752,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) > 0) {
-			echo "	<select name='condition_expression_1' id='condition_expression_1' class='formfld' style='width: 60%;' >\n";
+			echo "	<select name='destination_uuid' id='destination_uuid' class='formfld' style='width: 60%;' >\n";
 			echo "	<option></option>\n";
 			foreach ($result as &$row) {
-				echo "		<option value='".$row["destination_number"]."'>".$row["destination_number"]."</option>\n";
+				echo "		<option value='".$row["destination_uuid"]."'>".$row["destination_number"]."</option>\n";
 			}
 			echo "		</select>\n";
 			echo "<br />\n";
