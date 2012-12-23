@@ -27,7 +27,7 @@ include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (permission_exists('gateways_add')) {
+if (permission_exists('gateway_add')) {
 	//access granted
 }
 else {

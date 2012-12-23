@@ -36,16 +36,16 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'gateways_view';
+		$apps[$x]['permissions'][0]['name'] = 'gateway_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'gateways_add';
+		$apps[$x]['permissions'][1]['name'] = 'gateway_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'gateways_edit';
+		$apps[$x]['permissions'][2]['name'] = 'gateway_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'gateways_delete';
+		$apps[$x]['permissions'][3]['name'] = 'gateway_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 	//schema details
