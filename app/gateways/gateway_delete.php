@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('gateways_delete')) {
+if (permission_exists('gateway_delete')) {
 	//access granted
 }
 else {
@@ -34,9 +34,17 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
+
+
 if (strlen($_GET["id"])>0) {
 	//set the variable
-		$id = $_GET["id"];
+		$id = check_str($_GET["id"]);
 
 	//get the gateway name
 		$sql = "select * from v_gateways ";
@@ -113,7 +121,7 @@ if (strlen($_GET["id"])>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=gateways.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo $text['message-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
