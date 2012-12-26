@@ -26,7 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('voicemail_greetings_view')) {
 	//access granted
 }
@@ -35,11 +34,14 @@ else {
 	exit;
 }
 
-        foreach($content_voicemail_greetings as $key => $value) {
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/paging.php";
+//additional includes
+	require_once "includes/paging.php";
 
 //set the max php execution time
 	ini_set(max_execution_time,7200);
