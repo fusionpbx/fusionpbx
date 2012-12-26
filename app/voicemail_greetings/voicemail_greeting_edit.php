@@ -26,7 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('voicemail_greetings_add') || permission_exists('voicemail_greetings_edit')) {
 	//access granted
 }
@@ -36,7 +35,8 @@ else {
 }
 
 //add multi-lingual support
-	foreach($content_voicemail_greetings as $key => $value) {
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
