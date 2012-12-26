@@ -12,8 +12,8 @@
 	$text['description-gateway-edit']['en-us'] = 'Defines a connections to a SIP Provider or another SIP server.';
 	$text['description-gateway-edit']['pt-pt'] = '';
 
-	$text['label-gateway-name']['en-us'] = 'Gateway';
-	$text['label-gateway-name']['pt-pt'] = '';
+	$text['label-gateway']['en-us'] = 'Gateway';
+	$text['label-gateway']['pt-pt'] = '';
 
 	$text['description-gateway-name']['en-us'] = 'Enter the gateway name here.';
 	$text['description-gateway-name']['pt-pt'] = '';

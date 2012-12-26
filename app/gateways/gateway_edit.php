@@ -86,7 +86,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($gateway_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-gateway_uuid']."<br>\n"; }
 		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 		if (strlen($gateway) == 0) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
 		if ($register == "true") {
@@ -373,7 +372,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-gateway-name'].":\n";
+	echo "    ".$text['label-gateway'].":\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='gateway' maxlength='255' value=\"$gateway\">\n";
