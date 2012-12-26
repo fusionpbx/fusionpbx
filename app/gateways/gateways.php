@@ -118,7 +118,6 @@ else {
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_gateways ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 	$prep_statement->execute();
@@ -134,7 +133,12 @@ else {
 //get the list
 	$sql = "select * from v_gateways ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by) == 0) {
+		$sql .= "order by gateway asc ";
+	}
+	else {
+		$sql .= "order by $order_by $order ";
+	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
