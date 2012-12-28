@@ -189,6 +189,7 @@
 				table.insert(actions, {app="say.number.pronounced",data=voicemail_id});
 				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-not_available.wav"});
 				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_message.wav"});
+				table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 			end
 		--You have zero new messages
 			if (name == "new_messages") then
@@ -408,6 +409,8 @@
 						if (string.len(dtmf_digits) == 0) then
 							if (row.app == "playback") then
 								session:execute(row.app, sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
+							elseif (row.app == "tone_stream") then
+								session:execute("playback", "tone_stream://"..row.data);
 							elseif (row.app == "playAndGetDigits") then
 								--playAndGetDigits <min> <max> <tries> <timeout> <terminators> <file> <invalid_file> <var_name> <regexp> <digit_timeout>
 								if (not file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data)) then
