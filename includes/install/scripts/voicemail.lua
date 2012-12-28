@@ -448,6 +448,9 @@
 			voicemail_uuid = row["voicemail_uuid"];
 			voicemail_password = row["voicemail_password"];
 			greeting_id = row["greeting_id"];
+			voicemail_mail_to = row["voicemail_mail_to"];
+			voicemail_attach_file = row["voicemail_attach_file"];
+			voicemail_local_after_email = row["voicemail_local_after_email"];
 		end);
 	end
 
@@ -474,6 +477,12 @@
 			result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
 			--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 
+		--set the message waiting event
+			local event = freeswitch.Event("message_waiting");
+			event:addHeader("MWI-Messages-Waiting", "yes");
+			event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+			event:fire();
+
 		--set the epoch
 			stop_epoch = os.time();
 			freeswitch.consoleLog("notice", "[voicemail] start epoch: " .. stop_epoch .. "\n");
@@ -483,12 +492,29 @@
 			freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
 
 		--send the email with the voicemail recording attached
-			--[[freeswitch.email("",
-				"",
-				"To: "..email_address.."\nFrom: "..from_address.."\nSubject: Fax to: "..number_dialed.." SENT",
-				email_message_success ,
-				fax_file
-			);]]
+			if (string.len(voicemail_mail_to) > 3) then
+				message = [[<font face=arial>
+				<b>Message From "]]..caller_id_name..[[" <A HREF="tel:]]..caller_id_number..[[">]]..caller_id_number..[[</A></b><br>
+				<hr noshade size=1>
+				Created: ]]..os.date("%d %b %Y", start_epoch)..[[<br>
+				Duration: ]]..message_length..[[<br>
+				Account: ]]..voicemail_id..[[@]]..domain_name..[[<br>
+				</font>]];
+				if (voicemail_attach_file == "true") then
+					freeswitch.email("",
+					"",
+					"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length,
+					message,
+					voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav"
+					);
+				else
+					freeswitch.email("",
+						"",
+						"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length,
+						message
+					);
+				end
+			end
 
 		--save the message to the voicemail messages
 			local sql = {}
@@ -516,11 +542,18 @@
 			--table.insert(sql, "'".. message_status .."', ");
 			--table.insert(sql, "'".. message_priority .."' ");
 			table.insert(sql, ") ");
-			sql = table.concat(sql, "\n");
+			if (voicemail_local_after_email == "true") then
+				sql = table.concat(sql, "\n");
+			end
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
 			dbh:query(sql);
+
+		--local after email is false so delete the recording file
+			if (voicemail_local_after_email == "false") then
+				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+			end
 	end
 
 function main_menu ()
@@ -623,7 +656,7 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 			--please enter the extension to send this message to followed by #
 	--process the dtmf
 		if (dtmf_digits == "1") then
-			listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number)
+			listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number);
 		elseif (dtmf_digits == "2") then
 			message_saved(uuid);
 			macro(session, "message_saved", 200, '');
@@ -641,9 +674,9 @@ function message_saved(uuid)
 		sql = [[UPDATE v_voicemail_messages SET message_status = 'saved'
 			WHERE domain_uuid = ']] .. domain_uuid ..[['
 			AND voicemail_message_uuid = ']] .. uuid ..[[']];
-		--if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[voicemail] SQL7: " .. sql .. "\n");
-		--end
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+		end
 		dbh:query(sql);
 end
 
@@ -700,6 +733,26 @@ function menu_messages (message_status)
 				--listen to the message
 					freeswitch.consoleLog("notice", message_number.." "..string.lower(row["voicemail_message_uuid"]).." "..row["created_epoch"]);
 					listen_to_recording(message_number, string.lower(row["voicemail_message_uuid"]), row["created_epoch"], row["caller_id_name"], row["caller_id_number"]);
+			end);
+		end
+
+	--voicemail count if zero new messages set the mwi to no
+		if (voicemail_id ~= nil) then
+			sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND voicemail_uuid = ']] .. voicemail_uuid ..[['
+				AND (message_status is null or message_status = '') ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(row)
+				if (row["new_messages"] == "0") then
+					--send the message waiting event
+					local event = freeswitch.Event("message_waiting");
+					event:addHeader("MWI-Messages-Waiting", "no");
+					event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+					event:fire();
+				end
 			end);
 		end
 
