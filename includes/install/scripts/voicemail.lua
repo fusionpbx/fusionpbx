@@ -255,10 +255,11 @@
 						actions = {}
 						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_fail.wav"});
 					end
-				--recording your greeting at the tone press any key or stop talking to end the recording
+				--Record your greeting at the tone press any key or stop talking to end the recording
 					if (name == "record_greeting") then
 						actions = {}
 						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_greeting.wav"});
+						table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 					end
 			--To choose greeting press 2
 				if (name == "choose_greeting") then
@@ -270,13 +271,25 @@
 				--Choose a greeting between 1 and 9
 					--if (name == "choose_greeting_choose") then
 					--	actions = {}
-					--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_choose"});
+					--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_choose.wav"});
 					--end
+						--press 1 to listen to the recording
+						--press 2 to save the recording
+							--message saved
+						--press 3 to re-record
 				--Invalid greeting number
 					--if (name == "choose_greeting_fail") then
 					--	actions = {}
-					--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_fail"});
+					--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_fail.wav"});
 					--end
+				--Greeting 1 selected
+					if (name == "greeting_selected") then
+						actions = {}
+						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-greeting.wav"});
+						table.insert(actions, {app="playAndGetDigits",data="digits/"..param..".wav"});
+						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-selected.wav"});
+					end
+
 			--To record your name 3
 				if (name == "record_name") then
 					actions = {}
@@ -448,7 +461,7 @@
 			freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 		end
 		status = dbh:query(sql, function(row)
-			voicemail_uuid = row["voicemail_uuid"];
+			voicemail_uuid = string.lower(row["voicemail_uuid"]);
 			voicemail_password = row["voicemail_password"];
 			greeting_id = row["greeting_id"];
 			voicemail_mail_to = row["voicemail_mail_to"];
@@ -653,6 +666,10 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 		if (string.len(dtmf_digits) == 0) then
 			dtmf_digits = macro(session, "return_call", 200, '');
 		end
+	--wait for more digits
+		if (string.len(dtmf_digits) == 0) then
+			dtmf_digits = session:getDigits(max_digits, "#", 3000);
+		end
 	--to forward this message press 8
 		--to add an introduction to this message press 1
 		--to send this message now 2
@@ -668,7 +685,8 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 		elseif (dtmf_digits == "5") then
 			return_call(caller_id_number);
 		else
-			--message_saved();
+			message_saved(uuid);
+			macro(session, "message_saved", 200, '');
 		end
 end
 
@@ -734,8 +752,10 @@ function menu_messages (message_status)
 				--increment the message count
 					message_number = message_number + 1;
 				--listen to the message
-					freeswitch.consoleLog("notice", message_number.." "..string.lower(row["voicemail_message_uuid"]).." "..row["created_epoch"]);
-					listen_to_recording(message_number, string.lower(row["voicemail_message_uuid"]), row["created_epoch"], row["caller_id_name"], row["caller_id_number"]);
+					if (session:ready()) then
+						freeswitch.consoleLog("notice", message_number.." "..string.lower(row["voicemail_message_uuid"]).." "..row["created_epoch"]);
+						listen_to_recording(message_number, string.lower(row["voicemail_message_uuid"]), row["created_epoch"], row["caller_id_name"], row["caller_id_number"]);
+					end
 			end);
 		end
 
@@ -807,6 +827,114 @@ function advanced ()
 				advanced();
 			end
 		end
+end
+
+function record_greeting()
+	--Choose a greeting between 1 and 9
+		greeting_id = macro(session, "choose_greeting_choose", 5000, '');
+
+	--validate the greeting_id
+		if (greeting_id == "1" 
+			or greeting_id == "2" 
+			or greeting_id == "3" 
+			or greeting_id == "4" 
+			or greeting_id == "5" 
+			or greeting_id == "6" 
+			or greeting_id == "7" 
+			or greeting_id == "8" 
+			or greeting_id == "9") then
+
+			--record your greeting at the tone press any key or stop talking to end the recording
+				macro(session, "record_greeting", 200, '');
+
+			--record the greeting
+				max_len_seconds = 30;
+				silence_threshold = 30;
+				silence_seconds = 5;
+				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
+				result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", max_len_seconds, silence_threshold, silence_seconds);
+				--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
+
+			--advanced menu
+				advanced();
+		else
+			--invalid greeting_id
+				greeting_id = macro(session, "choose_greeting_fail", 200, '');
+
+			--send back to choose the greeting
+				if (session:ready()) then
+					record_greeting();
+				end
+		end
+end
+
+function choose_greeting()
+	--select the greeting
+		greeting_id = macro(session, "choose_greeting_choose", 5000, '');
+
+	--check to see if the greeting file exists
+		if (not file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
+			--invalid greeting_id file does not exist
+			greeting_id = "invalid";
+		end
+
+	--validate the greeting_id
+		if (greeting_id == "0" 
+			or greeting_id == "1" 
+			or greeting_id == "2" 
+			or greeting_id == "3" 
+			or greeting_id == "4" 
+			or greeting_id == "5" 
+			or greeting_id == "6" 
+			or greeting_id == "7" 
+			or greeting_id == "8" 
+			or greeting_id == "9") then
+
+			--valid greeting_id update the database
+				if (greeting_id == "0") then 
+					sql = [[UPDATE v_voicemails SET greeting_id = null ]];
+				else
+					sql = [[UPDATE v_voicemails SET greeting_id = ']]..greeting_id..[[' ]];
+				end
+				sql = sql ..[[WHERE domain_uuid = ']] .. domain_uuid ..[[' ]]
+				sql = sql ..[[AND voicemail_uuid = ']] .. voicemail_uuid ..[[' ]];
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				end
+				dbh:query(sql);
+
+			--play the greeting
+				session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+
+			--greeting selected
+				macro(session, "greeting_selected", 200, greeting_id);
+
+			--advanced menu
+				advanced();
+		else
+			--invalid greeting_id
+				greeting_id = macro(session, "choose_greeting_fail", 200, '');
+
+			--send back to choose the greeting
+				if (session:ready()) then
+					choose_greeting();
+				end
+		end
+
+	--advanced menu
+		advanced();
+end
+
+function record_name()
+	--play the name record
+		
+	--save the recording
+		-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
+		max_len_seconds = 30;
+		silence_threshold = 30;
+		silence_seconds = 5;
+		result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
+		--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 end
 
 --check voicemail
