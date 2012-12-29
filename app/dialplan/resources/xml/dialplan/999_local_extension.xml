@@ -28,7 +28,11 @@
 			<action application="bridge" data="user/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name}"/>
 			<action application="answer"/>
 			<action application="sleep" data="1000"/>
-			<action application="voicemail" data="default ${domain_name} ${dialed_extension}"/>
+			<!--<action application="voicemail" data="default ${domain_name} ${dialed_extension}"/>-->
+			<action application="set" data="voicemail_action=save"/>
+			<action application="set" data="voicemail_id=$1"/>
+			<action application="set" data="voicemail_profile=default"/>
+			<action application="lua" data="voicemail.lua"/>
 		</condition>
 	</extension>
 </context>
