@@ -551,7 +551,6 @@
 					--variables
 					extension_uuid = row.extension_uuid;
 					domain_uuid = row.domain_uuid;
-					extension = row.extension;
 					sip_from_user = row.extension;
 					call_group = row.call_group;
 					hold_music = row.hold_music;
