@@ -291,11 +291,17 @@
 					end
 
 			--To record your name 3
-				if (name == "record_name") then
+				if (name == "to_record_name") then
 					actions = {}
 					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_name2.wav"});
 					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
 					table.insert(actions, {app="playAndGetDigits",data="digits/3.wav"});
+				end
+			--At the tone please record your name press any key or stop talking to end the recording 
+				if (name == "record_name") then
+					actions = {}
+					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_name1.wav"});
+					table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 				end
 			--To change your password press 6
 				if (name == "change_password") then
@@ -796,7 +802,7 @@ function advanced ()
 		end
 	--To record your name 3
 		if (string.len(dtmf_digits) == 0) then
-			dtmf_digits = macro(session, "record_name", 200, '');
+			dtmf_digits = macro(session, "to_record_name", 200, '');
 		end
 	--To change your password press 6
 		if (string.len(dtmf_digits) == 0) then
@@ -927,14 +933,24 @@ end
 
 function record_name()
 	--play the name record
-		
+		macro(session, "record_name", 200, '');
+
 	--save the recording
 		-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
 		max_len_seconds = 30;
 		silence_threshold = 30;
 		silence_seconds = 5;
-		result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
+		result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav", max_len_seconds, silence_threshold, silence_seconds);
 		--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
+
+	--play the greeting
+		session:streamFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
+
+	--message saved
+		macro(session, "message_saved", 200, '');
+
+	--advanced menu
+		advanced();
 end
 
 --check voicemail
