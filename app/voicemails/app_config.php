@@ -23,39 +23,41 @@
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 
 	//schema details
@@ -76,22 +78,37 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Voicemail ID';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the voicemail id.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_password';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Voicemail password';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the voicemail password.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'greeting_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Greeting ID';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select the greeting id.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_mail_to';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the email address to send voicemail to.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_attach_file';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Choose whether to attach the file to the email.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_local_after_email';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Choose to keep the voicemail file after sending the email.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Voicemail enabled';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select to enable or disable this voicemail.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the description.';
 		$z++;
 
-	//schema details
 		$y = 1; //table array index
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = 'v_voicemail_messages';
@@ -141,5 +158,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Voicemail message priority.';
 		$z++;
-
 ?>
