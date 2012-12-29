@@ -182,12 +182,18 @@
 				table.insert(actions, {app="playAndGetDigits",data="digits/pound.wav"});
 			end
 		--the person at extension 101 is not available record your message at the tone press any key or stop talking to end the recording
-			if (name == "record_message") then
+			if (name == "person_not_available_record_message") then
 				actions = {}
 				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-person.wav"});
 				--pronounce the voicemail_id
 				table.insert(actions, {app="say.number.pronounced",data=voicemail_id});
 				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-not_available.wav"});
+				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_message.wav"});
+				table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
+			end
+		--record your message at the tone press any key or stop talking to end the recording
+			if (name == "record_message") then
+				actions = {}
 				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_message.wav"});
 				table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 			end
@@ -317,12 +323,12 @@
 					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
 					table.insert(actions, {app="playAndGetDigits",data="digits/0.wav"});
 				end
-		--To exit press #
+		--To exit press *
 			if (name == "to_exit_press") then
 				actions = {}
 				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-to_exit.wav"});
 				table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-				table.insert(actions, {app="playAndGetDigits",data="digits/pound.wav"});
+				table.insert(actions, {app="playAndGetDigits",data="digits/star.wav"});
 			end
 		--Additional Macros
 			--Please enter your new password then press the # key #
@@ -480,12 +486,15 @@
 	if (voicemail_action == "save") then
 
 		--voicemail prompt
---			if (greeting_id) then
+			if (greeting_id) then
 				--play the greeting
---			else
+					session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+				--record your message at the tone press any key or stop talking to end the recording
+					result = macro(session, "record_message", 200);
+			else
 				--if there is no greeting then play digits of the voicemail_id
-				result = macro(session, "record_message", 200);
---			end
+				result = macro(session, "person_not_available_record_message", 200);
+			end
 
 		--set the epoch
 			start_epoch = os.time();
@@ -623,7 +632,7 @@ function main_menu ()
 		end
 	--to exit press #
 		if (string.len(dtmf_digits) == 0) then
-			dtmf_digits = macro(session, "to_exit_press", 5000, '');
+			dtmf_digits = macro(session, "to_exit_press", 3000, '');
 		end
 	--process the dtmf
 		if (dtmf_digits == "1") then
@@ -632,7 +641,9 @@ function main_menu ()
 			menu_messages("saved");
 		elseif (dtmf_digits == "5") then
 			advanced();
-		elseif (dtmf_digits == "#") then
+		elseif (dtmf_digits == "0") then
+			session:transfer("0", "XML", context);
+		elseif (dtmf_digits == "*") then
 			session:hangup();
 		else
 			if (session:ready()) then
@@ -690,6 +701,10 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 			delete_recording(uuid);
 		elseif (dtmf_digits == "5") then
 			return_call(caller_id_number);
+		elseif (dtmf_digits == "*") then
+			main_menu();
+		elseif (dtmf_digits == "0") then
+			session:transfer("0", "XML", context);
 		else
 			message_saved(uuid);
 			macro(session, "message_saved", 200, '');
