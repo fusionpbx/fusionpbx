@@ -7,17 +7,17 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en'] = '';
+		$apps[$x]['description']['en-us'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en'] = 'Voicemail';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Voicemail';
 		$apps[$x]['menu'][0]['uuid'] = '0347f82a-62a0-49d0-bacd-511d080c46d5';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/app/voicemails/voicemails.php';
-		//$apps[$x]['menu'][0]['groups'][] = 'user';
-		//$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
+		$apps[$x]['menu'][0]['groups'][] = 'admin';
+		//$apps[$x]['menu'][0]['groups'][] = 'user';
 
 	//permission details
 		$y = 0;
@@ -78,35 +78,35 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the voicemail id.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the voicemail id.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_password';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the voicemail password.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the voicemail password.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'greeting_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select the greeting id.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the greeting id.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_mail_to';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the email address to send voicemail to.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the email address to send voicemail to.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_attach_file';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Choose whether to attach the file to the email.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Choose whether to attach the file to the email.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_local_after_email';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Choose to keep the voicemail file after sending the email.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Choose to keep the voicemail file after sending the email.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Select to enable or disable this voicemail.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select to enable or disable this voicemail.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'voicemail_description';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the description.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 
 		$y = 1; //table array index
@@ -132,30 +132,30 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'created_epoch';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Created epoch';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Created epoch';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'read_epoch';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Read epoch';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Read epoch';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'caller_id_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Caller ID Name';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Caller ID Name';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'caller_id_number';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Caller ID Number';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Caller ID Number';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'message_length';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Voicemail message length.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Voicemail message length.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'message_status';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Voicemail  message status';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Voicemail  message status';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'message_priority';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Voicemail message priority.';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Voicemail message priority.';
 		$z++;
 ?>
