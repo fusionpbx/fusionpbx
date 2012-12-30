@@ -144,7 +144,8 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_local_after_email']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."'>\n";
-			echo "		<a href='voicemail_messages.php?id=".$row['voicemail_uuid']."'>".$text['label-view']."</a>&nbsp;\n";
+			echo "		<a href='voicemail_messages.php?id=".$row['voicemail_uuid']."'>".$text['label-view']."</a>&nbsp;&nbsp;\n";
+			echo "		<a href='/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."'>".$text['label-greetings']."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['voicemail_description']."&nbsp;</td>\n";

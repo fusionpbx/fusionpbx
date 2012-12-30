@@ -33,21 +33,37 @@ else {
 	echo "access denied";
 	exit;
 }
+
 //add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//get the uuid
+	$voicemail_uuid = check_str($_REQUEST["id"]);
+
+//get the voicemail_id
+	$sql = "select * from v_voicemails ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$voicemail_id = $row["voicemail_id"];
+	}
+	unset ($prep_statement);
+
 //download the voicemail
 	if ($_GET['a'] == "download") {
 
 		session_cache_limiter('public');
-		$uuid = check_str($_GET["uuid"]);
+		$voicemail_message_uuid = check_str($_GET["uuid"]);
 
 		$sql = "select * from v_voicemail_messages ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and voicemail_message_uuid = '$uuid' ";
+		$sql .= "and voicemail_message_uuid = '$voicemail_message_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -63,20 +79,9 @@ else {
 		}
 		unset ($prep_statement);
 
-		$sql = "select * from v_voicemails ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$voicemail_id = $row["voicemail_id"];
-		}
-		unset ($prep_statement);
-
 		if ($_GET['type'] = "vm") {
-			file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$voicemail_id."/msg_".$voicemail_uuid.".wav";
-			if  (file_exists($file_path)) {
+			$file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$voicemail_id."/msg_".$voicemail_message_uuid.".wav";
+			if (file_exists($file_path)) {
 				$fd = fopen($file_path, "rb");
 				if ($_GET['t'] == "bin") {
 					header("Content-Type: application/force-download");
@@ -110,10 +115,10 @@ else {
 	}
 
 //get the html values and set them as variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 	if (strlen($_GET["id"]) > 0) {
-		$voicemail_uuid = $_GET["id"];
+		$voicemail_uuid = check_str($_GET["id"]);
 	}
 
 //additional includes
@@ -195,6 +200,8 @@ else {
 	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
 	echo th_order_by('message_length', $text['label-message_length'], $order_by, $order);
 	echo th_order_by('message_status', $text['label-message_status'], $order_by, $order);
+	echo "<th>".$text['label-message_size']."</th>\n";
+	echo "<th>".$text['label-tools']."</th>\n";
 	//echo th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('voicemail_message_add')) {
@@ -208,6 +215,21 @@ else {
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
+
+			//set the greeting directory
+			$file_path = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$voicemail_id.'/msg_'.$row['voicemail_message_uuid'].'.wav';
+			$file_size = filesize($file_path);
+			$file_size = byte_convert($file_size);
+			$file_ext = substr($row['file_path'], -3);
+
+			$message_length = $row['message_length'];
+			if ($message_length < 60 ) {
+				$message_length = $message_length. " sec";
+			}
+			else {
+				$message_length = round(($message_length/60), 2). " min";
+			}
+
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_uuid']."&nbsp;</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">";
@@ -216,8 +238,18 @@ else {
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_number']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_length']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$message_length."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_status']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$file_size."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['voicemail_message_uuid']."&id=".$row['voicemail_id']."&ext=".$file_ext."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+			//echo "			".$text['label-play']."\n";
+			//echo "		</a>\n";
+			echo "		&nbsp;&nbsp;\n";
+			echo "		<a href=\"voicemail_messages.php?a=download&type=vm&t=bin&id=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\">\n";
+			echo "			".$text['label-download']."\n";
+			echo "		</a>\n";
+			echo "	</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('voicemail_message_edit')) {
