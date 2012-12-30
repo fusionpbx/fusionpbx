@@ -64,8 +64,20 @@
 		$text['label-tools']['en-us'] = 'Tools';
 		$text['label-tools']['pt-pt'] = 'Ferramentas';
 
+		$text['label-message_size']['en-us'] = 'Size';
+		$text['label-message_size']['pt-pt'] = '';
+
+		$text['label-play']['en-us'] = 'Play';
+		$text['label-play']['pt-pt'] = '';
+
+		$text['label-download']['en-us'] = 'Download';
+		$text['label-download']['pt-pt'] = '';
+
 		$text['label-view']['en-us'] = 'View';
 		$text['label-view']['pt-pt'] = '';
+
+		$text['label-greetings']['en-us'] = 'Greetings';
+		$text['label-greetings']['pt-pt'] = '';
 
 		$text['label-true']['en-us'] = 'true';
 		$text['label-true']['pt-pt'] = '';
@@ -122,16 +134,16 @@
 		$text['description-voicemail_uuid']['en-us'] = 'Voicemail UUID';
 		$text['description-voicemail_uuid']['pt-pt'] = '';
 
-		$text['label-created_epoch']['en-us'] = 'Created Epoch';
+		$text['label-created_epoch']['en-us'] = 'Created';
 		$text['label-created_epoch']['pt-pt'] = '';
 
-		$text['description-created_epoch']['en-us'] = 'Created Epoch';
+		$text['description-created_epoch']['en-us'] = 'Created';
 		$text['description-created_epoch']['pt-pt'] = '';
 
-		$text['label-read_epoch']['en-us'] = 'Read Epoch';
+		$text['label-read_epoch']['en-us'] = 'Read';
 		$text['label-read_epoch']['pt-pt'] = '';
 
-		$text['description-read_epoch']['en-us'] = 'Read Epoch';
+		$text['description-read_epoch']['en-us'] = 'Read';
 		$text['description-read_epoch']['pt-pt'] = '';
 
 		$text['label-caller_id_name']['en-us'] = 'Caller ID Name';
