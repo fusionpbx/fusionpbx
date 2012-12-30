@@ -35,13 +35,14 @@ else {
 	exit;
 }
 
-        foreach($content_voicemail_greetings as $key => $value) {
+//add multi-lingual support
+	foreach($content_voicemail_greetings as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 if (count($_GET)>0) {
-    $id = $_GET["id"];
-	$user_id = $_GET["user_id"];
+	$id = check_str($_GET["id"]);
+	$voicemail_id = check_str($_GET["voicemail_id"]);
 }
 
 if (strlen($id)>0) {
@@ -49,7 +50,7 @@ if (strlen($id)>0) {
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where greeting_uuid = '$id' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$sql .= "and user_id = '$user_id' ";
+		$sql .= "and voicemail_id = '$voicemail_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -63,13 +64,13 @@ if (strlen($id)>0) {
 		$sql = "delete from v_voicemail_greetings ";
 		$sql .= "where greeting_uuid = '$id' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
-		$sql .= "and user_id = '$user_id' ";
+		$sql .= "and voicemail_id = '$voicemail_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
 
 	//set the greeting directory
-		$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$user_id;
+		$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 	//delete the recording file
 		unlink($v_greeting_dir."/".$greeting_name);
@@ -77,7 +78,7 @@ if (strlen($id)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=$user_id\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=$voicemail_id\">\n";
 	echo "<div align='center'>\n";
 	echo "".$text['confirm-delete-2']."\n";
 	echo "</div>\n";
