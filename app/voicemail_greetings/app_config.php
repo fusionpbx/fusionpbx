@@ -97,7 +97,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = 'true';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'user_id';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'voicemail_id';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'user_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;

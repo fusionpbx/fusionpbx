@@ -50,7 +50,7 @@ else {
 	}
 
 //get the form value and set to php variables
-	$user_id = check_str($_REQUEST["user_id"]);
+	$voicemail_id = check_str($_REQUEST["voicemail_id"]);
 	if (count($_POST)>0) {
 		$greeting_name = check_str($_POST["greeting_name"]);
 		$greeting_description = check_str($_POST["greeting_description"]);
@@ -106,7 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$user_id."\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$voicemail_id."\">\n";
 			echo "<div align='center'>\n";
 			echo "".$text['confirm-add']."\n";
 			echo "</div>\n";
@@ -145,7 +145,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$user_id."\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$voicemail_id."\">\n";
 			echo "<div align='center'>\n";
 			echo "".$text['confirm-update']."\n";
 			echo "</div>\n";
@@ -194,7 +194,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap><b>".$text['label-edit']['en-us']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_greetings.php?id=".$user_id."'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_greetings.php?id=".$voicemail_id."'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
@@ -223,7 +223,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='greeting_uuid' value='$greeting_uuid'>\n";
 	}
-	echo "				<input type='hidden' name='user_id' value='$user_id'>\n";
+	echo "				<input type='hidden' name='voicemail_id' value='$voicemail_id'>\n";
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
