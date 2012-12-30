@@ -58,6 +58,15 @@
 		$text['description-voicemail_description']['en-us'] = 'Enter the description.';
 		$text['description-voicemail_description']['pt-pt'] = '';
 
+		$text['label-count']['en-us'] = 'Count';
+		$text['label-count']['pt-pt'] = '';
+
+		$text['label-tools']['en-us'] = 'Tools';
+		$text['label-tools']['pt-pt'] = 'Ferramentas';
+
+		$text['label-view']['en-us'] = 'View';
+		$text['label-view']['pt-pt'] = '';
+
 		$text['label-true']['en-us'] = 'true';
 		$text['label-true']['pt-pt'] = '';
 
@@ -96,5 +105,63 @@
 
 		$text['message-required']['en-us'] = 'Please provide: ';
 		$text['message-required']['pt-pt'] = '';
+
+	//Voicemail Messages
+		$text['title-voicemail_messages']['en-us'] = 'Voicemail Messages';
+		$text['title-voicemail_messages']['pt-pt'] = '';
+
+		$text['title-voicemail_message']['en-us'] = 'Voicemail Message';
+		$text['title-voicemail_message']['pt-pt'] = '';
+
+		$text['description-voicemail_message']['en-us'] = 'Voicemail Messages.';
+		$text['description-voicemail_message']['pt-pt'] = '';
+
+		$text['label-voicemail_uuid']['en-us'] = 'Voicemail UUID';
+		$text['label-voicemail_uuid']['pt-pt'] = '';
+
+		$text['description-voicemail_uuid']['en-us'] = 'Voicemail UUID';
+		$text['description-voicemail_uuid']['pt-pt'] = '';
+
+		$text['label-created_epoch']['en-us'] = 'Created Epoch';
+		$text['label-created_epoch']['pt-pt'] = '';
+
+		$text['description-created_epoch']['en-us'] = 'Created Epoch';
+		$text['description-created_epoch']['pt-pt'] = '';
+
+		$text['label-read_epoch']['en-us'] = 'Read Epoch';
+		$text['label-read_epoch']['pt-pt'] = '';
+
+		$text['description-read_epoch']['en-us'] = 'Read Epoch';
+		$text['description-read_epoch']['pt-pt'] = '';
+
+		$text['label-caller_id_name']['en-us'] = 'Caller ID Name';
+		$text['label-caller_id_name']['pt-pt'] = '';
+
+		$text['description-caller_id_name']['en-us'] = 'Caller ID Name';
+		$text['description-caller_id_name']['pt-pt'] = '';
+
+		$text['label-caller_id_number']['en-us'] = 'Caller ID Number';
+		$text['label-caller_id_number']['pt-pt'] = '';
+
+		$text['description-caller_id_number']['en-us'] = 'Caller ID Number';
+		$text['description-caller_id_number']['pt-pt'] = '';
+
+		$text['label-message_length']['en-us'] = 'Length';
+		$text['label-message_length']['pt-pt'] = '';
+
+		$text['description-message_length']['en-us'] = 'Length';
+		$text['description-message_length']['pt-pt'] = '';
+
+		$text['label-message_status']['en-us'] = 'Status';
+		$text['label-message_status']['pt-pt'] = '';
+
+		$text['description-message_status']['en-us'] = 'Status';
+		$text['description-message_status']['pt-pt'] = '';
+
+		$text['label-message_priority']['en-us'] = 'Priority';
+		$text['label-message_priority']['pt-pt'] = '';
+
+		$text['description-message_priority']['en-us'] = 'Priority';
+		$text['description-message_priority']['pt-pt'] = '';
 
 ?>

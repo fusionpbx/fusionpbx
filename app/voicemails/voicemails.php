@@ -93,7 +93,12 @@ else {
 	//get the list
 		$sql = "select * from v_voicemails ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) == 0) {
+			$sql .= "order by voicemail_id asc ";
+		}
+		else {
+			$sql .= "order by $order_by $order ";
+		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -114,6 +119,8 @@ else {
 	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
 	echo th_order_by('voicemail_attach_file', $text['label-voicemail_attach_file'], $order_by, $order);
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order);
+	//echo "<th>".$text['label-count']."</th>\n";
+	echo "<th>".$text['label-tools']."</th>\n";
 	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order);
 	echo th_order_by('voicemail_description', $text['label-voicemail_description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
@@ -135,8 +142,12 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_attach_file']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_local_after_email']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
+			echo "	<td valign='middle' class='".$row_style[$c]."'>\n";
+			echo "		<a href='voicemail_messages.php?id=".$row['voicemail_uuid']."'>".$text['label-view']."</a>&nbsp;\n";
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['voicemail_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('voicemail_edit')) {
 				echo "		<a href='voicemail_edit.php?id=".$row['voicemail_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";

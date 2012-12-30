@@ -39,6 +39,76 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//download the voicemail
+	if ($_GET['a'] == "download") {
+
+		session_cache_limiter('public');
+		$uuid = check_str($_GET["uuid"]);
+
+		$sql = "select * from v_voicemail_messages ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and voicemail_message_uuid = '$uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$voicemail_uuid = $row["voicemail_uuid"];
+			$created_epoch = $row["created_epoch"];
+			$read_epoch = $row["read_epoch"];
+			$caller_id_name = $row["caller_id_name"];
+			$caller_id_number = $row["caller_id_number"];
+			$message_length = $row["message_length"];
+			$message_status = $row["message_status"];
+			$message_priority = $row["message_priority"];
+		}
+		unset ($prep_statement);
+
+		$sql = "select * from v_voicemails ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$voicemail_id = $row["voicemail_id"];
+		}
+		unset ($prep_statement);
+
+		if ($_GET['type'] = "vm") {
+			file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$voicemail_id."/msg_".$voicemail_uuid.".wav";
+			if  (file_exists($file_path)) {
+				$fd = fopen($file_path, "rb");
+				if ($_GET['t'] == "bin") {
+					header("Content-Type: application/force-download");
+					header("Content-Type: application/octet-stream");
+					header("Content-Type: application/download");
+					header("Content-Description: File Transfer");
+					$file_ext = substr($file_path, -3);
+					if ($file_ext == "wav") {
+						header('Content-Disposition: attachment; filename="voicemail.wav"');
+					}
+					if ($file_ext == "mp3") {
+						header('Content-Disposition: attachment; filename="voicemail.mp3"');
+					}
+				}
+				else {
+					$file_ext = substr($file_path, -3);
+					if ($file_ext == "wav") {
+						header("Content-Type: audio/x-wav");
+					}
+					if ($file_ext == "mp3") {
+						header("Content-Type: audio/mp3");
+					}
+				}
+				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
+				header("Content-Length: " . filesize($file_path));
+				fpassthru($fd);
+			}
+			return;
+		}
+	}
+
 //get the html values and set them as variables
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
@@ -87,7 +157,7 @@ else {
 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
+		$rows_per_page = 150;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
@@ -98,7 +168,12 @@ else {
 		$sql = "select * from v_voicemail_messages ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) == 0) {
+			$sql .= "order by created_epoch desc ";
+		}
+		else {
+			$sql .= "order by $order_by $order ";
+		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -113,14 +188,14 @@ else {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('voicemail_uuid', $text['label-voicemail_uuid'], $order_by, $order);
+	//echo th_order_by('voicemail_uuid', $text['label-voicemail_uuid'], $order_by, $order);
 	echo th_order_by('created_epoch', $text['label-created_epoch'], $order_by, $order);
-	echo th_order_by('read_epoch', $text['label-read_epoch'], $order_by, $order);
+	//echo th_order_by('read_epoch', $text['label-read_epoch'], $order_by, $order);
 	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
 	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
 	echo th_order_by('message_length', $text['label-message_length'], $order_by, $order);
 	echo th_order_by('message_status', $text['label-message_status'], $order_by, $order);
-	echo th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
+	//echo th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('voicemail_message_add')) {
 		echo "	<a href='voicemail_message_edit.php?voicemail_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
@@ -134,14 +209,16 @@ else {
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_uuid']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['created_epoch']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_uuid']."&nbsp;</td>\n";
+			echo "<td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">";
+			echo "	".date("j M Y g:i a",$row['created_epoch']);
+			echo "</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_number']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_length']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_status']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('voicemail_message_edit')) {
 				echo "		<a href='voicemail_message_edit.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
