@@ -144,6 +144,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if (strlen($greeting_id) > 0) {
 					$sql .= "greeting_id = '$greeting_id', ";
 				}
+				else {
+					$sql .= "greeting_id = null, ";
+				}
 				$sql .= "voicemail_mail_to = '$voicemail_mail_to', ";
 				$sql .= "voicemail_attach_file = '$voicemail_attach_file', ";
 				$sql .= "voicemail_local_after_email = '$voicemail_local_after_email', ";
