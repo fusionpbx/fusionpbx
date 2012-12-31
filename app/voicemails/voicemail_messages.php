@@ -199,17 +199,11 @@ else {
 	echo th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
 	echo th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
 	echo th_order_by('message_length', $text['label-message_length'], $order_by, $order);
-	echo th_order_by('message_status', $text['label-message_status'], $order_by, $order);
 	echo "<th>".$text['label-message_size']."</th>\n";
 	echo "<th>".$text['label-tools']."</th>\n";
 	//echo th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
-	if (permission_exists('voicemail_message_add')) {
-		echo "	<a href='voicemail_message_edit.php?voicemail_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
-	}
-	else {
-		echo "	&nbsp;\n";
-	}
+	echo "<td align='right' width='21'>\n";
+	echo "	&nbsp;\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -230,18 +224,18 @@ else {
 				$message_length = round(($message_length/60), 2). " min";
 			}
 
-			echo "<tr >\n";
+			if ($row['message_status'] == '') { $style = "style=\"font-weight:bold;\""; } else { $style = ''; }
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_uuid']."&nbsp;</td>\n";
 			echo "<td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">";
 			echo "	".date("j M Y g:i a",$row['created_epoch']);
 			echo "</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_number']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$message_length."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_status']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$file_size."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_number']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$message_length."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_status']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$file_size."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' $style>\n";
 			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['voicemail_message_uuid']."&id=".$row['voicemail_id']."&ext=".$file_ext."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			//echo "			".$text['label-play']."\n";
 			//echo "		</a>\n";
@@ -252,9 +246,6 @@ else {
 			echo "	</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('voicemail_message_edit')) {
-				echo "		<a href='voicemail_message_edit.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			}
 			if (permission_exists('voicemail_message_delete')) {
 				echo "		<a href='voicemail_message_delete.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
@@ -272,12 +263,7 @@ else {
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('voicemail_message_add')) {
-		echo "			<a href='voicemail_message_edit.php?voicemail_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
-	}
-	else {
-		echo "			&nbsp;\n";
-	}
+	echo "			&nbsp;\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
