@@ -54,11 +54,27 @@ if (strlen($id)>0) {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
+
+	//get the voicemail_id
+		$sql = "select * from v_voicemails ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$voicemail_id = $row["voicemail_id"];
+		}
+		unset ($prep_statement);
+
+	//delete the recording
+		$file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$voicemail_id."/msg_".$id.".wav";
+		unlink($file_path);
 }
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_edit.php?id=$voicemail_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_messages.php?id=$voicemail_uuid\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";
