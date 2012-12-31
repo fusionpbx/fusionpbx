@@ -486,7 +486,7 @@
 	if (voicemail_action == "save") then
 
 		--voicemail prompt
-			if (greeting_id) then
+			if (string.len(greeting_id) > 0) then
 				--play the greeting
 					session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 				--record your message at the tone press any key or stop talking to end the recording
