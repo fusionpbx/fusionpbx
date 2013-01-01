@@ -114,7 +114,12 @@
 					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 				end
 				status = dbh:query(sql, function(row)
+					voicemail_uuid = string.lower(row["voicemail_uuid"]);
 					voicemail_password = row["voicemail_password"];
+					greeting_id = row["greeting_id"];
+					voicemail_mail_to = row["voicemail_mail_to"];
+					voicemail_attach_file = row["voicemail_attach_file"];
+					voicemail_local_after_email = row["voicemail_local_after_email"];
 				end);
 			end
 		--please enter your password followed by pound
@@ -505,6 +510,7 @@
 			max_len_seconds = 30;
 			silence_threshold = 30;
 			silence_seconds = 5;
+			os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
 			result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
 			--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 
@@ -589,33 +595,29 @@
 
 function main_menu ()
 	--new voicemail count
-		if (voicemail_id ~= nil) then
-			sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-				AND (message_status is null or message_status = '') ]];
+		sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
+			WHERE domain_uuid = ']] .. domain_uuid ..[['
+			AND voicemail_uuid = ']] .. voicemail_uuid ..[['
+			AND (message_status is null or message_status = '') ]];
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
-			status = dbh:query(sql, function(row)
-				new_messages = row["new_messages"];
-			end);
-		end
+		status = dbh:query(sql, function(row)
+			new_messages = row["new_messages"];
+		end);
 		dtmf_digits = macro(session, "new_messages", 200, new_messages);
 	--saved voicemail count
 		if (string.len(dtmf_digits) == 0) then
-			if (voicemail_id ~= nil) then
-				sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-					AND message_status = 'saved' ]];
+			sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND voicemail_uuid = ']] .. voicemail_uuid ..[['
+				AND message_status = 'saved' ]];
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 				end
-				status = dbh:query(sql, function(row)
-					saved_messages = row["saved_messages"];
-				end);
-			end
+			status = dbh:query(sql, function(row)
+				saved_messages = row["saved_messages"];
+			end);
 			dtmf_digits = macro(session, "saved_messages", 200, saved_messages);
 		end
 	--to listen to new message
@@ -872,6 +874,7 @@ function record_greeting()
 				max_len_seconds = 30;
 				silence_threshold = 30;
 				silence_seconds = 5;
+				os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
 				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
 				result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", max_len_seconds, silence_threshold, silence_seconds);
 				--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
@@ -955,6 +958,7 @@ function record_name()
 		max_len_seconds = 30;
 		silence_threshold = 30;
 		silence_seconds = 5;
+		os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
 		result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav", max_len_seconds, silence_threshold, silence_seconds);
 		--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 
@@ -978,8 +982,8 @@ end
 --notes
 	--record the video
 		--records audio only
-			--session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs);
 			--result = session:execute("set", "enable_file_write_buffering=false");
+			--os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
 			--session:recordFile("/tmp/recording.fsv", 200, 200, 200);
 		--records audio and video
 			--result = session:execute("record_fsv", "file.fsv");
@@ -994,6 +998,7 @@ end
 
 	--callback (works with DTMF)
 		--http://wiki.freeswitch.org/wiki/Mod_fsv
+		--os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
 		--session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs) 
 		--session:sayPhrase(macro_name [,macro_data] [,language]);
 		--session:sayPhrase("voicemail_menu", "1:2:3:#", "en");
