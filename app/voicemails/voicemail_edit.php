@@ -49,7 +49,9 @@ else {
 		$action = "add";
 	}
 
-//get http post variables and set them to php variables
+//get http variables and set them to php variables
+	$referer_path = check_str($_REQUEST["referer_path"]);
+	$referer_query = check_str($_REQUEST["referer_query"]);
 	if (count($_POST)>0) {
 		$voicemail_id = check_str($_POST["voicemail_id"]);
 		$voicemail_password = check_str($_POST["voicemail_password"]);
@@ -158,7 +160,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemails.php\">\n";
+				if ($referer_path == "/app/voicemails/voicemail_messages.php") {
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_messages.php?".$referer_query."\">\n";
+				}
+				else {
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemails.php\">\n";
+				}
 				echo "<div align='center'>\n";
 				echo "	".$text['message-update']."\n";
 				echo "</div>\n";
@@ -343,6 +350,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='voicemail_uuid' value='$voicemail_uuid'>\n";
 	}
+	$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
+	echo "				<input type='hidden' name='referer_path' value='".$http_referer['path']."'>\n";
+	echo "				<input type='hidden' name='referer_query' value='".$http_referer['query']."'>\n";
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
