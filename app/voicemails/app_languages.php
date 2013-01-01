@@ -76,14 +76,20 @@
 		$text['label-view']['en-us'] = 'View';
 		$text['label-view']['pt-pt'] = '';
 
-		$text['label-greetings']['en-us'] = 'Greetings';
-		$text['label-greetings']['pt-pt'] = '';
-
 		$text['label-true']['en-us'] = 'true';
 		$text['label-true']['pt-pt'] = '';
 
 		$text['label-false']['en-us'] = 'false';
 		$text['label-false']['pt-pt'] = 'falso';
+
+		$text['label-greetings']['en-us'] = 'Greetings';
+		$text['label-greetings']['pt-pt'] = '';
+
+		$text['button-greetings']['en-us'] = 'Greetings';
+		$text['button-greetings']['pt-pt'] = '';
+
+		$text['button-settings']['en-us'] = 'Settings';
+		$text['button-settings']['pt-pt'] = '';
 
 		$text['button-add']['en-us'] = 'Add';
 		$text['button-add']['pt-pt'] = '';
@@ -125,8 +131,11 @@
 		$text['title-voicemail_message']['en-us'] = 'Voicemail Message';
 		$text['title-voicemail_message']['pt-pt'] = '';
 
-		$text['description-voicemail_message']['en-us'] = 'Voicemail Messages.';
+		$text['description-voicemail_message']['en-us'] = 'A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.';
 		$text['description-voicemail_message']['pt-pt'] = '';
+
+		$text['label-mailbox']['en-us'] = 'Mailbox';
+		$text['label-mailbox']['pt-pt'] = '';
 
 		$text['label-voicemail_uuid']['en-us'] = 'Voicemail UUID';
 		$text['label-voicemail_uuid']['pt-pt'] = '';
