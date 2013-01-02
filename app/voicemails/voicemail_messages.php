@@ -51,6 +51,7 @@ else {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$voicemail_id = $row["voicemail_id"];
+			$voicemail_uuid = $row["voicemail_uuid"];
 		}
 		unset ($prep_statement);
 	}
@@ -123,7 +124,20 @@ else {
 	$result_count = count($result);
 
 	//loop throug the voicemail messages
-	if ($result_count > 0) {
+	if ($result_count == 0) {
+		echo "<tr><td colspan='5' align='left'>\n";
+		echo "	<br /><br />\n";
+		echo "	<b>".$text['label-mailbox'].": ".$voicemail_id."</b>&nbsp;\n";
+		echo "	\n";
+		echo "</td>\n";
+		echo "<td valign='bottom' align='right'>\n";
+		echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$voicemail_id."'\" value='".$text['button-greetings']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$voicemail_uuid."'\" value='".$text['button-settings']."'>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo $table_header;
+	}
+	else {
 		$previous_voicemail_id = '';
 		foreach($result as $row) {
 			if ($previous_voicemail_id != $row['voicemail_id']) {
