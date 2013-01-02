@@ -236,7 +236,7 @@
 				}
 
 				if (strlen($sql) == 0) { //default sql for base of the menu
-					$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid from v_menu_items as i, v_menu_languages as l ";
+					$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid from v_menu_items as i, v_menu_languages as l ";
 					$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 					$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
 					$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
@@ -341,7 +341,7 @@
 					$_SESSION['groups'][0]['group_name'] = 'public';
 				}
 
-				$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid from v_menu_items as i, v_menu_languages as l ";
+				$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
 				$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
