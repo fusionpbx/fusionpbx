@@ -755,9 +755,9 @@
 				sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
 				sql = sql .. "and d.dialplan_enabled = 'true' ";
 				sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
-				if (call_context ~= "public") then
-					sql = sql .. "and d.domain_uuid = '" .. domain_uuid .. "' ";
-				end
+				--if (call_context ~= "public") then
+				--	sql = sql .. "and d.domain_uuid = '" .. domain_uuid .. "' ";
+				--end
 				sql = sql .. "order by ";
 				sql = sql .. "d.dialplan_order asc, ";
 				sql = sql .. "d.dialplan_name asc, ";
