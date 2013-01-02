@@ -103,7 +103,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "domain_uuid, ";
 				$sql .= "voicemail_message_uuid, ";
 				$sql .= "voicemail_uuid, ";
-				$sql .= "voicemail_uuid, ";
 				$sql .= "created_epoch, ";
 				$sql .= "read_epoch, ";
 				$sql .= "caller_id_name, ";
@@ -116,7 +115,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "(";
 				$sql .= "'$domain_uuid', ";
 				$sql .= "'".uuid()."', ";
-				$sql .= "'$voicemail_uuid', ";
 				$sql .= "'$voicemail_uuid', ";
 				$sql .= "'$created_epoch', ";
 				$sql .= "'$read_epoch', ";
