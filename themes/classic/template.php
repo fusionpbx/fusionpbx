@@ -605,7 +605,6 @@ if (isset($_SESSION["reload_xml"])) {
 </tr>
 </table>
 
-
 </td>
 </tr>
 </table>
