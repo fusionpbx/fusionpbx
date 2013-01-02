@@ -97,6 +97,19 @@
 		if f~=nil then io.close(f) return true else return false end
 	end
 
+--format seconds to 00:00:00
+	function format_seconds(seconds)
+		local seconds = tonumber(seconds);
+		if seconds == 0 then
+			return "00:00:00";
+		else
+			hours = string.format("%02.f", math.floor(seconds/3600));
+			minutes = string.format("%02.f", math.floor(seconds/60 - (hours*60)));
+			seconds = string.format("%02.f", math.floor(seconds - hours*3600 - minutes *60));
+			return string.format("%02d:%02d:%02d", hours, minutes, seconds);
+		end
+	end
+
 --check the voicemail password
 	function check_password(voicemail_id)
 		--please enter your id followed by pound
@@ -526,6 +539,7 @@
 
 		--calculate the message length
 			message_length = stop_epoch - start_epoch;
+			message_length_formatted = format_seconds(message_length);
 			freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
 
 		--send the email with the voicemail recording attached
@@ -533,21 +547,21 @@
 				message = [[<font face=arial>
 				<b>Message From "]]..caller_id_name..[[" <A HREF="tel:]]..caller_id_number..[[">]]..caller_id_number..[[</A></b><br>
 				<hr noshade size=1>
-				Created: ]]..os.date("%d %b %Y", start_epoch)..[[<br>
-				Duration: ]]..message_length..[[<br>
+				Created: ]]..os.date("%A, %d %b %Y %I:%M %p", start_epoch)..[[<br>
+				Duration: ]]..message_length_formatted..[[<br>
 				Account: ]]..voicemail_id..[[@]]..domain_name..[[<br>
 				</font>]];
 				if (voicemail_attach_file == "true") then
 					freeswitch.email("",
 					"",
-					"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length,
+					"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length_formatted,
 					message,
 					voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav"
 					);
 				else
 					freeswitch.email("",
 						"",
-						"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length,
+						"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length_formatted,
 						message
 					);
 				end
