@@ -472,7 +472,7 @@ function confirmdelete(url) {
 <td align='left' valign='top'>
 <?php
 if (isset($_SESSION["reload_xml"])) {
-		if ($_SERVER["PHP_SELF"] != PROJECT_PATH."/app/sip_status/v_status.php") {
+		if ($_SERVER["PHP_SELF"] != PROJECT_PATH."/app/sip_status/sip_status.php") {
 			if(stristr($_SERVER["PHP_SELF"] , "_edit") != FALSE) { 
 				//found
 			}
