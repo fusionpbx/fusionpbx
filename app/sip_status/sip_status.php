@@ -101,7 +101,7 @@ if (strlen($msg) > 0) {
 		catch(Exception $e) {
 			echo $e->getMessage();
 		}
-
+		echo "<br />\n";
 		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='50%'>\n";
@@ -153,7 +153,7 @@ if (strlen($msg) > 0) {
 		}
 		echo "</table>\n";
 		unset($xml);
-		echo "<br /><br />\n\n";
+		echo "<br />\n\n";
 	}
 
 //sofia status profile
