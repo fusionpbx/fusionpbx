@@ -70,7 +70,7 @@ echo "<br />";
 	echo "		".$text['label-voicemail'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
-	echo "		<a href='".PROJECT_PATH."/app/voicemail_msgs/v_voicemail_msgs.php'>".$text['label-view-messages']."</a> \n";
+	echo "		<a href='".PROJECT_PATH."/app/voicemails/voicemail_messages.php'>".$text['label-view-messages']."</a> \n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
