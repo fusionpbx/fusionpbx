@@ -110,11 +110,23 @@
 		end
 	end
 
+--get the voicemail id
+	function get_voicemail_id()
+		voicemail_id = macro(session, "voicemail_id", 5000, '');
+		if (string.len(voicemail_id) == 0) then
+			if (session:ready()) then
+				voicemail_id = get_voicemail_id();
+			end
+		else
+			return voicemail_id;
+		end
+	end
+
 --check the voicemail password
 	function check_password(voicemail_id)
 		--please enter your id followed by pound
 			if (not voicemail_id) then
-				voicemail_id = macro(session, "voicemail_id", 5000, '');
+				voicemail_id = get_voicemail_id();
 				freeswitch.consoleLog("notice", "[voicemail] voicemail id: " .. voicemail_id .. "\n");
 			end
 		--get the voicemail settings from the database
