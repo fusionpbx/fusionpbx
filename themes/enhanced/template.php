@@ -699,7 +699,7 @@ function confirmdelete(url) {
 						<td class='main_content' align='left' valign='top' width='85%'>
 							<?php
 							/*
-							if ($_SESSION["reload_xml"]) {
+							if (isset($_SESSION["reload_xml"])) {
 									if ($_SESSION['apply_settings'] == "true") {
 										//show the apply settings prompt
 									}

@@ -738,7 +738,7 @@ function confirmdelete(url) {
 </td>
 <td class='main_content' align='left' valign='top' width='85%'>
 <?php
-if ($_SESSION["reload_xml"]) {
+if (isset($_SESSION["reload_xml"])) {
 	if ($_SERVER["PHP_SELF"] != PROJECT_PATH."/app/sip_status/sip_status.php") {
 		if(stristr($_SERVER["PHP_SELF"], "_edit") != FALSE) { 
 			//found
