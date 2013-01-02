@@ -198,6 +198,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 	}
 
+//set defaults
+	if (strlen($voicemail_attach_file) == 0) { $voicemail_attach_file = "true"; }
+	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
+	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
+
 //show the header
 	require_once "includes/header.php";
 
@@ -266,7 +271,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='voicemail_attach_file'>\n";
-	echo "	<option value=''></option>\n";
 	if ($voicemail_attach_file == "true") { 
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -291,7 +295,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='voicemail_local_after_email'>\n";
-	echo "	<option value=''></option>\n";
 	if ($voicemail_local_after_email == "true") { 
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
@@ -316,7 +319,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='voicemail_enabled'>\n";
-	echo "	<option value=''></option>\n";
 	if ($voicemail_enabled == "true") { 
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
