@@ -233,6 +233,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	echo "}\n";
 	echo "</script>";
 
+	echo "<br />\n";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
