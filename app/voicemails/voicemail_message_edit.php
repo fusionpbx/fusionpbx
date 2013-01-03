@@ -200,7 +200,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Voicemail Messages</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>Voicemail Messages</b></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_edit.php?id=$voicemail_uuid'\" value='Back'></td>\n";
 	echo "</tr>\n";
 
