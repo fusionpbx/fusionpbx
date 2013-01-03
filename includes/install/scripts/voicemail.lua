@@ -172,11 +172,9 @@
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
-			status = dbh:query(sql, function(row)
-				voicemail_password = row["voicemail_password"];
-			end);
-		--you password has been changed
-			macro(session, "password_changed", 5000, '');
+			dbh:query(sql);
+		--has been changed to
+			macro(session, "password_changed", 3000, password);
 		--advanced menu
 			advanced();
 	end
@@ -385,10 +383,11 @@
 					actions = {}
 					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-enter_new_pin.wav"});
 				end
-			--Your password has been changed
+			--Has been changed to
 				if (name == "password_changed") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-password_has_been_changed.wav"});
+					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-has_been_changed_to.wav"});
+					table.insert(actions, {app="say.number.iterated",data=param});
 				end
 			--Login Incorrect
 				--if (name == "password_not_valid") then
