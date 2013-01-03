@@ -484,6 +484,69 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "app/provision/provision_write.php";
 				}
 
+			//determine the voicemail_id
+				if (is_numeric($extension)) {
+					$voicemail_id = $extension;
+				}
+				else {
+					$voicemail_id = $number_alias;
+				}
+
+			//update the voicemail settings
+				$sql = "select * from v_voicemails ";
+				$sql .= "where domain_uuid = '$domain_uuid' ";
+				$sql .= "and voicemail_id = '$voicemail_id' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (count($result) == 0) {
+					//add the voicemail box
+						$sql = "insert into v_voicemails ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "voicemail_uuid, ";
+						$sql .= "voicemail_id, ";
+						$sql .= "voicemail_password, ";
+						if (strlen($greeting_id) > 0) {
+							$sql .= "greeting_id, ";
+						}
+						$sql .= "voicemail_mail_to, ";
+						$sql .= "voicemail_attach_file, ";
+						$sql .= "voicemail_local_after_email, ";
+						$sql .= "voicemail_enabled, ";
+						$sql .= "voicemail_description ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$domain_uuid', ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'$voicemail_id', ";
+						$sql .= "'$vm_password', ";
+						$sql .= "'$vm_mailto', ";
+						$sql .= "'$vm_attach_file', ";
+						$sql .= "'$vm_keep_local_after_email', ";
+						$sql .= "'$vm_enabled', ";
+						$sql .= "'$description' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
+				}
+				else {
+					//update the voicemail box
+					$sql = "update v_voicemails set ";
+					$sql .= "voicemail_password = '$vm_password', ";
+					$sql .= "voicemail_mail_to = '$vm_mailto', ";
+					$sql .= "voicemail_attach_file = '$vm_attach_file', ";
+					$sql .= "voicemail_local_after_email = '$vm_keep_local_after_email', ";
+					$sql .= "voicemail_enabled = '$vm_enabled', ";
+					$sql .= "voicemail_description = '$description' ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and voicemail_id = '$voicemail_id'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+				unset ($prep_statement);
+
 			//show the action and redirect the user
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
