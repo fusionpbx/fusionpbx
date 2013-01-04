@@ -103,32 +103,4 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the member type.';
 		$z++;
 
-		$y = 2; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_meeting_users';
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'meeting_user_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'primary';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'meeting_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'user_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'user_uuid';
-		$z++;
-
 ?>

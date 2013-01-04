@@ -135,7 +135,7 @@
 			foreach($result_defaults_settings as $row) {
 				$name = $row['default_setting_name'];
 				$category = $row['default_setting_category'];
-				$subcategory = $row['default_setting_subcategory'];	
+				$subcategory = $row['default_setting_subcategory'];
 				if (strlen($subcategory) == 0) {
 					$_SESSION[$category][$name] = $row['default_setting_value'];
 				}
@@ -154,7 +154,7 @@
 			foreach($result as $row) {
 				$name = $row['domain_setting_name'];
 				$category = $row['domain_setting_category'];
-				$subcategory = $row['domain_setting_subcategory'];	
+				$subcategory = $row['domain_setting_subcategory'];
 				if (strlen($subcategory) == 0) {
 					//$$category[$name] = $row['domain_setting_value'];
 					$_SESSION[$category][$name] = $row['domain_setting_value'];
