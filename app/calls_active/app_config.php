@@ -70,7 +70,7 @@
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][5]['name'] = 'extensions_active_view';
-		$apps[$x]['permissions'][5]['groups'][] = 'user';
+		//$apps[$x]['permissions'][5]['groups'][] = 'user';
 		$apps[$x]['permissions'][5]['groups'][] = 'admin';
 		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
 

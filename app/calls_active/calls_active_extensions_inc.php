@@ -108,6 +108,7 @@ else {
 		echo "</div>\n";
 	}
 	else {
+
 		//get the agent list from event socket
 			$switch_cmd = 'callcenter_config agent list';
 			$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
@@ -137,39 +138,39 @@ else {
 			}
 
 		//send the api command over event socket
-			$switch_cmd = 'valet_info';
-			$valet_xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
+			//$switch_cmd = 'valet_info';
+			//$valet_xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 
 		//parse the xml
-			try {
-				$valet_xml = new SimpleXMLElement($valet_xml_str);
-			}
-			catch(Exception $e) {
-				//echo $e->getMessage();
-			}
-			$valet_xml = new SimpleXMLElement($valet_xml_str);
-			foreach ($valet_xml as $row) {
-				$valet_name = (string) $row->attributes()->name;
-				foreach ($row->extension as $row2) {
-					$extension = (string) $row2;
-					$uuid = (string) $row2->attributes()->uuid;
-					$uuid = trim($uuid);
-					$valet_array[$uuid]['name'] = $valet_name;
-					$valet_array[$uuid]['extension'] = $extension;
-				}
-			}
+			//try {
+			//	$valet_xml = new SimpleXMLElement($valet_xml_str);
+			//}
+			//catch(Exception $e) {
+			//	//echo $e->getMessage();
+			//}
+			//$valet_xml = new SimpleXMLElement($valet_xml_str);
+			//foreach ($valet_xml as $row) {
+			//	$valet_name = (string) $row->attributes()->name;
+			//	foreach ($row->extension as $row2) {
+			//		$extension = (string) $row2;
+			//		$uuid = (string) $row2->attributes()->uuid;
+			//		$uuid = trim($uuid);
+			//		$valet_array[$uuid]['name'] = $valet_name;
+			//		$valet_array[$uuid]['extension'] = $extension;
+			//	}
+			//}
 
 		//send the event socket command
 			$switch_cmd = 'show channels as xml';
 			$xml_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 
 		//parse the xml
-				try {
-					$xml = new SimpleXMLElement($xml_str);
-				}
-				catch(Exception $e) {
-					//echo $e->getMessage();
-				}
+			try {
+				$xml = new SimpleXMLElement($xml_str);
+			}
+			catch(Exception $e) {
+				//echo $e->getMessage();
+			}
 
 		//active channels array
 				$channels_array = '';
@@ -236,12 +237,12 @@ else {
 						$channels_array[$x]['call_length'] = $call_length;
 
 					//valet park
-						if (is_array($valet_array[$uuid])) {
-							$valet_array[$uuid]['context'] = $channels_array[$x]['context'];
-							$valet_array[$uuid]['cid_name'] = $channels_array[$x]['cid_name'];
-							$valet_array[$uuid]['cid_num'] = $channels_array[$x]['cid_num'];
-							$valet_array[$uuid]['call_length'] = $call_length;
-						}
+						//if (is_array($valet_array[$uuid])) {
+						//	$valet_array[$uuid]['context'] = $channels_array[$x]['context'];
+						//	$valet_array[$uuid]['cid_name'] = $channels_array[$x]['cid_name'];
+						//	$valet_array[$uuid]['cid_num'] = $channels_array[$x]['cid_num'];
+						//	$valet_array[$uuid]['call_length'] = $call_length;
+						//}
 					//increment the array index
 						$x++;
 				}
@@ -525,29 +526,29 @@ else {
 
 				echo "</table>\n";
 				echo "<br /><br />\n";
-
 				//valet park
-					echo "<table width='100%' border='0' cellpadding='5' cellspacing='0'>\n";
-					echo "<tr>\n";
-					echo "<th valign='top'>".$text['label-park-ext']."</th>\n";
-					echo "<th valign='top'>".$text['label-time']."</th>\n";
-					echo "<th valign='top'>".$text['label-cid-name']."</th>\n";
-					echo "<th valign='top'>".$text['label-cid-number']."</th>\n";
-					echo "</tr>\n";
-					foreach ($valet_array as $row) {
-						if (strlen($row['extension']) > 0) {
-							if ($row['context'] == $_SESSION['domain_name'] || $row['context'] == "default") {
-								echo "<tr>\n";
-								echo "<td valign='top' class='".$row_style[$c]."' >*".$row['extension']."</td>\n";
-								echo "<td valign='top' class='".$row_style[$c]."' >".$row['call_length']."</td>\n";
-								echo "<td valign='top' class='".$row_style[$c]."' >".$row['cid_name']."</td>\n";
-								echo "<td valign='top' class='".$row_style[$c]."' >".$row['cid_num']."</td>\n";
-								echo "</tr>\n";
-							}
-						}
-					}
-					echo "<table>\n";
-			}
+					//echo "<table width='100%' border='0' cellpadding='5' cellspacing='0'>\n";
+					//echo "<tr>\n";
+					//echo "<th valign='top'>".$text['label-park-ext']."</th>\n";
+					//echo "<th valign='top'>".$text['label-time']."</th>\n";
+					//echo "<th valign='top'>".$text['label-cid-name']."</th>\n";
+					//echo "<th valign='top'>".$text['label-cid-number']."</th>\n";
+					//echo "</tr>\n";
+					//foreach ($valet_array as $row) {
+					//	if (strlen($row['extension']) > 0) {
+					//		if ($row['context'] == $_SESSION['domain_name'] || $row['context'] == "default") {
+					//			echo "<tr>\n";
+					//			echo "<td valign='top' class='".$row_style[$c]."' >*".$row['extension']."</td>\n";
+					//			echo "<td valign='top' class='".$row_style[$c]."' >".$row['call_length']."</td>\n";
+					//			echo "<td valign='top' class='".$row_style[$c]."' >".$row['cid_name']."</td>\n";
+					//			echo "<td valign='top' class='".$row_style[$c]."' >".$row['cid_num']."</td>\n";
+					//			echo "</tr>\n";
+					//		}
+					//	}
+					//}
+					//echo "<table>\n";
+
+			} //end permission
 
 		echo "<br /><br />\n";
 
