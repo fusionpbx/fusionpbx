@@ -205,8 +205,8 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Directory';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'Dial by name directory.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_distributor":
 						$mod['module_label'] = 'Distributor';
@@ -331,8 +331,8 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'LCR';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'Least cost routing.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_local_stream":
 						$mod['module_label'] = 'Local Stream';
@@ -366,8 +366,8 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Memcached';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'API for memcached.';
-						$mod['module_enabled'] = 'false';
-						$mod['module_default_enabled'] = 'false';
+						$mod['module_enabled'] = 'true';
+						$mod['module_default_enabled'] = 'true';
 						break;
 					case "mod_native_file":
 						$mod['module_label'] = 'Native File';
@@ -610,22 +610,22 @@ echo $mod->dir."\n";
 						$mod['module_label'] = 'Valet Parking';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'Call parking';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_voicemail":
 						$mod['module_label'] = 'Voicemail';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'Full featured voicemail module.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_voicemail_ivr":
 						$mod['module_label'] = 'Voicemail IVR';
 						$mod['module_category'] = 'Applications';
 						$mod['module_description'] = 'Voicemail IVR interface.';
-						$mod['module_enabled'] = 'true';
-						$mod['module_default_enabled'] = 'true';
+						$mod['module_enabled'] = 'false';
+						$mod['module_default_enabled'] = 'false';
 						break;
 					case "mod_xml_cdr":
 						$mod['module_label'] = 'XML CDR';
