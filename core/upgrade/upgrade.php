@@ -89,10 +89,9 @@ if ($display_type == 'text') {
 		echo "<br />\n";
 		echo "<br />\n";
 	}
-
-if ($display_type == 'text') {
-	echo "\n";
-}
+	elseif ($display_type == 'text') {
+		echo "\n";
+	}
 
 //include the footer
 	if ($display_results) {
