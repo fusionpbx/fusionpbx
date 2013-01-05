@@ -31,8 +31,8 @@ include "root.php";
 	session_unset();
 	session_destroy();
 
-//redirect the user to the login page
-	header("Location: ".PROJECT_PATH."/login.php");
+//redirect the user to the index page
+	header("Location: ".PROJECT_PATH."/");
 	return;
 
 ?>
