@@ -385,7 +385,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //set default values
 	if (strlen($record) == 0) { $record = 'false'; }
 	if (strlen($max_members) == 0) { $max_members = 0; }
-	if (strlen($wait_mod) == 0) { $wait_mod = 'false'; }
+	if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
 	if (strlen($announce) == 0) { $announce = 'true'; }
 	//if ($action == "add") {
 	//	if (strlen($enter_sound) == 0) { $enter_sound = 'tone_stream://%(200,0,500,600,700)'; }
