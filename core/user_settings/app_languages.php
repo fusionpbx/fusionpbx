@@ -63,8 +63,8 @@
 	$content_users['confirm-update']['en-us'] = 'Update Complete';
 	$content_users['confirm-update']['pt-pt'] = 'Actualização Completa';
 
-	$text['title-user-information']['en-us'] = 'User Information';
-	$text['title-user-information']['pt-pt'] = 'Informação do Utilizador';
+	$text['title-user-settings']['en-us'] = 'User Information';
+	$text['title-user-settings']['pt-pt'] = 'Informação do Utilizador';
 
 	$text['label-username']['en-us'] = 'User Name';
 	$text['label-username']['pt-pt'] = 'Nome do Utilizador';

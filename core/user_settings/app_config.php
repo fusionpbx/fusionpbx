@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '4d532f0b-c206-c39d-ff33-fc67d668fb69';
 		$apps[$x]['menu'][0]['parent_uuid'] = '02194288-6d56-6d3e-0b1a-d53a2bc10788';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = 'user/user_edit.php';
+		$apps[$x]['menu'][0]['path'] = '/core/user_settings/user_edit.php';
 		$apps[$x]['menu'][0]['groups'][] = 'user';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
