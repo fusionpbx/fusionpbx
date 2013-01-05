@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = 'c85bf816-b88d-40fa-8634-11b456928afa';
 		$apps[$x]['menu'][0]['parent_uuid'] = '';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/core/login/login.php';
+		$apps[$x]['menu'][0]['path'] = '/login.php';
 		$apps[$x]['menu'][0]['groups'][] = 'public';
 		$apps[$x]['menu'][0]['order'] = '99';
 
