@@ -53,8 +53,8 @@ else {
 	if (count($_POST) > 0) {
 		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
 		$meeting_uuid = check_str($_POST["meeting_uuid"]);
-		$member_pin = check_str($_POST["member_pin"]);
-		$member_type = check_str($_POST["member_type"]);
+		$moderator_pin = check_str($_POST["moderator_pin"]);
+		$participant_pin = check_str($_POST["participant_pin"]);
 		$profile = check_str($_POST["profile"]);
 		$record = check_str($_POST["record"]);
 		$user_uuid = check_str($_POST["user_uuid"]);
@@ -69,7 +69,8 @@ else {
 		$description = check_str($_POST["description"]);
 
 		//remove any pin number formatting
-		$member_pin = preg_replace('{\D}', '', $member_pin);
+		$moderator_pin = preg_replace('{\D}', '', $moderator_pin);
+		$participant_pin = preg_replace('{\D}', '', $participant_pin);
 	}
 
 //delete the user
@@ -112,16 +113,29 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for a unique pin number and length
-		if (strlen($member_pin) > 0) {
+		if (strlen($moderator_pin) > 0) {
 			$sql = "select count(*) as num_rows from v_meeting_pins ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and member_pin = '".$member_pin."' ";
+			$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+			$sql .= "and member_pin = '".$moderator_pin."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			if ($prep_statement) {
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] > 0) {
-					$msg .= "Please provide a unique pin number.<br>\n";
+					$msg .= "Please provide a unique moderator pin number.<br>\n";
+				}
+			}
+			$sql = "select count(*) as num_rows from v_meeting_pins ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+			$sql .= "and member_pin = '".$participant_pin."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					$msg .= "Please provide a unique participant pin number.<br>\n";
 				}
 			}
 			$sql = "select conference_center_pin_length from v_conference_centers ";
@@ -131,8 +145,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($prep_statement) {
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if (strlen($member_pin) != $row['conference_center_pin_length']) {
-					$msg .= "Please provide a PIN number that is the required length\n";
+				if (strlen($moderator_pin) != $row['conference_center_pin_length']) {
+					$msg .= "Please provide a moderator PIN number that is the required length\n";
+				}
+				if (strlen($participant_pin) != $row['conference_center_pin_length']) {
+					$msg .= "Please provide a participant PIN number that is the required length\n";
 				}
 			}
 		}
@@ -319,8 +336,29 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 				}
 
-			//assign the pin numbers to the meeting
-				if (strlen($member_pin) > 0) {
+			//get the pin numbers for the meeting
+				$sql = "SELECT * FROM v_meeting_pins ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and meeting_uuid = '".$meeting_uuid."' ";
+				$sql .= "order by member_pin asc ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$result_count = count($result);
+				foreach($result as $field) {
+					if ($field['member_type'] == "moderator") {
+						$moderator_member_pin = $field['member_pin'];
+						$moderator_pin_uuid = $field['meeting_pin_uuid'];
+					}
+					else {
+						$participant_member_pin = $field['member_pin'];
+						$participant_pin_uuid = $field['meeting_pin_uuid'];
+					}
+				}
+
+			//add or update the moderator_pin
+				if (strlen($moderator_member_pin) == 0) {
+					//add
 					$meeting_pin_uuid = uuid();
 					$sql = "insert into v_meeting_pins ";
 					$sql .= "(";
@@ -335,10 +373,53 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$domain_uuid', ";
 					$sql .= "'$meeting_pin_uuid', ";
 					$sql .= "'$meeting_uuid', ";
-					$sql .= "'$member_pin', ";
-					$sql .= "'$member_type' ";
+					$sql .= "'$moderator_pin', ";
+					$sql .= "'moderator' ";
 					$sql .= ")";
 					//echo $sql; //exit;
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+				else {
+					//update
+					$sql = "update v_meeting_pins set ";
+					$sql .= "member_pin = '$moderator_pin' ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and meeting_pin_uuid = '$moderator_pin_uuid' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+
+			//add or update the participant_pin
+				if (strlen($participant_member_pin) == 0) {
+					//add
+					$meeting_pin_uuid = uuid();
+					$sql = "insert into v_meeting_pins ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "meeting_pin_uuid, ";
+					$sql .= "meeting_uuid, ";
+					$sql .= "member_pin, ";
+					$sql .= "member_type ";
+					$sql .= ") ";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$domain_uuid', ";
+					$sql .= "'$meeting_pin_uuid', ";
+					$sql .= "'$meeting_uuid', ";
+					$sql .= "'$participant_pin', ";
+					$sql .= "'participant' ";
+					$sql .= ")";
+					//echo $sql; //exit;
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+				else {
+					//update
+					$sql = "update v_meeting_pins set ";
+					$sql .= "member_pin = '$participant_pin' ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and meeting_pin_uuid = '$participant_pin_uuid' ";
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
@@ -380,6 +461,30 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$description = $row["description"];
 		}
 		unset ($prep_statement);
+	}
+
+//get the pin numbers
+	if ($action == "update") {
+		$sql = "SELECT * FROM v_meeting_pins ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and meeting_uuid = '".$meeting_uuid."' ";
+		$sql .= "order by member_pin asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		foreach($result as $field) {
+			$member_pin = $field['member_pin'];
+			if (strlen($member_pin) == 9)  {
+				$member_pin = substr($member_pin, 0, 3) ."-".  substr($member_pin, 3, 3) ."-". substr($member_pin, -3)."\n";
+			}
+			if ($field['member_type'] == "moderator") {
+				$moderator_pin = $member_pin;
+			}
+			else {
+				$participant_pin = $member_pin;
+			}
+		}
 	}
 
 //set default values
@@ -495,71 +600,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-member-pin'].":</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin'].":</td>";
 	echo "		<td class='vtable' align='left'>";
-	if ($action == "update") {
-		echo "			<table border='0' style='width : 235px;'>\n";
-		$sql = "SELECT * FROM v_meeting_pins ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and meeting_uuid = '".$meeting_uuid."' ";
-		$sql .= "order by member_pin asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		foreach($result as $field) {
-			$member_pin = $field['member_pin'];
-			if (strlen($member_pin) == 9)  {
-				$member_pin = substr($member_pin, 0, 3) ."-".  substr($member_pin, 3, 3) ."-". substr($member_pin, -3)."\n";
-			}
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>".$member_pin."</td>\n";
-			echo "				<td class='vtable'>";
-			if ($field['member_type'] == "moderator") {
-				echo $text['label-member-type-moderator'];
-			}
-			else {
-				echo $text['label-member-type-participant'];
-			}
-			echo "</td>\n";
-			echo "				<td style='width : 25px;' align='right'>\n";
-			echo "					<a href='conference_room_edit.php?meeting_pin_uuid=".$field['meeting_pin_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
-			echo "				</td>\n";
-			echo "			</tr>\n";
-		}
-		echo "			</table>\n";
-	}
+	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='$moderator_pin'>\n";
 	echo "			<br />\n";
-	echo "			<table border='0' style='width : 245px;'>\n";
-	echo "				<tr>\n";
-	echo "				<td nowrap='nowrap'>\n";
-	echo "					<input class='formfld' type='text' name='member_pin' style='width : 125px;' value=''>\n";
-	echo "				</td>\n";
-	echo "				<td>\n";
-	echo "					<select class='formfld' name='member_type' style='width : 100px;'>\n";
-	if ($member_type == "participant") {
-		echo "				<option value='participant' selected='selected'>".$text['label-member-type-participant']."</option>\n";
-	}
-	else {
-		echo "				<option value='participant'>".$text['label-member-type-participant']."</option>\n";
-	}
-	if ($member_type == "moderator") { 
-		echo "				<option value='moderator' selected='selected'>".$text['label-member-type-moderator']."</option>\n";
-	}
-	else {
-		echo "				<option value='moderator'>".$text['label-member-type-moderator']."</option>\n";
-	}
-	echo "					</select>\n";
-	echo "				</td>\n";
-	if ($action == "update") {
-		echo "				<td>\n";
-		echo "					<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-		echo "				</td>\n";
-	}
-	echo "				</tr>\n";
-	echo "			</table>\n";
-	unset($sql, $result);
-	echo "			".$text['description-member-pin'].".\n";
+	echo "			".$text['description-moderator-pin']."\n";
+	echo "			<br />\n";
+	echo "		</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-participant-pin'].":</td>";
+	echo "		<td class='vtable' align='left'>";
+	echo "  		<input class='formfld' type='text' name='participant_pin' maxlength='255' value='$participant_pin'>\n";
+	echo "			<br />\n";
+	echo "			".$text['description-participant-pin']."\n";
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
