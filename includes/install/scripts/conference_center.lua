@@ -348,7 +348,9 @@
 
 			--set flags and moderator controls
 				if (mute == "true") then
-					flags = flags .. "mute";
+					if (member_type == "participant") then
+						flags = flags .. "mute";
+					end
 				end
 				if (member_type == "moderator") then
 					--set as the moderator
