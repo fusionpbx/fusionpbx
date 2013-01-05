@@ -1,9 +1,14 @@
-<?php
+﻿<?php
 
-	$content_users['label-username']['en-us'] = 'Username';
-	$content_users['label-username']['pt-pt'] = 'Nome de Utilizador';
+	$text['label-username']['en-us'] = 'Username';
+	$text['label-username']['pt-pt'] = 'Nome de Utilizador';
 
-	$content_users['label-password']['en-us'] = 'Password';
-	$content_users['label-password']['pt-pt'] = 'Palavra passe';
+	$text['label-password']['en-us'] = 'Password';
+	$text['label-password']['pt-pt'] = 'Palavra passe';
 
+	$text['label-domain']['en-us'] = 'Domain';
+	$text['label-domain']['pt-pt'] = '';
+
+	$text['button-login']['en-us'] = 'Login';
+	$text['button-login']['pt-pt'] = '';
 ?>
