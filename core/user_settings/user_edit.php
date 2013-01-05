@@ -36,9 +36,10 @@ else {
 	return;
 }
 
-
-        foreach($content_users as $key => $value) {
-		$content_users[$key] = $value[$_SESSION['domain']['language']['code']];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //set the username from v_users
@@ -87,7 +88,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 
 	$msg = '';
 	//if (strlen($password) == 0) { $msg .= "Password cannot be blank.<br>\n"; }
-	if ($password != $confirm_password) { $msg .= "".$content_users['confirm-password']."<br>\n"; }
+	if ($password != $confirm_password) { $msg .= "".$text['confirm-password']."<br>\n"; }
 	//if (strlen($user_time_zone) == 0) { $msg .= "Please provide an time zone.<br>\n"; }
 
 	if (strlen($msg) > 0) {
@@ -200,7 +201,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 	//redirect the browser
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/core/user_settings/user_edit.php\">\n";
-		echo "<div align='center'>".$content_users['confirm-update']."</div>";
+		echo "<div align='center'>".$text['confirm-update']."</div>";
 		require_once "includes/footer.php";
 		return;
 }
@@ -235,15 +236,15 @@ else {
 	echo "<td>\n";
 
 	echo "<table $table_width cellpadding='3' cellspacing='0' border='0'>";
-	echo "<td align='left' width='90%' nowrap><b>".$content_users['title']."</b></td>\n";
+	echo "<td align='left' width='90%' nowrap><b>".$text['title']."</b></td>\n";
 	echo "<td nowrap='nowrap'>\n";
-	echo "	<input type='submit' name='submit' class='btn' value='".$content_users['button-save']."'>";
-	echo "	<input type='button' class='btn' onclick=\"window.location='".$_SESSION['login']['destination']['url']."'\" value='".$content_users['button-back']."'>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<input type='button' class='btn' onclick=\"window.location='".$_SESSION['login']['destination']['url']."'\" value='".$text['button-back']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "	".$content_users['description']." \n";
+	echo "	".$text['description']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -252,20 +253,20 @@ else {
 
 	echo "<table $table_width cellpadding='6' cellspacing='0' border='0'>";
 	echo "<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>".$content_users['table-title']."</th>\n";
+	echo "	<th class='th' colspan='2' align='left'>".$text['table-title']."</th>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncellreq'>".$content_users['label-username'].":</td>";
+	echo "		<td width='30%' class='vncellreq'>".$text['label-username'].":</td>";
 	echo "		<td width='70%' class='vtable'>$username</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$content_users['label-password'].":</td>";
+	echo "		<td class='vncell'>".$text['label-password'].":</td>";
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$content_users['label-confirm-password'].":</td>";
+	echo "		<td class='vncell'>".$text['label-confirm-password'].":</td>";
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' value=\"\"></td>";
 	echo "	</tr>";
 
@@ -277,7 +278,7 @@ else {
 
 	echo "<table $table_width cellpadding='6' cellspacing='0'>";
 	echo "	<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>".$content_users['table2-title']."</th>\n";
+	echo "	<th class='th' colspan='2' align='left'>".$text['table2-title']."</th>\n";
 	echo "	</tr>\n";
 
 	if ($_SESSION['user_status_display'] == "false") {
@@ -286,44 +287,44 @@ else {
 	else {
 		echo "	<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		".$content_users['label-status'].":\n";
+		echo "		".$text['label-status'].":\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
 		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		if ($user_status == "Available") {
-			echo "		<option value='Available' selected='selected'>".$content_users['check-available-status']."</option>\n";
+			echo "		<option value='Available' selected='selected'>".$text['check-available-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Available'>".$content_users['check-available-status']."</option>\n";
+			echo "		<option value='Available'>".$text['check-available-status']."</option>\n";
 		}
 		if ($user_status == "Available (On Demand)") {
-			echo "		<option value='Available (On Demand)' selected='selected'>".$content_users['check-available-ondemand-status']."</option>\n";
+			echo "		<option value='Available (On Demand)' selected='selected'>".$text['check-available-ondemand-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Available (On Demand)'>".$content_users['check-available-ondemand-status']."</option>\n";
+			echo "		<option value='Available (On Demand)'>".$text['check-available-ondemand-status']."</option>\n";
 		}
 		if ($user_status == "Logged Out") {
-			echo "		<option value='Logged Out' selected='selected'>".$content_users['check-loggedout-status']."</option>\n";
+			echo "		<option value='Logged Out' selected='selected'>".$text['check-loggedout-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Logged Out'>".$content_users['check-loggedout-status']."</option>\n";
+			echo "		<option value='Logged Out'>".$text['check-loggedout-status']."</option>\n";
 		}
 		if ($user_status == "On Break") {
-			echo "		<option value='On Break' selected='selected'>".$content_users['check-onbreak-status']."</option>\n";
+			echo "		<option value='On Break' selected='selected'>".$text['check-onbreak-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='On Break'>".$content_users['check-onbreak-status']."</option>\n";
+			echo "		<option value='On Break'>".$text['check-onbreak-status']."</option>\n";
 		}
 		if ($user_status == "Do Not Disturb") {
-			echo "		<option value='Do Not Disturb' selected='selected'>".$content_users['check-do-not-disturb-status']."</option>\n";
+			echo "		<option value='Do Not Disturb' selected='selected'>".$text['check-do-not-disturb-status']."</option>\n";
 		}
 		else {
-			echo "		<option value='Do Not Disturb'>".$content_users['check-do-not-disturb-status']."</option>\n";
+			echo "		<option value='Do Not Disturb'>".$text['check-do-not-disturb-status']."</option>\n";
 		}
 		echo "		</select>\n";
 		echo "		<br />\n";
-		echo "		".$content_users['description-status']."<br />\n";
+		echo "		".$text['description-status']."<br />\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 	}
@@ -364,7 +365,7 @@ else {
 
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		".$content_users['label-time'].": \n";
+	echo "		".$text['label-time'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
 	echo "		<select id='user_time_zone' name='user_time_zone' class='formfld' style=''>\n";
@@ -393,7 +394,7 @@ else {
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
-	echo "		".$content_users['description-timezone']."<br />\n";
+	echo "		".$text['description-timezone']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>";
@@ -403,7 +404,7 @@ else {
 	echo "<table $table_width>";
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
-	echo "			<input type='submit' name='submit' class='btn' value='".$content_users['button-save']."'>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
