@@ -25,7 +25,7 @@
 */
 include "root.php";
 if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")){
-	header("Location: ".PROJECT_PATH."/install.php");
+	header("Location: ".PROJECT_PATH."/resources/install.php");
 	exit;
 }
 require_once "includes/require.php";
