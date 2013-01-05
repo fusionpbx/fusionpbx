@@ -21,6 +21,12 @@
 	$text['label-password']['en-us'] = 'Password';
 	$text['label-password']['pt-pt'] = 'Palavra passe';
 
+	$text['label-domain']['en-us'] = 'Domain';
+	$text['label-domain']['pt-pt'] = '';
+
+	$text['button-login']['en-us'] = 'Login';
+	$text['button-login']['pt-pt'] = '';
+
 	$text['label-confirm-password']['en-us'] = 'Confirm Password';
 	$text['label-confirm-password']['pt-pt'] = 'Confirme Palavra Chave';
 
@@ -65,9 +71,6 @@
 
 	$text['title-user-settings']['en-us'] = 'User Information';
 	$text['title-user-settings']['pt-pt'] = 'Informação do Utilizador';
-
-	$text['label-username']['en-us'] = 'User Name';
-	$text['label-username']['pt-pt'] = 'Nome do Utilizador';
 
 	$text['label-voicemail']['en-us'] = 'Voicemail';
 	$text['label-voicemail']['pt-pt'] = 'Correio de Voz';

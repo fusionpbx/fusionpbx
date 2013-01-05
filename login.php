@@ -34,9 +34,7 @@ include "root.php";
 	require_once "includes/require.php";
 
 //add multi-lingual support
-	echo "<!--\n";
-	require_once "core/login/app_languages.php";
-	echo "-->\n";
+	require_once "core/user_settings/app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
