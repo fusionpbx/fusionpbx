@@ -50,7 +50,7 @@
 		$apps[$x]['menu'][1]['uuid'] = '02194288-6d56-6d3e-0b1a-d53a2bc10788';
 		$apps[$x]['menu'][1]['parent_uuid'] = '';
 		$apps[$x]['menu'][1]['category'] = 'internal';
-		$apps[$x]['menu'][1]['path'] = '/index2.php';
+		$apps[$x]['menu'][1]['path'] = '/app/user/user_dashboard.php';
 		$apps[$x]['menu'][1]['order'] = '5';
 		$apps[$x]['menu'][1]['groups'][] = 'user';
 		$apps[$x]['menu'][1]['groups'][] = 'admin';
@@ -115,7 +115,7 @@
 		$apps[$x]['menu'][5]['uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][5]['parent_uuid'] = '';
 		$apps[$x]['menu'][5]['category'] = 'internal';
-		$apps[$x]['menu'][5]['path'] = '/app/exec/v_exec.php';
+		$apps[$x]['menu'][5]['path'] = '/app/exec/exec.php';
 		$apps[$x]['menu'][5]['order'] = '30';
 		$apps[$x]['menu'][5]['groups'][] = 'superadmin';
 
