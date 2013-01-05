@@ -24,13 +24,14 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "includes/require.php";
-
 //if config.php does not exist then redirect to the install.php.
 	if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")){
 		header("Location: ".PROJECT_PATH."/resources/install.php");
 		exit;
 	}
+
+//adds multiple includes
+	require_once "includes/require.php";
 
 //add multi-lingual support
 	echo "<!--\n";
