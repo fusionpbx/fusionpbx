@@ -120,11 +120,20 @@
 		$text['button-add']['en-us'] = 'Add';
 		$text['button-add']['pt-pt'] = '';
 
+		$text['label-moderator-pin']['en-us'] = 'Moderator PIN';
+		$text['label-moderator-pin']['pt-pt'] = '';
+
+		$text['label-participant-pin']['en-us'] = 'Participant PIN';
+		$text['label-participant-pin']['pt-pt'] = '';
+
 		$text['label-member-pin']['en-us'] = 'PIN Numbers';
 		$text['label-member-pin']['pt-pt'] = '';
 
-		$text['description-member-pin']['en-us'] = 'Pin numbers for the moderators or participants.';
-		$text['description-member-pin']['pt-pt'] = '';
+		$text['description-moderator-pin']['en-us'] = 'Pin numbers for the moderators.';
+		$text['description-moderator-pin']['pt-pt'] = '';
+
+		$text['description-participant-pin']['en-us'] = 'Pin numbers for the participants.';
+		$text['description-participant-pin']['pt-pt'] = '';
 
 		$text['label-member-type-moderator']['en-us'] = 'moderator';
 		$text['label-member-type-moderator']['pt-pt'] = '';

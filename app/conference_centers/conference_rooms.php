@@ -272,7 +272,6 @@ else {
 			echo "	<td valign='middle' class='".$row_style[$c]."'>\n";
 			echo "		<a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$row['meeting_uuid']."'>".$text['label-view']."</a>&nbsp;\n";
 			echo "		<a href='conference_sessions.php?id=".$row['meeting_uuid']."'>".$text['label-sessions']."</a>\n";
-			
 			echo "	</td>\n";
 			echo "	<td valign='middle' class='row_stylebg' width='20%' nowrap='nowrap'>".$row['description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
