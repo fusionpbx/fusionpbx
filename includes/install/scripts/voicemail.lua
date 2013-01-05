@@ -523,9 +523,9 @@
 									dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", row.data, "", "\\d+", max_timeout);
 								end
 							elseif (row.app == "say.number.pronounced") then
-								session:say(row.data, "en", "number", "pronounced");
+								session:say(row.data, default_language, "number", "pronounced");
 							elseif (row.app == "say.number.iterated") then
-								session:say(row.data, "en", "number", "iterated");
+								session:say(row.data, default_language, "number", "iterated");
 							else
 								session:execute(row.app, row.data);
 							end
@@ -973,9 +973,9 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 		--say the message number
 			dtmf_digits = macro(session, "message_number", 100, '');
 		--say the number
-			session:say(message_number, "en", "NUMBER", "pronounced");
+			session:say(message_number, default_language, "NUMBER", "pronounced");
 		--say the message date
-			session:say(created_epoch, "en", "CURRENT_DATE_TIME", "pronounced");
+			session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
 		--play the message
 			if (string.len(dtmf_digits) == 0) then
 				dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", max_timeout);
@@ -1385,9 +1385,9 @@ end
 		--os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
 		--session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs) 
 		--session:sayPhrase(macro_name [,macro_data] [,language]);
-		--session:sayPhrase("voicemail_menu", "1:2:3:#", "en");
+		--session:sayPhrase("voicemail_menu", "1:2:3:#", default_language);
 		--session:streamFile("directory/dir-to_select_entry.wav"); --works with setInputCallback
-		--session:say("12345", "en", "number", "pronounced");
+		--session:say("12345", default_language, "number", "pronounced");
 		--speak
 			--session:set_tts_parms("flite", "kal");
 			--session:speak("Please say the name of the person you're trying to contact");
