@@ -63,7 +63,7 @@ echo "<br />";
 	echo "		".$text['label-usernname'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
-	echo "		<a href='".PROJECT_PATH."/app/user_settings/user_edit.php'>".$_SESSION["username"]."</a> \n";
+	echo "		<a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a> \n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 

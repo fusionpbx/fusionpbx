@@ -199,7 +199,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 
 	//redirect the browser
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/user/user_edit.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/core/user_settings/user_edit.php\">\n";
 		echo "<div align='center'>".$content_users['confirm-update']."</div>";
 		require_once "includes/footer.php";
 		return;
@@ -238,7 +238,7 @@ else {
 	echo "<td align='left' width='90%' nowrap><b>".$content_users['title']."</b></td>\n";
 	echo "<td nowrap='nowrap'>\n";
 	echo "	<input type='submit' name='submit' class='btn' value='".$content_users['button-save']."'>";
-	echo "	<input type='button' class='btn' onclick=\"window.location='".PROJECT_PATH."/index2.php'\" value='".$content_users['button-back']."'>";
+	echo "	<input type='button' class='btn' onclick=\"window.location='".$_SESSION['login']['destination']['url']."'\" value='".$content_users['button-back']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
