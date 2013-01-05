@@ -178,10 +178,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Introduce participants as they enter the conference.';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'enter_sound';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'The sound played when someone enters the conference.';
-		$z++;
+		//$apps[$x]['db'][$y]['fields'][$z]['name'] = 'enter_sound';
+		//$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'The sound played when someone enters the conference.';
+		//$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'mute';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Mute participants on entering the conference.';

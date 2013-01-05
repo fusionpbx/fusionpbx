@@ -61,7 +61,7 @@ else {
 		$max_members = check_str($_POST["max_members"]);
 		$wait_mod = check_str($_POST["wait_mod"]);
 		$announce = check_str($_POST["announce"]);
-		$enter_sound = check_str($_POST["enter_sound"]);
+		//$enter_sound = check_str($_POST["enter_sound"]);
 		$mute = check_str($_POST["mute"]);
 		$created = check_str($_POST["created"]);
 		$created_by = check_str($_POST["created_by"]);
@@ -202,7 +202,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "max_members, ";
 					$sql .= "wait_mod, ";
 					$sql .= "announce, ";
-					$sql .= "enter_sound, ";
+					//$sql .= "enter_sound, ";
 					$sql .= "mute, ";
 					$sql .= "created, ";
 					$sql .= "created_by, ";
@@ -220,7 +220,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$max_members', ";
 					$sql .= "'$wait_mod', ";
 					$sql .= "'$announce', ";
-					$sql .= "'$enter_sound', ";
+					//$sql .= "'$enter_sound', ";
 					$sql .= "'$mute', ";
 					$sql .= "now(), ";
 					$sql .= "'".$_SESSION['user_uuid']."', ";
@@ -286,7 +286,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "max_members = '$max_members', ";
 					$sql .= "wait_mod = '$wait_mod', ";
 					$sql .= "announce = '$announce', ";
-					$sql .= "enter_sound = '$enter_sound', ";
+					//$sql .= "enter_sound = '$enter_sound', ";
 					$sql .= "mute = '$mute', ";
 					$sql .= "enabled = '$enabled', ";
 					$sql .= "description = '$description' ";
@@ -372,7 +372,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$max_members = $row["max_members"];
 			$wait_mod = $row["wait_mod"];
 			$announce = $row["announce"];
-			$enter_sound = $row["enter_sound"];
+			//$enter_sound = $row["enter_sound"];
 			$mute = $row["mute"];
 			$created = $row["created"];
 			$created_by = $row["created_by"];
@@ -387,9 +387,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($max_members) == 0) { $max_members = 0; }
 	if (strlen($wait_mod) == 0) { $wait_mod = 'false'; }
 	if (strlen($announce) == 0) { $announce = 'true'; }
-	if ($action == "add") {
-		if (strlen($enter_sound) == 0) { $enter_sound = 'tone_stream://%(200,0,500,600,700)'; }
-	}
+	//if ($action == "add") {
+	//	if (strlen($enter_sound) == 0) { $enter_sound = 'tone_stream://%(200,0,500,600,700)'; }
+	//}
 	if (strlen($mute) == 0) { $mute = 'false'; }
 	if (strlen($enabled) == 0) { $enabled = 'true'; }
 
@@ -668,16 +668,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-enter-sound'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='enter_sound' maxlength='255' value=\"$enter_sound\">\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	//echo "<tr>\n";
+	//echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	//echo "	".$text['label-enter-sound'].":\n";
+	//echo "</td>\n";
+	//echo "<td class='vtable' align='left'>\n";
+	//echo "	<input class='formfld' type='text' name='enter_sound' maxlength='255' value=\"$enter_sound\">\n";
+	//echo "<br />\n";
+	//echo "\n";
+	//echo "</td>\n";
+	//echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

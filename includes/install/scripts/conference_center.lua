@@ -225,7 +225,7 @@
 				wait_mod = row["wait_mod"];
 				member_type = row["member_type"];
 				announce = row["announce"];
-				enter_sound = row["enter_sound"];
+				--enter_sound = row["enter_sound"];
 				mute = row["mute"];
 				created = row["created"];
 				created_by = row["created_by"];
@@ -395,10 +395,10 @@
 						freeswitch.consoleLog("notice", "[conference] ".. cmd .."\n");
 						response = api:executeString(cmd);
 				else
-					if (enter_sound ~= nil) then
-						cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..enter_sound;
-						response = api:executeString(cmd);
-					end
+					--if (enter_sound ~= nil) then
+					--	cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..enter_sound;
+					--	response = api:executeString(cmd);
+					--end
 				end
 
 			--send the call to the conference
