@@ -199,7 +199,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 
 	//redirect the browser
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/users/usersupdate.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/user/user_edit.php\">\n";
 		echo "<div align='center'>".$content_users['confirm-update']."</div>";
 		require_once "includes/footer.php";
 		return;
