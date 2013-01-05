@@ -12,7 +12,7 @@
     <!-- expire is in seconds -->
     <param name="cache-expire" value="86400"/>
 
-    <param name="odbc-dsn" value="fusionpbx:username:password"/>
+    <param name="odbc-dsn" value="{v_dsn}"/>
 
     <!-- comment out sql to not setup a database (directory) lookup -->
     <param name="sql" value="
