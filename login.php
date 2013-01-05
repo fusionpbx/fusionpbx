@@ -30,10 +30,10 @@ require_once "includes/require.php";
 	$path = check_str($_GET["path"]);
 	$msg = check_str($_GET["msg"]);
 
-//set a default login url
-	//if (strlen($_SESSION['login']['url']['text']) == 0) {
-	//	$_SESSION['login']['url']['text'] = PROJECT_PATH."/index2.php";
-	//}
+//set a default login destination
+	if (strlen($_SESSION['login']['destination']['url']) == 0) {
+		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/user/user_dashboard.php";
+	}
 
 //add the header
 	include "includes/header.php";
@@ -84,7 +84,8 @@ require_once "includes/require.php";
 
 //show the content
 	echo "<br><br>";
-	echo "<form name='login' METHOD=\"POST\" action=\"".PROJECT_PATH."/index2.php."\">\n";
+	echo "<div align='center'>\n";
+	echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
 	echo "<input type='hidden' name='path' value='$path'>\n";
 	echo "<table width='200' border='0'>\n";
 	echo "<tr>\n";
