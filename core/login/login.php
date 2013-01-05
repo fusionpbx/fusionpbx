@@ -26,6 +26,14 @@
 include "root.php";
 require_once "includes/require.php";
 
+//add multi-lingual support
+	echo "<!--\n";
+	require_once "core/login/app_languages.php";
+	echo "-->\n";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //get the http values and set as variables
 	$path = check_str($_GET["path"]);
 	$msg = check_str($_GET["msg"]);
@@ -90,7 +98,7 @@ require_once "includes/require.php";
 	echo "<table width='200' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left'>\n";
-	echo "	<strong>UserName:</strong>\n";
+	echo "	<strong>".$text['label-username'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td>\n";
 	echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"username\">\n";
@@ -99,7 +107,7 @@ require_once "includes/require.php";
 
 	echo "<tr>\n";
 	echo "<td align='left'>\n";
-	echo "	<strong>Password:</strong>\n";
+	echo "	<strong>".$text['label-password'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td align='left'>\n";
 	echo "	<input type=\"password\" style='width: 150px;' class='formfld' name=\"password\">\n";
@@ -109,7 +117,7 @@ require_once "includes/require.php";
 	if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
 		echo "<tr>\n";
 		echo "<td align='left'>\n";
-		echo "	<strong>Domain:</strong>\n";
+		echo "	<strong>".$text['label-domain'].":</strong>\n";
 		echo "</td>\n";
 		echo "<td>\n";
 		if (count($_SESSION['login']['domain_name']) > 0) {
@@ -131,7 +139,7 @@ require_once "includes/require.php";
 	echo "<td>\n";
 	echo "</td>\n";
 	echo "<td align=\"right\">\n";
-	echo "  <input type=\"submit\" class='btn' value=\"Login\">\n";
+	echo "  <input type=\"submit\" class='btn' value=\"".$text['button-login']."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
