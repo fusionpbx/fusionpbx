@@ -32,9 +32,6 @@ require_once "includes/require.php";
 require_once "includes/checkauth.php";
 require_once "includes/header.php";
 
-echo "<br />";
-echo "<br />";
-
 //add multi-lingual support
 	echo "<!--\n";
 	require_once "app_languages.php";
@@ -54,13 +51,15 @@ echo "<br />";
 	//echo "<br />\n";
 
 //start the user table
+	echo "<br />";
+	echo "<br />";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 	echo "<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>".$text['title-user-settings']."&nbsp;</th>\n";
+	echo "	<th class='th' colspan='2' align='left'>".$text['title-user-settings']." &nbsp;</th>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		".$text['label-usernname'].": \n";
+	echo "		".$text['label-username'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
 	echo "		<a href='".PROJECT_PATH."/core/user_settings/user_edit.php'>".$_SESSION["username"]."</a> \n";
