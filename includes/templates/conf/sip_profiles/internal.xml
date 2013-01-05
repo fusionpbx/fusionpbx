@@ -200,7 +200,7 @@
 		<!--<param name="rtp-rewrite-timestamps" value="true"/>-->
 		<!--<param name="pass-rfc2833" value="true"/>-->
 		<!--If you have ODBC support and a working dsn you can use it instead of SQLite-->
-		<!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
+		<!--<param name="odbc-dsn" value="${dsn}"/>-->
 
 		<!--Uncomment to set all inbound calls to no media mode-->
 		<!--<param name="inbound-bypass-media" value="true"/>-->

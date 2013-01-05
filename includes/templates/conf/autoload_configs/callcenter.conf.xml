@@ -1,6 +1,6 @@
 <configuration name="callcenter.conf" description="CallCenter">
 	<settings>
-		<!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
+		<!--<param name="odbc-dsn" value="${dsn}"/>-->
 		<!--<param name="dbname" value="/usr/local/freeswitch/db/call_center.db"/>-->
 	</settings>
 

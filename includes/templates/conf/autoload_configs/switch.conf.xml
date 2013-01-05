@@ -143,7 +143,7 @@
 
 		<param name="rtp-enable-zrtp" value="true"/>
 
-		<!-- <param name="core-db-dsn" value="dsn:username:password" /> -->
+		<!-- <param name="core-db-dsn" value="${dsn}" /> -->
 		<!-- 
 		 Allow to specify the sqlite db at a different location (In this example, move it to ramdrive for
 		 better performance on most linux distro (note, you loose the data if you reboot))
