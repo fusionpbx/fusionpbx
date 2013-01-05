@@ -56,14 +56,14 @@ echo "<br />";
 //start the user table
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
 	echo "<tr>\n";
-	echo "	<th class='th' colspan='2' align='left'>".$text['title-user-information']."&nbsp;</th>\n";
+	echo "	<th class='th' colspan='2' align='left'>".$text['title-user-settings']."&nbsp;</th>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 	echo "		".$text['label-usernname'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
-	echo "		<a href='".PROJECT_PATH."/app/user/user_edit.php'>".$_SESSION["username"]."</a> \n";
+	echo "		<a href='".PROJECT_PATH."/app/user_settings/user_edit.php'>".$_SESSION["username"]."</a> \n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 

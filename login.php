@@ -32,7 +32,7 @@ require_once "includes/require.php";
 
 //set a default login destination
 	if (strlen($_SESSION['login']['destination']['url']) == 0) {
-		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/user/user_dashboard.php";
+		$_SESSION['login']['destination']['url'] = PROJECT_PATH."/user_settings/user_dashboard.php";
 	}
 
 //add the header
