@@ -1,6 +1,6 @@
 --	voicemail.lua
 --	Part of FusionPBX
---	Copyright (C) 2012 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -114,7 +114,7 @@
 
 --get the voicemail id
 	function get_voicemail_id()
-		voicemail_id = macro(session, "voicemail_id", 5000, '');
+		voicemail_id = macro(session, "voicemail_id", 20, 5000, '');
 		if (string.len(voicemail_id) == 0) then
 			if (session:ready()) then
 				voicemail_id = get_voicemail_id();
@@ -155,11 +155,11 @@
 					end);
 				end
 			--please enter your password followed by pound
-				password = macro(session, "voicemail_password", 5000, '');
+				password = macro(session, "voicemail_password", 20, 5000, '');
 			--compare the password from the database with the password provided by the user
 				if (voicemail_password ~= password) then
 					--incorrect password
-					macro(session, "password_not_valid", 1000, '');
+					macro(session, "password_not_valid", 1, 1000, '');
 					if (session:ready()) then
 						check_password(voicemail_id);
 					end
@@ -171,7 +171,7 @@
 	function change_password(voicemail_id)
 		if (session:ready()) then
 			--please enter your password followed by pound
-				password = macro(session, "password_new", 5000, '');
+				password = macro(session, "password_new", 20, 5000, '');
 			--update the voicemail password
 				sql = [[UPDATE v_voicemails
 					set voicemail_password = ']] .. password ..[['
@@ -183,7 +183,7 @@
 				end
 				dbh:query(sql);
 			--has been changed to
-				macro(session, "password_changed", 3000, password);
+				macro(session, "password_changed", 20, 3000, password);
 			--advanced menu
 				advanced();
 		end
@@ -206,7 +206,7 @@
 	--session:setInputCallback("on_dtmf", "");
 
 --define the macro function
-	function macro(session, name, max_timeout, param)
+	function macro(session, name, max_digits, max_timeout, param)
 		if (session:ready()) then
 			--Please enter your id followed by
 				if (name == "voicemail_id") then
@@ -506,38 +506,44 @@
 						dtmf_digits = '';
 						tries = 1;
 						timeout = 100;
-						max_digits = 10;
 					--loop through the action and data
 						for key, row in pairs(actions) do
 							--freeswitch.consoleLog("notice", "[voicemail] app: " .. row.app .. " data: " .. row.data .. "\n");
-							if (string.len(dtmf_digits) == 0) then
-								if (row.app == "playback") then
-									session:execute(row.app, sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
-								elseif (row.app == "tone_stream") then
-								session:execute("playback", "tone_stream://"..row.data);
-							elseif (row.app == "playAndGetDigits") then
-								--playAndGetDigits <min> <max> <tries> <timeout> <terminators> <file> <invalid_file> <var_name> <regexp> <digit_timeout>
-								if (not file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data)) then
-									dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data, "", "\\d+", max_timeout);
+							if (session:ready()) then
+								if (string.len(dtmf_digits) == 0) then
+									if (row.app == "playback") then
+											session:execute(row.app, sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
+									elseif (row.app == "tone_stream") then
+										session:execute("playback", "tone_stream://"..row.data);
+									elseif (row.app == "playAndGetDigits") then
+										--playAndGetDigits <min> <max> <tries> <timeout> <terminators> <file> <invalid_file> <var_name> <regexp> <digit_timeout>
+										if (not file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data)) then
+											dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data, "", "\\d+", max_timeout);
+										else
+											dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", row.data, "", "\\d+", max_timeout);
+										end
+									elseif (row.app == "say.number.pronounced") then
+										session:say(row.data, default_language, "number", "pronounced");
+									elseif (row.app == "say.number.iterated") then
+										session:say(row.data, default_language, "number", "iterated");
+									else
+										session:execute(row.app, row.data);
+									end
+								end --if
+							end --session:ready
+						end --for
+					--get the remaining digits
+						if (session:ready()) then
+							if (string.len(dtmf_digits) < max_digits) then
+								if (string.len(dtmf_digits) == 0) then
+									dtmf_digits = session:getDigits(max_digits, "#", max_timeout);
 								else
-									dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", row.data, "", "\\d+", max_timeout);
+									dtmf_digits = dtmf_digits .. session:getDigits(max_digits, "#", max_timeout);
 								end
-							elseif (row.app == "say.number.pronounced") then
-								session:say(row.data, default_language, "number", "pronounced");
-							elseif (row.app == "say.number.iterated") then
-								session:say(row.data, default_language, "number", "iterated");
-							else
-								session:execute(row.app, row.data);
 							end
 						end
-					end
-					if (string.len(dtmf_digits) == 0) then
-						dtmf_digits = session:getDigits(max_digits, "#", max_timeout);
-					else
-						dtmf_digits = dtmf_digits .. session:getDigits(max_digits, "#", max_timeout);
-					end
-				--return dtmf the digits
-					return dtmf_digits;
+					--return dtmf the digits
+						return dtmf_digits;
 			else
 				--no dtmf digits to return
 					return '';
@@ -565,10 +571,10 @@
 					voicemail_local_after_email = row["voicemail_local_after_email"];
 				end);
 			--set default values
-				if (string.len(voicemail_local_after_email) == 0) then
+				if (voicemail_local_after_email == nil) then
 					voicemail_local_after_email = "true";
 				end
-				if (string.len(voicemail_attach_file) == 0) then
+				if (voicemail_attach_file == nil) then
 					voicemail_attach_file = "true";
 				end
 		end
@@ -578,7 +584,7 @@
 	function record_message()
 		if (session:ready()) then
 			--record your message at the tone press any key or stop talking to end the recording
-				result = macro(session, "record_message", 100);
+				result = macro(session, "record_message", 1, 100);
 
 			--start epoch
 				start_epoch = os.time();
@@ -614,14 +620,16 @@
 				else
 					if (session:ready()) then
 						--your recording is below the minimal acceptable length, please try again
-							macro(session, "too_small", 100);
+							macro(session, "too_small", 1, 100);
 						--record your message at the tone
 							record_message();
 					end
 				end
 
 			--record menu 1 listen to the recording, 2 save the recording, 3 re-record
-				record_menu();
+				if (session:ready()) then
+					record_menu();
+				end
 		end
 	end
 
@@ -631,39 +639,47 @@
 			--clear the dtmf digits variable
 				dtmf_digits = '';
 			--to listen to the recording press 1
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "to_listen_to_recording", 100, '');
+				if (session:ready()) then
+					if (string.len(dtmf_digits) == 0) then
+						dtmf_digits = macro(session, "to_listen_to_recording", 1, 100, '');
+					end
 				end
 			--to save the recording press 2
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "to_save_recording", 100, '');
+				if (session:ready()) then
+					if (string.len(dtmf_digits) == 0) then
+						dtmf_digits = macro(session, "to_save_recording", 1, 100, '');
+					end
 				end
 			--to re-record press 3
-				if (string.len(dtmf_digits) == 0) then
-					dtmf_digits = macro(session, "to_rerecord", 3000, '');
+				if (session:ready()) then
+					if (string.len(dtmf_digits) == 0) then
+						dtmf_digits = macro(session, "to_rerecord", 1, 3000, '');
+					end
 				end
 			--process the dtmf
-				if (dtmf_digits == "1") then
-					--listen to the recording
-						dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", 1000);
-					--record menu 1 listen to the recording, 2 save the recording, 3 re-record
-						record_menu();
-				elseif (dtmf_digits == "2") then
-					--save the message
-						macro(session, "message_saved", 100, '');
-						macro(session, "goodbye", 100, '');
-					--hangup the call
-						session:hangup();
-				elseif (dtmf_digits == "3") then
-					--rerecord the message
-						record_message();
-				elseif (dtmf_digits == "*") then
-					--hangup
-						macro(session, "goodbye", 100, '');
-						session:hangup();
-				else
-					if (session:ready()) then
-						record_menu();
+				if (session:ready()) then
+					if (dtmf_digits == "1") then
+						--listen to the recording
+							dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", 1000);
+						--record menu 1 listen to the recording, 2 save the recording, 3 re-record
+							record_menu();
+					elseif (dtmf_digits == "2") then
+						--save the message
+							macro(session, "message_saved", 1, 100, '');
+							macro(session, "goodbye", 1, 100, '');
+						--hangup the call
+							session:hangup();
+					elseif (dtmf_digits == "3") then
+						--rerecord the message
+							record_message();
+					elseif (dtmf_digits == "*") then
+						--hangup
+							macro(session, "goodbye", 1, 100, '');
+							session:hangup();
+					else
+						if (session:ready()) then
+							record_menu();
+						end
 					end
 				end
 		end
@@ -721,8 +737,9 @@
 
 --define a function to forward a message to an extension
 	function forward_to_extension(uuid)
-		if (session:ready()) then
-			--get voicemail message details
+
+		--get voicemail message details
+			if (session:ready()) then
 				sql = [[SELECT * FROM v_voicemail_messages
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
 					AND voicemail_message_uuid = ']] .. uuid ..[[']]
@@ -738,17 +755,25 @@
 						message_status = row["message_status"];
 						message_priority = row["message_priority"];
 				end);
+			end
 
-			--request the forward_voicemail_id
-				forward_voicemail_id = macro(session, "forward_enter_extension", 7000, '');
-				if (string.len(forward_voicemail_id) == 0) then
-					forward_voicemail_id = macro(session, "forward_enter_extension", 7000, '');
+		--request the forward_voicemail_id
+			if (session:ready()) then
+				forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
+				if (session:ready()) then
+					if (string.len(forward_voicemail_id) == 0) then
+						forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
+					end
 				end
+			end
+			if (session:ready()) then
 				if (string.len(forward_voicemail_id) == 0) then
-					forward_voicemail_id = macro(session, "forward_enter_extension", 7000, '');
+					forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
 				end
+			end
 
-			--get the voicemail settings using the voicemail_uuid
+		--get the voicemail settings using the voicemail_uuid
+			if (session:ready()) then
 				sql = [[SELECT * FROM v_voicemails
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
 					AND voicemail_id = ']] .. forward_voicemail_id ..[['
@@ -762,16 +787,22 @@
 					forward_voicemail_attach_file = row["voicemail_attach_file"];
 					forward_voicemail_local_after_email = row["voicemail_local_after_email"];
 				end);
+			end
 
-			--set default values
+		--set default values
+			if (session:ready()) then
 				if (string.len(forward_voicemail_attach_file) == 0) then
 					forward_voicemail_attach_file = "true";
 				end
+			end
+			if (session:ready()) then
 				if (string.len(forward_voicemail_local_after_email) == 0) then
 					forward_voicemail_local_after_email = "true";
 				end
+			end
 
-			--save the message to the voicemail messages
+		--save the message to the voicemail messages
+			if (session:ready()) then
 				local sql = {}
 				table.insert(sql, "INSERT INTO v_voicemail_messages ");
 				table.insert(sql, "(");
@@ -804,42 +835,53 @@
 					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 				end
 				dbh:query(sql);
+			end
 
-			--set the message waiting event
+		--set the message waiting event
+			if (session:ready()) then
 				local event = freeswitch.Event("message_waiting");
 				event:addHeader("MWI-Messages-Waiting", "yes");
 				event:addHeader("MWI-Message-Account", "sip:"..forward_voicemail_id.."@"..domain_name);
 				event:fire();
+			end
 
-			--local after email is true so copy the recording file
+		--local after email is true so copy the recording file
+			if (session:ready()) then
 				if (voicemail_local_after_email == "true") then
 					os.execute("mkdir -p " .. voicemail_dir.."/"..forward_voicemail_id);
 					os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid..".wav");
 				end
+			end
 
-			--send the email with the voicemail recording attached
+		--send the email with the voicemail recording attached
+			if (session:ready()) then
 				if (string.len(forward_voicemail_mail_to) > 2) then
 					send_email(uuid);
 				end
-		end
+			end
 	end
 
 --leave a voicemail
 	if (voicemail_action == "save") then
-		if (session:ready()) then
-			--voicemail prompt
+
+		--voicemail prompt
+			if (session:ready()) then
 				if (string.len(greeting_id) > 0) then
 					--play the greeting
 					session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 				else
 					--if there is no greeting then play digits of the voicemail_id
-					result = macro(session, "person_not_available_record_message", 100);
+					result = macro(session, "person_not_available_record_message", 1, 100);
 				end
+			end
 
-			--save the recording
+		--save the recording
+			if (session:ready()) then
 				record_message();
+			end
 
-			--save the message to the voicemail messages
+		--save the message to the voicemail messages
+			if (session:ready()) then
 				if (message_length > 2) then
 					local sql = {}
 					table.insert(sql, "INSERT INTO v_voicemail_messages ");
@@ -874,27 +916,31 @@
 					end
 					dbh:query(sql);
 				end
+			end
 
-			--set the message waiting event
+		--set the message waiting event
+			if (session:ready()) then
 				if (message_length > 2) then
 					local event = freeswitch.Event("message_waiting");
 					event:addHeader("MWI-Messages-Waiting", "yes");
 					event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
 					event:fire();
 				end
+			end
 
-			--send the email with the voicemail recording attached
+		--send the email with the voicemail recording attached
+			if (session:ready()) then
 				if (message_length > 2) then
 					if (string.len(voicemail_mail_to) > 3) then
 						send_email(uuid);
 					end
 				end
+			end
 
-			--local after email is false so delete the recording file
-				if (voicemail_local_after_email == "false") then
-					os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
-				end
-		end
+		--local after email is false so delete the recording file
+			if (voicemail_local_after_email == "false") then
+				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+			end
 	end
 
 function main_menu ()
@@ -902,137 +948,176 @@ function main_menu ()
 		--clear the value
 			dtmf_digits = '';
 		--new voicemail count
-			sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-				AND (message_status is null or message_status = '') ]];
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-			status = dbh:query(sql, function(row)
-				new_messages = row["new_messages"];
-			end);
-			dtmf_digits = macro(session, "new_messages", 100, new_messages);
-		--saved voicemail count
-			if (string.len(dtmf_digits) == 0) then
-				sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
+			if (session:ready()) then
+				sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
 					AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-					AND message_status = 'saved' ]];
+					AND (message_status is null or message_status = '') ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 					end
 				status = dbh:query(sql, function(row)
-					saved_messages = row["saved_messages"];
+					new_messages = row["new_messages"];
 				end);
-				dtmf_digits = macro(session, "saved_messages", 100, saved_messages);
+				dtmf_digits = macro(session, "new_messages", 1, 100, new_messages);
+			end
+		--saved voicemail count
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
+						WHERE domain_uuid = ']] .. domain_uuid ..[['
+						AND voicemail_uuid = ']] .. voicemail_uuid ..[['
+						AND message_status = 'saved' ]];
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+					status = dbh:query(sql, function(row)
+						saved_messages = row["saved_messages"];
+					end);
+					dtmf_digits = macro(session, "saved_messages", 1, 100, saved_messages);
+				end
 			end
 		--to listen to new message
-			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "listen_to_new_messages", 100, '');
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					dtmf_digits = macro(session, "listen_to_new_messages", 1, 100, '');
+				end
 			end
 		--to listen to saved message
-			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "listen_to_saved_messages", 100, '');
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					dtmf_digits = macro(session, "listen_to_saved_messages", 1, 100, '');
+				end
 			end
 		--for advanced options
-			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "advanced", 100, '');
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					dtmf_digits = macro(session, "advanced", 1, 100, '');
+				end
 			end
 		--to exit press #
-			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "to_exit_press", 3000, '');
+			if (session:ready()) then
+				if (string.len(dtmf_digits) == 0) then
+					dtmf_digits = macro(session, "to_exit_press", 1, 3000, '');
+				end
 			end
 		--process the dtmf
-			if (dtmf_digits == "1") then
-				menu_messages("new");
-			elseif (dtmf_digits == "2") then
-				menu_messages("saved");
-			elseif (dtmf_digits == "5") then
-				advanced();
-			elseif (dtmf_digits == "0") then
-				session:transfer("0", "XML", context);
-			elseif (dtmf_digits == "*") then
-				macro(session, "goodbye", 100, '');
-				session:hangup();
-			else
-				if (session:ready()) then
-					main_menu();
+			if (session:ready()) then
+				if (dtmf_digits == "1") then
+					menu_messages("new");
+				elseif (dtmf_digits == "2") then
+					menu_messages("saved");
+				elseif (dtmf_digits == "5") then
+					advanced();
+				elseif (dtmf_digits == "0") then
+					session:transfer("0", "XML", context);
+				elseif (dtmf_digits == "*") then
+					macro(session, "goodbye", 1, 100, '');
+					session:hangup();
+				else
+					if (session:ready()) then
+						main_menu();
+					end
 				end
 			end
 	end
 end
 
 function listen_to_recording (message_number, uuid, created_epoch, caller_id_name, caller_id_number)
-	if (session:ready()) then
-		--clear the value
-			dtmf_digits = '';
-		--set the display
+
+	--clear the value
+		dtmf_digits = '';
+	--set the display
+		if (session:ready()) then
 			api = freeswitch.API();
 			reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
-		--say the message number
-			dtmf_digits = macro(session, "message_number", 100, '');
-		--say the number
+		end
+	--say the message number
+		if (session:ready()) then
+			dtmf_digits = macro(session, "message_number", 1, 100, '');
+		end
+	--say the number
+		if (session:ready()) then
 			session:say(message_number, default_language, "NUMBER", "pronounced");
-		--say the message date
+		end
+	--say the message date
+		if (session:ready()) then
 			session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
-		--play the message
+		end
+	--play the message
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
 				dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", max_timeout);
 			end
-		--to listen to the recording press 1
+		end
+	--to listen to the recording press 1
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "listen_to_recording", 100, '');
+				dtmf_digits = macro(session, "listen_to_recording", 1, 100, '');
 			end
-		--to save the recording press 2
+		end
+	--to save the recording press 2
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "save_recording", 100, '');
+				dtmf_digits = macro(session, "save_recording", 1, 100, '');
 			end
-		--to return the call now press 5
+		end
+	--to return the call now press 5
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "return_call", 100, '');
+				dtmf_digits = macro(session, "return_call", 1, 100, '');
 			end
-		--to delete the recording press 7
+		end
+	--to delete the recording press 7
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "delete_recording", 100, '');
+				dtmf_digits = macro(session, "delete_recording", 1, 100, '');
 			end
-		--to forward this message press 8
+		end
+	--to forward this message press 8
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "to_forward_message", 100, '');
+				dtmf_digits = macro(session, "to_forward_message", 1, 100, '');
 			end
-		--to forward this recording to your email press 9
+		end
+	--to forward this recording to your email press 9
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "forward_to_email", 100, '');
+				dtmf_digits = macro(session, "forward_to_email", 1, 3000, '');
 			end
-		--wait for more digits
-			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = session:getDigits(max_digits, "#", 3000);
-			end
-		--process the dtmf
+		end
+	--wait for more digits
+		--if (session:ready()) then
+		--	if (string.len(dtmf_digits) == 0) then
+		--		dtmf_digits = session:getDigits(max_digits, "#", 1, 3000);
+		--	end
+		--end
+	--process the dtmf
+		if (session:ready()) then
 			if (dtmf_digits == "1") then
 				listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number);
 			elseif (dtmf_digits == "2") then
 				message_saved(uuid);
-				macro(session, "message_saved", 100, '');
+				macro(session, "message_saved", 1, 100, '');
 			elseif (dtmf_digits == "5") then
 				return_call(caller_id_number);
 			elseif (dtmf_digits == "7") then
 				delete_recording(uuid);
 			elseif (dtmf_digits == "8") then
 				forward_to_extension(uuid);
-				macro(session, "message_saved", 100, '');
+				macro(session, "message_saved", 1, 100, '');
 			elseif (dtmf_digits == "9") then
 				send_email(uuid);
-				macro(session, "emailed", 100);
+				macro(session, "emailed", 1, 100);
 			elseif (dtmf_digits == "*") then
 				main_menu();
 			elseif (dtmf_digits == "0") then
 				session:transfer("0", "XML", context);
 			else
 				message_saved(uuid);
-				macro(session, "message_saved", 100, '');
+				macro(session, "message_saved", 1, 100, '');
 			end
-	end
+		end
 end
 
 --voicemail count if zero new messages set the mwi to no
@@ -1079,7 +1164,7 @@ end
 				end
 				dbh:query(sql);
 			--message deleted
-				macro(session, "message_deleted", 100, '');
+				macro(session, "message_deleted", 1, 100, '');
 			--check the message waiting status
 				message_waiting();
 		end
@@ -1112,16 +1197,17 @@ end
 	end
 
 function menu_messages (message_status)
-	if (session:ready()) then
-		--set default values
-			max_timeout = 2000;
-			min_digits = 1;
-			max_digits = 1;
-			tries = 1;
-			timeout = 2000;
-		--set the message number
-			message_number = 0;
-		--message_status new,saved
+
+	--set default values
+		max_timeout = 2000;
+		min_digits = 1;
+		max_digits = 1;
+		tries = 1;
+		timeout = 2000;
+	--set the message number
+		message_number = 0;
+	--message_status new,saved
+		if (session:ready()) then
 			if (voicemail_id ~= nil) then
 				sql = [[SELECT * FROM v_voicemail_messages
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -1154,8 +1240,10 @@ function menu_messages (message_status)
 						end
 				end);
 			end
+		end
 
-		--voicemail count if zero new messages set the mwi to no
+	--voicemail count if zero new messages set the mwi to no
+		if (session:ready()) then
 			if (voicemail_id ~= nil) then
 				sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -1174,37 +1262,52 @@ function menu_messages (message_status)
 					end
 				end);
 			end
+		end
 
-		--set the display
+	--set the display
+		if (session:ready()) then
 			api = freeswitch.API();
 			reply = api:executeString("uuid_display "..session:get_uuid().." "..destination_number);
+		end
 
-		--send back to the main menu
+	--send back to the main menu
+		if (session:ready()) then
 			main_menu();
-	end
+		end
 end
 
 function advanced ()
-	if (session:ready()) then
-		--To record a greeting press 1
-			dtmf_digits = macro(session, "to_record_greeting", 100, '');
-		--To choose greeting press 2
+
+	--To record a greeting press 1
+		if (session:ready()) then
+			dtmf_digits = macro(session, "to_record_greeting", 1, 100, '');
+		end
+	--To choose greeting press 2
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "choose_greeting", 100, '');
+				dtmf_digits = macro(session, "choose_greeting", 1, 100, '');
 			end
-		--To record your name 3
+		end
+	--To record your name 3
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "to_record_name", 100, '');
+				dtmf_digits = macro(session, "to_record_name", 1, 100, '');
 			end
-		--To change your password press 6
+		end
+	--To change your password press 6
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "change_password", 100, '');
+				dtmf_digits = macro(session, "change_password", 1, 100, '');
 			end
-		--For the main menu press 0
+		end
+	--For the main menu press 0
+		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = macro(session, "main_menu", 5000, '');
+				dtmf_digits = macro(session, "main_menu", 1, 5000, '');
 			end
-		--process the dtmf
+		end
+	--process the dtmf
+		if (session:ready()) then
 			if (dtmf_digits == "1") then
 				--To record a greeting press 1
 				record_greeting();
@@ -1221,33 +1324,36 @@ function advanced ()
 				--For the main menu press 0
 				main_menu();
 			else
-				if (session:ready()) then
-					advanced();
-				end
+				advanced();
 			end
-	end
+		end
 end
 
 function record_greeting()
-	if (session:ready()) then
-		--Choose a greeting between 1 and 9
-			greeting_id = macro(session, "choose_greeting_choose", 5000, '');
 
-		--validate the greeting_id
-			if (greeting_id == "1" 
-				or greeting_id == "2" 
-				or greeting_id == "3" 
-				or greeting_id == "4" 
-				or greeting_id == "5" 
-				or greeting_id == "6" 
-				or greeting_id == "7" 
-				or greeting_id == "8" 
-				or greeting_id == "9") then
+	--Choose a greeting between 1 and 9
+		if (session:ready()) then
+			greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
+		end
 
-				--record your greeting at the tone press any key or stop talking to end the recording
-					macro(session, "record_greeting", 100, '');
+	--validate the greeting_id
+		if (greeting_id == "1" 
+			or greeting_id == "2" 
+			or greeting_id == "3" 
+			or greeting_id == "4" 
+			or greeting_id == "5" 
+			or greeting_id == "6" 
+			or greeting_id == "7" 
+			or greeting_id == "8" 
+			or greeting_id == "9") then
 
-				--record the greeting
+			--record your greeting at the tone press any key or stop talking to end the recording
+				if (session:ready()) then
+					macro(session, "record_greeting", 1, 100, '');
+				end
+
+			--record the greeting
+				if (session:ready()) then
 					max_len_seconds = 30;
 					silence_threshold = 30;
 					silence_seconds = 5;
@@ -1255,45 +1361,52 @@ function record_greeting()
 					-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
 					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav", max_len_seconds, silence_threshold, silence_seconds);
 					--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
+				end
 
-				--advanced menu
+			--advanced menu
+				if (session:ready()) then
 					advanced();
-			else
-				--invalid greeting_id
-					greeting_id = macro(session, "choose_greeting_fail", 100, '');
+				end
+		else
+			--invalid greeting_id
+				if (session:ready()) then
+					greeting_id = macro(session, "choose_greeting_fail", 1, 100, '');
+				end
 
-				--send back to choose the greeting
-					if (session:ready()) then
-						record_greeting();
-					end
-			end
-	end
+			--send back to choose the greeting
+				if (session:ready()) then
+					record_greeting();
+				end
+		end
 end
 
 function choose_greeting()
-	if (session:ready()) then
-		--select the greeting
-			greeting_id = macro(session, "choose_greeting_choose", 5000, '');
 
-		--check to see if the greeting file exists
-			if (not file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
-				--invalid greeting_id file does not exist
-				greeting_id = "invalid";
-			end
+	--select the greeting
+		if (session:ready()) then
+			greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
+		end
 
-		--validate the greeting_id
-			if (greeting_id == "0" 
-				or greeting_id == "1" 
-				or greeting_id == "2" 
-				or greeting_id == "3" 
-				or greeting_id == "4" 
-				or greeting_id == "5" 
-				or greeting_id == "6" 
-				or greeting_id == "7" 
-				or greeting_id == "8" 
-				or greeting_id == "9") then
+	--check to see if the greeting file exists
+		if (not file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
+			--invalid greeting_id file does not exist
+			greeting_id = "invalid";
+		end
 
-				--valid greeting_id update the database
+	--validate the greeting_id
+		if (greeting_id == "0" 
+			or greeting_id == "1" 
+			or greeting_id == "2" 
+			or greeting_id == "3" 
+			or greeting_id == "4" 
+			or greeting_id == "5" 
+			or greeting_id == "6" 
+			or greeting_id == "7" 
+			or greeting_id == "8" 
+			or greeting_id == "9") then
+
+			--valid greeting_id update the database
+				if (session:ready()) then
 					if (greeting_id == "0") then 
 						sql = [[UPDATE v_voicemails SET greeting_id = null ]];
 					else
@@ -1305,34 +1418,44 @@ function choose_greeting()
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 					end
 					dbh:query(sql);
+				end
 
-				--play the greeting
+			--play the greeting
+				if (session:ready()) then
 					session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+				end
 
-				--greeting selected
-					macro(session, "greeting_selected", 100, greeting_id);
+			--greeting selected
+				if (session:ready()) then
+					macro(session, "greeting_selected", 1, 100, greeting_id);
+				end
 
-				--advanced menu
+			--advanced menu
+				if (session:ready()) then
 					advanced();
-			else
-				--invalid greeting_id
-					greeting_id = macro(session, "choose_greeting_fail", 100, '');
+				end
+		else
+			--invalid greeting_id
+				if (session:ready()) then
+					greeting_id = macro(session, "choose_greeting_fail", 1, 100, '');
+				end
 
-				--send back to choose the greeting
-					if (session:ready()) then
-						choose_greeting();
-					end
-			end
+			--send back to choose the greeting
+				if (session:ready()) then
+					choose_greeting();
+				end
+		end
 
-		--advanced menu
+	--advanced menu
+		if (session:ready()) then
 			advanced();
-	end
+		end
 end
 
 function record_name()
 	if (session:ready()) then
 		--play the name record
-			macro(session, "record_name", 100, '');
+			macro(session, "record_name", 1, 100, '');
 
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
@@ -1347,7 +1470,7 @@ function record_name()
 			session:streamFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
 
 		--message saved
-			macro(session, "message_saved", 100, '');
+			macro(session, "message_saved", 1, 100, '');
 
 		--advanced menu
 			advanced();
