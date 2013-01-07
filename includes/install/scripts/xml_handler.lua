@@ -57,6 +57,17 @@
 		return s:gsub("^%s+", ""):gsub("%s+$", "")
 	end
 
+--add the explode function
+	function explode ( seperator, str ) 
+		local pos, arr = 0, {}
+		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+			pos = sp + 1 -- jump past current divider
+		end
+		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+		return arr
+	end
+
 --if the params class and methods do not exist then add them to prevent errors
 	if (not params) then
 		params = {}
@@ -445,274 +456,357 @@
 	end --section configuration
 
 --handle the directory
-	if (XML_REQUEST["section"] == "directory" and key and user and domain_name) then
+	if (XML_REQUEST["section"] == "directory") then
 
 		--set the default
 			continue = true;
 
-		--get the cache
-			if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-				XML_STRING = trim(api:execute("memcache", "get " .. user .. "@" .. domain_name));
-				if (XML_STRING == "-ERR NOT FOUND") then
-					continue = true;
-				else
-					--replace the &#39 back to a single quote
-					XML_STRING = XML_STRING:gsub("&#39;", "'");
-					continue = false;
-				end
-			else
-				XML_STRING = "";
-				continue = true;
-			end
+		--get the action
+			action = params:getHeader("action");
+				--sip_auth - registration
+				--group_call - call group has been called
+				--user_call - user has been called
 
-		--prevent processing for invalid user
-			if (user == "*97") then
-				continue = false;
-			end
+		--determine the correction action to perform
+			if (action == "group_call") then
+				--handles action
+					--group_call
 
-		--get the extension from the database
-			if (continue) then
-				sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and extension = '" .. user .. "' and enabled = 'true' ";
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-				end
-				dbh:query(sql, function(row)
-					--general
-						domain_uuid = row.domain_uuid;
-						extension = row.extension;
-						cidr = "";
-						if (string.len(row.cidr) > 0) then
-							cidr = [[ cidr="]] .. row.cidr .. [["]];
+				--build the call group array
+					sql = [[
+					select * from v_extensions 
+					where domain_uuid = ']]..domain_uuid..[[' 
+					order by call_group asc 
+					]];
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+					end
+					call_group_array = {};
+					status = dbh:query(sql, function(row)
+						call_group = row['call_group'];
+						--call_group = str_replace(";", ",", call_group);
+						tmp_array = explode(",", call_group);
+						for key,value in pairs(tmp_array) do
+							value = trim(value);
+							--freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. value .. " " ..row['extension'] .."\n");
+							if (string.len(value) == 0) then
+							
+							else
+								if (call_group_array[value] == nil) then
+									call_group_array[value] = row['extension'];
+								else
+									call_group_array[value] = call_group_array[value]..','..row['extension'];
+								end
+							end
 						end
-						number_alias = "";
-						if (string.len(row.number_alias) > 0) then
-							number_alias = [[ number-alias="]] .. row.number_alias .. [["]];
-						end
-					--params
-						password = row.password;
-						vm_enabled = "true";
-						if (string.len(row.vm_enabled) > 0) then
-							vm_enabled = row.vm_enabled;
-						end
-						vm_password = row.vm_password;
-						vm_attach_file = "true";
-						if (string.len(row.vm_attach_file) > 0) then
-							vm_attach_file = row.vm_attach_file;
-						end
-						vm_keep_local_after_email = "true";
-						if (string.len(row.vm_keep_local_after_email) > 0) then
-							vm_keep_local_after_email = row.vm_keep_local_after_email;
-						end
-						if (string.len(row.vm_mailto) > 0) then
-							vm_mailto = row.vm_mailto;
-						else
-							vm_mailto = "";
-						end
-						mwi_account = row.mwi_account;
-						auth_acl = row.auth_acl;
-					--variables
-						sip_from_user = row.extension;
-						call_group = row.call_group;
-						hold_music = row.hold_music;
-						toll_allow = row.toll_allow;
-						accountcode = row.accountcode;
-						user_context = row.user_context;
-						effective_caller_id_name = row.effective_caller_id_name;
-						effective_caller_id_number = row.effective_caller_id_number;
-						outbound_caller_id_name = row.outbound_caller_id_name;
-						outbound_caller_id_number = row.outbound_caller_id_number;
-						emergency_caller_id_number = row.emergency_caller_id_number;
-						directory_full_name = row.directory_full_name;
-						directory_visible = row.directory_visible;
-						directory_exten_visible = row.directory_exten_visible;
-						limit_max = row.limit_max;
-						limit_destination = row.limit_destination;
-						sip_force_contact = row.sip_force_contact;
-						sip_force_expires = row.sip_force_expires;
-						nibble_account = row.nibble_account;
-						sip_bypass_media = row.sip_bypass_media;
+					end);
+					--for key,value in pairs(call_group_array) do
+					--	freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. value .. "\n");
+					--end
 
-					--set the dial_string
-						if (string.len(row.dial_string) > 0) then
-							dial_string = row.dial_string;
-						else
-							dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
-						end
-				end);
-			end
-
-		--outbound hot desking - get the extension variables
-			if (continue) then
-				sql = "SELECT * FROM v_extensions WHERE dial_domain = '" .. domain_name .. "' and dial_user = '" .. user .. "' and enabled = 'true' ";
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-				end
-				dbh:query(sql, function(row)
-					--variables
-					extension_uuid = row.extension_uuid;
-					domain_uuid = row.domain_uuid;
-					sip_from_user = row.extension;
-					call_group = row.call_group;
-					hold_music = row.hold_music;
-					toll_allow = row.toll_allow;
-					accountcode = row.accountcode;
-					user_context = row.user_context;
-					effective_caller_id_name = row.effective_caller_id_name;
-					effective_caller_id_number = row.effective_caller_id_number;
-					outbound_caller_id_name = row.outbound_caller_id_name;
-					outbound_caller_id_number = row.outbound_caller_id_number;
-					emergency_caller_id_number = row.emergency_caller_id_number;
-					directory_full_name = row.directory_full_name;
-					directory_visible = row.directory_visible;
-					directory_exten_visible = row.directory_exten_visible;
-					limit_max = row.limit_max;
-					limit_destination = row.limit_destination;
-					sip_force_contact = row.sip_force_contact;
-					sip_force_expires = row.sip_force_expires;
-					nibble_account = row.nibble_account;
-					sip_bypass_media = row.sip_bypass_media;
-				end);
-			end
-
-		--set the xml array and then concatenate the array to a string
-			if (continue and password) then
-				--build the xml
+				--build the xml array
 					local xml = {}
 					table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
 					table.insert(xml, [[<document type="freeswitch/xml">]]);
 					table.insert(xml, [[	<section name="directory">]]);
 					table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
-					if (number_alias) then
-						if (cidr) then
-							table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[>]]);
-						else
-							table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
+					table.insert(xml, [[		<groups>]]);
+					previous_call_group = "";
+					for key, value in pairs(call_group_array) do
+						call_group = trim(key);
+						extension_list = trim(value);
+						if (string.len(call_group) > 0) then
+							freeswitch.consoleLog("notice", "[directory] call_group: " .. call_group .. "\n");
+							freeswitch.consoleLog("notice", "[directory] extension_list: " .. extension_list .. "\n");
+							if (previous_call_group ~= call_group) then
+								table.insert(xml, [[			<group name="]]..call_group..[[">]]);
+								table.insert(xml, [[				<users>]]);
+								extension_array = explode(",", extension_list);
+								for index,tmp_extension in pairs(extension_array) do
+										table.insert(xml, [[					<user id="]]..tmp_extension..[[" type="pointer"/>]]);
+								end
+								table.insert(xml, [[				</users>]]);
+								table.insert(xml, [[			</group>]]);
+							end
+							previous_call_group = call_group;
 						end
-					else
-						if (cidr) then
-							table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. [[>]]);
-						else
-							table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
-						end
 					end
-					table.insert(xml, [[			<params>]]);
-					table.insert(xml, [[				<param name="password" value="]] .. password .. [["/>]]);
-					table.insert(xml, [[				<param name="vm-enabled" value="]] .. vm_enabled .. [["/>]]);
-					if (string.len(vm_mailto) > 0) then
-						table.insert(xml, [[				<param name="vm-password" value="]] .. vm_password  .. [["/>]]);
-						table.insert(xml, [[				<param name="vm-email-all-messages" value="]] .. vm_enabled  ..[["/>]]);
-						table.insert(xml, [[				<param name="vm-attach-file" value="]] .. vm_attach_file .. [["/>]]);
-						table.insert(xml, [[				<param name="vm-keep-local-after-email" value="]] .. vm_keep_local_after_email .. [["/>]]);
-						table.insert(xml, [[				<param name="vm-mailto" value="]] .. vm_mailto .. [["/>]]);
-					end
-					if (string.len(mwi_account) > 0) then
-						table.insert(xml, [[				<param name="MWI-Account" value="]] .. mwi_account .. [["/>]]);
-					end
-					if (string.len(auth_acl) > 0) then
-						table.insert(xml, [[				<param name="auth-acl" value="]] .. auth_acl .. [["/>]]);
-					end
-					table.insert(xml, [[				<param name="dial-string" value="]] .. dial_string .. [["/>]]);
-					table.insert(xml, [[			</params>]]);
-					table.insert(xml, [[			<variables>]]);
-					table.insert(xml, [[				<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
-					table.insert(xml, [[				<variable name="domain_name" value="]] .. domain_name .. [["/>]]);
-					table.insert(xml, [[				<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
-					table.insert(xml, [[				<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
-					if (string.len(call_group) > 0) then
-						table.insert(xml, [[				<variable name="call_group" value="]] .. call_group .. [["/>]]);
-					end
-					if (string.len(hold_music) > 0) then
-						table.insert(xml, [[				<variable name="hold_music" value="]] .. hold_music .. [["/>]]);
-					end
-					if (string.len(toll_allow) > 0) then
-						table.insert(xml, [[				<variable name="toll_allow" value="]] .. toll_allow .. [["/>]]);
-					end
-					if (string.len(accountcode) > 0) then
-						table.insert(xml, [[				<variable name="accountcode" value="]] .. accountcode .. [["/>]]);
-					end
-					table.insert(xml, [[				<variable name="user_context" value="]] .. user_context .. [["/>]]);
-					if (string.len(effective_caller_id_name) > 0) then
-						table.insert(xml, [[				<variable name="effective_caller_id_name" value="]] .. effective_caller_id_name.. [["/>]]);
-					end
-					if (string.len(effective_caller_id_number) > 0) then
-						table.insert(xml, [[				<variable name="effective_caller_id_number" value="]] .. effective_caller_id_number.. [["/>]]);
-					end
-					if (string.len(outbound_caller_id_name) > 0) then
-						table.insert(xml, [[				<variable name="outbound_caller_id_name" value="]] .. outbound_caller_id_name .. [["/>]]);
-					end
-					if (string.len(outbound_caller_id_number) > 0) then
-						table.insert(xml, [[				<variable name="outbound_caller_id_number" value="]] .. outbound_caller_id_number .. [["/>]]);
-					end
-					if (string.len(emergency_caller_id_number) > 0) then
-						table.insert(xml, [[				<variable name="emergency_caller_id_number" value="]] .. emergency_caller_id_number .. [["/>]]);
-					end
-					if (string.len(directory_full_name) > 0) then
-						table.insert(xml, [[				<variable name="directory_full_name" value="]] .. directory_full_name .. [["/>]]);
-					end
-					if (string.len(directory_visible) > 0) then
-						table.insert(xml, [[				<variable name="directory-visible" value="]] .. directory_visible .. [["/>]]);
-					end
-					if (string.len(directory_exten_visible) > 0) then
-						table.insert(xml, [[				<variable name="directory-exten-visible" value="]] .. directory_exten_visible .. [["/>]]);
-					end
-					if (string.len(limit_max) > 0) then
-						table.insert(xml, [[				<variable name="limit_max" value="]] .. limit_max .. [["/>]]);
-					else
-						table.insert(xml, [[				<variable name="limit_max" value="5"/>]]);
-					end
-					if (string.len(limit_destination) > 0) then
-						table.insert(xml, [[				<variable name="limit_destination" value="]] .. limit_destination .. [["/>]]);
-					end
-					if (string.len(sip_force_contact) > 0) then
-						table.insert(xml, [[				<variable name="sip_force_contact" value="]] .. sip_force_contact .. [["/>]]);
-					end
-					if (string.len(sip_force_expires) > 0) then
-						table.insert(xml, [[				<variable name="sip-force-expires" value="]] .. sip_force_expires .. [["/>]]);
-					end
-					if (string.len(nibble_account) > 0) then
-						table.insert(xml, [[				<variable name="nibble_account" value="]] .. nibble_account .. [["/>]]);
-					end
-					if (sip_bypass_media == "bypass-media") then
-						table.insert(xml, [[				<variable name="bypass_media" value="true"/>]]);
-					end
-					if (sip_bypass_media == "bypass-media-after-bridge") then
-						table.insert(xml, [[				<variable name="bypass_media_after_bridge" value="true"/>]]);
-					end
-					if (sip_bypass_media == "proxy-media") then
-						table.insert(xml, [[				<variable name="proxy_media" value="true"/>]]);
-					end
-					table.insert(xml, [[				<variable name="record_stereo" value="true"/>]]);
-					table.insert(xml, [[				<variable name="transfer_fallback_extension" value="operator"/>]]);
-					table.insert(xml, [[				<variable name="export_vars" value="domain_name"/>]]);
-					table.insert(xml, [[			</variables>]]);
-					table.insert(xml, [[			</user>]]);
+					table.insert(xml, [[		</groups>]]);
 					table.insert(xml, [[		</domain>]]);
 					table.insert(xml, [[	</section>]]);
 					table.insert(xml, [[</document>]]);
 					XML_STRING = table.concat(xml, "\n");
+					freeswitch.consoleLog("notice", "[directory] XML_STRING: \n" .. XML_STRING .. "\n");
 
-				--set the cache
-					result = trim(api:execute("memcache", "set " .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+			else 
+				--handle action
+					--all directory actions: sip_auth, user_call 
+					--except for the action: group_call
 
-				--send the xml to the console
-					if (debug["xml_string"]) then
-						local file = assert(io.open("/tmp/" .. user .. "@" .. domain_name .. ".xml", "w"));
-						file:write(XML_STRING);
-						file:close();
-					end
-
-				--send to the console
-					if (debug["cache"]) then
-						freeswitch.consoleLog("notice", "[xml_handler] directory: " .. user .. "@" .. domain_name .. " source: database\n");
-					end
-			else
-				--send to the console
-					if (debug["cache"]) then
-						if (XML_STRING) then
-							freeswitch.consoleLog("notice", "[xml_handler] directory: " .. user .. "@" .. domain_name .. " source: memcache \n");
+				--get the cache
+					if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
+						XML_STRING = trim(api:execute("memcache", "get " .. user .. "@" .. domain_name));
+						if (XML_STRING == "-ERR NOT FOUND") then
+							continue = true;
+						else
+							--replace the &#39 back to a single quote
+							XML_STRING = XML_STRING:gsub("&#39;", "'");
+							continue = false;
 						end
+					else
+						XML_STRING = "";
+						continue = true;
 					end
-			end
+
+				--prevent processing for invalid user
+					if (user == "*97") then
+						continue = false;
+					end
+
+				--get the extension from the database
+					if (continue) then
+						sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and extension = '" .. user .. "' and enabled = 'true' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+						end
+						dbh:query(sql, function(row)
+							--general
+								domain_uuid = row.domain_uuid;
+								extension = row.extension;
+								cidr = "";
+								if (string.len(row.cidr) > 0) then
+									cidr = [[ cidr="]] .. row.cidr .. [["]];
+								end
+								number_alias = "";
+								if (string.len(row.number_alias) > 0) then
+									number_alias = [[ number-alias="]] .. row.number_alias .. [["]];
+								end
+							--params
+								password = row.password;
+								vm_enabled = "true";
+								if (string.len(row.vm_enabled) > 0) then
+									vm_enabled = row.vm_enabled;
+								end
+								vm_password = row.vm_password;
+								vm_attach_file = "true";
+								if (string.len(row.vm_attach_file) > 0) then
+									vm_attach_file = row.vm_attach_file;
+								end
+								vm_keep_local_after_email = "true";
+								if (string.len(row.vm_keep_local_after_email) > 0) then
+									vm_keep_local_after_email = row.vm_keep_local_after_email;
+								end
+								if (string.len(row.vm_mailto) > 0) then
+									vm_mailto = row.vm_mailto;
+								else
+									vm_mailto = "";
+								end
+								mwi_account = row.mwi_account;
+								auth_acl = row.auth_acl;
+							--variables
+								sip_from_user = row.extension;
+								call_group = row.call_group;
+								hold_music = row.hold_music;
+								toll_allow = row.toll_allow;
+								accountcode = row.accountcode;
+								user_context = row.user_context;
+								effective_caller_id_name = row.effective_caller_id_name;
+								effective_caller_id_number = row.effective_caller_id_number;
+								outbound_caller_id_name = row.outbound_caller_id_name;
+								outbound_caller_id_number = row.outbound_caller_id_number;
+								emergency_caller_id_number = row.emergency_caller_id_number;
+								directory_full_name = row.directory_full_name;
+								directory_visible = row.directory_visible;
+								directory_exten_visible = row.directory_exten_visible;
+								limit_max = row.limit_max;
+								limit_destination = row.limit_destination;
+								sip_force_contact = row.sip_force_contact;
+								sip_force_expires = row.sip_force_expires;
+								nibble_account = row.nibble_account;
+								sip_bypass_media = row.sip_bypass_media;
+
+							--set the dial_string
+								if (string.len(row.dial_string) > 0) then
+									dial_string = row.dial_string;
+								else
+									dial_string = "{sip_invite_domain=" .. domain_name .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+								end
+						end);
+					end
+
+				--outbound hot desking - get the extension variables
+					if (continue) then
+						sql = "SELECT * FROM v_extensions WHERE dial_domain = '" .. domain_name .. "' and dial_user = '" .. user .. "' and enabled = 'true' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+						end
+						dbh:query(sql, function(row)
+							--variables
+							extension_uuid = row.extension_uuid;
+							domain_uuid = row.domain_uuid;
+							sip_from_user = row.extension;
+							call_group = row.call_group;
+							hold_music = row.hold_music;
+							toll_allow = row.toll_allow;
+							accountcode = row.accountcode;
+							user_context = row.user_context;
+							effective_caller_id_name = row.effective_caller_id_name;
+							effective_caller_id_number = row.effective_caller_id_number;
+							outbound_caller_id_name = row.outbound_caller_id_name;
+							outbound_caller_id_number = row.outbound_caller_id_number;
+							emergency_caller_id_number = row.emergency_caller_id_number;
+							directory_full_name = row.directory_full_name;
+							directory_visible = row.directory_visible;
+							directory_exten_visible = row.directory_exten_visible;
+							limit_max = row.limit_max;
+							limit_destination = row.limit_destination;
+							sip_force_contact = row.sip_force_contact;
+							sip_force_expires = row.sip_force_expires;
+							nibble_account = row.nibble_account;
+							sip_bypass_media = row.sip_bypass_media;
+						end);
+					end
+
+				--set the xml array and then concatenate the array to a string
+					if (continue and password) then
+						--build the xml
+							local xml = {}
+							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+							table.insert(xml, [[<document type="freeswitch/xml">]]);
+							table.insert(xml, [[	<section name="directory">]]);
+							table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
+							if (number_alias) then
+								if (cidr) then
+									table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[>]]);
+								else
+									table.insert(xml, [[			<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
+								end
+							else
+								if (cidr) then
+									table.insert(xml, [[			<user id="]] .. extension .. [["]] .. cidr .. [[>]]);
+								else
+									table.insert(xml, [[			<user id="]] .. extension .. [[">]]);
+								end
+							end
+							table.insert(xml, [[			<params>]]);
+							table.insert(xml, [[				<param name="password" value="]] .. password .. [["/>]]);
+							table.insert(xml, [[				<param name="vm-enabled" value="]] .. vm_enabled .. [["/>]]);
+							if (string.len(vm_mailto) > 0) then
+								table.insert(xml, [[				<param name="vm-password" value="]] .. vm_password  .. [["/>]]);
+								table.insert(xml, [[				<param name="vm-email-all-messages" value="]] .. vm_enabled  ..[["/>]]);
+								table.insert(xml, [[				<param name="vm-attach-file" value="]] .. vm_attach_file .. [["/>]]);
+								table.insert(xml, [[				<param name="vm-keep-local-after-email" value="]] .. vm_keep_local_after_email .. [["/>]]);
+								table.insert(xml, [[				<param name="vm-mailto" value="]] .. vm_mailto .. [["/>]]);
+							end
+							if (string.len(mwi_account) > 0) then
+								table.insert(xml, [[				<param name="MWI-Account" value="]] .. mwi_account .. [["/>]]);
+							end
+							if (string.len(auth_acl) > 0) then
+								table.insert(xml, [[				<param name="auth-acl" value="]] .. auth_acl .. [["/>]]);
+							end
+							table.insert(xml, [[				<param name="dial-string" value="]] .. dial_string .. [["/>]]);
+							table.insert(xml, [[			</params>]]);
+							table.insert(xml, [[			<variables>]]);
+							table.insert(xml, [[				<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
+							table.insert(xml, [[				<variable name="domain_name" value="]] .. domain_name .. [["/>]]);
+							table.insert(xml, [[				<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
+							table.insert(xml, [[				<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
+							if (string.len(call_group) > 0) then
+								table.insert(xml, [[				<variable name="call_group" value="]] .. call_group .. [["/>]]);
+							end
+							if (string.len(hold_music) > 0) then
+								table.insert(xml, [[				<variable name="hold_music" value="]] .. hold_music .. [["/>]]);
+							end
+							if (string.len(toll_allow) > 0) then
+								table.insert(xml, [[				<variable name="toll_allow" value="]] .. toll_allow .. [["/>]]);
+							end
+							if (string.len(accountcode) > 0) then
+								table.insert(xml, [[				<variable name="accountcode" value="]] .. accountcode .. [["/>]]);
+							end
+							table.insert(xml, [[				<variable name="user_context" value="]] .. user_context .. [["/>]]);
+							if (string.len(effective_caller_id_name) > 0) then
+								table.insert(xml, [[				<variable name="effective_caller_id_name" value="]] .. effective_caller_id_name.. [["/>]]);
+							end
+							if (string.len(effective_caller_id_number) > 0) then
+								table.insert(xml, [[				<variable name="effective_caller_id_number" value="]] .. effective_caller_id_number.. [["/>]]);
+							end
+							if (string.len(outbound_caller_id_name) > 0) then
+								table.insert(xml, [[				<variable name="outbound_caller_id_name" value="]] .. outbound_caller_id_name .. [["/>]]);
+							end
+							if (string.len(outbound_caller_id_number) > 0) then
+								table.insert(xml, [[				<variable name="outbound_caller_id_number" value="]] .. outbound_caller_id_number .. [["/>]]);
+							end
+							if (string.len(emergency_caller_id_number) > 0) then
+								table.insert(xml, [[				<variable name="emergency_caller_id_number" value="]] .. emergency_caller_id_number .. [["/>]]);
+							end
+							if (string.len(directory_full_name) > 0) then
+								table.insert(xml, [[				<variable name="directory_full_name" value="]] .. directory_full_name .. [["/>]]);
+							end
+							if (string.len(directory_visible) > 0) then
+								table.insert(xml, [[				<variable name="directory-visible" value="]] .. directory_visible .. [["/>]]);
+							end
+							if (string.len(directory_exten_visible) > 0) then
+								table.insert(xml, [[				<variable name="directory-exten-visible" value="]] .. directory_exten_visible .. [["/>]]);
+							end
+							if (string.len(limit_max) > 0) then
+								table.insert(xml, [[				<variable name="limit_max" value="]] .. limit_max .. [["/>]]);
+							else
+								table.insert(xml, [[				<variable name="limit_max" value="5"/>]]);
+							end
+							if (string.len(limit_destination) > 0) then
+								table.insert(xml, [[				<variable name="limit_destination" value="]] .. limit_destination .. [["/>]]);
+							end
+							if (string.len(sip_force_contact) > 0) then
+								table.insert(xml, [[				<variable name="sip_force_contact" value="]] .. sip_force_contact .. [["/>]]);
+							end
+							if (string.len(sip_force_expires) > 0) then
+								table.insert(xml, [[				<variable name="sip-force-expires" value="]] .. sip_force_expires .. [["/>]]);
+							end
+							if (string.len(nibble_account) > 0) then
+								table.insert(xml, [[				<variable name="nibble_account" value="]] .. nibble_account .. [["/>]]);
+							end
+							if (sip_bypass_media == "bypass-media") then
+								table.insert(xml, [[				<variable name="bypass_media" value="true"/>]]);
+							end
+							if (sip_bypass_media == "bypass-media-after-bridge") then
+								table.insert(xml, [[				<variable name="bypass_media_after_bridge" value="true"/>]]);
+							end
+							if (sip_bypass_media == "proxy-media") then
+								table.insert(xml, [[				<variable name="proxy_media" value="true"/>]]);
+							end
+							table.insert(xml, [[				<variable name="record_stereo" value="true"/>]]);
+							table.insert(xml, [[				<variable name="transfer_fallback_extension" value="operator"/>]]);
+							table.insert(xml, [[				<variable name="export_vars" value="domain_name"/>]]);
+							table.insert(xml, [[			</variables>]]);
+							table.insert(xml, [[			</user>]]);
+							table.insert(xml, [[		</domain>]]);
+							table.insert(xml, [[	</section>]]);
+							table.insert(xml, [[</document>]]);
+							XML_STRING = table.concat(xml, "\n");
+
+						--set the cache
+							result = trim(api:execute("memcache", "set " .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+
+						--send the xml to the console
+							if (debug["xml_string"]) then
+								local file = assert(io.open("/tmp/" .. user .. "@" .. domain_name .. ".xml", "w"));
+								file:write(XML_STRING);
+								file:close();
+							end
+
+						--send to the console
+							if (debug["cache"]) then
+								freeswitch.consoleLog("notice", "[xml_handler] directory: " .. user .. "@" .. domain_name .. " source: database\n");
+							end
+					else
+						--send to the console
+							if (debug["cache"]) then
+								if (XML_STRING) then
+									freeswitch.consoleLog("notice", "[xml_handler] directory: " .. user .. "@" .. domain_name .. " source: memcache \n");
+								end
+							end
+					end
+			end --if action
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
