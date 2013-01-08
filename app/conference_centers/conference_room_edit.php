@@ -94,14 +94,20 @@ function get_meeting_pin($length, $meeting_uuid) {
 }
 
 //generate the pins
-	if ($action == "add") {
-		$length = 9;
-		if (strlen($moderator_pin) > 0) {
-			$moderator_pin = get_meeting_pin($length, $meeting_uuid);
-		}
-		if (strlen($moderator_pin) > 0) {
-			$participant_pin = get_meeting_pin($length, $meeting_uuid);
-		}
+	$sql = "select conference_center_pin_length from v_conference_centers ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		$pin_length = $row['conference_center_pin_length'];
+	}
+	if (strlen($moderator_pin) == 0) {
+		$moderator_pin = get_meeting_pin($pin_length, $meeting_uuid);
+	}
+	if (strlen($participant_pin) == 0) {
+		$participant_pin = get_meeting_pin($pin_length, $meeting_uuid);
 	}
 
 //delete the user
@@ -181,19 +187,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$msg .= "Please provide a unique participant pin number.<br>\n";
 				}
 			}
-			$sql = "select conference_center_pin_length from v_conference_centers ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if (strlen($moderator_pin) != $row['conference_center_pin_length']) {
-					$msg .= "Please provide a moderator PIN number that is the required length\n";
-				}
-				if (strlen($participant_pin) != $row['conference_center_pin_length']) {
-					$msg .= "Please provide a participant PIN number that is the required length\n";
-				}
+			if (strlen($moderator_pin) != $pin_length) {
+				$msg .= "Please provide a moderator PIN number that is the required length\n";
+			}
+			if (strlen($participant_pin) != $pin_length) {
+				$msg .= "Please provide a participant PIN number that is the required length\n";
 			}
 		}
 
