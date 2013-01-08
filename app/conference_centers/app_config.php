@@ -82,6 +82,41 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'conference_room_profile';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'conference_room_record';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'conference_room_max_members';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'conference_room_wait_mod';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'conference_room_announce';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'conference_room_mute';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'conference_room_enabled';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index

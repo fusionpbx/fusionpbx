@@ -114,7 +114,7 @@
 		$text['label-users']['en-us'] = 'Users';
 		$text['label-users']['pt-pt'] = '';
 
-		$text['description-users']['en-us'] = 'Assign the user to the conference room.';
+		$text['description-users']['en-us'] = 'Assign additional users to the conference room.';
 		$text['description-users']['pt-pt'] = '';
 
 		$text['button-add']['en-us'] = 'Add';
@@ -129,10 +129,10 @@
 		$text['label-member-pin']['en-us'] = 'PIN Numbers';
 		$text['label-member-pin']['pt-pt'] = '';
 
-		$text['description-moderator-pin']['en-us'] = 'Pin numbers for the moderators.';
+		$text['description-moderator-pin']['en-us'] = 'Pin number for the moderators.';
 		$text['description-moderator-pin']['pt-pt'] = '';
 
-		$text['description-participant-pin']['en-us'] = 'Pin numbers for the participants.';
+		$text['description-participant-pin']['en-us'] = 'Pin number for the participants.';
 		$text['description-participant-pin']['pt-pt'] = '';
 
 		$text['label-member-type-moderator']['en-us'] = 'moderator';

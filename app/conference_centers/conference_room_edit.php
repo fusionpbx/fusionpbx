@@ -73,6 +73,37 @@ else {
 		$participant_pin = preg_replace('{\D}', '', $participant_pin);
 	}
 
+function get_meeting_pin($length, $meeting_uuid) {
+	global $db;
+	$pin = generate_password($length,1);
+	$sql = "select count(*) as num_rows from v_meeting_pins ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+	$sql .= "and member_pin = '".$pin."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	if ($prep_statement) {
+		$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] == 0) {
+			return $pin;
+		}
+		else {
+			get_meeting_pin($length, $uuid);
+		}
+	}
+}
+
+//generate the pins
+	if ($action == "add") {
+		$length = 9;
+		if (strlen($moderator_pin) > 0) {
+			$moderator_pin = get_meeting_pin($length, $meeting_uuid);
+		}
+		if (strlen($moderator_pin) > 0) {
+			$participant_pin = get_meeting_pin($length, $meeting_uuid);
+		}
+	}
+
 //delete the user
 	if ($_GET["a"] == "delete" && permission_exists('conference_room_add') && permission_exists('conference_room_edit')) {
 		if (strlen($_REQUEST["meeting_user_uuid"]) > 0) {
@@ -103,6 +134,18 @@ else {
 			echo "<div align='center'>Delete Complete</div>";
 			require_once "includes/footer.php";
 			return;
+	}
+
+//get the conference centers
+	$sql = "select * from v_conference_centers ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "order by conference_center_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$conference_center_count = count($conference_centers);
+	if ($conference_center_count == 1) {
+		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -158,13 +201,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($conference_center_uuid) == 0) { $msg .= "Please provide: Conference UUID<br>\n"; }
 		//if (strlen($max_members) == 0) { $msg .= "Please provide: Max Members<br>\n"; }
 		//if (strlen($wait_mod) == 0) { $msg .= "Please provide: Wait for the Moderator<br>\n"; }
-		if (strlen($profile) == 0) { $msg .= "Please provide: Conference Profile<br>\n"; }
-		if (strlen($announce) == 0) { $msg .= "Please provide: Announce<br>\n"; }
+		//if (strlen($profile) == 0) { $msg .= "Please provide: Conference Profile<br>\n"; }
+		//if (strlen($announce) == 0) { $msg .= "Please provide: Announce<br>\n"; }
 		//if (strlen($enter_sound) == 0) { $msg .= "Please provide: Enter Sound<br>\n"; }
-		if (strlen($mute) == 0) { $msg .= "Please provide: Mute<br>\n"; }
+		//if (strlen($mute) == 0) { $msg .= "Please provide: Mute<br>\n"; }
 		//if (strlen($created) == 0) { $msg .= "Please provide: Created<br>\n"; }
 		//if (strlen($created_by) == 0) { $msg .= "Please provide: Created By<br>\n"; }
-		if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
+		//if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
 		//if (strlen($description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
@@ -183,6 +226,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 
 			if ($action == "add" && permission_exists('conference_room_add')) {
+				//set default values
+					if (strlen($profile) == 0) { $profile = 'default'; }
+					if (strlen($record) == 0) { $record = 'false'; }
+					if (strlen($max_members) == 0) { $max_members = 0; }
+					if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
+					if (strlen($announce) == 0) { $announce = 'true'; }
+					if (strlen($mute) == 0) { $mute = 'false'; }
+					if (strlen($enabled) == 0) { $enabled = 'true'; }
+
 				//add a meeting
 					$meeting_uuid = uuid();
 					$sql = "insert into v_meetings ";
@@ -298,18 +350,31 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_conference_rooms set ";
 					$sql .= "conference_center_uuid = '$conference_center_uuid', ";
 					//$sql .= "meeting_uuid = '$meeting_uuid', ";
-					$sql .= "profile = '$profile', ";
-					$sql .= "record = '$record', ";
-					$sql .= "max_members = '$max_members', ";
-					$sql .= "wait_mod = '$wait_mod', ";
-					$sql .= "announce = '$announce', ";
+					if (strlen($profile) > 0) {
+						$sql .= "profile = '$profile', ";
+					}
+					if (strlen($record) > 0) {
+						$sql .= "record = '$record', ";
+					}
+					if (strlen($max_members) > 0) {
+						$sql .= "max_members = '$max_members', ";
+					}
+					if (strlen($wait_mod) > 0) {
+						$sql .= "wait_mod = '$wait_mod', ";
+					}
+					if (strlen($announce) > 0) {
+						$sql .= "announce = '$announce', ";
+					}
 					//$sql .= "enter_sound = '$enter_sound', ";
-					$sql .= "mute = '$mute', ";
-					$sql .= "enabled = '$enabled', ";
+					if (strlen($mute) > 0) {
+						$sql .= "mute = '$mute', ";
+					}
+					if (strlen($enabled) > 0) {
+						$sql .= "enabled = '$enabled', ";
+					}
 					$sql .= "description = '$description' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
 					$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
-					//echo $sql; //exit;
 					$db->exec(check_sql($sql));
 					unset($sql);
 			} //if ($action == "update")
@@ -475,9 +540,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result_count = count($result);
 		foreach($result as $field) {
 			$member_pin = $field['member_pin'];
-			if (strlen($member_pin) == 9)  {
-				$member_pin = substr($member_pin, 0, 3) ."-".  substr($member_pin, 3, 3) ."-". substr($member_pin, -3)."\n";
-			}
 			if ($field['member_type'] == "moderator") {
 				$moderator_pin = $member_pin;
 			}
@@ -485,6 +547,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$participant_pin = $member_pin;
 			}
 		}
+	}
+
+//format the pins
+	if (strlen($moderator_pin) == 9)  {
+		$moderator_pin = substr($moderator_pin, 0, 3) ."-".  substr($moderator_pin, 3, 3) ."-". substr($moderator_pin, -3)."\n";
+	}
+	if (strlen($participant_pin) == 9)  {
+		$participant_pin = substr($participant_pin, 0, 3) ."-".  substr($participant_pin, 3, 3) ."-". substr($participant_pin, -3)."\n";
 	}
 
 //set default values
@@ -522,34 +592,48 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-conference-name'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='conference_center_uuid'>\n";
-	$sql = "select * from v_conference_centers ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "order by conference_center_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$x = 0;
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	foreach ($result as &$row) {
-		if ($conference_center_uuid == $row["conference_center_uuid"]) {
-			echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_center_name"]."</option>\n";
+	if ($conference_center_count > 1) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-conference-name'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='conference_center_uuid'>\n";
+		foreach ($conference_centers as &$row) {
+			if ($conference_center_uuid == $row["conference_center_uuid"]) {
+				echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_center_name"]."</option>\n";
+			}
+			else {
+				echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_center_name"]."</option>\n";
+			}
 		}
-		else {
-			echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_center_name"]."</option>\n";
-		}
-		$x++;
+		unset ($prep_statement);
+		echo "	</select>\n";
+		echo "	<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	unset ($prep_statement);
-	echo "	</select>\n";
-	echo "	<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin'].":</td>";
+	echo "		<td class='vtable' align='left'>";
+	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='$moderator_pin'>\n";
+	echo "			<br />\n";
+	echo "			".$text['description-moderator-pin']."\n";
+	echo "			<br />\n";
+	echo "		</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-participant-pin'].":</td>";
+	echo "		<td class='vtable' align='left'>";
+	echo "  		<input class='formfld' type='text' name='participant_pin' maxlength='255' value='$participant_pin'>\n";
+	echo "			<br />\n";
+	echo "			".$text['description-participant-pin']."\n";
+	echo "			<br />\n";
+	echo "		</td>";
+	echo "	</tr>";
 
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-users'].":</td>";
@@ -599,129 +683,119 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>";
 	echo "	</tr>";
 
-	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin'].":</td>";
-	echo "		<td class='vtable' align='left'>";
-	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='$moderator_pin'>\n";
-	echo "			<br />\n";
-	echo "			".$text['description-moderator-pin']."\n";
-	echo "			<br />\n";
-	echo "		</td>";
-	echo "	</tr>";
+	if (permission_exists('conference_room_profile')) {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-profile'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='profile'>\n";
+		//if the profile has no value set it to default
+		if ($profile == "") { $profile = "default"; }
+		if ($profile == "default") { echo "<option value='default' selected='selected'>default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
+		if ($profile == "wideband") { echo "<option value='wideband' selected='selected'>wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
+		if ($profile == "ultrawideband") { echo "<option value='ultrawideband' selected='selected'>ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
+		if ($profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-profile']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-participant-pin'].":</td>";
-	echo "		<td class='vtable' align='left'>";
-	echo "  		<input class='formfld' type='text' name='participant_pin' maxlength='255' value='$participant_pin'>\n";
-	echo "			<br />\n";
-	echo "			".$text['description-participant-pin']."\n";
-	echo "			<br />\n";
-	echo "		</td>";
-	echo "	</tr>";
+	if (permission_exists('conference_room_profile')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-record'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='record'>\n";
+		echo "	<option value=''></option>\n";
+		if ($record == "true") { 
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($record == "false") { 
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-profile'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='profile'>\n";
-	//if the profile has no value set it to default
-	if ($profile == "") { $profile = "default"; }
-	if ($profile == "default") { echo "<option value='default' selected='selected'>default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
-	if ($profile == "wideband") { echo "<option value='wideband' selected='selected'>wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
-	if ($profile == "ultrawideband") { echo "<option value='ultrawideband' selected='selected'>ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
-	if ($profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-profile']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('conference_room_max_members')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-max-members'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='max_members' maxlength='255' value='$max_members'>\n";
+		echo "<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-record'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='record'>\n";
-	echo "	<option value=''></option>\n";
-	if ($record == "true") { 
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (permission_exists('conference_room_wait_mod')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-wait-for-moderator'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='wait_mod'>\n";
+		echo "	<option value=''></option>\n";
+		if ($announce == "true") { 
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($announce == "false") { 
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($record == "false") { 
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-max-members'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='max_members' maxlength='255' value='$max_members'>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-wait-for-moderator'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='wait_mod'>\n";
-	echo "	<option value=''></option>\n";
-	if ($announce == "true") { 
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (permission_exists('conference_room_announce')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-announce'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='announce'>\n";
+		echo "	<option value=''></option>\n";
+		if ($announce == "true") { 
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($announce == "false") { 
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($announce == "false") { 
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-announce'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='announce'>\n";
-	echo "	<option value=''></option>\n";
-	if ($announce == "true") { 
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($announce == "false") { 
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	//echo "<tr>\n";
 	//echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -734,30 +808,32 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "</td>\n";
 	//echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-mute'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='mute'>\n";
-	echo "	<option value=''></option>\n";
-	if ($mute == "true") { 
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (permission_exists('conference_room_mute')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-mute'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='mute'>\n";
+		echo "	<option value=''></option>\n";
+		if ($mute == "true") { 
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($mute == "false") { 
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($mute == "false") { 
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	/*
 	if ($action == "update" && permission_exists('conference_room_edit')) {
@@ -790,30 +866,32 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	*/
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-enabled'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='enabled'>\n";
-	echo "	<option value=''></option>\n";
-	if ($enabled == "true") { 
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (permission_exists('conference_room_profile')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-enabled'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='enabled'>\n";
+		echo "	<option value=''></option>\n";
+		if ($enabled == "true") { 
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($enabled == "false") { 
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($enabled == "false") { 
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
