@@ -468,7 +468,14 @@
 				--user_call - user has been called
 
 		--determine the correction action to perform
-			if (action == "group_call") then
+			if (action == "message-count") then
+				--Event-Calling-Line-Number: 102
+				--Event-Sequence: 4173
+				--action: message-count
+				--key: id
+				--user: *98
+				--domain: example.com
+			elseif (action == "group_call") then
 				--handles action
 					--group_call
 
@@ -536,8 +543,11 @@
 					table.insert(xml, [[	</section>]]);
 					table.insert(xml, [[</document>]]);
 					XML_STRING = table.concat(xml, "\n");
-					freeswitch.consoleLog("notice", "[directory] XML_STRING: \n" .. XML_STRING .. "\n");
 
+				--send the xml to the console
+					if (debug["xml_string"]) then
+						freeswitch.consoleLog("notice", "[directory] XML_STRING: \n" .. XML_STRING .. "\n");
+					end
 			else 
 				--handle action
 					--all directory actions: sip_auth, user_call 
