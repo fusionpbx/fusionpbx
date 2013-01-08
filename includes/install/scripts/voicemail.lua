@@ -61,6 +61,8 @@
 	destination_number = session:getVariable("destination_number");
 	caller_id_name = session:getVariable("caller_id_name");
 	caller_id_number = session:getVariable("caller_id_number");
+	skip_instructions = session:getVariable("skip_instructions");
+	skip_greeting = session:getVariable("skip_greeting");
 
 --set the sounds path for the language, dialect and voice
 	default_language = session:getVariable("default_language");
@@ -232,6 +234,11 @@
 				if (name == "record_message") then
 					actions = {}
 					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_message.wav"});
+					table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
+				end
+			--beep
+				if (name == "record_beep") then
+					actions = {}
 					table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 				end
 			--to listen to the recording press 1
@@ -582,55 +589,65 @@
 
 --save the recording
 	function record_message()
-		if (session:ready()) then
-			--record your message at the tone press any key or stop talking to end the recording
+		--record your message at the tone press any key or stop talking to end the recording
+			if (skip_greeting == "true") then
+				result = macro(session, "record_beep", 1, 100);
+			else
 				result = macro(session, "record_message", 1, 100);
+			end
 
-			--start epoch
-				start_epoch = os.time();
-				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[voicemail] start epoch: " .. start_epoch .. "\n");
-				end
+		--start epoch
+			start_epoch = os.time();
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] start epoch: " .. start_epoch .. "\n");
+			end
 
-			--save the recording
-				-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-				max_len_seconds = 30;
-				silence_threshold = 30;
-				silence_seconds = 5;
-				os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
-				result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
-				--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
+		--save the recording
+			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
+			max_len_seconds = 30;
+			silence_threshold = 30;
+			silence_seconds = 5;
+			os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
+			result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
+			--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 
-			--stop epoch
-				stop_epoch = os.time();
-				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[voicemail] start epoch: " .. stop_epoch .. "\n");
-				end
+		--stop epoch
+			stop_epoch = os.time();
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] start epoch: " .. stop_epoch .. "\n");
+			end
 
-			--calculate the message length
-				message_length = stop_epoch - start_epoch;
-				message_length_formatted = format_seconds(message_length);
-				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
-				end
+		--calculate the message length
+			message_length = stop_epoch - start_epoch;
+			message_length_formatted = format_seconds(message_length);
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
+			end
 
-			--if the recording is below the minmal length then re-record the message
-				if (message_length > 2) then
-					--continue
-				else
-					if (session:ready()) then
-						--your recording is below the minimal acceptable length, please try again
-							macro(session, "too_small", 1, 100);
-						--record your message at the tone
-							record_message();
-					end
-				end
-
-			--record menu 1 listen to the recording, 2 save the recording, 3 re-record
+		--if the recording is below the minmal length then re-record the message
+			if (message_length > 2) then
+				--continue
+			else
 				if (session:ready()) then
+					--your recording is below the minimal acceptable length, please try again
+						macro(session, "too_small", 1, 100);
+					--record your message at the tone
+						record_message();
+				end
+			end
+
+		--instructions press 1 to listen to the recording, press 2 to save the recording, press 3 to re-record
+			if (session:ready()) then
+				if (skip_instructions == "true") then
+					--save the message
+						macro(session, "message_saved", 1, 100, '');
+						macro(session, "goodbye", 1, 100, '');
+					--hangup the call
+						session:hangup();
+				else
 					record_menu();
 				end
-		end
+			end
 	end
 
 --record message menu
@@ -865,75 +882,71 @@
 	if (voicemail_action == "save") then
 
 		--voicemail prompt
-			if (session:ready()) then
-				if (string.len(greeting_id) > 0) then
-					--play the greeting
-					session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
-				else
-					--if there is no greeting then play digits of the voicemail_id
-					result = macro(session, "person_not_available_record_message", 1, 100);
+			if (skip_greeting == "true") then
+				--skip the greeting
+			else
+				if (session:ready()) then
+					if (string.len(greeting_id) > 0) then
+						--play the greeting
+						session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+					else
+						--if there is no greeting then play digits of the voicemail_id
+						result = macro(session, "person_not_available_record_message", 1, 100);
+					end
 				end
 			end
 
 		--save the recording
-			if (session:ready()) then
-				record_message();
-			end
+			record_message();
 
 		--save the message to the voicemail messages
-			if (session:ready()) then
-				if (message_length > 2) then
-					local sql = {}
-					table.insert(sql, "INSERT INTO v_voicemail_messages ");
-					table.insert(sql, "(");
-					table.insert(sql, "voicemail_message_uuid, ");
-					table.insert(sql, "domain_uuid, ");
-					table.insert(sql, "voicemail_uuid, ");
-					table.insert(sql, "created_epoch, ");
-					table.insert(sql, "caller_id_name, ");
-					table.insert(sql, "caller_id_number, ");
-					table.insert(sql, "message_length ");
-					--table.insert(sql, "message_status, ");
-					--table.insert(sql, "message_priority, ");
-					table.insert(sql, ") ");
-					table.insert(sql, "VALUES ");
-					table.insert(sql, "( ");
-					table.insert(sql, "'".. uuid .."', ");
-					table.insert(sql, "'".. domain_uuid .."', ");
-					table.insert(sql, "'".. voicemail_uuid .."', ");
-					table.insert(sql, "'".. start_epoch .."', ");
-					table.insert(sql, "'".. caller_id_name .."', ");
-					table.insert(sql, "'".. caller_id_number .."', ");
-					table.insert(sql, "'".. message_length .."' ");
-					--table.insert(sql, "'".. message_status .."', ");
-					--table.insert(sql, "'".. message_priority .."' ");
-					table.insert(sql, ") ");
-					if (voicemail_local_after_email == "true") then
-						sql = table.concat(sql, "\n");
-					end
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-					end
-					dbh:query(sql);
+			if (message_length > 2) then
+				local sql = {}
+				table.insert(sql, "INSERT INTO v_voicemail_messages ");
+				table.insert(sql, "(");
+				table.insert(sql, "voicemail_message_uuid, ");
+				table.insert(sql, "domain_uuid, ");
+				table.insert(sql, "voicemail_uuid, ");
+				table.insert(sql, "created_epoch, ");
+				table.insert(sql, "caller_id_name, ");
+				table.insert(sql, "caller_id_number, ");
+				table.insert(sql, "message_length ");
+				--table.insert(sql, "message_status, ");
+				--table.insert(sql, "message_priority, ");
+				table.insert(sql, ") ");
+				table.insert(sql, "VALUES ");
+				table.insert(sql, "( ");
+				table.insert(sql, "'".. uuid .."', ");
+				table.insert(sql, "'".. domain_uuid .."', ");
+				table.insert(sql, "'".. voicemail_uuid .."', ");
+				table.insert(sql, "'".. start_epoch .."', ");
+				table.insert(sql, "'".. caller_id_name .."', ");
+				table.insert(sql, "'".. caller_id_number .."', ");
+				table.insert(sql, "'".. message_length .."' ");
+				--table.insert(sql, "'".. message_status .."', ");
+				--table.insert(sql, "'".. message_priority .."' ");
+				table.insert(sql, ") ");
+				if (voicemail_local_after_email == "true") then
+					sql = table.concat(sql, "\n");
 				end
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				end
+				dbh:query(sql);
 			end
 
 		--set the message waiting event
-			if (session:ready()) then
-				if (message_length > 2) then
-					local event = freeswitch.Event("message_waiting");
-					event:addHeader("MWI-Messages-Waiting", "yes");
-					event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-					event:fire();
-				end
+			if (message_length > 2) then
+				local event = freeswitch.Event("message_waiting");
+				event:addHeader("MWI-Messages-Waiting", "yes");
+				event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+				event:fire();
 			end
 
 		--send the email with the voicemail recording attached
-			if (session:ready()) then
-				if (message_length > 2) then
-					if (string.len(voicemail_mail_to) > 3) then
-						send_email(uuid);
-					end
+			if (message_length > 2) then
+				if (string.len(voicemail_mail_to) > 3) then
+					send_email(uuid);
 				end
 			end
 
