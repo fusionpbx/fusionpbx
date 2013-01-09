@@ -242,7 +242,7 @@ if (defined('STDIN')) {
 			if ($fax_retry == 'yes') {
 				$tmp_subject = "Fax Received for Relay: ".$fax_name;
 				//$tmp_text_plain .= "This message arrived earlier and has been queued until now due to email server issues.\n";
-				$tmp_text_plain .= "\nThis message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified as to the success or failure of this message at ".$email"\n";
+				$tmp_text_plain .= "\nThis message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified later as to the success or failure of this fax.\n";
 			}
 			$tmp_text_html = $tmp_text_plain;
 
