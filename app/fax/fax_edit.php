@@ -326,6 +326,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
 							$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
 							$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
+							$dialplan_detail_data .= "fax_relay=true ";
 
 							$dialplan_detail_order = '010';
 							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
@@ -435,6 +436,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
 						$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
 						$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
+						$dialplan_detail_data .= "fax_relay=true ";
 						$sql = "update v_dialplan_details set ";
 						$sql .= "dialplan_detail_data = '".check_str($dialplan_detail_data)."' ";
 						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
