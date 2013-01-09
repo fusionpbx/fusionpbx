@@ -64,7 +64,7 @@ if (defined('STDIN')) {
 		$fax_messages = $_REQUEST["messages"];
 		$caller_id_name = $_REQUEST["caller_id_name"];
 		$caller_id_number = $_REQUEST["caller_id_number"];
-		$fax_retry = $_REQUEST["retry"];
+		$fax_relay = $_REQUEST["retry"];
 		$mailfrom_address = $_REQUEST["mailfrom_address"];
 	}
 	else {
@@ -97,7 +97,7 @@ if (defined('STDIN')) {
 		unset($tmp_array);
 
 		$tmp_array = explode("=", $_SERVER["argv"][8]);
-		$fax_retry = $tmp_array[1];
+		$fax_relay = $tmp_array[1];
 		unset($tmp_array);
 
 		$tmp_array = explode("=", $_SERVER["argv"][9]);
@@ -239,7 +239,7 @@ if (defined('STDIN')) {
 			$tmp_text_plain .= "Extension: ".$fax_extension."\n";
 			$tmp_text_plain .= "Messages: ".$fax_messages."\n";
 			$tmp_text_plain .= $fax_file_warning."\n";
-			if ($fax_retry == 'yes') {
+			if ($fax_relay == 'yes') {
 				$tmp_subject = "Fax Received for Relay: ".$fax_name;
 				//$tmp_text_plain .= "This message arrived earlier and has been queued until now due to email server issues.\n";
 				$tmp_text_plain .= "\nThis message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified later as to the success or failure of this fax.\n";
