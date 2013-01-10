@@ -74,12 +74,3 @@
 				);
 		end
 	end
-
-	--[[freeswitch.email("",
-		"",
-		"To: "..to.."\nFrom: "..from.."\nSubject: "..subject,
-		body,
-		file,
-		convert_cmd,
-		convert_ext
-		);]]
