@@ -29,6 +29,9 @@
 	max_digits = 8;
 	max_tries = 3;
 	digit_timeout = 5000;
+	dtmf_digits = '';
+	voicemail_id_tries = 0;
+	password_tries = 0;
 
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
@@ -114,25 +117,52 @@
 		end
 	end
 
+--define on_dtmf call back function
+	function on_dtmf(s, type, obj, arg)
+		if (type == "dtmf") then
+			if (obj['digit'] ~= "#") then
+				dtmf_digits = dtmf_digits .. obj['digit'];
+				return 0;
+			end
+			freeswitch.console_log("info", "[voicemail] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
+		end
+		return 0;
+	end
+	if (session:ready()) then
+		session:setInputCallback("on_dtmf", "");
+	end
+
 --get the voicemail id
-	function get_voicemail_id()
+	function get_voicemail_id(voicemail_id_tries)
+		session:flushDigits();
+		dtmf_digits = '';
 		voicemail_id = macro(session, "voicemail_id", 20, 5000, '');
+		voicemail_id_tries = voicemail_id_tries + 1;
 		if (string.len(voicemail_id) == 0) then
 			if (session:ready()) then
-				voicemail_id = get_voicemail_id();
+				if (voicemail_id_tries <= 3) then
+					voicemail_id = get_voicemail_id(voicemail_id_tries);
+				else
+					macro(session, "goodbye", 1, 1000, '');
+					session:hangup();
+				end
 			end
 		end
 		return voicemail_id;
 	end
 
 --check the voicemail password
-	function check_password(voicemail_id)
+	function check_password(voicemail_id, password_tries)
 		if (session:ready()) then
+
+			--flush dtmf digits from the input buffer
+				session:flushDigits();
+
 			--please enter your id followed by pound
 				if (voicemail_id) then
 					--do nothing
 				else
-					voicemail_id = get_voicemail_id();
+					voicemail_id = get_voicemail_id(0);
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[voicemail] voicemail id: " .. voicemail_id .. "\n");
 					end
@@ -140,30 +170,41 @@
 
 			--get the voicemail settings from the database
 				if (voicemail_id) then
-					sql = [[SELECT * FROM v_voicemails
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_id = ']] .. voicemail_id ..[['
-						AND voicemail_enabled = 'true' ]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+					if (session:ready()) then
+						sql = [[SELECT * FROM v_voicemails
+							WHERE domain_uuid = ']] .. domain_uuid ..[['
+							AND voicemail_id = ']] .. voicemail_id ..[['
+							AND voicemail_enabled = 'true' ]];
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(row)
+							voicemail_uuid = string.lower(row["voicemail_uuid"]);
+							voicemail_password = row["voicemail_password"];
+							greeting_id = row["greeting_id"];
+							voicemail_mail_to = row["voicemail_mail_to"];
+							voicemail_attach_file = row["voicemail_attach_file"];
+							voicemail_local_after_email = row["voicemail_local_after_email"];
+						end);
 					end
-					status = dbh:query(sql, function(row)
-						voicemail_uuid = string.lower(row["voicemail_uuid"]);
-						voicemail_password = row["voicemail_password"];
-						greeting_id = row["greeting_id"];
-						voicemail_mail_to = row["voicemail_mail_to"];
-						voicemail_attach_file = row["voicemail_attach_file"];
-						voicemail_local_after_email = row["voicemail_local_after_email"];
-					end);
 				end
 			--please enter your password followed by pound
+				dtmf_digits = '';
 				password = macro(session, "voicemail_password", 20, 5000, '');
+				--freeswitch.consoleLog("notice", "[voicemail] password: " .. password .. "\n");
 			--compare the password from the database with the password provided by the user
 				if (voicemail_password ~= password) then
 					--incorrect password
+					dtmf_digits = '';
+					password_tries = password_tries + 1;
 					macro(session, "password_not_valid", 1, 1000, '');
 					if (session:ready()) then
-						check_password(voicemail_id);
+						if (password_tries <= 3) then
+							check_password(voicemail_id, password_tries);
+						else
+							macro(session, "goodbye", 1, 1000, '');
+							session:hangup();
+						end
 					end
 				end
 		end
@@ -172,7 +213,10 @@
 --check the voicemail password
 	function change_password(voicemail_id)
 		if (session:ready()) then
+			--flush dtmf digits from the input buffer
+				session:flushDigits();
 			--please enter your password followed by pound
+				dtmf_digits = '';
 				password = macro(session, "password_new", 20, 5000, '');
 			--update the voicemail password
 				sql = [[UPDATE v_voicemails
@@ -185,55 +229,41 @@
 				end
 				dbh:query(sql);
 			--has been changed to
+				dtmf_digits = '';
 				macro(session, "password_changed", 20, 3000, password);
 			--advanced menu
 				advanced();
 		end
 	end
 
---define on_dtmf
-	function on_dtmf(s, type, obj, arg)
-		if (arg) then
-			freeswitch.console_log("info", "\ntype: " .. type .. "\n" .. "arg: " .. arg .. "\n");
-		else
-			freeswitch.console_log("info", "\ntype: " .. type .. "\n");
-		end
-
-		if (type == "dtmf") then
-			freeswitch.console_log("info", "\ndigit: [" .. obj['digit'] .. "]\nduration: [" .. obj['duration'] .. "]\n"); 
-		else
-			freeswitch.console_log("info", obj:serialize("xml"));
-		end
-	end
-	--session:setInputCallback("on_dtmf", "");
-
 --define the macro function
 	function macro(session, name, max_digits, max_timeout, param)
 		if (session:ready()) then
+
 			--Please enter your id followed by
 				if (name == "voicemail_id") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-enter_id.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/pound.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-enter_id.wav"});
+					table.insert(actions, {app="streamFile",data="digits/pound.wav"});
 				end
 			 --Please enter your id followed by
 				if (name == "voicemail_password") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-enter_pass.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/pound.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-enter_pass.wav"});
+					table.insert(actions, {app="streamFile",data="digits/pound.wav"});
 				end
 			--the person at extension 101 is not available record your message at the tone press any key or stop talking to end the recording
 				if (name == "person_not_available_record_message") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-person.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-person.wav"});
 					--pronounce the voicemail_id
 					table.insert(actions, {app="say.number.iterated",data=voicemail_id});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-not_available.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-not_available.wav"});
 				end
 			--record your message at the tone press any key or stop talking to end the recording
 				if (name == "record_message") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_message.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-record_message.wav"});
 					table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 				end
 			--beep
@@ -244,105 +274,105 @@
 			--to listen to the recording press 1
 				if (name == "to_listen_to_recording") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-listen_to_recording.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/1.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-listen_to_recording.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+					table.insert(actions, {app="streamFile",data="digits/1.wav"});
 				end
 			--to save the recording press 2
 				if (name == "to_save_recording") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-save_recording.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/2.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-save_recording.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+					table.insert(actions, {app="streamFile",data="digits/2.wav"});
 				end
 			--to rerecord press 3
 				if (name == "to_rerecord") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-rerecord.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/3.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-rerecord.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+					table.insert(actions, {app="streamFile",data="digits/3.wav"});
 				end
 			--You have zero new messages
 				if (name == "new_messages") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-you_have.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/"..param..".wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-new.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-you_have.wav"});
+					table.insert(actions, {app="say.number.pronounced",data=param});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-new.wav"});
 					if (param == "1") then
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-message.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-message.wav"});
 					else
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-messages.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-messages.wav"});
 					end
 				end
 			--You have zero saved messages
 				if (name == "saved_messages") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-you_have.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/"..param..".wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-saved.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-you_have.wav"});
+					table.insert(actions, {app="say.number.pronounced",data=param});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-saved.wav"});
 					if (param == "1") then
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-message.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-message.wav"});
 					else
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-messages.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-messages.wav"});
 					end
 				end
 			--To listen to new messages press 1
 				if (name == "listen_to_new_messages") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-listen_new.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/1.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-listen_new.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+					table.insert(actions, {app="streamFile",data="digits/1.wav"});
 				end
 			--To listen to saved messages press 2
 				if (name == "listen_to_saved_messages") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-listen_saved.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/2.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-listen_saved.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+					table.insert(actions, {app="streamFile",data="digits/2.wav"});
 				end
 
 			--For advanced options press 5
 				if (name == "advanced") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-advanced.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/5.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-advanced.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+					table.insert(actions, {app="streamFile",data="digits/5.wav"});
 				end
 			--Advanced Options Menu
 				--To record a greeting press 1
 					if (name == "to_record_greeting") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-to_record_greeting.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/1.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-to_record_greeting.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
 					end
 					--Choose a greeting between 1 and 9
 						if (name == "choose_greeting_choose") then
 							actions = {}
-							table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_choose.wav"});
+							table.insert(actions, {app="streamFile",data="voicemail/vm-choose_greeting_choose.wav"});
 						end
 					--Greeting invalid value
 						if (name == "choose_greeting_fail") then
 							actions = {}
-							table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_fail.wav"});
+							table.insert(actions, {app="streamFile",data="voicemail/vm-choose_greeting_fail.wav"});
 						end
 					--Record your greeting at the tone press any key or stop talking to end the recording
 						if (name == "record_greeting") then
 							actions = {}
-							table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_greeting.wav"});
+							table.insert(actions, {app="streamFile",data="voicemail/vm-record_greeting.wav"});
 							table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 						end
 				--To choose greeting press 2
 					if (name == "choose_greeting") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/2.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-choose_greeting.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/2.wav"});
 					end
 					--Choose a greeting between 1 and 9
 						--if (name == "choose_greeting_choose") then
 						--	actions = {}
-						--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_choose.wav"});
+						--	table.insert(actions, {app="streamFile",data="voicemail/vm-choose_greeting_choose.wav"});
 						--end
 							--press 1 to listen to the recording
 							--press 2 to save the recording
@@ -351,166 +381,165 @@
 					--Invalid greeting number
 						--if (name == "choose_greeting_fail") then
 						--	actions = {}
-						--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-choose_greeting_fail.wav"});
+						--	table.insert(actions, {app="streamFile",data="voicemail/vm-choose_greeting_fail.wav"});
 						--end
 					--Greeting 1 selected
 						if (name == "greeting_selected") then
 							actions = {}
-							table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-greeting.wav"});
-							table.insert(actions, {app="playAndGetDigits",data="digits/"..param..".wav"});
-							table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-selected.wav"});
+							table.insert(actions, {app="streamFile",data="voicemail/vm-greeting.wav"});
+							table.insert(actions, {app="streamFile",data="digits/"..param..".wav"});
+							table.insert(actions, {app="streamFile",data="voicemail/vm-selected.wav"});
 						end
 
 				--To record your name 3
 					if (name == "to_record_name") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_name2.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/3.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-record_name2.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/3.wav"});
 					end
 				--At the tone please record your name press any key or stop talking to end the recording 
 					if (name == "record_name") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-record_name1.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-record_name1.wav"});
 						table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 					end
 				--To change your password press 6
 					if (name == "change_password") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-change_password.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/6.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-change_password.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/6.wav"});
 					end
 				--For the main menu press 0
 					if (name == "main_menu") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-main_menu.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/0.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-main_menu.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/0.wav"});
 					end
 			--To exit press *
 				if (name == "to_exit_press") then
 					actions = {}
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-to_exit.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-					table.insert(actions, {app="playAndGetDigits",data="digits/star.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-to_exit.wav"});
+					table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+					table.insert(actions, {app="streamFile",data="digits/star.wav"});
 				end
 			--Additional Macros
 				--Please enter your new password then press the # key #
 					if (name == "password_new") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-enter_new_pin.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-enter_new_pin.wav"});
 					end
 				--Has been changed to
 					if (name == "password_changed") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-has_been_changed_to.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-has_been_changed_to.wav"});
 						table.insert(actions, {app="say.number.iterated",data=param});
 					end
 				--Login Incorrect
 					--if (name == "password_not_valid") then
 					--	actions = {}
-					--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-password_not_valid.wav"});
+					--	table.insert(actions, {app="streamFile",data="voicemail/vm-password_not_valid.wav"});
 					--end
 				--Login Incorrect
 					if (name == "password_not_valid") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-fail_auth.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-fail_auth.wav"});
 					end
 				--Too many failed attempts
 					if (name == "too_many_failed_attempts") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-abort.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-abort.wav"});
 					end
 				--Message number
 					if (name == "message_number") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-message_number.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-message_number.wav"});
 					end
 				--To listen to the recording press 1
 					if (name == "listen_to_recording") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-listen_to_recording.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/1.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-listen_to_recording.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/1.wav"});
 					end
 				--To save the recording press 2
 					if (name == "save_recording") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-save_recording.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/2.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-save_recording.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/2.wav"});
 					end
 				--To delete the recording press 7
 					if (name == "delete_recording") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-delete_recording.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/7.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-delete_recording.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/7.wav"});
 					end
 				--Message deleted
 					if (name == "message_deleted") then
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-message.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-deleted.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-message.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-deleted.wav"});
 					end
 				--To return the call now press 5
 					if (name == "return_call") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-return_call.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/5.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-return_call.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/5.wav"});
 					end
 				--To forward this message press 8
 					if (name == "to_forward_message") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-to_forward.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/8.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-to_forward.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/8.wav"});
 					end
 				--Please enter the extension to forward this message to followed by #
 					if (name == "forward_enter_extension") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-forward_enter_ext.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-followed_by_pound.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-forward_enter_ext.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-followed_by_pound.wav"});
 					end
 				--To forward this recording to your email press 9
 					if (name == "forward_to_email") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-forward_to_email.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-press.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="digits/9.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-forward_to_email.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-press.wav"});
+						table.insert(actions, {app="streamFile",data="digits/9.wav"});
 					end
 				--Emailed
 					if (name == "emailed") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-emailed.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-emailed.wav"});
 					end
 				--Please enter the extension to send this message to followed by #
 					--if (name == "send_message_to_extension") then
 					--	actions = {}
-					--	table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-zzz.wav"});
+					--	table.insert(actions, {app="streamFile",data="voicemail/vm-zzz.wav"});
 					--end
 				--Message saved
 					if (name == "message_saved") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-message.wav"});
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-saved.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-message.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-saved.wav"});
 					end
 				--Your recording is below the minimal acceptable length, please try again.
 					if (name == "too_small") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-too-small.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-too-small.wav"});
 					end
 				--Goodbye
 					if (name == "goodbye") then
 						actions = {}
-						table.insert(actions, {app="playAndGetDigits",data="voicemail/vm-goodbye.wav"});
+						table.insert(actions, {app="streamFile",data="voicemail/vm-goodbye.wav"});
 					end
 
 			--if actions table exists then process it
 				if (actions) then
 					--set default values
-						dtmf_digits = '';
 						tries = 1;
 						timeout = 100;
 					--loop through the action and data
@@ -518,10 +547,14 @@
 							--freeswitch.consoleLog("notice", "[voicemail] app: " .. row.app .. " data: " .. row.data .. "\n");
 							if (session:ready()) then
 								if (string.len(dtmf_digits) == 0) then
-									if (row.app == "playback") then
-											session:execute(row.app, sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
+									if (row.app == "streamFile") then
+										session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
+									elseif (row.app == "playback") then
+										session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data);
 									elseif (row.app == "tone_stream") then
-										session:execute("playback", "tone_stream://"..row.data);
+										session:streamFile("tone_stream://"..row.data);
+									elseif (row.app == "silence_stream") then
+										session:streamFile("silence_stream://100"..row.data);
 									elseif (row.app == "playAndGetDigits") then
 										--playAndGetDigits <min> <max> <tries> <timeout> <terminators> <file> <invalid_file> <var_name> <regexp> <digit_timeout>
 										if (not file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..row.data)) then
@@ -533,20 +566,15 @@
 										session:say(row.data, default_language, "number", "pronounced");
 									elseif (row.app == "say.number.iterated") then
 										session:say(row.data, default_language, "number", "iterated");
-									else
-										session:execute(row.app, row.data);
 									end
+									session:streamFile("silence_stream://100");
 								end --if
 							end --session:ready
 						end --for
 					--get the remaining digits
 						if (session:ready()) then
 							if (string.len(dtmf_digits) < max_digits) then
-								if (string.len(dtmf_digits) == 0) then
-									dtmf_digits = session:getDigits(max_digits, "#", max_timeout);
-								else
-									dtmf_digits = dtmf_digits .. session:getDigits(max_digits, "#", max_timeout);
-								end
+								dtmf_digits = dtmf_digits .. session:getDigits(max_digits, "#", max_timeout);
 							end
 						end
 					--return dtmf the digits
@@ -589,10 +617,16 @@
 
 --save the recording
 	function record_message()
+
+		--flush dtmf digits from the input buffer
+			session:flushDigits();
+
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_greeting == "true") then
+				dtmf_digits = '';
 				result = macro(session, "record_beep", 1, 100);
 			else
+				dtmf_digits = '';
 				result = macro(session, "record_message", 1, 100);
 			end
 
@@ -630,6 +664,7 @@
 			else
 				if (session:ready()) then
 					--your recording is below the minimal acceptable length, please try again
+						dtmf_digits = '';
 						macro(session, "too_small", 1, 100);
 					--record your message at the tone
 						record_message();
@@ -640,6 +675,7 @@
 			if (session:ready()) then
 				if (skip_instructions == "true") then
 					--save the message
+						dtmf_digits = '';
 						macro(session, "message_saved", 1, 100, '');
 						macro(session, "goodbye", 1, 100, '');
 					--hangup the call
@@ -655,6 +691,8 @@
 		if (session:ready()) then
 			--clear the dtmf digits variable
 				dtmf_digits = '';
+			--flush dtmf digits from the input buffer
+				session:flushDigits();
 			--to listen to the recording press 1
 				if (session:ready()) then
 					if (string.len(dtmf_digits) == 0) then
@@ -677,7 +715,8 @@
 				if (session:ready()) then
 					if (dtmf_digits == "1") then
 						--listen to the recording
-							dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", 1000);
+							session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+							--dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", 1000);
 						--record menu 1 listen to the recording, 2 save the recording, 3 re-record
 							record_menu();
 					elseif (dtmf_digits == "2") then
@@ -750,10 +789,19 @@
 					message
 				);
 			end
+
+		--emailed
+			if (session:ready()) then
+				dtmf_digits = '';
+				macro(session, "emailed", 1, 1000, '');
+			end
 	end
 
 --define a function to forward a message to an extension
 	function forward_to_extension(uuid)
+
+		--flush dtmf digits from the input buffer
+			session:flushDigits();
 
 		--get voicemail message details
 			if (session:ready()) then
@@ -776,105 +824,94 @@
 
 		--request the forward_voicemail_id
 			if (session:ready()) then
+				dtmf_digits = '';
 				forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
 				if (session:ready()) then
 					if (string.len(forward_voicemail_id) == 0) then
+						dtmf_digits = '';
 						forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
 					end
 				end
 			end
 			if (session:ready()) then
 				if (string.len(forward_voicemail_id) == 0) then
+					dtmf_digits = '';
 					forward_voicemail_id = macro(session, "forward_enter_extension", 20, 5000, '');
 				end
 			end
 
 		--get the voicemail settings using the voicemail_uuid
-			if (session:ready()) then
-				sql = [[SELECT * FROM v_voicemails
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_id = ']] .. forward_voicemail_id ..[['
-					AND voicemail_enabled = 'true' ]];
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-				status = dbh:query(sql, function(row)
-					forward_voicemail_uuid = string.lower(row["voicemail_uuid"]);
-					forward_voicemail_mail_to = row["voicemail_mail_to"];
-					forward_voicemail_attach_file = row["voicemail_attach_file"];
-					forward_voicemail_local_after_email = row["voicemail_local_after_email"];
-				end);
+			sql = [[SELECT * FROM v_voicemails
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND voicemail_id = ']] .. forward_voicemail_id ..[['
+				AND voicemail_enabled = 'true' ]];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
+			status = dbh:query(sql, function(row)
+				forward_voicemail_uuid = string.lower(row["voicemail_uuid"]);
+				forward_voicemail_mail_to = row["voicemail_mail_to"];
+				forward_voicemail_attach_file = row["voicemail_attach_file"];
+				forward_voicemail_local_after_email = row["voicemail_local_after_email"];
+			end);
 
 		--set default values
-			if (session:ready()) then
-				if (string.len(forward_voicemail_attach_file) == 0) then
-					forward_voicemail_attach_file = "true";
-				end
+			if (forward_voicemail_attach_file == nil) then
+				forward_voicemail_attach_file = "true";
 			end
-			if (session:ready()) then
-				if (string.len(forward_voicemail_local_after_email) == 0) then
-					forward_voicemail_local_after_email = "true";
-				end
+			if (forward_voicemail_local_after_email == nil) then
+				forward_voicemail_local_after_email = "true";
 			end
 
 		--save the message to the voicemail messages
-			if (session:ready()) then
-				local sql = {}
-				table.insert(sql, "INSERT INTO v_voicemail_messages ");
-				table.insert(sql, "(");
-				table.insert(sql, "voicemail_message_uuid, ");
-				table.insert(sql, "domain_uuid, ");
-				table.insert(sql, "voicemail_uuid, ");
-				table.insert(sql, "created_epoch, ");
-				table.insert(sql, "caller_id_name, ");
-				table.insert(sql, "caller_id_number, ");
-				table.insert(sql, "message_length ");
-				--table.insert(sql, "message_status, ");
-				--table.insert(sql, "message_priority, ");
-				table.insert(sql, ") ");
-				table.insert(sql, "VALUES ");
-				table.insert(sql, "( ");
-				table.insert(sql, "'".. uuid .."', ");
-				table.insert(sql, "'".. domain_uuid .."', ");
-				table.insert(sql, "'".. forward_voicemail_uuid .."', ");
-				table.insert(sql, "'".. created_epoch .."', ");
-				table.insert(sql, "'".. caller_id_name .."', ");
-				table.insert(sql, "'".. caller_id_number .."', ");
-				table.insert(sql, "'".. message_length .."' ");
-				--table.insert(sql, "'".. message_status .."', ");
-				--table.insert(sql, "'".. message_priority .."' ");
-				table.insert(sql, ") ");
-				if (voicemail_local_after_email == "true") then
-					sql = table.concat(sql, "\n");
-				end
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-				dbh:query(sql);
+			local sql = {}
+			table.insert(sql, "INSERT INTO v_voicemail_messages ");
+			table.insert(sql, "(");
+			table.insert(sql, "voicemail_message_uuid, ");
+			table.insert(sql, "domain_uuid, ");
+			table.insert(sql, "voicemail_uuid, ");
+			table.insert(sql, "created_epoch, ");
+			table.insert(sql, "caller_id_name, ");
+			table.insert(sql, "caller_id_number, ");
+			table.insert(sql, "message_length ");
+			--table.insert(sql, "message_status, ");
+			--table.insert(sql, "message_priority, ");
+			table.insert(sql, ") ");
+			table.insert(sql, "VALUES ");
+			table.insert(sql, "( ");
+			table.insert(sql, "'".. uuid .."', ");
+			table.insert(sql, "'".. domain_uuid .."', ");
+			table.insert(sql, "'".. forward_voicemail_uuid .."', ");
+			table.insert(sql, "'".. created_epoch .."', ");
+			table.insert(sql, "'".. caller_id_name .."', ");
+			table.insert(sql, "'".. caller_id_number .."', ");
+			table.insert(sql, "'".. message_length .."' ");
+			--table.insert(sql, "'".. message_status .."', ");
+			--table.insert(sql, "'".. message_priority .."' ");
+			table.insert(sql, ") ");
+			if (voicemail_local_after_email == "true") then
+				sql = table.concat(sql, "\n");
 			end
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+			end
+			dbh:query(sql);
 
 		--set the message waiting event
-			if (session:ready()) then
-				local event = freeswitch.Event("message_waiting");
-				event:addHeader("MWI-Messages-Waiting", "yes");
-				event:addHeader("MWI-Message-Account", "sip:"..forward_voicemail_id.."@"..domain_name);
-				event:fire();
-			end
+			local event = freeswitch.Event("message_waiting");
+			event:addHeader("MWI-Messages-Waiting", "yes");
+			event:addHeader("MWI-Message-Account", "sip:"..forward_voicemail_id.."@"..domain_name);
+			event:fire();
 
 		--local after email is true so copy the recording file
-			if (session:ready()) then
-				if (voicemail_local_after_email == "true") then
-					os.execute("mkdir -p " .. voicemail_dir.."/"..forward_voicemail_id);
-					os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid..".wav");
-				end
+			if (voicemail_local_after_email == "true") then
+				os.execute("mkdir -p " .. voicemail_dir.."/"..forward_voicemail_id);
+				os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid..".wav");
 			end
 
 		--send the email with the voicemail recording attached
-			if (session:ready()) then
-				if (string.len(forward_voicemail_mail_to) > 2) then
-					send_email(uuid);
-				end
+			if (string.len(forward_voicemail_mail_to) > 2) then
+				send_email(uuid);
 			end
 	end
 
@@ -891,6 +928,7 @@
 						session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
 					else
 						--if there is no greeting then play digits of the voicemail_id
+						dtmf_digits = '';
 						result = macro(session, "person_not_available_record_message", 1, 100);
 					end
 				end
@@ -960,6 +998,8 @@ function main_menu ()
 	if (voicemail_uuid) then
 		--clear the value
 			dtmf_digits = '';
+		--flush dtmf digits from the input buffer
+			session:flushDigits();
 		--new voicemail count
 			if (session:ready()) then
 				sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
@@ -1040,6 +1080,8 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 
 	--clear the value
 		dtmf_digits = '';
+	--flush dtmf digits from the input buffer
+		session:flushDigits();
 	--set the display
 		if (session:ready()) then
 			api = freeswitch.API();
@@ -1047,20 +1089,28 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 		end
 	--say the message number
 		if (session:ready()) then
-			dtmf_digits = macro(session, "message_number", 1, 100, '');
+			if (string.len(dtmf_digits) == 0) then
+				dtmf_digits = macro(session, "message_number", 1, 100, '');
+			end
 		end
 	--say the number
 		if (session:ready()) then
-			session:say(message_number, default_language, "NUMBER", "pronounced");
+			if (string.len(dtmf_digits) == 0) then
+				session:say(message_number, default_language, "NUMBER", "pronounced");
+			end
 		end
 	--say the message date
 		if (session:ready()) then
-			session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
+			if (string.len(dtmf_digits) == 0) then
+				session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
+			end
 		end
 	--play the message
 		if (session:ready()) then
 			if (string.len(dtmf_digits) == 0) then
-				dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", max_timeout);
+				session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+				--max_digits = 1;
+				--dtmf_digits = session:playAndGetDigits(min_digits, max_digits, tries, timeout, "#", voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", "", "\\d+", max_timeout);
 			end
 		end
 	--to listen to the recording press 1
@@ -1121,7 +1171,6 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 				macro(session, "message_saved", 1, 100, '');
 			elseif (dtmf_digits == "9") then
 				send_email(uuid);
-				macro(session, "emailed", 1, 100);
 			elseif (dtmf_digits == "*") then
 				main_menu();
 			elseif (dtmf_digits == "0") then
@@ -1166,6 +1215,8 @@ end
 --delete the recording
 	function delete_recording(uuid)
 		if (session:ready()) then
+			--flush dtmf digits from the input buffer
+				session:flushDigits();
 			--delete the file
 				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
 			--delete from the database
@@ -1177,6 +1228,7 @@ end
 				end
 				dbh:query(sql);
 			--message deleted
+				dtmf_digits = '';
 				macro(session, "message_deleted", 1, 100, '');
 			--check the message waiting status
 				message_waiting();
@@ -1186,6 +1238,10 @@ end
 --save the message
 	function message_saved(uuid)
 		if (session:ready()) then
+			--clear the dtmf
+				dtmf_digits = '';
+			--flush dtmf digits from the input buffer
+				session:flushDigits();
 			--delete from the database
 				sql = [[UPDATE v_voicemail_messages SET message_status = 'saved'
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -1202,6 +1258,10 @@ end
 --return the call
 	function return_call(destination)
 		if (session:ready()) then
+			--clear the dtmf
+				dtmf_digits = '';
+			--flush dtmf digits from the input buffer
+				session:flushDigits();
 			--check the message waiting status
 				message_waiting();
 			--transfer the call
@@ -1217,6 +1277,10 @@ function menu_messages (message_status)
 		max_digits = 1;
 		tries = 1;
 		timeout = 2000;
+	--clear the dtmf
+		dtmf_digits = '';
+	--flush dtmf digits from the input buffer
+		session:flushDigits();
 	--set the message number
 		message_number = 0;
 	--message_status new,saved
@@ -1290,7 +1354,10 @@ function menu_messages (message_status)
 end
 
 function advanced ()
-
+	--clear the dtmf
+		dtmf_digits = '';
+	--flush dtmf digits from the input buffer
+		session:flushDigits();
 	--To record a greeting press 1
 		if (session:ready()) then
 			dtmf_digits = macro(session, "to_record_greeting", 1, 100, '');
@@ -1344,9 +1411,14 @@ end
 
 function record_greeting()
 
+	--flush dtmf digits from the input buffer
+		session:flushDigits();
+
 	--Choose a greeting between 1 and 9
 		if (session:ready()) then
+			dtmf_digits = '';
 			greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
+			freeswitch.consoleLog("notice", "[voicemail] greeting_id: " .. greeting_id .. "\n");
 		end
 
 	--validate the greeting_id
@@ -1359,9 +1431,9 @@ function record_greeting()
 			or greeting_id == "7" 
 			or greeting_id == "8" 
 			or greeting_id == "9") then
-
 			--record your greeting at the tone press any key or stop talking to end the recording
 				if (session:ready()) then
+					dtmf_digits = '';
 					macro(session, "record_greeting", 1, 100, '');
 				end
 
@@ -1383,7 +1455,8 @@ function record_greeting()
 		else
 			--invalid greeting_id
 				if (session:ready()) then
-					greeting_id = macro(session, "choose_greeting_fail", 1, 100, '');
+					dtmf_digits = '';
+					macro(session, "choose_greeting_fail", 1, 100, '');
 				end
 
 			--send back to choose the greeting
@@ -1395,15 +1468,21 @@ end
 
 function choose_greeting()
 
+	--flush dtmf digits from the input buffer
+		session:flushDigits();
+
 	--select the greeting
 		if (session:ready()) then
+			dtmf_digits = '';
 			greeting_id = macro(session, "choose_greeting_choose", 1, 5000, '');
 		end
 
 	--check to see if the greeting file exists
-		if (not file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
-			--invalid greeting_id file does not exist
-			greeting_id = "invalid";
+		if (greeting_id ~= "0") then
+			if (not file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
+				--invalid greeting_id file does not exist
+				greeting_id = "invalid";
+			end
 		end
 
 	--validate the greeting_id
@@ -1427,19 +1506,22 @@ function choose_greeting()
 					end
 					sql = sql ..[[WHERE domain_uuid = ']] .. domain_uuid ..[[' ]]
 					sql = sql ..[[AND voicemail_uuid = ']] .. voicemail_uuid ..[[' ]];
-					if (debug["sql"]) then
+--					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-					end
+--					end
 					dbh:query(sql);
 				end
 
 			--play the greeting
 				if (session:ready()) then
-					session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+					if (file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
+						session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+					end
 				end
 
 			--greeting selected
 				if (session:ready()) then
+					dtmf_digits = '';
 					macro(session, "greeting_selected", 1, 100, greeting_id);
 				end
 
@@ -1450,6 +1532,7 @@ function choose_greeting()
 		else
 			--invalid greeting_id
 				if (session:ready()) then
+					dtmf_digits = '';
 					greeting_id = macro(session, "choose_greeting_fail", 1, 100, '');
 				end
 
@@ -1467,7 +1550,12 @@ end
 
 function record_name()
 	if (session:ready()) then
+
+		--flush dtmf digits from the input buffer
+			session:flushDigits();
+
 		--play the name record
+			dtmf_digits = '';
 			macro(session, "record_name", 1, 100, '');
 
 		--save the recording
@@ -1483,6 +1571,7 @@ function record_name()
 			session:streamFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
 
 		--message saved
+			dtmf_digits = '';
 			macro(session, "message_saved", 1, 100, '');
 
 		--advanced menu
@@ -1494,7 +1583,7 @@ end
 	if (voicemail_action == "check") then
 		if (session:ready()) then
 			--check the voicemail password
-			check_password(voicemail_id);
+			check_password(voicemail_id, password_tries);
 			main_menu();
 		end
 	end
@@ -1523,7 +1612,9 @@ end
 		--session:sayPhrase(macro_name [,macro_data] [,language]);
 		--session:sayPhrase("voicemail_menu", "1:2:3:#", default_language);
 		--session:streamFile("directory/dir-to_select_entry.wav"); --works with setInputCallback
+		--session:streamFile("tone_stream://L=1;%(1000, 0, 640)");
 		--session:say("12345", default_language, "number", "pronounced");
+
 		--speak
 			--session:set_tts_parms("flite", "kal");
 			--session:speak("Please say the name of the person you're trying to contact");
