@@ -768,27 +768,29 @@
 			end
 
 		--send the email
-			message = [[<font face=arial>
-			<b>Message From "]]..caller_id_name..[[" <A HREF="tel:]]..caller_id_number..[[">]]..caller_id_number..[[</A></b><br>
-			<hr noshade size=1>
-			Created: ]]..os.date("%A, %d %b %Y %I:%M %p", start_epoch)..[[<br>
-			Duration: ]]..message_length_formatted..[[<br>
-			Account: ]]..voicemail_id..[[@]]..domain_name..[[<br>
-			</font>]];
+			subject = [[Voicemail from ]]..caller_id_name..[[ <]]..caller_id_number..[[> ]]..message_length_formatted;
+			local message = {}
+			table.insert(message, [[<font face="arial">]]);
+			table.insert(message, [[<b>Message From "]]..caller_id_name..[[" <A HREF="tel:]]..caller_id_number..[[">]]..caller_id_number..[[</A></b><br>]]);
+			table.insert(message, [[<hr noshade="noshade" size="1">]]);
+			table.insert(message, [[Created: ]]..os.date("%A, %d %b %Y %I:%M %p", start_epoch)..[[<br>]]);
+			table.insert(message, [[Duration: ]]..message_length_formatted..[[<br>]]);
+			table.insert(message, [[Account: ]]..voicemail_id..[[@]]..domain_name..[[<br>]]);
+			table.insert(message, [[</font>]]);
+			body = table.concat(message, "");
+			body = body:gsub("'", "&#39;")
+			body = body:gsub([["]], "&#34;")
 			if (voicemail_attach_file == "true") then
-				freeswitch.email("",
-				"",
-				"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length_formatted,
-				message,
-				voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav"
-				);
+				file = voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav";
+				cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." '"..subject.."' '"..body.."' '"..file.."'";
 			else
-				freeswitch.email("",
-					"",
-					"To: "..voicemail_mail_to.."\nFrom: "..voicemail_mail_to.."\nSubject: Voicemail from "..caller_id_name.." <"..caller_id_number.."> "..message_length_formatted,
-					message
-				);
+				cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." '"..subject.."' '"..body.."'";
 			end
+			api = freeswitch.API();
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
+			end
+			result = api:executeString(cmd);
 
 		--emailed
 			if (session:ready()) then
