@@ -48,6 +48,12 @@
 	--convert_cmd = argv[6];
 	--convert_ext = argv[7];
 
+--replace the &#39 with a single quote
+	body = body:gsub("&#39;", "'");
+
+--replace the &#34 with double quote
+	body = body:gsub("&#34;", [["]]);
+
 --send the email
 	if (file == nil) then
 		freeswitch.email("",
