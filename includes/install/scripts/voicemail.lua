@@ -790,8 +790,12 @@
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
 			status = dbh:query(sql, function(row)
+				--voicemail_uuid = string.lower(row["voicemail_uuid"]);
+				--voicemail_password = row["voicemail_password"];
+				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
 				voicemail_attach_file = row["voicemail_attach_file"];
+				voicemail_local_after_email = row["voicemail_local_after_email"];
 			end);
 
 		--get voicemail message details
@@ -842,6 +846,11 @@
 				freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
 			end
 			result = api:executeString(cmd);
+
+		--local after email is false so delete the recording file
+			if (voicemail_local_after_email == "false") then
+				os.remove(voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext);
+			end
 
 		--emailed
 			if (session:ready()) then
@@ -957,10 +966,8 @@
 			event:fire();
 
 		--if local after email is true then copy the recording file
-			if (forward_voicemail_local_after_email == "true") then
-				os.execute("mkdir -p " .. voicemail_dir.."/"..forward_voicemail_id);
-				os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-			end
+			os.execute("mkdir -p " .. voicemail_dir.."/"..forward_voicemail_id);
+			os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 
 		--send the email with the voicemail recording attached
 			if (string.len(forward_voicemail_mail_to) > 2) then
@@ -1042,10 +1049,6 @@
 				end
 			end
 
-		--local after email is false so delete the recording file
-			if (voicemail_local_after_email == "false") then
-				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-			end
 	end
 
 function main_menu ()
