@@ -44,7 +44,7 @@
 	from = argv[2];
 	subject = argv[3];
 	body = argv[4];
-	--file = argv[5];
+	file = argv[5];
 	--convert_cmd = argv[6];
 	--convert_ext = argv[7];
 
