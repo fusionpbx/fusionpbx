@@ -96,7 +96,7 @@ function get_meeting_pin($length, $meeting_uuid) {
 //generate the pins
 	$sql = "select conference_center_pin_length from v_conference_centers ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
+	//$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
