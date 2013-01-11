@@ -459,6 +459,7 @@ function Replaceivr_menu_option_param(obj){
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplan_detail_group' class='formfld'>\n";
+	echo "              <option value=''></option>\n";
 	if (strlen($dialplan_detail_group)> 0) {
 		echo "              <option selected='selected' value='".htmlspecialchars($dialplan_detail_group)."'>".htmlspecialchars($dialplan_detail_group)."</option>\n";
 	}
