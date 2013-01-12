@@ -134,7 +134,7 @@
 
 				--get the cache
 				if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-					XML_STRING = trim(api:execute("memcache", "get sofia.conf"));
+					XML_STRING = trim(api:execute("memcache", "get configuration:sofia.conf"));
 				else
 					XML_STRING = "-ERR NOT FOUND";
 				end
@@ -348,7 +348,7 @@
 						end
 
 					--set the cache
-						result = trim(api:execute("memcache", "set sofia.conf '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia.conf"]));
+						result = trim(api:execute("memcache", "set configuration:sofia.conf '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia.conf"]));
 
 					--send the xml to the console
 						if (debug["xml_string"]) then
@@ -359,7 +359,7 @@
 
 					--send to the console
 						if (debug["cache"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] sofia.conf source: database\n");
+							freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf source: database\n");
 						end
 				else
 					--replace the &#39 back to a single quote
@@ -367,7 +367,7 @@
 
 					--send to the console
 						if (debug["cache"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] sofia.conf source: memcache\n");
+							freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf source: memcache\n");
 						end
 				end --if XML_STRING
 			end --sofia.conf
@@ -479,88 +479,113 @@
 				--handles action
 					--group_call
 
-				--build the call group array
-					sql = [[
-					select * from v_extensions 
-					where domain_uuid = ']]..domain_uuid..[[' 
-					order by call_group asc 
-					]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+				--attempt to use the cache
+					if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
+						XML_STRING = trim(api:execute("memcache", "get directory:groups"));
+					else
+						XML_STRING = "-ERR NOT FOUND";
 					end
-					call_group_array = {};
-					status = dbh:query(sql, function(row)
-						call_group = row['call_group'];
-						--call_group = str_replace(";", ",", call_group);
-						tmp_array = explode(",", call_group);
-						for key,value in pairs(tmp_array) do
-							value = trim(value);
-							--freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. value .. " " ..row['extension'] .."\n");
-							if (string.len(value) == 0) then
-							
-							else
-								if (call_group_array[value] == nil) then
-									call_group_array[value] = row['extension'];
-								else
-									call_group_array[value] = call_group_array[value]..','..row['extension'];
-								end
+					if (XML_STRING == "-ERR NOT FOUND") then
+						--build the call group array
+							sql = [[
+							select * from v_extensions 
+							where domain_uuid = ']]..domain_uuid..[[' 
+							order by call_group asc 
+							]];
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 							end
-						end
-					end);
-					--for key,value in pairs(call_group_array) do
-					--	freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. value .. "\n");
-					--end
+							call_group_array = {};
+							status = dbh:query(sql, function(row)
+								call_group = row['call_group'];
+								--call_group = str_replace(";", ",", call_group);
+								tmp_array = explode(",", call_group);
+								for key,value in pairs(tmp_array) do
+									value = trim(value);
+									--freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. value .. " " ..row['extension'] .."\n");
+									if (string.len(value) == 0) then
+									
+									else
+										if (call_group_array[value] == nil) then
+											call_group_array[value] = row['extension'];
+										else
+											call_group_array[value] = call_group_array[value]..','..row['extension'];
+										end
+									end
+								end
+							end);
+							--for key,value in pairs(call_group_array) do
+							--	freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. value .. "\n");
+							--end
 
-				--build the xml array
-					local xml = {}
-					table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-					table.insert(xml, [[<document type="freeswitch/xml">]]);
-					table.insert(xml, [[	<section name="directory">]]);
-					table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
-					table.insert(xml, [[		<groups>]]);
-					previous_call_group = "";
-					for key, value in pairs(call_group_array) do
-						call_group = trim(key);
-						extension_list = trim(value);
-						if (string.len(call_group) > 0) then
-							freeswitch.consoleLog("notice", "[directory] call_group: " .. call_group .. "\n");
-							freeswitch.consoleLog("notice", "[directory] extension_list: " .. extension_list .. "\n");
-							if (previous_call_group ~= call_group) then
-								table.insert(xml, [[			<group name="]]..call_group..[[">]]);
-								table.insert(xml, [[				<users>]]);
-								extension_array = explode(",", extension_list);
-								for index,tmp_extension in pairs(extension_array) do
-										table.insert(xml, [[					<user id="]]..tmp_extension..[[" type="pointer"/>]]);
+						--build the xml array
+							local xml = {}
+							table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
+							table.insert(xml, [[<document type="freeswitch/xml">]]);
+							table.insert(xml, [[	<section name="directory">]]);
+							table.insert(xml, [[		<domain name="]] .. domain_name .. [[">]]);
+							table.insert(xml, [[		<groups>]]);
+							previous_call_group = "";
+							for key, value in pairs(call_group_array) do
+								call_group = trim(key);
+								extension_list = trim(value);
+								if (string.len(call_group) > 0) then
+									freeswitch.consoleLog("notice", "[directory] call_group: " .. call_group .. "\n");
+									freeswitch.consoleLog("notice", "[directory] extension_list: " .. extension_list .. "\n");
+									if (previous_call_group ~= call_group) then
+										table.insert(xml, [[			<group name="]]..call_group..[[">]]);
+										table.insert(xml, [[				<users>]]);
+										extension_array = explode(",", extension_list);
+										for index,tmp_extension in pairs(extension_array) do
+												table.insert(xml, [[					<user id="]]..tmp_extension..[[" type="pointer"/>]]);
+										end
+										table.insert(xml, [[				</users>]]);
+										table.insert(xml, [[			</group>]]);
+									end
+									previous_call_group = call_group;
 								end
-								table.insert(xml, [[				</users>]]);
-								table.insert(xml, [[			</group>]]);
 							end
-							previous_call_group = call_group;
-						end
+							table.insert(xml, [[		</groups>]]);
+							table.insert(xml, [[		</domain>]]);
+							table.insert(xml, [[	</section>]]);
+							table.insert(xml, [[</document>]]);
+							XML_STRING = table.concat(xml, "\n");
+
+						--set the cache
+							result = trim(api:execute("memcache", "set directory:groups '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+
+						--send to the console
+							if (debug["cache"]) then
+								freeswitch.consoleLog("notice", "[xml_handler] directory:groups source: database\n");
+							end
+
+					else
+						--replace the &#39 back to a single quote
+							XML_STRING = XML_STRING:gsub("&#39;", "'");
+
+						--send to the console
+							if (debug["cache"]) then
+								if (XML_STRING) then
+									freeswitch.consoleLog("notice", "[xml_handler] directory:groups source: memcache\n");
+								end
+							end
 					end
-					table.insert(xml, [[		</groups>]]);
-					table.insert(xml, [[		</domain>]]);
-					table.insert(xml, [[	</section>]]);
-					table.insert(xml, [[</document>]]);
-					XML_STRING = table.concat(xml, "\n");
 
 				--send the xml to the console
 					if (debug["xml_string"]) then
-						freeswitch.consoleLog("notice", "[directory] XML_STRING: \n" .. XML_STRING .. "\n");
+						freeswitch.consoleLog("notice", "[directory] Groups XML_STRING: \n" .. XML_STRING .. "\n");
 					end
 			else 
 				--handle action
-					--all directory actions: sip_auth, user_call 
+					--all other directory actions: sip_auth, user_call 
 					--except for the action: group_call
 
 				--get the cache
 					if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-						XML_STRING = trim(api:execute("memcache", "get " .. user .. "@" .. domain_name));
+						XML_STRING = trim(api:execute("memcache", "get directory:" .. user .. "@" .. domain_name));
 						if (XML_STRING == "-ERR NOT FOUND") then
 							continue = true;
 						else
-							--replace the &#39 back to a single quote
-							XML_STRING = XML_STRING:gsub("&#39;", "'");
 							continue = false;
 						end
 					else
@@ -795,7 +820,7 @@
 							XML_STRING = table.concat(xml, "\n");
 
 						--set the cache
-							result = trim(api:execute("memcache", "set " .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+							result = trim(api:execute("memcache", "set directory:" .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
 
 						--send the xml to the console
 							if (debug["xml_string"]) then
@@ -806,13 +831,16 @@
 
 						--send to the console
 							if (debug["cache"]) then
-								freeswitch.consoleLog("notice", "[xml_handler] directory: " .. user .. "@" .. domain_name .. " source: database\n");
+								freeswitch.consoleLog("notice", "[xml_handler] directory:" .. user .. "@" .. domain_name .. " source: database\n");
 							end
 					else
+						--replace the &#39 back to a single quote
+							XML_STRING = XML_STRING:gsub("&#39;", "'");
+
 						--send to the console
 							if (debug["cache"]) then
 								if (XML_STRING) then
-									freeswitch.consoleLog("notice", "[xml_handler] directory: " .. user .. "@" .. domain_name .. " source: memcache \n");
+									freeswitch.consoleLog("notice", "[xml_handler] directory:" .. user .. "@" .. domain_name .. " source: memcache \n");
 								end
 							end
 					end
@@ -832,11 +860,10 @@
 
 		--get the cache
 		if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-			XML_STRING = trim(api:execute("memcache", "get " .. call_context));
+			XML_STRING = trim(api:execute("memcache", "get dialplan:" .. call_context));
 		else
 			XML_STRING = "-ERR NOT FOUND";
 		end
-
 		if (XML_STRING == "-ERR NOT FOUND") then
 			--set the xml array and then concatenate the array to a string
 				local xml = {}
@@ -1045,7 +1072,7 @@
 
 			--set the cache
 				tmp = XML_STRING:gsub("\\", "\\\\");
-				result = trim(api:execute("memcache", "set " .. call_context .. " '"..tmp:gsub("'", "&#39;").."' "..expire["dialplan"]));
+				result = trim(api:execute("memcache", "set dialplan:" .. call_context .. " '"..tmp:gsub("'", "&#39;").."' "..expire["dialplan"]));
 
 			--send the xml to the console
 				if (debug["xml_string"]) then
@@ -1056,7 +1083,7 @@
 
 			--send to the console
 				if (debug["cache"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] dialplan: "..call_context.." source: database\n");
+					freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: database\n");
 				end
 		else
 			--replace the &#39 back to a single quote
@@ -1064,7 +1091,7 @@
 
 			--send to the console
 				if (debug["cache"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] dialplan: "..call_context.." source: memcache\n");
+					freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: memcache\n");
 				end
 		end
 	end
