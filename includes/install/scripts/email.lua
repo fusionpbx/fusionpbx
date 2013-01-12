@@ -45,8 +45,9 @@
 	subject = argv[3];
 	body = argv[4];
 	file = argv[5];
-	--convert_cmd = argv[6];
-	--convert_ext = argv[7];
+	delete = argv[6];
+	--convert_cmd = argv[7];
+	--convert_ext = argv[8];
 
 --replace the &#39 with a single quote
 	body = body:gsub("&#39;", "'");
@@ -79,4 +80,9 @@
 				convert_ext
 				);
 		end
+	end
+
+--delete the file
+	if (delete == "true") then
+		os.remove(file);
 	end
