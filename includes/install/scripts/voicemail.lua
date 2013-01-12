@@ -32,7 +32,7 @@
 	digit_timeout = 3000;
 
 --debug
-	debug["info"] = true;
+	debug["info"] = false;
 	debug["sql"] = false;
 
 --starting values
@@ -808,7 +808,7 @@
 			status = dbh:query(sql, function(row)
 				--get the values from the database
 					--uuid = row["voicemail_message_uuid"];
-					--created_epoch = row["created_epoch"];
+					created_epoch = row["created_epoch"];
 					caller_id_name = row["caller_id_name"];
 					caller_id_number = row["caller_id_number"];
 					message_length = row["message_length"];
@@ -828,7 +828,7 @@
 			table.insert(message, [[<font face="arial">]]);
 			table.insert(message, [[<b>Message From "]]..caller_id_name..[[" <A HREF="tel:]]..caller_id_number..[[">]]..caller_id_number..[[</A></b><br>]]);
 			table.insert(message, [[<hr noshade="noshade" size="1">]]);
-			table.insert(message, [[Created: ]]..os.date("%A, %d %b %Y %I:%M %p", start_epoch)..[[<br>]]);
+			table.insert(message, [[Created: ]]..os.date("%A, %d %b %Y %I:%M %p", created_epoch)..[[<br>]]);
 			table.insert(message, [[Duration: ]]..message_length_formatted..[[<br>]]);
 			table.insert(message, [[Account: ]]..id..[[@]]..domain_name..[[<br>]]);
 			table.insert(message, [[</font>]]);
@@ -1225,13 +1225,14 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 			if (dtmf_digits == "1") then
 				listen_to_recording(message_number, uuid, created_epoch, caller_id_name, caller_id_number);
 			elseif (dtmf_digits == "2") then
-				message_saved(uuid);
+				message_saved(voicemail_id, uuid);
 				macro(session, "message_saved", 1, 100, '');
 			elseif (dtmf_digits == "5") then
-				message_saved(uuid);
+				message_saved(voicemail_id, uuid);
 				return_call(caller_id_number);
 			elseif (dtmf_digits == "7") then
 				delete_recording(uuid);
+				message_waiting(voicemail_id);
 			elseif (dtmf_digits == "8") then
 				forward_to_extension(uuid);
 				dtmf_digits = '';
@@ -1242,22 +1243,23 @@ function listen_to_recording (message_number, uuid, created_epoch, caller_id_nam
 				timeouts = 0;
 				main_menu();
 			elseif (dtmf_digits == "0") then
-				message_saved(uuid);
+				message_saved(voicemail_id, uuid);
 				session:transfer("0", "XML", context);
 			else
-				message_saved(uuid);
+				message_saved(voicemail_id, uuid);
 				macro(session, "message_saved", 1, 100, '');
 			end
 		end
 end
 
 --voicemail count if zero new messages set the mwi to no
-	function message_waiting(voicemail_uuid, voicemail_id)
+	function message_waiting(voicemail_id)
 		if (voicemail_id ~= nil) then
-			sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-				AND (message_status is null or message_status = '') ]];
+			sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages as m, v_voicemails as v
+				WHERE v.domain_uuid = ']] .. domain_uuid ..[['
+				AND v.voicemail_uuid = m.voicemail_uuid
+				AND v.voicemail_id = ']] .. voicemail_id ..[['
+				AND (m.message_status is null or m.message_status = '') ]];
 			if (debug["sql"]) then
 				if (session:ready()) then
 					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
@@ -1266,16 +1268,24 @@ end
 			status = dbh:query(sql, function(row)
 				if (row["new_messages"] == "0") then
 					--send the message waiting event
-					local event = freeswitch.Event("message_waiting");
-					event:addHeader("MWI-Messages-Waiting", "no");
-					event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-					event:fire();
+						local event = freeswitch.Event("message_waiting");
+						event:addHeader("MWI-Messages-Waiting", "no");
+						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+						event:fire();
+					--log to console
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail][message-waiting] id: "..voicemail_id.."@"..domain_name.." status: no\n");
+						end
 				else
 					--set the message waiting event
-					local event = freeswitch.Event("message_waiting");
-					event:addHeader("MWI-Messages-Waiting", "yes");
-					event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-					event:fire();
+						local event = freeswitch.Event("message_waiting");
+						event:addHeader("MWI-Messages-Waiting", "yes");
+						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+						event:fire();
+					--log to console
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[voicemail][message-waiting] id: "..voicemail_id.."@"..domain_name.." status: yes\n");
+						end
 				end
 			end);
 		end
@@ -1296,16 +1306,18 @@ end
 					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 				end
 				dbh:query(sql);
+			--log to console
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail][deleted] message: " .. uuid .. "\n");
+				end
 			--message deleted
 				dtmf_digits = '';
 				macro(session, "message_deleted", 1, 100, '');
-			--check the message waiting status
-				message_waiting();
 		end
 	end
 
 --save the message
-	function message_saved(uuid)
+	function message_saved(voicemail_id, uuid)
 		if (session:ready()) then
 			--clear the dtmf
 				dtmf_digits = '';
@@ -1319,8 +1331,12 @@ end
 					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 				end
 				dbh:query(sql);
+			--log to console
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail][saved] id: " .. voicemail_id .. " message: "..uuid.."\n");
+				end
 			--check the message waiting status
-				message_waiting();
+				message_waiting(voicemail_id);
 		end
 	end
 
