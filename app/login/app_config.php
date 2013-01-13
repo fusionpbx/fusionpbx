@@ -49,7 +49,7 @@
 		$apps[$x]['menu'][1]['uuid'] = '0d29e9f4-0c9b-9d8d-cd2d-454899dc9bc4';
 		$apps[$x]['menu'][1]['parent_uuid'] = '02194288-6d56-6d3e-0b1a-d53a2bc10788';
 		$apps[$x]['menu'][1]['category'] = 'internal';
-		$apps[$x]['menu'][1]['path'] = '/resources/logout.php';
+		$apps[$x]['menu'][1]['path'] = '/logout.php';
 		$apps[$x]['menu'][1]['groups'][] = 'user';
 		$apps[$x]['menu'][1]['groups'][] = 'admin';
 		$apps[$x]['menu'][1]['groups'][] = 'superadmin';
