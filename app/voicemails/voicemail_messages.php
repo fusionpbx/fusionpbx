@@ -63,6 +63,21 @@ else {
 		}
 	}
 
+//download the message
+	if (check_str($_REQUEST["action"]) == "download") {
+		$voicemail_message_uuid = check_str($_REQUEST["uuid"]);
+		require_once "resources/classes/voicemail.php";
+		$voicemail = new voicemail;
+		$voicemail->db = $db;
+		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+		$voicemail->voicemail_uuid = $voicemail_uuid;
+		$voicemail->voicemail_id = $voicemail_id;
+		$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
+		$result = $voicemail->message_download();
+		unset($voicemail);
+		exit;
+	}
+
 //get the html values and set them as variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
@@ -164,11 +179,11 @@ else {
 			//echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_status']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['file_size_label']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' $style>\n";
-			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?a=download&type=vm&uuid=".$row['voicemail_message_uuid']."&id=".$row['voicemail_id']."&ext=".$row['file_ext']."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?action=download&type=vm&uuid=".$row['voicemail_message_uuid']."&id=".$row['voicemail_id']."&ext=".$row['file_ext']."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			//echo "			".$text['label-play']."\n";
 			//echo "		</a>\n";
 			echo "		&nbsp;&nbsp;\n";
-			echo "		<a href=\"voicemail_messages.php?a=download&type=vm&t=bin&id=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\">\n";
+			echo "		<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\">\n";
 			echo "			".$text['label-download']."\n";
 			echo "		</a>\n";
 			echo "	</td>\n";

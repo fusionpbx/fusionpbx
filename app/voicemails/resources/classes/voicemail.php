@@ -107,40 +107,76 @@
 			return $num_rows;
 		}
 
-		public function download() {
-			//get the voicemail_id
-				$sql = "select * from v_voicemails ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		public function message_waiting() {
+			//send the message waiting status
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_cmd .= "luarun voicemail.lua mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			}
+		}
+
+		public function message_delete() {
+
+			//delete voicemail_message
+				$sql = "delete from v_voicemail_messages ";
+				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
-				$prep_statement = $db->prepare(check_sql($sql));
+				$sql .= "and voicemail_message_uuid = '$this->voicemail_message_uuid' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$voicemail_id = $row["voicemail_id"];
+				unset($sql);
+
+			//get the voicemail_id
+				if (!isset($this->voicemail_id)) {
+					$sql = "select * from v_voicemails ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($result as &$row) {
+						$this->voicemail_id = $row["voicemail_id"];
+					}
+					unset ($prep_statement);
 				}
-				unset ($prep_statement);
+
+			//delete the recording
+				$file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$this->voicemail_id."/msg_".$this->voicemail_message_uuid.".wav";
+				unlink($file_path);
+
+			//check the message waiting status
+				$this->message_waiting();
+
+		}
+
+		public function message_saved() {
+			//set the voicemail status to saved
+				$sql = "update v_voicemail_messages set ";
+				$sql .= "message_status = 'saved' ";
+				$sql .= "where domain_uuid = '$this->domain_uuid' ";
+				$sql .= "and voicemail_uuid = '$this->voicemail_uuid' ";
+				$sql .= "and voicemail_message_uuid = '$this->voicemail_message_uuid'";
+				$this->db->exec($sql);
+				unset($sql);
+			//check the message waiting status
+				$this->message_waiting();
+		}
+
+		public function message_download() {
+
+			//check the message waiting status
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd .= "luarun voicemail.lua mwi ".$this->voicemail_id."@".$_SESSION['domain_name'];
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
+
+			//change the message status
+				$this->message_saved();
 
 			//clear the cache
 				session_cache_limiter('public');
-
-			//get the voicemail message meta data
-				$sql = "select * from v_voicemail_messages ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and voicemail_message_uuid = '$this->voicemail_message_uuid' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$voicemail_uuid = $row["voicemail_uuid"];
-					$created_epoch = $row["created_epoch"];
-					$read_epoch = $row["read_epoch"];
-					$caller_id_name = $row["caller_id_name"];
-					$caller_id_number = $row["caller_id_number"];
-					$message_length = $row["message_length"];
-					$message_status = $row["message_status"];
-					$message_priority = $row["message_priority"];
-				}
-				unset ($prep_statement);
 
 			//prepare and stream the file
 				$file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$this->voicemail_id."/msg_".$this->voicemail_message_uuid.".wav";
@@ -174,7 +210,6 @@
 					fpassthru($fd);
 				}
 		} // download
-
 	}
 
 //example voicemail messages
