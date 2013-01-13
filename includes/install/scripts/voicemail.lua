@@ -34,7 +34,7 @@
 --direct dial
 	direct_dial = {}
 	direct_dial["enabled"] = "true";
-	direct_dial["max_digits"] = 3;
+	direct_dial["max_digits"] = 4;
 
 --debug
 	debug["info"] = true;
