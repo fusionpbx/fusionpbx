@@ -68,6 +68,7 @@
 
 		--set the callback function
 			if (session:ready()) then
+				session:setVariable("playback_terminators", "#");
 				session:setInputCallback("on_dtmf", "");
 			end
 
