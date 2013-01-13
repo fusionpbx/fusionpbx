@@ -46,31 +46,18 @@ else {
 		$voicemail_uuid = check_str($_GET["voicemail_uuid"]);
 	}
 
-if (strlen($id)>0) {
-	//delete voicemail_message
-		$sql = "delete from v_voicemail_messages ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and voicemail_message_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-
-	//get the voicemail_id
-		$sql = "select * from v_voicemails ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$voicemail_id = $row["voicemail_id"];
-		}
-		unset ($prep_statement);
-
-	//delete the recording
-		$file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$voicemail_id."/msg_".$id.".wav";
-		unlink($file_path);
-}
+//delete the voicemail message
+	if (strlen($id)>0) {
+		require_once "resources/classes/voicemail.php";
+		$voicemail = new voicemail;
+		$voicemail->db = $db;
+		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+		$voicemail->voicemail_uuid = $voicemail_uuid;
+		$voicemail->voicemail_id = $voicemail_id;
+		$voicemail->voicemail_message_uuid = $id;
+		$result = $voicemail->message_delete();
+		unset($voicemail);
+	}
 
 //redirect the user
 	require_once "includes/header.php";
