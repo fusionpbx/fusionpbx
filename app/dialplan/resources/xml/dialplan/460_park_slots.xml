@@ -1,6 +1,6 @@
 <context name="{v_context}">
-	<extension name="park_slots" app_uuid="f096f899-c78e-409c-8290-00f6d423b31c" enabled="false">
-		<condition field="destination_number" expression="(^5901$|^5902$|^5903$)" >
+	<extension name="park_slots" app_uuid="f096f899-c78e-409c-8290-00f6d423b31c" enabled="true">
+		<condition field="destination_number" expression="(^\*5901$|^\*5902$|^\*5903$)" >
 			<action application="set" data="park_extension=$1" />
 			<action application="set" data="park_direction=both" />
 			<action application="set" data="park_announce=true" />
