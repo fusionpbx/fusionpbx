@@ -74,7 +74,7 @@ recording_prefix = "";
 			session:execute("set", "playback_terminators=#");
 
 		--begin recording
-			session:execute("record", recordings_dir.."/"..recording_name.." 180 200");
+			session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 180 200");
 
 		--preview the recording
 			session:streamFile(recordings_dir.."/"..recording_name);
