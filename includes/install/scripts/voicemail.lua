@@ -31,6 +31,11 @@
 	max_timeouts = 3;
 	digit_timeout = 3000;
 
+--direct dial
+	direct_dial = {}
+	direct_dial["enabled"] = "true";
+	direct_dial["max_digits"] = 3;
+
 --debug
 	debug["info"] = true;
 	debug["sql"] = false;
@@ -182,14 +187,14 @@
 --define on_dtmf call back function
 	function on_dtmf(s, type, obj, arg)
 		if (type == "dtmf") then
-			dtmf_digits = dtmf_digits .. obj['digit'];
-			if (debug["info"]) then
-				freeswitch.console_log("info", "[voicemail] dtmf digits: " .. dtmf_digits .. ", length: ".. string.len(dtmf_digits) .." max_digits: " .. max_digits .. "\n");
-			end
 			if (obj['digit'] == "#") then
 				return 0;
 			else
-				if (string.len(dtmf_digits) >= max_digits) then
+				dtmf_digits = dtmf_digits .. obj['digit'];
+				if (debug["info"]) then
+					freeswitch.console_log("info", "[voicemail] dtmf digits: " .. dtmf_digits .. ", length: ".. string.len(dtmf_digits) .." max_digits: " .. max_digits .. "\n");
+				end
+				if (string.len(dtmf_digits) > max_digits) then
 					if (debug["info"]) then
 						freeswitch.console_log("info", "[voicemail] max_digits reached\n");
 					end
@@ -335,7 +340,6 @@
 				if (name == "record_message") then
 					actions = {}
 					table.insert(actions, {app="streamFile",data="voicemail/vm-record_message.wav"});
-					table.insert(actions, {app="tone_stream",data="L=1;%(1000, 0, 640)"});
 				end
 			--beep
 				if (name == "record_beep") then
@@ -660,23 +664,64 @@
 --save the recording
 	function record_message()
 
-		--flush dtmf digits from the input buffer
-			session:flushDigits();
+		--voicemail prompt
+			if (skip_greeting == "true") then
+				--skip the greeting
+			else
+				if (session:ready()) then
+					dtmf_digits = '';
+					if (string.len(greeting_id) > 0) then
+						--play the custom greeting
+						session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+						session:streamFile("silence_stream://200");
+					else
+						--play the default greeting
+						dtmf_digits = macro(session, "person_not_available_record_message", 1, 200);
+					end
+				end
+			end
 
 		--record your message at the tone press any key or stop talking to end the recording
 			if (skip_greeting == "true") then
-				dtmf_digits = '';
-				result = macro(session, "record_beep", 1, 100);
+				--skip the greeting
 			else
-				dtmf_digits = '';
-				result = macro(session, "record_message", 1, 100);
+				if (string.len(dtmf_digits) == 0) then
+					dtmf_digits = macro(session, "record_message", 1, 100);
+				end
 			end
+
+		--direct dial
+			if (string.len(dtmf_digits) > 0) then
+				if (session:ready()) then
+					if (direct_dial["enabled"] == "true") then
+						if (string.len(dtmf_digits) < max_digits) then
+							dtmf_digits = dtmf_digits .. session:getDigits(direct_dial["max_digits"], "#", 5000);
+						end
+					end
+				end
+				if (session:ready()) then
+					freeswitch.consoleLog("notice", "[voicemail] dtmf_digits: zzzz " .. string.sub(dtmf_digits, 0, 1) .. "\n");
+					if (dtmf_digits == "*") then
+						--check the voicemail password
+							check_password(voicemail_id, password_tries);
+						--send to the main menu
+							timeouts = 0;
+							main_menu();
+					elseif (string.sub(dtmf_digits, 0, 1) == "*") then
+						--do not allow dialing numbers prefixed with *
+						session:hangup();
+					else
+						session:transfer(dtmf_digits, "XML", context);
+					end
+				end
+			end
+
+		--play the beep
+			dtmf_digits = '';
+			result = macro(session, "record_beep", 1, 100);
 
 		--start epoch
 			start_epoch = os.time();
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] start epoch: " .. start_epoch .. "\n");
-			end
 
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
@@ -689,9 +734,6 @@
 
 		--stop epoch
 			stop_epoch = os.time();
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] start epoch: " .. stop_epoch .. "\n");
-			end
 
 		--calculate the message length
 			message_length = stop_epoch - start_epoch;
@@ -1706,22 +1748,6 @@
 
 --leave a message
 	if (voicemail_action == "save") then
-
-		--voicemail prompt
-			if (skip_greeting == "true") then
-				--skip the greeting
-			else
-				if (session:ready()) then
-					if (string.len(greeting_id) > 0) then
-						--play the greeting
-						session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
-					else
-						--if there is no greeting then play digits of the voicemail_id
-						dtmf_digits = '';
-						result = macro(session, "person_not_available_record_message", 1, 100);
-					end
-				end
-			end
 
 		--save the recording
 			timeouts = 0;
