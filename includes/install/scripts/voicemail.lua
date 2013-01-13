@@ -32,8 +32,12 @@
 	digit_timeout = 3000;
 
 --debug
-	debug["info"] = false;
+	debug["info"] = true;
 	debug["sql"] = false;
+
+--get the argv values
+	script_name = argv[0];
+	voicemail_action = argv[1];
 
 --starting values
 	dtmf_digits = '';
@@ -55,62 +59,110 @@
 			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
 		end
 
---answer the session
-	if (session:ready()) then
-		session:answer();
-	end
-
---get session variables
-	context = session:getVariable("context");
-	sounds_dir = session:getVariable("sounds_dir");
-	domain_name = session:getVariable("domain_name");
-	uuid = session:getVariable("uuid");
-	voicemail_id = session:getVariable("voicemail_id");
-	voicemail_action = session:getVariable("voicemail_action");
-	base_dir = session:getVariable("base_dir");
-	destination_number = session:getVariable("destination_number");
-	caller_id_name = session:getVariable("caller_id_name");
-	caller_id_number = session:getVariable("caller_id_number");
-	skip_instructions = session:getVariable("skip_instructions");
-	skip_greeting = session:getVariable("skip_greeting");
-	vm_message_ext = session:getVariable("vm_message_ext");
-	if (not vm_message_ext) then vm_message_ext = 'wav'; end
-
---set the sounds path for the language, dialect and voice
-	default_language = session:getVariable("default_language");
-	default_dialect = session:getVariable("default_dialect");
-	default_voice = session:getVariable("default_voice");
-	if (not default_language) then default_language = 'en'; end
-	if (not default_dialect) then default_dialect = 'us'; end
-	if (not default_voice) then default_voice = 'callie'; end
-
---get the domain_uuid
-	domain_uuid = session:getVariable("domain_uuid");
-	if (domain_uuid == nil) then
-		--get the domain_uuid
-			if (domain_name ~= nil) then
-				sql = "SELECT domain_uuid FROM v_domains ";
-				sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-				end
-				status = dbh:query(sql, function(rows)
-					domain_uuid = rows["domain_uuid"];
-				end);
+--if the session exists
+	if (session ~= nil) then
+		--answer the session
+			if (session:ready()) then
+				session:answer();
 			end
-	end
-	domain_uuid = string.lower(domain_uuid);
 
---set the voicemail_dir
-	voicemail_dir = base_dir.."/storage/voicemail/default/"..domain_name;
-	if (debug["info"]) then
-		freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
+		--set the callback function
+			if (session:ready()) then
+				session:setInputCallback("on_dtmf", "");
+			end
+
+		--get session variables
+			context = session:getVariable("context");
+			sounds_dir = session:getVariable("sounds_dir");
+			domain_name = session:getVariable("domain_name");
+			uuid = session:getVariable("uuid");
+			voicemail_id = session:getVariable("voicemail_id");
+			voicemail_action = session:getVariable("voicemail_action");
+			base_dir = session:getVariable("base_dir");
+			destination_number = session:getVariable("destination_number");
+			caller_id_name = session:getVariable("caller_id_name");
+			caller_id_number = session:getVariable("caller_id_number");
+			skip_instructions = session:getVariable("skip_instructions");
+			skip_greeting = session:getVariable("skip_greeting");
+			vm_message_ext = session:getVariable("vm_message_ext");
+			if (not vm_message_ext) then vm_message_ext = 'wav'; end
+
+		--set the sounds path for the language, dialect and voice
+			default_language = session:getVariable("default_language");
+			default_dialect = session:getVariable("default_dialect");
+			default_voice = session:getVariable("default_voice");
+			if (not default_language) then default_language = 'en'; end
+			if (not default_dialect) then default_dialect = 'us'; end
+			if (not default_voice) then default_voice = 'callie'; end
+
+		--get the domain_uuid
+			domain_uuid = session:getVariable("domain_uuid");
+			if (domain_uuid == nil) then
+				--get the domain_uuid
+					if (domain_name ~= nil) then
+						sql = "SELECT domain_uuid FROM v_domains ";
+						sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(rows)
+							domain_uuid = rows["domain_uuid"];
+						end);
+					end
+			end
+			domain_uuid = string.lower(domain_uuid);
+
+		--set the voicemail_dir
+			voicemail_dir = base_dir.."/storage/voicemail/default/"..domain_name;
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
+			end
+
+		--get the voicemail settings
+			if (voicemail_id ~= nil) then
+				if (session:ready()) then
+					--get the information from the database
+						sql = [[SELECT * FROM v_voicemails
+							WHERE domain_uuid = ']] .. domain_uuid ..[['
+							AND voicemail_id = ']] .. voicemail_id ..[['
+							AND voicemail_enabled = 'true' ]];
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(row)
+							voicemail_uuid = string.lower(row["voicemail_uuid"]);
+							voicemail_password = row["voicemail_password"];
+							greeting_id = row["greeting_id"];
+							voicemail_mail_to = row["voicemail_mail_to"];
+							voicemail_attach_file = row["voicemail_attach_file"];
+							voicemail_local_after_email = row["voicemail_local_after_email"];
+						end);
+					--set default values
+						if (voicemail_local_after_email == nil) then
+							voicemail_local_after_email = "true";
+						end
+						if (voicemail_attach_file == nil) then
+							voicemail_attach_file = "true";
+						end
+				end
+			end
 	end
 
 --check if a file exists
 	function file_exists(name)
 		local f=io.open(name,"r")
 		if f~=nil then io.close(f) return true else return false end
+	end
+
+--add the explode function
+	function explode ( seperator, str ) 
+		local pos, arr = 0, {}
+		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+			pos = sp + 1 -- jump past current divider
+		end
+		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+		return arr
 	end
 
 --format seconds to 00:00:00
@@ -146,9 +198,6 @@
 			freeswitch.console_log("info", "[voicemail] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
 		end
 		return 0;
-	end
-	if (session:ready()) then
-		session:setInputCallback("on_dtmf", "");
 	end
 
 --get the voicemail id
@@ -607,35 +656,6 @@
 		end
 	end
 
---get the voicemail settings
-	if (voicemail_id ~= nil) then
-		if (session:ready()) then
-			--get the information from the database
-				sql = [[SELECT * FROM v_voicemails
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_id = ']] .. voicemail_id ..[['
-					AND voicemail_enabled = 'true' ]];
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-				status = dbh:query(sql, function(row)
-					voicemail_uuid = string.lower(row["voicemail_uuid"]);
-					voicemail_password = row["voicemail_password"];
-					greeting_id = row["greeting_id"];
-					voicemail_mail_to = row["voicemail_mail_to"];
-					voicemail_attach_file = row["voicemail_attach_file"];
-					voicemail_local_after_email = row["voicemail_local_after_email"];
-				end);
-			--set default values
-				if (voicemail_local_after_email == nil) then
-					voicemail_local_after_email = "true";
-				end
-				if (voicemail_attach_file == nil) then
-					voicemail_attach_file = "true";
-				end
-		end
-	end
-
 --save the recording
 	function record_message()
 
@@ -675,9 +695,6 @@
 		--calculate the message length
 			message_length = stop_epoch - start_epoch;
 			message_length_formatted = format_seconds(message_length);
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
-			end
 
 		--if the recording is below the minmal length then re-record the message
 			if (message_length > 2) then
@@ -781,29 +798,13 @@
 	end
 
 --define a function to forward a message to an extension
-	function forward_to_extension(uuid)
+	function forward_to_extension(voicemail_id, uuid)
 
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
 
-		--get voicemail message details
-			if (session:ready()) then
-				sql = [[SELECT * FROM v_voicemail_messages
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_message_uuid = ']] .. uuid ..[[']]
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-				status = dbh:query(sql, function(row)
-					--get the values from the database
-						created_epoch = row["created_epoch"];
-						caller_id_name = row["caller_id_name"];
-						caller_id_number = row["caller_id_number"];
-						message_length = row["message_length"];
-						message_status = row["message_status"];
-						message_priority = row["message_priority"];
-				end);
-			end
+		--save the voicemail message
+			message_saved(voicemail_id, uuid);
 
 		--request the forward_voicemail_id
 			if (session:ready()) then
@@ -823,7 +824,27 @@
 				end
 			end
 
-		--get the voicemail settings using the voicemail_uuid
+		--get voicemail message details
+			if (session:ready()) then
+				sql = [[SELECT * FROM v_voicemail_messages
+					WHERE domain_uuid = ']] .. domain_uuid ..[['
+					AND voicemail_uuid = ']] .. voicemail_uuid ..[['
+					AND voicemail_message_uuid = ']] .. uuid ..[[']]
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+				end
+				status = dbh:query(sql, function(row)
+					--get the values from the database
+						created_epoch = row["created_epoch"];
+						caller_id_name = row["caller_id_name"];
+						caller_id_number = row["caller_id_number"];
+						message_length = row["message_length"];
+						message_status = row["message_status"];
+						message_priority = row["message_priority"];
+				end);
+			end
+
+		--get the voicemail settings
 			sql = [[SELECT * FROM v_voicemails
 				WHERE domain_uuid = ']] .. domain_uuid ..[['
 				AND voicemail_id = ']] .. forward_voicemail_id ..[['
@@ -837,14 +858,6 @@
 				forward_voicemail_attach_file = row["voicemail_attach_file"];
 				forward_voicemail_local_after_email = row["voicemail_local_after_email"];
 			end);
-
-		--set default values
-			if (forward_voicemail_attach_file == nil) then
-				forward_voicemail_attach_file = "true";
-			end
-			if (forward_voicemail_local_after_email == nil) then
-				forward_voicemail_local_after_email = "true";
-			end
 
 		--save the message to the voicemail messages
 			local sql = {}
@@ -872,9 +885,7 @@
 			--table.insert(sql, "'".. message_status .."', ");
 			--table.insert(sql, "'".. message_priority .."' ");
 			table.insert(sql, ") ");
-			if (forward_voicemail_local_after_email == "true") then
-				sql = table.concat(sql, "\n");
-			end
+			sql = table.concat(sql, "\n");
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
@@ -891,9 +902,8 @@
 			os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 
 		--send the email with the voicemail recording attached
-			if (string.len(forward_voicemail_mail_to) > 2) then
-				send_email(forward_voicemail_id, uuid);
-			end
+			send_email(forward_voicemail_id, uuid);
+
 	end
 
 --define function main menu
@@ -1078,10 +1088,10 @@
 					message_saved(voicemail_id, uuid);
 					return_call(caller_id_number);
 				elseif (dtmf_digits == "7") then
-					delete_recording(uuid);
-					message_waiting(voicemail_id);
+					delete_recording(voicemail_id, uuid);
+					message_waiting(voicemail_id, domain_uuid);
 				elseif (dtmf_digits == "8") then
-					forward_to_extension(uuid);
+					forward_to_extension(voicemail_id, uuid);
 					dtmf_digits = '';
 					macro(session, "message_saved", 1, 100, '');
 				elseif (dtmf_digits == "9") then
@@ -1100,42 +1110,30 @@
 	end
 
 --voicemail count if zero new messages set the mwi to no
-	function message_waiting(voicemail_id)
-		if (voicemail_id ~= nil) then
-			sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages as m, v_voicemails as v
-				WHERE v.domain_uuid = ']] .. domain_uuid ..[['
-				AND v.voicemail_uuid = m.voicemail_uuid
-				AND v.voicemail_id = ']] .. voicemail_id ..[['
-				AND (m.message_status is null or m.message_status = '') ]];
-			if (debug["sql"]) then
-				if (session:ready()) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-			end
-			status = dbh:query(sql, function(row)
-				if (row["new_messages"] == "0") then
-					--send the message waiting event
-						local event = freeswitch.Event("message_waiting");
-						event:addHeader("MWI-Messages-Waiting", "no");
-						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-						event:fire();
-					--log to console
-						if (debug["info"]) then
-							freeswitch.consoleLog("notice", "[voicemail][message-waiting] id: "..voicemail_id.."@"..domain_name.." status: no\n");
-						end
-				else
-					--set the message waiting event
-						local event = freeswitch.Event("message_waiting");
-						event:addHeader("MWI-Messages-Waiting", "yes");
-						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-						event:fire();
-					--log to console
-						if (debug["info"]) then
-							freeswitch.consoleLog("notice", "[voicemail][message-waiting] id: "..voicemail_id.."@"..domain_name.." status: yes\n");
-						end
-				end
-			end);
+	function message_waiting(voicemail_id, domain_uuid)
+		sql = [[SELECT count(*) as message_count FROM v_voicemail_messages as m, v_voicemails as v
+			WHERE v.domain_uuid = ']] .. domain_uuid ..[['
+			AND v.voicemail_uuid = m.voicemail_uuid
+			AND v.voicemail_id = ']] .. voicemail_id ..[['
+			AND (m.message_status is null or m.message_status = '') ]];
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 		end
+		status = dbh:query(sql, function(row)
+			--send the message waiting event
+				local event = freeswitch.Event("message_waiting");
+				if (row["message_count"] == "0") then
+					event:addHeader("MWI-Messages-Waiting", "no");
+				else
+					event:addHeader("MWI-Messages-Waiting", "yes");
+				end
+				event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+				event:fire();
+			--log to console
+				if (debug["info"]) then
+					freeswitch.consoleLog("notice", "[voicemail] mailbox: "..voicemail_id.."@"..domain_name.." messages: " .. row["message_count"] .. " \n");
+				end
+		end);
 	end
 
 --define a function to send email
@@ -1148,7 +1146,7 @@
 				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 			end
 			status = dbh:query(sql, function(row)
-				--voicemail_uuid = string.lower(row["voicemail_uuid"]);
+				db_voicemail_uuid = string.lower(row["voicemail_uuid"]);
 				--voicemail_password = row["voicemail_password"];
 				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
@@ -1156,131 +1154,166 @@
 				voicemail_local_after_email = row["voicemail_local_after_email"];
 			end);
 
-		--get voicemail message details
-			sql = [[SELECT * FROM v_voicemail_messages
-				WHERE domain_uuid = ']] .. domain_uuid ..[['
-				AND voicemail_message_uuid = ']] .. uuid ..[[']]
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+		--set default values
+			if (voicemail_local_after_email == nil) then
+				voicemail_local_after_email = "true";
 			end
-			status = dbh:query(sql, function(row)
-				--get the values from the database
-					--uuid = row["voicemail_message_uuid"];
-					created_epoch = row["created_epoch"];
-					caller_id_name = row["caller_id_name"];
-					caller_id_number = row["caller_id_number"];
-					message_length = row["message_length"];
-					--message_status = row["message_status"];
-					--message_priority = row["message_priority"];
-			end);
-
-		--format the message length
-			message_length_formatted = format_seconds(message_length);
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
+			if (voicemail_attach_file == nil) then
+				voicemail_attach_file = "true";
 			end
 
-		--send the email
-			subject = [[Voicemail from ]]..caller_id_name..[[ <]]..caller_id_number..[[> ]]..message_length_formatted;
-			local message = {}
-			table.insert(message, [[<font face="arial">]]);
-			table.insert(message, [[<b>Message From "]]..caller_id_name..[[" <A HREF="tel:]]..caller_id_number..[[">]]..caller_id_number..[[</A></b><br>]]);
-			table.insert(message, [[<hr noshade="noshade" size="1">]]);
-			table.insert(message, [[Created: ]]..os.date("%A, %d %b %Y %I:%M %p", created_epoch)..[[<br>]]);
-			table.insert(message, [[Duration: ]]..message_length_formatted..[[<br>]]);
-			table.insert(message, [[Account: ]]..id..[[@]]..domain_name..[[<br>]]);
-			table.insert(message, [[</font>]]);
-			body = table.concat(message, "");
-			body = body:gsub("'", "&#39;");
-			body = body:gsub([["]], "&#34;");
-			if (voicemail_attach_file == "true") then
-				if (voicemail_local_after_email == "false") then
-					delete = "true";
-				else
-					delete = "false";
-				end
-				file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
-				cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." '"..subject.."' '"..body.."' '"..file.."' "..delete;
-			else
-				cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." '"..subject.."' '"..body.."'";
+		--require the email address to send the email
+			if (string.len(voicemail_mail_to) > 2) then
+				--get voicemail message details
+					sql = [[SELECT * FROM v_voicemail_messages
+						WHERE domain_uuid = ']] .. domain_uuid ..[['
+						AND voicemail_message_uuid = ']] .. uuid ..[[']]
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+					end
+					status = dbh:query(sql, function(row)
+						--get the values from the database
+							--uuid = row["voicemail_message_uuid"];
+							created_epoch = row["created_epoch"];
+							caller_id_name = row["caller_id_name"];
+							caller_id_number = row["caller_id_number"];
+							message_length = row["message_length"];
+							--message_status = row["message_status"];
+							--message_priority = row["message_priority"];
+					end);
+
+				--format the message length
+					message_length_formatted = format_seconds(message_length);
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] message length: " .. message_length .. "\n");
+					end
+
+				--send the email
+					subject = [[Voicemail from ]]..caller_id_name..[[ <]]..caller_id_number..[[> ]]..message_length_formatted;
+					local message = {}
+					table.insert(message, [[<font face="arial">]]);
+					table.insert(message, [[<b>Message From "]]..caller_id_name..[[" <A HREF="tel:]]..caller_id_number..[[">]]..caller_id_number..[[</A></b><br>]]);
+					table.insert(message, [[<hr noshade="noshade" size="1">]]);
+					table.insert(message, [[Created: ]]..os.date("%A, %d %b %Y %I:%M %p", created_epoch)..[[<br>]]);
+					table.insert(message, [[Duration: ]]..message_length_formatted..[[<br>]]);
+					table.insert(message, [[Account: ]]..id..[[@]]..domain_name..[[<br>]]);
+					table.insert(message, [[</font>]]);
+					body = table.concat(message, "");
+					body = body:gsub("'", "&#39;");
+					body = body:gsub([["]], "&#34;");
+					if (voicemail_attach_file == "true") then
+						if (voicemail_local_after_email == "false") then
+							delete = "true";
+						else
+							delete = "false";
+						end
+						file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
+						cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." '"..subject.."' '"..body.."' '"..file.."' "..delete;
+					else
+						cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." '"..subject.."' '"..body.."'";
+					end
+					api = freeswitch.API();
+					if (debug["info"]) then
+						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
+					end
+					result = api:executeString(cmd);
+
+				--emailed
+					if (session:ready()) then
+						dtmf_digits = '';
+						macro(session, "emailed", 1, 1000, '');
+					end
 			end
-			api = freeswitch.API();
-			if (debug["info"]) then
-				freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
-			end
-			result = api:executeString(cmd);
 
 		--whether to keep the voicemail message and details local after email
 			if (voicemail_local_after_email == "false") then
 				--delete the voicemail message details
 					sql = [[DELETE FROM v_voicemail_messages
 						WHERE domain_uuid = ']] .. domain_uuid ..[['
+						AND voicemail_uuid = ']] .. db_voicemail_uuid ..[['
 						AND voicemail_message_uuid = ']] .. uuid ..[[']]
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 					end
 					status = dbh:query(sql);
 				--set message waiting indicator
-					message_waiting(id);
-			end
-
-		--emailed
-			if (session:ready()) then
-				dtmf_digits = '';
-				macro(session, "emailed", 1, 1000, '');
+					message_waiting(id, domain_uuid);
+				--clear the variable
+					db_voicemail_uuid = '';
 			end
 	end
 
---delete the recording
-	function delete_recording(uuid)
-		if (session:ready()) then
-			--flush dtmf digits from the input buffer
-				session:flushDigits();
-			--delete the file
-				os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
-			--delete from the database
-				sql = [[DELETE FROM v_voicemail_messages
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_message_uuid = ']] .. uuid ..[[']];
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+--delete the message
+	function delete_recording(voicemail_id, uuid)
+
+		--get the voicemail_uuid
+			sql = [[SELECT * FROM v_voicemails
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND voicemail_id = ']] .. voicemail_id ..[[']];
+			status = dbh:query(sql, function(row)
+				db_voicemail_uuid = row["voicemail_uuid"];
+			end);
+		--flush dtmf digits from the input buffer
+			session:flushDigits();
+		--delete the file
+			os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+		--delete from the database
+			sql = [[DELETE FROM v_voicemail_messages
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND voicemail_uuid = ']] .. db_voicemail_uuid ..[['
+				AND voicemail_message_uuid = ']] .. uuid ..[[']];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+			end
+			dbh:query(sql);
+		--log to console
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail][deleted] message: " .. uuid .. "\n");
+			end
+		--message deleted
+			if (session ~= nil) then
+				if (session:ready()) then
+					dtmf_digits = '';
+					macro(session, "message_deleted", 1, 100, '');
 				end
-				dbh:query(sql);
-			--log to console
-				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[voicemail][deleted] message: " .. uuid .. "\n");
-				end
-			--message deleted
-				dtmf_digits = '';
-				macro(session, "message_deleted", 1, 100, '');
-		end
+			end
+		--clear the variable
+			db_voicemail_uuid = '';
 	end
 
 --save the message
 	function message_saved(voicemail_id, uuid)
-		if (session:ready()) then
-			--clear the dtmf
-				dtmf_digits = '';
-			--flush dtmf digits from the input buffer
-				session:flushDigits();
-			--delete from the database
-				sql = [[UPDATE v_voicemail_messages SET message_status = 'saved'
-					WHERE domain_uuid = ']] .. domain_uuid ..[['
-					AND voicemail_message_uuid = ']] .. uuid ..[[']];
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-				dbh:query(sql);
-			--log to console
-				if (debug["info"]) then
-					freeswitch.consoleLog("notice", "[voicemail][saved] id: " .. voicemail_id .. " message: "..uuid.."\n");
-				end
-			--check the message waiting status
-				message_waiting(voicemail_id);
-		end
+		--clear the dtmf
+			dtmf_digits = '';
+		--flush dtmf digits from the input buffer
+			session:flushDigits();
+		--get the voicemail_uuid
+			sql = [[SELECT * FROM v_voicemails
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND voicemail_id = ']] .. voicemail_id ..[[']];
+			status = dbh:query(sql, function(row)
+				db_voicemail_uuid = row["voicemail_uuid"];
+			end);
+		--delete from the database
+			sql = [[UPDATE v_voicemail_messages SET message_status = 'saved'
+				WHERE domain_uuid = ']] .. domain_uuid ..[['
+				AND voicemail_uuid = ']] .. db_voicemail_uuid ..[['
+				AND voicemail_message_uuid = ']] .. uuid ..[[']];
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+			end
+			dbh:query(sql);
+		--log to console
+			if (debug["info"]) then
+				freeswitch.consoleLog("notice", "[voicemail][saved] id: " .. voicemail_id .. " message: "..uuid.."\n");
+			end
+		--check the message waiting status
+			message_waiting(voicemail_id, domain_uuid);
+		--clear the variable
+			db_voicemail_uuid = '';
 	end
 
---return the call
+--define a function to return the call
 	function return_call(destination)
 		if (session:ready()) then
 			--clear the dtmf
@@ -1635,17 +1668,42 @@
 		end
 	end
 
---check voicemail
+--send a message waiting event
+	if (voicemail_action == "mwi") then
+		--get the mailbox info
+			account = argv[2];
+			array = explode("@", account);
+			voicemail_id = array[1];
+			domain_name = array[2];
+
+		--send information the console
+			debug["info"] = "true";
+
+		--get voicemail message details
+			sql = [[SELECT * FROM v_domains WHERE domain_name = ']] .. domain_name ..[[']]
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(row)
+				domain_uuid = string.lower(row["domain_uuid"]);
+			end);
+
+		--get the message count and send the mwi event
+			message_waiting(voicemail_id, domain_uuid);
+	end
+
+--check messages
 	if (voicemail_action == "check") then
 		if (session:ready()) then
 			--check the voicemail password
-			check_password(voicemail_id, password_tries);
-			timeouts = 0;
-			main_menu();
+				check_password(voicemail_id, password_tries);
+			--send to the main menu
+				timeouts = 0;
+				main_menu();
 		end
 	end
 
---leave a voicemail
+--leave a message
 	if (voicemail_action == "save") then
 
 		--voicemail prompt
@@ -1712,9 +1770,7 @@
 
 		--send the email with the voicemail recording attached
 			if (message_length > 2) then
-				if (string.len(voicemail_mail_to) > 3) then
-					send_email(voicemail_id, uuid);
-				end
+				send_email(voicemail_id, uuid);
 			end
 	end
 
