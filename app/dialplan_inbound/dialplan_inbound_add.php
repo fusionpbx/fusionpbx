@@ -374,7 +374,57 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				unset ($prep_statement);
 
-			//add the dialplan fax detection
+			//add set tone_detect_hits=1
+				$dialplan_detail_uuid = uuid();
+				$sql = "insert into v_dialplan_details ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "dialplan_uuid, ";
+				$sql .= "dialplan_detail_uuid, ";
+				$sql .= "dialplan_detail_tag, ";
+				$sql .= "dialplan_detail_type, ";
+				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_order ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'$dialplan_uuid', ";
+				$sql .= "'$dialplan_detail_uuid', ";
+				$sql .= "'action', ";
+				$sql .= "'set', ";
+				$sql .= "'tone_detect_hits=1', ";
+				$sql .= "'75' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+			//add execute_on_tone_detect
+				$dialplan_detail_uuid = uuid();
+				$sql = "insert into v_dialplan_details ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "dialplan_uuid, ";
+				$sql .= "dialplan_detail_uuid, ";
+				$sql .= "dialplan_detail_tag, ";
+				$sql .= "dialplan_detail_type, ";
+				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_order ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'$dialplan_uuid', ";
+				$sql .= "'$dialplan_detail_uuid', ";
+				$sql .= "'action', ";
+				$sql .= "'set', ";
+				$sql .= "'execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"]."', ";
+				$sql .= "'80' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+			//add tone_detect fax 1100 r +5000
 				$dialplan_detail_uuid = uuid();
 				$sql = "insert into v_dialplan_details ";
 				$sql .= "(";
@@ -393,8 +443,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$dialplan_detail_uuid', ";
 				$sql .= "'action', ";
 				$sql .= "'tone_detect', ";
-				$sql .= "'fax 1100 r +5000 transfer ".$fax_extension." XML ".$_SESSION["context"]." 1', ";
-				$sql .= "'75' ";
+				$sql .= "'fax 1100 r +5000', ";
+				$sql .= "'85' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+			//add sleep to provide time for fax detection
+				$dialplan_detail_uuid = uuid();
+				$sql = "insert into v_dialplan_details ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "dialplan_uuid, ";
+				$sql .= "dialplan_detail_uuid, ";
+				$sql .= "dialplan_detail_tag, ";
+				$sql .= "dialplan_detail_type, ";
+				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_order ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'$dialplan_uuid', ";
+				$sql .= "'$dialplan_detail_uuid', ";
+				$sql .= "'action', ";
+				$sql .= "'sleep', ";
+				$sql .= "'3000', ";
+				$sql .= "'90' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -426,7 +501,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'answer', ";
 			$sql .= "'', ";
-			$sql .= "'85' ";
+			$sql .= "'95' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -453,7 +528,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'action', ";
 		$sql .= "'$action_application_1', ";
 		$sql .= "'$action_data_1', ";
-		$sql .= "'90' ";
+		$sql .= "'100' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
 		unset($sql);
@@ -479,7 +554,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'$action_application_2', ";
 			$sql .= "'$action_data_2', ";
-			$sql .= "'100' ";
+			$sql .= "'105' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
