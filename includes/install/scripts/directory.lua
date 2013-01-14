@@ -33,6 +33,10 @@
 	search_limit = 4;
 	search_count = 0;
 
+--debug
+	debug["info"] = false;
+	debug["sql"] = false;
+
 --include the lua script
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
 	include = assert(loadfile(scripts_dir .. "/resources/config.lua"));
@@ -66,6 +70,15 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
+	end
+
+--get session variables
+	base_dir = session:getVariable("base_dir");
+
+--set the voicemail_dir
+	voicemail_dir = base_dir.."/storage/voicemail/default/"..domain_name;
+	if (debug["info"]) then
+		freeswitch.consoleLog("notice", "[directory] voicemail_dir: " .. voicemail_dir .. "\n");
 	end
 
 --get the domain_uuid
@@ -127,6 +140,12 @@
 		return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
 	end
 
+--check if a file exists
+	function file_exists(name)
+		local f=io.open(name,"r")
+		if f~=nil then io.close(f) return true else return false end
+	end
+
 --define select_entry function 
 	function select_entry()
 		dtmf_digits = "";
@@ -174,17 +193,24 @@
 
 				if (search_dtmf_digits == row.last_name_digits) or (search_dtmf_digits == row.first_name_digits) then
 					if (row.first_name and row.last_name) then
-						--announce the first and last names
-							session:execute("say", "en name_spelled pronounced "..row.first_name);
-							--session:execute("sleep", "500");
-							session:execute("say", "en name_spelled pronounced "..row.last_name);
+						if (debug["info"]) then
+							freeswitch.consoleLog("notice", "[directory] path: "..voicemail_dir.."/"..row.extension.."/recorded_name.wav\n");
+						end
+						if (file_exists(voicemail_dir.."/"..row.extension.."/recorded_name.wav")) then
+							session:streamFile(voicemail_dir.."/"..row.extension.."/recorded_name.wav");
+						else
+							--announce the first and last names
+								session:execute("say", "en name_spelled iterated "..row.first_name);
+								--session:execute("sleep", "500");
+								session:execute("say", "en name_spelled iterated "..row.last_name);
+						end
 
 						--announce the extension number
 							if (row.directory_exten_visible == "false") then
 								--invisible extension number
 							else
 								session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-at_extension.wav");
-								session:execute("say", "en number pronounced "..row.extension);
+								session:execute("say", "en number iterated "..row.extension);
 							end
 
 						--select this entry press 1
