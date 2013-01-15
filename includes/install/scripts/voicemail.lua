@@ -1531,11 +1531,11 @@
 					end
 
 				--play the greeting
-					if (session:ready()) then
-						if (file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
-							session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
-						end
-					end
+					--if (session:ready()) then
+					--	if (file_exists(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav")) then
+					--		session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+					--	end
+					--end
 
 				--option to play, save, and re-record the greeting
 					if (session:ready()) then
@@ -1669,7 +1669,7 @@
 				--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 
 			--play the name
-				session:streamFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
+				--session:streamFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav");
 
 			--option to play, save, and re-record the name
 				if (session:ready()) then
