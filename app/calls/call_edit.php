@@ -219,8 +219,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$call_forward->extension_uuid = $extension_uuid;
 			$call_forward->forward_all_destination = $forward_all_destination;
 			$call_forward->forward_all_enabled = $forward_all_enabled;
-			$call_forward->set();
-			unset($call_forward);
+			//$call_forward->set();
+			//unset($call_forward);
+		}
+
+	//do not disturb (dnd) config
+		if (permission_exists('do_not_disturb')) {
+			$dnd = new do_not_disturb;
+			$dnd->domain_uuid = $_SESSION['domain_uuid'];
+			$dnd->domain_name = $_SESSION['domain_name'];
+			$dnd->extension_uuid = $extension_uuid;
+			$dnd->enabled = $dnd_enabled;
+			//$dnd->set();
+			//$dnd->user_status();
+			//unset($dnd);
+		}
+
+	//if follow me is enabled then process it last
+		if ($follow_me_enabled == "true") {
+			//call forward
+				$call_forward->set();
+				unset($call_forward);
+			//dnd
+				$dnd->set();
+				$dnd->user_status();
+				unset($dnd);
 		}
 
 	//follow me config
@@ -277,22 +300,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			if ($follow_me_action == "update") {
 				$follow_me->follow_me_uuid = $follow_me_uuid;
-				$follow_me->set();
 				$follow_me->follow_me_update();
+				$follow_me->set();
 			}
 			unset($follow_me);
 		}
 
-	//do not disturb (dnd) config
-		if (permission_exists('do_not_disturb')) {
-			$dnd = new do_not_disturb;
-			$dnd->domain_uuid = $_SESSION['domain_uuid'];
-			$dnd->domain_name = $_SESSION['domain_name'];
-			$dnd->extension_uuid = $extension_uuid;
-			$dnd->enabled = $dnd_enabled;
-			$dnd->set();
-			$dnd->user_status();
-			unset($dnd);
+	//if dnd or call forward are enabled process it last
+		if ($follow_me_enabled != "true") {
+			if ($forward_all_enabled == "true") {
+				//dnd
+					$dnd->set();
+					$dnd->user_status();
+					unset($dnd);
+				//call forward
+					$call_forward->set();
+					unset($call_forward);
+			}
+			else{
+				//call forward
+					$call_forward->set();
+					unset($call_forward);
+				//dnd
+					$dnd->set();
+					$dnd->user_status();
+					unset($dnd);
+			}
 		}
 
 	//redirect the user
