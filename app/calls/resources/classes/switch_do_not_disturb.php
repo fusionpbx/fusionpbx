@@ -111,12 +111,10 @@ include "root.php";
 				unset($sql);
 
 			//delete extension from memcache
-				if ($this->dial_string_update) {
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					if ($fp) {
-						$switch_cmd .= "memcache delete ".$this->extension."@".$this->domain_name;
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					}
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd .= "memcache delete directory:".$this->extension."@".$this->domain_name;
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
 			//syncrhonize configuration
