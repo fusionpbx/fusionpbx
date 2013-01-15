@@ -64,6 +64,9 @@
 			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
 		end
 
+--set the api
+	api = freeswitch.API();
+
 --if the session exists
 	if (session ~= nil) then
 		--answer the session
@@ -187,6 +190,7 @@
 --define on_dtmf call back function
 	function on_dtmf(s, type, obj, arg)
 		if (type == "dtmf") then
+			freeswitch.console_log("info", "[voicemail] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
 			if (obj['digit'] == "#") then
 				return 0;
 			else
@@ -194,14 +198,13 @@
 				if (debug["info"]) then
 					freeswitch.console_log("info", "[voicemail] dtmf digits: " .. dtmf_digits .. ", length: ".. string.len(dtmf_digits) .." max_digits: " .. max_digits .. "\n");
 				end
-				if (string.len(dtmf_digits) > max_digits) then
+				if (string.len(dtmf_digits) >= max_digits) then
 					if (debug["info"]) then
 						freeswitch.console_log("info", "[voicemail] max_digits reached\n");
 					end
 					return 0;
 				end
 			end
-			freeswitch.console_log("info", "[voicemail] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
 		end
 		return 0;
 	end
@@ -1022,11 +1025,10 @@
 			dtmf_digits = '';
 			max_digits = 1;
 		--flush dtmf digits from the input buffer
-			--session:flushDigits();
+			session:flushDigits();
 		--set the display
 			if (session:ready()) then
-				--api = freeswitch.API();
-				--reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
+				reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
 			end
 		--say the message number
 			if (session:ready()) then
@@ -1231,7 +1233,6 @@
 					else
 						cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." '"..subject.."' '"..body.."'";
 					end
-					api = freeswitch.API();
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
 					end
@@ -1413,7 +1414,6 @@
 
 		--set the display
 			if (session:ready()) then
-				api = freeswitch.API();
 				reply = api:executeString("uuid_display "..session:get_uuid().." "..destination_number);
 			end
 
