@@ -331,7 +331,6 @@ include "root.php";
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
 					$switch_cmd .= "memcache delete directory:".$this->extension."@".$this->domain_name;
-					echo $switch_cmd; exit;
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
