@@ -124,12 +124,14 @@ else {
 		//set the variables
 			$user_uuid = check_str($_REQUEST["user_uuid"]);
 			$fax_uuid = check_str($_REQUEST["id"]);
+
 		//delete the group from the users
 			$sql = "delete from v_fax_users ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and fax_uuid = '".$fax_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
+
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
@@ -159,6 +161,7 @@ else {
 			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
+
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
@@ -452,6 +455,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//apply settings reminder
 				$_SESSION["reload_xml"] = true;
+
+			//delete the dialplan context from memcache
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd .= "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
 
 			//redirect the browser
 				require_once "includes/header.php";

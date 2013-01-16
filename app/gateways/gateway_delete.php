@@ -40,8 +40,6 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-
-
 if (strlen($_GET["id"])>0) {
 	//set the variable
 		$id = check_str($_GET["id"]);
@@ -97,6 +95,13 @@ if (strlen($_GET["id"])>0) {
 
 	//synchronize the xml config
 		save_dialplan_xml();
+
+	//delete the gateways from memcache
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_cmd = "memcache delete configuration:sofia.conf";
+			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		}
 
 	//rescan the sip profile to look for new or stopped gateways
 		//create the event socket connection and send a command

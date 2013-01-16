@@ -59,28 +59,40 @@ else {
 				$dialplan_uuid = $row["dialplan_uuid"];
 			}
 			unset ($prep_statement);
+
 		//delete from the ring groups table
 			$sql = "delete from v_ring_groups ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and ring_group_uuid = '".$id."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
 		//delete from the ring group extensions table
 			$sql = "delete from v_ring_group_extensions ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and ring_group_uuid = '".$id."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
 		//delete from the dialplan
 			$sql = "delete from v_dialplans ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
 		//save the xml
 			save_dialplan_xml();
+
 		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
+
+		//delete the dialplan context from memcache
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			}
 	}
 
 //redirect the user

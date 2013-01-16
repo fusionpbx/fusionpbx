@@ -240,13 +240,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//synchronize the xml config
 		save_dialplan_xml();
 
-	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php\">\n";
-	echo "<div align='center'>\n";
-	echo "Update Complete\n";
-	echo "</div>\n";
-	require_once "includes/footer.php";
-	return;
+	//delete the dialplan context from memcache
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		}
+
+	//redirect the browser
+		require_once "includes/header.php";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php\">\n";
+		echo "<div align='center'>\n";
+		echo "Update Complete\n";
+		echo "</div>\n";
+		require_once "includes/footer.php";
+		return;
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 ?><script type="text/javascript">

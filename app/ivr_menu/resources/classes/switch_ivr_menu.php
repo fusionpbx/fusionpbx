@@ -346,6 +346,13 @@ require_once "includes/classes/switch_dialplan.php";
 					$database->fields['ivr_menu_option_description'] = $this->ivr_menu_option_description;
 					$database->add();
 				}
+
+			//delete the dialplan context from memcache
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd .= "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
 		}
 
 		public function update() {
@@ -690,25 +697,32 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->delete();
 						}
 
-						//delete child data
-							$database->table = "v_ivr_menu_options";
-							$database->where[0]['name'] = 'domain_uuid';
-							$database->where[0]['value'] = $this->domain_uuid;
-							$database->where[0]['operator'] = '=';
-							$database->where[1]['name'] = 'ivr_menu_uuid';
-							$database->where[1]['value'] = $this->ivr_menu_uuid;
-							$database->where[1]['operator'] = '=';
-							$database->delete();
+					//delete child data
+						$database->table = "v_ivr_menu_options";
+						$database->where[0]['name'] = 'domain_uuid';
+						$database->where[0]['value'] = $this->domain_uuid;
+						$database->where[0]['operator'] = '=';
+						$database->where[1]['name'] = 'ivr_menu_uuid';
+						$database->where[1]['value'] = $this->ivr_menu_uuid;
+						$database->where[1]['operator'] = '=';
+						$database->delete();
 
-						//delete parent data
-							$database->table = "v_ivr_menus";
-							$database->where[0]['name'] = 'domain_uuid';
-							$database->where[0]['value'] = $this->domain_uuid;
-							$database->where[0]['operator'] = '=';
-							$database->where[1]['name'] = 'ivr_menu_uuid';
-							$database->where[1]['value'] = $this->ivr_menu_uuid;
-							$database->where[1]['operator'] = '=';
-							$database->delete();
+					//delete parent data
+						$database->table = "v_ivr_menus";
+						$database->where[0]['name'] = 'domain_uuid';
+						$database->where[0]['value'] = $this->domain_uuid;
+						$database->where[0]['operator'] = '=';
+						$database->where[1]['name'] = 'ivr_menu_uuid';
+						$database->where[1]['value'] = $this->ivr_menu_uuid;
+						$database->where[1]['operator'] = '=';
+						$database->delete();
+
+					//delete the dialplan context from memcache
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						if ($fp) {
+							$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+						}
 
 					//commit the transaction
 						//$count = $database->db->exec("COMMIT;");

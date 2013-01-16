@@ -386,13 +386,13 @@ include "root.php";
 
 		function generate_xml($single=1){
 			//switch_account_code!! How should we be passing this??
-			
+
 			if ($this->enabled== "false" || !$this->enabled) {
 				return false;//This the best way??
 			}
-			
+
 			$this->vm_password = str_replace("#", "", $this->vm_password); //preserves leading zeros//**Generic Validation!
-			
+
 			/*if(!in_array($this->vm_enabled,array("false","true"))) {//**Generic Validation!
 				$this->vm_enabled = "true";
 			}

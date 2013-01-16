@@ -109,6 +109,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
+
 		//update the extension
 			if ($action == "update" && permission_exists('extension_edit')) {
 				$sql = "update v_extensions set ";
@@ -124,6 +125,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
+
+		//get the extension
+			$sql = "select * from v_extensions ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and extension_uuid = '$extension_uuid' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$extension = $row["extension"];
+			}
+			unset ($prep_statement);
+
+		//delete extension from memcache
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_cmd = "memcache delete directory:".$extension."@".$_SESSION['domain_name'];
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			}
+
 		//show the action and redirect the user
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=index.php\">\n";
@@ -166,7 +187,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$password = $row["password"];
 			$vm_password = $row["vm_password"];
 			$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
-
 		}
 		unset ($prep_statement);
 	}

@@ -264,6 +264,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 					$db->query($sql);
 
+				//delete the dialplan context from memcache
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp) {
+						$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+
 				//save the xml
 					save_dialplan_xml();
 

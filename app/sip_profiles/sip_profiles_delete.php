@@ -63,6 +63,12 @@ if (strlen($id)>0) {
 	//apply settings reminder
 		$_SESSION["reload_xml"] = true;
 
+	//delete the sip profiles from memcache
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_cmd = "memcache delete configuration:sofia.conf";
+			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		}
 }
 
 //redirect the browser

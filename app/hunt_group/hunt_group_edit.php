@@ -254,6 +254,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//synchronize the xml config
 					save_hunt_group_xml();
 
+				//delete the dialplan context from memcache
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp) {
+						$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+
 				//rediret the user
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_groups.php\">\n";
