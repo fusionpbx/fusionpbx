@@ -1547,7 +1547,6 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		//echo "    <option value='sleep'>sleep</option>\n";
 		echo "    <option value='sofia_contact'>sofia_contact</option>\n";
 		//echo "    <option value='transfer'>transfer</option>\n";
-		echo "    <option value='voicemail'>voicemail</option>\n";
 		echo "    <option value='conference'>conference</option>\n";
 		echo "    <option value='conference_set_auto_outcall'>conference_set_auto_outcall</option>\n";
 		*/
@@ -2602,16 +2601,9 @@ function save_hunt_group_xml() {
 						}
 
 					//set caller id
-						$tmp .= "if outbound_caller_id_number then\n";
-						$tmp .= "	caller_id_number = outbound_caller_id_number;\n";
-						$tmp .= "end\n";
 						if (strlen($row['hunt_group_cid_name_prefix'])> 0) {
-							$tmp .= "if caller_id_name then\n";
-							$tmp .= "	caller_id_name = \"".$row['hunt_group_cid_name_prefix']."\"..caller_id_name;\n";
-							$tmp .= "end\n";
-							$tmp .= "if outbound_caller_id_name then\n";
-							$tmp .= "	caller_id_name = \"".$row['hunt_group_cid_name_prefix']."\"..outbound_caller_id_name;\n";
-							$tmp .= "end\n";
+							$tmp .= "session:execute(\"set\", \"effective_caller_id_name=".$row['hunt_group_cid_name_prefix']."#\"..caller_id_name);\n";
+							$tmp .= "session:execute(\"set\", \"outbound_caller_id_name=".$row['hunt_group_cid_name_prefix']."#\"..caller_id_name);\n";
 						}
 
 					//set ring back
@@ -2701,7 +2693,7 @@ function save_hunt_group_xml() {
 							$tmp_sub_array["application"] = "voicemail";
 							$tmp_sub_array["type"] = "voicemail";
 							$tmp .= "	session:answer();\n";
-							$tmp .= "	session:execute(\"voicemail\", \"default \${domain_name} ".$ent['destination_data']."\");\n";
+							$tmp .= "	session:execute(\"transfer\", \"*99".$ent['destination_data']." XML ".$_SESSION["context"]." \");\n";
 							//$tmp_sub_array["application"] = "voicemail";
 							//$tmp_sub_array["data"] = "default \${domain_name} ".$ent['destination_data'];
 							//$tmp_array[$i] = $tmp_sub_array;
@@ -2828,7 +2820,7 @@ function save_hunt_group_xml() {
 					//set the timeout destination
 						$hunt_group_timeout_destination = $row['hunt_group_timeout_destination'];
 						if ($row['hunt_group_timeout_type'] == "extension") { $hunt_group_timeout_type = "transfer"; }
-						if ($row['hunt_group_timeout_type'] == "voicemail") { $hunt_group_timeout_type = "voicemail"; $hunt_group_timeout_destination = "default \${domain_name} ".$hunt_group_timeout_destination; }
+						if ($row['hunt_group_timeout_type'] == "voicemail") { $hunt_group_timeout_type = "transfer"; $hunt_group_timeout_destination = "*99".$hunt_group_timeout_destination." XML ".$_SESSION["context"]; }
 						if ($row['hunt_group_timeout_type'] == "sip uri") { $hunt_group_timeout_type = "bridge"; }
 						$tmp .= "\n";
 						if ($row['hunt_group_caller_announce'] == "true" || $row['hunt_group_call_prompt'] == "true") {
