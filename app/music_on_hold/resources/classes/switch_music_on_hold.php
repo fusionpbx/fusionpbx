@@ -54,9 +54,14 @@ include "root.php";
 					$music_on_hold_dir = $music_on_hold_dir."/".$_SESSION['domain_name'];
 				}
 
+			//add multi-lingual support
+				require_once "app/music_on_hold/app_languages.php";
+				foreach($text as $key => $value) {
+					$text[$key] = $value[$_SESSION['domain']['language']['code']];
+				}
+
 			//start the select
-				$select = "";
-				$select .= "	<select class='formfld' name='".$this->select_name."' id='".$this->select_name."' style='width: auto;'>\n";
+				$select = "	<select class='formfld' name='".$this->select_name."' id='".$this->select_name."' style='width: auto;'>\n";
 				$select .= "		<option value='' style='font-style: italic;'>".$text['opt-default']."</option>\n";
 
 			//categories
