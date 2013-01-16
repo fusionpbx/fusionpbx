@@ -41,15 +41,22 @@ if (count($_GET)>0) {
 
 if (strlen($id)>0) {
 	//delete the data
-		$sql = "";
-		$sql .= "delete from v_dialplan_details ";
+		$sql = "delete from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and dialplan_detail_uuid = '$id' ";
 		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 		$db->query($sql);
 		unset($sql);
+
 	//synchronize the xml config
 		save_dialplan_xml();
+
+	//delete the dialplan context from memcache
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		}
 }
 
 //redirect the user

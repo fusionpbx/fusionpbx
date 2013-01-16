@@ -208,31 +208,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 					//synchronize the xml config
 						save_dialplan_xml();
-
-					//redirect the user
-						require_once "includes/header.php";
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";
-						echo "<div align='center'>\n";
-						echo "Add Complete\n";
-						echo "</div>\n";
-						require_once "includes/footer.php";
-						return;
 				}
+
 			//update the data
 				if ($action == "update" && permission_exists('ivr_menu_edit')) {
 					//run the update method in the ivr menu class
-						$ivr->ivr_menu_uuid = $ivr_menu_uuid;
-						$ivr->update();
-
-					//redirect the user
-						require_once "includes/header.php";
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";
-						echo "<div align='center'>\n";
-						echo "Update Complete\n";
-						echo "</div>\n";
-						require_once "includes/footer.php";
-						return;
+					$ivr->ivr_menu_uuid = $ivr_menu_uuid;
+					$ivr->update();
 				}
+
+			//redirect the user
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";
+				echo "<div align='center'>\n";
+				echo "Update Complete\n";
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 

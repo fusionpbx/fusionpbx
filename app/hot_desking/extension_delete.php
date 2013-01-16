@@ -35,7 +35,7 @@ else {
 }
 
 if (count($_GET)>0) {
-	$id = $_GET["id"];
+	$id = check_str($_GET["id"]);
 }
 
 //delete the extension
@@ -50,6 +50,25 @@ if (count($_GET)>0) {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
+	}
+
+//get the extension
+	$sql = "select * from v_extensions ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and extension_uuid = '$id' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$extension = $row["extension"];
+	}
+	unset ($prep_statement);
+
+//delete extension from memcache
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if ($fp) {
+		$switch_cmd = "memcache delete directory:".$extension."@".$_SESSION['domain_name'];
+		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 	}
 
 //redirect the user
