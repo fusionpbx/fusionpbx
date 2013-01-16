@@ -33,8 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
+//additional includes
+	require_once "includes/header.php";
+	require_once "includes/paging.php";
 
 //get the http values and set them as variables
 	if (isset($_GET["order_by"])) {

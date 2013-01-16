@@ -35,6 +35,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set the http get/post variable(s) to a php variable
 	if (isset($_REQUEST["id"])) {
 		$ivr_menu_uuid = $_GET["id"];
