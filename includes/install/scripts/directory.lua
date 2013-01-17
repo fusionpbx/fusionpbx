@@ -30,7 +30,7 @@
 	timeout_transfer = 5000;
 	max_tries = 3;
 	digit_timeout = 5000;
-	search_limit = 4;
+	search_limit = 3;
 	search_count = 0;
 
 --debug
@@ -60,6 +60,9 @@
 		--answer the session
 			session:answer();
 
+		--give time for the call to be ready
+			session:streamFile("silence_stream://1000");
+
 		--get the domain name
 			domain_name = session:getVariable("domain_name");
 
@@ -70,6 +73,10 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
+
+		--define the sounds directory
+			sounds_dir = session:getVariable("sounds_dir");
+			sounds_dir = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice;
 	end
 
 --get session variables
@@ -152,13 +159,13 @@
 		digit_timeout = "500";
 		max_digits = 1;
 		max_tries = 1;
-		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-to_select_entry.wav", "", "\\d+");
+		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-to_select_entry.wav", "", "\\d+");
 		if (string.len(dtmf_digits) == 0) then
-			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-press.wav", "", "\\d+");
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/voicemail/vm-press.wav", "", "\\d+");
 		end
 		if (string.len(dtmf_digits) == 0) then
 			digit_timeout = "3000";
-			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/digits/1.wav", "", "\\d+");
+			dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/digits/1.wav", "", "\\d+");
 		end
 		return dtmf_digits;
 	end
@@ -167,7 +174,7 @@
 	function prompt_for_name()
 		dtmf_digits = "";
 		min_digits=0; max_digits=3; max_tries=3; digit_timeout = "5000";
-		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-enter_person_first_or_last.wav", "", "\\d+");
+		dtmf_digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/directory/dir-enter_person_first_or_last.wav", "", "\\d+");
 		return dtmf_digits;
 	end
 
@@ -209,7 +216,7 @@
 							if (row.directory_exten_visible == "false") then
 								--invisible extension number
 							else
-								session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-at_extension.wav");
+								session:streamFile(sounds_dir.."/directory/dir-at_extension.wav");
 								session:execute("say", "en number iterated "..row.extension);
 							end
 
@@ -225,11 +232,11 @@
 				end
 			end
 			if (found ~= true) then
-				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/directory/dir-no_matching_results.wav");
-				search_count = search_count + 1;
-				if (search_count < search_limit) then 
-					directory_search();
-				end
+				session:streamFile(sounds_dir.."/directory/dir-no_matching_results.wav");
+			end
+			search_count = search_count + 1;
+			if (search_count < search_limit) then
+				directory_search();
 			end
 	end
 
