@@ -34,25 +34,25 @@
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/app/destinations/destinations.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
-		$apps[$x]['menu'][0]['groups'][] = 'admin';
+		//$apps[$x]['menu'][0]['groups'][] = 'admin';
 
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'destination_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'destination_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'destination_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'destination_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 
 	//schema details
