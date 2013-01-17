@@ -61,8 +61,8 @@ else {
 	}
 
 //create the sql query to get the xml cdr records
-	if (strlen($order_by) == 0)  { $order_by  = "start_epoch"; }
-	if (strlen($order) == 0)  { $order  = "desc"; }
+	if (strlen($order_by) == 0) { $order_by  = "start_epoch"; }
+	if (strlen($order) == 0) { $order  = "desc"; }
 
 //calculate the seconds in different time frames
 	$seconds_hour = 3600;

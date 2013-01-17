@@ -45,32 +45,41 @@ else {
 
 //get post or get variables from http
 	if (count($_REQUEST)>0) {
-		$order_by = $_REQUEST["order_by"];
-		$order = $_REQUEST["order"];
-		$cdr_id = $_REQUEST["cdr_id"];
-		$direction = $_REQUEST["direction"];
-		$caller_id_name = $_REQUEST["caller_id_name"];
-		$caller_id_number = $_REQUEST["caller_id_number"];
-		$destination_number = $_REQUEST["destination_number"];
-		$context = $_REQUEST["context"];
-		$start_stamp = $_REQUEST["start_stamp"];
-		$answer_stamp = $_REQUEST["answer_stamp"];
-		$end_stamp = $_REQUEST["end_stamp"];
-		$duration = $_REQUEST["duration"];
-		$billsec = $_REQUEST["billsec"];
-		$hangup_cause = $_REQUEST["hangup_cause"];
-		$uuid = $_REQUEST["uuid"];
-		$bleg_uuid = $_REQUEST["bleg_uuid"];
-		$accountcode = $_REQUEST["accountcode"];
-		$read_codec = $_REQUEST["read_codec"];
-		$write_codec = $_REQUEST["write_codec"];
-		$remote_media_ip = $_REQUEST["remote_media_ip"];
-		$network_addr = $_REQUEST["network_addr"];
+		$order_by = check_str($_REQUEST["order_by"]);
+		$order = check_str($_REQUEST["order"]);
+		$cdr_id = check_str($_REQUEST["cdr_id"]);
+		$missed = check_str($_REQUEST["missed"]);
+		$direction = check_str($_REQUEST["direction"]);
+		$caller_id_name = check_str($_REQUEST["caller_id_name"]);
+		$caller_id_number = check_str($_REQUEST["caller_id_number"]);
+		$destination_number = check_str($_REQUEST["destination_number"]);
+		$context = check_str($_REQUEST["context"]);
+		$start_stamp = check_str($_REQUEST["start_stamp"]);
+		$answer_stamp = check_str($_REQUEST["answer_stamp"]);
+		$end_stamp = check_str($_REQUEST["end_stamp"]);
+		$start_epoch = check_str($_REQUEST["start_epoch"]);
+		$stop_epoch = check_str($_REQUEST["stop_epoch"]);
+		$duration = check_str($_REQUEST["duration"]);
+		$billsec = check_str($_REQUEST["billsec"]);
+		$hangup_cause = check_str($_REQUEST["hangup_cause"]);
+		$uuid = check_str($_REQUEST["uuid"]);
+		$bleg_uuid = check_str($_REQUEST["bleg_uuid"]);
+		$accountcode = check_str($_REQUEST["accountcode"]);
+		$read_codec = check_str($_REQUEST["read_codec"]);
+		$write_codec = check_str($_REQUEST["write_codec"]);
+		$remote_media_ip = check_str($_REQUEST["remote_media_ip"]);
+		$network_addr = check_str($_REQUEST["network_addr"]);
 	}
 
 //build the sql where string
+	if ($missed == true) {
+		$sql_where .= "and billsec = '0' ";
+	}
+	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) { 
+		$sql_where .= "and start_epoch BETWEEN ".$start_epoch." AND ".$stop_epoch." ";
+	}
 	if (strlen($cdr_id) > 0) { $sql_where .= "and cdr_id like '%$cdr_id%' "; }
-	if (strlen($direction) > 0) { $sql_where .= "and direction like '%$direction%' "; }
+	if (strlen($direction) > 0) { $sql_where .= "and direction = '$direction' "; }
 	if (strlen($caller_id_name) > 0) { $sql_where .= "and caller_id_name like '%$caller_id_name%' "; }
 	if (strlen($caller_id_number) > 0 && strlen($destination_number) > 0) {
 			$sql_where .= "and (";
@@ -137,6 +146,7 @@ else {
 
 //set the param variable which is used with paging
 	$param = "";
+	$param .= "&missed=$missed";
 	$param .= "&caller_id_name=$caller_id_name";
 	$param .= "&start_stamp=$start_stamp";
 	$param .= "&hangup_cause=$hangup_cause";
@@ -145,6 +155,8 @@ else {
 	$param .= "&context=$context";
 	$param .= "&answer_stamp=$answer_stamp";
 	$param .= "&end_stamp=$end_stamp";
+	$param .= "&start_epoch=$start_epoch";
+	$param .= "&stop_epoch=$stop_epoch";
 	$param .= "&duration=$duration";
 	$param .= "&billsec=$billsec";
 	$param .= "&uuid=$uuid";
