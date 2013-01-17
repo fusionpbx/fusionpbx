@@ -34,7 +34,6 @@ include "root.php";
 		public $call_prompt;
 		public $follow_me_enabled;
 		private $extension;
-		private $dial_string_update = false;
 
 		public $destination_data_1;
 		public $destination_type_1;
@@ -272,15 +271,9 @@ include "root.php";
 					foreach ($result as &$row) {
 						//$cid_name_prefix = $row["cid_name_prefix"];
 						$call_prompt = $row["call_prompt"];
-						if ($this->follow_me_enabled == "false" && $row["follow_me_enabled"] == "true") {
-							$this->dial_string_update = true;
-						}
 					}
 				}
 				unset ($prep_statement);
-				if ($this->follow_me_enabled == "true") {
-					$this->dial_string_update = true;
-				}
 
 			//update the extension
 				if ($this->follow_me_enabled == "true") {
@@ -314,10 +307,9 @@ include "root.php";
 				else {
 					$this->dial_string = '';
 				}
+
 				$sql  = "update v_extensions set ";
-				if ($this->dial_string_update) {
-					$sql .= "dial_string = '".$this->dial_string."', ";
-				}
+				$sql .= "dial_string = '".$this->dial_string."', ";
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
@@ -327,17 +319,6 @@ include "root.php";
 				$db->exec($sql);
 				unset($sql);
 
-			//delete extension from memcache
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "memcache delete directory:".$this->extension."@".$this->domain_name;
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
-
-			//syncrhonize configuration
-				if ($this->dial_string_update) {
-					save_extension_xml();
-				}
 		} //function
 	} //class
 
