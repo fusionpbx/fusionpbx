@@ -998,7 +998,7 @@
 						timeouts = 0;
 						advanced();
 					elseif (dtmf_digits == "0") then
-						session:transfer("0", "XML", context);
+						main_menu();
 					elseif (dtmf_digits == "*") then
 						dtmf_digits = '';
 						macro(session, "goodbye", 1, 100, '');
@@ -1116,7 +1116,8 @@
 					macro(session, "message_saved", 1, 100, '');
 				elseif (dtmf_digits == "9") then
 					send_email(voicemail_id, uuid);
-					macro(session, "emailed", 1, 1000, '');
+					dtmf_digits = '';
+					macro(session, "emailed", 1, 100, '');
 				elseif (dtmf_digits == "*") then
 					timeouts = 0;
 					main_menu();
@@ -1769,6 +1770,9 @@
 				send_email(voicemail_id, uuid);
 			end
 	end
+
+--close the database connection
+	dbh:release();
 
 --notes
 	--record the video
