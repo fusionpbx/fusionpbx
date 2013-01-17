@@ -34,7 +34,6 @@ include "root.php";
 		private $extension;
 		public $enabled;
 		private $dial_string;
-		private $dial_string_update = false;
 
 		//update the user_status
 		public function user_status() {
@@ -76,15 +75,9 @@ include "root.php";
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
 						$this->extension = $row["extension"];
-						if ($this->enabled == "false" && $row["do_not_disturb"] == "true") {
-							$this->dial_string_update = true;
-						}
 					}
 				}
 				unset ($prep_statement);
-				if ($this->enabled == "true") {
-					$this->dial_string_update = true;
-				}
 
 			//set the dial string
 				if ($this->enabled == "true") {
@@ -96,9 +89,7 @@ include "root.php";
 
 			//update the extension
 				$sql  = "update v_extensions set ";
-				if ($this->dial_string_update) {
-					$sql .= "dial_string = '".$this->dial_string."', ";
-				}
+				$sql .= "dial_string = '".$this->dial_string."', ";
 				//$sql .= "dial_domain = '".$this->domain_name."', ";
 				$sql .= "do_not_disturb = '".$this->enabled."' ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
@@ -110,17 +101,6 @@ include "root.php";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-			//delete extension from memcache
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "memcache delete directory:".$this->extension."@".$this->domain_name;
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
-
-			//syncrhonize configuration
-				if ($this->dial_string_update) {
-					save_extension_xml();
-				}
 		} //function
 	} //class
 
