@@ -61,8 +61,11 @@
 	$text['label-download']['en-us'] = 'Download';
 	$text['label-download']['pt-pt'] = '';
 
-	$text['label-statistics']['en-us'] = 'Statistics';
-	$text['label-statistics']['pt-pt'] = 'Estatisticas';
+	$text['button-statistics']['en-us'] = 'Statistics';
+	$text['button-statistics']['pt-pt'] = 'Estatisticas';
+
+	$text['button-missed']['en-us'] = 'Missed Calls';
+	$text['button-statistics']['pt-pt'] = 'Chamadas Perdidas';
 
 	//xml_cdr_details
 	$text['title2']['en-us'] = 'Call Details';

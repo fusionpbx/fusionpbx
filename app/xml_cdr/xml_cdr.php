@@ -76,7 +76,8 @@ else {
 	echo "<table>\n";
 	echo "<tr>\n";
 	echo "<td>\n";
-	echo "	<input type='button' class='btn' value='".$text['label-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
+	echo "	<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?missed=true';\">\n";
+	echo "	<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
 	echo "</td>\n";
 	echo "<form method='post' action='xml_cdr_csv.php'>";
 	echo "<td>\n";
