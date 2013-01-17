@@ -749,13 +749,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='wait_mod'>\n";
 		echo "	<option value=''></option>\n";
-		if ($announce == "true") { 
+		if ($wait_mod == "true") { 
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($announce == "false") { 
+		if ($wait_mod == "false") { 
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
