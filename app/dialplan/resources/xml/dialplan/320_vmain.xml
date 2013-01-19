@@ -6,7 +6,7 @@
 			<action application="sleep" data="1000"/>
 			<action application="set" data="voicemail_action=check"/>
 			<action application="set" data="voicemail_profile=default"/>
-			<action application="lua" data="voicemail.lua"/>
+			<action application="lua" data="app.lua voicemail"/>
 			<!--<action application="voicemail" data="check default ${domain_name}"/>-->
 		</condition>
 	</extension>
