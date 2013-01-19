@@ -199,6 +199,7 @@ th:last-child th:first-child {
 }
 
 .vtable {
+	text-align: left;
 	border-bottom: 1px solid #DFDFDF;
 }
 

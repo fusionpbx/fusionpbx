@@ -187,6 +187,7 @@ INPUT.txt {
 }
 
 .vtable {
+	text-align: left;
 	border-bottom: 1px solid #DFDFDF;
 }
 
