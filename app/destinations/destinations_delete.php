@@ -39,8 +39,8 @@ if (count($_GET)>0) {
 }
 
 //delete the destination
-	if (strlen($id)>0) {
-		$sql .= "delete from v_destinations ";
+	if (strlen($id) > 0) {
+		$sql = "delete from v_destinations ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and destination_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
