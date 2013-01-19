@@ -26,7 +26,7 @@
 
 --set defaults
 	expire = {}
-	expire["directory"] = "30";
+	expire["directory"] = "3600";
 	expire["dialplan"] = "300";
 	expire["sofia.conf"] = "3600";
 
@@ -467,6 +467,9 @@
 				--group_call - call group has been called
 				--user_call - user has been called
 
+		--additional information
+				--event_calling_function = params:getHeader("Event-Calling-Function");
+
 		--determine the correction action to perform
 			if (action == "message-count") then
 				--Event-Calling-Line-Number: 102
@@ -846,6 +849,19 @@
 					end
 			end --if action
 
+		--if the extension does not exist send "not found"
+			if (trim(XML_STRING) == "-ERR NOT FOUND") then
+				--send not found
+					XML_STRING = [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+					<document type="freeswitch/xml">
+						<section name="result">
+							<result status="not found" />
+						</section>
+					</document>]];
+				--set the cache
+					result = trim(api:execute("memcache", "set directory:" .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+			end
+
 		--send the xml to the console
 			if (debug["xml_string"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: \n" .. XML_STRING .. "\n");
@@ -1103,3 +1119,6 @@
 		freeswitch.consoleLog("notice", "[xml_handler] Key Name: " .. XML_REQUEST["key_name"] .. "\n");
 		freeswitch.consoleLog("notice", "[xml_handler] Key Value: " .. XML_REQUEST["key_value"] .. "\n");
 	end
+
+--close the database connection
+	dbh:release();
