@@ -24,7 +24,6 @@
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'voicemail_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
