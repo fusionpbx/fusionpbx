@@ -257,17 +257,17 @@ else {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncellreq'>".$text['label-username'].":</td>";
-	echo "		<td width='70%' class='vtable'>$username</td>";
+	echo "		<td width='30%' class='vncellreq' align='left'>".$text['label-username'].":</td>";
+	echo "		<td width='70%' class='vtable' align='left'>$username</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-password'].":</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
+	echo "		<td class='vncell' align='left'>".$text['label-password'].":</td>";
+	echo "		<td class='vtable' align='left'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-confirm-password'].":</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' value=\"\"></td>";
+	echo "		<td class='vncell' align='left'>".$text['label-confirm-password'].":</td>";
+	echo "		<td class='vtable' align='left'><input type='password' autocomplete='off' class='formfld' name='confirm_password' value=\"\"></td>";
 	echo "	</tr>";
 
 	echo "		</td>";
@@ -289,7 +289,7 @@ else {
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
 		echo "		".$text['label-status'].":\n";
 		echo "	</td>\n";
-		echo "	<td class=\"vtable\">\n";
+		echo "	<td class=\"vtable\" align='left'>\n";
 		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		if ($user_status == "Available") {
