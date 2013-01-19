@@ -340,7 +340,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//redirect the user
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/calls/calls.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/core/user_settings/user_dashboard.php\">\n";
 		echo "<div align='center'>\n";
 		echo "".$text['confirm-update']."<br />\n";
 		echo "</div>\n";
