@@ -32,7 +32,7 @@
 			<action application="set" data="voicemail_action=save"/>
 			<action application="set" data="voicemail_id=$1"/>
 			<action application="set" data="voicemail_profile=default"/>
-			<action application="lua" data="voicemail.lua"/>
+			<action application="lua" data="app.lua voicemail"/>
 		</condition>
 	</extension>
 </context>
