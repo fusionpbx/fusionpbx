@@ -351,8 +351,7 @@ include "root.php";
 			$domain_uuid = $this->domain_uuid;
 			$extension_uuid = $this->extension_uuid;
 			if (strlen($extension_uuid)>0) {
-				$sql = "";
-				$sql .= "delete from v_extensions ";
+				$sql = "delete from v_extensions ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and extension_uuid = '$extension_uuid' ";
 				$prep_statement = $db->prepare(check_sql($sql));
@@ -368,7 +367,7 @@ include "root.php";
 			$values=array_values($data);
 			for($i=0;$i<$count;$i++){
 				$keys[$i]= str_replace("-", "_", $keys[$i]); 
-				$this->{$keys[$i]}=$values[$i];			
+				$this->{$keys[$i]}=$values[$i];
 			}
 		}
 

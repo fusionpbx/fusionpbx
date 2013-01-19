@@ -115,23 +115,7 @@ include "root.php";
 			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/scripts';
 			$dst_dir = $this->switch_scripts_dir;
 			if (is_readable($this->switch_scripts_dir)) {
-				if ($handle = opendir($src_dir)) {
-					$i = 0;
-					$files = array();
-					while (false !== ($file = readdir($handle))) {
-						if ($file != "." && $file != ".." && is_file($src_dir.'/'.$file)) {
-							if (!file_exists($dst_dir.'/'.$file) ) {
-								//copy the file if it does not exist in the destination directory
-								if (copy($src_dir.'/'.$file, $dst_dir.'/'.$file)) {
-									$this->result['copy']['scripts'][] = "copied from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-								}
-								else {
-									$this->result['copy']['scripts'][] = "copy failed from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-								}
-							}
-						}
-					}
-				}
+				$this->recursive_copy($src_dir, $dst_dir);
 				unset($src_dir, $dst_dir);
 			}
 		}
