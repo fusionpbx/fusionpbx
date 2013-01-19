@@ -36,14 +36,12 @@
 		$apps[$x]['menu'][$y]['path'] = '/app/conference_centers/conference_centers.php';
 		$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['menu'][$y]['groups'][] = 'admin';
-		$apps[$x]['menu'][$y]['groups'][] = 'user';
 
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_center_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_center_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
