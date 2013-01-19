@@ -564,6 +564,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		z-index:1;
 		padding:7px;
 		color: 000;
+		text-align: left;
 		/*
 		box-shadow:5px -5px 10px #700;
 		-webkit-box-shadow:5px -5px 10px #888;
