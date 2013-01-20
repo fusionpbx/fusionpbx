@@ -91,7 +91,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "default_setting_name, ";
 				$sql .= "default_setting_value, ";
 				$sql .= "default_setting_enabled, ";
-				$sql .= "default_setting_description ";	
+				$sql .= "default_setting_description ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
@@ -210,12 +210,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type:\n";
+	echo "	Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='default_setting_name' maxlength='255' value=\"$default_setting_name\">\n";
 	echo "<br />\n";
-	echo "Enter the type.\n";
+	echo "Enter the name.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

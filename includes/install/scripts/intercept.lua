@@ -106,7 +106,7 @@ if ( session:ready() ) then
 		if (debug["sql"]) then
 			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
 		end
-		dbh:query(sql, function(result)
+			dbh:query(sql, function(result)
 			--for key, val in pairs(result) do
 			--	freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
 			--end
