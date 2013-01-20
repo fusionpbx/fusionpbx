@@ -33,12 +33,10 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-//require_once "includes/checkauth.php";
 if (permission_exists('click_to_call_view')) {
 	//access granted
 }
 else {
-
 	echo "access denied";
 	exit;
 }
@@ -126,7 +124,6 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			}
 		}
 		else {
-
 			if (strlen($src) < 7) {
 				if (strlen($dest_cid_number) == 0) {
 					//get the caller id from the extension caller id comes from the extension (the source number)
@@ -149,11 +146,10 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			$destination = "{origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number}".$bridge_array[0];
 			if (permission_exists('click_to_call_call')) {
 				if (strpbrk($dest, '@') != FALSE) {
-                                	//call a sip uri
+				//call a sip uri
 					//echo "Found an @ 4, do nothing for now<br><br>";
 					$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,call_direction=outbound}sofia/external/$dest)";
 					//echo "<br>SWITCH-CMD: $switch_cmd<br>";
-
 				}
 				else {
 					//regular call
