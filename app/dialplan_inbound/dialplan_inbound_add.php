@@ -98,7 +98,8 @@ foreach($text as $key => $value) {
 		else {
 			if (strlen($condition_field_1) == 0) { $condition_field_1 = "destination_number"; }
 			if (is_numeric($condition_expression_1)) { 
-				//the number is numeric 
+				//the number is numeric
+				$condition_expression_1 = str_replace("+", "\+", $condition_expression_1);
 				$condition_expression_1 = '^'.$condition_expression_1.'$';
 			}
 			else {
