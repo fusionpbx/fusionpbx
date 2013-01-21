@@ -146,7 +146,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "destination_caller_id_name = '$destination_caller_id_name', ";
 				$sql .= "destination_caller_id_number = '$destination_caller_id_number', ";
 				$sql .= "destination_context = '$destination_context', ";
-				$sql .= "fax_uuid = '$fax_uuid', ";
+				if (strlen($fax_uuid) > 0) {
+					$sql .= "fax_uuid = '$fax_uuid', ";
+				}
 				$sql .= "destination_enabled = '$destination_enabled', ";
 				$sql .= "destination_description = '$destination_description' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
