@@ -29,7 +29,7 @@
 	$text['description-interactive']['en-us'] = 'Use this to monitor and interact with the members of the conference.';
 	$text['message-connection']['en-us'] = 'Connection to Event Socket failed.';
 	$text['label-message']['en-us'] = 'Message';
-	$text['label-tools']['en-us'] = 'Conference Tools';
+	$text['label-tools']['en-us'] = 'Tools';
 	$text['button-start-rec']['en-us'] = 'Start Record';
 	$text['button-stop-rec']['en-us'] = 'Stop Record';
 	$text['label-recording']['en-us'] = 'Recording';
