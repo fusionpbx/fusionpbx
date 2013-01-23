@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('menu_restore')) {
+if (permission_exists('group_edit')) {
 	//access granted
 }
 else {
@@ -34,19 +34,15 @@ else {
 	return;
 }
 
-//get the http value and set as a php variable
-	$menu_uuid = check_str($_REQUEST["menu_uuid"]);
-	$menu_language = check_str($_REQUEST["menu_language"]);
-
-//menu restore default
+//permission restore default
 	require_once "resources/classes/permission.php";
-	$menu = new menu;
-	$menu->db = $db;
-	$menu->restore();
+	$permission = new permission;
+	$permission->db = $db;
+	$permission->restore();
 
 //show a message to the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=/core/menu/menu_edit.php?id=$menu_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=groups.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Restore Complete\n";
 	echo "</div>\n";
