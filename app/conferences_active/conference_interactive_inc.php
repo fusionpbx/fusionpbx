@@ -143,21 +143,11 @@ else {
 			$recording_name = $session_uuid.".mp3";
 		}
 
-		if (permission_exists('conferences_active_record')) {
-			if ($recording == "true") {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&uuid=".$session_uuid."&data=norecord');\">".$text['button-stop-rec']."</a>&nbsp;\n";
-			}
-			else {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&uuid=".$session_uuid."&data=record');\">".$text['button-start-rec']."</a>&nbsp;\n";
-			}
+		if ($recording == "true") {
+			echo "	".$text['label-recording']." &nbsp;";
 		}
 		else {
-			if ($recording == "true") {
-				echo "	".$text['label-recording']." &nbsp;";
-			}
-			else {
-				echo "	".$text['label-not-recording']." &nbsp;";
-			}
+			echo "	".$text['label-not-recording']." &nbsp;";
 		}
 		if (permission_exists('conferences_active_lock')) {
 			if ($locked == "true") {
