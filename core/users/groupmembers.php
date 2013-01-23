@@ -74,7 +74,7 @@ else {
 	echo "			<span  class=\"\" height='50'>Member list for <b>$group_name</b></span>";
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='grouplist.php'\" value='Back'>";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='Back'>";
 	echo "			&nbsp;&nbsp;&nbsp;\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";

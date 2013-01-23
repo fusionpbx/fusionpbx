@@ -196,9 +196,12 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Group Permission List for $group_name</b></td>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Group Permissions for $group_name</b></td>\n";
 	echo "<td width='50%' align=\"right\">\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='grouplist.php'\" value='Back'> ";
+	if (permission_exists('group_edit')) {
+		echo "	<input type='button' class='btn' alt='Restore Default Permissions' onclick=\"window.location='permissions_default.php'\" value='Restore Default'>";
+	}
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='Back'> ";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

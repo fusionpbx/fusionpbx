@@ -48,7 +48,7 @@
 		$apps[$x]['menu'][3]['uuid'] = '3b4acc6d-827b-f537-bf21-0093d94ffec7';
 		$apps[$x]['menu'][3]['parent_uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][3]['category'] = 'internal';
-		$apps[$x]['menu'][3]['path'] = '/core/users/grouplist.php';
+		$apps[$x]['menu'][3]['path'] = '/core/users/groups.php';
 		$apps[$x]['menu'][3]['groups'][] = 'superadmin';
 
 	//permission details
