@@ -35,7 +35,7 @@ else {
 }
 
 //permission restore default
-	require_once "resources/classes/permission.php";
+	require_once "core/users/resources/classes/permission.php";
 	$permission = new permission;
 	$permission->db = $db;
 	$permission->restore();
