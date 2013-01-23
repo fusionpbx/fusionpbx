@@ -17,14 +17,14 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2013
 	All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the follow me class
+//define the menu class
 	class menu {
 		public $menu_uuid;
 
@@ -148,45 +148,6 @@
 											}
 									}
 								}
-						}
-					}
-					foreach($apps as $row) {
-						foreach ($row['permissions'] as $menu) {
-							//set the variables
-							if ($menu['groups']) {
-								foreach ($menu['groups'] as $group) {
-									//if the item uuid is not currently in the db then add it
-									$sql = "select * from v_group_permissions ";
-									$sql .= "where permission_name = '".$menu['name']."' ";
-									$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-									$sql .= "and group_name = '$group' ";
-									$prep_statement = $db->prepare(check_sql($sql));
-									if ($prep_statement) {
-										$prep_statement->execute();
-										$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-										unset ($prep_statement);
-										if (count($result) == 0) {
-											//insert the default menu into the database
-											$sql = "insert into v_group_permissions ";
-											$sql .= "(";
-											$sql .= "group_permission_uuid, ";
-											$sql .= "domain_uuid, ";
-											$sql .= "permission_name, ";
-											$sql .= "group_name ";
-											$sql .= ") ";
-											$sql .= "values ";
-											$sql .= "(";
-											$sql .= "'".uuid()."', ";
-											$sql .= "'".$_SESSION["domain_uuid"]."', ";
-											$sql .= "'".$menu['name']."', ";
-											$sql .= "'".$group."' ";
-											$sql .= ");";
-											$db->exec(check_sql($sql));
-											unset($sql);
-										}
-									}
-								}
-							}
 						}
 					}
 
