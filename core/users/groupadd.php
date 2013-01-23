@@ -66,7 +66,7 @@ if (strlen($group_name) > 0) {
 
 	//redirect the user
 		require_once "includes/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=grouplist.php\">\n";
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=groups.php\">\n";
 		echo "<div align='center'>\n";
 		echo "Group Added\n";
 		echo "</div>\n";
@@ -87,7 +87,7 @@ if (strlen($group_name) > 0) {
 	echo "			Please choose a group name. ";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='grouplist.php'\" value='Back'> ";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='Back'> ";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";

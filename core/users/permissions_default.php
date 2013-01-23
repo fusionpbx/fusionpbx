@@ -26,31 +26,31 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('group_delete') || if_group("superadmin")) {
-	//access allowed
+if (permission_exists('menu_restore')) {
+	//access granted
 }
 else {
 	echo "access denied";
 	return;
 }
 
-//get the http value and set as a variable
-	$id = check_str($_GET["id"]);
+//get the http value and set as a php variable
+	$menu_uuid = check_str($_REQUEST["menu_uuid"]);
+	$menu_language = check_str($_REQUEST["menu_language"]);
 
-//delete the group
-	$sqldelete = "delete from v_groups ";
-	$sqldelete .= "where domain_uuid = '$domain_uuid' ";
-	$sqldelete .= "and group_uuid = '$id' ";
-	if (!$db->exec($sqldelete)) {
-		//echo $db->errorCode() . "<br>";
-		$info = $db->errorInfo();
-		print_r($info);
-		// $info[0] == $db->errorCode() unified error code
-		// $info[1] is the driver specific error code
-		// $info[2] is the driver specific error string
-	}
+//menu restore default
+	require_once "resources/classes/permission.php";
+	$menu = new menu;
+	$menu->db = $db;
+	$menu->restore();
 
-//redirect the user
-	header("Location: groups.php");
+//show a message to the user
+	require_once "includes/header.php";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=/core/menu/menu_edit.php?id=$menu_uuid\">\n";
+	echo "<div align='center'>\n";
+	echo "Restore Complete\n";
+	echo "</div>\n";
+	require_once "includes/footer.php";
+	return;
 
 ?>
