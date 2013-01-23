@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2013
 	All Rights Reserved.
 
 	Contributor(s):
@@ -25,7 +25,7 @@
 */
 include "root.php";
 
-//define the follow me class
+//define the schema class
 	class schema {
 		public $db;
 		public $apps;
@@ -90,7 +90,7 @@ include "root.php";
 									}
 								}
 								if ($this->db_type == "mysql") {
-									$sql .= ") ENGINE=INNODB;";	
+									$sql .= ") ENGINE=INNODB;";
 								}
 								else {
 									$sql .= ");";
@@ -119,3 +119,11 @@ include "root.php";
 				}
 			}
 	}
+
+//example use
+	//require_once "includes/classes/schema.php";
+	//$schema = new schema;
+	//$schema->db_type = $db_type;
+	//$schema->sql();
+	//$result_array = $schema->result['sql'];
+	//print_r($result_array);
