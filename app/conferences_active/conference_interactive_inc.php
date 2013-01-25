@@ -165,6 +165,7 @@ else {
 		//echo "<th>UUID</th>\n";
 		echo "<th>".$text['label-cid-name']."</th>\n";
 		echo "<th>".$text['label-cid-num']."</th>\n";
+		echo "<th>".$text['label-moderator']."</th>\n";
 		echo "<th>".$text['label-joined']."</th>\n";
 		echo "<th>".$text['label-hear']."</th>\n";
 		echo "<th>".$text['label-speak']."</th>\n";
@@ -185,6 +186,7 @@ else {
 			$join_time = $row->join_time;
 			$flag_has_video = $row->flags->has_video;
 			$flag_has_floor = $row->flags->has_floor;
+			$is_moderator = $row->flags->is_moderator;
 			$uuid = $row->uuid;
 			$caller_id_name = $row->caller_id_name;
 			$caller_id_name = str_replace("%20", " ", $caller_id_name);
@@ -200,6 +202,12 @@ else {
 				//echo "<td valign='top' class='".$row_style[$c]."'>$uuid</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$caller_id_name</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$caller_id_number</td>\n";
+				if ($is_moderator == "true") {
+					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-yes']."</td>\n";
+				}
+				else {
+					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-no']."</td>\n";
+				}
 				echo "<td valign='top' class='".$row_style[$c]."'>".$join_time_formatted."</td>\n";
 				if ($flag_can_hear == "true") {
 					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-yes']."</td>\n";

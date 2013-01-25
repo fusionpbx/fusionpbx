@@ -53,19 +53,19 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][4]['name'] = 'conferences_active_energy';
-		$apps[$x]['permissions'][4]['groups'][] = 'user';
-		$apps[$x]['permissions'][4]['groups'][] = 'admin';
-		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+		//$apps[$x]['permissions'][4]['groups'][] = 'user';
+		//$apps[$x]['permissions'][4]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][5]['name'] = 'conferences_active_volume';
-		$apps[$x]['permissions'][5]['groups'][] = 'user';
-		$apps[$x]['permissions'][5]['groups'][] = 'admin';
-		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
+		//$apps[$x]['permissions'][5]['groups'][] = 'user';
+		//$apps[$x]['permissions'][5]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][6]['name'] = 'conferences_active_gain';
-		$apps[$x]['permissions'][6]['groups'][] = 'user';
-		$apps[$x]['permissions'][6]['groups'][] = 'admin';
-		$apps[$x]['permissions'][6]['groups'][] = 'superadmin';
+		//$apps[$x]['permissions'][6]['groups'][] = 'user';
+		//$apps[$x]['permissions'][6]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][6]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][7]['name'] = 'conferences_active_mute';
 		$apps[$x]['permissions'][7]['groups'][] = 'user';
