@@ -39,6 +39,7 @@
 	$text['label-id']['en-us'] = 'ID';
 	$text['label-cid-name']['en-us'] = 'Caller ID Name';
 	$text['label-cid-num']['en-us'] = 'Caller ID Number';
+	$text['label-moderator']['en-us'] = 'Moderator';
 	$text['label-joined']['en-us'] = 'Joined';
 	$text['label-hear']['en-us'] = 'Hear';
 	$text['label-speak']['en-us'] = 'Speak';
