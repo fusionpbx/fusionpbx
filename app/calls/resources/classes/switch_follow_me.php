@@ -283,7 +283,7 @@ include "root.php";
 					$prep_statement_2 = $db->prepare(check_sql($sql));
 					$prep_statement_2->execute();
 					$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-					$dial_string = "{group_confirm_key=exec,group_confirm_file=lua confirm.lua,sip_invite_domain=".$_SESSION['domain_name'];
+					$dial_string = "{group_confirm_key=exec,group_confirm_file=lua confirm.lua,instant_ringback=true,ignore_early_media=true,sip_invite_domain=".$_SESSION['domain_name'];
 					if ($this->call_prompt == "true") {
 						$dial_string .= ",call_prompt=true";
 					}
@@ -299,7 +299,13 @@ include "root.php";
 							$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
 						}
 						else {
-							$dial_string .= "loopback/".$row["follow_me_destination"].",";
+							$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
+							if (strlen($bridge[0]) > 0) {
+								$dial_string .= "".$bridge[0].",";
+							}
+							else {
+								$dial_string .= "loopback/".$row["follow_me_destination"].",";
+							}
 						}
 					}
 					$this->dial_string = trim($dial_string, ",");

@@ -42,12 +42,20 @@ include "root.php";
 
 			//set the dial string
 				if ($this->forward_all_enabled == "true") {
+					$dial_string = "[presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name'].",instant_ringback=true]";
 					if (extension_exists($this->forward_all_destination)) {
-						$this->dial_string = "[presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name']."]\${sofia_contact(".$this->forward_all_destination."@".$_SESSION['domain_name'].")}";
+						$dial_string .= "\${sofia_contact(".$this->forward_all_destination."@".$_SESSION['domain_name'].")}";
 					}
 					else {
-						$this->dial_string = "[presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name']."]loopback/".$this->forward_all_destination;
+						$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $this->forward_all_destination);
+						if (strlen($bridge[0]) > 0) {
+							$dial_string .= $bridge[0];
+						}
+						else {
+							$dial_string .= "loopback/".$this->forward_all_destination;
+						}
 					}
+					$this->dial_string = $dial_string;
 				}
 				else {
 					$this->dial_string = '';
