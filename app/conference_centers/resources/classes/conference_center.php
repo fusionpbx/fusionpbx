@@ -58,7 +58,7 @@
 
 		public function rooms() {
 			//get the list of rooms
-				$fields = "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.meeting_uuid max_members, ";
+				$fields = "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.meeting_uuid, max_members, ";
 				$fields .= "wait_mod, announce, mute, created, created_by, r.enabled, r.description, record, ";
 				$fields .= "profile, meeting_user_uuid, user_uuid, meeting_pin_uuid, member_pin, member_type ";
 				$sql = "select ".$fields." from v_conference_rooms as r, v_meeting_users as u, v_meeting_pins as p ";
