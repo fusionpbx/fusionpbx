@@ -74,6 +74,30 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--set the sounds path for the language, dialect and voice
+			ringback = session:getVariable("ringback");
+			session:setVariable("instant_ringback", "true");
+			session:setVariable("ignore_early_media", "true");
+			if (not ringback) then
+				session:execute("set", "ringback=local_stream://default"); --set to ringtone
+				session:execute("set", "transfer_ringback=local_stream://default"); --set to ringtone
+			elseif (ringback == "uk-ring") then
+				session:setVariable("ringback", "%(400,200,400,450);%(400,2200,400,450)");
+				session:setVariable("transfer_ringback", "%(400,200,400,450);%(400,2200,400,450)");
+			elseif (ringback == "us-ring") then
+				session:setVariable("ringback", "%(2000, 4000, 440.0, 480.0)");
+				session:setVariable("transfer_ringback", "%(2000, 4000, 440.0, 480.0)");
+			elseif (ringback == "fr-ring") then
+				session:setVariable("ringback", "%(1500, 3500, 440.0, 0.0)");
+				session:setVariable("transfer_ringback", "%(1500, 3500, 440.0, 0.0)");
+			elseif (ringback == "rs-ring") then
+				session:setVariable("ringback", "%(1000, 4000, 425.0, 0.0)");
+				session:setVariable("transfer_ringback", "%(1000, 4000, 425.0, 0.0)");
+			else
+				session:execute("set", "ringback=local_stream://default"); --set to ringtone
+				session:execute("set", "transfer_ringback=local_stream://default"); --set to ringtone
+			end
+
 		--define the sounds directory
 			sounds_dir = session:getVariable("sounds_dir");
 			sounds_dir = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice;
