@@ -48,6 +48,7 @@
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
+	context = session:getVariable("context");
 	ivr_menu_uuid = session:getVariable("ivr_menu_uuid");
 	caller_id_name = session:getVariable("caller_id_name");
 	caller_id_number = session:getVariable("caller_id_number");
@@ -92,7 +93,7 @@
 		ivr_menu_max_failures = row["ivr_menu_max_failures"];
 		ivr_menu_max_timeouts = row["ivr_menu_max_timeouts"];
 		ivr_menu_digit_len = row["ivr_menu_digit_len"];
-		--ivr_menu_direct_dial = row["ivr_menu_direct_dial"];
+		ivr_menu_direct_dial = row["ivr_menu_direct_dial"];
 		--ivr_menu_description = row["ivr_menu_description"];
 		ivr_menu_ringback = row["ivr_menu_ringback"];
 	end);
@@ -215,6 +216,15 @@
 								end
 							--run the action
 								session:execute(action, data);
+						end
+					else
+						if (ivr_menu_direct_dial == "true") then
+							if (string.len(digits) < 6) then
+								--replace the $1 and the domain name
+									digits = digits:gsub("*", "");
+								--run the action
+									session:execute("transfer", digits.." XML "..context);
+							end
 						end
 					end
 
