@@ -76,6 +76,11 @@
 
 		--set the sounds path for the language, dialect and voice
 			ringback = session:getVariable("ringback");
+			if (ringback) then
+				ringback = ringback:gsub("$", "");
+				ringback = ringback:gsub("{", "");
+				ringback = ringback:gsub("}", "");
+			end
 			session:setVariable("instant_ringback", "true");
 			session:setVariable("ignore_early_media", "true");
 			if (not ringback) then
