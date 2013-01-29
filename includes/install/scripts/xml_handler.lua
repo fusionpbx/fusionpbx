@@ -54,6 +54,7 @@
 
 --add the trim function
 	function trim(s)
+		if (s == nil) then s = ''; end
 		return s:gsub("^%s+", ""):gsub("%s+$", "")
 	end
 
