@@ -199,6 +199,7 @@ function db_create_table ($apps, $db_type, $table) {
 }
 
 function db_insert_into ($apps, $db_type, $table) {
+	global $db, $db_name;
 	foreach ($apps as $x => &$app) {
 		foreach ($app['db'] as $y => $row) {
 			if ($row['table'] == $table) {
@@ -230,7 +231,17 @@ function db_insert_into ($apps, $db_type, $table) {
 						if ($field_count > 0 ) { $sql .= ","; }
 						if (is_array($field['name'])) {
 							if ($field['exists'] == "false") {
-								$sql .= $field['name']['deprecated'];
+								if (is_array($field['name']['deprecated'])) {
+									foreach ($field['name']['deprecated'] as $row) {
+										if (db_column_exists ($db, $db_type, $db_name, $table, $row)) {
+											$sql .= $row;
+											break;
+										}
+									}
+								}
+								else {
+									$sql .= $field['name']['deprecated'];
+								}
 							}
 							else {
 								$sql .= $field['name']['text'];
@@ -242,7 +253,7 @@ function db_insert_into ($apps, $db_type, $table) {
 						$field_count++;
 					}
 				}
-				$sql .= " FROM tmp_".$row['table'].";\n\n";	
+				$sql .= " FROM tmp_".$table.";\n\n";
 				return $sql;
 			}
 		}
