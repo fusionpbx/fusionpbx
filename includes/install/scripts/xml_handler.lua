@@ -585,6 +585,7 @@
 
 				--get the cache
 					if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
+						if (user == nil) then user = "" end
 						XML_STRING = trim(api:execute("memcache", "get directory:" .. user .. "@" .. domain_name));
 						if (XML_STRING == "-ERR NOT FOUND") then
 							continue = true;
@@ -850,7 +851,7 @@
 			end --if action
 
 		--if the extension does not exist send "not found"
-			if (trim(XML_STRING) == "-ERR NOT FOUND") then
+			if (trim(XML_STRING) == "-ERR NOT FOUND" or XML_STRING == nil) then
 				--send not found
 					XML_STRING = [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 					<document type="freeswitch/xml">
