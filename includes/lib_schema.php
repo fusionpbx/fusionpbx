@@ -232,15 +232,23 @@ function db_insert_into ($apps, $db_type, $table) {
 						if (is_array($field['name'])) {
 							if ($field['exists'] == "false") {
 								if (is_array($field['name']['deprecated'])) {
+									$found = false;
 									foreach ($field['name']['deprecated'] as $row) {
-										if (db_column_exists ($db, $db_type, $db_name, $table, $row)) {
+										if (db_column_exists ($db, $db_type, $db_name, 'tmp_'.$table, $row)) {
 											$sql .= $row;
+											$found = true;
 											break;
 										}
 									}
+									if (!$found) { $sql .= "''"; }
 								}
 								else {
-									$sql .= $field['name']['deprecated'];
+									if (db_column_exists ($db, $db_type, $db_name, 'tmp_'.$table, $field['name']['deprecated'])) {
+										$sql .= $field['name']['deprecated'];
+									}
+									else {
+										$sql .= "''";
+									}
 								}
 							}
 							else {
@@ -375,12 +383,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 											//skip this row
 										}
 										else {
-											if (is_array($field['name'])) {
-												if ($field['exists'] == "false" && !db_column_exists ($db, $db_type, $db_name, $table_name, $field['name']['deprecated'])) {
-													$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field['name']['text']." ".$field_type.";\n";
-												}
-											}
-											else {
+											if (!is_array($field['name'])) {
 												if ($field['exists'] == "false") {
 													$sql_update .= "ALTER TABLE ".$table_name." ADD ".$field['name']." ".$field_type.";\n";
 												}
@@ -461,6 +464,8 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 				$table_name = $row['table'];
 				if ($row['rebuild'] == "true") {
 					if ($db_type == "sqlite") {
+						//start the transaction
+							$sql_update .= "BEGIN TRANSACTION;\n";
 						//rename the table
 							$sql_update .= "ALTER TABLE ".$table_name." RENAME TO tmp_".$table_name.";\n";
 						//create the table
@@ -469,6 +474,8 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 							$sql_update .= db_insert_into($apps, $db_type, $table_name);
 						//drop the old table
 							$sql_update .= "DROP TABLE tmp_".$table_name.";\n";
+						//commit the transaction
+							$sql_update .= "COMMIT;\n";
 					}
 				}
 			}
