@@ -219,56 +219,63 @@
 --leave a message
 	if (voicemail_action == "save") then
 
-		--save the recording
-			timeouts = 0;
-			play_greeting();
-			record_message();
+		--valid voicemail
+			if (voicemail_uuid ~= nil) then
 
-		--save the message to the voicemail messages
-			if (message_length > 2) then
-				local sql = {}
-				table.insert(sql, "INSERT INTO v_voicemail_messages ");
-				table.insert(sql, "(");
-				table.insert(sql, "voicemail_message_uuid, ");
-				table.insert(sql, "domain_uuid, ");
-				table.insert(sql, "voicemail_uuid, ");
-				table.insert(sql, "created_epoch, ");
-				table.insert(sql, "caller_id_name, ");
-				table.insert(sql, "caller_id_number, ");
-				table.insert(sql, "message_length ");
-				--table.insert(sql, "message_status, ");
-				--table.insert(sql, "message_priority, ");
-				table.insert(sql, ") ");
-				table.insert(sql, "VALUES ");
-				table.insert(sql, "( ");
-				table.insert(sql, "'".. uuid .."', ");
-				table.insert(sql, "'".. domain_uuid .."', ");
-				table.insert(sql, "'".. voicemail_uuid .."', ");
-				table.insert(sql, "'".. start_epoch .."', ");
-				table.insert(sql, "'".. caller_id_name .."', ");
-				table.insert(sql, "'".. caller_id_number .."', ");
-				table.insert(sql, "'".. message_length .."' ");
-				--table.insert(sql, "'".. message_status .."', ");
-				--table.insert(sql, "'".. message_priority .."' ");
-				table.insert(sql, ") ");
-				sql = table.concat(sql, "\n");
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-				end
-				dbh:query(sql);
-			end
+				--save the recording
+					timeouts = 0;
+					play_greeting();
+					record_message();
 
-		--set the message waiting event
-			if (message_length > 2) then
-				local event = freeswitch.Event("message_waiting");
-				event:addHeader("MWI-Messages-Waiting", "yes");
-				event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-				event:fire();
-			end
+				--save the message to the voicemail messages
+					if (message_length > 2) then
+						local sql = {}
+						table.insert(sql, "INSERT INTO v_voicemail_messages ");
+						table.insert(sql, "(");
+						table.insert(sql, "voicemail_message_uuid, ");
+						table.insert(sql, "domain_uuid, ");
+						table.insert(sql, "voicemail_uuid, ");
+						table.insert(sql, "created_epoch, ");
+						table.insert(sql, "caller_id_name, ");
+						table.insert(sql, "caller_id_number, ");
+						table.insert(sql, "message_length ");
+						--table.insert(sql, "message_status, ");
+						--table.insert(sql, "message_priority, ");
+						table.insert(sql, ") ");
+						table.insert(sql, "VALUES ");
+						table.insert(sql, "( ");
+						table.insert(sql, "'".. uuid .."', ");
+						table.insert(sql, "'".. domain_uuid .."', ");
+						table.insert(sql, "'".. voicemail_uuid .."', ");
+						table.insert(sql, "'".. start_epoch .."', ");
+						table.insert(sql, "'".. caller_id_name .."', ");
+						table.insert(sql, "'".. caller_id_number .."', ");
+						table.insert(sql, "'".. message_length .."' ");
+						--table.insert(sql, "'".. message_status .."', ");
+						--table.insert(sql, "'".. message_priority .."' ");
+						table.insert(sql, ") ");
+						sql = table.concat(sql, "\n");
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+						dbh:query(sql);
+					end
 
-		--send the email with the voicemail recording attached
-			if (message_length > 2) then
-				send_email(voicemail_id, uuid);
+				--set the message waiting event
+					if (message_length > 2) then
+						local event = freeswitch.Event("message_waiting");
+						event:addHeader("MWI-Messages-Waiting", "yes");
+						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+						event:fire();
+					end
+
+				--send the email with the voicemail recording attached
+					if (message_length > 2) then
+						send_email(voicemail_id, uuid);
+					end
+			else
+				--invalid voicemail
+					session:hangup();
 			end
 	end
 
