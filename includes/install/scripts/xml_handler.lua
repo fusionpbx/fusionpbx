@@ -508,7 +508,7 @@
 									value = trim(value);
 									--freeswitch.consoleLog("notice", "[directory] Key: " .. key .. " Value: " .. value .. " " ..row['extension'] .."\n");
 									if (string.len(value) == 0) then
-									
+										--do nothing
 									else
 										if (call_group_array[value] == nil) then
 											call_group_array[value] = row['extension'];
@@ -586,7 +586,9 @@
 
 				--get the cache
 					if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-						if (user == nil) then user = "" end
+						if (user == nil) then
+							user = "";
+						end
 						XML_STRING = trim(api:execute("memcache", "get directory:" .. user .. "@" .. domain_name));
 						if (XML_STRING == "-ERR NOT FOUND") then
 							continue = true;
@@ -612,6 +614,7 @@
 						dbh:query(sql, function(row)
 							--general
 								domain_uuid = row.domain_uuid;
+								extension_uuid = row.extension_uuid;
 								extension = row.extension;
 								cidr = "";
 								if (string.len(row.cidr) > 0) then
@@ -673,6 +676,11 @@
 								end
 						end);
 					end
+				
+				--if the extension does not exist set continue to false;
+					if (extension_uuid == nil) then
+						continue = false;
+					end
 
 				--outbound hot desking - get the extension variables
 					if (continue) then
@@ -681,7 +689,7 @@
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 						end
 						dbh:query(sql, function(row)
-							--variables
+							--get the values from the database
 							extension_uuid = row.extension_uuid;
 							domain_uuid = row.domain_uuid;
 							sip_from_user = row.extension;
