@@ -70,7 +70,7 @@
 
 		--save the recording
 			-- syntax is session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs)
-			max_len_seconds = 30;
+			max_len_seconds = 300;
 			silence_threshold = 30;
 			silence_seconds = 5;
 			os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
