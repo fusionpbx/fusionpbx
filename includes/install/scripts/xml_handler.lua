@@ -1131,4 +1131,4 @@
 	end
 
 --close the database connection
-	dbh:release();
+	--dbh:release();
