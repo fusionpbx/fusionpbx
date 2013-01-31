@@ -1802,6 +1802,8 @@ function save_extension_xml() {
 					$xml .= "      <param name=\"dial-string\" value=\"" . $dial_string . "\"/>\n";
 					$xml .= "    </params>\n";
 					$xml .= "    <variables>\n";
+					$xml .= "      <variable name=\"domain_uuid\" value=\"" . $_SESSION['domain_uuid'] . "\"/>\n";
+					$xml .= "      <variable name=\"domain_name\" value=\"" . $_SESSION['domain_name'] . "\"/>\n";
 					if (strlen($row['call_group']) > 0) {
 						$xml .= "      <variable name=\"call_group\" value=\"" . $row['call_group'] . "\"/>\n";
 					}
