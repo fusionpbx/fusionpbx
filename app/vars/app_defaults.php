@@ -114,7 +114,7 @@ EOD;
 	if ($domains_processed == 1) {
 		//set the ringback
 			$sql = "select count(*) as num_rows from v_vars ";
-			$sql .= "where var_name = 'domain_uuid' ";
+			$sql .= "where var_name = 'ringback' ";
 			$prep_statement = $db->prepare($sql);
 			if ($prep_statement) {
 				$prep_statement->execute();
