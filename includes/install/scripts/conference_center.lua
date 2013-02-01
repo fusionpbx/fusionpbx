@@ -186,6 +186,10 @@
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
 
+		--sounds
+			enter_sound = "tone_stream://%(200,0,500,600,700)";
+			exit_sound = "tone_stream://%(500,0,300,200,100,50,25)";
+
 		--get the variables
 			username = session:getVariable("username");
 			caller_id_name = session:getVariable("caller_id_name");
@@ -225,8 +229,8 @@
 				wait_mod = row["wait_mod"];
 				member_type = row["member_type"];
 				announce = row["announce"];
-				--enter_sound = row["enter_sound"];
 				mute = row["mute"];
+				sounds = row["sounds"];
 				created = row["created"];
 				created_by = row["created_by"];
 				enabled = row["enabled"];
@@ -339,12 +343,9 @@
 				end
 
 			--set the exit sound
-				if (exit_sound ~= nil) then
+				if (sounds == "true") then
 					session:execute("set","conference_exit_sound="..exit_sound);
 				end
-				--else
-				--	session:execute("set","conference_exit_sound=");
-				--end
 
 			--set flags and moderator controls
 				if (mute == "true") then
@@ -397,10 +398,10 @@
 						freeswitch.consoleLog("notice", "[conference] ".. cmd .."\n");
 						response = api:executeString(cmd);
 				else
-					--if (enter_sound ~= nil) then
-					--	cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..enter_sound;
-					--	response = api:executeString(cmd);
-					--end
+					if (sounds == "true") then
+						cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..enter_sound;
+						response = api:executeString(cmd);
+					end
 				end
 
 			--send the call to the conference
