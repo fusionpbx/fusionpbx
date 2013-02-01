@@ -123,15 +123,15 @@ else {
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
-		echo "<td >\n";
-		echo "	<strong>Count: $member_count</strong>\n";
+		echo "<td colspan='3' >\n";
+		echo "	<strong>Members: $member_count</strong>\n";
 		echo "</td>\n";
-		echo "<td colspan='9'>\n";
+		echo "<td colspan='2'>\n";
 		echo "	&nbsp;\n";
 		echo "</td>\n";
-		echo "<td colspan='1' align='right'>\n";
+		echo "<td colspan='7' align='right'>\n";
 		if (permission_exists('conferences_active_record') || permission_exists('conferences_active_lock')) {
-			echo "	<strong>".$text['label-tools'].":</strong> \n";
+			//echo "	<strong>".$text['label-tools'].":</strong> \n";
 		}
 
 		$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
@@ -151,12 +151,23 @@ else {
 		}
 		if (permission_exists('conferences_active_lock')) {
 			if ($locked == "true") {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\">".$text['label-unlock']."</a>&nbsp;\n";
+				//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\">".$text['label-unlock']."</a>&nbsp;\n";
+				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\" value='".$text['label-unlock']."'>\n";
+
 			}
 			else {
-				echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\">".$text['label-lock']."</a>&nbsp;\n";
+				//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\">".$text['label-lock']."</a>&nbsp;\n";
+				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\" value='".$text['label-mute-all']."'>\n";
+
 			}
 		}
+
+		//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\">".$text['label-mute-all']."</a>&nbsp;\n";
+		echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\" value='".$text['label-mute-all']."'>\n";
+
+		//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick+all');\">".$text['label-end-conference']."</a>&nbsp;\n";
+		echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick+all');\" value='".$text['label-end-conference']."'>\n";
+
 		echo "</td>\n";
 		echo "</tr>\n";
 
