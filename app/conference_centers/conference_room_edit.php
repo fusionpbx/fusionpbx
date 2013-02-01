@@ -61,7 +61,7 @@ else {
 		$max_members = check_str($_POST["max_members"]);
 		$wait_mod = check_str($_POST["wait_mod"]);
 		$announce = check_str($_POST["announce"]);
-		//$enter_sound = check_str($_POST["enter_sound"]);
+		$sounds = check_str($_POST["sounds"]);
 		$mute = check_str($_POST["mute"]);
 		$created = check_str($_POST["created"]);
 		$created_by = check_str($_POST["created_by"]);
@@ -203,6 +203,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($announce) == 0) { $msg .= "Please provide: Announce<br>\n"; }
 		//if (strlen($enter_sound) == 0) { $msg .= "Please provide: Enter Sound<br>\n"; }
 		//if (strlen($mute) == 0) { $msg .= "Please provide: Mute<br>\n"; }
+		//if (strlen($sounds) == 0) { $msg .= "Please provide: Sounds<br>\n"; }
 		//if (strlen($created) == 0) { $msg .= "Please provide: Created<br>\n"; }
 		//if (strlen($created_by) == 0) { $msg .= "Please provide: Created By<br>\n"; }
 		//if (strlen($enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
@@ -232,6 +233,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($announce) == 0) { $announce = 'true'; }
 					if (strlen($mute) == 0) { $mute = 'false'; }
 					if (strlen($enabled) == 0) { $enabled = 'true'; }
+					if (strlen($sounds) == 0) { $sounds = 'false'; }
 
 				//add a meeting
 					$meeting_uuid = uuid();
@@ -269,7 +271,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "max_members, ";
 					$sql .= "wait_mod, ";
 					$sql .= "announce, ";
-					//$sql .= "enter_sound, ";
+					$sql .= "sounds, ";
 					$sql .= "mute, ";
 					$sql .= "created, ";
 					$sql .= "created_by, ";
@@ -287,7 +289,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$max_members', ";
 					$sql .= "'$wait_mod', ";
 					$sql .= "'$announce', ";
-					//$sql .= "'$enter_sound', ";
+					$sql .= "'$sounds', ";
 					$sql .= "'$mute', ";
 					$sql .= "now(), ";
 					$sql .= "'".$_SESSION['user_uuid']."', ";
@@ -367,6 +369,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($mute) > 0) {
 						$sql .= "mute = '$mute', ";
 					}
+					$sql .= "sounds = '$sounds', ";
 					if (strlen($enabled) > 0) {
 						$sql .= "enabled = '$enabled', ";
 					}
@@ -516,7 +519,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$max_members = $row["max_members"];
 			$wait_mod = $row["wait_mod"];
 			$announce = $row["announce"];
-			//$enter_sound = $row["enter_sound"];
+			$sounds = $row["sounds"];
 			$mute = $row["mute"];
 			$created = $row["created"];
 			$created_by = $row["created_by"];
@@ -560,10 +563,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($max_members) == 0) { $max_members = 0; }
 	if (strlen($wait_mod) == 0) { $wait_mod = 'true'; }
 	if (strlen($announce) == 0) { $announce = 'true'; }
-	//if ($action == "add") {
-	//	if (strlen($enter_sound) == 0) { $enter_sound = 'tone_stream://%(200,0,500,600,700)'; }
-	//}
 	if (strlen($mute) == 0) { $mute = 'false'; }
+	if (strlen($sounds) == 0) { $sounds = 'false'; }
 	if (strlen($enabled) == 0) { $enabled = 'true'; }
 
 //show the header
@@ -890,6 +891,31 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-sounds'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='sounds'>\n";
+	echo "	<option value=''></option>\n";
+	if ($sounds == "true") { 
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	}
+	else {
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
+	}
+	if ($sounds == "false") { 
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+	}
+	else {
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

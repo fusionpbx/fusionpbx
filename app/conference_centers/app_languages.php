@@ -68,8 +68,11 @@
 		$text['label-enabled']['en-us'] = 'Enabled';
 		$text['label-enabled']['pt-pt'] = 'Activo';
 
-		$text['label-count']['en-us'] = 'Count';
-		$text['label-count']['pt-pt'] = '';
+		$text['label-sounds']['en-us'] = 'Sounds';
+		$text['label-sounds']['pt-pt'] = '';
+
+		$text['label-members']['en-us'] = 'Members';
+		$text['label-members']['pt-pt'] = '';
 
 		$text['label-tools']['en-us'] = 'Tools';
 		$text['label-tools']['pt-pt'] = 'Ferramentas';
