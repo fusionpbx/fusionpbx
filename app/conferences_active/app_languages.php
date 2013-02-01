@@ -25,43 +25,87 @@
 	James Rose <james.o.rose@gmail.com>
 */
 	$text['message-denied']['en-us'] = 'access denied';
+
 	$text['label-interactive']['en-us'] = 'Interactive Conference';
+
 	$text['description-interactive']['en-us'] = 'Use this to monitor and interact with the members of the conference.';
+
 	$text['message-connection']['en-us'] = 'Connection to Event Socket failed.';
+
 	$text['label-message']['en-us'] = 'Message';
+
 	$text['label-tools']['en-us'] = 'Tools';
+
 	$text['button-start-rec']['en-us'] = 'Start Record';
+
 	$text['button-stop-rec']['en-us'] = 'Stop Record';
+
 	$text['label-recording']['en-us'] = 'Recording';
+
 	$text['label-not-recording']['en-us'] = 'Not Recording';
+
 	$text['label-unlock']['en-us'] = 'Unlock';
+
 	$text['label-lock']['en-us'] = 'Lock';
+
 	$text['label-id']['en-us'] = 'ID';
+
 	$text['label-cid-name']['en-us'] = 'Caller ID Name';
+
 	$text['label-cid-num']['en-us'] = 'Caller ID Number';
+
 	$text['label-moderator']['en-us'] = 'Moderator';
+
 	$text['label-joined']['en-us'] = 'Joined';
+
 	$text['label-hear']['en-us'] = 'Hear';
+
 	$text['label-speak']['en-us'] = 'Speak';
+
 	$text['label-talking']['en-us'] = 'Talking';
+
 	$text['label-last-talk']['en-us'] = 'Last Talked';
+
 	$text['label-video']['en-us'] = 'Video';
+
 	$text['label-floor']['en-us'] = 'Has Floor';
+
 	$text['label-tool']['en-us'] = 'Tools';
+
 	$text['label-yes']['en-us'] = 'yes';
+
 	$text['label-no']['en-us'] = 'no';
-	$text['label-energy']['en-us'] = 'energy';
-	$text['label-volume']['en-us'] = 'vol';
-	$text['label-gain']['en-us'] = 'gain';
-	$text['label-mute']['en-us'] = 'mute';
-	$text['label-unmute']['en-us'] = 'unmute';
-	$text['label-deaf']['en-us'] = 'deaf';
-	$text['label-undeaf']['en-us'] = 'undeaf';
-	$text['label-kick']['en-us'] = 'kick';
+
+	$text['label-energy']['en-us'] = 'Energy';
+
+	$text['label-volume']['en-us'] = 'Vol';
+
+	$text['label-gain']['en-us'] = 'Gain';
+
+	$text['label-mute']['en-us'] = 'Mute';
+
+	$text['label-unmute']['en-us'] = 'Unmute';
+
+	$text['label-mute-all']['en-us'] = 'Mute All';
+
+	$text['label-unmute-all']['en-us'] = 'Unmute All';
+
+	$text['label-end-conference']['en-us'] = 'End Conference';
+
+	$text['label-deaf']['en-us'] = 'Deaf';
+
+	$text['label-undeaf']['en-us'] = 'Undeaf';
+
+	$text['label-kick']['en-us'] = 'Kick';
+
 	$text['label-active']['en-us'] = 'Active Conferences';
+
 	$text['description-active']['en-us'] = 'List all the conferences that are currently active with one or more members.';
+
 	$text['label-name']['en-us'] = 'Name';
+
 	$text['label-member-count']['en-us'] = 'Member Count';
+
 	$text['button-view']['en-us'] = 'view';
 
 ?>

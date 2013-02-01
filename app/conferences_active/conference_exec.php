@@ -129,13 +129,20 @@ else {
 						$switch_cmd .= $recording_dir."/".$uuid.".wav";
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
-					elseif ($data == "kick") {
-						$switch_result = event_socket_request($fp, "api ".$switch_cmd);
+					elseif ($data == "kick" || $data == "kick all") {
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
-					//else {
-					//	$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					//}
-					//echo $switch_cmd."<br\n>";
+					elseif ($data == "mute" || $data == "unmute" || $data == "mute non_moderator" || $data == "unmute non_moderator") {
+					echo "hi -- ";
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+					elseif ($data == "deaf" || $data == "undeaf" ) {
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+					elseif ($data == "lock" || $data == "unlock" ) {
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+					echo "command: ".$switch_cmd." result: ".$switch_result."<br\n>";
 				}
 		}
 	}
