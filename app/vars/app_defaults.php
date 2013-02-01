@@ -110,14 +110,83 @@ EOD;
 		unset($prep_statement, $result);
 	}
 
-//if there is more than one domain then disable the domain variable
+//adjust the variables required variables
 	if ($domains_processed == 1) {
-		if (count($_SESSION['domains']) > 1) {
-			$sql = "update v_vars set ";
-			$sql .= "var_enabled = 'false' ";
-			$sql .= "where var_name = 'domain'";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
+		//set the ringback
+			$sql = "select count(*) as num_rows from v_vars ";
+			$sql .= "where var_name = 'domain_uuid' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$sql = "insert into v_vars ";
+					$sql .= "(";
+					$sql .= "var_uuid, ";
+					$sql .= "var_name, ";
+					$sql .= "var_value, ";
+					$sql .= "var_cat, ";
+					$sql .= "var_enabled, ";
+					$sql .= "var_order, ";
+					$sql .= "var_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'ringback', ";
+					$sql .= "'\$\${us-ring}', ";
+					$sql .= "'Defaults', ";
+					$sql .= "'true', ";
+					$sql .= "'333', ";
+					$sql .= "'' ";
+					$sql .= ");";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+			}
+
+		//set variables that depend on the number of domains
+			if (count($_SESSION['domains']) > 1) {
+				//disable the domain and domain_uuid for systems with multiple domains
+					$sql = "update v_vars set ";
+					$sql .= "var_enabled = 'false' ";
+					$sql .= "where (var_name = 'domain' or var_name = 'domain_uuid') ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+			}
+			else {
+				//set the domain_uuid
+					$sql = "select count(*) as num_rows from v_vars ";
+					$sql .= "where var_name = 'domain_uuid' ";
+					$prep_statement = $db->prepare($sql);
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if ($row['num_rows'] == 0) {
+							$sql = "insert into v_vars ";
+							$sql .= "(";
+							$sql .= "var_uuid, ";
+							$sql .= "var_name, ";
+							$sql .= "var_value, ";
+							$sql .= "var_cat, ";
+							$sql .= "var_enabled, ";
+							$sql .= "var_order, ";
+							$sql .= "var_description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'".uuid()."', ";
+							$sql .= "'domain_uuid', ";
+							$sql .= "'".$domain_uuid."', ";
+							$sql .= "'Defaults', ";
+							$sql .= "'true', ";
+							$sql .= "'999', ";
+							$sql .= "'' ";
+							$sql .= ");";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+					}
+			}
 	}
 ?>
