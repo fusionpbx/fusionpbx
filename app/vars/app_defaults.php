@@ -66,6 +66,7 @@ $vars_string = <<<EOD
 {"var_name":"format_phone","var_value":"Rxxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"format_phone","var_value":"xxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"xml_cdr_archive","var_value":"dir","var_cat":"Defaults","var_enabled":"true","var_description":""}
+{"var_name":"ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""}
 ]
 EOD;
 
