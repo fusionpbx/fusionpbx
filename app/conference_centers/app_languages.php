@@ -62,7 +62,7 @@
 		$text['label-announce']['en-us'] = 'Announce';
 		$text['label-announce']['pt-pt'] = '';
 
-		$text['label-mute']['en-us'] = 'Mute';
+		$text['label-mute']['en-us'] = 'Mute on Entry';
 		$text['label-mute']['pt-pt'] = '';
 
 		$text['label-enabled']['en-us'] = 'Enabled';
@@ -117,7 +117,7 @@
 		$text['label-users']['en-us'] = 'Users';
 		$text['label-users']['pt-pt'] = '';
 
-		$text['description-users']['en-us'] = 'Assign additional users to the conference room.';
+		$text['description-users']['en-us'] = 'Assign additional users as administrators of this conference room.';
 		$text['description-users']['pt-pt'] = '';
 
 		$text['button-add']['en-us'] = 'Add';

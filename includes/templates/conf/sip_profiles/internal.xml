@@ -246,7 +246,7 @@
 			Used as the public IP address for SDP.
 			Can be an one of:
 				ip address            - "12.34.56.78"
-				a stun server lookup  - "stun:stun.server.com"
+				a stun server lookup  - "stun:stun.freeswitch.org"
 				a DNS name            - "host:host.server.com"
 				auto                  - Use guessed ip.
 				auto-nat              - Use ip learned from NAT-PMP or UPNP

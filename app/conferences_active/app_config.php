@@ -35,6 +35,7 @@
 		$apps[$x]['menu'][0]['path'] = '/app/conferences_active/conferences_active.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
+		$apps[$x]['menu'][0]['groups'][] = 'user';
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'conferences_active_view';

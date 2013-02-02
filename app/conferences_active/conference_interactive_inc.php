@@ -42,44 +42,10 @@ else {
 	}
 
 //get the http get or post and set it as php variables
-	$conference_name = check_str($_REQUEST["c"]);
-
-//determine if the user should have access to the conference room
-	if (if_group("superadmin") || if_group("admin")) {
-		//access granted
-	}
-	else {
-		//get the conference_uuid from the coference_name
-			$sql = "select conference_uuid from v_conferences ";
-			$sql .= "where conference_name = '".$conference_name."' ";
-			$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-			$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				$conference_uuid = $row['conference_uuid'];
-			}
-
-		//show only assigned extensions
-			$sql = "select count(*) as num_rows from v_conferences as c, v_conference_users as u ";
-			$sql .= "where c.conference_uuid = u.conference_uuid ";
-			$sql .= "and c.conference_uuid = '".$conference_uuid."' ";
-			$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-			if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-			$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] == 0) {
-					echo $text['message-denied'];
-					exit;
-				}
-			}
-	}
+	$conference_uuid = check_str($_REQUEST["c"]);
 
 //replace the space with underscore
-	$conference_name = $conference_name.'-'.$_SESSION['domain_name'];
+	$conference_name = $conference_uuid.'-'.$_SESSION['domain_name'];
 
 //create the conference list command
 	$switch_cmd = "conference '".$conference_name."' xml_list";
@@ -113,6 +79,19 @@ else {
 		$member_count = $xml->conference['member-count'];
 		$locked = $xml->conference['locked'];
 		$recording = $xml->conference['recording'];
+		if (strlen($member_count) == 0) {
+			$member_count = 0;
+		}
+
+		//get mute_all
+		$mute_all = "true";
+		foreach ($xml->conference->members->member as $row) {
+			if ($row->flags->is_moderator == "false") {
+				if ($row->flags->can_speak == "true") {
+					$mute_all = "false";
+				}
+			}
+		}
 
 		$c = 0;
 		$row_style["0"] = "row_style0";
@@ -124,15 +103,14 @@ else {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<td colspan='3' >\n";
-		echo "	<strong>Members: $member_count</strong>\n";
+		echo "	<strong>\n";
+		echo "		Members: ".$member_count."\n";
+		echo "	</strong>\n";
 		echo "</td>\n";
 		echo "<td colspan='2'>\n";
 		echo "	&nbsp;\n";
 		echo "</td>\n";
 		echo "<td colspan='7' align='right'>\n";
-		if (permission_exists('conferences_active_record') || permission_exists('conferences_active_lock')) {
-			//echo "	<strong>".$text['label-tools'].":</strong> \n";
-		}
 
 		$recording_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.date("Y").'/'.date("M").'/'.date("d");
 		$recording_name = '';
@@ -151,21 +129,20 @@ else {
 		}
 		if (permission_exists('conferences_active_lock')) {
 			if ($locked == "true") {
-				//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\">".$text['label-unlock']."</a>&nbsp;\n";
 				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\" value='".$text['label-unlock']."'>\n";
-
 			}
 			else {
-				//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\">".$text['label-lock']."</a>&nbsp;\n";
 				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\" value='".$text['label-lock']."'>\n";
-
 			}
 		}
 
-		//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\">".$text['label-mute-all']."</a>&nbsp;\n";
-		echo "		<input type='button' class='btn' title=\"".$text['label-mute-all-alt']."\" onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\" value='".$text['label-mute-all']."'>\n";
+		if ($mute_all == "true") {
+			echo "		<input type='button' class='btn' title=\"".$text['label-mute-all-alt']."\" onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unmute+non_moderator');\" value='".$text['label-unmute-all']."'>\n";
+		}
+		else {
+			echo "		<input type='button' class='btn' title=\"".$text['label-mute-all-alt']."\" onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\" value='".$text['label-mute-all']."'>\n";
+		}
 
-		//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick+all');\">".$text['label-end-conference']."</a>&nbsp;\n";
 		echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick+all');\" value='".$text['label-end-conference']."'>\n";
 
 		echo "</td>\n";

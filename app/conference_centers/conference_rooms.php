@@ -285,12 +285,12 @@ else {
 				echo "		&nbsp;\n";
 				echo "	</td>\n";
 
-				echo "	<td valign='middle' class='row_stylebg' width='20%' nowrap='nowrap'>";
+				echo "	<td valign='middle' class='row_stylebg' width='20%'>";
 				echo "		".$row['description']."\n";
 				echo "		&nbsp;\n";
 				echo "	</td>\n";
 
-				echo "	<td valign='top' align='right'>\n";
+				echo "	<td valign='top' align='right' nowrap='nowrap'>\n";
 				if (permission_exists('conference_room_edit')) {
 					echo "		<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 				}
