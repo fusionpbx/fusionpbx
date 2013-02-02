@@ -32,7 +32,7 @@ include "root.php";
 	session_destroy();
 
 //redirect the user to the index page
-	header("Location: ".PROJECT_PATH."/");
+	header("Location: ".PROJECT_PATH."/login.php");
 	return;
 
 ?>
