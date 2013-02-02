@@ -88,6 +88,8 @@
 
 	$text['label-mute-all']['en-us'] = 'Mute All';
 
+	$text['label-mute-all-alt']['en-us'] = 'Mute all but moderator.';
+
 	$text['label-unmute-all']['en-us'] = 'Unmute All';
 
 	$text['label-end-conference']['en-us'] = 'End Conference';
