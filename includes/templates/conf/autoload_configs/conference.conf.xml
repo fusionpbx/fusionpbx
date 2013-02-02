@@ -10,32 +10,32 @@
 	<!-- Note: none and default are reserved names for group names.  Disabled if dist-dtmf member flag is set. -->
 	<caller-controls>
 		<group name="default">
-				<control action="mute" digits=""/>
-				<control action="deaf mute" digits=""/>
-				<control action="energy up" digits="9"/>
-				<control action="energy equ" digits="8"/>
-				<control action="energy dn" digits="7"/>
-				<control action="vol talk up" digits="3"/>
-				<control action="vol talk zero" digits="2"/>
-				<control action="vol talk dn" digits="1"/>
-				<control action="vol listen up" digits="6"/>
-				<control action="vol listen zero" digits="5"/>
-				<control action="vol listen dn" digits="4"/>
-				<control action="hangup" digits=""/>
-			</group>
-			<group name="moderator">
-				<control action="mute" digits="#"/>
-				<control action="deaf mute" digits="*"/>
-				<control action="energy up" digits="9"/>
-				<control action="energy equ" digits="8"/>
-				<control action="energy dn" digits="7"/>
-				<control action="vol talk up" digits="3"/>
-				<control action="vol talk zero" digits="2"/>
-				<control action="vol talk dn" digits="1"/>
-				<control action="vol listen up" digits="6"/>
-				<control action="vol listen zero" digits="5"/>
-				<control action="vol listen dn" digits="4"/>
-				<control action="hangup" digits=""/>
+			<control action="mute" digits=""/>
+			<control action="deaf mute" digits=""/>
+			<control action="energy up" digits="9"/>
+			<control action="energy equ" digits="8"/>
+			<control action="energy dn" digits="7"/>
+			<control action="vol talk up" digits="3"/>
+			<control action="vol talk zero" digits="2"/>
+			<control action="vol talk dn" digits="1"/>
+			<control action="vol listen up" digits="6"/>
+			<control action="vol listen zero" digits="5"/>
+			<control action="vol listen dn" digits="4"/>
+			<control action="hangup" digits=""/>
+		</group>
+		<group name="moderator">
+			<control action="mute" digits="#"/>
+			<control action="deaf mute" digits="*"/>
+			<control action="energy up" digits="9"/>
+			<control action="energy equ" digits="8"/>
+			<control action="energy dn" digits="7"/>
+			<control action="vol talk up" digits="3"/>
+			<control action="vol talk zero" digits="2"/>
+			<control action="vol talk dn" digits="1"/>
+			<control action="vol listen up" digits="6"/>
+			<control action="vol listen zero" digits="5"/>
+			<control action="vol listen dn" digits="4"/>
+			<control action="hangup" digits=""/>
 		</group>
 	</caller-controls>
 
@@ -44,8 +44,8 @@
 		<!--If no profile is specified it will default to "default"-->
 		<profile name="default">
 			<!-- Directory to drop CDR's 
-			'auto' means $PREFIX/logs/conference_cdr/<confernece_uuid>.cdr.xml
-			a non-absolute path means $PREFIX/logs/<value>/<confernece_uuid>.cdr.xml
+			'auto' means $PREFIX/logs/conference_cdr/<conference_uuid>.cdr.xml
+			a non-absolute path means $PREFIX/logs/<value>/<conference_uuid>.cdr.xml
 			absolute path means <value>/<conference_uuid>.cdr.xml
 			-->
 			<param name="cdr-log-dir" value="auto"/>
@@ -123,7 +123,7 @@
 			<!-- enable comfort noise generation -->
 			<param name="comfort-noise" value="true"/>
 			<!-- Uncomment auto-record to toggle recording every conference call. -->
-			<!-- Another valid value is   shout://user:pass@server.com/live.mp3   -->
+			<!-- Another valid value is shout://user:pass@server.com/live.mp3   -->
 			<!--
 			<param name="auto-record" value="$${recordings_dir}/${conference_name}_${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>
 			-->

@@ -147,7 +147,7 @@
   <!-- external_rtp_ip
        Can be an one of:
            ip address: "12.34.56.78"
-           a stun server lookup: "stun:stun.server.com"
+           a stun server lookup: "stun:stun.freeswitch.org"
            a DNS name: "host:host.server.com"
        where fs.mydomain.com is a DNS A record-useful when fs is on
        a dynamic IP address, and uses a dynamic DNS updater.
@@ -160,7 +160,7 @@
       Used as the public IP address for SDP.
        Can be an one of:
            ip address: "12.34.56.78"
-           a stun server lookup: "stun:stun.server.com"
+           a stun server lookup: "stun:stun.freeswitch.org"
            a DNS name: "host:host.server.com"
        where fs.mydomain.com is a DNS A record-useful when fs is on
        a dynamic IP address, and uses a dynamic DNS updater.
