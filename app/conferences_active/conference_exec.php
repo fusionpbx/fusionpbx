@@ -133,7 +133,6 @@ else {
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 					elseif ($data == "mute" || $data == "unmute" || $data == "mute non_moderator" || $data == "unmute non_moderator") {
-					echo "hi -- ";
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 					elseif ($data == "deaf" || $data == "undeaf" ) {
@@ -142,7 +141,7 @@ else {
 					elseif ($data == "lock" || $data == "unlock" ) {
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
-					echo "command: ".$switch_cmd." result: ".$switch_result."<br\n>";
+					//echo "command: ".$switch_cmd." result: ".$switch_result."<br\n>";
 				}
 		}
 	}

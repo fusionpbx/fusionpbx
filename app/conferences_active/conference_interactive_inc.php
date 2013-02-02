@@ -157,13 +157,13 @@ else {
 			}
 			else {
 				//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\">".$text['label-lock']."</a>&nbsp;\n";
-				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\" value='".$text['label-mute-all']."'>\n";
+				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=lock');\" value='".$text['label-lock']."'>\n";
 
 			}
 		}
 
 		//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\">".$text['label-mute-all']."</a>&nbsp;\n";
-		echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\" value='".$text['label-mute-all']."'>\n";
+		echo "		<input type='button' class='btn' title=\"".$text['label-mute-all-alt']."\" onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute+non_moderator');\" value='".$text['label-mute-all']."'>\n";
 
 		//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick+all');\">".$text['label-end-conference']."</a>&nbsp;\n";
 		echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick+all');\" value='".$text['label-end-conference']."'>\n";
@@ -188,6 +188,7 @@ else {
 		echo "</tr>\n";
 
 		foreach ($xml->conference->members->member as $row) {
+
 			$id = $row->id;
 			$record_path = $row->record_path;
 			$flag_can_hear = $row->flags->can_hear;
@@ -204,8 +205,8 @@ else {
 			$caller_id_number = $row->caller_id_number;
 
 			//format the seconds
-			$join_time_formatted = floor($join_time/60)."' ".($join_time - (floor($join_time/60))*60)."\"";
-			$last_talking_formatted = floor($last_talking/60)."' ".($last_talking - (floor($last_talking/60))*60)."\"";
+			$join_time_formatted = sprintf("%02s", floor($join_time/3600)).":".sprintf("%02s",floor($join_time/60)).":".sprintf("%02s",($join_time - (floor($join_time/60))*60));
+			$last_talking_formatted = sprintf("%02s",floor($last_talking/3600)).":".sprintf("%02s",floor($last_talking/60)).":".sprintf("%02s",($last_talking - (floor($last_talking/60))*60));
 
 			if (strlen($record_path) == 0) {
 				echo "<tr>\n";
