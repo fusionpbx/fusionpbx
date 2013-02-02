@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-$vars_string = <<<EOD
+$vars = <<<EOD
 [
 {"var_name":"domain","var_value":"\$\${local_ip_v4}","var_cat":"Domain","var_enabled":"true","var_description":"U2V0cyB0aGUgZGVmYXVsdCBkb21haW4u"},
 {"var_name":"domain_name","var_value":"\$\${domain}","var_cat":"Domain","var_enabled":"true","var_description":""},
@@ -65,7 +65,7 @@ $vars_string = <<<EOD
 {"var_name":"ajax_refresh_rate","var_value":"3000","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"format_phone","var_value":"Rxxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"format_phone","var_value":"xxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"xml_cdr_archive","var_value":"dir","var_cat":"Defaults","var_enabled":"true","var_description":""}
+{"var_name":"xml_cdr_archive","var_value":"dir","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""}
 ]
 EOD;
@@ -78,7 +78,7 @@ EOD;
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] == 0) {
-				$result = json_decode($vars_string, true);
+				$result = json_decode($vars, true);
 				$x = 1;
 				foreach($result as $row) {
 					$sql = "insert into v_vars ";
