@@ -300,12 +300,12 @@ include "root.php";
 						}
 						else {
 							$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
-							if (strlen($bridge[0]) > 0) {
-								$dial_string .= "".$bridge[0].",";
-							}
-							else {
+							//if (strlen($bridge[0]) > 0) {
+							//	$dial_string .= "".$bridge[0].",";
+							//}
+							//else {
 								$dial_string .= "loopback/".$row["follow_me_destination"].",";
-							}
+							//}
 						}
 					}
 					$this->dial_string = trim($dial_string, ",");

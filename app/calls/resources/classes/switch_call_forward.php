@@ -48,12 +48,12 @@ include "root.php";
 					}
 					else {
 						$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $this->forward_all_destination);
-						if (strlen($bridge[0]) > 0) {
-							$dial_string .= $bridge[0];
-						}
-						else {
+						//if (strlen($bridge[0]) > 0) {
+						//	$dial_string .= $bridge[0];
+						//}
+						//else {
 							$dial_string .= "loopback/".$this->forward_all_destination;
-						}
+						//}
 					}
 					$this->dial_string = $dial_string;
 				}
