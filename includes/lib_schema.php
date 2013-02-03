@@ -465,7 +465,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 				if ($row['rebuild'] == "true") {
 					if ($db_type == "sqlite") {
 						//start the transaction
-							$sql_update .= "BEGIN TRANSACTION;\n";
+							//$sql_update .= "BEGIN TRANSACTION;\n";
 						//rename the table
 							$sql_update .= "ALTER TABLE ".$table_name." RENAME TO tmp_".$table_name.";\n";
 						//create the table
@@ -475,7 +475,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 						//drop the old table
 							$sql_update .= "DROP TABLE tmp_".$table_name.";\n";
 						//commit the transaction
-							$sql_update .= "COMMIT;\n";
+							//$sql_update .= "COMMIT;\n";
 					}
 				}
 			}
