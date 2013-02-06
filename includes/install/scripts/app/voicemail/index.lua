@@ -100,18 +100,20 @@
 
 		--get the domain_uuid
 			domain_uuid = session:getVariable("domain_uuid");
-			if (domain_uuid == nil) then
-				--get the domain_uuid
-					if (domain_name ~= nil) then
-						sql = "SELECT domain_uuid FROM v_domains ";
-						sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+			if (domain_count > 1) then
+				if (domain_uuid == nil) then
+					--get the domain_uuid using the domain name required for multi-tenant
+						if (domain_name ~= nil) then
+							sql = "SELECT domain_uuid FROM v_domains ";
+							sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
+							if (debug["sql"]) then
+								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+							end
+							status = dbh:query(sql, function(rows)
+								domain_uuid = rows["domain_uuid"];
+							end);
 						end
-						status = dbh:query(sql, function(rows)
-							domain_uuid = rows["domain_uuid"];
-						end);
-					end
+				end
 			end
 			domain_uuid = string.lower(domain_uuid);
 
@@ -280,7 +282,7 @@
 	end
 
 --close the database connection
-	dbh:release();
+	--dbh:release();
 
 --notes
 	--record the video
