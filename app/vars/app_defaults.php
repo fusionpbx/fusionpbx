@@ -66,7 +66,8 @@ $vars = <<<EOD
 {"var_name":"format_phone","var_value":"Rxxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"format_phone","var_value":"xxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"xml_cdr_archive","var_value":"dir","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""}
+{"var_name":"ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""},
+{"var_name":"transfer_ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""}
 ]
 EOD;
 
@@ -138,6 +139,39 @@ EOD;
 					$sql .= "'Defaults', ";
 					$sql .= "'true', ";
 					$sql .= "'333', ";
+					$sql .= "'' ";
+					$sql .= ");";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+			}
+
+		//set the transfer_ringback
+			$sql = "select count(*) as num_rows from v_vars ";
+			$sql .= "where var_name = 'transfer_ringback' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$sql = "insert into v_vars ";
+					$sql .= "(";
+					$sql .= "var_uuid, ";
+					$sql .= "var_name, ";
+					$sql .= "var_value, ";
+					$sql .= "var_cat, ";
+					$sql .= "var_enabled, ";
+					$sql .= "var_order, ";
+					$sql .= "var_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'transfer_ringback', ";
+					$sql .= "'\$\${us-ring}', ";
+					$sql .= "'Defaults', ";
+					$sql .= "'true', ";
+					$sql .= "'334', ";
 					$sql .= "'' ";
 					$sql .= ");";
 					$db->exec(check_sql($sql));
