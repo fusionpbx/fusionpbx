@@ -87,6 +87,7 @@ require_once "includes/paging.php";
 				$sql .= "	contact_name_family like '%".$search_all."%' or \n";
 				$sql .= "	contact_nickname like '%".$search_all."%' or \n";
 				$sql .= "	contact_title like '%".$search_all."%' or \n";
+				$sql .= "	contact_category like '%".$search_all."%' or \n";
 				$sql .= "	contact_role like '%".$search_all."%' or \n";
 				$sql .= "	contact_email like '%".$search_all."%' or \n";
 				$sql .= "	contact_url like '%".$search_all."%' or \n";
@@ -111,7 +112,7 @@ require_once "includes/paging.php";
 		}
 
 	//prepare to page the results
-		$rows_per_page = 30;
+		$rows_per_page = 150;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
@@ -134,6 +135,7 @@ require_once "includes/paging.php";
 				$sql .= "	contact_name_family like '%".$search_all."%' or \n";
 				$sql .= "	contact_nickname like '%".$search_all."%' or \n";
 				$sql .= "	contact_title like '%".$search_all."%' or \n";
+				$sql .= "	contact_category like '%".$search_all."%' or \n";
 				$sql .= "	contact_role like '%".$search_all."%' or \n";
 				$sql .= "	contact_email like '%".$search_all."%' or \n";
 				$sql .= "	contact_url like '%".$search_all."%' or \n";
@@ -165,6 +167,7 @@ require_once "includes/paging.php";
 	echo th_order_by('contact_name_family', 'Last Name', $order_by, $order);
 	echo th_order_by('contact_nickname', 'Nickname', $order_by, $order);
 	echo th_order_by('contact_title', 'Title', $order_by, $order);
+	//echo th_order_by('contact_category', 'Category', $order_by, $order);
 	echo th_order_by('contact_role', 'Role', $order_by, $order);
 	//echo th_order_by('contact_email', 'Email', $order_by, $order);
 	//echo th_order_by('contact_url', 'URL', $order_by, $order);
@@ -184,6 +187,7 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_name_family']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_nickname']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_title']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_category']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_role']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_email']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_url']."&nbsp;</td>\n";

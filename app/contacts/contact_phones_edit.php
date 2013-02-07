@@ -52,6 +52,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$phone_type = check_str($_POST["phone_type"]);
 		$phone_number = check_str($_POST["phone_number"]);
 		$phone_extension = check_str($_POST["phone_extension"]);
+		$phone_description = check_str($_POST["phone_description"]);
 
 		//remove any phone number formatting
 		$phone_number = preg_replace('{\D}', '', $phone_number);
@@ -92,7 +93,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_phone_uuid, ";
 			$sql .= "phone_type, ";
 			$sql .= "phone_number, ";
-			$sql .= "phone_extension ";
+			$sql .= "phone_extension, ";
+			$sql .= "phone_description ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
@@ -101,7 +103,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$contact_phone_uuid', ";
 			$sql .= "'$phone_type', ";
 			$sql .= "'$phone_number', ";
-			$sql .= "'$phone_extension' ";
+			$sql .= "'$phone_extension', ";
+			$sql .= "'$phone_description' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -120,7 +123,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_uuid = '$contact_uuid', ";
 			$sql .= "phone_type = '$phone_type', ";
 			$sql .= "phone_number = '$phone_number', ";
-			$sql .= "phone_extension = '$phone_extension' ";
+			$sql .= "phone_extension = '$phone_extension', ";
+			$sql .= "phone_description = '$phone_description' ";
 			$sql .= "where domain_uuid = '$domain_uuid'";
 			$sql .= "and contact_phone_uuid = '$contact_phone_uuid'";
 			$db->exec(check_sql($sql));
@@ -150,6 +154,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$phone_type = $row["phone_type"];
 			$phone_number = $row["phone_number"];
 			$phone_extension = $row["phone_extension"];
+			$phone_description = $row["phone_description"];
 		}
 		unset ($prep_statement);
 	}
@@ -168,7 +173,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' align='left' border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Contacts Phone</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact Phone</b></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -179,108 +184,124 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type.:\n";
+	echo "	Type:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='phone_type'>\n";
-	echo "	<option value=''></option>\n";
-	if ($phone_type == "home") { 
-		echo "	<option value='home' SELECTED >Home</option>\n";
+	if (is_array($_SESSION["contact"]["phone_type"])) {
+		sort($_SESSION["contact"]["phone_type"]);
+		echo "	<select class='formfld' style='width:85%;' name='phone_type'>\n";
+		echo "	<option value=''></option>\n";
+		foreach($_SESSION["contact"]["phone_type"] as $row) {
+			if ($row == $phone_type) { 
+				echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
+			}
+			else {
+				echo "	<option value='".$row."'>".$row."</option>\n";
+			}
+		}
+		echo "	</select>\n";
 	}
 	else {
-		echo "	<option value='home'>Home</option>\n";
+		echo "	<select class='formfld' name='phone_type'>\n";
+		echo "	<option value=''></option>\n";
+		if ($phone_type == "home") { 
+			echo "	<option value='home' selected='selected'>Home</option>\n";
+		}
+		else {
+			echo "	<option value='home'>Home</option>\n";
+		}
+		if ($phone_type == "work") { 
+			echo "	<option value='work' selected='selected'>Work</option>\n";
+		}
+		else {
+			echo "	<option value='work'>Work</option>\n";
+		}
+		if ($phone_type == "pref") { 
+			echo "	<option value='pref' selected='selected'>Pref</option>\n";
+		}
+		else {
+			echo "	<option value='pref'>Pref</option>\n";
+		}
+		if ($phone_type == "voice") { 
+			echo "	<option value='voice' selected='selected'>Voice</option>\n";
+		}
+		else {
+			echo "	<option value='voice'>Voice</option>\n";
+		}
+		if ($phone_type == "fax") { 
+			echo "	<option value='fax' selected='selected'>Fax</option>\n";
+		}
+		else {
+			echo "	<option value='fax'>Fax</option>\n";
+		}
+		if ($phone_type == "msg") { 
+			echo "	<option value='msg' selected='selected'>MSG</option>\n";
+		}
+		else {
+			echo "	<option value='msg'>MSG</option>\n";
+		}
+		if ($phone_type == "cell") { 
+			echo "	<option value='cell' selected='selected'>Cell</option>\n";
+		}
+		else {
+			echo "	<option value='cell'>Cell</option>\n";
+		}
+		if ($phone_type == "pager") { 
+			echo "	<option value='pager' selected='selected'>Pager</option>\n";
+		}
+		else {
+			echo "	<option value='pager'>Pager</option>\n";
+		}
+		if ($phone_type == "bbs") { 
+			echo "	<option value='bbs' selected='selected'>BBS</option>\n";
+		}
+		else {
+			echo "	<option value='bbs'>BBS</option>\n";
+		}
+		if ($phone_type == "modem") { 
+			echo "	<option value='modem' selected='selected'>Modem</option>\n";
+		}
+		else {
+			echo "	<option value='modem'>Modem</option>\n";
+		}
+		if ($phone_type == "car") { 
+			echo "	<option value='car' selected='selected'>Car</option>\n";
+		}
+		else {
+			echo "	<option value='car'>Car</option>\n";
+		}
+		if ($phone_type == "isdn") { 
+			echo "	<option value='isdn' selected='selected'>ISDN</option>\n";
+		}
+		else {
+			echo "	<option value='isdn'>ISDN</option>\n";
+		}
+		if ($phone_type == "video") { 
+			echo "	<option value='video' selected='selected'>Video</option>\n";
+		}
+		else {
+			echo "	<option value='video'>Video</option>\n";
+		}
+		if ($phone_type == "pcs") { 
+			echo "	<option value='pcs' selected='selected'>PCS</option>\n";
+		}
+		else {
+			echo "	<option value='pcs'>PCS</option>\n";
+		}
+		if ($phone_type == "iana-token") { 
+			echo "	<option value='iana-token' selected='selected'>iana-token</option>\n";
+		}
+		else {
+			echo "	<option value='iana-token'>iana-token</option>\n";
+		}
+		if ($phone_type == "x-name") { 
+			echo "	<option value='x-name' selected='selected'>x-name</option>\n";
+		}
+		else {
+			echo "	<option value='x-name'>x-name</option>\n";
+		}
+		echo "	</select>\n";
 	}
-	if ($phone_type == "work") { 
-		echo "	<option value='work' SELECTED >Work</option>\n";
-	}
-	else {
-		echo "	<option value='work'>Work</option>\n";
-	}
-	if ($phone_type == "pref") { 
-		echo "	<option value='pref' SELECTED >Pref</option>\n";
-	}
-	else {
-		echo "	<option value='pref'>Pref</option>\n";
-	}
-	if ($phone_type == "voice") { 
-		echo "	<option value='voice' SELECTED >Voice</option>\n";
-	}
-	else {
-		echo "	<option value='voice'>Voice</option>\n";
-	}
-	if ($phone_type == "fax") { 
-		echo "	<option value='fax' SELECTED >Fax</option>\n";
-	}
-	else {
-		echo "	<option value='fax'>Fax</option>\n";
-	}
-	if ($phone_type == "msg") { 
-		echo "	<option value='msg' SELECTED >MSG</option>\n";
-	}
-	else {
-		echo "	<option value='msg'>MSG</option>\n";
-	}
-	if ($phone_type == "cell") { 
-		echo "	<option value='cell' SELECTED >Cell</option>\n";
-	}
-	else {
-		echo "	<option value='cell'>Cell</option>\n";
-	}
-	if ($phone_type == "pager") { 
-		echo "	<option value='pager' SELECTED >Pager</option>\n";
-	}
-	else {
-		echo "	<option value='pager'>Pager</option>\n";
-	}
-	if ($phone_type == "bbs") { 
-		echo "	<option value='bbs' SELECTED >BBS</option>\n";
-	}
-	else {
-		echo "	<option value='bbs'>BBS</option>\n";
-	}
-	if ($phone_type == "modem") { 
-		echo "	<option value='modem' SELECTED >Modem</option>\n";
-	}
-	else {
-		echo "	<option value='modem'>Modem</option>\n";
-	}
-	if ($phone_type == "car") { 
-		echo "	<option value='car' SELECTED >Car</option>\n";
-	}
-	else {
-		echo "	<option value='car'>Car</option>\n";
-	}
-	if ($phone_type == "isdn") { 
-		echo "	<option value='isdn' SELECTED >ISDN</option>\n";
-	}
-	else {
-		echo "	<option value='isdn'>ISDN</option>\n";
-	}
-	if ($phone_type == "video") { 
-		echo "	<option value='video' SELECTED >Video</option>\n";
-	}
-	else {
-		echo "	<option value='video'>Video</option>\n";
-	}
-	if ($phone_type == "pcs") { 
-		echo "	<option value='pcs' SELECTED >PCS</option>\n";
-	}
-	else {
-		echo "	<option value='pcs'>PCS</option>\n";
-	}
-	if ($phone_type == "iana-token") { 
-		echo "	<option value='iana-token' SELECTED >iana-token</option>\n";
-	}
-	else {
-		echo "	<option value='iana-token'>iana-token</option>\n";
-	}
-	if ($phone_type == "x-name") { 
-		echo "	<option value='x-name' SELECTED >x-name</option>\n";
-	}
-	else {
-		echo "	<option value='x-name'>x-name</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo "Enter the phone type.\n";
 	echo "</td>\n";
@@ -305,6 +326,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='phone_extension' maxlength='255' value=\"$phone_extension\">\n";
 	echo "<br />\n";
 	echo "Enter the extension.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Description:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='phone_description' maxlength='255' value=\"$phone_description\">\n";
+	echo "<br />\n";
+	echo "Enter the description.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

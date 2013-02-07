@@ -121,6 +121,7 @@ require_once "includes/paging.php";
 	echo th_order_by('phone_type', 'Type', $order_by, $order);
 	echo th_order_by('phone_number', 'Numbers', $order_by, $order);
 	echo "<th>Tools</th>\n";
+	echo th_order_by('phone_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	echo "	<a href='contact_phones_edit.php?contact_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
@@ -139,6 +140,7 @@ require_once "includes/paging.php";
 			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".$row['phone_number']."&destination_number=".$row['phone_number']."\">CDR</a>\n";
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phone_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<a href='contact_phones_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			echo "		<a href='contact_phones_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
@@ -150,7 +152,7 @@ require_once "includes/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='4' align='left'>\n";
+	echo "<td colspan='5' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";

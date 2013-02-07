@@ -116,6 +116,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the role.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'contact_category';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the category.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'contact_email';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the email address.';
@@ -132,6 +136,13 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the notes.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'created';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Date when the contact was created.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'created_by';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'The user that created the contact.';
 
 		$y = 1; //table array index
 		$apps[$x]['db'][$y]['table'] = 'v_contact_addresses';
@@ -160,6 +171,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'contact_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
+		//$apps[$x]['db'][$y]['fields'][$z]['name'] = 'address_name';
+		//$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the address name.';
+		//$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'address_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the address type.';
@@ -190,11 +205,15 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'address_latitude';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the latitude';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the latitude.';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'address_longitude';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the longitude';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the longitude.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'address_description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 
 		$y = 2; //table array index
@@ -235,6 +254,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'phone_extension';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the extension.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'phone_description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the description.';
 		$z++;
 
 		$y = 3; //table array index
