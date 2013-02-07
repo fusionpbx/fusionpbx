@@ -51,6 +51,7 @@ else {
 		$contact_name_family = check_str($_POST["contact_name_family"]);
 		$contact_nickname = check_str($_POST["contact_nickname"]);
 		$contact_title = check_str($_POST["contact_title"]);
+		$contact_category = check_str($_POST["contact_category"]);
 		$contact_role = check_str($_POST["contact_role"]);
 		$contact_email = check_str($_POST["contact_email"]);
 		$contact_url = check_str($_POST["contact_url"]);
@@ -74,10 +75,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($contact_nickname) == 0) { $msg .= "Please provide: Nickname<br>\n"; }
 		//if (strlen($contact_title) == 0) { $msg .= "Please provide: Title<br>\n"; }
 		//if (strlen($contact_role) == 0) { $msg .= "Please provide: Role<br>\n"; }
-		//if (strlen($) == 0) { $msg .= "Please provide: Contact Information<br>\n"; }
 		//if (strlen($contact_email) == 0) { $msg .= "Please provide: Email<br>\n"; }
 		//if (strlen($contact_url) == 0) { $msg .= "Please provide: URL<br>\n"; }
-		//if (strlen($) == 0) { $msg .= "Please provide: Additional Information<br>\n"; }
 		//if (strlen($contact_time_zone) == 0) { $msg .= "Please provide: Time Zone<br>\n"; }
 		//if (strlen($contact_note) == 0) { $msg .= "Please provide: Notes<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -107,6 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_name_family, ";
 			$sql .= "contact_nickname, ";
 			$sql .= "contact_title, ";
+			$sql .= "contact_category, ";
 			$sql .= "contact_role, ";
 			$sql .= "contact_email, ";
 			$sql .= "contact_url, ";
@@ -123,6 +123,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$contact_name_family', ";
 			$sql .= "'$contact_nickname', ";
 			$sql .= "'$contact_title', ";
+			$sql .= "'$contact_category', ";
 			$sql .= "'$contact_role', ";
 			$sql .= "'$contact_email', ";
 			$sql .= "'$contact_url', ";
@@ -149,6 +150,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_name_family = '$contact_name_family', ";
 			$sql .= "contact_nickname = '$contact_nickname', ";
 			$sql .= "contact_title = '$contact_title', ";
+			$sql .= "contact_category = '$contact_category', ";
 			$sql .= "contact_role = '$contact_role', ";
 			$sql .= "contact_email = '$contact_email', ";
 			$sql .= "contact_url = '$contact_url', ";
@@ -173,8 +175,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$contact_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_contacts ";
+		$sql = "select * from v_contacts ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and contact_uuid = '$contact_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -187,6 +188,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$contact_name_family = $row["contact_name_family"];
 			$contact_nickname = $row["contact_nickname"];
 			$contact_title = $row["contact_title"];
+			$contact_category = $row["contact_category"];
 			$contact_role = $row["contact_role"];
 			$contact_email = $row["contact_email"];
 			$contact_url = $row["contact_url"];
@@ -210,12 +212,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact Add</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact Edit</b></td>\n";
-	}
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='qr code' onclick=\"window.location='contacts_vcard.php?id=$contact_uuid&type=image'\" value='QR Code'>\n";
 	echo "	<input type='button' class='btn' name='' alt='vcard' onclick=\"window.location='contacts_vcard.php?id=$contact_uuid&type=download'\" value='vCard'>\n";
@@ -248,75 +245,92 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	Type:\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' style='width:85%;' name='contact_type'>\n";
-		echo "	<option value=''></option>\n";
-		if ($contact_type == "customer") { 
-			echo "	<option value='customer' selected='selected' >Customer</option>\n";
+		
+		if (is_array($_SESSION["contact"]["role"])) {
+			sort($_SESSION["contact"]["role"]);
+			echo "	<select class='formfld' style='width:85%;' name='contact_type'>\n";
+			echo "	<option value=''></option>\n";
+			foreach($_SESSION["contact"]["type"] as $row) {
+				if ($row == $contact_type) { 
+					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
+				}
+				else {
+					echo "	<option value='".$row."'>".$row."</option>\n";
+				}
+			}
+			echo "	</select>\n";
 		}
 		else {
-			echo "	<option value='customer'>Customer</option>\n";
+			echo "	<select class='formfld' style='width:85%;' name='contact_type'>\n";
+			echo "	<option value=''></option>\n";
+			if ($contact_type == "customer") { 
+				echo "	<option value='customer' selected='selected' >Customer</option>\n";
+			}
+			else {
+				echo "	<option value='customer'>Customer</option>\n";
+			}
+			if ($contact_type == "contractor") { 
+				echo "	<option value='contractor' selected='selected' >Contractor</option>\n";
+			}
+			else {
+				echo "	<option value='contractor'>Contractor</option>\n";
+			}
+			if ($contact_type == "friend") { 
+				echo "	<option value='friend' selected='selected' >Friend</option>\n";
+			}
+			else {
+				echo "	<option value='friend'>Friend</option>\n";
+			}
+			if ($contact_type == "lead") { 
+				echo "	<option value='lead' selected='selected' >Lead</option>\n";
+			}
+			else {
+				echo "	<option value='lead'>Lead</option>\n";
+			}
+			if ($contact_type == "member") { 
+				echo "	<option value='member' selected='selected' >Member</option>\n";
+			}
+			else {
+				echo "	<option value='member'>Member</option>\n";
+			}
+			if ($contact_type == "family") { 
+				echo "	<option value='family' selected='selected' >Family</option>\n";
+			}
+			else {
+				echo "	<option value='family'>Family</option>\n";
+			}
+			if ($contact_type == "subscriber") { 
+				echo "	<option value='subscriber' selected='selected' >Subscriber</option>\n";
+			}
+			else {
+				echo "	<option value='subscriber'>Subscriber</option>\n";
+			}
+			if ($contact_type == "supplier") { 
+				echo "	<option value='supplier' selected='selected' >Supplier</option>\n";
+			}
+			else {
+				echo "	<option value='supplier'>Supplier</option>\n";
+			}
+			if ($contact_type == "provider") { 
+				echo "	<option value='provider' selected='selected' >Provider</option>\n";
+			}
+			else {
+				echo "	<option value='provider'>Provider</option>\n";
+			}
+			if ($contact_type == "user") { 
+				echo "	<option value='user' selected='selected' >User</option>\n";
+			}
+			else {
+				echo "	<option value='user'>User</option>\n";
+			}
+			if ($contact_type == "volunteer") { 
+				echo "	<option value='volunteer' selected='selected' >Volunteer</option>\n";
+			}
+			else {
+				echo "	<option value='volunteer'>Volunteer</option>\n";
+			}
+			echo "	</select>\n";
 		}
-		if ($contact_type == "contractor") { 
-			echo "	<option value='contractor' selected='selected' >Contractor</option>\n";
-		}
-		else {
-			echo "	<option value='contractor'>Contractor</option>\n";
-		}
-		if ($contact_type == "friend") { 
-			echo "	<option value='friend' selected='selected' >Friend</option>\n";
-		}
-		else {
-			echo "	<option value='friend'>Friend</option>\n";
-		}
-		if ($contact_type == "lead") { 
-			echo "	<option value='lead' selected='selected' >Lead</option>\n";
-		}
-		else {
-			echo "	<option value='lead'>Lead</option>\n";
-		}
-		if ($contact_type == "member") { 
-			echo "	<option value='member' selected='selected' >Member</option>\n";
-		}
-		else {
-			echo "	<option value='member'>Member</option>\n";
-		}
-		if ($contact_type == "family") { 
-			echo "	<option value='family' selected='selected' >Family</option>\n";
-		}
-		else {
-			echo "	<option value='family'>Family</option>\n";
-		}
-		if ($contact_type == "subscriber") { 
-			echo "	<option value='subscriber' selected='selected' >Subscriber</option>\n";
-		}
-		else {
-			echo "	<option value='subscriber'>Subscriber</option>\n";
-		}
-		if ($contact_type == "supplier") { 
-			echo "	<option value='supplier' selected='selected' >Supplier</option>\n";
-		}
-		else {
-			echo "	<option value='supplier'>Supplier</option>\n";
-		}
-		if ($contact_type == "provider") { 
-			echo "	<option value='provider' selected='selected' >Provider</option>\n";
-		}
-		else {
-			echo "	<option value='provider'>Provider</option>\n";
-		}
-		if ($contact_type == "user") { 
-			echo "	<option value='user' selected='selected' >User</option>\n";
-		}
-		else {
-			echo "	<option value='user'>User</option>\n";
-		}
-		if ($contact_type == "volunteer") { 
-			echo "	<option value='volunteer' selected='selected' >Volunteer</option>\n";
-		}
-		else {
-			echo "	<option value='volunteer'>Volunteer</option>\n";
-		}
-		echo "	</select>\n";
 		echo "<br />\n";
 		echo "Select the contact type.\n";
 		echo "</td>\n";
@@ -371,9 +385,52 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	Title:\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_title' maxlength='255' value=\"$contact_title\">\n";
+		if (is_array($_SESSION["contact"]["title"])) {
+			sort($_SESSION["contact"]["title"]);
+			echo "	<select class='formfld' style='width:85%;' name='contact_title'>\n";
+			echo "	<option value=''></option>\n";
+			foreach($_SESSION["contact"]["title"] as $row) {
+				if ($row == $contact_title) { 
+					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
+				}
+				else {
+					echo "	<option value='".$row."'>".$row."</option>\n";
+				}
+			}
+			echo "	</select>\n";
+		}
+		else {
+			echo "	<input class='formfld' style='width:85%;' type='text' name='contact_title' maxlength='255' value=\"$contact_title\">\n";
+		}
 		echo "<br />\n";
 		echo "Enter the title.\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Category:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if (is_array($_SESSION["contact"]["category"])) {
+			sort($_SESSION["contact"]["category"]);
+			echo "	<select class='formfld' style='width:85%;' name='contact_category'>\n";
+			echo "	<option value=''></option>\n";
+			foreach($_SESSION["contact"]["category"] as $row) {
+				if ($row == $contact_category) { 
+					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
+				}
+				else {
+					echo "	<option value='".$row."'>".$row."</option>\n";
+				}
+			}
+			echo "	</select>\n";
+		}
+		else {
+			echo "	<input class='formfld' style='width:85%;' type='text' name='contact_category' maxlength='255' value=\"$contact_category\">\n";
+		}
+		echo "<br />\n";
+		echo "Enter the category.\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -382,7 +439,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	Role:\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_role' maxlength='255' value=\"$contact_role\">\n";
+		if (is_array($_SESSION["contact"]["role"])) {
+			sort($_SESSION["contact"]["role"]);
+			echo "	<select class='formfld' style='width:85%;' name='contact_role'>\n";
+			echo "	<option value=''></option>\n";
+			foreach($_SESSION["contact"]["role"] as $row) {
+				if ($row == $contact_role) { 
+					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
+				}
+				else {
+					echo "	<option value='".$row."'>".$row."</option>\n";
+				}
+			}
+			echo "	</select>\n";
+		}
+		else {
+			echo "	<input class='formfld' style='width:85%;' type='text' name='contact_role' maxlength='255' value=\"$contact_role\">\n";
+		}
 		echo "<br />\n";
 		echo "Enter the role.\n";
 		echo "</td>\n";
@@ -459,7 +532,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require "contact_phones.php";
 			require "contact_addresses.php";
 			require "contact_notes.php";
-			//echo "<br/><br/>\n";
 		}
 
 	echo "</td>\n";

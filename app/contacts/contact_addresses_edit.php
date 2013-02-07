@@ -49,6 +49,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
+		//$address_name = check_str($_POST["address_name"]);
 		$address_type = check_str($_POST["address_type"]);
 		$address_street = check_str($_POST["address_street"]);
 		$address_extended = check_str($_POST["address_extended"]);
@@ -58,6 +59,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$address_country = check_str($_POST["address_country"]);
 		$address_latitude = check_str($_POST["address_latitude"]);
 		$address_longitude = check_str($_POST["address_longitude"]);
+		$address_description = check_str($_POST["address_description"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -100,6 +102,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "domain_uuid, ";
 			$sql .= "contact_uuid, ";
 			$sql .= "contact_address_uuid, ";
+			//$sql .= "address_name, ";
 			$sql .= "address_type, ";
 			$sql .= "address_street, ";
 			$sql .= "address_extended, ";
@@ -108,13 +111,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "address_postal_code, ";
 			$sql .= "address_country, ";
 			$sql .= "address_latitude, ";
-			$sql .= "address_longitude ";
+			$sql .= "address_longitude, ";
+			$sql .= "address_description ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
 			$sql .= "'".$_SESSION['domain_uuid']."', ";
 			$sql .= "'$contact_uuid', ";
 			$sql .= "'$contact_address_uuid', ";
+			//$sql .= "'$address_name', ";
 			$sql .= "'$address_type', ";
 			$sql .= "'$address_street', ";
 			$sql .= "'$address_extended', ";
@@ -123,7 +128,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$address_postal_code', ";
 			$sql .= "'$address_country', ";
 			$sql .= "'$address_latitude', ";
-			$sql .= "'$address_longitude' ";
+			$sql .= "'$address_longitude', ";
+			$sql .= "'$address_description' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -140,6 +146,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($action == "update") {
 			$sql = "update v_contact_addresses set ";
 			$sql .= "contact_uuid = '$contact_uuid', ";
+			//$sql .= "address_name = '$address_name', ";
 			$sql .= "address_type = '$address_type', ";
 			$sql .= "address_street = '$address_street', ";
 			$sql .= "address_extended = '$address_extended', ";
@@ -148,8 +155,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "address_postal_code = '$address_postal_code', ";
 			$sql .= "address_country = '$address_country', ";
 			$sql .= "address_latitude = '$address_latitude', ";
-			$sql .= "address_longitude = '$address_longitude' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."'";
+			$sql .= "address_longitude = '$address_longitude', ";
+			$sql .= "address_description = '$address_description' ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and contact_address_uuid = '$contact_address_uuid'";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -168,14 +176,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$contact_address_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_contact_addresses ";
+		$sql = "select * from v_contact_addresses ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and contact_address_uuid = '$contact_address_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			//$address_name = $row["address_name"];
 			$address_type = $row["address_type"];
 			$address_street = $row["address_street"];
 			$address_extended = $row["address_extended"];
@@ -185,6 +193,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$address_country = $row["address_country"];
 			$address_latitude = $row["address_latitude"];
 			$address_longitude = $row["address_longitude"];
+			$address_description = $row["address_description"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
@@ -198,18 +207,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
+	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Contacts Address Add</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Contacts Address Edit</b></td>\n";
-	}
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact Address</b></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -220,24 +224,40 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Address Type:\n";
+	echo "	Type:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='address_type'>\n";
-	echo "	<option value=''></option>\n";
-	if (strtolower($address_type) == "home") { 
-		echo "	<option value='home' selected='selected'>home</option>\n";
+	if (is_array($_SESSION["contact"]["address_type"])) {
+		sort($_SESSION["contact"]["address_type"]);
+		echo "	<select class='formfld' style='width:85%;' name='address_type'>\n";
+		echo "	<option value=''></option>\n";
+		foreach($_SESSION["contact"]["address_type"] as $row) {
+			if ($row == $address_type) { 
+				echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
+			}
+			else {
+				echo "	<option value='".$row."'>".$row."</option>\n";
+			}
+		}
+		echo "	</select>\n";
 	}
 	else {
-		echo "	<option value='home'>home</option>\n";
+		echo "	<select class='formfld' name='address_type'>\n";
+		echo "	<option value=''></option>\n";
+		if (strtolower($address_type) == "home") { 
+			echo "	<option value='home' selected='selected'>home</option>\n";
+		}
+		else {
+			echo "	<option value='home'>home</option>\n";
+		}
+		if (strtolower($address_type) == "work") { 
+			echo "	<option value='work' selected='selected'>work</option>\n";
+		}
+		else {
+			echo "	<option value='work'>work</option>\n";
+		}
+		echo "	</select>\n";
 	}
-	if (strtolower($address_type) == "work") { 
-		echo "	<option value='work' selected='selected'>work</option>\n";
-	}
-	else {
-		echo "	<option value='work'>work</option>\n";
-	}
-	echo "	</select>\n";
 	echo "<br />\n";
 	echo "Enter the address type.\n";
 	echo "</td>\n";
@@ -330,6 +350,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "Enter the longitude\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Description:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='address_description' maxlength='255' value=\"$address_description\">\n";
+	echo "<br />\n";
+	echo "Enter the description.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "				<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
