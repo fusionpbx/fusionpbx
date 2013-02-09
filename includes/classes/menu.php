@@ -197,7 +197,7 @@
 				}
 
 				if (strlen($sql) == 0) { //default sql for base of the menu
-					$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid from v_menu_items as i, v_menu_languages as l ";
+					$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid from v_menu_items as i, v_menu_languages as l ";
 					$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 					$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
 					$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
@@ -230,15 +230,6 @@
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach($result as $field) {
-					$sql2 = "select * from v_menu_languages ";
-					$sql2 .= "where menu_language = 'en-us' ";
-					$sql2 .= "and menu_item_uuid = '".$field['menu_item_uuid']."' ";
-					$prep_statement2 = $db->prepare(check_sql($sql2));
-					$prep_statement2->execute();
-					$result2 = $prep_statement2->fetchAll(PDO::FETCH_NAMED);
-					foreach($result2 as $field2) {
-						$menu_icon_name=$field2['menu_item_title'];
-					}
 					unset($prep_statement2, $sql2, $result2);
 					$menu_tags = '';
 					switch ($field['menu_item_category']) {
@@ -256,6 +247,14 @@
 							break;
 					}
 
+					//prepare the protected menus
+					if ($field['menu_item_protected'] == "true") {
+						$menu_item_title = $field['menu_item_title'];
+					}
+					else {
+						$menu_item_title = $field['menu_language_title'];
+					}
+
 					if ($menu_item_level == "main") {
 						$db_menu  = "<ul class='menu_main'>\n";
 						$db_menu .= "<li>\n";
@@ -263,14 +262,14 @@
 							$_SESSION["username"] = '';
 						}
 						if (strlen($_SESSION["username"]) == 0) {
-							$db_menu .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$field['menu_item_title']."</h2></a>\n";
+							$db_menu .= "<a $menu_tags style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
 						}
 						else {
 							if ($field['menu_item_link'] == "/login.php" || $field['menu_item_link'] == "/users/signup.php") {
 								//hide login and sign-up when the user is logged in
 							}
 							else {
-								$db_menu .= "<a ".$menu_tags." style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$field['menu_item_title']."</h2></a>\n";
+								$db_menu .= "<a ".$menu_tags." style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
 							}
 						}
 					}
@@ -302,7 +301,8 @@
 					$_SESSION['groups'][0]['group_name'] = 'public';
 				}
 
-				$sql = "select i.menu_item_link, l.menu_item_title, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid from v_menu_items as i, v_menu_languages as l ";
+				$sql = "select i.menu_item_link, l.menu_item_title as menu_language_title, i.menu_item_title, i.menu_item_protected, i.menu_item_category, i.menu_item_uuid, i.menu_item_parent_uuid ";
+				$sql .= "from v_menu_items as i, v_menu_languages as l ";
 				$sql .= "where i.menu_item_uuid = l.menu_item_uuid ";
 				$sql .= "and l.menu_language = '".$_SESSION['domain']['language']['code']."' ";
 				$sql .= "and l.menu_uuid = '".$this->menu_uuid."' ";
@@ -342,20 +342,29 @@
 						$menu_item_uuid = $row['menu_item_uuid'];
 						$menu_item_parent_uuid = $row['menu_item_parent_uuid'];
 
-						switch ($menu_item_category) {
-							case "internal":
-								$menu_tags = "href='".PROJECT_PATH.$menu_item_link."'";
-								break;
-							case "external":
-								if (substr($menu_item_link, 0,1) == "/") {
-									$menu_item_link = PROJECT_PATH . $menu_item_link;
-								}
-								$menu_tags = "href='".$menu_item_link."' target='_blank'";
-								break;
-							case "email":
-								$menu_tags = "href='mailto:".$menu_item_link."'";
-								break;
-						}
+						//prepare the protected menus
+							if ($row['menu_item_protected'] == "true") {
+								$menu_item_title = $row['menu_item_title'];
+							}
+							else {
+								$menu_item_title = $row['menu_language_title'];
+							}
+
+						//prepare the menu_tags according to the category
+							switch ($menu_item_category) {
+								case "internal":
+									$menu_tags = "href='".PROJECT_PATH.$menu_item_link."'";
+									break;
+								case "external":
+									if (substr($menu_item_link, 0,1) == "/") {
+										$menu_item_link = PROJECT_PATH . $menu_item_link;
+									}
+									$menu_tags = "href='".$menu_item_link."' target='_blank'";
+									break;
+								case "email":
+									$menu_tags = "href='mailto:".$menu_item_link."'";
+									break;
+							}
 
 						$db_menu_sub .= "<li>";
 
@@ -365,12 +374,12 @@
 							}
 
 						if (strlen($str_child_menu) > 1) {
-							$db_menu_sub .= "<a ".$menu_tags.">".$row['menu_item_title']."</a>";
+							$db_menu_sub .= "<a ".$menu_tags.">".$menu_item_title."</a>";
 							$db_menu_sub .= $str_child_menu;
 							unset($str_child_menu);
 						}
 						else {
-							$db_menu_sub .= "<a ".$menu_tags.">".$row['menu_item_title']."</a>";
+							$db_menu_sub .= "<a ".$menu_tags.">".$menu_item_title."</a>";
 						}
 						$db_menu_sub .= "</li>\n";
 					}
