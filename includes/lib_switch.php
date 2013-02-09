@@ -2673,7 +2673,6 @@ function save_hunt_group_xml() {
 					if ($row['hunt_group_timeout'] > 0) {
 						//$tmp .= "session:setVariable(\"call_timeout\", \"".$row['hunt_group_timeout']."\");\n";
 						$tmp .= "session:setVariable(\"continue_on_fail\", \"true\");\n";
-						$tmp .= "session:setVariable(\"ignore_early_media\", \"true\");\n";
 					}
 					$tmp .= "session:setVariable(\"hangup_after_bridge\", \"true\");\n";
 					$tmp .= "\n";
