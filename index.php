@@ -28,11 +28,14 @@ if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php"))
 	header("Location: ".PROJECT_PATH."/resources/install.php");
 	exit;
 }
-require_once "includes/require.php";
-require_once "includes/header.php";
 
-echo "<br />";
-echo "<br />";
-
-require_once "includes/footer.php";
+if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/index.php")){
+	require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
+}
+else {
+	require_once "includes/require.php";
+	require_once "includes/header.php";
+	echo "<br /><br />\n";
+	require_once "includes/footer.php";
+}
 ?>
