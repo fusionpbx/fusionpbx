@@ -410,9 +410,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //prepare the autocomplete
-	echo "<script src=\"/includes/jquery/jquery-1.8.3.js\"></script>\n";
-	echo "<script src=\"/includes/jquery/jquery-ui-1.9.2.min.js\"></script>\n";
-	echo "<link rel=\"stylesheet\" href=\"/includes/jquery/jquery-ui.css\" />\n";
+	echo "<script src=\"".PROJECT_PATH."/includes/jquery/jquery-1.8.3.js\"></script>\n";
+	echo "<script src=\"".PROJECT_PATH."/includes/jquery/jquery-ui-1.9.2.min.js\"></script>\n";
+	echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/includes/jquery/jquery-ui.css\" />\n";
 	echo "<script type=\"text/javascript\">\n";
 	echo "\$(function() {\n";
 	echo "	var extensions = [\n";
