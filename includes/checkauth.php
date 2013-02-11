@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -98,73 +98,75 @@ session_start();
 					}
 
 				//check to see if the user exists
-					$sql = "select * from v_users ";
-					$sql .= "where username=:username ";
-					if (count($_SESSION["domains"]) > 1) {
-						$sql .= "and domain_uuid=:domain_uuid ";
-					}
-					$prep_statement = $db->prepare(check_sql($sql));
-					if (count($_SESSION["domains"]) > 1) {
-						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-					}
-					$prep_statement->bindParam(':username', $username);
-					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (count($result) == 0) {
-						//salt used with the password to create a one way hash
-							$salt = generate_password('20', '4');
-							$password = generate_password('20', '4');
+					if (!$auth_failed) {
+						$sql = "select * from v_users ";
+						$sql .= "where username=:username ";
+						if (count($_SESSION["domains"]) > 1) {
+							$sql .= "and domain_uuid=:domain_uuid ";
+						}
+						$prep_statement = $db->prepare(check_sql($sql));
+						if (count($_SESSION["domains"]) > 1) {
+							$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+						}
+						$prep_statement->bindParam(':username', $username);
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						if (count($result) == 0) {
+							//salt used with the password to create a one way hash
+								$salt = generate_password('20', '4');
+								$password = generate_password('20', '4');
 
-						//prepare the uuids
-							$user_uuid = uuid();
-							$contact_uuid = uuid();
+							//prepare the uuids
+								$user_uuid = uuid();
+								$contact_uuid = uuid();
 
-						//add the user
-							$sql = "insert into v_users ";
-							$sql .= "(";
-							$sql .= "domain_uuid, ";
-							$sql .= "user_uuid, ";
-							$sql .= "contact_uuid, ";
-							$sql .= "username, ";
-							$sql .= "password, ";
-							$sql .= "salt, ";
-							$sql .= "add_date, ";
-							$sql .= "add_user, ";
-							$sql .= "user_enabled ";
-							$sql .= ") ";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'$domain_uuid', ";
-							$sql .= "'$user_uuid', ";
-							$sql .= "'$contact_uuid', ";
-							$sql .= "'".$username."', ";
-							$sql .= "'".md5($salt.$password)."', ";
-							$sql .= "'".$salt."', ";
-							$sql .= "now(), ";
-							$sql .= "'".$username."', ";
-							$sql .= "'true' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
+							//add the user
+								$sql = "insert into v_users ";
+								$sql .= "(";
+								$sql .= "domain_uuid, ";
+								$sql .= "user_uuid, ";
+								$sql .= "contact_uuid, ";
+								$sql .= "username, ";
+								$sql .= "password, ";
+								$sql .= "salt, ";
+								$sql .= "add_date, ";
+								$sql .= "add_user, ";
+								$sql .= "user_enabled ";
+								$sql .= ") ";
+								$sql .= "values ";
+								$sql .= "(";
+								$sql .= "'$domain_uuid', ";
+								$sql .= "'$user_uuid', ";
+								$sql .= "'$contact_uuid', ";
+								$sql .= "'".strtolower($username)."', ";
+								$sql .= "'".md5($salt.$password)."', ";
+								$sql .= "'".$salt."', ";
+								$sql .= "now(), ";
+								$sql .= "'".strtolower($username)."', ";
+								$sql .= "'true' ";
+								$sql .= ")";
+								$db->exec(check_sql($sql));
+								unset($sql);
 
-						//add the user to group user
-							$group_name = 'user';
-							$sql = "insert into v_group_users ";
-							$sql .= "(";
-							$sql .= "group_user_uuid, ";
-							$sql .= "domain_uuid, ";
-							$sql .= "group_name, ";
-							$sql .= "user_uuid ";
-							$sql .= ")";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'".uuid()."', ";
-							$sql .= "'$domain_uuid', ";
-							$sql .= "'$group_name', ";
-							$sql .= "'$user_uuid' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
+							//add the user to group user
+								$group_name = 'user';
+								$sql = "insert into v_group_users ";
+								$sql .= "(";
+								$sql .= "group_user_uuid, ";
+								$sql .= "domain_uuid, ";
+								$sql .= "group_name, ";
+								$sql .= "user_uuid ";
+								$sql .= ")";
+								$sql .= "values ";
+								$sql .= "(";
+								$sql .= "'".uuid()."', ";
+								$sql .= "'$domain_uuid', ";
+								$sql .= "'$group_name', ";
+								$sql .= "'$user_uuid' ";
+								$sql .= ")";
+								$db->exec(check_sql($sql));
+								unset($sql);
+						}
 					}
 			}
 		//database authentication
