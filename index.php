@@ -24,18 +24,24 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")){
-	header("Location: ".PROJECT_PATH."/resources/install.php");
-	exit;
-}
 
-if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/index.php")){
-	require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
-}
-else {
+//if config.php file does not exist then redirect to the install page
+	if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")){
+		header("Location: ".PROJECT_PATH."/resources/install.php");
+		exit;
+	}
+
+//adds multiple includes
 	require_once "includes/require.php";
-	require_once "includes/header.php";
-	echo "<br /><br />\n";
-	require_once "includes/footer.php";
-}
+
+//show the index page
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/index.php")){
+		require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
+	}
+	else {
+		require_once "includes/require.php";
+		require_once "includes/header.php";
+		echo "<br /><br />\n";
+		require_once "includes/footer.php";
+	}
 ?>
