@@ -33,8 +33,11 @@
 				$db = $this->db;
 
 			//clear the sessions
+				unset($_SESSION['contact']);
 				unset($_SESSION['domain']);
 				unset($_SESSION['email']);
+				unset($_SESSION['ldap']);
+				unset($_SESSION['login']);
 				unset($_SESSION['provision']);
 				unset($_SESSION['security']);
 				unset($_SESSION['server']);
