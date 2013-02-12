@@ -71,9 +71,11 @@
 
 	$text['label-strategy']['en-us'] = 'Strategy';
 
-	$text['dropdown-sequence']['en-us'] = 'sequence';
+	$text['select-sequence']['en-us'] = 'sequence';
 
-	$text['dropdown-simultaneous']['en-us'] = 'simultaneous';
+	$text['select-simultaneous']['en-us'] = 'simultaneous';
+
+	$text['select-enterprise']['en-us'] = 'enterprise';
 
 	$text['label-sequence']['en-us'] = 'Select the strategy.';
 
@@ -114,5 +116,11 @@
 	$text['description-description']['en-us'] = 'Enter the description';
 
 	$text['label-extensions']['en-us'] = 'Extensions';
+
+	$text['label-delay']['en-us'] = 'Delay';
+	$text['label-delay']['pt-pt'] = '';
+
+	$text['label-timeout']['en-us'] = 'Timeout';
+	$text['label-timeout']['pt-pt'] = '';
 
 ?>
