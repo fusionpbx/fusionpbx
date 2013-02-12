@@ -118,6 +118,7 @@ if (count($_POST)>0) {
 	$ivr_menu_digit_len = check_str($_POST["ivr_menu_digit_len"]);
 	$ivr_menu_direct_dial = check_str($_POST["ivr_menu_direct_dial"]);
 	$ivr_menu_ringback = check_str($_POST["ivr_menu_ringback"]);
+	$ivr_menu_cid_prefix = check_str($_POST["ivr_menu_cid_prefix"]);
 	$ivr_menu_enabled = check_str($_POST["ivr_menu_enabled"]);
 	$ivr_menu_description = check_str($_POST["ivr_menu_description"]);
 
@@ -204,6 +205,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$ivr->ivr_menu_digit_len = $ivr_menu_digit_len;
 				$ivr->ivr_menu_direct_dial = $ivr_menu_direct_dial;
 				$ivr->ivr_menu_ringback = $ivr_menu_ringback;
+				$ivr->ivr_menu_cid_prefix = $ivr_menu_cid_prefix;
 				$ivr->ivr_menu_enabled = $ivr_menu_enabled;
 				$ivr->ivr_menu_description = $ivr_menu_description;
 
@@ -264,6 +266,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$ivr_menu_digit_len = $row["ivr_menu_digit_len"];
 			$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
 			$ivr_menu_ringback = $row["ivr_menu_ringback"];
+			$ivr_menu_cid_prefix = $row["ivr_menu_cid_prefix"];
 			$ivr_menu_enabled = $row["ivr_menu_enabled"];
 			$ivr_menu_description = $row["ivr_menu_description"];
 
@@ -643,6 +646,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<br />\n";
 	echo "Defines what the caller will hear while the destination is being called.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	CID Prefix:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='ivr_menu_cid_prefix' maxlength='255' value=\"$ivr_menu_cid_prefix\">\n";
+	echo "<br />\n";
+	echo "Set a prefix on the caller ID name.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
