@@ -96,7 +96,18 @@
 		ivr_menu_direct_dial = row["ivr_menu_direct_dial"];
 		--ivr_menu_description = row["ivr_menu_description"];
 		ivr_menu_ringback = row["ivr_menu_ringback"];
+		ivr_menu_cid_prefix = row["ivr_menu_cid_prefix"];
 	end);
+
+--set the caller id name
+	caller_id_name = session:getVariable("caller_id_name");
+	effective_caller_id_name = session:getVariable("effective_caller_id_name");
+	if (string.len(ivr_menu_cid_prefix) > 0) then
+		caller_id_name = ivr_menu_cid_prefix .. "#" .. caller_id_name;
+		effective_caller_id_name = ivr_menu_cid_prefix .. "#" .. effective_caller_id_name;
+		session:setVariable("caller_id_name", caller_id_name);
+		session:setVariable("effective_caller_id_name", effective_caller_id_name);
+	end
 
 --get the sounds dir, language, dialect and voice
 	sounds_dir = session:getVariable("sounds_dir");
@@ -151,7 +162,7 @@
 		end
 		if (string.len(dtmf_digits) > 0) then
 			freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
-			menu_options(dtmf_digits);
+			menu_options(session, dtmf_digits);
 		else
 			if (tries <= tonumber(ivr_menu_max_failures)) then
 				--log the dtmf digits
@@ -164,7 +175,7 @@
 		end
 	end
 
-	function menu_options(digits)
+	function menu_options(session, digits)
 		--remove the pound sign
 			digits = digits:gsub("#", "");
 
