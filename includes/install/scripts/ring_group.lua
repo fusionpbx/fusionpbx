@@ -52,7 +52,7 @@
 --get the extension list
 	sql = 
 	[[ SELECT g.ring_group_extension_uuid, e.extension_uuid, e.extension, 
-	r.ring_group_strategy, r.ring_group_timeout_sec, r.ring_group_timeout_app, r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_ringback
+	r.ring_group_strategy, r.ring_group_timeout_sec, r.ring_group_timeout_app, g.extension_delay, g.extension_timeout, r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_ringback
 	FROM v_ring_groups as r, v_ring_group_extensions as g, v_extensions as e 
 	where g.ring_group_uuid = r.ring_group_uuid 
 	and g.ring_group_uuid = ']]..ring_group_uuid..[[' 
@@ -60,7 +60,6 @@
 	and r.ring_group_enabled = 'true' 
 	order by e.extension asc ]]
 	--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
-	app_data = "";
 
 	x = 0;
 	dbh:query(sql, function(row)
@@ -69,6 +68,8 @@
 		ring_group_timeout_data = row.ring_group_timeout_data;
 		ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
 		ring_group_ringback = row.ring_group_ringback;
+		extension_delay = row.extension_delay;
+		extension_timeout = row.extension_timeout;
 
 		if (ring_group_ringback == "${uk-ring}") then
 			ring_group_ringback = "%(400,200,400,450);%(400,2200,400,450)";
@@ -97,10 +98,15 @@
 		if (row.ring_group_strategy == "simultaneous") then
 			delimiter = ",";
 		end
+		if (row.ring_group_strategy == "enterprise") then
+			delimiter = ":_:";
+		end
+
 		if (x == 0) then
-			app_data = "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = "{originate_timeout="..ring_group_timeout_sec.."}";
+			app_data = app_data .. "[leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		else
-			app_data = app_data .. delimiter .. "[leg_timeout="..ring_group_timeout_sec..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = app_data .. delimiter .. "[leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		end
 		x = x + 1;
 	end);
