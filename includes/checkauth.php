@@ -47,7 +47,7 @@ session_start();
 		//get the domain name
 			if (count($_SESSION["domains"]) > 1) {
 				//get the domain from the url
-					$domain_name = $_SERVER["http_host"];
+					$domain_name = $_SERVER["HTTP_HOST"];
 				//get the domain name from the username
 					$username_array = explode("@", check_str($_REQUEST["username"]));
 					if (count($username_array) > 1) {
