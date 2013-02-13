@@ -46,33 +46,38 @@ session_start();
 
 		//get the domain name
 			if (count($_SESSION["domains"]) > 1) {
-				$username_array = explode("@", check_str($_REQUEST["username"]));
-				if (count($username_array) > 1) {
-					$domain_name = $username_array[count($username_array) -1];
-					$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
-				}
-				if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
-					$domain_name = check_str($_REQUEST["domain_name"]);
-				}
-				if (count($username_array) > 1 || strlen(check_str($_REQUEST["domain_name"])) > 0) {
-					foreach ($_SESSION['domains'] as &$row) {
-						if ($row['domain_name'] == $domain_name) {
-							//set the domain session variables
-								$domain_uuid = $row["domain_uuid"];
-								$_SESSION["domain_uuid"] = $row["domain_uuid"];
-								$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-								$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
-								$_SESSION["domain_name"] = $domain_name;
+				//get the domain from the url
+					$domain_name = $_SERVER["http_host"];
+				//get the domain name from the username
+					$username_array = explode("@", check_str($_REQUEST["username"]));
+					if (count($username_array) > 1) {
+						$domain_name = $username_array[count($username_array) -1];
+						$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+					}
+				//get the domain name from the http value
+					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
+						$domain_name = check_str($_REQUEST["domain_name"]);
+					}
+				//set the domain information
+					if (strlen($domain_name) > 0) {
+						foreach ($_SESSION['domains'] as &$row) {
+							if ($row['domain_name'] == $domain_name) {
+								//set the domain session variables
+									$domain_uuid = $row["domain_uuid"];
+									$_SESSION["domain_uuid"] = $row["domain_uuid"];
+									$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
+									$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
+									$_SESSION["domain_name"] = $domain_name;
 
-							//set the setting arrays
-								//domains set()
-								require "includes/classes/domains.php";
-								$domain = new domains();
-								$domain->db = $db;
-								$domain->set();
+								//set the setting arrays
+									//domains set()
+									require "includes/classes/domains.php";
+									$domain = new domains();
+									$domain->db = $db;
+									$domain->set();
+							}
 						}
 					}
-				}
 			}
 
 		//get the username
