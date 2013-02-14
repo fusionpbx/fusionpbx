@@ -116,6 +116,7 @@
 
 --session actions
 	if (session:ready()) then
+		session:preAnswer();
 		session:execute("set", "hangup_after_bridge=true");
 		session:execute("set", "continue_on_fail=true");
 		session:execute("bind_meta_app", "1 ab s execute_extension::dx XML features");
