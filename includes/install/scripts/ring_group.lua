@@ -124,9 +124,7 @@
 		session:execute("bind_meta_app", "3 ab s execute_extension::cf XML features");
 		session:execute("bind_meta_app", "4 ab s execute_extension::att_xfer XML features");
 		session:execute("bridge", app_data);
-		if (session:getVariable("last_bridge_hangup_cause") == "NORMAL_CLEARING") then
-			--ring group was answered
-		else
+		if (session:getVariable("originate_disposition") ~= "SUCCESS") then
 			session:execute(ring_group_timeout_app, ring_group_timeout_data);
 		end
 	end
@@ -137,3 +135,4 @@
 	--table.insert(ACTIONS, {"set", "continue_on_fail=true"});
 	--table.insert(ACTIONS, {"bridge", app_data});
 	--table.insert(ACTIONS, {ring_group_timeout_app, ring_group_timeout_data});
+
