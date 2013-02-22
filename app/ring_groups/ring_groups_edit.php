@@ -434,19 +434,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ring_group_strategy'>\n";
 	echo "	<option value=''></option>\n";
-	if ($ring_group_strategy == "sequence") { 
-		echo "	<option value='selected' selected='selected'>".$text['select-sequence']."</option>\n";
+	if ($ring_group_strategy == "sequence") {
+		echo "	<option value='sequence' selected='selected'>".$text['select-sequence']."</option>\n";
 	}
 	else {
 		echo "	<option value='sequence'>".$text['select-sequence']."</option>\n";
 	}
-	if ($ring_group_strategy == "simultaneous") { 
+	if ($ring_group_strategy == "simultaneous") {
 		echo "	<option value='simultaneous' selected='selected'>".$text['select-simultaneous']."</option>\n";
 	}
 	else {
 		echo "	<option value='simultaneous'>".$text['select-simultaneous']."</option>\n";
 	}
-	if ($ring_group_strategy == "enterprise") { 
+	if ($ring_group_strategy == "enterprise") {
 		echo "	<option value='enterprise' selected='selected'>".$text['select-enterprise']."</option>\n";
 	}
 	else {
