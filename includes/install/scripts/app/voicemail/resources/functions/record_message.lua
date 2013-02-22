@@ -36,27 +36,29 @@
 			end
 
 		--direct dial
-			if (string.len(dtmf_digits) > 0) then
-				if (session:ready()) then
-					if (direct_dial["enabled"] == "true") then
-						if (string.len(dtmf_digits) < max_digits) then
-							dtmf_digits = dtmf_digits .. session:getDigits(direct_dial["max_digits"], "#", 5000);
+			if (dtmf_digits ~= nil) then
+				if (string.len(dtmf_digits) > 0) then
+					if (session:ready()) then
+						if (direct_dial["enabled"] == "true") then
+							if (string.len(dtmf_digits) < max_digits) then
+								dtmf_digits = dtmf_digits .. session:getDigits(direct_dial["max_digits"], "#", 5000);
+							end
 						end
 					end
-				end
-				if (session:ready()) then
-					freeswitch.consoleLog("notice", "[voicemail] dtmf_digits: " .. string.sub(dtmf_digits, 0, 1) .. "\n");
-					if (dtmf_digits == "*") then
-						--check the voicemail password
-							check_password(voicemail_id, password_tries);
-						--send to the main menu
-							timeouts = 0;
-							main_menu();
-					elseif (string.sub(dtmf_digits, 0, 1) == "*") then
-						--do not allow dialing numbers prefixed with *
-						session:hangup();
-					else
-						session:transfer(dtmf_digits, "XML", context);
+					if (session:ready()) then
+						freeswitch.consoleLog("notice", "[voicemail] dtmf_digits: " .. string.sub(dtmf_digits, 0, 1) .. "\n");
+						if (dtmf_digits == "*") then
+							--check the voicemail password
+								check_password(voicemail_id, password_tries);
+							--send to the main menu
+								timeouts = 0;
+								main_menu();
+						elseif (string.sub(dtmf_digits, 0, 1) == "*") then
+							--do not allow dialing numbers prefixed with *
+							session:hangup();
+						else
+							session:transfer(dtmf_digits, "XML", context);
+						end
 					end
 				end
 			end
