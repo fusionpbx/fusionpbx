@@ -63,7 +63,7 @@ else {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		$table_name = $row[0];
+		$table_name = $row['name'];
 
 		//get the table data
 			$sql = "select * from $table_name";
