@@ -58,7 +58,7 @@
 	and g.ring_group_uuid = ']]..ring_group_uuid..[[' 
 	and e.extension_uuid = g.extension_uuid 
 	and r.ring_group_enabled = 'true' 
-	order by e.extension asc ]]
+	order by g.extension_delay, e.extension asc ]]
 	--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 
 	x = 0;
@@ -103,7 +103,7 @@
 		end
 
 		if (x == 0) then
-			app_data = "{originate_timeout="..ring_group_timeout_sec.."}";
+			app_data = ""; --{originate_timeout="..ring_group_timeout_sec.."}";
 			app_data = app_data .. "[leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		else
 			app_data = app_data .. delimiter .. "[leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
