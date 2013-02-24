@@ -738,41 +738,7 @@ function confirmdelete(url) {
 ?>
 </td>
 <td class='main_content' align='left' valign='top' width='85%'>
-<?php
-if (isset($_SESSION["reload_xml"])) {
-	if ($_SERVER["PHP_SELF"] != PROJECT_PATH."/app/sip_status/sip_status.php") {
-		if(stristr($_SERVER["PHP_SELF"], "_edit") != FALSE) { 
-			//found
-		}
-		else {
-			echo "<div align='center'>\n";
-			echo "<table border='0' width='400px'>\n";
-			echo "<tr>\n";
-			echo "<th align='left'>Message</th>\n";
-			echo "</tr>\n";
-			echo "<tr>\n";
-			echo "<td class='row_style1'>\n";
 
-			echo "	<table width='100%' border='0'>\n";
-			echo "	<tr>\n";
-			echo "	<td width='90%' align='left'>\n";
-			echo "			The configuration has been changed. \n";
-			echo "			Apply the changes in order for them to take effect. \n";
-			echo "	</td>\n";
-			echo "	<td align='right'>\n";
-			echo "		<input type='button' class='btn' value='Apply Settings' onclick=\"document.location.href='".PROJECT_PATH."/app/sip_status/cmd.php?cmd=api+reloadxml';\" />\n";
-			echo "	</td>\n";
-			echo "	</tr>\n";
-			echo "	</table>\n";
-
-			echo "</td>\n";
-			echo "</tr>\n";
-			echo "</table>\n";
-			echo "</div>\n";
-		}
-	}
-}
-?>
 <!--{body}-->
 
 <br /><br />
