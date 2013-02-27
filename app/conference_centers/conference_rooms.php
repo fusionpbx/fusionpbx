@@ -54,6 +54,21 @@ else {
 			$mute = check_str($_GET["mute"]);
 			$sounds = check_str($_GET["sounds"]);
 			$enabled = check_str($_GET["enabled"]);
+			$meeting_uuid = check_str($_GET["meeting_uuid"]);
+
+		//record announcment
+			if ($record == "true") {
+				//prepare the values
+					$default_language = 'en';
+					$default_dialect = 'us';
+					$default_voice = 'callie';
+					$switch_cmd = "conference ".$meeting_uuid."-".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+				//connect to event socket
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp) {
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+			}
 
 		//update the conference room
 			$sql = "update v_conference_rooms set ";
@@ -219,10 +234,10 @@ else {
 				//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>";
 				if ($row['record'] == "true") {
-					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=false\">".$text['label-true']."</a>";
+					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=false&meeting_uuid=".$meeting_uuid."\">".$text['label-true']."</a>";
 				}
 				else {
-					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=true\">".$text['label-false']."</a>";
+					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&record=true&meeting_uuid=".$meeting_uuid."\">".$text['label-false']."</a>";
 				}
 				echo "		&nbsp;\n";
 				echo "	</td>\n";
