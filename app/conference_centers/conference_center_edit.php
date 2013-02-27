@@ -193,16 +193,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//<action application="lua" />
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'lua';
-					$dialplan_detail_data = 'conference_center.lua';
+					$dialplan_detail_data = 'app.lua conference_center';
 					$dialplan_detail_order = '020';
 					$dialplan_detail_group = '2';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 				//save the xml
 					save_dialplan_xml();
-
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
 
 				//redirect the browser
 					require_once "includes/header.php";
@@ -254,7 +251,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//update dialplan detail action
 					$dialplan_detail_type = 'lua';
-					$dialplan_detail_data = 'conference_center.lua';
+					$dialplan_detail_data = 'app.lua conference_center';
 					$sql = "update v_dialplan_details set ";
 					$sql .= "dialplan_detail_type = '".$dialplan_detail_type."', ";
 					$sql .= "dialplan_detail_data = '".$dialplan_detail_data."' ";
@@ -273,9 +270,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//save the xml
 					save_dialplan_xml();
-
-				//apply settings reminder
-					$_SESSION["reload_xml"] = true;
 
 				//redirect the browser
 					require_once "includes/header.php";

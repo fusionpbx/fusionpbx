@@ -68,7 +68,11 @@
 				if (!if_group("admin") && !if_group("superadmin")) {
 					$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
 				}
-				if (strlen($this->order_by)> 0) { $sql .= "order by $this->order_by $this->order "; }
+				if (strlen($this->order_by) == 0) {
+					$sql .= "order by description, meeting_uuid asc ";
+				} else {
+					$sql .= "order by $this->order_by $this->order ";
+				}
 				$sql .= "limit $this->rows_per_page offset $this->offset ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
