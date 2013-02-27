@@ -184,7 +184,9 @@ else {
 		echo th_order_by('sounds', $text['label-sounds'], $order_by, $order);
 		echo "<th>".$text['label-members']."</th>\n";
 		echo "<th>".$text['label-tools']."</th>\n";
-		echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
+		if (permission_exists('conference_room_enabled')) {
+			echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
+		}
 		echo th_order_by('description', $text['label-description'], $order_by, $order);
 		echo "<td align='right' width='42' nowrap='nowrap'>\n";
 		if (permission_exists('conference_room_add')) {
@@ -275,15 +277,17 @@ else {
 				echo "		<a href='conference_sessions.php?id=".$row['meeting_uuid']."'>".$text['label-sessions']."</a>\n";
 				echo "	</td>\n";
 
-				echo "	<td valign='middle' class='".$row_style[$c]."'>";
-				if ($row['enabled'] == "true") {
-					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=false\">".$text['label-true']."</a>";
+				if (permission_exists('conference_room_enabled')) {
+					echo "	<td valign='middle' class='".$row_style[$c]."'>";
+					if ($row['enabled'] == "true") {
+						echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=false\">".$text['label-true']."</a>";
+					}
+					else {
+						echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=true\">".$text['label-false']."</a>";
+					}
+					echo "		&nbsp;\n";
+					echo "	</td>\n";
 				}
-				else {
-					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&enabled=true\">".$text['label-false']."</a>";
-				}
-				echo "		&nbsp;\n";
-				echo "	</td>\n";
 
 				echo "	<td valign='middle' class='row_stylebg' width='20%'>";
 				echo "		".$row['description']."\n";
@@ -291,6 +295,7 @@ else {
 				echo "	</td>\n";
 
 				echo "	<td valign='top' align='right' nowrap='nowrap'>\n";
+				echo "		&nbsp;\n";
 				if (permission_exists('conference_room_edit')) {
 					echo "		<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 				}

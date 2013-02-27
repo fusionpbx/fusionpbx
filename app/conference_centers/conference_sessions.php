@@ -48,6 +48,11 @@ else {
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 
+//add meeting_uuid to a session variable
+	if (strlen($meeting_uuid) > 0) { 
+		$_SESSION['meeting']['uuid'] = $meeting_uuid;
+	}
+
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -70,7 +75,7 @@ else {
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_conference_sessions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and meeting_uuid = '$meeting_uuid' ";
+		$sql .= "and meeting_uuid = '".$_SESSION['meeting']['uuid']."' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -94,7 +99,7 @@ else {
 	//get the list
 		$sql = "select * from v_conference_sessions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and meeting_uuid = '$meeting_uuid' ";
+		$sql .= "and meeting_uuid = '".$_SESSION['meeting']['uuid']."' ";
 		if (strlen($order_by) == 0) {
 			$sql .= "order by start_epoch desc ";
 		}
@@ -149,20 +154,22 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
 			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			$tmp_name = '';
-			if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
-				$tmp_name = $row['conference_session_uuid'].".wav";
-			}
-			elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
+			if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
 				$tmp_name = $row['conference_session_uuid'].".mp3";
+			}
+			elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
+				$tmp_name = $row['conference_session_uuid'].".wav";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			echo "		<a href='conference_session_details.php?uuid=".$row['conference_session_uuid']."'>".$text['label-details']."</a>&nbsp;\n";
 			if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
-				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
-				echo "			".$text['label-play']."\n";
-				echo "		</a>\n";
-				echo "		&nbsp;\n";
-				echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+				if (permission_exists('conference_session_play')) {
+					echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+					echo "			".$text['label-play']."\n";
+					echo "		</a>\n";
+					echo "		&nbsp;\n";
+				}
+				echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
 				echo "			".$text['label-download']."\n";
 				echo "		</a>\n";
 				echo "		&nbsp;\n";

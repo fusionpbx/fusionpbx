@@ -48,6 +48,32 @@ else {
 	$order = check_str($_GET["order"]);
 	$conference_session_uuid = check_str($_GET["uuid"]);
 
+//add meeting_uuid to a session variable
+	if (strlen($conference_session_uuid) > 0) { 
+		$_SESSION['meeting']['session_uuid'] = $conference_session_uuid;
+	}
+
+//get the list
+	$sql = "select * from v_conference_sessions ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and conference_session_uuid = '".$_SESSION['meeting']['session_uuid']."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll();
+	foreach ($result as &$row) {
+		$meeting_uuid = $row["meeting_uuid"];
+		$recording = $row["recording"];
+		$start_epoch = $row["start_epoch"];
+		$end_epoch = $row["end_epoch"];
+		$profile = $row["profile"];
+	}
+	unset ($prep_statement);
+
+//set the year, month and day based on the session start epoch
+	$tmp_year = date("Y", $start_epoch);
+	$tmp_month = date("M", $start_epoch);
+	$tmp_day = date("d", $start_epoch);
+
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -58,7 +84,32 @@ else {
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference-session-details']."</b></td>\n";
-	echo "		<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_sessions.php'\" value='".$text['button-back']."'></td>\n";
+	echo "		<td width='70%' align='right'>\n";
+	$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+	$tmp_name = '';
+	if (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.mp3')) {
+		$tmp_name = $row['conference_session_uuid'].".mp3";
+	}
+	elseif (file_exists($tmp_dir.'/'.$row['conference_session_uuid'].'.wav')) {
+		$tmp_name = $row['conference_session_uuid'].".wav";
+	}
+	if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
+		if (permission_exists('conference_session_play')) {
+			echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+			//echo "			".$text['label-play']."\n";
+			echo "			<input type='button' class='btn' name='' alt='".$text['label-play']."' onclick=\"\" value='".$text['label-play']."'></a>\n";
+			//echo "		\n";
+			echo "		&nbsp;\n";
+		}
+		echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+		//echo "			".$text['label-download']."\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['label-download']."' onclick=\"\" value='".$text['label-download']."'></a>\n";
+		//echo "		\n";
+		//echo "			<input type='button' class='btn' name='' alt='".$text['label-download']."' onclick=\"window.location='".PROJECT_PATH."/app/recordings/recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."'\" value='".$text['label-download']."'>\n";
+		echo "		&nbsp;\n";
+	}
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_sessions.php'\" value='".$text['button-back']."'>\n";
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -70,7 +121,7 @@ else {
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_conference_session_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_session_uuid = '$conference_session_uuid' ";
+		$sql .= "and conference_session_uuid = '".$_SESSION['meeting']['session_uuid']."' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -94,7 +145,7 @@ else {
 	//get the list
 		$sql = "select * from v_conference_session_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_session_uuid = '$conference_session_uuid' ";
+		$sql .= "and conference_session_uuid = '".$_SESSION['meeting']['session_uuid']."' ";
 		if (strlen($order_by) == 0) {
 			$sql .= "order by start_epoch asc ";
 		}

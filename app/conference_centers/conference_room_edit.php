@@ -652,7 +652,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".$field['username']."</td>\n";
 			echo "				<td style='width : 25px;' align='right'>\n";
-			echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+			if ($result_count > 1) {
+				echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+			}
+			else {
+				echo "					&nbsp;";
+			}
 			echo "				</td>\n";
 			echo "			</tr>\n";
 		}
@@ -892,30 +897,32 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-sounds'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='sounds'>\n";
-	echo "	<option value=''></option>\n";
-	if ($sounds == "true") { 
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	if (permission_exists('conference_room_sounds')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-sounds'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='sounds'>\n";
+		echo "	<option value=''></option>\n";
+		if ($sounds == "true") { 
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($sounds == "false") { 
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($sounds == "false") { 
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
