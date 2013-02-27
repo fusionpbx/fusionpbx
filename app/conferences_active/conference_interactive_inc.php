@@ -159,7 +159,9 @@ else {
 		echo "<th>".$text['label-speak']."</th>\n";
 		echo "<th>".$text['label-talking']."</th>\n";
 		echo "<th>".$text['label-last-talk']."</th>\n";
-		echo "<th>".$text['label-video']."</th>\n";
+		if (permission_exists('conferences_active_video')) {
+			echo "<th>".$text['label-video']."</th>\n";
+		}
 		echo "<th>".$text['label-floor']."</th>\n";
 		echo "<th>".$text['label-tool']."</th>\n";
 		echo "</tr>\n";
@@ -217,11 +219,13 @@ else {
 					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-no']."</td>\n";
 				}
 				echo "<td valign='top' class='".$row_style[$c]."'>$last_talking_formatted</td>\n";
-				if ($flag_has_video == "true") {
-					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-yes']."</td>\n";
-				}
-				else {
-					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-no']."</td>\n";
+				if (permission_exists('conferences_active_video')) {
+					if ($flag_has_video == "true") {
+						echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-yes']."</td>\n";
+					}
+					else {
+						echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-no']."</td>\n";
+					}
 				}
 				if ($flag_has_floor == "true") {
 					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-yes']."</td>\n";

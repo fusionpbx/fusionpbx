@@ -93,6 +93,20 @@ function get_meeting_pin($length, $meeting_uuid) {
 	}
 }
 
+//record announcment
+	if ($record == "true") {
+		//prepare the values
+			$default_language = 'en';
+			$default_dialect = 'us';
+			$default_voice = 'callie';
+			$switch_cmd = "conference ".$meeting_uuid."-".$_SESSION['domain_name']." play ".$_SESSION['switch']['sounds']['dir']."/".$default_language."/".$default_dialect."/".$default_voice."/ivr/ivr-recording_started.wav";
+		//connect to event socket
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			}
+	}
+
 //generate the pins
 	$sql = "select conference_center_pin_length from v_conference_centers ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
