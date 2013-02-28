@@ -1,1 +1,1 @@
-Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}
+New recording available for conference ${moderator_pin} ${conference_date_end}.

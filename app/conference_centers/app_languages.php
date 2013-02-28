@@ -162,6 +162,9 @@
 		$text['button-save']['en-us'] = 'Save';
 		$text['button-save']['pt-pt'] = 'Guardar';
 
+		$text['button-search']['en-us'] = 'Search';
+		$text['button-search']['pt-pt'] = '';
+
 	//Conference Sessions
 		$text['title-conference-sessions']['en-us'] = 'Conference Sessions';
 		$text['title-conference-sessions']['pt-pt'] = '';
