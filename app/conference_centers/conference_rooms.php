@@ -44,8 +44,22 @@ else {
 	require_once "includes/header.php";
 	require_once "includes/paging.php";
 
+//get the meeting_uuid using the pin number
+	$search = check_str($_GET["search"]);
+	if (strlen($search) > 0) {
+		$sql = "select * from v_meeting_pins ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and member_pin = '".$search."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$meeting_uuid = $row['meeting_uuid'];
+		}
+	}
+
 //if the $_GET array exists then process it
-	if (count($_GET) > 0) {
+	if (count($_GET) > 0 && strlen($_GET["search"]) == 0) {
 		//get http GET variables and set them as php variables
 			$conference_room_uuid = check_str($_GET["conference_room_uuid"]);
 			$record = check_str($_GET["record"]);
@@ -56,7 +70,7 @@ else {
 			$enabled = check_str($_GET["enabled"]);
 			$meeting_uuid = check_str($_GET["meeting_uuid"]);
 
-		//record announcment
+		//record announcement
 			if ($record == "true") {
 				//prepare the values
 					$default_language = 'en';
@@ -143,8 +157,13 @@ else {
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
+	echo "			<td width='50%' align='right'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</td>\n";
+	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
@@ -155,6 +174,12 @@ else {
 		$conference_center->domain_uuid = $_SESSION['domain_uuid'];
 		$conference_center->voicemail_uuid = $voicemail_uuid;
 		$conference_center->voicemail_id = $voicemail_id;
+		if (strlen($meeting_uuid) > 0) {
+			$conference_center->meeting_uuid = $meeting_uuid;
+		}
+		if (strlen($search) > 0) {
+			$conference_center->search = $search;
+		}
 		$row_count = $conference_center->room_count() * 2;
 
 	//prepare to page the results
@@ -171,6 +196,12 @@ else {
 		$conference_center->offset = $offset;
 		$conference_center->order_by = $order_by;
 		$conference_center->order = $order;
+		if (strlen($meeting_uuid) > 0) {
+			$conference_center->meeting_uuid = $meeting_uuid;
+		}
+		if (strlen($search) > 0) {
+			$conference_center->search = $search;
+		}
 		$result = $conference_center->rooms();
 		$result_count = $conference_center->count;
 

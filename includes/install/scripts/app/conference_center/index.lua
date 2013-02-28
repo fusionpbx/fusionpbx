@@ -29,11 +29,6 @@
 	max_tries = 3;
 	digit_timeout = 5000;
 
---include the lua script
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	include = assert(loadfile(scripts_dir .. "/resources/config.lua"));
-	include();
-
 --connect to the database
 	--ODBC - data source name
 		if (dsn_name) then
@@ -581,7 +576,9 @@
 						end
 					end
 				end
-				--session:setHangupHook("session_hangup_hook");
+
+			--set the hangup hook function
+				session:setHangupHook("session_hangup_hook");
 
 			--send the call to the conference
 				profile = "default";

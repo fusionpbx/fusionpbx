@@ -1,7 +1,7 @@
 <font face="arial">
-<b>Message From "${caller_id_name}" <a href="tel:${caller_id_number}">${caller_id_number}</a></b><br/>
+<p>The conference moderator pin is ${moderator_pin} and it ended on ${conference_date_end}.</p>
+<p>You can download your conference recording by clicking <a href='http://${domain_name}/app/conference_centers/conference_session_details.php?uuid=${conference_uuid}'>here</a>.</p>
 <hr noshade="noshade" size="1"/>
-Created: ${message_date}<br/>
-Duration: ${message_duration}<br/>
-Account: ${account}@${domain_name}<br/>
+Moderator PIN: ${moderator_pin}
+Ended: ${conference_date_end}<br/>
 </font>

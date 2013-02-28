@@ -28,20 +28,30 @@
 	class conference_center {
 		public $db;
 		public $domain_uuid;
+		public $meeting_uuid;
 		public $order_by;
 		public $order;
 		public $rows_per_page;
 		public $offset;
 		private $fields;
+		public $search;
 		public $count;
 
 		public function room_count() {
 			//get the room count
-				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meeting_users as u ";
+				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meeting_users as u, v_meeting_pins as p ";
 				$sql .= "where r.domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and r.meeting_uuid = u.meeting_uuid ";
+				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
+				$sql .= "and p.member_type = 'moderator' ";
 				if (!if_group("admin") && !if_group("superadmin")) {
 					$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
+				}
+				//if (is_numeric($this->search)) {
+				//	$sql .= "and p.member_pin = '".$this->search."' ";
+				//}
+				if (isset($this->search)) {
+					$sql .= "and r.meeting_uuid = '".$this->meeting_uuid."' ";
 				}
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				if ($prep_statement) {
@@ -67,6 +77,12 @@
 				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
 				if (!if_group("admin") && !if_group("superadmin")) {
 					$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
+				}
+				//if (is_numeric($this->search)) {
+				//	$sql .= "and p.member_pin = '".$this->search."' ";
+				//}
+				if (isset($this->search)) {
+					$sql .= "and r.meeting_uuid = '".$this->meeting_uuid."' ";
 				}
 				if (strlen($this->order_by) == 0) {
 					$sql .= "order by description, meeting_uuid asc ";
