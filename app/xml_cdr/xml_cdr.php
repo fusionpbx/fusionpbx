@@ -302,7 +302,7 @@ else {
 			echo "</tr>";
 			echo "<tr>\n";
 			echo "<td colspan='2' align='right'>\n";
-			//echo "	<input type='button' class='btn' name='' alt='view' onclick=\"window.location='v_cdr_search.php'\" value='advanced'>\n";
+			//echo "	<input type='button' class='btn' name='' alt='view' onclick=\"window.location='cdr_search.php'\" value='advanced'>\n";
 			echo "</td>\n";
 			echo "<td colspan='1' align='right'>\n";
 			echo "	<input type='button' class='btn' name='' alt='view' onclick=\"window.location='xml_cdr_search.php'\" value='advanced'>&nbsp;\n";
@@ -402,11 +402,11 @@ else {
 
 			echo "	<td valign='top' class='".$row_style[$c]."' nowrap=\"nowrap\">";
 			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+				echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
 				echo "			".$text['label-play']."\n";
 				echo "		</a>\n";
 				echo "		&nbsp;\n";
-				echo "		<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+				echo "		<a href=\"../recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
 				echo "			".$text['label-download']."\n";
 				echo "		</a>\n";
 			}
