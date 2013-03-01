@@ -86,6 +86,30 @@ include "root.php";
 						}
 						$select .= "		<option value='".$moh_value."' ".(($this->select_value == $moh_value)?'selected="selected"':null).">".(str_replace('_', ' ', $moh_name))."</option>\n";
 				}
+			//recordings
+				if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
+					$tmp_selected = false;
+					$files = Array();
+					//$select .= "<optgroup label='recordings'>\n";
+					while($file = readdir($dh)) {
+						if($file != "." && $file != ".." && $file[0] != '.') {
+							if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
+								//this is a directory
+							}
+							else {
+								if ($this->select_value == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($this->select_value) > 0) {
+									$tmp_selected = true;
+									$select .= "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
+								}
+								else {
+									$select .= "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
+								}
+							}
+						}
+					}
+					closedir($dh);
+					//$select .= "</optgroup>\n";
+				}
 			//add additional options
 				$select .= $this->select_options;
 			//end the select and return it
