@@ -80,7 +80,7 @@ else {
 	}
 	if (strlen($cdr_id) > 0) { $sql_where .= "and cdr_id like '%$cdr_id%' "; }
 	if (strlen($direction) > 0) { $sql_where .= "and direction = '$direction' "; }
-	if (strlen($caller_id_name) > 0) { $sql_where .= "and caller_id_name like '%$caller_id_name%' "; }
+	if (strlen($caller_id_name) > 0) { $sql_where .= "and caller_id_name like '$caller_id_name' "; }
 	if (strlen($caller_id_number) > 0 && strlen($destination_number) > 0) {
 			$sql_where .= "and (";
 			$sql_where .= "caller_id_number = '$caller_id_number' ";
@@ -88,8 +88,8 @@ else {
 			$sql_where .= ") ";
 	}
 	else {
-		if (strlen($caller_id_number) > 0) { $sql_where .= "and caller_id_number like '%$caller_id_number%' "; }
-		if (strlen($destination_number) > 0) { $sql_where .= "and destination_number like '%$destination_number%' "; }
+		if (strlen($caller_id_number) > 0) { $sql_where .= "and caller_id_number like '$caller_id_number' "; }
+		if (strlen($destination_number) > 0) { $sql_where .= "and destination_number like '$destination_number' "; }
 	}
 	if (strlen($context) > 0) { $sql_where .= "and context like '%$context%' "; }
 	if ($db_type == "sqlite") {
