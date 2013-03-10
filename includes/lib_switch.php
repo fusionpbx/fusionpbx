@@ -1733,6 +1733,7 @@ function save_extension_xml() {
 
 				//echo "enabled: ".$row['enabled'];
 				if ($row['enabled'] != "false") {
+					$extension_uuid = $row['extension_uuid'];
 					//remove invalid characters from the file names
 					$extension = $row['extension'];
 					$extension = str_replace(" ", "_", $extension);
@@ -1803,6 +1804,7 @@ function save_extension_xml() {
 					$xml .= "    </params>\n";
 					$xml .= "    <variables>\n";
 					$xml .= "      <variable name=\"domain_uuid\" value=\"" . $_SESSION['domain_uuid'] . "\"/>\n";
+					$xml .= "      <variable name=\"extension_uuid\" value=\"" . $extension_uuid . "\"/>\n";
 					if (strlen($row['call_group']) > 0) {
 						$xml .= "      <variable name=\"call_group\" value=\"" . $row['call_group'] . "\"/>\n";
 					}
