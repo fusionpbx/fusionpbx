@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -208,6 +208,11 @@ function process_xml_cdr($db, $leg, $xml_string) {
 	//if xml_cdr_archive is set to db then insert it.
 		if ($xml_cdr_archive == "db") {
 			$database->fields['xml_cdr'] = check_str($xml_string);
+		}
+
+	//insert the check_str($extension_uuid)
+		if (check_str($extension_uuid)) {
+			$database->fields['extension_uuid'] = check_str($extension_uuid);
 		}
 
 	//insert xml_cdr into the db

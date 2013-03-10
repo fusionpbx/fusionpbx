@@ -350,7 +350,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->commit();
 
 			//syncrhonize configuration
-				save_extension_xml();
+				if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+					require_once "app/extensions/resources/extension.php";
+					$extension = new extension;
+					$extension->xml();
+				}
 
 			//write the provision files
 				if (strlen($provisioning_list)>0) {
@@ -477,7 +481,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			//syncrhonize configuration
-				save_extension_xml();
+				if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+					require_once "app/extensions/resources/extension.php";
+					$extension = new extension;
+					$extension->xml();
+				}
 
 			//write the provision files
 				if (strlen($provisioning_list)>0) {
