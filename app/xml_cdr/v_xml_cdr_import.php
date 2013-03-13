@@ -211,8 +211,8 @@ function process_xml_cdr($db, $leg, $xml_string) {
 		}
 
 	//insert the check_str($extension_uuid)
-		if (check_str($extension_uuid)) {
-			$database->fields['extension_uuid'] = check_str($extension_uuid);
+		if (strlen($xml->variables->extension_uuid) > 0) {
+			$database->fields['extension_uuid'] = check_str(urldecode($xml->variables->extension_uuid));
 		}
 
 	//insert xml_cdr into the db
