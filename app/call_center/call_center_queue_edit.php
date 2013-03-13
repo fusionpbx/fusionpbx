@@ -85,7 +85,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($queue_name) == 0) { $msg .= "Please provide: Queue Name<br>\n"; }
 		if (strlen($queue_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
 		if (strlen($queue_strategy) == 0) { $msg .= "Please provide: Strategy<br>\n"; }
-		if (strlen($queue_moh_sound) == 0) { $msg .= "Please provide: Music on Hold<br>\n"; }
+		//if (strlen($queue_moh_sound) == 0) { $msg .= "Please provide: Music on Hold<br>\n"; }
 		//if (strlen($queue_record_template) == 0) { $msg .= "Please provide: Record Template<br>\n"; }
 		//if (strlen($queue_time_base_score) == 0) { $msg .= "Please provide: Time Base Score<br>\n"; }
 		//if (strlen($queue_max_wait_time) == 0) { $msg .= "Please provide: Max Wait Time<br>\n"; }
