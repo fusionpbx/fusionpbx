@@ -346,6 +346,7 @@
 				//apply settings
 					$_SESSION["reload_xml"] = true;
 			}
+		}
 	}
 
 ?>

@@ -43,7 +43,7 @@ else {
 	}
 
 //get the http values and set them as php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//get the values from the HTTP POST and save them as PHP variables
 			$extension = check_str($_POST["extension"]);
 			$number_alias = check_str($_POST["number_alias"]);
@@ -410,7 +410,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($action == "update" && permission_exists('extension_edit')) {
 
 			if (strlen($password) == 0) {
-				$password = generate_password();
+				$password = generate_password(12,4);
 			}
 
 			$sql = "update v_extensions set ";
@@ -422,7 +422,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "vm_password = '$vm_password', ";
 			}
 			else {
-				$sql .= "vm_password = 'user-choose', ";
+				$sql .= "vm_password = '".generate_password(9, 1)."', ";
 			}
 			$sql .= "accountcode = '$accountcode', ";
 			$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
@@ -480,11 +480,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			//syncrhonize configuration
+			//synchronize configuration
 				if (is_readable($_SESSION['switch']['extensions']['dir'])) {
-					require_once "app/extensions/resources/extension.php";
-					$extension = new extension;
-					$extension->xml();
+					require_once "app/extensions/resources/classes/extension.php";
+					$ext = new extension;
+					$ext->xml();
+					unset($ext);
 				}
 
 			//write the provision files
