@@ -42,7 +42,7 @@
 		end
 	--FreeSWITCH core db handler
 		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
+			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
 		end
 	--exit the script if we didn't connect properly
 		assert(dbh:connected());
