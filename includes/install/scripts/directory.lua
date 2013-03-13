@@ -49,7 +49,7 @@
 		end
 	--FreeSWITCH core db handler
 		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
+			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
 		end
 
 --prepare the api object
