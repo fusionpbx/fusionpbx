@@ -226,7 +226,7 @@ function recur_dir($dir) {
     //echo "<TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD nowrap WIDTH=12></TD><TD nowrap align='bottom'><IMG SRC=\"images/file.png\"><a href='/xml_edit/filenew.php?folder=".urlencode($_SERVER["DOCUMENT_ROOT"])."' title=''>New File </a><DIV style='display:none'>\n"; //parent.document.getElementById('file').value='".urlencode($newpath)."'
     //echo "</DIV></TD></TR></TABLE>\n";
     //echo "</DIV></TD></TR></TABLE>\n";
-    echo recur_dir($_SESSION['switch']['conf']['dir']);
+    echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/");
 
     echo "</DIV></TD></TR></TABLE>\n";
 
