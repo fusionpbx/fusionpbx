@@ -329,7 +329,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//synchronize configuration
-		save_extension_xml();
+		if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+			require_once "app/extensions/resources/classes/extension.php";
+			$ext = new extension;
+			$ext->xml();
+			unset($ext);
+		}
 
 	//delete extension from memcache
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
