@@ -2288,8 +2288,8 @@ function save_hunt_group_xml() {
 					$tmp .= "uuid = session:getVariable(\"uuid\");\n";
 					$tmp .= "dialed_extension = session:getVariable(\"dialed_extension\");\n";
 					$tmp .= "domain_name = session:getVariable(\"domain_name\");\n";
-					$tmp .= "caller_id_name = session:getVariable(\"caller_id_name\");\n";
-					$tmp .= "caller_id_number = session:getVariable(\"caller_id_number\");\n";
+					$tmp .= "caller_id_name = session:getVariable(\"effective_caller_id_name\");\n";
+					$tmp .= "caller_id_number = session:getVariable(\"effective_caller_id_number\");\n";
 					$tmp .= "outbound_caller_id_name = session:getVariable(\"outbound_caller_id_name\");\n";
 					$tmp .= "outbound_caller_id_number = session:getVariable(\"outbound_caller_id_number\");\n";
 					$tmp .= "\n";
