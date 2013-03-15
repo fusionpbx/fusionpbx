@@ -268,7 +268,7 @@ else {
 					}
 				//kick someone from the conference
 					if (permission_exists('conferences_active_kick')) {
-						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick&id=".$id."');\">".$text['label-kick']."</a>&nbsp;\n";
+						echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick&id=".$id."&uuid=".$uuid."');\">".$text['label-kick']."</a>&nbsp;\n";
 					}
 				echo "	&nbsp;";
 				echo "</td>\n";

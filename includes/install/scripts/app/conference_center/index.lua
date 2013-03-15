@@ -36,7 +36,7 @@
 		end
 	--FreeSWITCH core db handler
 		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("core:"..db_path.."/"..db_name);
+			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
 		end
 
 --prepare the api object
@@ -277,15 +277,19 @@
 						AND u.user_uuid = m.user_uuid
 						AND m.meeting_uuid = ']] .. meeting_uuid ..[['
 						and u.contact_uuid = c.contact_uuid]];
---					if (debug["sql"]) then
+					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[conference] <email> SQL: " .. sql .. "\n");
---					end
+					end
 					status = dbh:query(sql, function(row)
 						if (row["contact_email"] ~= nil) then
 							contact_email = string.lower(row["contact_email"]);
 							if (string.len(contact_email) > 3) then
 								freeswitch.consoleLog("notice", "[conference] contact_email: " .. contact_email .. "\n");
-								send_email(contact_email, "", default_language, default_dialect);
+								if (record == "true") then
+									if (file_exists(conference_recording..".wav")) then
+										send_email(contact_email, "", default_language, default_dialect);
+									end
+								end
 							end
 						end
 					end);
@@ -295,12 +299,17 @@
 
 --make sure the session is ready
 	if (session:ready()) then
-		session:answer();
-		session:setHangupHook("session_hangup_hook");
-		sounds_dir = session:getVariable("sounds_dir");
-		hold_music = session:getVariable("hold_music");
-		domain_name = session:getVariable("domain_name");
-		pin_number = session:getVariable("pin_number");
+		--answer the call
+			session:answer();
+
+		--set the hangup hook function
+			session:setHangupHook("session_hangup_hook");
+
+		--get session variables
+			sounds_dir = session:getVariable("sounds_dir");
+			hold_music = session:getVariable("hold_music");
+			domain_name = session:getVariable("domain_name");
+			pin_number = session:getVariable("pin_number");
 
 		--get the domain_uuid
 			if (domain_name ~= nil) then
@@ -328,8 +337,8 @@
 			if (not default_voice) then default_voice = 'callie'; end
 
 		--sounds
-			enter_sound = "tone_stream://%(200,0,500,600,700)";
-			exit_sound = "tone_stream://%(500,0,300,200,100,50,25)";
+			enter_sound = "tone_stream://v=-20;%(100,1000,100);v=-20;%(90,60,440);%(90,60,620)";
+			exit_sound = "tone_stream://v=-20;%(90,60,620);/%(90,60,440)";
 
 		--get the variables
 			username = session:getVariable("username");
@@ -374,8 +383,15 @@
 				end
 			end
 
-		--get the pin 
-			pin_number = get_pin_number(domain_uuid);
+		--get the pin
+			pin_number = session:getVariable("pin_number");
+			if (not pin_number) then
+				pin_number = nil;
+				pin_number = get_pin_number(domain_uuid);
+			end
+			if (pin_number == nil) then
+				pin_number = get_pin_number(domain_uuid);
+			end
 			if (pin_number == nil) then
 				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-bad-pin.wav");
 				pin_number = get_pin_number(domain_uuid);
@@ -536,26 +552,31 @@
 
 			--set the recording variable
 				if (conference_session_uuid ~= nil) then
-					recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
-					--session:execute("set","recording="..recording);
+					if (record == "true") then
+						recordings_dir = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch);
+						os.execute("mkdir -p " .. recordings_dir);
+						recording = recordings_dir.."/"..conference_session_uuid;
+						session:execute("set","recording="..recording);
+					end
 				end
 
 			--record the conference
 				if (record == "true") then
-					if (conference_exists) then
-						--send a command to record the conference
-							if (not file_exists(recording..".wav")) then
-								cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recording..".wav";
-								freeswitch.consoleLog("notice", "[conference] cmd: " .. cmd .. "\n");
-								response = api:executeString(cmd);
-							end
-						--play a message that the conference is being a recorded
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
-						--play a message that the conference is being a recorded
-							--cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
-							--freeswitch.consoleLog("notice", "[conference] ".. cmd .."\n");
-							--response = api:executeString(cmd);
-					end
+					--play a message that the conference is being a recorded
+						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
+					--play a message that the conference is being a recorded
+						--cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav";
+						--freeswitch.consoleLog("notice", "[conference] ".. cmd .."\n");
+						--response = api:executeString(cmd);
+					--record the conference when it exists
+						if (conference_exists) then
+							--send a command to record the conference
+								if (not file_exists(recording..".wav")) then
+									cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recording..".wav";
+									freeswitch.consoleLog("notice", "[conference] cmd: " .. cmd .. "\n");
+									response = api:executeString(cmd);
+								end
+						end
 				end
 
 			--announce the caller
@@ -576,9 +597,6 @@
 						end
 					end
 				end
-
-			--set the hangup hook function
-				session:setHangupHook("session_hangup_hook");
 
 			--send the call to the conference
 				profile = "default";

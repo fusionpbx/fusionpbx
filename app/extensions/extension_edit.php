@@ -779,6 +779,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "and u.user_enabled = 'true' ";
 		$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and e.extension_uuid = '".$extension_uuid."' ";
+		$sql .= "order by u.username asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -797,6 +798,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql = "SELECT * FROM v_users ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and user_enabled = 'true' ";
+		$sql .= "order by username asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		echo "			<select name=\"user_uuid\" class='frm'>\n";

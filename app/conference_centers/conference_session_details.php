@@ -177,7 +177,9 @@ else {
 	echo "<th>".$text['label-time']."</th>\n";
 	echo th_order_by('start_epoch', $text['label-start'], $order_by, $order);
 	echo th_order_by('end_epoch', $text['label-end'], $order_by, $order);
-	echo "<th>".$text['label-details']."</th>\n";
+	if (permission_exists('conference_session_details')) {
+		echo "<th>".$text['label-details']."</th>\n";
+	}
 	echo "<tr>\n";
 
 	if ($result_count > 0) {
@@ -204,7 +206,9 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$time_difference."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."'>".$text['label-cdr']."</a>&nbsp;</td>\n";
+			if (permission_exists('conference_session_details')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."'>".$text['label-cdr']."</a>&nbsp;</td>\n";
+			}
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
