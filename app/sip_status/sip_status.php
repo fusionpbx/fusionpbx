@@ -182,7 +182,7 @@ if (strlen($msg) > 0) {
 					echo "  <b>".$text['title-sofia-status-profile']." $sip_profile_name</b> \n";
 					echo "</td>\n";
 					echo "<td width='50%' align='right'>\n";
-					echo "  <input type='button' class='btn' value='registrations' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/v_status_registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
+					echo "  <input type='button' class='btn' value='registrations' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/status_registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
 					echo "  <input type='button' class='btn' value='start' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+start';\" />\n";
 					echo "  <input type='button' class='btn' value='stop' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+stop';\" />\n";
 					echo "  <input type='button' class='btn' value='restart' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+restart';\" />\n";
