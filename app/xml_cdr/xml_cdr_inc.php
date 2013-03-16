@@ -115,7 +115,7 @@ else {
 	//example sql
 		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = '' 
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
-	if (!if_group("admin") && !if_group("superadmin")) {
+	if (!if_group("admin") && !if_group("superadmin") && !permission_exists('xml_cdr_domain')) {
 		$sql_where = "where domain_uuid = '$domain_uuid' ";
 		$sql_where .= "and ( ";
 		if (count($_SESSION['user']['extension']) > 0) {
@@ -138,7 +138,7 @@ else {
 		$sql_where .= ") ";
 	}
 	else {
-		//superadmin or admin
+		//superadmin or admin or permission_exists('xml_cdr_domain')
 		$sql_where = "where domain_uuid = '$domain_uuid' ".$sql_where;
 	}
 	//$sql_where = str_replace ("where or", "where", $sql_where);
