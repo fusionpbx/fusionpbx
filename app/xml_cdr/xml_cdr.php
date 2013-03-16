@@ -123,7 +123,7 @@ else {
 	echo "</table>\n";
 
 	//search the call detail records
-		if (if_group("admin") || if_group("superadmin")) {
+		if (if_group("admin") || if_group("superadmin") || permission_exists('xml_cdr_domain')) {
 			echo "<form method='post' action=''>\n";
 			echo "<table width='95%' cellpadding='3' border='0'>\n";
 			echo "<tr>\n";
