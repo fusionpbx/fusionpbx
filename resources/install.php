@@ -143,30 +143,46 @@ require_once "includes/lib_functions.php";
 
 	//set specific alternative directories as required
 		switch (PHP_OS) {
-		case "Debian":
-			//if the Debian PKGS are installed use the following paths by default.
-				if (file_exists('/var/lib/freeswitch')) {
-					//Debian Pkgs
-						//set the default db_path
-							if (strlen($db_path) == 0) { //secure dir
-									$db_path = '/var/lib/fusionpbx';
-									if (!is_readable($db_path)) { mkdir($db_path,0777,true); }
-							}
-						//set the other default directories
-							$switch_bin_dir = '/usr/bin'; //freeswitch bin directory
-							$switch_conf_dir = '/etc/freeswitch';
-							$switch_db_dir = '/var/lib/freeswitch/db';
-							$switch_log_dir = '/var/log/freeswitch';
-							$switch_mod_dir = '/usr/lib/freeswitch/mod';
-							$switch_extensions_dir = $switch_conf_dir.'/directory';
-							$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
-							$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
-							$switch_scripts_dir = '/usr/share/freeswitch/scripts';
-							$switch_grammar_dir = '/usr/share/freeswitch/grammar';
-							$switch_storage_dir = '/var/lib/freeswitch/storage';
-							$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
-							$switch_recordings_dir = $switch_storage_dir.'/recordings';
-							$switch_sounds_dir = '/usr/share/freeswitch/sounds';
+		case "Linux":
+			//set the default db_path
+				if (strlen($db_path) == 0) { //secure dir
+					if (file_exists('/var/lib/fusionpbx')) {
+						$db_path = '/var/lib/fusionpbx';
+					}
+					if (!is_readable($db_path)) { mkdir($db_path,0777,true); }
+				}
+			//set the other default directories
+				if (file_exists('/usr/bin')) {
+					$switch_bin_dir = '/usr/bin'; //freeswitch bin directory
+				}
+				if (file_exists('/etc/freeswitch')) {
+					$switch_conf_dir = '/etc/freeswitch';
+					$switch_extensions_dir = $switch_conf_dir.'/directory';
+					$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
+					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
+				}
+				if (file_exists('/var/lib/freeswitch/db')) {
+					$switch_db_dir = '/var/lib/freeswitch/db';
+				}
+				if (file_exists('/var/log/freeswitch')) {
+					$switch_log_dir = '/var/log/freeswitch';
+				}
+				if (file_exists('/usr/lib/freeswitch/mod')) {
+					$switch_mod_dir = '/usr/lib/freeswitch/mod';
+				}
+				if (file_exists('/usr/share/freeswitch/scripts')) {
+					$switch_scripts_dir = '/usr/share/freeswitch/scripts';
+				}
+				if (file_exists('/usr/share/freeswitch/grammar')) {
+					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
+				}
+				if (file_exists('/var/lib/freeswitch/storage')) {
+					$switch_storage_dir = '/var/lib/freeswitch/storage';
+					$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
+					$switch_recordings_dir = $switch_storage_dir.'/recordings';
+				}
+				if (file_exists('/usr/share/freeswitch/sounds')) {
+					$switch_sounds_dir = '/usr/share/freeswitch/sounds';
 				}
 			break;
 		case "FreeBSD":
