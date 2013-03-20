@@ -179,7 +179,9 @@ require_once "includes/lib_functions.php";
 				if (file_exists('/var/lib/freeswitch/storage')) {
 					$switch_storage_dir = '/var/lib/freeswitch/storage';
 					$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
-					$switch_recordings_dir = $switch_storage_dir.'/recordings';
+				}
+				if (file_exists('/var/lib/freeswitch/recordings')) {
+					$switch_recordings_dir = '/var/lib/freeswitch/recordings';
 				}
 				if (file_exists('/usr/share/freeswitch/sounds')) {
 					$switch_sounds_dir = '/usr/share/freeswitch/sounds';
