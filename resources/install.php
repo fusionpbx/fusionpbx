@@ -143,10 +143,36 @@ require_once "includes/lib_functions.php";
 
 	//set specific alternative directories as required
 		switch (PHP_OS) {
+		case "Debian":
+			//if the Debian PKGS are installed use the following paths by default.
+				if (file_exists('/var/lib/freeswitch')) {
+					//Debian Pkgs
+						//set the default db_path
+							if (strlen($db_path) == 0) { //secure dir
+									$db_path = '/var/lib/fusionpbx';
+									if (!is_readable($db_path)) { mkdir($db_path,0777,true); }
+							}
+						//set the other default directories
+							$switch_bin_dir = '/usr/bin'; //freeswitch bin directory
+							$switch_conf_dir = '/etc/freeswitch';
+							$switch_db_dir = '/var/lib/freeswitch/db';
+							$switch_log_dir = '/var/log/freeswitch';
+							$switch_mod_dir = '/usr/lib/freeswitch/mod';
+							$switch_extensions_dir = $switch_conf_dir.'/directory';
+							$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
+							$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
+							$switch_scripts_dir = '/usr/share/freeswitch/scripts';
+							$switch_grammar_dir = '/usr/share/freeswitch/grammar';
+							$switch_storage_dir = '/var/lib/freeswitch/storage';
+							$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
+							$switch_recordings_dir = $switch_storage_dir.'/recordings';
+							$switch_sounds_dir = '/usr/share/freeswitch/sounds';
+				}
+			break;
 		case "FreeBSD":
-			//if the freebsd port is installed use the following paths by default.
+			//if the FreeBSD port is installed use the following paths by default.
 				if (file_exists('/var/db/freeswitch')) {
-					//freebsd port
+					//FreeBSD port
 						//set the default db_path
 							if (strlen($db_path) == 0) { //secure dir
 								$db_path = '/var/db/fusionpbx';
@@ -169,7 +195,7 @@ require_once "includes/lib_functions.php";
 							$switch_sounds_dir = '/usr/local/share/freeswitch/sounds';
 				}
 				elseif (file_exists('/data/freeswitch')) {
-					//freebsd embedded 
+					//FreeBSD embedded 
 						//set the default db_path
 							if (strlen($db_path) == 0) { //secure dir
 								$db_path = '/data/db/fusionpbx';
