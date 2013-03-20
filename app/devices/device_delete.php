@@ -39,9 +39,9 @@ if (count($_GET)>0) {
 
 //delete the data
 	if (strlen($id)>0) {
-		$sql = "delete from v_hardware_phones ";
+		$sql = "delete from v_devices ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and hardware_phone_uuid = '$id' ";
+		$sql .= "and device_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
@@ -52,7 +52,7 @@ if (count($_GET)>0) {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=hardware_phones.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=devices.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";
@@ -60,4 +60,3 @@ if (count($_GET)>0) {
 	return;
 
 ?>
-
