@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('virtual_tables_edit')) {
+if (permission_exists('table_edit')) {
 	//access granted
 }
 else {
@@ -35,33 +35,33 @@ else {
 }
 
 if (count($_POST)>0) {
-	$virtual_table_uuid = trim($_REQUEST["id"]);
+	$table_uuid = trim($_REQUEST["id"]);
 	$data = trim($_POST["data"]);
 	$data_delimiter = trim($_POST["data_delimiter"]);
 	$data_enclosure = trim($_POST["data_enclosure"]);
 }
 
 //define the php class
-	class v_virtual_table_fields {
+	class v_table_fields {
 		var $domain_uuid;
-		var $virtual_table_uuid;
-		var $virtual_field_label;
-		var $virtual_field_name;
-		var $virtual_field_type;
-		var $virtual_field_value;
-		var $virtual_field_list_hidden;
-		var $virtual_field_column;
-		var $virtual_field_required;
-		var $virtual_field_order;
-		var $virtual_field_order_tab;
-		var $virtual_field_description;
+		var $table_uuid;
+		var $field_label;
+		var $field_name;
+		var $field_type;
+		var $field_value;
+		var $field_list_hidden;
+		var $field_column;
+		var $field_required;
+		var $field_order;
+		var $field_order_tab;
+		var $field_description;
 
 		function db_field_exists() {
 			global $db;
-			$sql = "select count(*) as num_rows from v_virtual_table_fields ";
+			$sql = "select count(*) as num_rows from v_table_fields ";
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and virtual_table_uuid ='$this->virtual_table_uuid' ";
-			$sql .= "and virtual_field_name = '$this->virtual_field_name' ";
+			$sql .= "and table_uuid ='$this->table_uuid' ";
+			$sql .= "and field_name = '$this->field_name' ";
 			$prep_statement = $db->prepare($sql);
 			if ($prep_statement) {
 				$prep_statement->execute();
@@ -77,39 +77,39 @@ if (count($_POST)>0) {
 
 		function db_insert() {
 			global $db;
-			$sql = "insert into v_virtual_table_fields ";
+			$sql = "insert into v_table_fields ";
 			$sql .= "(";
-			$sql .= "virtual_table_field_uuid, ";
+			$sql .= "table_field_uuid, ";
 			$sql .= "domain_uuid, ";
-			$sql .= "virtual_table_uuid, ";
-			$sql .= "virtual_field_label, ";
-			$sql .= "virtual_field_name, ";
-			$sql .= "virtual_field_type, ";
-			$sql .= "virtual_field_value, ";
-			$sql .= "virtual_field_list_hidden, ";
-			$sql .= "virtual_field_search_by, ";
-			$sql .= "virtual_field_column, ";
-			$sql .= "virtual_field_required, ";
-			$sql .= "virtual_field_order, ";
-			$sql .= "virtual_field_order_tab, ";
-			$sql .= "virtual_field_description ";
+			$sql .= "table_uuid, ";
+			$sql .= "field_label, ";
+			$sql .= "field_name, ";
+			$sql .= "field_type, ";
+			$sql .= "field_value, ";
+			$sql .= "field_list_hidden, ";
+			$sql .= "field_search_by, ";
+			$sql .= "field_column, ";
+			$sql .= "field_required, ";
+			$sql .= "field_order, ";
+			$sql .= "field_order_tab, ";
+			$sql .= "field_description ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'$this->domain_uuid', ";
-			$sql .= "'$this->virtual_table_uuid', ";
-			$sql .= "'$this->virtual_field_label', ";
-			$sql .= "'$this->virtual_field_name', ";
-			$sql .= "'$this->virtual_field_type', ";
-			$sql .= "'$this->virtual_field_value', ";
-			$sql .= "'$this->virtual_field_list_hidden', ";
+			$sql .= "'$this->table_uuid', ";
+			$sql .= "'$this->field_label', ";
+			$sql .= "'$this->field_name', ";
+			$sql .= "'$this->field_type', ";
+			$sql .= "'$this->field_value', ";
+			$sql .= "'$this->field_list_hidden', ";
 			$sql .= "'no', ";
-			$sql .= "'$this->virtual_field_column', ";
-			$sql .= "'$this->virtual_field_required', ";
-			$sql .= "'$this->virtual_field_order', ";
-			$sql .= "'$this->virtual_field_order_tab', ";
-			$sql .= "'$this->virtual_field_description' ";
+			$sql .= "'$this->field_column', ";
+			$sql .= "'$this->field_required', ";
+			$sql .= "'$this->field_order', ";
+			$sql .= "'$this->field_order_tab', ";
+			$sql .= "'$this->field_description' ";
 			$sql .= ")";
 			if (!$this->db_field_exists()) { 
 				$db->exec(check_sql($sql));
@@ -118,18 +118,18 @@ if (count($_POST)>0) {
 		}
 	}
 
-	class v_virtual_table_data {
+	class v_table_data {
 		var $domain_uuid;
-		var $virtual_table_uuid;
-		var $virtual_data_row_uuid;
-		var $virtual_field_name;
-		var $virtual_data_field_value;
+		var $table_uuid;
+		var $data_row_uuid;
+		var $field_name;
+		var $data_field_value;
 		var $last_insert_id;
-		var $virtual_table_data_uuid;
+		var $table_data_uuid;
 
 		function db_unique_id() {
 			global $db;
-			$sql = "insert into v_virtual_table_data_row_id ";
+			$sql = "insert into v_table_data_row_id ";
 			$sql .= "(";
 			$sql .= "domain_uuid ";
 			$sql .= ")";
@@ -144,25 +144,25 @@ if (count($_POST)>0) {
 
 		function db_insert() {
 			global $db;
-			$sql = "insert into v_virtual_table_data ";
+			$sql = "insert into v_table_data ";
 			$sql .= "(";
-			$sql .= "virtual_table_data_uuid, ";
+			$sql .= "table_data_uuid, ";
 			$sql .= "domain_uuid, ";
-			$sql .= "virtual_data_row_uuid, ";
-			$sql .= "virtual_table_uuid, ";
-			$sql .= "virtual_field_name, ";
-			$sql .= "virtual_data_field_value, ";
-			$sql .= "virtual_data_add_user, ";
-			$sql .= "virtual_data_add_date ";
+			$sql .= "data_row_uuid, ";
+			$sql .= "table_uuid, ";
+			$sql .= "field_name, ";
+			$sql .= "data_field_value, ";
+			$sql .= "data_add_user, ";
+			$sql .= "data_add_date ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'$this->domain_uuid', ";
-			$sql .= "'$this->virtual_data_row_uuid', ";
-			$sql .= "'$this->virtual_table_uuid', ";
-			$sql .= "'$this->virtual_field_name', ";
-			$sql .= "'$this->virtual_data_field_value', ";
+			$sql .= "'$this->data_row_uuid', ";
+			$sql .= "'$this->table_uuid', ";
+			$sql .= "'$this->field_name', ";
+			$sql .= "'$this->data_field_value', ";
 			$sql .= "'".$_SESSION["username"]."', ";
 			$sql .= "now() ";
 			$sql .= ")";
@@ -173,14 +173,14 @@ if (count($_POST)>0) {
 
 		function db_update() {
 			global $db;
-			$sql  = "update v_virtual_table_data set ";
-			$sql .= "virtual_data_row_uuid = '$this->virtual_data_row_uuid', ";
-			$sql .= "virtual_field_name = '$this->virtual_field_name', ";
-			$sql .= "virtual_data_field_value = '$this->virtual_data_field_value', ";
-			$sql .= "virtual_data_add_user = '".$_SESSION["username"]."', ";
-			$sql .= "virtual_data_add_date = now() ";
+			$sql  = "update v_table_data set ";
+			$sql .= "data_row_uuid = '$this->data_row_uuid', ";
+			$sql .= "field_name = '$this->field_name', ";
+			$sql .= "data_field_value = '$this->data_field_value', ";
+			$sql .= "data_add_user = '".$_SESSION["username"]."', ";
+			$sql .= "data_add_date = now() ";
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and virtual_table_data_uuid = '$this->virtual_table_data_uuid' ";
+			$sql .= "and table_data_uuid = '$this->table_data_uuid' ";
 			$db->exec($sql);
 			unset($sql);
 		}
@@ -209,7 +209,7 @@ if (count($_POST)>0) {
 			echo "<tr>\n";
 			echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import Results</b></td>\n";
 			echo "<td width='70%' align='right' valign='top'>\n";
-			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
+			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='tables_import.php?id=$table_uuid'\" value='Back'>\n";
 			echo "	<br /><br />\n";
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -224,25 +224,25 @@ if (count($_POST)>0) {
 					$x = 0;
 					$db->beginTransaction();
 					foreach($name_array as $key => $val) {
-						$virtual_field_label = trim($val);
-						$virtual_field_name = trim($val);
-						$virtual_field_name = str_replace(" ", "_", $virtual_field_name);
-						$virtual_field_name = str_replace("-", "_", $virtual_field_name);
-						$virtual_field_name = strtolower($virtual_field_name);
+						$field_label = trim($val);
+						$field_name = trim($val);
+						$field_name = str_replace(" ", "_", $field_name);
+						$field_name = str_replace("-", "_", $field_name);
+						$field_name = strtolower($field_name);
 
-						$fields = new v_virtual_table_fields;
+						$fields = new v_table_fields;
 						$fields->domain_uuid = $domain_uuid;
-						$fields->virtual_table_uuid = $virtual_table_uuid;
-						$fields->virtual_field_label = $virtual_field_label;
-						$fields->virtual_field_name = $virtual_field_name;
-						$fields->virtual_field_type = 'text';
-						$fields->virtual_field_value = '';
-						$fields->virtual_field_list_hidden = 'show';
-						$fields->virtual_field_column = '1';
-						$fields->virtual_field_required = 'yes';
-						$fields->virtual_field_order = $x;
-						$fields->virtual_field_order_tab = $x;
-						$fields->virtual_field_description = $virtual_field_label;
+						$fields->table_uuid = $table_uuid;
+						$fields->field_label = $field_label;
+						$fields->field_name = $field_name;
+						$fields->field_type = 'text';
+						$fields->field_value = '';
+						$fields->field_list_hidden = 'show';
+						$fields->field_column = '1';
+						$fields->field_required = 'yes';
+						$fields->field_order = $x;
+						$fields->field_order_tab = $x;
+						$fields->field_description = $field_label;
 						$fields->db_insert();
 						unset($fields);
 						$x++;
@@ -254,28 +254,28 @@ if (count($_POST)>0) {
 							$x=0;
 							foreach($value_array as $key => $val) {
 
-								$virtual_field_label = trim($name_array[$x]);
-								$virtual_field_name = trim($name_array[$x]);
-								$virtual_field_name = str_replace(" ", "_", $virtual_field_name);
-								$virtual_field_name = str_replace("-", "_", $virtual_field_name);
-								$virtual_field_name = strtolower($virtual_field_name);
+								$field_label = trim($name_array[$x]);
+								$field_name = trim($name_array[$x]);
+								$field_name = str_replace(" ", "_", $field_name);
+								$field_name = str_replace("-", "_", $field_name);
+								$field_name = strtolower($field_name);
 
-								$virtual_field_value = trim($val);
+								$field_value = trim($val);
 
-								$data = new v_virtual_table_data;
+								$data = new v_table_data;
 								$data->domain_uuid = $domain_uuid;
-								$data->virtual_table_uuid = $virtual_table_uuid;
+								$data->table_uuid = $table_uuid;
 								if ($x == 0) {
-									$virtual_data_row_uuid = uuid();
-									//echo "id: ".$virtual_data_row_uuid."<br />\n";
+									$data_row_uuid = uuid();
+									//echo "id: ".$data_row_uuid."<br />\n";
 								}
-								$data->virtual_data_row_uuid = $virtual_data_row_uuid;
-								$data->virtual_field_name = $virtual_field_name;
-								$data->virtual_data_field_value = $virtual_field_value;
+								$data->data_row_uuid = $data_row_uuid;
+								$data->field_name = $field_name;
+								$data->data_field_value = $field_value;
 								$data->db_insert();
 								unset($data);
 
-								echo "<strong>$virtual_field_name:</strong> $virtual_field_value<br/>\n";
+								echo "<strong>$field_name:</strong> $field_value<br/>\n";
 								$x++;
 							}
 							echo "<hr size='1' />\n";
@@ -305,7 +305,7 @@ if (count($_POST)>0) {
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_tables_import.php?id=$virtual_table_uuid'\" value='Back'>\n";
+	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='tables_import.php?id=$table_uuid'\" value='Back'>\n";
 	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";

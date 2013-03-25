@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('virtual_tables_data_delete')) {
+if (permission_exists('table_data_delete')) {
 	//access granted
 }
 else {
@@ -37,59 +37,59 @@ else {
 if (count($_GET)>0) {
 
 	//declare variable(s)
-		$virtual_table_parent_id = '';
+		$table_parent_id = '';
 
 	//get the http get and set them as php variables
-		$virtual_data_row_uuid = check_str($_GET["virtual_data_row_uuid"]);
-		$virtual_data_parent_row_uuid = check_str($_GET["virtual_data_parent_row_uuid"]);
-		$virtual_table_uuid = check_str($_GET["virtual_table_uuid"]);
+		$data_row_uuid = check_str($_GET["data_row_uuid"]);
+		$data_parent_row_uuid = check_str($_GET["data_parent_row_uuid"]);
+		$table_uuid = check_str($_GET["table_uuid"]);
 
 	//show the results and redirect
 		require_once "includes/header.php";
 
-	//get the virtual_table_parent_id from the child table
-		if (strlen($virtual_table_parent_id) == 0) {
-			$sql = "select * from v_virtual_tables ";
+	//get the table_parent_id from the child table
+		if (strlen($table_parent_id) == 0) {
+			$sql = "select * from v_tables ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
+			$sql .= "and table_uuid = '$table_uuid' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
-				$virtual_table_parent_id = $row["virtual_table_parent_id"];
+				$table_parent_id = $row["table_parent_id"];
 			}
 		}
 
 	//delete the child data
-		$sql = "delete from v_virtual_table_data ";
+		$sql = "delete from v_table_data ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and virtual_data_parent_row_uuid = '$virtual_data_row_uuid' ";
+		$sql .= "and data_parent_row_uuid = '$data_row_uuid' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
 	//delete the data
-		$sql = "delete from v_virtual_table_data ";
+		$sql = "delete from v_table_data ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and virtual_data_row_uuid = '$virtual_data_row_uuid' ";
+		$sql .= "and data_row_uuid = '$data_row_uuid' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
 	//mark the the item as deleted and who deleted it
-		//$sql  = "update v_virtual_table_data set ";
-		//$sql .= "virtual_data_del_date = now(), ";
-		//$sql .= "virtual_data_del_user = '".$_SESSION["username"]."' ";
+		//$sql  = "update v_table_data set ";
+		//$sql .= "data_del_date = now(), ";
+		//$sql .= "data_del_user = '".$_SESSION["username"]."' ";
 		//$sql .= "where domain_uuid = '$domain_uuid' ";
-		//$sql .= "and virtual_data_row_uuid = '$virtual_data_row_uuid' ";
+		//$sql .= "and data_row_uuid = '$data_row_uuid' ";
 		//$db->exec(check_sql($sql));
 		//$lastinsertid = $db->lastInsertId($id);
 		//unset($sql);
 
 	//set the meta redirect
-		if (strlen($virtual_data_parent_row_uuid) == 0) {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_table_data_view.php?id=$virtual_table_uuid&virtual_data_row_uuid=$virtual_data_row_uuid\">\n";
+		if (strlen($data_parent_row_uuid) == 0) {
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=table_data_view.php?id=$table_uuid&data_row_uuid=$data_row_uuid\">\n";
 		}
 		else {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_table_data_edit.php?virtual_table_uuid=$virtual_table_parent_id&virtual_data_row_uuid=$virtual_data_parent_row_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=table_data_edit.php?table_uuid=$table_parent_id&data_row_uuid=$data_parent_row_uuid\">\n";
 		}
 
 	//show a message to the user before the redirect

@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('virtual_tables_add') || permission_exists('virtual_tables_edit')) {
+if (permission_exists('tables_add') || permission_exists('table_edit')) {
 	//access granted
 }
 else {
@@ -37,7 +37,7 @@ else {
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$virtual_table_uuid = check_str($_REQUEST["id"]);
+		$table_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -45,33 +45,33 @@ else {
 
 //get the http post variables
 	if (count($_POST)>0) {
-		$virtual_table_category = check_str($_POST["virtual_table_category"]);
-		$virtual_table_category_other = check_str($_POST["virtual_table_category_other"]);
-		if (strlen($virtual_table_category_other) > 0) { $virtual_table_category = $virtual_table_category_other; }
-		$virtual_table_label = check_str($_POST["virtual_table_label"]);
-		$virtual_table_name = check_str($_POST["virtual_table_name"]);
-		$virtual_table_auth = check_str($_POST["virtual_table_auth"]);
-		$virtual_table_captcha = check_str($_POST["virtual_table_captcha"]);
-		$virtual_table_parent_uuid = check_str($_POST["virtual_table_parent_uuid"]);
-		$virtual_table_description = check_str($_POST["virtual_table_description"]);
+		$table_category = check_str($_POST["table_category"]);
+		$table_category_other = check_str($_POST["table_category_other"]);
+		if (strlen($table_category_other) > 0) { $table_category = $table_category_other; }
+		$table_label = check_str($_POST["table_label"]);
+		$table_name = check_str($_POST["table_name"]);
+		$table_auth = check_str($_POST["table_auth"]);
+		$table_captcha = check_str($_POST["table_captcha"]);
+		$table_parent_uuid = check_str($_POST["table_parent_uuid"]);
+		$table_description = check_str($_POST["table_description"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$virtual_table_uuid = check_str($_POST["virtual_table_uuid"]);
+		$table_uuid = check_str($_POST["table_uuid"]);
 	}
 
 	//check for all required data
 		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($virtual_table_category) == 0) { $msg .= "Please provide: Table Category<br>\n"; }
-		//if (strlen($virtual_table_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
-		if (strlen($virtual_table_name) == 0) { $msg .= "Please provide: Table Name<br>\n"; }
-		//if (strlen($virtual_table_auth) == 0) { $msg .= "Please provide: Authentication<br>\n"; }
-		//if (strlen($virtual_table_captcha) == 0) { $msg .= "Please provide: Captcha<br>\n"; }
-		//if (strlen($virtual_table_parent_uuid) == 0) { $msg .= "Please provide: Parent Table<br>\n"; }
-		//if (strlen($virtual_table_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		//if (strlen($table_category) == 0) { $msg .= "Please provide: Table Category<br>\n"; }
+		//if (strlen($table_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
+		if (strlen($table_name) == 0) { $msg .= "Please provide: Table Name<br>\n"; }
+		//if (strlen($table_auth) == 0) { $msg .= "Please provide: Authentication<br>\n"; }
+		//if (strlen($table_captcha) == 0) { $msg .= "Please provide: Captcha<br>\n"; }
+		//if (strlen($table_parent_uuid) == 0) { $msg .= "Please provide: Parent Table<br>\n"; }
+		//if (strlen($table_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -88,41 +88,41 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add") {
-				$virtual_table_uuid = uuid();
-				$sql = "insert into v_virtual_tables ";
+				$table_uuid = uuid();
+				$sql = "insert into v_tables ";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
-				$sql .= "virtual_table_uuid, ";
-				$sql .= "virtual_table_category, ";
-				$sql .= "virtual_table_label, ";
-				$sql .= "virtual_table_name, ";
-				$sql .= "virtual_table_auth, ";
-				$sql .= "virtual_table_captcha, ";
-				$sql .= "virtual_table_parent_uuid, ";
-				$sql .= "virtual_table_description ";
+				$sql .= "table_uuid, ";
+				$sql .= "table_category, ";
+				$sql .= "table_label, ";
+				$sql .= "table_name, ";
+				$sql .= "table_auth, ";
+				$sql .= "table_captcha, ";
+				$sql .= "table_parent_uuid, ";
+				$sql .= "table_description ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
 				$sql .= "'$domain_uuid', ";
-				$sql .= "'$virtual_table_uuid', ";
-				$sql .= "'$virtual_table_category', ";
-				$sql .= "'$virtual_table_label', ";
-				$sql .= "'$virtual_table_name', ";
-				$sql .= "'$virtual_table_auth', ";
-				$sql .= "'$virtual_table_captcha', ";
-				if (strlen($virtual_table_parent_uuid) == 0) {
+				$sql .= "'$table_uuid', ";
+				$sql .= "'$table_category', ";
+				$sql .= "'$table_label', ";
+				$sql .= "'$table_name', ";
+				$sql .= "'$table_auth', ";
+				$sql .= "'$table_captcha', ";
+				if (strlen($table_parent_uuid) == 0) {
 					$sql .= "null, ";
 				}
 				else {
-					$sql .= "'$virtual_table_parent_uuid', ";
+					$sql .= "'$table_parent_uuid', ";
 				}
-				$sql .= "'$virtual_table_description' ";
+				$sql .= "'$table_description' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_tables.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=tables.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -131,26 +131,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			} //if ($action == "add")
 
 			if ($action == "update") {
-				$sql = "update v_virtual_tables set ";
+				$sql = "update v_tables set ";
 				$sql .= "domain_uuid = '$domain_uuid', ";
-				$sql .= "virtual_table_category = '$virtual_table_category', ";
-				$sql .= "virtual_table_label = '$virtual_table_label', ";
-				$sql .= "virtual_table_name = '$virtual_table_name', ";
-				$sql .= "virtual_table_auth = '$virtual_table_auth', ";
-				$sql .= "virtual_table_captcha = '$virtual_table_captcha', ";
-				if (strlen($virtual_table_parent_uuid) == 0) {
-					$sql .= "virtual_table_parent_uuid = null, ";
+				$sql .= "table_category = '$table_category', ";
+				$sql .= "table_label = '$table_label', ";
+				$sql .= "table_name = '$table_name', ";
+				$sql .= "table_auth = '$table_auth', ";
+				$sql .= "table_captcha = '$table_captcha', ";
+				if (strlen($table_parent_uuid) == 0) {
+					$sql .= "table_parent_uuid = null, ";
 				}
 				else {
-					$sql .= "virtual_table_parent_uuid = '$virtual_table_parent_uuid', ";
+					$sql .= "table_parent_uuid = '$table_parent_uuid', ";
 				}
-				$sql .= "virtual_table_description = '$virtual_table_description' ";
-				$sql .= "where virtual_table_uuid = '$virtual_table_uuid'";
+				$sql .= "table_description = '$table_description' ";
+				$sql .= "where table_uuid = '$table_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
 				require_once "includes/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_tables.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=tables.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -162,21 +162,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$virtual_table_uuid = $_GET["id"];
-		$sql = "select * from v_virtual_tables ";
+		$table_uuid = $_GET["id"];
+		$sql = "select * from v_tables ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
+		$sql .= "and table_uuid = '$table_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$virtual_table_category = $row["virtual_table_category"];
-			$virtual_table_label = $row["virtual_table_label"];
-			$virtual_table_name = $row["virtual_table_name"];
-			$virtual_table_auth = $row["virtual_table_auth"];
-			$virtual_table_captcha = $row["virtual_table_captcha"];
-			$virtual_table_parent_uuid = $row["virtual_table_parent_uuid"];
-			$virtual_table_description = $row["virtual_table_description"];
+			$table_category = $row["table_category"];
+			$table_label = $row["table_label"];
+			$table_name = $row["table_name"];
+			$table_auth = $row["table_auth"];
+			$table_captcha = $row["table_captcha"];
+			$table_parent_uuid = $row["table_parent_uuid"];
+			$table_description = $row["table_description"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
@@ -203,12 +203,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>Virtual Table Edit</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
-	if (strlen($virtual_table_uuid) > 0) {
-		echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='virtual_table_data_view.php?id=".$row[virtual_table_uuid]."'\" value='View'>&nbsp;&nbsp;\n";
-		echo "		<input type='button' class='btn' name='' alt='import' onclick=\"window.location='virtual_tables_import.php?id=".$row[virtual_table_uuid]."'\" value='Import'>&nbsp;&nbsp;\n";
+	if (strlen($table_uuid) > 0) {
+		echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='table_data_view.php?id=".$row[table_uuid]."'\" value='View'>&nbsp;&nbsp;\n";
+		echo "		<input type='button' class='btn' name='' alt='import' onclick=\"window.location='tables_import.php?id=".$row[table_uuid]."'\" value='Import'>&nbsp;&nbsp;\n";
 	}
 	include "export/index.php";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='virtual_tables.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='tables.php'\" value='Back'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -223,7 +223,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Table Category:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$table_name = 'v_virtual_tables';$field_name = 'virtual_table_category';$sql_where_optional = "";$field_current_value = $virtual_table_category;
+	$table_name = 'v_tables';$field_name = 'table_category';$sql_where_optional = "";$field_current_value = $table_category;
 	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
 	echo "Select the category.\n";
 	echo "</td>\n";
@@ -234,7 +234,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Label:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='virtual_table_label' maxlength='255' value=\"$virtual_table_label\">\n";
+	echo "	<input class='formfld' type='text' name='table_label' maxlength='255' value=\"$table_label\">\n";
 	echo "<br />\n";
 	echo "Enter the label.\n";
 	echo "</td>\n";
@@ -245,7 +245,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Table Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='virtual_table_name' maxlength='255' value=\"$virtual_table_name\">\n";
+	echo "	<input class='formfld' type='text' name='table_name' maxlength='255' value=\"$table_name\">\n";
 	echo "<br />\n";
 	echo "Enter the table name.\n";
 	echo "</td>\n";
@@ -256,15 +256,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Authentication:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='virtual_table_auth'>\n";
+	echo "	<select class='formfld' name='table_auth'>\n";
 	echo "	<option value=''></option>\n";
-	if ($virtual_table_auth == "yes") { 
+	if ($table_auth == "yes") { 
 		echo "	<option value='yes' SELECTED >yes</option>\n";
 	}
 	else {
 		echo "	<option value='yes'>yes</option>\n";
 	}
-	if ($virtual_table_auth == "no") { 
+	if ($table_auth == "no") { 
 		echo "	<option value='no' SELECTED >no</option>\n";
 	}
 	else {
@@ -281,15 +281,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "	Captcha:\n";
 	//echo "</td>\n";
 	//echo "<td class='vtable' align='left'>\n";
-	//echo "	<select class='formfld' name='virtual_table_captcha'>\n";
+	//echo "	<select class='formfld' name='table_captcha'>\n";
 	//echo "	<option value=''></option>\n";
-	//if ($virtual_table_captcha == "yes") { 
+	//if ($table_captcha == "yes") { 
 	//	echo "	<option value='yes' SELECTED >yes</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='yes'>yes</option>\n";
 	//}
-	//if ($virtual_table_captcha == "no") { 
+	//if ($table_captcha == "no") { 
 	//	echo "	<option value='no' SELECTED >no</option>\n";
 	//}
 	//else {
@@ -307,19 +307,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	echo "			<select name='virtual_table_parent_uuid' class='formfld'>\n";
+	echo "			<select name='table_parent_uuid' class='formfld'>\n";
 	echo "			<option value=''></option>\n";
-	$sql = "select * from v_virtual_tables ";
+	$sql = "select * from v_tables ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		if ($row["virtual_table_uuid"] == $virtual_table_parent_uuid) {
-			echo "			<option value='".$row["virtual_table_uuid"]."' selected>".$row["virtual_table_name"]."</option>\n";
+		if ($row["table_uuid"] == $table_parent_uuid) {
+			echo "			<option value='".$row["table_uuid"]."' selected>".$row["table_name"]."</option>\n";
 		}
 		else {
-			echo "			<option value='".$row["virtual_table_uuid"]."'>".$row["virtual_table_name"]."</option>\n";
+			echo "			<option value='".$row["table_uuid"]."'>".$row["table_name"]."</option>\n";
 		}
 	}
 	echo "			</select>\n";
@@ -334,7 +334,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Description:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea class='formfld' name='virtual_table_description' rows='4'>$virtual_table_description</textarea>\n";
+	echo "	<textarea class='formfld' name='table_description' rows='4'>$table_description</textarea>\n";
 	echo "<br />\n";
 	echo "Enter a description.\n";
 	echo "</td>\n";
@@ -342,9 +342,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='virtual_table_uuid' value='$virtual_table_uuid'>\n";
+		echo "				<input type='hidden' name='table_uuid' value='$table_uuid'>\n";
 	}
-	echo "				<input type='hidden' name='virtual_table_captcha' value='$virtual_table_captcha'>\n";
+	echo "				<input type='hidden' name='table_captcha' value='$table_captcha'>\n";
 	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
@@ -352,7 +352,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</form>";
 
 	if ($action == "update") {
-		require "virtual_table_fields.php";
+		require "table_fields.php";
 	}
 
 	echo "	</td>";
