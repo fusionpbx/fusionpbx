@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('virtual_tables_delete')) {
+if (permission_exists('table_delete')) {
 	//access granted
 }
 else {
@@ -44,16 +44,16 @@ else {
 
 if (strlen($id)>0) {
 	$sql = "";
-	$sql .= "delete from v_virtual_tables ";
+	$sql .= "delete from v_tables ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and virtual_table_uuid = '$id' ";
+	$sql .= "and table_uuid = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	unset($sql);
 }
 
 //redirect the user
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=virtual_tables.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=tables.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('virtual_tables_view')) {
+if (permission_exists('table_view')) {
 	//access granted
 }
 else {
@@ -48,24 +48,24 @@ $order = $_GET["order"];
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Virtual Table Field List</b></td>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Table Fields</b></td>\n";
 	echo "<td width='50%'  align=\"right\">&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan=\"2\">\n";
-	echo "Lists the fields in the virtual database.<br /><br />\n";
+	echo "Lists the fields in the database.<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
 
 	if (strlen($order_by) == 0) {
-		$order_by = 'virtual_field_order';
+		$order_by = 'field_order';
 		$order = 'asc';
 	}
 
-	$sql = "select * from v_virtual_table_fields ";
+	$sql = "select * from v_table_fields ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
+	$sql .= "and table_uuid = '$table_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -80,19 +80,19 @@ $order = $_GET["order"];
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('virtual_field_label', 'Label', $order_by, $order);
-	echo th_order_by('virtual_field_name', 'Name', $order_by, $order);
-	echo th_order_by('virtual_field_type', 'Type', $order_by, $order);
-	echo th_order_by('virtual_field_column', 'Column', $order_by, $order);
-	echo th_order_by('virtual_field_required', 'Required', $order_by, $order);
-	echo th_order_by('virtual_field_list_hidden', 'Visible', $order_by, $order);
-	echo th_order_by('virtual_field_search_by', 'Search By', $order_by, $order);
-	echo th_order_by('virtual_field_order', 'Field Order', $order_by, $order);
-	echo th_order_by('virtual_field_order_tab', 'Tab Order', $order_by, $order);
-	echo th_order_by('virtual_field_description', 'Description', $order_by, $order);
+	echo th_order_by('field_label', 'Label', $order_by, $order);
+	echo th_order_by('field_name', 'Name', $order_by, $order);
+	echo th_order_by('field_type', 'Type', $order_by, $order);
+	echo th_order_by('field_column', 'Column', $order_by, $order);
+	echo th_order_by('field_required', 'Required', $order_by, $order);
+	echo th_order_by('field_list_hidden', 'Visible', $order_by, $order);
+	echo th_order_by('field_search_by', 'Search By', $order_by, $order);
+	echo th_order_by('field_order', 'Field Order', $order_by, $order);
+	echo th_order_by('field_order_tab', 'Tab Order', $order_by, $order);
+	echo th_order_by('field_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('virtual_tables_view')) {
-		echo "	<a href='virtual_table_fields_edit.php?virtual_table_uuid=".$virtual_table_uuid."' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('table_view')) {
+		echo "	<a href='table_field_edit.php?table_uuid=".$table_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -100,22 +100,22 @@ $order = $_GET["order"];
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_type']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_column']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_required']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_list_hidden']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_search_by']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_order']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_order_tab']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['virtual_field_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_label']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_type']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_column']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_required']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_list_hidden']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_search_by']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order_tab']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('virtual_tables_edit')) {
-				echo "		<a href='virtual_table_fields_edit.php?virtual_table_uuid=".$row['virtual_table_uuid']."&id=".$row['virtual_table_field_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			if (permission_exists('table_edit')) {
+				echo "		<a href='table_field_edit.php?table_uuid=".$row['table_uuid']."&id=".$row['table_field_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
-			if (permission_exists('virtual_tables_delete')) {
-				echo "		<a href='virtual_table_fields_delete.php?virtual_table_uuid=".$row['virtual_table_uuid']."&id=".$row['virtual_table_field_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('table_delete')) {
+				echo "		<a href='table_field_delete.php?table_uuid=".$row['table_uuid']."&id=".$row['table_field_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -131,8 +131,8 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('virtual_tables_add')) {
-		echo "			<a href='virtual_table_fields_edit.php?virtual_table_uuid=".$virtual_table_uuid."' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('tables_add')) {
+		echo "			<a href='table_field_edit.php?table_uuid=".$table_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

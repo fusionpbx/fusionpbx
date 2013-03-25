@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('virtual_tables_data_view')) {
+if (permission_exists('table_data_view')) {
 	//access granted
 }
 else {
@@ -35,9 +35,9 @@ else {
 }
 
 if (strlen($_GET["id"]) > 0) {
-	$virtual_table_uuid = check_str($_GET["id"]);
-	if (strlen($_GET["virtual_data_parent_row_uuid"])>0) {
-		$virtual_data_parent_row_uuid = $_GET["virtual_data_parent_row_uuid"];
+	$table_uuid = check_str($_GET["id"]);
+	if (strlen($_GET["data_parent_row_uuid"])>0) {
+		$data_parent_row_uuid = $_GET["data_parent_row_uuid"];
 	}
 	$search_all = check_str($_GET["search_all"]);
 }
@@ -54,22 +54,22 @@ if (strlen($_GET["id"]) > 0) {
 //show the header
 	require_once "includes/header.php";
 
-//get the information about the virtual table by using the id
+//get the information about the table by using the id
 	$sql = "";
-	$sql .= "select * from v_virtual_tables ";
+	$sql .= "select * from v_tables ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
+	$sql .= "and table_uuid = '$table_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		$virtual_table_category = $row["virtual_table_category"];
-		$virtual_table_label = $row["virtual_table_label"];
-		$virtual_table_name = $row["virtual_table_name"];
-		$virtual_table_auth = $row["virtual_table_auth"];
-		$virtual_table_captcha = $row["virtual_table_captcha"];
-		$virtual_table_parent_uuid = $row["virtual_table_parent_uuid"];
-		$virtual_table_description = $row["virtual_table_description"];
+		$table_category = $row["table_category"];
+		$table_label = $row["table_label"];
+		$table_name = $row["table_name"];
+		$table_auth = $row["table_auth"];
+		$table_captcha = $row["table_captcha"];
+		$table_parent_uuid = $row["table_parent_uuid"];
+		$table_description = $row["table_description"];
 		break; //limit to 1 row
 	}
 	unset ($prep_statement);
@@ -78,69 +78,69 @@ if (strlen($_GET["id"]) > 0) {
 	$db_field_name_array = array();
 	$db_value_array = array();
 	$db_names .= "<tr>\n";
-	$sql = "select * from v_virtual_table_fields ";
+	$sql = "select * from v_table_fields ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
-	$sql .= "order by virtual_field_order asc ";
+	$sql .= "and table_uuid = '$table_uuid' ";
+	$sql .= "order by field_order asc ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$result_names = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	$result_count = count($result);
 	foreach($result_names as $row) {
-		$virtual_field_label = $row["virtual_field_label"];
-		$virtual_field_name = $row["virtual_field_name"];
-		$virtual_field_type = $row["virtual_field_type"];
-		$virtual_field_value = $row["virtual_field_value"];
-		$virtual_field_list_hidden = $row["virtual_field_list_hidden"];
-		$virtual_field_column = $row["virtual_field_column"];
-		$virtual_field_required = $row["virtual_field_required"];
-		$virtual_field_order = $row["virtual_field_order"];
-		$virtual_field_order_tab = $row["virtual_field_order_tab"];
-		$virtual_field_description = $row["virtual_field_description"];
+		$field_label = $row["field_label"];
+		$field_name = $row["field_name"];
+		$field_type = $row["field_type"];
+		$field_value = $row["field_value"];
+		$field_list_hidden = $row["field_list_hidden"];
+		$field_column = $row["field_column"];
+		$field_required = $row["field_required"];
+		$field_order = $row["field_order"];
+		$field_order_tab = $row["field_order_tab"];
+		$field_description = $row["field_description"];
 
-		$name_array[$virtual_field_name]['virtual_field_label'] = $row["virtual_field_label"];
-		$name_array[$virtual_field_name]['virtual_field_type'] = $row["virtual_field_type"];
-		$name_array[$virtual_field_name]['virtual_field_list_hidden'] = $row["virtual_field_list_hidden"];
-		$name_array[$virtual_field_name]['virtual_field_column'] = $row["virtual_field_column"];
-		$name_array[$virtual_field_name]['virtual_field_required'] = $row["virtual_field_required"];
-		$name_array[$virtual_field_name]['virtual_field_order'] = $row["virtual_field_order"];
-		$name_array[$virtual_field_name]['virtual_field_order_tab'] = $row["virtual_field_order_tab"];
-		$name_array[$virtual_field_name]['virtual_field_description'] = $row["virtual_field_description"];
+		$name_array[$field_name]['field_label'] = $row["field_label"];
+		$name_array[$field_name]['field_type'] = $row["field_type"];
+		$name_array[$field_name]['field_list_hidden'] = $row["field_list_hidden"];
+		$name_array[$field_name]['field_column'] = $row["field_column"];
+		$name_array[$field_name]['field_required'] = $row["field_required"];
+		$name_array[$field_name]['field_order'] = $row["field_order"];
+		$name_array[$field_name]['field_order_tab'] = $row["field_order_tab"];
+		$name_array[$field_name]['field_description'] = $row["field_description"];
 	}
 	unset($sql, $prep_statement, $row);
 	$fieldcount = count($name_array);
 
 //get the data
 	$sql = "";
-	$sql .= "select * from v_virtual_table_data ";
+	$sql .= "select * from v_table_data ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	if (strlen($search_all) == 0) {
-		$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
-		if (strlen($virtual_data_parent_row_uuid) > 0) {
-			$sql .= " and virtual_data_parent_row_uuid = '$virtual_data_parent_row_uuid' ";
+		$sql .= "and table_uuid = '$table_uuid' ";
+		if (strlen($data_parent_row_uuid) > 0) {
+			$sql .= " and data_parent_row_uuid = '$data_parent_row_uuid' ";
 		}
 	}
 	else {
-		$sql .= "and virtual_data_row_uuid in (";
-		$sql .= "select virtual_data_row_uuid from v_virtual_table_data \n";
+		$sql .= "and data_row_uuid in (";
+		$sql .= "select data_row_uuid from v_table_data \n";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and virtual_table_uuid = '$virtual_table_uuid' ";
-		if (strlen($virtual_data_parent_row_uuid) == 0) {
+		$sql .= "and table_uuid = '$table_uuid' ";
+		if (strlen($data_parent_row_uuid) == 0) {
 			$tmp_digits = preg_replace('{\D}', '', $search_all);
 			if (is_numeric($tmp_digits) && strlen($tmp_digits) > 5) {
 				if (strlen($tmp_digits) == '11' ) {
-					$sql .= "and virtual_data_field_value like '%".substr($tmp_digits, -10)."%' \n";
+					$sql .= "and data_field_value like '%".substr($tmp_digits, -10)."%' \n";
 				}
 				else {
-					$sql .= "and virtual_data_field_value like '%$tmp_digits%' \n";
+					$sql .= "and data_field_value like '%$tmp_digits%' \n";
 				}
 			}
 			else {
-				$sql .= "and virtual_data_field_value like '%$search_all%' \n";
+				$sql .= "and data_field_value like '%$search_all%' \n";
 			}
 		}
 		else {
-			$sql .= "and virtual_data_parent_row_uuid = '$virtual_data_parent_row_uuid' ";
+			$sql .= "and data_parent_row_uuid = '$data_parent_row_uuid' ";
 		}
 		$sql .= ")\n";
 	}
@@ -150,15 +150,15 @@ if (strlen($_GET["id"]) > 0) {
 	$result_values = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach($result_values as $row) {
 		//set a php variable
-			$virtual_field_name = $row[virtual_field_name];
-			$virtual_data_row_uuid = $row[virtual_data_row_uuid];
+			$field_name = $row[field_name];
+			$data_row_uuid = $row[data_row_uuid];
 
 		//restructure the data by setting it the value_array
-			$value_array[$virtual_data_row_uuid][$virtual_field_name] = $row[virtual_data_field_value];
-			$value_array[$virtual_data_row_uuid]['virtual_table_uuid'] = $row[virtual_table_uuid];
-			$value_array[$virtual_data_row_uuid]['virtual_data_row_uuid'] = $row[virtual_data_row_uuid];
-			$value_array[$virtual_data_row_uuid]['virtual_table_parent_uuid'] = $row[virtual_table_parent_uuid];
-			$value_array[$virtual_data_row_uuid]['virtual_data_parent_row_uuid'] = $row[virtual_data_parent_row_uuid];
+			$value_array[$data_row_uuid][$field_name] = $row[data_field_value];
+			$value_array[$data_row_uuid]['table_uuid'] = $row[table_uuid];
+			$value_array[$data_row_uuid]['data_row_uuid'] = $row[data_row_uuid];
+			$value_array[$data_row_uuid]['table_parent_uuid'] = $row[table_parent_uuid];
+			$value_array[$data_row_uuid]['data_parent_row_uuid'] = $row[data_parent_row_uuid];
 	}
 	$num_rows = count($value_array);
 
@@ -175,21 +175,21 @@ if (strlen($_GET["id"]) > 0) {
 	$sql = "CREATE TABLE memory_table ";
 	$sql .= "(";
 	$sql .= "'id' INTEGER PRIMARY KEY, ";
-	$sql .= "'virtual_table_uuid' TEXT, ";
-	$sql .= "'virtual_data_row_uuid' TEXT, ";
-	$sql .= "'virtual_table_parent_uuid' TEXT, ";
-	$sql .= "'virtual_data_parent_row_uuid' TEXT, ";
+	$sql .= "'table_uuid' TEXT, ";
+	$sql .= "'data_row_uuid' TEXT, ";
+	$sql .= "'table_parent_uuid' TEXT, ";
+	$sql .= "'data_parent_row_uuid' TEXT, ";
 	foreach($result_names as $row) {
-		if ($row["virtual_field_type"] != "label") {
-			if ($row["virtual_field_name"] != "domain_uuid") {
-				//$row["virtual_field_label"];
-				//$row["virtual_field_name"]
-				//$row["virtual_field_type"];
-				if ($row["virtual_field_name"] == "number") {
-					$sql .= "'".$row["virtual_field_name"]."' NUMERIC, ";
+		if ($row["field_type"] != "label") {
+			if ($row["field_name"] != "domain_uuid") {
+				//$row["field_label"];
+				//$row["field_name"]
+				//$row["field_type"];
+				if ($row["field_name"] == "number") {
+					$sql .= "'".$row["field_name"]."' NUMERIC, ";
 				}
 				else {
-					$sql .= "'".$row["virtual_field_name"]."' TEXT, ";
+					$sql .= "'".$row["field_name"]."' TEXT, ";
 				}
 			}
 		}
@@ -207,29 +207,29 @@ if (strlen($_GET["id"]) > 0) {
 		//insert the data into the memory table
 			$sql = "insert into memory_table ";
 			$sql .= "(";
-			$sql .= "'virtual_table_uuid', ";
-			$sql .= "'virtual_data_row_uuid', ";
-			$sql .= "'virtual_table_parent_uuid', ";
-			$sql .= "'virtual_data_parent_row_uuid', ";
+			$sql .= "'table_uuid', ";
+			$sql .= "'data_row_uuid', ";
+			$sql .= "'table_parent_uuid', ";
+			$sql .= "'data_parent_row_uuid', ";
 			//foreach($array as $key => $value) {
 			//	$sql .= "'$key', ";
 			foreach($result_names as $row) {
-				$virtual_field_name = $row["virtual_field_name"];
-				$sql .= "'$virtual_field_name', ";
+				$field_name = $row["field_name"];
+				$sql .= "'$field_name', ";
 			}
 			$sql .= "'domain_uuid' ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
-			$sql .= "'".$array['virtual_table_uuid']."', ";
-			$sql .= "'".$array['virtual_data_row_uuid']."', ";
-			$sql .= "'".$array['virtual_table_parent_uuid']."', ";
-			$sql .= "'".$array['virtual_data_parent_row_uuid']."', ";
+			$sql .= "'".$array['table_uuid']."', ";
+			$sql .= "'".$array['data_row_uuid']."', ";
+			$sql .= "'".$array['table_parent_uuid']."', ";
+			$sql .= "'".$array['data_parent_row_uuid']."', ";
 			//foreach($array as $key => $value) {
 			//	$sql .= "'$value', ";
 			foreach($result_names as $row) {
-				$virtual_field_name = $row["virtual_field_name"];
-				$sql .= "'".check_str($array[$virtual_field_name])."', ";
+				$field_name = $row["field_name"];
+				$sql .= "'".check_str($array[$field_name])."', ";
 			}
 			$sql .= "'$domain_uuid' ";
 			$sql .= ");";
@@ -243,20 +243,20 @@ if (strlen($_GET["id"]) > 0) {
 			$x++;
 	}
 
-//set the title and description of the virtual table
+//set the title and description of the table
 	echo "<br />\n";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	<td align='left' valign='top'><strong>$virtual_table_label</strong><br>\n";
-	echo "		$virtual_table_description\n";
+	echo "	<td align='left' valign='top'><strong>$table_label</strong><br>\n";
+	echo "		$table_description\n";
 	echo "	</td>\n";
 	echo "	<td align='right' valign='top'>\n";
-	if (strlen($virtual_data_parent_row_uuid) == 0) {
+	if (strlen($data_parent_row_uuid) == 0) {
 		$search_all = str_replace("''", "'", $search_all);
 		echo "<form method='GET' name='frm_search' action=''>\n";
 		echo "	<input class='formfld' type='text' name='search_all' value=\"$search_all\">\n";
-		echo "	<input type='hidden' name='id' value='$virtual_table_uuid'>\n";
-		echo "	<input type='hidden' name='virtual_data_parent_row_uuid' value='$virtual_data_parent_row_uuid'>\n";
+		echo "	<input type='hidden' name='id' value='$table_uuid'>\n";
+		echo "	<input type='hidden' name='data_parent_row_uuid' value='$data_parent_row_uuid'>\n";
 		echo "	<input class='btn' type='submit' name='submit' value='Search All'>\n";
 		echo "</form>\n";
 	}
@@ -271,11 +271,11 @@ if (strlen($_GET["id"]) > 0) {
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	if (strlen($virtual_table_parent_uuid) > 0) {
-		$param = "&id=$virtual_table_parent_uuid&virtual_data_row_uuid=$virtual_data_row_uuid";
+	if (strlen($table_parent_uuid) > 0) {
+		$param = "&id=$table_parent_uuid&data_row_uuid=$data_row_uuid";
 	}
 	else {
-		$param = "&id=$virtual_table_uuid&virtual_data_row_uuid=$virtual_data_row_uuid";
+		$param = "&id=$table_uuid&data_row_uuid=$data_row_uuid";
 	}
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page;
@@ -284,7 +284,7 @@ if (strlen($_GET["id"]) > 0) {
 	$sql = "select * from memory_table \n";
 	$sql .= "where domain_uuid = '$domain_uuid' \n";
 	$sql .= "limit $rows_per_page offset $offset \n";
-	//$sql .= "order by virtual_field_order asc \n";
+	//$sql .= "order by field_order asc \n";
 	//echo "<pre>\n";
 	//echo $sql;
 	//echo "</pre>\n";
@@ -296,13 +296,13 @@ if (strlen($_GET["id"]) > 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	foreach($result_names as $row) {
-		if ($row['virtual_field_list_hidden'] != "hide") {
-			echo "<th valign='top' nowrap>&nbsp; ".$row['virtual_field_label']." &nbsp;</th>\n";
+		if ($row['field_list_hidden'] != "hide") {
+			echo "<th valign='top' nowrap>&nbsp; ".$row['field_label']." &nbsp;</th>\n";
 		}
 	}
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('virtual_tables_data_add')) {
-		echo "	<a href='virtual_table_data_edit.php?virtual_table_uuid=".$virtual_table_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('table_data_add')) {
+		echo "	<a href='table_data_edit.php?table_uuid=".$table_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -312,58 +312,58 @@ if (strlen($_GET["id"]) > 0) {
 	foreach ($result as &$row) {
 		echo "<tr>\n";
 		foreach($result_names as $row2) {
-			$virtual_field_name = $row2[virtual_field_name];
+			$field_name = $row2[field_name];
 
 			//get the values from the array and set as php variables
-				$virtual_field_label = $name_array[$virtual_field_name]['virtual_field_label'];
-				$virtual_field_type = $name_array[$virtual_field_name]['virtual_field_type'];
-				$virtual_field_list_hidden = $name_array[$virtual_field_name]['virtual_field_list_hidden'];
-				$virtual_field_column = $name_array[$virtual_field_name]['virtual_field_column'];
-				$virtual_field_required = $name_array[$virtual_field_name]['virtual_field_required'];
-				$virtual_field_order = $name_array[$virtual_field_name]['virtual_field_order'];
-				$virtual_field_order_tab = $name_array[$virtual_field_name]['virtual_field_order_tab'];
-				$virtual_field_description = $name_array[$virtual_field_name]['virtual_field_description'];
+				$field_label = $name_array[$field_name]['field_label'];
+				$field_type = $name_array[$field_name]['field_type'];
+				$field_list_hidden = $name_array[$field_name]['field_list_hidden'];
+				$field_column = $name_array[$field_name]['field_column'];
+				$field_required = $name_array[$field_name]['field_required'];
+				$field_order = $name_array[$field_name]['field_order'];
+				$field_order_tab = $name_array[$field_name]['field_order_tab'];
+				$field_description = $name_array[$field_name]['field_description'];
 
-			if ($virtual_field_list_hidden != "hide") {
-				switch ($virtual_field_type) {
+			if ($field_list_hidden != "hide") {
+				switch ($field_type) {
 					case "textarea":
-						$tmp_value = str_replace("\n", "<br />\n", $row[$virtual_field_name]);
+						$tmp_value = str_replace("\n", "<br />\n", $row[$field_name]);
 						echo "<td valign='top' class='".$row_style[$c]."'>".$tmp_value."&nbsp;</td>\n";
 						unset($tmp_value);
 						break;
 					case "email":
-						echo "<td valign='top' class='".$row_style[$c]."'><a href='mailto:".$row[$virtual_field_name]."'>".$row[$virtual_field_name]."</a>&nbsp;</td>\n";
+						echo "<td valign='top' class='".$row_style[$c]."'><a href='mailto:".$row[$field_name]."'>".$row[$field_name]."</a>&nbsp;</td>\n";
 						break;
 					case "phone":
-						$tmp_phone = $row[$virtual_field_name];
+						$tmp_phone = $row[$field_name];
 						$tmp_phone = format_phone($tmp_phone);
 						echo "<td valign='top' class='".$row_style[$c]."'>".$tmp_phone."&nbsp;</td>\n";
 						break;
 					case "url":
-						$url = $row[$virtual_field_name];
+						$url = $row[$field_name];
 						if (substr($url,0,4) != "http") {
 							$url = 'http://'.$url;
 						}
-						echo "<td valign='top' class='".$row_style[$c]."'><a href='".$url."' target='_blank'>".$row[$virtual_field_name]."</a>&nbsp;</td>\n";
+						echo "<td valign='top' class='".$row_style[$c]."'><a href='".$url."' target='_blank'>".$row[$field_name]."</a>&nbsp;</td>\n";
 						break;
 					default:
-						echo "<td valign='top' class='".$row_style[$c]."'>".$row[$virtual_field_name]."&nbsp;</td>\n";
+						echo "<td valign='top' class='".$row_style[$c]."'>".$row[$field_name]."&nbsp;</td>\n";
 						break;
 				}
 			}
 		}
 
 		echo "<td valign='top' align='right' nowrap='nowrap'>\n";
-		if (permission_exists('virtual_tables_data_edit')) {
-			if (strlen($virtual_data_parent_row_uuid) == 0) {
-				echo "	<a href='virtual_table_data_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_data_row_uuid=".$row['virtual_data_row_uuid']."&search_all=$search_all' alt='edit'>$v_link_label_edit</a>\n";
+		if (permission_exists('tables_data_edit')) {
+			if (strlen($data_parent_row_uuid) == 0) {
+				echo "	<a href='table_data_edit.php?table_uuid=".$row[table_uuid]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."&search_all=$search_all' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			else {
-				echo "	<a href='virtual_table_data_edit.php?virtual_table_uuid=".$row[virtual_table_uuid]."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_data_row_uuid=".$row['virtual_data_row_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "	<a href='table_data_edit.php?table_uuid=".$row[table_uuid]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 		}
-		if (permission_exists('virtual_tables_data_delete')) {
-			echo"	<a href='virtual_table_data_delete.php?virtual_data_row_uuid=".$row['virtual_data_row_uuid']."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid&virtual_table_uuid=".$virtual_table_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+		if (permission_exists('table_data_delete')) {
+			echo"	<a href='table_data_delete.php?data_row_uuid=".$row['data_row_uuid']."&data_parent_row_uuid=$data_parent_row_uuid&table_uuid=".$table_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 		}
 		echo "</td>\n";
 
@@ -379,8 +379,8 @@ if (strlen($_GET["id"]) > 0) {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('virtual_tables_data_add')) {
-		echo "			<a href='virtual_table_data_edit.php?virtual_table_uuid=".$virtual_table_uuid."&virtual_data_parent_row_uuid=$virtual_data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('table_data_add')) {
+		echo "			<a href='table_data_edit.php?table_uuid=".$table_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
