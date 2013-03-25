@@ -142,7 +142,7 @@ if (strlen($_GET["a"]) > 0) {
 	echo "<th>Action</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('services_add')) {
-		echo "	<a href='services_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='service_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
