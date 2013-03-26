@@ -113,7 +113,6 @@ if ($db_type == "sqlite") {
 			$db_name_short = $db_name;
 		}
 
-		$db_path = $document_root.PROJECT_PATH.'/secure';
 		$db_path = realpath($db_path);
 		if (file_exists($db_path.'/'.$db_name)) {
 			//echo "database file exists<br>";
@@ -122,7 +121,8 @@ if ($db_type == "sqlite") {
 			if (is_writable($db_path.'/'.$db_name)) {
 				//use database in current location
 			}
-			else { //not writable
+			else {
+				//not writable
 				echo "The database ".$db_path."/".$db_name." does not exist or is not writable.";
 				exit;
 			}
