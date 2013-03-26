@@ -309,7 +309,12 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 		$sql = '';
 		foreach ($apps as $x => &$app) {
 			foreach ($app['db'] as $y => &$row) {
-				$table_name = $row['table'];
+				if (is_array($row['table'])) {
+					$table_name = $row['table']['text'];
+				}
+				else {
+					$table_name = $row['table'];
+				}
 				if (strlen($table_name) > 0) {
 					//check if the table exists
 						if (db_table_exists($db, $db_type, $db_name, $table_name)) {
@@ -355,7 +360,26 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 	//add missing tables and fields
 		foreach ($apps as $x => &$app) {
 			foreach ($app['db'] as $y => &$row) {
-				$table_name = $row['table'];
+				if (is_array($row['table'])) {
+					$table_name = $row['table']['text'];
+					if (!db_table_exists($db, $db_type, $db_name, $row['table']['text'])) {
+						$row['exists'] = "true"; //testing
+						//if (db_table_exists($db, $db_type, $db_name, $row['table']['deprecated'])) {
+							if ($db_type == "pgsql") {
+								$sql_update .= "ALTER TABLE ".$row['table']['deprecated']." RENAME TO ".$row['table']['text'].";\n";
+							}
+							if ($db_type == "mysql") {
+								$sql_update .= "RENAME TABLE ".$row['table']['deprecated']." TO ".$row['table']['text'].";\n";
+							}
+							if ($db_type == "sqlite") {
+								$sql_update .= "ALTER TABLE ".$row['table']['deprecated']." RENAME TO ".$row['table']['text'].";\n";
+							}
+						//}
+					}
+				}
+				else {
+					$table_name = $row['table'];
+				}
 				//check if the table exists
 					if ($row['exists'] == "true") {
 						if (count($row['fields']) > 0) {
@@ -424,7 +448,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 														//field type has not changed
 													}
 													else {
-														$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name)."<br>";
+														//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name)."<br>";
 														$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
 													}
 												}
@@ -454,14 +478,21 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 					}
 					else {
 						//create table
-						$sql_update .= db_create_table($apps, $db_type, $row['table']);
+							if (!is_array($row['table'])) {
+								$sql_update .= db_create_table($apps, $db_type, $row['table']);
+							}
 					}
 			}
 		}
 	//rebuild and populate the table
 		foreach ($apps as $x => &$app) {
 			foreach ($app['db'] as $y => &$row) {
-				$table_name = $row['table'];
+				if (is_array($row['table'])) {
+					$table_name = $row['table']['text'];
+				}
+				else {
+					$table_name = $row['table'];
+				}
 				if ($row['rebuild'] == "true") {
 					if ($db_type == "sqlite") {
 						//start the transaction
@@ -509,7 +540,12 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 				$sql = '';
 				foreach ($apps as &$app) {
 					foreach ($app['db'] as $row) {
-						$table_name = $row['table'];
+						if (is_array($row['table'])) {
+							$table_name = $row['table']['text'];
+						}
+						else {
+							$table_name = $row['table'];
+						}
 						echo "<tr>\n";
 
 						//check if the table exists
@@ -592,7 +628,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 						try {
 							$db->query(trim($sql));
 							if ($display_type == "text") {
-								echo " 	$sql\n";
+								echo "	$sql\n";
 							}
 						}
 						catch (PDOException $error) {
