@@ -349,9 +349,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			$db->commit();
 
-			//syncrhonize configuration
+			//synchronize configuration
 				if (is_readable($_SESSION['switch']['extensions']['dir'])) {
-					require_once "app/extensions/resources/extension.php";
+					require_once "app/extensions/resources/classes/extension.php";
 					$extension = new extension;
 					$extension->xml();
 				}
@@ -1046,7 +1046,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$onchange = "document.getElementById('provisioning_list').value += document.getElementById('select_mac_address').value;";
 	$onchange .= "document.getElementById('provisioning_list').value += ':'+document.getElementById('prov_line').value + '\\n'";
 
-	$sql = "select * from v_hardware_phones ";
+	$sql = "select * from v_devices ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -1057,13 +1057,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<option value=''></option>\n";
 
 	foreach($result as $row) {
-		$phone_mac_address = $row['phone_mac_address'];
-		$phone_mac_address = substr($phone_mac_address, 0,2).'-'.substr($phone_mac_address, 2,2).'-'.substr($phone_mac_address, 4,2).'-'.substr($phone_mac_address, 6,2).'-'.substr($phone_mac_address, 8,2).'-'.substr($phone_mac_address, 10,2);
-		if ($row['phone_mac_address'] == $select_mac_address) {
-			echo "<option value='".$row['phone_mac_address']."' selected>".$phone_mac_address." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
+		$device_mac_address = $row['device_mac_address'];
+		$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
+		if ($row['device_mac_address'] == $select_mac_address) {
+			echo "<option value='".$row['device_mac_address']."' selected='selected'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
 		}
 		else {
-			echo "<option value='".$row['phone_mac_address']."'>".$phone_mac_address." ".$row['phone_model']." ".$row['phone_description']."</option>\n";
+			echo "<option value='".$row['device_mac_address']."'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
 		}
 	} //end foreach
 	unset($sql, $result, $row_count);

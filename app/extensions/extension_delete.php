@@ -34,28 +34,32 @@ else {
 	exit;
 }
 
-if (count($_GET)>0) {
-	$id = $_GET["id"];
-}
-
-//delete the extension
+//check for the id
+	if (count($_GET)>0) {
+		$id = $_GET["id"];
+	}
 	if (strlen($id)>0) {
-		$sql = "delete from v_extensions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and extension_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+		//delete the extension
+			$sql = "delete from v_extensions ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and extension_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($prep_statement, $sql);
 
-		$sql = "delete from v_extension_users ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and extension_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
+			$sql = "delete from v_extension_users ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and extension_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($prep_statement, $sql);
 
-		//syncrhonize configuration
-		save_extension_xml();
+		//synchronize configuration
+			if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+				require_once "app/extensions/resources/classes/extension.php";
+				$extension = new extension;
+				$extension->xml();
+			}
 	}
 
 //redirect the user
