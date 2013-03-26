@@ -74,7 +74,6 @@ require_once "includes/lib_functions.php";
 	$db_create_password = $_POST["db_create_password"];
 	$db_path = $_POST["db_path"];
 	$install_step = $_POST["install_step"];
-	$install_secure_dir = $_POST["install_secure_dir"];
 	$install_tmp_dir = $_POST["install_tmp_dir"];
 	$install_backup_dir = $_POST["install_backup_dir"];
 	$install_switch_base_dir = $_POST["install_switch_base_dir"];
@@ -91,11 +90,6 @@ require_once "includes/lib_functions.php";
 
 	$install_backup_dir = realpath($_POST["install_backup_dir"]);
 	$install_backup_dir = str_replace("\\", "/", $install_backup_dir);
-
-//set the default install_secure_dir
-	if (strlen($install_secure_dir) == 0) { //secure dir
-		$install_secure_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
-	}
 
 //set the default db_name
 	if ($db_type == "sqlite") {
@@ -145,7 +139,7 @@ require_once "includes/lib_functions.php";
 		switch (PHP_OS) {
 		case "Linux":
 			//set the default db_path
-				if (strlen($db_path) == 0) { //secure dir
+				if (strlen($db_path) == 0) {
 					if (file_exists('/var/lib/fusionpbx')) {
 						$db_path = '/var/lib/fusionpbx';
 					}
@@ -192,7 +186,7 @@ require_once "includes/lib_functions.php";
 				if (file_exists('/var/db/freeswitch')) {
 					//FreeBSD port
 						//set the default db_path
-							if (strlen($db_path) == 0) { //secure dir
+							if (strlen($db_path) == 0) {
 								$db_path = '/var/db/fusionpbx';
 								if (!is_readable($db_path)) { mkdir($db_path,0777,true); }
 							}
@@ -215,7 +209,7 @@ require_once "includes/lib_functions.php";
 				elseif (file_exists('/data/freeswitch')) {
 					//FreeBSD embedded 
 						//set the default db_path
-							if (strlen($db_path) == 0) { //secure dir
+							if (strlen($db_path) == 0) {
 								$db_path = '/data/db/fusionpbx';
 								if (!is_readable($db_path)) { mkdir($db_path,0777,true); }
 							}
@@ -242,7 +236,7 @@ require_once "includes/lib_functions.php";
 				}
 				else {
 					//set the default db_path
-						if (strlen($db_path) == 0) { //secure dir
+						if (strlen($db_path) == 0) {
 							$db_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
 						}
 				}
@@ -250,20 +244,20 @@ require_once "includes/lib_functions.php";
 		case "NetBSD":
 			$startup_script_dir = '';
 			//set the default db_path
-				if (strlen($db_path) == 0) { //secure dir
+				if (strlen($db_path) == 0) {
 					$db_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
 				}
 			break;
 		case "OpenBSD":
 			$startup_script_dir = '';
 			//set the default db_path
-				if (strlen($db_path) == 0) { //secure dir
+				if (strlen($db_path) == 0) {
 					$db_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
 				}
 			break;
 		default:
 			//set the default db_path
-				if (strlen($db_path) == 0) { //secure dir
+				if (strlen($db_path) == 0) {
 					$db_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
 				}
 		}
@@ -286,7 +280,6 @@ require_once "includes/lib_functions.php";
 		// SunOS
 		// HP-UX
 		// OpenBSD (not in Wikipedia)
-
 
 	//set the dir defaults for windows
 		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
@@ -365,315 +358,411 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		exit;
 	}
 
-if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+	//generate the config.php
+		$tmp_config = "<?php\n";
+		$tmp_config .= "/* \$Id\$ */\n";
+		$tmp_config .= "/*\n";
+		$tmp_config .= "	config.php\n";
+		$tmp_config .= "	Copyright (C) 2008, 2009 Mark J Crane\n";
+		$tmp_config .= "	All rights reserved.\n";
+		$tmp_config .= "\n";
+		$tmp_config .= "	Redistribution and use in source and binary forms, with or without\n";
+		$tmp_config .= "	modification, are permitted provided that the following conditions are met:\n";
+		$tmp_config .= "\n";
+		$tmp_config .= "	1. Redistributions of source code must retain the above copyright notice,\n";
+		$tmp_config .= "	   this list of conditions and the following disclaimer.\n";
+		$tmp_config .= "\n";
+		$tmp_config .= "	2. Redistributions in binary form must reproduce the above copyright\n";
+		$tmp_config .= "	   notice, this list of conditions and the following disclaimer in the\n";
+		$tmp_config .= "	   documentation and/or other materials provided with the distribution.\n";
+		$tmp_config .= "\n";
+		$tmp_config .= "	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,\n";
+		$tmp_config .= "	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY\n";
+		$tmp_config .= "	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n";
+		$tmp_config .= "	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,\n";
+		$tmp_config .= "	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n";
+		$tmp_config .= "	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n";
+		$tmp_config .= "	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n";
+		$tmp_config .= "	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n";
+		$tmp_config .= "	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n";
+		$tmp_config .= "	POSSIBILITY OF SUCH DAMAGE.\n";
+		$tmp_config .= "*/\n";
+		$tmp_config .= "\n";
+		$tmp_config .= "//-----------------------------------------------------\n";
+		$tmp_config .= "// settings:\n";
+		$tmp_config .= "//-----------------------------------------------------\n";
+		$tmp_config .= "\n";
+		$tmp_config .= "	//set the database type\n";
+		$tmp_config .= "		\$db_type = '".$db_type."'; //sqlite, mysql, pgsql, others with a manually created PDO connection\n";
+		$tmp_config .= "\n";
+		if ($db_type == "sqlite") {
+			$tmp_config .= "	//sqlite: the db_name and db_path are automatically assigned however the values can be overidden by setting the values here.\n";
+			$tmp_config .= "		\$db_name = '".$db_name."'; //host name/ip address + '.db' is the default database filename\n";
+			$tmp_config .= "		\$db_path = '".$db_path."'; //the path is determined by a php variable\n";
+		}
+		$tmp_config .= "\n";
+		$tmp_config .= "	//mysql: database connection information\n";
+		if ($db_type == "mysql") {
+			if ($db_host == "localhost") {
+				//if localhost is used it defaults to a Unix Socket which doesn't seem to work.
+				//replace localhost with 127.0.0.1 so that it will connect using TCP
+				$db_host = "127.0.0.1";
+			}
+			$tmp_config .= "		\$db_host = '".$db_host."';\n";
+			$tmp_config .= "		\$db_port = '".$db_port."';\n";
+			$tmp_config .= "		\$db_name = '".$db_name."';\n";
+			$tmp_config .= "		\$db_username = '".$db_username."';\n";
+			$tmp_config .= "		\$db_password = '".$db_password."';\n";
+		}
+		else {
+			$tmp_config .= "		//\$db_host = '';\n";
+			$tmp_config .= "		//\$db_port = '';\n";
+			$tmp_config .= "		//\$db_name = '';\n";
+			$tmp_config .= "		//\$db_username = '';\n";
+			$tmp_config .= "		//\$db_password = '';\n";
+		}
+		$tmp_config .= "\n";
+		$tmp_config .= "	//pgsql: database connection information\n";
+		if ($db_type == "pgsql") {
+			$tmp_config .= "		\$db_host = '".$db_host."'; //set the host only if the database is not local\n";
+			$tmp_config .= "		\$db_port = '".$db_port."';\n";
+			$tmp_config .= "		\$db_name = '".$db_name."';\n";
+			$tmp_config .= "		\$db_username = '".$db_username."';\n";
+			$tmp_config .= "		\$db_password = '".$db_password."';\n";
+		}
+		else {
+			$tmp_config .= "		//\$db_host = '".$db_host."'; //set the host only if the database is not local\n";
+			$tmp_config .= "		//\$db_port = '".$db_port."';\n";
+			$tmp_config .= "		//\$db_name = '".$db_name."';\n";
+			$tmp_config .= "		//\$db_username = '".$db_username."';\n";
+			$tmp_config .= "		//\$db_password = '".$db_password."';\n";
+		}
+		$tmp_config .= "\n";
+		$tmp_config .= "	//show errors\n";
+		$tmp_config .= "		ini_set('display_errors', '1');\n";
+		$tmp_config .= "		//error_reporting (E_ALL); // Report everything\n";
+		$tmp_config .= "		//error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
+		$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
+		$tmp_config .= "\n";
+		$tmp_config .= "?>";
+		$fout = fopen($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php","w");
+		fwrite($fout, $tmp_config);
+		unset($tmp_config);
+		fclose($fout);
+
+	//include the new config.php file
+		require "includes/config.php";
+
 	//create the sqlite database
-			if ($db_type == "sqlite") {
-				//sqlite database will be created when the config.php is loaded and only if the database file does not exist
+		if ($db_type == "sqlite") {
+			//sqlite database will be created when the config.php is loaded and only if the database file does not exist
+				try {
+					$db_tmp = new PDO('sqlite:'.$db_path.'/'.$db_name); //sqlite 3
+					//$db_tmp = new PDO('sqlite::memory:'); //sqlite 3
+				}
+				catch (PDOException $error) {
+					print "error: " . $error->getMessage() . "<br/>";
+					die();
+				}
+
+			//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
+				if (!function_exists('php_now')) {
+					function php_now() {
+						if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get")) {
+							@date_default_timezone_set(@date_default_timezone_get());
+						}
+						return date("Y-m-d H:i:s");
+					}
+				}
+				$db_tmp->sqliteCreateFunction('now', 'php_now', 0);
+
+			//add the database structure
+				require_once "includes/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $db_tmp;
+				$schema->db_type = $db_type;
+				$schema->sql();
+				$schema->exec();
+
+			//get the contents of the sql file
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/sqlite.sql';
+				$file_contents = file_get_contents($filename);
+				unset($filename);
+
+			//replace \r\n with \n then explode on \n
+				$file_contents = str_replace("\r\n", "\n", $file_contents);
+
+			//loop line by line through all the lines of sql code
+				$db_tmp->beginTransaction();
+				$string_array = explode("\n", $file_contents);
+				$x = 0;
+				foreach($string_array as $sql) {
 					try {
-						$db_tmp = new PDO('sqlite:'.$db_path.'/'.$db_name); //sqlite 3
-						//$db_tmp = new PDO('sqlite::memory:'); //sqlite 3
+						$db_tmp->query($sql);
 					}
 					catch (PDOException $error) {
+						echo "error: " . $error->getMessage() . " sql: $sql<br/>";
+						//die();
+					}
+					$x++;
+				}
+				unset ($file_contents, $sql);
+				$db_tmp->commit();
+		}
+
+	//create the pgsql database
+		if ($db_type == "pgsql") {
+
+			//echo "DB Name: {$db_name}<br>";
+			//echo "DB Host: {$db_host}<br>";
+			//echo "DB User: {$db_username}<br>";
+			//echo "DB Pass: {$db_password}<br>";
+			//echo "DB Port: {$db_port}<br>";
+			//echo "DB Create User: {$db_create_username}<br>";
+			//echo "DB Create Pass: {$db_create_password}<br>";
+
+			//if $db_create_username provided, attempt to create new PG role and database
+				if (strlen($db_create_username) > 0) {
+					try {
+						if (strlen($db_port) == 0) { $db_port = "5432"; }
+						if (strlen($db_host) > 0) {
+							$db_tmp = new PDO("pgsql:host={$db_host} port={$db_port} user={$db_create_username} password={$db_create_password} dbname=template1");
+						} else {
+							$db_tmp = new PDO("pgsql:host=localhost port={$db_port} user={$db_create_username} password={$db_create_password} dbname=template1");
+						}
+					} catch (PDOException $error) {
 						print "error: " . $error->getMessage() . "<br/>";
 						die();
 					}
 
-				//add additional functions to SQLite - bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
-					if (!function_exists('php_now')) {
-						function php_now() {
-							if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get")) {
-								@date_default_timezone_set(@date_default_timezone_get());
-							}
-							return date("Y-m-d H:i:s");
-						}
+					//create the database, user, grant perms
+					$db_tmp->exec("CREATE DATABASE {$db_name}");
+					$db_tmp->exec("CREATE USER {$db_username} WITH PASSWORD '{$db_password}'");
+					$db_tmp->exec("GRANT ALL ON {$db_name} TO {$db_username}");
+
+					//close database connection_aborted
+					$db_tmp = null;
+				}
+
+			//open database connection with $db_name
+				try {
+					if (strlen($db_port) == 0) { $db_port = "5432"; }
+					if (strlen($db_host) > 0) {
+						$db_tmp = new PDO("pgsql:host={$db_host} port={$db_port} dbname={$db_name} user={$db_username} password={$db_password}");
+					} else {
+						$db_tmp = new PDO("pgsql:host=localhost port={$db_port} user={$db_username} password={$db_password} dbname={$db_name}");
 					}
-					$db_tmp->sqliteCreateFunction('now', 'php_now', 0);
+				}
+				catch (PDOException $error) {
+					print "error: " . $error->getMessage() . "<br/>";
+					die();
+				}
 
-				//add the database structure
-					require_once "includes/classes/schema.php";
-					$schema = new schema;
-					$schema->db = $db_tmp;
-					$schema->db_type = $db_type;
-					$schema->sql();
-					$schema->exec();
+			//add the database structure
+				require_once "includes/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $db_tmp;
+				$schema->db_type = $db_type;
+				$schema->sql();
+				$schema->exec();
 
-				//get the contents of the sql file
-					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/sqlite.sql';
-					$file_contents = file_get_contents($filename);
-					unset($filename);
+			//get the contents of the sql file
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/pgsql.sql';
+				$file_contents = file_get_contents($filename);
 
-				//replace \r\n with \n then explode on \n
-					$file_contents = str_replace("\r\n", "\n", $file_contents);
+			//replace \r\n with \n then explode on \n
+				$file_contents = str_replace("\r\n", "\n", $file_contents);
 
-				//loop line by line through all the lines of sql code
-					$db_tmp->beginTransaction();
-					$stringarray = explode("\n", $file_contents);
-					$x = 0;
-					foreach($stringarray as $sql) {
+			//loop line by line through all the lines of sql code
+				$string_array = explode("\n", $file_contents);
+				$x = 0;
+				foreach($string_array as $sql) {
+					if (strlen($sql) > 3) {
 						try {
 							$db_tmp->query($sql);
 						}
 						catch (PDOException $error) {
 							echo "error: " . $error->getMessage() . " sql: $sql<br/>";
-							//die();
-						}
-						$x++;
-					}
-					unset ($file_contents, $sql);
-					$db_tmp->commit();
-			}
-
-	//create the pgsql database
-			if ($db_type == "pgsql") {
-
-				//echo "DB Name: {$db_name}<br>";
-				//echo "DB Host: {$db_host}<br>";
-				//echo "DB User: {$db_username}<br>";
-				//echo "DB Pass: {$db_password}<br>";
-				//echo "DB Port: {$db_port}<br>";
-				//echo "DB Create User: {$db_create_username}<br>";
-				//echo "DB Create Pass: {$db_create_password}<br>";
-
-				//if $db_create_username provided, attempt to create new PG role and database
-					if (strlen($db_create_username) > 0) {
-						try {
-							if (strlen($db_port) == 0) { $db_port = "5432"; }
-							if (strlen($db_host) > 0) {
-								$db_tmp = new PDO("pgsql:host={$db_host} port={$db_port} user={$db_create_username} password={$db_create_password} dbname=template1");
-							} else {
-								$db_tmp = new PDO("pgsql:host=localhost port={$db_port} user={$db_create_username} password={$db_create_password} dbname=template1");
-							}
-						} catch (PDOException $error) {
-							print "error: " . $error->getMessage() . "<br/>";
 							die();
 						}
-
-						//create the database, user, grant perms
-						$db_tmp->exec("CREATE DATABASE {$db_name}");
-						$db_tmp->exec("CREATE USER {$db_username} WITH PASSWORD '{$db_password}'");
-						$db_tmp->exec("GRANT ALL ON {$db_name} TO {$db_username}");
-
-						//close database connection_aborted
-						$db_tmp = null;
 					}
+					$x++;
+				}
+				unset ($file_contents, $sql);
+		}
 
-				//open database connection with $db_name
-					try {
-						if (strlen($db_port) == 0) { $db_port = "5432"; }
-						if (strlen($db_host) > 0) {
-							$db_tmp = new PDO("pgsql:host={$db_host} port={$db_port} dbname={$db_name} user={$db_username} password={$db_password}");
-						} else {
-							$db_tmp = new PDO("pgsql:host=localhost port={$db_port} user={$db_username} password={$db_password} dbname={$db_name}");
+	//create the mysql database
+		if ($db_type == "mysql") {
+			//database connection
+				try {
+					if (strlen($db_host) == 0 && strlen($db_port) == 0) {
+						//if both host and port are empty use the unix socket
+						if (strlen($db_create_username) == 0) {
+							$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_username, $db_password);
+						}
+						else {
+							$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_create_username, $db_create_password);
 						}
 					}
-					catch (PDOException $error) {
-						print "error: " . $error->getMessage() . "<br/>";
-						die();
+					else {
+						if (strlen($db_port) == 0) {
+							//leave out port if it is empty
+							if (strlen($db_create_username) == 0) {
+								$db_tmp = new PDO("mysql:host=$db_host;", $db_username, $db_password);
+							}
+							else {
+								$db_tmp = new PDO("mysql:host=$db_host;", $db_create_username, $db_create_password);
+							}
+						}
+						else {
+							if (strlen($db_create_username) == 0) {
+								$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_username, $db_password);
+							}
+							else {
+								$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_create_username, $db_create_password);
+							}
+						}
 					}
+					$db_tmp->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					$db_tmp->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+				}
+				catch (PDOException $error) {
+					if ($v_debug) {
+						print "error: " . $error->getMessage() . "<br/>";
+					}
+				}
 
-				//add the database structure
-					require_once "includes/classes/schema.php";
-					$schema = new schema;
-					$schema->db = $db_tmp;
-					$schema->db_type = $db_type;
-					$schema->sql();
-					$schema->exec();
+			//create the table, user and set the permissions only if the db_create_username was provided
+				if (strlen($db_create_username) > 0) {
+					//select the mysql database
+						try {
+							$db_tmp->query("USE mysql;");
+						}
+						catch (PDOException $error) {
+							if ($v_debug) {
+								print "error: " . $error->getMessage() . "<br/>";
+							}
+						}
 
+					//create user and set the permissions
+						try {
+							$tmp_sql = "CREATE USER '".$db_username."'@'%' IDENTIFIED BY '".$db_password."'; ";
+							$db_tmp->query($tmp_sql);
+						}
+						catch (PDOException $error) {
+							if ($v_debug) {
+								print "error: " . $error->getMessage() . "<br/>";
+							}
+						}
+
+					//set account to unlimitted use
+						try {
+							if ($db_host == "localhost" || $db_host == "127.0.0.1") {
+								$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'localhost' ";
+								$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
+								$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+								$db_tmp->query($tmp_sql);
+
+								$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'127.0.0.1' ";
+								$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
+								$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+								$db_tmp->query($tmp_sql);
+							}
+							else {
+								$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'".$db_host."' ";
+								$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
+								$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
+								$db_tmp->query($tmp_sql);
+							}
+						}
+						catch (PDOException $error) {
+							if ($v_debug) {
+								print "error: " . $error->getMessage() . "<br/>";
+							}
+						}
+
+					//create the database and set the create user with permissions
+						try {
+							$tmp_sql = "CREATE DATABASE IF NOT EXISTS ".$db_name."; ";
+							$db_tmp->query($tmp_sql);
+						}
+						catch (PDOException $error) {
+							if ($v_debug) {
+								print "error: " . $error->getMessage() . "<br/>";
+							}
+						}
+
+					//set user permissions
+						try {
+							$db_tmp->query("GRANT ALL PRIVILEGES ON ".$db_name.".* TO '".$db_username."'@'%'; ");
+						}
+						catch (PDOException $error) {
+							if ($v_debug) {
+								print "error: " . $error->getMessage() . "<br/>";
+							}
+						}
+
+					//make the changes active
+						try {
+							$tmp_sql = "FLUSH PRIVILEGES; ";
+							$db_tmp->query($tmp_sql);
+						}
+						catch (PDOException $error) {
+							if ($v_debug) {
+								print "error: " . $error->getMessage() . "<br/>";
+							}
+						}
+
+				} //if (strlen($db_create_username) > 0)
+
+			//select the database
+				try {
+					$db_tmp->query("USE ".$db_name.";");
+				}
+				catch (PDOException $error) {
+					if ($v_debug) {
+						print "error: " . $error->getMessage() . "<br/>";
+					}
+				}
+
+			//add the database structure
+				require_once "includes/classes/schema.php";
+				$schema = new schema;
+				$schema->db = $db_tmp;
+				$schema->db_type = $db_type;
+				$schema->sql();
+				$schema->exec();
+
+			//add the defaults data into the database
 				//get the contents of the sql file
-					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/pgsql.sql';
+					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/mysql.sql';
 					$file_contents = file_get_contents($filename);
 
 				//replace \r\n with \n then explode on \n
 					$file_contents = str_replace("\r\n", "\n", $file_contents);
 
 				//loop line by line through all the lines of sql code
-					$stringarray = explode("\n", $file_contents);
+					$string_array = explode("\n", $file_contents);
 					$x = 0;
-					foreach($stringarray as $sql) {
+					foreach($string_array as $sql) {
 						if (strlen($sql) > 3) {
 							try {
+								if ($v_debug) {
+									fwrite($fp, $sql."\n");
+								}
 								$db_tmp->query($sql);
 							}
 							catch (PDOException $error) {
-								echo "error: " . $error->getMessage() . " sql: $sql<br/>";
-								die();
+								//echo "error on line $x: " . $error->getMessage() . " sql: $sql<br/>";
+								//die();
 							}
 						}
 						$x++;
 					}
 					unset ($file_contents, $sql);
-			}
-
-	//create the mysql database
-			if ($db_type == "mysql") {
-				//database connection
-					try {
-						if (strlen($db_host) == 0 && strlen($db_port) == 0) {
-							//if both host and port are empty use the unix socket
-							if (strlen($db_create_username) == 0) {
-								$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_username, $db_password);
-							}
-							else {
-								$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_create_username, $db_create_password);
-							}
-						}
-						else {
-							if (strlen($db_port) == 0) {
-								//leave out port if it is empty
-								if (strlen($db_create_username) == 0) {
-									$db_tmp = new PDO("mysql:host=$db_host;", $db_username, $db_password);
-								}
-								else {
-									$db_tmp = new PDO("mysql:host=$db_host;", $db_create_username, $db_create_password);
-								}
-							}
-							else {
-								if (strlen($db_create_username) == 0) {
-									$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_username, $db_password);
-								}
-								else {
-									$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_create_username, $db_create_password);
-								}
-							}
-						}
-						$db_tmp->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-						$db_tmp->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-					}
-					catch (PDOException $error) {
-						if ($v_debug) {
-							print "error: " . $error->getMessage() . "<br/>";
-						}
-					}
-
-				//create the table, user and set the permissions only if the db_create_username was provided
-					if (strlen($db_create_username) > 0) {
-						//select the mysql database
-							try {
-								$db_tmp->query("USE mysql;");
-							}
-							catch (PDOException $error) {
-								if ($v_debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
-							}
-
-						//create user and set the permissions
-							try {
-								$tmp_sql = "CREATE USER '".$db_username."'@'%' IDENTIFIED BY '".$db_password."'; ";
-								$db_tmp->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								if ($v_debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
-							}
-
-						//set account to unlimitted use
-							try {
-								if ($db_host == "localhost" || $db_host == "127.0.0.1") {
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'localhost' ";
-									$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-									$db_tmp->query($tmp_sql);
-
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'127.0.0.1' ";
-									$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-									$db_tmp->query($tmp_sql);
-								}
-								else {
-									$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'".$db_host."' ";
-									$tmp_sql .= "IDENTIFIED BY '".$db_password."' ";
-									$tmp_sql .= "WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0; ";
-									$db_tmp->query($tmp_sql);
-								}
-							}
-							catch (PDOException $error) {
-								if ($v_debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
-							}
-
-						//create the database and set the create user with permissions
-							try {
-								$tmp_sql = "CREATE DATABASE IF NOT EXISTS ".$db_name."; ";
-								$db_tmp->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								if ($v_debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
-							}
-
-						//set user permissions
-							try {
-								$db_tmp->query("GRANT ALL PRIVILEGES ON ".$db_name.".* TO '".$db_username."'@'%'; ");
-							}
-							catch (PDOException $error) {
-								if ($v_debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
-							}
-
-						//make the changes active
-							try {
-								$tmp_sql = "FLUSH PRIVILEGES; ";
-								$db_tmp->query($tmp_sql);
-							}
-							catch (PDOException $error) {
-								if ($v_debug) {
-									print "error: " . $error->getMessage() . "<br/>";
-								}
-							}
-
-					} //if (strlen($db_create_username) > 0)
-
-				//select the database
-					try {
-						$db_tmp->query("USE ".$db_name.";");
-					}
-					catch (PDOException $error) {
-						if ($v_debug) {
-							print "error: " . $error->getMessage() . "<br/>";
-						}
-					}
-
-				//add the database structure
-					require_once "includes/classes/schema.php";
-					$schema = new schema;
-					$schema->db = $db_tmp;
-					$schema->db_type = $db_type;
-					$schema->sql();
-					$schema->exec();
-
-				//add the defaults data into the database
-					//get the contents of the sql file
-						$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/mysql.sql';
-						$file_contents = file_get_contents($filename);
-
-					//replace \r\n with \n then explode on \n
-						$file_contents = str_replace("\r\n", "\n", $file_contents);
-
-					//loop line by line through all the lines of sql code
-						$stringarray = explode("\n", $file_contents);
-						$x = 0;
-						foreach($stringarray as $sql) {
-							if (strlen($sql) > 3) {
-								try {
-									if ($v_debug) {
-										fwrite($fp, $sql."\n");
-									}
-									$db_tmp->query($sql);
-								}
-								catch (PDOException $error) {
-									//echo "error on line $x: " . $error->getMessage() . " sql: $sql<br/>";
-									//die();
-								}
-							}
-							$x++;
-						}
-						unset ($file_contents, $sql);
-			}
+		}
 
 	//replace back slashes with forward slashes
 		$install_switch_base_dir = str_replace("\\", "/", $install_switch_base_dir);
@@ -908,7 +997,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 			$sql .= "'".$row['value']."', ";
 			$sql .= "'".$row['category']."', ";
 			$sql .= "'".$row['subcategory']."', ";
-			$sql .= "'".$row['enabled']."' ";	
+			$sql .= "'".$row['enabled']."' ";
 			$sql .= ");";
 			if ($v_debug) {
 				fwrite($fp, $sql."\n");
@@ -1085,100 +1174,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 	//unset the temporary database connection
 		unset($db_tmp);
 
-	//generate the config.php
-		$tmp_config = "<?php\n";
-		$tmp_config .= "/* \$Id\$ */\n";
-		$tmp_config .= "/*\n";
-		$tmp_config .= "	config.php\n";
-		$tmp_config .= "	Copyright (C) 2008, 2009 Mark J Crane\n";
-		$tmp_config .= "	All rights reserved.\n";
-		$tmp_config .= "\n";
-		$tmp_config .= "	Redistribution and use in source and binary forms, with or without\n";
-		$tmp_config .= "	modification, are permitted provided that the following conditions are met:\n";
-		$tmp_config .= "\n";
-		$tmp_config .= "	1. Redistributions of source code must retain the above copyright notice,\n";
-		$tmp_config .= "	   this list of conditions and the following disclaimer.\n";
-		$tmp_config .= "\n";
-		$tmp_config .= "	2. Redistributions in binary form must reproduce the above copyright\n";
-		$tmp_config .= "	   notice, this list of conditions and the following disclaimer in the\n";
-		$tmp_config .= "	   documentation and/or other materials provided with the distribution.\n";
-		$tmp_config .= "\n";
-		$tmp_config .= "	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,\n";
-		$tmp_config .= "	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY\n";
-		$tmp_config .= "	AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n";
-		$tmp_config .= "	AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,\n";
-		$tmp_config .= "	OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF\n";
-		$tmp_config .= "	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n";
-		$tmp_config .= "	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN\n";
-		$tmp_config .= "	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)\n";
-		$tmp_config .= "	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n";
-		$tmp_config .= "	POSSIBILITY OF SUCH DAMAGE.\n";
-		$tmp_config .= "*/\n";
-		$tmp_config .= "\n";
-		$tmp_config .= "//-----------------------------------------------------\n";
-		$tmp_config .= "// settings:\n";
-		$tmp_config .= "//-----------------------------------------------------\n";
-		$tmp_config .= "\n";
-		$tmp_config .= "	//set the database type\n";
-		$tmp_config .= "		\$db_type = '".$db_type."'; //sqlite, mysql, pgsql, others with a manually created PDO connection\n";
-		$tmp_config .= "\n";
-		if ($db_type == "sqlite") {
-			$tmp_config .= "	//sqlite: the db_name and db_path are automatically assigned however the values can be overidden by setting the values here.\n";
-			$tmp_config .= "		\$db_name = '".$db_name."'; //host name/ip address + '.db' is the default database filename\n";
-			$tmp_config .= "		\$db_path = '".$db_path."'; //the path is determined by a php variable\n";
-		}
-		$tmp_config .= "\n";
-		$tmp_config .= "	//mysql: database connection information\n";
-		if ($db_type == "mysql") {
-			if ($db_host == "localhost") {
-				//if localhost is used it defaults to a Unix Socket which doesn't seem to work.
-				//replace localhost with 127.0.0.1 so that it will connect using TCP
-				$db_host = "127.0.0.1";
-			}
-			$tmp_config .= "		\$db_host = '".$db_host."';\n";
-			$tmp_config .= "		\$db_port = '".$db_port."';\n";
-			$tmp_config .= "		\$db_name = '".$db_name."';\n";
-			$tmp_config .= "		\$db_username = '".$db_username."';\n";
-			$tmp_config .= "		\$db_password = '".$db_password."';\n";
-		}
-		else {
-			$tmp_config .= "		//\$db_host = '';\n";
-			$tmp_config .= "		//\$db_port = '';\n";
-			$tmp_config .= "		//\$db_name = '';\n";
-			$tmp_config .= "		//\$db_username = '';\n";
-			$tmp_config .= "		//\$db_password = '';\n";
-		}
-		$tmp_config .= "\n";
-		$tmp_config .= "	//pgsql: database connection information\n";
-		if ($db_type == "pgsql") {
-			$tmp_config .= "		\$db_host = '".$db_host."'; //set the host only if the database is not local\n";
-			$tmp_config .= "		\$db_port = '".$db_port."';\n";
-			$tmp_config .= "		\$db_name = '".$db_name."';\n";
-			$tmp_config .= "		\$db_username = '".$db_username."';\n";
-			$tmp_config .= "		\$db_password = '".$db_password."';\n";
-		}
-		else {
-			$tmp_config .= "		//\$db_host = '".$db_host."'; //set the host only if the database is not local\n";
-			$tmp_config .= "		//\$db_port = '".$db_port."';\n";
-			$tmp_config .= "		//\$db_name = '".$db_name."';\n";
-			$tmp_config .= "		//\$db_username = '".$db_username."';\n";
-			$tmp_config .= "		//\$db_password = '".$db_password."';\n";
-		}
-		$tmp_config .= "\n";
-		$tmp_config .= "	//show errors\n";
-		$tmp_config .= "		ini_set('display_errors', '1');\n";
-		$tmp_config .= "		//error_reporting (E_ALL); // Report everything\n";
-		$tmp_config .= "		//error_reporting (E_ALL ^ E_NOTICE); // Report everything\n";
-		$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
-		$tmp_config .= "\n";
-		$tmp_config .= "?>";
-
-		$fout = fopen($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php","w");
-		fwrite($fout, $tmp_config);
-		unset($tmp_config);
-		fclose($fout);
-
-	//include the new config.php file
+	//include additional files
 		require "includes/require.php";
 
 	//set the defaults
@@ -1524,7 +1520,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "			<input type='hidden' name='db_type' value='$db_type'>\n";
 		echo "			<input type='hidden' name='admin_username' value='$admin_username'>\n";
 		echo "			<input type='hidden' name='admin_password' value='$admin_password'>\n";
-		echo "			<input type='hidden' name='install_secure_dir' value='$install_secure_dir'>\n";
 		echo "			<input type='hidden' name='install_switch_base_dir' value='$install_switch_base_dir'>\n";
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_backup_dir' value='$install_backup_dir'>\n";
@@ -1639,7 +1634,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "			<input type='hidden' name='db_type' value='$db_type'>\n";
 		echo "			<input type='hidden' name='admin_username' value='$admin_username'>\n";
 		echo "			<input type='hidden' name='admin_password' value='$admin_password'>\n";
-		echo "			<input type='hidden' name='install_secure_dir' value='$install_secure_dir'>\n";
 		echo "			<input type='hidden' name='install_switch_base_dir' value='$install_switch_base_dir'>\n";
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_backup_dir' value='$install_backup_dir'>\n";
@@ -1752,7 +1746,6 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 		echo "			<input type='hidden' name='db_type' value='$db_type'>\n";
 		echo "			<input type='hidden' name='admin_username' value='$admin_username'>\n";
 		echo "			<input type='hidden' name='admin_password' value='$admin_password'>\n";
-		echo "			<input type='hidden' name='install_secure_dir' value='$install_secure_dir'>\n";
 		echo "			<input type='hidden' name='install_switch_base_dir' value='$install_switch_base_dir'>\n";
 		echo "			<input type='hidden' name='install_tmp_dir' value='$install_tmp_dir'>\n";
 		echo "			<input type='hidden' name='install_backup_dir' value='$install_backup_dir'>\n";
