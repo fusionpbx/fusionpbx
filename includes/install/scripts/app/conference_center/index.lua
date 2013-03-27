@@ -150,6 +150,16 @@
 		--set the end epoch
 			end_epoch = os.time();
 
+		--connect to the database
+			--ODBC - data source name
+				if (dsn_name) then
+					dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
+				end
+			--FreeSWITCH core db handler
+				if (db_type == "sqlite") then
+					dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
+				end
+
 		--get the conference sessions
 			sql = [[SELECT count(*) as num_rows 
 				FROM v_conference_sessions
@@ -295,6 +305,8 @@
 					end);
 			end
 
+		--close the database connection
+			dbh:release();
 	end
 
 --make sure the session is ready
@@ -430,6 +442,9 @@
 				end);
 				freeswitch.consoleLog("INFO","conference_room_uuid: " .. conference_room_uuid .. "\n");
 			end
+
+		--close the database connection
+			dbh:release();
 
 		--set the meeting uuid
 			session:setVariable("meeting_uuid", meeting_uuid);
