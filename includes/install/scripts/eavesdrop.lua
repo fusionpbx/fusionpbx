@@ -27,13 +27,23 @@ digit_timeout = "5000";
 
 extension = argv[1];
 
---database
-	--connect to the database
-		--local dbh = freeswitch.Dbh("dsn","user","pass"); -- when using ODBC
-		local dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/config.lua");
 
-	--exits the script if we didn't connect properly
-		assert(dbh:connected());
+--add the file_exists function
+	dofile(scripts_dir.."/resources/functions/file_exists.lua");
+
+--connect to the database
+	if (file_exists(database_dir.."/core.db") then
+		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+	else
+		dbh = freeswitch.Dbh(database["switch"]);
+	end
+
+--exits the script if we didn't connect properly
+	assert(dbh:connected());
 
 if ( session:ready() ) then
 	session:answer( );

@@ -101,33 +101,48 @@ if ($domains_processed == 1) {
 			if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
 				$tmp .= "	sounds_dir = \"".$_SESSION['switch']['sounds']['dir']."\";\n";
 			}
+			if (strlen($_SESSION['switch']['db']['dir']) > 0) {
+				$tmp .= "	database_dir = \"".$_SESSION['switch']['db']['dir']."\";\n";
+			}
 			if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
 				$tmp .= "	recordings_dir = \"".$recordings_dir."\";\n";
 			}
 			$tmp .= "\n";
-			$tmp .= "--database connection info\n";
-			if (strlen($db_type) > 0) {
-				$tmp .= "	db_type = \"".$db_type."\";\n";
+			$tmp .= "--define the database array\n";
+			$tmp .= "	database = {}\n";
+
+			$tmp .= "\n";
+			$tmp .= "--database information\n";
+			$tmp .= "	database[\"type\"] = \"".$db_type."\";\n";
+			$tmp .= "	database[\"name\"] = \"".$db_name."\";\n";
+			$tmp .= "	database[\"path\"] = \"".$db_path."\";\n";
+			if ($db_type == "pgsql") {
+				if ($db_host = "localhost") { $db_host = "127.0.0.1"; }
+				$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='-c client_min_messages=NOTICE' application_name='".$db_name."'\";\n";
+				$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='-c client_min_messages=NOTICE' application_name='freeswitch'\";\n";
 			}
-			if (strlen($db_name) > 0) {
-				$tmp .= "	db_name = \"".$db_name."\";\n";
+			elseif ($db_type == "sqlite") {
+				$tmp .= "	database[\"system\"] = \"sqlite://".$db_path."/".$db_name."\";\n";
+				$tmp .= "	database[\"switch\"] = \"sqlite://".$_SESSION['switch']['db']['dir']."\";\n";
 			}
-			if (strlen($db_path) > 0) {
-				$tmp .= "	db_path = \"".$db_path."\";\n";
+			elseif ($db_type == "mysql") {
+				if (strlen($dsn_name) > 0) {
+					$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password.";\"\n";
+					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password.";\"\n";
+				}
+				else {
+					$tmp .= "	database[\"system\"] = \"\"\n";
+					$tmp .= "	database[\"switch\"] = \"\"\n";
+				}
 			}
-			if (strlen($dsn_name) > 0) {
-				$tmp .= "	dsn_name = \"".$dsn_name."\";\n";
-			}
-			if (strlen($dsn_username) > 0) {
-				$tmp .= "	dsn_username = \"".$dsn_username."\";\n";
-			}
-			if (strlen($dsn_password) > 0) {
-				$tmp .= "	dsn_password = \"".$dsn_password."\";\n";
-			}
+
 			$tmp .= "\n";
 			$tmp .= "--additional info\n";
 			$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
-			$tmp .= "	tmp_dir = \"".$tmp_dir."\";\n";
+			$tmp .= "	temp_dir = \"".$_SESSION['server']['temp']['dir']."\";\n";
+			$tmp .= "\n";
+			$tmp .= "--include local.lua\n";
+			$tmp .= "	include = loadfile(scripts_dir .. \"/resources/local.lua\"); if (include ~= nil) then include(); end\n";
 			fwrite($fout, $tmp);
 			unset($tmp);
 			fclose($fout);

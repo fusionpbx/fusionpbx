@@ -30,14 +30,7 @@
 	digit_timeout = 5000;
 
 --connect to the database
-	--ODBC - data source name
-		if (dsn_name) then
-			dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
-		end
-	--FreeSWITCH core db handler
-		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
-		end
+	dbh = freeswitch.Dbh(database["system"]);
 
 --prepare the api object
 	api = freeswitch.API();
@@ -151,14 +144,7 @@
 			end_epoch = os.time();
 
 		--connect to the database
-			--ODBC - data source name
-				if (dsn_name) then
-					dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
-				end
-			--FreeSWITCH core db handler
-				if (db_type == "sqlite") then
-					dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
-				end
+			dbh = freeswitch.Dbh(database["system"]);
 
 		--get the conference sessions
 			sql = [[SELECT count(*) as num_rows 
@@ -612,6 +598,9 @@
 						end
 					end
 				end
+
+			--close the database connection
+				dbh:release();
 
 			--send the call to the conference
 				profile = "default";

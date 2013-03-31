@@ -14,12 +14,17 @@
 		--action	set		park_music=$${hold_music}
 		--action	lua		park.lua
 
---connect to the database
-	--ODBC - data source name
-		--local dbh = freeswitch.Dbh("name","user","pass");
-	--FreeSWITCH core db
-		local dbh = freeswitch.Dbh("core:park");
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/config.lua");
 
+--connect to the database
+	--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+	dbh = freeswitch.Dbh("sqlite://"..database_dir.."/park.db");
+	--dbh = freeswitch.Dbh(database["system"]);
+
+--exits the script if we didn't connect properly
+	assert(dbh:connected());
 --get the session variables
 	sounds_dir = session:getVariable("sounds_dir");
 	park_direction = session:getVariable("park_direction");
