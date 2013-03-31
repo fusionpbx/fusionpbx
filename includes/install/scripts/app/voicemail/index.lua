@@ -49,14 +49,7 @@
 	password_tries = 0;
 
 --connect to the database
-	--ODBC - data source name
-		if (dsn_name) then
-			dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
-		end
-	--FreeSWITCH core db handler
-		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
-		end
+	dbh = freeswitch.Dbh(database["system"]);
 
 --set the api
 	api = freeswitch.API();
@@ -282,7 +275,7 @@
 	end
 
 --close the database connection
-	--dbh:release();
+	dbh:release();
 
 --notes
 	--record the video

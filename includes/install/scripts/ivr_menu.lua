@@ -31,20 +31,12 @@
 	debug["dtmf"] = false;
 	debug["tries"] = false;
 
---include the lua script
+--include config.lua
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	include = assert(loadfile(scripts_dir .. "/resources/config.lua")); include();
-	include = loadfile(scripts_dir .. "/resources/local.lua"); if (include ~= nil) then include(); end
+	dofile(scripts_dir.."/resources/config.lua");
 
 --connect to the database
-	--ODBC - data source name
-		if (dsn_name) then
-			dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
-		end
-	--FreeSWITCH core db handler
-		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
-		end
+	dbh = freeswitch.Dbh(database["system"]);
 
 --get the variables
 	domain_name = session:getVariable("domain_name");

@@ -30,22 +30,20 @@
 --set the debug options
 	debug["sql"] = false;
 
---include the lua script
+--include config.lua
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	include = assert(loadfile(scripts_dir .. "/resources/config.lua")); include();
-	include = loadfile(scripts_dir .. "/resources/local.lua"); if (include ~= nil) then include(); end
+	dofile(scripts_dir.."/resources/config.lua");
 
 --connect to the database
-	--ODBC - data source name
-		if (switch_dsn_name) then
-			dbh = freeswitch.Dbh(switch_dsn_name,switch_dsn_username,switch_dsn_password);
-		end
-	--FreeSWITCH core db handler
-		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
-		end
-	--exit the script if we didn't connect properly
-		assert(dbh:connected());
+	if (file_exists(database_dir.."/core.db") then
+		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
+		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+	else
+		dbh = freeswitch.Dbh(database["switch"]);
+	end
+
+--exits the script if we didn't connect properly
+	assert(dbh:connected());
 
 if ( session:ready() ) then
 	--answer the session

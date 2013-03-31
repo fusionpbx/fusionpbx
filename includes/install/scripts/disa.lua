@@ -82,9 +82,8 @@ if ( session:ready() ) then
 				--pin is correct
 			else
 				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-pin_or_extension_is-invalid.wav");
-                                session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-im_sorry.wav");
-                                session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-goodbye.wav");
-
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-im_sorry.wav");
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-goodbye.wav");
 				session:hangup("NORMAL_CLEARING");
 				return;
 			end

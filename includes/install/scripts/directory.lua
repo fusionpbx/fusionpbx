@@ -37,20 +37,12 @@
 	debug["info"] = false;
 	debug["sql"] = false;
 
---include the lua script
+--include config.lua
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	include = assert(loadfile(scripts_dir .. "/resources/config.lua"));
-	include();
+	dofile(scripts_dir.."/resources/config.lua");
 
 --connect to the database
-	--ODBC - data source name
-		if (dsn_name) then
-			dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
-		end
-	--FreeSWITCH core db handler
-		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
-		end
+	dbh = freeswitch.Dbh(database["system"]);
 
 --prepare the api object
 	api = freeswitch.API();
