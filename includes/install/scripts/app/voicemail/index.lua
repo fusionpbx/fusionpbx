@@ -269,8 +269,12 @@
 						send_email(voicemail_id, uuid);
 					end
 			else
-				--invalid voicemail
-					session:hangup();
+				--voicemail not enabled or does not exist
+					referred_by = session:getVariable("sip_h_Referred-By");
+					referred_by = referred_by:match('[%d]+');
+					if (referred_by) then
+						session:transfer(referred_by, "XML", context);
+					end
 			end
 	end
 
