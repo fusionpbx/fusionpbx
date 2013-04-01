@@ -259,46 +259,60 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$prep_statement->execute();
 						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] == 0) {
-							//add the dialplan entry
-								$dialplan_name = $ring_group_name;
-								$dialplan_order ='333';
-								$dialplan_context = $ring_group_context;
-								$dialplan_enabled = 'true';
-								$dialplan_description = $ring_group_description;
-								$app_uuid = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-								dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
-								//<condition destination_number="500" />
-								$dialplan_detail_tag = 'condition'; //condition, action, antiaction
-								$dialplan_detail_type = 'destination_number';
-								$dialplan_detail_data = '^'.$ring_group_extension.'$';
-								$dialplan_detail_order = '000';
-								$dialplan_detail_group = '1';
-								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+							//add the dialplan
+								require_once "includes/classes/database.php";
+								$database = new database;
+								$database->table = "v_dialplans";
+								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+								$database->fields['dialplan_uuid'] = $dialplan_uuid;
+								$database->fields['dialplan_name'] = $ring_group_name;
+								$database->fields['dialplan_order'] = '333';
+								$database->fields['dialplan_context'] = $ring_group_context;
+								$database->fields['dialplan_enabled'] = 'true';
+								$database->fields['dialplan_description'] = $ring_group_description;
+								$database->fields['app_uuid'] = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+								$database->add();
 
-								//<action application="set" data="ring_group_uuid="/>
-								$dialplan_detail_tag = 'action'; //condition, action, antiaction
-								$dialplan_detail_type = 'set';
-								$dialplan_detail_data = 'ring_group_uuid='.$ring_group_uuid;
-								$dialplan_detail_order = '010';
-								$dialplan_detail_group = '1';
-								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+							//add the dialplan details
+								$database->table = "v_dialplan_details";
+								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+								$database->fields['dialplan_uuid'] = $dialplan_uuid;
+								$database->fields['dialplan_detail_uuid'] = uuid();
+								$database->fields['dialplan_detail_tag'] = 'condition'; //condition, action, antiaction
+								$database->fields['dialplan_detail_type'] = 'destination_number';
+								$database->fields['dialplan_detail_data'] = '^'.$ring_group_extension.'$';
+								$database->fields['dialplan_detail_order'] = '000';
+								$database->add();
 
-								//<action application="lua" data="ring_group.lua"/>
-								$dialplan_detail_tag = 'action'; //condition, action, antiaction
-								//$dialplan_detail_type = 'transfer';
-								//$dialplan_detail_data = $ring_group_extension . ' LUA ring_group.lua';
-								$dialplan_detail_type = 'lua';
-								$dialplan_detail_data = 'ring_group.lua';
-								$dialplan_detail_order = '030';
-								$dialplan_detail_group = '1';
-								dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+							//add the dialplan details
+								$database->table = "v_dialplan_details";
+								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+								$database->fields['dialplan_uuid'] = $dialplan_uuid;
+								$database->fields['dialplan_detail_uuid'] = uuid();
+								$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+								$database->fields['dialplan_detail_type'] = 'set';
+								$database->fields['dialplan_detail_data'] = 'ring_group_uuid='.$ring_group_uuid;
+								$database->fields['dialplan_detail_order'] = '025';
+								$database->add();
+
+							//add the dialplan details
+								$database->table = "v_dialplan_details";
+								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+								$database->fields['dialplan_uuid'] = $dialplan_uuid;
+								$database->fields['dialplan_detail_uuid'] = uuid();
+								$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+								$database->fields['dialplan_detail_type'] = 'lua';
+								$database->fields['dialplan_detail_data'] = 'ring_group.lua';
+								$database->fields['dialplan_detail_order'] = '030';
+								$database->add();
 
 							//save the xml
 								save_dialplan_xml();
 
 							//apply settings reminder
 								$_SESSION["reload_xml"] = true;
+
 						}
 					}
 
