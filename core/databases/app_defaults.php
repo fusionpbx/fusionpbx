@@ -127,12 +127,12 @@ if ($domains_processed == 1) {
 			}
 			elseif ($db_type == "mysql") {
 				if (strlen($dsn_name) > 0) {
-					$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password.";\"\n";
-					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password.";\"\n";
+					$tmp .= "	database[\"system\"] = \"odbc://".$dsn_name.":".$dsn_username.":".$dsn_password."\";\n";
+					$tmp .= "	database[\"switch\"] = \"odbc://freeswitch:".$dsn_username.":".$dsn_password."\";\n";
 				}
 				else {
-					$tmp .= "	database[\"system\"] = \"\"\n";
-					$tmp .= "	database[\"switch\"] = \"\"\n";
+					$tmp .= "	database[\"system\"] = \"\";\n";
+					$tmp .= "	database[\"switch\"] = \"\";\n";
 				}
 			}
 
