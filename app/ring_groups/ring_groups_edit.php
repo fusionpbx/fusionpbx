@@ -263,6 +263,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							//add the dialplan
 								require_once "includes/classes/database.php";
 								$database = new database;
+								$database->db = $db;
 								$database->table = "v_dialplans";
 								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
 								$database->fields['dialplan_uuid'] = $dialplan_uuid;
