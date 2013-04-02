@@ -270,7 +270,7 @@ include "root.php";
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
 						//$cid_name_prefix = $row["cid_name_prefix"];
-						$call_prompt = $row["call_prompt"];
+						$this->call_prompt = $row["call_prompt"];
 					}
 				}
 				unset ($prep_statement);
@@ -283,9 +283,9 @@ include "root.php";
 					$prep_statement_2 = $db->prepare(check_sql($sql));
 					$prep_statement_2->execute();
 					$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-					$dial_string = "{group_confirm_key=exec,group_confirm_file=lua confirm.lua,instant_ringback=true,ignore_early_media=true,sip_invite_domain=".$_SESSION['domain_name'];
+					$dial_string = "{instant_ringback=true,ignore_early_media=true,sip_invite_domain=".$_SESSION['domain_name'];
 					if ($this->call_prompt == "true") {
-						$dial_string .= ",call_prompt=true";
+						$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
 					}
 					//if (strlen($this->cid_name_prefix) > 0) {
 					//	$dial_string .= ",effective_caller_id_name=".$this->cid_name_prefix."#123";
