@@ -87,6 +87,7 @@ else {
 			$range = check_str($_POST["range"]);
 			$autogen_users = check_str($_POST["autogen_users"]);
 			$toll_allow = check_str($_POST["toll_allow"]);
+			$call_timeout = check_str($_POST["call_timeout"]);
 			$call_group = check_str($_POST["call_group"]);
 			$hold_music = check_str($_POST["hold_music"]);
 			$auth_acl = check_str($_POST["auth_acl"]);
@@ -268,6 +269,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (permission_exists('extension_toll')) {
 						$sql .= "toll_allow, ";
 					}
+					if (strlen($call_timeout) > 0) {
+						$sql .= "call_timeout, ";
+					}
 					$sql .= "call_group, ";
 					$sql .= "hold_music, ";
 					$sql .= "auth_acl, ";
@@ -314,6 +318,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$user_context', ";
 					if (permission_exists('extension_toll')) {
 						$sql .= "'$toll_allow', ";
+					}
+					if (strlen($call_timeout) > 0) {
+						$sql .= "'$call_timeout', ";
 					}
 					$sql .= "'$call_group', ";
 					$sql .= "'$hold_music', ";
@@ -442,6 +449,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "user_context = '$user_context', ";
 			if (permission_exists('extension_toll')) {
 				$sql .= "toll_allow = '$toll_allow', ";
+			}
+			if (strlen($call_timeout) == 0) {
+				$sql .= "call_timeout = '$call_timeout', ";
 			}
 			$sql .= "call_group = '$call_group', ";
 			$sql .= "hold_music = '$hold_music', ";
@@ -621,6 +631,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
 			$user_context = $row["user_context"];
 			$toll_allow = $row["toll_allow"];
+			$call_timeout = $row["call_timeout"];
 			$call_group = $row["call_group"];
 			$hold_music = $row["hold_music"];
 			$auth_acl = $row["auth_acl"];
@@ -640,6 +651,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //set the defaults
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
+	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 
 //begin the page content
 	require_once "includes/header.php";
@@ -1227,10 +1239,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Call Group:\n";
+	echo "	Call Timeout:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='call_group' maxlength='255' value=\"$call_group\">\n";
+	echo "	<input class='formfld' type='text' name='call_timeout' maxlength='255' value=\"$call_timeout\">\n";
+	echo "<br />\n";
+	echo "Enter the call timeout.\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	Call Group:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='call_group' maxlength='255' value=\"$call_group\">\n";
 	echo "<br />\n";
 	echo "Enter the user call group here. Groups available by default: sales, support, billing\n";
 	echo "</td>\n";

@@ -191,6 +191,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_timeout';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'call_group';
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'callgroup';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
