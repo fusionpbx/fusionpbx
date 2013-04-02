@@ -450,7 +450,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (permission_exists('extension_toll')) {
 				$sql .= "toll_allow = '$toll_allow', ";
 			}
-			if (strlen($call_timeout) == 0) {
+			if (strlen($call_timeout) > 0) {
 				$sql .= "call_timeout = '$call_timeout', ";
 			}
 			$sql .= "call_group = '$call_group', ";
