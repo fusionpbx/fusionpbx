@@ -271,8 +271,8 @@
 			else
 				--voicemail not enabled or does not exist
 					referred_by = session:getVariable("sip_h_Referred-By");
-					referred_by = referred_by:match('[%d]+');
 					if (referred_by) then
+						referred_by = referred_by:match('[%d]+');
 						session:transfer(referred_by, "XML", context);
 					end
 			end
