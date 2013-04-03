@@ -147,152 +147,160 @@
 			dbh = freeswitch.Dbh(database["system"]);
 
 		--get the conference sessions
-			sql = [[SELECT count(*) as num_rows 
-				FROM v_conference_sessions
-				WHERE conference_session_uuid = ']] .. conference_session_uuid ..[[']];
-			status = dbh:query(sql, function(row)
-			num_rows = string.lower(row["num_rows"]);
-			end);
-			freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. " Rows:"..num_rows.."\n");
-			if (tonumber(num_rows) == 0) then
-				local sql = {}
-				table.insert(sql, "INSERT INTO v_conference_sessions ");
-				table.insert(sql, "(");
-				table.insert(sql, "conference_session_uuid, ");
-				table.insert(sql, "domain_uuid, ");
-				table.insert(sql, "meeting_uuid, ");
-				--if (conference_recording) then
-				--	table.insert(sql, "recording, ");
-				--end
-				--if (wait_mod) then
-				--	table.insert(sql, "wait_mod, ");
-				--end
-				--table.insert(sql, "start_epoch, ");
-				table.insert(sql, "profile ");
-				table.insert(sql, ") ");
-				table.insert(sql, "VALUES ");
-				table.insert(sql, "( ");
-				table.insert(sql, "'".. conference_session_uuid .."', ");
-				table.insert(sql, "'".. domain_uuid .."', ");
-				table.insert(sql, "'".. meeting_uuid .."', ");
-				--if (conference_recording) then
-				--	table.insert(sql, "'".. conference_recording .."', ");
-				--end
-				--if (wait_mod) then
-				--	table.insert(sql, "'".. wait_mod .."', ");
-				--end
-				--table.insert(sql, "'".. start_epoch .."', ");
-				table.insert(sql, "'".. profile .."' ");
-				table.insert(sql, ") ");
-				SQL_STRING = table.concat(sql, "\n");
-				dbh:query(SQL_STRING);
-				freeswitch.consoleLog("notice", "[conference] SQL: " .. SQL_STRING .. "\n");
+			if (conference_session_uuid) then
+				sql = [[SELECT count(*) as num_rows 
+					FROM v_conference_sessions
+					WHERE conference_session_uuid = ']] .. conference_session_uuid ..[[']];
+				status = dbh:query(sql, function(row)
+				num_rows = string.lower(row["num_rows"]);
+				end);
+				freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. " Rows:"..num_rows.."\n");
+				if (tonumber(num_rows) == 0) then
+					local sql = {}
+					table.insert(sql, "INSERT INTO v_conference_sessions ");
+					table.insert(sql, "(");
+					table.insert(sql, "conference_session_uuid, ");
+					table.insert(sql, "domain_uuid, ");
+					table.insert(sql, "meeting_uuid, ");
+					--if (conference_recording) then
+					--	table.insert(sql, "recording, ");
+					--end
+					--if (wait_mod) then
+					--	table.insert(sql, "wait_mod, ");
+					--end
+					--table.insert(sql, "start_epoch, ");
+					table.insert(sql, "profile ");
+					table.insert(sql, ") ");
+					table.insert(sql, "VALUES ");
+					table.insert(sql, "( ");
+					table.insert(sql, "'".. conference_session_uuid .."', ");
+					table.insert(sql, "'".. domain_uuid .."', ");
+					table.insert(sql, "'".. meeting_uuid .."', ");
+					--if (conference_recording) then
+					--	table.insert(sql, "'".. conference_recording .."', ");
+					--end
+					--if (wait_mod) then
+					--	table.insert(sql, "'".. wait_mod .."', ");
+					--end
+					--table.insert(sql, "'".. start_epoch .."', ");
+					table.insert(sql, "'".. profile .."' ");
+					table.insert(sql, ") ");
+					SQL_STRING = table.concat(sql, "\n");
+					dbh:query(SQL_STRING);
+					freeswitch.consoleLog("notice", "[conference] SQL: " .. SQL_STRING .. "\n");
+				end
 			end
 
 		--add the conference sessions details
-			local sql = {}
-			table.insert(sql, "INSERT INTO v_conference_session_details ");
-			table.insert(sql, "(");
-			table.insert(sql, "conference_session_detail_uuid, ");
-			table.insert(sql, "domain_uuid, ");
-			table.insert(sql, "conference_session_uuid, ");
-			table.insert(sql, "meeting_uuid, ");
-			table.insert(sql, "username, ");
-			table.insert(sql, "caller_id_name, ");
-			table.insert(sql, "caller_id_number, ");
-			table.insert(sql, "network_addr, ");
-			table.insert(sql, "uuid, ");
-			if (conference_moderator) then
-				table.insert(sql, "moderator, ");
+			if (conference_session_uuid) then
+				local sql = {}
+				table.insert(sql, "INSERT INTO v_conference_session_details ");
+				table.insert(sql, "(");
+				table.insert(sql, "conference_session_detail_uuid, ");
+				table.insert(sql, "domain_uuid, ");
+				table.insert(sql, "conference_session_uuid, ");
+				table.insert(sql, "meeting_uuid, ");
+				table.insert(sql, "username, ");
+				table.insert(sql, "caller_id_name, ");
+				table.insert(sql, "caller_id_number, ");
+				table.insert(sql, "network_addr, ");
+				table.insert(sql, "uuid, ");
+				if (conference_moderator) then
+					table.insert(sql, "moderator, ");
+				end
+				table.insert(sql, "start_epoch, ");
+				table.insert(sql, "end_epoch ");
+				table.insert(sql, ") ");
+				table.insert(sql, "VALUES ");
+				table.insert(sql, "( ");
+				table.insert(sql, "'".. conference_session_detail_uuid .."', ");
+				table.insert(sql, "'".. domain_uuid .."', ");
+				table.insert(sql, "'".. conference_session_uuid .."', ");
+				table.insert(sql, "'".. meeting_uuid .."', ");
+				table.insert(sql, "'".. username .."', ");
+				table.insert(sql, "'".. caller_id_name .."', ");
+				table.insert(sql, "'".. caller_id_number .."', ");
+				table.insert(sql, "'".. network_addr .."', ");
+				table.insert(sql, "'".. uuid .."', ");
+				if (conference_moderator) then
+					table.insert(sql, "'".. conference_moderator .."', ");
+				end
+				table.insert(sql, "'".. start_epoch .."', ");
+				table.insert(sql, "'".. end_epoch .."' ");
+				table.insert(sql, ") ");
+				SQL_STRING = table.concat(sql, "\n");
+				dbh:query(SQL_STRING);
 			end
-			table.insert(sql, "start_epoch, ");
-			table.insert(sql, "end_epoch ");
-			table.insert(sql, ") ");
-			table.insert(sql, "VALUES ");
-			table.insert(sql, "( ");
-			table.insert(sql, "'".. conference_session_detail_uuid .."', ");
-			table.insert(sql, "'".. domain_uuid .."', ");
-			table.insert(sql, "'".. conference_session_uuid .."', ");
-			table.insert(sql, "'".. meeting_uuid .."', ");
-			table.insert(sql, "'".. username .."', ");
-			table.insert(sql, "'".. caller_id_name .."', ");
-			table.insert(sql, "'".. caller_id_number .."', ");
-			table.insert(sql, "'".. network_addr .."', ");
-			table.insert(sql, "'".. uuid .."', ");
-			if (conference_moderator) then
-				table.insert(sql, "'".. conference_moderator .."', ");
-			end
-			table.insert(sql, "'".. start_epoch .."', ");
-			table.insert(sql, "'".. end_epoch .."' ");
-			table.insert(sql, ") ");
-			SQL_STRING = table.concat(sql, "\n");
-			dbh:query(SQL_STRING);
 
 		--if the conference is empty
-			cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
-			result = trim(api:executeString(cmd));
-			if (string.sub(result, -9) == "not found") then
-				--get the conference start_epoch
-					sql = [[SELECT start_epoch
-						FROM v_conference_session_details
-						WHERE conference_session_uuid = ']] .. conference_session_uuid ..[['
-						ORDER BY start_epoch ASC
-						LIMIT 1]];
-					status = dbh:query(sql, function(row)
-					start_epoch = string.lower(row["start_epoch"]);
-					end);
-					freeswitch.consoleLog("notice", "[conference] <conference_start_epoch> sql: " .. sql .. "\n");
+			if (conference_session_uuid) then
+				cmd = "conference "..meeting_uuid.."-"..domain_name.." xml_list";
+				result = trim(api:executeString(cmd));
+				if (string.sub(result, -9) == "not found") then
+					--get the conference start_epoch
+						sql = [[SELECT start_epoch
+							FROM v_conference_session_details
+							WHERE conference_session_uuid = ']] .. conference_session_uuid ..[['
+							ORDER BY start_epoch ASC
+							LIMIT 1]];
+						status = dbh:query(sql, function(row)
+						start_epoch = string.lower(row["start_epoch"]);
+						end);
+						freeswitch.consoleLog("notice", "[conference] <conference_start_epoch> sql: " .. sql .. "\n");
 
-				--set the conference_recording
-					conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
+					--set the conference_recording
+						conference_recording = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch) .."/"..conference_session_uuid;
 
-				--conference has ended set the end_epoch
-					local sql = {}
-					table.insert(sql, "update v_conference_sessions set ");
-					table.insert(sql, "recording = '".. conference_recording .."', ");
-					table.insert(sql, "start_epoch = '".. start_epoch .."', ");
-					table.insert(sql, "end_epoch = '".. end_epoch .."' ");
-					table.insert(sql, "where conference_session_uuid = '"..conference_session_uuid.."' ");
-					SQL_STRING = table.concat(sql, "\n");
-					freeswitch.consoleLog("notice", "[conference] SQL: " .. SQL_STRING .. "\n");
-					dbh:query(SQL_STRING);
-				--convert the wav to an mp3
-					if (record == "true") then
-						--cmd = "sox "..conference_recording..".wav -r 16000 -c 1 "..conference_recording..".mp3";
-						cmd = "/usr/bin/lame -b 32 --resample 8 -a "..conference_recording..".wav "..conference_recording..".mp3";
-						freeswitch.consoleLog("notice", "[conference] cmd: " .. cmd .. "\n");
-						os.execute(cmd);
-						--if (file_exists(conference_recording..".mp3")) then
-						--	cmd = "rm "..conference_recording..".wav";
-						--	os.execute(cmd);
-						--end
-					end
-				--send the email addresses
-					sql = [[SELECT c.contact_email FROM v_users as u, v_meeting_users as m, v_contacts as c
-						WHERE m.domain_uuid = ']] .. domain_uuid ..[['
-						AND u.user_uuid = m.user_uuid
-						AND m.meeting_uuid = ']] .. meeting_uuid ..[['
-						and u.contact_uuid = c.contact_uuid]];
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[conference] <email> SQL: " .. sql .. "\n");
-					end
-					status = dbh:query(sql, function(row)
-						if (row["contact_email"] ~= nil) then
-							contact_email = string.lower(row["contact_email"]);
-							if (string.len(contact_email) > 3) then
-								freeswitch.consoleLog("notice", "[conference] contact_email: " .. contact_email .. "\n");
-								if (record == "true") then
-									if (file_exists(conference_recording..".wav")) then
-										send_email(contact_email, "", default_language, default_dialect);
+					--conference has ended set the end_epoch
+						local sql = {}
+						table.insert(sql, "update v_conference_sessions set ");
+						table.insert(sql, "recording = '".. conference_recording .."', ");
+						table.insert(sql, "start_epoch = '".. start_epoch .."', ");
+						table.insert(sql, "end_epoch = '".. end_epoch .."' ");
+						table.insert(sql, "where conference_session_uuid = '"..conference_session_uuid.."' ");
+						SQL_STRING = table.concat(sql, "\n");
+						freeswitch.consoleLog("notice", "[conference] SQL: " .. SQL_STRING .. "\n");
+						dbh:query(SQL_STRING);
+					--convert the wav to an mp3
+						if (record == "true") then
+							--cmd = "sox "..conference_recording..".wav -r 16000 -c 1 "..conference_recording..".mp3";
+							cmd = "/usr/bin/lame -b 32 --resample 8 -a "..conference_recording..".wav "..conference_recording..".mp3";
+							freeswitch.consoleLog("notice", "[conference] cmd: " .. cmd .. "\n");
+							os.execute(cmd);
+							--if (file_exists(conference_recording..".mp3")) then
+							--	cmd = "rm "..conference_recording..".wav";
+							--	os.execute(cmd);
+							--end
+						end
+					--send the email addresses
+						sql = [[SELECT c.contact_email FROM v_users as u, v_meeting_users as m, v_contacts as c
+							WHERE m.domain_uuid = ']] .. domain_uuid ..[['
+							AND u.user_uuid = m.user_uuid
+							AND m.meeting_uuid = ']] .. meeting_uuid ..[['
+							and u.contact_uuid = c.contact_uuid]];
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[conference] <email> SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(row)
+							if (row["contact_email"] ~= nil) then
+								contact_email = string.lower(row["contact_email"]);
+								if (string.len(contact_email) > 3) then
+									freeswitch.consoleLog("notice", "[conference] contact_email: " .. contact_email .. "\n");
+									if (record == "true") then
+										if (file_exists(conference_recording..".wav")) then
+											send_email(contact_email, "", default_language, default_dialect);
+										end
 									end
 								end
 							end
-						end
-					end);
+						end);
+				end
 			end
 
 		--close the database connection
-			dbh:release();
+			if (conference_session_uuid) then
+				dbh:release();
+			end
 	end
 
 --make sure the session is ready
@@ -433,7 +441,9 @@
 			dbh:release();
 
 		--set the meeting uuid
-			session:setVariable("meeting_uuid", meeting_uuid);
+			if (meeting_uuid) then
+				session:setVariable("meeting_uuid", meeting_uuid);
+			end
 
 		if (conference_center_uuid == nil) then
 			--invalid pin number
