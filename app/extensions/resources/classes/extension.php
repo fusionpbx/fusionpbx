@@ -235,9 +235,6 @@
 										$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
 										break;
 							}
-							if (strlen($row['call_timeout']) > 0) {
-								$xml .= "      <variable name=\"call_timeout\" value=\"" . $row['call_timeout'] . "\"/>\n";
-							}
 							$xml .= "    </variables>\n";
 							$xml .= "  </user>\n";
 
