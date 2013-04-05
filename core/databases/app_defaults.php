@@ -50,6 +50,9 @@ if ($domains_processed == 1) {
 			unset($sql);
 		}
 
+	//replace the backslash with a forward slash
+		$db_path = str_replace("\\", "/", $db_path);
+
 	if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 		//get the odbc information
 			$sql = "select count(*) as num_rows from v_databases ";
@@ -116,6 +119,7 @@ if ($domains_processed == 1) {
 			$tmp .= "	database[\"type\"] = \"".$db_type."\";\n";
 			$tmp .= "	database[\"name\"] = \"".$db_name."\";\n";
 			$tmp .= "	database[\"path\"] = \"".$db_path."\";\n";
+
 			if ($db_type == "pgsql") {
 				if ($db_host = "localhost") { $db_host = "127.0.0.1"; }
 				$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='-c client_min_messages=NOTICE' application_name='".$db_name."'\";\n";
