@@ -45,7 +45,7 @@ require_once "includes/require.php";
 	}
 
 //get the http post values and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$device_mac_address = check_str($_POST["device_mac_address"]);
 		$device_mac_address = strtolower($device_mac_address);
 		$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
@@ -96,7 +96,7 @@ require_once "includes/require.php";
 	}
 
 //add or update the database
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		$msg = '';
 		if ($action == "update") {
