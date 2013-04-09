@@ -25,23 +25,23 @@
 */
 
 //normalize the mac address
-	$sql = "select hardware_phone_uuid, phone_mac_address ";
-	$sql .= "from v_hardware_phones ";
+	$sql = "select device_uuid, device_mac_address ";
+	$sql .= "from v_devices ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and (phone_mac_address like '%-%' or phone_mac_address like '%:%') ";
+	$sql .= "and (device_mac_address like '%-%' or device_mac_address like '%:%') ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach($result as $row) {
-			$hardware_phone_uuid = $row["hardware_phone_uuid"];
-			$phone_mac_address = $row["phone_mac_address"];
-			$phone_mac_address = strtolower($phone_mac_address);
-			$phone_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $phone_mac_address);
+			$device_uuid = $row["device_uuid"];
+			$device_mac_address = $row["device_mac_address"];
+			$device_mac_address = strtolower($device_mac_address);
+			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
-			$sql = "update v_hardware_phones set ";
-			$sql .= "phone_mac_address = '".$phone_mac_address."' ";
-			$sql .= "where hardware_phone_uuid = '".$hardware_phone_uuid."' ";
+			$sql = "update v_devices set ";
+			$sql .= "device_mac_address = '".$device_mac_address."' ";
+			$sql .= "where device_uuid = '".$device_uuid."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 		}

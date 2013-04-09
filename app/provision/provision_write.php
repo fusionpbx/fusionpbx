@@ -40,60 +40,60 @@ else {
 	$tmp_array = '';
 
 //get the hardware phone list
-	$sql = "select * from v_hardware_phones ";
+	$sql = "select * from v_devices ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		$phone_mac_address = $row["phone_mac_address"];
-		$phone_label = $row["phone_label"];
-		$phone_vendor = $row["phone_vendor"];
-		$phone_model = $row["phone_model"];
-		$phone_firmware_version = $row["phone_firmware_version"];
-		$phone_provision_enable = $row["phone_provision_enable"];
-		$phone_template = $row["phone_template"];
-		$phone_username = $row["phone_username"];
-		$phone_password = $row["phone_password"];
-		$phone_time_zone = $row["phone_time_zone"];
-		$phone_description = $row["phone_description"];
+		$device_mac_address = $row["device_mac_address"];
+		$device_label = $row["device_label"];
+		$device_vendor = $row["device_vendor"];
+		$device_model = $row["device_model"];
+		$device_firmware_version = $row["device_firmware_version"];
+		$device_provision_enable = $row["device_provision_enable"];
+		$device_template = $row["device_template"];
+		$device_username = $row["device_username"];
+		$device_password = $row["device_password"];
+		$device_time_zone = $row["device_time_zone"];
+		$device_description = $row["device_description"];
 
 		//use the mac address to find the vendor
-			if (strlen($phone_vendor) == 0) {
-				switch (substr($phone_mac_address, 0, 6)) {
+			if (strlen($device_vendor) == 0) {
+				switch (substr($device_mac_address, 0, 6)) {
 				case "00085d":
-					$phone_vendor = "aastra";
+					$device_vendor = "aastra";
 					break;
 				case "000e08":
-					$phone_vendor = "linksys";
+					$device_vendor = "linksys";
 					break;
 				case "0004f2":
-					$phone_vendor = "polycom";
+					$device_vendor = "polycom";
 					break;
 				case "00907a":
-					$phone_vendor = "polycom";
+					$device_vendor = "polycom";
 					break;
 				case "001873":
-					$phone_vendor = "cisco";
+					$device_vendor = "cisco";
 					break;
 				case "00045a":
-					$phone_vendor = "linksys";
+					$device_vendor = "linksys";
 					break;
 				case "000625":
-					$phone_vendor = "linksys";
+					$device_vendor = "linksys";
 					break;
 				case "001565":
-					$phone_vendor = "yealink";
+					$device_vendor = "yealink";
 					break;
 				case "000413":
-					$phone_vendor = "snom";
+					$device_vendor = "snom";
 				default:
-					$phone_vendor = "";
+					$device_vendor = "";
 				}
 			}
 
 		//set the mac address in the correct format
-			switch ($phone_vendor) {
+			switch ($device_vendor) {
 			case "aastra":
 				$mac = strtoupper($mac);
 				break;
@@ -106,7 +106,7 @@ else {
 			}
 
 		//loop through the provision template directory
-			$provision_template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$phone_template;
+			$provision_template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template;
 
 			clearstatcache();
 			$dir_list = '';
@@ -159,14 +159,14 @@ else {
 						$file_size = round(filesize($new_path)/1024, 2);
 
 						//get the contents of the template
-							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$phone_template ."/".$file_name);
+							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template ."/".$file_name);
 
 						//prepare the files
 							//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-								$file_contents = str_replace("{v_mac}", $phone_mac_address, $file_contents);
-								$file_contents = str_replace("{v_label}", $phone_label, $file_contents);
-								$file_contents = str_replace("{v_firmware_version}", $phone_firmware_version, $file_contents);
-								$file_contents = str_replace("{domain_time_zone}", $phone_time_zone, $file_contents);
+								$file_contents = str_replace("{v_mac}", $device_mac_address, $file_contents);
+								$file_contents = str_replace("{v_label}", $device_label, $file_contents);
+								$file_contents = str_replace("{v_firmware_version}", $device_firmware_version, $file_contents);
+								$file_contents = str_replace("{domain_time_zone}", $device_time_zone, $file_contents);
 								$file_contents = str_replace("{domain_name}", $_SESSION['domain_name'], $file_contents);
 								$file_contents = str_replace("{v_server1_address}", $server1_address, $file_contents);
 								$file_contents = str_replace("{v_proxy1_address}", $proxy1_address, $file_contents);
@@ -178,12 +178,12 @@ else {
 							}
 
 						//create a mac address with back slashes for backwards compatability
-							$mac_dash = substr($phone_mac_address, 0,2).'-'.substr($phone_mac_address, 2,2).'-'.substr($phone_mac_address, 4,2).'-'.substr($phone_mac_address, 6,2).'-'.substr($phone_mac_address, 8,2).'-'.substr($phone_mac_address, 10,2);
+							$mac_dash = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 
 						//lookup the provisioning information for this MAC address.
 							$sql2 = "select * from v_extensions ";
 							$sql2 .= "where domain_uuid = '$domain_uuid' ";
-							$sql2 .= "and (provisioning_list like '%|".$phone_mac_address.":%' or provisioning_list like '%|".$mac_dash.":%') ";
+							$sql2 .= "and (provisioning_list like '%|".$device_mac_address.":%' or provisioning_list like '%|".$mac_dash.":%') ";
 							$sql2 .= "and enabled = 'true' ";
 							$prep_statement_2 = $db->prepare(check_sql($sql2));
 							$prep_statement_2->execute();
@@ -197,7 +197,7 @@ else {
 										if (strlen($prov_row_array[0]) > 0) {
 											//echo "mac address: ".$prov_row_array[0]."<br />";
 											//echo "line_number: ".$prov_row_array[1]."<br />";
-											if ($prov_row_array[0] == $phone_mac_address) {
+											if ($prov_row_array[0] == $device_mac_address) {
 												$line_number = $prov_row_array[1];
 												//echo "prov_row: ".$prov_row."<br />";
 												//echo "line_number: ".$line_number."<br />";
@@ -242,13 +242,13 @@ else {
 							}
 
 						//replace {v_mac} in the file name
-							if (substr($phone_mac_address, 0, 6) == "00085d") {
+							if (substr($device_mac_address, 0, 6) == "00085d") {
 								//upper case the mac address for aastra phones
-								$file_name = str_replace("{v_mac}", strtoupper($phone_mac_address), $file_name);
+								$file_name = str_replace("{v_mac}", strtoupper($device_mac_address), $file_name);
 							}
 							else {
 								//all other phones
-								$file_name = str_replace("{v_mac}", $phone_mac_address, $file_name);
+								$file_name = str_replace("{v_mac}", $device_mac_address, $file_name);
 							}
 
 						//write the configuration to the directory
