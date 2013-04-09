@@ -187,7 +187,7 @@ require_once "includes/paging.php";
 		if ($tmp[1] == $_SESSION['domain_name']) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";			
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			echo "		<input type='hidden' name='agents[".$x."][name]' id='agent_".$x."_name' value='".$agent_name."'>\n";
 			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>No Change</label>\n";
