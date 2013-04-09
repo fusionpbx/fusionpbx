@@ -3,7 +3,7 @@
 		<condition field="destination_number" expression="^\*(3472)$">
 			<action application="answer"/>
 			<action application="set" data="pin_number={v_pin_number}"/>
-			<action application="set" data="dialplan_context={v_context}"/>
+			<action application="set" data="dialplan_context=${context}"/>
 			<action application="lua" data="disa.lua"/>
 		</condition>
 	</extension>
