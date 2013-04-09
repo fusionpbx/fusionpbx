@@ -150,41 +150,6 @@ if ($domains_processed == 1) {
 			fwrite($fout, $tmp);
 			unset($tmp);
 			fclose($fout);
-
-		//config.js
-			$fout = fopen($_SESSION['switch']['scripts']['dir']."/resources/config.js","w");
-			$tmp = "\n";
-			$tmp .= "//switch directories\n";
-			$tmp .= "	var admin_pin = \"".$row["admin_pin"]."\";\n";
-			$tmp .= "	var sounds_dir = \"".$_SESSION['switch']['sounds']['dir']."\";\n";
-			$tmp .= "	var recordings_dir = \"".$recordings_dir."\";\n";
-			$tmp .= "\n";
-			$tmp = "//database connection info\n";
-			if (strlen($db_type) > 0) {
-				$tmp .= "	var db_type = \"".$db_type."\";\n";
-			}
-			if (strlen($db_name) > 0) {
-				$tmp .= "	var db_name = \"".$db_name."\";\n";
-			}
-			if (strlen($db_path) > 0) {
-				$tmp .= "	var db_path = \"".$db_path."\";\n";
-			}
-			if (strlen($dsn_name) > 0) {
-				$tmp .= "	var dsn_name = \"".$dsn_name."\";\n";
-			}
-			if (strlen($dsn_username) > 0) {
-				$tmp .= "	var dsn_username = \"".$dsn_username."\";\n";
-			}
-			if (strlen($dsn_password) > 0) {
-				$tmp .= "	var dsn_password = \"".$dsn_password."\";\n";
-			}
-			$tmp .= "\n";
-			$tmp .= "//additional info\n";
-			$tmp .= "	var domain_count = ".count($_SESSION["domains"]).";\n";
-			$tmp .= "	var tmp_dir = \"".$tmp_dir."\";\n";
-			fwrite($fout, $tmp);
-			unset($tmp);
-			fclose($fout);
 	}
 }
 ?>
