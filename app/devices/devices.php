@@ -121,7 +121,7 @@ if ($result_count > 0) { //no results
 			echo "		<a href='device_edit.php?id=".$row['device_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 		}
 		if (permission_exists('device_delete')) {
-			echo "		<a href='hardware_device_delete.php?id=".$row['device_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='device_delete.php?id=".$row['device_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 		}
 		echo "	</td>\n";
 		echo "</tr>\n";
