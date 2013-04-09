@@ -25,7 +25,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('phone_delete')) {
+if (permission_exists('device_delete')) {
 	//access granted
 }
 else {
