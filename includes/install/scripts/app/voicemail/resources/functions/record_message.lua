@@ -86,7 +86,7 @@
 			message_length = stop_epoch - start_epoch;
 			message_length_formatted = format_seconds(message_length);
 
-		--if the recording is below the minmal length then re-record the message
+		--if the recording is below the minimal length then re-record the message
 			if (message_length > 2) then
 				--continue
 			else
