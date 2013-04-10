@@ -55,8 +55,9 @@
 		--give time for the call to be ready
 			session:streamFile("silence_stream://1000");
 
-		--get the domain name
+		--get the domain info
 			domain_name = session:getVariable("domain_name");
+			domain_uuid = session:getVariable("domain_uuid");
 
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
@@ -110,15 +111,17 @@
 	end
 
 --get the domain_uuid
-	if (domain_name ~= nil) then
-		sql = "SELECT domain_uuid FROM v_domains ";
-		sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
+	if (domain_uuid == nil) then
+		if (domain_name ~= nil) then
+			sql = "SELECT domain_uuid FROM v_domains ";
+			sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(rows)
+				domain_uuid = string.lower(rows["domain_uuid"]);
+				end);
 		end
-		status = dbh:query(sql, function(rows)
-			domain_uuid = string.lower(rows["domain_uuid"]);
-		end);
 	end
 
 --define explode
