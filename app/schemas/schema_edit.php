@@ -218,8 +218,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Category:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	$schema_name = 'v_schemas';$field_name = 'schema_category';$sql_where_optional = "";$field_current_value = $schema_category;
-	echo html_select_other($db, $schema_name, $field_name, $sql_where_optional, $field_current_value);
+	$select_name = 'v_schemas';$field_name = 'schema_category';$sql_where_optional = "";$field_current_value = $schema_category;
+	echo html_select_other($db, $select_name, $field_name, $sql_where_optional, $field_current_value);
 	echo "Select the category.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
