@@ -253,13 +253,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "select count(*) as num_rows from v_dialplans ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-					$db->exec(check_sql($sql));
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						$row = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] == 0) {
-
 							//add the dialplan
 								require_once "includes/classes/database.php";
 								$database = new database;
@@ -313,7 +311,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 							//apply settings reminder
 								$_SESSION["reload_xml"] = true;
-
 						}
 					}
 
