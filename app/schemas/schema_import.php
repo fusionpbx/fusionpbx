@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('table_edit')) {
+if (permission_exists('schema_edit')) {
 	//access granted
 }
 else {
@@ -35,16 +35,16 @@ else {
 }
 
 if (count($_POST)>0) {
-	$table_uuid = trim($_REQUEST["id"]);
+	$schema_uuid = trim($_REQUEST["id"]);
 	$data = trim($_POST["data"]);
 	$data_delimiter = trim($_POST["data_delimiter"]);
 	$data_enclosure = trim($_POST["data_enclosure"]);
 }
 
 //define the php class
-	class v_table_fields {
+	class v_schema_fields {
 		var $domain_uuid;
-		var $table_uuid;
+		var $schema_uuid;
 		var $field_label;
 		var $field_name;
 		var $field_type;
@@ -58,9 +58,9 @@ if (count($_POST)>0) {
 
 		function db_field_exists() {
 			global $db;
-			$sql = "select count(*) as num_rows from v_table_fields ";
+			$sql = "select count(*) as num_rows from v_schema_fields ";
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and table_uuid ='$this->table_uuid' ";
+			$sql .= "and schema_uuid ='$this->schema_uuid' ";
 			$sql .= "and field_name = '$this->field_name' ";
 			$prep_statement = $db->prepare($sql);
 			if ($prep_statement) {
@@ -77,11 +77,11 @@ if (count($_POST)>0) {
 
 		function db_insert() {
 			global $db;
-			$sql = "insert into v_table_fields ";
+			$sql = "insert into v_schema_fields ";
 			$sql .= "(";
-			$sql .= "table_field_uuid, ";
+			$sql .= "schema_field_uuid, ";
 			$sql .= "domain_uuid, ";
-			$sql .= "table_uuid, ";
+			$sql .= "schema_uuid, ";
 			$sql .= "field_label, ";
 			$sql .= "field_name, ";
 			$sql .= "field_type, ";
@@ -98,7 +98,7 @@ if (count($_POST)>0) {
 			$sql .= "(";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'$this->domain_uuid', ";
-			$sql .= "'$this->table_uuid', ";
+			$sql .= "'$this->schema_uuid', ";
 			$sql .= "'$this->field_label', ";
 			$sql .= "'$this->field_name', ";
 			$sql .= "'$this->field_type', ";
@@ -118,18 +118,18 @@ if (count($_POST)>0) {
 		}
 	}
 
-	class v_table_data {
+	class v_schema_data {
 		var $domain_uuid;
-		var $table_uuid;
+		var $schema_uuid;
 		var $data_row_uuid;
 		var $field_name;
 		var $data_field_value;
 		var $last_insert_id;
-		var $table_data_uuid;
+		var $schema_data_uuid;
 
 		function db_unique_id() {
 			global $db;
-			$sql = "insert into v_table_data_row_id ";
+			$sql = "insert into v_schema_data_row_id ";
 			$sql .= "(";
 			$sql .= "domain_uuid ";
 			$sql .= ")";
@@ -144,12 +144,12 @@ if (count($_POST)>0) {
 
 		function db_insert() {
 			global $db;
-			$sql = "insert into v_table_data ";
+			$sql = "insert into v_schema_data ";
 			$sql .= "(";
-			$sql .= "table_data_uuid, ";
+			$sql .= "schema_data_uuid, ";
 			$sql .= "domain_uuid, ";
 			$sql .= "data_row_uuid, ";
-			$sql .= "table_uuid, ";
+			$sql .= "schema_uuid, ";
 			$sql .= "field_name, ";
 			$sql .= "data_field_value, ";
 			$sql .= "data_add_user, ";
@@ -160,7 +160,7 @@ if (count($_POST)>0) {
 			$sql .= "'".uuid()."', ";
 			$sql .= "'$this->domain_uuid', ";
 			$sql .= "'$this->data_row_uuid', ";
-			$sql .= "'$this->table_uuid', ";
+			$sql .= "'$this->schema_uuid', ";
 			$sql .= "'$this->field_name', ";
 			$sql .= "'$this->data_field_value', ";
 			$sql .= "'".$_SESSION["username"]."', ";
@@ -173,14 +173,14 @@ if (count($_POST)>0) {
 
 		function db_update() {
 			global $db;
-			$sql  = "update v_table_data set ";
+			$sql  = "update v_schema_data set ";
 			$sql .= "data_row_uuid = '$this->data_row_uuid', ";
 			$sql .= "field_name = '$this->field_name', ";
 			$sql .= "data_field_value = '$this->data_field_value', ";
 			$sql .= "data_add_user = '".$_SESSION["username"]."', ";
 			$sql .= "data_add_date = now() ";
 			$sql .= "where domain_uuid = '$this->domain_uuid' ";
-			$sql .= "and table_data_uuid = '$this->table_data_uuid' ";
+			$sql .= "and schema_data_uuid = '$this->schema_data_uuid' ";
 			$db->exec($sql);
 			unset($sql);
 		}
@@ -209,7 +209,7 @@ if (count($_POST)>0) {
 			echo "<tr>\n";
 			echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import Results</b></td>\n";
 			echo "<td width='70%' align='right' valign='top'>\n";
-			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='tables_import.php?id=$table_uuid'\" value='Back'>\n";
+			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_import.php?id=$schema_uuid'\" value='Back'>\n";
 			echo "	<br /><br />\n";
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -230,9 +230,9 @@ if (count($_POST)>0) {
 						$field_name = str_replace("-", "_", $field_name);
 						$field_name = strtolower($field_name);
 
-						$fields = new v_table_fields;
+						$fields = new v_schema_fields;
 						$fields->domain_uuid = $domain_uuid;
-						$fields->table_uuid = $table_uuid;
+						$fields->schema_uuid = $schema_uuid;
 						$fields->field_label = $field_label;
 						$fields->field_name = $field_name;
 						$fields->field_type = 'text';
@@ -262,9 +262,9 @@ if (count($_POST)>0) {
 
 								$field_value = trim($val);
 
-								$data = new v_table_data;
+								$data = new v_schema_data;
 								$data->domain_uuid = $domain_uuid;
-								$data->table_uuid = $table_uuid;
+								$data->schema_uuid = $schema_uuid;
 								if ($x == 0) {
 									$data_row_uuid = uuid();
 									//echo "id: ".$data_row_uuid."<br />\n";
@@ -291,8 +291,7 @@ if (count($_POST)>0) {
 
 			//show the footer
 				require_once "includes/footer.php";
-
-			exit;
+				exit;
 		}
 
 
@@ -305,7 +304,7 @@ if (count($_POST)>0) {
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='tables_import.php?id=$table_uuid'\" value='Back'>\n";
+	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_import.php?id=$schema_uuid'\" value='Back'>\n";
 	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -314,7 +313,7 @@ if (count($_POST)>0) {
 	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "      <br>";
+	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";

@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('table_delete')) {
+if (permission_exists('schema_delete')) {
 	//access granted
 }
 else {
@@ -42,18 +42,17 @@ else {
 //show the header
 	require_once "includes/header.php";
 
-if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_tables ";
+if (strlen($id) > 0) {
+	$sql = "delete from v_schemas ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and table_uuid = '$id' ";
+	$sql .= "and schema_uuid = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	unset($sql);
 }
 
 //redirect the user
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=tables.php\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=schemas.php\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";

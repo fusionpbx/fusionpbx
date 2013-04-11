@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('table_data_view')) {
+if (permission_exists('schema_data_view')) {
 	//access granted
 }
 else {
@@ -35,7 +35,7 @@ else {
 }
 
 if (strlen($_GET["id"]) > 0) {
-	$table_uuid = check_str($_GET["id"]);
+	$schema_uuid = check_str($_GET["id"]);
 	if (strlen($_GET["data_parent_row_uuid"])>0) {
 		$data_parent_row_uuid = $_GET["data_parent_row_uuid"];
 	}
@@ -54,22 +54,21 @@ if (strlen($_GET["id"]) > 0) {
 //show the header
 	require_once "includes/header.php";
 
-//get the information about the table by using the id
-	$sql = "";
-	$sql .= "select * from v_tables ";
+//get the information about the schema by using the id
+	$sql = "select * from v_schemas ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and table_uuid = '$table_uuid' ";
+	$sql .= "and schema_uuid = '$schema_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as &$row) {
-		$table_category = $row["table_category"];
-		$table_label = $row["table_label"];
-		$table_name = $row["table_name"];
-		$table_auth = $row["table_auth"];
-		$table_captcha = $row["table_captcha"];
-		$table_parent_uuid = $row["table_parent_uuid"];
-		$table_description = $row["table_description"];
+		$schema_category = $row["schema_category"];
+		$schema_label = $row["schema_label"];
+		$schema_name = $row["schema_name"];
+		$schema_auth = $row["schema_auth"];
+		$schema_captcha = $row["schema_captcha"];
+		$schema_parent_uuid = $row["schema_parent_uuid"];
+		$schema_description = $row["schema_description"];
 		break; //limit to 1 row
 	}
 	unset ($prep_statement);
@@ -78,9 +77,9 @@ if (strlen($_GET["id"]) > 0) {
 	$db_field_name_array = array();
 	$db_value_array = array();
 	$db_names .= "<tr>\n";
-	$sql = "select * from v_table_fields ";
+	$sql = "select * from v_schema_fields ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and table_uuid = '$table_uuid' ";
+	$sql .= "and schema_uuid = '$schema_uuid' ";
 	$sql .= "order by field_order asc ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
@@ -112,19 +111,19 @@ if (strlen($_GET["id"]) > 0) {
 
 //get the data
 	$sql = "";
-	$sql .= "select * from v_table_data ";
+	$sql .= "select * from v_schema_data ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	if (strlen($search_all) == 0) {
-		$sql .= "and table_uuid = '$table_uuid' ";
+		$sql .= "and schema_uuid = '$schema_uuid' ";
 		if (strlen($data_parent_row_uuid) > 0) {
 			$sql .= " and data_parent_row_uuid = '$data_parent_row_uuid' ";
 		}
 	}
 	else {
 		$sql .= "and data_row_uuid in (";
-		$sql .= "select data_row_uuid from v_table_data \n";
+		$sql .= "select data_row_uuid from v_schema_data \n";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
-		$sql .= "and table_uuid = '$table_uuid' ";
+		$sql .= "and schema_uuid = '$schema_uuid' ";
 		if (strlen($data_parent_row_uuid) == 0) {
 			$tmp_digits = preg_replace('{\D}', '', $search_all);
 			if (is_numeric($tmp_digits) && strlen($tmp_digits) > 5) {
@@ -155,9 +154,9 @@ if (strlen($_GET["id"]) > 0) {
 
 		//restructure the data by setting it the value_array
 			$value_array[$data_row_uuid][$field_name] = $row[data_field_value];
-			$value_array[$data_row_uuid]['table_uuid'] = $row[table_uuid];
+			$value_array[$data_row_uuid]['schema_uuid'] = $row["schema_uuid"];
 			$value_array[$data_row_uuid]['data_row_uuid'] = $row[data_row_uuid];
-			$value_array[$data_row_uuid]['table_parent_uuid'] = $row[table_parent_uuid];
+			$value_array[$data_row_uuid]['schema_parent_uuid'] = $row[schema_parent_uuid];
 			$value_array[$data_row_uuid]['data_parent_row_uuid'] = $row[data_parent_row_uuid];
 	}
 	$num_rows = count($value_array);
@@ -175,9 +174,9 @@ if (strlen($_GET["id"]) > 0) {
 	$sql = "CREATE TABLE memory_table ";
 	$sql .= "(";
 	$sql .= "'id' INTEGER PRIMARY KEY, ";
-	$sql .= "'table_uuid' TEXT, ";
+	$sql .= "'schema_uuid' TEXT, ";
 	$sql .= "'data_row_uuid' TEXT, ";
-	$sql .= "'table_parent_uuid' TEXT, ";
+	$sql .= "'schema_parent_uuid' TEXT, ";
 	$sql .= "'data_parent_row_uuid' TEXT, ";
 	foreach($result_names as $row) {
 		if ($row["field_type"] != "label") {
@@ -207,9 +206,9 @@ if (strlen($_GET["id"]) > 0) {
 		//insert the data into the memory table
 			$sql = "insert into memory_table ";
 			$sql .= "(";
-			$sql .= "'table_uuid', ";
+			$sql .= "'schema_uuid', ";
 			$sql .= "'data_row_uuid', ";
-			$sql .= "'table_parent_uuid', ";
+			$sql .= "'schema_parent_uuid', ";
 			$sql .= "'data_parent_row_uuid', ";
 			//foreach($array as $key => $value) {
 			//	$sql .= "'$key', ";
@@ -221,9 +220,9 @@ if (strlen($_GET["id"]) > 0) {
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
-			$sql .= "'".$array['table_uuid']."', ";
+			$sql .= "'".$array['schema_uuid']."', ";
 			$sql .= "'".$array['data_row_uuid']."', ";
-			$sql .= "'".$array['table_parent_uuid']."', ";
+			$sql .= "'".$array['schema_parent_uuid']."', ";
 			$sql .= "'".$array['data_parent_row_uuid']."', ";
 			//foreach($array as $key => $value) {
 			//	$sql .= "'$value', ";
@@ -247,15 +246,15 @@ if (strlen($_GET["id"]) > 0) {
 	echo "<br />\n";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	<td align='left' valign='top'><strong>$table_label</strong><br>\n";
-	echo "		$table_description\n";
+	echo "	<td align='left' valign='top'><strong>$schema_label</strong><br>\n";
+	echo "		$schema_description\n";
 	echo "	</td>\n";
 	echo "	<td align='right' valign='top'>\n";
 	if (strlen($data_parent_row_uuid) == 0) {
 		$search_all = str_replace("''", "'", $search_all);
 		echo "<form method='GET' name='frm_search' action=''>\n";
 		echo "	<input class='formfld' type='text' name='search_all' value=\"$search_all\">\n";
-		echo "	<input type='hidden' name='id' value='$table_uuid'>\n";
+		echo "	<input type='hidden' name='id' value='$schema_uuid'>\n";
 		echo "	<input type='hidden' name='data_parent_row_uuid' value='$data_parent_row_uuid'>\n";
 		echo "	<input class='btn' type='submit' name='submit' value='Search All'>\n";
 		echo "</form>\n";
@@ -271,11 +270,11 @@ if (strlen($_GET["id"]) > 0) {
 	$param = "";
 	$page = $_GET['page'];
 	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-	if (strlen($table_parent_uuid) > 0) {
-		$param = "&id=$table_parent_uuid&data_row_uuid=$data_row_uuid";
+	if (strlen($schema_parent_uuid) > 0) {
+		$param = "&id=$schema_parent_uuid&data_row_uuid=$data_row_uuid";
 	}
 	else {
-		$param = "&id=$table_uuid&data_row_uuid=$data_row_uuid";
+		$param = "&id=$schema_uuid&data_row_uuid=$data_row_uuid";
 	}
 	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
 	$offset = $rows_per_page * $page;
@@ -301,8 +300,8 @@ if (strlen($_GET["id"]) > 0) {
 		}
 	}
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('table_data_add')) {
-		echo "	<a href='table_data_edit.php?table_uuid=".$table_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('schema_data_add')) {
+		echo "	<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -354,16 +353,16 @@ if (strlen($_GET["id"]) > 0) {
 		}
 
 		echo "<td valign='top' align='right' nowrap='nowrap'>\n";
-		if (permission_exists('tables_data_edit')) {
+		if (permission_exists('schema_data_edit')) {
 			if (strlen($data_parent_row_uuid) == 0) {
-				echo "	<a href='table_data_edit.php?table_uuid=".$row[table_uuid]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."&search_all=$search_all' alt='edit'>$v_link_label_edit</a>\n";
+				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."&search_all=$search_all' alt='edit'>$v_link_label_edit</a>\n";
 			}
 			else {
-				echo "	<a href='table_data_edit.php?table_uuid=".$row[table_uuid]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
 		}
-		if (permission_exists('table_data_delete')) {
-			echo"	<a href='table_data_delete.php?data_row_uuid=".$row['data_row_uuid']."&data_parent_row_uuid=$data_parent_row_uuid&table_uuid=".$table_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+		if (permission_exists('schema_delete')) {
+			echo"	<a href='schema_delete.php?data_row_uuid=".$row['data_row_uuid']."&data_parent_row_uuid=$data_parent_row_uuid&schema_uuid=".$schema_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 		}
 		echo "</td>\n";
 
@@ -379,8 +378,8 @@ if (strlen($_GET["id"]) > 0) {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('table_data_add')) {
-		echo "			<a href='table_data_edit.php?table_uuid=".$table_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('schema_data_add')) {
+		echo "			<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('table_data_delete')) {
+if (permission_exists('schema_delete')) {
 	//access granted
 }
 else {
@@ -37,45 +37,45 @@ else {
 if (count($_GET)>0) {
 
 	//declare variable(s)
-		$table_parent_id = '';
+		$schema_parent_id = '';
 
 	//get the http get and set them as php variables
 		$data_row_uuid = check_str($_GET["data_row_uuid"]);
 		$data_parent_row_uuid = check_str($_GET["data_parent_row_uuid"]);
-		$table_uuid = check_str($_GET["table_uuid"]);
+		$schema_uuid = check_str($_GET["schema_uuid"]);
 
 	//show the results and redirect
 		require_once "includes/header.php";
 
-	//get the table_parent_id from the child table
-		if (strlen($table_parent_id) == 0) {
-			$sql = "select * from v_tables ";
+	//get the schema_parent_id from the child table
+		if (strlen($schema_parent_id) == 0) {
+			$sql = "select * from v_schemas ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and table_uuid = '$table_uuid' ";
+			$sql .= "and schema_uuid = '$schema_uuid' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
-				$table_parent_id = $row["table_parent_id"];
+				$schema_parent_id = $row["schema_parent_id"];
 			}
 		}
 
 	//delete the child data
-		$sql = "delete from v_table_data ";
+		$sql = "delete from v_schema_data ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and data_parent_row_uuid = '$data_row_uuid' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
 	//delete the data
-		$sql = "delete from v_table_data ";
+		$sql = "delete from v_schema_data ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and data_row_uuid = '$data_row_uuid' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
 	//mark the the item as deleted and who deleted it
-		//$sql  = "update v_table_data set ";
+		//$sql  = "update v_schema_data set ";
 		//$sql .= "data_del_date = now(), ";
 		//$sql .= "data_del_user = '".$_SESSION["username"]."' ";
 		//$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -86,10 +86,10 @@ if (count($_GET)>0) {
 
 	//set the meta redirect
 		if (strlen($data_parent_row_uuid) == 0) {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=table_data_view.php?id=$table_uuid&data_row_uuid=$data_row_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_view.php?id=$schema_uuid&data_row_uuid=$data_row_uuid\">\n";
 		}
 		else {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=table_data_edit.php?table_uuid=$table_parent_id&data_row_uuid=$data_parent_row_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid\">\n";
 		}
 
 	//show a message to the user before the redirect
