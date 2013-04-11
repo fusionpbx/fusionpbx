@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('table_data_add') || permission_exists('tables_data_edit')) {
+if (permission_exists('schema_data_add') || permission_exists('schema_data_edit')) {
 	//access granted
 }
 else {
@@ -36,7 +36,7 @@ else {
 
 //set http get variables to php variables
 	$search_all = check_str($_GET["search_all"]);
-	$table_uuid = check_str($_GET["table_uuid"]);
+	$schema_uuid = check_str($_GET["schema_uuid"]);
 	if (strlen($_GET["data_row_uuid"])>0) { //update
 		$data_row_uuid = check_str($_GET["data_row_uuid"]);
 		$action = "update";
@@ -50,45 +50,44 @@ else {
 		}
 	}
 	if (strlen($_GET["id"]) > 0) {
-		$table_uuid = check_str($_GET["id"]);
+		$schema_uuid = check_str($_GET["id"]);
 	}
 	if (strlen($_GET["data_parent_row_uuid"])>0) {
 		$data_parent_row_uuid = check_str($_GET["data_parent_row_uuid"]);
 	}
 
-//get table information
-	$sql = "";
-	$sql .= "select * from v_tables ";
+//get schema information
+	$sql = "select * from v_schemas ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and table_uuid = '$table_uuid' ";
+	$sql .= "and schema_uuid = '$schema_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		$table_category = $row["table_category"];
-		$table_label = $row["table_label"];
-		$table_name = $row["table_name"];
-		$table_auth = $row["table_auth"];
-		$table_captcha = $row["table_captcha"];
-		$table_parent_id = $row["table_parent_id"];
-		$table_description = $row["table_description"];
+		$schema_category = $row["schema_category"];
+		$schema_label = $row["schema_label"];
+		$schema_name = $row["schema_name"];
+		$schema_auth = $row["schema_auth"];
+		$schema_captcha = $row["schema_captcha"];
+		$schema_parent_id = $row["schema_parent_id"];
+		$schema_description = $row["schema_description"];
 		break; //limit to 1 row
 	}
 	unset ($prep_statement);
 
 //process the data submitted to by the html form
 	if (count($_POST)>0) { //add
-		$table_uuid = check_str($_POST["table_uuid"]);
-		$table_name = check_str($_POST["table_name"]);
+		$schema_uuid = check_str($_POST["schema_uuid"]);
+		$schema_name = check_str($_POST["schema_name"]);
 		$rcount = check_str($_POST["rcount"]);
 
 		//get the field information
 			$db_field_name_array = array();
 			$db_value_array = array();
 			$db_names .= "<tr>\n";
-			$sql = "select * from v_table_fields ";
+			$sql = "select * from v_schema_fields ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and table_uuid = '$table_uuid' ";
+			$sql .= "and schema_uuid = '$schema_uuid' ";
 			$sql .= "order by field_order asc ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
@@ -126,9 +125,9 @@ else {
 				$unique_temp_id = md5('7k3j2m'.date('r')); //used to find the first item
 				$data_row_uuid = $unique_temp_id;
 			}
-			$sql = "select field_type, field_name from v_table_fields ";
+			$sql = "select field_type, field_name from v_schema_fields ";
 			$sql .= "where domain_uuid  = '$domain_uuid' ";
-			$sql .= "and table_uuid  = '$table_uuid' ";
+			$sql .= "and schema_uuid  = '$schema_uuid' ";
 			$sql .= "and field_name = '$field_name' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
@@ -183,24 +182,24 @@ else {
 				//}
 			} //end if file or image
 
-			if ($action == "add" && permission_exists('table_data_add')) {
+			if ($action == "add" && permission_exists('schema_data_add')) {
 				//get a unique id for the data_row_uuid
 					if ($i==1) {
 						$data_row_uuid = uuid();
 					}
 
 				//insert the field data
-					$sql = "insert into v_table_data ";
+					$sql = "insert into v_schema_data ";
 					$sql .= "(";
-					$sql .= "table_data_uuid, ";
+					$sql .= "schema_data_uuid, ";
 					$sql .= "domain_uuid, ";
 					$sql .= "data_row_uuid, ";
 					if(strlen($data_parent_row_uuid)>0) {
 						$sql .= "data_parent_row_uuid, ";
 					}
-					$sql .= "table_uuid, ";
-					if (strlen($table_parent_id) > 0) {
-						$sql .= "table_parent_id, ";
+					$sql .= "schema_uuid, ";
+					if (strlen($schema_parent_id) > 0) {
+						$sql .= "schema_parent_id, ";
 					}
 					$sql .= "field_name, ";
 					$sql .= "data_field_value, ";
@@ -215,9 +214,9 @@ else {
 					if(strlen($data_parent_row_uuid)>0) {
 						$sql .= "'$data_parent_row_uuid', ";
 					}
-					$sql .= "'$table_uuid', ";
-					if (strlen($table_parent_id) > 0) {
-						$sql .= "'$table_parent_id', ";
+					$sql .= "'$schema_uuid', ";
+					if (strlen($schema_parent_id) > 0) {
+						$sql .= "'$schema_parent_id', ";
 					}
 					$sql .= "'$field_name', ";
 					switch ($name_array[$field_name]['field_type']) {
@@ -248,10 +247,10 @@ else {
 					unset($sql);
 			} //end action add
 
-			if ($action == "update" && permission_exists('tables_data_edit')) {
+			if ($action == "update" && permission_exists('schema_data_edit')) {
 					$data_row_uuid = $_POST["data_row_uuid"];
 
-					$sql_update  = "update v_table_data set ";
+					$sql_update  = "update v_schema_data set ";
 					switch ($name_array[$field_name]['field_type']) {
 						case "phone":
 							$tmp_phone = preg_replace('{\D}', '', $data_field_value);
@@ -273,9 +272,9 @@ else {
 							$sql_update .= "data_field_value = '$data_field_value' ";
 					}
 					$sql_update .= "where domain_uuid = '$domain_uuid' ";
-					$sql_update .= "and table_uuid = '$table_uuid' ";
-					if (strlen($table_parent_id) > 0) {
-						$sql_update .= "and table_parent_id = '$table_parent_id' ";
+					$sql_update .= "and schema_uuid = '$schema_uuid' ";
+					if (strlen($schema_parent_id) > 0) {
+						$sql_update .= "and schema_parent_id = '$schema_parent_id' ";
 					}
 					$sql_update .= "and data_row_uuid = '$data_row_uuid' ";
 					if(strlen($data_parent_row_uuid)>0) {
@@ -289,15 +288,15 @@ else {
 					}
 					else {
 						//no value to update so insert new value
-						$sql = "insert into v_table_data ";
+						$sql = "insert into v_schema_data ";
 						$sql .= "(";
 						$sql .= "domain_uuid, ";
 						$sql .= "data_row_uuid, ";
 						if(strlen($data_parent_row_uuid)>0) {
 							$sql .= "data_parent_row_uuid, ";
 						}
-						$sql .= "table_uuid, ";
-						$sql .= "table_parent_id, ";
+						$sql .= "schema_uuid, ";
+						$sql .= "schema_parent_id, ";
 						$sql .= "field_name, ";
 						$sql .= "data_field_value, ";
 						$sql .= "data_add_user, ";
@@ -310,8 +309,8 @@ else {
 						if(strlen($data_parent_row_uuid)>0) {
 							$sql .= "'$data_parent_row_uuid', ";
 						}
-						$sql .= "'$table_uuid', ";
-						$sql .= "'$table_parent_id', ";
+						$sql .= "'$schema_uuid', ";
+						$sql .= "'$schema_parent_id', ";
 						$sql .= "'$field_name', ";
 						switch ($name_array[$field_name]['field_type']) {
 							case "phone":
@@ -350,10 +349,10 @@ else {
 
 		//set the meta redirect
 			if (strlen($data_parent_row_uuid) == 0) {
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=table_data_edit.php?id=$table_uuid&data_row_uuid=$data_row_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_edit.php?id=$schema_uuid&data_row_uuid=$data_row_uuid\">\n";
 			}
 			else {
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=table_data_edit.php?table_uuid=$table_parent_id&data_row_uuid=$data_parent_row_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid\">\n";
 			}
 
 		//show a message to the user before the redirect
@@ -372,19 +371,19 @@ else {
 	if ($action == "update") {
 		//get the field values
 			$sql = "";
-			$sql .= "select * from v_table_data ";
+			$sql .= "select * from v_schema_data ";
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			if (strlen($search_all) == 0) {
-				$sql .= "and table_uuid = '$table_uuid' ";
+				$sql .= "and schema_uuid = '$schema_uuid' ";
 				if (strlen($data_parent_row_uuid) > 0) {
 					$sql .= " and data_parent_row_uuid = '$data_parent_row_uuid' ";
 				}
 			}
 			else {
 				$sql .= "and data_row_uuid in (";
-				$sql .= "select data_row_uuid from v_table_data \n";
+				$sql .= "select data_row_uuid from v_schema_data \n";
 				$sql .= "where domain_uuid = '".$domain_uuid."' ";
-				$sql .= "and table_uuid = '$table_uuid' ";
+				$sql .= "and schema_uuid = '$schema_uuid' ";
 				if (strlen($data_parent_row_uuid) > 0) {
 					$sql .= " and data_parent_row_uuid = '$data_parent_row_uuid' ";
 				}
@@ -476,11 +475,11 @@ else {
 //begin creating the content 
 	echo "<br />";
 
-//get the title and description of the table
+//get the title and description of the schema
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' valign='top' nowrap='nowrap'>\n";
-	echo 	"	<b>$table_label \n";
+	echo 	"	<b>$schema_label \n";
 	if ($action == "add") {
 		echo 	"	Add\n";
 	}
@@ -489,12 +488,12 @@ else {
 	}
 	echo "	</b>\n";
 	echo "	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
-	if ($action == "update" && permission_exists('tables_data_edit')) {
-		echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='table_data_edit.php?table_uuid=$table_uuid'\" value='Add'>\n";
-		//echo "	<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Do you really want to delete this?')){window.location='table_data_delete.php?id=".$table_uuid."&?data_row_uuid=".$data_row_uuid."&data_parent_row_uuid=$data_parent_row_uuid';}\" value='Delete'>\n";
+	if ($action == "update" && permission_exists('schema_data_edit')) {
+		echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid'\" value='Add'>\n";
+		//echo "	<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Do you really want to delete this?')){window.location='schema_delete.php?id=".$schema_uuid."&?data_row_uuid=".$data_row_uuid."&data_parent_row_uuid=$data_parent_row_uuid';}\" value='Delete'>\n";
 	}
 	echo "			<br />\n";
-	echo "			$table_description\n";
+	echo "			$schema_description\n";
 	echo "			<br />\n";
 	echo "			<br />\n";
 	echo "		</td>\n";
@@ -502,32 +501,32 @@ else {
 	if (strlen($data_parent_row_uuid) == 0) {
 		echo "<td align='center' valign='top' nowrap='nowrap'>\n";
 
-		if ($action == "update" && permission_exists('tables_data_edit')) {
-			//echo "		<input type='button' class='btn' name='' alt='first' onclick=\"window.location='table_data_edit.php?table_uuid=$table_uuid&data_row_uuid=".$first_data_row_uuid."'\" value='First'>\n";
+		if ($action == "update" && permission_exists('schema_data_edit')) {
+			//echo "		<input type='button' class='btn' name='' alt='first' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$first_data_row_uuid."'\" value='First'>\n";
 			if (strlen($previous_data_row_uuid) == 0) {
 				echo "		<input type='button' class='btn' name='' alt='prev' disabled='disabled' value='Prev'>\n";
 			}
 			else {
-				echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='table_data_edit.php?table_uuid=$table_uuid&data_row_uuid=".$previous_data_row_uuid."&search_all=$search_all&n=".($n-1)."'\" value='Prev ".$previous_record_id."'>\n";
+				echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$previous_data_row_uuid."&search_all=$search_all&n=".($n-1)."'\" value='Prev ".$previous_record_id."'>\n";
 			}
 			echo "		<input type='button' class='btn' name='' alt='prev' value='".$record_number_array[$data_row_uuid]." of $total_records'>\n";
 			if (strlen($next_data_row_uuid) == 0) {
 				echo "		<input type='button' class='btn' name='' alt='next' disabled='disabled' value='Next'>\n";
 			}
 			else {
-				echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='table_data_edit.php?table_uuid=$table_uuid&data_row_uuid=".$next_data_row_uuid."&search_all=$search_all&n=".($n+1)."'\" value='Next ".$next_record_id."'>\n";
+				echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$next_data_row_uuid."&search_all=$search_all&n=".($n+1)."'\" value='Next ".$next_record_id."'>\n";
 			}
-			//echo "		<input type='button' class='btn' name='' alt='last' onclick=\"window.location='table_data_edit.php?table_uuid=$table_uuid&data_row_uuid=".$last_data_row_uuid."'\" value='Last'>\n";
+			//echo "		<input type='button' class='btn' name='' alt='last' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$last_data_row_uuid."'\" value='Last'>\n";
 		}
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "</td>\n";
 
-		echo "<form method='GET' name='frm_search' action='table_data_edit.php'>\n";
+		echo "<form method='GET' name='frm_search' action='schema_data_edit.php'>\n";
 		echo "<td width='45%' align='right' valign='top' nowrap='nowrap'>\n";
-		echo "	<input type='hidden' name='table_uuid' value='$table_uuid'>\n";
-		//echo "	<input type='hidden' name='id' value='$table_uuid'>\n";
+		echo "	<input type='hidden' name='schema_uuid' value='$schema_uuid'>\n";
+		//echo "	<input type='hidden' name='id' value='$schema_uuid'>\n";
 		//echo "	<input type='hidden' name='data_parent_row_uuid' value='$data_parent_row_uuid'>\n";
 		//echo "	<input type='hidden' name='data_row_uuid' value='$first_data_row_uuid'>\n";
 		echo "	<input class='formfld' type='text' name='search_all' value='$search_all'>\n";
@@ -535,14 +534,14 @@ else {
 		echo "</td>\n";
 		echo "</form>\n";
 		echo "<td width='5%' align='right' valign='top' nowrap='nowrap'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='table_data_view.php?id=$table_uuid'\" value='Back'>\n";
+		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_data_view.php?id=$schema_uuid'\" value='Back'>\n";
 		echo "</td>\n";
 	}
 	else {
 		echo "	<td width='50%' align='right'>\n";
-		//echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='table_data_edit.php?table_uuid=$table_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Prev'>\n";
-		//echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='table_data_edit.php?table_uuid=$table_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Next'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='table_data_edit.php?table_uuid=$table_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Back'>\n";
+		//echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Prev'>\n";
+		//echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Next'>\n";
+		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Back'>\n";
 		echo "	</td>\n";
 	}
 	echo "  </tr>\n";
@@ -553,12 +552,12 @@ else {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='10'>\n";
 
 //determine if a file should be uploaded
-	$sql = "SELECT * FROM v_table_fields ";
+	$sql = "SELECT * FROM v_schema_fields ";
 	$sql .= "where domain_uuid  = '$domain_uuid ' ";
-	$sql .= "and table_uuid  = '$table_uuid ' ";
+	$sql .= "and schema_uuid  = '$schema_uuid ' ";
 	$sql .= "and field_type = 'uploadimage' ";
 	$sql .= "or domain_uuid  = '$domain_uuid ' ";
-	$sql .= "and table_uuid  = '$table_uuid ' ";
+	$sql .= "and schema_uuid  = '$schema_uuid ' ";
 	$sql .= "and field_type = 'upload_file' ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
@@ -570,11 +569,10 @@ else {
 		echo "<form method='post' name='frm' action=''>\n";
 	}
 
-//get the table fields and then display them
-	$sql = "";
-	$sql .= "select * from v_table_fields ";
+//get the fields and then display them
+	$sql = "select * from v_schema_fields ";
 	$sql .= "where domain_uuid  = '$domain_uuid' ";
-	$sql .= "and table_uuid  = '$table_uuid' ";
+	$sql .= "and schema_uuid  = '$schema_uuid' ";
 	$sql .= "order by field_column asc, field_order asc ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
@@ -582,7 +580,7 @@ else {
 	$result_count = count($result);
 
 	echo "<input type='hidden' name='rcount' value='$result_count'>\n";
-	echo "<input type='hidden' name='table_uuid' value='$table_uuid'>\n";
+	echo "<input type='hidden' name='schema_uuid' value='$schema_uuid'>\n";
 
 	if ($result_count == 0) { //no results
 		echo "<tr><td class='vncell'>&nbsp;</td></tr>\n";
@@ -590,13 +588,13 @@ else {
 	else { //received results
 		$x=1;
 		$field_column_previous = '';
-		$column_table_cell_status = '';
+		$column_schema_cell_status = '';
 		foreach($result as $row) {
 			//handle more than one column
 				$field_column = $row[field_column];
 				//echo "<!--[column: $field_column]-->\n";
 				if ($field_column != $field_column_previous) {
-					$column_table_cell_status = 'open';
+					$column_schema_cell_status = 'open';
 					//do the following except for the first time through the loop
 						if ($x != 1) {
 							//close the table
@@ -740,9 +738,9 @@ else {
 							echo "<input type='hidden' name=\"".$x."field_name\" value=\"".$row['field_name']."\">\n";
 
 							$sqlselect = "SELECT data_types_name, data_types_value ";
-							$sqlselect .= "FROM v_table_name_values ";
+							$sqlselect .= "FROM v_schema_name_values ";
 							$sqlselect .= "where domain_uuid = '".$domain_uuid."' ";
-							$sqlselect .= "and table_field_uuid = '".$row[table_field_uuid]."' ";
+							$sqlselect .= "and schema_field_uuid = '".$row["schema_field_uuid"]."' ";
 							$prep_statement_2 = $db->prepare($sqlselect);
 							$prep_statement_2->execute();
 							$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
@@ -766,9 +764,9 @@ else {
 							echo "<input type='hidden' name='".$x."field_name' value='".$row['field_name']."'>\n";
 
 							$sqlselect = "SELECT data_types_name, data_types_value ";
-							$sqlselect .= "FROM v_table_name_values ";
+							$sqlselect .= "FROM v_schema_name_values ";
 							$sqlselect .= "where domain_uuid = '".$domain_uuid."' ";
-							$sqlselect .= "and table_field_uuid = '".$row[table_field_uuid]."' ";
+							$sqlselect .= "and schema_field_uuid = '".$row["schema_field_uuid"]."' ";
 							$prep_statement_2 = $db->prepare($sqlselect);
 							$prep_statement_2->execute();
 							$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
@@ -928,17 +926,17 @@ else {
 		} //end foreach
 		unset($sql, $result, $row_count);
 
-		if ($column_table_cell_status == 'open') {
-			$column_table_cell_status = 'closed';
+		if ($column_schema_cell_status == 'open') {
+			$column_schema_cell_status = 'closed';
 		}
 	} //end if results
 
 	echo "	<tr>\n";
 	echo "		<td colspan='999' align='right'>\n";
-		if ($action == "add" && permission_exists('table_data_add')) {
+		if ($action == "add" && permission_exists('schema_data_add')) {
 			echo "			<input type='submit' class='btn' name='submit' value='save'>\n";
 		}
-		if ($action == "update" && permission_exists('tables_data_edit')) {
+		if ($action == "update" && permission_exists('schema_data_edit')) {
 			echo "			<input type='hidden' name='data_row_uuid' value='$data_row_uuid'>\n";
 			echo "			<input type='submit' tabindex='9999999' class='btn' name='submit' value='Save'>\n";
 		}
@@ -950,11 +948,11 @@ else {
 	echo "	</tr>\n";
 	echo "</form>\n";
 
-	if ($action == "update" && permission_exists('tables_data_edit')) {
-		//get the child table_uuid and use it to show the list of data
-			$sql = "select * from v_tables ";
+	if ($action == "update" && permission_exists('schema_data_edit')) {
+		//get the child schema_uuid and use it to show the list of data
+			$sql = "select * from v_schemas ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and table_parent_id = '$table_uuid' ";
+			$sql .= "and schema_parent_id = '$schema_uuid' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -962,15 +960,15 @@ else {
 				echo "<tr class='border'>\n";
 				echo "	<td colspan='999' align=\"left\">\n";
 				echo "		<br>";
-				$_GET["id"] = $row["table_uuid"];
-				$table_label = $row["table_label"];
+				$_GET["id"] = $row["schema_uuid"];
+				$schema_label = $row["schema_label"];
 				$_GET["data_parent_row_uuid"] = $data_row_uuid;
 
 				//show button
-				//echo "<input type='button' class='btn' name='' alt='".$table_label."' onclick=\"window.location='table_data_view.php?id=".$row["table_uuid"]."&data_parent_row_uuid=".$data_row_uuid."'\" value='".$table_label."'>\n";
+				//echo "<input type='button' class='btn' name='' alt='".$schema_label."' onclick=\"window.location='schema_data_view.php?id=".$row["schema_uuid"]."&data_parent_row_uuid=".$data_row_uuid."'\" value='".$schema_label."'>\n";
 
 				//show list
-				require_once "table_data_view.php";
+				require_once "schema_data_view.php";
 				echo "	</td>";
 				echo "	</tr>";
 			}

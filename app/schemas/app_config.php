@@ -72,8 +72,9 @@
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table']['text'] = 'v_schema_data';
-		$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_table_data';
+		$apps[$x]['db'][$y]['table'] = 'v_schema_data';
+		//$apps[$x]['db'][$y]['table']['text'] = 'v_schema_data';
+		//$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_table_data';
 
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'id';
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'virtual_table_data_id';
@@ -175,8 +176,9 @@
 
 		$y = 1; //table array index
 		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table']['text'] = 'v_schema_name_values';
-		$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_table_name_values';
+		$apps[$x]['db'][$y]['table'] = 'v_schema_name_values';
+		//$apps[$x]['db'][$y]['table']['text'] = 'v_schema_name_values';
+		//$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_table_name_values';
 
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'virtual_table_data_types_name_value_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'serial';
@@ -251,8 +253,9 @@
 
 		$y = 2; //table array index
 		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table']['text'] = 'v_schema_fields';
-		$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_table_fields';
+		$apps[$x]['db'][$y]['table'] = 'v_schema_fields';
+		//$apps[$x]['db'][$y]['table']['text'] = 'v_schema_fields';
+		//$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_table_fields';
 
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'schema_field_id';
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'virtual_table_field_id';
@@ -356,8 +359,9 @@
 
 		$y = 3; //table array index
 		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table']['text'] = 'v_schemas';
-		$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_tables';
+		$apps[$x]['db'][$y]['table'] = 'v_schemas';
+		//$apps[$x]['db'][$y]['table']['text'] = 'v_schemas';
+		//$apps[$x]['db'][$y]['table']['deprecated'] = 'v_virtual_tables';
 
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'virtual_table_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'serial';

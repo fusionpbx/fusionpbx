@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('table_view')) {
+if (permission_exists('schema_view')) {
 	//access granted
 }
 else {
@@ -48,7 +48,7 @@ $order = $_GET["order"];
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Table Fields</b></td>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Fields</b></td>\n";
 	echo "<td width='50%'  align=\"right\">&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -63,9 +63,9 @@ $order = $_GET["order"];
 		$order = 'asc';
 	}
 
-	$sql = "select * from v_table_fields ";
+	$sql = "select * from v_schema_fields ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and table_uuid = '$table_uuid' ";
+	$sql .= "and schema_uuid = '$schema_uuid' ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -91,8 +91,8 @@ $order = $_GET["order"];
 	echo th_order_by('field_order_tab', 'Tab Order', $order_by, $order);
 	echo th_order_by('field_description', 'Description', $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('table_view')) {
-		echo "	<a href='table_field_edit.php?table_uuid=".$table_uuid."' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('schema_view')) {
+		echo "	<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -111,11 +111,11 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order_tab']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('table_edit')) {
-				echo "		<a href='table_field_edit.php?table_uuid=".$row['table_uuid']."&id=".$row['table_field_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			if (permission_exists('schema_edit')) {
+				echo "		<a href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
-			if (permission_exists('table_delete')) {
-				echo "		<a href='table_field_delete.php?table_uuid=".$row['table_uuid']."&id=".$row['table_field_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			if (permission_exists('schema_delete')) {
+				echo "		<a href='schema_field_delete.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -131,8 +131,8 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('tables_add')) {
-		echo "			<a href='table_field_edit.php?table_uuid=".$table_uuid."' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('schema_add')) {
+		echo "			<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

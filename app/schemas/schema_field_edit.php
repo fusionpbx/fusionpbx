@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('tables_add') || permission_exists('table_edit')) {
+if (permission_exists('schema_add') || permission_exists('schema_edit')) {
 	//access granted
 }
 else {
@@ -37,15 +37,15 @@ else {
 //set the action as an add or update
 if (isset($_REQUEST["id"])) {
 	$action = "update";
-	$table_field_uuid = check_str($_REQUEST["id"]);
+	$schema_field_uuid = check_str($_REQUEST["id"]);
 }
 else {
 	$action = "add";
 }
 
 //get the http variables
-	if (strlen($_GET["table_uuid"]) > 0) {
-		$table_uuid = check_str($_GET["table_uuid"]);
+	if (strlen($_GET["schema_uuid"]) > 0) {
+		$schema_uuid = check_str($_GET["schema_uuid"]);
 	}
 
 //get the http post variables
@@ -67,7 +67,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$table_field_uuid = check_str($_POST["table_field_uuid"]);
+		$schema_field_uuid = check_str($_POST["schema_field_uuid"]);
 	}
 
 	//check for all required data
@@ -98,13 +98,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add" && permission_exists('tables_add')) {
-			$table_field_uuid = uuid();
-			$sql = "insert into v_table_fields ";
+		if ($action == "add" && permission_exists('schema_add')) {
+			$schema_field_uuid = uuid();
+			$sql = "insert into v_schema_fields ";
 			$sql .= "(";
 			$sql .= "domain_uuid, ";
-			$sql .= "table_uuid, ";
-			$sql .= "table_field_uuid, ";
+			$sql .= "schema_uuid, ";
+			$sql .= "schema_field_uuid, ";
 			$sql .= "field_label, ";
 			$sql .= "field_name, ";
 			$sql .= "field_type, ";
@@ -120,8 +120,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "values ";
 			$sql .= "(";
 			$sql .= "'$domain_uuid', ";
-			$sql .= "'$table_uuid', ";
-			$sql .= "'$table_field_uuid', ";
+			$sql .= "'$schema_uuid', ";
+			$sql .= "'$schema_field_uuid', ";
 			$sql .= "'$field_label', ";
 			$sql .= "'$field_name', ";
 			$sql .= "'$field_type', ";
@@ -138,7 +138,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=table_edit.php?id=$table_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_edit.php?id=$schema_uuid\">\n";
 			echo "<div align='center'>\n";
 			echo "Add Complete\n";
 			echo "</div>\n";
@@ -146,8 +146,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update" && permission_exists('table_edit')) {
-			$sql = "update v_table_fields set ";
+		if ($action == "update" && permission_exists('schema_edit')) {
+			$sql = "update v_schema_fields set ";
 			$sql .= "field_label = '$field_label', ";
 			$sql .= "field_name = '$field_name', ";
 			$sql .= "field_type = '$field_type', ";
@@ -160,13 +160,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "field_order_tab = '$field_order_tab', ";
 			$sql .= "field_description = '$field_description' ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and table_uuid = '$table_uuid'";
-			$sql .= "and table_field_uuid = '$table_field_uuid' ";
+			$sql .= "and schema_uuid = '$schema_uuid'";
+			$sql .= "and schema_field_uuid = '$schema_field_uuid' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
 			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=table_edit.php?id=$table_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_edit.php?id=$schema_uuid\">\n";
 			echo "<div align='center'>\n";
 			echo "Update Complete\n";
 			echo "</div>\n";
@@ -178,13 +178,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$table_uuid = $_GET["table_uuid"];
-		$table_field_uuid = $_GET["id"];
+		$schema_uuid = $_GET["schema_uuid"];
+		$schema_field_uuid = $_GET["id"];
 
-		$sql = "select * from v_table_fields ";
+		$sql = "select * from v_schema_fields ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and table_uuid = '$table_uuid' ";
-		$sql .= "and table_field_uuid = '$table_field_uuid' ";
+		$sql .= "and schema_uuid = '$schema_uuid' ";
+		$sql .= "and schema_field_uuid = '$schema_field_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -219,13 +219,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap=\"nowrap\"><b>Virtual Table Field Add</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap=\"nowrap\"><b>Virtual Table Field Edit</b></td>\n";
-	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='table_edit.php?id=$table_uuid'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap=\"nowrap\"><b>Field</b></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_edit.php?id=$schema_uuid'\" value='Back'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan=\"2\">\n";
@@ -555,9 +550,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='table_uuid' value='$table_uuid'>\n";
+	echo "				<input type='hidden' name='schema_uuid' value='$schema_uuid'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='table_field_uuid' value='$table_field_uuid'>\n";
+		echo "				<input type='hidden' name='schema_field_uuid' value='$schema_field_uuid'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
 	echo "		</td>\n";
@@ -567,7 +562,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if ($action == "update") {
 		if ($field_type == "select") {
-			require "table_data_types_name_value.php";
+			require "schema_data_types_name_value.php";
 		}
 	}
 

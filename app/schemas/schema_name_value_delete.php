@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('table_delete')) {
+if (permission_exists('schema_delete')) {
 	//access granted
 }
 else {
@@ -35,18 +35,17 @@ else {
 }
 
 //get the http values
-	if (count($_GET)>0) {
+	if (count($_GET) > 0) {
 		$id = check_str($_GET["id"]);
-		$table_uuid = check_str($_GET["table_uuid"]);
-		$table_field_uuid = check_str($_GET["table_field_uuid"]);
+		$schema_uuid = check_str($_GET["schema_uuid"]);
+		$schema_field_uuid = check_str($_GET["schema_field_uuid"]);
 	}
 
 //delete the data
-	if (strlen($id)>0) {
-		$sql = "";
-		$sql .= "delete from v_table_name_values ";
+	if (strlen($id) > 0) {
+		$sql .= "delete from v_schema_name_values ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and table_name_value_uuid = '$id' ";
+		$sql .= "and schema_name_value_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
@@ -54,7 +53,7 @@ else {
 
 //redirect the user
 	require_once "includes/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=table_fields_edit.php?table_uuid=$table_uuid&id=$table_field_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_field_edit.php?schema_uuid=$schema_uuid&id=$schema_field_uuid\">\n";
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";
