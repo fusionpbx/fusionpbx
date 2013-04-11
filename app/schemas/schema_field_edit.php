@@ -534,7 +534,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='field_order_tab' maxlength='255' value='$field_order_tab'>\n";
 	echo "<br />\n";
-	echo "Enter the HTML Tab Order.\n";
+	echo "Enter the tab order.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -562,7 +562,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if ($action == "update") {
 		if ($field_type == "select") {
-			require "schema_data_types_name_value.php";
+			require "schema_name_values.php";
 		}
 	}
 
