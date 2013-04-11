@@ -125,7 +125,6 @@ include "root.php";
 						}
 						unset ($file_contents, $sql);
 						$db->commit();
-
 						if (is_writable($this->path.'/'.$this->name)) {
 							//is writable - use database in current location
 						}
@@ -429,8 +428,22 @@ include "root.php";
 						$i++;
 					}
 					$sql .= ")";
-					$this->sql = $sql;
-					$this->db->exec($sql);
+				//execute the query, show exceptions
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+					try {
+						$this->sql = $sql;
+						$this->db->exec($sql);
+					}
+					catch(PDOException $e) {
+						echo "<b>Error:</b><br />\n";
+						echo "<table>\n";
+						echo "<tr>\n";
+						echo "<td>\n";
+						echo $e->getMessage();
+						echo "</td>\n";
+						echo "</tr>\n";
+						echo "</table>\n";
+					}
 					unset($this->fields);
 					unset($sql);
 			}
