@@ -152,6 +152,7 @@
 	dofile(scripts_dir.."/resources/functions/file_exists.lua");
 	dofile(scripts_dir.."/resources/functions/explode.lua");
 	dofile(scripts_dir.."/resources/functions/format_seconds.lua");
+	dofile(scripts_dir.."/resources/functions/mkdir.lua");
 
 --voicemail functions
 	dofile(scripts_dir.."/app/voicemail/resources/functions/on_dtmf.lua");
@@ -285,7 +286,7 @@
 	--record the video
 		--records audio only
 			--result = session:execute("set", "enable_file_write_buffering=false");
-			--os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
+			--mkdir(voicemail_dir.."/"..voicemail_id);
 			--session:recordFile("/tmp/recording.fsv", 200, 200, 200);
 		--records audio and video
 			--result = session:execute("record_fsv", "file.fsv");
@@ -300,7 +301,7 @@
 
 	--callback (works with DTMF)
 		--http://wiki.freeswitch.org/wiki/Mod_fsv
-		--os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
+		--mkdir(voicemail_dir.."/"..voicemail_id);
 		--session:recordFile(file_name, max_len_secs, silence_threshold, silence_secs) 
 		--session:sayPhrase(macro_name [,macro_data] [,language]);
 		--session:sayPhrase("voicemail_menu", "1:2:3:#", default_language);

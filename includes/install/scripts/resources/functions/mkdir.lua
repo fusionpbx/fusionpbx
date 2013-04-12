@@ -1,7 +1,7 @@
 
 --add the mkdir function
 	function mkdir(dir)
-		dir = dir:gsub("\\", "/");
+		dir = dir:gsub([[\]], "/");
 		if (package.config:sub(1,1) == "/") then
 			--unix
 			cmd = [[mkdir -p "]] .. dir .. [["]];

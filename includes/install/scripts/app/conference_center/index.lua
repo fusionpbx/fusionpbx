@@ -46,6 +46,7 @@
 	dofile(scripts_dir.."/resources/functions/file_exists.lua");
 	dofile(scripts_dir.."/resources/functions/explode.lua");
 	dofile(scripts_dir.."/resources/functions/format_seconds.lua");
+	dofile(scripts_dir.."/resources/functions/mkdir.lua");
 
 --get the session variables
 	uuid = session:getVariable("uuid");
@@ -565,7 +566,7 @@
 				if (conference_session_uuid ~= nil) then
 					if (record == "true") then
 						recordings_dir = recordings_dir.."/archive/"..os.date("%Y", start_epoch).."/"..os.date("%b", start_epoch).."/"..os.date("%d", start_epoch);
-						os.execute("mkdir -p " .. recordings_dir);
+						mkdir(recordings_dir);
 						recording = recordings_dir.."/"..conference_session_uuid;
 						session:execute("set","recording="..recording);
 					end
