@@ -30,6 +30,43 @@
 		public $domain_uuid;
 		public $domain_name;
 		private $app_uuid;
+		public $extension_uuid;
+		public $extension;
+		public $voicemail_id;
+		public $number_alias;
+		public $password;
+		public $provisioning_list;
+		public $vm_password;
+		public $accountcode;
+		public $effective_caller_id_name;
+		public $effective_caller_id_number;
+		public $outbound_caller_id_name;
+		public $outbound_caller_id_number;
+		public $emergency_caller_id_number;
+		public $directory_full_name;
+		public $directory_visible;
+		public $directory_exten_visible;
+		public $limit_max;
+		public $limit_destination;
+		public $vm_enabled;
+		public $vm_mailto;
+		public $vm_attach_file;
+		public $vm_keep_local_after_email;
+		public $user_context;
+		public $toll_allow;
+		public $call_timeout;
+		public $call_group;
+		public $hold_music;
+		public $auth_acl;
+		public $cidr;
+		public $sip_force_contact;
+		public $sip_force_expires;
+		public $nibble_account;
+		public $mwi_account;
+		public $sip_bypass_media;
+		public $dial_string;
+		public $enabled;
+		public $description;
 
 		public function __construct() {
 			require_once "includes/classes/database.php";
@@ -48,6 +85,72 @@
 
 		public function set_domain_uuid($domain_uuid){
 			$this->domain_uuid = $domain_uuid;
+		}
+
+		public function voicemail() {
+
+			//determine the voicemail_id
+				if (is_numeric($this->extension)) {
+					$this->voicemail_id = $this->extension;
+				}
+				else {
+					$this->voicemail_id = $this->number_alias;
+				}
+
+			//update the voicemail settings
+				$sql = "select * from v_voicemails ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and voicemail_id = '".$this->voicemail_id."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (count($result) == 0) {
+					//add the voicemail box
+						$sql = "insert into v_voicemails ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "voicemail_uuid, ";
+						$sql .= "voicemail_id, ";
+						$sql .= "voicemail_password, ";
+						if (strlen($this->greeting_id) > 0) {
+							$sql .= "greeting_id, ";
+						}
+						$sql .= "voicemail_mail_to, ";
+						$sql .= "voicemail_attach_file, ";
+						$sql .= "voicemail_local_after_email, ";
+						$sql .= "voicemail_enabled, ";
+						$sql .= "voicemail_description ";
+						$sql .= ") ";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'".$this->domain_uuid."', ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'".$this->voicemail_id."', ";
+						$sql .= "'".$this->vm_password."', ";
+						$sql .= "'".$this->vm_mailto."', ";
+						$sql .= "'".$this->vm_attach_file."', ";
+						$sql .= "'".$this->vm_keep_local_after_email."', ";
+						$sql .= "'".$this->vm_enabled."', ";
+						$sql .= "'".$this->description."' ";
+						$sql .= ")";
+						$this->db->exec(check_sql($sql));
+						unset($sql);
+				}
+				else {
+					//update the voicemail box
+						$sql = "update v_voicemails set ";
+						$sql .= "voicemail_password = '".$this->vm_password."', ";
+						$sql .= "voicemail_mail_to = '".$this->vm_mailto."', ";
+						$sql .= "voicemail_attach_file = '".$this->vm_attach_file."', ";
+						$sql .= "voicemail_local_after_email = '".$this->vm_keep_local_after_email."', ";
+						$sql .= "voicemail_enabled = '".$this->vm_enabled."', ";
+						$sql .= "voicemail_description = '".$this->description."' ";
+						$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+						$sql .= "and voicemail_id = '".$this->voicemail_id."' ";
+						$this->db->exec(check_sql($sql));
+						unset($sql);
+				}
+				unset ($prep_statement);
 		}
 
 		public function xml() {

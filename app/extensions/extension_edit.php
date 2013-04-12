@@ -217,121 +217,222 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add" && permission_exists('extension_add')) {
-			$user_email = '';
-			if ($autogen_users == "true") {
-				$auto_user = $extension;
-				for ($i=1; $i<=$range; $i++){
-					$user_last_name = $auto_user;
-					$user_password = generate_password();
-					user_add($auto_user, $user_password, $user_email);
-					$generated_users[$i]['username'] = $auto_user;
-					$generated_users[$i]['password'] = $user_password;
-					$auto_user++;
+		//add the extension to the database
+			if ($action == "add" && permission_exists('extension_add')) {
+				$user_email = '';
+				if ($autogen_users == "true") {
+					$auto_user = $extension;
+					for ($i=1; $i<=$range; $i++) {
+						$user_last_name = $auto_user;
+						$user_password = generate_password();
+						user_add($auto_user, $user_password, $user_email);
+						$generated_users[$i]['username'] = $auto_user;
+						$generated_users[$i]['password'] = $user_password;
+						$auto_user++;
+					}
+					unset($auto_user);
 				}
-				unset($auto_user);
-			}
 
-			$db->beginTransaction();
-			for ($i=1; $i<=$range; $i++) {
-				if (extension_exists($extension)) {
-					//extension exists
+				for ($i=1; $i<=$range; $i++) {
+					if (extension_exists($extension)) {
+						//extension exists
+					}
+					else {
+						//extension does not exist add it
+							$extension_uuid = uuid();
+							$password = generate_password();
+							$sql = "insert into v_extensions ";
+							$sql .= "(";
+							$sql .= "domain_uuid, ";
+							$sql .= "extension_uuid, ";
+							$sql .= "extension, ";
+							$sql .= "number_alias, ";
+							$sql .= "password, ";
+							$sql .= "provisioning_list, ";
+							$sql .= "vm_password, ";
+							$sql .= "accountcode, ";
+							$sql .= "effective_caller_id_name, ";
+							$sql .= "effective_caller_id_number, ";
+							$sql .= "outbound_caller_id_name, ";
+							$sql .= "outbound_caller_id_number, ";
+							$sql .= "emergency_caller_id_number, ";
+							$sql .= "directory_full_name, ";
+							$sql .= "directory_visible, ";
+							$sql .= "directory_exten_visible, ";
+							$sql .= "limit_max, ";
+							$sql .= "limit_destination, ";
+							$sql .= "vm_enabled, ";
+							$sql .= "vm_mailto, ";
+							$sql .= "vm_attach_file, ";
+							$sql .= "vm_keep_local_after_email, ";
+							$sql .= "user_context, ";
+							if (permission_exists('extension_toll')) {
+								$sql .= "toll_allow, ";
+							}
+							if (strlen($call_timeout) > 0) {
+								$sql .= "call_timeout, ";
+							}
+							$sql .= "call_group, ";
+							$sql .= "hold_music, ";
+							$sql .= "auth_acl, ";
+							$sql .= "cidr, ";
+							$sql .= "sip_force_contact, ";
+							if (strlen($sip_force_expires) > 0) {
+								$sql .= "sip_force_expires, ";
+							}
+							if (strlen($nibble_account) > 0) {
+								$sql .= "nibble_account, ";
+							}
+							if (strlen($mwi_account) > 0) {
+								$sql .= "mwi_account, ";
+							}
+							$sql .= "sip_bypass_media, ";
+							$sql .= "dial_string, ";
+							$sql .= "enabled, ";
+							$sql .= "description ";
+							$sql .= ")";
+							$sql .= "values ";
+							$sql .= "(";
+							$sql .= "'$domain_uuid', ";
+							$sql .= "'$extension_uuid', ";
+							$sql .= "'$extension', ";
+							$sql .= "'$number_alias', ";
+							$sql .= "'$password', ";
+							$sql .= "'$provisioning_list', ";
+							$sql .= "'user-choose', ";
+							$sql .= "'$accountcode', ";
+							$sql .= "'$effective_caller_id_name', ";
+							$sql .= "'$effective_caller_id_number', ";
+							$sql .= "'$outbound_caller_id_name', ";
+							$sql .= "'$outbound_caller_id_number', ";
+							$sql .= "'$emergency_caller_id_number', ";
+							$sql .= "'$directory_full_name', ";
+							$sql .= "'$directory_visible', ";
+							$sql .= "'$directory_exten_visible', ";
+							$sql .= "'$limit_max', ";
+							$sql .= "'$limit_destination', ";
+							$sql .= "'$vm_enabled', ";
+							$sql .= "'$vm_mailto', ";
+							$sql .= "'$vm_attach_file', ";
+							$sql .= "'$vm_keep_local_after_email', ";
+							$sql .= "'$user_context', ";
+							if (permission_exists('extension_toll')) {
+								$sql .= "'$toll_allow', ";
+							}
+							if (strlen($call_timeout) > 0) {
+								$sql .= "'$call_timeout', ";
+							}
+							$sql .= "'$call_group', ";
+							$sql .= "'$hold_music', ";
+							$sql .= "'$auth_acl', ";
+							$sql .= "'$cidr', ";
+							$sql .= "'$sip_force_contact', ";
+							if (strlen($sip_force_expires) > 0) {
+								$sql .= "'$sip_force_expires', ";
+							}
+							if (strlen($nibble_account) > 0) {
+								$sql .= "'$nibble_account', ";
+							}
+							if (strlen($mwi_account) > 0) {
+								if (strpos($mwi_account, '@') === false) {
+									if (count($_SESSION["domains"]) > 1) {
+										$mwi_account .= "@".$_SESSION['domain_name'];
+									}
+									else {
+										$mwi_account .= "@\$\${domain}";
+									}
+								}
+								$sql .= "'$mwi_account', ";
+							}
+							$sql .= "'$sip_bypass_media', ";
+							$sql .= "'$dial_string', ";
+							$sql .= "'$enabled', ";
+							$sql .= "'$description' ";
+							$sql .= ")";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+					//set the voicemail password
+						if (strlen($vm_password) == 0) {
+							$vm_password = generate_password(9, 1);
+						}
+					//add or update voicemail
+						require_once "app/extensions/resources/classes/extension.php";
+						$ext = new extension;
+						$ext->db = $db;
+						$ext->domain_uuid = $domain_uuid;
+						$ext->extension = $extension;
+						$ext->number_alias = $number_alias;
+						$ext->vm_password = $vm_password;
+						$ext->vm_mailto = $vm_mailto;
+						$ext->vm_attach_file = $vm_attach_file;
+						$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
+						$ext->vm_enabled = $vm_enabled;
+						$ext->description = $description;
+						$ext->voicemail();
+						unset($ext);
+					//unset the voicemail password
+						$vm_password = "";
+					//increment the extension number
+						$extension++;
 				}
-				else {
-					//extension does not exist add it
-					$extension_uuid = uuid();
-					$password = generate_password();
-					$sql = "insert into v_extensions ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "extension_uuid, ";
-					$sql .= "extension, ";
-					$sql .= "number_alias, ";
-					$sql .= "password, ";
-					$sql .= "provisioning_list, ";
-					$sql .= "vm_password, ";
-					$sql .= "accountcode, ";
-					$sql .= "effective_caller_id_name, ";
-					$sql .= "effective_caller_id_number, ";
-					$sql .= "outbound_caller_id_name, ";
-					$sql .= "outbound_caller_id_number, ";
-					$sql .= "emergency_caller_id_number, ";
-					$sql .= "directory_full_name, ";
-					$sql .= "directory_visible, ";
-					$sql .= "directory_exten_visible, ";
-					$sql .= "limit_max, ";
-					$sql .= "limit_destination, ";
-					$sql .= "vm_enabled, ";
-					$sql .= "vm_mailto, ";
-					$sql .= "vm_attach_file, ";
-					$sql .= "vm_keep_local_after_email, ";
-					$sql .= "user_context, ";
+			} //if ($action == "add")
+
+		//update the database
+			if ($action == "update" && permission_exists('extension_edit')) {
+				//generate a password
+					if (strlen($password) == 0) {
+						$password = generate_password(12,4);
+					}
+				//set the voicemail password
+					if (strlen($vm_password) == 0) {
+						$vm_password = generate_password(9, 1);
+					}
+				//update extensions
+					$sql = "update v_extensions set ";
+					$sql .= "extension = '$extension', ";
+					$sql .= "number_alias = '$number_alias', ";
+					$sql .= "password = '$password', ";
+					$sql .= "provisioning_list = '$provisioning_list', ";
+					$sql .= "vm_password = '$vm_password', ";
+					$sql .= "accountcode = '$accountcode', ";
+					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
+					$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
+					$sql .= "outbound_caller_id_name = '$outbound_caller_id_name', ";
+					$sql .= "outbound_caller_id_number = '$outbound_caller_id_number', ";
+					$sql .= "emergency_caller_id_number = '$emergency_caller_id_number', ";
+					$sql .= "directory_full_name = '$directory_full_name', ";
+					$sql .= "directory_visible = '$directory_visible', ";
+					$sql .= "directory_exten_visible = '$directory_exten_visible', ";
+					$sql .= "limit_max = '$limit_max', ";
+					$sql .= "limit_destination = '$limit_destination', ";
+					$sql .= "vm_enabled = '$vm_enabled', ";
+					$sql .= "vm_mailto = '$vm_mailto', ";
+					$sql .= "vm_attach_file = '$vm_attach_file', ";
+					$sql .= "vm_keep_local_after_email = '$vm_keep_local_after_email', ";
+					$sql .= "user_context = '$user_context', ";
 					if (permission_exists('extension_toll')) {
-						$sql .= "toll_allow, ";
+						$sql .= "toll_allow = '$toll_allow', ";
 					}
 					if (strlen($call_timeout) > 0) {
-						$sql .= "call_timeout, ";
+						$sql .= "call_timeout = '$call_timeout', ";
 					}
-					$sql .= "call_group, ";
-					$sql .= "hold_music, ";
-					$sql .= "auth_acl, ";
-					$sql .= "cidr, ";
-					$sql .= "sip_force_contact, ";
-					if (strlen($sip_force_expires) > 0) {
-						$sql .= "sip_force_expires, ";
+					$sql .= "call_group = '$call_group', ";
+					$sql .= "hold_music = '$hold_music', ";
+					$sql .= "auth_acl = '$auth_acl', ";
+					$sql .= "cidr = '$cidr', ";
+					$sql .= "sip_force_contact = '$sip_force_contact', ";
+					if (strlen($sip_force_expires) == 0) {
+						$sql .= "sip_force_expires = null, ";
 					}
-					if (strlen($nibble_account) > 0) {
-						$sql .= "nibble_account, ";
+					else {
+						$sql .= "sip_force_expires = '$sip_force_expires', ";
 					}
-					if (strlen($mwi_account) > 0) {
-						$sql .= "mwi_account, ";
+					if (strlen($nibble_account) == 0) {
+						$sql .= "nibble_account = null, ";
 					}
-					$sql .= "sip_bypass_media, ";
-					$sql .= "dial_string, ";
-					$sql .= "enabled, ";
-					$sql .= "description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$extension_uuid', ";
-					$sql .= "'$extension', ";
-					$sql .= "'$number_alias', ";
-					$sql .= "'$password', ";
-					$sql .= "'$provisioning_list', ";
-					$sql .= "'user-choose', ";
-					$sql .= "'$accountcode', ";
-					$sql .= "'$effective_caller_id_name', ";
-					$sql .= "'$effective_caller_id_number', ";
-					$sql .= "'$outbound_caller_id_name', ";
-					$sql .= "'$outbound_caller_id_number', ";
-					$sql .= "'$emergency_caller_id_number', ";
-					$sql .= "'$directory_full_name', ";
-					$sql .= "'$directory_visible', ";
-					$sql .= "'$directory_exten_visible', ";
-					$sql .= "'$limit_max', ";
-					$sql .= "'$limit_destination', ";
-					$sql .= "'$vm_enabled', ";
-					$sql .= "'$vm_mailto', ";
-					$sql .= "'$vm_attach_file', ";
-					$sql .= "'$vm_keep_local_after_email', ";
-					$sql .= "'$user_context', ";
-					if (permission_exists('extension_toll')) {
-						$sql .= "'$toll_allow', ";
-					}
-					if (strlen($call_timeout) > 0) {
-						$sql .= "'$call_timeout', ";
-					}
-					$sql .= "'$call_group', ";
-					$sql .= "'$hold_music', ";
-					$sql .= "'$auth_acl', ";
-					$sql .= "'$cidr', ";
-					$sql .= "'$sip_force_contact', ";
-					if (strlen($sip_force_expires) > 0) {
-						$sql .= "'$sip_force_expires', ";
-					}
-					if (strlen($nibble_account) > 0) {
-						$sql .= "'$nibble_account', ";
+					else {
+						$sql .= "nibble_account = '$nibble_account', ";
 					}
 					if (strlen($mwi_account) > 0) {
 						if (strpos($mwi_account, '@') === false) {
@@ -342,263 +443,133 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$mwi_account .= "@\$\${domain}";
 							}
 						}
-						$sql .= "'$mwi_account', ";
 					}
-					$sql .= "'$sip_bypass_media', ";
-					$sql .= "'$dial_string', ";
-					$sql .= "'$enabled', ";
-					$sql .= "'$description' ";
-					$sql .= ")";
+					$sql .= "mwi_account = '$mwi_account', ";
+					$sql .= "sip_bypass_media = '$sip_bypass_media', ";
+					$sql .= "dial_string = '$dial_string', ";
+					$sql .= "enabled = '$enabled', ";
+					$sql .= "description = '$description' ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and extension_uuid = '$extension_uuid'";
 					$db->exec(check_sql($sql));
 					unset($sql);
-				}
-				$extension++;
-			}
-			$db->commit();
 
-			//synchronize configuration
-				if (is_readable($_SESSION['switch']['extensions']['dir'])) {
-					require_once "app/extensions/resources/classes/extension.php";
-					$extension = new extension;
-					$extension->xml();
-				}
-
-			//write the provision files
-				if (strlen($provisioning_list)>0) {
-					require_once "app/provision/provision_write.php";
-				}
-
-			//prepare for alternating the row style
-				$c = 0;
-				$row_style["0"] = "row_style0";
-				$row_style["1"] = "row_style1";
-
-			//show the action and redirect the user
-				require_once "includes/header.php";
-				echo "<br />\n";
-				echo "<div align='center'>\n";
-				if (count($generated_users) == 0) {
-					//action add
-						echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
-						echo "	<table width='40%'>\n";
-						echo "		<tr>\n";
-						echo "			<th align='left'>Message</th>\n";
-						echo "		</tr>\n";
-						echo "		<tr>\n";
-						echo "			<td class='row_style1'><strong>Add Complete</strong></td>\n";
-						echo "		</tr>\n";
-						echo "	</table>\n";
-						echo "	<br />\n";
-				}
-				else {
-					// auto-generate user with extension as login name
-						echo "	<table width='40%' border='0' cellpadding='0' cellspacing='0'>\n";
-						echo "		<tr>\n";
-						echo "			<td colspan='2'><strong>New User Accounts</strong></td>\n";
-						echo "		</tr>\n";
-						echo "		<tr>\n";
-						echo "			<th>Username</th>\n";
-						echo "			<th>Password</th>\n";
-						echo "		</tr>\n";
-						foreach($generated_users as $tmp_user){
-							echo "		<tr>\n";
-							echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['username']."</td>\n";
-							echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['password']."</td>\n";
-							echo "		</tr>\n";
-						}
-						if ($c==0) { $c=1; } else { $c=0; }
-						echo "	</table>";
-				}
-				echo "</div>\n";
-				require_once "includes/footer.php";
-				return;
-		} //if ($action == "add")
-
-		if ($action == "update" && permission_exists('extension_edit')) {
-
-			if (strlen($password) == 0) {
-				$password = generate_password(12,4);
-			}
-
-			$sql = "update v_extensions set ";
-			$sql .= "extension = '$extension', ";
-			$sql .= "number_alias = '$number_alias', ";
-			$sql .= "password = '$password', ";
-			$sql .= "provisioning_list = '$provisioning_list', ";
-			if (strlen($vm_password) > 0) {
-				$sql .= "vm_password = '$vm_password', ";
-			}
-			else {
-				$sql .= "vm_password = '".generate_password(9, 1)."', ";
-			}
-			$sql .= "accountcode = '$accountcode', ";
-			$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
-			$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
-			$sql .= "outbound_caller_id_name = '$outbound_caller_id_name', ";
-			$sql .= "outbound_caller_id_number = '$outbound_caller_id_number', ";
-			$sql .= "emergency_caller_id_number = '$emergency_caller_id_number', ";
-			$sql .= "directory_full_name = '$directory_full_name', ";
-			$sql .= "directory_visible = '$directory_visible', ";
-			$sql .= "directory_exten_visible = '$directory_exten_visible', ";
-			$sql .= "limit_max = '$limit_max', ";
-			$sql .= "limit_destination = '$limit_destination', ";
-			$sql .= "vm_enabled = '$vm_enabled', ";
-			$sql .= "vm_mailto = '$vm_mailto', ";
-			$sql .= "vm_attach_file = '$vm_attach_file', ";
-			$sql .= "vm_keep_local_after_email = '$vm_keep_local_after_email', ";
-			$sql .= "user_context = '$user_context', ";
-			if (permission_exists('extension_toll')) {
-				$sql .= "toll_allow = '$toll_allow', ";
-			}
-			if (strlen($call_timeout) > 0) {
-				$sql .= "call_timeout = '$call_timeout', ";
-			}
-			$sql .= "call_group = '$call_group', ";
-			$sql .= "hold_music = '$hold_music', ";
-			$sql .= "auth_acl = '$auth_acl', ";
-			$sql .= "cidr = '$cidr', ";
-			$sql .= "sip_force_contact = '$sip_force_contact', ";
-			if (strlen($sip_force_expires) == 0) {
-				$sql .= "sip_force_expires = null, ";
-			}
-			else {
-				$sql .= "sip_force_expires = '$sip_force_expires', ";
-			}
-			if (strlen($nibble_account) == 0) {
-				$sql .= "nibble_account = null, ";
-			}
-			else {
-				$sql .= "nibble_account = '$nibble_account', ";
-			}
-			if (strlen($mwi_account) > 0) {
-				if (strpos($mwi_account, '@') === false) {
-					if (count($_SESSION["domains"]) > 1) {
-						$mwi_account .= "@".$_SESSION['domain_name'];
-					}
-					else {
-						$mwi_account .= "@\$\${domain}";
-					}
-				}
-			}
-			$sql .= "mwi_account = '$mwi_account', ";
-			$sql .= "sip_bypass_media = '$sip_bypass_media', ";
-			$sql .= "dial_string = '$dial_string', ";
-			$sql .= "enabled = '$enabled', ";
-			$sql .= "description = '$description' ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and extension_uuid = '$extension_uuid'";
-			$db->exec(check_sql($sql));
-			unset($sql);
-
-			//synchronize configuration
-				if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+				//add or update voicemail
 					require_once "app/extensions/resources/classes/extension.php";
 					$ext = new extension;
-					$ext->xml();
+					$ext->db = $db;
+					$ext->domain_uuid = $domain_uuid;
+					$ext->extension = $extension;
+					$ext->number_alias = $number_alias;
+					$ext->vm_password = $vm_password;
+					$ext->vm_mailto = $vm_mailto;
+					$ext->vm_attach_file = $vm_attach_file;
+					$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
+					$ext->vm_enabled = $vm_enabled;
+					$ext->description = $description;
+					$ext->voicemail();
 					unset($ext);
-				}
+			} //if ($action == "update")
 
-			//write the provision files
-				if (strlen($provisioning_list)>0) {
-					require_once "app/provision/provision_write.php";
-				}
+		//check the permissions
+			if (permission_exists('extension_add') || permission_exists('extension_edit')) {
 
-			//determine the voicemail_id
-				if (is_numeric($extension)) {
-					$voicemail_id = $extension;
-				}
-				else {
-					$voicemail_id = $number_alias;
-				}
+				//synchronize configuration
+					if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+						require_once "app/extensions/resources/classes/extension.php";
+						$ext = new extension;
+						$ext->xml();
+						unset($ext);
+					}
 
-			//update the voicemail settings
-				$sql = "select * from v_voicemails ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and voicemail_id = '$voicemail_id' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (count($result) == 0) {
-					//add the voicemail box
-						$sql = "insert into v_voicemails ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "voicemail_uuid, ";
-						$sql .= "voicemail_id, ";
-						$sql .= "voicemail_password, ";
-						if (strlen($greeting_id) > 0) {
-							$sql .= "greeting_id, ";
-						}
-						$sql .= "voicemail_mail_to, ";
-						$sql .= "voicemail_attach_file, ";
-						$sql .= "voicemail_local_after_email, ";
-						$sql .= "voicemail_enabled, ";
-						$sql .= "voicemail_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'$voicemail_id', ";
-						$sql .= "'$vm_password', ";
-						$sql .= "'$vm_mailto', ";
-						$sql .= "'$vm_attach_file', ";
-						$sql .= "'$vm_keep_local_after_email', ";
-						$sql .= "'$vm_enabled', ";
-						$sql .= "'$description' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-				}
-				else {
-					//update the voicemail box
-					$sql = "update v_voicemails set ";
-					$sql .= "voicemail_password = '$vm_password', ";
-					$sql .= "voicemail_mail_to = '$vm_mailto', ";
-					$sql .= "voicemail_attach_file = '$vm_attach_file', ";
-					$sql .= "voicemail_local_after_email = '$vm_keep_local_after_email', ";
-					$sql .= "voicemail_enabled = '$vm_enabled', ";
-					$sql .= "voicemail_description = '$description' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and voicemail_id = '$voicemail_id'";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-				unset ($prep_statement);
+				//write the provision files
+					if (strlen($provisioning_list) > 0) {
+						require_once "app/provision/provision_write.php";
+						$ext = new extension;
+					}
 
-			//delete extension from memcache
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "memcache delete directory:".$extension."@".$_SESSION['domain_name'];
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
+				//delete extension from memcache
+					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+					if ($fp) {
+						$switch_cmd = "memcache delete directory:".$extension."@".$_SESSION['domain_name'];
+						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+					}
+			}
 
-			//show the action and redirect the user
+		//show the action and redirect the user
+			if ($action == "add") {
+				//prepare for alternating the row style
+					$c = 0;
+					$row_style["0"] = "row_style0";
+					$row_style["1"] = "row_style1";
+
+				//show the action and redirect the user
+					require_once "includes/header.php";
+					echo "<br />\n";
+					echo "<div align='center'>\n";
+					if (count($generated_users) == 0) {
+						//action add
+							echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
+							echo "	<table width='40%'>\n";
+							echo "		<tr>\n";
+							echo "			<th align='left'>Message</th>\n";
+							echo "		</tr>\n";
+							echo "		<tr>\n";
+							echo "			<td class='row_style1'><strong>Add Complete</strong></td>\n";
+							echo "		</tr>\n";
+							echo "	</table>\n";
+							echo "	<br />\n";
+					}
+					else {
+						//auto-generate user with extension as login name
+							echo "	<table width='40%' border='0' cellpadding='0' cellspacing='0'>\n";
+							echo "		<tr>\n";
+							echo "			<td colspan='2'><strong>New User Accounts</strong></td>\n";
+							echo "		</tr>\n";
+							echo "		<tr>\n";
+							echo "			<th>Username</th>\n";
+							echo "			<th>Password</th>\n";
+							echo "		</tr>\n";
+							foreach($generated_users as $tmp_user){
+								echo "		<tr>\n";
+								echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['username']."</td>\n";
+								echo "			<td valign='top' class='".$row_style[$c]."'>".$tmp_user['password']."</td>\n";
+								echo "		</tr>\n";
+							}
+							if ($c==0) { $c=1; } else { $c=0; }
+							echo "	</table>";
+					}
+					echo "</div>\n";
+					require_once "includes/footer.php";
+			}
+			if ($action == "update") {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
 				echo "<br />\n";
 				echo "<div align='center'>\n";
-
-				//action update
-					echo "	<table width='40%'>\n";
-					echo "		<tr>\n";
-					echo "			<th align='left'>Message</th>\n";
-					echo "		</tr>\n";
-					echo "		<tr>\n";
+				echo "	<table width='40%'>\n";
+				echo "		<tr>\n";
+				echo "			<th align='left'>Message</th>\n";
+				echo "		</tr>\n";
+				echo "		<tr>\n";
+				if ($action == "update") {
 					echo "			<td class='row_style1'><strong>Update Complete</strong></td>\n";
-					echo "		</tr>\n";
-					echo "	</table>\n";
-					echo "<br />\n";
-
+				}
+				else {
+					echo "			<td class='row_style1'><strong>Add Complete</strong></td>\n";
+				}
+				echo "		</tr>\n";
+				echo "	</table>\n";
+				echo "<br />\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
-		} //if ($action == "update")
+			}
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
