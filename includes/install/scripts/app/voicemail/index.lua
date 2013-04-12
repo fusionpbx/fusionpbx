@@ -218,9 +218,6 @@
 		--valid voicemail
 			if (voicemail_uuid ~= nil) then
 
-				--make sure the voicemail directory exists
-					mkdir(voicemail_dir.."/"..voicemail_id);
-
 				--save the recording
 					timeouts = 0;
 					play_greeting();
