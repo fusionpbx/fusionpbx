@@ -61,7 +61,7 @@ require_once "includes/paging.php";
 
 	//get the number of rows in v_extensions 
 		$sql = "select count(*) as num_rows from v_extensions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
 			$prep_statement->execute();
