@@ -39,7 +39,7 @@
 				max_len_seconds = 30;
 				silence_threshold = 30;
 				silence_seconds = 5;
-				os.execute("mkdir -p " .. voicemail_dir.."/"..voicemail_id);
+				mkdir(voicemail_dir.."/"..voicemail_id);
 				result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/recorded_name.wav", max_len_seconds, silence_threshold, silence_seconds);
 				--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 

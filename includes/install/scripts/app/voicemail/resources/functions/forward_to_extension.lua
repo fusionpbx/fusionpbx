@@ -124,7 +124,7 @@
 			event:fire();
 
 		--if local after email is true then copy the recording file
-			os.execute("mkdir -p " .. voicemail_dir.."/"..forward_voicemail_id);
+			mkdir(voicemail_dir.."/"..forward_voicemail_id);
 			os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
 
 		--send the email with the voicemail recording attached
