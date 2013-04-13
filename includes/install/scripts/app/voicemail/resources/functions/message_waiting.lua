@@ -37,6 +37,7 @@
 			--send the message waiting event
 				local event = freeswitch.Event("message_waiting");
 				if (row["message_count"] == "0") then
+					--freeswitch.consoleLog("notice", "[voicemail] mailbox: "..voicemail_id.."@"..domain_name.." messages: " .. row["message_count"] .. " no messages\n");
 					event:addHeader("MWI-Messages-Waiting", "no");
 				else
 					event:addHeader("MWI-Messages-Waiting", "yes");
