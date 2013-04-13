@@ -36,14 +36,7 @@
 	debug["info"] = false;
 
 --connect to the database
-	--ODBC - data source name
-		if (dsn_name) then
-			dbh = freeswitch.Dbh(dsn_name,dsn_username,dsn_password);
-		end
-	--FreeSWITCH core db handler
-		if (db_type == "sqlite") then
-			dbh = freeswitch.Dbh("sqlite://"..db_path.."/"..db_name);
-		end
+	dbh = freeswitch.Dbh(database["system"]);
 
 --used to stop the lua service
 	local file = assert(io.open(tmp_file, "w"));

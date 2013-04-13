@@ -85,13 +85,15 @@
 						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 					end
 					status = dbh:query(sql, function(row)
+						--send the message waiting event
+						local event = freeswitch.Event("message_waiting");
 						if (row["new_messages"] == "0") then
-							--send the message waiting event
-							local event = freeswitch.Event("message_waiting");
 							event:addHeader("MWI-Messages-Waiting", "no");
-							event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-							event:fire();
+						else
+							event:addHeader("MWI-Messages-Waiting", "yes");
 						end
+						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+						event:fire();
 					end);
 				end
 			end
