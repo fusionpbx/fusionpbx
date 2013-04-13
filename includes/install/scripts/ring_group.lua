@@ -96,15 +96,15 @@
 
 		if (x == 0) then
 			app_data = ""; --{originate_timeout="..ring_group_timeout_sec.."}";
-			app_data = app_data .. "[leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = app_data .. "[sip_invite_domain="..domain_name..",leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		else
-			app_data = app_data .. delimiter .. "[leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
+			app_data = app_data .. delimiter .. "[sip_invite_domain="..domain_name..",leg_timeout="..extension_timeout..",leg_delay_start="..extension_delay..",origination_caller_id_name="..origination_caller_id_name.."]user/" .. row.extension .. "@" .. domain_name;
 		end
 		x = x + 1;
 	end);
 
 --app_data
-	--freeswitch.consoleLog("notice", "Debug:\n" .. app_data .. "\n");
+	--freeswitch.consoleLog("notice", "[ring group] app_data: " .. app_data .. "\n");
 
 --session actions
 	if (session:ready()) then
@@ -115,7 +115,19 @@
 		session:execute("bind_meta_app", "2 ab s record_session::"..recordings_dir.."}/archive/"..os.date("%Y").."/"..os.date("%m").."/"..os.date("%d").."}/"..uuid..".wav");
 		session:execute("bind_meta_app", "3 ab s execute_extension::cf XML features");
 		session:execute("bind_meta_app", "4 ab s execute_extension::att_xfer XML features");
-		session:execute("bridge", app_data);
+		if (app_data) then
+			session:execute("bridge", app_data);
+		else
+			--get the timeout app and data
+				sql = [[SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups 
+				where ring_group_uuid = ']]..ring_group_uuid..[[' 
+				and ring_group_enabled = 'true' ]];
+				--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+				dbh:query(sql, function(row)
+					ring_group_timeout_app = row.ring_group_timeout_app;
+					ring_group_timeout_data = row.ring_group_timeout_data;
+				end);
+		end
 		if (session:getVariable("originate_disposition") ~= "SUCCESS") then
 			session:execute(ring_group_timeout_app, ring_group_timeout_data);
 		end
