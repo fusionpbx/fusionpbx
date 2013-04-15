@@ -43,7 +43,7 @@ else {
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$greeting_uuid = check_str($_REQUEST["id"]);
+		$voicemail_greeting_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -51,7 +51,7 @@ else {
 
 //get the form value and set to php variables
 	$voicemail_id = check_str($_REQUEST["voicemail_id"]);
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$greeting_name = check_str($_POST["greeting_name"]);
 		$greeting_description = check_str($_POST["greeting_description"]);
 
@@ -64,7 +64,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		$greeting_uuid = check_str($_POST["greeting_uuid"]);
+		$voicemail_greeting_uuid = check_str($_POST["voicemail_greeting_uuid"]);
 	}
 
 	//check for all required data
@@ -117,8 +117,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($action == "update" && permission_exists('voicemail_greetings_edit')) {
 			//get the original filename
 				$sql = "select * from v_voicemail_greetings ";
-				$sql .= "where greeting_uuid = '$greeting_uuid' ";
-				$sql .= "and domain_uuid = '$domain_uuid' ";
+				$sql .= "where voicemail_greeting_uuid = '$voicemail_greeting_uuid' ";
+				$sql .= "and voicemail_greeting_uuid = '$domain_uuid' ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -140,27 +140,28 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "greeting_name = '$greeting_name', ";
 				$sql .= "greeting_description = '$greeting_description' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and greeting_uuid = '$greeting_uuid' ";
+				$sql .= "and voicemail_greeting_uuid = '$voicemail_greeting_uuid' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-			require_once "includes/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$voicemail_id."\">\n";
-			echo "<div align='center'>\n";
-			echo "".$text['confirm-update']."\n";
-			echo "</div>\n";
-			require_once "includes/footer.php";
-			return;
+			//redirect the user
+				require_once "includes/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=".$voicemail_id."\">\n";
+				echo "<div align='center'>\n";
+				echo "".$text['confirm-update']."\n";
+				echo "</div>\n";
+				require_once "includes/footer.php";
+				return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$greeting_uuid = $_GET["id"];
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
+		$voicemail_greeting_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and greeting_uuid = '$greeting_uuid' ";
+		$sql .= "and voicemail_greeting_uuid = '$voicemail_greeting_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -183,7 +184,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "      <br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
-
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
@@ -192,7 +192,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' width='30%' nowrap><b>".$text['label-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['label-edit']['en-us']."</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['label-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='voicemail_greetings.php?id=".$voicemail_id."'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
@@ -221,7 +221,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='greeting_uuid' value='$greeting_uuid'>\n";
+		echo "				<input type='hidden' name='voicemail_greeting_uuid' value='$voicemail_greeting_uuid'>\n";
 	}
 	echo "				<input type='hidden' name='voicemail_id' value='$voicemail_id'>\n";
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";

@@ -1,6 +1,6 @@
 ﻿<?php
 
-	//v_voicemail_greetings
+	//voicemail_greetings
 	$text['title']['en-us'] = 'Voicemail Greetings';
 	$text['title']['pt-pt'] = 'Saudações de correio de voz';
 
@@ -31,11 +31,11 @@
 	$text['button-save']['en-us'] = 'Save';
 	$text['button-save']['pt-pt'] = 'Guardar';
 
-	//v_voicemail_greetings_delete
-	$text['confirm-delete-2']['en-us'] = 'Delete Complete';
-	$text['confirm-delete-2']['pt-pt'] = 'Eliminação Completa';
+	//voicemail_greeting_delete
+	$text['confirm-delete']['en-us'] = 'Delete Complete';
+	$text['confirm-delete']['pt-pt'] = 'Eliminação Completa';
 
-	//v_voicemail_greetings_edit
+	//voicemail_greeting_edit
 	$text['confirm-name']['en-us'] = 'Please provide: Greeting Name (play)';
 	$text['confirm-name']['pt-pt'] = 'Por favor, forneça: Nome da saudação (execução)';
 

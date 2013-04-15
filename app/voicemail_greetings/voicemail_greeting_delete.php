@@ -26,7 +26,6 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "app_languages.php";
 if (permission_exists('voicemail_greetings_delete')) {
 	//access granted
 }
@@ -36,7 +35,8 @@ else {
 }
 
 //add multi-lingual support
-	foreach($content_voicemail_greetings as $key => $value) {
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
@@ -48,7 +48,7 @@ if (count($_GET)>0) {
 if (strlen($id)>0) {
 	//get the greeting filename
 		$sql = "select * from v_voicemail_greetings ";
-		$sql .= "where greeting_uuid = '$id' ";
+		$sql .= "where voicemail_greeting_uuid = '$id' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$sql .= "and voicemail_id = '$voicemail_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -62,7 +62,7 @@ if (strlen($id)>0) {
 
 	//delete recording from the database
 		$sql = "delete from v_voicemail_greetings ";
-		$sql .= "where greeting_uuid = '$id' ";
+		$sql .= "where voicemail_greeting_uuid = '$id' ";
 		$sql .= "and domain_uuid = '$domain_uuid' ";
 		$sql .= "and voicemail_id = '$voicemail_id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -80,7 +80,7 @@ if (strlen($id)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_greetings.php?id=$voicemail_id\">\n";
 	echo "<div align='center'>\n";
-	echo "".$text['confirm-delete-2']."\n";
+	echo "".$text['confirm-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
