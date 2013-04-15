@@ -48,8 +48,8 @@ else {
 
 //get the http get values and set them as php variables
 	$voicemail_id = check_str($_REQUEST["id"]);
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //used to search the array to determin if an extension is assigned to the user
 	function is_extension_assigned($number) {
@@ -301,7 +301,7 @@ else {
 	echo "<th align='right'>".$text['table-download']."</th>\n";
 	echo "<th width=\"50px\" class=\"listhdr\" nowrap=\"nowrap\">".$text['table-size']."</th>\n";
 	echo th_order_by('greeting_description', $text['table-description'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td align='right' width='21'>\n";
 	//if (permission_exists('voicemail_greetings_add')) {
 	//	echo "	<a href='voicemail_greetings_edit.php?&voicemail_id=".$voicemail_id."' alt='add'>$v_link_label_add</a>\n";
 	//}
@@ -343,11 +343,11 @@ else {
 			echo "	<td valign='top' class='row_stylebg'>".$row['greeting_description']."&nbsp;</td>\n";
 
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('voicemail_greetings_edit')) {
-				echo "		<a href='voicemail_greetings_edit.php?id=".$row['greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='edit'>$v_link_label_edit</a>\n";
-			}
+			//if (permission_exists('voicemail_greetings_edit')) {
+			//	echo "		<a href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='edit'>$v_link_label_edit</a>\n";
+			//}
 			if (permission_exists('voicemail_greetings_delete')) {
-				echo "		<a href='voicemail_greetings_delete.php?id=".$row['greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='voicemail_greeting_delete.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -362,11 +362,7 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
-	//if (permission_exists('voicemail_greetings_add')) {
-	//	echo "			<a href='voicemail_greetings_edit.php?voicemail_id=".$voicemail_id."' alt='add'>$v_link_label_add</a>\n";
-	//}
-	echo "		</td>\n";
+	echo "		<td width='33.3%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
 
