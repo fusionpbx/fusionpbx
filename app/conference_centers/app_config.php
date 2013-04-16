@@ -288,7 +288,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'end_epoch';
 		$z++;
 
-		$y = 4; //table array index
+		$y = 3; //table array index
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = 'v_conference_session_details';
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
@@ -351,7 +351,7 @@
 		$z++;
 
 		/*
-		$y = 1; //table array index
+		$y = 4; //table array index
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = 'v_conference_center_users';
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'conference_user_uuid';
