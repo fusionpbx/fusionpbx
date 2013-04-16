@@ -47,6 +47,38 @@
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = 'v_meetings';
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'meeting_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
+		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'moderator_pin';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the moderator PIN number.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'participant_pin';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the participant PIN number.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'enabled';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select to enable or disable the meeting.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'description';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Description.for the meeting description.';
+		$z++;
+
+		$y = 1; //table array index
+		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = 'v_meeting_users';
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
@@ -71,36 +103,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'user_uuid';
-		$z++;
-
-		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_meeting_pins';
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'meeting_pin_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'primary';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'meeting_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'member_pin';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the PIN number.';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'member_type';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the member type.';
 		$z++;
 
 ?>
