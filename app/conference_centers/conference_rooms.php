@@ -46,6 +46,7 @@ else {
 
 //get the meeting_uuid using the pin number
 	$search = check_str($_GET["search"]);
+	$search = preg_replace('{\D}', '', $search);
 	if (strlen($search) > 0) {
 		$sql = "select * from v_meetings ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -216,8 +217,8 @@ else {
 		echo "<tr>\n";
 		//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
 		//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
-		echo "<th>".$text['label-moderator-pin']."</th>\n";
-		echo "<th>".$text['label-participant-pin']."</th>\n";
+		echo "<th nowrap='nowrap'>".$text['label-moderator-pin']."</th>\n";
+		echo "<th nowrap='nowrap'>".$text['label-participant-pin']."</th>\n";
 		//echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 		echo th_order_by('record', $text['label-record'], $order_by, $order);
 		//echo th_order_by('max_members', 'Max', $order_by, $order);
