@@ -49,6 +49,21 @@ else {
 		$action = "add";
 	}
 
+//get the conference centers
+	$sql = "select * from v_conference_centers ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	if (strlen($conference_room_uuid) > 0) {
+		$sql .= "and conference_room_uuid = '".$conference_room_uuid."' ";
+	}
+	$sql .= "order by conference_center_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+	$conference_center_count = count($conference_centers);
+	if ($conference_center_count == 1) {
+		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
+	}
+
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
@@ -73,25 +88,26 @@ else {
 		$participant_pin = preg_replace('{\D}', '', $participant_pin);
 	}
 
-function get_meeting_pin($length, $meeting_uuid) {
-	global $db;
-	$pin = generate_password($length,1);
-	$sql = "select count(*) as num_rows from v_meeting_pins ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
-	$sql .= "and member_pin = '".$pin."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-		if ($row['num_rows'] == 0) {
-			return $pin;
-		}
-		else {
-			get_meeting_pin($length, $uuid);
+//define fucntion get_meeting_pin - used to find a unique pin number
+	function get_meeting_pin($length, $meeting_uuid) {
+		global $db;
+		$pin = generate_password($length,1);
+		$sql = "select count(*) as num_rows from v_meetings ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		//$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+		$sql .= "and (moderator_pin = '".$pin."' or participant_pin = '".$pin."') ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] == 0) {
+				return $pin;
+			}
+			else {
+				get_meeting_pin($length, $uuid);
+			}
 		}
 	}
-}
 
 //record announcment
 	if ($record == "true") {
@@ -110,7 +126,9 @@ function get_meeting_pin($length, $meeting_uuid) {
 //generate the pins
 	$sql = "select conference_center_pin_length from v_conference_centers ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	//$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
+	if (strlen($conference_center_uuid) > 0) {
+		$sql .= "and conference_center_uuid = '".$conference_center_uuid."' ";
+	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -137,17 +155,6 @@ function get_meeting_pin($length, $meeting_uuid) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 		}
-		if (strlen($_REQUEST["meeting_pin_uuid"]) > 0) {
-			//set the variables
-				$meeting_pin_uuid = check_str($_REQUEST["meeting_pin_uuid"]);
-				$conference_room_uuid = check_str($_REQUEST["conference_room_uuid"]);
-			//delete the pin number
-				$sql = "delete from v_meeting_pins ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and meeting_pin_uuid = '$meeting_pin_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
-		}
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_room_edit.php?id=$conference_room_uuid\">\n";
@@ -156,17 +163,6 @@ function get_meeting_pin($length, $meeting_uuid) {
 			return;
 	}
 
-//get the conference centers
-	$sql = "select * from v_conference_centers ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "order by conference_center_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$conference_center_count = count($conference_centers);
-	if ($conference_center_count == 1) {
-		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
-	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
@@ -177,27 +173,42 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for a unique pin number and length
 		if (strlen($moderator_pin) > 0) {
-			$sql = "select count(*) as num_rows from v_meeting_pins ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			//$sql .= "and meeting_uuid = '".$meeting_uuid."' ";
-			$sql .= "and member_pin = '".$moderator_pin."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] > 0) {
-					$msg .= "Please provide a unique moderator pin number.<br>\n"; //participant
+			//make sure the moderator pin number is unique
+				$sql = "select count(*) as num_rows from v_meetings ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				$sql .= "and moderator_pin = '".$moderator_pin."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['num_rows'] > 0) {
+						$msg .= "Please provide a unique moderator pin number.<br>\n";
+					}
 				}
-			}
-			if ($moderator_pin == $participant_pin) {
-				$msg .= "Moderator and Participant PIN number must be unique.\n";
-			}
-			if (strlen($moderator_pin) != $pin_length) {
-				$msg .= "Please provide a moderator PIN number that is the required length.\n";
-			}
-			if (strlen($participant_pin) != $pin_length) {
-				$msg .= "Please provide a participant PIN number that is the required length.\n";
-			}
+			//make sure the participant pin number is unique
+				$sql = "select count(*) as num_rows from v_meetings ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				$sql .= "and participant_pin = '".$participant_pin."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['num_rows'] > 0) {
+						$msg .= "Please provide a unique participant pin number.<br>\n";
+					}
+				}
+			//additional checks
+				if ($moderator_pin == $participant_pin) {
+					$msg .= "Moderator and Participant PIN number must be unique.\n";
+				}
+				if (strlen($moderator_pin) != $pin_length) {
+					$msg .= "Please provide a moderator PIN number that is the required length.\n";
+				}
+				if (strlen($participant_pin) != $pin_length) {
+					$msg .= "Please provide a participant PIN number that is the required length.\n";
+				}
 		}
 
 	//check for all required data
@@ -250,7 +261,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "participant_pin, ";
 					$sql .= "enabled, ";
 					$sql .= "description ";
-					$sql .= ")";
+					$sql .= ") ";
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'$domain_uuid', ";
@@ -313,7 +324,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "meeting_user_uuid, ";
 						$sql .= "meeting_uuid, ";
 						$sql .= "user_uuid ";
-						$sql .= ")";
+						$sql .= ") ";
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'$domain_uuid', ";
@@ -408,97 +419,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
-/*
-			//get the pin numbers for the meeting
-				$moderator_pin_uuid = '';
-				$participant_pin_uuid = '';
-				$sql = "SELECT * FROM v_meeting_pins ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and meeting_uuid = '".$meeting_uuid."' ";
-				$sql .= "order by member_pin asc ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$result_count = count($result);
-				foreach($result as $field) {
-					if ($field['member_type'] == "moderator") {
-						$moderator_member_pin = $field['member_pin'];
-						$moderator_pin_uuid = $field['meeting_pin_uuid'];
-					}
-					else {
-						$participant_member_pin = $field['member_pin'];
-						$participant_pin_uuid = $field['meeting_pin_uuid'];
-					}
-				}
 
-			//add or update the moderator_pin
-				if (strlen($moderator_pin_uuid) == 0) {
-					//add
-					$meeting_pin_uuid = uuid();
-					$sql = "insert into v_meeting_pins ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "meeting_pin_uuid, ";
-					$sql .= "meeting_uuid, ";
-					$sql .= "member_pin, ";
-					$sql .= "member_type ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$meeting_pin_uuid', ";
-					$sql .= "'$meeting_uuid', ";
-					$sql .= "'$moderator_pin', ";
-					$sql .= "'moderator' ";
-					$sql .= ")";
-					//echo $sql; //exit;
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-				else {
-					//update
-					$sql = "update v_meeting_pins set ";
-					$sql .= "member_pin = '$moderator_pin' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and meeting_pin_uuid = '$moderator_pin_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-
-			//add or update the participant_pin
-				if (strlen($participant_pin_uuid) == 0) {
-					//add
-					$meeting_pin_uuid = uuid();
-					$sql = "insert into v_meeting_pins ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "meeting_pin_uuid, ";
-					$sql .= "meeting_uuid, ";
-					$sql .= "member_pin, ";
-					$sql .= "member_type ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
-					$sql .= "'$meeting_pin_uuid', ";
-					$sql .= "'$meeting_uuid', ";
-					$sql .= "'$participant_pin', ";
-					$sql .= "'participant' ";
-					$sql .= ")";
-					//echo $sql; //exit;
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-				else {
-					//update
-					$sql = "update v_meeting_pins set ";
-					$sql .= "member_pin = '$participant_pin' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "and meeting_pin_uuid = '$participant_pin_uuid' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-*/
 			//redirect the user
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_room_edit.php?id=$conference_room_uuid\">\n";
@@ -515,15 +436,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		//get the conference room details
 			$conference_room_uuid = check_str($_REQUEST["id"]);
-			$sql = "select * from v_conference_rooms ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
+			$sql = "select * from v_conference_rooms as r, v_meetings as m ";
+			$sql .= "where r.domain_uuid = '$domain_uuid' ";
+			$sql .= "and r.meeting_uuid = m.meeting_uuid ";
+			$sql .= "and r.conference_room_uuid = '$conference_room_uuid' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll();
 			foreach ($result as &$row) {
 				$conference_center_uuid = $row["conference_center_uuid"];
 				$meeting_uuid = $row["meeting_uuid"];
+				$moderator_pin = $row["moderator_pin"];
+				$participant_pin = $row["participant_pin"];
 				$profile = $row["profile"];
 				$record = $row["record"];
 				$max_members = $row["max_members"];
@@ -538,19 +462,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			unset ($prep_statement);
 		}
-	//get the pin numbers
-		$sql = "SELECT * FROM v_meetings ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and meeting_uuid = '".$meeting_uuid."' ";
-		$sql .= "order by moderator_pin asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		foreach ($result as &$row) {
-			$moderator_pin = $row["moderator_pin"];
-			$participant_pin = $row["participant_pin"];
-		}
-		unset ($prep_statement);
 
 //get default pins
 	if (strlen($moderator_pin) == 0) {
