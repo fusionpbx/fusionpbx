@@ -35,11 +35,6 @@
 --prepare the api object
 	api = freeswitch.API();
 
---define the trim function
-	function trim(s)
-		return s:gsub("^%s+", ""):gsub("%s+$", "")
-	end
-
 --general functions
 	dofile(scripts_dir.."/resources/functions/base64.lua");
 	dofile(scripts_dir.."/resources/functions/trim.lua");
@@ -77,9 +72,8 @@
 					end
 
 				--get the moderator_pin
-					sql = [[SELECT member_pin as moderator_pin FROM v_meeting_pins 
-					WHERE meeting_uuid = ']] .. meeting_uuid ..[[' 
-					AND member_type = 'moderator']];
+					sql = [[SELECT moderator_pin FROM v_meetings 
+					WHERE meeting_uuid = ']] .. meeting_uuid ..[[']];
 					freeswitch.consoleLog("notice", "[voicemail] sql: " .. sql .. "\n");
 					status = dbh:query(sql, function(row)
 					moderator_pin = string.lower(row["moderator_pin"]);
@@ -370,11 +364,11 @@
 						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-pin.wav", "", "\\d+");
 					end
 				if (pin_number ~= "") then
-					sql = [[SELECT * FROM v_conference_rooms as s, v_meeting_pins as p
+					sql = [[SELECT * FROM v_conference_rooms as s, v_meetings as p
 						WHERE s.domain_uuid = ']] .. domain_uuid ..[['
 						AND s.meeting_uuid = p.meeting_uuid
 						AND p.domain_uuid = ']] .. domain_uuid ..[['
-						AND p.member_pin = ']] .. pin_number ..[['
+						AND (p.moderator_pin = ']] .. pin_number ..[[' or p.participant_pin = ']] .. pin_number ..[[') 
 						AND enabled = 'true' ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
@@ -408,11 +402,11 @@
 				pin_number = get_pin_number(domain_uuid);
 			end
 			if (pin_number ~= nil) then
-				sql = [[SELECT * FROM v_conference_rooms as s, v_meeting_pins as p
+				sql = [[SELECT * FROM v_conference_rooms as s, v_meetings as p
 					WHERE s.domain_uuid = ']] .. domain_uuid ..[['
 					AND s.meeting_uuid = p.meeting_uuid
 					AND p.domain_uuid = ']] .. domain_uuid ..[['
-					AND p.member_pin = ']] .. pin_number ..[['
+					AND (p.moderator_pin = ']] .. pin_number ..[[' or p.participant_pin = ']] .. pin_number ..[[')
 					AND enabled = 'true' ]];
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
