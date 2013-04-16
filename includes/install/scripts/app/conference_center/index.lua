@@ -364,12 +364,12 @@
 						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-pin.wav", "", "\\d+");
 					end
 				if (pin_number ~= "") then
-					sql = [[SELECT * FROM v_conference_rooms as s, v_meetings as p
-						WHERE s.domain_uuid = ']] .. domain_uuid ..[['
-						AND s.meeting_uuid = p.meeting_uuid
-						AND p.domain_uuid = ']] .. domain_uuid ..[['
-						AND (p.moderator_pin = ']] .. pin_number ..[[' or p.participant_pin = ']] .. pin_number ..[[') 
-						AND enabled = 'true' ]];
+					sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
+						WHERE r.domain_uuid = ']] .. domain_uuid ..[['
+						AND r.meeting_uuid = m.meeting_uuid
+						AND m.domain_uuid = ']] .. domain_uuid ..[['
+						AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[') 
+						AND r.enabled = 'true' ]];
 					if (debug["sql"]) then
 						freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
 					end
@@ -402,12 +402,12 @@
 				pin_number = get_pin_number(domain_uuid);
 			end
 			if (pin_number ~= nil) then
-				sql = [[SELECT * FROM v_conference_rooms as s, v_meetings as p
-					WHERE s.domain_uuid = ']] .. domain_uuid ..[['
-					AND s.meeting_uuid = p.meeting_uuid
-					AND p.domain_uuid = ']] .. domain_uuid ..[['
-					AND (p.moderator_pin = ']] .. pin_number ..[[' or p.participant_pin = ']] .. pin_number ..[[')
-					AND enabled = 'true' ]];
+				sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
+					WHERE r.domain_uuid = ']] .. domain_uuid ..[['
+					AND r.meeting_uuid = m.meeting_uuid
+					AND m.domain_uuid = ']] .. domain_uuid ..[['
+					AND (m.moderator_pin = ']] .. pin_number ..[[' or m.participant_pin = ']] .. pin_number ..[[')
+					AND r.enabled = 'true' ]];
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
 				end
