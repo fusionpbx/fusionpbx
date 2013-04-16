@@ -70,8 +70,8 @@
 			//get the list of rooms
 				$fields = "r.domain_uuid, r.conference_room_uuid, r.conference_center_uuid, r.meeting_uuid, max_members, ";
 				$fields .= "wait_mod, announce, mute, sounds, created, created_by, r.enabled, r.description, record, ";
-				$fields .= "profile, meeting_user_uuid, user_uuid, meeting_pin_uuid, member_pin, member_type ";
-				$sql = "select ".$fields." from v_conference_rooms as r, v_meeting_users as u, v_meeting_pins as p ";
+				$fields .= "profile, meeting_user_uuid, user_uuid, moderator_pin, participant_pin ";
+				$sql = "select ".$fields." from v_conference_rooms as r, v_meeting_users as u, v_meetings as p ";
 				$sql .= "where r.domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and r.meeting_uuid = u.meeting_uuid ";
 				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
@@ -114,12 +114,8 @@
 								$result[$x]["profile"] = $row["profile"];
 								$result[$x]["meeting_user_uuid"] = $row["meeting_user_uuid"];
 								$result[$x]["user_uuid"] = $row["user_uuid"];
-								if ($row["member_type"] == "moderator") {
-									$result[$x]["moderator_pin"] = $row["member_pin"];
-								}
-								if ($row["member_type"] == "participant") {
-									$result[$x]["participant_pin"] = $row["member_pin"];
-								}
+								$result[$x]["moderator_pin"] = $row["moderator_pin"];
+								$result[$x]["participant_pin"] = $row["participant_pin"];
 								$result[$x]["created"] = $row["created"];
 								$result[$x]["created_by"] = $row["created_by"];
 								$result[$x]["enabled"] = $row["enabled"];

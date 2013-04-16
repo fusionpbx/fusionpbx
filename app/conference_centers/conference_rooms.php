@@ -47,9 +47,9 @@ else {
 //get the meeting_uuid using the pin number
 	$search = check_str($_GET["search"]);
 	if (strlen($search) > 0) {
-		$sql = "select * from v_meeting_pins ";
+		$sql = "select * from v_meetings ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and member_pin = '".$search."' ";
+		$sql .= "and (moderator_pin = '".$search."' or participant_pin = '".$search."') ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
 			$prep_statement->execute();
