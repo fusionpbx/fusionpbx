@@ -94,8 +94,8 @@ else {
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$prep_statement->execute();
+			$row = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] > 0) {
 				$num_rows = $row['num_rows'];
 			}

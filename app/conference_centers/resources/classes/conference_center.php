@@ -91,44 +91,46 @@
 				}
 				$sql .= "limit $this->rows_per_page offset $this->offset ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				$this->count = count($rows);
-				if ($this->count > 0) {
-					$x = 0;
-					foreach($rows as $row) {
-						//increment the array index
-							if (isset($previous) && $row["conference_room_uuid"] != $previous) { $x++; }
-						//build the array
-							$result[$x]["domain_uuid"] = $row["domain_uuid"];
-							$result[$x]["conference_room_uuid"] = $row["conference_room_uuid"];
-							$result[$x]["conference_center_uuid"] = $row["conference_center_uuid"];
-							$result[$x]["meeting_uuid"] = $row["meeting_uuid"];
-							$result[$x]["max_members"] = $row["max_members"];
-							$result[$x]["wait_mod"] = $row["wait_mod"];
-							$result[$x]["announce"] = $row["announce"];
-							$result[$x]["mute"] = $row["mute"];
-							$result[$x]["record"] = $row["record"];
-							$result[$x]["sounds"] = $row["sounds"];
-							$result[$x]["profile"] = $row["profile"];
-							$result[$x]["meeting_user_uuid"] = $row["meeting_user_uuid"];
-							$result[$x]["user_uuid"] = $row["user_uuid"];
-							if ($row["member_type"] == "moderator") {
-								$result[$x]["moderator_pin"] = $row["member_pin"];
-							}
-							if ($row["member_type"] == "participant") {
-								$result[$x]["participant_pin"] = $row["member_pin"];
-							}
-							$result[$x]["created"] = $row["created"];
-							$result[$x]["created_by"] = $row["created_by"];
-							$result[$x]["enabled"] = $row["enabled"];
-							$result[$x]["description"] = $row["description"];
-						//set the previous uuid
-							$previous = $row["conference_room_uuid"];
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$rows = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$this->count = count($rows);
+					if ($this->count > 0) {
+						$x = 0;
+						foreach($rows as $row) {
+							//increment the array index
+								if (isset($previous) && $row["conference_room_uuid"] != $previous) { $x++; }
+							//build the array
+								$result[$x]["domain_uuid"] = $row["domain_uuid"];
+								$result[$x]["conference_room_uuid"] = $row["conference_room_uuid"];
+								$result[$x]["conference_center_uuid"] = $row["conference_center_uuid"];
+								$result[$x]["meeting_uuid"] = $row["meeting_uuid"];
+								$result[$x]["max_members"] = $row["max_members"];
+								$result[$x]["wait_mod"] = $row["wait_mod"];
+								$result[$x]["announce"] = $row["announce"];
+								$result[$x]["mute"] = $row["mute"];
+								$result[$x]["record"] = $row["record"];
+								$result[$x]["sounds"] = $row["sounds"];
+								$result[$x]["profile"] = $row["profile"];
+								$result[$x]["meeting_user_uuid"] = $row["meeting_user_uuid"];
+								$result[$x]["user_uuid"] = $row["user_uuid"];
+								if ($row["member_type"] == "moderator") {
+									$result[$x]["moderator_pin"] = $row["member_pin"];
+								}
+								if ($row["member_type"] == "participant") {
+									$result[$x]["participant_pin"] = $row["member_pin"];
+								}
+								$result[$x]["created"] = $row["created"];
+								$result[$x]["created_by"] = $row["created_by"];
+								$result[$x]["enabled"] = $row["enabled"];
+								$result[$x]["description"] = $row["description"];
+							//set the previous uuid
+								$previous = $row["conference_room_uuid"];
+						}
+						unset($rows);
 					}
-					unset($rows);
+					unset ($prep_statement, $sql);
 				}
-				unset ($prep_statement, $sql);
 				return $result;
 		}
 	}
