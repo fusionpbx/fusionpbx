@@ -41,6 +41,7 @@
 
 if ( session:ready() ) then
 	session:answer();
+	domain_uuid = session:getVariable("domain_uuid");
 	pin_number = session:getVariable("pin_number");
 	sounds_dir = session:getVariable("sounds_dir");
 	sip_from_user = session:getVariable("sip_from_user");
@@ -89,6 +90,7 @@ if ( session:ready() ) then
 		sql = sql .. "WHERE e.domain_uuid = d.domain_uuid ";
 		if (extension == "true") then
 			sql = sql .. "AND e.extension = '" .. unique_id .."' ";
+			sql = sql .. "AND e.domain_uuid = '" .. domain_uuid .."' ";
 		else
 			sql = sql .. "AND e.unique_id = '" .. unique_id .."' ";
 		end
