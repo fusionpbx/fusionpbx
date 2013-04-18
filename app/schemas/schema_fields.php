@@ -106,7 +106,7 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_column']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_required']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_list_hidden']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_search_by']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_search_by']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order_tab']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_description']."&nbsp;</td>\n";
