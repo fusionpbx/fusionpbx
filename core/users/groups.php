@@ -45,7 +45,7 @@ require_once "includes/require.php";
 	echo "<td>";
 
 	echo "<table width='100%' border='0'><tr>";
-	echo "<td width='50%'><b>Group List</b></td>";
+	echo "<td width='50%'><b>Groups</b></td>";
 	echo "<td width='50%' align='right'>";
 	if (permission_exists('user_view')) {
 		echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='User Manager'>";
