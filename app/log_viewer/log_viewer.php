@@ -241,7 +241,7 @@ if (permission_exists('log_view')) {
 			//more firefox workaround...
 			//echo "<p style=\"background-color:$background_color;color:$default_color;font-wieght:$default_type;font-family:$default_font\">";
 
-			$ary_output[] = "<font color=\"$default_color\" face=\"$default_font\">".$log_line."</font><br>";
+			$ary_output[] = "<font color=\"$default_color\" face=\"$default_font\">".htmlentities($log_line)."</font><br>";
 		}
 	}
 
