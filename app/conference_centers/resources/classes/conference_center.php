@@ -81,7 +81,7 @@
 					$sql .= "and r.meeting_uuid = '".$this->meeting_uuid."' ";
 				}
 				if (strlen($this->order_by) == 0) {
-					$sql .= "order by description, meeting_uuid asc ";
+					$sql .= "order by r.description, r.meeting_uuid asc ";
 				} else {
 					$sql .= "order by $this->order_by $this->order ";
 				}
