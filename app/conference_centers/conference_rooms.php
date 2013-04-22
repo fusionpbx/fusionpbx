@@ -173,22 +173,19 @@ else {
 		$conference_center = new conference_center;
 		$conference_center->db = $db;
 		$conference_center->domain_uuid = $_SESSION['domain_uuid'];
-		$conference_center->voicemail_uuid = $voicemail_uuid;
-		$conference_center->voicemail_id = $voicemail_id;
 		if (strlen($meeting_uuid) > 0) {
 			$conference_center->meeting_uuid = $meeting_uuid;
 		}
 		if (strlen($search) > 0) {
 			$conference_center->search = $search;
 		}
-		$row_count = $conference_center->room_count() * 2;
+		$row_count = $conference_center->room_count();
 
 	//prepare to page the results
 		$rows_per_page = 150;
 		$param = "";
 		$page = check_str($_GET['page']);
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		$rows_per_page = $rows_per_page * 2;
 		list($paging_controls, $rows_per_page, $var3) = paging($row_count, $param, $rows_per_page); 
 		$offset = $rows_per_page * $page; 
 

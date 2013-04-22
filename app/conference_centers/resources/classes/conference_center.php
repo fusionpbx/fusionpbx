@@ -24,7 +24,7 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//define the voicemail class
+//define the conference center class
 	class conference_center {
 		public $db;
 		public $domain_uuid;
@@ -39,17 +39,13 @@
 
 		public function room_count() {
 			//get the room count
-				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meeting_users as u, v_meeting_pins as p ";
+				$sql = "select count(*) as num_rows from v_conference_rooms as r, v_meeting_users as u, v_meetings as p ";
 				$sql .= "where r.domain_uuid = '".$this->domain_uuid."' ";
 				$sql .= "and r.meeting_uuid = u.meeting_uuid ";
 				$sql .= "and r.meeting_uuid = p.meeting_uuid ";
-				$sql .= "and p.member_type = 'moderator' ";
 				if (!if_group("admin") && !if_group("superadmin")) {
 					$sql .= "and u.user_uuid = '".$_SESSION["user_uuid"]."' ";
 				}
-				//if (is_numeric($this->search)) {
-				//	$sql .= "and p.member_pin = '".$this->search."' ";
-				//}
 				if (isset($this->search)) {
 					$sql .= "and r.meeting_uuid = '".$this->meeting_uuid."' ";
 				}
@@ -137,8 +133,6 @@
 	$conference_center = new conference_center;
 	$conference_center->db = $db;
 	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
-	$conference_center->voicemail_uuid = $voicemail_uuid;
-	$conference_center->voicemail_id = $voicemail_id;
 	$conference_center->rows_per_page = 150;
 	$conference_center->offset = 0;
 	$conference_center->order_by = $order_by;
