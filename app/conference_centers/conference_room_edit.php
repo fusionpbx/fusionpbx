@@ -52,9 +52,6 @@ else {
 //get the conference centers
 	$sql = "select * from v_conference_centers ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (strlen($conference_room_uuid) > 0) {
-		$sql .= "and conference_room_uuid = '".$conference_room_uuid."' ";
-	}
 	$sql .= "order by conference_center_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
