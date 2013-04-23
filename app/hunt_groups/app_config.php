@@ -19,7 +19,7 @@
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = 'Hunt Group';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Hunt Groups';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['uuid'] = '632f87de-7f86-b68f-c629-4c2d2b3ce545';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/hunt_group/hunt_groups.php';
+		$apps[$x]['menu'][0]['path'] = '/app/hunt_groups/hunt_groups.php';
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
