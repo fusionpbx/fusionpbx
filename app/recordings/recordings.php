@@ -81,12 +81,14 @@ require_once "includes/paging.php";
 	}
 
 //upload the recording
-	if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recordings_upload')) {
-		if ($_POST['type'] == 'rec') {
-			move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_FILES['ulfile']['name']);
-			$savemsg = $text['message-uploaded']." ".$_SESSION['switch']['recordings']['dir']."/". htmlentities($_FILES['ulfile']['name']);
-			//system('chmod -R 744 '.$_SESSION['switch']['recordings']['dir'].'*');
-			unset($_POST['txtCommand']);
+	if (permission_exists('recordings_upload')) {
+		if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recordings_upload')) {
+			if ($_POST['type'] == 'rec') {
+				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_FILES['ulfile']['name']);
+				$savemsg = $text['message-uploaded']." ".$_SESSION['switch']['recordings']['dir']."/". htmlentities($_FILES['ulfile']['name']);
+				//system('chmod -R 744 '.$_SESSION['switch']['recordings']['dir'].'*');
+				unset($_POST['txtCommand']);
+			}
 		}
 	}
 
@@ -166,7 +168,6 @@ require_once "includes/paging.php";
 
 	echo "<br />\n";
 
-	echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
 	echo "	<table border='0' width='100%'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%'>\n";
@@ -175,17 +176,20 @@ require_once "includes/paging.php";
 		echo $_SESSION['switch']['recordings']['dir'];
 	}
 	echo "		</td>\n";
-	echo "		<td valign=\"top\" class=\"label\">\n";
-	echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
-	echo "		</td>\n";
-	echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
-	echo "			".$text['label-upload']."\n";
-	echo "			<input name=\"ulfile\" type=\"file\" class=\"btn\" id=\"ulfile\">\n";
-	echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
-	echo "		</td>\n";
+	if (permission_exists('recordings_upload')) {
+		echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
+		echo "		<td valign=\"top\" class=\"label\">\n";
+		echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
+		echo "		</td>\n";
+		echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
+		echo "			".$text['label-upload']."\n";
+		echo "			<input name=\"ulfile\" type=\"file\" class=\"btn\" id=\"ulfile\">\n";
+		echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
+		echo "		</td>\n";
+		echo "</form>";
+	}
 	echo "	</tr>\n";
 	echo "	</table>\n";
-	echo "</form>";
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
