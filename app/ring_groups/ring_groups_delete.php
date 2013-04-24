@@ -27,7 +27,7 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('ring_group_add')) {
 	//access granted
 }
 else {
