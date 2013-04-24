@@ -58,5 +58,6 @@
 	$text['button-delete-this']['en-us'] = 'Are you sure want to delete this?';
 	$text['button-search']['en-us'] = 'Search';
 	$text['button-add']['en-us'] = 'Add';
+	$text['label-file']['en-us'] = 'File:';
 
 ?>
