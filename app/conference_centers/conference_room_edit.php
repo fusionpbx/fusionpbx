@@ -169,12 +169,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for a unique pin number and length
-		if (strlen($moderator_pin) > 0) {
+		if (strlen($moderator_pin) > 0 || strlen($participant_pin) > 0) {
 			//make sure the moderator pin number is unique
 				$sql = "select count(*) as num_rows from v_meetings ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
-				$sql .= "and moderator_pin = '".$moderator_pin."' ";
+				$sql .= "and (moderator_pin = '".$moderator_pin."' or participant_pin = '".$moderator_pin."') ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
@@ -183,11 +183,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$msg .= "Please provide a unique moderator pin number.<br>\n";
 					}
 				}
+
 			//make sure the participant pin number is unique
 				$sql = "select count(*) as num_rows from v_meetings ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
-				$sql .= "and participant_pin = '".$participant_pin."' ";
+				$sql .= "and (moderator_pin = '".$participant_pin."' or participant_pin = '".$participant_pin."') ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
@@ -196,6 +197,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$msg .= "Please provide a unique participant pin number.<br>\n";
 					}
 				}
+
 			//additional checks
 				if ($moderator_pin == $participant_pin) {
 					$msg .= "Moderator and Participant PIN number must be unique.\n";
