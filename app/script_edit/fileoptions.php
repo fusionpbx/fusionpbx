@@ -36,10 +36,7 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	// included in the header.php file below
 
 require_once "header.php";
 
@@ -57,7 +54,7 @@ echo "<td colspan='2'>";
 echo "<table border='0'>";
 echo "<form method='post' name='frm' action=''>";
 echo "<tr><td>".$text['label-path']."</td><td width='95%'><input type='text' name='folder' id='folder' style=\"width: 100%;\" value=''></td><tr>\n";
-echo "<tr><td>File:</td><td width='95%' style=\"width: 60%;\"><input type='text' name='filename' id='filename' style=\"width: 100%;\" value=''></div></td></tr>\n";
+echo "<tr><td>".$text['label-file']."</td><td width='95%' style=\"width: 60%;\"><input type='text' name='filename' id='filename' style=\"width: 100%;\" value=''></div></td></tr>\n";
 echo "</form>";
 echo "</table>";
 
