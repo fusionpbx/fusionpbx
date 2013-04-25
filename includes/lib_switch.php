@@ -2414,6 +2414,10 @@ function save_hunt_group_xml() {
 						//$ent['destination_description']
 
 						$destination_timeout = $ent['destination_timeout'];
+						$hunt_group_cid_name_prefix = $row['hunt_group_cid_name_prefix'];
+						if (strlen($hunt_group_cid_name_prefix) > 0) {
+							$hunt_group_cid_name_prefix .= "#";
+						}
 						if (strlen($destination_timeout) == 0) {
 							if (strlen($row['hunt_group_timeout']) == 0) {
 								$destination_timeout = '30';
@@ -2431,8 +2435,9 @@ function save_hunt_group_xml() {
 							$tmp_sub_array["application"] = "bridge";
 							$tmp_sub_array["type"] = "extension";
 							$tmp_sub_array["extension"] = $ent['destination_data'];
+
 							//$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout]\"..sofia_contact_".$ent['destination_data'];
-							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout]user/".$ent['destination_data']."@\"..domain_name";
+							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout,origination_caller_id_name='".$hunt_group_cid_name_prefix."\"..caller_id_name..\"',origination_caller_id_number=\"..caller_id_number..\"]user/".$ent['destination_data']."@\"..domain_name";
 							$tmp_array[$i] = $tmp_sub_array;
 							unset($tmp_sub_array);
 						}
@@ -2453,7 +2458,7 @@ function save_hunt_group_xml() {
 							$bridge_array = outbound_route_to_bridge ($domain_uuid, $ent['destination_data']);
 							$destination_data = $bridge_array[0];
 							$tmp_sub_array["application"] = "bridge";
-							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout,origination_caller_id_name=\"..caller_id_name..\",origination_caller_id_number=\"..caller_id_number..\"]".$destination_data."\"";
+							$tmp_sub_array["data"] = "\"[leg_timeout=$destination_timeout,origination_caller_id_name='".$hunt_group_cid_name_prefix."\"..caller_id_name..\"',origination_caller_id_number=\"..caller_id_number..\"]".$destination_data."\"";
 							$tmp_array[$i] = $tmp_sub_array;
 							unset($tmp_sub_array);
 							unset($destination_data);
