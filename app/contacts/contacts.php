@@ -37,11 +37,12 @@ require_once "includes/header.php";
 require_once "includes/paging.php";
 
 //get the search criteria
-	$search_all = $_GET["search_all"];
+	$search_all = check_str($_GET["search_all"]);
+	$phone_number = check_str($_GET["phone_number"]);
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //show the content
 	echo "<div align='center'>";
@@ -73,29 +74,37 @@ require_once "includes/paging.php";
 		$sql = "";
 		$sql .= " select count(*) as num_rows from v_contacts ";
 		$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		if (strlen($search_all) > 0) {
-			if (is_numeric($search_all)) {
-				$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones where phone_number like '%".$search_all."%') \n";
-			}
-			else {
-				$sql .= "and contact_uuid in (\n";
-				$sql .= "	select contact_uuid from v_contacts ";
-				$sql .= "	where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
-				$sql .= "	and (\n";
-				$sql .= "	contact_organization like '%".$search_all."%' or \n";
-				$sql .= "	contact_name_given like '%".$search_all."%' or \n";
-				$sql .= "	contact_name_family like '%".$search_all."%' or \n";
-				$sql .= "	contact_nickname like '%".$search_all."%' or \n";
-				$sql .= "	contact_title like '%".$search_all."%' or \n";
-				$sql .= "	contact_category like '%".$search_all."%' or \n";
-				$sql .= "	contact_role like '%".$search_all."%' or \n";
-				$sql .= "	contact_email like '%".$search_all."%' or \n";
-				$sql .= "	contact_url like '%".$search_all."%' or \n";
-				$sql .= "	contact_time_zone like '%".$search_all."%' or \n";
-				$sql .= "	contact_note like '%".$search_all."%' or \n";
-				$sql .= "	contact_type like '%".$search_all."%'\n";
-				$sql .= "	)\n";
-				$sql .= ")\n";
+		if (strlen($phone_number) > 0) {
+			$phone_number = preg_replace('{\D}', '', $phone_number);
+			$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
+			$sql .= "where phone_number like '%".$phone_number."%') \n";
+		}
+		else {
+			if (strlen($search_all) > 0) {
+				if (is_numeric($search_all)) {
+					$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
+					$sql .= "where phone_number like '%".$search_all."%') \n";
+				}
+				else {
+					$sql .= "and contact_uuid in (\n";
+					$sql .= "	select contact_uuid from v_contacts ";
+					$sql .= "	where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+					$sql .= "	and (\n";
+					$sql .= "	contact_organization like '%".$search_all."%' or \n";
+					$sql .= "	contact_name_given like '%".$search_all."%' or \n";
+					$sql .= "	contact_name_family like '%".$search_all."%' or \n";
+					$sql .= "	contact_nickname like '%".$search_all."%' or \n";
+					$sql .= "	contact_title like '%".$search_all."%' or \n";
+					$sql .= "	contact_category like '%".$search_all."%' or \n";
+					$sql .= "	contact_role like '%".$search_all."%' or \n";
+					$sql .= "	contact_email like '%".$search_all."%' or \n";
+					$sql .= "	contact_url like '%".$search_all."%' or \n";
+					$sql .= "	contact_time_zone like '%".$search_all."%' or \n";
+					$sql .= "	contact_note like '%".$search_all."%' or \n";
+					$sql .= "	contact_type like '%".$search_all."%'\n";
+					$sql .= "	)\n";
+					$sql .= ")\n";
+				}
 			}
 		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -122,30 +131,38 @@ require_once "includes/paging.php";
 	//get the  list
 		$sql = "select * from v_contacts ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		if (strlen($search_all) > 0) {
-			if (is_numeric($search_all)) {
-				$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones where phone_number like '%".$search_all."%') \n";
-			}
-			else {
-				$sql .= "and contact_uuid in (\n";
-				$sql .= "	select contact_uuid from v_contacts where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
-				$sql .= "	and (\n";
-				$sql .= "	contact_organization like '%".$search_all."%' or \n";
-				$sql .= "	contact_name_given like '%".$search_all."%' or \n";
-				$sql .= "	contact_name_family like '%".$search_all."%' or \n";
-				$sql .= "	contact_nickname like '%".$search_all."%' or \n";
-				$sql .= "	contact_title like '%".$search_all."%' or \n";
-				$sql .= "	contact_category like '%".$search_all."%' or \n";
-				$sql .= "	contact_role like '%".$search_all."%' or \n";
-				$sql .= "	contact_email like '%".$search_all."%' or \n";
-				$sql .= "	contact_url like '%".$search_all."%' or \n";
-				$sql .= "	contact_time_zone like '%".$search_all."%' or \n";
-				$sql .= "	contact_note like '%".$search_all."%' or \n";
-				$sql .= "	contact_type like '%".$search_all."%'\n";
-				$sql .= "	)\n";
-				$sql .= ")\n";
+		if (strlen($phone_number) > 0) {
+			$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
+			$sql .= "where phone_number like '%".$phone_number."%') \n";
+		}
+		else {
+			if (strlen($search_all) > 0) {
+				if (is_numeric($search_all)) {
+					$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
+					$sql .= "where phone_number like '%".$search_all."%') \n";
+				}
+				else {
+					$sql .= "and contact_uuid in (\n";
+					$sql .= "	select contact_uuid from v_contacts where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
+					$sql .= "	and (\n";
+					$sql .= "	contact_organization like '%".$search_all."%' or \n";
+					$sql .= "	contact_name_given like '%".$search_all."%' or \n";
+					$sql .= "	contact_name_family like '%".$search_all."%' or \n";
+					$sql .= "	contact_nickname like '%".$search_all."%' or \n";
+					$sql .= "	contact_title like '%".$search_all."%' or \n";
+					$sql .= "	contact_category like '%".$search_all."%' or \n";
+					$sql .= "	contact_role like '%".$search_all."%' or \n";
+					$sql .= "	contact_email like '%".$search_all."%' or \n";
+					$sql .= "	contact_url like '%".$search_all."%' or \n";
+					$sql .= "	contact_time_zone like '%".$search_all."%' or \n";
+					$sql .= "	contact_note like '%".$search_all."%' or \n";
+					$sql .= "	contact_type like '%".$search_all."%'\n";
+					$sql .= "	)\n";
+					$sql .= ")\n";
+				}
 			}
 		}
+echo "sql: ".$sql."<br /><br />\n";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
