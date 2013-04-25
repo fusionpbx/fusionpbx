@@ -162,7 +162,6 @@ require_once "includes/paging.php";
 				}
 			}
 		}
-echo "sql: ".$sql."<br /><br />\n";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
