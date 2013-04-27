@@ -365,7 +365,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$tmp_config .= "/* \$Id\$ */\n";
 		$tmp_config .= "/*\n";
 		$tmp_config .= "	config.php\n";
-		$tmp_config .= "	Copyright (C) 2008, 2009 Mark J Crane\n";
+		$tmp_config .= "	Copyright (C) 2008, 20013 Mark J Crane\n";
 		$tmp_config .= "	All rights reserved.\n";
 		$tmp_config .= "\n";
 		$tmp_config .= "	Redistribution and use in source and binary forms, with or without\n";
@@ -447,13 +447,23 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
 		$tmp_config .= "\n";
 		$tmp_config .= "?>";
-		$fout = fopen($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php","w");
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php";
+		} elseif (file_exists("/etc/fusionpbx/config.php")){
+			$config = "/etc/fusionpbx/config.php";
+		} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+			$config = "/usr/local/etc/fusionpbx/config.php";
+		}
+		else {
+			$config = PROJECT_PATH."/includes/config.php";
+		}
+		$fout = fopen($config,"w");
 		fwrite($fout, $tmp_config);
 		unset($tmp_config);
 		fclose($fout);
 
 	//include the new config.php file
-		require "includes/config.php";
+		require $config;
 
 	//create the sqlite database
 		if ($db_type == "sqlite") {
