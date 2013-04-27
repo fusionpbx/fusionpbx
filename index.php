@@ -26,7 +26,14 @@
 include "root.php";
 
 //if config.php file does not exist then redirect to the install page
-	if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")){
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+		//do nothing
+	} elseif (file_exists("/etc/fusionpbx/config.php")){
+		//linux
+	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+		//bsd
+	}
+	else {
 		header("Location: ".PROJECT_PATH."/resources/install.php");
 		exit;
 	}

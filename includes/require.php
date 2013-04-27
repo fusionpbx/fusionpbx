@@ -24,7 +24,15 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-include "includes/config.php";
+if (file_exists("/etc/fusionpbx/config.php")) {
+	include "/etc/fusionpbx/config.php";
+}
+elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+	include "/usr/local/etc/fusionpbx/config.php";
+}
+else {
+	include "includes/config.php";
+}
 require_once "includes/lib_php.php";
 require "includes/lib_pdo.php";
 require_once "includes/lib_functions.php";
