@@ -103,10 +103,6 @@ else {
 	$sql .= "caller_id_in_from, ";
 	$sql .= "supress_cng, ";
 	$sql .= "extension_in_contact, ";
-	$sql .= "effective_caller_id_name, ";
-	$sql .= "effective_caller_id_number, ";
-	$sql .= "outbound_caller_id_name, ";
-	$sql .= "outbound_caller_id_number, ";
 	$sql .= "context, ";
 	$sql .= "enabled, ";
 	$sql .= "description ";
@@ -134,10 +130,6 @@ else {
 	$sql .= "'$caller_id_in_from', ";
 	$sql .= "'$supress_cng', ";
 	$sql .= "'$extension_in_contact', ";
-	$sql .= "'$effective_caller_id_name', ";
-	$sql .= "'$effective_caller_id_number', ";
-	$sql .= "'$outbound_caller_id_name', ";
-	$sql .= "'$outbound_caller_id_number', ";
 	$sql .= "'$context', ";
 	$sql .= "'$enabled', ";
 	$sql .= "'$description' ";
