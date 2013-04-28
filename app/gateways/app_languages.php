@@ -222,6 +222,9 @@
 	$text['confirm-delete']['en-us'] = 'Do you really want to delete this?';
 	$text['confirm-delete']['pt-pt'] = '';
 
+	$text['confirm-copy']['en-us'] = 'Do you really want to copy this?';
+	$text['confirm-copy']['pt-pt'] = '';
+
 	$text['message-add']['en-us'] = 'Add Completed';
 	$text['message-add']['pt-pt'] = '';
 
