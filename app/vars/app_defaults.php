@@ -222,5 +222,8 @@ EOD;
 						}
 					}
 			}
+
+		//save the vars.xml file
+			save_var_xml();
 	}
 ?>
