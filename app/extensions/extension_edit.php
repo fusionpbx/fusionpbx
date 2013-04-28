@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012 All Rights Reserved.
+	Copyright (C) 2008-2013 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -49,23 +49,6 @@ else {
 			$number_alias = check_str($_POST["number_alias"]);
 			$password = check_str($_POST["password"]);
 
-		//prepare the provisioning list for the database
-			$provisioning_list = $_POST["provisioning_list"];
-			if (strlen($provisioning_list) > 0) {
-				$provisioning_list_array = explode("\n", $provisioning_list);
-				if (count($provisioning_list_array) == 0) {
-					$provisioning_list = '';
-				}
-				else {
-					$provisioning_list = '|';
-					foreach($provisioning_list_array as $value){
-						if(strlen(trim($value)) > 0) {
-							$provisioning_list .= check_str(trim($value))."|";
-						}
-					}
-				}
-			}
-
 		//get the values from the HTTP POST and save them as PHP variables
 			$vm_password = check_str($_POST["vm_password"]);
 			$accountcode = check_str($_POST["accountcode"]);
@@ -79,6 +62,8 @@ else {
 			$directory_exten_visible = check_str($_POST["directory_exten_visible"]);
 			$limit_max = check_str($_POST["limit_max"]);
 			$limit_destination = check_str($_POST["limit_destination"]);
+			$device_uuid = check_str($_POST["device_uuid"]);
+			$device_line = check_str($_POST["device_line"]);
 			$vm_enabled = check_str($_POST["vm_enabled"]);
 			$vm_mailto = check_str($_POST["vm_mailto"]);
 			$vm_attach_file = check_str($_POST["vm_attach_file"]);
@@ -103,7 +88,7 @@ else {
 	}
 
 //delete the user from the v_extension_users
-	if ($_GET["a"] == "delete" && permission_exists("user_delete")) {
+	if ($_GET["a"] == "delete" && strlen($_REQUEST["user_uuid"]) > 0 && permission_exists("extension_delete")) {
 		//set the variables
 			$user_uuid = check_str($_REQUEST["user_uuid"]);
 			$extension_uuid = check_str($_REQUEST["id"]);
@@ -112,6 +97,25 @@ else {
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and extension_uuid = '".$extension_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
+			$db->exec(check_sql($sql));
+		//redirect the browser
+			require_once "includes/header.php";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
+			echo "<div align='center'>Delete Complete</div>";
+			require_once "includes/footer.php";
+			return;
+	}
+
+//delete the user from the v_extension_users
+	if ($_GET["a"] == "delete" && strlen($_REQUEST["device_extension_uuid"]) > 0 && permission_exists("extension_delete")) {
+		//set the variables
+			$device_extension_uuid = check_str($_REQUEST["device_extension_uuid"]);
+			$extension_uuid = check_str($_REQUEST["id"]);
+		//delete the group from the users
+			$sql = "delete from v_device_extensions ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and extension_uuid = '".$extension_uuid."' ";
+			$sql .= "and device_extension_uuid = '".$device_extension_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
 			require_once "includes/header.php";
@@ -142,6 +146,38 @@ else {
 			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
+		//redirect the browser
+			require_once "includes/header.php";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
+			echo "<div align='center'>Add Complete</div>";
+			require_once "includes/footer.php";
+			return;
+	}
+
+//assign the device to the extension
+	if (strlen($_REQUEST["device_uuid"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
+		//set the variables
+			$extension_uuid = check_str($_REQUEST["id"]);
+
+		//assign the user to the extension
+			$sql_insert = "insert into v_device_extensions ";
+			$sql_insert .= "(";
+			$sql_insert .= "device_extension_uuid, ";
+			$sql_insert .= "domain_uuid, ";
+			$sql_insert .= "extension_uuid, ";
+			$sql_insert .= "device_uuid, ";
+			$sql_insert .= "device_line ";
+			$sql_insert .= ")";
+			$sql_insert .= "values ";
+			$sql_insert .= "(";
+			$sql_insert .= "'".uuid()."', ";
+			$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
+			$sql_insert .= "'".$extension_uuid."', ";
+			$sql_insert .= "'".$device_uuid."', ";
+			$sql_insert .= "'".$device_line."' ";
+			$sql_insert .= ")";
+			$db->exec($sql_insert);
+
 		//redirect the browser
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
@@ -248,7 +284,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "extension, ";
 							$sql .= "number_alias, ";
 							$sql .= "password, ";
-							$sql .= "provisioning_list, ";
+							//$sql .= "provisioning_list, ";
 							$sql .= "vm_password, ";
 							$sql .= "accountcode, ";
 							$sql .= "effective_caller_id_name, ";
@@ -298,7 +334,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$extension', ";
 							$sql .= "'$number_alias', ";
 							$sql .= "'$password', ";
-							$sql .= "'$provisioning_list', ";
+							//$sql .= "'$provisioning_list', ";
 							$sql .= "'user-choose', ";
 							$sql .= "'$accountcode', ";
 							$sql .= "'$effective_caller_id_name', ";
@@ -393,7 +429,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
-					$sql .= "provisioning_list = '$provisioning_list', ";
+					//$sql .= "provisioning_list = '$provisioning_list', ";
 					$sql .= "vm_password = '$vm_password', ";
 					$sql .= "accountcode = '$accountcode', ";
 					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
@@ -483,10 +519,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 				//write the provision files
-					if (strlen($provisioning_list) > 0) {
-						require_once "app/provision/provision_write.php";
-						$ext = new extension;
-					}
+					require_once "app/provision/provision_write.php";
+					$ext = new extension;
 
 				//delete extension from memcache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -581,8 +615,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$extension = $row["extension"];
 			$number_alias = $row["number_alias"];
 			$password = $row["password"];
-			$provisioning_list = $row["provisioning_list"];
-			$provisioning_list = strtolower($provisioning_list);
 			$vm_password = $row["vm_password"];
 			$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
 			$accountcode = $row["accountcode"];
@@ -1020,94 +1052,109 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Phone Provisioning:\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	if ($action == "update") {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	Phone Provisioning:\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
 
-	$onchange = "document.getElementById('provisioning_list').value += document.getElementById('select_mac_address').value;";
-	$onchange .= "document.getElementById('provisioning_list').value += ':'+document.getElementById('prov_line').value + '\\n'";
-
-	$sql = "select * from v_devices ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
-	echo "<select name=\"select_mac_address\" id=\"select_mac_address\" class=\"formfld\">\n";
-	echo "<option value=''></option>\n";
-
-	foreach($result as $row) {
-		$device_mac_address = $row['device_mac_address'];
-		$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
-		if ($row['device_mac_address'] == $select_mac_address) {
-			echo "<option value='".$row['device_mac_address']."' selected='selected'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
+		echo "		<table width='52%'>\n";
+		$sql = "SELECT d.device_mac_address, d.device_model, d.device_description, e.device_extension_uuid, e.device_uuid, e.extension_uuid, e.device_line ";
+		$sql .= "FROM v_device_extensions as e, v_devices as d ";
+		$sql .= "WHERE e.device_uuid = d.device_uuid ";
+		$sql .= "AND e.extension_uuid = '".$extension_uuid."' ";
+		$sql .= "AND e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "ORDER BY d.device_mac_address asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		foreach($result as $row) {
+			$device_mac_address = $row['device_mac_address'];
+			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
+			echo "		<tr>\n";
+			echo "			<td class='vtable'>".$device_mac_address."</td>\n";
+			echo "			<td class='vtable'>".$row['device_model']."&nbsp;</td>\n";
+			echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
+			echo "			<td class='vtable'>".$row['device_line']."</td>\n";
+			echo "			<td>\n";
+			echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&device_extension_uuid=".$row['device_extension_uuid']."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "			</td>\n";
+			echo "		</tr>\n";
 		}
-		else {
-			echo "<option value='".$row['device_mac_address']."'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
-		}
-	} //end foreach
-	unset($sql, $result, $row_count);
-	echo "</select>\n";
-	echo "<br />\n";
-	echo "Select a device to assign to this extension by its MAC addresses.\n";
+		echo "		</table>\n";
+		echo "		<br />\n";
 
-	echo "<br />\n";
-	echo "<br />\n";
+		$sql = "SELECT * FROM v_devices ";
+		$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
+		$sql .= "ORDER BY device_mac_address asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		unset ($prep_statement, $sql);
+		echo "<select name=\"device_uuid\" id=\"select_mac_address\" class=\"formfld\" style=\"width:37%;\">\n";
+		echo "<option value=''></option>\n";
+		foreach($result as $row) {
+			$device_mac_address = $row['device_mac_address'];
+			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
+			if ($row['device_uuid'] == $device_uuid) {
+				echo "<option value='".$row['device_uuid']."' selected='selected'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
+			}
+			else {
+				echo "<option value='".$row['device_uuid']."'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
+			}
+		} //end foreach
+		unset($sql, $result, $row_count);
+		echo "</select>\n";
 
-	echo "	<select id='prov_line' name='prov_line' onchange=\"$onchange\" class='formfld'>\n";
-	echo "	<option value=''></option>\n";
-	echo "	<option value='1'>1</option>\n";
-	echo "	<option value='2'>2</option>\n";
-	echo "	<option value='3'>3</option>\n";
-	echo "	<option value='4'>4</option>\n";
-	echo "	<option value='5'>5</option>\n";
-	echo "	<option value='6'>6</option>\n";
-	echo "	<option value='7'>7</option>\n";
-	echo "	<option value='8'>8</option>\n";
-	echo "	<option value='9'>9</option>\n";
-	echo "	<option value='10'>10</option>\n";
-	echo "	<option value='11'>11</option>\n";
-	echo "	<option value='12'>12</option>\n";
-	echo "	<option value='13'>13</option>\n";
-	echo "	<option value='14'>14</option>\n";
-	echo "	<option value='15'>15</option>\n";
-	echo "	<option value='16'>16</option>\n";
-	echo "	<option value='17'>17</option>\n";
-	echo "	<option value='18'>18</option>\n";
-	echo "	<option value='19'>19</option>\n";
-	echo "	<option value='20'>20</option>\n";
-	echo "	<option value='21'>21</option>\n";
-	echo "	<option value='22'>22</option>\n";
-	echo "	<option value='23'>23</option>\n";
-	echo "	<option value='24'>24</option>\n";
-	echo "	<option value='25'>25</option>\n";
-	echo "	<option value='26'>26</option>\n";
-	echo "	<option value='27'>27</option>\n";
-	echo "	<option value='28'>28</option>\n";
-	echo "	<option value='29'>29</option>\n";
-	echo "	<option value='30'>30</option>\n";
-	echo "	<option value='31'>31</option>\n";
-	echo "	<option value='32'>32</option>\n";
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo "Select a line number.<br>\n";
-	echo "<br />\n";
-	//replace the vertical bar with a line feed to display in the textarea
-	$provisioning_list = trim($provisioning_list, "|");
-	$provisioning_list_array = explode("|", $provisioning_list);
-	$provisioning_list = '';
-	foreach($provisioning_list_array as $value){
-		$provisioning_list .= trim($value)."\n";
+		echo "	<select id='device_line' name='device_line' style='width: 50;' onchange=\"$onchange\" class='formfld'>\n";
+		echo "	<option value=''></option>\n";
+		echo "	<option value='1'>1</option>\n";
+		echo "	<option value='2'>2</option>\n";
+		echo "	<option value='3'>3</option>\n";
+		echo "	<option value='4'>4</option>\n";
+		echo "	<option value='5'>5</option>\n";
+		echo "	<option value='6'>6</option>\n";
+		echo "	<option value='7'>7</option>\n";
+		echo "	<option value='8'>8</option>\n";
+		echo "	<option value='9'>9</option>\n";
+		echo "	<option value='10'>10</option>\n";
+		echo "	<option value='11'>11</option>\n";
+		echo "	<option value='12'>12</option>\n";
+		echo "	<option value='13'>13</option>\n";
+		echo "	<option value='14'>14</option>\n";
+		echo "	<option value='15'>15</option>\n";
+		echo "	<option value='16'>16</option>\n";
+		echo "	<option value='17'>17</option>\n";
+		echo "	<option value='18'>18</option>\n";
+		echo "	<option value='19'>19</option>\n";
+		echo "	<option value='20'>20</option>\n";
+		echo "	<option value='21'>21</option>\n";
+		echo "	<option value='22'>22</option>\n";
+		echo "	<option value='23'>23</option>\n";
+		echo "	<option value='24'>24</option>\n";
+		echo "	<option value='25'>25</option>\n";
+		echo "	<option value='26'>26</option>\n";
+		echo "	<option value='27'>27</option>\n";
+		echo "	<option value='28'>28</option>\n";
+		echo "	<option value='29'>29</option>\n";
+		echo "	<option value='30'>30</option>\n";
+		echo "	<option value='31'>31</option>\n";
+		echo "	<option value='32'>32</option>\n";
+		echo "	<option value='50'>50</option>\n";
+		echo "	<option value='100'>100</option>\n";
+		echo "	<option value='120'>120</option>\n";
+		echo "	<option value='150'>150</option>\n";
+		echo "	</select>\n";
+		echo "	<input type=\"submit\" class='btn' value=\"Add\">\n";
+		echo "<br />\n";
+		echo "Select a device and line number to assign to this extension.\n";
+
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	echo "    <textarea name=\"provisioning_list\" id=\"provisioning_list\" class=\"formfld\" cols=\"30\" rows=\"3\" wrap=\"off\">$provisioning_list</textarea>\n";
-	echo "    <br>\n";
-	echo "If a MAC address is not in the select list it can be added manually.<br />MAC Address:Line Number\n";
-	echo "<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
