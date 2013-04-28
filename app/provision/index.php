@@ -125,6 +125,7 @@ require_once "includes/require.php";
 					$prep_statement_2->bindParam(':mac', $mac);
 					$prep_statement_2->execute();
 					$row = $prep_statement_2->fetch();
+					$device_uuid = $row["device_uuid"];
 					$device_label = $row["device_label"];
 					if (strlen($row["device_vendor"]) > 0) {
 						$device_vendor = $row["device_vendor"];
@@ -288,29 +289,25 @@ require_once "includes/require.php";
 		$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 
 	//lookup the provisioning information for this MAC address.
-		$sql = "select * from v_extensions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and (provisioning_list like '%|".$mac.":%' or provisioning_list like '%|".$mac_dash.":%') ";
-		$sql .= "and enabled = 'true' ";
+		$sql = "SELECT e.extension, e.password, e.effective_caller_id_name, d.device_extension_uuid, d.extension_uuid, d.device_line ";
+		$sql .= "FROM v_device_extensions as d, v_extensions as e ";
+		$sql .= "WHERE e.extension_uuid = d.extension_uuid ";
+		$sql .= "AND d.device_uuid = '".$device_uuid."' ";
+		$sql .= "AND d.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and e.enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$provisioning_list = $row["provisioning_list"];
-			$provisioning_list_array = explode("|", $provisioning_list);
-			foreach ($provisioning_list_array as &$prov_row) {
-				$prov_row_array = explode(":", $prov_row);
-				$prov_mac = strtolower($prov_row_array[0]);
-				$prov_mac = preg_replace('#[^a-fA-F0-9./]#', '', $prov_mac);
-				if ($prov_mac == $mac) {
-					$line_number = $prov_row_array[1];
-					$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
-					$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["effective_caller_id_name"], $file_contents);
-					$file_contents = str_replace("{v_line".$line_number."_shortname}", $row["extension"], $file_contents);
-					$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["extension"], $file_contents);
-					$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
-				}
-			}
+		$result_count = count($result);
+		foreach($result as $row) {
+			$line_number = $row['device_line'];
+
+			$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["effective_caller_id_name"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_shortname}", $row["extension"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["extension"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
+
 			//$vm_password = $row["vm_password"];
 			//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
 			//$accountcode = $row["accountcode"];
@@ -385,8 +382,8 @@ require_once "includes/require.php";
 	function mac_exists_in_devices($db, $mac) {
 		global $domain_uuid;
 		$sql = "SELECT count(*) as count FROM v_devices ";
-		$sql .= "where domain_uuid=:domain_uuid ";
-		$sql .= "and device_mac_address=:mac ";
+		$sql .= "WHERE domain_uuid=:domain_uuid ";
+		$sql .= "AND device_mac_address=:mac ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
 			$prep_statement->bindParam(':domain_uuid', $domain_uuid);

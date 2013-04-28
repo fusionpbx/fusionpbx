@@ -181,54 +181,42 @@ else {
 							$mac_dash = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 
 						//lookup the provisioning information for this MAC address.
-							$sql2 = "select * from v_extensions ";
-							$sql2 .= "where domain_uuid = '$domain_uuid' ";
-							$sql2 .= "and (provisioning_list like '%|".$device_mac_address.":%' or provisioning_list like '%|".$mac_dash.":%') ";
-							$sql2 .= "and enabled = 'true' ";
-							$prep_statement_2 = $db->prepare(check_sql($sql2));
-							$prep_statement_2->execute();
-							$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result2 as &$row2) {
-								$provisioning_list = $row2["provisioning_list"];
-								if (strlen($provisioning_list) > 1) {
-									$provisioning_list_array = explode("|", $provisioning_list);
-									foreach ($provisioning_list_array as $prov_row) {
-										$prov_row_array = explode(":", $prov_row);
-										if (strlen($prov_row_array[0]) > 0) {
-											//echo "mac address: ".$prov_row_array[0]."<br />";
-											//echo "line_number: ".$prov_row_array[1]."<br />";
-											if ($prov_row_array[0] == $device_mac_address) {
-												$line_number = $prov_row_array[1];
-												//echo "prov_row: ".$prov_row."<br />";
-												//echo "line_number: ".$line_number."<br />";
-												//echo "<hr><br />\n";
-											}
-											$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
-											$file_contents = str_replace("{v_line".$line_number."_displayname}", $row2["effective_caller_id_name"], $file_contents);
-											$file_contents = str_replace("{v_line".$line_number."_shortname}", $row2["extension"], $file_contents);
-											$file_contents = str_replace("{v_line".$line_number."_user_id}", $row2["extension"], $file_contents);
-											$file_contents = str_replace("{v_line".$line_number."_user_password}", $row2["password"], $file_contents);
-										}
-									}
-									//$vm_password = $row["vm_password"];
-									//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
-									//$accountcode = $row["accountcode"];
-									//$effective_caller_id_name = $row["effective_caller_id_name"];
-									//$effective_caller_id_number = $row["effective_caller_id_number"];
-									//$outbound_caller_id_name = $row["outbound_caller_id_name"];
-									//$outbound_caller_id_number = $row["outbound_caller_id_number"];
-									//$vm_enabled = $row["vm_enabled"];
-									//$vm_mailto = $row["vm_mailto"];
-									//$vm_attach_file = $row["vm_attach_file"];
-									//$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
-									//$user_context = $row["user_context"];
-									//$call_group = $row["call_group"];
-									//$auth_acl = $row["auth_acl"];
-									//$cidr = $row["cidr"];
-									//$sip_force_contact = $row["sip_force_contact"];
-									//$enabled = $row["enabled"];
-									//$description = $row["description"]
-								}
+							$sql = "SELECT e.extension, e.password, e.effective_caller_id_name, d.device_extension_uuid, d.extension_uuid, d.device_line ";
+							$sql .= "FROM v_device_extensions as d, v_extensions as e ";
+							$sql .= "WHERE e.extension_uuid = d.extension_uuid ";
+							$sql .= "AND d.device_uuid = '".$device_uuid."' ";
+							$sql .= "AND d.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$sql .= "and e.enabled = 'true' ";
+							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$result_count = count($result);
+							foreach($result as $row) {
+								$line_number = $row['device_line'];
+								$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["effective_caller_id_name"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_shortname}", $row["extension"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["extension"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
+
+								//$vm_password = $row["vm_password"];
+								//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
+								//$accountcode = $row["accountcode"];
+								//$effective_caller_id_name = $row["effective_caller_id_name"];
+								//$effective_caller_id_number = $row["effective_caller_id_number"];
+								//$outbound_caller_id_name = $row["outbound_caller_id_name"];
+								//$outbound_caller_id_number = $row["outbound_caller_id_number"];
+								//$vm_enabled = $row["vm_enabled"];
+								//$vm_mailto = $row["vm_mailto"];
+								//$vm_attach_file = $row["vm_attach_file"];
+								//$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
+								//$user_context = $row["user_context"];
+								//$call_group = $row["call_group"];
+								//$auth_acl = $row["auth_acl"];
+								//$cidr = $row["cidr"];
+								//$sip_force_contact = $row["sip_force_contact"];
+								//$enabled = $row["enabled"];
+								//$description = $row["description"]
 							}
 							unset ($prep_statement_2);
 
