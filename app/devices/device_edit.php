@@ -294,7 +294,11 @@ require_once "includes/require.php";
 
 	echo "<select id='device_template' name='device_template' class='formfld'>\n";
 	echo "<option value=''></option>\n";
-	$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision";
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$_SESSION["domain_name"])) {
+		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$_SESSION["domain_name"];
+	} else {
+		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision";
+	}
 	if($dh = opendir($temp_dir)) {
 		while($dir = readdir($dh)) {
 			if($file != "." && $dir != ".." && $dir[0] != '.') {
