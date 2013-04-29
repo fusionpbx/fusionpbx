@@ -121,7 +121,7 @@ require_once "includes/require.php";
 				$sql .= "and device_mac_address=:mac ";
 				$prep_statement_2 = $db->prepare(check_sql($sql));
 				if ($prep_statement_2) {
-					$prep_statement_2->bindParam(':domain_uuid', $domain_uuid);
+					$prep_statement_2->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
 					$prep_statement_2->bindParam(':mac', $mac);
 					$prep_statement_2->execute();
 					$row = $prep_statement_2->fetch();
@@ -147,7 +147,7 @@ require_once "includes/require.php";
 				$sql .= "and device_template like '%/%' ";
 				$prep_statement3 = $db->prepare(check_sql($sql));
 				if ($prep_statement3) {
-					$prep_statement3->bindParam(':domain_uuid', $domain_uuid);
+					$prep_statement3->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
 					$prep_statement3->bindParam(':mac', $mac);
 					$prep_statement3->execute();
 					$row = $prep_statement3->fetch();
@@ -168,7 +168,8 @@ require_once "includes/require.php";
 		//use the user_agent to pre-assign a template for 1-hit provisioning. Enter the a unique string to match in the user agent, and the template it should match.
 			$template_list=array(  
 					"Linksys/SPA-2102"=>"linksys/spa2102",
-					"Linksys/SPA-3102"=>"linksys/spa3102"
+					"Linksys/SPA-3102"=>"linksys/spa3102",
+					"snom370"=>"snom/370"
 					);
 
 			foreach ($template_list as $key=>$val){
@@ -196,7 +197,7 @@ require_once "includes/require.php";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
+			$sql .= "'".$_SESSION['domain_uuid']."', ";
 			$sql .= "'$device_uuid', ";
 			$sql .= "'$mac', ";
 			$sql .= "'$device_vendor', ";
@@ -209,6 +210,11 @@ require_once "includes/require.php";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+	}
+
+//if the domain name directory exists then only use templates from it
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/templates/provision/'.$_SESSION['domain_name'])) {
+		$device_template = $_SESSION['domain_name'].'/'.$device_template;
 	}
 
 //if $file is not provided then look for a default file that exists
@@ -378,15 +384,14 @@ require_once "includes/require.php";
 	header ("Content-Length: ".strlen($file_contents));
 	echo $file_contents;
 
-//define the function which checks to see if the mac address exists in the table
+//define the function which checks to see if the mac address exists in devices
 	function mac_exists_in_devices($db, $mac) {
-		global $domain_uuid;
 		$sql = "SELECT count(*) as count FROM v_devices ";
 		$sql .= "WHERE domain_uuid=:domain_uuid ";
 		$sql .= "AND device_mac_address=:mac ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
-			$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+			$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
 			$prep_statement->bindParam(':mac', $mac);
 			$prep_statement->execute();
 			$row = $prep_statement->fetch();
