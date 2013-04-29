@@ -256,7 +256,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$prep_statement = $db->prepare(check_sql($sql));
 					if ($prep_statement) {
 						$prep_statement->execute();
-						$row = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] == 0) {
 							//add the dialplan
 								require_once "includes/classes/database.php";
