@@ -136,19 +136,21 @@
 			end
 
 		--whether to keep the voicemail message and details local after email
-			if (voicemail_local_after_email == "false") then
-				--delete the voicemail message details
-					sql = [[DELETE FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. db_voicemail_uuid ..[['
-						AND voicemail_message_uuid = ']] .. uuid ..[[']]
-					if (debug["sql"]) then
-						freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-					end
-					status = dbh:query(sql);
-				--set message waiting indicator
-					message_waiting(id, domain_uuid);
-				--clear the variable
-					db_voicemail_uuid = '';
+			if (voicemail_mail_to) then
+				if (voicemail_local_after_email == "false" and string.len(voicemail_mail_to) > 0) then
+					--delete the voicemail message details
+						sql = [[DELETE FROM v_voicemail_messages
+							WHERE domain_uuid = ']] .. domain_uuid ..[['
+							AND voicemail_uuid = ']] .. db_voicemail_uuid ..[['
+							AND voicemail_message_uuid = ']] .. uuid ..[[']]
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql);
+					--set message waiting indicator
+						message_waiting(id, domain_uuid);
+					--clear the variable
+						db_voicemail_uuid = '';
+				end
 			end
 	end
