@@ -40,7 +40,8 @@
 	dofile(scripts_dir.."/resources/functions/mkdir.lua");
 
 --connect to the database
-	dbh = freeswitch.Dbh(database["system"]);
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
 
 --make sure the scripts/run dir exists
 	mkdir(scripts_dir .. "/run");

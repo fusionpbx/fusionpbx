@@ -36,7 +36,8 @@
 	debug["info"] = false;
 
 --connect to the database
-	dbh = freeswitch.Dbh(database["system"]);
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
 
 --used to stop the lua service
 	local file = assert(io.open(tmp_file, "w"));

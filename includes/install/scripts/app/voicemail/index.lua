@@ -49,7 +49,8 @@
 	password_tries = 0;
 
 --connect to the database
-	dbh = freeswitch.Dbh(database["system"]);
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
 
 --set the api
 	api = freeswitch.API();

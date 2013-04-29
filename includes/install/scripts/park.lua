@@ -21,7 +21,8 @@
 --connect to the database
 	--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 	dbh = freeswitch.Dbh("sqlite://"..database_dir.."/park.db");
-	--dbh = freeswitch.Dbh(database["system"]);
+	--dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	--dbh = database_handle('system');
 
 --exits the script if we didn't connect properly
 	assert(dbh:connected());
