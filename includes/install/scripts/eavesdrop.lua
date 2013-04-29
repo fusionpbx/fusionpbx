@@ -39,7 +39,8 @@ extension = argv[1];
 		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 	else
-		dbh = freeswitch.Dbh(database["switch"]);
+		dofile(scripts_dir.."/resources/functions/database_handle.lua");
+		dbh = database_handle('switch');
 	end
 
 --exits the script if we didn't connect properly

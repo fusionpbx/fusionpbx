@@ -42,7 +42,8 @@
 	dofile(scripts_dir.."/resources/config.lua");
 
 --connect to the database
-	dbh = freeswitch.Dbh(database["system"]);
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
 
 --prepare the api object
 	api = freeswitch.API();

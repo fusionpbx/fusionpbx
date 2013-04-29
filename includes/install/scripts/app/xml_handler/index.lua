@@ -42,7 +42,11 @@
 	dofile(scripts_dir.."/resources/functions/explode.lua");
 
 --connect to the database
-	dbh = freeswitch.Dbh(database["system"]);
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
+
+--exits the script if we didn't connect properly
+	assert(dbh:connected());
 
 --if the params class and methods do not exist then add them to prevent errors
 	if (not params) then
