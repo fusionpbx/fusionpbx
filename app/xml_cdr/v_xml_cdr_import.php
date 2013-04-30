@@ -266,7 +266,7 @@
 					}
 				}
 				unset($error);
-		
+
 				if ($debug) {
 					GLOBAL $insert_time,$insert_count;
 					$insert_time+=microtime(true)-$time5_insert;//add this current query.
@@ -306,24 +306,24 @@
 					}
 			}
 
-			//if http enabled is set to false then deny access
-				if (!$_SESSION["xml_cdr"]["http_enabled"]) {
-					echo "access denied<br />\n";
-					return;
-				}
+		//if http enabled is set to false then deny access
+			if (!$_SESSION["xml_cdr"]["http_enabled"]) {
+				echo "access denied<br />\n";
+				return;
+			}
 
-			//check for the correct username and password
-				if ($_SESSION["xml_cdr"]["username"] == $_SERVER["PHP_AUTH_USER"] && $_SESSION["xml_cdr"]["password"] == $_SERVER["PHP_AUTH_PW"]) {
-					//echo "access granted<br />\n";
-				}
-				else {
-					echo "access denied<br />\n";
-					return;
-				}
-			//loop through all attribues
-				//foreach($xml->settings->param[1]->attributes() as $a => $b) {
-				//		echo $a,'="',$b,"\"<br />\n";
-				//}
+		//check for the correct username and password
+			if ($_SESSION["xml_cdr"]["username"] == $_SERVER["PHP_AUTH_USER"] && $_SESSION["xml_cdr"]["password"] == $_SERVER["PHP_AUTH_PW"]) {
+				//echo "access granted<br />\n";
+			}
+			else {
+				echo "access denied<br />\n";
+				return;
+			}
+		//loop through all attribues
+			//foreach($xml->settings->param[1]->attributes() as $a => $b) {
+			//		echo $a,'="',$b,"\"<br />\n";
+			//}
 
 		//get the http post variable
 			$xml_string = trim($_POST["cdr"]);
