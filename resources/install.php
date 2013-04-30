@@ -446,15 +446,15 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
 		$tmp_config .= "\n";
 		$tmp_config .= "?>";
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+		if (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes")) {
 			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php";
-		} elseif (file_exists("/etc/fusionpbx/config.php")){
+		} elseif (is_dir("/etc/fusionpbx")){
 			$config = "/etc/fusionpbx/config.php";
-		} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+		} elseif (is_dir("/usr/local/etc/fusionpbx")){
 			$config = "/usr/local/etc/fusionpbx/config.php";
 		}
 		else {
-			$config = PROJECT_PATH."/includes/config.php";
+			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php";
 		}
 		$fout = fopen($config,"w");
 		fwrite($fout, $tmp_config);
