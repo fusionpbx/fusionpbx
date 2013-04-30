@@ -27,7 +27,7 @@
 //check the permission
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
-		preg_match("/^(.*)\/mod\/.*$/", $document_root, $matches);
+		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
 		$document_root = $matches[1];
 		set_include_path($document_root);
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
