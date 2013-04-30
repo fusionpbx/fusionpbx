@@ -143,7 +143,6 @@ require_once "includes/lib_functions.php";
 					if (file_exists('/var/lib/fusionpbx')) {
 						$db_path = '/var/lib/fusionpbx';
 					}
-					if (!is_readable($db_path)) { mkdir($db_path,0777,true); }
 				}
 			//set the other default directories
 				if (file_exists('/usr/bin')) {
