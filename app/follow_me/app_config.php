@@ -19,23 +19,23 @@
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		//$apps[$x]['menu'][0]['title']['en-us'] = 'Follow Me';
-		//$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		//$apps[$x]['menu'][0]['title']['de'] = '';
-		//$apps[$x]['menu'][0]['title']['de-ch'] = '';
-		//$apps[$x]['menu'][0]['title']['de-at'] = '';
-		//$apps[$x]['menu'][0]['title']['fr'] = '';
-		//$apps[$x]['menu'][0]['title']['fr-ca'] = '';
-		//$apps[$x]['menu'][0]['title']['fr-ch'] = '';
-		//$apps[$x]['menu'][0]['title']['pt-pt'] = '';
-		//$apps[$x]['menu'][0]['title']['pt-br'] = '';
-		//$apps[$x]['menu'][0]['uuid'] = 'a1144e12-873e-4722-9818-02da1adb6ba3';
-		//$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
-		//$apps[$x]['menu'][0]['category'] = 'internal';
-		//$apps[$x]['menu'][0]['path'] = '/app/follow_me/follow_me.php';
-		//$apps[$x]['menu'][0]['groups'][] = 'user';
-		//$apps[$x]['menu'][0]['groups'][] = 'admin';
-		//$apps[$x]['menu'][0]['groups'][] = 'superadmin';
+		$apps[$x]['menu'][0]['title']['en-us'] = 'Follow Me';
+		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-ch'] = '';
+		$apps[$x]['menu'][0]['title']['de-at'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = '';
+		$apps[$x]['menu'][0]['title']['pt-br'] = '';
+		$apps[$x]['menu'][0]['uuid'] = 'a1144e12-873e-4722-9818-02da1adb6ba3';
+		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
+		$apps[$x]['menu'][0]['category'] = 'internal';
+		$apps[$x]['menu'][0]['path'] = '/app/calls/calls.php';
+		$apps[$x]['menu'][0]['groups'][] = 'user';
+		$apps[$x]['menu'][0]['groups'][] = 'admin';
+		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
 		$y = 0;
@@ -57,6 +57,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'follow_me_cid_name_prefix';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
@@ -74,10 +79,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'primary';
 		$z++;
-		//$apps[$x]['db'][$y]['fields'][$z]['name'] = 'cid_name_prefix';
-		//$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		//$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
-		//$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'cid_name_prefix';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'call_prompt';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';

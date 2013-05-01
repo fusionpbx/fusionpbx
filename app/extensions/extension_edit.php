@@ -284,7 +284,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "extension, ";
 							$sql .= "number_alias, ";
 							$sql .= "password, ";
-							//$sql .= "provisioning_list, ";
 							$sql .= "vm_password, ";
 							$sql .= "accountcode, ";
 							$sql .= "effective_caller_id_name, ";
@@ -334,7 +333,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$extension', ";
 							$sql .= "'$number_alias', ";
 							$sql .= "'$password', ";
-							//$sql .= "'$provisioning_list', ";
 							$sql .= "'user-choose', ";
 							$sql .= "'$accountcode', ";
 							$sql .= "'$effective_caller_id_name', ";
@@ -429,7 +427,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
-					//$sql .= "provisioning_list = '$provisioning_list', ";
 					$sql .= "vm_password = '$vm_password', ";
 					$sql .= "accountcode = '$accountcode', ";
 					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
