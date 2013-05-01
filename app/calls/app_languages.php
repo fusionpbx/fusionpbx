@@ -48,11 +48,11 @@
 	$text['label-ring-5']['en-us'] = 'Ring 5th Number';
 	$text['label-ring-5']['pt-pt'] = '5º Número a Tocar';
 
-	//$text['label-cid-prefix']['en-us'] = 'CID Prefix';
-	//$text['label-cid-prefix']['pt-pt'] = '';
+	$text['label-cid-name-prefix']['en-us'] = 'Caller ID Prefix';
+	$text['label-cid-name-prefix']['pt-pt'] = '';
 
-	$text['description-cid-prefix']['en-us'] = 'Set the caller ID name prefix.';
-	$text['description-cid-prefix']['pt-pt'] = '';
+	$text['description-cid-name-prefix']['en-us'] = 'Set the caller ID name prefix.';
+	$text['description-cid-name-prefix']['pt-pt'] = '';
 
 	$text['label-call-prompt']['en-us'] = 'Call Prompt';
 	$text['label-call-prompt']['pt-pt'] = '';
