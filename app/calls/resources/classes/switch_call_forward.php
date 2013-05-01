@@ -35,14 +35,34 @@ include "root.php";
 		public $forward_all_destination;
 		public $forward_all_enabled;
 		private $dial_string;
+		public $accountcode;
 
 		public function set() {
 			//set the global variable
 				global $db;
 
+			//determine whether to update the dial string
+				$sql = "select * from v_extensions ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				if (count($result) > 0) {
+					foreach ($result as &$row) {
+						$this->extension = $row["extension"];
+						$this->accountcode = $row["accountcode"];
+					}
+				}
+				unset ($prep_statement);
+
 			//set the dial string
 				if ($this->forward_all_enabled == "true") {
-					$dial_string = "[presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name'].",instant_ringback=true]";
+					$dial_string = "{presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name'].",instant_ringback=true";
+					if (strlen($this->accountcode) > 0) {
+						$dial_string .= ",accountcode=".$this->accountcode;
+					}
+					$dial_string .= "}";
 					if (extension_exists($this->forward_all_destination)) {
 						$dial_string .= "\${sofia_contact(".$this->forward_all_destination."@".$_SESSION['domain_name'].")}";
 					}
@@ -60,20 +80,6 @@ include "root.php";
 				else {
 					$this->dial_string = '';
 				}
-
-			//determine whether to update the dial string
-				$sql = "select * from v_extensions ";
-				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				if (count($result) > 0) {
-					foreach ($result as &$row) {
-						$this->extension = $row["extension"];
-					}
-				}
-				unset ($prep_statement);
 
 			//update the extension
 				$sql = "update v_extensions set ";
