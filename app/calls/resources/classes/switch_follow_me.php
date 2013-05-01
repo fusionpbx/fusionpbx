@@ -298,7 +298,7 @@ include "root.php";
 							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#\${caller_id_name}";
 						}
 						if (strlen($this->accountcode) > 0) {
-							$dial_string .= ",accountcode=".$this->accountcode."}";
+							$dial_string .= ",accountcode=".$this->accountcode;
 						}
 						$dial_string .= "}";
 						foreach ($result as &$row) {

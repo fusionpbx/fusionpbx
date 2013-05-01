@@ -116,7 +116,7 @@ if (strlen($_GET["id"]) > 0) {
 	if (strlen($search_all) == 0) {
 		$sql .= "and schema_uuid = '$schema_uuid' ";
 		if (strlen($data_parent_row_uuid) > 0) {
-			$sql .= " and data_parent_row_uuid = '$data_parent_row_uuid' ";
+			$sql .= "and data_parent_row_uuid = '$data_parent_row_uuid' ";
 		}
 	}
 	else {
@@ -182,7 +182,7 @@ if (strlen($_GET["id"]) > 0) {
 		if ($row["field_type"] != "label") {
 			if ($row["field_name"] != "domain_uuid") {
 				//$row["field_label"];
-				//$row["field_name"]
+				//$row["field_name"];
 				//$row["field_type"];
 				if ($row["field_name"] == "number") {
 					$sql .= "'".$row["field_name"]."' NUMERIC, ";
@@ -195,7 +195,6 @@ if (strlen($_GET["id"]) > 0) {
 	}
 	$sql .= "'domain_uuid' TEXT ";
 	$sql .= ");";
-	//echo "$sql<br /><br />\n";
 	$prep_statement = $db_memory->prepare($sql);
 	$prep_statement->execute();
 	unset ($prep_statement, $sql);
@@ -284,9 +283,6 @@ if (strlen($_GET["id"]) > 0) {
 	$sql .= "where domain_uuid = '$domain_uuid' \n";
 	$sql .= "limit $rows_per_page offset $offset \n";
 	//$sql .= "order by field_order asc \n";
-	//echo "<pre>\n";
-	//echo $sql;
-	//echo "</pre>\n";
 	$prep_statement = $db_memory->prepare($sql);
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
