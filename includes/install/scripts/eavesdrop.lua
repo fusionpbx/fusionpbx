@@ -29,7 +29,8 @@ extension = argv[1];
 
 --include config.lua
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/config.lua");
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --add the file_exists function
 	dofile(scripts_dir.."/resources/functions/file_exists.lua");
