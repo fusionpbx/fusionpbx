@@ -30,9 +30,9 @@
 	expire["sofia.conf"] = "3600";
 
 --set the debug options
-	debug["params"] = true;
+	debug["params"] = false;
 	debug["sql"] = false;
-	debug["xml_request"] = true;
+	debug["xml_request"] = false;
 	debug["xml_string"] = false;
 	debug["cache"] = false;
 
