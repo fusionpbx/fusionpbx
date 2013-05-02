@@ -140,8 +140,8 @@ require_once "includes/lib_functions.php";
 		case "Linux":
 			//set the default db_path
 				if (strlen($db_path) == 0) {
-					if (file_exists('/var/lib/fusionpbx')) {
-						$db_path = '/var/lib/fusionpbx';
+					if (file_exists('/var/lib/fusionpbx/db')) {
+						$db_path = '/var/lib/fusionpbx/db';
 					}
 				}
 			//set the other default directories
@@ -165,6 +165,9 @@ require_once "includes/lib_functions.php";
 				}
 				if (file_exists('/usr/share/freeswitch/scripts')) {
 					$switch_scripts_dir = '/usr/share/freeswitch/scripts';
+				}
+				if (file_exists('/var/lib/fusionpbx/scripts')) {
+					$switch_scripts_dir = '/var/lib/fusionpbx/scripts';
 				}
 				if (file_exists('/usr/share/freeswitch/grammar')) {
 					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
@@ -364,7 +367,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$tmp_config .= "/* \$Id\$ */\n";
 		$tmp_config .= "/*\n";
 		$tmp_config .= "	config.php\n";
-		$tmp_config .= "	Copyright (C) 2008, 20013 Mark J Crane\n";
+		$tmp_config .= "	Copyright (C) 2008, 2013 Mark J Crane\n";
 		$tmp_config .= "	All rights reserved.\n";
 		$tmp_config .= "\n";
 		$tmp_config .= "	Redistribution and use in source and binary forms, with or without\n";
