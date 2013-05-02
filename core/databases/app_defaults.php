@@ -98,7 +98,15 @@ if ($domains_processed == 1) {
 			}
 
 		//config.lua
-			$fout = fopen($_SESSION['switch']['scripts']['dir']."/resources/config.lua","w");
+			if (is_dir("/etc/fusionpbx")){
+				$config = "/etc/fusionpbx/config.lua";
+			} elseif (is_dir("/usr/local/etc/fusionpbx")){
+				$config = "/usr/local/etc/fusionpbx/config.lua";
+			}
+			else {
+				$config = $_SESSION['switch']['scripts']['dir']."/resources/config.lua";
+			}
+			$fout = fopen($config,"w");
 			$tmp = "\n";
 			$tmp .= "--switch directories\n";
 			if (strlen($_SESSION['switch']['sounds']['dir']) > 0) {
@@ -111,11 +119,8 @@ if ($domains_processed == 1) {
 				$tmp .= "	recordings_dir = \"".$recordings_dir."\";\n";
 			}
 			$tmp .= "\n";
-			$tmp .= "--define the database array\n";
-			$tmp .= "	database = {}\n";
-
-			$tmp .= "\n";
 			$tmp .= "--database information\n";
+			$tmp .= "	database = {}\n";
 			$tmp .= "	database[\"type\"] = \"".$db_type."\";\n";
 			$tmp .= "	database[\"name\"] = \"".$db_name."\";\n";
 			$tmp .= "	database[\"path\"] = \"".$db_path."\";\n";
@@ -146,7 +151,14 @@ if ($domains_processed == 1) {
 			$tmp .= "	temp_dir = \"".$_SESSION['server']['temp']['dir']."\";\n";
 			$tmp .= "\n";
 			$tmp .= "--include local.lua\n";
-			$tmp .= "	include = loadfile(scripts_dir .. \"/resources/local.lua\"); if (include ~= nil) then include(); end\n";
+			$tmp .= "	dofile(scripts_dir..\"/resources/functions/file_exists.lua\");\n";
+			$tmp .= "	if (file_exists(\"/etc/fusionpbx/local.lua\")) then\n";
+			$tmp .= "		dofile(scripts_dir..\"/etc/fusionpbx/local.lua\");\n";
+			$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
+			$tmp .= "		dofile(scripts_dir..\"/usr/local/etc/fusionpbx/local.lua\");\n";
+			$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
+			$tmp .= "		dofile(scripts_dir..\"/resources/local.lua\");\n";
+			$tmp .= "	end\n";
 			fwrite($fout, $tmp);
 			unset($tmp);
 			fclose($fout);
