@@ -618,7 +618,7 @@ require_once "includes/classes/switch_dialplan.php";
 								$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
 								$database->fields['dialplan_detail_type'] = $this->ivr_menu_exit_app;
 								$database->fields['dialplan_detail_data'] = $this->ivr_menu_exit_data;
-								$database->fields['dialplan_detail_order'] = '040';
+								$database->fields['dialplan_detail_order'] = '045';
 								$database->add();
 							}
 				}
