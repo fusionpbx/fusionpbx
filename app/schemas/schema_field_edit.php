@@ -257,157 +257,157 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_type'>\n";
 	echo "	<option value=''></option>\n";
-	if ($field_type == "text") { 
+	if ($field_type == "text") {
 		echo "	<option value='text' selected='selected'>Text</option>\n";
 	}
 	else {
 		echo "	<option value='text'>Text</option>\n";
 	}
-	if ($field_type == "number") { 
-		echo "	<option value='number' selected='selected'>Number</option>\n";
+	if ($field_type == "numeric") {
+		echo "	<option value='numeric' selected='selected'>Number</option>\n";
 	}
 	else {
-		echo "	<option value='number'>Number</option>\n";
+		echo "	<option value='numeric'>Number</option>\n";
 	}
-	if ($field_type == "date") { 
+	if ($field_type == "date") {
 		echo "	<option value='date' selected='selected'>Date</option>\n";
 	}
 	else {
 		echo "	<option value='date'>Date</option>\n";
 	}
-	if ($field_type == "email") { 
+	if ($field_type == "email") {
 		echo "	<option value='email' selected='selected'>Email</option>\n";
 	}
 	else {
 		echo "	<option value='email'>Email</option>\n";
 	}
-	if ($field_type == "label") { 
+	if ($field_type == "label") {
 		echo "	<option value='label' selected='selected'>Label</option>\n";
 	}
 	else {
 		echo "	<option value='label'>Label</option>\n";
 	}
-	if ($field_type == "phone") { 
+	if ($field_type == "phone") {
 		echo "	<option value='phone' selected='selected'>Phone</option>\n";
 	}
 	else {
 		echo "	<option value='phone'>Phone</option>\n";
 	}
-	//if ($field_type == "truefalse") { 
+	//if ($field_type == "truefalse") {
 	//	echo "	<option value='truefalse' selected='selected'>True or False</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='truefalse'>True or False</option>\n";
 	//}
-	if ($field_type == "checkbox") { 
+	if ($field_type == "checkbox") {
 		echo "	<option value='checkbox' selected='selected'>Check Box</option>\n";
 	}
 	else {
 		echo "	<option value='checkbox'>Check Box</option>\n";
 	}
-	//if ($field_type == "radiobutton") { 
+	//if ($field_type == "radiobutton") {
 	//	echo "	<option value='radiobutton' selected='selected' >Radio Button</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='radiobutton'>Radio Button</option>\n";
 	//}
-	if ($field_type == "textarea") { 
+	if ($field_type == "textarea") {
 		echo "	<option value='textarea' selected='selected'>Textarea</option>\n";
 	}
 	else {
 		echo "	<option value='textarea'>Textarea</option>\n";
 	}
-	if ($field_type == "select") { 
+	if ($field_type == "select") {
 		echo "	<option value='select' selected='selected'>Select</option>\n";
 	}
 	else {
 		echo "	<option value='select'>Select</option>\n";
 	}
-	if ($field_type == "hidden") { 
+	if ($field_type == "hidden") {
 		echo "	<option value='hidden' selected='selected'>Hidden</option>\n";
 	}
 	else {
 		echo "	<option value='hidden'>Hidden</option>\n";
 	}
-	if ($field_type == "uuid") { 
+	if ($field_type == "uuid") {
 		echo "	<option value='uuid' selected='selected'>UUID</option>\n";
 	}
 	else {
 		echo "	<option value='uuid'>UUID</option>\n";
 	}
-	//if ($field_type == "ipv4") { 
+	//if ($field_type == "ipv4") {
 	//	echo "	<option value='ipv4' selected='selected'>IP version 4</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='ipv4'>IP version 4</option>\n";
 	//}
-	//if ($field_type == "ipv6") { 
+	//if ($field_type == "ipv6") {
 	//	echo "	<option value='ipv6' selected='selected'>IP version 6</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='ipv6'>IP version 6</option>\n";
 	//}
-	//if ($field_type == "money") { 
+	//if ($field_type == "money") {
 	//	echo "	<option value='money' selected='selected'>Money</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='money'>Money</option>\n";
 	//}
-	if ($field_type == "password") { 
+	if ($field_type == "password") {
 		echo "	<option value='password' selected='selected'>Password</option>\n";
 	}
 	else {
 		echo "	<option value='password'>Password</option>\n";
 	}
-	if ($field_type == "pin_number") { 
+	if ($field_type == "pin_number") {
 		echo "	<option value='pin_number' selected='selected'>PIN Number</option>\n";
 	}
 	else {
 		echo "	<option value='pin_number'>PIN Number</option>\n";
 	}
-	if ($field_type == "image") { 
+	if ($field_type == "image") {
 		echo "	<option value='image' selected='selected'>Upload Image</option>\n";
 	}
 	else {
 		echo "	<option value='image'>Upload Image</option>\n";
 	}
-	if ($field_type == "file") { 
+	if ($field_type == "file") {
 		echo "	<option value='upload_file' selected='selected'>Upload File</option>\n";
 	}
 	else {
 		echo "	<option value='file'>Upload File</option>\n";
 	}
-	//if ($field_type == "yesno") { 
+	//if ($field_type == "yesno") {
 	//	echo "	<option value='yesno' selected='selected'>Yes or No</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='yesno'>Yes or No</option>\n";
 	//}
-	if ($field_type == "url") { 
+	if ($field_type == "url") {
 		echo "	<option value='url' selected='selected'>URL</option>\n";
 	}
 	else {
 		echo "	<option value='url'>URL</option>\n";
 	}
-	//if ($field_type == "add_date") { 
+	//if ($field_type == "add_date") {
 	//	echo "	<option value='add_date' selected='selected'>Add Date</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='add_date'>Add Date</option>\n";
 	//}
-	//if ($field_type == "add_user") { 
+	//if ($field_type == "add_user") {
 	//	echo "	<option value='add_user' selected='selected'>Add User</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='add_user'>Add User</option>\n";
 	//}
-	if ($field_type == "mod_date") { 
+	if ($field_type == "mod_date") {
 		echo "	<option value='mod_date' selected='selected'>Modified Date</option>\n";
 	}
 	else {
 		echo "	<option value='mod_date'>Modified Date</option>\n";
 	}
-	if ($field_type == "mod_user") { 
+	if ($field_type == "mod_user") {
 		echo "	<option value='mod_user' selected='selected'>Modified User</option>\n";
 	}
 	else {
@@ -437,13 +437,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_list_hidden'>\n";
 	echo "	<option value=''></option>\n";
-	if ($field_list_hidden == "show") { 
+	if ($field_list_hidden == "show") {
 		echo "	<option value='show'  selected='selected'>show</option>\n";
 	}
 	else {
 		echo "	<option value='show'>show</option>\n";
 	}
-	if ($field_list_hidden == "hide") { 
+	if ($field_list_hidden == "hide") {
 		echo "	<option value='hide'  selected='selected'>hide</option>\n";
 	}
 	else {
@@ -462,13 +462,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_search_by'>\n";
 	echo "	<option value=''></option>\n";
-	if ($field_search_by == "yes") { 
+	if ($field_search_by == "yes") {
 		echo "	<option value='yes'  selected='selected'>yes</option>\n";
 	}
 	else {
 		echo "	<option value='yes'>yes</option>\n";
 	}
-	if ($field_search_by == "no") { 
+	if ($field_search_by == "no") {
 		echo "	<option value='no' selected='selected'>no</option>\n";
 	}
 	else {
@@ -498,13 +498,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_required'>\n";
 	echo "	<option value=''></option>\n";
-	if ($field_required == "yes") { 
+	if ($field_required == "yes") {
 		echo "	<option value='yes'  selected='selected'>yes</option>\n";
 	}
 	else {
 		echo "	<option value='yes'>yes</option>\n";
 	}
-	if ($field_required == "no") { 
+	if ($field_required == "no") {
 		echo "	<option value='no' selected='selected'>no</option>\n";
 	}
 	else {
