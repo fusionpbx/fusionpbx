@@ -24,20 +24,32 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-	
 
 	$text['label-execute']['en-us'] = 'Execute Command';
+	$text['label-execute']['pt-pt'] = '';
+
 	$text['description-execute']['en-us'] = 'Provides a conventient way to execute system, PHP, and switch commands.';
+	$text['description-execute']['pt-pt'] = '';
+
 	$text['label-shell']['en-us'] = 'Shell command';
+	$text['label-shell']['pt-pt'] = '';
+
 	$text['description-shell']['en-us'] = 'System commands.';
+	$text['description-shell']['pt-pt'] = '';
+
 	$text['label-php']['en-us'] = 'PHP command';
+	$text['label-php']['pt-pt'] = '';
+
 	$text['description-php']['en-us'] = "Use the following link as a reference for PHP: <a href='http://php.net/manual/en/index.php' target='_blank'>PHP Manual";
+	$text['description-php']['pt-pt'] = "";
 
 	$text['label-switch']['en-us'] = 'Switch Command';
+	$text['label-switch']['pt-pt'] = '';
+
 	$text['description-switch']['en-us'] = 'For a list of the valid commands use: help';
+	$text['description-switch']['pt-pt'] = '';
+
 	$text['button-execute']['en-us'] = 'Execute';
-
-
-	
+	$text['button-execute']['pt-pt'] = '';
 
 ?>
