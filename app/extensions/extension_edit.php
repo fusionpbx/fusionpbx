@@ -514,7 +514,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (permission_exists('extension_add') || permission_exists('extension_edit')) {
 
 				//synchronize configuration
-					if (is_readable($_SESSION['switch']['extensions']['dir'])) {
+					if (is_writable($_SESSION['switch']['extensions']['dir'])) {
 						require_once "app/extensions/resources/classes/extension.php";
 						$ext = new extension;
 						$ext->xml();

@@ -141,6 +141,14 @@ else {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
+//synchronize configuration
+	if (is_writable($_SESSION['switch']['extensions']['dir'])) {
+		require_once "app/extensions/resources/classes/extension.php";
+		$ext = new extension;
+		$ext->xml();
+		unset($ext);
+	}
+
 //redirect the user
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
