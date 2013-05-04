@@ -104,21 +104,21 @@ require_once "includes/require.php";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$result_count = count($result);
 
-	$custom_title = '';
+	$page["title"] = '';
 	foreach($result as $row) {
 		$template_rss_sub_category = $row['rss_sub_category'];
 		if (strlen($row['rss_group']) == 0) {
 			//content is public
 			$content_from_db = &$row['rss_description'];
 			if (strlen($row['rss_title']) > 0) {
-				$custom_title = $row['rss_title'];
+				$page["title"] = $row['rss_title'];
 			}
 		}
 		else {
 			if (if_group($row[rss_group])) { //viewable only to designated group
 				$content_from_db = &$row[rss_description];
 				if (strlen($row['rss_title']) > 0) {
-					$custom_title = $row['rss_title'];
+					$page["title"] = $row['rss_title'];
 				}
 			}
 		}
