@@ -43,6 +43,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if ($_REQUEST['interface']) {
 	$interface = $_REQUEST['interface'];
 }
@@ -63,18 +69,17 @@ else {
 	$height = "330"; //275 //330 //396
 }
 
-$pg_title = "<b>Traffic Graph</b>\n";
-
 require_once "includes/header.php";
+$page["title"] = $text['title-traffic_graph'];
 ?>
 <table width='100%'>
 <tr>
 <td align='left'>
-	<p class="pgtitle"><?php echo $pg_title; ?></p>
+	<p class="pgtitle"><b><?=$text['header-traffic_graph']?></b></p>
 </td>
 <td align='right'>
 	<form name="form1" action="status_graph.php" method="get" style="">
-	Interface:
+	<?=$text['label-interface']?>:
 	<select name="interface" class="formfld" style="width:100px; z-index: -10;" onchange="document.form1.submit()">
 	<option value=''></option>
 	<?php
@@ -118,7 +123,7 @@ require_once "includes/header.php";
 </tr>
 </table>
 
-<strong>Note:</strong> the <a href="http://www.adobe.com/svg/viewer/install/" target="_blank">Adobe SVG Viewer</a>, Firefox 1.5 or later or other browser supporting SVG is required to view the graph.
+<?=$text['description-traffic_graph']?>
 
 <br />
 <br />
@@ -128,7 +133,7 @@ require_once "includes/header.php";
 <div align="center">
 	<object data="svg_graph.php?interface=<?php echo $interface; ?>" type="image/svg+xml" width="<?php echo $width; ?>" height="<?php echo $height; ?>">
 		<param name="src" value="svg_graph.php?interface=<?php echo $interface; ?>" />
-		Your browser does not support the type SVG! You need to either use Firefox or download the Adobe SVG plugin.
+		<?=$text['description-no_svg']?>
 	</object>
 </div>
 
