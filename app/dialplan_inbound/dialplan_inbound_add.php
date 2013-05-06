@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -101,9 +101,6 @@ foreach($text as $key => $value) {
 				//the number is numeric
 				$condition_expression_1 = str_replace("+", "\+", $condition_expression_1);
 				$condition_expression_1 = '^'.$condition_expression_1.'$';
-			}
-			else {
-				$msg .= "".$text['label-destination-must-be-num']."<br>\n";
 			}
 		}
 		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
