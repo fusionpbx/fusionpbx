@@ -26,13 +26,19 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('destination_add') || permission_exists('destination_edit')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
@@ -130,7 +136,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=destinations.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -159,12 +165,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=destinations.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -197,6 +203,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-destination-edit'];
+	}
+	else if ($action == "add") {
+		$page["title"] = $text['title-destination-add'];
+	}
+
 
 //show the content
 	echo "<div align='center'>";
@@ -209,87 +222,87 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Destination</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='destinations.php'\" value='Back'></td>\n";
+	if ($action == "add") {
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-destination-add']."</b></td>\n";
+	}
+	if ($action == "update") {
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-destination-edit']."</b></td>\n";
+	}
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='destinations.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "An alias for a call destination. The destination will use the dialplan to find it its target.<br /><br />\n";
+	echo $text['description-destinations']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type:\n";
+	echo "	".$text['label-destination_type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type'>\n";
 	echo "	<option value=''></option>\n";
-	if ($destination_type == "inbound") { 
-		echo "	<option value='inbound' selected='selected'>inbound</option>\n";
+	switch ($destination_type) {
+		case "inbound" : 	$selected[1] = "selected='selected'";	break;
+		case "outbound" : 	$selected[2] = "selected='selected'";	break;
 	}
-	else {
-		echo "	<option value='inbound'>inbound</option>\n";
-	}
-	if ($destination_type == "outbound") { 
-		echo "	<option value='outbound' selected='selected'>outbound</option>\n";
-	}
-	else {
-		echo "	<option value='outbound'>outbound</option>\n";
-	}
+	echo "	<option value='inbound' ".$selected[1].">".$text['option-type_inbound']."</option>\n";
+	echo "	<option value='outbound' ".$selected[2].">".$text['option-type_outbound']."</option>\n";
+	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the type.\n";
+	echo $text['description-destination_type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Destination:\n";
+	echo "	".$text['label-destination_number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"$destination_number\">\n";
 	echo "<br />\n";
-	echo "Enter the destination.\n";
+	echo $text['description-destination_number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Caller ID Name:\n";
+	echo "	".$text['label-destination_caller_id_name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_caller_id_name' maxlength='255' value=\"$destination_caller_id_name\">\n";
 	echo "<br />\n";
-	echo "Enter the caller id name.\n";
+	echo $text['description-destination_caller_id_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Caller ID Number:\n";
+	echo "	".$text['label-destination_caller_id_number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_caller_id_number' maxlength='255' value=\"$destination_caller_id_number\">\n";
 	echo "<br />\n";
-	echo "Enter the caller id number.\n";
+	echo $text['description-destination_caller_id_number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Context:\n";
+	echo "	".$text['label-destination_context'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_context' maxlength='255' value=\"$destination_context\">\n";
 	echo "<br />\n";
-	echo "Enter the context.\n";
+	echo $text['description-destination_context']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Fax Destination:\n";
+	echo "	".$text['label-fax_uuid'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$sql = "select * from v_fax ";
@@ -311,42 +324,38 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</select>\n";
 	unset ($prep_statement, $extension);
 	echo "	<br />\n";
-	echo "	Select the fax destination to enable fax detection.\n";
+	echo "	".$text['description-fax_uuid']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Enabled:\n";
+	echo "	".$text['label-destination_enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($destination_enabled == "true") {
-		echo "	<option value='true' selected='selected'>true</option>\n";
+	switch ($destination_enabled) {
+		case "true" :	$selected[1] = "selected='selected'";	break;
+		case "false" :	$selected[2] = "selected='selected'";	break;
 	}
-	else {
-		echo "	<option value='true'>true</option>\n";
-	}
-	if ($destination_enabled == "false") {
-		echo "	<option value='false' selected='selected'>false</option>\n";
-	}
-	else {
-		echo "	<option value='false'>false</option>\n";
-	}
+	echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
+	echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
+	unset($selected);
 	echo "	</select>\n";
 	echo "<br />\n";
+	echo $text['description-destination_enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-destination_description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_description' maxlength='255' value=\"$destination_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-destination_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -355,7 +364,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 		echo "				<input type='hidden' name='destination_uuid' value='$destination_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
