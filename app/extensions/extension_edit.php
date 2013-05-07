@@ -662,7 +662,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //begin the page content
 	require_once "includes/header.php";
+	if ($action == "update") {
 	$page["title"] = $text['title-extension-edit'];
+	}
+	else if ($action == "add") {
+		$page["title"] = $text['title-extension-add'];
+	}
 
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
