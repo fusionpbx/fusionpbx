@@ -49,17 +49,6 @@ else {
 		$action = "add";
 	}
 
-//get the conference centers
-	$sql = "select * from v_conference_centers ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "order by conference_center_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	$conference_center_count = count($conference_centers);
-	if ($conference_center_count == 1) {
-		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
-	}
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
@@ -83,6 +72,17 @@ else {
 		//remove any pin number formatting
 		$moderator_pin = preg_replace('{\D}', '', $moderator_pin);
 		$participant_pin = preg_replace('{\D}', '', $participant_pin);
+	}
+
+//get the conference centers
+	if (strlen($conference_center_uuid) == 0) {
+		$sql = "select * from v_conference_centers ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "order by conference_center_name asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
 	}
 
 //define fucntion get_meeting_pin - used to find a unique pin number
