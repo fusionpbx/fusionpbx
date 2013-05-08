@@ -29,12 +29,18 @@ include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
 if (permission_exists('xmpp_delete')) {
-        //access granted
+	//access granted
 }
 else {
-        echo "access denied";
-        exit;
+	echo "access denied";
+	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 require_once "includes/header.php";
 
@@ -64,7 +70,7 @@ $sql .= "where domain_uuid = '$domain_uuid' ";
 $sql .= "and xmpp_profile_uuid = '$profile_id' ";
 $db->exec(check_sql($sql));
 
-$filename = $_SESSION['switch']['conf']['dir'] . "/jingle_profiles/" . "v_" . $domain_name . "_" . 
+$filename = $_SESSION['switch']['conf']['dir'] . "/jingle_profiles/" . "v_" . $domain_name . "_" .
 	preg_replace("/[^A-Za-z0-9]/", "", $profile['profile_name']) . "_" . $profile_id . ".xml";
 
 unlink($filename);
@@ -84,6 +90,8 @@ if ($fp) {
 	//close the connection
 	fclose($fp);
 }
+
+$action = "delete";
 
 include "update_complete.php";
 
