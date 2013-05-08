@@ -1,11 +1,10 @@
 <meta http-equiv="refresh" content="2;url=xmpp.php">
 <div align='center'>
-<?php 
-if ($action == "add") {
-	echo "Add Complete\n";
-}
-if ($action == "update") {
-	echo "Edit Complete\n";
+<?php
+switch ($action) {
+	case "add" : 		echo $text['message-add']."\n"; 	break;
+	case "update" : 	echo $text['message-update']."\n";	break;
+	case "delete" :		echo $text['message-delete']."\n";	break;
 }
 ?>
 </div>
