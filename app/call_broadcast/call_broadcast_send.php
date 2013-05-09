@@ -206,7 +206,7 @@ function cmd_async($cmd) {
 				echo "	<table width='100%'>\n";
 				echo "	<tr>\n";
 				echo "	<td align='center'>\n";
-				echo "		<a href='".PROJECT_PATH."/app/calls_active/v_calls_active.php'>".$text['label-view-calls']."</a>\n";
+				echo "		<a href='".PROJECT_PATH."/app/calls_active/calls_active.php'>".$text['label-view-calls']."</a>\n";
 				echo "	</td>\n";
 				echo "	</table>\n";
 				echo "</td>\n";
