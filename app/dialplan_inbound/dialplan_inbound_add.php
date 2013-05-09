@@ -558,6 +558,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 		}
 
+	//update the destination dialplan_uuid
+		if (strlen($destination_uuid) > 0) {
+			$sql = "update v_destinations set ";
+			$sql .= "dialplan_uuid = '".$dialplan_uuid."' ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and destination_uuid = '".$destination_uuid."' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+
 	//commit the atomic transaction
 		$count = $db->exec("COMMIT;"); //returns affected rows
 
