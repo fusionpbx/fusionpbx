@@ -845,7 +845,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<select name='destination_uuid' id='destination_uuid' class='formfld' style='width: 60%;' >\n";
 			echo "	<option></option>\n";
 			foreach ($result as &$row) {
-				echo "		<option value='".$row["destination_uuid"]."'>".$row["destination_number"]."</option>\n";
+				if (strlen($row["dialplan_uuid"]) == 0) {
+					echo "		<option value='".$row["destination_uuid"]."' style=\"font-weight:bold;\">".$row["destination_number"]." ".$row["destination_description"]."</option>\n";
+				}
+				else {
+					echo "		<option value='".$row["destination_uuid"]."'>".$row["destination_number"]." ".$row["destination_description"]."</option>\n";
+				}
 			}
 			echo "		</select>\n";
 			echo "<br />\n";
