@@ -100,7 +100,7 @@ foreach($text as $key => $value) {
 			if (is_numeric($condition_expression_1)) { 
 				//the number is numeric
 				$condition_expression_1 = str_replace("+", "\+", $condition_expression_1);
-				$condition_expression_1 = '^'.$condition_expression_1.'$';
+				$condition_expression_1 = '^('.$condition_expression_1.')$';
 			}
 		}
 		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
