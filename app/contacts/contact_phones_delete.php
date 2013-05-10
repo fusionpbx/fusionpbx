@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);
 	$contact_uuid = check_str($_GET["contact_uuid"]);
@@ -52,7 +58,7 @@ if (strlen($id)>0) {
 require_once "includes/header.php";
 echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
 echo "<div align='center'>\n";
-echo "Delete Complete\n";
+echo $text['message-delete']."\n";
 echo "</div>\n";
 
 require_once "includes/footer.php";

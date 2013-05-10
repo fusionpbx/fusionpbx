@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -62,10 +68,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($contact_note) == 0) { $msg .= "Please provide: Notes<br>\n"; }
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($last_mod_date) == 0) { $msg .= "Please provide: Last Modified Date<br>\n"; }
-		//if (strlen($last_mod_user) == 0) { $msg .= "Please provide: Last Modified By<br>\n"; }
+		//if (strlen($contact_note) == 0) { $msg .= $text['message-required'].$text['label-contact_note']."<br>\n"; }
+		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		//if (strlen($last_mod_date) == 0) { $msg .= $text['message-required']."Last Modified Date<br>\n"; }
+		//if (strlen($last_mod_user) == 0) { $msg .= $text['message-required']."Last Modified By<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -107,7 +113,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo $text['message-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -127,12 +133,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -156,6 +162,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-contact_notes-edit'];
+	}
+	else if ($action == "add") {
+		$page["title"] = $text['title-contact_notes-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -170,17 +182,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='15%' nowrap='nowrap'><b>Add Notes</b></td>\n";
+		echo "<td align='left' width='15%' nowrap='nowrap'><b>".$text['header-contact_notes-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='15%' nowrap='nowrap'><b>Edit Notes</b></td>\n";
+		echo "<td align='left' width='15%' nowrap='nowrap'><b>".$text['header-contact_notes-edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Notes:\n";
+	echo "	".$text['label-contact_note'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <textarea class='formfld' type='text' rows=\"20\" style=\"width: 100%\" name='contact_note'>$contact_note</textarea>\n";
@@ -194,7 +205,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='contact_note_uuid' value='$contact_note_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
