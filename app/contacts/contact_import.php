@@ -34,7 +34,13 @@ else {
 	exit;
 }
 
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
+//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
 	if(!function_exists('str_getcsv')) {
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
@@ -296,14 +302,14 @@ else {
 			echo "<div align='center'>\n";
 			echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<td align='left' width='30%' nowrap='nowrap'><b>Import Contacts</b></td>\n";
+			echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-contacts_import']."</b></td>\n";
 			echo "<td width='70%' align='right'>\n";
-			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='Back'>\n";
+			echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
 			echo "<td align=\"left\" colspan='2'>\n";
-			echo "	These contacts were added from the csv file.<br /><br />\n";
+			echo "	".$text['message-results']."<br /><br />\n";
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
@@ -311,10 +317,10 @@ else {
 		//show the results
 			echo "<table width='100%'  border='0' cellpadding='3' cellspacing='0' width='100%'>\n";
 			echo "<tr>\n";
-			echo "	<th>Name</th>\n";
-			echo "	<th>Organization</th>\n";
-			echo "	<th>Email</th>\n";
-			echo "	<th>URL</th>\n";
+			echo "	<th>".$text['label-contact_name']."</th>\n";
+			echo "	<th>".$text['label-contact_organization']."</th>\n";
+			echo "	<th>".$text['label-contact_email']."</th>\n";
+			echo "	<th>".$text['label-contact_url']."</th>\n";
 			echo "</tr>\n";
 			foreach($results as $row) {
 				echo "<tr>\n";
@@ -354,11 +360,11 @@ else {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "	<td align='left' width='30%' nowrap='nowrap'>\n";
-	echo "		<b>Import Contacts</b><br />\n";
-	echo "		Export your contacts from outlook to a comma delimitted csv file. Then use this tool to upload and add the contacts from that file.\n";
+	echo "		<b>".$text['header-contacts_import']."</b><br />\n";
+	echo "		".$text['description-contacts_import']."\n";
 	echo "	</td>\n";
 	echo "	<td width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='Back'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
@@ -370,7 +376,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Delimiter:\n";
+	echo "    ".$text['label-import_delimiter'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' style='width:40px;' name='data_delimiter'>\n";
@@ -378,13 +384,13 @@ else {
 	echo "    <option value='|'>|</option>\n";
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Select the delimiter.\n";
+	echo $text['description-import_delimiter']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Enclosure:\n";
+	echo "    ".$text['label-import_enclosure'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' style='width:40px;' name='data_enclosure'>\n";
@@ -392,13 +398,13 @@ else {
 	echo "    <option value=''></option>\n";
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Select the enclosure.\n";
+	echo $text['description-import_enclosure']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "			File to upload:\n";
+	echo "			".$text['label-import_file_upload'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "			<input name=\"ulfile\" type=\"file\" class=\"btn\" id=\"ulfile\">\n";
@@ -413,7 +419,7 @@ else {
 	echo "		</td>\n";
 	echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
 	echo "			<input name=\"type\" type=\"hidden\" value=\"csv\">\n";
-	echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"Upload\">\n";
+	echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";

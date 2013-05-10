@@ -33,7 +33,8 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
+
+//require_once "includes/header.php";
 require_once "includes/paging.php";
 
 //get variables used to control the order
@@ -41,22 +42,12 @@ require_once "includes/paging.php";
 	$order = $_GET["order"];
 
 //show the content
-	//echo "<div align='center'>";
-	//echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	//echo "<tr class='border'>\n";
-	//echo "	<td align=\"center\">\n";
-	//echo "		<br>";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>Addresses</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-addresses']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
-	//echo "<tr>\n";
-	//echo "<td align='left' colspan='2'>\n";
-	//echo "List of addresses for the contact.<br /><br />\n";
-	//echo "</td>\n";
-	//echo "</tr>\n";
 	echo "</table>\n";
 
 	//prepare to page the results
@@ -80,9 +71,9 @@ require_once "includes/paging.php";
 		$rows_per_page = 10;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the contact list
 		$sql = " select * from v_contact_addresses ";
@@ -104,20 +95,19 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	//echo th_order_by('address_name', 'Name', $order_by, $order);
-	echo th_order_by('address_type', 'Type', $order_by, $order);
-	//echo th_order_by('address_street', 'Street Address', $order_by, $order);
-	//echo th_order_by('address_extended', 'Extended Address', $order_by, $order);
-	echo th_order_by('address_locality', 'City', $order_by, $order);
-	echo th_order_by('address_region', 'Region', $order_by, $order);
-	//echo th_order_by('address_postal_code', 'Postal Code', $order_by, $order);
-	echo th_order_by('address_country', 'Country', $order_by, $order);
-	//echo th_order_by('address_latitude', 'Latitude', $order_by, $order);
-	//echo th_order_by('address_longitude', 'Longitude', $order_by, $order);
-	echo "<th>Tools</th>\n";
-	echo th_order_by('address_description', 'Description', $order_by, $order);
+	echo th_order_by('address_type', $text['label-address_type'], $order_by, $order);
+	//echo th_order_by('address_street', $text['label-address_street'], $order_by, $order);
+	//echo th_order_by('address_extended', $text['label-address_extended'], $order_by, $order);
+	echo th_order_by('address_locality', $text['label-address_locality'], $order_by, $order);
+	echo th_order_by('address_region', $text['label-address_region'], $order_by, $order);
+	//echo th_order_by('address_postal_code', $text['label-address_postal_code'], $order_by, $order);
+	echo th_order_by('address_country', $text['label-address_country'], $order_by, $order);
+	//echo th_order_by('address_latitude', $text['label-address_latitude'], $order_by, $order);
+	//echo th_order_by('address_longitude', $text['label-address_longitude'], $order_by, $order);
+	echo "<th>".$text['label-address_tools']."</th>\n";
+	echo th_order_by('address_description', $text['label-address_description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='contact_addresses_edit.php?contact_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	echo "	<a href='contact_addresses_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -140,8 +130,8 @@ require_once "includes/paging.php";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='contact_addresses_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_address_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='contact_addresses_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_address_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='contact_addresses_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_address_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "		<a href='contact_addresses_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_address_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -156,7 +146,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='contact_addresses_edit.php?contact_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='contact_addresses_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
@@ -166,12 +156,4 @@ require_once "includes/paging.php";
 	echo "</table>";
 	echo "</div>";
 
-	//echo "</td>";
-	//echo "</tr>";
-	//echo "</table>";
-	//echo "</div>";
-	//echo "<br><br>";
-
-//include the footer
-	//require_once "includes/footer.php";
 ?>

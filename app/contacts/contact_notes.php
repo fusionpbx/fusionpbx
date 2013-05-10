@@ -33,7 +33,8 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
+
+//require_once "includes/header.php";
 require_once "includes/paging.php";
 
 //get variables used to control the order
@@ -41,28 +42,18 @@ require_once "includes/paging.php";
 	$order = $_GET["order"];
 
 //set defaults
-	if (strlen($order_by) == 0) { 
+	if (strlen($order_by) == 0) {
 		$order_by = 'last_mod_date';
 		$order = 'desc';
 	}
 
 //show the content
-	//echo "<div align='center'>";
-	//echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	//echo "<tr class='border'>\n";
-	//echo "	<td align=\"center\">\n";
-	//echo "		<br>";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>Notes</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-contact_notes']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
-	//echo "<tr>\n";
-	//echo "<td align='left' colspan='2'>\n";
-	//echo "	List of notes for the contact.<br /><br />\n";
-	//echo "</td>\n";
-	//echo "</tr>\n";
 	echo "</table>\n";
 
 	//prepare to page the results
@@ -86,9 +77,9 @@ require_once "includes/paging.php";
 		$rows_per_page = 10;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the contact list
 		$sql = "select * from v_contact_notes ";
@@ -117,7 +108,7 @@ require_once "includes/paging.php";
 		echo "	&nbsp; \n";
 		echo "</th>\n";
 		echo "<td align='right' width='42'>\n";
-		echo "	<a href='contact_notes_edit.php?contact_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='contact_notes_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		echo "</td>\n";
 		echo "<tr>\n";
 	}
@@ -134,7 +125,7 @@ require_once "includes/paging.php";
 			//echo "<th>Modified Date ".$row['last_mod_date']."</th>\n";
 			//echo "<th>Modified By ".$row['last_mod_user']."</th>\n";
 			echo "<td align='right' width='42'>\n";
-			echo "	<a href='contact_notes_edit.php?contact_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='contact_notes_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 			echo "</td>\n";
 			echo "<tr>\n";
 
@@ -143,8 +134,8 @@ require_once "includes/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_date']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_user']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='contact_notes_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='contact_notes_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='contact_notes_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "		<a href='contact_notes_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 
@@ -164,7 +155,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='contact_notes_edit.php?contact_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='contact_notes_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
@@ -174,12 +165,4 @@ require_once "includes/paging.php";
 	echo "</table>";
 	echo "</div>";
 
-	//echo "</td>";
-	//echo "</tr>";
-	//echo "</table>";
-	//echo "</div>";
-	//echo "<br><br>";
-
-//include the footer
-	//require_once "includes/footer.php";
 ?>

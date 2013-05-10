@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -66,9 +72,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($phone_type) == 0) { $msg .= "Please provide: Telephone Type.<br>\n"; }
-		//if (strlen($phone_number) == 0) { $msg .= "Please provide: Telephone Number<br>\n"; }
+		//if (strlen($phone_type) == 0) { $msg .= $text['message-required'].$text['label-phone_type']."<br>\n"; }
+		//if (strlen($phone_number) == 0) { $msg .= $text['message-required'].$text['label-phone_number']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -112,7 +117,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo $text['message-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -133,12 +138,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -161,6 +166,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-contact_phones-edit'];
+	}
+	else if ($action == "add") {
+		$page["title"] = $text['title-contact_phones-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -173,18 +184,24 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' align='left' border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact Phone</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
+	if ($action == "update") {
+		echo $text['header-contact_phones-edit'];
+	}
+	else if ($action == "add") {
+		echo $text['header-contact_phones-add'];
+	}
+	echo "</b></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	//echo "Phone Numbers<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type:\n";
+	echo "	".$text['label-phone_type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (is_array($_SESSION["contact"]["phone_type"])) {
@@ -192,7 +209,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<select class='formfld' style='width:85%;' name='phone_type'>\n";
 		echo "	<option value=''></option>\n";
 		foreach($_SESSION["contact"]["phone_type"] as $row) {
-			if ($row == $phone_type) { 
+			if ($row == $phone_type) {
 				echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
 			}
 			else {
@@ -204,97 +221,97 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "	<select class='formfld' name='phone_type'>\n";
 		echo "	<option value=''></option>\n";
-		if ($phone_type == "home") { 
+		if ($phone_type == "home") {
 			echo "	<option value='home' selected='selected'>Home</option>\n";
 		}
 		else {
 			echo "	<option value='home'>Home</option>\n";
 		}
-		if ($phone_type == "work") { 
+		if ($phone_type == "work") {
 			echo "	<option value='work' selected='selected'>Work</option>\n";
 		}
 		else {
 			echo "	<option value='work'>Work</option>\n";
 		}
-		if ($phone_type == "pref") { 
+		if ($phone_type == "pref") {
 			echo "	<option value='pref' selected='selected'>Pref</option>\n";
 		}
 		else {
 			echo "	<option value='pref'>Pref</option>\n";
 		}
-		if ($phone_type == "voice") { 
+		if ($phone_type == "voice") {
 			echo "	<option value='voice' selected='selected'>Voice</option>\n";
 		}
 		else {
 			echo "	<option value='voice'>Voice</option>\n";
 		}
-		if ($phone_type == "fax") { 
+		if ($phone_type == "fax") {
 			echo "	<option value='fax' selected='selected'>Fax</option>\n";
 		}
 		else {
 			echo "	<option value='fax'>Fax</option>\n";
 		}
-		if ($phone_type == "msg") { 
+		if ($phone_type == "msg") {
 			echo "	<option value='msg' selected='selected'>MSG</option>\n";
 		}
 		else {
 			echo "	<option value='msg'>MSG</option>\n";
 		}
-		if ($phone_type == "cell") { 
+		if ($phone_type == "cell") {
 			echo "	<option value='cell' selected='selected'>Cell</option>\n";
 		}
 		else {
 			echo "	<option value='cell'>Cell</option>\n";
 		}
-		if ($phone_type == "pager") { 
+		if ($phone_type == "pager") {
 			echo "	<option value='pager' selected='selected'>Pager</option>\n";
 		}
 		else {
 			echo "	<option value='pager'>Pager</option>\n";
 		}
-		if ($phone_type == "bbs") { 
+		if ($phone_type == "bbs") {
 			echo "	<option value='bbs' selected='selected'>BBS</option>\n";
 		}
 		else {
 			echo "	<option value='bbs'>BBS</option>\n";
 		}
-		if ($phone_type == "modem") { 
+		if ($phone_type == "modem") {
 			echo "	<option value='modem' selected='selected'>Modem</option>\n";
 		}
 		else {
 			echo "	<option value='modem'>Modem</option>\n";
 		}
-		if ($phone_type == "car") { 
+		if ($phone_type == "car") {
 			echo "	<option value='car' selected='selected'>Car</option>\n";
 		}
 		else {
 			echo "	<option value='car'>Car</option>\n";
 		}
-		if ($phone_type == "isdn") { 
+		if ($phone_type == "isdn") {
 			echo "	<option value='isdn' selected='selected'>ISDN</option>\n";
 		}
 		else {
 			echo "	<option value='isdn'>ISDN</option>\n";
 		}
-		if ($phone_type == "video") { 
+		if ($phone_type == "video") {
 			echo "	<option value='video' selected='selected'>Video</option>\n";
 		}
 		else {
 			echo "	<option value='video'>Video</option>\n";
 		}
-		if ($phone_type == "pcs") { 
+		if ($phone_type == "pcs") {
 			echo "	<option value='pcs' selected='selected'>PCS</option>\n";
 		}
 		else {
 			echo "	<option value='pcs'>PCS</option>\n";
 		}
-		if ($phone_type == "iana-token") { 
+		if ($phone_type == "iana-token") {
 			echo "	<option value='iana-token' selected='selected'>iana-token</option>\n";
 		}
 		else {
 			echo "	<option value='iana-token'>iana-token</option>\n";
 		}
-		if ($phone_type == "x-name") { 
+		if ($phone_type == "x-name") {
 			echo "	<option value='x-name' selected='selected'>x-name</option>\n";
 		}
 		else {
@@ -303,40 +320,40 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
-	echo "Enter the phone type.\n";
+	echo $text['description-phone_type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Phone Number:\n";
+	echo "	".$text['label-phone_number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' value=\"$phone_number\">\n";
 	echo "<br />\n";
-	echo "Enter the phone number.\n";
+	echo $text['description-phone_number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Extension:\n";
+	echo "	".$text['label-phone_extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='phone_extension' maxlength='255' value=\"$phone_extension\">\n";
 	echo "<br />\n";
-	echo "Enter the extension.\n";
+	echo $text['description-phone_extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-phone_description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='phone_description' maxlength='255' value=\"$phone_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-phone_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -346,7 +363,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='contact_phone_uuid' value='$contact_phone_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

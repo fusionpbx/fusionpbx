@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -70,16 +76,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($address_type) == 0) { $msg .= "Please provide: Address Type<br>\n"; }
-		//if (strlen($address_street) == 0) { $msg .= "Please provide: Street Address<br>\n"; }
-		//if (strlen($address_extended) == 0) { $msg .= "Please provide: Extended Address<br>\n"; }
-		//if (strlen($address_locality) == 0) { $msg .= "Please provide: City<br>\n"; }
-		//if (strlen($address_region) == 0) { $msg .= "Please provide: State / Province<br>\n"; }
-		//if (strlen($address_postal_code) == 0) { $msg .= "Please provide: Postal Code<br>\n"; }
-		//if (strlen($address_country) == 0) { $msg .= "Please provide: Country<br>\n"; }
-		//if (strlen($address_latitude) == 0) { $msg .= "Please provide: Latitude<br>\n"; }
-		//if (strlen($address_longitude) == 0) { $msg .= "Please provide: Longitude<br>\n"; }
+		//if (strlen($address_type) == 0) { $msg .= $text['message-required'].$text['label-address_type']."<br>\n"; }
+		//if (strlen($address_street) == 0) { $msg .= $text['message-required'].$text['label-address_street']."<br>\n"; }
+		//if (strlen($address_extended) == 0) { $msg .= $text['message-required'].$text['label-address_extended']."<br>\n"; }
+		//if (strlen($address_locality) == 0) { $msg .= $text['message-required'].$text['label-address_locality']."<br>\n"; }
+		//if (strlen($address_region) == 0) { $msg .= $text['message-required'].$text['label-address_region']."<br>\n"; }
+		//if (strlen($address_postal_code) == 0) { $msg .= $text['message-required'].$text['label-address_postal_code']."<br>\n"; }
+		//if (strlen($address_country) == 0) { $msg .= $text['message-required'].$text['label-address_country']."<br>\n"; }
+		//if (strlen($address_latitude) == 0) { $msg .= $text['message-required'].$text['label-address_latitude']."<br>\n"; }
+		//if (strlen($address_longitude) == 0) { $msg .= $text['message-required'].$text['label-address_longitude']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -137,7 +142,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo $text['message-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -165,12 +170,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -201,6 +206,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-contact_addresses-edit'];
+	}
+	else if ($action == "add") {
+		$page["title"] = $text['title-contact_addresses-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -213,18 +224,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Contact Address</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
+	if ($action == "update") {
+		echo $text['header-contact_addresses-edit'];
+	}
+	else if ($action == "add") {
+		echo $text['header-contact_addresses-add'];
+	}
+	echo "</b></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Contact address information.<br /><br />\n";
+	if ($action == "update") {
+		echo $text['description-contact_addresses-edit'];
+	}
+	else if ($action == "add") {
+		echo $text['description-contact_addresses-add'];
+	}
+	echo "<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type:\n";
+	echo "	".$text['label-address_type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (is_array($_SESSION["contact"]["address_type"])) {
@@ -232,7 +256,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<select class='formfld' style='width:85%;' name='address_type'>\n";
 		echo "	<option value=''></option>\n";
 		foreach($_SESSION["contact"]["address_type"] as $row) {
-			if ($row == $address_type) { 
+			if ($row == $address_type) {
 				echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
 			}
 			else {
@@ -244,13 +268,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "	<select class='formfld' name='address_type'>\n";
 		echo "	<option value=''></option>\n";
-		if (strtolower($address_type) == "home") { 
+		if (strtolower($address_type) == "home") {
 			echo "	<option value='home' selected='selected'>home</option>\n";
 		}
 		else {
 			echo "	<option value='home'>home</option>\n";
 		}
-		if (strtolower($address_type) == "work") { 
+		if (strtolower($address_type) == "work") {
 			echo "	<option value='work' selected='selected'>work</option>\n";
 		}
 		else {
@@ -259,106 +283,106 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	</select>\n";
 	}
 	echo "<br />\n";
-	echo "Enter the address type.\n";
+	echo $text['description-address_type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Street Address:\n";
+	echo "	".$text['label-address_street'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_street' maxlength='255' value=\"$address_street\">\n";
 	echo "<br />\n";
-	echo "Enter the street address.\n";
+	echo $text['description-address_street']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Extended Address:\n";
+	echo "	".$text['label-address_extended'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_extended' maxlength='255' value=\"$address_extended\">\n";
 	echo "<br />\n";
-	echo "Enter the extended address.\n";
+	echo $text['description-address_extended']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	City:\n";
+	echo "	".$text['label-address_locality'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_locality' maxlength='255' value=\"$address_locality\">\n";
 	echo "<br />\n";
-	echo "Enter the city.\n";
+	echo $text['description-address_locality']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Region:\n";
+	echo "	".$text['label-address_region'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_region' maxlength='255' value=\"$address_region\">\n";
 	echo "<br />\n";
-	echo "Enter the state or province.\n";
+	echo $text['description-address_region']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Postal Code:\n";
+	echo "	".$text['label-address_postal_code'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_postal_code' maxlength='255' value=\"$address_postal_code\">\n";
 	echo "<br />\n";
-	echo "Enter the postal code.\n";
+	echo $text['description-address_postal_code']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Country:\n";
+	echo "	".$text['label-address_country'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_country' maxlength='255' value=\"$address_country\">\n";
 	echo "<br />\n";
-	echo "Enter the country.\n";
+	echo $text['description-address_country']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Latitude:\n";
+	echo "	".$text['label-address_latitude'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_latitude' maxlength='255' value=\"$address_latitude\">\n";
 	echo "<br />\n";
-	echo "Enter the latitude\n";
+	echo $text['description-address_latitude']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Longitude:\n";
+	echo "	".$text['label-address_longitude'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_longitude' maxlength='255' value=\"$address_longitude\">\n";
 	echo "<br />\n";
-	echo "Enter the longitude\n";
+	echo $text['description-address_longitude']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-address_description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='address_description' maxlength='255' value=\"$address_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-address_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -368,7 +392,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='contact_address_uuid' value='$contact_address_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
