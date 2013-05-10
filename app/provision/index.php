@@ -97,6 +97,15 @@ require_once "includes/require.php";
 	case "001873":
 		$device_vendor = "cisco";
 		break;
+	case "a44c11":
+		$phone_vendor = "cisco";
+		break;
+	case "30e4db":
+		$phone_vendor = "cisco";
+		break;
+	case "68efbd":
+		$phone_vendor = "cisco";
+		break;
 	case "00045a":
 		$device_vendor = "linksys";
 		break;
@@ -169,7 +178,19 @@ require_once "includes/require.php";
 			$template_list=array(  
 					"Linksys/SPA-2102"=>"linksys/spa2102",
 					"Linksys/SPA-3102"=>"linksys/spa3102",
-					"snom370"=>"snom/370"
+					"Cisco/SPA301"=>"cisco/spa301",
+					"Cisco/SPA301D"=>"cisco/spa302d",
+					"Cisco/SPA303"=>"cisco/spa303",
+					"Cisco/SPA501G"=>"cisco/spa501g",
+					"Cisco/SPA502G"=>"cisco/spa502g",
+					"Cisco/SPA504G"=>"cisco/spa504g",
+					"Cisco/SPA508G"=>"cisco/spa508g",
+					"Cisco/SPA509G"=>"cisco/spa509g",
+					"Cisco/SPA512G"=>"cisco/spa512g",
+					"Cisco/SPA514G"=>"cisco/spa514g",
+					"Cisco/SPA525G2"=>"cisco/spa525g2",
+					"snom370"=>"snom/370",
+					"snom370"=>"snom/320"
 					);
 
 			foreach ($template_list as $key=>$val){
