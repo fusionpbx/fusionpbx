@@ -116,7 +116,7 @@ require_once "includes/paging.php";
 	echo th_order_by('destination_enabled', $text['label-destination_enabled'], $order_by, $order);
 	echo th_order_by('destination_description', $text['label-destination_description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='destinations_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	echo "	<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 	if ($result_count > 0) {
@@ -128,8 +128,8 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='destinations_edit.php?id=".$row['destination_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			echo "		<a href='destinations_delete.php?id=".$row['destination_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "		<a href='destination_edit.php?id=".$row['destination_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "		<a href='destination_delete.php?id=".$row['destination_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -144,7 +144,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='destinations_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	echo "			<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
