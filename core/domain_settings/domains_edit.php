@@ -137,7 +137,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$domain_uuid = $_GET["id"];
 		$sql = "select * from v_domains ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -165,7 +164,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>Domain</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='domains.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'>\n";
+	if (permission_exists('domain_export')) {
+		echo "	<input type='button' class='btn' name='' alt='export' onclick=\"window.location='".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/domain_export.php?id=".$domain_uuid."'\" value='Export'>\n";
+	}
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='domains.php'\" value='Back'>\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
