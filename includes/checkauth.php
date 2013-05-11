@@ -60,6 +60,7 @@ session_start();
 					}
 				//set the domain information
 					if (strlen($domain_name) > 0) {
+						require_once "includes/classes/domains.php";
 						foreach ($_SESSION['domains'] as &$row) {
 							if ($row['domain_name'] == $domain_name) {
 								//set the domain session variables
@@ -70,8 +71,6 @@ session_start();
 									$_SESSION["domain_name"] = $domain_name;
 
 								//set the setting arrays
-									//domains set()
-									require "includes/classes/domains.php";
 									$domain = new domains();
 									$domain->db = $db;
 									$domain->set();
