@@ -15,7 +15,7 @@
 <title><!--{title}--></title>
 <!--{head}-->
 <link rel="icon" href="<!--{project_path}-->/favicon.ico">
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type='text/css'>
 
 img {
