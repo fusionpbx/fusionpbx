@@ -8,11 +8,11 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
-		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['es-mx'] = 'El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels sélon les conditions et context.  Vous pouvez en utiliser pour diriger les appels vers gateways, IVR, nombres éxterieurs ou quelqu'autre déstination.";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'O dialplan é usado para configurar destinos de chamada com base nas condições e contexto. Você pode usar o dialplan para enviar chamadas para gateways, atendedores automáticos, números externos, para scripts, ou qualquer destino.';
@@ -20,11 +20,11 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Dialplan';
-		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['es-mx'] = 'Plan de Marcado';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = 'Dialplan';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Dialplan';
@@ -38,11 +38,11 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][1]['title']['en-us'] = 'Dialplan Manager';
-		$apps[$x]['menu'][1]['title']['es-mx'] = '';
+		$apps[$x]['menu'][1]['title']['es-mx'] = 'Administrador de Planes de Marcado';
 		$apps[$x]['menu'][1]['title']['de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
-		$apps[$x]['menu'][1]['title']['fr'] = '';
+		$apps[$x]['menu'][1]['title']['fr'] = 'Administrateur de Dialplan';
 		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Gestor de Dialplan';

@@ -7,12 +7,12 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en-us'] = 'Used to configure SIP extensions.';
-		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['en-us'] = 'Used Configure SIP extensions.';
+		$apps[$x]['description']['es-mx'] = 'Utilizado para configurar Extensiones SIP.';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr'] = 'Utilisé pour configurer des éxtentions SIP';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Usado para configurar extensões SIP.';
@@ -20,11 +20,11 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Extensions';
-		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['es-mx'] = 'Extensiones';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = 'Post téléphonique';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Extensões';

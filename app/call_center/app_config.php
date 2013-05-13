@@ -8,11 +8,11 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Queues for managing inbound calls and routing those calls to available agents.';
-		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['es-mx'] = 'Colas pra administar las llamadas entrantes y enviarlas a los agentes disponibles';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr'] = 'Queues pour envoyer les appels entrants vers les agents disponibles.';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes disponíveis.';
@@ -20,11 +20,11 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Call Center';
-		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['es-mx'] = 'Centro de Llamadas';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = "Centre d' appels";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Centro de Chamadas';
@@ -38,11 +38,11 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['menu'][1]['title']['en-us'] = 'Agent Status';
-		$apps[$x]['menu'][1]['title']['es-mx'] = '';
+		$apps[$x]['menu'][1]['title']['es-mx'] = 'Estado de Agente';
 		$apps[$x]['menu'][1]['title']['de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
-		$apps[$x]['menu'][1]['title']['fr'] = '';
+		$apps[$x]['menu'][1]['title']['fr'] = "État d'agent";
 		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Estado do Agente';

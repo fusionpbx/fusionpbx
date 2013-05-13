@@ -8,11 +8,11 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.';
-		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['es-mx'] = 'Las pasarelas proveen acceso a otras redes de voz.  Pueden ser provedores u otro sistema que requiera registo SIP.';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr'] = "Les passerelles donnent access autres réseaux vocaux.  Elles pouvent être d'autre furnisseur ou autre système avec la régistration SIP.";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Gateways fornecem acesso em redes de voz outros. Estes podem ser os provedores de voz ou outros sistemas que exigem registro SIP.';
@@ -20,11 +20,11 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Gateways';
-		$apps[$x]['menu'][0]['title']['es-mx'] = '';
+		$apps[$x]['menu'][0]['title']['es-mx'] = 'Pasarelas';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = 'Passerelles';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Gateways';

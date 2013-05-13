@@ -8,11 +8,11 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.';
-		$apps[$x]['description']['es-mx'] = '';
+		$apps[$x]['description']['es-mx'] = 'Para recibir un FAX, configure una extensiÃ³n y despuÃ©s asigne un nÃºmero a esta.';
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr'] = 'Pour recevoir un fax, configurez un Ã©xtension du FAX et aprÃ¨s dirigers un nombre vers lui.';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Para receber uma configuração de fax uma extensão de fax e, em seguida, direcionar o fax com um número dedicado ou você pode detectar o tom de fax, usando na guia Pública.';
@@ -20,11 +20,11 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Fax Server';
-		$apps[$x]['menu'][0]['title']['es-mx'] = 'Fax de servidor';
+		$apps[$x]['menu'][0]['title']['es-mx'] = 'Servidor de Fax';
 		$apps[$x]['menu'][0]['title']['de'] = 'Faxserver';
 		$apps[$x]['menu'][0]['title']['de-ch'] = 'Faxserver';
 		$apps[$x]['menu'][0]['title']['de-at'] = 'Faxserver';
-		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = 'Serveur du fax';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Servidor de Fax';
