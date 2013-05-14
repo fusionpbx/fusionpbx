@@ -90,7 +90,7 @@ else {
 
 //get the user settings
 	$sql = "select * from v_user_settings ";
-	$sql .= "where user_uuid = '".$_SESSION["user_uuid"]."' ";
+	$sql .= "where user_uuid = '".$user_uuid."' ";
 	$sql .= "and user_setting_enabled = 'true' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
