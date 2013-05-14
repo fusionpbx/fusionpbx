@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -89,20 +95,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($call_flow_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		if (strlen($call_flow_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-		//if (strlen($call_flow_feature_code) == 0) { $msg .= "Please provide: Feature Code<br>\n"; }
-		if (strlen($call_flow_context) == 0) { $msg .= "Please provide: Context<br>\n"; }
-		//if (strlen($call_flow_status) == 0) { $msg .= "Please provide: Status<br>\n"; }
-		//if (strlen($call_flow_pin_number) == 0) { $msg .= "Please provide: PIN Number<br>\n"; }
-		//if (strlen($call_flow_status) == 0) { $msg .= "Please provide: Status<br>\n"; }
-		//if (strlen($call_flow_label) == 0) { $msg .= "Please provide: Destination Label<br>\n"; }
-		//if (strlen($call_flow_app) == 0) { $msg .= "Please provide: Application<br>\n"; }
-		//if (strlen($call_flow_data) == 0) { $msg .= "Please provide: Application Data<br>\n"; }
-		//if (strlen($call_flow_anti_label) == 0) { $msg .= "Please provide: Alternate Destination Label<br>\n"; }
-		//if (strlen($call_flow_anti_app) == 0) { $msg .= "Please provide: Alternate  Application<br>\n"; }
-		//if (strlen($call_flow_anti_data) == 0) { $msg .= "Please provide: Application Data<br>\n"; }
-		//if (strlen($call_flow_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($call_flow_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		if (strlen($call_flow_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+		//if (strlen($call_flow_feature_code) == 0) { $msg .= $text['message-required'].$text['label-feature_code']."<br>\n"; }
+		if (strlen($call_flow_context) == 0) { $msg .= $text['message-required'].$text['label-context']."<br>\n"; }
+		//if (strlen($call_flow_status) == 0) { $msg .= $text['message-required'].$text['label-status']."<br>\n"; }
+		//if (strlen($call_flow_pin_number) == 0) { $msg .= $text['message-required'].$text['label-pin_number']."<br>\n"; }
+		//if (strlen($call_flow_status) == 0) { $msg .= $text['message-required'].$text['label-status']."<br>\n"; }
+		//if (strlen($call_flow_label) == 0) { $msg .= $text['message-required'].$text['label-destination_label']."<br>\n"; }
+		//if (strlen($call_flow_app) == 0) { $msg .= $text['message-required'].$text['label-destination']."<br>\n"; }
+		//if (strlen($call_flow_data) == 0) { $msg .= $text['message-required'].$text['label-destination']."<br>\n"; }
+		//if (strlen($call_flow_anti_label) == 0) { $msg .= $text['message-required'].$text['label-alternate_label']."<br>\n"; }
+		//if (strlen($call_flow_anti_app) == 0) { $msg .= $text['message-required'].$text['label-alternate_destination']."<br>\n"; }
+		//if (strlen($call_flow_anti_data) == 0) { $msg .= $text['message-required'].$text['label-alternate_destination']."<br>\n"; }
+		//if (strlen($call_flow_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -351,16 +357,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=call_flows.php\">\n";
 					echo "<div align='center'>\n";
 					if ($action == "add") {
-						echo "Add Complete\n";
+						echo $text['message-add']."\n";
 					}
 					if ($action == "update") {
-						echo "Update Complete\n";
+						echo $text['message-update']."\n";
 					}
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
 			}
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -420,6 +426,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-call_flow-edit'];
+	}
+	if ($action == "add") {
+		$page["title"] = $text['title-call_flow-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -432,57 +444,64 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Call Flow</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_flows.php'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
+	if ($action == "update") {
+		echo $text['header-call_flow-edit'];
+	}
+	if ($action == "add") {
+		echo $text['header-call_flow-add'];
+	}
+	echo "</b></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_flows.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_name' maxlength='255' value=\"$call_flow_name\">\n";
 	echo "<br />\n";
-	echo "Enter the name.\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Extension:\n";
+	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_extension' maxlength='255' value=\"$call_flow_extension\">\n";
 	echo "<br />\n";
-	echo "Enter the extension number.\n";
+	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Feature Code:\n";
+	echo "	".$text['label-feature_code'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_feature_code' maxlength='255' value=\"$call_flow_feature_code\">\n";
 	echo "<br />\n";
-	echo "Enter the feature code.\n";
+	echo $text['description-feature_code']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Context:\n";
+	echo "	".$text['label-context'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_context' maxlength='255' value=\"$call_flow_context\">\n";
 	echo "<br />\n";
-	echo "Enter the context.\n";
+	echo $text['description-context']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Status:\n";
+	echo "	".$text['label-status'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_flow_status'>\n";
@@ -492,7 +511,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<option value='true' selected='selected'>$call_flow_label</option>\n";
 		}
 		else {
-			echo "	<option value='true' selected='selected'>true</option>\n";
+			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 	}
 	else {
@@ -500,7 +519,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<option value='true'>$call_flow_label</option>\n";
 		}
 		else {
-			echo "	<option value='true'>true</option>\n";
+			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
 	}
 	if ($call_flow_status == "false") {
@@ -508,7 +527,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<option value='false' selected='selected'>$call_flow_anti_label</option>\n";
 		}
 		else {
-			echo "	<option value='false' selected='selected'>false</option>\n";
+			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 	}
 	else {
@@ -516,40 +535,40 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<option value='false'>$call_flow_anti_label</option>\n";
 		}
 		else {
-			echo "	<option value='false'>false</option>\n";
+			echo "	<option value='false'>".$text['label-false']."</option>\n";
 		}
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the status.\n";
+	echo $text['description-status']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	PIN Number:\n";
+	echo "	".$text['label-pin_number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_pin_number' maxlength='255' value=\"$call_flow_pin_number\">\n";
 	echo "<br />\n";
-	echo "Enter the pin number\n";
+	echo $text['description-pin_number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Destination Label:\n";
+	echo "	".$text['label-destination_label'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_label' maxlength='255' value=\"$call_flow_label\">\n";
 	echo "<br />\n";
-	echo "Enter the destination label\n";
+	echo $text['description-destination_label']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Destination:\n";
+	echo "	".$text['label-destination'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$select_value = '';
@@ -562,24 +581,24 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	switch_select_destination("dialplan", $destination_label, "call_flow_destination", $select_value, "", $call_flow_data);
 	unset($select_value);
 	echo "<br />\n";
-	echo "Select the destination.\n";
+	echo $text['description-destination']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Alternate Label:\n";
+	echo "	".$text['label-alternate_label'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_anti_label' maxlength='255' value=\"$call_flow_anti_label\">\n";
 	echo "<br />\n";
-	echo "Enter the alternate destination label\n";
+	echo $text['description-alternate_label']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Alternate Destination:\n";
+	echo "	".$text['label-alternate_destination'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	//switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='')
@@ -590,18 +609,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	switch_select_destination("dialplan", $alternate_destination_label, "call_flow_alternate_destination", $select_value, "", $call_flow_anti_data);
 	unset($select_value);
 	echo "<br />\n";
-	echo "Select the alternate destination.\n";
+	echo $text['description-alternate_destination']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_flow_description' maxlength='255' value=\"$call_flow_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -611,7 +630,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='call_flow_uuid' value='$call_flow_uuid'>\n";
 		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
