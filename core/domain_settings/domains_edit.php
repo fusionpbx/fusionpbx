@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -57,8 +63,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_name) == 0) { $msg .= "Please provide: Domain<br>\n"; }
-		//if (strlen($domain_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		//if (strlen($domain_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		//if (strlen($domain_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -124,10 +130,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=domains.php\">\n";
 			echo "<div align='center'>\n";
 			if ($action == "update") {
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 			}
 			if ($action == "add") {
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 			}
 			echo "</div>\n";
 			require_once "includes/footer.php";
@@ -151,6 +157,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-domain-edit'];
+	}
+	if ($action == "add") {
+		$page["title"] = $text['title-domain-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -163,39 +175,52 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Domain</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
+	if ($action == "update") {
+		echo $text['header-domain-edit'];
+	}
+	if ($action == "add") {
+		echo $text['header-domain-add'];
+	}
+	echo "</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	if (permission_exists('domain_export')) {
-		echo "	<input type='button' class='btn' name='' alt='export' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".$domain_uuid."'\" value='Export'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".$domain_uuid."'\" value='".$text['button-export']."'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='domains.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Control the list of domains to manage.<br /><br />\n";
+	if ($action == "update") {
+		echo $text['description-domain-edit'];
+	}
+	if ($action == "add") {
+		echo $text['description-domain-add'];
+	}
+	echo "<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Domain:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"$domain_name\">\n";
 	echo "<br />\n";
-	echo "Enter the domain name.\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"$domain_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -203,7 +228,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='domain_uuid' value='$domain_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);
 }
@@ -60,7 +66,7 @@ if (strlen($id) > 0) {
 		foreach($result as $row) {
 			$name = $row['domain_setting_name'];
 			$category = $row['domain_setting_category'];
-			$subcategory = $row['domain_setting_subcategory'];	
+			$subcategory = $row['domain_setting_subcategory'];
 			if (strlen($subcategory) == 0) {
 				//$$category[$name] = $row['domain_setting_value'];
 				$_SESSION[$category][$name] = $row['domain_setting_value'];
@@ -112,7 +118,7 @@ if (strlen($id) > 0) {
 		//delete the dialplan public
 			unlink($_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name.'.xml');
 			if (strlen($_SESSION['switch']['dialplan']['dir']) > 0) {
-				system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name);	
+				system('rm -rf '.$_SESSION['switch']['dialplan']['dir'].'/public/'.$domain_name);
 			}
 
 		//delete the extension
@@ -187,7 +193,7 @@ if (strlen($id) > 0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=domains.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo $text['message-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;

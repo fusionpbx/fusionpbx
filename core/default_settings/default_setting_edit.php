@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -61,12 +67,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($default_setting_category) == 0) { $msg .= "Please provide: Category<br>\n"; }
-		//if (strlen($default_setting_subcategory) == 0) { $msg .= "Please provide: Subcategory<br>\n"; }
-		//if (strlen($default_setting_name) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($default_setting_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
-		//if (strlen($default_setting_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (strlen($default_setting_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		//if (strlen($default_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		//if (strlen($default_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+		//if (strlen($default_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (strlen($default_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+		//if (strlen($default_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//if (strlen($default_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -109,7 +115,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -130,12 +136,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -160,6 +166,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-default_setting-edit'];
+	}
+	else if ($action == "add") {
+		$page["title"] = $text['title-default_setting-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -173,55 +185,60 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Default Setting Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-default_setting-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Default Setting Edit</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-default_setting-edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='default_settings.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='default_settings.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Settings used for all domains.<br /><br />\n";
+	if ($action == "add") {
+		echo $text['description-default_setting-add']."<br /><br />\n";
+	}
+	if ($action == "update") {
+		echo $text['description-default_setting-edit']."<br /><br />\n";
+	}
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Category:\n";
+	echo "	".$text['label-category'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='default_setting_category' maxlength='255' value=\"$default_setting_category\">\n";
 	echo "<br />\n";
-	echo "Enter the category.\n";
+	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Subcategory:\n";
+	echo "	".$text['label-subcategory'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='default_setting_subcategory' maxlength='255' value=\"$default_setting_subcategory\">\n";
 	echo "<br />\n";
-	echo "Enter the subcategory.\n";
+	echo $text['description-subcategory']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='default_setting_name' maxlength='255' value=\"$default_setting_name\">\n";
 	echo "<br />\n";
-	echo "Enter the name.\n";
+	echo $text['description-type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Value:\n";
+	echo "	".$text['label-value'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$category = $row['default_setting_category'];
@@ -270,39 +287,39 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	} elseif ($category == "email" && $subcategory == "smtp_auth" && $name == "var" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    <option value=''></option>\n";
-		if ($row['default_setting_value'] == "true") { 
-		echo "    <option value='true' selected='selected'>true</option>\n";
+		if ($row['default_setting_value'] == "true") {
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($row['default_setting_value'] == "false") { 
-		echo "    <option value='false' selected='selected'>false</option>\n";
+		if ($row['default_setting_value'] == "false") {
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
 		}
 		echo "    </select>\n";
 	} elseif ($category == "email" && $subcategory == "smtp_secure" && $name == "var" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    <option value=''></option>\n";
-		if ($row['default_setting_value'] == "none") { 
-		echo "    <option value='none' selected='selected'>none</option>\n";
+		if ($row['default_setting_value'] == "none") {
+		echo "    <option value='none' selected='selected'>".$text['label-none']."</option>\n";
 		}
 		else {
-		echo "    <option value='none'>none</option>\n";
+		echo "    <option value='none'>".$text['label-none']."</option>\n";
 		}
-		if ($row['default_setting_value'] == "tls") { 
-		echo "    <option value='tls' selected='selected'>tls</option>\n";
-		}
-		else {
-		echo "    <option value='tls'>tls</option>\n";
-		}
-		if ($row['default_setting_value'] == "ssl") { 
-		echo "    <option value='ssl' selected='selected'>ssl</option>\n";
+		if ($row['default_setting_value'] == "tls") {
+		echo "    <option value='tls' selected='selected'>TLS</option>\n";
 		}
 		else {
-		echo "    <option value='ssl'>ssl</option>\n";
+		echo "    <option value='tls'>TLS</option>\n";
+		}
+		if ($row['default_setting_value'] == "ssl") {
+		echo "    <option value='ssl' selected='selected'>SSL</option>\n";
+		}
+		else {
+		echo "    <option value='ssl'>SSL</option>\n";
 		}
 		echo "    </select>\n";
 	} elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
@@ -355,43 +372,43 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}
 	echo "<br />\n";
-	echo "Enter the value.\n";
+	echo $text['description-value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Enabled:\n";
+	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='default_setting_enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($default_setting_enabled == "true") { 
-		echo "    <option value='true' selected='selected'>true</option>\n";
+	if ($default_setting_enabled == "true") {
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($default_setting_enabled == "false") { 
-		echo "    <option value='false' selected='selected'>false</option>\n";
+	if ($default_setting_enabled == "false") {
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Choose to enable or disable the value.\n";
+	echo $text['description-enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='default_setting_description' maxlength='255' value=\"$default_setting_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -400,7 +417,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='default_setting_uuid' value='$default_setting_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

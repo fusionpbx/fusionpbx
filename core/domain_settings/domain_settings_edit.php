@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -54,7 +60,7 @@ if (strlen($_GET["domain_uuid"]) > 0) {
 		$domain_setting_name = check_str($_POST["domain_setting_name"]);
 		$domain_setting_value = check_str($_POST["domain_setting_value"]);
 		$domain_setting_enabled = check_str($_POST["domain_setting_enabled"]);
-		$domain_setting_description = check_str($_POST["domain_setting_description"]);		
+		$domain_setting_description = check_str($_POST["domain_setting_description"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -65,13 +71,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($domain_setting_category) == 0) { $msg .= "Please provide: Category<br>\n"; }
-		//if (strlen($domain_setting_subcategory) == 0) { $msg .= "Please provide: Subcategory<br>\n"; }
-		//if (strlen($domain_setting_name) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($domain_setting_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
-		//if (strlen($domain_setting_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (strlen($domain_setting_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		//if (strlen($domain_setting_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		//if (strlen($domain_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
+		//if (strlen($domain_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (strlen($domain_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+		//if (strlen($domain_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//if (strlen($domain_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -97,7 +102,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "domain_setting_name, ";
 				$sql .= "domain_setting_value, ";
 				$sql .= "domain_setting_enabled, ";
-				$sql .= "domain_setting_description ";	
+				$sql .= "domain_setting_description ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
@@ -116,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=domains_edit.php?id=$domain_uuid\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -129,7 +134,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "domain_setting_name = '$domain_setting_name', ";
 				$sql .= "domain_setting_value = '$domain_setting_value', ";
 				$sql .= "domain_setting_enabled = '$domain_setting_enabled', ";
-				$sql .= "domain_setting_description = '$domain_setting_description' ";	
+				$sql .= "domain_setting_description = '$domain_setting_description' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and domain_setting_uuid = '$domain_setting_uuid'";
 				$db->exec(check_sql($sql));
@@ -138,12 +143,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=domains_edit.php?id=$domain_uuid\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -169,6 +174,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-domain_setting-edit'];
+	}
+	if ($action == "add") {
+		$page["title"] = $text['title-domain_setting-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -181,51 +192,64 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Domain Setting</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='domains_edit.php?id=$domain_uuid'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
+	if ($action == "update") {
+		echo $text['header-domain_setting-edit'];
+	}
+	if ($action == "add") {
+		echo $text['header-domain_setting-add'];
+	}
+	echo "</b></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains_edit.php?id=$domain_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Settings used for each domain.<br /><br />\n";
+	if ($action == "update") {
+		echo $text['description-domain_setting-edit'];
+	}
+	if ($action == "add") {
+		echo $text['header-domain_setting-add'];
+	}
+	echo "<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Category:\n";
+	echo "	".$text['label-category'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='domain_setting_category' maxlength='255' value=\"$domain_setting_category\">\n";
 	echo "<br />\n";
-	echo "Enter the category.\n";
+	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Subcategory:\n";
+	echo "	".$text['label-subcategory'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='domain_setting_subcategory' maxlength='255' value=\"$domain_setting_subcategory\">\n";
 	echo "<br />\n";
-	echo "Enter the subcategory.\n";
+	echo $text['description-subcategory']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type:\n";
+	echo "	".$text['label-type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='domain_setting_name' maxlength='255' value=\"$domain_setting_name\">\n";
 	echo "<br />\n";
-	echo "Enter the type.\n";
+	echo $text['description-type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Value:\n";
+	echo "	".$text['label-value'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$category = $row['domain_setting_category'];
@@ -308,43 +332,43 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<input class='formfld' type='text' name='domain_setting_value' maxlength='255' value=\"$domain_setting_value\">\n";
 	}
 	echo "<br />\n";
-	echo "Enter the value.\n";
+	echo $text['description-value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Enabled:\n";
+	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='domain_setting_enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($domain_setting_enabled == "true") { 
-		echo "    <option value='true' selected='selected'>true</option>\n";
+	if ($domain_setting_enabled == "true") {
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($domain_setting_enabled == "false") { 
-		echo "    <option value='false' selected='selected'>false</option>\n";
+	if ($domain_setting_enabled == "false") {
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Choose to enable or disable the value.\n";
+	echo $text['description-enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='domain_setting_description' maxlength='255' value=\"$domain_setting_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -354,7 +378,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='domain_setting_uuid' value='$domain_setting_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
