@@ -33,6 +33,7 @@ else {
 	echo "access denied";
 	exit;
 }
+
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -80,9 +81,9 @@ require_once "includes/paging.php";
 		$rows_per_page = 100;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the list
 		$sql = "select * from v_domain_settings ";
@@ -111,14 +112,14 @@ require_once "includes/paging.php";
 				echo "	<br />\n";
 				echo "	<b>".ucfirst($row['domain_setting_category'])."</b>&nbsp;</td></tr>\n";
 				echo "<tr>\n";
-				echo th_order_by('domain_setting_subcategory', 'Category', $order_by, $order);
-				echo th_order_by('domain_setting_name', 'Type', $order_by, $order);
-				echo th_order_by('domain_setting_value', 'Value', $order_by, $order);
-				echo th_order_by('domain_setting_enabled', 'Enabled', $order_by, $order);
-				echo th_order_by('domain_setting_description', 'Description', $order_by, $order);
+				echo th_order_by('domain_setting_subcategory', $text['label-category'], $order_by, $order);
+				echo th_order_by('domain_setting_name', $text['label-type'], $order_by, $order);
+				echo th_order_by('domain_setting_value', $text['label-value'], $order_by, $order);
+				echo th_order_by('domain_setting_enabled', $text['label-enabled'], $order_by, $order);
+				echo th_order_by('domain_setting_description', $text['label-description'], $order_by, $order);
 				echo "<td align='right' width='42'>\n";
 				if (permission_exists('domain_setting_add')) {
-					echo "	<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+					echo "	<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 				}
 				else {
 					echo "	&nbsp;\n";
@@ -160,10 +161,10 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('domain_setting_edit')) {
-			echo "		<a href='domain_settings_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='domain_settings_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('domain_setting_delete')) {
-			echo "		<a href='domain_settings_delete.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='domain_settings_delete.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -181,7 +182,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('domain_setting_add')) {
-		echo "			<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "			&nbsp;\n";
