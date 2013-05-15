@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-databases'];
+
 require_once "includes/paging.php";
 
 //get variables used to control the order
@@ -49,12 +58,12 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Databases</b></td>\n";
+	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-databases']."</b></td>\n";
 	echo "		<td width='50%' align=\"right\">&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align=\"left\" colspan='2'>\n";
-	echo "			Database information.<br /><br />\n";
+	echo "			".$text['description-databases']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -79,8 +88,8 @@ require_once "includes/paging.php";
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the  list
 		$sql = "select * from v_databases ";
@@ -100,16 +109,16 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo th_order_by('database_driver', 'Driver', $order_by, $order);
-	echo th_order_by('database_type', 'Type', $order_by, $order);
-	echo th_order_by('database_host', 'Host', $order_by, $order);
-	//echo th_order_by('database_port', 'Port', $order_by, $order);
-	echo th_order_by('database_name', 'Name', $order_by, $order);
-	//echo th_order_by('database_username', 'Username', $order_by, $order);
-	//echo th_order_by('database_path', 'Path', $order_by, $order);
-	echo th_order_by('database_description', 'Description', $order_by, $order);
+	echo th_order_by('database_driver', $text['label-driver'], $order_by, $order);
+	echo th_order_by('database_type', $text['label-type'], $order_by, $order);
+	echo th_order_by('database_host', $text['label-host'], $order_by, $order);
+	//echo th_order_by('database_port', $text['label-port'], $order_by, $order);
+	echo th_order_by('database_name', $text['label-name'], $order_by, $order);
+	//echo th_order_by('database_username', $text['label-username'], $order_by, $order);
+	//echo th_order_by('database_path', $text['label-path'], $order_by, $order);
+	echo th_order_by('database_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='database_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "	<a href='database_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -125,8 +134,8 @@ require_once "includes/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_path']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['database_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='database_edit.php?id=".$row['database_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='database_delete.php?id=".$row['database_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		<a href='database_edit.php?id=".$row['database_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "		<a href='database_delete.php?id=".$row['database_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -141,7 +150,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='database_edit.php' alt='add'>$v_link_label_add</a>\n";
+	echo "			<a href='database_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
