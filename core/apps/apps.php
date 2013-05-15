@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-apps'];
+
 require_once "includes/paging.php";
 
 //get variables used to control the order
@@ -57,12 +66,12 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap><b>App Manager</b></td>\n";
+	echo "		<td width='50%' align='left' nowrap><b>".$text['header-apps']."</b></td>\n";
 	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			Manage the applications that are installed.<br /><br />\n";
+	echo "			".$text['description-apps']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -74,13 +83,13 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<th>Name</th>\n";
-	echo "	<th>Category</th>\n";
-	echo "	<th>Subcategory</th>\n";
-	echo "	<th>Version</th>\n";
-	echo "	<th>Description</th>\n";
+	echo "	<th>".$text['label-name']."</th>\n";
+	echo "	<th>".$text['label-category']."</th>\n";
+	echo "	<th>".$text['label-subcategory']."</th>\n";
+	echo "	<th>".$text['label-version']."</th>\n";
+	echo "	<th>".$text['label-description']."</th>\n";
 	//echo "<td align='right' width='42'>\n";
-	//echo "	<a href='apps_edit.php' alt='add'>$v_link_label_add</a>\n";
+	//echo "	<a href='apps_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	//echo "</td>\n";
 	echo "<tr>\n";
 
@@ -92,10 +101,12 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='35%'>".$row['description']['en-us']."&nbsp;</td>\n";
+			/*  // temporarily disabled
 			echo "	<td valign='top' align='left' nowrap='nowrap' width='42'>\n";
-			echo "		&nbsp;<a href='apps_edit.php?id=".$row['uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='apps_delete.php?id=".$row['uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo "		&nbsp;<a href='apps_edit.php?id=".$row['uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "		<a href='apps_delete.php?id=".$row['uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
+			*/
 			echo "</tr>\n";
 		}
 		if ($c==0) { $c=1; } else { $c=0; }
