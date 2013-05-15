@@ -26,13 +26,19 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("superadmin")) {
+if (permission_exists('database_add') || permission_exists('database_edit')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
@@ -75,15 +81,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($database_driver) == 0) { $msg .= "Please provide: Driver<br>\n"; }
-		//if (strlen($database_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($database_host) == 0) { $msg .= "Please provide: Host<br>\n"; }
-		//if (strlen($database_port) == 0) { $msg .= "Please provide: Port<br>\n"; }
-		//if (strlen($database_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		//if (strlen($database_username) == 0) { $msg .= "Please provide: Username<br>\n"; }
-		//if (strlen($database_password) == 0) { $msg .= "Please provide: Password<br>\n"; }
-		//if (strlen($database_path) == 0) { $msg .= "Please provide: Path<br>\n"; }
-		//if (strlen($database_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		//if (strlen($database_driver) == 0) { $msg .= $text['message-required'].$text['label-driver']."<br>\n"; }
+		//if (strlen($database_type) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (strlen($database_host) == 0) { $msg .= $text['message-required'].$text['label-host']."<br>\n"; }
+		//if (strlen($database_port) == 0) { $msg .= $text['message-required'].$text['label-port']."<br>\n"; }
+		//if (strlen($database_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		//if (strlen($database_username) == 0) { $msg .= $text['message-required'].$text['label-username']."<br>\n"; }
+		//if (strlen($database_password) == 0) { $msg .= $text['message-required'].$text['label-password']."<br>\n"; }
+		//if (strlen($database_path) == 0) { $msg .= $text['message-required'].$text['label-path']."<br>\n"; }
+		//if (strlen($database_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -140,7 +146,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=databases.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -170,12 +176,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=databases.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -203,6 +209,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-database-edit'];
+	}
+	if ($action == "add") {
+		$page["title"] = $text['title-database-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -216,167 +228,173 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='3' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align=\"left\" width='30%' nowrap=\"nowrap\"><b>Database Add</b></td>\n";
+		echo "<td align=\"left\" width='30%' nowrap=\"nowrap\"><b>".$text['header-database-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align=\"left\" width='30%' nowrap=\"nowrap\"><b>Database Edit</b></td>\n";
+		echo "<td align=\"left\" width='30%' nowrap=\"nowrap\"><b>".$text['header-database-edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align=\"right\"><input type='button' class='btn' name='' alt='back' onclick=\"window.location='databases.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align=\"right\"><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='databases.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan='2'>\n";
-	echo "Database connection information.<br /><br />\n";
+	if ($action == "add") {
+		echo $text['description-database-add'];
+	}
+	if ($action == "update") {
+		echo $text['description-database-edit'];
+	}
+	echo "<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Driver:\n";
+	echo "	".$text['label-driver'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='database_driver'>\n";
 	echo "	<option value=''></option>\n";
 	if ($database_driver == "sqlite") {
-		echo "	&nbsp; &nbsp;<option value='sqlite' selected='selected'>sqlite</option>\n";
+		echo "	&nbsp; &nbsp;<option value='sqlite' selected='selected'>SQLite</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='sqlite'>sqlite</option>\n";
+		echo "	&nbsp; &nbsp;<option value='sqlite'>SQLite</option>\n";
 	}
 	if ($database_driver == "pgsql") {
-		echo "	&nbsp; &nbsp;<option value='pgsql' selected='selected'>pgsql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='pgsql' selected='selected'>PostgreSQL</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='pgsql'>pgsql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='pgsql'>PostgreSQL</option>\n";
 	}
 	if ($database_driver == "mysql") {
-		echo "	&nbsp; &nbsp;<option value='mysql' selected='selected'>mysql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mysql' selected='selected'>MySQL</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='mysql'>mysql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mysql'>MySQL</option>\n";
 	}
 	if ($database_driver == "odbc") {
-		echo "	&nbsp; &nbsp;<option value='odbc' selected='selected'>odbc</option>\n";
+		echo "	&nbsp; &nbsp;<option value='odbc' selected='selected'>ODBC</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='odbc'>odbc</option>\n";
+		echo "	&nbsp; &nbsp;<option value='odbc'>ODBC</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the database driver.\n";
+	echo $text['description-driver']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Type:\n";
+	echo "	".$text['label-type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='database_type'>\n";
 	echo "	<option value=''></option>\n";
 	if ($database_type == "sqlite") {
-		echo "	&nbsp; &nbsp;<option value='sqlite' selected='selected'>sqlite</option>\n";
+		echo "	&nbsp; &nbsp;<option value='sqlite' selected='selected'>SQLite</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='sqlite'>sqlite</option>\n";
+		echo "	&nbsp; &nbsp;<option value='sqlite'>SQLite</option>\n";
 	}
 	if ($database_type == "pgsql") {
-		echo "	&nbsp; &nbsp;<option value='pgsql' selected='selected'>pgsql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='pgsql' selected='selected'>PostgreSQL</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='pgsql'>pgsql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='pgsql'>PostgreSQL</option>\n";
 	}
 	if ($database_type == "mysql") {
-		echo "	&nbsp; &nbsp;<option value='mysql' selected='selected'>mysql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mysql' selected='selected'>MySQL</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='mysql'>mysql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mysql'>MySQL</option>\n";
 	}
 	if ($database_type == "mssql") {
-		echo "	&nbsp; &nbsp;<option value='mssql' selected='selected'>mssql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mssql' selected='selected'>Microsoft SQL Server</option>\n";
 	}
 	else {
-		echo "	&nbsp; &nbsp;<option value='mssql'>mssql</option>\n";
+		echo "	&nbsp; &nbsp;<option value='mssql'>Microsoft SQL Server</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the database type.\n";
+	echo $text['description-type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Host:\n";
+	echo "	".$text['label-host'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='database_host' maxlength='255' value=\"$database_host\">\n";
 	echo "<br />\n";
-	echo "Enter the host name.\n";
+	echo $text['description-host']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Port:\n";
+	echo "	".$text['label-port'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='database_port' maxlength='255' value=\"$database_port\">\n";
 	echo "<br />\n";
-	echo "Enter the port number.\n";
+	echo $text['description-port']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='database_name' maxlength='255' value=\"$database_name\">\n";
 	echo "<br />\n";
-	echo "Enter the database name.\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Username:\n";
+	echo "	".$text['label-username'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='database_username' maxlength='255' value=\"$database_username\">\n";
 	echo "<br />\n";
-	echo "Enter the database username.\n";
+	echo $text['description-username']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Password:\n";
+	echo "	".$text['label-password'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='database_password' maxlength='255' value=\"$database_password\">\n";
 	echo "<br />\n";
-	echo "Enter the database password.\n";
+	echo $text['description-password']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Path:\n";
+	echo "	".$text['label-path'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='database_path' maxlength='255' value=\"$database_path\">\n";
 	echo "<br />\n";
-	echo "Enter the database file path.\n";
+	echo $text['description-path']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='database_description' maxlength='255' value=\"$database_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -384,7 +402,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='database_uuid' value='$database_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
