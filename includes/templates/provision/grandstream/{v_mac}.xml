@@ -1,0 +1,51 @@
+<gs_provision version="1">
+	<config version="1">
+		<!-- Account 1 Settings -->
+		<!-- Account 1 General Settings -->
+			<!-- Account Active. Values 0 - No 1 - Yes -->
+			<P271>1</P271>
+			<!-- Account Name -->
+			<P270>{v_line1_displayname}</P270>
+			<!-- Sip Server -->
+			<P47>{domain_name}</P47>
+			<!-- SIP User ID. -->
+			<P35>{v_line1_user_id}</P35>
+			<!-- SIP Authenticate ID. -->
+			<P36>{v_line1_user_id}</P36>
+			<!-- SIP Authenticate Password -->
+			<P34>{v_line1_user_password}</P34>
+			<!-- Voice Mail UserID. -->
+			<P33>*97</P33>
+			<!-- Name (Display Name, e.g., John Doe) -->
+			<P3>{v_line1_displayname}</P3>
+			<!-- Tel URI 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
+		<!-- Account 1 Network Settings -->
+			<!-- Outbound Proxy -->
+			<P48></P48>
+			<!-- Secondary Outbound Proxy -->
+			<P2333></P2333>
+			<!-- DNS Mode  0 - A record, 1 - SRV, 2 - NAPTR/SRV Default 0 -->
+			<P103>0</P103>
+			<!-- Proxy-Require -->
+			<P197></P197>
+		<!-- Account 1 SIP Settings -->
+			<!-- SIP Registration 0 - No 1 - Yes Default 1 -->
+			<P31>1</P31>
+			<!-- Unregister on Reboot 0 - No 1 - Yes Default 0 -->
+			<P81>0</P81>
+			<!-- Regier Expiration in minutes -->
+			<P32>60</P32>
+			<!-- Wait Time Retry Registration in seconds -->
+			<P138>20</P138>
+			<!-- Local SIP Port -->
+			<P40>5060</P40>
+			<!-- SUBSCRIBE for MWI 0 - No 1 - Yes Default 0 -->
+			<P99>0</P99>
+			<!-- Session Expiration in seconds -->
+			<P260>180</P260>
+			<!-- Min-SE in seconds -->
+			<P261>90</P261>
+			<!-- YAC SPecific Refresher 0 - Omit 1 - UAC 2 - UAS Default 0 -->
+			<P266>0</P266>
+	</config>
+</gs_provision>
