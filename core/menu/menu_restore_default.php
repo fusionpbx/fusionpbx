@@ -34,6 +34,12 @@ else {
 	return;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //get the http value and set as a php variable
 	$menu_uuid = check_str($_REQUEST["menu_uuid"]);
 	$menu_language = check_str($_REQUEST["menu_language"]);
@@ -57,7 +63,7 @@ else {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/core/menu/menu_edit.php?id=$menu_uuid\">\n";
 	echo "<div align='center'>\n";
-	echo "Restore Complete\n";
+	echo $text['message-restore']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;

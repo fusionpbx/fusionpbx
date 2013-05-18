@@ -34,6 +34,12 @@ else {
 	return;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_GET)>0) {
 	//clear the menu session so it will rebuild with the update
 		$_SESSION["menu"] = "";
@@ -53,7 +59,7 @@ if (count($_GET)>0) {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_edit.php?id=$menu_uuid\">\n";
 		echo "<div align='center'>";
-		echo "Delete Completed";
+		echo $text['message-delete'];
 		echo "</div>";
 		require_once "includes/footer.php";
 		return;

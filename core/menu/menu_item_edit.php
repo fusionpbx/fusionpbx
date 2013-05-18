@@ -26,7 +26,7 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete')) {
+if (permission_exists('menu_add') || permission_exists('menu_edit')) {
 	//access granted
 }
 else {
@@ -34,8 +34,11 @@ else {
 	return;
 }
 
-//include the header
-	require_once "includes/header.php";
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //get the menu_uuid
 	$menu_uuid = check_str($_REQUEST["id"]);
@@ -54,7 +57,7 @@ else {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_item_edit.php?id=$menu_uuid&menu_item_uuid=$menu_item_uuid&menu_uuid=$menu_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Delete Complete\n";
+			echo $text['message-delete']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -100,9 +103,9 @@ else {
 
 		//check for all required data
 			$msg = '';
-			if (strlen($menu_item_title) == 0) { $msg .= "Please provide: title<br>\n"; }
-			if (strlen($menu_item_category) == 0) { $msg .= "Please provide: category<br>\n"; }
-			//if (strlen($menu_item_link) == 0) { $msg .= "Please provide: menu_item_link<br>\n"; }
+			if (strlen($menu_item_title) == 0) { $msg .= $text['message-required'].$text['label-title']."<br>\n"; }
+			if (strlen($menu_item_category) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+			//if (strlen($menu_item_link) == 0) { $msg .= $text['message-required'].$text['label-link']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				require_once "includes/persistformvar.php";
@@ -219,13 +222,13 @@ else {
 
 			//redirect the user
 				require_once "includes/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_item_edit.php?id=$menu_uuid&menu_item_uuid=$menu_item_uuid&menu_uuid=$menu_uuid\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_edit.php?id=$menu_uuid\">\n";
 					echo "<div align='center'>\n";
 					if ($action == "add") {
-						echo "Add Complete\n";
+						echo $text['message-add']."\n";
 					}
 					if ($action == "update") {
-						echo "Edit Complete\n";
+						echo $text['message-update']."\n";
 					}
 					echo "</div>\n";
 					require_once "includes/footer.php";
@@ -262,8 +265,15 @@ else {
 		}
 	}
 
-//show the content
+//include the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-menu_item-edit'];
+	}
+	if ($action == "add") {
+		$page["title"] = $text['title-menu_item-add'];
+	}
+
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
@@ -273,32 +283,39 @@ else {
 	echo "<form method='post' action=''>";
 	echo "<table width='100%' cellpadding='6' cellspacing='0'>";
 	echo "<tr>\n";
-	echo "<td width='30%' align='left' valign='top' nowrap><b>Menu Item Edit</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='Back'><br /><br /></td>\n";
+	echo "<td width='30%' align='left' valign='top' nowrap><b>";
+	if ($action == "update") {
+		echo $text['header-menu_item-edit'];
+	}
+	if ($action == "add") {
+		echo $text['header-menu_item-add'];
+	}
+	echo "</b></td>\n";
+	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='".$text['button-back']."'><br /><br /></td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Title:</td>";
+	echo "		<td class='vncellreq'>".$text['label-title'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='$menu_item_title'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Link:</td>";
+	echo "		<td class='vncellreq'>".$text['label-link'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='$menu_item_link'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Category:</td>";
+	echo "		<td class='vncellreq'>".$text['label-category'].":</td>";
 	echo "		<td class='vtable'>";
 	echo "            <select name=\"menu_item_category\" class='formfld'>\n";
 	echo "            <option value=\"\"></option>\n";
-	if ($menu_item_category == "internal") { echo "<option value=\"internal\" selected>internal</option>\n"; } else { echo "<option value=\"internal\">internal</option>\n"; }
-	if ($menu_item_category == "external") { echo "<option value=\"external\" selected>external</option>\n"; } else { echo "<option value=\"external\">external</option>\n"; }
-	if ($menu_item_category == "email") { echo "<option value=\"email\" selected>email</option>\n"; } else { echo "<option value=\"email\">email</option>\n"; }
+	if ($menu_item_category == "internal") { echo "<option value=\"internal\" selected>".$text['option-internal']."</option>\n"; } else { echo "<option value=\"internal\">".$text['option-internal']."</option>\n"; }
+	if ($menu_item_category == "external") { echo "<option value=\"external\" selected>".$text['option-external']."</option>\n"; } else { echo "<option value=\"external\">".$text['option-external']."</option>\n"; }
+	if ($menu_item_category == "email") { echo "<option value=\"email\" selected>".$text['option-email']."</option>\n"; } else { echo "<option value=\"email\">".$text['option-email']."</option>\n"; }
 	echo "            </select>";
 	echo "        </td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>Parent Menu:</td>";
+	echo "		<td class='vncell'>".$text['label-parent_menu'].":</td>";
 	echo "		<td class='vtable'>";
 	$sql = "SELECT * FROM v_menu_items ";
 	$sql .= "where menu_uuid = '$menu_uuid' ";
@@ -322,7 +339,7 @@ else {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>Groups:</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-groups'].":</td>";
 	echo "		<td class='vtable'>";
 
 	echo "<table width='52%'>\n";
@@ -341,7 +358,7 @@ else {
 			echo "	<td class='vtable'>".$field['group_name']."</td>\n";
 			echo "	<td>\n";
 			if (permission_exists('group_member_delete') || if_group("superadmin")) {
-				echo "		<a href='menu_item_edit.php?id=".$field['menu_uuid']."&group_name=".$field['group_name']."&menu_item_uuid=".$menu_item_uuid."&menu_item_parent_uuid=".$menu_item_parent_uuid."&a=delete' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='menu_item_edit.php?id=".$field['menu_uuid']."&group_name=".$field['group_name']."&menu_item_uuid=".$menu_item_uuid."&menu_item_parent_uuid=".$menu_item_parent_uuid."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -369,32 +386,32 @@ else {
 		}
 	}
 	echo "</select>";
-	echo "<input type=\"submit\" class='btn' value=\"Add\">\n";
+	echo "<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 	unset($sql, $result);
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Protected:\n";
+	echo "    ".$text['label-protected'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='menu_item_protected'>\n";
 	echo "    <option value=''></option>\n";
-	if ($menu_item_protected == "true") { 
-		echo "    <option value='true' selected='selected' >true</option>\n";
+	if ($menu_item_protected == "true") {
+		echo "    <option value='true' selected='selected' >".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($menu_item_protected == "false") { 
-		echo "    <option value='false' selected='selected' >false</option>\n";
+	if ($menu_item_protected == "false") {
+		echo "    <option value='false' selected='selected' >".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "    </select><br />\n";
-	echo "Protect this item in the menu so that is is not removed by 'Restore Default.'<br />\n";
+	echo $text['description-protected']."<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -402,38 +419,14 @@ else {
 	if ($action == "update") {
 		if ($menu_item_parent_uuid == "") {
 			echo "	<tr>";
-			echo "		<td class='vncell'>Menu Order:</td>";
+			echo "		<td class='vncell'>".$text['label-menu_order'].":</td>";
 			echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='$menu_item_order'></td>";
 			echo "	</tr>";
 		}
-		//echo "	<tr>";
-		//echo "		<td class='vncell'>Added By:</td>";
-		//echo "		<td class='vtable'>$menu_item_add_user &nbsp;</td>";
-		//echo "	</tr>";
-		//echo "	<tr>";
-		//echo "		<td class='vncell'>Add Date:</td>";
-		//echo "		<td class='vtable'>$menu_item_add_date &nbsp;</td>";
-		//echo "	</tr>";
-		//echo "	<tr>";
-		//echo "		<td class='vncell'>menu_item_del_user:</td>";
-		//echo "		<td><input type='text' name='menu_item_del_user' value='$menu_item_del_user'></td>";
-		//echo "	</tr>";
-		//echo "	<tr>";
-		//echo "		<td class='vncell'>menu_item_del_date:</td>";
-		//echo "		<td><input type='text' name='menu_item_del_date' value='$menu_item_del_date'></td>";
-		//echo "	</tr>";
-		//echo "	<tr>";
-		//echo "		<td class='vncell'>Modified By:</td>";
-		//echo "		<td class='vtable'>$menu_item_mod_user &nbsp;</td>";
-		//echo "	</tr>";
-		//echo "	<tr>";
-		//echo "		<td class='vncell'>Modified Date:</td>";
-		//echo "		<td class='vtable'>$menu_item_mod_date &nbsp;</td>";
-		//echo "	</tr>";
 	}
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>Description:</td>";
+	echo "		<td class='vncell'>".$text['label-description'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_description' value='$menu_item_description'></td>";
 	echo "	</tr>";
 
@@ -450,7 +443,7 @@ else {
 		}
 		echo "				<input type='hidden' name='menu_uuid' value='$menu_uuid'>";
 		echo "				<input type='hidden' name='menu_item_uuid' value='$menu_item_uuid'>";
-		echo "				<input type='submit' class='btn' name='submit' value='Save'>\n";
+		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 		echo "			</td>";
 		echo "			</tr>";
 		echo "			</table>";
