@@ -34,6 +34,12 @@ else {
 	return;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //move down more than one level at a time
 //update v_menu_items set menu_order = (menu_order+1) where menu_order > 2 or menu_order = 2
 
@@ -43,7 +49,7 @@ if (count($_GET)>0) {
 
 	if ($menu_order != 1) {
 		//clear the menu session so it will rebuild with the update
-			$_SESSION["menu"] = ""; 
+			$_SESSION["menu"] = "";
 
 		//move the current item's order number down
 			$sql  = "update v_menu_items set ";
@@ -66,7 +72,7 @@ if (count($_GET)>0) {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"1;url=menu_list.php?menu_item_id=$menu_item_id\">\n";
 		echo "<div align='center'>";
-		echo "Item Moved Up";
+		echo $text['message-moved_up'];
 		echo "</div>";
 		require_once "includes/footer.php";
 		return;

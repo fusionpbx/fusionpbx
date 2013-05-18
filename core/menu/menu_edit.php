@@ -26,13 +26,19 @@
 require_once "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (if_group("admin") || if_group("superadmin")) {
+if (permission_exists('menu_add') || permission_exists('menu_edit')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
@@ -59,10 +65,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($menu_uuid) == 0) { $msg .= "Please provide: Menu UUID<br>\n"; }
-		//if (strlen($menu_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		//if (strlen($menu_language) == 0) { $msg .= "Please provide: Language<br>\n"; }
-		//if (strlen($menu_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		//if (strlen($menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		//if (strlen($menu_language) == 0) { $msg .= $text['message-required'].$text['label-language']."<br>\n"; }
+		//if (strlen($menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -111,7 +116,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=menu.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -131,12 +136,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=menu.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -159,6 +164,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "update") {
+		$page["title"] = $text['title-menu-edit'];
+	}
+	if ($action == "add") {
+		$page["title"] = $text['title-menu-add'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -172,53 +183,59 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Menu Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-menu-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Menu Edit</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-menu-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
-	if (permission_exists('menu_restore')) {
-		echo "	<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='menu_restore_default.php?menu_uuid=$menu_uuid&menu_language=$menu_language';\" />";
+	if (permission_exists('menu_restore') && $action == "update") {
+		echo "	<input type='button' class='btn' value='".$text['button-restore_default']."' onclick=\"document.location.href='menu_restore_default.php?menu_uuid=$menu_uuid&menu_language=$menu_language';\" />";
 	}
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='menu.php'\" value='Back'></td>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Used to customize one or more menus.<br /><br />\n";
+	if ($action == "update") {
+		echo $text['description-menu-edit'];
+	}
+	if ($action == "add") {
+		echo $text['description-menu-add'];
+	}
+	echo "<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='menu_name' maxlength='255' value=\"$menu_name\">\n";
 	echo "<br />\n";
-	echo "Enter the name of the menu.\n";
-	echo "</td>\n";
+	echo "\n";
+	echo $text['description-name']."</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Language:\n";
+	echo "	".$text['label-language'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='menu_language' maxlength='255' value=\"$menu_language\">\n";
 	echo "<br />\n";
-	echo "Enter the language.\n";
+	echo $text['description-language']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='menu_description' maxlength='255' value=\"$menu_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -226,7 +243,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='menu_uuid' value='$menu_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
