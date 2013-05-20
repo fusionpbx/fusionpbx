@@ -85,6 +85,11 @@
 				continue = false;
 			end
 
+		--prevent processing for invalid domains
+			if (domain_uuid == nil) then
+				continue = false;
+			end
+
 		--get the extension from the database
 			if (continue) then
 				sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and extension = '" .. user .. "' and enabled = 'true' ";
