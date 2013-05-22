@@ -178,7 +178,6 @@ else {
 		//$tmp_file_array = explode("\.",$file);
 		echo 	$caller_id_name.' ';
 		echo "	  </a>";
-
 	}
 	else {
 		echo 	$caller_id_name.' ';
@@ -257,41 +256,43 @@ else {
 	foreach($xml->variables->children() as $child) {
 		$key = $child->getName();
 		$value = urldecode($child);
-		echo "<tr >\n";
-		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
-		if ($key == "bridge_uuid" || $key == "signal_bond") {
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>\n";
-			echo "		<a href='xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;\n";
-			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-			$tmp_name = '';
-			if (file_exists($tmp_dir.'/'.$value.'.wav')) {
-				$tmp_name = $value.".wav";
+		if ($key != "digits_dialed" && $key != "dsn") {
+			echo "<tr >\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
+			if ($key == "bridge_uuid" || $key == "signal_bond") {
+				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>\n";
+				echo "		<a href='xml_cdr_details.php?uuid=$value'>".$value."</a>&nbsp;\n";
+				$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
+				$tmp_name = '';
+				if (file_exists($tmp_dir.'/'.$value.'.wav')) {
+					$tmp_name = $value.".wav";
+				}
+				elseif (file_exists($tmp_dir.'/'.$value.'_1.wav')) {
+					$tmp_name = $value."_1.wav";
+				}
+				elseif (file_exists($tmp_dir.'/'.$value.'.mp3')) {
+					$tmp_name = $value.".mp3";
+				}
+				elseif (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
+					$tmp_name = $value."_1.mp3";
+				}
+				if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+					echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
+					echo "		play";
+					echo "	</a>&nbsp;";
+				}
+				if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
+					echo "	<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
+					echo "		download";
+					echo "	</a>";
+				}
+				echo "</td>\n";
 			}
-			elseif (file_exists($tmp_dir.'/'.$value.'_1.wav')) {
-				$tmp_name = $value."_1.wav";
+			else {
+				echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
 			}
-			elseif (file_exists($tmp_dir.'/'.$value.'.mp3')) {
-				$tmp_name = $value.".mp3";
-			}
-			elseif (file_exists($tmp_dir.'/'.$value.'_1.mp3')) {
-				$tmp_name = $value."_1.mp3";
-			}
-			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "	<a href=\"javascript:void(0);\" onclick=\"window.open('../recordings/v_recordings_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
-				echo "		play";
-				echo "	</a>&nbsp;";
-			}
-			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "	<a href=\"../recordings/v_recordings.php?a=download&type=rec&t=bin&filename=".base64_encode("archive/".$tmp_year."/".$tmp_month."/".$tmp_day."/".$tmp_name)."\">\n";
-				echo "		download";
-				echo "	</a>";
-			}
-			echo "</td>\n";
+			echo "</tr>\n";
 		}
-		else {
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
-		}
-		echo "</tr>\n";
 		if ($c==0) { $c=1; } else { $c=0; }
 	}
 	echo "</table>";

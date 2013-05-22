@@ -77,7 +77,7 @@
 				$database->fields['accountcode'] = check_str(urldecode($xml->variables->accountcode));
 				$database->fields['default_language'] = check_str(urldecode($xml->variables->default_language));
 				$database->fields['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
-				$database->fields['digits_dialed'] = check_str(urldecode($xml->variables->digits_dialed));
+				//$database->fields['digits_dialed'] = check_str(urldecode($xml->variables->digits_dialed));
 				$database->fields['sip_hangup_disposition'] = check_str(urldecode($xml->variables->sip_hangup_disposition));
 			//time
 				$database->fields['start_epoch'] = check_str(urldecode($xml->variables->start_epoch));
