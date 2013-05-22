@@ -130,7 +130,7 @@
 					ring_group_timeout_data = row.ring_group_timeout_data;
 				end);
 		end
-		if (session:getVariable("originate_disposition") ~= "SUCCESS") then
+		if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT") then
 			session:execute(ring_group_timeout_app, ring_group_timeout_data);
 		end
 	end
