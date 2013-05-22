@@ -49,7 +49,6 @@ else {
 		$action = "add";
 	}
 
-
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
@@ -511,28 +510,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($conference_center_count > 1) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-conference-name'].":\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='conference_center_uuid'>\n";
-		foreach ($conference_centers as &$row) {
-			if ($conference_center_uuid == $row["conference_center_uuid"]) {
-				echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_center_name"]."</option>\n";
-			}
-			else {
-				echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_center_name"]."</option>\n";
-			}
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-conference-name'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='conference_center_uuid'>\n";
+	foreach ($conference_centers as &$row) {
+		if ($conference_center_uuid == $row["conference_center_uuid"]) {
+			echo "		<option value='".$row["conference_center_uuid"]."' selected='selected'>".$row["conference_center_name"]."</option>\n";
 		}
-		unset ($prep_statement);
-		echo "	</select>\n";
-		echo "	<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		else {
+			echo "		<option value='".$row["conference_center_uuid"]."'>".$row["conference_center_name"]."</option>\n";
+		}
 	}
+	unset ($prep_statement);
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin'].":</td>";
