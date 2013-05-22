@@ -259,10 +259,12 @@ include "root.php";
 				}
 
 				//ensure the condition array uniform
-					if (!is_array($dialplan['extension']['condition'][0])) {
-						$tmp = $dialplan['extension']['condition'];
-						unset($dialplan['extension']['condition']);
-						$dialplan['extension']['condition'][0] = $tmp;
+					if (is_array($dialplan)) {
+						if (!is_array($dialplan['extension']['condition'][0])) {
+							$tmp = $dialplan['extension']['condition'];
+							unset($dialplan['extension']['condition']);
+							$dialplan['extension']['condition'][0] = $tmp;
+						}
 					}
 				//check if the dialplan app uuid exists
 					$this->app_uuid = $dialplan['extension']['@attributes']['app_uuid'];
