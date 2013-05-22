@@ -65,7 +65,14 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		$src_cid_number = check_str($_REQUEST['src_cid_number']);
 		$dest_cid_name = check_str($_REQUEST['dest_cid_name']);
 		$dest_cid_number = check_str($_REQUEST['dest_cid_number']);
+		$auto_answer = check_str($_REQUEST['auto_answer']); //true,false
 		$rec = check_str($_REQUEST['rec']); //true,false
+		if ($auto_answer == "true") {
+				$sip_auto_answer = "sip_auto_answer=true,";
+		}
+		else {
+				$sip_auto_answer = '';
+		}
 		if (strlen($cid_number) == 0) { $cid_number = $src;}
 		if (strlen($_SESSION['context']) > 0) {
 			$context = $_SESSION['context'];
@@ -74,10 +81,10 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			$context = 'default';
 		}
 
-		//woraround for TBDialout on Thunderbird
+		//workaround for TBDialout on Thunderbird
 		//seems it can only handle the first %NUM%
 		if ($dest == "%NUM%"){
-			//echo "Thnuderbird fix, dest now = $src_cid_number <br>";
+			//echo "Thunderbird fix, dest now = $src_cid_number <br>";
 			$dest = $src_cid_number;
 		}
 
@@ -105,7 +112,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	//source should see the destination caller id
 		if (strlen($src) < 7) {
-			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			$source = "{".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
 		}
 		else {
 			$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $src);
@@ -146,7 +153,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			$destination = "{origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number}".$bridge_array[0];
 			if (permission_exists('click_to_call_call')) {
 				if (strpbrk($dest, '@') != FALSE) {
-				//call a sip uri
+					//call a sip uri
 					//echo "Found an @ 4, do nothing for now<br><br>";
 					$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,call_direction=outbound}sofia/external/$dest)";
 					//echo "<br>SWITCH-CMD: $switch_cmd<br>";
@@ -286,6 +293,31 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "		<br />\n";
 	echo "		".$text['desc-dest-num']."\n";
 	echo "	</td>\n";
+	echo "</tr>\n";
+
+	echo" <tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	$text['label-auto-answer']:\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='auto_answer'>\n";
+	echo "    <option value=''></option>\n";
+	if ($auto_answer == "true") {
+			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	}
+	else {
+			echo "    <option value='true'>".$text['label-true']."</option>\n";
+	}
+	if ($auto_answer == "false") {
+			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+	}
+	else {
+			echo "    <option value='false'>".$text['label-false']."</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo $text['desc-auto-answer']."\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
