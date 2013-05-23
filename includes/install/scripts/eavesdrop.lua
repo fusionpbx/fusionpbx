@@ -36,7 +36,7 @@ extension = argv[1];
 	dofile(scripts_dir.."/resources/functions/file_exists.lua");
 
 --connect to the database
-	if (file_exists(database_dir.."/core.db") then
+	if (file_exists(database_dir.."/core.db")) then
 		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
 	else
