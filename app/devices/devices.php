@@ -32,130 +32,154 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
 
-$order_by = $_GET["order_by"];
-$order = $_GET["order"];
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
-echo "<div align='center'>";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "<tr class='border'>\n";
-echo "	<td align=\"center\">\n";
-echo "		<br>";
+//get variables used to control the order
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
-echo "<table width='100%' border='0'>\n";
-echo "<tr>\n";
-echo "<td width='50%' nowrap='nowrap' align='left'><b>Devices</b></td>\n";
-echo "<td width='50%' align='right'>&nbsp;</td>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td colspan='2' align='left'>\n";
+//additional includes
+	require_once "includes/header.php";
+	require_once "includes/paging.php";
 
-echo "Devices in this list are added to the list when they contact the provisioning \n";
-echo "server or added manually by an administrator. \n";
-echo "Items in this list are assigned from the extensions page.<br /><br />\n";
-echo "</td>\n";
-echo "</tr>\n";
-echo "</tr></table>\n";
+//show the content
+	echo "<br />";
+	echo "<div align='center'>";
+	echo "<table width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-devices']."</b></td>\n";
+	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' colspan='2'>\n";
+	echo "			".$text['description-devices']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 
-$sql = "select * from v_devices ";
-$sql .= "where domain_uuid = '$domain_uuid' ";
-if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-$prep_statement = $db->prepare(check_sql($sql));
-$prep_statement->execute();
-$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-$num_rows = count($result);
-unset ($prep_statement, $result, $sql);
-$rows_per_page = 150;
-$param = "";
-$page = $_GET['page'];
-if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-$offset = $rows_per_page * $page; 
-
-$sql = "select * from v_devices ";
-$sql .= "where domain_uuid = '$domain_uuid' ";
-if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-$sql .= " limit $rows_per_page offset $offset ";
-$prep_statement = $db->prepare(check_sql($sql));
-$prep_statement->execute();
-$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-$result_count = count($result);
-unset ($prep_statement, $sql);
-
-$c = 0;
-$row_style["0"] = "row_style0";
-$row_style["1"] = "row_style1";
-
-echo "<div align='center'>\n";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-echo "<tr>\n";
-echo th_order_by('device_mac_address', 'MAC Address', $order_by, $order);
-echo th_order_by('device_template', 'Template', $order_by, $order);
-echo th_order_by('device_vendor', 'Vendor', $order_by, $order);
-//echo th_order_by('device_model', 'Model', $order_by, $order);
-echo th_order_by('device_provision_enable', 'Enabled', $order_by, $order);
-echo th_order_by('device_description', 'Description', $order_by, $order);
-echo "<td align='right' width='42'>\n";
-if (permission_exists('device_add')) {
-	echo "	<a href='device_edit.php' alt='add'>$v_link_label_add</a>\n";
-}
-echo "</td>\n";
-echo "<tr>\n";
-
-if ($result_count > 0) { //no results
-	foreach($result as $row) {
-		$device_mac_address = $row[device_mac_address];
-		$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
-
-		echo "<tr >\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$device_mac_address."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
-		//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_mode'l]."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."' width='10px'>".$row['device_provision_enable']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
-		echo "	<td valign='top' align='right'>\n";
-		if (permission_exists('device_edit')) {
-			echo "		<a href='device_edit.php?id=".$row['device_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+	//prepare to page the results
+		$sql = "select count(*) as num_rows from v_devices ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+		$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] > 0) {
+				$num_rows = $row['num_rows'];
+			}
+			else {
+				$num_rows = '0';
+			}
 		}
-		if (permission_exists('device_delete')) {
-			echo "		<a href='device_delete.php?id=".$row['device_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
-		}
-		echo "	</td>\n";
-		echo "</tr>\n";
-		if ($c==0) { $c=1; } else { $c=0; }
-	} //end foreach
-	unset($sql, $result, $row_count);
-} //end if results
 
-echo "<tr>\n";
-echo "<td colspan='7' align='left'>\n";
-echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-echo "	<tr>\n";
-echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-echo "		<td width='33.3%' align='right'>\n";
-if (permission_exists('device_add')) {
-	echo "			<a href='device_edit.php' alt='add'>$v_link_label_add</a>\n";
-}
-echo "		</td>\n";
-echo "	</tr>\n";
-echo "	</table>\n";
-echo "</td>\n";
-echo "</tr>\n";
+	//prepare to page the results
+		$rows_per_page = 10;
+		$param = "";
+		$page = $_GET['page'];
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
+		$offset = $rows_per_page * $page; 
 
-echo "</table>";
-echo "</div>";
-echo "<br><br>";
-echo "<br><br>";
+	//get the list
+		$sql = "select * from v_devices ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		$sql .= "limit $rows_per_page offset $offset ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		unset ($prep_statement, $sql);
 
-echo "</td>";
-echo "</tr>";
-echo "</table>";
-echo "</div>";
-echo "<br><br>";
+	$c = 0;
+	$row_style["0"] = "row_style0";
+	$row_style["1"] = "row_style1";
 
-require_once "includes/footer.php";
+	echo "<div align='center'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<tr>\n";
+	//echo th_order_by('device_uuid', $text['label-device_uuid'], $order_by, $order);
+	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
+	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
+	//echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
+	echo th_order_by('device_model', $text['label-device_model'], $order_by, $order);
+	//echo th_order_by('device_firmware_version', $text['label-device_firmware_version'], $order_by, $order);
+	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
+	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
+	//echo th_order_by('device_username', $text['label-device_username'], $order_by, $order);
+	//echo th_order_by('device_password', $text['label-device_password'], $order_by, $order);
+	//echo th_order_by('device_time_zone', $text['label-device_time_zone'], $order_by, $order);
+	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
+	echo "<td align='right' width='42'>\n";
+	if (permission_exists('device_add')) {
+		echo "	<a href='device_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	}
+	else {
+		echo "	&nbsp;\n";
+	}
+	echo "</td>\n";
+	echo "<tr>\n";
+
+	if ($result_count > 0) {
+		foreach($result as $row) {
+			$device_mac_address = $row[device_mac_address];
+			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
+
+			echo "<tr >\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_uuid']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_mac_address']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_model']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_firmware_version']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provision_enable']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_username']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_password']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_time_zone']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' align='right'>\n";
+			if (permission_exists('device_edit')) {
+				echo "		<a href='device_edit.php?id=".$row['device_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('device_delete')) {
+				echo "		<a href='device_delete.php?id=".$row['device_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			}
+			echo "	</td>\n";
+			echo "</tr>\n";
+			if ($c==0) { $c=1; } else { $c=0; }
+		} //end foreach
+		unset($sql, $result, $row_count);
+	} //end if results
+
+	echo "<tr>\n";
+	echo "<td colspan='7' align='left'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
+	echo "		<td width='33.3%' align='right'>\n";
+	if (permission_exists('device_add')) {
+		echo "			<a href='device_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	}
+	else {
+		echo "			&nbsp;\n";
+	}
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "</table>";
+	echo "</div>";
+	echo "<br /><br />";
+
+//include the footer
+	require_once "includes/footer.php";
 ?>
