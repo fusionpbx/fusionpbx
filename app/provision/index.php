@@ -32,6 +32,20 @@ require_once "includes/require.php";
 	$tmp_array = '';
 	$device_template = '';
 
+//get the domain_uuid
+	//get the domain
+		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+	//get the domain_uuid
+		$sql = "select * from v_domains ";
+		$sql .= "where domain_name = '".$_SESSION['domain_name']."' ";
+		$prep_statement = $db->prepare($sql);
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach($result as $row) {
+			$_SESSION["domain_uuid"] = $row["domain_uuid"];
+		}
+		unset($result, $prep_statement);
+
 //if password was defined in the system -> variables page then require the password.
 	if (strlen($_SESSION['provision']['password']['var']) > 0) {
 		//deny access if the password doesn't match
