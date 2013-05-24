@@ -27,7 +27,7 @@ digit_timeout = "5000";
 
 if ( session:ready() ) then
 	session:answer();
-	domain_name = session:getVariable("domain_name");
+	context = session:getVariable("context");
 	sounds_dir = session:getVariable("sounds_dir");
 	destination_number = session:getVariable("destination_number");
 
@@ -47,7 +47,7 @@ if ( session:ready() ) then
 			prompt_for_digits = true;
 		--if an extension answer the call
 			-- user_exists id 1005 voip.fusionpbx.com
-			cmd = "user_exists id ".. destination_number .." "..domain_name;
+			cmd = "user_exists id ".. destination_number .." "..context;
 			result = api:executeString(cmd);
 			freeswitch.consoleLog("NOTICE", "[confirm] "..cmd.." --"..result.."--\n");
 			if (result == "true") then
