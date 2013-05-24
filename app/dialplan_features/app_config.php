@@ -1,6 +1,6 @@
 <?php
 	//application details
-		$apps[$x]['name'] = "Dialplan Featuers";
+		$apps[$x]['name'] = "Dialplan Features";
 		$apps[$x]['uuid'] = '42d2bf28-c90c-4a6d-a06c-796c5bc412aa';
 		$apps[$x]['category'] = 'Switch';
 		$apps[$x]['subcategory'] = '';
