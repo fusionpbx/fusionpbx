@@ -56,6 +56,7 @@ if (strlen($folder) > 0 && strlen($file) > 0) {
 }
 else {
 	require_once "header.php";
+
 	echo "<br>";
 	echo "<div align='left'>";
 	echo "<form method='get' action=''>";
@@ -81,9 +82,9 @@ else {
 
 	echo "	<tr>";
 	echo "		<td colspan='1' align='right'>";
-	echo "      <input type='hidden' name='folder' value='$folder'>";
-	echo "		  <input type='submit' value='".$text['button-new-file']."'>";
-	echo "    </td>";
+	echo "			<input type='hidden' name='folder' value='$folder'>";
+	echo "			<input type='submit' value='".$text['button-new-file']."'>";
+	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";

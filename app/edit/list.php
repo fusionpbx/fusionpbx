@@ -85,10 +85,10 @@ else { //received results
 			//echo "<td valign='top'>".$row[clip_desc]."</td>";
 			//echo "<td valign='top'>".$row[clip_order]."</td>";
 		echo "</tr>";
-
 		echo "<tr><td colspan='1'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 		if ($c==0) { $c=1; } else { $c=0; }
-	} //end foreach        unset($sql, $result, $row_count);
+	} //end foreach
+	unset($sql, $result, $row_count);
 	echo "</table>\n";
 	echo "</div>\n";
 

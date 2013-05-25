@@ -229,7 +229,21 @@ echo "      <TABLE BORDER=0 cellpadding='0' cellspacing='0'><TR><TD><IMG SRC=\"i
 //echo "</DIV></TD></TR></TABLE>\n";
 //echo "</DIV></TD></TR></TABLE>\n";
 
-echo recur_dir($_SESSION['switch']['scripts']['dir']);
+if ($_SESSION["app"]["edit"]["dir"] == "scripts") {
+	echo recur_dir($_SESSION['switch']['scripts']['dir']);
+}
+if ($_SESSION["app"]["edit"]["dir"] == "php") {
+	echo recur_dir($_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH);
+}
+if ($_SESSION["app"]["edit"]["dir"] == "grammar") {
+	echo recur_dir($_SESSION['switch']['grammar']['dir']);
+}
+if ($_SESSION["app"]["edit"]["dir"] == "provision") {
+	echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/");
+}
+if ($_SESSION["app"]["edit"]["dir"] == "xml") {
+	echo recur_dir($_SESSION['switch']['conf']['dir']);
+}
 
 echo "</DIV></TD></TR></TABLE>\n";
 
