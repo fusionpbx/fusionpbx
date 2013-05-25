@@ -41,6 +41,9 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//set the directory
+	$_SESSION["app"]["edit"]["dir"] = $_GET["dir"];
+
 echo "<html>\n";
 echo "<head>\n";
 echo "	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
