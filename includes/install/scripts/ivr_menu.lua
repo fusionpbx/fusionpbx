@@ -94,13 +94,12 @@
 	end);
 
 --set the caller id name
-	caller_id_name = session:getVariable("caller_id_name");
-	effective_caller_id_name = session:getVariable("effective_caller_id_name");
-	if (string.len(ivr_menu_cid_prefix) > 0) then
-		caller_id_name = ivr_menu_cid_prefix .. "#" .. caller_id_name;
-		effective_caller_id_name = ivr_menu_cid_prefix .. "#" .. effective_caller_id_name;
-		session:setVariable("caller_id_name", caller_id_name);
-		session:setVariable("effective_caller_id_name", effective_caller_id_name);
+	if (caller_id_name) then
+		if (string.len(ivr_menu_cid_prefix) > 0) then
+			caller_id_name = ivr_menu_cid_prefix .. "#" .. caller_id_name;
+			session:setVariable("caller_id_name", caller_id_name);
+			session:setVariable("effective_caller_id_name", caller_id_name);
+		end
 	end
 
 --get the sounds dir, language, dialect and voice
