@@ -86,6 +86,7 @@
 			origination_caller_id_name = caller_id_name;
 		end
 
+		delimiter = ",";
 		if (row.ring_group_strategy == "sequence") then
 			delimiter = "|";
 		end
