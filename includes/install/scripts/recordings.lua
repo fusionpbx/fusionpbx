@@ -22,15 +22,21 @@
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 
-pin_number = "";
-max_tries = "3";
-digit_timeout = "3000";
-sounds_dir = "";
-recordings_dir = "";
-file_name = "";
-recording_number = "";
-recording_slots = "";
-recording_prefix = "";
+--set the variables
+	pin_number = "";
+	max_tries = "3";
+	digit_timeout = "3000";
+	sounds_dir = "";
+	recordings_dir = "";
+	file_name = "";
+	recording_number = "";
+	recording_slots = "";
+	recording_prefix = "";
+
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
 
 --dtmf call back function detects the "#" and ends the call
 	function onInput(s, type, obj)
@@ -131,7 +137,22 @@ if ( session:ready() ) then
 	--get the dialplan variables and set them as local variables
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
-		recordings_dir = session:getVariable("recordings_dir");
+		domain_name = session:getVariable("domain_name");
+	
+	--set the base recordings dir
+		base_recordings_dir = recordings_dir;
+
+	--get the recordings from the config.lua and append the domain_name if the system is multi-tenant
+		if (domain_count > 1) then
+			recordings_dir = recordings_dir .. "/" .. domain_name;
+		end
+
+	--use the recording_dir when the variable is set
+		if (session:getVariable("recordings_dir")) then
+			if (base_recordings_dir ~= session:getVariable("recordings_dir")) then
+				recordings_dir = session:getVariable("recordings_dir");
+			end
+		end
 
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
