@@ -52,16 +52,18 @@
 	if (not params) then
 		params = {}
 		function params:getHeader(name)
-			self.name = name
+			self.name = name;
 		end
 		function params:serialize(name)
-			self.name = name
+			self.name = name;
 		end
 	end
 
 --show the params in the console
 	if (debug["params"]) then
-		freeswitch.consoleLog("notice", "[xml_handler] Params:\n" .. params:serialize() .. "\n");
+		if (params:serialize() ~= nil) then
+			freeswitch.consoleLog("notice", "[xml_handler] Params:\n" .. params:serialize() .. "\n");
+		end
 	end
 
 --show the xml request in the console
