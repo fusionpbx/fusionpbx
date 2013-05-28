@@ -89,7 +89,7 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//set variables from http values
 			$ring_group_name = check_str($_POST["ring_group_name"]);
 			$ring_group_extension = check_str($_POST["ring_group_extension"]);
@@ -122,7 +122,7 @@ else {
 
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -326,7 +326,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=ring_groups_edit.php?id=$ring_group_uuid\">\n";
 					echo "<div align='center'>\n";
 					if ($action == "add") {
-						echo $text['message-enabled']."\n";
+						echo $text['message-add-complete']."\n";
 					}
 					if ($action == "update") {
 						echo $text['message-update-complete']."\n";
@@ -339,7 +339,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$ring_group_uuid = $_GET["id"];
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -565,7 +565,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-cid-prefix'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
