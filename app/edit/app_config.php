@@ -1,6 +1,6 @@
 <?php
 	//application details
-		$apps[$x]['name'] = "Script Editor";
+		$apps[$x]['name'] = "Edit";
 		$apps[$x]['uuid'] = '17e628ee-ccfa-49c0-29ca-9894a0384b9b';
 		$apps[$x]['category'] = 'Switch';;
 		$apps[$x]['subcategory'] = '';
@@ -101,37 +101,38 @@
 		$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'script_editor_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'script_editor_save';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][0]['name'] = 'provision_editor_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-		
-		$apps[$x]['permissions'][1]['name'] = 'provision_editor_save';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][0]['name'] = 'xml_editor_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-		
-		$apps[$x]['permissions'][1]['name'] = 'xml_editor_save';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][0]['name'] = 'php_editor_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'php_editor_save';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][0]['name'] = 'grammar_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'admin';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'grammar_save';
-		$apps[$x]['permissions'][1]['groups'][] = 'admin';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = 'script_editor_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'script_editor_save';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'provision_editor_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'provision_editor_save';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_editor_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'xml_editor_save';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'php_editor_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'php_editor_save';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'grammar_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'grammar_save';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index
