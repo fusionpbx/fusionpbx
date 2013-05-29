@@ -43,6 +43,8 @@ else {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-dialplan-outbound-add'];
+
 	require_once "includes/paging.php";
 
 //get the http post values and set theme as php variables
@@ -305,7 +307,7 @@ else {
 					case "^9(\d{4})$":
 						$label = $text['label-9d4'];
 						$abbrv = "9.4d";
-						break;	
+						break;
 					case "^9(\d{7})$":
 						$label = $text['label-9d7'];
 						$abbrv = "9.7d";
@@ -646,7 +648,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    ".$text['label-gateway'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	
+
 	if (if_group("superadmin")) {
 		echo "<script>\n";
 		echo "var Objs;\n";
@@ -949,13 +951,13 @@ function type_onchange(dialplan_detail_type) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
 	//echo "    <option value=''></option>\n";
-	if ($dialplan_enabled == "true") { 
+	if ($dialplan_enabled == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($dialplan_enabled == "false") { 
+	if ($dialplan_enabled == "false") {
 		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {

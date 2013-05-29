@@ -33,7 +33,15 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-default_dialplan'];
 
 if ($_GET['a'] == "default" && permission_exists('dialplan_advanced_edit')) {
 	//create the dialplan/default.xml for single tenant or dialplan/domain.xml
@@ -55,7 +63,7 @@ if ($_POST['a'] == "save" && permission_exists('dialplan_advanced_edit')) {
 	}
 	fwrite($fd, $v_content);
 	fclose($fd);
-	$savemsg = "Saved";
+	$savemsg = $text['message-update'];
 }
 
 if (file_exists($_SESSION['switch']['dialplan']['dir']."/".$_SESSION['domain_name'].".xml")) {
@@ -81,7 +89,7 @@ function sf() { document.forms[0].savetopath.focus(); }
 		,start_highlight: true
 		,allow_toggle: false
 		,language: "en"
-		,syntax: "html"	
+		,syntax: "html"
 		,toolbar: "search, go_to_line,|, fullscreen, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
 		,syntax_selection_allow: "css,html,js,php,xml,c,cpp,sql"
 		,show_line_colors: true
@@ -92,17 +100,20 @@ function sf() { document.forms[0].savetopath.focus(); }
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
    <tr>
      <td class="" >
+     	<br>
 		<form action="dialplan_advanced.php" method="post" name="iform" id="iform">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			  <tr>
-				<td align='left' width='100%'><span class="vexpl"><span class="red"><strong>Default Dialplan<br>
+				<td align='left' width='100%'><span class="vexpl"><span class="red"><strong><?=$text['header-default_dialplan']?><br><br>
 					</strong></span>
-					The default dialplan is used to setup call destinations based on conditions and context. 
-					You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.
+					<?=$text['description-default_dialplan']?>
 					<br />
 					<br />
 				</td>
-				<td width='10%' align='right' valign='top'><input type='submit' class='btn' value='save' /></td>
+				<td width='10%' align='right' valign='top'>
+					<input type='button' class='btn' name='' alt='<?=$text['button-back']?>' onclick="window.location='dialplans.php'" value='<?=$text['button-back']?>'>
+					<input type='submit' class='btn' value='<?=$text['button-save']?>' />
+				</td>
 			  </tr>
 			<tr>
 			<td colspan='2' class='' valign='top' align='left' nowrap>
@@ -124,7 +135,7 @@ function sf() { document.forms[0].savetopath.focus(); }
 					<input type='hidden' name='a' value='save' />
 					<?php
 					if (permission_exists('dialplan_advanced_edit')) {
-						echo "<input type='button' class='btn' value='Restore Default' onclick=\"document.location.href='dialplan_advanced.php?a=default&f=default.xml';\" />";
+						echo "<input type='button' class='btn' value='".$text['button-restore']."' onclick=\"document.location.href='dialplan_advanced.php?a=default&f=default.xml';\" />";
 					}
 					?>
 				</td>

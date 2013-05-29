@@ -26,8 +26,8 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-if (permission_exists('dialplan_delete') 
-	|| permission_exists('inbound_route_delete') 
+if (permission_exists('dialplan_delete')
+	|| permission_exists('inbound_route_delete')
 	|| permission_exists('outbound_route_delete')
 	|| permission_exists('time_conditions_delete')) {
 	//access granted
@@ -36,6 +36,12 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 if (count($_GET)>0) {
 	$id = $_GET["id"];
@@ -68,7 +74,7 @@ if (strlen($id)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo $text['message-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 
