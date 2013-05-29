@@ -42,6 +42,8 @@ else {
 
 //additional includes
 	require_once "includes/header.php";
+	$page["title"] = $text['title-ivr_menus'];
+
 	require_once "includes/paging.php";
 
 //get the http values and set them as variables
@@ -64,17 +66,13 @@ else {
 	//show the content header
 		echo "<table width='100%' border='0'>\n";
 		echo "<tr>\n";
-		echo "<td width='50%' nowrap='nowrap' align='left'><b>IVR Menu</b></td>\n";
-		echo "<td width='50%' align='right'>&nbsp;</td>\n";
+		echo "<td width='50%' nowrap='nowrap' align='left'><b>".$text['header-ivr_menus']."</b></td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "<td colspan='2' align='left'>\n";
-		echo "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. \n";
-		echo "Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more. <br /><br />\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		echo "<td align='left'>".$text['description-ivr_menus']."</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
+		echo "<br>\n";
 
 	//get the count
 		require_once "includes/classes/database.php";
@@ -93,8 +91,8 @@ else {
 		$param = "";
 		if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 		$_GET['page'] = check_str($_GET['page']);
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $_GET['page']; 
+		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $_GET['page'];
 
 	//get the list from the db
 		if (isset($order_by)) {
@@ -113,14 +111,14 @@ else {
 		echo "<div align='center'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
-		echo th_order_by('ivr_menu_name', 'Name', $order_by[0]['name'], $order_by[0]['order']);
-		echo th_order_by('ivr_menu_extension', 'Extension', $order_by[0]['name'], $order_by[0]['order']);
-		echo th_order_by('ivr_menu_direct_dial', 'Direct Dial', $order_by[0]['name'], $order_by[0]['order']);
-		echo th_order_by('ivr_menu_enabled', 'Enabled', $order_by[0]['name'], $order_by[0]['order']);
-		echo th_order_by('ivr_menu_description', 'Description', $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_name', $text['label-name'], $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_extension', $text['label-extension'], $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_direct_dial', $text['label-direct_dial'], $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_enabled', $text['label-enabled'], $order_by[0]['name'], $order_by[0]['order']);
+		echo th_order_by('ivr_menu_description', $text['label-description'], $order_by[0]['name'], $order_by[0]['order']);
 		echo "<td align='right' width='42'>\n";
 		if (permission_exists('ivr_menu_add')) {
-			echo "	<a href='ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -136,10 +134,10 @@ else {
 				echo "	<td valign='top' class='row_stylebg'>".$row['ivr_menu_description']."&nbsp;</td>\n";
 				echo "	<td valign='top' align='right'>\n";
 				if (permission_exists('ivr_menu_edit')) {
-					echo "		<a href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "		<a href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('ivr_menu_delete')) {
-					echo "		<a href='ivr_menu_delete.php?id=".$row['ivr_menu_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					echo "		<a href='ivr_menu_delete.php?id=".$row['ivr_menu_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -156,7 +154,7 @@ else {
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 		echo "		<td width='33.3%' align='right'>\n";
 		if (permission_exists('ivr_menu_add')) {
-			echo "			<a href='ivr_menu_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "			<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";

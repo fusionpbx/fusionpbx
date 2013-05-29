@@ -137,29 +137,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($ivr_menu_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		if (strlen($ivr_menu_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-		if (strlen($ivr_menu_greet_long) == 0) { $msg .= "Please provide: Greet Long<br>\n"; }
-		//if (strlen($ivr_menu_greet_short) == 0) { $msg .= "Please provide: Greet Short<br>\n"; }
-		if (strlen($ivr_menu_invalid_sound) == 0) { $msg .= "Please provide: Invalid Sound<br>\n"; }
-		//if (strlen($ivr_menu_exit_sound) == 0) { $msg .= "Please provide: Exit Sound<br>\n"; }
-		//if (strlen($ivr_menu_confirm_macro) == 0) { $msg .= "Please provide: Confirm Macro<br>\n"; }
-		//if (strlen($ivr_menu_confirm_key) == 0) { $msg .= "Please provide: Confirm Key<br>\n"; }
-		//if (strlen($ivr_menu_tts_engine) == 0) { $msg .= "Please provide: TTS Engine<br>\n"; }
-		//if (strlen($ivr_menu_tts_voice) == 0) { $msg .= "Please provide: TTS Voice<br>\n"; }
-		if (strlen($ivr_menu_confirm_attempts) == 0) { $msg .= "Please provide: Confirm Attempts<br>\n"; }
-		if (strlen($ivr_menu_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
-		//if (strlen($ivr_menu_exit_app) == 0) { $msg .= "Please provide: Exit Action<br>\n"; }
-		//if (strlen($ivr_menu_exit_data) == 0) { $msg .= "Please provide: Timeout Data<br>\n"; }
-		if (strlen($ivr_menu_inter_digit_timeout) == 0) { $msg .= "Please provide: Inter Digit Timeout<br>\n"; }
-		if (strlen($ivr_menu_max_failures) == 0) { $msg .= "Please provide: Max Failures<br>\n"; }
-		if (strlen($ivr_menu_max_timeouts) == 0) { $msg .= "Please provide: Max Timeouts<br>\n"; }
-		if (strlen($ivr_menu_digit_len) == 0) { $msg .= "Please provide: Digit Length<br>\n"; }
-		if (strlen($ivr_menu_direct_dial) == 0) { $msg .= "Please provide: Direct Dial<br>\n"; }
-		//if (strlen($ivr_menu_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
-		if (strlen($ivr_menu_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (strlen($ivr_menu_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($ivr_menu_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		if (strlen($ivr_menu_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+		if (strlen($ivr_menu_greet_long) == 0) { $msg .= $text['message-required'].$text['label-greet_long']."<br>\n"; }
+		//if (strlen($ivr_menu_greet_short) == 0) { $msg .= $text['message-required'].$text['label-greet_short']."<br>\n"; }
+		if (strlen($ivr_menu_invalid_sound) == 0) { $msg .= $text['message-required'].$text['label-invalid_sound']."<br>\n"; }
+		//if (strlen($ivr_menu_exit_sound) == 0) { $msg .= $text['message-required'].$text['label-exit_sound']."<br>\n"; }
+		//if (strlen($ivr_menu_confirm_macro) == 0) { $msg .= $text['message-required'].$text['label-comfirm_macro']."<br>\n"; }
+		//if (strlen($ivr_menu_confirm_key) == 0) { $msg .= $text['message-required'].$text['label-comfirm_key']."<br>\n"; }
+		//if (strlen($ivr_menu_tts_engine) == 0) { $msg .= $text['message-required'].$text['label-tts_engine']."<br>\n"; }
+		//if (strlen($ivr_menu_tts_voice) == 0) { $msg .= $text['message-required'].$text['label-tts_voice']."<br>\n"; }
+		if (strlen($ivr_menu_confirm_attempts) == 0) { $msg .= $text['message-required'].$text['label-comfirm_attempts']."<br>\n"; }
+		if (strlen($ivr_menu_timeout) == 0) { $msg .= $text['message-required'].$text['label-timeout']."<br>\n"; }
+		//if (strlen($ivr_menu_exit_app) == 0) { $msg .= $text['message-required'].$text['label-exit_action']."<br>\n"; }
+		if (strlen($ivr_menu_inter_digit_timeout) == 0) { $msg .= $text['message-required'].$text['label-inter_digit_timeout']."<br>\n"; }
+		if (strlen($ivr_menu_max_failures) == 0) { $msg .= $text['message-required'].$text['label-max_failures']."<br>\n"; }
+		if (strlen($ivr_menu_max_timeouts) == 0) { $msg .= $text['message-required'].$text['label-max_timeouts']."<br>\n"; }
+		if (strlen($ivr_menu_digit_len) == 0) { $msg .= $text['message-required'].$text['label-digit_length']."<br>\n"; }
+		if (strlen($ivr_menu_direct_dial) == 0) { $msg .= $text['message-required'].$text['label-direct_dial']."<br>\n"; }
+		//if (strlen($ivr_menu_ringback) == 0) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
+		if (strlen($ivr_menu_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//if (strlen($ivr_menu_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -229,7 +227,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -296,6 +294,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //content
 	require_once "includes/header.php";
+	$page["title"] = $text['title-ivr_menu'];
 
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
@@ -329,43 +328,41 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td align='left' width='30%' nowrap='nowrap' align='left'><b>IVR Menu</b></td>\n";
+	echo "	<td align='left' width='30%' nowrap='nowrap' align='left'><b>".$text['header-ivr_menu']."</b></td>\n";
 	echo "	<td width='70%' align='right'>\n";
-	echo "		<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='ivr_menu_copy.php?id=".$ivr_menu_uuid."';}\" value='Copy'>\n";
-	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='ivr_menus.php'\" value='Back'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='ivr_menu_copy.php?id=".$ivr_menu_uuid."';}\" value='".$text['button-copy']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ivr_menus.php'\" value='".$text['button-back']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2' align='left'>\n";
-	echo "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, IVR menus, hunt groups, FAX extensions, and more. <br /><br />\n";
-	echo "</td>\n";
+	echo "<td colspan='2' align='left'>".$text['description-ivr_menu']."</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='ivr_menu_name' maxlength='255' value=\"$ivr_menu_name\">\n";
 	echo "<br />\n";
-	echo "Enter a name for the IVR menu.\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Extension:\n";
+	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='$ivr_menu_extension'>\n";
 	echo "<br />\n";
-	echo "Enter the extension number. \n";
+	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Greet Long:\n";
+	echo "	".$text['label-greet_long'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -473,13 +470,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 	echo "		</select>\n";
 	echo "<br />\n";
-	echo "The long greeting is played when entering the menu.\n";
+	echo $text['description-greet_long']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Greet Short:\n";
+	echo "	".$text['label-greet_short'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -554,66 +551,66 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</select>\n";
 
 	echo "<br />\n";
-	echo "The short greeting is played when returning to the menu.\n";
+	echo $text['description-greet_short']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Timeout:\n";
+	echo "	".$text['label-timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='ivr_menu_timeout' maxlength='255' value='$ivr_menu_timeout'>\n";
 	echo "<br />\n";
-	echo "The number of milliseconds to wait after playing the greeting or the confirm macro.\n";
+	echo $text['description-timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Exit Action:\n";
+	echo "    ".$text['label-exit_action'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
 	switch_select_destination("dialplan", "", "ivr_menu_exit_action", $ivr_menu_exit_action, "", "");
 	echo "	<br />\n";
-	echo "	Select the exit action to be performed if the IVR exits.\n";
+	echo "	".$text['description-exit_action']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Direct Dial:\n";
+	echo "	".$text['label-direct_dial'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ivr_menu_direct_dial'>\n";
 	echo "	<option value=''></option>\n";
-	if ($ivr_menu_direct_dial == "true") { 
-		echo "	<option value='true' selected='selected'>true</option>\n";
+	if ($ivr_menu_direct_dial == "true") {
+		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['option-true']."</option>\n";
 	}
-	if ($ivr_menu_direct_dial == "false") { 
-		echo "	<option value='false' selected='selected'>false</option>\n";
+	if ($ivr_menu_direct_dial == "false") {
+		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Define whether callers can dial directly to extensions and feature codes.\n";
+	echo $text['description-direct_dial']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	 Ring Back:\n";
+	echo "	 ".$text['label-ring_back'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
 	$select_options = "";
-	if ($ivr_menu_ringback == "\${us-ring}" || $ivr_menu_ringback == "us-ring") { 
+	if ($ivr_menu_ringback == "\${us-ring}" || $ivr_menu_ringback == "us-ring") {
 		$select_options .= "		<option value='\${us-ring}' selected='selected'>us-ring</option>\n";
 	}
 	else {
@@ -625,13 +622,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		$select_options .= "		<option value='\${fr-ring}'>fr-ring</option>\n";
 	}
-	if ($ivr_menu_ringback == "\${uk-ring}" || $ivr_menu_ringback == "uk-ring") { 
+	if ($ivr_menu_ringback == "\${uk-ring}" || $ivr_menu_ringback == "uk-ring") {
 		$select_options .= "		<option value='\${uk-ring}' selected='selected'>uk-ring</option>\n";
 	}
 	else {
 		$select_options .= "		<option value='\${uk-ring}'>uk-ring</option>\n";
 	}
-	if ($ivr_menu_ringback == "\${rs-ring}" || $ivr_menu_ringback == "rs-ring") { 
+	if ($ivr_menu_ringback == "\${rs-ring}" || $ivr_menu_ringback == "rs-ring") {
 		$select_options .= "		<option value='\${rs-ring}' selected='selected'>rs-ring</option>\n";
 	}
 	else {
@@ -645,18 +642,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $moh->select();
 
 	echo "<br />\n";
-	echo "Defines what the caller will hear while the destination is being called.\n";
+	echo $text['description-ring_back']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	CID Prefix:\n";
+	echo "	".$text['label-caller_id_name_prefix'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='ivr_menu_cid_prefix' maxlength='255' value=\"$ivr_menu_cid_prefix\">\n";
 	echo "<br />\n";
-	echo "Set a prefix on the caller ID name.\n";
+	echo $text['description-caller_id_name_prefix']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -667,9 +664,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<div id=\"show_advanced_box\">\n";
 		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "		<tr>\n";
-		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">Show Advanced</td>\n";
+		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">".$text['label-advanced']."</td>\n";
 		echo "		<td width=\"70%\" class=\"vtable\">\n";
-		echo "			<input type=\"button\" class='btn' onClick=\"show_advanced_config()\" value=\"Advanced\"></input></a>\n";
+		echo "			<input type=\"button\" class='btn' onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input></a>\n";
 		echo "		</td>\n";
 		echo "		</tr>\n";
 		echo "		</table>\n";
@@ -680,122 +677,122 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Invalid Sound:\n";
+		echo "	".$text['label-invalid_sound'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_invalid_sound' maxlength='255' value=\"$ivr_menu_invalid_sound\">\n";
 		echo "<br />\n";
-		echo "Played when and invalid option is chosen.\n";
+		echo $text['description-invalid_sound']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Exit Sound:\n";
+		echo "	".$text['label-exit_sound'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_exit_sound' maxlength='255' value=\"$ivr_menu_exit_sound\">\n";
 		echo "<br />\n";
-		echo "Played when leaving the menu.\n";
+		echo $text['description-exit_sound']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Confirm Macro:\n";
+		echo "	".$text['label-comfirm_macro'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"$ivr_menu_confirm_macro\">\n";
 		echo "<br />\n";
-		echo "Enter the confirm macro.\n";
+		echo $text['description-comfirm_macro']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	Confirm Key:\n";
+		echo "	".$text['label-comfirm_key'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"$ivr_menu_confirm_key\">\n";
 		echo "<br />\n";
-		echo "Enter the confirm key.\n";
+		echo $text['description-comfirm_key']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	TTS Engine:\n";
+		echo "	".$text['label-tts_engine'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_tts_engine' maxlength='255' value=\"$ivr_menu_tts_engine\">\n";
 		echo "<br />\n";
-		echo "Text to speech engine.\n";
+		echo $text['description-tts_engine']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	TTS Voice:\n";
+		echo "	".$text['label-tts_voice'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_tts_voice' maxlength='255' value=\"$ivr_menu_tts_voice\">\n";
 		echo "<br />\n";
-		echo "Text to speech voice.\n";
+		echo $text['description-tts_voice']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Confirm Attempts:\n";
+		echo "	".$text['label-comfirm_attempts'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='text' name='ivr_menu_confirm_attempts' maxlength='255' value='$ivr_menu_confirm_attempts'>\n";
 		echo "<br />\n";
-		echo "The maximum number of confirm attempts allowed.\n";
+		echo $text['description-comfirm_attempts']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Inter Digit Timeout:\n";
+		echo "	".$text['label-inter-digit_timeout'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='text' name='ivr_menu_inter_digit_timeout' maxlength='255' value='$ivr_menu_inter_digit_timeout'>\n";
 		echo "<br />\n";
-		echo "The number of milliseconds to wait between digits.\n";
+		echo $text['description-inter-digit_timeout']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Max Failures:\n";
+		echo "	".$text['label-max_failures'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='text' name='ivr_menu_max_failures' maxlength='255' value='$ivr_menu_max_failures'>\n";
 		echo "<br />\n";
-		echo "Maximum number of retries before exit.\n";
+		echo $text['description-max_failures']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Max Timeouts:\n";
+		echo "	".$text['label-max_timeouts'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='text' name='ivr_menu_max_timeouts' maxlength='255' value='$ivr_menu_max_timeouts'>\n";
 		echo "<br />\n";
-		echo "Maximum number of timeouts before exit.\n";
+		echo $text['description-max_timeouts']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Digit Length:\n";
+		echo "	".$text['label-digit_length'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='text' name='ivr_menu_digit_len' maxlength='255' value='$ivr_menu_digit_len'>\n";
 		echo "<br />\n";
-		echo "Maximum number of digits allowed.\n";
+		echo $text['description-digit_length']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -808,37 +805,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Enabled:\n";
+	echo "	".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ivr_menu_enabled'>\n";
 	echo "	<option value=''></option>\n";
 	if ($ivr_menu_enabled == "true") {
-		echo "	<option value='true' selected='selected'>true</option>\n";
+		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['option-true']."</option>\n";
 	}
 	if ($ivr_menu_enabled == "false") {
-		echo "	<option value='false' selected='selected'>false</option>\n";
+		echo "	<option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Define whether the IVR Menu is enabled or disabled.\n";
+	echo $text['description-enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='ivr_menu_description' maxlength='255' value=\"$ivr_menu_description\">\n";
 	echo "<br />\n";
-	echo "Enter a description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -846,7 +843,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='ivr_menu_uuid' value='$ivr_menu_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
