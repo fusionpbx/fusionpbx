@@ -83,13 +83,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($ivr_menu_uuid) == 0) { $msg .= "Please provide: ivr_menu_uuid<br>\n"; }
-		if (strlen($ivr_menu_option_digits) == 0) { $msg .= "Please provide: Option<br>\n"; }
-		//if (strlen($ivr_menu_option_action) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($ivr_menu_option_param) == 0) { $msg .= "Please provide: Destination<br>\n"; }
-		if (strlen($ivr_menu_option_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-		//if (strlen($ivr_menu_option_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($ivr_menu_option_digits) == 0) { $msg .= $text['message-required'].$text['label-option']."<br>\n"; }
+		//if (strlen($ivr_menu_option_param) == 0) { $msg .= $text['message-required'].$text['label-destination']."<br>\n"; }
+		if (strlen($ivr_menu_option_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+		//if (strlen($ivr_menu_option_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -143,7 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
 					echo "<div align='center'>\n";
-					echo "Update Complete\n";
+					echo $text['message-add']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -186,6 +183,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //send the content to the browser
 	require_once "includes/header.php";
+	if ($action == "add") {
+		$page["title"] = $text['title-option_add'];
+	}
+	if ($action == "update") {
+		$page["title"] = $text['title-option_edit'];
+	}
 
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
@@ -199,27 +202,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap' align='left'><b>IVR Menu Option Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap' align='left'><b>".$text['header-option_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap' align='left'><b>IVR Menu Option Edit</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap' align='left'><b>".$text['header-option_edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='ivr_menu_edit.php?id=$ivr_menu_uuid'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ivr_menu_edit.php?id=$ivr_menu_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left'>\n";
-	echo "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. <br /><br />\n";
+	echo $text['description-option_add_edit']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Option:\n";
+	echo "	".$text['label-option'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='ivr_menu_option_digits' maxlength='255' value='$ivr_menu_option_digits'>\n";
 	echo "<br />\n";
-	echo "Any number between 1-5 digits or regular expressions.\n";
+	echo $text['description-option']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -285,7 +288,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Destination:\n";
+	echo "	".$text['label-destination'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -298,13 +301,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($tmp_select_value);
 
 	echo "<br />\n";
-	echo "Select the destination.\n";
+	echo $text['description-destination']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Order:\n";
+	echo "	".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='ivr_menu_option_order' class='formfld'>\n";
@@ -327,18 +330,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the order.\n";
+	echo $text['description-order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='ivr_menu_option_description' maxlength='255' value=\"$ivr_menu_option_description\">\n";
 	echo "<br />\n";
-	echo "Enter a description here for your reference.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -347,7 +350,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "			<input type='hidden' name='ivr_menu_option_uuid' value='$ivr_menu_option_uuid'>\n";
 	}
-	echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 

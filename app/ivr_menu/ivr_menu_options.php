@@ -52,16 +52,14 @@ else {
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' nowrap='nowrap' align='left'><b>IVR Menu Option List</b></td>\n";
+	echo "<td width='50%' nowrap='nowrap' align='left'><b>".$text['header-option_list']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td colspan='2' align='left'>\n";
-	echo "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. <br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "<td colspan='2' align='left'>".$text['description-option_list']."</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+	echo "<br>\n";
 
 //get the number of rows in ivr_menu_options
 	$sql = "select count(*) as num_rows from v_ivr_menu_options ";
@@ -92,7 +90,7 @@ else {
 	$sql = "select * from v_ivr_menu_options ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and ivr_menu_uuid = '$ivr_menu_uuid' ";
-	$sql .= "order by ivr_menu_option_digits, ivr_menu_option_order asc "; 
+	$sql .= "order by ivr_menu_option_digits, ivr_menu_option_order asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -105,13 +103,13 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>Option</th>\n";
-	echo "<th>Destination</th>\n";
-	echo "<th>Order</th>\n";
-	echo "<th>Description</th>\n";
+	echo "<th>".$text['label-option']."</th>\n";
+	echo "<th>".$text['label-destination']."</th>\n";
+	echo "<th>".$text['label-order']."</th>\n";
+	echo "<th>".$text['label-description']."</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo "	<a href='ivr_menu_option_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='ivr_menu_option_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -139,10 +137,10 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_option_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('ivr_menu_edit')) {
-				echo "		<a href='ivr_menu_option_edit.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='ivr_menu_option_edit.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('ivr_menu_delete')) {
-				echo "		<a href='ivr_menu_option_delete.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='ivr_menu_option_delete.php?ivr_menu_uuid=".$row['ivr_menu_uuid']."&id=".$row['ivr_menu_option_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -159,7 +157,7 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('ivr_menu_add')) {
-		echo "			<a href='ivr_menu_option_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='ivr_menu_option_edit.php?ivr_menu_uuid=".$ivr_menu_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

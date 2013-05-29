@@ -46,7 +46,7 @@ else {
 		$ivr_menu_uuid = $_GET["id"];
 	}
 
-//get the ivr_menus data 
+//get the ivr_menus data
 	$sql = "select * from v_ivr_menus ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and ivr_menu_uuid = '$ivr_menu_uuid' ";
@@ -179,7 +179,7 @@ else {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Copy Complete\n";
+	echo $text['message-copy']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
