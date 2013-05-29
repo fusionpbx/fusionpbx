@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-call_center_agent_status'];
+
 require_once "includes/paging.php";
 
 //setup the event socket connection
@@ -154,15 +163,15 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>Call Center Agent Status</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_center_agent_status']."</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='call_center_agent_status.php'\" value='Refresh'>\n";
-	echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='call_center_queues.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"window.location='call_center_agent_status.php'\" value='".$text['button-refresh']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_queues.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "List all the call center agents with the option to change the status of one or more agents.<br /><br />\n";
+	echo $text['description-call_center_agent_status']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
@@ -175,9 +184,9 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>Agent</th>\n";
-	echo "<th>Status</th>\n";
-	echo "<th>Options</th>\n";
+	echo "<th>".$text['label-agent']."</th>\n";
+	echo "<th>".$text['label-status']."</th>\n";
+	echo "<th>".$text['label-options']."</th>\n";
 	echo "<tr>\n";
 
 	$x = 0;
@@ -190,12 +199,12 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			echo "		<input type='hidden' name='agents[".$x."][name]' id='agent_".$x."_name' value='".$agent_name."'>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>No Change</label>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_available' value='Available'><label for='agent_".$x."_status_available'>Available</label>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_logged_out' value='Logged Out'><label for='agent_".$x."_status_logged_out'>Logged Out</label>\n"; 
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_on_break' value='On Break'><label for='agent_".$x."_status_on_break'>On Break</label>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>DND</label>\n";
-			echo "	</td>\n";	
+			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>\n";
+			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_available' value='Available'><label for='agent_".$x."_status_available'>".$text['option-available']."</label>\n";
+			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_logged_out' value='Logged Out'><label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>\n";
+			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_on_break' value='On Break'><label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>\n";
+			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>".$text['option-do_not_disturb']."</label>\n";
+			echo "	</td>\n";
 			echo "</tr>\n";
 		}
 		if ($c==0) { $c=1; } else { $c=0; }
@@ -211,7 +220,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	echo "			<br />\n";
-	echo "			<input type='submit' name='submit' class='btn' value='Update Status'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-update_status']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

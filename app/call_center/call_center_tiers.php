@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-call_center_tiers'];
+
 require_once "includes/paging.php";
 
 //get http variables and set as php variables
@@ -49,14 +58,14 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>Call Center Tier List</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_center_tiers']."</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='call_center_queues.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_queues.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "List all tiers. Tiers assign agents to queues.<br /><br />\n";
+	echo $text['description-call_center_tiers']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
@@ -78,9 +87,9 @@ require_once "includes/paging.php";
 	$rows_per_page = 100;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_call_center_tiers ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -106,13 +115,13 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo th_order_by('agent_name', 'Agent Name', $order_by, $order);
-	echo th_order_by('queue_name', 'Queue Name', $order_by, $order);
-	echo th_order_by('tier_level', 'Tier Level', $order_by, $order);
-	echo th_order_by('tier_position', 'Tier Position', $order_by, $order);
+	echo th_order_by('agent_name', $text['label-agent_name'], $order_by, $order);
+	echo th_order_by('queue_name', $text['label-queue_name'], $order_by, $order);
+	echo th_order_by('tier_level', $text['label-tier_level'], $order_by, $order);
+	echo th_order_by('tier_position', $text['label-tier_position'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('call_center_tiers_add')) {
-		echo "	<a href='call_center_tier_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='call_center_tier_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -128,10 +137,10 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[tier_position]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('call_center_tiers_edit')) {
-				echo "		<a href='call_center_tier_edit.php?id=".$row[call_center_tier_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='call_center_tier_edit.php?id=".$row[call_center_tier_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('call_center_tiers_delete')) {
-				echo "		<a href='call_center_tier_delete.php?id=".$row[call_center_tier_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='call_center_tier_delete.php?id=".$row[call_center_tier_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -149,7 +158,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('call_center_tiers_add')) {
-		echo "			<a href='call_center_tier_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='call_center_tier_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -67,18 +73,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($agent_name) == 0) { $msg .= "Please provide: Agent Name<br>\n"; }
-		//if (strlen($agent_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($agent_call_timeout) == 0) { $msg .= "Please provide: Call Timeout<br>\n"; }
-		//if (strlen($agent_contact) == 0) { $msg .= "Please provide: Contact<br>\n"; }
-		//if (strlen($agent_status) == 0) { $msg .= "Please provide: Status<br>\n"; }
-		//if (strlen($agent_logout) == 0) { $msg .= "Please provide: Logout<br>\n"; }
-		//if (strlen($agent_no_answer_delay_time) == 0) { $msg .= "Please provide: No Answer Delay Time<br>\n"; }
-		//if (strlen($agent_max_no_answer) == 0) { $msg .= "Please provide: Max No Answer<br>\n"; }
-		//if (strlen($agent_wrap_up_time) == 0) { $msg .= "Please provide: Wrap Up Time<br>\n"; }
-		//if (strlen($agent_reject_delay_time) == 0) { $msg .= "Please provide: Reject Delay Time<br>\n"; }
-		//if (strlen($agent_busy_delay_time) == 0) { $msg .= "Please provide: Busy Delay Time<br>\n"; }
+		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		//if (strlen($agent_name) == 0) { $msg .= $text['message-required'].$text['label-agent_name']."<br>\n"; }
+		//if (strlen($agent_type) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (strlen($agent_call_timeout) == 0) { $msg .= $text['message-required'].$text['label-call_timeout']."<br>\n"; }
+		//if (strlen($agent_contact) == 0) { $msg .= $text['message-required'].$text['label-contact']."<br>\n"; }
+		//if (strlen($agent_status) == 0) { $msg .= $text['message-required'].$text['label-status']."<br>\n"; }
+		//if (strlen($agent_logout) == 0) { $msg .= $text['message-required'].$text['label-agent_logout']."<br>\n"; }
+		//if (strlen($agent_no_answer_delay_time) == 0) { $msg .= $text['message-required'].$text['label-no_answer_delay_time']."<br>\n"; }
+		//if (strlen($agent_max_no_answer) == 0) { $msg .= $text['message-required'].$text['label-max_no_answer']."<br>\n"; }
+		//if (strlen($agent_wrap_up_time) == 0) { $msg .= $text['message-required'].$text['label-wrap_up_time']."<br>\n"; }
+		//if (strlen($agent_reject_delay_time) == 0) { $msg .= $text['message-required'].$text['label-reject_delay_time']."<br>\n"; }
+		//if (strlen($agent_busy_delay_time) == 0) { $msg .= $text['message-required'].$text['label-busy_delay_time']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -114,7 +120,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//add the call_timeout
 					$tmp_pos = strrpos($agent_contact, "}");
 					$tmp_first = substr($agent_contact, 0, $tmp_pos);
-					$tmp_last = substr($agent_contact, $tmp_pos); 
+					$tmp_last = substr($agent_contact, $tmp_pos);
 					$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
 				}
 				else {
@@ -228,7 +234,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_agents.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -258,12 +264,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_agents.php\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -303,6 +309,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "add") {
+		$page["title"] = $text['title-call_center_agent_add'];
+	}
+	if ($action == "update") {
+		$page["title"] = $text['title-call_center_agent_edit'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -316,12 +328,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Call Center Agent Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_agent_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Call Center Agent Edit</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_agent_edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_center_agents.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_agents.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
@@ -331,7 +343,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Agent Name:\n";
+	echo "	".$text['label-agent_name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	//---- Begin Select List --------------------
@@ -358,35 +370,35 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($sql, $result);
 	//---- End Select List --------------------
 	echo "<br />\n";
-	echo "Select the agents name.\n";
+	echo $text['description-agent_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Type:\n";
+	echo "	".$text['label-type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='agent_type' maxlength='255' value=\"$agent_type\">\n";
 	echo "<br />\n";
-	echo "Enter the agent type.\n";
+	echo $text['description-type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Call Timeout:\n";
+	echo "	".$text['label-call_timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='agent_call_timeout' maxlength='255' value='$agent_call_timeout'>\n";
 	echo "<br />\n";
-	echo "Enter the call timeout.\n";
+	echo $text['description-call_timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Contact:\n";
+	echo "	".$text['label-contact'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -394,110 +406,110 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	switch_select_destination("call_center_contact", "", "agent_contact", $agent_contact, "", "");
 
 	echo "<br />\n";
-	echo "Select the contact number.\n";
+	echo $text['description-contact']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Status:\n";
+	echo "	".$text['label-status'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_status'>\n";
 	echo "	<option value=''></option>\n";
-	if ($agent_status == "Logged Out") { 
-		echo "	<option value='Logged Out' SELECTED >Logged Out</option>\n";
+	if ($agent_status == "Logged Out") {
+		echo "	<option value='Logged Out' SELECTED >".$text['option-logged_out']."</option>\n";
 	}
 	else {
-		echo "	<option value='Logged Out'>Logged Out</option>\n";
+		echo "	<option value='Logged Out'>".$text['option-logged_out']."</option>\n";
 	}
-	if ($agent_status == "Available") { 
-		echo "	<option value='Available' SELECTED >Available</option>\n";
-	}
-	else {
-		echo "	<option value='Available'>Available</option>\n";
-	}
-	if ($agent_status == "Available (On Demand)") { 
-		echo "	<option value='Available (On Demand)' SELECTED >Available (On Demand)</option>\n";
+	if ($agent_status == "Available") {
+		echo "	<option value='Available' SELECTED >".$text['option-available']."</option>\n";
 	}
 	else {
-		echo "	<option value='Available (On Demand)'>Available (On Demand)</option>\n";
+		echo "	<option value='Available'>".$text['option-available']."</option>\n";
 	}
-	if ($agent_status == "On Break") { 
-		echo "	<option value='On Break' SELECTED >On Break</option>\n";
+	if ($agent_status == "Available (On Demand)") {
+		echo "	<option value='Available (On Demand)' SELECTED >".$text['option-available_on_demand']."</option>\n";
 	}
 	else {
-		echo "	<option value='On Break'>On Break</option>\n";
+		echo "	<option value='Available (On Demand)'>".$text['option-available_on_demand']."</option>\n";
+	}
+	if ($agent_status == "On Break") {
+		echo "	<option value='On Break' SELECTED >".$text['option-on_break']."</option>\n";
+	}
+	else {
+		echo "	<option value='On Break'>".$text['option-on_break']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the agent status.\n";
+	echo $text['description-status']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	No Answer Delay Time:\n";
+	echo "	".$text['label-no_answer_delay_time'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='agent_no_answer_delay_time' maxlength='255' value='$agent_no_answer_delay_time'>\n";
 	echo "<br />\n";
-	echo "Enter the agent no answer delay time in seconds.\n";
+	echo $text['description-no_answer_delay_time']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Max No Answer:\n";
+	echo "	".$text['label-max_no_answer'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='agent_max_no_answer' maxlength='255' value='$agent_max_no_answer'>\n";
 	echo "<br />\n";
-	echo "Enter max no answer.\n";
+	echo $text['description-max_no_answer']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Wrap Up Time:\n";
+	echo "	".$text['label-wrap_up_time'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='agent_wrap_up_time' maxlength='255' value='$agent_wrap_up_time'>\n";
 	echo "<br />\n";
-	echo "Enter the wrap up time.\n";
+	echo $text['description-wrap_up_time']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Reject Delay Time:\n";
+	echo "	".$text['label-reject_delay_time'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='agent_reject_delay_time' maxlength='255' value='$agent_reject_delay_time'>\n";
 	echo "<br />\n";
-	echo "Enter the reject delay time.\n";
+	echo $text['description-reject_delay_time']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Busy Delay Time:\n";
+	echo "	".$text['label-busy_delay_time'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='agent_busy_delay_time' maxlength='255' value='$agent_busy_delay_time'>\n";
 	echo "<br />\n";
-	echo "Enter the agent busy delay time.\n";
+	echo $text['description-busy_delay_time']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Agent Logout:\n";
+	echo "	".$text['label-agent_logout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='agent_logout' maxlength='255' value='$agent_logout'>\n";
 	echo "<br />\n";
-	echo "Enter the auto agent logout time in 00:00 format. Requires a service to enforce the logout time.\n";
+	echo $text['description-agent_logout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -506,7 +518,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='call_center_agent_uuid' value='$call_center_agent_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

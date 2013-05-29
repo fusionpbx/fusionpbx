@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-call_center_agents'];
+
 require_once "includes/paging.php";
 
 //get http values and set them to php variables
@@ -49,15 +58,15 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>Call Center Agent List</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_center_agents']."</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='call_center_agent_status.php'\" value='Status'>\n";
-	echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='call_center_queues.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-status']."' onclick=\"window.location='call_center_agent_status.php'\" value='".$text['button-status']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_queues.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "List of call center agents.<br /><br />\n";
+	echo $text['description-call_center_agents']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
@@ -79,9 +88,9 @@ require_once "includes/paging.php";
 	$rows_per_page = 100;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_call_center_agents ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -109,18 +118,18 @@ require_once "includes/paging.php";
 
 	echo "<tr>\n";
 	//echo th_order_by('domain_uuid', 'domain_uuid', $order_by, $order);
-	echo th_order_by('agent_name', 'Agent Name', $order_by, $order);
-	echo th_order_by('agent_type', 'Type', $order_by, $order);
-	echo th_order_by('agent_call_timeout', 'Call Timeout', $order_by, $order);
-	echo th_order_by('agent_contact', 'Contact', $order_by, $order);
-	echo th_order_by('agent_max_no_answer', 'Max No Answer', $order_by, $order);
-	echo th_order_by('agent_status', 'Status', $order_by, $order);
-	//echo th_order_by('agent_wrap_up_time', 'Wrap Up Time', $order_by, $order);
-	//echo th_order_by('agent_reject_delay_time', 'Reject Delay Time', $order_by, $order);
-	//echo th_order_by('agent_busy_delay_time', 'Busy Delay Time', $order_by, $order);
+	echo th_order_by('agent_name', $text['label-agent_name'], $order_by, $order);
+	echo th_order_by('agent_type', $text['label-type'], $order_by, $order);
+	echo th_order_by('agent_call_timeout', $text['label-call_timeout'], $order_by, $order);
+	echo th_order_by('agent_contact', $text['label-contact'], $order_by, $order);
+	echo th_order_by('agent_max_no_answer', $text['label-max_no_answer'], $order_by, $order);
+	echo th_order_by('agent_status', $text['label-status'], $order_by, $order);
+	//echo th_order_by('agent_wrap_up_time', $text['label-wrap_up_time'], $order_by, $order);
+	//echo th_order_by('agent_reject_delay_time', $text['label-reject_delay_time'], $order_by, $order);
+	//echo th_order_by('agent_busy_delay_time', $text['label-busy_delay_time'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('call_center_agents_add')) {
-		echo "	<a href='call_center_agent_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -136,16 +145,16 @@ require_once "includes/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_call_timeout]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_contact]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_max_no_answer]."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_status]."&nbsp;</td>\n";			
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_status]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_wrap_up_time]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_reject_delay_time]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_busy_delay_time]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('call_center_agents_edit')) {
-				echo "		<a href='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('call_center_agents_delete')) {
-				echo "		<a href='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."'\" value='e'>\n";
 			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' }\" value='x'>\n";
@@ -164,7 +173,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('call_center_agents_add')) {
-		echo "			<a href='call_center_agent_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
