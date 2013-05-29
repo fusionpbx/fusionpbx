@@ -15,10 +15,10 @@
 		$text['header-inbound_routes']['en-us'] = 'Inbound Routes';
 		$text['header-outbound_routes']['en-us'] = 'Outbound Routes';
 		$text['header-time_conditions']['en-us'] = 'Time Conditions';
-		$text['header-dial_plan-add']['en-us'] = 'Dialplan Add';
-		$text['header-dial_plan-edit']['en-us'] = 'Dialplan Edit';
+		$text['header-dialplan-add']['en-us'] = 'Dialplan Add';
+		$text['header-dialplan-edit']['en-us'] = 'Dialplan Edit';
 		$text['header-conditions_and_actions']['en-us'] = 'Conditions and Actions';
-		$text['header-dial_plan_detail']['en-us'] = 'Dialplan Detail';
+		$text['header-dialplan_detail']['en-us'] = 'Dialplan Detail';
 		$text['header-default_dialplan']['en-us'] = 'Default Dialplan';
 
 		$text['description-dialplan_manager']['en-us'] = 'The dialplan provides a view of some of the feature codes, as well as the IVR Menu, Conferences, Queues and other destinations.';
@@ -26,7 +26,7 @@
 		$text['description-inbound_routes']['en-us'] = 'Route incoming calls to destinations based on one or more conditions. It can send incoming calls to an IVR Menu, Call Group, Extension, External Number, Script. Order is important when an anti-action is used or when there are multiple conditions that match.';
 		$text['description-outbound_routes']['en-us'] = 'Route outbound calls to gateways, tdm, enum and more. When a call matches the conditions the call to outbound routes.';
 		$text['description-time_conditions']['en-us'] = 'Time conditions route calls based on time conditions. You can use time conditions to send calls to an IVR Menu, External numbers, Scripts, or other destinations.';
-		$text['description-dial_plan-edit']['en-us'] = 'Dialplan include general settings.';
+		$text['description-dialplan-edit']['en-us'] = 'Dialplan include general settings.';
 		$text['description-conditions_and_actions']['en-us'] = 'The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order that it is given. Use as many conditions, actions or anti-actions as needed.';
 		$text['description-default_dialplan']['en-us'] = 'The default dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
 

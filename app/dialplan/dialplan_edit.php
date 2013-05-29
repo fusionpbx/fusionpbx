@@ -284,7 +284,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "  </tr>\n";
 	echo "  <tr>\n";
 	echo "    <td align='left' colspan='2'>\n";
-	echo "        ".$text['description-dial_plan-edit']."\n";
+	echo "        ".$text['description-dialplan-edit']."\n";
 	echo "        \n";
 	echo "    </td>\n";
 	echo "  </tr>\n";
