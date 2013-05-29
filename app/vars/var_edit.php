@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -65,12 +71,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($var_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		//if (strlen($var_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
-		//if (strlen($var_cat) == 0) { $msg .= "Please provide: Category<br>\n"; }
-		if (strlen($var_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		if (strlen($var_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-		//if (strlen($var_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($var_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		//if (strlen($var_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+		//if (strlen($var_cat) == 0) { $msg .= $text['message-required'].$text['label-category']."<br>\n"; }
+		if (strlen($var_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		if (strlen($var_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -121,7 +126,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=vars.php\">\n";
 					echo "<div align='center'>\n";
-					echo "Add Complete\n";
+					echo $text['message-add']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -149,7 +154,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=vars.php\">\n";
 					echo "<div align='center'>\n";
-					echo "Update Complete\n";
+					echo $text['message-update']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -179,6 +184,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include header
 	require_once "includes/header.php";
+	if ($action == "add") {
+		$page["title"] = $text['title-variable_add'];
+	}
+	if ($action == "update") {
+		$page["title"] = $text['title-variable_edit'];
+	}
 
 //show contents
 	echo "<div align='center'>";
@@ -193,67 +204,66 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td width='30%' align='left'nowrap><b>Variable Add</b></td>\n";
+		echo "<td width='30%' align='left'nowrap><b>".$text['header-variable_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td width='30%' align='left' nowrap><b>Variable Edit</b></td>\n";
+		echo "<td width='30%' align='left' nowrap><b>".$text['header-variable_edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='vars.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='vars.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='var_name' maxlength='255' value=\"$var_name\">\n";
 	echo "<br />\n";
-	echo "Enter the variable name here. \n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Value:\n";
+	echo "	".$text['label-value'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='var_value' maxlength='255' value=\"$var_value\">\n";
 	echo "<br />\n";
-	echo "Enter the variable value here. \n";
+	echo $text['description-value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Category:\n";
+	echo "	".$text['label-category'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$table_name = 'v_vars';$field_name = 'var_cat';$sql_where_optional = "";$field_current_value = $var_cat;
 	echo html_select_other($db, $table_name, $field_name, $sql_where_optional, $field_current_value);
-	//echo "	<input class='formfld' type='text' name='var_cat' maxlength='255' value=\"$var_cat\">\n";
 	echo "<br />\n";
-	echo "Enter the category here.\n";
+	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Enabled:\n";
+	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='var_enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($var_enabled == "true") { 
-		echo "    <option value='true' SELECTED >true</option>\n";
+	if ($var_enabled == "true") {
+		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
-	if ($var_enabled == "false") { 
-		echo "    <option value='false' SELECTED >false</option>\n";
+	if ($var_enabled == "false") {
+		echo "    <option value='false' SELECTED >".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
@@ -263,11 +273,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='var_order' class='formfld'>\n";
-	//echo "              <option></option>\n";
 	if (strlen(htmlspecialchars($var_order ))> 0) {
 		echo "              <option selected='yes' value='".htmlspecialchars($var_order )."'>".htmlspecialchars($var_order )."</option>\n";
 	}
@@ -293,7 +302,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<textarea class='formfld' name='var_description' rows='17'>$var_description</textarea>\n";
@@ -306,7 +315,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='var_uuid' value='$var_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 
@@ -315,7 +324,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<tr>\n";
 		echo "<td align='left' colspan='2'>\n";
 		echo "<br />\n";
-		echo "<b>Codec Information:</b><br />\n";
+		echo "<b>".$text['label-codec_information']."</b><br><br>\n";
 		echo "Module must be compiled and loaded. &nbsp; &nbsp; codecname[@8000h|16000h|32000h[@XXi]]<br />\n";
 		echo "<br />\n";
 		echo "XX is the frame size must be multples allowed for the codec<br />\n";
