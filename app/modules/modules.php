@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-modules'];
+
 require_once "includes/paging.php";
 
 $order_by = $_GET["order_by"];
@@ -46,7 +55,7 @@ if (strlen($_GET["a"]) > 0) {
 		if ($fp) {
 			$cmd = "api unload $module_name";
 			$response = trim(event_socket_request($fp, $cmd));
-			$msg = '<strong>Unload Module:</strong><pre>'.$response.'</pre>';
+			$msg = "<strong>".$text['label-unload_module'].":</strong> <pre>".$response."</pre>";
 		}
 	}
 	if ($_GET["a"] == "start") {
@@ -54,7 +63,7 @@ if (strlen($_GET["a"]) > 0) {
 		if ($fp) {
 			$cmd = "api load $module_name";
 			$response = trim(event_socket_request($fp, $cmd));
-			$msg = '<strong>Load Module:</strong><pre>'.$response.'</pre>';
+			$msg = "<strong>".$text['label-load_module'].":</strong> <pre>".$response."</pre>";
 		}
 	}
 }
@@ -76,7 +85,7 @@ if (strlen($_GET["a"]) > 0) {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>Message</th>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td class='row_style1'>$msg</td>\n";
@@ -93,13 +102,10 @@ if (strlen($_GET["a"]) > 0) {
 	echo "      <br>";
 
 	echo "<table width='100%' border='0'><tr>\n";
-	echo "<td align='left' width='50%' nowrap><b>Module List</b></td>\n";
-	echo "<td align='left' width='50%' align='right'>&nbsp;</td>\n";
+	echo "<td align='left' nowrap><b>".$text['header-modules']."</b></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
-	echo "<td align='left'>\n";
-	echo "Modules extend the features of the system. Use this page to enable or disable modules. ";
-	echo "</td>\n";
+	echo "<td align='left'>".$text['description-modules']."</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 
@@ -111,16 +117,13 @@ if (strlen($_GET["a"]) > 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$tmp_module_header = "\n";
 	$tmp_module_header .= "<tr>\n";
-	//$tmp_module_header .= "<th>Module Category</th>\n";
-	$tmp_module_header .= "<th>Label</th>\n";
-	//$tmp_module_header .= "<th>Module Name</th>\n";
-	$tmp_module_header .= "<th>Description</th>\n";
-	$tmp_module_header .= "<th>Status</th>\n";
-	$tmp_module_header .= "<th>Action</th>\n";
-	$tmp_module_header .= "<th>Enabled</th>\n";
-	//$tmp_module_header .= "<th>Default Enabled</th>\n";
+	$tmp_module_header .= "<th>".$text['label-label']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-description']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-status']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-action']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-enabled']."</th>\n";
 	$tmp_module_header .= "<td align='right' width='42'>\n";
-	$tmp_module_header .= "	<a href='modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+	$tmp_module_header .= "	<a href='modules_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	$tmp_module_header .= "</td>\n";
 	$tmp_module_header .= "<tr>\n";
 
@@ -154,31 +157,35 @@ if (strlen($_GET["a"]) > 0) {
 			}
 
 			echo "<tr >\n";
-			//echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_category"]."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_label"]."</td>\n";
-			//echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_name"]."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_description"]."&nbsp;</td>\n";
 			if ($mod->active($row["module_name"])) {
-				echo "   <td valign='top' class='".$row_style[$c]."'>Running</td>\n";
-				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='stop'>Stop</a></td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
 			}
 			else {
 				if ($row['module_enabled']=="true") {
-					echo "   <td valign='top' class='".$row_style[$c]."'><b>Stopped</b></td>\n";
+					echo "   <td valign='top' class='".$row_style[$c]."'><b>".$text['label-stopped']."</b></td>\n";
 				}
 				else {
-					echo "   <td valign='top' class='".$row_style[$c]."'>Stopped $notice</td>\n";
+					echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-stopped']." ".$notice."</td>\n";
 				}
-				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".$row["module_name"]."' alt='start'>Start</a></td>\n";
+				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=start&m=".$row["module_name"]."' alt='".$text['label-start']."'>".$text['label-start']."</a></td>\n";
 			}
-			echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_enabled"]."</td>\n";
-			//echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_default_enabled"]."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>";
+			if ($row["module_enabled"] == "true") {
+				echo $text['option-true'];
+			}
+			else if ($row["module_enabled"] == "false") {
+				echo $text['option-false'];
+			}
+			echo "</td>\n";
 			echo "   <td valign='top' align='right'>\n";
 			if (permission_exists('modules_edit')) {
-				echo "		<a href='modules_edit.php?id=".$row["module_uuid"]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='modules_edit.php?id=".$row["module_uuid"]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('modules_delete')) {
-				echo "		<a href='modules_delete.php?id=".$row["module_uuid"]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='modules_delete.php?id=".$row["module_uuid"]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "   </td>\n";
 			echo "</tr>\n";
@@ -197,7 +204,7 @@ if (strlen($_GET["a"]) > 0) {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('modules_add')) {
-		echo "			<a href='modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='modules_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
