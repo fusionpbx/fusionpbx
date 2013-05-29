@@ -34,8 +34,15 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //include the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-variables'];
 
 //set http values as php variables
 	$order_by = $_GET["order_by"];
@@ -50,8 +57,8 @@ else {
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
-	echo "	<td align='left'><b>Variables</b><br>\n";
-	echo "		Define preprocessor variables here. \n";
+	echo "	<td align='left'><b>".$text['header-variables']."</b><br>\n";
+	echo "		".$text['description-variables']."\n";
 	echo "	</td>\n";
 	echo "  </tr>\n";
 	echo "</table>\n";
@@ -78,15 +85,13 @@ else {
 
 	$tmp_var_header = '';
 	$tmp_var_header .= "<tr>\n";
-	$tmp_var_header .= th_order_by('var_name', 'Name', $order_by, $order);
-	$tmp_var_header .= th_order_by('var_value', 'Value', $order_by, $order);
-	//$tmp_var_header .= th_order_by('var_cat', 'Category', $order_by, $order);
-	//$tmp_var_header .= th_order_by('var_order', 'Order', $order_by, $order);
-	$tmp_var_header .= th_order_by('var_enabled', 'Enabled', $order_by, $order);
-	$tmp_var_header .= "<th>Description</th>\n";
+	$tmp_var_header .= th_order_by('var_name', $text['label-name'], $order_by, $order);
+	$tmp_var_header .= th_order_by('var_value', $text['label-value'], $order_by, $order);
+	$tmp_var_header .= th_order_by('var_enabled', $text['label-enabled'], $order_by, $order);
+	$tmp_var_header .= "<th>".$text['label-description']."</th>\n";
 	$tmp_var_header .= "<td align='right' width='42'>\n";
 	if (permission_exists('variables_add')) {
-		$tmp_var_header .= "	<a href='var_edit.php' alt='add'>$v_link_label_add</a>\n";
+		$tmp_var_header .= "	<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	$tmp_var_header .= "</td>\n";
 	$tmp_var_header .= "<tr>\n";
@@ -107,7 +112,7 @@ else {
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='right'>\n";
 					if (permission_exists('variables_add')) {
-						echo "			<a href='var_edit.php' alt='add'>$v_link_label_add</a>\n";
+						echo "			<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 					}
 					echo "		</td>\n";
 					echo "	</tr>\n";
@@ -125,18 +130,23 @@ else {
 			echo "<tr >\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($row['var_name'],0,32)."&nbsp;</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."&nbsp;</td>\n";
-			//echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_cat']."</td>\n";
-			//echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_order']."</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$row['var_enabled']."</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
+			if ($row['var_enabled'] == "true") {
+				echo $text['option-true'];
+			}
+			else if ($row['var_enabled'] == "false") {
+				echo $text['option-false'];
+			}
+			echo "</td>\n";
 			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
 			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$var_description."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('variables_edit')) {
-				echo "		<a href='var_edit.php?id=".$row['var_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='var_edit.php?id=".$row['var_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('variables_delete')) {
-				echo "		<a href='var_delete.php?id=".$row['var_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='var_delete.php?id=".$row['var_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -155,7 +165,7 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('variables_add')) {
-		echo "			<a href='var_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
