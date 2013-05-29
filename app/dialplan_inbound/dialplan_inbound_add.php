@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -33,14 +33,18 @@ else {
 	echo $text['label-access-denied'];
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
 
 //add multi-lingual support
 require_once "app_languages.php";
 foreach($text as $key => $value) {
 	$text[$key] = $value[$_SESSION['domain']['language']['code']];
 }
+
+require_once "includes/header.php";
+$page["title"] = $text['title-dialplan-inbound-add'];
+
+require_once "includes/paging.php";
+
 
 //get the http get values and set them as php variables
 	$order_by = $_GET["order_by"];
@@ -97,7 +101,7 @@ foreach($text as $key => $value) {
 		}
 		else {
 			if (strlen($condition_field_1) == 0) { $condition_field_1 = "destination_number"; }
-			if (is_numeric($condition_expression_1)) { 
+			if (is_numeric($condition_expression_1)) {
 				//the number is numeric
 				$condition_expression_1 = str_replace("+", "\+", $condition_expression_1);
 				$condition_expression_1 = '^('.$condition_expression_1.')$';
@@ -640,12 +644,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
 	if (permission_exists("inbound_route_edit") && $action == "advanced") {
-		echo "			<input type='button' class='btn' name='' alt='basic' onclick=\"window.location='dialplan_inbound_add.php?action=basic'\" value='".$text['button-basic']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-basic']."' onclick=\"window.location='dialplan_inbound_add.php?action=basic'\" value='".$text['button-basic']."'>\n";
 	}
 	else {
-		echo "			<input type='button' class='btn' name='' alt='advanced' onclick=\"window.location='dialplan_inbound_add.php?action=advanced'\" value='".$text['button-advanced']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"window.location='dialplan_inbound_add.php?action=advanced'\" value='".$text['button-advanced']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'\" value='".$text['button-back']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4'\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -703,7 +707,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			obj.parentNode.removeChild(obj);
 			Replace_condition_field_1(this.objs);
 		}
-		
+
 		function Replace_condition_field_1(obj){
 			obj[2].parentNode.insertBefore(obj[0],obj[2]);
 			obj[0].parentNode.removeChild(obj[1]);
@@ -722,21 +726,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($condition_field_1) > 0) {
 			echo "    <option value='$condition_field_1' selected>$condition_field_1</option>\n";
 		}
-		echo "    <option value='context'>context</option>\n";
-		echo "    <option value='username'>username</option>\n";
-		echo "    <option value='rdnis'>rdnis</option>\n";
-		echo "    <option value='destination_number'>destination_number</option>\n";
-		echo "    <option value='public'>public</option>\n";
-		echo "    <option value='caller_id_name'>caller_id_name</option>\n";
-		echo "    <option value='caller_id_number'>caller_id_number</option>\n";
-		echo "    <option value='ani'>ani</option>\n";
-		echo "    <option value='ani2'>ani2</option>\n";
-		echo "    <option value='uuid'>uuid</option>\n";
-		echo "    <option value='source'>source</option>\n";
-		echo "    <option value='chan_name'>chan_name</option>\n";
-		echo "    <option value='network_addr'>network_addr</option>\n";
+		echo "    <option value='context'>".$text['option-context']."</option>\n";
+		echo "    <option value='username'>".$text['option-username']."</option>\n";
+		echo "    <option value='rdnis'>".$text['option-rdnis']."</option>\n";
+		echo "    <option value='destination_number'>".$text['option-destination_number']."</option>\n";
+		echo "    <option value='public'>".$text['option-public']."</option>\n";
+		echo "    <option value='caller_id_name'>".$text['option-caller_id_name']."</option>\n";
+		echo "    <option value='caller_id_number'>".$text['option-caller_id_number']."</option>\n";
+		echo "    <option value='ani'>".$text['option-ani']."</option>\n";
+		echo "    <option value='ani2'>".$text['option-ani2']."</option>\n";
+		echo "    <option value='uuid'>".$text['option-uuid']."</option>\n";
+		echo "    <option value='source'>".$text['option-source']."</option>\n";
+		echo "    <option value='chan_name'>".$text['option-chan_name']."</option>\n";
+		echo "    <option value='network_addr'>".$text['option-network_addr']."</option>\n";
 		echo "    </select>\n";
-		echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='back' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='<'>\n";
+		echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='<'>\n";
 		echo "    <br />\n";
 		echo "	</td>\n";
 		echo "	<td style='width: 73px;'>&nbsp; ".$text['label-expression'].":</td>\n";
@@ -784,7 +788,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			obj.parentNode.removeChild(obj);
 			Replace_condition_field_2(this.objs);
 		}
-		
+
 		function Replace_condition_field_2(obj){
 			obj[2].parentNode.insertBefore(obj[0],obj[2]);
 			obj[0].parentNode.removeChild(obj[1]);
@@ -798,21 +802,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($condition_field_2) > 0) {
 			echo "    <option value='$condition_field_2' selected>$condition_field_2</option>\n";
 		}
-		echo "    <option value='context'>context</option>\n";
-		echo "    <option value='username'>username</option>\n";
-		echo "    <option value='rdnis'>rdnis</option>\n";
-		echo "    <option value='destination_number'>destination_number</option>\n";
-		echo "    <option value='public'>public</option>\n";
-		echo "    <option value='caller_id_name'>caller_id_name</option>\n";
-		echo "    <option value='caller_id_number'>caller_id_number</option>\n";
-		echo "    <option value='ani'>ani</option>\n";
-		echo "    <option value='ani2'>ani2</option>\n";
-		echo "    <option value='uuid'>uuid</option>\n";
-		echo "    <option value='source'>source</option>\n";
-		echo "    <option value='chan_name'>chan_name</option>\n";
-		echo "    <option value='network_addr'>network_addr</option>\n";
+		echo "    <option value='context'>".$text['option-context']."</option>\n";
+		echo "    <option value='username'>".$text['option-username']."</option>\n";
+		echo "    <option value='rdnis'>".$text['option-rdnis']."</option>\n";
+		echo "    <option value='destination_number'>".$text['option-destination_number']."</option>\n";
+		echo "    <option value='public'>".$text['option-public']."</option>\n";
+		echo "    <option value='caller_id_name'>".$text['option-caller_id_name']."</option>\n";
+		echo "    <option value='caller_id_number'>".$text['option-caller_id_number']."</option>\n";
+		echo "    <option value='ani'>".$text['option-ani']."</option>\n";
+		echo "    <option value='ani2'>".$text['option-ani2']."</option>\n";
+		echo "    <option value='uuid'>".$text['option-uuid']."</option>\n";
+		echo "    <option value='source'>".$text['option-source']."</option>\n";
+		echo "    <option value='chan_name'>".$text['option-chan_name']."</option>\n";
+		echo "    <option value='network_addr'>".$text['option-network_addr']."</option>\n";
 		echo "	</select>\n";
-		echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='back' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='<'>\n";
+		echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='<'>\n";
 		echo "	<br />\n";
 		echo "	</td>\n";
 		echo "	<td style='width: 73px;' align='left'>\n";
@@ -857,7 +861,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "".$text['label-select-inbound-destination-number']."\n";
 		}
 		else {
-			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"Add\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
+			echo "	<input type=\"button\" class=\"btn\" name=\"\" alt=\"".$text['button-add']."\" onclick=\"window.location='".PROJECT_PATH."/app/destinations/destinations.php'\" value='".$text['button-add']."'>\n";
 		}
 		unset ($prep_statement);
 
@@ -938,13 +942,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
-	if ($dialplan_enabled == "true") { 
+	if ($dialplan_enabled == "true") {
 		echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($dialplan_enabled == "false") { 
+	if ($dialplan_enabled == "false") {
 		echo "    <option value='false' SELECTED >".$text['label-false']."</option>\n";
 	}
 	else {

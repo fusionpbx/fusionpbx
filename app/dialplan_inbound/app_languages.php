@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 // main
 	$text['title-dialplan-inbound-add']['en-us'] = 'Inbound Call Routing';
@@ -44,10 +44,10 @@
 	$text['label-enabled']['en-us'] = 'Enabled';
 	$text['label-enabled']['pt-pt'] = '';
 
-	$text['label-true']['en-us'] = 'true';
+	$text['label-true']['en-us'] = 'True';
 	$text['label-true']['pt-pt'] = '';
 
-	$text['label-false']['en-us'] = 'false';
+	$text['label-false']['en-us'] = 'False';
 	$text['label-false']['pt-pt'] = '';
 
 	$text['label-description']['en-us'] = 'Description';
@@ -75,6 +75,45 @@
 
 	$text['label-expression']['en-us'] = 'Expression';
 	$text['label-expression']['pt-pt'] = '';
+
+	$text['option-context']['en-us'] = 'Context';
+	$text['option-context']['pt-pt'] = '';
+
+	$text['option-username']['en-us'] = 'Username';
+	$text['option-username']['pt-pt'] = '';
+
+	$text['option-rdnis']['en-us'] = 'RDNIS';
+	$text['option-rdnis']['pt-pt'] = '';
+
+	$text['option-destination_number']['en-us'] = 'Destination Number';
+	$text['option-destination_number']['pt-pt'] = '';
+
+	$text['option-public']['en-us'] = 'Public';
+	$text['option-public']['pt-pt'] = '';
+
+	$text['option-caller_id_name']['en-us'] = 'Caller ID Name';
+	$text['option-caller_id_name']['pt-pt'] = '';
+
+	$text['option-caller_id_number']['en-us'] = 'Caller ID Number';
+	$text['option-caller_id_number']['pt-pt'] = '';
+
+	$text['option-ani']['en-us'] = 'ANI';
+	$text['option-ani']['pt-pt'] = '';
+
+	$text['option-ani2']['en-us'] = 'ANI2';
+	$text['option-ani2']['pt-pt'] = '';
+
+	$text['option-uuid']['en-us'] = 'UUID';
+	$text['option-uuid']['pt-pt'] = '';
+
+	$text['option-source']['en-us'] = 'Source';
+	$text['option-source']['pt-pt'] = '';
+
+	$text['option-chan_name']['en-us'] = 'Channel Name';
+	$text['option-chan_name']['pt-pt'] = '';
+
+	$text['option-network_addr']['en-us'] = 'Network Address';
+	$text['option-network_addr']['pt-pt'] = '';
 
 // general
 	$text['button-save']['en-us'] = 'Save';
