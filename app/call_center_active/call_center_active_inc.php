@@ -35,6 +35,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //get the queue_name and set it as a variable
 	$queue_name = $_GET[queue_name].'@'. $_SESSION['domains'][$domain_uuid]['domain_name'];
 
@@ -74,7 +80,7 @@ else {
 
 //get the call center queue, agent and tiers list
 	if (!$fp) {
-		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -87,21 +93,21 @@ else {
 		echo "</div>\n";
 	}
 	else {
-	
+
 		//get the agent list
 
 			//show the title
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 				echo "  <tr>\n";
-				echo "	<td align='left'><b>Agents</b><br />\n";
-				echo "		List all the agents.<br />\n";
+				echo "	<td align='left'><b>".$text['header-agents']."</b><br />\n";
+				echo "		".$text['description-agents']."<br />\n";
 				echo "	</td>\n";
 				echo "  </tr>\n";
 				echo "</table>\n";
 				echo "<br />\n";
 
 			//send the event socket command and get the response
-				//callcenter_config queue list tiers [queue_name] | 
+				//callcenter_config queue list tiers [queue_name] |
 				$switch_cmd = 'callcenter_config queue list tiers '.$queue_name;
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$result = str_to_named_array($event_socket_str, '|');
@@ -121,7 +127,7 @@ else {
 				array_multisort($tier_result, SORT_ASC);
 
 			//send the event socket command and get the response
-				//callcenter_config queue list agents [queue_name] [status] | 
+				//callcenter_config queue list agents [queue_name] [status] |
 				$switch_cmd = 'callcenter_config queue list agents '.$queue_name;
 				$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 				$agent_result = str_to_named_array($event_socket_str, '|');
@@ -129,18 +135,17 @@ else {
 			//list the agents
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "<tr>\n";
-				echo "<th>Name</th>\n";
-				echo "<th>Extension</th>\n";
-				echo "<th>Status</th>\n";
-				echo "<th>State</th>\n";
-				//echo "<th>Offered Call</th>\n";
-				echo "<th>Status Change</th>\n";
-				echo "<th>Missed</th>\n";
-				echo "<th>Answered</th>\n";
-				echo "<th>Tier State</th>\n";
-				echo "<th>Tier Level</th>\n";
-				echo "<th>Tier Position</th>\n";
-				echo "<th>Options</th>\n";
+				echo "<th>".$text['label-name']."</th>\n";
+				echo "<th>".$text['label-extension']."</th>\n";
+				echo "<th>".$text['label-status']."</th>\n";
+				echo "<th>".$text['label-state']."</th>\n";
+				echo "<th>".$text['label-status_change']."</th>\n";
+				echo "<th>".$text['label-missed']."</th>\n";
+				echo "<th>".$text['label-answered']."</th>\n";
+				echo "<th>".$text['label-tier_state']."</th>\n";
+				echo "<th>".$text['label-tier_level']."</th>\n";
+				echo "<th>".$text['label-tier_position']."</th>\n";
+				echo "<th>".$text['label-options']."</th>\n";
 				echo "</tr>\n";
 				foreach ($tier_result as $tier_row) {
 					//$queue = $tier_row['queue'];
@@ -198,7 +203,6 @@ else {
 							echo "<td valign='top' class='".$row_style[$c]."'>".$a_exten."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$status."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
-							//echo "<td valign='top' class='".$row_style[$c]."'>".$last_offered_call_length."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$last_status_change_length."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$no_answer_count."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$calls_answered."</td>\n";
@@ -213,21 +217,20 @@ else {
 								//need to check state to so only waiting gets call, and trying/answer gets eavesdrop
 								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
 									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$a_uuid.")";
-							
+
 							//debug
 							//echo $orig_command;
-							//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">eavesdrop</a>&nbsp;\n";
+							//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
 									$xfer_command = $a_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
 									//$xfer_command = $a_uuid." ".$_SESSION['user']['extension'][0]['user']." XML default";
 									$xfer_command = urlencode($xfer_command);
-									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">transfer</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=uuid_transfer+".$xfer_command."');}\">".$text['label-transfer']."</a>&nbsp;\n";
 								}
 								else {
 									$orig_call="{origination_caller_id_name=c2c-".urlencode($name).",origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26bridge(user/".$a_exten."@".$_SESSION['domain_name'].")";
-	
-									 echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_call.")');}\">Click to Call</a>&nbsp;\n";
+									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_call.")');}\">".$text['label-call']."</a>&nbsp;\n";
 								}
 								echo "</td>";
 							}
@@ -245,7 +248,7 @@ else {
 			echo "<br />\n";
 			echo "<br />\n";
 
-	
+
 		//get the queue list
 			//send the event socket command and get the response
 				//callcenter_config queue list members [queue_name]
@@ -256,8 +259,8 @@ else {
 			//show the title
 				echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 				echo "  <tr>\n";
-				echo "	<td align='left'><b>".ucfirst($_GET[queue_name])." Queue</b><br />\n";
-				echo "		Shows a list of callers in the queue.<br />\n";
+				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst($_GET[queue_name])."</b><br />\n";
+				echo "		".$text['description-queue']."<br />\n";
 				echo "	</td>\n";
 				echo "  </tr>\n";
 				echo "</table>\n";
@@ -265,15 +268,15 @@ else {
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<th>Time</th>\n";
-			//echo "<th>System</th>\n";
-			echo "<th>Name</th>\n";
-			echo "<th>Number</th>\n";
-			echo "<th>Status</th>\n";
+			echo "<th>".$text['label-time']."</th>\n";
+			//echo "<th>".$text['label-system']."</th>\n";
+			echo "<th>".$text['label-name']."</th>\n";
+			echo "<th>".$text['label-number']."</th>\n";
+			echo "<th>".$text['label-status']."</th>\n";
 			if (if_group("admin") || if_group("superadmin")) {
-				echo "<th>Options</th>\n";
+				echo "<th>".$text['label-options']."</th>\n";
 			}
-			echo "<th>Agent</th>\n";
+			echo "<th>".$text['label-agent']."</th>\n";
 			echo "</tr>\n";
 
 			$q_waiting=0;
@@ -302,7 +305,7 @@ else {
 					if ($state=="Trying") {$q_trying = $q_trying + 1;}
 					if ($state=="Waiting") {$q_waiting = $q_waiting + 1;}
 					if ($state=="Answered") {$q_answered = $q_answered + 1;}
-	
+
 					$joined_seconds = time() - $joined_epoch;
 					$joined_length_hour = floor($joined_seconds/3600);
 					$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
@@ -310,7 +313,7 @@ else {
 					$joined_length_min = sprintf("%02d", $joined_length_min);
 					$joined_length_sec = sprintf("%02d", $joined_length_sec);
 					$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
-	
+
 					//$system_seconds = time() - $system_epoch;
 					//$system_length_hour = floor($system_seconds/3600);
 					//$system_length_min = floor($system_seconds/60 - ($system_length_hour * 60));
@@ -318,7 +321,7 @@ else {
 					//$system_length_min = sprintf("%02d", $system_length_min);
 					//$system_length_sec = sprintf("%02d", $system_length_sec);
 					//$system_length = $system_length_hour.':'.$system_length_min.':'.$system_length_sec;
-	
+
 					echo "<tr>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$joined_length."</td>\n";
 					//echo "<td valign='top' class='".$row_style[$c]."'>".$system_length."</td>\n";
@@ -329,13 +332,13 @@ else {
 						echo "<td valign='top' class='".$row_style[$c]."'>";
 
 						$q_caller_number = urlencode($caller_number);
-						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")"; 
+						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")";
 
 						//debug
 						//echo $orig_command;
-						//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
+						//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 
-						echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('Do you really want to do this?');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">eavesdrop</a>&nbsp;\n";
+						echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
 
 						echo "</td>";
@@ -347,7 +350,7 @@ else {
 			}
 			echo "</table>\n";
 			echo "</br>";
-			echo "<b>Total Waiting is {$q_waiting}. Total Trying is {$q_trying}. Total Answered is {$q_answered}.\n</b>";
+			echo "<b>".$text['label-total_waiting'].": {$q_waiting}<br>".$text['label-total_trying'].": {$q_trying}<br>".$text['label-total_answered'].": {$q_answered}\n</b>";
 
 		//add vertical spacing
 			echo "<br />\n";

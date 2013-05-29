@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -59,11 +65,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($agent_name) == 0) { $msg .= "Please provide: Agent Name<br>\n"; }
-		//if (strlen($queue_name) == 0) { $msg .= "Please provide: Queue Name<br>\n"; }
-		//if (strlen($tier_level) == 0) { $msg .= "Please provide: Tier Level<br>\n"; }
-		//if (strlen($tier_position) == 0) { $msg .= "Please provide: Tier Position<br>\n"; }
+		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		//if (strlen($agent_name) == 0) { $msg .= $text['message-required'].$text['label-agent_name']."<br>\n"; }
+		//if (strlen($queue_name) == 0) { $msg .= $text['message-required'].$text['label-queue_name']."<br>\n"; }
+		//if (strlen($tier_level) == 0) { $msg .= $text['message-required'].$text['label-tier_level']."<br>\n"; }
+		//if (strlen($tier_position) == 0) { $msg .= $text['message-required'].$text['label-tier_position']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -134,7 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_tiers.php\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo $text['message-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -157,12 +163,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_tiers.php\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
 		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true") 
+	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -187,6 +193,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "add") {
+		$page["title"] = $text['title-call_center_tier_add'];
+	}
+	if ($action == "update") {
+		$page["title"] = $text['title-call_center_tier_edit'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -201,22 +213,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Call Center Tier Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_tier_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>Call Center Tier Edit</b></td>\n";
+		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_tier_edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_center_tiers.php'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_tiers.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "List all tiers. Tiers assign agents to queues.<br /><br />\n";
+	echo $text['description-call_center_tiers']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Agent Name:\n";
+	echo "	".$text['label-agent_name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -245,13 +257,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//---- End Select List --------------------
 
 	echo "<br />\n";
-	echo "Select the agent name.\n";
+	echo $text['description-agent']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Queue Name:\n";
+	echo "	".$text['label-queue_name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -279,66 +291,66 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//---- End Select List --------------------
 
 	echo "<br />\n";
-	echo "Select the queue name.\n";
+	echo $text['description-options']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Tier Level:\n";
+	echo "	".$text['label-tier_level'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='tier_level'>\n";
 	//echo "	<option value=''></option>\n";
-	if ($tier_level == "1") { 
+	if ($tier_level == "1") {
 		echo "	<option value='1' selected='selected' >1</option>\n";
 	}
 	else {
 		echo "	<option value='1'>1</option>\n";
 	}
-	if ($tier_level == "2") { 
+	if ($tier_level == "2") {
 		echo "	<option value='2' selected='selected' >2</option>\n";
 	}
 	else {
 		echo "	<option value='2'>2</option>\n";
 	}
-	if ($tier_level == "3") { 
+	if ($tier_level == "3") {
 		echo "	<option value='3' selected='selected' >3</option>\n";
 	}
 	else {
 		echo "	<option value='3'>3</option>\n";
 	}
-	if ($tier_level == "4") { 
+	if ($tier_level == "4") {
 		echo "	<option value='4' selected='selected' >4</option>\n";
 	}
 	else {
 		echo "	<option value='4'>4</option>\n";
 	}
-	if ($tier_level == "5") { 
+	if ($tier_level == "5") {
 		echo "	<option value='5' selected='selected' >5</option>\n";
 	}
 	else {
 		echo "	<option value='5'>5</option>\n";
 	}
-	if ($tier_level == "6") { 
+	if ($tier_level == "6") {
 		echo "	<option value='6' selected='selected' >6</option>\n";
 	}
 	else {
 		echo "	<option value='6'>6</option>\n";
 	}
-	if ($tier_level == "7") { 
+	if ($tier_level == "7") {
 		echo "	<option value='7' selected='selected' >7</option>\n";
 	}
 	else {
 		echo "	<option value='7'>7</option>\n";
 	}
-	if ($tier_level == "8") { 
+	if ($tier_level == "8") {
 		echo "	<option value='8' selected='selected' >8</option>\n";
 	}
 	else {
 		echo "	<option value='8'>8</option>\n";
 	}
-	if ($tier_level == "9") { 
+	if ($tier_level == "9") {
 		echo "	<option value='9' selected='selected' >9</option>\n";
 	}
 	else {
@@ -346,66 +358,66 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the tier level.\n";
+	echo $text['description-tier_level']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Tier Position:\n";
+	echo "	".$text['label-tier_position'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='tier_position'>\n";
 	//echo "	<option value=''></option>\n";
-	if ($tier_position == "1") { 
+	if ($tier_position == "1") {
 		echo "	<option value='1' selected='selected' >1</option>\n";
 	}
 	else {
 		echo "	<option value='1'>1</option>\n";
 	}
-	if ($tier_position == "2") { 
+	if ($tier_position == "2") {
 		echo "	<option value='2' selected='selected' >2</option>\n";
 	}
 	else {
 		echo "	<option value='2'>2</option>\n";
 	}
-	if ($tier_position == "3") { 
+	if ($tier_position == "3") {
 		echo "	<option value='3' selected='selected' >3</option>\n";
 	}
 	else {
 		echo "	<option value='3'>3</option>\n";
 	}
-	if ($tier_position == "4") { 
+	if ($tier_position == "4") {
 		echo "	<option value='4' selected='selected' >4</option>\n";
 	}
 	else {
 		echo "	<option value='4'>4</option>\n";
 	}
-	if ($tier_position == "5") { 
+	if ($tier_position == "5") {
 		echo "	<option value='5' selected='selected' >5</option>\n";
 	}
 	else {
 		echo "	<option value='5'>5</option>\n";
 	}
-	if ($tier_position == "6") { 
+	if ($tier_position == "6") {
 		echo "	<option value='6' selected='selected' >6</option>\n";
 	}
 	else {
 		echo "	<option value='6'>6</option>\n";
 	}
-	if ($tier_position == "7") { 
+	if ($tier_position == "7") {
 		echo "	<option value='7' selected='selected' >7</option>\n";
 	}
 	else {
 		echo "	<option value='7'>7</option>\n";
 	}
-	if ($tier_position == "8") { 
+	if ($tier_position == "8") {
 		echo "	<option value='8' selected='selected' >8</option>\n";
 	}
 	else {
 		echo "	<option value='8'>8</option>\n";
 	}
-	if ($tier_position == "9") { 
+	if ($tier_position == "9") {
 		echo "	<option value='9' selected='selected' >9</option>\n";
 	}
 	else {
@@ -413,7 +425,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the tier position.\n";
+	echo $text['description-tier_position']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -421,7 +433,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='call_center_tier_uuid' value='$call_center_tier_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

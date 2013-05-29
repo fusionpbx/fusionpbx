@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-active_call_center'];
+
 require_once "includes/paging.php";
 
 $order_by = $_GET["order_by"];
@@ -48,13 +57,13 @@ $order = $_GET["order"];
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Call Center Queue List</b></td>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-active_call_center']."</b></td>\n";
 	echo "<td width='50%' align=\"right\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan='2'>\n";
-	echo "List of queues for the call center.<br /><br />\n";
+	echo $text['description-active_call_center']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
@@ -70,9 +79,9 @@ $order = $_GET["order"];
 	$rows_per_page = 100;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_call_center_queues ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -92,21 +101,21 @@ $order = $_GET["order"];
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo th_order_by('queue_name', 'Queue Name', $order_by, $order);
-	echo th_order_by('queue_extension', 'Extension', $order_by, $order);
-	echo th_order_by('queue_strategy', 'Strategy', $order_by, $order);
-	//echo th_order_by('queue_moh_sound', 'Music On Hold', $order_by, $order);
-	//echo th_order_by('queue_record_template', 'Record Template', $order_by, $order);
-	//echo th_order_by('queue_time_base_score', 'Time Base Score', $order_by, $order);
-	//echo th_order_by('queue_max_wait_time', 'Max Wait Time', $order_by, $order);
-	//echo th_order_by('queue_max_wait_time_with_no_agent', 'Max Wait Time With No Agent', $order_by, $order);
-	//echo th_order_by('queue_tier_rules_apply', 'Tier Rules Apply', $order_by, $order);
-	//echo th_order_by('queue_tier_rule_wait_second', 'Tier Rule Wait Second', $order_by, $order);
-	//echo th_order_by('queue_tier_rule_no_agent_no_wait', 'Tier Rule No Agent No Wait', $order_by, $order);
-	//echo th_order_by('queue_discard_abandoned_after', 'Discard Abandoned After', $order_by, $order);
-	//echo th_order_by('queue_abandoned_resume_allowed', 'Abandoned Resume Allowed', $order_by, $order);
-	//echo th_order_by('queue_tier_rule_wait_multiply_level', 'Tier Rule Wait Multiply Level', $order_by, $order);
-	echo th_order_by('queue_description', 'Description', $order_by, $order);
+	echo th_order_by('queue_name', $text['label-queue_name'], $order_by, $order);
+	echo th_order_by('queue_extension', $text['label-extension'], $order_by, $order);
+	echo th_order_by('queue_strategy', $text['label-strategy'], $order_by, $order);
+	//echo th_order_by('queue_moh_sound', $text['label-music_on_hold'], $order_by, $order);
+	//echo th_order_by('queue_record_template', $text['label-record_template'], $order_by, $order);
+	//echo th_order_by('queue_time_base_score', $text['label-time_base_score'], $order_by, $order);
+	//echo th_order_by('queue_max_wait_time', $text['label-max_wait_time'], $order_by, $order);
+	//echo th_order_by('queue_max_wait_time_with_no_agent', $text['label-max_wait_time_with_no_agent'], $order_by, $order);
+	//echo th_order_by('queue_tier_rules_apply', $text['label-tier_rules_apply'], $order_by, $order);
+	//echo th_order_by('queue_tier_rule_wait_second', $text['label-tier_rule_wait_second'], $order_by, $order);
+	//echo th_order_by('queue_tier_rule_no_agent_no_wait', $text['label-tier_rule_no_agent_no_wait'], $order_by, $order);
+	//echo th_order_by('queue_discard_abandoned_after', $text['label-discard_abandoned_after'], $order_by, $order);
+	//echo th_order_by('queue_abandoned_resume_allowed', $text['label-abandoned_resume_allowed'], $order_by, $order);
+	//echo th_order_by('queue_tier_rule_wait_multiply_level', $text['label-tier_rule_wait_multiply_level'], $order_by, $order);
+	echo th_order_by('queue_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	//echo "	<a href='call_center_queue_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
@@ -133,7 +142,7 @@ $order = $_GET["order"];
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_multiply_level]."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_description]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			//echo "		<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'\" value='e'>\n";
 			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' }\" value='x'>\n";
