@@ -710,7 +710,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	if ($action != "add") {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_ext = prompt('Enter the new Extension to use...'); if (new_ext != null) { window.location='extension_copy.php?id=".$extension_uuid."&ext=' + new_ext; }\" value='".$text['button-copy']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_ext = prompt('".$text['message_extension']."'); if (new_ext != null) { window.location='extension_copy.php?id=".$extension_uuid."&ext=' + new_ext; }\" value='".$text['button-copy']."'>\n";
 	}
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='extensions.php'\" value='".$text['button-back']."'>\n";
 	echo "	<br /><br />\n";
