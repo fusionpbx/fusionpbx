@@ -36,6 +36,12 @@ require_once "includes/checkauth.php";
 		exit;
 	}
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_GET)>0) {
 	$id = $_GET["id"];
 	$hunt_group_uuid = check_str($_REQUEST["id2"]);
@@ -58,7 +64,7 @@ if (strlen($id)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_group_edit.php?id=".$hunt_group_uuid."\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo $text['message-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
