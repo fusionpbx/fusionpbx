@@ -305,6 +305,9 @@
 		$text['message-copy']['en-us'] = 'Copy Completed';
 		$text['message-copy']['pt-pt'] = '';
 
+		$text['message_extension']['en-us'] = '# Enter the new Extension to use...';
+		$text['message_extension']['pt-pt'] = '';
+
 		$text['message-required']['en-us'] = 'Please provide: ';
 		$text['message-required']['pt-pt'] = '';
 
