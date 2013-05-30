@@ -37,12 +37,19 @@ require_once "includes/paging.php";
 		exit;
 	}
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set the http get/post variable(s) to a php variable
 	if (isset($_REQUEST["id"])) {
 		$hunt_group_uuid = check_str($_REQUEST["id"]);
+		$hunt_group_extension_new = check_str($_REQUEST["ext"]);
 	}
 
-//get the v_hunt_group data 
+//get the v_hunt_group data
 	$sql = "select * from v_hunt_groups ";
 	$sql .= "where hunt_group_uuid = '$hunt_group_uuid' ";
 	$sql .= "and domain_uuid = '$domain_uuid' ";
@@ -51,7 +58,7 @@ require_once "includes/paging.php";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		$hunt_group_extension = $row["hunt_group_extension"];
-		$hunt_group_name = $row["hunt_group_name"];
+		$hunt_group_name = $row["hunt_group_name"]."_copy";
 		$hunt_group_type = $row["hunt_group_type"];
 		$hunt_group_context = $row["hunt_group_context"];
 		$hunt_group_timeout = $row["hunt_group_timeout"];
@@ -61,6 +68,7 @@ require_once "includes/paging.php";
 		$hunt_group_cid_name_prefix = $row["hunt_group_cid_name_prefix"];
 		$hunt_group_pin = $row["hunt_group_pin"];
 		$hunt_group_caller_announce = $row["hunt_group_caller_announce"];
+		$hunt_group_user_list = $row["hunt_group_user_list"];
 		$hunt_group_enabled = $row["hunt_group_enabled"];
 		$hunt_group_description = "copy: ".$row["hunt_group_description"];
 		break; //limit to 1 row
@@ -68,10 +76,11 @@ require_once "includes/paging.php";
 	unset ($prep_statement);
 
 	//copy the hunt group
+		$hunt_group_uuid_new = uuid();
 		$sql = "insert into v_hunt_groups ";
 		$sql .= "(";
-		$sql .= "domain_uuid, ";
 		$sql .= "hunt_group_uuid, ";
+		$sql .= "domain_uuid, ";
 		$sql .= "hunt_group_extension, ";
 		$sql .= "hunt_group_name, ";
 		$sql .= "hunt_group_type, ";
@@ -83,14 +92,15 @@ require_once "includes/paging.php";
 		$sql .= "hunt_group_cid_name_prefix, ";
 		$sql .= "hunt_group_pin, ";
 		$sql .= "hunt_group_caller_announce, ";
+		$sql .= "hunt_group_user_list, ";
 		$sql .= "hunt_group_enabled, ";
 		$sql .= "hunt_group_description ";
 		$sql .= ")";
 		$sql .= "values ";
 		$sql .= "(";
+		$sql .= "'$hunt_group_uuid_new', ";
 		$sql .= "'$domain_uuid', ";
-		$sql .= "'$hunt_group_uuid', ";
-		$sql .= "'$hunt_group_extension', ";
+		$sql .= "'$hunt_group_extension_new', ";
 		$sql .= "'$hunt_group_name', ";
 		$sql .= "'$hunt_group_type', ";
 		$sql .= "'$hunt_group_context', ";
@@ -101,6 +111,7 @@ require_once "includes/paging.php";
 		$sql .= "'$hunt_group_cid_name_prefix', ";
 		$sql .= "'$hunt_group_pin', ";
 		$sql .= "'$hunt_group_caller_announce', ";
+		$sql .= "'$hunt_group_user_list', ";
 		$sql .= "'$hunt_group_enabled', ";
 		$sql .= "'$hunt_group_description' ";
 		$sql .= ")";
@@ -115,11 +126,12 @@ require_once "includes/paging.php";
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$hunt_group_uuid = $row["hunt_group_uuid"];
 			$destination_data = $row["destination_data"];
 			$destination_type = $row["destination_type"];
 			$destination_profile = $row["destination_profile"];
+			$destination_timeout = $row["destination_timeout"];
 			$destination_order = $row["destination_order"];
+			$destination_enabled = $row["destination_enabled"];
 			$destination_description = $row["destination_description"];
 
 			//copy the hunt group destinations
@@ -132,21 +144,27 @@ require_once "includes/paging.php";
 				$sql .= "destination_data, ";
 				$sql .= "destination_type, ";
 				$sql .= "destination_profile, ";
+				$sql .= "destination_timeout, ";
 				$sql .= "destination_order, ";
+				$sql .= "destination_enabled, ";
 				$sql .= "destination_description ";
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
 				$sql .= "'$domain_uuid', ";
-				$sql .= "'$db_hunt_group_uuid', ";
+				$sql .= "'$hunt_group_uuid_new', ";
 				$sql .= "'$hunt_group_destination_uuid', ";
 				$sql .= "'$destination_data', ";
 				$sql .= "'$destination_type', ";
 				$sql .= "'$destination_profile', ";
+				$sql .= "'$destination_timeout', ";
 				$sql .= "'$destination_order', ";
+				$sql .= "'$destination_enabled', ";
 				$sql .= "'$destination_description' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
+				//echo $sql."<br><br>";
+				//exit();
 				unset($sql);
 		}
 		unset ($prep_statement);
@@ -158,7 +176,7 @@ require_once "includes/paging.php";
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_groups.php\">\n";
 		echo "<div align='center'>\n";
-		echo "Copy Complete\n";
+		echo $text['message-copy']."\n";
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;

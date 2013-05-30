@@ -26,11 +26,22 @@
 include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
-require_once "includes/header.php";
-require_once "includes/paging.php";
 
 //check permissions
 if (permission_exists('hunt_group_call_forward')) {
+
+	require_once "includes/header.php";
+	$page["title"] = $text['title-hunt-group_call_forward'];
+
+	require_once "includes/paging.php";
+
+
+	//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
@@ -43,9 +54,8 @@ if (permission_exists('hunt_group_call_forward')) {
 		echo "	<br>";
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
-		echo "	<td align='left'><b>Hunt Group Call Forward</b><br>\n";
-		echo "		Use the links to configure hunt group call forward.\n";
-		echo "		The following hunt groups have been assigned to this user account. \n";
+		echo "	<td align='left'><b>".$text['header-hunt-group_call_forward']."</b><br>\n";
+		echo "		".$text['description-hunt_group_call_forward']."\n";
 		echo "	</td>\n";
 		echo "	</tr>\n";
 		echo "	</table>\n";
@@ -83,9 +93,9 @@ if (permission_exists('hunt_group_call_forward')) {
 	else {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
-		echo "<th>Hunt Group Extension</th>\n";
-		echo "<th>Tools</th>\n";
-		echo "<th>Description</th>\n";
+		echo "<th>".$text['label-extension']."</th>\n";
+		echo "<th>".$text['label-tools']."</th>\n";
+		echo "<th>".$text['label-description']."</th>\n";
 		echo "</tr>\n";
 	}
 
@@ -94,7 +104,7 @@ if (permission_exists('hunt_group_call_forward')) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['hunt_group_extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			echo "		<a href='".PROJECT_PATH."/app/hunt_group/hunt_group_call_forward_edit.php?id=".$row['hunt_group_uuid']."&a=call_forward' alt='Call Forward'>Call Forward</a> \n";
+			echo "		<a href='".PROJECT_PATH."/app/hunt_group/hunt_group_call_forward_edit.php?id=".$row['hunt_group_uuid']."&a=call_forward' alt='".$text['label-call_forward']."'>".$text['label-call_forward']."</a> \n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['hunt_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";

@@ -36,6 +36,12 @@ require_once "includes/checkauth.php";
 		exit;
 	}
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -70,13 +76,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($destination_data) == 0) { $msg .= "Please provide: Destination<br>\n"; }
-		if (strlen($destination_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($destination_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
-		//if (strlen($destination_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-		//if (strlen($destination_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (strlen($destination_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		if (strlen($destination_data) == 0) { $msg .= $text['message-required'].$text['label-destination']."<br>\n"; }
+		if (strlen($destination_type) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
+		//if (strlen($destination_timeout) == 0) { $msg .= $text['message-required'].$text['label-timeout']."<br>\n"; }
+		//if (strlen($destination_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+		//if (strlen($destination_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//if (strlen($destination_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -127,7 +133,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_group_edit.php?id=".$hunt_group_uuid."\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -153,7 +159,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_group_edit.php?id=".$hunt_group_uuid."\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -185,6 +191,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "add") {
+		$page["title"] = $text['title-hunt_group_destination_add'];
+	}
+	if ($action == "update") {
+		$page["title"] = $text['title-hunt_group_destination_edit'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -201,54 +213,55 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>Destination Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['header-hunt_group_destination_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>Destination Edit</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['header-hunt_group_destination_edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='hunt_group_edit.php?id=".$hunt_group_uuid."'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='hunt_group_edit.php?id=".$hunt_group_uuid."'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Destination:\n";
+	echo "    ".$text['label-destination'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='destination_data' maxlength='255' value=\"$destination_data\">\n";
 	echo "<br />\n";
-	echo "extension: 1001<br />\n";
-	echo "voicemail: 1001<br />\n";
-	echo "sip uri (voicemail): sofia/internal/*98@\${domain}<br />\n";
-	echo "sip uri (external number): sofia/gateway/gatewayname/12081231234<br />\n";
-	echo "sip uri (auto attendant): sofia/internal/5002@\${domain}<br />\n";
-	echo "sip uri (user): /user/1001@\${domain}\n";
+	echo "<b>".$text['description-destination_examples']."</b>...<br>\n";
+	echo $text['description-destination_example_extension'].": 1001<br />\n";
+	echo $text['description-destination_example_voicemail'].": 1001<br />\n";
+	echo $text['description-destination_example_sip_uri_voicemail'].": sofia/internal/*98@\${domain}<br />\n";
+	echo $text['description-destination_example_sip_uri_external_number'].": sofia/gateway/gatewayname/12081231234<br />\n";
+	echo $text['description-destination_example_sip_uri_auto_attendant'].": sofia/internal/5002@\${domain}<br />\n";
+	echo $text['description-destination_example_sip_uri_user'].": /user/1001@\${domain}\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Type:\n";
+	echo "    ".$text['label-type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "                <select name='destination_type' class='formfld'>\n";
 	echo "                <option></option>\n";
 	if ($destination_type == "extension") {
-		echo "                <option selected='yes'>extension</option>\n";
+		echo "                <option selected='yes' value='extension'>".$text['option-extension']."</option>\n";
 	}
 	else {
-		echo "                <option>extension</option>\n";
+		echo "                <option value='extension'>".$text['option-extension']."</option>\n";
 	}
 	if ($destination_type == "voicemail") {
-		echo "                <option selected='yes'>voicemail</option>\n";
+		echo "                <option selected='yes' value='voicemail'>".$text['option-voicemail']."</option>\n";
 	}
 	else {
-		echo "                <option>voicemail</option>\n";
+		echo "                <option value='voicemail'>".$text['option-voicemail']."</option>\n";
 	}
 	if ($destination_type == "sip uri") {
-		echo "                <option selected='yes'>sip uri</option>\n";
+		echo "                <option selected='yes' value='sip uri'>".$text['option-sip_uri']."</option>\n";
 	}
 	else {
-		echo "                <option>sip uri</option>\n";
+		echo "                <option value='sip uri'>".$text['option-sip_uri']."</option>\n";
 	}
 	echo "                </select>\n";
 	echo "<br />\n";
@@ -258,7 +271,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Timeout:\n";
+	echo "    ".$text['label-timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='destination_timeout' class='formfld'>\n";
@@ -273,17 +286,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "              </select>\n";
 	echo "<br />\n";
-	echo "Select the destination timeout in seconds. \n";
+	echo $text['description-destination_timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='destination_order' class='formfld'>\n";
-	//echo "              <option></option>\n";
 	if (strlen($destination_order)> 0) {
 		echo "              <option selected='yes' value='".htmlspecialchars($destination_order)."'>".htmlspecialchars($destination_order)."</option>\n";
 	}
@@ -302,28 +314,28 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "              </select>\n";
 	echo "<br />\n";
-	echo "Processing of each destination is determined by this order. \n";
+	echo $text['description-destination_order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Enabled:\n";
+	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='destination_enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($destination_enabled == "true" || strlen($destination_enabled) == 0) { 
-		echo "    <option value='true' selected >true</option>\n";
+	if ($destination_enabled == "true" || strlen($destination_enabled) == 0) {
+		echo "    <option value='true' selected >".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
-	if ($destination_enabled == "false") { 
-		echo "    <option value='false' selected >false</option>\n";
+	if ($destination_enabled == "false") {
+		echo "    <option value='false' selected >".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
@@ -333,12 +345,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Description:\n";
+	echo "    ".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='destination_description' maxlength='255' value=\"$destination_description\">\n";
 	echo "<br />\n";
-	echo "You may enter a description here for your reference (not parsed).\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -348,7 +360,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='hunt_group_destination_uuid' value='$hunt_group_destination_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

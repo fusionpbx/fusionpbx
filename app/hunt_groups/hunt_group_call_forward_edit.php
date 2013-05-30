@@ -36,6 +36,12 @@ require_once "includes/checkauth.php";
 		exit;
 	}
 
+	//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 function destination_select($select_name, $select_value, $select_default) {
 	if (strlen($select_value) == 0) { $select_value = $select_default; }
 	echo "	<select class='formfld' style='width: 40px;' name='$select_name'>\n";
@@ -56,6 +62,7 @@ function destination_select($select_name, $select_value, $select_default) {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-hunt-group_call_forward'];
 
 //get the hunt_group_uuid
 	$hunt_group_uuid = $_REQUEST["id"];
@@ -95,9 +102,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//check for all required data
-		//if (strlen($call_forward_enabled) == 0) { $msg .= "Please provide: Call Forward<br>\n"; }
-		//if (strlen($call_forward_number) == 0) { $msg .= "Please provide: Number<br>\n"; }
-		//if (strlen($hunt_group_call_prompt) == 0) { $msg .= "Please provide: call prompt<br>\n"; }
+		//if (strlen($call_forward_enabled) == 0) { $msg .= $text['message-required'].$text['label-call_forward']."<br>\n"; }
+		//if (strlen($call_forward_number) == 0) { $msg .= $text['message-required'].$text['label-number']."<br>\n"; }
+		//if (strlen($hunt_group_call_prompt) == 0) { $msg .= $text['message-required'].$text['label-call_prompt']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -343,14 +350,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/hunt_group/hunt_group_call_forward.php\">\n";
 		echo "<div align='center'>\n";
-		echo "Update Complete<br />\n";
+		echo $text['message-update']."<br />\n";
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
-//show the header
-	require_once "includes/header.php";
+
 
 //pre-populate the form
 	$sql = "select * from v_hunt_groups ";
@@ -412,49 +418,47 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap>\n";
-	echo "	<b>Hunt Group Call Forward</b>\n";
+	echo "	<b>".$text['header-hunt-group_call_forward']."</b>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='hunt_group_call_forward.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='hunt_group_call_forward.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2'>\n";
-	echo "	Directs incoming calls for extension  $hunt_group_extension.<br /><br />\n";
+	echo "	".$text['description-hunt_group_call_forward_edit']." ".$hunt_group_extension."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	<strong>Call Forward:</strong>\n";
+	echo "	<strong>".$text['label-call_forward'].":</strong>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if ($call_forward_enabled == "true") {
-		echo "	<input type='radio' name='call_forward_enabled' value='true' checked='checked'/> Enabled \n";
+		echo "	<input type='radio' name='call_forward_enabled' value='true' checked='checked'/> ".$text['option-enabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='call_forward_enabled' value='true' /> Enable \n";
+		echo "	<input type='radio' name='call_forward_enabled' value='true' /> ".$text['option-enabled']." \n";
 	}
 	if ($call_forward_enabled == "false" || $call_forward_enabled == "") {
-		echo "	<input type='radio' name='call_forward_enabled' value='false' checked='checked' /> Disabled \n";
+		echo "	<input type='radio' name='call_forward_enabled' value='false' checked='checked' /> ".$text['option-disabled']." \n";
 	}
 	else {
-		echo "	<input type='radio' name='call_forward_enabled' value='false' /> Disable \n";
+		echo "	<input type='radio' name='call_forward_enabled' value='false' /> ".$text['option-disabled']." \n";
 	}
 	echo "<br />\n";
 	echo "<br />\n";
-	//echo "Enable or disable call forward.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	Number:\n";
+	echo "	".$text['label-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_forward_number' maxlength='255' value=\"$call_forward_number\">\n";
 	echo "<br />\n";
-	//echo "Enter the call forward number.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -475,7 +479,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='id' value='$call_forward_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

@@ -37,6 +37,12 @@ require_once "includes/paging.php";
 		exit;
 	}
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -52,7 +58,6 @@ require_once "includes/paging.php";
 		$hunt_group_extension = check_str($_POST["hunt_group_extension"]);
 		$hunt_group_name = check_str($_POST["hunt_group_name"]);
 		$hunt_group_type = check_str($_POST["hunt_group_type"]);
-		//$hunt_group_context = check_str($_POST["hunt_group_context"]);
 		$hunt_group_timeout = check_str($_POST["hunt_group_timeout"]);
 		$hunt_group_timeout_destination = check_str($_POST["hunt_group_timeout_destination"]);
 		$hunt_group_timeout_type = check_str($_POST["hunt_group_timeout_type"]);
@@ -100,21 +105,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($hunt_group_extension) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-		if (strlen($hunt_group_name) == 0) { $msg .= "Please provide: Hunt Group Name<br>\n"; }
-		if (strlen($hunt_group_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($hunt_group_context) == 0) { $msg .= "Please provide: Context<br>\n"; }
-		if (strlen($hunt_group_timeout) == 0) { $msg .= "Please provide: Timeout<br>\n"; }
-		if (strlen($hunt_group_timeout_destination) == 0) { $msg .= "Please provide: Timeout Destination<br>\n"; }
-		if (strlen($hunt_group_timeout_type) == 0) { $msg .= "Please provide: Timeout Type<br>\n"; }
-		//if (strlen($hunt_group_ringback) == 0) { $msg .= "Please provide: Ring Back<br>\n"; }
-		//if (strlen($hunt_group_cid_name_prefix) == 0) { $msg .= "Please provide: CID Prefix<br>\n"; }
-		//if (strlen($hunt_group_pin) == 0) { $msg .= "Please provide: PIN<br>\n"; }
-		if (strlen($hunt_group_caller_announce) == 0) { $msg .= "Please provide: Caller Announce<br>\n"; }
-		//if (strlen($hunt_group_user_list) == 0) { $msg .= "Please provide: User List<br>\n"; }
-		//if (strlen($hunt_group_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (strlen($hunt_group_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		if (strlen($hunt_group_extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+		if (strlen($hunt_group_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		if (strlen($hunt_group_type) == 0) { $msg .= $text['message-required'].$text['label-strategy']."<br>\n"; }
+		if (strlen($hunt_group_timeout) == 0) { $msg .= $text['message-required'].$text['label-timeout']."<br>\n"; }
+		if (strlen($hunt_group_timeout_destination) == 0) { $msg .= $text['message-required'].$text['label-timeout_destination']."<br>\n"; }
+		if (strlen($hunt_group_timeout_type) == 0) { $msg .= $text['message-required'].$text['label-timeout_type']."<br>\n"; }
+		//if (strlen($hunt_group_ringback) == 0) { $msg .= $text['message-required'].$text['label-ring_back']."<br>\n"; }
+		//if (strlen($hunt_group_cid_name_prefix) == 0) { $msg .= $text['message-required'].$text['label-caller_id_name_prefix']."<br>\n"; }
+		//if (strlen($hunt_group_pin) == 0) { $msg .= $text['message-required'].$text['label-pin_number']."<br>\n"; }
+		if (strlen($hunt_group_caller_announce) == 0) { $msg .= $text['message-required'].$text['label-caller_announce']."<br>\n"; }
+		//if (strlen($hunt_group_user_list) == 0) { $msg .= $text['message-required'].$text['label-user_list']."<br>\n"; }
+		//if (strlen($hunt_group_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		//if (strlen($hunt_group_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -184,7 +188,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_groups.php\">\n";
 					echo "<div align='center'>\n";
-					echo "Add Complete\n";
+					echo $text['message-add']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -265,7 +269,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_groups.php\">\n";
 					echo "<div align='center'>\n";
-					echo "Update Complete\n";
+					echo $text['message-update']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -288,7 +292,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$hunt_group_extension = $row["hunt_group_extension"];
 			$hunt_group_name = $row["hunt_group_name"];
 			$hunt_group_type = $row["hunt_group_type"];
-			//$hunt_group_context = $row["hunt_group_context"];
 			$hunt_group_timeout = $row["hunt_group_timeout"];
 			$hunt_group_timeout_destination = $row["hunt_group_timeout_destination"];
 			$hunt_group_timeout_type = $row["hunt_group_timeout_type"];
@@ -306,6 +309,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-hunt_group'];
+
 
 //show the content
 	echo "<div align='center'>";
@@ -324,18 +329,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap>\n";
 	echo "	<span class='vexpl'>\n";
-	echo "		<strong>Hunt Group</strong><br>\n";
+	echo "		<strong>".$text['header-hunt_group']."</strong><br>\n";
 	echo "	</span>\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('Do you really want to copy this?')){window.location='hunt_group_copy.php?id=".$hunt_group_uuid."';}\" value='Copy'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='hunt_groups.php'\" value='Back'>\n";
+	if ($action != "add") {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_ext = prompt('".$text['message_extension']."'); if (new_ext != null) { window.location='hunt_group_copy.php?id=".$hunt_group_uuid."&ext=' + new_ext; }\" value='".$text['button-copy']."'>\n";
+	}
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='hunt_groups.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "		  A Hunt Group is a list of destinations that can be called in sequence or simultaneously. \n";
+	echo "		  ".$text['description-hunt_group']."\n";
 	echo "		  </span><br />\n";
 	echo "<br />\n";
 	echo "</td>\n";
@@ -347,69 +354,45 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Hunt Group Name:\n";
+	echo "	 ".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <input class='formfld' type='text' name='hunt_group_name' maxlength='255' value=\"$hunt_group_name\">\n";
 	echo "<br />\n";
-	echo "\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Extension:\n";
+	echo "	 ".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <input class='formfld' type='text' name='hunt_group_extension' maxlength='255' value=\"$hunt_group_extension\">\n";
 	echo "<br />\n";
-	echo "example: 7002\n";
+	echo $text['description-extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Type:\n";
+	echo "	 ".$text['label-strategy'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <select class='formfld' name='hunt_group_type'>\n";
 	echo "	 <option value=''></option>\n";
-	if ($hunt_group_type == "simultaneous") { 
-		echo "	 <option value='simultaneous' selected='selected'>simultaneous</option>\n";
+	if ($hunt_group_type == "simultaneous") {
+		echo "	 <option value='simultaneous' selected='selected'>".$text['option-simultaneous']."</option>\n";
 	}
 	else {
-		echo "	 <option value='simultaneous'>simultaneous</option>\n";
+		echo "	 <option value='simultaneous'>".$text['option-simultaneous']."</option>\n";
 	}
-	if ($hunt_group_type == "sequentially") { 
-		echo "	 <option value='sequentially' selected='selected'>sequentially</option>\n";
+	if ($hunt_group_type == "sequentially") {
+		echo "	 <option value='sequentially' selected='selected'>".$text['option-sequential']."</option>\n";
 	}
 	else {
-		echo "	 <option value='sequentially'>sequentially</option>\n";
+		echo "	 <option value='sequentially'>".$text['option-sequential']."</option>\n";
 	}
-	//if ($hunt_group_type == "call_forward") { 
-	//	echo "	 <option value='call_forward' selected='selected'>call_forward</option>\n";
-	//}
-	//else {
-	//	echo "	 <option value='call_forward'>call_forward</option>\n";
-	//}
-	//if ($hunt_group_type == "dnd") { 
-	//	echo "	 <option value='dnd' selected='selected'>dnd</option>\n";
-	//}
-	//else {
-	//	echo "	 <option value='dnd'>dnd</option>\n";
-	//}
-	//if ($hunt_group_type == "follow_me_sequence") { 
-	//	echo "	 <option value='follow_me_sequence' selected='selected'>follow_me_sequence</option>\n";
-	//}
-	//else {
-	//	echo "	 <option value='follow_me_sequence'>follow_me_sequence</option>\n";
-	//}
-	//if ($hunt_group_type == "follow_me_simultaneous") { 
-	//	echo "	 <option value='follow_me_simultaneous' selected='selected'>follow_me_simultaneous</option>\n";
-	//}
-	//else {
-	//	echo "	 <option value='follow_me_simultaneous'>follow_me_simultaneous</option>\n";
-	//}
 	echo "	 </select>\n";
 	echo "<br />\n";
 	echo "\n";
@@ -418,65 +401,65 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Timeout:\n";
+	echo "	 ".$text['label-timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <input class='formfld' type='text' name='hunt_group_timeout' maxlength='255' value=\"$hunt_group_timeout\">\n";
 	echo "<br />\n";
-	echo "The timeout sets the time in seconds to continue to call before timing out. \n";
+	echo $text['description-timeout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Timeout Destination:\n";
+	echo "	 ".$text['label-timeout_destination'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <input class='formfld' type='text' name='hunt_group_timeout_destination' maxlength='255' value=\"$hunt_group_timeout_destination\">\n";
 	echo "<br />\n";
-	echo "Destination. example: 1001\n";
+	echo $text['description-timeout_destination']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Timeout Type:\n";
+	echo "	 ".$text['label-timeout_type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <select class='formfld' name='hunt_group_timeout_type'>\n";
 	echo "	 <option value=''></option>\n";
-	if ($hunt_group_timeout_type == "extension") { 
-		echo "	 <option value='extension' SELECTED >extension</option>\n";
+	if ($hunt_group_timeout_type == "extension") {
+		echo "	 <option value='extension' SELECTED >".$text['option-extension']."</option>\n";
 	}
 	else {
-		echo "	 <option value='extension'>extension</option>\n";
+		echo "	 <option value='extension'>".$text['option-extension']."</option>\n";
 	}
-	if ($hunt_group_timeout_type == "voicemail") { 
-		echo "	 <option value='voicemail' SELECTED >voicemail</option>\n";
-	}
-	else {
-		echo "	 <option value='voicemail'>voicemail</option>\n";
-	}
-	if ($hunt_group_timeout_type == "sip uri") { 
-		echo "	 <option value='sip uri' SELECTED >sip uri</option>\n";
+	if ($hunt_group_timeout_type == "voicemail") {
+		echo "	 <option value='voicemail' SELECTED >".$text['option-voicemail']."</option>\n";
 	}
 	else {
-		echo "	 <option value='sip uri'>sip uri</option>\n";
+		echo "	 <option value='voicemail'>".$text['option-voicemail']."</option>\n";
+	}
+	if ($hunt_group_timeout_type == "sip uri") {
+		echo "	 <option value='sip uri' SELECTED >".$text['option-sip_uri']."</option>\n";
+	}
+	else {
+		echo "	 <option value='sip uri'>".$text['option-sip_uri']."</option>\n";
 	}
 	echo "	 </select>\n";
 	echo "<br />\n";
-	echo "\n";
+	echo $text['description-timeout_type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Ring Back:\n";
+	echo "	 ".$text['label-ring_back'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
 	$select_options = "";
-	if ($hunt_group_ringback == "\${us-ring}" || $hunt_group_ringback == "us-ring") { 
+	if ($hunt_group_ringback == "\${us-ring}" || $hunt_group_ringback == "us-ring") {
 		$select_options .= "		<option value='\${us-ring}' selected='selected'>us-ring</option>\n";
 	}
 	else {
@@ -488,13 +471,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		$select_options .= "		<option value='\${fr-ring}'>fr-ring</option>\n";
 	}
-	if ($hunt_group_ringback == "\${uk-ring}" || $hunt_group_ringback == "uk-ring") { 
+	if ($hunt_group_ringback == "\${uk-ring}" || $hunt_group_ringback == "uk-ring") {
 		$select_options .= "		<option value='\${uk-ring}' selected='selected'>uk-ring</option>\n";
 	}
 	else {
 		$select_options .= "		<option value='\${uk-ring}'>uk-ring</option>\n";
 	}
-	if ($hunt_group_ringback == "\${rs-ring}" || $hunt_group_ringback == "rs-ring") { 
+	if ($hunt_group_ringback == "\${rs-ring}" || $hunt_group_ringback == "rs-ring") {
 		$select_options .= "		<option value='\${rs-ring}' selected='selected'>rs-ring</option>\n";
 	}
 	else {
@@ -508,29 +491,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $moh->select();
 
 	echo "<br />\n";
-	echo "Defines what the caller will hear while the destination is being called. The choices are music (music on hold) ring (ring tone.) default: music \n";
+	echo $text['description-ring_back']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	 CID Prefix:\n";
+	echo "	 ".$text['label-caller_id_name_prefix'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <input class='formfld' type='text' name='hunt_group_cid_name_prefix' maxlength='255' value=\"$hunt_group_cid_name_prefix\">\n";
 	echo "<br />\n";
-	echo "Set a prefix on the caller ID name.\n";
+	echo $text['description-caller_id_name_prefix']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	 PIN:\n";
+	echo "	 ".$text['label-pin_number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <input class='formfld' type='text' name='hunt_group_pin' maxlength='255' value=\"$hunt_group_pin\">\n";
 	echo "<br />\n";
-	echo "If this is provided then the caller will be required to enter the PIN number.\n";
+	echo $text['description-pin_number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -540,22 +523,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (switch_module_is_running($fp, 'mod_spidermonkey')) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	 Caller Announce:\n";
+		echo "	 ".$text['label-caller_announce'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	 <select class='formfld' name='hunt_group_caller_announce'>\n";
 		echo "	 <option value=''></option>\n";
-		if ($hunt_group_caller_announce == "true") { 
-			echo "	 <option value='true' selected='selected'>true</option>\n";
+		if ($hunt_group_caller_announce == "true") {
+			echo "	 <option value='true' selected='selected'>".$text['option-true']."</option>\n";
 		}
 		else {
-			echo "	 <option value='true'>true</option>\n";
+			echo "	 <option value='true'>".$text['option-true']."</option>\n";
 		}
-		if ($hunt_group_caller_announce == "false") { 
-			echo "	 <option value='false' selected='selected'>false</option>\n";
+		if ($hunt_group_caller_announce == "false") {
+			echo "	 <option value='false' selected='selected'>".$text['option-false']."</option>\n";
 		}
 		else {
-			echo "	 <option value='false'>false</option>\n";
+			echo "	 <option value='false'>".$text['option-false']."</option>\n";
 		}
 		echo "	 </select>\n";
 		echo "<br />\n";
@@ -567,14 +550,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (if_group("admin") || if_group("superadmin")) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		User List:\n";
+		echo "		".$text['label-user_list'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		$onchange = "document.getElementById('hunt_group_user_list').value += document.getElementById('username').value + '\\n';";
 		$table_name = 'v_users'; $field_name = 'username'; $field_current_value = ''; $sql_where_optional = "where domain_uuid = '$domain_uuid' and user_enabled = 'true' ";
 		echo html_select_on_change($db, $table_name, $field_name, $sql_where_optional, $field_current_value, $onchange);
 		echo "<br />\n";
-		echo "Use the select list to add users to the user list. This will assign users to this extension.\n";
+		echo $text['description-user_list_select']."\n";
 		echo "<br />\n";
 		echo "<br />\n";
 		//replace the vertical bar with a line feed to display in the textarea
@@ -586,7 +569,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "		<textarea name=\"hunt_group_user_list\" id=\"hunt_group_user_list\" class=\"formfld\" cols=\"30\" rows=\"3\" wrap=\"off\">$hunt_group_user_list</textarea>\n";
 		echo "		<br>\n";
-		echo "Assign the users that are can manage this hunt group extension.\n";
+		echo $text['description-user_list_textarea']."\n";
 		echo "<br />\n";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -594,37 +577,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	 Enabled:\n";
+	echo "	 ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <select class='formfld' name='hunt_group_enabled'>\n";
 	echo "	 <option value=''></option>\n";
-	if ($hunt_group_enabled == "true" || strlen($hunt_group_enabled) == 0) { 
-		echo "	 <option value='true' selected >true</option>\n";
+	if ($hunt_group_enabled == "true" || strlen($hunt_group_enabled) == 0) {
+		echo "	 <option value='true' selected >".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "	 <option value='true'>true</option>\n";
+		echo "	 <option value='true'>".$text['option-true']."</option>\n";
 	}
-	if ($hunt_group_enabled == "false") { 
-		echo "	 <option value='false' selected >false</option>\n";
+	if ($hunt_group_enabled == "false") {
+		echo "	 <option value='false' selected >".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "	 <option value='false'>false</option>\n";
+		echo "	 <option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "	 </select>\n";
 	echo "<br />\n";
-	echo "\n";
+	echo $text['description-enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	 Description:\n";
+	echo "	 ".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	 <input class='formfld' type='text' name='hunt_group_description' maxlength='255' value=\"$hunt_group_description\">\n";
 	echo "<br />\n";
-	echo "You may enter a description here for your reference (not parsed). \n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -633,7 +616,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 		echo "				<input type='hidden' name='hunt_group_uuid' value='$hunt_group_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
@@ -657,10 +640,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 		echo "	<tr>\n";
 		echo "	<td align='left'><p><span class='vexpl'>\n";
-		echo "		<span class='red'><strong>\n";
-		echo "			Destinations<br />\n";
-		echo "		</strong></span>\n";
-		echo "			The following destinations will be called.\n";
+		echo "		<span class='red'><strong>".$text['header-hunt_group_destinations']."</strong></span><br>\n";
+		echo "			".$text['description-hunt_group_destinations']."\n";
 		echo "		</span></p></td>\n";
 		echo "	</tr>\n";
 		echo "</table>\n";
@@ -685,14 +666,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		echo "<tr>\n";
-		echo "<th align='center'>Destination</th>\n";
-		echo "<th align='center'>Type</th>\n";
-		echo "<th align='center'>Profile</th>\n";
-		echo "<th align='center'>Order</th>\n";
-		echo "<th align='center'>Description</th>\n";
+		echo "<th align='center'>".$text['label-destination']."</th>\n";
+		echo "<th align='center'>".$text['label-type']."</th>\n";
+		echo "<th align='center'>".$text['label-profile']."</th>\n";
+		echo "<th align='center'>".$text['label-order']."</th>\n";
+		echo "<th align='center'>".$text['label-description']."</th>\n";
 		echo "<td align='right' width='42'>\n";
 		if (permission_exists('hunt_group_add')) {
-			echo "	<a href='hunt_group_destination_edit.php?id2=".$hunt_group_uuid."' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='hunt_group_destination_edit.php?id2=".$hunt_group_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -701,16 +682,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			foreach($result as $row) {
 				echo "<tr >\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['destination_data']."</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['destination_type']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;";
+				switch($row['destination_type']) {
+					case "extension" : echo $text['option-extension']; break;
+					case "voicemail" : echo $text['option-voicemail']; break;
+					case "sip uri" : echo $text['option-sip_uri']; break;
+				}
+				echo "</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['destination_profile']."</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['destination_order']."</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['destination_description']."&nbsp;</td>\n";
 				echo "	<td valign='top' align='right'>\n";
 				if (permission_exists('hunt_group_edit')) {
-					echo "		<a href='hunt_group_destination_edit.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "		<a href='hunt_group_destination_edit.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('hunt_group_delete')) {
-					echo "		<a href='hunt_group_destination_delete.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					echo "		<a href='hunt_group_destination_delete.php?id=".$row['hunt_group_destination_uuid']."&id2=".$hunt_group_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -727,7 +714,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 		echo "		<td width='33.3%' align='right'>\n";
 		if (permission_exists('hunt_group_add')) {
-			echo "			<a href='hunt_group_destination_edit.php?id2=".$hunt_group_uuid."' alt='add'>$v_link_label_add</a>\n";
+			echo "			<a href='hunt_group_destination_edit.php?id2=".$hunt_group_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";

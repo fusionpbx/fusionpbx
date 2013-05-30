@@ -28,12 +28,18 @@ require_once "includes/require.php";
 require_once "includes/checkauth.php";
 
 //check permissions
-	if (permission_exists('hunt_group_delete')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		exit;
+if (permission_exists('hunt_group_delete')) {
+	//access granted
+}
+else {
+	echo "access denied";
+	exit;
+}
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 if (count($_GET)>0) {
@@ -104,7 +110,7 @@ if (strlen($id)>0) {
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_groups.php\">\n";
 	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
+	echo $text['message-delete']."\n";
 	echo "</div>\n";
 	require_once "includes/footer.php";
 	return;
