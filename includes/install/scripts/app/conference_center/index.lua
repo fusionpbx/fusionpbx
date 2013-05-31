@@ -29,6 +29,9 @@
 	max_tries = 3;
 	digit_timeout = 5000;
 
+--debug
+	debug["sql"] = true;
+
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
@@ -355,7 +358,7 @@
 			--context = session:getVariable("context");
 			chan_name = session:getVariable("chan_name");
 
-		--get the pin number
+		--define the function get_pin_number
 			function get_pin_number(domain_uuid)
 				--if the pin number is provided then require it
 					if (not pin_number) then 
@@ -421,7 +424,8 @@
 					profile = string.lower(row["profile"]);
 					max_members = row["max_members"];
 					wait_mod = row["wait_mod"];
-					member_type = row["member_type"];
+					moderator_pin = row["moderator_pin"];
+					participant_pin = row["participant_pin"];
 					announce = row["announce"];
 					mute = row["mute"];
 					sounds = row["sounds"];
@@ -432,6 +436,14 @@
 					return pin_number;
 				end);
 				freeswitch.consoleLog("INFO","conference_room_uuid: " .. conference_room_uuid .. "\n");
+			end
+
+		--set the member type
+			if (pin_number == moderator_pin) then
+				member_type = "moderator";
+			end
+			if (pin_number == participant_pin) then
+				member_type = "participant";
 			end
 
 		--close the database connection
