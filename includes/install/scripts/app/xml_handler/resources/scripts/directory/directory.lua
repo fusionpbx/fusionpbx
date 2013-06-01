@@ -54,7 +54,7 @@
 			XML_STRING = table.concat(xml, "\n");
 		end
 	elseif (action == "message-count") then
-		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/message-count");
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/message-count.lua");
 	elseif (action == "group_call") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/group_call.lua");
 	else 
