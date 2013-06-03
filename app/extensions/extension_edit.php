@@ -91,6 +91,9 @@ else {
 			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
+
+		//remove spaces
+			$vm_mailto = str_replace(" ", "", $vm_mailto);
 	}
 
 //delete the user from the v_extension_users
@@ -620,7 +623,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$number_alias = $row["number_alias"];
 			$password = $row["password"];
 			$vm_password = $row["vm_password"];
-			$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
 			$accountcode = $row["accountcode"];
 			$effective_caller_id_name = $row["effective_caller_id_name"];
 			$effective_caller_id_number = $row["effective_caller_id_number"];
@@ -655,6 +657,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset ($prep_statement);
 	}
+
+//clean the variables
+	$vm_password = str_replace("#", "", $vm_password);
+	$vm_mailto = str_replace(" ", "", $vm_mailto);
 
 //set the defaults
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }

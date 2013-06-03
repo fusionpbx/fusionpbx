@@ -53,17 +53,20 @@ else {
 	$referer_path = check_str($_REQUEST["referer_path"]);
 	$referer_query = check_str($_REQUEST["referer_query"]);
 	if (count($_POST)>0) {
-		$voicemail_id = check_str($_POST["voicemail_id"]);
-		$voicemail_password = check_str($_POST["voicemail_password"]);
-		$greeting_id = check_str($_POST["greeting_id"]);
-		$voicemail_mail_to = check_str($_POST["voicemail_mail_to"]);
-		$voicemail_attach_file = check_str($_POST["voicemail_attach_file"]);
-		$voicemail_local_after_email = check_str($_POST["voicemail_local_after_email"]);
-		$voicemail_enabled = check_str($_POST["voicemail_enabled"]);
-		$voicemail_description = check_str($_POST["voicemail_description"]);
+		//set the variables from the HTTP values
+			$voicemail_id = check_str($_POST["voicemail_id"]);
+			$voicemail_password = check_str($_POST["voicemail_password"]);
+			$greeting_id = check_str($_POST["greeting_id"]);
+			$voicemail_mail_to = check_str($_POST["voicemail_mail_to"]);
+			$voicemail_attach_file = check_str($_POST["voicemail_attach_file"]);
+			$voicemail_local_after_email = check_str($_POST["voicemail_local_after_email"]);
+			$voicemail_enabled = check_str($_POST["voicemail_enabled"]);
+			$voicemail_description = check_str($_POST["voicemail_description"]);
+		//remove the space
+			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -197,6 +200,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset ($prep_statement);
 	}
+
+//remove the spaces
+	$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 
 //set defaults
 	if (strlen($voicemail_attach_file) == 0) { $voicemail_attach_file = "true"; }
