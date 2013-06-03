@@ -234,6 +234,24 @@ else {
 		$fax_name = str_replace(".tif", "", $fax_name);
 		$fax_name = str_replace(".tiff", "", $fax_name);
 		$fax_name = str_replace(".pdf", "", $fax_name);
+		//lua doesn't seem to like special chars with env:GetHeader
+		$fax_name = str_replace(";", "_", $fax_name);
+		$fax_name = str_replace(",", "_", $fax_name);
+		$fax_name = str_replace("'", "_", $fax_name);
+		$fax_name = str_replace("!", "_", $fax_name);
+		$fax_name = str_replace("@", "_", $fax_name);
+		$fax_name = str_replace("#", "_", $fax_name);
+		$fax_name = str_replace("$", "_", $fax_name);
+		$fax_name = str_replace("%", "_", $fax_name);
+		$fax_name = str_replace("^", "_", $fax_name);
+		$fax_name = str_replace("`", "_", $fax_name);
+		$fax_name = str_replace("~", "_", $fax_name);
+		$fax_name = str_replace("&", "_", $fax_name);
+		$fax_name = str_replace("(", "_", $fax_name);
+		$fax_name = str_replace(")", "_", $fax_name);
+		$fax_name = str_replace("+", "_", $fax_name);
+		$fax_name = str_replace("=", "_", $fax_name);
+
 		$provider_type = check_str($_POST['provider_type']);
 		$fax_uuid = check_str($_POST["id"]);
 
