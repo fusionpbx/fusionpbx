@@ -112,7 +112,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	//source should see the destination caller id
 		if (strlen($src) < 7) {
-			$source = "{".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}sofia/internal/$src%".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			$source = "{".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound,domain_uuid=".$domain_uuid.",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/$src@".$_SESSION['domains'][$domain_uuid]['domain_name'];
 		}
 		else {
 			$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $src);
@@ -122,7 +122,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	//destination needs to see the source caller id
 		if (strlen($dest) < 7) {
 			if (strpbrk($dest, '@') != FALSE) {
-				echo "Found an @ 2<br><br>";
+				//echo "Found an @ 2<br><br>";
 				$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,call_direction=outbound}sofia/external/$dest)";
 				echo "$switch_cmd";
 			}
@@ -134,9 +134,8 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			if (strlen($src) < 7) {
 				if (strlen($dest_cid_number) == 0) {
 					//get the caller id from the extension caller id comes from the extension (the source number)
-						$sql = "";
-						$sql .= "select * from v_extensions ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
+						$sql = "select * from v_extensions ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 						$sql .= "and extension = '$src' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
