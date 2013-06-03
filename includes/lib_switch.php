@@ -3546,7 +3546,7 @@ if (!function_exists('switch_conf_xml')) {
 		//prepare the php variables
 			if (stristr(PHP_OS, 'WIN')) {
 				$bindir = getenv(PHPRC);
-				$v_mailer_app ='"'. $bindir."\php". '" -f  '.$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."\secure\\v_mailto.php -- ";
+				$v_mailer_app ='""'. $bindir."/php". '" -f  '.$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure/v_mailto.php -- "';
 				$v_mailer_app = sprintf("'%s'", $v_mailer_app);
 				$v_mailer_app_args = "";
 			}
