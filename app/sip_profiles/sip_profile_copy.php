@@ -27,9 +27,9 @@ include "root.php";
 require_once "includes/require.php";
 require_once "includes/checkauth.php";
 require_once "includes/paging.php";
-if (permission_exists('dialplan_add') 
-	|| permission_exists('inbound_route_add') 
-	|| permission_exists('outbound_route_add') 
+if (permission_exists('dialplan_add')
+	|| permission_exists('inbound_route_add')
+	|| permission_exists('outbound_route_add')
 	|| permission_exists('time_conditions_add')) {
 	//access granted
 }
@@ -38,12 +38,18 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set the http get/post variable(s) to a php variable
 	if (isset($_REQUEST["id"])) {
 		$sip_profile_uuid = check_str($_REQUEST["id"]);
 	}
 
-//get the sip profile data 
+//get the sip profile data
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$sql = "select * from v_sip_profiles ";
 		$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
@@ -120,7 +126,7 @@ else {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/sip_profiles/sip_profiles.php\">\n";
 		echo "<div align='center'>\n";
-		echo "Copy Complete\n";
+		echo $text['message-copy']."\n";
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
