@@ -34,11 +34,10 @@
 					$db = $this->db;
 				//remove the menu languages
 					$sql  = "delete from v_menu_languages where menu_item_uuid ";
-					$sql .= "in (select i.menu_item_uuid from v_menu_languages l, v_menu_items i ";
-					$sql .= "where l.menu_uuid = i.menu_uuid ";
-					$sql .= "and (i.menu_item_protected <> 'true' ";
-					$sql .= "or i.menu_item_protected is null) ";
-					$sql .= "group by i.menu_item_uuid)";
+					$sql .= "in (select distinct(menu_item_uuid) from v_menu_items ";
+					$sql .= "where (menu_item_protected <> 'true' ";
+					$sql .= "or menu_item_protected is null) ";
+					$sql .= ")";
 					$db->exec(check_sql($sql));
 				//remove the old menu
 					$sql  = "delete from v_menu_items ";
