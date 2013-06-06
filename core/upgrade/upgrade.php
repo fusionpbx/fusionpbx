@@ -33,6 +33,12 @@
 		require_once "includes/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$display_type = 'text'; //html, text
+
+		//add multi-lingual support
+			require_once "app_languages.php";
+			foreach($text as $key => $value) {
+				$text[$key] = $value[$_SESSION['domain']['language']['code']];
+			}
 	}
 	else {
 		include "root.php";
@@ -45,6 +51,13 @@
 			echo "access denied";
 			exit;
 		}
+
+		//add multi-lingual support
+			require_once "app_languages.php";
+			foreach($text as $key => $value) {
+				$text[$key] = $value[$_SESSION['domain']['language']['code']];
+			}
+
 	}
 
 //set the default
@@ -59,10 +72,10 @@
 
 if ($display_type == 'text') {
 	echo "\n";
-	echo "Upgrade\n";
+	echo $text['label-upgrade']."\n";
 	echo "-----------------------------------------\n";
 	echo "\n";
-	echo "Database\n";
+	echo $text['label-database']."\n";
 }
 
 //upgrade the database schema
@@ -73,10 +86,10 @@ if ($display_type == 'text') {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
-		echo "<th align='left'>Message</th>\n";
+		echo "<th align='left'>".$text['header-message']."</th>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "<td class='row_style1'><strong>Upgrade Completed</strong></td>\n";
+		echo "<td class='row_style1'><strong>".$text['message-upgrade']."</strong></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";

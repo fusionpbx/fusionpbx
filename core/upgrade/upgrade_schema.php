@@ -33,6 +33,12 @@
 		require_once "includes/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$display_type = 'text'; //html, text
+
+		//add multi-lingual support
+			require_once "app_languages.php";
+			foreach($text as $key => $value) {
+				$text[$key] = $value[$_SESSION['domain']['language']['code']];
+			}
 	}
 	else {
 		include "root.php";
@@ -45,7 +51,16 @@
 			echo "access denied";
 			exit;
 		}
+
+		//add multi-lingual support
+			require_once "app_languages.php";
+			foreach($text as $key => $value) {
+				$text[$key] = $value[$_SESSION['domain']['language']['code']];
+			}
+
 		require_once "includes/header.php";
+		$page["title"] = $text['title-upgrade_schema'];
+
 		$display_type = 'html'; //html, text
 	}
 
