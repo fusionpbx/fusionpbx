@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -63,10 +69,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($sip_profile_setting_name) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		//if (strlen($sip_profile_setting_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
-		//if (strlen($sip_profile_setting_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (strlen($sip_profile_setting_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		//if (strlen($sip_profile_setting_name) == 0) { $msg .= $text['message-required'].$text['label-setting_name']."<br>\n"; }
+		//if (strlen($sip_profile_setting_value) == 0) { $msg .= $text['message-required'].$text['label-setting_value']."<br>\n"; }
+		//if (strlen($sip_profile_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-setting_enabled']."<br>\n"; }
+		//if (strlen($sip_profile_setting_description) == 0) { $msg .= $text['message-required'].$text['label-setting_description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -115,7 +121,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=sip_profiles_edit.php?id=$sip_profile_uuid\">\n";
 					echo "<div align='center'>\n";
-					echo "Add Complete\n";
+					echo $text['message-add']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
@@ -143,12 +149,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					require_once "includes/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=sip_profiles_edit.php?id=$sip_profile_uuid\">\n";
 					echo "<div align='center'>\n";
-					echo "Update Complete\n";
+					echo $text['message-update']."\n";
 					echo "</div>\n";
 					require_once "includes/footer.php";
 					return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -171,6 +177,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-setting'];
 
 //show the content
 	echo "<div align='center'>";
@@ -183,8 +190,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Setting</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='sip_profiles_edit.php?id=$sip_profile_uuid'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-setting']."</b></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='sip_profiles_edit.php?id=$sip_profile_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2'>\n";
@@ -194,59 +201,59 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-setting_name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='sip_profile_setting_name' maxlength='255' value=\"$sip_profile_setting_name\">\n";
 	echo "<br />\n";
-	echo "Enter the name.\n";
+	echo $text['description-setting_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Value:\n";
+	echo "	".$text['label-setting_value'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='sip_profile_setting_value' maxlength='255' value=\"$sip_profile_setting_value\">\n";
 	echo "<br />\n";
-	echo "Enter the value.\n";
+	echo $text['description-setting_value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Enabled:\n";
+	echo "	".$text['label-setting_enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='sip_profile_setting_enabled'>\n";
 	echo "    <option value=''></option>\n";
-	if ($sip_profile_setting_enabled == "true" || strlen($sip_profile_setting_enabled) == 0) { 
-		echo "    <option value='true' selected >true</option>\n";
+	if ($sip_profile_setting_enabled == "true" || strlen($sip_profile_setting_enabled) == 0) {
+		echo "    <option value='true' selected >".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
-	if ($sip_profile_setting_enabled == "false") { 
-		echo "    <option value='false' selected >false</option>\n";
+	if ($sip_profile_setting_enabled == "false") {
+		echo "    <option value='false' selected >".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Choose to enable or disable this.\n";
+	echo $text['description-setting_enabled']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-setting_description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='sip_profile_setting_description' maxlength='255' value=\"$sip_profile_setting_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-setting_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -255,7 +262,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='sip_profile_setting_uuid' value='$sip_profile_setting_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
