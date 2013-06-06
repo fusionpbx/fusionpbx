@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-hot_desking'];
+
 require_once "includes/paging.php";
 
 //get the http values and set them as variables
@@ -52,14 +61,14 @@ require_once "includes/paging.php";
 	//show the content header
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "  <tr>\n";
-		echo "	<td align='left'><b>Hot Desking</b><br>\n";
-		echo "		Login into hot desking with an ID and your voicemail password to direct your calls to a remote extension. Then make and receive calls as if you were at your extension.\n";
+		echo "	<td align='left'><b>".$text['header-hot_desking']."</b><br>\n";
+		echo "		".$text['description-hot_desking']."\n";
 		echo "	</td>\n";
 		echo "  </tr>\n";
 		echo "</table>\n";
 		echo "<br />";
 
-	//get the number of rows in v_extensions 
+	//get the number of rows in v_extensions
 		$sql = "select count(*) as num_rows from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and unique_id is not null ";
@@ -81,8 +90,8 @@ require_once "includes/paging.php";
 		$param = "";
 		if (!isset($_GET['page'])) { $_GET['page'] = 0; }
 		$_GET['page'] = check_str($_GET['page']);
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $_GET['page']; 
+		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $_GET['page'];
 
 	//get the extension list
 		$sql = "select * from v_extensions ";
@@ -108,15 +117,13 @@ require_once "includes/paging.php";
 		echo "<div align='center'>\n";
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
-		echo th_order_by('extension', 'Extension', $order_by, $order);
-		echo th_order_by('unique_id', 'Unique ID', $order_by, $order);
-		echo th_order_by('dial_user', 'Forward To', $order_by, $order);
-		//echo th_order_by('dial_domain', 'Domain', $order_by, $order);
-		//echo th_order_by('call_group', 'Domain', $order_by, $order);
-		echo th_order_by('description', 'Description', $order_by, $order);
+		echo th_order_by('extension', $text['label-extension'], $order_by, $order);
+		echo th_order_by('unique_id', $text['label-unique_id'], $order_by, $order);
+		echo th_order_by('dial_user', $text['label-forward_to'], $order_by, $order);
+		echo th_order_by('description', $text['label-description'], $order_by, $order);
 		echo "<td align='right' width='42'>\n";
 		if (permission_exists('extension_add')) {
-			echo "	<a href='extension_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "	<a href='extension_edit.php' alt='".$text['message-add']."'>$v_link_label_add</a>\n";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -132,15 +139,13 @@ require_once "includes/paging.php";
 				else {
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
 				}
-				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['dial_domain']."&nbsp;</td>\n";
-				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_uuid']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
 				echo "	<td valign='top' align='right'>\n";
 				if (permission_exists('extension_edit')) {
-					echo "		<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "		<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('extension_delete')) {
-					echo "		<a href='extension_delete.php?id=".$row['extension_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					echo "		<a href='extension_delete.php?id=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -157,7 +162,7 @@ require_once "includes/paging.php";
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 		echo "		<td width='33.3%' align='right'>\n";
 		if (permission_exists('extension_add')) {
-			echo "			<a href='extension_edit.php' alt='add'>$v_link_label_add</a>\n";
+			echo "			<a href='extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";

@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);
 }
@@ -78,10 +84,10 @@ if (count($_GET)>0) {
 	echo "<div align='center'>\n";
 	echo "	<table width='40%'>\n";
 	echo "		<tr>\n";
-	echo "			<th align='left'>Message</th>\n";
+	echo "			<th align='left'>".$text['header-message']."</th>\n";
 	echo "		</tr>\n";
 	echo "		<tr>\n";
-	echo "			<td class='row_style1'><strong>Delete Complete</strong></td>\n";
+	echo "			<td class='row_style1'><strong>".$text['message-delete']."</strong></td>\n";
 	echo "		</tr>\n";
 	echo "	</table>\n";
 	echo "	<br />\n";
