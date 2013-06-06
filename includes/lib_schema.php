@@ -269,6 +269,7 @@ function db_insert_into ($apps, $db_type, $table) {
 }
 
 function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
+	global $text; // pulls in language variable array
 	global $display_type;
 
 	//PHP PDO check if table or column exists
@@ -514,7 +515,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 	//display results as html
 		if ($display_results && $display_type == "html") {
 			//show the database type
-				echo "<strong>Database Type: ".$db_type. "</strong><br /><br />";
+				echo "<strong>".$text['header-database_type'].": ".$db_type. "</strong><br /><br />";
 			//start the table
 				echo "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
 			//show the changes
@@ -522,7 +523,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 					echo "<tr>\n";
 					echo "<td class='row_style1' colspan='3'>\n";
 					echo "<br />\n";
-					echo "<strong>SQL Changes:</strong><br />\n";
+					echo "<strong>".$text['label-sql_changes'].":</strong><br />\n";
 					echo "<pre>\n";
 					echo $sql_update;
 					echo "</pre>\n";
@@ -532,9 +533,9 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 				}
 			//list all tables
 				echo "<tr>\n";
-				echo "<th>Table</th>\n";
-				echo "<th>Exists</th>\n";
-				echo "<th>Details</th>\n";
+				echo "<th>".$text['label-table']."</th>\n";
+				echo "<th>".$text['label-exists']."</th>\n";
+				echo "<th>".$text['label-details']."</th>\n";
 				echo "<tr>\n";
 			//build the html while looping through the app db array
 				$sql = '';
@@ -550,17 +551,17 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 
 						//check if the table exists
 							if ($row['exists'] == "true") {
-								echo "<td valign='top' class='row_style1'><strong>table</strong><br />$table_name</td>\n";
-								echo "<td valign='top' class='vncell' style=''>true</td>\n";
+								echo "<td valign='top' class='row_style1'>".$table_name."</td>\n";
+								echo "<td valign='top' class='vncell' style='padding-top: 3px;'>".$text['option-true']."</td>\n";
 
 								if (count($row['fields']) > 0) {
 									echo "<td class='row_style1'>\n";
 									//show the list of columns
 										echo "<table border='0' cellpadding='10' cellspacing='0'>\n";
 										echo "<tr>\n";
-										echo "<th>name</th>\n";
-										echo "<th>type</th>\n";
-										echo "<th>exists</th>\n";
+										echo "<th>".$text['label-name']."</th>\n";
+										echo "<th>".$text['label-type']."</th>\n";
+										echo "<th>".$text['label-exists']."</th>\n";
 										echo "</tr>\n";
 										foreach ($row['fields'] as $field) {
 											if ($field['deprecated'] == "true") {
@@ -583,11 +584,11 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 												echo "<td class='row_style1' width='200'>".$field_name."</td>\n";
 												echo "<td class='row_style1'>".$field_type."</td>\n";
 												if ($field['exists'] == "true") {
-													echo "<td class='row_style0' style=''>true</td>\n";
+													echo "<td class='row_style0' style=''>".$text['option-true']."</td>\n";
 													echo "<td>&nbsp;</td>\n";
 												}
 												else {
-													echo "<td class='row_style1' style='background-color:#444444;color:#CCCCCC;'>false</td>\n";
+													echo "<td class='row_style1' style='background-color:#444444;color:#CCCCCC;'>".$text['option-false']."</td>\n";
 													echo "<td>&nbsp;</td>\n";
 												}
 												echo "</tr>\n";
@@ -599,8 +600,8 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 								}
 							}
 							else {
-								echo "<td valign='top' class='row_style1'><strong>table</strong><br />$table_name</td>\n";
-								echo "<td valign='top' class='row_style1' style='background-color:#444444;color:#CCCCCC;'><strong>exists</strong><br />false</td>\n";
+								echo "<td valign='top' class='row_style1'>$table_name</td>\n";
+								echo "<td valign='top' class='row_style1' style='background-color:#444444;color:#CCCCCC;'><strong>".$text['label-exists']."</strong><br />".$text['option-false']."</td>\n";
 								echo "<td valign='top' class='row_style1'>&nbsp;</td>\n";
 							}
 							echo "</tr>\n";
@@ -615,11 +616,11 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 		//loop line by line through all the lines of sql code
 			$x = 0;
 			if (strlen($sql_update) == 0 && $display_type == "text") {
-				echo "	Schema:			no change\n";
+				echo "	".$text['label-schema'].":			".$text['label-no_change']."\n";
 			}
 			else {
 				if ($display_type == "text") {
-					echo "	Schema:\n";
+					echo "	".$text['label-schema'].":\n";
 				}
 				//$db->beginTransaction();
 				$update_array = explode(";", $sql_update);
