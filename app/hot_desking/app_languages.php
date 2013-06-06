@@ -7,7 +7,7 @@
 		$text['header-hot_desking']['en-us'] = 'Hot Desking';
 		$text['header-message']['en-us'] = 'Message';
 
-		$text['description-hot_desking']['en-us'] = 'Login into hot desking with an ID and your voicemail password to direct your calls to a remote extension. Then make and receive calls as if you were at your extension. ';
+		$text['description-hot_desking']['en-us'] = 'Log in to hot desking with a unique ID and your voicemail password to direct your calls to a remote extension. Then, make and receive calls as if you were at your extension.';
 
 		$text['label-extension']['en-us'] = 'Extension';
 		$text['label-unique_id']['en-us'] = 'Unique ID';
