@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //pdo database connection
 	if (strlen($_REQUEST['id']) > 0) {
 		require_once "sql_query_pdo.php";
@@ -69,12 +75,12 @@ else {
 			$sql = "select * from $table_name";
 			if (strlen($sql) > 0) {
 				$prep_statement_2 = $db->prepare(check_sql($sql));
-				if ($prep_statement_2) { 
+				if ($prep_statement_2) {
 					$prep_statement_2->execute();
 					$result2 = $prep_statement_2->fetchAll(PDO::FETCH_ASSOC);
 				}
 				else {
-					echo "<b>Error:</b>\n";
+					echo "<b>".$text['label-error'].":</b>\n";
 					echo "<pre>\n";
 					print_r($db->errorInfo());
 					echo "</pre>\n";

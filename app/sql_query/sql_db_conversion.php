@@ -34,6 +34,13 @@ if (if_group("superadmin")) {
 else {
 	echo "access denied";
 	exit;
+}
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //show errors
 	ini_set('display_errors', '1');
@@ -45,7 +52,7 @@ else {
 		$result = false;
 		foreach ($tmp_array as &$row) {
 			if ($row[0] == $column) {
-				$result = true; 
+				$result = true;
 			}
 			return $result;
 		}
@@ -95,7 +102,7 @@ else {
 					$db_dest->beginTransaction();
 				}
 				catch (PDOException $error) {
-					print "error: " . $error->getMessage() . "<br/>";
+					print $text['label-error'].": " . $error->getMessage() . "<br/>";
 					die();
 				}
 
@@ -116,7 +123,7 @@ else {
 							}
 						}
 						catch (PDOException $error) {
-							echo "error: " . $error->getMessage() . " sql: $sql<br/>";
+							echo $text['label-error'].": " . $error->getMessage() . " sql: $sql<br/>";
 						}
 						$x++;
 					}
@@ -140,7 +147,7 @@ else {
 									$db_dest = new PDO("pgsql:host=localhost port={$db_port} user={$db_create_username} password={$db_create_password} dbname=template1");
 								}
 							} catch (PDOException $error) {
-								print "error: " . $error->getMessage() . "<br/>";
+								print $text['label-error'].": " . $error->getMessage() . "<br/>";
 								die();
 							}
 						//create the database, user, grant perms
@@ -161,7 +168,7 @@ else {
 						}
 					}
 					catch (PDOException $error) {
-						print "error: " . $error->getMessage() . "<br/>";
+						print $text['label-error'].": " . $error->getMessage() . "<br/>";
 						die();
 					}
 
@@ -183,7 +190,7 @@ else {
 								}
 							}
 							catch (PDOException $error) {
-								echo "error: " . $error->getMessage() . " sql: $sql<br/>";
+								echo $text['label-error'].": " . $error->getMessage() . " sql: $sql<br/>";
 								die();
 							}
 						}
@@ -232,7 +239,7 @@ else {
 				}
 				catch (PDOException $error) {
 					if ($v_debug) {
-						print "error: " . $error->getMessage() . "<br/>";
+						print $text['label-error'].": " . $error->getMessage() . "<br/>";
 					}
 				}
 
@@ -244,7 +251,7 @@ else {
 						}
 						catch (PDOException $error) {
 							if ($v_debug) {
-								print "error: " . $error->getMessage() . "<br/>";
+								print $text['label-error'].": " . $error->getMessage() . "<br/>";
 							}
 						}
 					//create user and set the permissions
@@ -254,7 +261,7 @@ else {
 						}
 						catch (PDOException $error) {
 							if ($v_debug) {
-								print "error: " . $error->getMessage() . "<br/>";
+								print $text['label-error'].": " . $error->getMessage() . "<br/>";
 							}
 						}
 					//set account to unlimitted use
@@ -266,7 +273,7 @@ else {
 						}
 						catch (PDOException $error) {
 							if ($v_debug) {
-								print "error: " . $error->getMessage() . "<br/>";
+								print $text['label-error'].": " . $error->getMessage() . "<br/>";
 							}
 						}
 					//create the database and set the create user with permissions
@@ -276,7 +283,7 @@ else {
 						}
 						catch (PDOException $error) {
 							if ($v_debug) {
-								print "error: " . $error->getMessage() . "<br/>";
+								print $text['label-error'].": " . $error->getMessage() . "<br/>";
 							}
 						}
 					//set user permissions
@@ -285,7 +292,7 @@ else {
 						}
 						catch (PDOException $error) {
 							if ($v_debug) {
-								print "error: " . $error->getMessage() . "<br/>";
+								print $text['label-error'].": " . $error->getMessage() . "<br/>";
 							}
 						}
 					//make the changes active
@@ -295,7 +302,7 @@ else {
 						}
 						catch (PDOException $error) {
 							if ($v_debug) {
-								print "error: " . $error->getMessage() . "<br/>";
+								print $text['label-error'].": " . $error->getMessage() . "<br/>";
 							}
 						}
 				} //if (strlen($db_create_username) > 0)
@@ -305,7 +312,7 @@ else {
 				}
 				catch (PDOException $error) {
 					if ($v_debug) {
-						print "error: " . $error->getMessage() . "<br/>";
+						print $text['label-error'].": " . $error->getMessage() . "<br/>";
 					}
 				}
 
@@ -379,7 +386,7 @@ else {
 					$tmp_sql = "PRAGMA table_info($table_name);";
 				}
 				if ($db_dest_type == "pgsql") {
-				
+
 				}
 				if ($db_dest_type == "mysql") {
 					$tmp_sql = "show columns from $table_name;";
@@ -392,7 +399,7 @@ else {
 						$result2 = $prep_statement_2->fetchAll(PDO::FETCH_ASSOC);
 					}
 					else {
-						echo "<b>Error:</b>\n";
+						echo "<b>".$text['label-error'].":</b>\n";
 						echo "<pre>\n";
 						print_r($db_dest->errorInfo());
 						echo "</pre>\n";
@@ -406,7 +413,7 @@ else {
 							$destination_column_array[$x] = $row2['Field'];
 						}
 						if ($db_dest_type == "pgsql") {
-						
+
 						}
 						$x++;
 					}
@@ -435,7 +442,7 @@ else {
 						$result2 = $prep_statement_2->fetchAll(PDO::FETCH_ASSOC);
 					}
 					else {
-						echo "<b>Error:</b>\n";
+						echo "<b>".$text['label-error'].":</b>\n";
 						echo "<pre>\n";
 						print_r($db->errorInfo());
 						echo "</pre>\n";
