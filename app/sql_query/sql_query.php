@@ -34,8 +34,15 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-sql_query'];
 
 //pdo voicemail database connection
 	require_once "sql_query_pdo.php";
@@ -70,16 +77,16 @@ else {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap><b>SQL Query</b></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['header-sql_query']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	if (strlen($_REQUEST['id']) > 0) {
-		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='sql_backup.php?id=".$_REQUEST['id']."'\" value='Backup'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-backup']."' onclick=\"window.location='sql_backup.php?id=".$_REQUEST['id']."'\" value='".$text['button-backup']."'>\n";
 	}
 	else {
-		echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='sql_backup.php'\" value='Backup'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-backup']."' onclick=\"window.location='sql_backup.php'\" value='".$text['button-backup']."'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='backup' onclick=\"window.location='sql_query_db.php'\" value='Database'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onClick=\"history.back()\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-select_database']."' onclick=\"window.location='sql_query_db.php'\" value='".$text['button-select_database']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onClick=\"history.back()\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -92,7 +99,7 @@ else {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	
+
 	/*
 	echo "			DB: <select name='sql_db'>\n";
 	echo "				<option value=''></option>\n";
@@ -117,14 +124,8 @@ else {
 	echo "			</select>\n";
 	*/
 
-	echo "			Type: <select name='sql_type'>\n";
-	echo "			<option value='default'>default</option>\n";
-	echo "			<option value='csv'>csv</option>\n";
-	echo "			<option value='sql insert into'>sql insert into</option>\n";
-	echo "			</select>\n";
-	echo "			&nbsp;\n";
-	echo "			&nbsp;\n";
-	echo "			Table: \n";
+
+	echo "			".$text['label-table'].": \n";
 	echo "			<select name='table_name'>\n";
 	echo "			<option value=''></option>\n";
 	if ($db_type == "sqlite") {
@@ -149,8 +150,15 @@ else {
 		echo "			<option value='".$row['name']."'>".$row['name']."</option>\n";
 	}
 	echo "			</select>\n";
+	echo "			&nbsp;\n";
+	echo "			&nbsp;\n";
+	echo "			".$text['label-result_type'].": <select name='sql_type'>\n";
+	echo "			<option value='default'>".$text['option-result_type_view']."</option>\n";
+	echo "			<option value='csv'>".$text['option-result_type_csv']."</option>\n";
+	echo "			<option value='sql insert into'>".$text['option-result_type_insert']."</option>\n";
+	echo "			</select>\n";
 	echo "			<input type='hidden' name='id' value='".$_REQUEST['id']."'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='Execute'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-execute']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 

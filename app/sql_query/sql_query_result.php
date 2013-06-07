@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //pdo database connection
 	if (strlen($_REQUEST['id']) > 0) {
 		require_once "sql_query_pdo.php";
@@ -118,7 +124,7 @@ if (count($_POST)>0) {
 		reset($sql_array);
 		foreach($sql_array as $sql) {
 			$sql = trim($sql);
-			echo "<b>SQL Query:</b><br>\n";
+			echo "<b>".$text['label-sql_query'].":</b><br>\n";
 			echo "".$sql."<br /><br />";
 
 			if (strlen($sql) > 0) {
@@ -127,10 +133,10 @@ if (count($_POST)>0) {
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-					echo "<b>Results: ".count($result)."</b><br />";
+					echo "<b>".$text['label-results'].": ".count($result)."</b><br />";
 				}
 				catch(PDOException $e) {
-					echo "<b>Error:</b><br />\n";
+					echo "<b>".$text['label-error'].":</b><br />\n";
 					echo "<table>\n";
 					echo "<tr>\n";
 					echo "<td>\n";
@@ -170,19 +176,19 @@ if (count($_POST)>0) {
 		echo $tmp_header;
 
 		$sql = trim($sql);
-		echo "<b>SQL Query:</b><br>\n";
+		echo "<b>".$text['label-sql_query'].":</b><br>\n";
 		echo "".$sql."<br /><br />";
 
 		//get the table data
 			$sql = "select * from $table_name";
 			if (strlen($sql) > 0) {
 				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) { 
+				if ($prep_statement) {
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 				}
 				else {
-					echo "<b>Error:</b>\n";
+					echo "<b>".$text['label-error'].":</b>\n";
 					echo "<pre>\n";
 					print_r($db->errorInfo());
 					echo "</pre>\n";
@@ -240,19 +246,19 @@ if (count($_POST)>0) {
 
 		//set the headers
 			header('Content-type: application/octet-binary');
-			header('Content-Disposition: attachment; filename='.$table_name.'.sql');
+			header('Content-Disposition: attachment; filename='.$table_name.'.csv');
 
 		//get the table data
 			$sql = trim($sql);
 			$sql = "select * from $table_name";
 			if (strlen($sql) > 0) {
 				$prep_statement = $db->prepare(check_sql($sql));
-				if ($prep_statement) { 
+				if ($prep_statement) {
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 				}
 				else {
-					echo "<b>Error:</b>\n";
+					echo "<b>".$text['label-error'].":</b>\n";
 					echo "<pre>\n";
 					print_r($db->errorInfo());
 					echo "</pre>\n";
