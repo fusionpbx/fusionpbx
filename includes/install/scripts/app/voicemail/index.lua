@@ -62,6 +62,9 @@
 				session:answer();
 			end
 
+		--unset bind meta app
+			session:execute("unbind_meta_app", "");
+
 		--set the callback function
 			if (session:ready()) then
 				session:setVariable("playback_terminators", "#");
@@ -109,7 +112,9 @@
 						end
 				end
 			end
-			domain_uuid = string.lower(domain_uuid);
+			if (domain_uuid ~= nil) then
+				domain_uuid = string.lower(domain_uuid);
+			end
 
 		--set the voicemail_dir
 			voicemail_dir = base_dir.."/storage/voicemail/default/"..domain_name;
