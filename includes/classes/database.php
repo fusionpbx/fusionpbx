@@ -89,67 +89,12 @@ include "root.php";
 					else {
 						$db_name_short = $this->name;
 					}
-					$this->path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/secure';
 					$this->path = realpath($this->path);
 					if (file_exists($this->path.'/'.$this->name)) {
-						//echo "main file exists<br>";
+						$this->db = new PDO('sqlite:'.$this->path.'/'.$this->name); //sqlite 3
 					}
 					else {
-						$file_name = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/sqlite.sql';
-						$file_contents = file_get_contents($file_name);
-						try {
-							//$db = new PDO('sqlite2:example.db'); //sqlite 2
-							//$db = new PDO('sqlite::memory:'); //sqlite 3
-							$db = new PDO('sqlite:'.$this->path.'/'.$this->name); //sqlite 3
-							$db->beginTransaction();
-						}
-						catch (PDOException $error) {
-							print "error: " . $error->getMessage() . "<br/>";
-							die();
-						}
-
-						//replace \r\n with \n then explode on \n
-						$file_contents = str_replace("\r\n", "\n", $file_contents);
-
-						//loop line by line through all the lines of sql code
-						$stringarray = explode("\n", $file_contents);
-						$x = 0;
-						foreach($stringarray as $sql) {
-							try {
-								$db->query($sql);
-							}
-							catch (PDOException $error) {
-								echo "error: " . $error->getMessage() . " sql: $sql<br/>";
-							}
-							$x++;
-						}
-						unset ($file_contents, $sql);
-						$db->commit();
-						if (is_writable($this->path.'/'.$this->name)) {
-							//is writable - use database in current location
-						}
-						else { 
-							//not writable
-							echo "The database ".$this->path."/".$this->name." is not writeable.";
-							exit;
-						}
-					}
-					try {
-						//$db = new PDO('sqlite2:example.db'); //sqlite 2
-						//$db = new PDO('sqlite::memory:'); //sqlite 3
-						$this->db = new PDO('sqlite:'.$this->path.'/'.$this->name); //sqlite 3
-
-						//add additional functions to SQLite so that they are accessible inside SQL
-						//bool PDO::sqliteCreateFunction ( string function_name, callback callback [, int num_args] )
-						$this->db->sqliteCreateFunction('md5', 'php_md5', 1);
-						$this->db->sqliteCreateFunction('unix_timestamp', 'php_unix_time_stamp', 1);
-						$this->db->sqliteCreateFunction('now', 'php_now', 0);
-						$this->db->sqliteCreateFunction('str_left', 'php_left', 2);
-						$this->db->sqliteCreateFunction('str_right', 'php_right', 2);
-					}
-					catch (PDOException $error) {
-						print "error: " . $error->getMessage() . "<br/>";
-						die();
+						echo "not found";
 					}
 				}
 
