@@ -47,8 +47,8 @@
 		}
 	}
 
-//copy the files and directories from includes/install
-	require_once "includes/classes/install.php";
+//copy the files and directories from resources/install
+	require_once "resources/classes/install.php";
 	$install = new install;
 	$install->domain_uuid = $domain_uuid;
 	$install->domain_name = $domain;
