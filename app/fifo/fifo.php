@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-queues'];
+
 require_once "includes/paging.php";
 
 //get http values and set them as variables
@@ -49,9 +58,7 @@ require_once "includes/paging.php";
 
 	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "	<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>Queues\n";
-	echo "		</strong></span></span>\n";
-	echo "	</td>\n";
+	echo "	<td align='left'><span class=\"vexpl\"><strong>".$text['header-queues']."</strong></span></td>\n";
 	echo "	<td align='right'>\n";
 	//echo "		<input type='button' class='btn' value='advanced' onclick=\"document.location.href='fifo.php';\">\n";
 	echo "	</td>\n";
@@ -59,7 +66,7 @@ require_once "includes/paging.php";
 	echo "	<tr>\n";
 	echo "	<td align='left' colspan='2'>\n";
 	echo "		<span class=\"vexpl\">\n";
-	echo "			Queues are used to setup waiting lines for callers. Also known as FIFO Queues.\n";
+	echo "			".$text['description-queues']."\n";
 	echo "		</span>\n";
 	echo "	</td>\n";
 	echo "\n";
@@ -88,12 +95,12 @@ require_once "includes/paging.php";
 	}
 	unset($prep_statement, $result);
 
-//paging prep	
+//paging prep
 	$rows_per_page = 20;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //get the dialplans
@@ -116,13 +123,13 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('dialplan_name', 'Extension Name', $order_by, $order);
-	echo th_order_by('dialplan_order', 'Order', $order_by, $order);
-	echo th_order_by('dialplan_enabled', 'Enabled', $order_by, $order);
-	echo th_order_by('dialplan_description', 'Description', $order_by, $order);
+	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order);
+	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order);
+	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('fifo_add')) {
-		echo "	<a href='fifo_add.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='fifo_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -132,14 +139,21 @@ require_once "includes/paging.php";
 			echo "<tr >\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_name']."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_order']."</td>\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_enabled']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;";
+			if ($row['dialplan_enabled'] == 'true') {
+				echo $text['option-true'];
+			}
+			else {
+				echo $text['option-false'];
+			}
+			echo "</td>\n";
 			echo "   <td valign='top' class='row_stylebg' width='30%'>".$row['dialplan_description']."&nbsp;</td>\n";
 			echo "   <td valign='top' align='right'>\n";
 			if (permission_exists('fifo_edit')) {
-				echo "		<a href='fifo_edit.php?id=".$row['dialplan_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='fifo_edit.php?id=".$row['dialplan_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('fifo_delete')) {
-				echo "		<a href='fifo_delete.php?id=".$row['dialplan_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='fifo_delete.php?id=".$row['dialplan_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "   </td>\n";
 			echo "</tr>\n";
@@ -156,7 +170,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('fifo_add')) {
-		echo "			<a href='fifo_add.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='fifo_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

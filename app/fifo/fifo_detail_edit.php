@@ -33,7 +33,12 @@ else {
 	echo "access denied";
 	exit;
 }
-//if (permission_exists('fifo_add')) {
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
 
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
@@ -67,11 +72,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($dialplan_detail_tag) == 0) { $msg .= "Please provide: Tag<br>\n"; }
-		if (strlen($dialplan_detail_order) == 0) { $msg .= "Please provide: Order<br>\n"; }
-		//if (strlen($dialplan_detail_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($dialplan_detail_data) == 0) { $msg .= "Please provide: Data<br>\n"; }
+		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		if (strlen($dialplan_detail_tag) == 0) { $msg .= $text['message-required'].$text['label-tag']."<br>\n"; }
+		if (strlen($dialplan_detail_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -125,7 +128,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=fifo_edit.php?id=".$dialplan_uuid."\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -157,7 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=fifo_edit.php?id=".$dialplan_uuid."\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -188,6 +191,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	if ($action == "add") {
+		$page["title"] = $text['title-queue_detail_add'];
+	}
+	if ($action == "update") {
+		$page["title"] = $text['title-queue_detail_edit'];
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -201,12 +210,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>Queue Detail Add</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['header-queue_detail_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>Queue Detail Update</b></td>\n";
+		echo "<td align='left' width='30%' nowrap><b>".$text['header-queue_detail_edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='fifo_edit.php?id=".$dialplan_uuid."'\" value='Back'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='fifo_edit.php?id=".$dialplan_uuid."'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	?>
@@ -214,65 +223,65 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	function public_include_details_tag_onchange() {
 		var dialplan_detail_tag = document.getElementById("form_tag").value;
 		if (dialplan_detail_tag == "condition") {
-			document.getElementById("label_field_type").innerHTML = "Field";
-			document.getElementById("label_field_data").innerHTML = "Expression";
+			document.getElementById("label_field_type").innerHTML = "<?=$text['label-field']?>";
+			document.getElementById("label_field_data").innerHTML = "<?=$text['label-expression']?>";
 		}
 		else if (dialplan_detail_tag == "action") {
-			document.getElementById("label_field_type").innerHTML = "Application";
-			document.getElementById("label_field_data").innerHTML = "Data";
+			document.getElementById("label_field_type").innerHTML = "<?=$text['label-application']?>";
+			document.getElementById("label_field_data").innerHTML = "<?=$text['label-data']?>";
 		}
 		else if (dialplan_detail_tag == "anti-action") {
-			document.getElementById("label_field_type").innerHTML = "Application";
-			document.getElementById("label_field_data").innerHTML = "Data";
+			document.getElementById("label_field_type").innerHTML = "<?=$text['label-application']?>";
+			document.getElementById("label_field_data").innerHTML = "<?=$text['label-data']?>";
 		}
 		else if (dialplan_detail_tag == "param") {
-			document.getElementById("label_field_type").innerHTML = "Name";
-			document.getElementById("label_field_data").innerHTML = "Value";
+			document.getElementById("label_field_type").innerHTML = "<?=$text['label-name']?>";
+			document.getElementById("label_field_data").innerHTML = "<?=$text['label-value']?>";
 		}
 		if (dialplan_detail_tag == "") {
-			document.getElementById("label_field_type").innerHTML = "Type";
-			document.getElementById("label_field_data").innerHTML = "Data";
+			document.getElementById("label_field_type").innerHTML = "<?=$text['label-type']?>";
+			document.getElementById("label_field_data").innerHTML = "<?=$text['label-data']?>";
 		}
 	}
 	</script>
 	<?php
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Tag:\n";
+	echo "    ".$text['label-tag'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "                <select name='dialplan_detail_tag' class='formfld' id='form_tag' onchange='public_include_details_tag_onchange();'>\n";
 	echo "                <option></option>\n";
 	switch (htmlspecialchars($dialplan_detail_tag)) {
 	case "condition":
-		echo "                <option selected='yes'>condition</option>\n";
-		echo "                <option>action</option>\n";
-		echo "                <option>anti-action</option>\n";
-		//echo "                <option>param</option>\n";
+		echo "                <option value='condition' selected='yes'>".$text['option-condition']."</option>\n";
+		echo "                <option value='action'>".$text['option-action']."</option>\n";
+		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
+		//echo "                <option value='param'>".$text['option-parameter']."</option>\n";
 		break;
 	case "action":
-		echo "                <option>condition</option>\n";
-		echo "                <option selected='yes'>action</option>\n";
-		echo "                <option>anti-action</option>\n";
-		//echo "                <option>param</option>\n";
+		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
+		echo "                <option value='action' selected='yes'>".$text['option-action']."</option>\n";
+		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
+		//echo "                <option value='param'>".$text['option-parameter']."</option>\n";
 		break;
 	case "anti-action":
-		echo "                <option>condition</option>\n";
-		echo "                <option>action</option>\n";
-		echo "                <option selected='yes'>anti-action</option>\n";
-		//echo "                <option>param</option>\n";
+		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
+		echo "                <option value='action'>".$text['option-action']."</option>\n";
+		echo "                <option value='anti-action' selected='yes'>".$text['option-anti-action']."</option>\n";
+		//echo "                <option value='param'>".$text['option-parameter']."</option>\n";
 		break;
 	case "param":
-		echo "                <option>condition</option>\n";
-		echo "                <option>action</option>\n";
-		echo "                <option>anti-action</option>\n";
-		//echo "                <option selected='yes'>param</option>\n";
+		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
+		echo "                <option value='action'>".$text['option-action']."</option>\n";
+		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
+		//echo "                <option value='param' selected='yes'>".$text['option-parameter']."</option>\n";
 		break;
 	default:
-		echo "                <option>condition</option>\n";
-		echo "                <option>action</option>\n";
-		echo "                <option>anti-action</option>\n";
-		//echo "                <option>param</option>\n";
+		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
+		echo "                <option value='action'>".$text['option-action']."</option>\n";
+		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
+		//echo "                <option value='param'>".$text['option-parameter']."</option>\n";
 	}
 	echo "                </select>\n";
 
@@ -295,7 +304,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplan_detail_order' class='formfld'>\n";
@@ -324,8 +333,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Type:\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap id='label_field_type'>\n";
+	echo "    ".$text['label-type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='dialplan_detail_type' maxlength='255' value=\"$dialplan_detail_type\">\n";
@@ -335,8 +344,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Data:\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap id='label_field_data'>\n";
+	echo "    ".$text['label-data'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='dialplan_detail_data' maxlength='255' value=\"$dialplan_detail_data\">\n";
@@ -350,7 +359,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='dialplan_detail_uuid' value='$dialplan_detail_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
@@ -364,7 +373,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($v_path_show) {
 		echo "<br />\n";
 		echo "<br />\n";
-		echo "<b>Additional Information</b>\n";
+		echo "<b>".$text['header-additional_information']."</b>\n";
 		echo "<br />\n";
 		echo "<br />\n";
 
