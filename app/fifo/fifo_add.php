@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-queue_add'];
+
 require_once "includes/paging.php";
 
 //get http values and set them as variables
@@ -43,7 +52,7 @@ require_once "includes/paging.php";
 		$extension_name = check_str($_POST["extension_name"]);
 		$queue_extension_number = check_str($_POST["queue_extension_number"]);
 		$agent_queue_extension_number = check_str($_POST["agent_queue_extension_number"]);
-		$agent_login_logout_extension_number = check_str($_POST["agent_login_logout_extension_number"]);		
+		$agent_login_logout_extension_number = check_str($_POST["agent_login_logout_extension_number"]);
 		$dialplan_order = check_str($_POST["dialplan_order"]);
 		$pin_number = check_str($_POST["pin_number"]);
 		$profile = check_str($_POST["profile"]);
@@ -55,16 +64,9 @@ require_once "includes/paging.php";
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		if (strlen($extension_name) == 0) { $msg .= "Please provide: Extension Name<br>\n"; }
-		if (strlen($queue_extension_number) == 0) { $msg .= "Please provide: Extension Number 1<br>\n"; }
-		//if (strlen($agent_queue_extension_number) == 0) { $msg .= "Please provide: Queue Extension Number<br>\n"; }
-		//if (strlen($agent_queue_extension_number) == 0) { $msg .= "Please provide: Agent Login Logout Extension Number<br>\n"; }
-		//if (strlen($pin_number) == 0) { $msg .= "Please provide: PIN Number<br>\n"; }
-		//if (strlen($profile) == 0) { $msg .= "Please provide: profile<br>\n"; }
-		//if (strlen($flags) == 0) { $msg .= "Please provide: Flags<br>\n"; }
-		//if (strlen($dialplan_enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
-		//if (strlen($dialplan_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		if (strlen($extension_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+		if (strlen($queue_extension_number) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -258,7 +260,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=fifo.php\">\n";
 		echo "<div align='center'>\n";
-		echo "Update Complete\n";
+		echo $text['message-update']."\n";
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
@@ -275,18 +277,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<form method='post' name='frm' action=''>\n";
 	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\">\n";
-	echo "			<strong>Queues</strong>\n";
-	echo "			</span></span>\n";
-	echo "		</td>\n";
+	echo "		<td align='left'><span class=\"vexpl\"><strong>".$text['header-queue_add']."</strong></span></td>\n";
 	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fifo.php'\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='fifo.php'\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			<span class=\"vexpl\">\n";
-	echo "			In simple terms queues are holding patterns for callers to wait until someone is available to take the call. Also known as FIFO Queues.\n";
+	echo "			".$text['description-queue_add']."\n";
 	echo "			</span>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -298,29 +297,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "		Queue Name:\n";
+	echo "		".$text['label-name'].":\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input class='formfld' style='width: 60%;' type='text' name='extension_name' maxlength='255' value=\"$extension_name\">\n";
 	echo "		<br />\n";
-	echo "		The name the queue will be assigned.\n";
+	echo "		".$text['description-name']."\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	Extension Number:\n";
+	echo "	".$text['label-extension'].":\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input class='formfld' style='width: 60%;' type='text' name='queue_extension_number' maxlength='255' value=\"$queue_extension_number\">\n";
 	echo "		<br />\n";
-	echo "		The number that will be assigned to the queue.\n";
+	echo "		".$text['description-extension']."\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Order:\n";
+	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
@@ -342,21 +341,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    Enabled:\n";
+	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
-	if ($dialplan_enabled == "true") { 
-		echo "    <option value='true' selected='selected' >true</option>\n";
+	if ($dialplan_enabled == "true") {
+		echo "    <option value='true' selected='selected' >".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "    <option value='true'>true</option>\n";
+		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
-	if ($dialplan_enabled == "false") { 
-		echo "    <option value='false' selected='selected' >false</option>\n";
+	if ($dialplan_enabled == "false") {
+		echo "    <option value='false' selected='selected' >".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "    <option value='false'>false</option>\n";
+		echo "    <option value='false'>".$text['option-false']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
@@ -366,7 +365,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Description:\n";
+	echo "    ".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
@@ -378,7 +377,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td class='vtable' valign='top' align='left' nowrap>\n";
 	echo "	<br /><br />\n";
-	echo "	<b>Agent Details</b>\n";
+	echo "	<b>".$text['header-agent_details']."</b>\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    &nbsp\n";
@@ -387,23 +386,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Queue Extension Number:\n";
+	echo "    ".$text['label-agent_queue_extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='agent_queue_extension_number' maxlength='255' value=\"$agent_queue_extension_number\">\n";
 	echo "<br />\n";
-	echo "The extension number for the Agent FIFO Queue. This is the holding pattern for agents wating to service calls in the caller FIFO queue.\n";
+	echo $text['description-agent_queue_extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    Login/Logout Extension Number:\n";
+	echo "    ".$text['label-agent_loginout_extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='agent_login_logout_extension_number' maxlength='255' value=\"$agent_login_logout_extension_number\">\n";
 	echo "<br />\n";
-	echo "Agents use this extension number to login or logout of the Queue. After logging into the agent will be ready to receive calls from the Queue. \n";
+	echo $text['description-agent_loginout_extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -415,7 +414,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";
 	echo "</table>";
