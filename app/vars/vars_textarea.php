@@ -73,7 +73,7 @@ if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 	fclose($fd);
 
 //edit area
-	echo "	<script language=\"javascript\" type=\"text/javascript\" src=\"/includes/edit_area/edit_area_full.js\"></script>\n";
+	echo "	<script language=\"javascript\" type=\"text/javascript\" src=\"/resources/edit_area/edit_area_full.js\"></script>\n";
 	echo "	<script language=\"Javascript\" type=\"text/javascript\">\n";
 	echo "		// initialisation //load,\n";
 	echo "		editAreaLoader.init({\n";

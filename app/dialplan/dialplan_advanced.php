@@ -81,7 +81,7 @@ fclose($fd);
 <script language="Javascript">
 function sf() { document.forms[0].savetopath.focus(); }
 </script>
-<script language="Javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/includes/edit_area/edit_area_full.js"></script>
+<script language="Javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/edit_area/edit_area_full.js"></script>
 <script language="Javascript" type="text/javascript">
 	// initialisation
 	editAreaLoader.init({

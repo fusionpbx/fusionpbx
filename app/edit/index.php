@@ -131,7 +131,7 @@ echo "	<title></title>";
 	echo "    }\n";
 	echo "</script>";
 	?>
-	<script language="Javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/includes/edit_area/edit_area_full.js"></script>
+	<script language="Javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/edit_area/edit_area_full.js"></script>
 	<script language="Javascript" type="text/javascript">
 		// initialisation
 		editAreaLoader.init({

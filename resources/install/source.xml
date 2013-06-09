@@ -582,833 +582,833 @@
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area</path> 
+		<path>/resources/edit_area</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/edit_area_full.gz</path> 
+		<path>/resources/edit_area/edit_area_full.gz</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>8c924f9b2bc2bc0ac2919cbbffb24fa2</md5> 
 		<size>29125</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/edit_area_full.js</path> 
+		<path>/resources/edit_area/edit_area_full.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>58b9669d5903765b99ca4adac8e9b9f5</md5> 
 		<size>114587</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/images</path> 
+		<path>/resources/edit_area/images</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/autocompletion.gif</path> 
+		<path>/resources/edit_area/images/autocompletion.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>a49a7f9395b32bcf6aa8e143e17c03ff</md5> 
 		<size>359</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/close.gif</path> 
+		<path>/resources/edit_area/images/close.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>6cc9d27bdda91ad192a4326a653ba566</md5> 
 		<size>102</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/fullscreen.gif</path> 
+		<path>/resources/edit_area/images/fullscreen.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>88d0dd1d465c2989dc04cb8f4473f6b9</md5> 
 		<size>198</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/go_to_line.gif</path> 
+		<path>/resources/edit_area/images/go_to_line.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>05aa7fa3c6c720595bb3ead7366bbe07</md5> 
 		<size>1053</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/help.gif</path> 
+		<path>/resources/edit_area/images/help.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>4cd4a5d2cdcd74c8aeced17813afd6ea</md5> 
 		<size>295</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/highlight.gif</path> 
+		<path>/resources/edit_area/images/highlight.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>96382d6d24bb8a1b228586b323e72fb4</md5> 
 		<size>256</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/load.gif</path> 
+		<path>/resources/edit_area/images/load.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>203725593d5c7412fc51aa603434f96f</md5> 
 		<size>1041</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/move.gif</path> 
+		<path>/resources/edit_area/images/move.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>0da84ad6a24533d4335cef8255101edc</md5> 
 		<size>257</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/newdocument.gif</path> 
+		<path>/resources/edit_area/images/newdocument.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>24b01aa27845c551f24a186a92cbc94e</md5> 
 		<size>170</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/opacity.png</path> 
+		<path>/resources/edit_area/images/opacity.png</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>7f1c7b1ff1f3e04828540f6ffdde46c2</md5> 
 		<size>147</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/processing.gif</path> 
+		<path>/resources/edit_area/images/processing.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>40418383947fe6335056fce05abe44a2</md5> 
 		<size>825</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/redo.gif</path> 
+		<path>/resources/edit_area/images/redo.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>c2b3b80e20aa7f50ec45acb999373425</md5> 
 		<size>169</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/reset_highlight.gif</path> 
+		<path>/resources/edit_area/images/reset_highlight.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>e9c387cc80f33b14447b628df1906639</md5> 
 		<size>168</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/save.gif</path> 
+		<path>/resources/edit_area/images/save.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>2392d13d22fec22e69add07becf83e20</md5> 
 		<size>285</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/search.gif</path> 
+		<path>/resources/edit_area/images/search.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>791e640ca1b345a84084eb611004de98</md5> 
 		<size>191</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/smooth_selection.gif</path> 
+		<path>/resources/edit_area/images/smooth_selection.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>e6a384f19aef7c0fb2f2e0ee0bdc72e0</md5> 
 		<size>174</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/spacer.gif</path> 
+		<path>/resources/edit_area/images/spacer.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>12bf9e19374920de3146a64775f46a5e</md5> 
 		<size>43</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/statusbar_resize.gif</path> 
+		<path>/resources/edit_area/images/statusbar_resize.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>1b952cd23844b834e0a307db3c803626</md5> 
 		<size>79</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/undo.gif</path> 
+		<path>/resources/edit_area/images/undo.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>7883b9e1f9bf0b860e77b904e1941591</md5> 
 		<size>175</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/images/word_wrap.gif</path> 
+		<path>/resources/edit_area/images/word_wrap.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>47bd30f6fe667d34f37230b01544595a</md5> 
 		<size>951</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/langs</path> 
+		<path>/resources/edit_area/langs</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/bg.js</path> 
+		<path>/resources/edit_area/langs/bg.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>33949d475debd38862a6c8a6a5934fb6</md5> 
 		<size>3132</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/cs.js</path> 
+		<path>/resources/edit_area/langs/cs.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>a7ac795809ed32a3e42c5fe7ad5ca204</md5> 
 		<size>2202</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/de.js</path> 
+		<path>/resources/edit_area/langs/de.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>2855b486c898565e93a4124aaf31b48d</md5> 
 		<size>2244</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/dk.js</path> 
+		<path>/resources/edit_area/langs/dk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>cdda9d4383c055093c78d3ab4d8c71c5</md5> 
 		<size>2123</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/en.js</path> 
+		<path>/resources/edit_area/langs/en.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>a9941aeea2f8286991a4f2abe3d0367d</md5> 
 		<size>1969</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/eo.js</path> 
+		<path>/resources/edit_area/langs/eo.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>97ee39c2f4861273de5ed1fb2280b8ae</md5> 
 		<size>2282</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/es.js</path> 
+		<path>/resources/edit_area/langs/es.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>877c2f5a72984003da94b082b0fa04ab</md5> 
 		<size>2146</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/fi.js</path> 
+		<path>/resources/edit_area/langs/fi.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>effce5cfeb1b273543d1def9226ce843</md5> 
 		<size>2126</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/fr.js</path> 
+		<path>/resources/edit_area/langs/fr.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>e26b41e7407e91bb66e05abb7e9c0533</md5> 
 		<size>2413</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/hr.js</path> 
+		<path>/resources/edit_area/langs/hr.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>8179b813bea428c74c5d289aeb119a74</md5> 
 		<size>1985</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/it.js</path> 
+		<path>/resources/edit_area/langs/it.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>b937185e999b70255d161d15453a1cdf</md5> 
 		<size>2113</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/ja.js</path> 
+		<path>/resources/edit_area/langs/ja.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>a96e8fad9b9fef10138fb5be3f9b8b1a</md5> 
 		<size>2171</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/mk.js</path> 
+		<path>/resources/edit_area/langs/mk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>15acec0d9d4bee76f9f7fd90bc74f91e</md5> 
 		<size>2817</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/nl.js</path> 
+		<path>/resources/edit_area/langs/nl.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>74b7565272926811078e12f746e2242a</md5> 
 		<size>2034</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/pl.js</path> 
+		<path>/resources/edit_area/langs/pl.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>39ff6ff5981cc6730b6ee2832f47f556</md5> 
 		<size>2106</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/pt.js</path> 
+		<path>/resources/edit_area/langs/pt.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>6589eeeb1f79d896acfa7ab9dd5a7d97</md5> 
 		<size>1937</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/ru.js</path> 
+		<path>/resources/edit_area/langs/ru.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>f9f79e8730db7701c4ec4eb612c815d9</md5> 
 		<size>2919</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/sk.js</path> 
+		<path>/resources/edit_area/langs/sk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>a664ffc9e05ddd7c8341645839ddeccf</md5> 
 		<size>2211</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/langs/zh.js</path> 
+		<path>/resources/edit_area/langs/zh.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>4f844bc3cde7edaf03ee66aefaabb40d</md5> 
 		<size>2025</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins</path> 
+		<path>/resources/edit_area/plugins</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/charmap</path> 
+		<path>/resources/edit_area/plugins/charmap</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/charmap.js</path> 
+		<path>/resources/edit_area/plugins/charmap/charmap.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>15d5626b8375004c217dec10ce1346a4</md5> 
 		<size>2807</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/charmap/css</path> 
+		<path>/resources/edit_area/plugins/charmap/css</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/css/charmap.css</path> 
+		<path>/resources/edit_area/plugins/charmap/css/charmap.css</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>84eed9f0eaf34e71f528444d0fbd729c</md5> 
 		<size>953</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/charmap/images</path> 
+		<path>/resources/edit_area/plugins/charmap/images</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/images/charmap.gif</path> 
+		<path>/resources/edit_area/plugins/charmap/images/charmap.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>948c608cfe393168642e3946097eba3d</md5> 
 		<size>245</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/charmap/jscripts</path> 
+		<path>/resources/edit_area/plugins/charmap/jscripts</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/jscripts/map.js</path> 
+		<path>/resources/edit_area/plugins/charmap/jscripts/map.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>071107a09c753f3d2e88d0b99aa61820</md5> 
 		<size>11846</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/charmap/langs</path> 
+		<path>/resources/edit_area/plugins/charmap/langs</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/bg.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/bg.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>a4c60ccea1575a77c43c964ab1d78a62</md5> 
 		<size>396</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/cs.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/cs.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>d578b06a1b41e5da773ddb688d98bdd9</md5> 
 		<size>187</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/de.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/de.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>b93418619c8678c6505c023b1072b80b</md5> 
 		<size>192</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/dk.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/dk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>e6395e180e9b9bd87a7e96cf745b101e</md5> 
 		<size>187</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/en.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/en.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>17a20a2e46b7de8d7fa5370a9bf6b294</md5> 
 		<size>187</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/eo.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/eo.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>0cc471de01b7ad207df32c450682cd3d</md5> 
 		<size>175</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/es.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/es.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>ea43e35253952cc33c85d3fe7c9bb27b</md5> 
 		<size>187</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/fr.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/fr.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>96c4acb5f590d7b403d3b0e319dfb349</md5> 
 		<size>194</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/hr.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/hr.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>578178183db00474dfa660f616db86ae</md5> 
 		<size>191</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/it.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/it.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>433ac140154e12f5423b226c6ed8e148</md5> 
 		<size>189</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/ja.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/ja.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>fc17e42e8ce2ac676f885d332244cbaa</md5> 
 		<size>187</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/mk.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/mk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>4cc7a175a342f413101db66013f09900</md5> 
 		<size>188</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/nl.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/nl.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>0e717e403d8c8f53e4376c3b4e09d6fd</md5> 
 		<size>190</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/pl.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/pl.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>52627faf46a7b1f8b8f5110358d224cf</md5> 
 		<size>192</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/pt.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/pt.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>9828da57868e6192b5c921400ab87d1f</md5> 
 		<size>187</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/ru.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/ru.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>67e1426c248ee6fe6274ee2fed23df22</md5> 
 		<size>275</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/sk.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/sk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>3da0f484cce154d5a8f06572ac5a8461</md5> 
 		<size>194</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/langs/zh.js</path> 
+		<path>/resources/edit_area/plugins/charmap/langs/zh.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>50f6ecf19890d2cd305357ca9679684c</md5> 
 		<size>169</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/charmap/popup.html</path> 
+		<path>/resources/edit_area/plugins/charmap/popup.html</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>7d97c56e6f29a3cdaacb934793133188</md5> 
 		<size>782</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/test</path> 
+		<path>/resources/edit_area/plugins/test</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/test/css</path> 
+		<path>/resources/edit_area/plugins/test/css</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/css/test.css</path> 
+		<path>/resources/edit_area/plugins/test/css/test.css</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>c6d48fc50bb974b20bec7731e312f5de</md5> 
 		<size>53</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/test/images</path> 
+		<path>/resources/edit_area/plugins/test/images</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/images/test.gif</path> 
+		<path>/resources/edit_area/plugins/test/images/test.gif</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>6036655a01df362267183a8b23fead10</md5> 
 		<size>87</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/plugins/test/langs</path> 
+		<path>/resources/edit_area/plugins/test/langs</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/bg.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/bg.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>d7123a41255600449aec9fc1f301c147</md5> 
 		<size>244</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/cs.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/cs.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>1cefb4fd6e169dfe1950c35b4aff1eba</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/de.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/de.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>7a7675c982dd18be1ced114aa70daafb</md5> 
 		<size>92</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/dk.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/dk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>488f8af5a93283499dfebe551fb7f4ed</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/en.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/en.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>acb2b331564a8dc553302aa46d5f5d36</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/eo.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/eo.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>a010b4aa33bb848a8b16793910eb05ac</md5> 
 		<size>89</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/es.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/es.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>687fba1e66bc7ef6cec32cb208e2b1d7</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/fr.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/fr.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>7091caec9d5c627073e728ab74a3a5bd</md5> 
 		<size>88</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/hr.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/hr.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>152f29d20c99cb7d337f0f369dd71ceb</md5> 
 		<size>86</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/it.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/it.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>7de5456ada17577d4fcbbfc619324662</md5> 
 		<size>92</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/ja.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/ja.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>5ccb36b44757fc4e514498c4f447577c</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/mk.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/mk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>7a5f9fbf31ac0783d92fcaed1f1c8295</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/nl.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/nl.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>4b3627381f170e533d9eb767487f33d3</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/pl.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/pl.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>255f97808244326878b647cecb64aebc</md5> 
 		<size>78</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/pt.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/pt.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>dcbf418e8f05db1ef7b13cbc8e03782b</md5> 
 		<size>84</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/ru.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/ru.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>37a504c426450b8e738f7ebbd3ee7587</md5> 
 		<size>119</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/sk.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/sk.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>1e7b4e0b10b36b9d63edc4d6bfeea172</md5> 
 		<size>92</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/langs/zh.js</path> 
+		<path>/resources/edit_area/plugins/test/langs/zh.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:51 GMT</last_mod> 
 		<md5>0a68369b57f733e07b1eb10c1c238d95</md5> 
 		<size>87</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/test.js</path> 
+		<path>/resources/edit_area/plugins/test/test.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>8559ea076cd3f47bac8540f91369e7c6</md5> 
 		<size>3695</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/plugins/test/test2.js</path> 
+		<path>/resources/edit_area/plugins/test/test2.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:52 GMT</last_mod> 
 		<md5>9bef02a43a1bd789ec6534f20fbbfc5d</md5> 
 		<size>47</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/edit_area/reg_syntax</path> 
+		<path>/resources/edit_area/reg_syntax</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/basic.js</path> 
+		<path>/resources/edit_area/reg_syntax/basic.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>68e21d612e33473e6326c1e72df6421e</md5> 
 		<size>2650</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/brainfuck.js</path> 
+		<path>/resources/edit_area/reg_syntax/brainfuck.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>6514a6685ea2b819c610f050b4c36a32</md5> 
 		<size>907</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/c.js</path> 
+		<path>/resources/edit_area/reg_syntax/c.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>8668c7d1d3f4c1fae0fe5e46ef2b1fe9</md5> 
 		<size>1648</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/coldfusion.js</path> 
+		<path>/resources/edit_area/reg_syntax/coldfusion.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>389c9d5f2cbab70de8109b549d6f103d</md5> 
 		<size>5934</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/cpp.js</path> 
+		<path>/resources/edit_area/reg_syntax/cpp.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>4af61c486401e028b44874169d6bda35</md5> 
 		<size>1853</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/css.js</path> 
+		<path>/resources/edit_area/reg_syntax/css.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>33d561ba22a917c3279fb31a4a760551</md5> 
 		<size>4972</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/html.js</path> 
+		<path>/resources/edit_area/reg_syntax/html.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>b0f62d2507c072a89e51e60270f911d7</md5> 
 		<size>1116</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/java.js</path> 
+		<path>/resources/edit_area/reg_syntax/java.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>548e6e6ff4547cbec9b38f1f09b49f95</md5> 
 		<size>1667</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/js.js</path> 
+		<path>/resources/edit_area/reg_syntax/js.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>2d77b33a886e435004e11a1835f4b6f9</md5> 
 		<size>4368</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/pas.js</path> 
+		<path>/resources/edit_area/reg_syntax/pas.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>34dabdc2dc2df0c5a8865ad6f3f3688e</md5> 
 		<size>3292</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/perl.js</path> 
+		<path>/resources/edit_area/reg_syntax/perl.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>e01cf02194bff0a6c3565b2b93399887</md5> 
 		<size>3166</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/php.js</path> 
+		<path>/resources/edit_area/reg_syntax/php.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>d0048d0d4a51f0e2fb359169f62828d3</md5> 
 		<size>14135</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/python.js</path> 
+		<path>/resources/edit_area/reg_syntax/python.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>776815baeec98159e3f1f6ae6a4d70c0</md5> 
 		<size>7897</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/robotstxt.js</path> 
+		<path>/resources/edit_area/reg_syntax/robotstxt.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>f24de940202b28b84d393703cf73fd7e</md5> 
 		<size>634</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/ruby.js</path> 
+		<path>/resources/edit_area/reg_syntax/ruby.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>cf881ed977dc8dcc5683c186a55e566f</md5> 
 		<size>1732</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/sql.js</path> 
+		<path>/resources/edit_area/reg_syntax/sql.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>1696ab1abdc071d299af651defdaea4f</md5> 
 		<size>3384</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/tsql.js</path> 
+		<path>/resources/edit_area/reg_syntax/tsql.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>fef976fba89b77c46191eb3d9288e7c1</md5> 
 		<size>5211</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/vb.js</path> 
+		<path>/resources/edit_area/reg_syntax/vb.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>1614b162371030dd3372c80bbc40084c</md5> 
 		<size>2196</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/edit_area/reg_syntax/xml.js</path> 
+		<path>/resources/edit_area/reg_syntax/xml.js</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:53 GMT</last_mod> 
 		<md5>5fda1c26de462cbdf74ef0c185bcb8d8</md5> 
 		<size>1264</size> 

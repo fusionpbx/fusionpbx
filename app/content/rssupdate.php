@@ -148,7 +148,7 @@ else {
 	}
 	else {
 		//--- Begin: Edit Area -----------------------------------------------------
-			echo "    <script language=\"javascript\" type=\"text/javascript\" src=\"".PROJECT_PATH."/includes/edit_area/edit_area_full.js\"></script>\n";
+			echo "    <script language=\"javascript\" type=\"text/javascript\" src=\"".PROJECT_PATH."/resources/edit_area/edit_area_full.js\"></script>\n";
 			echo "    <!-- -->\n";
 
 			echo "	<script language=\"Javascript\" type=\"text/javascript\">\n";
