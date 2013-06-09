@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012 All Rights Reserved.
+	Copyright (C) 2008-2013 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -329,7 +329,7 @@ require_once "includes/require.php";
 	//create a mac address with back slashes for backwards compatability
 		$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 
-	//lookup the provisioning information for this MAC address.
+	//get the provisioning information for this MAC address.
 		$sql = "SELECT e.extension, e.password, e.effective_caller_id_name, d.device_extension_uuid, d.extension_uuid, d.device_line ";
 		$sql .= "FROM v_device_extensions as d, v_extensions as e ";
 		$sql .= "WHERE e.extension_uuid = d.extension_uuid ";
@@ -342,30 +342,30 @@ require_once "includes/require.php";
 		$result_count = count($result);
 		foreach($result as $row) {
 			$line_number = $row['device_line'];
-
 			$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
 			$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["effective_caller_id_name"], $file_contents);
 			$file_contents = str_replace("{v_line".$line_number."_shortname}", $row["extension"], $file_contents);
 			$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["extension"], $file_contents);
 			$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
+		}
+		unset ($prep_statement);
 
-			//$vm_password = $row["vm_password"];
-			//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
-			//$accountcode = $row["accountcode"];
-			//$effective_caller_id_name = $row["effective_caller_id_name"];
-			//$effective_caller_id_number = $row["effective_caller_id_number"];
-			//$outbound_caller_id_name = $row["outbound_caller_id_name"];
-			//$outbound_caller_id_number = $row["outbound_caller_id_number"];
-			//$vm_mailto = $row["vm_mailto"];
-			//$vm_attach_file = $row["vm_attach_file"];
-			//$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
-			//$user_context = $row["user_context"];
-			//$call_group = $row["call_group"];
-			//$auth_acl = $row["auth_acl"];
-			//$cidr = $row["cidr"];
-			//$sip_force_contact = $row["sip_force_contact"];
-			//$enabled = $row["enabled"];
-			//$description = $row["description"];
+	//get the provisioning information from device lines table
+		$sql = "SELECT * FROM v_device_lines ";
+		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+		$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		foreach($result as $row) {
+			$line_number = $row['line_number'];
+			$file_contents = str_replace("{v_line".$line_number."_server_address}", $row["server_address"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_outbound_proxy}", $row["outbound_proxy"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["display_name"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["user_id"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_auth_id}", $row["auth_id"], $file_contents);
+			$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
 		}
 		unset ($prep_statement);
 
