@@ -248,19 +248,19 @@ require_once "includes/require.php";
 	}
 
 //if the domain name directory exists then only use templates from it
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/templates/provision/'.$_SESSION['domain_name'])) {
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision/'.$_SESSION['domain_name'])) {
 		$device_template = $_SESSION['domain_name'].'/'.$device_template;
 	}
 
 //if $file is not provided then look for a default file that exists
 	if (strlen($file) == 0) { 
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template ."/{v_mac}")) {
+		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{v_mac}")) {
 			$file = "{v_mac}";
 		}
-		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template ."/{v_mac}.xml")) {
+		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{v_mac}.xml")) {
 			$file = "{v_mac}.xml";
 		}
-		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template ."/{v_mac}.cfg")) {
+		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{v_mac}.cfg")) {
 			$file = "{v_mac}.cfg";
 		}
 		else {
@@ -270,7 +270,7 @@ require_once "includes/require.php";
 	}
 	else {
 		//make sure the file exists
-		if (!file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template ."/".$file)) {
+		if (!file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/".$file)) {
 			echo "file not found";
 			exit;
 		}
@@ -303,7 +303,7 @@ require_once "includes/require.php";
 		//$proxy3_address= "";
 
 //get the contents of the template
-	$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template ."/".$file);
+	$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/".$file);
 
 //replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 

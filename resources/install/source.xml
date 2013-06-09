@@ -1905,112 +1905,112 @@
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision</path> 
+		<path>/resources/templates/provision</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/aastra</path> 
+		<path>/resources/templates/provision/aastra</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/aastra/675x</path> 
+		<path>/resources/templates/provision/aastra/675x</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/templates/provision/aastra/675x/{v_mac}.cfg</path> 
+		<path>/resources/templates/provision/aastra/675x/{v_mac}.cfg</path> 
 		<last_mod>Thu, 19 Aug 2010 07:41:58 GMT</last_mod> 
 		<md5>dabe18bd088393a798ce77e09d4e84c7</md5> 
 		<size>3697</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/cisco</path> 
+		<path>/resources/templates/provision/cisco</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/cisco/7940</path> 
+		<path>/resources/templates/provision/cisco/7940</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/cisco/7960</path> 
+		<path>/resources/templates/provision/cisco/7960</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/grandstream</path> 
+		<path>/resources/templates/provision/grandstream</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/linksys</path> 
+		<path>/resources/templates/provision/linksys</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/linksys/spa942</path> 
+		<path>/resources/templates/provision/linksys/spa942</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/templates/provision/linksys/spa942/{v_mac}.xml</path> 
+		<path>/resources/templates/provision/linksys/spa942/{v_mac}.xml</path> 
 		<last_mod>Mon, 05 Jul 2010 17:58:03 GMT</last_mod> 
 		<md5>826df81f528099612f785bb68ca542f8</md5> 
 		<size>1364</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/polycom</path> 
+		<path>/resources/templates/provision/polycom</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/snom</path> 
+		<path>/resources/templates/provision/snom</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/snom/820</path> 
+		<path>/resources/templates/provision/snom/820</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/templates/provision/snom/820/{v_mac}.xml</path> 
+		<path>/resources/templates/provision/snom/820/{v_mac}.xml</path> 
 		<last_mod>Sun, 27 Jun 2010 10:02:56 GMT</last_mod> 
 		<md5>46c1aa2b3da420cd26fd7b361bcd3360</md5> 
 		<size>2373</size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/templates/provision/yealink</path> 
+		<path>/resources/templates/provision/yealink</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 

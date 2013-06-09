@@ -399,10 +399,10 @@ require_once "includes/require.php";
 	echo "<td class='vtable' align='left'>\n";
 	echo "<select id='device_template' name='device_template' class='formfld'>\n";
 	echo "<option value=''></option>\n";
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$_SESSION["domain_name"])) {
-		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$_SESSION["domain_name"];
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"])) {
+		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"];
 	} else {
-		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision";
+		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
 	}
 	if($dh = opendir($temp_dir)) {
 		while($dir = readdir($dh)) {
