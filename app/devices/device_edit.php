@@ -371,108 +371,108 @@ require_once "includes/require.php";
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-lines'].":</td>";
 	echo "		<td class='vtable' align='left'>";
-	if ($action == "update") {
-		echo "			<table width='52%' border='0' cellpadding='0' cellspacing='0'>\n";
-		$sql = "SELECT * FROM v_device_lines ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "order by line_number asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		echo "<tr>\n";
-		echo "	<td class='vtable'>".$text['label-line']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-server_address']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-outbound_proxy']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-display_name']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-user_id']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-auth_id']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-password']."</td>\n";
-		echo "	<td></td>\n";
-		echo "</tr>\n";
-		foreach($result as $row) {
-			//if (strlen($row['line_number']) == 0) { $row['line_number'] = "1"; }
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['line_number']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['server_address']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['outbound_proxy']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['display_name']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['user_id']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['auth_id']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['password']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td>\n";
-			if (permission_exists('device_edit')) {
-				echo "		<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			}
-			if (permission_exists('device_delete')) {
-				echo "		<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			}			echo "				</td>\n";
-			echo "			</tr>\n";
-		}
+	echo "			<table width='75%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "			<tr>\n";
+	echo "				<td class='vtable'>".$text['label-line']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-server_address']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-outbound_proxy']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-display_name']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-user_id']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-auth_id']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-password']."</td>\n";
+	echo "				<td>&nbsp;</td>\n";
+	echo "			</tr>\n";
+	$sql = "SELECT * FROM v_device_lines ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and device_uuid = '".$device_uuid."' ";
+	$sql .= "order by line_number asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	foreach($result as $row) {
+		//if (strlen($row['line_number']) == 0) { $row['line_number'] = "1"; }
 		echo "			<tr>\n";
-		echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				<select class='formfld' style='width: 45px;' name='line_number'>\n";
-		echo "				<option value=''></option>\n";
-		echo "				<option value='1'>1</option>\n";
-		echo "				<option value='2'>2</option>\n";
-		echo "				<option value='3'>3</option>\n";
-		echo "				<option value='4'>4</option>\n";
-		echo "				<option value='5'>5</option>\n";
-		echo "				<option value='6'>6</option>\n";
-		echo "				<option value='7'>7</option>\n";
-		echo "				<option value='8'>8</option>\n";
-		echo "				<option value='9'>9</option>\n";
-		echo "				<option value='10'>10</option>\n";
-		echo "				<option value='11'>11</option>\n";
-		echo "				<option value='12'>12</option>\n";
-		echo "				</select>\n";
-		echo "			</td>\n";
-
-		echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				<input class='formfld' style='width: 125px;' type='text' name='server_address' maxlength='255' value=\"$server_address\">\n";
-		echo "			</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input class='formfld' style='width: 125px;' type='text' name='outbound_proxy' maxlength='255' value=\"$outbound_proxy\">\n";
-		echo "			</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input class='formfld' style='width: 95px;' type='text' name='display_name' maxlength='255' value=\"$display_name\">\n";
-		echo "			</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input class='formfld' style='width: 75px;' type='text' name='user_id' maxlength='255' value=\"$user_id\">\n";
-		echo "			</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input class='formfld' style='width: 75px;' type='text' name='auth_id' maxlength='255' value=\"$auth_id\">\n";
-		echo "			</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input class='formfld' style='width: 90px;' type='text' name='password' maxlength='255' value=\"$password\">\n";
-		echo "			</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-		echo "			</td>\n";
-
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['line_number']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['server_address']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['outbound_proxy']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['display_name']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['user_id']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['auth_id']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['password']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td>\n";
+		if (permission_exists('device_edit')) {
+			echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+		}
+		if (permission_exists('device_delete')) {
+			echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+		}
+		echo "				</td>\n";
 		echo "			</tr>\n";
-		echo "			</table>\n";
 	}
+	echo "			<tr>\n";
+	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				<select class='formfld' style='width: 45px;' name='line_number'>\n";
+	echo "				<option value=''></option>\n";
+	echo "				<option value='1'>1</option>\n";
+	echo "				<option value='2'>2</option>\n";
+	echo "				<option value='3'>3</option>\n";
+	echo "				<option value='4'>4</option>\n";
+	echo "				<option value='5'>5</option>\n";
+	echo "				<option value='6'>6</option>\n";
+	echo "				<option value='7'>7</option>\n";
+	echo "				<option value='8'>8</option>\n";
+	echo "				<option value='9'>9</option>\n";
+	echo "				<option value='10'>10</option>\n";
+	echo "				<option value='11'>11</option>\n";
+	echo "				<option value='12'>12</option>\n";
+	echo "				</select>\n";
+	echo "			</td>\n";
+
+	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				<input class='formfld' style='width: 125px;' type='text' name='server_address' maxlength='255' value=\"$server_address\">\n";
+	echo "			</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input class='formfld' style='width: 125px;' type='text' name='outbound_proxy' maxlength='255' value=\"$outbound_proxy\">\n";
+	echo "			</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input class='formfld' style='width: 95px;' type='text' name='display_name' maxlength='255' value=\"$display_name\">\n";
+	echo "			</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input class='formfld' style='width: 75px;' type='text' name='user_id' maxlength='255' value=\"$user_id\">\n";
+	echo "			</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input class='formfld' style='width: 75px;' type='text' name='auth_id' maxlength='255' value=\"$auth_id\">\n";
+	echo "			</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input class='formfld' style='width: 90px;' type='text' name='password' maxlength='255' value=\"$password\">\n";
+	echo "			</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			</td>\n";
+	echo "			</tr>\n";
+
+	echo "			</table>\n";
 	echo "			<br>\n";
 	echo "			".$text['description-extensions']."\n";
 	echo "			<br />\n";
