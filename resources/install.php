@@ -499,7 +499,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				$schema->exec();
 
 			//get the contents of the sql file
-				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/sqlite.sql';
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
 				$file_contents = file_get_contents($filename);
 				unset($filename);
 
@@ -581,7 +581,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				$schema->exec();
 
 			//get the contents of the sql file
-				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/pgsql.sql';
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
 				$file_contents = file_get_contents($filename);
 
 			//replace \r\n with \n then explode on \n
@@ -749,7 +749,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 
 			//add the defaults data into the database
 				//get the contents of the sql file
-					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/mysql.sql';
+					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
 					$file_contents = file_get_contents($filename);
 
 				//replace \r\n with \n then explode on \n
@@ -1246,8 +1246,8 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 					if (!is_readable($switch_recordings_dir.'') && $switch_scripts_dir != "/recordings") { mkdir($switch_recordings_dir.'',0777,true); }
 				}
 
-			//copy the files and directories from includes/install
-				require_once "includes/classes/install.php";
+			//copy the files and directories from resources/install
+				require_once "resources/classes/install.php";
 				$install = new install;
 				$install->domain_uuid = $_SESSION["domain_uuid"];
 				$install->domain = $domain_name;
@@ -1554,7 +1554,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 			if (strlen($db_port) == 0) { $db_port = '3306'; }
 			//if (strlen($db_name) == 0) { $db_name = 'fusionpbx'; }
 
-		//echo "However if preferred the database can be created manually with the <a href='". echo PROJECT_PATH; ."/includes/install/sql/mysql.sql' target='_blank'>mysql.sql</a> script. ";
+		//echo "However if preferred the database can be created manually with the <a href='". echo PROJECT_PATH; ."/resources/install/sql/mysql.sql' target='_blank'>mysql.sql</a> script. ";
 		echo "<div id='page' align='center'>\n";
 		echo "<form method='post' name='frm' action=''>\n";
 		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";

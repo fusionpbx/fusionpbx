@@ -112,7 +112,7 @@ include "root.php";
 
 		function copy_scripts() {
 			clearstatcache();
-			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
+			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/scripts';
 			$dst_dir = $this->switch_scripts_dir;
 			if (is_readable($this->switch_scripts_dir)) {
 				$this->recursive_copy($src_dir, $dst_dir);
@@ -122,7 +122,7 @@ include "root.php";
 
 		function copy_sounds() {
 			clearstatcache();
-			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/8000';
+			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sounds/en/us/callie/custom/8000';
 			$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/8000';
 			if (is_readable($this->switch_sounds_dir)) {
 				if ($handle = opendir($src_dir)) {
@@ -143,7 +143,7 @@ include "root.php";
 					}
 				}
 
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/16000';
+				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sounds/en/us/callie/custom/16000';
 				$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/16000';
 				if ($handle = opendir($src_dir)) {
 					$i = 0;
@@ -168,7 +168,7 @@ include "root.php";
 		function copy_swf() {
 			clearstatcache();
 			$file = "slim.swf";
-			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/htdocs';
+			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/htdocs';
 			$dst_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/recordings';
 			if (copy($src_dir.'/'.$file, $dst_dir.'/'.$file)) {
 				$this->result['copy']['swf'][] = "copied from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
@@ -190,7 +190,7 @@ include "root.php";
 	}
 
 //how to use the class
-	//include "includes/classes/install.php";
+	//include "resources/classes/install.php";
 	//$install = new install;
 	//$install->domain_uuid = $domain_uuid;
 	//$install->switch_conf_dir = $switch_conf_dir;

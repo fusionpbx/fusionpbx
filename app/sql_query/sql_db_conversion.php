@@ -93,7 +93,7 @@ else {
 		//create the sqlite database
 			if ($db_dest_type == "sqlite") {
 				//sqlite database will be created when the config.php is loaded and only if the database file does not exist
-				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/sqlite.sql';
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
 				$file_contents = file_get_contents($filename);
 				unset($filename);
 				try {
@@ -133,7 +133,7 @@ else {
 
 		//create the postgres database
 			if ($db_dest_type == "pgsql") {
-				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/pgsql.sql';
+				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
 				$file_contents = file_get_contents($filename);
 
 				//if $db_create_username provided, attempt to create new PG role and database
@@ -201,7 +201,7 @@ else {
 
 		//create the mysql database
 		if ($db_dest_type == "mysql") {
-			$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/install/sql/mysql.sql';
+			$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
 			$file_contents = file_get_contents($filename);
 
 			//database connection
