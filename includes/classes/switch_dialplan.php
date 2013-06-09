@@ -178,7 +178,7 @@ include "root.php";
 				$switch_dialplan_dir = $this->switch_dialplan_dir;
 				if (is_dir($switch_dialplan_dir)) {
 					//get the contents of the dialplan/default.xml
-						$file_default_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/templates/conf/dialplan/default.xml';
+						$file_default_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/dialplan/default.xml';
 						$file_default_contents = file_get_contents($file_default_path);
 					//prepare the file contents and the path
 						if (count($_SESSION['domains']) < 2) {

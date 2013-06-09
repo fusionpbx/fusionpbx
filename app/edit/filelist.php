@@ -243,7 +243,7 @@ if ($_SESSION["app"]["edit"]["dir"] == "grammar") {
 	echo recur_dir($_SESSION['switch']['grammar']['dir']);
 }
 if ($_SESSION["app"]["edit"]["dir"] == "provision") {
-	echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/");
+	echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
 }
 if ($_SESSION["app"]["edit"]["dir"] == "xml") {
 	echo recur_dir($_SESSION['switch']['conf']['dir']);

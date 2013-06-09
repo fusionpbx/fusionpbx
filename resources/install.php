@@ -1258,8 +1258,8 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				$install->copy();
 				clearstatcache();
 
-			//copy includes/templates/conf to the freeswitch/conf dir
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf";
+			//copy resources/templates/conf to the freeswitch/conf dir
+				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 				$dst_dir = $switch_conf_dir;
 				if (is_readable($dst_dir)) {
 					$install->recursive_copy($src_dir, $dst_dir);

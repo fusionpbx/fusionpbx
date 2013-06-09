@@ -107,7 +107,7 @@ else {
 			}
 
 		//loop through the provision template directory
-			$provision_template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template;
+			$provision_template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template;
 
 			clearstatcache();
 			$dir_list = '';
@@ -160,7 +160,7 @@ else {
 						$file_size = round(filesize($new_path)/1024, 2);
 
 						//get the contents of the template
-							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/provision/".$device_template ."/".$file_name);
+							$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/".$file_name);
 
 						//prepare the files
 							//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number

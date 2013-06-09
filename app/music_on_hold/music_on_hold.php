@@ -225,7 +225,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	require_once "includes/header.php";
 
 //show the title and description
-	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/includes/javascript/reset_file_input.js'></script>\n";
+	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/javascript/reset_file_input.js'></script>\n";
 	echo "<script>\n";
 	echo "function EvalSound(soundobj) {\n";
 	echo "	var thissound= eval(\"document.\"+soundobj);\n";

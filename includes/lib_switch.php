@@ -3508,7 +3508,7 @@ if (!function_exists('save_call_center_xml')) {
 				}
 
 			//get the contents of the template
-				$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/callcenter.conf.xml");
+				$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/callcenter.conf.xml");
 
 			//add the Call Center Queues, Agents and Tiers to the XML config
 				$file_contents = str_replace("{v_queues}", $v_queues, $file_contents);
@@ -3541,7 +3541,7 @@ if (!function_exists('switch_conf_xml')) {
 			global $db, $domain_uuid;
 
 		//get the contents of the template
-			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/switch.conf.xml");
+			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/switch.conf.xml");
 
 		//prepare the php variables
 			if (stristr(PHP_OS, 'WIN')) {
@@ -3582,7 +3582,7 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			global $db, $domain_uuid;
 
 		//get the contents of the template
-			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/templates/conf/autoload_configs/xml_cdr.conf.xml");
+			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/xml_cdr.conf.xml");
 
 		//replace the values in the template
 			$file_contents = str_replace("{v_http_protocol}", "http", $file_contents);
