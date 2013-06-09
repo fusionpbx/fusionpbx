@@ -58,8 +58,8 @@
 	//echo "Message: \n".$msg."\n";
 
 //includes
-	require('includes/pop3/mime_parser.php');
-	require('includes/pop3/rfc822_addresses.php');
+	require('resources/pop3/mime_parser.php');
+	require('resources/pop3/rfc822_addresses.php');
 
 //parse the email message
 	$mime=new mime_parser_class;
