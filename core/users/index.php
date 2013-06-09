@@ -34,8 +34,15 @@ else {
 	return;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //include the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-user_manager'];
 
 //show the user list
 	echo "<div align='center'>";

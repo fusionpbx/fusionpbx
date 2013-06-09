@@ -35,6 +35,12 @@ else {
 	return;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 $username = check_str($_POST["username"]);
 $password = check_str($_POST["password"]);
 $confirmpassword = check_str($_POST["confirmpassword"]);
@@ -59,7 +65,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	//username is already used.
 	if (strlen($username) == 0) {
-		$msgerror .= "Please provide a Username.<br>\n";
+		$msgerror .= $text['message-required'].$text['label-username']."<br>\n";
 	}
 	else {
 		$sql = "SELECT * FROM v_users ";
@@ -73,12 +79,12 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 		}
 	}
 
-	if (strlen($password) == 0) { $msgerror .= "Password cannot be blank.<br>\n"; }
-	if ($password != $confirmpassword) { $msgerror .= "Passwords did not match.<br>\n"; }
-	//if (strlen($contact_organization) == 0) { $msgerror .= "Please provide a organization name.<br>\n"; }
-	//if (strlen($contact_name_given) == 0) { $msgerror .= "Please provide a first name.<br>\n"; }
-	//if (strlen($contact_name_family) == 0) { $msgerror .= "Please provide a last name $user_last_name.<br>\n"; }
-	if (strlen($user_email) == 0) { $msgerror .= "Please provide an email.<br>\n"; }
+	if (strlen($password) == 0) { $msgerror .= $text['message-password_blank']."<br>\n"; }
+	if ($password != $confirmpassword) { $msgerror .= $text['message-password_mismatch']."<br>\n"; }
+	//if (strlen($contact_organization) == 0) { $msgerror .= $text['message-required'].$text['label-company_name']."<br>\n"; }
+	//if (strlen($contact_name_given) == 0) { $msgerror .= $text['message-required'].$text['label-first_name']."<br>\n"; }
+	//if (strlen($contact_name_family) == 0) { $msgerror .= $text['message-required'].$text['label-last_name']."<br>\n"; }
+	if (strlen($user_email) == 0) { $msgerror .= $text['message-required'].$text['label-email']."<br>\n"; }
 
 	if (strlen($msgerror) > 0) {
 		require_once "includes/header.php";
@@ -178,20 +184,17 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	require_once "includes/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"3;url=index.php\">\n";
-	echo "<div align='center'>Add Complete</div>";
+	echo "<div align='center'>".$text['message-add']."</div>";
 	require_once "includes/footer.php";
 	return;
 }
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-user_add'];
 
 //show the content
 	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr>\n";
-	echo "	<td align=\"left\">\n";
-	echo "      <br>";
 
 	$tablewidth ='width="100%"';
 	echo "<form method='post' action=''>";
@@ -200,42 +203,44 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
 	echo "	<tr>\n";
 	echo "		<td width='80%'>\n";
-	echo "			<b>To add a user, please fill out this form completely. All fields are required. </b><br>";
+	echo "			<b>".$text['header-user_add']."</b>\n";
+	echo "			<br><br>\n";
+	echo "			".$text['description-user_add']."\n";
 	echo "		</td>\n";
 	echo "		<td width='20%' align='right'>\n";
-	echo "			<input type='button' class='btn' name='back' alt='back' onclick=\"window.history.back()\" value='Back'>\n";
+	echo "			<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"window.history.back()\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
 	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq' width='40%'>Username:</td>";
+	echo "		<td class='vncellreq' width='40%'>".$text['label-username'].":</td>";
 	echo "		<td class='vtable' width='60%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Password:</td>";
+	echo "		<td class='vncellreq'>".$text['label-password'].":</td>";
 	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='password' value='$password'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Confirm Password:</td>";
+	echo "		<td class='vncellreq'>".$text['label-confirm_password'].":</td>";
 	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='confirmpassword' value='$confirmpassword'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>Email:</td>";
+	echo "		<td class='vncellreq'>".$text['label-email'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='$user_email'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>First Name:</td>";
+	echo "		<td class='vncell'>".$text['label-first_name'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_given' value='$contact_name_given'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>Last Name:</td>";
+	echo "		<td class='vncell'>".$text['label-last_name'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='contact_name_family' value='$contact_name_family'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>Company Name:</td>";
+	echo "		<td class='vncell'>".$text['label-company_name'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='contact_organization' value='$contact_organization'></td>";
 	echo "	</tr>";
 	echo "</table>";
@@ -245,15 +250,12 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "<table $tablewidth>";
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
-	echo "       <input type='submit' name='submit' class='btn' value='Create Account'>";
+	echo "       <input type='submit' name='submit' class='btn' value='".$text['button-create_account']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
 
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
 	echo "</div>";
 
 //show the footer

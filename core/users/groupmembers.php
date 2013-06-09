@@ -40,6 +40,12 @@ else {
 		return;
 	}
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //get the http value and set as a variable
 	$group_name = $_GET["group_name"];
 
@@ -58,6 +64,7 @@ else {
 
 //include the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-group_members'];
 
 //show the content
 	$c = 0;
@@ -65,16 +72,14 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='90%' border='0'><tr><td align='left'>\n";
-	echo "\n";
 
 	echo "<table width='100%' cellpadding='6' cellspacing='1'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span  class=\"\" height='50'>Member list for <b>$group_name</b></span>";
+	echo "			<span  class=\"\" height='50'><b>".$text['header-group_members'].$group_name."</b></span>";
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='Back'>";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'>";
 	echo "			&nbsp;&nbsp;&nbsp;\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -89,7 +94,7 @@ else {
 
 	$strlist = "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$strlist .= "<tr>\n";
-	$strlist .= "	<th align=\"left\" nowrap> &nbsp; Username &nbsp; </th>\n";
+	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-username']." &nbsp; </th>\n";
 	$strlist .= "	<th align=\"left\" nowrap> &nbsp; &nbsp; </th>\n";
 	$strlist .= "	<td width='22' align=\"right\" nowrap>\n";
 	$strlist .= "		&nbsp;\n";
@@ -107,7 +112,7 @@ else {
 		$strlist .= "<td align=\"left\"  class='".$row_style[$c]."' nowrap> &nbsp; </td>\n";
 		$strlist .= "<td align=\"right\" nowrap>\n";
 		if (permission_exists('group_member_delete')) {
-			$strlist .= "	<a href='groupmemberdelete.php?user_uuid=$user_uuid&group_name=$group_name' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
+			$strlist .= "	<a href='groupmemberdelete.php?user_uuid=$user_uuid&group_name=$group_name' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
 		}
 		$strlist .= "</td>\n";
 		$strlist .= "</tr>\n";
@@ -119,9 +124,6 @@ else {
 	$strlist .= "</table>\n";
 	echo $strlist;
 
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
 	echo "<br>";
 
 	echo "  <div align='center'>";
@@ -152,7 +154,7 @@ else {
 	echo "		<td align='right'>";
 	if (permission_exists('group_member_add')) {
 		echo "          <input type='hidden' name='group_name' value='$group_name'>";
-		echo "          <input type='submit' class='btn' value='Add Member'>";
+		echo "          <input type='submit' class='btn' value='".$text['button-add_member']."'>";
 	}
 	echo "      </td>";
 	echo "	</tr>";
