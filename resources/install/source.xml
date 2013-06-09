@@ -477,49 +477,49 @@
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/captcha</path> 
+		<path>/resources/captcha</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>directory</type> 
-		<path>/includes/captcha/fonts</path> 
+		<path>/resources/captcha/fonts</path> 
 		<last_mod></last_mod> 
 		<md5></md5> 
 		<size></size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/captcha/fonts/hanshand.ttf</path> 
+		<path>/resources/captcha/fonts/hanshand.ttf</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:54 GMT</last_mod> 
 		<md5>5abafb3678ef53ce7298c9e253a0a2b4</md5> 
 		<size>53424</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/captcha/fonts/ROUGD.TTF</path> 
+		<path>/resources/captcha/fonts/ROUGD.TTF</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:54 GMT</last_mod> 
 		<md5>58dcf2f5d780c90a9d45284cde4eb4d1</md5> 
 		<size>65036</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/captcha/fonts/Zebra.ttf</path> 
+		<path>/resources/captcha/fonts/Zebra.ttf</path> 
 		<last_mod>Tue, 08 Dec 2009 02:24:54 GMT</last_mod> 
 		<md5>47b48b6778cf0b3e1a70e28fe4c2c7cb</md5> 
 		<size>82064</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/captcha/img.php</path> 
+		<path>/resources/captcha/img.php</path> 
 		<last_mod>Sat, 06 Feb 2010 18:19:35 GMT</last_mod> 
 		<md5>6eb82ef732e3f02a50c0e885562dcbf4</md5> 
 		<size>3290</size> 
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/captcha/root.php</path> 
+		<path>/resources/captcha/root.php</path> 
 		<last_mod>Sat, 06 Feb 2010 18:19:35 GMT</last_mod> 
 		<md5>d399882b4822a07f0f4745cc41e1af1a</md5> 
 		<size>1911</size> 
