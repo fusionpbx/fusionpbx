@@ -201,6 +201,25 @@ else {
 							}
 							unset ($prep_statement_2);
 
+						//get the provisioning information from device lines table
+							$sql = "SELECT * FROM v_device_lines ";
+							$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+							$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$result_count = count($result);
+							foreach($result as $row) {
+								$line_number = $row['line_number'];
+								$file_contents = str_replace("{v_line".$line_number."_server_address}", $row["server_address"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_outbound_proxy}", $row["outbound_proxy"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["display_name"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["user_id"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_auth_id}", $row["auth_id"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
+							}
+							unset ($prep_statement);
+
 						//cleanup any remaining variables
 							for ($i = 1; $i <= 100; $i++) {
 								$file_contents = str_replace("{v_line".$i."_server_address}", "", $file_contents);
