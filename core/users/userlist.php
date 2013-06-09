@@ -33,6 +33,7 @@ else {
 	echo "access denied";
 	exit;
 }
+
 //require_once "includes/header.php";
 	require_once "includes/paging.php";
 
@@ -50,35 +51,28 @@ echo "	<td align=\"center\">\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<form method='post' action=''>";
 	echo "<tr>\n";
-	echo "<td align='left' width='90%' nowrap><b>User Manager</b></td>\n";
-	echo "<td align='right' nowrap='nowrap'>Search by:&nbsp;</td>";
+	echo "<td align='left' width='90%' nowrap><b>".$text['header-user_manager']."</b></td>\n";
+	echo "<td align='right' nowrap='nowrap'>".$text['label-search_by'].":&nbsp;</td>";
 	echo "<td align='left'>\n";
 	echo "	<select name='field_name' style='width:150px' class='frm'>\n";
 	echo "	<option value=''></option>\n";
 	if ($field_name == "username") {
-		echo "	<option value='username' selected='selected'>Username</option>\n";
+		echo "	<option value='username' selected='selected'>".$text['label-username']."</option>\n";
 	}
 	else {
-		echo "	<option value='username'>Username</option>\n";
+		echo "	<option value='username'>".$text['label-username']."</option>\n";
 	}
-	//if ($field_name == "user_email") {
-	//	echo "	<option value='user_email' selected='selected'>Email</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='user_email'>Email</option>\n";
-	//}
 	echo "	</select>\n";
 	echo "</td>\n";
 	echo "<td align='left' width='3px'>&nbsp;</td>";
 	echo "<td align='left'><input type='text' class='txt' style='width: 150px' name='field_value' value='$field_value'></td>";
-	echo "<td align='left' width='60px'><input type='submit' class='btn' name='submit' value='search'></td>";
-	//echo "	<input type='button' class='btn' name='' alt='view' onclick=\"window.location='user_search.php'\" value='advanced'>&nbsp;\n";
+	echo "<td align='left' width='60px'><input type='submit' class='btn' name='submit' value='".$text['button-search']."'></td>";
 	echo "</tr>\n";
 	echo "</form>";
 
 	echo "<tr>\n";
 	echo "<td align='left' colspan='4'>\n";
-	echo "Add, edit, delete, and search for users. \n";
+	echo $text['description-user_manager']."\n";
 	echo "<br />\n";
 	echo "<br />\n";
 	echo "</td>\n";
@@ -99,17 +93,17 @@ echo "	<td align=\"center\">\n";
 	$rows_per_page = 200;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	if (strlen($field_name) > 0 && strlen($field_value) > 0) {
 		$sql .= "and $field_name like '%$field_value%' ";
 	}
-	if (strlen($order_by)> 0) { 
-		$sql .= "order by $order_by $order "; 
+	if (strlen($order_by)> 0) {
+		$sql .= "order by $order_by $order ";
 	}
 	else {
 		$sql .= "order by username ";
@@ -131,13 +125,11 @@ echo "	<td align=\"center\">\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo th_order_by('username', 'Username', $order_by, $order);
-	//echo th_order_by('user_email', 'Email', $order_by, $order);
-	//echo th_order_by('user_template_name', 'Template', $order_by, $order);
-	echo "<th>Enabled</th>\n";
+	echo th_order_by('username', $text['label-username'], $order_by, $order);
+	echo "<th>".$text['label-enabled']."</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('user_add')) {
-		echo "	<a href='signup.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='signup.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -146,14 +138,20 @@ echo "	<td align=\"center\">\n";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['username']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_email']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if ($row['user_enabled'] == 'true') {
+				echo $text['option-true'];
+			}
+			else {
+				echo $text['option-false'];
+			}
+			echo "&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('user_edit')) {
-				echo "		<a href='usersupdate.php?id=".$row['user_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='usersupdate.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('user_delete')) {
-				echo "		<a href='userdelete.php?id=".$row['user_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='userdelete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -170,7 +168,7 @@ echo "	<td align=\"center\">\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('user_add')) {
-		echo "			<a href='signup.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='signup.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

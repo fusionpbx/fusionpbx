@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-group_permissions'];
+
 require_once "includes/paging.php";
 
 //get the list of installed apps from the core and mod directories
@@ -84,7 +93,7 @@ require_once "includes/paging.php";
 
 //get the http values and set them as php variables
 	$group_name = $_REQUEST['group_name'];
-	
+
 //get the permissions assigned to this group
 	$sql = "";
 	$sql .= " select * from v_group_permissions ";
@@ -139,7 +148,7 @@ require_once "includes/paging.php";
 			//echo "<pre>";
 			//print_r($permissions_form_checklist);
 			//echo "</pre>";
-		
+
 		//list all the permissions
 			foreach($apps as $app) {
 				foreach ($app['permissions'] as $row) {
@@ -192,21 +201,20 @@ require_once "includes/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
-	echo "		<br>";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Group Permissions for $group_name</b></td>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-group_permissions'].$group_name."</b></td>\n";
 	echo "<td width='50%' align=\"right\">\n";
 	if (permission_exists('group_edit')) {
-		echo "	<input type='button' class='btn' alt='Restore Default Permissions' onclick=\"window.location='permissions_default.php'\" value='Restore Default'>";
+		echo "	<input type='button' class='btn' alt='".$text['button-restore']."' onclick=\"window.location='permissions_default.php'\" value='".$text['button-restore']."'>";
 	}
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='Back'> ";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan='2'>\n";
-	echo "	Assign permissions to groups.<br /><br />\n";
+	echo "	".$text['description-group_permissions']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
@@ -228,8 +236,8 @@ require_once "includes/paging.php";
 			echo "".$description."<br /><br />";
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<th>Permissions</th>\n";
-			echo "<th>Description</th>\n";
+			echo "<th>".$text['label-permission_permissions']."</th>\n";
+			echo "<th>".$text['label-permission_description']."</th>\n";
 			echo "<tr>\n";
 
 			foreach ($app['permissions'] as $row) {
@@ -249,10 +257,10 @@ require_once "includes/paging.php";
 				echo "</tr>\n";
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
-			
+
 			echo "<tr>\n";
 			echo "	<td colspan='3' align='right'>\n";
-			echo "		<input type='submit' name='submit' class='btn' value='Save'>\n";
+			echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "</table>";
@@ -269,8 +277,6 @@ require_once "includes/paging.php";
 	echo "</table>";
 	echo "</div>";
 	echo "<form>\n";
-
-	echo "<br><br>";
 
 //show the footer
 	require_once "includes/footer.php";

@@ -34,6 +34,12 @@ else {
 	return;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //get the http values and set them as variables
 	$path = check_str($_GET["path"]);
 	$msg = check_str($_GET["msg"]);
@@ -68,7 +74,7 @@ if (strlen($group_name) > 0) {
 		require_once "includes/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=groups.php\">\n";
 		echo "<div align='center'>\n";
-		echo "Group Added\n";
+		echo $text['message-add']."\n";
 		echo "</div>\n";
 		require_once "includes/footer.php";
 		return;
@@ -76,18 +82,20 @@ if (strlen($group_name) > 0) {
 
 //include the header
 	include "includes/header.php";
+	$page["title"] = $text['title-group_add'];
 
 //show the content
-	echo "<br><br>";
 	echo "<div align='center'>";
 
 	echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			Please choose a group name. ";
+	echo "			<b>".$text['header-group_add']."</b>\n";
+	echo "			<br><br>\n";
+	echo "			".$text['description-group_add']."\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='Back'> ";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
@@ -97,7 +105,7 @@ if (strlen($group_name) > 0) {
 	echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq'>\n";
-	echo "Group Name:\n";
+	echo $text['label-group_name'].":\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='left' class='vtable'>\n";
 	echo "  <input type=\"text\" class='formfld' name=\"group_name\">\n";
@@ -106,7 +114,7 @@ if (strlen($group_name) > 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq'>\n";
-	echo "Description:\n";
+	echo $text['label-group_description'].":\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable'>\n";
 	echo "<textarea name='group_description' class='formfld'></textarea>\n";
@@ -118,7 +126,7 @@ if (strlen($group_name) > 0) {
 	echo "</td>\n";
 	echo "<td align=\"right\">\n";
 	echo "  <input type=\"hidden\" name=\"path\" value=\"$path\">\n";
-	echo "  <input type=\"submit\" class='btn' value=\"Save\">\n";
+	echo "  <input type=\"submit\" class='btn' value=\"".$text['button-save']."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

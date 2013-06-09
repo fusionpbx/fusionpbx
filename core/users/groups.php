@@ -27,17 +27,24 @@ include "root.php";
 require_once "includes/require.php";
 
 //check the permissions
-	require_once "includes/checkauth.php";
-	if (if_group("admin") || if_group("superadmin")) {
-		//access allowed
-	}
-	else {
-		echo "access denied";
-		return;
+require_once "includes/checkauth.php";
+if (if_group("admin") || if_group("superadmin")) {
+	//access allowed
+}
+else {
+	echo "access denied";
+	return;
+}
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-group_manager'];
 
 //show the content
 	echo "<div class='' style='padding:0px;'>\n";
@@ -45,10 +52,10 @@ require_once "includes/require.php";
 	echo "<td>";
 
 	echo "<table width='100%' border='0'><tr>";
-	echo "<td width='50%'><b>Groups</b></td>";
+	echo "<td width='50%'><b>".$text['header-group_manager']."</b><br><br></td>";
 	echo "<td width='50%' align='right'>";
 	if (permission_exists('user_view')) {
-		echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='User Manager'>";
+		echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='".$text['header-user_manager']."'>";
 	}
 	echo "</td>\n";
 	echo "</tr></table>";
@@ -64,13 +71,13 @@ require_once "includes/require.php";
 
 	$strlist = "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$strlist .= "<tr class='border'>\n";
-	$strlist .= "	<th align=\"left\" nowrap> &nbsp; Group Name &nbsp; </th>\n";
-	$strlist .= "	<th align=\"left\" nowrap> &nbsp; Group Description &nbsp; </th>\n";
+	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_name']." &nbsp; </th>\n";
+	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_description']." &nbsp; </th>\n";
 	$strlist .= "	<th align=\"center\" nowrap>&nbsp;</th>\n";
 
 	$strlist .= "	<td width='22px' align=\"right\" nowrap>\n";
 	if (permission_exists('group_add')) {
-		$strlist .= "	<a href='groupadd.php' alt='add'>$v_link_label_add</a>\n";
+		$strlist .= "	<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	$strlist .= "	</td>\n";
 	$strlist .= "</tr>\n";
@@ -91,19 +98,19 @@ require_once "includes/require.php";
 		else {
 			$strlist .= "<tr>";
 			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_name &nbsp; </td>\n";
-			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp;  $group_description &nbsp; </td>\n";
+			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_description &nbsp; </td>\n";
 
 			$strlist .= "<td class='".$row_style[$c]."' align=\"center\" nowrap>\n";
 			if (permission_exists('group_add') || if_group("superadmin")) {
-				$strlist .= "&nbsp;<a class='' href='group_permissions.php?group_name=$group_name' title='Group Permissions'>Permissions</a>&nbsp;&nbsp;";
+				$strlist .= "&nbsp;<a class='' href='group_permissions.php?group_name=$group_name' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('group_member_view') || if_group("superadmin")) {
-				$strlist .= "&nbsp;<a class='' href='groupmembers.php?group_name=$group_name' title='Group Members'>Members</a>&nbsp;";
+				$strlist .= "&nbsp;<a class='' href='groupmembers.php?group_name=$group_name' title='".$text['label-group_members']."'>".$text['label-group_members']."</a>&nbsp;";
 			}
 			$strlist .= "</td>\n";
 
 			$strlist .= "<td align=\"right\" nowrap>\n";
-			$strlist .= "<a href='groupdelete.php?id=$group_uuid' onclick=\"return confirm('Do you really want to delete this?')\" alt='delete'>$v_link_label_delete</a>\n";
+			$strlist .= "<a href='groupdelete.php?id=$group_uuid' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
 
 			$strlist .= "</td>\n";
 			$strlist .= "</tr>\n";
@@ -115,7 +122,7 @@ require_once "includes/require.php";
 	$strlist .= "<tr>\n";
 	$strlist .= "<td colspan='4' align='right' height='20'>\n";
 	if (permission_exists('group_add')) {
-		$strlist .= "	<a href='groupadd.php' alt='add'>$v_link_label_add</a>\n";
+		$strlist .= "	<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	$strlist .= "</td>\n";
 	$strlist .= "</tr>\n";
