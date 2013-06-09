@@ -64,6 +64,60 @@
 		$text['description-device_template']['en-us'] = 'Select a template.';
 		$text['description-device_template']['pt-pt'] = '';
 
+		$text['label-lines']['en-us'] = 'Lines';
+		$text['label-lines']['pt-pt'] = '';
+
+		$text['label-line']['en-us'] = 'Line';
+		$text['label-line']['pt-pt'] = '';
+
+		$text['label-line_number']['en-us'] = 'Line Number';
+		$text['label-line_number']['pt-pt'] = '';
+
+		$text['description-line_number']['en-us'] = 'Select a line number.';
+		$text['description-line_number']['pt-pt'] = '';
+
+		$text['label-server_address']['en-us'] = 'Server Address';
+		$text['label-server_address']['pt-pt'] = '';
+
+		$text['description-server_address']['en-us'] = 'Select a server address.';
+		$text['description-server_address']['pt-pt'] = '';
+
+		$text['label-server_address']['en-us'] = 'Server Address';
+		$text['label-server_address']['pt-pt'] = '';
+
+		$text['description-server_address']['en-us'] = 'Select a server address.';
+		$text['description-server_address']['pt-pt'] = '';
+
+		$text['label-outbound_proxy']['en-us'] = 'Outbound Proxy';
+		$text['label-outbound_proxy']['pt-pt'] = '';
+
+		$text['description-outbound_proxy']['en-us'] = 'Enter the outbound proxy.';
+		$text['description-outbound_proxy']['pt-pt'] = '';
+
+		$text['label-display_name']['en-us'] = 'Display Name';
+		$text['label-display_name']['pt-pt'] = '';
+
+		$text['description-display_name']['en-us'] = 'Enter the display name.';
+		$text['description-display_name']['pt-pt'] = '';
+
+		$text['label-user_id']['en-us'] = 'User ID';
+		$text['label-user_id']['pt-pt'] = '';
+
+		$text['description-user_id']['en-us'] = 'Enter the user ID.';
+		$text['description-user_id']['pt-pt'] = '';
+
+		$text['label-auth_id']['en-us'] = 'Auth ID';
+		$text['label-auth_id']['pt-pt'] = '';
+
+		$text['description-auth_id']['en-us'] = 'Enter the auth ID.';
+		$text['description-auth_id']['pt-pt'] = '';
+
+		$text['label-password']['en-us'] = 'Password';
+		$text['label-password']['pt-pt'] = '';
+
+		$text['description-password']['en-us'] = 'Enter the password.';
+		$text['description-password']['pt-pt'] = '';
+
 		//$text['label-device_username']['en-us'] = 'Username';
 		//$text['label-device_username']['pt-pt'] = '';
 
