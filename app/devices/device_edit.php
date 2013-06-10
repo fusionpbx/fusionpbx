@@ -292,7 +292,7 @@ require_once "includes/require.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-device']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-device']."</b></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
@@ -575,50 +575,6 @@ require_once "includes/require.php";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	*/
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-device_template'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "<select id='device_template' name='device_template' class='formfld'>\n";
-	echo "<option value=''></option>\n";
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"])) {
-		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"];
-	} else {
-		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
-	}
-	if($dh = opendir($temp_dir)) {
-		while($dir = readdir($dh)) {
-			if($file != "." && $dir != ".." && $dir[0] != '.') {
-				if(is_dir($temp_dir . "/" . $dir)) {
-					echo "<optgroup label='$dir'>";
-					if($dh_sub = opendir($temp_dir.'/'.$dir)) {
-						while($dir_sub = readdir($dh_sub)) {
-							if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-								if(is_dir($temp_dir . '/' . $dir .'/'. $dir_sub)) {
-									if ($device_template == $dir."/".$dir_sub) {
-										echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
-									}
-									else {
-										echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
-									}
-								}
-							}
-						}
-						closedir($dh_sub);
-					}
-					echo "</optgroup>";
-				}
-			}
-		}
-		closedir($dh);
-	}
-	echo "</select>\n";
-	echo "<br />\n";
-	echo $text['description-device_template']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
