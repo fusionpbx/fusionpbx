@@ -33,11 +33,8 @@
 				//set the variable
 					$db = $this->db;
 				//remove the menu languages
-					$sql  = "delete from v_menu_languages where menu_item_uuid ";
-					$sql .= "in (select distinct(menu_item_uuid) from v_menu_items ";
-					$sql .= "where (menu_item_protected <> 'true' ";
-					$sql .= "or menu_item_protected is null) ";
-					$sql .= ")";
+					$sql  = "delete from v_menu_languages ";
+					$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
 					$db->exec(check_sql($sql));
 				//remove the old menu
 					$sql  = "delete from v_menu_items ";
@@ -142,7 +139,6 @@
 												$sql .= "'$menu_item_title' ";
 												$sql .= ")";
 												$db->exec(check_sql($sql));
-												
 												unset($sql);
 											}
 									}
