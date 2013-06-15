@@ -147,7 +147,8 @@ else {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		echo "			<option value='".$row['name']."'>".$row['name']."</option>\n";
+		$row = array_values($row);
+		echo "			<option value='".$row[0]."'>".$row[0]."</option>\n";
 	}
 	echo "			</select>\n";
 	echo "			&nbsp;\n";
