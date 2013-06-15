@@ -367,10 +367,6 @@
 					<result status="not found" />
 				</section>
 			</document>]];
-		--set the cache
-			if (user and domain_name) then
-				result = trim(api:execute("memcache", "set directory:" .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
-			end
 	end
 
 --send the xml to the console
