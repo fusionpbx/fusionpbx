@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set http get variables to php variables
 	$search_all = check_str($_GET["search_all"]);
 	$schema_uuid = check_str($_GET["schema_uuid"]);
@@ -357,8 +363,8 @@ else {
 
 		//show a message to the user before the redirect
 			echo "<div align='center'>\n";
-			if ($action == "add") { echo "Add Complete\n"; }
-			if ($action == "update") { echo "Update Complete\n"; }
+			if ($action == "add") { echo $text['message-add']."\n"; }
+			if ($action == "update") { echo $text['message-update']."\n"; }
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -366,6 +372,7 @@ else {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-data'];
 
 //pre-populate the form
 	if ($action == "update") {
@@ -431,7 +438,7 @@ else {
 					}
 				//detect a new row id
 					if ($previous_row_id != $row['data_row_uuid']) {
-						if ($row_id_found) { 
+						if ($row_id_found) {
 							if (!$next_row_id_found) {
 								//make sure it is not the current row id
 								if ($data_row_uuid != $row['data_row_uuid']) {
@@ -458,7 +465,7 @@ else {
 				$total_records = $x;
 
 			//set record number
-				if (strlen($_GET["n"]) == 0) { 
+				if (strlen($_GET["n"]) == 0) {
 					$n = 1;
 				}
 				else {
@@ -472,25 +479,24 @@ else {
 	//echo "<script language=\"javascript\" src=\"/includes/calendar_lw_layers.js\"></script>\n";
 	//echo "<script language=\"javascript\" src=\"/includes/calendar_lw_menu.js\"></script>";
 
-//begin creating the content 
+//begin creating the content
 	echo "<br />";
 
 //get the title and description of the schema
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' valign='top' nowrap='nowrap'>\n";
-	echo 	"	<b>$schema_label \n";
+	echo 	"	<b>$schema_label ";
 	if ($action == "add") {
-		echo 	"	Add\n";
+		echo $text['button-add']."\n";
 	}
 	else {
-		echo 	"Edit\n";
+		echo $text['button-edit']."\n";
 	}
 	echo "	</b>\n";
 	echo "	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 	if ($action == "update" && permission_exists('schema_data_edit')) {
-		echo "	<input type='button' class='btn' name='' alt='add' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid'\" value='Add'>\n";
-		//echo "	<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Do you really want to delete this?')){window.location='schema_delete.php?id=".$schema_uuid."&?data_row_uuid=".$data_row_uuid."&data_parent_row_uuid=$data_parent_row_uuid';}\" value='Delete'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-add']."' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid'\" value='".$text['button-add']."'>\n";
 	}
 	echo "			<br />\n";
 	echo "			$schema_description\n";
@@ -502,21 +508,19 @@ else {
 		echo "<td align='center' valign='top' nowrap='nowrap'>\n";
 
 		if ($action == "update" && permission_exists('schema_data_edit')) {
-			//echo "		<input type='button' class='btn' name='' alt='first' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$first_data_row_uuid."'\" value='First'>\n";
 			if (strlen($previous_data_row_uuid) == 0) {
-				echo "		<input type='button' class='btn' name='' alt='prev' disabled='disabled' value='Prev'>\n";
+				echo "		<input type='button' class='btn' name='' alt='".$text['button-prev']."' disabled='disabled' value='".$text['button-prev']."'>\n";
 			}
 			else {
-				echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$previous_data_row_uuid."&search_all=$search_all&n=".($n-1)."'\" value='Prev ".$previous_record_id."'>\n";
+				echo "		<input type='button' class='btn' name='' alt='".$text['button-prev']."' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$previous_data_row_uuid."&search_all=$search_all&n=".($n-1)."'\" value='".$text['button-prev']." ".$previous_record_id."'>\n";
 			}
-			echo "		<input type='button' class='btn' name='' alt='prev' value='".$record_number_array[$data_row_uuid]." of $total_records'>\n";
+			echo "		<input type='button' class='btn' name='' alt='".$text['button-prev']."' value='".$record_number_array[$data_row_uuid]." (".$total_records.")'>\n";
 			if (strlen($next_data_row_uuid) == 0) {
-				echo "		<input type='button' class='btn' name='' alt='next' disabled='disabled' value='Next'>\n";
+				echo "		<input type='button' class='btn' name='' alt='".$text['button-next']."' disabled='disabled' value='".$text['button-next']."'>\n";
 			}
 			else {
-				echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$next_data_row_uuid."&search_all=$search_all&n=".($n+1)."'\" value='Next ".$next_record_id."'>\n";
+				echo "		<input type='button' class='btn' name='' alt='".$text['button-next']."' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$next_data_row_uuid."&search_all=$search_all&n=".($n+1)."'\" value='".$text['button-next']." ".$next_record_id."'>\n";
 			}
-			//echo "		<input type='button' class='btn' name='' alt='last' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_uuid&data_row_uuid=".$last_data_row_uuid."'\" value='Last'>\n";
 		}
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "		&nbsp;&nbsp;&nbsp;";
@@ -530,18 +534,18 @@ else {
 		//echo "	<input type='hidden' name='data_parent_row_uuid' value='$data_parent_row_uuid'>\n";
 		//echo "	<input type='hidden' name='data_row_uuid' value='$first_data_row_uuid'>\n";
 		echo "	<input class='formfld' type='text' name='search_all' value='$search_all'>\n";
-		echo "	<input class='btn' type='submit' name='submit' value='Search All'>\n";
+		echo "	<input class='btn' type='submit' name='submit' value='".$text['button-search_all']."'>\n";
 		echo "</td>\n";
 		echo "</form>\n";
 		echo "<td width='5%' align='right' valign='top' nowrap='nowrap'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_data_view.php?id=$schema_uuid'\" value='Back'>\n";
+		echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='schema_data_view.php?id=$schema_uuid'\" value='".$text['button-back']."'>\n";
 		echo "</td>\n";
 	}
 	else {
 		echo "	<td width='50%' align='right'>\n";
-		//echo "		<input type='button' class='btn' name='' alt='prev' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Prev'>\n";
-		//echo "		<input type='button' class='btn' name='' alt='next' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Next'>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='Back'>\n";
+		//echo "		<input type='button' class='btn' name='' alt='".$text['button-prev']."' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='".$text['button-prev']."'>\n";
+		//echo "		<input type='button' class='btn' name='' alt='".$text['button-next']."' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='".$text['button-next']."'>\n";
+		echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid'\" value='".$text['button-back']."'>\n";
 		echo "	</td>\n";
 	}
 	echo "  </tr>\n";
@@ -711,16 +715,16 @@ else {
 							echo "<tr>\n";
 							switch ($row['field_name']) {
 								case "true":
-									echo "<td>True</td><td width='50'><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' checked='checked' value='true' /></td>\n";
-									echo "<td>False</td><td><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='false'></td>\n";
+									echo "<td>".$text['option-true']."</td><td width='50'><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' checked='checked' value='true' /></td>\n";
+									echo "<td>".$text['option-false']."</td><td><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='false'></td>\n";
 									break;
 								case "false":
-									echo "<td>True</td><td width='50'><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='true' /></td>\n";
-									echo "<td>False</td><td><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' checked='checked' value='false' /></td>\n";
+									echo "<td>".$text['option-true']."</td><td width='50'><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='true' /></td>\n";
+									echo "<td>".$text['option-false']."</td><td><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' checked='checked' value='false' /></td>\n";
 									break;
 								default:
-									echo "<td>True</td><td width='50'><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='true' /></td>\n";
-									echo "<td>False</td><td><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='false' /></td>\n";
+									echo "<td>".$text['option-true']."</td><td width='50'><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='true' /></td>\n";
+									echo "<td>".$text['option-false']."</td><td><input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='checkbox' name='".$x."field_value' value='false' /></td>\n";
 							}
 
 							echo "</tr>\n";
@@ -893,7 +897,7 @@ else {
 								echo "<a href='download.php?f=".$data_row[$row['field_name']]."'>".$data_row[$row['field_name']]."</a>";
 								echo "</td>";
 								echo "<td align='right'>";
-									echo "<input tabindex='".$row['field_order_tab']."' type='button' class='btn' title='delete' onclick=\"document.getElementById('".$row['field_name']."').innerHTML=".$row['field_name']."\" value='x'>\n";
+									echo "<input tabindex='".$row['field_order_tab']."' type='button' class='btn' title='".$text['button-delete']."' onclick=\"document.getElementById('".$row['field_name']."').innerHTML=".$row['field_name']."\" value='x'>\n";
 								echo "</td>";
 								echo "</tr>";
 								echo "</table>";
@@ -934,11 +938,11 @@ else {
 	echo "	<tr>\n";
 	echo "		<td colspan='999' align='right'>\n";
 		if ($action == "add" && permission_exists('schema_data_add')) {
-			echo "			<input type='submit' class='btn' name='submit' value='save'>\n";
+			echo "			<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 		}
 		if ($action == "update" && permission_exists('schema_data_edit')) {
 			echo "			<input type='hidden' name='data_row_uuid' value='$data_row_uuid'>\n";
-			echo "			<input type='submit' tabindex='9999999' class='btn' name='submit' value='Save'>\n";
+			echo "			<input type='submit' tabindex='9999999' class='btn' name='submit' value='".$text['button-save']."'>\n";
 		}
 	echo "		</td>\n";
 	echo "	</tr>\n";

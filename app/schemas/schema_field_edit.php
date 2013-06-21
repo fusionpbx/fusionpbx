@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set the action as an add or update
 if (isset($_REQUEST["id"])) {
 	$action = "update";
@@ -71,18 +77,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($field_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
-		if (strlen($field_name) == 0 && $field_type != "label") { $msg .= "Please provide: Name<br>\n"; }
-		if (strlen($field_type) == 0) { $msg .= "Please provide: Type<br>\n"; }
-		//if (strlen($field_value) == 0) { $msg .= "Please provide: Value<br>\n"; }
-		if (strlen($field_list_hidden) == 0) { $msg .= "Please provide: List Visibility<br>\n"; }
-		//if (strlen($field_search_by) == 0) { $msg .= "Please provide: Search By<br>\n"; }
-		if (strlen($field_column) == 0) { $msg .= "Please provide: Column<br>\n"; }
-		if (strlen($field_required) == 0) { $msg .= "Please provide: Required<br>\n"; }
-		if (strlen($field_order) == 0) { $msg .= "Please provide: Field Order<br>\n"; }
-		if (strlen($field_order_tab) == 0) { $msg .= "Please provide: Tab Order<br>\n"; }
-		//if (strlen($field_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
+		if (strlen($field_name) == 0 && $field_type != "label") { $msg .= $text['message-required'].$text['label-field_name']."<br>\n"; }
+		if (strlen($field_type) == 0) { $msg .= $text['message-required'].$text['label-field_type']."<br>\n"; }
+		if (strlen($field_list_hidden) == 0) { $msg .= $text['message-required'].$text['label-field_visibility']."<br>\n"; }
+		if (strlen($field_column) == 0) { $msg .= $text['message-required'].$text['label-field_column']."<br>\n"; }
+		if (strlen($field_required) == 0) { $msg .= $text['message-required'].$text['label-field_required']."<br>\n"; }
+		if (strlen($field_order) == 0) { $msg .= $text['message-required'].$text['label-field_order']."<br>\n"; }
+		if (strlen($field_order_tab) == 0) { $msg .= $text['message-required'].$text['label-field_tab_order']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -140,7 +142,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_edit.php?id=$schema_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Add Complete\n";
+			echo $text['message-add']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -168,7 +170,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_edit.php?id=$schema_uuid\">\n";
 			echo "<div align='center'>\n";
-			echo "Update Complete\n";
+			echo $text['message-update']."\n";
 			echo "</div>\n";
 			require_once "includes/footer.php";
 			return;
@@ -207,6 +209,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-field'];
 
 //begin the content
 	echo "<div align='center'>";
@@ -219,333 +222,285 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap=\"nowrap\"><b>Field</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_edit.php?id=$schema_uuid'\" value='Back'></td>\n";
+	echo "<td align='left' width='30%' nowrap=\"nowrap\"><b>".$text['header-field']."</b></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='schema_edit.php?id=$schema_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan=\"2\">\n";
-	echo "Lists the fields in the database.<br /><br />\n";
+	echo $text['description-field']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Label:\n";
+	echo "	".$text['label-field_label'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_label' maxlength='255' value=\"$field_label\">\n";
 	echo "<br />\n";
-	echo "Enter the field label.\n";
+	echo $text['description-field_label']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Name:\n";
+	echo "	".$text['label-field_name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_name' maxlength='255' value=\"$field_name\">\n";
 	echo "<br />\n";
-	echo "Enter field name.\n";
+	echo $text['description-field_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Type:\n";
+	echo "	".$text['label-field_type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_type'>\n";
 	echo "	<option value=''></option>\n";
 	if ($field_type == "text") {
-		echo "	<option value='text' selected='selected'>Text</option>\n";
+		echo "	<option value='text' selected='selected'>".$text['option-text']."</option>\n";
 	}
 	else {
-		echo "	<option value='text'>Text</option>\n";
+		echo "	<option value='text'>".$text['option-text']."</option>\n";
 	}
 	if ($field_type == "numeric") {
-		echo "	<option value='numeric' selected='selected'>Number</option>\n";
+		echo "	<option value='numeric' selected='selected'>".$text['option-number']."</option>\n";
 	}
 	else {
-		echo "	<option value='numeric'>Number</option>\n";
+		echo "	<option value='numeric'>".$text['option-number']."</option>\n";
 	}
 	if ($field_type == "date") {
-		echo "	<option value='date' selected='selected'>Date</option>\n";
+		echo "	<option value='date' selected='selected'>".$text['option-date']."</option>\n";
 	}
 	else {
-		echo "	<option value='date'>Date</option>\n";
+		echo "	<option value='date'>".$text['option-date']."</option>\n";
 	}
 	if ($field_type == "email") {
-		echo "	<option value='email' selected='selected'>Email</option>\n";
+		echo "	<option value='email' selected='selected'>".$text['option-email']."</option>\n";
 	}
 	else {
-		echo "	<option value='email'>Email</option>\n";
+		echo "	<option value='email'>".$text['option-email']."</option>\n";
 	}
 	if ($field_type == "label") {
-		echo "	<option value='label' selected='selected'>Label</option>\n";
+		echo "	<option value='label' selected='selected'>".$text['option-label']."</option>\n";
 	}
 	else {
-		echo "	<option value='label'>Label</option>\n";
+		echo "	<option value='label'>".$text['option-label']."</option>\n";
 	}
 	if ($field_type == "phone") {
-		echo "	<option value='phone' selected='selected'>Phone</option>\n";
+		echo "	<option value='phone' selected='selected'>".$text['option-phone']."</option>\n";
 	}
 	else {
-		echo "	<option value='phone'>Phone</option>\n";
+		echo "	<option value='phone'>".$text['option-phone']."</option>\n";
 	}
-	//if ($field_type == "truefalse") {
-	//	echo "	<option value='truefalse' selected='selected'>True or False</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='truefalse'>True or False</option>\n";
-	//}
 	if ($field_type == "checkbox") {
-		echo "	<option value='checkbox' selected='selected'>Check Box</option>\n";
+		echo "	<option value='checkbox' selected='selected'>".$text['option-check_box']."</option>\n";
 	}
 	else {
-		echo "	<option value='checkbox'>Check Box</option>\n";
+		echo "	<option value='checkbox'>".$text['option-check_box']."</option>\n";
 	}
-	//if ($field_type == "radiobutton") {
-	//	echo "	<option value='radiobutton' selected='selected' >Radio Button</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='radiobutton'>Radio Button</option>\n";
-	//}
 	if ($field_type == "textarea") {
-		echo "	<option value='textarea' selected='selected'>Textarea</option>\n";
+		echo "	<option value='textarea' selected='selected'>".$text['option-text_area']."</option>\n";
 	}
 	else {
-		echo "	<option value='textarea'>Textarea</option>\n";
+		echo "	<option value='textarea'>".$text['option-text_area']."</option>\n";
 	}
 	if ($field_type == "select") {
-		echo "	<option value='select' selected='selected'>Select</option>\n";
+		echo "	<option value='select' selected='selected'>".$text['option-select']."</option>\n";
 	}
 	else {
-		echo "	<option value='select'>Select</option>\n";
+		echo "	<option value='select'>".$text['option-select']."</option>\n";
 	}
 	if ($field_type == "hidden") {
-		echo "	<option value='hidden' selected='selected'>Hidden</option>\n";
+		echo "	<option value='hidden' selected='selected'>".$text['option-hidden']."</option>\n";
 	}
 	else {
-		echo "	<option value='hidden'>Hidden</option>\n";
+		echo "	<option value='hidden'>".$text['option-hidden']."</option>\n";
 	}
 	if ($field_type == "uuid") {
-		echo "	<option value='uuid' selected='selected'>UUID</option>\n";
+		echo "	<option value='uuid' selected='selected'>".$text['option-uuid']."</option>\n";
 	}
 	else {
-		echo "	<option value='uuid'>UUID</option>\n";
+		echo "	<option value='uuid'>".$text['option-uuid']."</option>\n";
 	}
-	//if ($field_type == "ipv4") {
-	//	echo "	<option value='ipv4' selected='selected'>IP version 4</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='ipv4'>IP version 4</option>\n";
-	//}
-	//if ($field_type == "ipv6") {
-	//	echo "	<option value='ipv6' selected='selected'>IP version 6</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='ipv6'>IP version 6</option>\n";
-	//}
-	//if ($field_type == "money") {
-	//	echo "	<option value='money' selected='selected'>Money</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='money'>Money</option>\n";
-	//}
 	if ($field_type == "password") {
-		echo "	<option value='password' selected='selected'>Password</option>\n";
+		echo "	<option value='password' selected='selected'>".$text['option-password']."</option>\n";
 	}
 	else {
-		echo "	<option value='password'>Password</option>\n";
+		echo "	<option value='password'>".$text['option-password']."</option>\n";
 	}
 	if ($field_type == "pin_number") {
-		echo "	<option value='pin_number' selected='selected'>PIN Number</option>\n";
+		echo "	<option value='pin_number' selected='selected'>".$text['option-pin_number']."</option>\n";
 	}
 	else {
-		echo "	<option value='pin_number'>PIN Number</option>\n";
+		echo "	<option value='pin_number'>".$text['option-pin_number']."</option>\n";
 	}
 	if ($field_type == "image") {
-		echo "	<option value='image' selected='selected'>Upload Image</option>\n";
+		echo "	<option value='image' selected='selected'>".$text['option-image_upload']."</option>\n";
 	}
 	else {
-		echo "	<option value='image'>Upload Image</option>\n";
+		echo "	<option value='image'>".$text['option-image_upload']."</option>\n";
 	}
 	if ($field_type == "file") {
-		echo "	<option value='upload_file' selected='selected'>Upload File</option>\n";
+		echo "	<option value='upload_file' selected='selected'>".$text['option-file_upload']."</option>\n";
 	}
 	else {
-		echo "	<option value='file'>Upload File</option>\n";
+		echo "	<option value='file'>".$text['option-file_upload']."</option>\n";
 	}
-	//if ($field_type == "yesno") {
-	//	echo "	<option value='yesno' selected='selected'>Yes or No</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='yesno'>Yes or No</option>\n";
-	//}
 	if ($field_type == "url") {
-		echo "	<option value='url' selected='selected'>URL</option>\n";
+		echo "	<option value='url' selected='selected'>".$text['option-url']."</option>\n";
 	}
 	else {
-		echo "	<option value='url'>URL</option>\n";
+		echo "	<option value='url'>".$text['option-url']."</option>\n";
 	}
-	//if ($field_type == "add_date") {
-	//	echo "	<option value='add_date' selected='selected'>Add Date</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='add_date'>Add Date</option>\n";
-	//}
-	//if ($field_type == "add_user") {
-	//	echo "	<option value='add_user' selected='selected'>Add User</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='add_user'>Add User</option>\n";
-	//}
 	if ($field_type == "mod_date") {
-		echo "	<option value='mod_date' selected='selected'>Modified Date</option>\n";
+		echo "	<option value='mod_date' selected='selected'>".$text['option-modified_date']."</option>\n";
 	}
 	else {
-		echo "	<option value='mod_date'>Modified Date</option>\n";
+		echo "	<option value='mod_date'>".$text['option-modified_date']."</option>\n";
 	}
 	if ($field_type == "mod_user") {
-		echo "	<option value='mod_user' selected='selected'>Modified User</option>\n";
+		echo "	<option value='mod_user' selected='selected'>".$text['option-modified_user']."</option>\n";
 	}
 	else {
-		echo "	<option value='mod_user'>Modified User</option>\n";
+		echo "	<option value='mod_user'>".$text['option-modified_user']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Select the field type.\n";
+	echo $text['description-field_type']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Value:\n";
+	echo "	".$text['label-field_value'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_value' maxlength='255' value=\"$field_value\">\n";
 	echo "<br />\n";
-	echo "Enter the default value.\n";
+	echo $text['description-field_value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	List Visibility:\n";
+	echo "	".$text['label-field_visibility'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_list_hidden'>\n";
 	echo "	<option value=''></option>\n";
 	if ($field_list_hidden == "show") {
-		echo "	<option value='show'  selected='selected'>show</option>\n";
+		echo "	<option value='show'  selected='selected'>".$text['option-visible']."</option>\n";
 	}
 	else {
-		echo "	<option value='show'>show</option>\n";
+		echo "	<option value='show'>".$text['option-visible']."</option>\n";
 	}
 	if ($field_list_hidden == "hide") {
-		echo "	<option value='hide'  selected='selected'>hide</option>\n";
+		echo "	<option value='hide'  selected='selected'>".$text['option-hidden']."</option>\n";
 	}
 	else {
-		echo "	<option value='hide'>hide</option>\n";
+		echo "	<option value='hide'>".$text['option-hidden']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Choose whether the field is hidden from the list.\n";
+	echo $text['description-field_visibility']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Search By:\n";
+	echo "	".$text['label-field_search_by'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_search_by'>\n";
 	echo "	<option value=''></option>\n";
 	if ($field_search_by == "yes") {
-		echo "	<option value='yes'  selected='selected'>yes</option>\n";
+		echo "	<option value='yes'  selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='yes'>yes</option>\n";
+		echo "	<option value='yes'>".$text['option-true']."</option>\n";
 	}
 	if ($field_search_by == "no") {
-		echo "	<option value='no' selected='selected'>no</option>\n";
+		echo "	<option value='no' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='no'>no</option>\n";
+		echo "	<option value='no'>".$text['option-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Choose whether the field will be used for searches.\n";
+	echo $text['description-field_search_by']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Column:\n";
+	echo "	".$text['label-field_column'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_column' maxlength='255' value=\"$field_column\">\n";
 	echo "<br />\n";
-	echo "Determines which column to show the field in.\n";
+	echo $text['description-field_column']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Required:\n";
+	echo "	".$text['label-field_required'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_required'>\n";
 	echo "	<option value=''></option>\n";
 	if ($field_required == "yes") {
-		echo "	<option value='yes'  selected='selected'>yes</option>\n";
+		echo "	<option value='yes'  selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='yes'>yes</option>\n";
+		echo "	<option value='yes'>".$text['option-true']."</option>\n";
 	}
 	if ($field_required == "no") {
-		echo "	<option value='no' selected='selected'>no</option>\n";
+		echo "	<option value='no' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='no'>no</option>\n";
+		echo "	<option value='no'>".$text['option-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Choose whether the field is required.\n";
+	echo $text['description-field_required']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Field Order:\n";
+	echo "	".$text['label-field_order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='field_order' maxlength='255' value='$field_order'>\n";
 	echo "<br />\n";
-	echo "Enter the order of the field.\n";
+	echo $text['description-field_order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Tab Order:\n";
+	echo "	".$text['label-field_tab_order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='field_order_tab' maxlength='255' value='$field_order_tab'>\n";
 	echo "<br />\n";
-	echo "Enter the tab order.\n";
+	echo $text['description-field_tab_order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	Description:\n";
+	echo "	".$text['label-field_description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_description' maxlength='255' value=\"$field_description\">\n";
 	echo "<br />\n";
-	echo "Enter the description.\n";
+	echo $text['description-field_description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -554,7 +509,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='schema_field_uuid' value='$schema_field_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

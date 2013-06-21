@@ -33,7 +33,16 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-schemas'];
+
 require_once "includes/paging.php";
 
 //get the http get variables
@@ -49,12 +58,12 @@ require_once "includes/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>Schemas</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-schemas']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Provides the ability to quickly define information to store and dynamically makes tools available to view, add, edit, delete, and search.\n";
+	echo $text['description-schemas']."\n";
 	echo "<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -71,9 +80,9 @@ require_once "includes/paging.php";
 	$rows_per_page = 100;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = " select * from v_schemas ";
 	$sql .= " where domain_uuid = '$domain_uuid' ";
@@ -92,14 +101,14 @@ require_once "includes/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('schema_label', 'Label', $order_by, $order);
-	echo th_order_by('schema_name', 'Schema Name', $order_by, $order);
-	echo th_order_by('schema_auth', 'Authentication', $order_by, $order);
-	echo th_order_by('schema_description', 'Description', $order_by, $order);
+	echo th_order_by('schema_label', $text['label-label'], $order_by, $order);
+	echo th_order_by('schema_name', $text['label-schema_name'], $order_by, $order);
+	echo th_order_by('schema_auth', $text['label-authentication'], $order_by, $order);
+	echo th_order_by('schema_description', $text['label-description'], $order_by, $order);
 	//echo "<th align='center'>View</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('schema_add')) {
-		echo "	<a href='schema_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='schema_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -112,14 +121,21 @@ require_once "includes/paging.php";
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['schema_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['schema_name']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['schema_auth']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if ($row['schema_auth'] == 'yes') {
+				echo $text['option-true'];
+			}
+			else if ($row['schema_auth'] == 'false') {
+				echo $text['option-false'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['schema_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('schema_edit')) {
-				echo "		<a href='schema_edit.php?id=".$row['schema_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='schema_edit.php?id=".$row['schema_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('schema_delete')) {
-				echo "		<a href='schema_delete.php?id=".$row['schema_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='schema_delete.php?id=".$row['schema_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -136,7 +152,7 @@ require_once "includes/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('schema_add')) {
-		echo "			<a href='schema_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='schema_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

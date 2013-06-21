@@ -33,6 +33,7 @@ else {
 	echo "access denied";
 	exit;
 }
+
 require_once "includes/header.php";
 require_once "includes/paging.php";
 
@@ -48,12 +49,12 @@ $order = $_GET["order"];
 
 	echo "<table width='100%' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>Fields</b></td>\n";
+	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-fields']."</b></td>\n";
 	echo "<td width='50%'  align=\"right\">&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan=\"2\">\n";
-	echo "Lists the fields in the database.<br /><br />\n";
+	echo $text['description-fields']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
@@ -80,19 +81,19 @@ $order = $_GET["order"];
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('field_label', 'Label', $order_by, $order);
-	echo th_order_by('field_name', 'Name', $order_by, $order);
-	echo th_order_by('field_type', 'Type', $order_by, $order);
-	echo th_order_by('field_column', 'Column', $order_by, $order);
-	echo th_order_by('field_required', 'Required', $order_by, $order);
-	echo th_order_by('field_list_hidden', 'Visible', $order_by, $order);
-	echo th_order_by('field_search_by', 'Search By', $order_by, $order);
-	echo th_order_by('field_order', 'Field Order', $order_by, $order);
-	echo th_order_by('field_order_tab', 'Tab Order', $order_by, $order);
-	echo th_order_by('field_description', 'Description', $order_by, $order);
+	echo th_order_by('field_label', $text['label-field_label'], $order_by, $order);
+	echo th_order_by('field_name', $text['label-field_name'], $order_by, $order);
+	echo th_order_by('field_type', $text['label-field_type'], $order_by, $order);
+	echo th_order_by('field_column', $text['label-field_column'], $order_by, $order);
+	echo th_order_by('field_required', $text['label-field_required'], $order_by, $order);
+	echo th_order_by('field_list_hidden', $text['label-field_visibility'], $order_by, $order);
+	echo th_order_by('field_search_by', $text['label-field_search_by'], $order_by, $order);
+	echo th_order_by('field_order', $text['label-field_order'], $order_by, $order);
+	echo th_order_by('field_order_tab', $text['label-field_tab_order'], $order_by, $order);
+	echo th_order_by('field_description', $text['label-field_description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('schema_view')) {
-		echo "	<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -102,20 +103,63 @@ $order = $_GET["order"];
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_type']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			switch ($row['field_type']) {
+				case "text" : echo $text['option-text']; break;
+				case "numeric" : echo $text['option-number']; break;
+				case "date" : echo $text['option-date']; break;
+				case "email" : echo $text['option-email']; break;
+				case "label" : echo $text['option-label']; break;
+				case "phone" : echo $text['option-phone']; break;
+				case "checkbox" : echo $text['option-check_box']; break;
+				case "textarea" : echo $text['option-text_area']; break;
+				case "select" : echo $text['option-select']; break;
+				case "hidden" : echo $text['option-hidden']; break;
+				case "uuid" : echo $text['option-uuid']; break;
+				case "password" : echo $text['option-password']; break;
+				case "pin_number" : echo $text['option-pin_number']; break;
+				case "image" : echo $text['option-image_upload']; break;
+				case "upload_file" : echo $text['option-file_upload']; break;
+				case "url" : echo $text['option-url']; break;
+				case "mod_date" : echo $text['option-modified_date']; break;
+				case "mod_user" : echo $text['option-modified_user']; break;
+				default : echo $row['field_type'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_column']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_required']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_list_hidden']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_search_by']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if ($row['field_required'] == 'yes') {
+				echo $text['option-true'];
+			}
+			else if ($row['field_required'] == 'no') {
+				echo $text['option-false'];
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if ($row['field_list_hidden'] == 'show') {
+				echo $text['option-visible'];
+			}
+			else if ($row['field_list_hidden'] == 'hide') {
+				echo $text['option-hidden'];
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if ($row['field_search_by'] == 'yes') {
+				echo $text['option-true'];
+			}
+			else if ($row['field_search_by'] == 'no') {
+				echo $text['option-false'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order_tab']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('schema_edit')) {
-				echo "		<a href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "		<a href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('schema_delete')) {
-				echo "		<a href='schema_field_delete.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "		<a href='schema_field_delete.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -132,7 +176,7 @@ $order = $_GET["order"];
 	echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('schema_add')) {
-		echo "			<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

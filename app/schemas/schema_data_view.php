@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (strlen($_GET["id"]) > 0) {
 	$schema_uuid = check_str($_GET["id"]);
 	if (strlen($_GET["data_parent_row_uuid"])>0) {
@@ -44,15 +50,16 @@ if (strlen($_GET["id"]) > 0) {
 
 //used for changing the order
 	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];    
+	$order = $_GET["order"];
 
-//used to alternate colors when paging 
+//used to alternate colors when paging
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-data_view'];
 
 //get the information about the schema by using the id
 	$sql = "select * from v_schemas ";
@@ -255,7 +262,7 @@ if (strlen($_GET["id"]) > 0) {
 		echo "	<input class='formfld' type='text' name='search_all' value=\"$search_all\">\n";
 		echo "	<input type='hidden' name='id' value='$schema_uuid'>\n";
 		echo "	<input type='hidden' name='data_parent_row_uuid' value='$data_parent_row_uuid'>\n";
-		echo "	<input class='btn' type='submit' name='submit' value='Search All'>\n";
+		echo "	<input class='btn' type='submit' name='submit' value='".$text['button-search_all']."'>\n";
 		echo "</form>\n";
 	}
 	echo "	</td>\n";
@@ -275,7 +282,7 @@ if (strlen($_GET["id"]) > 0) {
 	else {
 		$param = "&id=$schema_uuid&data_row_uuid=$data_row_uuid";
 	}
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 //list the data in the database
@@ -297,7 +304,7 @@ if (strlen($_GET["id"]) > 0) {
 	}
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('schema_data_add')) {
-		echo "	<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+		echo "	<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -351,14 +358,14 @@ if (strlen($_GET["id"]) > 0) {
 		echo "<td valign='top' align='right' nowrap='nowrap'>\n";
 		if (permission_exists('schema_data_edit')) {
 			if (strlen($data_parent_row_uuid) == 0) {
-				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."&search_all=$search_all' alt='edit'>$v_link_label_edit</a>\n";
+				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."&search_all=$search_all' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			else {
-				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 		}
 		if (permission_exists('schema_delete')) {
-			echo"	<a href='schema_delete.php?data_row_uuid=".$row['data_row_uuid']."&data_parent_row_uuid=$data_parent_row_uuid&schema_uuid=".$schema_uuid."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+			echo"	<a href='schema_delete.php?data_row_uuid=".$row['data_row_uuid']."&data_parent_row_uuid=$data_parent_row_uuid&schema_uuid=".$schema_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 		}
 		echo "</td>\n";
 
@@ -375,7 +382,7 @@ if (strlen($_GET["id"]) > 0) {
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('schema_data_add')) {
-		echo "			<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='add'>$v_link_label_add</a>\n";
+		echo "			<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
