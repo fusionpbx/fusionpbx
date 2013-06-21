@@ -185,7 +185,7 @@
 					if (tonumber(row.ivr_menu_option_digits) ~= nil) then
 						row.ivr_menu_option_digits = "^"..row.ivr_menu_option_digits.."$";
 					end
-					if (api:execute("regex", digits.."|"..row.ivr_menu_option_digits) == "true") then
+					if (api:execute("regex", "m:~"..digits.."~"..row.ivr_menu_option_digits) == "true") then
 						if (row.ivr_menu_option_action == "menu-exec-app") then
 							--get the action and data
 								pos = string.find(row.ivr_menu_option_param, " ", 0, true);
@@ -196,9 +196,9 @@
 								regex = string.find(row.ivr_menu_option_digits, "(", 0, true);
 								if (regex) then
 									--get the regex result
-										result = trim(api:execute("regex", digits.."|"..row.ivr_menu_option_digits.."|\$1"));
+										result = trim(api:execute("regex", "m:~"..digits.."~"..row.ivr_menu_option_digits.."~\$1"));
 										if (debug["regex"]) then
-											freeswitch.consoleLog("notice", "[ivr_menu] regex "..digits.."|"..row.ivr_menu_option_digits.."|\$1\n");
+											freeswitch.consoleLog("notice", "[ivr_menu] regex m:~"..digits.."~"..row.ivr_menu_option_digits.."~\$1\n");
 											freeswitch.consoleLog("notice", "[ivr_menu] result: "..result.."\n");
 										end
 
