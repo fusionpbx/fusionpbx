@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_POST)>0) {
 	$schema_uuid = trim($_REQUEST["id"]);
 	$data = trim($_POST["data"]);
@@ -111,7 +117,7 @@ if (count($_POST)>0) {
 			$sql .= "'$this->field_order_tab', ";
 			$sql .= "'$this->field_description' ";
 			$sql .= ")";
-			if (!$this->db_field_exists()) { 
+			if (!$this->db_field_exists()) {
 				$db->exec(check_sql($sql));
 			}
 			unset($sql);
@@ -186,7 +192,7 @@ if (count($_POST)>0) {
 		}
 	}
 
-//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher 
+//built in str_getcsv requires PHP 5.3 or higher, this function can be used to reproduct the functionality but requirs PHP 5.1.0 or higher
 	if(!function_exists('str_getcsv')) {
 		function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
 			$fp = fopen("php://memory", 'r+');
@@ -203,13 +209,14 @@ if (count($_POST)>0) {
 
 			//show the header
 				require_once "includes/header.php";
+				$page["title"] = $text['title-import_results'];
 
 			echo "<div align='center'>\n";
 			echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import Results</b></td>\n";
+			echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-import_results']."</b></td>\n";
 			echo "<td width='70%' align='right' valign='top'>\n";
-			echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_import.php?id=$schema_uuid'\" value='Back'>\n";
+			echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='schema_import.php?id=$schema_uuid'\" value='".$text['button-back']."'>\n";
 			echo "	<br /><br />\n";
 			echo "</td>\n";
 			echo "</tr>\n";
@@ -297,14 +304,14 @@ if (count($_POST)>0) {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-import'];
 
 //show the content
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr>\n";
-	echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>Import</b></td>\n";
+	echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-import']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	//echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schema_import.php?id=$schema_uuid'\" value='Back'>\n";
 	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -321,46 +328,46 @@ if (count($_POST)>0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Data:\n";
+	echo "    ".$text['label-import_data'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' rows='7' class='txt' wrap='off'>$data</textarea\n";
+	echo "    <textarea name='data' id='data' rows='7' class='txt' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
-	echo "Copy and paste the comma delimitted data into the text area to begin the import.\n";
+	echo $text['description-import_data']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Delimiter:\n";
+	echo "    ".$text['label-import_delimiter'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' style='width:40px;' name='data_delimiter'>\n";
-	echo "    <option value=','>,</option>\n";
-	echo "    <option value='|'>|</option>\n";
+	echo "    <select class='formfld' style='width: 100px;' name='data_delimiter'>\n";
+	echo "    <option value=','>, (Comma)</option>\n";
+	echo "    <option value='|'>| (Pipe)</option>\n";
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Select the delimiter.\n";
+	echo $text['description-import_delimiter']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    Enclosure:\n";
+	echo "    ".$text['label-import_enclosure'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' style='width:40px;' name='data_enclosure'>\n";
-	echo "    <option value='\"'>\"</option>\n";
-	echo "    <option value=''></option>\n";
+	echo "    <select class='formfld' style='width: 150px;' name='data_enclosure'>\n";
+	echo "    <option value='\"'>\" (Double-Quote)</option>\n";
+	echo "    <option value=''>(Nothing)</option>\n";
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo "Select the enclosure.\n";
+	echo $text['description-import_enclosure']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<input type='submit' name='import' class='btn' value='Import'>\n";
+	echo "			<input type='submit' name='import' class='btn' value='".$text['button-import']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

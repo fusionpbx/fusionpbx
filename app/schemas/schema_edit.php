@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -64,14 +70,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		if (strlen($domain_uuid) == 0) { $msg .= "Please provide: domain_uuid<br>\n"; }
-		//if (strlen($schema_category) == 0) { $msg .= "Please provide: Schema Category<br>\n"; }
-		//if (strlen($schema_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
-		if (strlen($schema_name) == 0) { $msg .= "Please provide: Schema Name<br>\n"; }
-		//if (strlen($schema_auth) == 0) { $msg .= "Please provide: Authentication<br>\n"; }
-		//if (strlen($schema_captcha) == 0) { $msg .= "Please provide: Captcha<br>\n"; }
-		//if (strlen($schema_parent_uuid) == 0) { $msg .= "Please provide: Parent Schema<br>\n"; }
-		//if (strlen($schema_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+		if (strlen($schema_name) == 0) { $msg .= $text['message-required'].$text['label-schema_name']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "includes/header.php";
 			require_once "includes/persistformvar.php";
@@ -124,7 +123,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=schemas.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Add Complete\n";
+				echo $text['message-add']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -152,7 +151,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "includes/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=schemas.php\">\n";
 				echo "<div align='center'>\n";
-				echo "Update Complete\n";
+				echo $text['message-update']."\n";
 				echo "</div>\n";
 				require_once "includes/footer.php";
 				return;
@@ -184,6 +183,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "includes/header.php";
+	$page["title"] = $text['title-schema'];
 
 //show the content
 	echo "<div align='center'>";
@@ -196,78 +196,78 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>Schema</b></td>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-schema']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	if (strlen($schema_uuid) > 0) {
-		echo "		<input type='button' class='btn' name='' alt='view' onclick=\"window.location='schema_data_view.php?id=".$row["schema_uuid"]."'\" value='View'>&nbsp;&nbsp;\n";
-		echo "		<input type='button' class='btn' name='' alt='import' onclick=\"window.location='schema_import.php?id=".$row["schema_uuid"]."'\" value='Import'>&nbsp;&nbsp;\n";
+		echo "		<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='schema_data_view.php?id=".$row["schema_uuid"]."'\" value='".$text['button-view']."'>&nbsp;&nbsp;\n";
+		echo "		<input type='button' class='btn' name='' alt='".$text['button-import']."' onclick=\"window.location='schema_import.php?id=".$row["schema_uuid"]."'\" value='".$text['button-import']."'>&nbsp;&nbsp;\n";
 	}
 	include "export/index.php";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='schemas.php'\" value='Back'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='schemas.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td align=\"left\" colspan='2'>\n";
-	echo "Provides the ability to quickly define information to store and dynamically makes tools available to view, add, edit, delete, and search. <br /><br />\n";
+	echo $text['description-schema']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Category:\n";
+	echo "	".$text['label-category'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$select_name = 'v_schemas';$field_name = 'schema_category';$sql_where_optional = "";$field_current_value = $schema_category;
 	echo html_select_other($db, $select_name, $field_name, $sql_where_optional, $field_current_value);
-	echo "Select the category.\n";
+	echo $text['description-category']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Label:\n";
+	echo "	".$text['label-label'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='schema_label' maxlength='255' value=\"$schema_label\">\n";
 	echo "<br />\n";
-	echo "Enter the label.\n";
+	echo $text['description-label']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='schema_name' maxlength='255' value=\"$schema_name\">\n";
 	echo "<br />\n";
-	echo "Enter the schema name.\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Authentication:\n";
+	echo "	".$text['label-authentication'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='schema_auth'>\n";
 	echo "	<option value=''></option>\n";
-	if ($schema_auth == "yes") { 
-		echo "	<option value='yes' SELECTED >yes</option>\n";
+	if ($schema_auth == "yes") {
+		echo "	<option value='yes' SELECTED >".$text['option-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='yes'>yes</option>\n";
+		echo "	<option value='yes'>".$text['option-true']."</option>\n";
 	}
-	if ($schema_auth == "no") { 
-		echo "	<option value='no' SELECTED >no</option>\n";
+	if ($schema_auth == "no") {
+		echo "	<option value='no' SELECTED >".$text['option-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='no'>no</option>\n";
+		echo "	<option value='no'>".$text['option-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo "Choose whether to require authentication.\n";
+	echo $text['description-authentication']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -278,13 +278,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//echo "<td class='vtable' align='left'>\n";
 	//echo "	<select class='formfld' name='schema_captcha'>\n";
 	//echo "	<option value=''></option>\n";
-	//if ($schema_captcha == "yes") { 
+	//if ($schema_captcha == "yes") {
 	//	echo "	<option value='yes' SELECTED >yes</option>\n";
 	//}
 	//else {
 	//	echo "	<option value='yes'>yes</option>\n";
 	//}
-	//if ($schema_captcha == "no") { 
+	//if ($schema_captcha == "no") {
 	//	echo "	<option value='no' SELECTED >no</option>\n";
 	//}
 	//else {
@@ -298,7 +298,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Parent Schema:\n";
+	echo "	".$text['label-parent_schema'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -306,6 +306,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			<option value=''></option>\n";
 	$sql = "select * from v_schemas ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and schema_name not like '".$schema_name."'";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -320,18 +321,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			</select>\n";
 
 	echo "<br />\n";
-	echo "Select a parent schema.\n";
+	echo $text['description-parent_schema']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Description:\n";
+	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<textarea class='formfld' name='schema_description' rows='4'>$schema_description</textarea>\n";
 	echo "<br />\n";
-	echo "Enter a description.\n";
+	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
@@ -340,7 +341,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='schema_uuid' value='$schema_uuid'>\n";
 	}
 	echo "				<input type='hidden' name='schema_captcha' value='$schema_captcha'>\n";
-	echo "				<input type='submit' name='submit' class='btn' value='Save'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

@@ -1,0 +1,119 @@
+<?php
+
+$text['title-schemas']['en-us'] = 'Schemas';
+$text['title-schema']['en-us'] = 'Schema';
+$text['title-field']['en-us'] = 'Field';
+$text['title-name_value']['en-us'] = 'Select Box Option';
+$text['title-data_view']['en-us'] = 'Schema Data View';
+$text['title-data']['en-us'] = 'Schema Data';
+$text['title-import']['en-us'] = 'Schema Import';
+$text['title-import_results']['en-us'] = 'Schema Import Results';
+
+$text['header-schemas']['en-us'] = 'Schemas';
+$text['header-schema']['en-us'] = 'Schema';
+$text['header-fields']['en-us'] = 'Fields';
+$text['header-field']['en-us'] = 'Field';
+$text['header-name_values']['en-us'] = 'Select Box Options';
+$text['header-name_value']['en-us'] = 'Select Box Option';
+$text['header-data_view']['en-us'] = 'Schema Data View';
+$text['header-data']['en-us'] = 'Schema Data';
+$text['header-import']['en-us'] = 'Schema Import';
+$text['header-import_results']['en-us'] = 'Schema Import Results';
+
+$text['description-schemas']['en-us'] = 'Provides the ability to quickly define information to store and dynamically makes tools available to view, add, edit, delete, and search.';
+$text['description-schema']['en-us'] = 'Define the properties of the schema below.';
+$text['description-fields']['en-us'] = 'Lists the fields in the database.';
+$text['description-field']['en-us'] = 'Define the properties of the field below.';
+$text['description-name_values']['en-us'] = 'Name and value pairs of the Select Box.';
+$text['description-name_value']['en-us'] = 'Define a name and value pair for the Select Box.';
+
+$text['label-category']['en-us'] = 'Category';
+$text['label-label']['en-us'] = 'Label';
+$text['label-name']['en-us'] = 'Name';
+$text['label-schema_name']['en-us'] = 'Schema Name';
+$text['label-authentication']['en-us'] = 'Authentication';
+$text['label-parent_schema']['en-us'] = 'Parent Schema';
+$text['label-description']['en-us'] = 'Description';
+$text['label-field_label']['en-us'] = 'Label';
+$text['label-field_name']['en-us'] = 'Name';
+$text['label-field_type']['en-us'] = 'Type';
+$text['label-field_value']['en-us'] = 'Value';
+$text['label-field_visibility']['en-us'] = 'Visibility';
+$text['label-field_column']['en-us'] = 'Column';
+$text['label-field_required']['en-us'] = 'Required';
+$text['label-field_search_by']['en-us'] = 'Search By';
+$text['label-field_order']['en-us'] = 'Field Order';
+$text['label-field_tab_order']['en-us'] = 'Tab Order';
+$text['label-field_description']['en-us'] = 'Description';
+$text['label-name_value_name']['en-us'] = 'Name';
+$text['label-name_value_value']['en-us'] = 'Value';
+$text['label-import_data']['en-us'] = 'Data';
+$text['label-import_delimiter']['en-us'] = 'Delimiter';
+$text['label-import_enclosure']['en-us'] = 'Enclosure';
+
+$text['description-category']['en-us'] = 'Select the category.';
+$text['description-label']['en-us'] = 'Enter the label.';
+$text['description-name']['en-us'] = 'Enter the schema name.';
+$text['description-authentication']['en-us'] = 'Choose whether to require authentication.';
+$text['description-parent_schema']['en-us'] = 'Select a parent schema.';
+$text['description-description']['en-us'] = 'Enter a description (optional).';
+$text['description-field_label']['en-us'] = 'Enter the field label.';
+$text['description-field_name']['en-us'] = 'Enter field name.';
+$text['description-field_type']['en-us'] = 'Select the field type.';
+$text['description-field_value']['en-us'] = 'Enter the default value.';
+$text['description-field_visibility']['en-us'] = 'Choose whether the field is hidden from the list.';
+$text['description-field_search_by']['en-us'] = 'Choose whether the field will be used for searches.';
+$text['description-field_column']['en-us'] = 'Determines which column to show the field in.';
+$text['description-field_required']['en-us'] = 'Choose whether the field is required.';
+$text['description-field_order']['en-us'] = 'Enter the order of the field.';
+$text['description-field_tab_order']['en-us'] = 'Enter the tab order.';
+$text['description-field_description']['en-us'] = 'Enter the description (optional).';
+$text['description-name_value_name']['en-us'] = 'Enter the option text.';
+$text['description-name_value_value']['en-us'] = 'Enter the option value.';
+$text['description-import_data']['en-us'] = 'Copy and paste the comma delimitted data into the text area to begin the import.';
+$text['description-import_delimiter']['en-us'] = 'Select the field/column delimiter.';
+$text['description-import_enclosure']['en-us'] = 'Select the field/column data enclosure.';
+
+$text['option-true']['en-us'] = 'True';
+$text['option-false']['en-us'] = 'False';
+$text['option-fusionpbx']['en-us'] = 'FusionPBX';
+$text['option-other']['en-us'] = 'Other';
+$text['option-visible']['en-us'] = 'Visible';
+$text['option-hidden']['en-us'] = 'Hidden';
+$text['option-text']['en-us'] = 'Text';
+$text['option-number']['en-us'] = 'Number';
+$text['option-date']['en-us'] = 'Date';
+$text['option-email']['en-us'] = 'Email';
+$text['option-label']['en-us'] = 'Label';
+$text['option-phone']['en-us'] = 'Phone';
+$text['option-check_box']['en-us'] = 'Check Box';
+$text['option-text_area']['en-us'] = 'Text Area';
+$text['option-select']['en-us'] = 'Select';
+$text['option-hidden']['en-us'] = 'Hidden';
+$text['option-uuid']['en-us'] = 'UUID';
+$text['option-password']['en-us'] = 'Password';
+$text['option-pin_number']['en-us'] = 'PIN Number';
+$text['option-image_upload']['en-us'] = 'Image Upload';
+$text['option-file_upload']['en-us'] = 'File Upload';
+$text['option-url']['en-us'] = 'URL';
+$text['option-modified_date']['en-us'] = 'Modified Date';
+$text['option-modified_user']['en-us'] = 'Modified User';
+
+$text['button-add']['en-us'] = 'Add';
+$text['button-edit']['en-us'] = 'Edit';
+$text['button-delete']['en-us'] = 'Delete';
+$text['button-back']['en-us'] = 'Back';
+$text['button-save']['en-us'] = 'Save';
+$text['button-view']['en-us'] = 'View';
+$text['button-import']['en-us'] = 'Import';
+$text['button-search_all']['en-us'] = 'Search All';
+$text['button-prev']['en-us'] = 'Previous';
+$text['button-next']['en-us'] = 'Next';
+
+$text['confirm-delete']['en-us'] = 'Do you really want to delete this?';
+
+$text['message-add']['en-us'] = 'Add Completed';
+$text['message-update']['en-us'] = 'Update Completed';
+$text['message-delete']['en-us'] = 'Delete Completed';
+$text['message-required']['en-us'] = 'Please provide: ';
+?>
