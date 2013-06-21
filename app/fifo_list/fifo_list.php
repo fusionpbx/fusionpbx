@@ -34,7 +34,15 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "includes/header.php";
+$page["title"] = $text['title-active_queues'];
+
 ?><script type="text/javascript">
 function loadXmlHttp(url, id) {
 	var f = this;
@@ -90,8 +98,8 @@ echo "<div align='center'>";
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 echo "  <tr>\n";
-echo "	<td align='left'><b>Active Queues</b><br>\n";
-echo "		List all the queues that are currently active with one or more callers.\n";
+echo "	<td align='left'><b>".$text['header-active_queues']."</b><br>\n";
+echo "		".$text['description-active_queues']."\n";
 echo "	</td>\n";
 echo "  </tr>\n";
 echo "</table>\n";

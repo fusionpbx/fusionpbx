@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set variables
 	$fifo_name = trim($_REQUEST["c"]);
 
@@ -49,7 +55,7 @@ else {
 	$switch_cmd = 'fifo list_verbose '.$fifo_name.'';
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -112,24 +118,15 @@ else {
 			*/
 
 			echo "<tr>\n";
-			echo "<th>Username</th>\n";
-			//echo "<th>Dialplan</th>\n";
-			echo "<th>Caller ID Name</th>\n";
-			echo "<th>Caller ID Number</th>\n";
-			echo "<th>Language</th>\n";
-			//echo "<th>ANI</th>\n";
-			//echo "<th>ANIII</th>\n";
-			//echo "<th>Network Addr</th>\n";
-			echo "<th>Destination Number</th>\n";
-			//echo "<th>RDNIS</th>\n";
-			//echo "<th>UUID</th>\n";
-			//echo "<th>Source</th>\n";
-			//echo "<th>Context</th>\n";
-			//echo "<th>Chan Name</th>\n";
-			echo "<th>Position</th>\n";
-			echo "<th>Priority</th>\n";
-			echo "<th>Status</th>\n";
-			echo "<th>Duration</th>\n";
+			echo "<th>".$text['label-username']."</th>\n";
+			echo "<th>".$text['label-caller_id_name']."</th>\n";
+			echo "<th>".$text['label-caller_id_number']."</th>\n";
+			echo "<th>".$text['label-language']."</th>\n";
+			echo "<th>".$text['label-destination_number']."</th>\n";
+			echo "<th>".$text['label-position']."</th>\n";
+			echo "<th>".$text['label-priority']."</th>\n";
+			echo "<th>".$text['label-status']."</th>\n";
+			echo "<th>".$text['label-duration']."</th>\n";
 			echo "</tr>\n";
 
 			foreach ($xml->fifo->callers->caller as $row) {
@@ -181,19 +178,10 @@ else {
 
 				echo "<tr>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$username &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$dialplan &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$caller_id_name &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$caller_id_number &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$default_language &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$ani &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$aniii &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$network_addr &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$destination_number &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$rdnis &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$uuid &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$source &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$context &nbsp;</td>\n";
-				//echo "<td valign='top' class='".$row_style[$c]."'>$chan_name &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_position &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_priority &nbsp;</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>$fifo_status &nbsp;</td>\n";
