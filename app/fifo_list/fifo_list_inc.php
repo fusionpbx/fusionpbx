@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 $switch_cmd = 'fifo list';
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 if ($fp) {
@@ -68,11 +74,11 @@ if ($fp) {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>Name</th>\n";
-	echo "<th>Consumer Count</th>\n";
-	echo "<th>Caller Count</th>\n";
-	echo "<th>Waiting Count</th>\n";
-	echo "<th>Importance</th>\n";
+	echo "<th>".$text['label-name']."</th>\n";
+	echo "<th>".$text['label-consumer_count']."</th>\n";
+	echo "<th>".$text['label-caller_count']."</th>\n";
+	echo "<th>".$text['label-waiting_count']."</th>\n";
+	echo "<th>".$text['label-importance']."</th>\n";
 	echo "<th>&nbsp;</th>\n";
 	echo "</tr>\n";
 
@@ -96,7 +102,7 @@ if ($fp) {
 				echo "<td valign='top' class='".$row_style[$c]."'>".$caller_count."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$waiting_count."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$importance."</td>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>view</a></td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>".$text['label-view']."</a></td>\n";
 				echo "</tr>\n";
 		}
 		else {
@@ -108,7 +114,7 @@ if ($fp) {
 					echo "<td valign='top' class='".$row_style[$c]."'>".$caller_count."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$waiting_count."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$importance."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>view</a></td>\n";
+					echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>".$text['label-view']."</a></td>\n";
 					echo "</tr>\n";
 				}
 		}
