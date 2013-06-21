@@ -130,10 +130,14 @@
 			ivr_menu_greet_long = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_long;
 		end
 	end
-	if (not file_exists(ivr_menu_greet_short)) then
-		if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short)) then
-			ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short;
+	if (string.len(ivr_menu_greet_short) > 1) then
+		if (not file_exists(ivr_menu_greet_short)) then
+			if (file_exists(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short)) then
+				ivr_menu_greet_short = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_greet_short;
+			end
 		end
+	else
+		ivr_menu_greet_short = ivr_menu_greet_long;
 	end
 	ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-that_was_an_invalid_entry.wav";
 
