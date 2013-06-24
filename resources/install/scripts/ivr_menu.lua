@@ -228,8 +228,17 @@
 							if (string.len(digits) < 6) then
 								--replace the $1 and the domain name
 									digits = digits:gsub("*", "");
-								--run the action
-									session:execute("transfer", digits.." XML "..context);
+								--check to see if the user extension exists
+									cmd = "user_exists id ".. digits .." "..context;
+									result = api:executeString(cmd);
+									freeswitch.consoleLog("NOTICE", "[confirm] "..cmd.." --"..result.."--\n");
+									if (result == "true") then
+										--run the action
+											session:execute("transfer", digits.." XML "..context);
+									else
+										--run the menu again
+											menu();	
+									end
 							end
 						end
 					end
