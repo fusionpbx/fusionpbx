@@ -956,7 +956,7 @@ else {
 		//get the child schema_uuid and use it to show the list of data
 			$sql = "select * from v_schemas ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and schema_parent_id = '$schema_uuid' ";
+			$sql .= "and schema_parent_uuid = '$schema_uuid' ";
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
