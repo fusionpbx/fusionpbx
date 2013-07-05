@@ -83,10 +83,11 @@ echo "			<b>".$text['label-log-viewer']."</b><br />\n";
 echo "		</td>\n";
 echo "		<form action=\"log_viewer.php\" method=\"POST\">\n";
 echo "		<td align='right' valign='middle' nowrap>\n";
-echo "				<label for='ln' style='margin-right: 30px;'><input type='checkbox' name='ln' id='ln' value='1' ".(($_POST['ln'] == 1) ? 'checked' : null)."> ".$text['label-line-num']."</label>";
-echo "				<label for='ord' style='margin-right: 30px;'><input type='checkbox' name='ord' id='ord' value='desc' ".(($_POST['ord'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
-echo "				Display <input type=\"text\" class=\"formfld\" style=\"width: 50px; text-align: center;\" name=\"fs\" value=\"".$_POST['fs']."\" onclick=\"this.select();\"> ".$text['label-kb']."";
-echo "				<input type=\"submit\" class=\"btn\" style=\"margin-left: 30px;\" name=\"submit\" value=\"".$text['button-reload']."\">";
+echo "			<label for='filter' style='margin-right: 30px;'>".$text['label-filter']." <input type=\"text\" class=\"formfld\" style=\"width: 150px; text-align: center;\" name=\"filter\" value=\"".$_POST['filter']."\" onclick=\"this.select();\"></label>";
+echo "			<label for='ln' style='margin-right: 30px;'><input type='checkbox' name='ln' id='ln' value='1' ".(($_POST['ln'] == 1) ? 'checked' : null)."> ".$text['label-line-num']."</label>";
+echo "			<label for='ord' style='margin-right: 30px;'><input type='checkbox' name='ord' id='ord' value='desc' ".(($_POST['ord'] == 'desc') ? 'checked' : null)."> ".$text['label-sort']."</label>";
+echo "			Display <input type=\"text\" class=\"formfld\" style=\"width: 50px; text-align: center;\" name=\"fs\" value=\"".$_POST['fs']."\" onclick=\"this.select();\"> ".$text['label-kb']."";
+echo "			<input type=\"submit\" class=\"btn\" style=\"margin-left: 30px;\" name=\"submit\" value=\"".$text['button-reload']."\">";
 echo "		</td>\n";
 echo "		</form>\n";
 echo "		<td width='125' align='right' valign='middle' nowrap='nowrap'>\n";
@@ -167,12 +168,16 @@ if (permission_exists('log_view')) {
 		else {
 			$user_filesize = $_POST['fs'] * 1024;
 		}
+		if (strlen($_REQUEST['filter']) > 0){
+			$uuid_filter = $_REQUEST['filter'];
+			echo "<div style=\"text-align: right;color: #FFFFFF;\">".$text['description-filter']." " . $uuid_filter . "</div>";
+		}
 	}
 
 	//echo "Log File Size: " . $file_size . " bytes. <br />";
 	echo "<div style=\"text-align: right;color: #FFFFFF;\">".$text['label-displaying']." " . number_format($user_filesize,0,'.',',') . " of " . number_format($file_size,0,'.',',') . " ".$text['label-bytes'].". </div><br><hr>";
 
-	$file = fopen($log_file, "r") or exit("Unable to open file!");
+	$file = fopen($log_file, "r") or exit($text['error-open-file']);
 
 	//set pointer in file
 	if ($user_filesize >= '0') {
@@ -221,27 +226,39 @@ if (permission_exists('log_view')) {
 		$log_line = fgets($file);
 		$byte_count++;
 		$noprint = false;
-		foreach ($arr_filter as $v1) {
-			$pos = strpos($log_line, $v1['pattern']);
-			//echo "</br> POS is: '$pos'</br>";
-			if ($pos !== false){
-				//color adjustments on words in log line
-				for ($i=2; $i<=$MAXEL; $i++){
-					if (isset ($v1["pattern".$i])){
-						$log_line = str_replace($v1["pattern".$i], "<font color=\"{$v1["color".$i]}\">{$v1["pattern".$i]}</font>", $log_line);
-					}
-				}
 
-				$ary_output[] = "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">".$log_line."</font><br>";
-				$noprint = true;
+		$skip_line = false;
+		if (!empty($uuid_filter) ) {
+			$uuid_match = strpos($log_line, $uuid_filter);
+			if ($uuid_match === false) {
+				$skip_line = true;
+			}
+			else {
+				$skip_line = false;
 			}
 		}
 
-		if ($noprint !== true){
-			//more firefox workaround...
-			//echo "<p style=\"background-color:$background_color;color:$default_color;font-wieght:$default_type;font-family:$default_font\">";
+		if ($skip_line === false) {
+			foreach ($arr_filter as $v1) {
+				$pos = strpos($log_line, $v1['pattern']);
+				//echo "</br> POS is: '$pos'</br>";
+				if ($pos !== false){
+					//color adjustments on words in log line
+					for ($i=2; $i<=$MAXEL; $i++){
+						if (isset ($v1["pattern".$i])){
+							$log_line = str_replace($v1["pattern".$i], "<font color=\"{$v1["color".$i]}\">{$v1["pattern".$i]}</font>", $log_line);
+						}
+					}
+					$ary_output[] = "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">".$log_line."</font><br>";
+					$noprint = true;
+				}
+			}
 
-			$ary_output[] = "<font color=\"$default_color\" face=\"$default_font\">".htmlentities($log_line)."</font><br>";
+			if ($noprint !== true){
+				//more firefox workaround...
+				//echo "<p style=\"background-color:$background_color;color:$default_color;font-wieght:$default_type;font-family:$default_font\">";
+				$ary_output[] = "<font color=\"$default_color\" face=\"$default_font\">".$log_line."</font><br>";
+			}
 		}
 	}
 

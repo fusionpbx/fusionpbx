@@ -24,11 +24,12 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 */
-	
 
 	$text['label-log-viewer']['en-us'] = 'Log Viewer';
 	$text['label-line-num']['en-us'] = 'Show Line Numbers';
 	$text['label-sort']['en-us'] = 'Sort Descending';
+	$text['label-filter']['en-us'] = 'Filter';
+	$text['description-filter']['en-us'] = 'Filtering the log with the text:';
 	$text['button-reload']['en-us'] = 'Reload';
 	$text['label-kb']['en-us'] = 'KB'; //KiloBytes
 	$text['button-download']['en-us'] = 'Download Logs';
@@ -37,6 +38,7 @@
 	$text['label-syntax']['en-us'] = 'Syntax Highlighted';
 	$text['label-open-at']['en-us'] = 'opening at';
 	$text['label-open-file']['en-us'] = 'opening entire file';
+	$text['error-open-file']['en-us'] = 'Unable to open file!';
 
 
 ?>
