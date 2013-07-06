@@ -119,6 +119,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$forward_all_enabled = check_str($_POST["forward_all_enabled"]);
 			$forward_all_destination = check_str($_POST["forward_all_destination"]);
 			$cid_name_prefix = check_str($_POST["cid_name_prefix"]);
+			$cid_number_prefix = check_str($_POST["cid_number_prefix"]);
 			$call_prompt = check_str($_POST["call_prompt"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
 
@@ -256,6 +257,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$follow_me->extension_uuid = $extension_uuid;
 			$follow_me->db_type = $db_type;
 			$follow_me->cid_name_prefix = $cid_name_prefix;
+			$follow_me->cid_number_prefix = $cid_number_prefix;
 			$follow_me->call_prompt = $call_prompt;
 			$follow_me->follow_me_enabled = $follow_me_enabled;
 
@@ -296,13 +298,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 
 					$follow_me->follow_me_uuid = $follow_me_uuid;
-					$follow_me->follow_me_add();
+					$follow_me->add();
 					$follow_me->set();
 				}
 			}
 			if ($follow_me_action == "update") {
 				$follow_me->follow_me_uuid = $follow_me_uuid;
-				$follow_me->follow_me_update();
+				$follow_me->update();
 				$follow_me->set();
 			}
 			unset($follow_me);
@@ -368,6 +370,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		$cid_name_prefix = $row["cid_name_prefix"];
+		$cid_number_prefix = $row["cid_number_prefix"];
 		$call_prompt = $row["call_prompt"];
 		$follow_me_enabled = $row["follow_me_enabled"];
 
@@ -560,7 +563,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-ring-delay']."\n"; 
 	destination_select('destination_delay_1', $destination_delay_1, '0');
 	echo "	".$text['label-ring-timeout']."\n"; 
-	destination_select('destination_timeout_1', $destination_timeout_1, '10');
+	destination_select('destination_timeout_1', $destination_timeout_1, '30');
 	//echo "<br />\n";
 	//echo "This number rings first.\n";
 	echo "</td>\n";
@@ -635,6 +638,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "  <input class='formfld' type='text' name='cid_name_prefix' maxlength='255' value='$cid_name_prefix'>\n";
 		echo "<br />\n";
 		echo $text['description-cid-name-prefix']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
+	if (permission_exists('follow_me_cid_number_prefix')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-cid-number-prefix'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='cid_number_prefix' maxlength='255' value='$cid_number_prefix'>\n";
+		echo "<br />\n";
+		echo $text['description-cid-number-prefix']." \n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
