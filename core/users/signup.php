@@ -92,7 +92,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 		echo "<table><tr><td>";
 		echo $msgerror;
 		echo "</td></tr></table>";
-		require_once "includes/persistform.php";
+		require_once "resources/persist_form.php";
 		echo persistform($_POST);
 		echo "</div>";
 		require_once "includes/footer.php";
