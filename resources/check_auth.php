@@ -23,7 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-require_once "includes/require.php";
+require_once "resources/require.php";
 session_start();
 
 //if the username session is not set the check username and password
