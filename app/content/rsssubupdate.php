@@ -65,7 +65,7 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 	if (strlen($rss_sub_description) == 0) { $msg .= $text['message-description']."<br>\n"; }
 
 	if (strlen($msg) > 0) {
-		require_once "includes/persistform.php";
+		require_once "resources/persist_form.php";
 		require_once "includes/header.php";
 		echo "<div align='center' style='' >";
 		echo "<table>";
