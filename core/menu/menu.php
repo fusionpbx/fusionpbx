@@ -25,7 +25,7 @@
 */
 require_once "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 if (permission_exists('menu_add') || permission_exists('menu_edit') || permission_exists('menu_delete')) {
 	//access granted
 }

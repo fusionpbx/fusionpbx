@@ -29,7 +29,7 @@ if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php"))
 	exit;
 }
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 require_once "includes/header.php";
 
 //add multi-lingual support

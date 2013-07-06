@@ -25,7 +25,7 @@
 	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 if (permission_exists('script_editor_view')) {
 	//access granted
 }

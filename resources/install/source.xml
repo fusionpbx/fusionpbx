@@ -526,7 +526,7 @@
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/checkauth.php</path> 
+		<path>/resources/check_auth.php</path> 
 		<last_mod>Sun, 05 Sep 2010 06:44:52 GMT</last_mod> 
 		<md5>8f5f75bae7abe72ddfe0283d9f05935f</md5> 
 		<size>4660</size> 

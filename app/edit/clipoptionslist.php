@@ -26,7 +26,7 @@
 */
 include "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 if (permission_exists('php_editor_view')) {
 	//access granted
 }
