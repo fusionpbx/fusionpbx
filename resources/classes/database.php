@@ -53,7 +53,17 @@ include "root.php";
 				if (strlen($this->type) == 0 && strlen($this->name) == 0) {
 					//include config.php
 						include "root.php";
-						include "includes/config.php";
+						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+							include $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
+						} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+							include $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php";
+						} elseif (file_exists("/etc/fusionpbx/config.php")){
+							//linux
+							include "/etc/fusionpbx/config.php";
+						} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+							//bsd
+							include "/usr/local/etc/fusionpbx/config.php";
+						}
 
 					//backwards compatibility
 						if (isset($dbtype)) { $db_type = $dbtype; }
