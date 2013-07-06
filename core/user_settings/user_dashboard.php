@@ -23,14 +23,28 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")){
-	header("Location: ".PROJECT_PATH."/install.php");
-	exit;
-}
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-require_once "resources/header.php";
+
+//include the root directory
+	include "root.php";
+
+//if config.php file does not exist then redirect to the install page
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+		//do nothing
+	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+		//original directory
+	} elseif (file_exists("/etc/fusionpbx/config.php")){
+		//linux
+	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+		//bsd
+	} else {
+		header("Location: ".PROJECT_PATH."/resources/install.php");
+		exit;
+	}
+
+//additional includes
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	require_once "resources/header.php";
 
 //add multi-lingual support
 	echo "<!--\n";
