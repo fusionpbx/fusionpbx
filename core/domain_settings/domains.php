@@ -76,7 +76,7 @@ else {
 				unset($_SESSION['extension_array']);
 			//set the setting arrays
 				//domains set()
-				require "includes/classes/domains.php";
+				require "resources/classes/domains.php";
 				$domain = new domains();
 				$domain->db = $db;
 				$domain->set();

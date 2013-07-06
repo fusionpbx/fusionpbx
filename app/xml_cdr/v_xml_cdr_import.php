@@ -67,7 +67,7 @@
 			}
 
 		//prepare the database object
-			require_once "includes/classes/database.php";
+			require_once "resources/classes/database.php";
 			$database = new database;
 			$database->table = "v_xml_cdr";
 

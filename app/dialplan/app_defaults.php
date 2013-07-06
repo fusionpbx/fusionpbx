@@ -79,7 +79,7 @@
 				$dialplan_order = 0;
 			}
 		//dialplan class
-			require_once "includes/classes/switch_dialplan.php";
+			require_once "resources/classes/dialplan.php";
 			$dialplan = new dialplan;
 			$dialplan->domain_uuid = $domain_uuid;
 			$dialplan->dialplan_order = $dialplan_order;

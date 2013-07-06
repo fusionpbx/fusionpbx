@@ -69,7 +69,7 @@
 		public $description;
 
 		public function __construct() {
-			require_once "includes/classes/database.php";
+			require_once "resources/classes/database.php";
 			$this->app_uuid = 'e68d9689-2769-e013-28fa-6214bf47fca3';
 		}
 

@@ -25,7 +25,7 @@
 */
 include "root.php";
 //require_once "resources/require.php";
-//require_once "includes/classes/database.php";
+//require_once "resources/classes/database.php";
 //$db = new database;
 //$db->db = $db;
 //$db->db_type = $db_type;

@@ -1,4 +1,5 @@
 <?php
+
 class array_order {
 
 	var $sort_fields;

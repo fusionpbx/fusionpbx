@@ -61,7 +61,7 @@
 				$db->exec(check_sql($sql));
 				unset($sql);
 			//add the menu items
-				require_once "includes/classes/menu.php";
+				require_once "resources/classes/menu.php";
 				$menu = new menu;
 				$menu->db = $db;
 				$menu->menu_uuid = $menu_uuid;

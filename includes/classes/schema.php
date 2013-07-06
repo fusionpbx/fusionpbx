@@ -121,7 +121,7 @@ include "root.php";
 	}
 
 //example use
-	//require_once "includes/classes/schema.php";
+	//require_once "resources/classes/schema.php";
 	//$schema = new schema;
 	//$schema->db_type = $db_type;
 	//$schema->sql();

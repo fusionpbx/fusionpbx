@@ -531,7 +531,7 @@ if (!function_exists('php_right')) {
 //example usage
 /*
 //find
-	require_once "includes/classes/database.php";
+	require_once "resources/classes/database.php";
 	$database = new database;
 	$database->domain_uuid = $_SESSION["domain_uuid"];
 	$database->type = $db_type;
@@ -548,7 +548,7 @@ if (!function_exists('php_right')) {
 	$database->find();
 	print_r($database->result);
 //insert
-	require_once "includes/classes/database.php";
+	require_once "resources/classes/database.php";
 	$database = new database;
 	$database->domain_uuid = $_SESSION["domain_uuid"];
 	$database->type = $db_type;

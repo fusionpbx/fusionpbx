@@ -156,7 +156,7 @@ require_once "resources/check_auth.php";
 			echo "</tr>\n";
 
 		//order the array
-			require_once "includes/classes/array_order.php";
+			require_once "resources/classes/array_order.php";
 			$order = new array_order();
 			$registrations = $order->sort($registrations, 'domain', 'user');
 
