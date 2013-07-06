@@ -132,7 +132,7 @@ require_once "resources/require.php";
 			//if (strlen($device_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 			if (strlen($msg) > 0) {
 				require_once "includes/header.php";
-				require_once "includes/persistformvar.php";
+				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
 				echo "<table><tr><td>\n";
 				echo $msg."<br />";
