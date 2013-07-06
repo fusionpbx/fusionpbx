@@ -39,14 +39,14 @@ include "root.php";
 	}
 
 //adds multiple includes
-	require_once "includes/require.php";
+	require_once "resources/require.php";
 
 //show the index page
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/index.php")){
 		require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
 	}
 	else {
-		require_once "includes/require.php";
+		require_once "resources/require.php";
 		require_once "includes/header.php";
 		echo "<br /><br />\n";
 		require_once "includes/footer.php";

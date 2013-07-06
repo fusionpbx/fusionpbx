@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "includes/require.php";
+require_once "resources/require.php";
 
 //get the output from the buffer
 	$body = $content_from_db.ob_get_contents(); 
@@ -67,19 +67,19 @@ require_once "includes/require.php";
 	ob_end_clean(); //clean the buffer
 
 //get the menu
-	require_once "includes/menu.php";
+	require_once "resources/menu.php";
 
 //prepare the template to display the output
 	$custom_head = '';
 	$output = str_replace ("<!--{title}-->", $page["title"], $template); //<!--{title}--> defined in each individual page
 	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
 	if (strlen($v_menu) > 0) {
-		$output = str_replace ("<!--{menu}-->", $v_menu, $output); //defined in /includes/menu.php
+		$output = str_replace ("<!--{menu}-->", $v_menu, $output); //defined in /resources/menu.php
 	}
 	else {
-		$output = str_replace ("<!--{menu}-->", $_SESSION["menu"], $output); //defined in /includes/menu.php
+		$output = str_replace ("<!--{menu}-->", $_SESSION["menu"], $output); //defined in /resources/menu.php
 	}
-	$output = str_replace ("<!--{project_path}-->", PROJECT_PATH, $output); //defined in /includes/menu.php
+	$output = str_replace ("<!--{project_path}-->", PROJECT_PATH, $output); //defined in /resources/menu.php
 
 	$pos = strrpos($output, "<!--{body}-->");
 	if ($pos === false) {

@@ -23,7 +23,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 require_once "root.php";
-require_once "includes/require.php";
+require_once "resources/require.php";
 
 //check permissions
 	require_once "resources/check_auth.php";

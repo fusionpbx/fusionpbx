@@ -25,7 +25,7 @@
 	James Rose <james.o.rose@gmail.com>
 */
 include "root.php";
-require_once "includes/require.php";
+require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "resources/check_auth.php";
 if (permission_exists('script_editor_view')) {

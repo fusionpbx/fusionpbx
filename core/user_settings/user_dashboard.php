@@ -28,7 +28,7 @@ if (!file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php"))
 	header("Location: ".PROJECT_PATH."/install.php");
 	exit;
 }
-require_once "includes/require.php";
+require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "includes/header.php";
 

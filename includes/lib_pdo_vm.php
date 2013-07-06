@@ -24,7 +24,7 @@
  Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require "includes/require.php";
+require "resources/require.php";
 
 //get the contents of xml_cdr.conf.xml
 	$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/voicemail.conf.xml');
