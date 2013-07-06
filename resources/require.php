@@ -35,6 +35,6 @@ else {
 }
 require_once "includes/lib_php.php";
 require "includes/lib_pdo.php";
-require_once "includes/lib_functions.php";
+require_once "resources/functions.php";
 require_once "includes/lib_switch.php";
 ?>

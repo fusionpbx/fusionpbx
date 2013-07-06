@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "includes/lib_functions.php";
+require_once "resources/functions.php";
 
 //set debug to true or false
 	$v_debug = true;
