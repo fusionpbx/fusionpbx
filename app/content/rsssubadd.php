@@ -105,7 +105,7 @@ if (count($_POST)>0) {
 
 //show the header
 	require_once "includes/header.php";
-	require_once "includes/wysiwyg.php";
+	require_once "resources/wysiwyg.php";
 
 //show the content
 	echo "<div align='center'>";
