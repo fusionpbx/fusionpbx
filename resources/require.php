@@ -30,11 +30,14 @@ if (file_exists("/etc/fusionpbx/config.php")) {
 elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 	include "/usr/local/etc/fusionpbx/config.php";
 }
-else {
+elseif (file_exists("includes/config.php")) {
 	include "includes/config.php";
 }
-require_once "includes/lib_php.php";
-require "includes/lib_pdo.php";
+else {
+	include "resources/config.php";
+}
+require_once "resources/php.php";
+require "resources/pdo.php";
 require_once "resources/functions.php";
-require_once "includes/lib_switch.php";
+require_once "resources/switch.php";
 ?>
