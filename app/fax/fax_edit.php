@@ -25,7 +25,7 @@
 */
 include "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit') || permission_exists('fax_extension_delete')) {
 	//access granted
 }

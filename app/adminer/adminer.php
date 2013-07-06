@@ -3,7 +3,7 @@
 	//includes
 		include "root.php";
 		require_once "includes/require.php";
-		require_once "includes/checkauth.php";
+		require_once "resources/check_auth.php";
 	//only allow users in the superadmin group to use this feature
 		if (if_group("superadmin")) {
 			//echo "access granted";

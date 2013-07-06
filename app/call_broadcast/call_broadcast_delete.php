@@ -25,7 +25,7 @@
 */
 require "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 if (permission_exists('call_broadcast_delete')) {
 	//access granted
 }

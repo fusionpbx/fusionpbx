@@ -28,7 +28,7 @@
 
 include "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 
 if (permission_exists('xmpp_add') || permission_exists('xmpp_edit')) {
 	//access granted

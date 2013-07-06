@@ -26,7 +26,7 @@
 */
 include "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 
 //check permissions
 	if (permission_exists("registrations_domain") || permission_exists("registrations_all") || if_group("superadmin")) {

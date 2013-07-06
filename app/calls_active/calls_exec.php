@@ -28,7 +28,7 @@
 */
 include "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 if (permission_exists('calls_active_view') || permission_exists('extensions_active_view')) {
 	//access granted
 }

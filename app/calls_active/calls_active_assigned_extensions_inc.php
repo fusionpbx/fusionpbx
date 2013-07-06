@@ -25,7 +25,7 @@
 */
 include "root.php";
 require_once "includes/require.php";
-require_once "includes/checkauth.php";
+require_once "resources/check_auth.php";
 include "app_languages.php";
 if (permission_exists('extensions_active_assigned_view')) {
 
