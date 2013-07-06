@@ -1370,7 +1370,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 	echo "<div align='center'>\n";
 	$msg = '';
 	//make sure the includes directory is writable so the config.php file can be written.
-		if (!is_writable($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/lib_pdo.php")) {
+		if (!is_writable($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/pdo.php")) {
 			$msg .= "<b>Write access to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."</b><br />";
 			$msg .= "and its sub-directories are required during the install.<br /><br />\n";
 		}

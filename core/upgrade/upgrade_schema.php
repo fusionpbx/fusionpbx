@@ -70,7 +70,7 @@
 	}
 
 //load the default database into memory and compare it with the active database
-	require_once "includes/lib_schema.php";
+	require_once "resources/schema.php";
 	db_upgrade_schema ($db, $db_type, $db_name, $display_results);
 	unset($apps);
 
