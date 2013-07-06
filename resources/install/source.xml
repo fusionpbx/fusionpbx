@@ -554,7 +554,7 @@
 	</src> 
 	<src> 
 		<type>file</type> 
-		<path>/includes/class_vcard.php</path> 
+		<path>resources/classes/vcard.php</path> 
 		<last_mod>Tue, 08 Jun 2010 00:32:38 GMT</last_mod> 
 		<md5>720e638a94af0dbb374d746a42ef46de</md5> 
 		<size>6073</size> 

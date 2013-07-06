@@ -36,7 +36,7 @@ else {
 
 if (count($_GET)>0) {
 	//create the vcard object
-		require_once "includes/class_vcard.php";
+		require_once "resources/classes/vcard.php";
 		$vcard = new vcard();
 
 	//get the contact id
