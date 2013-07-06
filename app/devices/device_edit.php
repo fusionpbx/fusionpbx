@@ -131,7 +131,7 @@ require_once "resources/require.php";
 			//if (strlen($device_time_zone) == 0) { $msg .= "Please provide: Time Zone<br>\n"; }
 			//if (strlen($device_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 			if (strlen($msg) > 0) {
-				require_once "includes/header.php";
+				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
 				echo "<table><tr><td>\n";
@@ -139,7 +139,7 @@ require_once "resources/require.php";
 				echo "</td></tr></table>\n";
 				persistformvar($_POST);
 				echo "</div>\n";
-				require_once "includes/footer.php";
+				require_once "resources/footer.php";
 				return;
 			}
 
@@ -242,12 +242,12 @@ require_once "resources/require.php";
 					require_once "app/provision/provision_write.php";
 
 				//redirect the user
-					require_once "includes/header.php";
+					require_once "resources/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=devices.php\">\n";
 					echo "<div align='center'>\n";
 					echo $text['message-add']."\n";
 					echo "</div>\n";
-					require_once "includes/footer.php";
+					require_once "resources/footer.php";
 					return;
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -279,7 +279,7 @@ require_once "resources/require.php";
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //show the content
 	echo "<div align='center'>";
@@ -700,5 +700,5 @@ require_once "resources/require.php";
 	echo "</div>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

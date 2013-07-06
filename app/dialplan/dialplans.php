@@ -47,7 +47,7 @@ else {
 	$app_uuid = $_GET["app_uuid"];
 
 //includes
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
 		$page["title"] = $text['title-inbound_routes'];
 	}
@@ -61,7 +61,7 @@ else {
 		$page["title"] = $text['title-dialplan_manager'];
 	}
 
-	require_once "includes/paging.php";
+	require_once "resources/paging.php";
 
 //show the content
 	echo "<div align='center'>";
@@ -342,7 +342,7 @@ else {
 	echo "<br><br>";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 //unset the variables
 	unset ($result_count);

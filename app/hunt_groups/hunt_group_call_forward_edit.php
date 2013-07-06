@@ -61,7 +61,7 @@ function destination_select($select_name, $select_value, $select_default) {
 }
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-hunt-group_call_forward'];
 
 //get the hunt_group_uuid
@@ -106,7 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($call_forward_number) == 0) { $msg .= $text['message-required'].$text['label-number']."<br>\n"; }
 		//if (strlen($hunt_group_call_prompt) == 0) { $msg .= $text['message-required'].$text['label-call_prompt']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
 			echo "<table><tr><td>\n";
@@ -114,7 +114,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td></tr></table>\n";
 			persistformvar($_POST);
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		}
 
@@ -347,12 +347,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		save_dialplan_xml();
 
 	//redirect the user
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/hunt_group/hunt_group_call_forward.php\">\n";
 		echo "<div align='center'>\n";
 		echo $text['message-update']."<br />\n";
 		echo "</div>\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -491,5 +491,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</div>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

@@ -46,7 +46,7 @@ else {
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 if (strlen($id) > 0) {
 	$sql = "delete from v_schemas ";
@@ -64,7 +64,7 @@ if (strlen($id) > 0) {
 	echo "</div>\n";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 
 ?>

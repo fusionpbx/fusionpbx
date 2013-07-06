@@ -42,8 +42,8 @@ else {
 	}
 
 //add the includes
-	require_once "includes/header.php";
-	require_once "includes/paging.php";
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get the http get variables and set them to php variables
 	$order_by = $_GET["order_by"];
@@ -155,5 +155,5 @@ else {
 	echo "</div>";
 	echo "<br><br>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

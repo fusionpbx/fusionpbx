@@ -78,10 +78,10 @@ else {
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences_edit.php?id=$conference_uuid\">\n";
 			echo "<div align='center'>".$text['confirm-delete']."</div>";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	}
 
@@ -107,10 +107,10 @@ else {
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
 		//redirect the browser
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences_edit.php?id=$conference_uuid\">\n";
 			echo "<div align='center'>".$text['confirm-add']."</div>";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	}
 
@@ -132,7 +132,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($conference_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($conference_enabled) == 0) { $msg .= "".$text['confirm-enabled']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
 			echo "<table><tr><td>\n";
@@ -140,7 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td></tr></table>\n";
 			persistformvar($_POST);
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		}
 
@@ -287,12 +287,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			//redirect the browser
-				require_once "includes/header.php";
+				require_once "resources/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences.php\">\n";
 				echo "<div align='center'>\n";
 				echo "".$text['confirm-update']."\n";
 				echo "</div>\n";
-				require_once "includes/footer.php";
+				require_once "resources/footer.php";
 				return;
 
 		} //if ($_POST["persistformvar"] != "true") 
@@ -326,7 +326,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($conference_enabled) == 0) { $conference_enabled = "true"; }
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //show the content
 	echo "<div align='center'>";
@@ -542,5 +542,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</div>";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

@@ -46,7 +46,7 @@ $rss_uuid = $_GET["rss_uuid"];
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 
 
 	echo "<div align='center'>";
@@ -440,7 +440,7 @@ require_once "includes/header.php";
 	echo "</div>";
 
 	echo "<br><br>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 	unset ($result_count);
 	unset ($result);

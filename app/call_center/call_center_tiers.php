@@ -40,10 +40,10 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $page["title"] = $text['title-call_center_tiers'];
 
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 //get http variables and set as php variables
 	$order_by = $_GET["order_by"];
@@ -178,5 +178,5 @@ require_once "includes/paging.php";
 	echo "<br><br>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

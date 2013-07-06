@@ -71,7 +71,7 @@ if ($_GET['a'] == "download") {
 	exit;
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 
 $msg = $_GET["savemsg"];
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -260,6 +260,6 @@ if (strlen($msg) > 0) {
 	}
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

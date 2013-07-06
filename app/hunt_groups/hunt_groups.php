@@ -42,10 +42,10 @@ require_once "resources/check_auth.php";
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $page["title"] = $text['title-hunt_groups'];
 
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
@@ -186,7 +186,7 @@ echo "</table>";
 echo "</div>";
 echo "<br><br>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 unset ($result_count);
 unset ($result);
 unset ($key);

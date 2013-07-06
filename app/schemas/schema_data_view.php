@@ -58,7 +58,7 @@ if (strlen($_GET["id"]) > 0) {
 	$row_style["1"] = "row_style1";
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-data_view'];
 
 //get the information about the schema by using the id
@@ -271,7 +271,7 @@ if (strlen($_GET["id"]) > 0) {
 	echo "<br />";
 
 //prepare for paging the results
-	require_once "includes/paging.php";
+	require_once "resources/paging.php";
 	$rows_per_page = 100;
 	$param = "";
 	$page = $_GET['page'];
@@ -396,6 +396,6 @@ if (strlen($_GET["id"]) > 0) {
 
 //show the header
     echo "<br><br>";
-    require_once "includes/footer.php";
+    require_once "resources/footer.php";
 
 ?>

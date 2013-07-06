@@ -66,7 +66,7 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 
 	if (strlen($msg) > 0) {
 		require_once "resources/persist_form.php";
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<div align='center' style='' >";
 		echo "<table>";
 		echo "<tr>";
@@ -81,7 +81,7 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 		echo "</table>";
 		echo "</div>";
 
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 	}
 
@@ -105,12 +105,12 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 	//echo "Affected Rows: ".$count;
 
 	//edit: make sure the meta redirect url is correct 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsssublist.php?rss_uuid=$rss_uuid&rss_sub_uuid=$rss_sub_uuid\">\n";
 	echo "<div align='center'>";
 	echo $text['message-update'];
 	echo "</div>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 else {
@@ -141,7 +141,7 @@ else {
 }
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	require_once "resources/wysiwyg.php";
 
 //show the content
@@ -209,5 +209,5 @@ else {
 	echo "</div>";
 
 //show the footer
-  require_once "includes/footer.php";
+  require_once "resources/footer.php";
 ?>

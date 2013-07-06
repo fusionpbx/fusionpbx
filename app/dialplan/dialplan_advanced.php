@@ -40,7 +40,7 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $page["title"] = $text['title-default_dialplan'];
 
 if ($_GET['a'] == "default" && permission_exists('dialplan_advanced_edit')) {
@@ -162,5 +162,5 @@ function sf() { document.forms[0].savetopath.focus(); }
 </div>
 
 <?php
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

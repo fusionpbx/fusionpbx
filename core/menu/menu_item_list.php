@@ -174,7 +174,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 	//end check for children
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
 
@@ -355,6 +355,6 @@ $order = $_GET["order"];
 	echo "</div>";
 
 	echo "<br><br>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

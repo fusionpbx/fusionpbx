@@ -33,8 +33,8 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/header.php";
-require_once "includes/paging.php";
+require_once "resources/header.php";
+require_once "resources/paging.php";
 
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
@@ -67,12 +67,12 @@ if (strlen($_GET["a"]) > 0) {
 		shell_exec($service_cmd_start);
 	}
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"5;url=services.php\">\n";
 	echo "<div align='center'>\n";
 	echo $msg."\n";
 	echo "</div>\n";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 
@@ -214,6 +214,6 @@ if (strlen($_GET["a"]) > 0) {
 	echo "<br><br>";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

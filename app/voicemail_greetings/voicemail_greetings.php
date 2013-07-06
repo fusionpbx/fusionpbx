@@ -41,7 +41,7 @@ else {
 	}
 
 //additional includes
-	require_once "includes/paging.php";
+	require_once "resources/paging.php";
 
 //set the max php execution time
 	ini_set(max_execution_time,7200);
@@ -208,7 +208,7 @@ else {
 	unset($prep_statement, $result);
 
 //include the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //show the message
 	if (strlen($save_msg) > 0) {
@@ -379,6 +379,6 @@ else {
 	echo "<br>\n";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

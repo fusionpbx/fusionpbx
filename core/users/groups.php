@@ -43,7 +43,7 @@ else {
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-group_manager'];
 
 //show the content
@@ -139,6 +139,6 @@ else {
 	echo "</div>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

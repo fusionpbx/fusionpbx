@@ -34,7 +34,7 @@ else {
 	echo "access denied";
 	exit;
 }
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -142,7 +142,7 @@ require_once "includes/paging.php";
 	}
 
 //include the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //begin the content
 	echo "<script>\n";
@@ -294,6 +294,6 @@ require_once "includes/paging.php";
 	echo "<br>\n";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

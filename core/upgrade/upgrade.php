@@ -67,7 +67,7 @@
 
 //include the header
 	if ($display_results) {
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 	}
 
 if ($display_type == 'text') {
@@ -108,6 +108,6 @@ if ($display_type == 'text') {
 
 //include the footer
 	if ($display_results) {
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 	}
 ?>

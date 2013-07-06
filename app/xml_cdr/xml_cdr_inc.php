@@ -38,7 +38,7 @@ else {
 	require_once "v_xml_cdr_import.php";
 
 //additional includes
-	require_once "includes/paging.php";
+	require_once "resources/paging.php";
 
 //set 24hr or 12hr clock
 	define('TIME_24HR', 1);

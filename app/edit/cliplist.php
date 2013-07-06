@@ -228,7 +228,7 @@ echo "</table>\n";
 echo "</div>";
 
 echo "<br><br>";
-//require_once "includes/footer.php";
+//require_once "resources/footer.php";
 
 unset ($result_count);
 unset ($result);

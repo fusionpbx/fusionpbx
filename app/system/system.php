@@ -43,7 +43,7 @@ else {
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
-require_once "includes/header.php";
+require_once "resources/header.php";
 
 echo "<br />";
 echo "<br />";
@@ -333,5 +333,5 @@ echo "<br />";
 	}
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

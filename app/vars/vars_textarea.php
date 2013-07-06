@@ -41,7 +41,7 @@ else {
 	}
 
 //include the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-variables_advanced'];
 
 //restore the default vars.xml
@@ -164,5 +164,5 @@ if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 </div>
 
 <?php
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

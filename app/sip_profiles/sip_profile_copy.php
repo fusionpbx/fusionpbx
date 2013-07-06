@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 if (permission_exists('dialplan_add')
 	|| permission_exists('inbound_route_add')
 	|| permission_exists('outbound_route_add')
@@ -123,12 +123,12 @@ else {
 		$_SESSION["reload_xml"] = true;
 
 	//redirect the user
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/sip_profiles/sip_profiles.php\">\n";
 		echo "<div align='center'>\n";
 		echo $text['message-copy']."\n";
 		echo "</div>\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 
 ?>

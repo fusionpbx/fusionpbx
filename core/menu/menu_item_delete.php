@@ -56,12 +56,12 @@ if (count($_GET)>0) {
 		unset($sql);
 
 	//redirect the user
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_edit.php?id=$menu_uuid\">\n";
 		echo "<div align='center'>";
 		echo $text['message-delete'];
 		echo "</div>";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 }
 

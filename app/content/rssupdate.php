@@ -91,12 +91,12 @@ if (count($_POST)>0) {
 	//exit;
 
 	//edit: make sure the meta redirect url is correct
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsslist.php\">\n";
 	echo "<div align='center'>";
 	echo $text['message-update'];
 	echo "</div>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 else {
@@ -140,7 +140,7 @@ else {
 	}
 }
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/tiny_mce')) {
 		if ($rss_optional_1 == "text/html") {
 			require_once "resources/wysiwyg.php";
@@ -395,5 +395,5 @@ else {
 	echo "</div>";
 
 
-  require_once "includes/footer.php";
+  require_once "resources/footer.php";
 ?>

@@ -208,7 +208,7 @@ if (count($_POST)>0) {
 		if (count($_POST)>0) {
 
 			//show the header
-				require_once "includes/header.php";
+				require_once "resources/header.php";
 				$page["title"] = $text['title-import_results'];
 
 			echo "<div align='center'>\n";
@@ -297,13 +297,13 @@ if (count($_POST)>0) {
 			echo "</div>\n";
 
 			//show the footer
-				require_once "includes/footer.php";
+				require_once "resources/footer.php";
 				exit;
 		}
 
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-import'];
 
 //show the content
@@ -379,5 +379,5 @@ if (count($_POST)>0) {
 
 	echo "</form>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

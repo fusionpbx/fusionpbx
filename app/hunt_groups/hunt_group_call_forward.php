@@ -30,10 +30,10 @@ require_once "resources/check_auth.php";
 //check permissions
 if (permission_exists('hunt_group_call_forward')) {
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-hunt-group_call_forward'];
 
-	require_once "includes/paging.php";
+	require_once "resources/paging.php";
 
 
 	//add multi-lingual support
@@ -128,7 +128,7 @@ if (permission_exists('hunt_group_call_forward')) {
 	echo "</div>";
 
 	if ($is_included != "true") {
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 	}
 }
 

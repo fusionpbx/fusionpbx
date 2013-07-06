@@ -117,7 +117,7 @@ function cmd_async($cmd) {
 
 //get information over event socket
 	if (!$fp) {
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
@@ -129,11 +129,11 @@ function cmd_async($cmd) {
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "</div>\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 	}
 	else {
 		//show the header
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 
 		//send the call broadcast
 			if (strlen($broadcast_phone_numbers) > 0) {
@@ -217,13 +217,13 @@ function cmd_async($cmd) {
 			}
 
 		//show the footer
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 	}
 
 /*
 //reserved for future use
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
@@ -371,7 +371,7 @@ require_once "includes/header.php";
 	echo "<br><br>";
 
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 unset ($result_count);
 unset ($result);
 unset ($key);

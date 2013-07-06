@@ -108,10 +108,10 @@ else {
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
 			echo "<div align='center'>".$text['message-delete']."</div>";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	}
 
@@ -127,10 +127,10 @@ else {
 			$sql .= "and device_extension_uuid = '".$device_extension_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
 			echo "<div align='center'>".$text['message-delete']."</div>";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	}
 
@@ -156,10 +156,10 @@ else {
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
 		//redirect the browser
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
 			echo "<div align='center'>".$text['message-add']."</div>";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	}
 
@@ -188,10 +188,10 @@ else {
 			$db->exec($sql_insert);
 
 		//redirect the browser
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
 			echo "<div align='center'>".$text['message-add']."</div>";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	}
 
@@ -232,7 +232,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 		//if (strlen($description) == 0) { $msg .= $text['message-required']."Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
 			echo "<table><tr><td>\n";
@@ -240,7 +240,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td></tr></table>\n";
 			persistformvar($_POST);
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		}
 
@@ -544,7 +544,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$row_style["1"] = "row_style1";
 
 				//show the action and redirect the user
-					require_once "includes/header.php";
+					require_once "resources/header.php";
 					echo "<br />\n";
 					echo "<div align='center'>\n";
 					if (count($generated_users) == 0) {
@@ -580,11 +580,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							echo "	</table>";
 					}
 					echo "</div>\n";
-					require_once "includes/footer.php";
+					require_once "resources/footer.php";
 					return;
 			}
 			if ($action == "update") {
-				require_once "includes/header.php";
+				require_once "resources/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
 				echo "<br />\n";
 				echo "<div align='center'>\n";
@@ -603,7 +603,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "	</table>\n";
 				echo "<br />\n";
 				echo "</div>\n";
-				require_once "includes/footer.php";
+				require_once "resources/footer.php";
 				return;
 			}
 	} //if ($_POST["persistformvar"] != "true")
@@ -667,7 +667,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
 
 //begin the page content
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	if ($action == "update") {
 	$page["title"] = $text['title-extension-edit'];
 	}
@@ -1519,5 +1519,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

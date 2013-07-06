@@ -1346,7 +1346,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 	ob_start();
 
 //show the html form
-	if (!is_writable($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/header.php")) {
+	if (!is_writable($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/header.php")) {
 		$install_msg .= "<li>Write access to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/ is required during the install.</li>\n";
 	}
 	if (!extension_loaded('PDO')) {
