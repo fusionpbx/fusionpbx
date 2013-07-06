@@ -30,7 +30,7 @@
 		preg_match("/^(.*)\/mod\/.*$/", $document_root, $matches);
 		$document_root = $matches[1];
 		set_include_path($document_root);
-		require_once "includes/require.php";
+		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$display_type = 'text'; //html, text
 	}

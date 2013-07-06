@@ -39,7 +39,7 @@ if (defined('STDIN')) {
 
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
-	require_once "includes/require.php";
+	require_once "resources/require.php";
 	include "resources/phpmailer/class.phpmailer.php";
 	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
 

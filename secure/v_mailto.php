@@ -36,7 +36,7 @@
 
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
-	require_once "includes/require.php";
+	require_once "resources/require.php";
 
 //set init settings
 	ini_set('max_execution_time',1800); //30 minutes

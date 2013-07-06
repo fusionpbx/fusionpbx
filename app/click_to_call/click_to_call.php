@@ -31,7 +31,7 @@
 
 */
 include "root.php";
-require_once "includes/require.php";
+require_once "resources/require.php";
 require_once "resources/check_auth.php";
 if (permission_exists('click_to_call_view')) {
 	//access granted

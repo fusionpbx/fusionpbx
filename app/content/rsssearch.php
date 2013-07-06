@@ -27,7 +27,7 @@
 return; //disabled
 
 include "root.php";
-require_once "includes/require.php";
+require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "config.php";
 if (permission_exists('content_view')) {

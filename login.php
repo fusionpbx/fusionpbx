@@ -31,7 +31,7 @@ include "root.php";
 	}
 
 //adds multiple includes
-	require_once "includes/require.php";
+	require_once "resources/require.php";
 
 //include the login
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/login.php")){

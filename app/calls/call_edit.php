@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 require_once "root.php";
-require_once "includes/require.php";
+require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "app_languages.php";
 if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {

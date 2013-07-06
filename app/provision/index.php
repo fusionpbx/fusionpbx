@@ -23,7 +23,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "includes/require.php";
+require_once "resources/require.php";
 
 //set default variables
 	$dir_count = 0;

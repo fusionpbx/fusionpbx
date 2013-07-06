@@ -1187,7 +1187,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		unset($db_tmp);
 
 	//include additional files
-		require "includes/require.php";
+		require "resources/require.php";
 
 	//set the defaults
 		$menu_name = 'default';
