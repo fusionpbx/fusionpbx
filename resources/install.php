@@ -348,7 +348,7 @@ if ($_POST["install_step"] == "3" && count($_POST)>0 && strlen($_POST["persistfo
 }
 //show the error message if one exists
 	if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-		require_once "includes/persistformvar.php";
+		require_once "resources/persist_form_var.php";
 		echo "<br />\n";
 		echo "<br />\n";
 		echo "<div align='center'>\n";
@@ -1794,8 +1794,8 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 	$custom_head = '';
 	$output = str_replace ("<!--{title}-->", $custom_title, $template); //<!--{title}--> defined in each individual page
 	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
-	$output = str_replace ("<!--{menu}-->", $_SESSION["menu"], $output); //defined in /includes/menu.php
-	$output = str_replace ("<!--{project_path}-->", PROJECT_PATH, $output); //defined in /includes/menu.php
+	$output = str_replace ("<!--{menu}-->", $_SESSION["menu"], $output); //defined in /resources/menu.php
+	$output = str_replace ("<!--{project_path}-->", PROJECT_PATH, $output); //defined in /resources/menu.php
 
 	$pos = strrpos($output, "<!--{body}-->");
 	if ($pos === false) {

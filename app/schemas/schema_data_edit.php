@@ -475,9 +475,9 @@ else {
 	}
 
 //use this when the calendar is needed
-	//echo "<script language='javascript' src=\"/includes/calendar_popcalendar.js\"></script>\n";
-	//echo "<script language=\"javascript\" src=\"/includes/calendar_lw_layers.js\"></script>\n";
-	//echo "<script language=\"javascript\" src=\"/includes/calendar_lw_menu.js\"></script>";
+	//echo "<script language='javascript' src=\"/resources/calendar_popcalendar.js\"></script>\n";
+	//echo "<script language=\"javascript\" src=\"/resources/calendar_lw_layers.js\"></script>\n";
+	//echo "<script language=\"javascript\" src=\"/resources/calendar_lw_menu.js\"></script>";
 
 //begin creating the content
 	echo "<br />";
