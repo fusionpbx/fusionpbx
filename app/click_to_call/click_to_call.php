@@ -47,7 +47,7 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 
 if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])) {
 	//get the http variables and set them as variables
@@ -396,5 +396,5 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "</form>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

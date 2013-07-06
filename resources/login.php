@@ -40,7 +40,7 @@
 	}
 
 //add the header
-	include "includes/header.php";
+	include "resources/header.php";
 
 //show the message
 	if (strlen($msg) > 0) {
@@ -141,6 +141,6 @@
 	echo "</div>";
 
 //add the footer
-	include "includes/footer.php";
+	include "resources/footer.php";
 
 ?>

@@ -41,7 +41,7 @@ else {
 	}
 
 //include the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-variables'];
 
 //set http values as php variables
@@ -185,6 +185,6 @@ else {
 	echo "<br><br>";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

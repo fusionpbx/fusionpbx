@@ -42,10 +42,10 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $page["title"] = $text['title-xmpp'];
 
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 //connect to event socket
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -96,6 +96,6 @@ unset ($prep_statement);
 include "profile_list.php";
 
 //include the footer
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 
 ?>

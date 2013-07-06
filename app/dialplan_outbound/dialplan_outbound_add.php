@@ -42,10 +42,10 @@ else {
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-dialplan-outbound-add'];
 
-	require_once "includes/paging.php";
+	require_once "resources/paging.php";
 
 //get the http post values and set theme as php variables
 	if (count($_POST)>0) {
@@ -199,7 +199,7 @@ else {
 			//if (strlen($dialplan_enabled) == 0) { $msg .= "Please provide: Enabled True or False<br>\n"; }
 			//if (strlen($description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-				require_once "includes/header.php";
+				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
 				echo "<table><tr><td>\n";
@@ -207,7 +207,7 @@ else {
 				echo "</td></tr></table>\n";
 				persistformvar($_POST);
 				echo "</div>\n";
-				require_once "includes/footer.php";
+				require_once "resources/footer.php";
 				return;
 			}
 
@@ -568,12 +568,12 @@ else {
 			save_dialplan_xml();
 
 		//redirect the user
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3\">\n";
 			echo "<div align='center'>\n";
 			echo $text['message-update']."\n";
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 ?>
@@ -1001,5 +1001,5 @@ function type_onchange(dialplan_detail_type) {
 	echo "<br><br>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

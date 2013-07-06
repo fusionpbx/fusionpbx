@@ -123,7 +123,7 @@ require_once "resources/check_auth.php";
 			}
 
 		//show the header
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
@@ -193,6 +193,6 @@ require_once "resources/check_auth.php";
 	echo "<br />\n";
 
 //get the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

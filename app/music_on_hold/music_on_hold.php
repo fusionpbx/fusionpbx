@@ -42,7 +42,7 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 $sampling_rate_dirs = Array(8000, 16000, 32000, 48000);
 $music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
@@ -222,7 +222,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 }
 
 //include the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //show the title and description
 	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/javascript/reset_file_input.js'></script>\n";
@@ -445,6 +445,6 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	}
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

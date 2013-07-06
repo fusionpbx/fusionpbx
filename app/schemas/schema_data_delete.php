@@ -51,7 +51,7 @@ if (count($_GET)>0) {
 		$schema_uuid = check_str($_GET["schema_uuid"]);
 
 	//show the results and redirect
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 
 	//get the schema_parent_id from the child table
 		if (strlen($schema_parent_id) == 0) {
@@ -102,7 +102,7 @@ if (count($_GET)>0) {
 		echo "<div align='center'>\n";
 		echo $text['message-delete']."\n";
 		echo "</div>\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 }
 

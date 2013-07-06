@@ -47,8 +47,8 @@ include "root.php";
 	}
 	else {
 		require_once "resources/require.php";
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<br /><br />\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 	}
 ?>

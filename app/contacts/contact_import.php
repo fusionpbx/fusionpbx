@@ -298,7 +298,7 @@ else {
 			}
 
 		//show the header
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<div align='center'>\n";
 			echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 			echo "<tr>\n";
@@ -341,14 +341,14 @@ else {
 			echo "</table>\n";
 
 		//include the footer
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 
 		//end the script
 			break;
 	}
 
 //include the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //begin the content
 	echo "<div align='center'>";
@@ -426,7 +426,7 @@ else {
 	echo "</form>";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 /*
 [Suffix]

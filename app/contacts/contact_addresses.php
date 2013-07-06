@@ -34,8 +34,8 @@ else {
 	exit;
 }
 
-//require_once "includes/header.php";
-require_once "includes/paging.php";
+//require_once "resources/header.php";
+require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];

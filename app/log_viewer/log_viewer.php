@@ -71,7 +71,7 @@ if (permission_exists('log_download')) {
 	}
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 
 echo "<br />\n";
 echo "<div align='center'>\n";
@@ -286,6 +286,6 @@ if (permission_exists('log_view')) {
 echo "</table>\n";
 echo "</div>\n";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 
 ?>

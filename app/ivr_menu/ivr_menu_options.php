@@ -35,7 +35,7 @@ else {
 }
 
 //additional includes
-	require_once "includes/paging.php";
+	require_once "resources/paging.php";
 
 //get the http values and set them as variables
 	if (isset($_GET["order_by"])) {

@@ -40,10 +40,10 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $page["title"] = $text['title-group_permissions'];
 
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 //get the list of installed apps from the core and mod directories
 	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -279,6 +279,6 @@ require_once "includes/paging.php";
 	echo "<form>\n";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 ?>

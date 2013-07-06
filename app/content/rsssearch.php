@@ -60,7 +60,7 @@ if (count($_POST)>0) {
 	$rss_add_date = check_str($_POST["rss_add_date"]);
 	$rss_add_user = check_str($_POST["rss_add_user"]);
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 
 
@@ -187,7 +187,7 @@ if (count($_POST)>0) {
 	echo "</div>";
 
 	echo "<br><br>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 	unset ($result_count);
 	unset ($result);
@@ -198,7 +198,7 @@ if (count($_POST)>0) {
 	}
 	else {
 
-		echo "\n";    require_once "includes/header.php";
+		echo "\n";    require_once "resources/header.php";
 	echo "<div align='center'>";
 	echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
 
@@ -278,7 +278,7 @@ if (count($_POST)>0) {
 	echo "</div>";
 
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 
 } //end if not post
 ?>

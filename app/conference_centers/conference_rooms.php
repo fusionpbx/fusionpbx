@@ -41,8 +41,8 @@ else {
 	}
 
 //additional includes
-	require_once "includes/header.php";
-	require_once "includes/paging.php";
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get the meeting_uuid using the pin number
 	$search = check_str($_GET["search"]);
@@ -387,5 +387,5 @@ else {
 	echo "<br /><br />";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

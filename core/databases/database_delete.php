@@ -53,12 +53,12 @@ if (strlen($id)>0) {
 	unset($sql);
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 echo "<meta http-equiv=\"refresh\" content=\"2;url=databases.php\">\n";
 echo "<div align='center'>\n";
 echo $text['message-delete']."\n";
 echo "</div>\n";
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 return;
 
 ?>

@@ -75,7 +75,7 @@ else {
 	}
 
 //get the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //page title and description
 	echo "<br>";
@@ -512,5 +512,5 @@ else {
 	//echo "</pre>\n";
 
 //get the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

@@ -76,7 +76,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset($prep_statement, $result);
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
 			echo "<table><tr><td>\n";
@@ -84,7 +84,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td></tr></table>\n";
 			persistformvar($_POST);
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		}
 
@@ -152,7 +152,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 		//show the action and redirect the user
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=index.php\">\n";
 			echo "<br />\n";
 			echo "<div align='center'>\n";
@@ -171,7 +171,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	</table>\n";
 			echo "<br />\n";
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 
 	} //if ($_POST["persistformvar"] != "true")
@@ -201,7 +201,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 
 //begin the page content
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";
@@ -327,5 +327,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

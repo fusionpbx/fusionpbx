@@ -73,14 +73,14 @@ if (count($_POST)>0) {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"5;url=rss_sub_categorylist.php\">\n";
 	echo $text['message-add'];
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 echo "<div align='center'>";
 echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
 echo "<tr class='border'>\n";
@@ -120,5 +120,5 @@ echo "	</tr>";
 echo "</table>";
 echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

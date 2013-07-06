@@ -58,7 +58,7 @@
 				$text[$key] = $value[$_SESSION['domain']['language']['code']];
 			}
 
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		$page["title"] = $text['title-upgrade_schema'];
 
 		$display_type = 'html'; //html, text
@@ -80,7 +80,7 @@
 if ($display_results && $display_type == "html") {
 	echo "<br />\n";
 	echo "<br />\n";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 }
 
 ?>

@@ -57,7 +57,7 @@ else {
 	$tmp_fifo_name = $tmp_fifo_array[0];
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-queue'];
 
 ?>
@@ -146,5 +146,5 @@ echo "</table>";
 
 echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

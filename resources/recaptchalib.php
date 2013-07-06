@@ -102,9 +102,9 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
 {
 	if ($pubkey == null || $pubkey == '') {
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		exit;
 	}
 	

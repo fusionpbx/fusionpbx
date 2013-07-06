@@ -42,7 +42,7 @@ else {
 	}
 
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 ?><script type="text/javascript">
 function loadXmlHttp(url, id) {
 	var f = this;
@@ -116,5 +116,5 @@ echo "	</tr>";
 echo "</table>";
 echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

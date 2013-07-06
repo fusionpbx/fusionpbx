@@ -78,7 +78,7 @@ if (count($_GET)>0) {
 	}
 
 //redirect the user
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=index.php\">\n";
 	echo "<br />\n";
 	echo "<div align='center'>\n";
@@ -92,7 +92,7 @@ if (count($_GET)>0) {
 	echo "	</table>\n";
 	echo "	<br />\n";
 	echo "</div>\n";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 
 ?>

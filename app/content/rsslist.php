@@ -64,7 +64,7 @@ if (!function_exists('th_order_by')) {
 	}
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"\" href=\"rss.php\" />\n";
 
 $order_by = $_GET["order_by"];
@@ -213,7 +213,7 @@ $order = $_GET["order"];
 	echo "</div>";
 
 	echo "<br><br>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 
 	unset ($result_count);
 	unset ($result);

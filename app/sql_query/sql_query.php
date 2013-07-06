@@ -41,7 +41,7 @@ else {
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-sql_query'];
 
 //pdo voicemail database connection
@@ -175,5 +175,5 @@ else {
 
 //show the footer
 	include "resources/require.php";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

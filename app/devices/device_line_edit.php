@@ -80,7 +80,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($auth_id) == 0) { $msg .= $text['message-required']." ".$text['label-auth_id']."<br>\n"; }
 		//if (strlen($password) == 0) { $msg .= $text['message-required']." ".$text['label-password']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
 			echo "<table><tr><td>\n";
@@ -88,7 +88,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td></tr></table>\n";
 			persistformvar($_POST);
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		}
 
@@ -144,7 +144,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				} //if ($action == "update")
 
 			//redirect the browser
-				require_once "includes/header.php";
+				require_once "resources/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
 				echo "<div align='center'>\n";
 				if ($action == "add") {
@@ -154,7 +154,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	".$text['message-update']."\n";
 				}
 				echo "</div>\n";
-				require_once "includes/footer.php";
+				require_once "resources/footer.php";
 				return;
 		} //if ($_POST["persistformvar"] != "true") 
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -181,7 +181,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //show the content
 	echo "<div align='center'>";
@@ -311,5 +311,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</div>";
 
 //include the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

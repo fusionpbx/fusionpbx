@@ -94,7 +94,7 @@ if (strlen($dialplan_uuid)>0) {
 }
 
 //redirect the user
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	switch ($app_uuid) {
 		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4":
 			//inbound routes
@@ -115,6 +115,6 @@ if (strlen($dialplan_uuid)>0) {
 	echo "<div align='center'>\n";
 	echo $text['message-delete']."\n";
 	echo "</div>\n";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 ?>

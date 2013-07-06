@@ -71,17 +71,17 @@ if (strlen($group_name) > 0) {
 	}
 
 	//redirect the user
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=groups.php\">\n";
 		echo "<div align='center'>\n";
 		echo $text['message-add']."\n";
 		echo "</div>\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 }
 
 //include the header
-	include "includes/header.php";
+	include "resources/header.php";
 	$page["title"] = $text['title-group_add'];
 
 //show the content
@@ -137,6 +137,6 @@ if (strlen($group_name) > 0) {
 	echo "<br><br>";
 
 //include the footer
-	include "includes/footer.php";
+	include "resources/footer.php";
 
 ?>

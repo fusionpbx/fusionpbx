@@ -71,7 +71,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($tier_level) == 0) { $msg .= $text['message-required'].$text['label-tier_level']."<br>\n"; }
 		//if (strlen($tier_position) == 0) { $msg .= $text['message-required'].$text['label-tier_position']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
 			echo "<div align='center'>\n";
 			echo "<table><tr><td>\n";
@@ -79,7 +79,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "</td></tr></table>\n";
 			persistformvar($_POST);
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		}
 
@@ -137,12 +137,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//syncrhonize configuration
 			save_call_center_xml();
 
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_tiers.php\">\n";
 			echo "<div align='center'>\n";
 			echo $text['message-add']."\n";
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		} //if ($action == "add")
 
@@ -160,12 +160,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//syncrhonize configuration
 			save_call_center_xml();
 
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_center_tiers.php\">\n";
 			echo "<div align='center'>\n";
 			echo $text['message-update']."\n";
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true")
@@ -192,7 +192,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	if ($action == "add") {
 		$page["title"] = $text['title-call_center_tier_add'];
 	}
@@ -444,5 +444,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

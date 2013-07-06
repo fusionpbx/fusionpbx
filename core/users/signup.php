@@ -87,7 +87,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	if (strlen($user_email) == 0) { $msgerror .= $text['message-required'].$text['label-email']."<br>\n"; }
 
 	if (strlen($msgerror) > 0) {
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<div align='center'>";
 		echo "<table><tr><td>";
 		echo $msgerror;
@@ -95,7 +95,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 		require_once "resources/persist_form.php";
 		echo persistform($_POST);
 		echo "</div>";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 	}
 
@@ -182,15 +182,15 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"3;url=index.php\">\n";
 	echo "<div align='center'>".$text['message-add']."</div>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-user_add'];
 
 //show the content
@@ -259,5 +259,5 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "</div>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

@@ -50,7 +50,7 @@ else {
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //edit area
 	echo "	<script language=\"javascript\" type=\"text/javascript\" src=\"".PROJECT_PATH."/resources/edit_area/edit_area_full.js\"></script>\n";
@@ -202,5 +202,5 @@ else {
 	echo "</div>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

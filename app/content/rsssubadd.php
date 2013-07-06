@@ -94,17 +94,17 @@ if (count($_POST)>0) {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsssublist.php?rss_uuid=$rss_uuid\">\n";
 	echo "<div align='center'>";
 	echo $text['message-add'];
 	echo "</div>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	require_once "resources/wysiwyg.php";
 
 //show the content
@@ -178,5 +178,5 @@ if (count($_POST)>0) {
 	echo "</div>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

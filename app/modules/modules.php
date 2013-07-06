@@ -40,10 +40,10 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $page["title"] = $text['title-modules'];
 
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
@@ -224,5 +224,5 @@ if (strlen($_GET["a"]) > 0) {
 	echo "<br><br>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

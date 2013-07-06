@@ -185,7 +185,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//if (strlen($destination_timeout_7) == 0) { $msg .= "Please provide: sec<br>\n"; }
 			//if (strlen($hunt_group_call_prompt) == 0) { $msg .= "Please provide: call prompt<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
-				require_once "includes/header.php";
+				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
 				echo "<div align='center'>\n";
 				echo "<table><tr><td>\n";
@@ -193,7 +193,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</td></tr></table>\n";
 				persistformvar($_POST);
 				echo "</div>\n";
-				require_once "includes/footer.php";
+				require_once "resources/footer.php";
 				return;
 			}
 
@@ -348,18 +348,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//redirect the user
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/core/user_settings/user_dashboard.php\">\n";
 		echo "<div align='center'>\n";
 		echo "".$text['confirm-update']."<br />\n";
 		echo "</div>\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //pre-populate the form
 	$sql = "select * from v_follow_me ";
@@ -739,5 +739,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

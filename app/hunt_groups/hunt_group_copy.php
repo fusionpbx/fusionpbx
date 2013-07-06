@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-require_once "includes/paging.php";
+require_once "resources/paging.php";
 
 //check permissions
 	if (permission_exists('hunt_group_add')) {
@@ -173,12 +173,12 @@ require_once "includes/paging.php";
 		save_hunt_group_xml();
 
 	//redirect the user
-		require_once "includes/header.php";
+		require_once "resources/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=hunt_groups.php\">\n";
 		echo "<div align='center'>\n";
 		echo $text['message-copy']."\n";
 		echo "</div>\n";
-		require_once "includes/footer.php";
+		require_once "resources/footer.php";
 		return;
 
 ?>

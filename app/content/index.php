@@ -39,12 +39,12 @@ else {
 require_once "config.php";
 session_start();
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"\" href=\"rss.php\" />\n";
 
 $_GET["c"] = "html";
 require_once "rss.php";
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 
 return;
 ?>

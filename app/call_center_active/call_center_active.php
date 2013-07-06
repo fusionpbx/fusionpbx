@@ -44,7 +44,7 @@ else {
 	$queue_name = $_GET[queue_name];
 
 //get the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-call_center_queue_activity'];
 
 ?><script type="text/javascript">
@@ -126,5 +126,5 @@ echo "	</tr>";
 echo "</table>";
 echo "</div>";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

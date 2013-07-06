@@ -367,7 +367,7 @@ else {
 
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 
 //fax extension form
 	echo "<div align='center'>";
@@ -729,5 +729,5 @@ else {
 	echo "</div>";
 
 //show the footer
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 ?>

@@ -69,7 +69,7 @@ else {
 	$height = "330"; //275 //330 //396
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 $page["title"] = $text['title-traffic_graph'];
 ?>
 <table width='100%'>
@@ -138,5 +138,5 @@ $page["title"] = $text['title-traffic_graph'];
 </div>
 
 <?php
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

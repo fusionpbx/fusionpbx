@@ -351,7 +351,7 @@ else {
 		}
 
 		//show the header
-			require_once "includes/header.php";
+			require_once "resources/header.php";
 
 		//set the meta redirect
 			if (strlen($data_parent_row_uuid) == 0) {
@@ -366,12 +366,12 @@ else {
 			if ($action == "add") { echo $text['message-add']."\n"; }
 			if ($action == "update") { echo $text['message-update']."\n"; }
 			echo "</div>\n";
-			require_once "includes/footer.php";
+			require_once "resources/footer.php";
 			return;
 	}
 
 //show the header
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	$page["title"] = $text['title-data'];
 
 //pre-populate the form
@@ -980,5 +980,5 @@ else {
 	echo "</table>\n";
 	echo "</div>\n";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

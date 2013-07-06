@@ -63,7 +63,7 @@ else {
 $conference_name = trim($_REQUEST["c"]);
 $tmp_conference_name = str_replace("_", " ", $conference_name);
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 ?><script type="text/javascript">
 <!--
 
@@ -340,5 +340,5 @@ echo "}\n";
 echo "-->\n";
 echo "</script>\n";
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

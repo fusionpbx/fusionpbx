@@ -103,16 +103,16 @@ if (count($_POST)>0) {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsslist.php\">\n";
 	echo "<div align='center'>";
 	echo $text['message-add'];
 	echo "</div>";
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/tiny_mce')) {
 		if ($rss_optional_1 == "text/html") {
 			require_once "resources/wysiwyg.php";
@@ -350,5 +350,5 @@ if (count($_POST)>0) {
 	echo "</div>";
 
 
-require_once "includes/footer.php";
+require_once "resources/footer.php";
 ?>

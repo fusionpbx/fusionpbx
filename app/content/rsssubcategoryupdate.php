@@ -63,10 +63,10 @@ if (count($_POST)>0) {
 	//echo "Affected Rows: ".$count;
 
 	//edit: make sure the meta redirect url is correct 
-	require_once "includes/header.php";
+	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"5;url=rss_sub_categorylist.php\">\n";
 	echo $text['message-update'];
-	require_once "includes/footer.php";
+	require_once "resources/footer.php";
 	return;
 }
 else {
@@ -90,7 +90,7 @@ else {
 	}
 }
 
-require_once "includes/header.php";
+require_once "resources/header.php";
 echo "<div align='center'>";
 echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
 
@@ -137,5 +137,5 @@ echo "</table>";
 echo "</div>";
 
 
-  require_once "includes/footer.php";
+  require_once "resources/footer.php";
 ?>
