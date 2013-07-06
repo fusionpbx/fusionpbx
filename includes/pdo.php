@@ -25,7 +25,7 @@
  Raymond Chandler <intralanman@gmail.com>
  */
 include "root.php";
-require_once "includes/lib_functions.php";
+require_once "resources/functions.php";
 
 //set defaults
 	if (isset($dbtype) > 0) { 
