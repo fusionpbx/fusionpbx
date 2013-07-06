@@ -113,9 +113,9 @@ if (count($_POST)>0) {
 }
 
 	require_once "includes/header.php";
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/tiny_mce')) {
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/tiny_mce')) {
 		if ($rss_optional_1 == "text/html") {
-			require_once "includes/wysiwyg.php";
+			require_once "resources/wysiwyg.php";
 		}
 	}
 	else {
