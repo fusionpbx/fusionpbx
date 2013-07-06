@@ -27,9 +27,7 @@ require_once "root.php";
 require_once "resources/require.php";
 
 //preferences
-	$v_label_show = false;
 	$v_menu_tab_show = false;
-	$v_fax_show = true;
 	$v_path_show = true;
 
 //get user defined variables
@@ -188,16 +186,6 @@ foreach($settings_array as $name => $value) {
 				}
 			}
 	}
-
-if ($db_type == "sqlite") {
-	//sqlite: check if call detail record (CDR) db file exists if not create it
-	if (!file_exists($db_file_path.'/'.$server_name.'.cdr.db')) {
-		//echo "file does not exist: ".$_SESSION['switch']['db']['dir'].'/cdr.db';
-		if (copy($db_file_path.'/cdr.clean.db', $db_file_path.'/'.$server_name.'.cdr.db')) {
-			//echo "copy succeeded.\n";
-		}
-	}
-}
 
 function build_menu() {
 	global $v_menu_tab_show;
