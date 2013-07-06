@@ -724,7 +724,7 @@ function confirmdelete(url) {
 	$menu_level = '0';
 	if ($db) {
 		if (strlen($php_self_parent_uuid) > 0) {
-			require_once "includes/classes/menu.php";
+			require_once "resources/classes/menu.php";
 			$menu = new menu;
 			$menu->db = $db;
 			$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];

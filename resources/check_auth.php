@@ -60,7 +60,7 @@ session_start();
 					}
 				//set the domain information
 					if (strlen($domain_name) > 0) {
-						require_once "includes/classes/domains.php";
+						require_once "resources/classes/domains.php";
 						foreach ($_SESSION['domains'] as &$row) {
 							if ($row['domain_name'] == $domain_name) {
 								//set the domain session variables

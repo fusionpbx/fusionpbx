@@ -190,7 +190,7 @@ include "root.php";
 	}
 
 //how to use the class
-	//include "includes/classes/install.php";
+	//include "resources/classes/install.php";
 	//$install = new install;
 	//$install->domain_uuid = $domain_uuid;
 	//$install->switch_conf_dir = $switch_conf_dir;

@@ -219,7 +219,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 
 				//update the dialplan entry
-					require_once "includes/classes/switch_dialplan.php";
+					require_once "resources/classes/dialplan.php";
 					$dialplan = new dialplan;
 					$dialplan->domain_uuid = $_SESSION['domain_uuid'];
 					$dialplan->app_uuid = $app_uuid;

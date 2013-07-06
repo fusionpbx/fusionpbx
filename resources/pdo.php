@@ -260,7 +260,7 @@ if ($db_type == "pgsql") {
 //set the setting arrays
 	if (!isset($_SESSION['domain']['menu'])){
 		//domains set()
-		require "includes/classes/domains.php";
+		require "resources/classes/domains.php";
 		$domain = new domains();
 		$domain->db = $db;
 		$domain->set();

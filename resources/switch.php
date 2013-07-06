@@ -2129,7 +2129,7 @@ function save_hunt_group_xml() {
 										unset($sql);
 								}
 
-								require_once "includes/classes/switch_dialplan.php";
+								require_once "resources/classes/dialplan.php";
 								$dialplan = new dialplan;
 								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->app_uuid = $app_uuid;
@@ -2178,7 +2178,7 @@ function save_hunt_group_xml() {
 
 						//if action is add or update
 							if ($action == 'add' || $action == 'update') {
-								require_once "includes/classes/switch_dialplan.php";
+								require_once "resources/classes/dialplan.php";
 								$dialplan = new dialplan;
 								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
@@ -3080,7 +3080,7 @@ if (!function_exists('save_call_center_xml')) {
 		global $db, $domain_uuid;
 
 		//include the classes
-		include "includes/classes/switch_dialplan.php";
+		include "resources/classes/dialplan.php";
 
 		$sql = "select * from v_call_center_queues ";
 		$prep_statement = $db->prepare(check_sql($sql));

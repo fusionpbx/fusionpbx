@@ -37,7 +37,7 @@ include "root.php";
 		private $xml;
 
 		public function __construct() {
-			require_once "includes/classes/database.php";
+			require_once "resources/classes/database.php";
 			$this->app_uuid = '';
 		}
 

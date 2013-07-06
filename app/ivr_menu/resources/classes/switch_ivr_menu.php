@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "includes/classes/switch_dialplan.php";
+require_once "resources/classes/dialplan.php";
 
 //define the directory class
 	class switch_ivr_menu {
@@ -65,7 +65,7 @@ require_once "includes/classes/switch_dialplan.php";
 		public $order_by; //array
 
 		public function __construct() {
-			require_once "includes/classes/database.php";
+			require_once "resources/classes/database.php";
 			$this->app_uuid = 'a5788e9b-58bc-bd1b-df59-fff5d51253ab';
 		}
 

@@ -259,7 +259,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 						if ($row['num_rows'] == 0) {
 							//add the dialplan
-								require_once "includes/classes/database.php";
+								require_once "resources/classes/database.php";
 								$database = new database;
 								$database->db = $db;
 								$database->table = "v_dialplans";

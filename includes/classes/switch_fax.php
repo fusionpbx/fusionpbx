@@ -45,7 +45,7 @@ include "root.php";
 		public $fax_description;
 
 		public function __construct() {
-			require_once "includes/classes/database.php";
+			require_once "resources/classes/database.php";
 			$this->app_uuid = '24108154-4ac3-1db6-1551-4731703a4440';
 		}
 
@@ -521,8 +521,8 @@ include "root.php";
 		}
 	}
 /*
-require_once "includes/classes/database.php";
-require_once "includes/classes/switch_fax.php";
+require_once "resources/classes/database.php";
+require_once "resources/classes/fax.php";
 $fax = new switch_fax;
 $fax->domain_uuid = $_SESSION["domain_uuid"];
 print_r($fax->find());

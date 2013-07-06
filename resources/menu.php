@@ -61,7 +61,7 @@ require_once "resources/require.php";
 		$v_menu .= "<div id=\"menu\" style=\"position: relative; z-index:199; width:100%;\" align='left'>\n";
 		$v_menu .= "\n";
 
-		require_once "includes/classes/menu.php";
+		require_once "resources/classes/menu.php";
 		$menu = new menu;
 		$menu->db = $db;
 		$menu->menu_uuid = $_SESSION['domain']['menu']['uuid'];

@@ -49,7 +49,7 @@ else {
 //delete the ivr menu option
 	if (strlen($id)>0) {
 		//include the ivr menu class
-			require_once "includes/classes/database.php";
+			require_once "resources/classes/database.php";
 			require_once "resources/classes/switch_ivr_menu.php";
 			$ivr = new switch_ivr_menu;
 			$ivr->domain_uuid = $_SESSION["domain_uuid"];

@@ -106,7 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 			//add the default items in the menu
-				require_once "includes/classes/menu.php";
+				require_once "resources/classes/menu.php";
 				$menu = new menu;
 				$menu->db = $db;
 				$menu->menu_uuid = $menu_uuid;
