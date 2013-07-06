@@ -28,9 +28,8 @@ require_once "includes/require.php";
 //require_once "includes/checkauth.php";
 
 $file = $_GET["f"];
-require_once "includes/securedownload.php";
+require_once "resources/secure_download.php";
 //echo $file;
 DownloadFile($file_dir.$file);
 
 ?>
-
