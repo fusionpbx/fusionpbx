@@ -352,40 +352,6 @@ function byte_convert($bytes, $decimals = 2) {
 	return $formattedbytes;
 }
 
-function lan_sip_profile() {
-	global $config;
-	clearstatcache();
-
-	//if the lan directory does not exist then create it
-	if (!is_readable($_SESSION['switch']['conf']['dir'].'/sip_profiles/lan/')) {
-		exec("mkdir ".$_SESSION['switch']['conf']['dir']."/sip_profiles/lan/");
-	}
-
-	//create the LAN profile if it doesn't exist
-	if (!file_exists($_SESSION['switch']['conf']['dir'].'/sip_profiles/lan.xml')) {
-		$lan_ip = $config['interfaces']['lan']['ipaddr'];
-		if (strlen($lan_ip) > 0) {
-			exec("cp ".$_SESSION['switch']['conf']['dir']."/sip_profiles/internal.xml ".$_SESSION['switch']['conf']['dir']."/sip_profiles/lan.xml");
-
-			$filename = $_SESSION['switch']['conf']['dir']."/sip_profiles/lan.xml";
-			$handle = fopen($filename,"rb");
-			$contents = fread($handle, filesize($filename));
-			fclose($handle);
-
-			$handle = fopen($filename,"w");
-			$contents = str_replace("<profile name=\"internal\">", "<profile name=\"lan\">", $contents);
-			$contents = str_replace("<alias name=\"default\"/>", "", $contents);
-			$contents = str_replace("<X-PRE-PROCESS cmd=\"include\" data=\"internal/*.xml\"/>", "<X-PRE-PROCESS cmd=\"include\" data=\"lan/*.xml\"/>", $contents);
-			$contents = str_replace("<param name=\"rtp-ip\" value=\"\$\${local_ip_v4}\"/>", "<param name=\"rtp-ip\" value=\"".$lan_ip."\"/>", $contents);
-			$contents = str_replace("<param name=\"sip-ip\" value=\"\$\${local_ip_v4}\"/>", "<param name=\"sip-ip\" value=\"".$lan_ip."\"/>", $contents);
-			fwrite($handle, $contents);
-			unset($contents);
-			fclose($handle);
-			unset($filename);
-		}
-	}
-}
-
 function ListFiles($dir) {
 	if($dh = opendir($dir)) {
 		$files = Array();
