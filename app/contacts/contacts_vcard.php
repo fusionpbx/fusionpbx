@@ -151,7 +151,7 @@ if (count($_GET)>0) {
 			$content = $vcard->card;
 
 			//include
-				require_once PROJECT_PATH."/resources/qr/qrcode.php";
+				require_once PROJECT_PATH."resources/qr/qrcode.php";
 
 			//error correction level
 				//QR_ERROR_CORRECT_LEVEL_L : $e = 0;
