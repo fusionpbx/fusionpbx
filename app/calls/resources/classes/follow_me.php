@@ -64,7 +64,7 @@ include "root.php";
 		public $destination_timeout = 0;
 		public $destination_order = 1;
 
-		public function follow_me_add() {
+		public function add() {
 			//set the global variable
 				global $db;
 
@@ -93,7 +93,7 @@ include "root.php";
 				$this->follow_me_destinations();
 		} //end function
 
-		public function follow_me_update() {
+		public function update() {
 			//set the global variable
 				global $db;
 			//update follow me table
