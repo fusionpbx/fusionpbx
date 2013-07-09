@@ -46,7 +46,7 @@ $page["title"] = $text['title-contacts'];
 require_once "resources/paging.php";
 
 //get the search criteria
-	$search_all = check_str($_GET["search_all"]);
+	$search_all = strtolower(check_str($_GET["search_all"]));
 	$phone_number = check_str($_GET["phone_number"]);
 
 //get variables used to control the order
@@ -80,9 +80,8 @@ require_once "resources/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "";
-		$sql .= " select count(*) as num_rows from v_contacts ";
-		$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql = "select count(*) as num_rows from v_contacts ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		if (strlen($phone_number) > 0) {
 			$phone_number = preg_replace('{\D}', '', $phone_number);
 			$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
@@ -99,18 +98,18 @@ require_once "resources/paging.php";
 					$sql .= "	select contact_uuid from v_contacts ";
 					$sql .= "	where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 					$sql .= "	and (\n";
-					$sql .= "	contact_organization like '%".$search_all."%' or \n";
-					$sql .= "	contact_name_given like '%".$search_all."%' or \n";
-					$sql .= "	contact_name_family like '%".$search_all."%' or \n";
-					$sql .= "	contact_nickname like '%".$search_all."%' or \n";
-					$sql .= "	contact_title like '%".$search_all."%' or \n";
-					$sql .= "	contact_category like '%".$search_all."%' or \n";
-					$sql .= "	contact_role like '%".$search_all."%' or \n";
-					$sql .= "	contact_email like '%".$search_all."%' or \n";
-					$sql .= "	contact_url like '%".$search_all."%' or \n";
-					$sql .= "	contact_time_zone like '%".$search_all."%' or \n";
-					$sql .= "	contact_note like '%".$search_all."%' or \n";
-					$sql .= "	contact_type like '%".$search_all."%'\n";
+					$sql .= "	lower(contact_organization) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_name_given) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_name_family) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_nickname) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_title) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_category) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_role) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_email) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_url) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_time_zone) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_note) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_type) like '%".$search_all."%'\n";
 					$sql .= "	)\n";
 					$sql .= ")\n";
 				}
@@ -154,18 +153,18 @@ require_once "resources/paging.php";
 					$sql .= "and contact_uuid in (\n";
 					$sql .= "	select contact_uuid from v_contacts where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
 					$sql .= "	and (\n";
-					$sql .= "	contact_organization like '%".$search_all."%' or \n";
-					$sql .= "	contact_name_given like '%".$search_all."%' or \n";
-					$sql .= "	contact_name_family like '%".$search_all."%' or \n";
-					$sql .= "	contact_nickname like '%".$search_all."%' or \n";
-					$sql .= "	contact_title like '%".$search_all."%' or \n";
-					$sql .= "	contact_category like '%".$search_all."%' or \n";
-					$sql .= "	contact_role like '%".$search_all."%' or \n";
-					$sql .= "	contact_email like '%".$search_all."%' or \n";
-					$sql .= "	contact_url like '%".$search_all."%' or \n";
-					$sql .= "	contact_time_zone like '%".$search_all."%' or \n";
-					$sql .= "	contact_note like '%".$search_all."%' or \n";
-					$sql .= "	contact_type like '%".$search_all."%'\n";
+					$sql .= "	lower(contact_organization) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_name_given) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_name_family) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_nickname) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_title) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_category) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_role) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_email) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_url) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_time_zone) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_note) like '%".$search_all."%' or \n";
+					$sql .= "	lower(contact_type) like '%".$search_all."%'\n";
 					$sql .= "	)\n";
 					$sql .= ")\n";
 				}
