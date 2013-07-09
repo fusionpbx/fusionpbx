@@ -45,7 +45,7 @@ if (strlen($_GET["id"]) > 0) {
 	if (strlen($_GET["data_parent_row_uuid"])>0) {
 		$data_parent_row_uuid = $_GET["data_parent_row_uuid"];
 	}
-	$search_all = check_str($_GET["search_all"]);
+	$search_all = strtolower(check_str($_GET["search_all"]));
 }
 
 //used for changing the order
@@ -142,7 +142,7 @@ if (strlen($_GET["id"]) > 0) {
 				}
 			}
 			else {
-				$sql .= "and data_field_value like '%$search_all%' \n";
+				$sql .= "and lower(data_field_value) like '%$search_all%' \n";
 			}
 		}
 		else {

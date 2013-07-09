@@ -41,7 +41,7 @@ else {
 	}
 
 //set http get variables to php variables
-	$search_all = check_str($_GET["search_all"]);
+	$search_all = strtolower(check_str($_GET["search_all"]));
 	$schema_uuid = check_str($_GET["schema_uuid"]);
 	if (strlen($_GET["data_row_uuid"])>0) { //update
 		$data_row_uuid = check_str($_GET["data_row_uuid"]);
@@ -406,7 +406,7 @@ else {
 						}
 					}
 					else {
-						$sql .= "and data_field_value like '%$search_all%' )\n";
+						$sql .= "and lower(data_field_value) like '%$search_all%' )\n";
 					}
 				}
 			}
