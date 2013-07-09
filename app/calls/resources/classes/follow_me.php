@@ -291,9 +291,6 @@ include "root.php";
 						$prep_statement_2->execute();
 						$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
 						$dial_string = "{instant_ringback=true,ignore_early_media=true,sip_invite_domain=".$_SESSION['domain_name'];
-						if ($this->call_prompt == "true") {
-							$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
-						}
 						if (strlen($this->cid_name_prefix) > 0) {
 							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#\${caller_id_name}";
 						}
@@ -303,6 +300,9 @@ include "root.php";
 						$dial_string .= "}";
 						foreach ($result as &$row) {
 							$dial_string .= "[presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
+							if ($this->call_prompt == "true") {
+								$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
+							}
 							$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 							$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
 							if (extension_exists($row["follow_me_destination"])) {
