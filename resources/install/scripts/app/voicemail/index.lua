@@ -29,6 +29,7 @@
 	max_tries = 3;
 	max_timeouts = 3;
 	digit_timeout = 3000;
+	stream_seek = false;
 
 --direct dial
 	direct_dial = {}

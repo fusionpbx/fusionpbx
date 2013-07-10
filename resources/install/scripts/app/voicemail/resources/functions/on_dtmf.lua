@@ -34,6 +34,16 @@
 				if (debug["info"]) then
 					freeswitch.console_log("info", "[voicemail] dtmf digits: " .. dtmf_digits .. ", length: ".. string.len(dtmf_digits) .." max_digits: " .. max_digits .. "\n");
 				end
+				if (stream_seek == true) then
+					if (dtmf_digits == "4") then
+						dtmf_digits = "";
+						return("seek:-12000");
+					end
+					if (dtmf_digits == "6") then
+						dtmf_digits = "";
+						return("seek:12000");
+					end
+				end
 				if (string.len(dtmf_digits) >= max_digits) then
 					if (debug["info"]) then
 						freeswitch.console_log("info", "[voicemail] max_digits reached\n");

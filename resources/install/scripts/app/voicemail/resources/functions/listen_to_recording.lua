@@ -56,7 +56,9 @@
 		--play the message
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
+					stream_seek = true;
 					session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+					stream_seek = false;
 					session:streamFile("silence_stream://1000");
 				end
 			end
