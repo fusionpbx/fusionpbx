@@ -71,7 +71,7 @@
 				echo "username: <strong>admin</strong> <br />password: <strong>fusionpbx</strong> <br/><br/>\n";
 				echo "</li>\n";
 				echo "<li>\n";
-				echo "The database connection settings have been saved to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php.<br />\n";
+				echo "The database connection settings have been saved to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php.<br />\n";
 				echo "</li>\n";
 				echo "</ul>\n";
 				echo "<strong>\n";

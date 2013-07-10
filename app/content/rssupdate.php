@@ -305,7 +305,7 @@ else {
 	echo "		<td  class='' colspan='2' align='left'>";
 	echo "            <strong>".$text['label-content'].":</strong> ";
 	if ($rss_optional_1 == "text/html") {
-		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/tiny_mce')) {
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/tiny_mce')) {
 			echo "            &nbsp; &nbsp; &nbsp; editor &nbsp; <a href='#' title='toggle' onclick=\"toogleEditorMode('rss_description'); return false;\">".$text['label-on-off']."</a><br>";
 		}
 		echo "            <textarea name='rss_description'  id='rss_description' class='formfld' cols='20' style='width: 100%' rows='12' >$rss_description</textarea>";

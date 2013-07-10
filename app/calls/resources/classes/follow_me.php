@@ -31,6 +31,7 @@ include "root.php";
 		public $db_type;
 		public $follow_me_uuid;
 		public $cid_name_prefix;
+		public $cid_number_prefix;
 		public $accountcode;
 		public $call_prompt;
 		public $follow_me_enabled;
@@ -74,6 +75,9 @@ include "root.php";
 				$sql .= "domain_uuid, ";
 				$sql .= "follow_me_uuid, ";
 				$sql .= "cid_name_prefix, ";
+				if (strlen($this->cid_number_prefix) > 0) {
+					$sql .= "cid_number_prefix, ";
+				}
 				$sql .= "call_prompt, ";
 				$sql .= "follow_me_enabled ";
 				$sql .= ")";
@@ -82,6 +86,9 @@ include "root.php";
 				$sql .= "'$this->domain_uuid', ";
 				$sql .= "'$this->follow_me_uuid', ";
 				$sql .= "'$this->cid_name_prefix', ";
+				if (strlen($this->cid_number_prefix) > 0) {
+					$sql .= "'$this->cid_number_prefix', ";
+				}
 				$sql .= "'$this->call_prompt', ";
 				$sql .= "'$this->follow_me_enabled' ";
 				$sql .= ")";
@@ -100,6 +107,9 @@ include "root.php";
 				$sql = "update v_follow_me set ";
 				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
 				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
+				if (strlen($this->cid_number_prefix) > 0) {
+					$sql .= "cid_number_prefix = '$this->cid_number_prefix', ";
+				}
 				$sql .= "call_prompt = '$this->call_prompt' ";
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
@@ -273,6 +283,7 @@ include "root.php";
 						$follow_me_uuid = $row["follow_me_uuid"];
 						$this->call_prompt = $row["call_prompt"];
 						$this->cid_name_prefix = $row["cid_name_prefix"];
+						$this->cid_number_prefix = $row["cid_number_prefix"];
 					}
 				}
 				unset ($prep_statement);
@@ -293,6 +304,10 @@ include "root.php";
 						$dial_string = "{instant_ringback=true,ignore_early_media=true,sip_invite_domain=".$_SESSION['domain_name'];
 						if (strlen($this->cid_name_prefix) > 0) {
 							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#\${caller_id_name}";
+						}
+						if (strlen($this->cid_number_prefix) > 0) {
+							$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
+							//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."#\${caller_id_number}";
 						}
 						if (strlen($this->accountcode) > 0) {
 							$dial_string .= ",accountcode=".$this->accountcode;

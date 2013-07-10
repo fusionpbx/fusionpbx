@@ -55,8 +55,8 @@ include "root.php";
 						include "root.php";
 						if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 							include $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
-						} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
-							include $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php";
+						} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+							include $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php";
 						} elseif (file_exists("/etc/fusionpbx/config.php")){
 							//linux
 							include "/etc/fusionpbx/config.php";

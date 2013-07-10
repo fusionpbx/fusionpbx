@@ -125,7 +125,7 @@ if (count($_GET)>0) {
 
 		if (strlen($user_status) > 0) {
 			//include the dnd class
-				include "includes/classes/do_not_disturb.php";
+				include "resources/classes/do_not_disturb.php";
 			//loop through the list of assigned extensions
 				foreach ($_SESSION['user']['extension'] as &$row) {
 					$extension = $row["user"];

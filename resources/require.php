@@ -30,8 +30,8 @@ if (file_exists("/etc/fusionpbx/config.php")) {
 elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 	include "/usr/local/etc/fusionpbx/config.php";
 }
-elseif (file_exists("includes/config.php")) {
-	include "includes/config.php";
+elseif (file_exists("resources/config.php")) {
+	include "resources/config.php";
 }
 else {
 	include "resources/config.php";

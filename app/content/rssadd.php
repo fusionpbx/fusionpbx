@@ -272,7 +272,7 @@ if (count($_POST)>0) {
 	//echo "		<td  class='vncellreq' valign='top'></td>";
 	echo "		<td  class='' colspan='2' align='left'>";
 	echo "            <strong>".$text['label-content'].":</strong> ";
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/includes/tiny_mce')) {
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/tiny_mce')) {
 		echo "            &nbsp; &nbsp; &nbsp; editor &nbsp; <a href='#' title='toggle' onclick=\"toogleEditorMode('rss_description'); return false;\">".$text['label-on-off']."</a><br>";
 	}
 	else {

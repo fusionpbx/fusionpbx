@@ -62,6 +62,7 @@
 		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'follow_me_cid_number_prefix';
 
 	//schema details
 		$y = 0; //table array index
@@ -80,6 +81,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'primary';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'cid_name_prefix';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'cid_number_prefix';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = '';
 		$z++;
