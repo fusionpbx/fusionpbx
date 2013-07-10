@@ -47,14 +47,14 @@ require_once "resources/require.php";
 		$v_menu .= "    #menu{float:none;} /* This is required for IE to avoid positioning bug when placing content first in source. */\n";
 		$v_menu .= "    /* IE Menu CSS */\n";
 		$v_menu .= "    /* csshover.htc file version: V1.21.041022 - Available for download from: http://www.xs4all.nl/~peterned/csshover.html */\n";
-		$v_menu .= "    body{behavior:url(/includes/csshover.htc);\n";
+		$v_menu .= "    body{behavior:url(/resources/csshover.htc);\n";
 		$v_menu .= "    font-size:100%; /* to enable text resizing in IE */\n";
 		$v_menu .= "    }\n";
 		$v_menu .= "    #menu ul li{float:left;width:100%;}\n";
 		$v_menu .= "    #menu h2, #menu a{height:1%;font:bold arial,helvetica,sans-serif;}\n";
 		$v_menu .= "    </style>\n";
 		$v_menu .= "    <![endif]-->\n";
-		//$v_menu .= "    <style type=\"text/css\">@import url(\"/includes/menuh.css\");</style>\n";
+		//$v_menu .= "    <style type=\"text/css\">@import url(\"/resources/menuh.css\");</style>\n";
 		$v_menu .= "\n";
 
 		$v_menu .= "<!-- Begin CSS Horizontal Popout Menu -->\n";

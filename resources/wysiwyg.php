@@ -33,11 +33,11 @@
 //plugins : style,layer,table,save,advhr,advimage,advlink,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,spellchecker
 //theme_advanced_buttons3_add : "spellchecker,media,advhr,separator,print,separator,ltr,rtl,separator,fullscreen",
 
-//<script language="javascript" type="text/javascript" src="/includes/tiny_mce/tiny_mce.js"></script>
+//<script language="javascript" type="text/javascript" src="/resources/tiny_mce/tiny_mce.js"></script>
 
 ?>
 
-<script type="text/javascript" src="<?php echo PROJECT_PATH; ?>/includes/tiny_mce/tiny_mce_gzip.js"></script>
+<script type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/tiny_mce/tiny_mce_gzip.js"></script>
 <script type="text/javascript">
 tinyMCE_GZ.init({
 	plugins : 'style,layer,table,save,advhr,advimage,advlink,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,spellchecker',
@@ -85,7 +85,7 @@ tinyMCE_GZ.init({
 
 
 	function ajaxfilemanager(field_name, url, type, win) {
-		var ajaxfilemanagerurl = "<?php echo PROJECT_PATH; ?>/includes/tiny_mce/plugins/ajaxfilemanager/ajaxfilemanager.php";
+		var ajaxfilemanagerurl = "<?php echo PROJECT_PATH; ?>/resources/tiny_mce/plugins/ajaxfilemanager/ajaxfilemanager.php";
 		switch (type) {
 			case "image":
 				ajaxfilemanagerurl += "?type=img";

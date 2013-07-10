@@ -46,7 +46,7 @@ require_once "resources/functions.php";
 	$domain_name = $domain_array[0];
 
 //if the config file exists then disable the install page
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php")) {
+	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php")) {
 		$msg .= "Already Installed";
 		header("Location: ".PROJECT_PATH."/index.php?msg=".urlencode($msg));
 		exit;
@@ -449,15 +449,15 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
 		$tmp_config .= "\n";
 		$tmp_config .= "?>";
-		if (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes")) {
-			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php";
+		if (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources")) {
+			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
 		} elseif (is_dir("/etc/fusionpbx")){
 			$config = "/etc/fusionpbx/config.php";
 		} elseif (is_dir("/usr/local/etc/fusionpbx")){
 			$config = "/usr/local/etc/fusionpbx/config.php";
 		}
 		else {
-			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/config.php";
+			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
 		}
 		$fout = fopen($config,"w");
 		fwrite($fout, $tmp_config);
@@ -1347,7 +1347,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 
 //show the html form
 	if (!is_writable($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/header.php")) {
-		$install_msg .= "<li>Write access to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/includes/ is required during the install.</li>\n";
+		$install_msg .= "<li>Write access to ".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/ is required during the install.</li>\n";
 	}
 	if (!extension_loaded('PDO')) {
 		$install_msg .= "<li>PHP PDO was not detected. Please install it before proceeding.</li>";

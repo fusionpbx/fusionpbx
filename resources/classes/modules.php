@@ -27,7 +27,7 @@ include "root.php";
 
 //add the database structure
 /*
-require_once "includes/classes/modules.php";
+require_once "resources/classes/modules.php";
 $mod = new switch_modules;
 $mod->dir = $_SESSION['switch']['mod']['dir'];
 echo $mod->dir."\n";

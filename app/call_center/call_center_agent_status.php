@@ -51,7 +51,7 @@ require_once "resources/paging.php";
 //get the http post values and set them as php variables
 	if (count($_POST)>0) {
 		//include the dnd php class
-		include "includes/classes/do_not_disturb.php";
+		include "resources/classes/do_not_disturb.php";
 
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['status']) > 0) {
