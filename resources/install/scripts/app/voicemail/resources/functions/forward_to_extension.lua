@@ -125,7 +125,7 @@
 
 		--if local after email is true then copy the recording file
 			mkdir(voicemail_dir.."/"..forward_voicemail_id);
-			os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+			os.execute("cp '"..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."' '"..voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."'");
 
 		--send the email with the voicemail recording attached
 			send_email(forward_voicemail_id, uuid);
