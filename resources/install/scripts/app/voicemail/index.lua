@@ -160,6 +160,7 @@
 	dofile(scripts_dir.."/resources/functions/explode.lua");
 	dofile(scripts_dir.."/resources/functions/format_seconds.lua");
 	dofile(scripts_dir.."/resources/functions/mkdir.lua");
+	dofile(scripts_dir.."/resources/functions/copy.lua");
 
 --voicemail functions
 	dofile(scripts_dir.."/app/voicemail/resources/functions/on_dtmf.lua");
