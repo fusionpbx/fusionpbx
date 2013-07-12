@@ -91,7 +91,7 @@ if ($_GET['a'] == "download") {
 	exit;
 }
 
-if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['tmp_name'])) {
+if (is_uploaded_file($_FILES['upload_file']['tmp_name'])) {
 	$file_ext = strtolower(pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION));
 	if ($file_ext == 'wav' || $file_ext == 'mp3') {
 		if ($_POST['type'] == 'moh' && permission_exists('music_on_hold_add')) {
@@ -140,7 +140,7 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 						}
 					}
 				}
-				else { 
+				else {
 					exit();
 				}
 
@@ -150,8 +150,6 @@ if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['upload_file']['t
 				$moh->xml();
 				$moh->save();
 
-			//set an upload message
-				$save_msg = "Uploaded file to ".$target_dir."/".htmlentities($_FILES['upload_file']['name']);
 		}
 	}
 }
