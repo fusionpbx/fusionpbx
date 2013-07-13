@@ -76,14 +76,14 @@ include "root.php";
 						if (isset($dbfilename)) { $db_name = $dbfilename; }
 
 					//set defaults
-						if (isset($db_type)) { $this->driver = $db_type; }
-						if (isset($db_type)) { $this->type = $db_type; }
-						if (isset($db_host)) { $this->host = $db_host; }
-						if (isset($db_port)) { $this->port = $db_port; }
-						if (isset($db_name)) { $this->name = $db_name; }
-						if (isset($db_username)) { $this->username = $db_username; }
-						if (isset($db_password)) { $this->password = $db_password; }
-						if (isset($db_path)) { $this->path = $db_path; }
+						if (!isset($this->driver) && isset($db_type)) { $this->driver = $db_type; }
+						if (!isset($this->type) && isset($db_type)) { $this->type = $db_type; }
+						if (!isset($this->host) && isset($db_host)) { $this->host = $db_host; }
+						if (!isset($this->port) && isset($db_port)) { $this->port = $db_port; }
+						if (!isset($this->name) && isset($db_name)) { $this->name = $db_name; }
+						if (!isset($this->username) && isset($db_username)) { $this->username = $db_username; }
+						if (!isset($this->password) && isset($db_password)) { $this->password = $db_password; }
+						if (!isset($this->path) && isset($db_path)) { $this->path = $db_path; }
 				}
 				if (strlen($this->driver) == 0) {
 					$this->driver = $this->type;
