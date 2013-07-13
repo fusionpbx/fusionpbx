@@ -150,6 +150,8 @@ if (is_uploaded_file($_FILES['upload_file']['tmp_name'])) {
 				$moh->xml();
 				$moh->save();
 
+			//set an upload message
+				$save_msg = "Uploaded file to ".$target_dir."/".htmlentities($_FILES['upload_file']['name']);
 		}
 	}
 }
