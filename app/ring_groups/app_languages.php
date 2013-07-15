@@ -91,7 +91,7 @@
 
 	$text['description-timeout']['en-us'] = 'Enter the total call timeout in seconds';
 
-	$text['label-destination']['en-us'] = 'Destination';
+	$text['label-destination']['en-us'] = 'Timeout Destination';
 
 	$text['description-destination']['en-us'] = 'Select the timeout destination for this ring group.';
 
