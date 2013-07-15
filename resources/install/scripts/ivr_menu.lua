@@ -223,30 +223,31 @@
 							--run the action
 								session:execute(action, data);
 						end
-					else
-						if (ivr_menu_direct_dial == "true") then
-							if (string.len(digits) < 6) then
-								--replace the $1 and the domain name
-									digits = digits:gsub("*", "");
-								--check to see if the user extension exists
-									cmd = "user_exists id ".. digits .." "..context;
-									result = api:executeString(cmd);
-									freeswitch.consoleLog("NOTICE", "[confirm] "..cmd.." --"..result.."--\n");
-									if (result == "true") then
-										--run the action
-											session:execute("transfer", digits.." XML "..context);
-									else
-										--run the menu again
-											menu();	
-									end
-							end
-						end
 					end
 
 				--clear the variables
 					action = "";
 					data = "";
 			end); --end results
+
+		--direct dial
+			if (ivr_menu_direct_dial == "true") then
+				if (string.len(digits) < 6) then
+					--replace the $1 and the domain name
+						digits = digits:gsub("*", "");
+					--check to see if the user extension exists
+						cmd = "user_exists id ".. digits .." "..domain_name;
+						result = api:executeString(cmd);
+						freeswitch.consoleLog("NOTICE", "[ivr_menu] "..cmd.." "..result.."\n");
+						if (result == "true") then
+							--run the action
+								session:execute("transfer", digits.." XML "..context);
+						else
+							--run the menu again
+								menu();	
+						end
+				end
+			end
 
 		--execute
 			if (action) then
