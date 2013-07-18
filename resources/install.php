@@ -148,7 +148,7 @@ require_once "resources/functions.php";
 				if (file_exists('/usr/bin')) {
 					$switch_bin_dir = '/usr/bin'; //freeswitch bin directory
 				}
-				if (file_exists('/etc/freeswitch')) {
+				if (file_exists('/etc/freeswitch/dialplan')) {
 					$switch_conf_dir = '/etc/freeswitch';
 					$switch_extensions_dir = $switch_conf_dir.'/directory';
 					$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
