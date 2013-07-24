@@ -278,7 +278,7 @@
 					end
 				--originate each destination
 				dial_string = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
-				cmd = "bgapi originate "..dial_string.." '&lua(confirm.lua "..uuid.." "..originate_prompt..")'";
+				cmd = "bgapi originate "..dial_string.." '&lua('"..scripts_dir.."/app/ring_groups/resources/scripts/confirm.lua' "..uuid.." "..originate_prompt..")'";
 				--freeswitch.consoleLog("notice", "[ring group] cmd: " .. cmd .. "\n");
 				result = trim(api:executeString(cmd));
 			else
