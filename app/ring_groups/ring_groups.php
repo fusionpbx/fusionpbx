@@ -137,7 +137,7 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			echo "		<a href='ring_groups_edit.php?id=".$row['ring_group_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "		<a href='ring_groups_delete.php?id=".$row['ring_group_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>\n";
+			echo "		<a href='ring_groups_delete.php?id=".$row['ring_group_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
