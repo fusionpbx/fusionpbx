@@ -37,9 +37,7 @@
 
 	$text['label-description']['en-us'] = 'Description';
 
-	$text['message-delete']['en-us'] = 'Do you really want to delete this?';
-
-	$text['message-delete-done']['en-us'] = 'Delete Complete';
+	$text['message-delete']['en-us'] = 'Delete Complete';
 
 	$text['message-name']['en-us'] = 'Please provide: Name';
 
@@ -53,9 +51,9 @@
 
 	$text['message-enabled']['en-us'] = 'Please provide: Enabled';
 
-	$text['message-add-complete']['en-us'] = 'Add Complete';
+	$text['message-add']['en-us'] = 'Add Complete';
 
-	$text['message-update-complete']['en-us'] = 'Update Complete';
+	$text['message-update']['en-us'] = 'Update Complete';
 
 	$text['label-ring-group']['en-us'] = 'Ring Group';
 
@@ -81,8 +79,6 @@
 
 	$text['description-extensions']['en-us'] = 'Add an extension and ring parameters to the ring group.';
 
-	$text['button-add']['en-us'] = 'Add';
-
 	$text['description-extension']['en-us'] = 'Define an extension number for this ring group.';
 
 	$text['label-duration']['en-us'] = 'Duration';
@@ -91,9 +87,9 @@
 
 	$text['description-timeout']['en-us'] = 'Enter the total call timeout in seconds';
 
-	$text['label-destination']['en-us'] = 'Timeout Destination';
+	$text['label-timeout_destination']['en-us'] = 'Timeout Destination';
 
-	$text['description-destination']['en-us'] = 'Select the timeout destination for this ring group.';
+	$text['description-timeout_destination']['en-us'] = 'Select the timeout destination for this ring group.';
 
 	$text['label-cid-prefix']['en-us'] = 'CID Prefix';
 
@@ -124,5 +120,41 @@
 
 	$text['label-timeout']['en-us'] = 'Timeout';
 	$text['label-timeout']['pt-pt'] = '';
+
+	$text['label-destinations']['en-us'] = 'Destinations';
+	$text['label-destinations']['pt-pt'] = '';
+
+	$text['label-destination_number']['en-us'] = 'Destination';
+	$text['label-destination_number']['pt-pt'] = '';
+
+	$text['label-destination_delay']['en-us'] = 'Delay';
+	$text['label-destination_delay']['pt-pt'] = '';
+
+	$text['label-destination_timeout']['en-us'] = 'Timeout';
+	$text['label-destination_timeout']['pt-pt'] = '';
+
+	$text['label-destination_prompt']['en-us'] = 'Prompt';
+	$text['label-destination_prompt']['pt-pt'] = '';
+
+	$text['label-destination_prompt_confirm']['en-us'] = 'Confirm';
+	$text['label-destination_prompt_confirm']['pt-pt'] = '';
+
+	$text['label-destination_prompt_announce']['en-us'] = 'Announce';
+	$text['label-destination_prompt_announce']['pt-pt'] = '';
+
+	$text['description-destinations']['en-us'] = 'Add destinations and parameters to the ring group.';
+	$text['description-destinations']['pt-pt'] = '';
+
+	$text['button-add']['en-us'] = 'Add';
+	$text['button-add']['pt-pt'] = '';
+
+	$text['button-save']['en-us'] = 'Save';
+	$text['button-save']['pt-pt'] = '';
+
+	$text['confirm-delete']['en-us'] = 'Do you really want to delete this?';
+	$text['confirm-delete']['pt-pt'] = '';
+
+	$text['confirm-copy']['en-us'] = 'Do you really want to copy this?';
+	$text['confirm-copy']['en-us'] = '';
 
 ?>
