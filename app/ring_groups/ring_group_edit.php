@@ -43,17 +43,6 @@ else {
 
 //delete the user from the v_extension_users
 	if ($_GET["a"] == "delete" && permission_exists("user_delete")) {
-		/*
-		//set the variables
-			$ring_group_extension_uuid = check_str($_REQUEST["id"]);
-			$ring_group_uuid = check_str($_REQUEST["ring_group_uuid"]);
-		//delete the extension from the ring_group
-			$sql = "delete from v_ring_group_extensions ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and ring_group_extension_uuid = '$ring_group_extension_uuid' ";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		*/
 		//set the variables
 			$ring_group_destination_uuid = check_str($_REQUEST["id"]);
 			$ring_group_uuid = check_str($_REQUEST["ring_group_uuid"]);
@@ -65,7 +54,7 @@ else {
 			unset($sql);
 		//redirect the browser
 			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=ring_groups_edit.php?id=$ring_group_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=ring_group_edit.php?id=$ring_group_uuid\">\n";
 			echo "<div align='center'>Delete Complete</div>";
 			require_once "resources/footer.php";
 			return;
@@ -117,9 +106,6 @@ else {
 			$ring_group_timeout_array = explode(":", $ring_group_timeout_action);
 			$ring_group_timeout_app = array_shift($ring_group_timeout_array);
 			$ring_group_timeout_data = join(':', $ring_group_timeout_array);
-//			$extension_uuid = check_str($_POST["extension_uuid"]);
-//			$extension_delay = check_str($_POST["extension_delay"]);
-//			$extension_timeout = check_str($_POST["extension_timeout"]);
 			$destination_number = check_str($_POST["destination_number"]);
 			$destination_delay = check_str($_POST["destination_delay"]);
 			$destination_timeout = check_str($_POST["destination_timeout"]);
@@ -234,35 +220,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 			if ($action == "update" || $action == "add") {
-				//if extension_uuid then add it to ring group extensions
-					/* if (strlen($extension_uuid) > 0) {
-						$ring_group_extension_uuid = uuid();
-						$sql = "insert into v_ring_group_extensions ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "ring_group_uuid, ";
-						$sql .= "ring_group_extension_uuid, ";
-						$sql .= "extension_delay, ";
-						if (strlen($extension_timeout) > 0) {
-							$sql .= "extension_timeout, ";
-						}
-						$sql .= "extension_uuid ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'".$_SESSION['domain_uuid']."', ";
-						$sql .= "'$ring_group_uuid', ";
-						$sql .= "'$ring_group_extension_uuid', ";
-						$sql .= "'$extension_delay', ";
-						if (strlen($extension_timeout) > 0) {
-							$sql .= "'$extension_timeout', ";
-						}
-						$sql .= "'$extension_uuid' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					} */
-
 				//if destination then add it to ring group destinations
 					if (strlen($destination_number) > 0) {
 						$ring_group_destination_uuid = uuid();
@@ -374,13 +331,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//redirect the browser
 					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=ring_groups_edit.php?id=$ring_group_uuid\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=ring_group_edit.php?id=$ring_group_uuid\">\n";
 					echo "<div align='center'>\n";
 					if ($action == "add") {
-						echo $text['message-add-complete']."\n";
+						echo $text['message-add']."\n";
 					}
 					if ($action == "update") {
-						echo $text['message-update-complete']."\n";
+						echo $text['message-update']."\n";
 					}
 					echo "</div>\n";
 					require_once "resources/footer.php";
@@ -520,78 +477,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-strategy']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-/*
-	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-extensions'].":</td>";
-	echo "		<td class='vtable' align='left'>";
-	if ($action == "update") {
-		echo "			<table width='52%' border='0' cellpadding='0' cellspacing='0'>\n";
-		$sql = "SELECT g.ring_group_extension_uuid, e.extension_uuid, g.extension_delay, g.extension_timeout, e.extension ";
-		$sql .= "FROM v_ring_groups as r, v_ring_group_extensions as g, v_extensions as e ";
-		$sql .= "where g.ring_group_uuid = r.ring_group_uuid ";
-		$sql .= "and g.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and g.ring_group_uuid = '".$ring_group_uuid."' ";
-		$sql .= "and e.extension_uuid = g.extension_uuid ";
-		$sql .= "order by g.extension_delay asc, e.extension asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		echo "<tr>\n";
-		echo "	<td class='vtable'>".$text['label-extension']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-delay']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-duration']."</td>\n";
-		echo "	<td></td>\n";
-		echo "</tr>\n";
-		foreach($result as $field) {
-			if (strlen($field['extension_delay']) == 0) { $field['extension_delay'] = "0"; }
-			if (strlen($field['extension_timeout']) == 0) { $field['extension_timeout'] = "30"; }
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$field['extension'];
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$field['extension_delay']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$field['extension_timeout']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td>\n";
-			echo "					<a href='ring_groups_edit.php?id=".$field['ring_group_extension_uuid']."&ring_group_uuid=".$ring_group_uuid."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>\n";
-			echo "				</td>\n";
-			echo "			</tr>\n";
-		}
-		echo "			</table>\n";
-	}
-	echo "			<br />\n";
-	$sql = "SELECT * FROM v_extensions ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "order by extension asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	echo "			<select name=\"extension_uuid\" class='frm'>\n";
-	echo "			<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
-		echo "			<option value='".$field['extension_uuid']."'>".$field['extension']."</option>\n";
-	}
-	echo "			</select>";
-	echo "			&nbsp;\n";
 
-	echo "	".$text['label-delay']."&nbsp;";
-	destination_select('extension_delay', $extension_delay, '0');
-	echo "	&nbsp;".$text['label-duration']."&nbsp;\n";
-	destination_select('extension_timeout', $extension_timeout, '30');
-	if ($action == "update") {
-		echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-	}
-	unset($sql, $result);
-	echo "			<br>\n";
-	echo "			".$text['description-extensions']."\n";
-	echo "			<br />\n";
-	echo "		</td>";
-	echo "	</tr>";
-*/
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-destinations'].":</td>";
 	echo "		<td class='vtable' align='left'>";
