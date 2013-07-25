@@ -161,7 +161,7 @@
 			freeswitch.consoleLog("notice", "[ivr_menu] dtmf_digits: " .. dtmf_digits .. "\n");
 			menu_options(session, dtmf_digits);
 		else
-			if (tries <= tonumber(ivr_menu_max_failures)) then
+			if (tries < tonumber(ivr_menu_max_failures)) then
 				--log the dtmf digits
 					if (debug["tries"]) then
 						freeswitch.consoleLog("notice", "[ivr_menu] tries: " .. tries .. "\n");
