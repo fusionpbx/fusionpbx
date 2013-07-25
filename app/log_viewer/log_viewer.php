@@ -246,10 +246,10 @@ if (permission_exists('log_view')) {
 					//color adjustments on words in log line
 					for ($i=2; $i<=$MAXEL; $i++){
 						if (isset ($v1["pattern".$i])){
-							$log_line = str_replace($v1["pattern".$i], "<font color=\"{$v1["color".$i]}\">{$v1["pattern".$i]}</font>", $log_line);
+							$log_line = str_replace($v1["pattern".$i], "<font color=\"{$v1["color".$i]}\">{$v1["pattern".$i]}</font>", htmlentities($log_line));
 						}
 					}
-					$ary_output[] = "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">".$log_line."</font><br>";
+					$ary_output[] = "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">".htmlentities($log_line)."</font><br>";
 					$noprint = true;
 				}
 			}
@@ -257,7 +257,7 @@ if (permission_exists('log_view')) {
 			if ($noprint !== true){
 				//more firefox workaround...
 				//echo "<p style=\"background-color:$background_color;color:$default_color;font-wieght:$default_type;font-family:$default_font\">";
-				$ary_output[] = "<font color=\"$default_color\" face=\"$default_font\">".$log_line."</font><br>";
+				$ary_output[] = "<font color=\"$default_color\" face=\"$default_font\">".htmlentities($log_line)."</font><br>";
 			}
 		}
 	}
