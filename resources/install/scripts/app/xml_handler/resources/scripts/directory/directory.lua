@@ -39,25 +39,14 @@
 
 --determine the correction action to perform
 	if (purpose == "gateways") then
-		if (params:getHeader("profile") == "internal") then
-			--process when the sip profile is rescanned or sofia is reloaded
-			local xml = {}
-			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
-			table.insert(xml, [[<document type="freeswitch/xml">]]);
-			table.insert(xml, [[	<section name="directory">]]);
-			sql = "SELECT * FROM v_domains ";
-			dbh:query(sql, function(row)
-				table.insert(xml, [[		<domain name="]]..row.domain_name..[[" />]]);
-			end);
-			table.insert(xml, [[	</section>]]);
-			table.insert(xml, [[</document>]]);
-			XML_STRING = table.concat(xml, "\n");
-		end
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
 	elseif (action == "message-count") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/message-count.lua");
 	elseif (action == "group_call") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/group_call.lua");
-	else 
+	elseif (params:getHeader("Event-Calling-Function") == "switch_xml_locate_domain") then
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
+	else
 		--handle action
 			--all other directory actions: sip_auth, user_call 
 			--except for the action: group_call
@@ -162,7 +151,7 @@
 						end
 				end);
 			end
-		
+
 		--if the extension does not exist set continue to false;
 			if (extension_uuid == nil) then
 				continue = false;
@@ -367,6 +356,10 @@
 					<result status="not found" />
 				</section>
 			</document>]];
+		--set the cache
+			if (user and domain_name) then
+				result = trim(api:execute("memcache", "set directory:" .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
+			end
 	end
 
 --send the xml to the console
