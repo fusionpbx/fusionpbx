@@ -27,11 +27,9 @@
 
 	$text['title']['en-us'] = 'Ring Groups';
 
-	$text['description']['en-us'] = 'A ring group is a set of extensions that can be called with a ring strategy.';
+	$text['description']['en-us'] = 'A ring group is a set of destinations that can be called with a ring strategy.';
 
 	$text['label-name']['en-us'] = 'Name';
-
-	$text['label-extension']['en-us'] = 'Extension';
 
 	$text['label-enabled']['en-us'] = 'Enabled';
 
@@ -40,8 +38,6 @@
 	$text['message-delete']['en-us'] = 'Delete Complete';
 
 	$text['message-name']['en-us'] = 'Please provide: Name';
-
-	$text['message-extension']['en-us'] = 'Please provide: Extension';
 
 	$text['message-strategy']['en-us'] = 'Please provide: Strategy';
 
@@ -74,12 +70,6 @@
 	$text['option-enterprise']['en-us'] = 'Enterprise';
 
 	$text['description-strategy']['en-us'] = 'Select the ring strategy.';
-
-	$text['label-extensions']['en-us'] = 'Extensions';
-
-	$text['description-extensions']['en-us'] = 'Add an extension and ring parameters to the ring group.';
-
-	$text['description-extension']['en-us'] = 'Define an extension number for this ring group.';
 
 	$text['label-duration']['en-us'] = 'Duration';
 
