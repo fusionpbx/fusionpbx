@@ -31,6 +31,8 @@
 
 	$text['label-name']['en-us'] = 'Name';
 
+	$text['label-extension']['en-us'] = 'Extension';
+
 	$text['label-enabled']['en-us'] = 'Enabled';
 
 	$text['label-description']['en-us'] = 'Description';
