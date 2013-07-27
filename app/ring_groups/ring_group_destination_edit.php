@@ -230,15 +230,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination_prompt'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if ($destination_prompt == "1") {
-		echo "					".$text['label-destination_prompt_confirm']."&nbsp;\n";
-	}
-	elseif ($destination_prompt == "2") {
-		echo "					".$text['label-destination_prompt_announce']."&nbsp;\n";
-	}
-	else {
-		echo "					&nbsp;\n";
-	}
+	echo "					<select class='formfld' style='width: 90px;' name='destination_prompt'>\n";
+	echo "					<option value=''></option>\n";
+	echo "					<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
+	//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+	echo "					</select>\n";
 	echo "<br />\n";
 	echo $text['description-destination_prompt']."\n";
 	echo "</td>\n";
