@@ -55,6 +55,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
@@ -124,42 +125,6 @@
 		$z++;
 
 		$y = 1; //table array index
-		$z = 0; //field array index
-		$apps[$x]['db'][$y]['table'] = 'v_ring_group_extensions';
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_extension_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'primary';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key'] = 'foreign';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'extension_uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the extension.';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'extension_delay';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'extension_timeout';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
-		$z++;
-
-		$y = 2; //table array index
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = 'v_ring_group_destinations';
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_destination_uuid';
