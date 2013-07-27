@@ -63,6 +63,25 @@ else {
 		$destination_prompt = check_str($_POST["destination_prompt"]);
 	}
 
+//define the destination_select function
+	function destination_select($select_name, $select_value, $select_default) {
+		if (strlen($select_value) == 0) { $select_value = $select_default; }
+		echo "	<select class='formfld' name='$select_name'>\n";
+		echo "	<option value=''></option>\n";
+
+		$i = 0;
+		while($i <= 100) {
+			if ($select_value == $i) {
+				echo "	<option value='$i' selected='selected'>$i</option>\n";
+			}
+			else {
+				echo "	<option value='$i'>$i</option>\n";
+			}
+			$i = $i + 5;
+		}
+		echo "</select>\n";
+	}
+
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
@@ -104,7 +123,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "destination_delay, ";
 				$sql .= "destination_timeout, ";
 				$sql .= "destination_prompt ";
-				$sql .= ")";
+				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
 				$sql .= "'$domain_uuid', ";
@@ -131,15 +150,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			if ($action == "update" && permission_exists('ring_group_edit')) {
 				$sql = "update v_ring_group_destinations set ";
-				$sql .= "ring_group_uuid = '$ring_group_uuid', ";
-				$sql .= "domain_uuid = '$domain_uuid', ";
-				$sql .= "ring_group_uuid = '$ring_group_uuid', ";
 				$sql .= "destination_number = '$destination_number', ";
 				$sql .= "destination_delay = '$destination_delay', ";
 				$sql .= "destination_timeout = '$destination_timeout', ";
 				$sql .= "destination_prompt = '$destination_prompt' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and ring_group_destination_uuid = '$ring_group_destination_uuid'";
+				$sql .= "and ring_group_destination_uuid = '$ring_group_destination_uuid' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
@@ -169,7 +185,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$destination_delay = $row["destination_delay"];
 			$destination_timeout = $row["destination_timeout"];
 			$destination_prompt = $row["destination_prompt"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -208,7 +223,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination_delay'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='destination_delay' maxlength='255' value='$destination_delay'>\n";
+	destination_select('destination_delay', $destination_delay, '0');
+	//echo "  <input class='formfld' type='text' name='destination_delay' maxlength='255' value='$destination_delay'>\n";
 	echo "<br />\n";
 	echo $text['description-destination_delay']."\n";
 	echo "</td>\n";
@@ -219,7 +235,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-destination_timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='destination_timeout' maxlength='255' value='$destination_timeout'>\n";
+	destination_select('destination_timeout', $destination_timeout, '30');
+	//echo "  <input class='formfld' type='text' name='destination_timeout' maxlength='255' value='$destination_timeout'>\n";
 	echo "<br />\n";
 	echo $text['description-destination_timeout']."\n";
 	echo "</td>\n";
@@ -232,8 +249,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "					<select class='formfld' name='destination_prompt'>\n";
 	echo "					<option value=''></option>\n";
-	echo "					<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
-	//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+	if ($destination_prompt == "1") {
+		echo "					<option value='1' selected='selected'>".$text['label-destination_prompt_confirm']."</option>\n";
+	}
+	else {
+		echo "					<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
+	}
+	//if ($destination_prompt == "2") {
+		//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+	//}
+	//else {
+		//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+	//}
 	echo "					</select>\n";
 	echo "<br />\n";
 	echo $text['description-destination_prompt']."\n";
