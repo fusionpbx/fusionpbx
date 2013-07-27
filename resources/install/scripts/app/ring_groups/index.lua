@@ -278,7 +278,11 @@
 					end
 				--originate each destination
 				dial_string = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
-				cmd = "bgapi originate "..dial_string.." '&lua('"..scripts_dir.."/app/ring_groups/resources/scripts/confirm.lua' "..uuid.." "..originate_prompt..")'";
+				cmd = "";
+				if (tonumber(destination_delay) > 0) then
+					cmd = "sched_api +"..destination_delay.." "..new_uuid.." ";
+				end
+				cmd = cmd .. "bgapi originate "..dial_string.." '&lua('"..scripts_dir.."/app/ring_groups/resources/scripts/confirm.lua' "..uuid.." "..originate_prompt..")'";
 				--freeswitch.consoleLog("notice", "[ring group] cmd: " .. cmd .. "\n");
 				result = trim(api:executeString(cmd));
 			else
@@ -312,11 +316,11 @@
 			if (prompt == "true") then
 				--schedule the timeout and route to the timeout destination
 					if (ring_group_timeout_app == "transfer") then
-						cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_transfer "..uuid.." "..ring_group_timeout_data;
+						cmd = "sched_api +"..ring_group_timeout_sec.." "..uuid.." bgapi uuid_transfer "..uuid.." "..ring_group_timeout_data;
 					elseif (ring_group_timeout_app == "bridge") then
-						cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_transfer "..uuid.." bridge:"..ring_group_timeout_data;
+						cmd = "sched_api +"..ring_group_timeout_sec.." "..uuid.." bgapi uuid_transfer "..uuid.." bridge:"..ring_group_timeout_data;
 					else
-						cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_kill "..uuid.." alloted_timeout";
+						cmd = "sched_api +"..ring_group_timeout_sec.." "..uuid.." bgapi uuid_kill "..uuid.." alloted_timeout";
 					end
 					--freeswitch.consoleLog("NOTICE", "[confirm] schedule timeout: "..cmd.."\n");
 					results = trim(api:executeString(cmd));
