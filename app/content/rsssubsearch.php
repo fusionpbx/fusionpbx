@@ -212,7 +212,7 @@ if (count($_POST)>0) {
 	  echo "		<td><input type='text' class='txt' name='rss_sub_title'></td>";
 	  echo "	</tr>";
 	  echo "	<tr>";
-	  echo "		<td>".text['label-sub-link'].":</td>";
+	  echo "		<td>".$text['label-sub-link'].":</td>";
 	  echo "		<td><input type='text' class='txt' name='rss_sub_link'></td>";
 	  echo "	</tr>";
 	  echo "	<tr>";
