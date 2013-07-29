@@ -345,7 +345,7 @@ if (defined('STDIN')) {
 					fclose($fp);
 					$tmp_response = exec("chmod 777 ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh");
 				// note we use batch in order to execute when system load is low.  Alternatively this could be replaced with AT.
-					$tmp_response = exec("batch -f ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh now + 3 minutes");
+					$tmp_response = exec("at -f ".$_SESSION['server']['temp']['dir']."/failed_fax_emails.sh now + 3 minutes");
 			}
 		}
 	}
