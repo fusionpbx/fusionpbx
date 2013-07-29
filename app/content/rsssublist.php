@@ -111,7 +111,7 @@ require_once "resources/header.php";
 			  
 			  if (strlen($row[rss_order]) > 0) {
 				  echo "<tr>";
-				  echo "    <td valign='top'>".text['label-order'].": &nbsp;</td>";
+				  echo "    <td valign='top'>".$text['label-order'].": &nbsp;</td>";
 				  echo "     <td valign='top'>".$row[rss_order]."</td>";
 				  echo "</tr>";
 			  }
