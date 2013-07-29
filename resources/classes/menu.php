@@ -597,7 +597,7 @@
 					$sql .= ") ";
 					$sql .= "and menu_item_uuid is not null ";
 					$sql .= ") ";
-					$sql .= "order by i.menu_item_order desc ";
+					$sql .= "order by i.menu_item_order asc ";
 				}
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
