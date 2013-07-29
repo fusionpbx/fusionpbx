@@ -1816,13 +1816,13 @@ function save_module_xml() {
 	$prev_module_cat = '';
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	foreach ($result as $row) {
-		if ($prev_module_cat != $row['module_cat']) {
-			$xml .= "\n		<!-- ".$row['module_cat']." -->\n";
+		if ($prev_module_cat != $row['module_category']) {
+			$xml .= "\n		<!-- ".$row['module_category']." -->\n";
 		}
 		if ($row['module_enabled'] == "true"){
 			$xml .= "		<load module=\"".$row['module_name']."\"/>\n";
 		}
-		$prev_module_cat = $row['module_cat'];
+		$prev_module_cat = $row['module_category'];
 	}
 	$xml .= "\n";
 	$xml .= "	</modules>\n";
@@ -1957,6 +1957,19 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 	}
 	return $bridge_array;
 	unset ($prep_statement);
+}
+
+function email_validate($strEmail){
+   $validRegExp =  '/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,3}$/';
+   // search email text for regular exp matches
+   preg_match($validRegExp, $strEmail, $matches, PREG_OFFSET_CAPTURE);
+
+   if (count($matches) == 0) {
+	return 0;
+   }
+   else {
+	return 1;
+   }
 }
 //$destination_number = '1231234';
 //$bridge_array = outbound_route_to_bridge ($domain_uuid, $destination_number);
