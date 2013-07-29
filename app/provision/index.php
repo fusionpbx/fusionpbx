@@ -112,13 +112,13 @@ require_once "resources/require.php";
 		$device_vendor = "cisco";
 		break;
 	case "a44c11":
-		$phone_vendor = "cisco";
+		$device_vendor = "cisco";
 		break;
 	case "30e4db":
-		$phone_vendor = "cisco";
+		$device_vendor = "cisco";
 		break;
 	case "68efbd":
-		$phone_vendor = "cisco";
+		$device_vendor = "cisco";
 		break;
 	case "00045a":
 		$device_vendor = "linksys";
@@ -131,6 +131,13 @@ require_once "resources/require.php";
 		break;
 	case "000413":
 		$device_vendor = "snom";
+		break;
+	case "000b82":
+		$device_vendor = "grandstream";
+		break;
+	case "00177d":
+		$device_vendor = "konftel";
+		break;
 	default:
 		$device_vendor = "";
 	}
@@ -140,11 +147,11 @@ require_once "resources/require.php";
 		//get the device_template
 			if (strlen($device_template) == 0) {
 				$sql = "SELECT * FROM v_devices ";
-				$sql .= "where domain_uuid=:domain_uuid ";
-				$sql .= "and device_mac_address=:mac ";
+				//$sql .= "where domain_uuid=:domain_uuid ";
+				$sql .= "where device_mac_address=:mac ";
 				$prep_statement_2 = $db->prepare(check_sql($sql));
 				if ($prep_statement_2) {
-					$prep_statement_2->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
+					//$prep_statement_2->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
 					$prep_statement_2->bindParam(':mac', $mac);
 					$prep_statement_2->execute();
 					$row = $prep_statement_2->fetch();
@@ -203,8 +210,19 @@ require_once "resources/require.php";
 					"Cisco/SPA512G"=>"cisco/spa512g",
 					"Cisco/SPA514G"=>"cisco/spa514g",
 					"Cisco/SPA525G2"=>"cisco/spa525g2",
-					"snom370"=>"snom/370",
-					"snom370"=>"snom/320"
+                                        "snom300-SIP"=>"snom/300",
+                                        "snom320-SIP"=>"snom/320",
+                                        "snom370-SIP"=>"snom/370",
+					"snom820-SIP"=>"snom/820",
+                                        "yealink SIP-T20"=>"yealink/t20",
+                                        "yealink SIP-T22"=>"yealink/t22",
+                                        "yealink SIP-T26"=>"yealink/t26",
+					"Yealink SIP-T32"=>"yealink/t32",
+                                        "HW GXP1450"=>"grandstream/gxp1450",
+                                        "HW GXP2124"=>"grandstream/gxp2124",
+                                        "HW GXV3140"=>"grandstream/gxv3140",
+                                        "HW GXV3175"=>"grandstream/gxv3175",
+                                        "Wget/1.11.3"=>"konftel/kt300ip"
 					);
 
 			foreach ($template_list as $key=>$val){
@@ -413,20 +431,23 @@ require_once "resources/require.php";
 	$cfg_ext = ".cfg";
 	if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
 		header ("content-type: text/plain");
+	} else if ($device_vendor === "yealink") {
+		header ("content-length: ".strval(strlen($file_contents)));
+		header ("content-type: text/plain");
 	} else {
 		header ("content-type: text/xml");
 	}
 	header ("Content-Length: ".strlen($file_contents));
-	echo $file_contents;
+	echo utf8_encode($file_contents);
 
 //define the function which checks to see if the mac address exists in devices
 	function mac_exists_in_devices($db, $mac) {
 		$sql = "SELECT count(*) as count FROM v_devices ";
-		$sql .= "WHERE domain_uuid=:domain_uuid ";
-		$sql .= "AND device_mac_address=:mac ";
+		//$sql .= "WHERE domain_uuid=:domain_uuid ";
+		$sql .= "WHERE device_mac_address=:mac ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
-			$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
+			//$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
 			$prep_statement->bindParam(':mac', $mac);
 			$prep_statement->execute();
 			$row = $prep_statement->fetch();
