@@ -89,20 +89,20 @@ if (permission_exists('extensions_active_assigned_view')) {
 
 					if ($number == $extension) {
 						if ($application == "conference") { 
-							$alt_color = "background-image: url('".PROJECT_PATH."/images/background_cell_active.gif";
+							$alt_color = "background-image: url('".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/background_cell_active.gif";
 						}
 						switch ($application) {
 						case "conference":
-							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_conference.gif');\"";
+							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/background_cell_conference.gif');\"";
 							break;
 						case "fifo":
-							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_fifo.gif');\"";
+							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/background_cell_fifo.gif');\"";
 							break;
 						case "valet_park":
-							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_fifo.gif');\"";
+							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/background_cell_fifo.gif');\"";
 							break;
 						default:
-							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_active.gif');\"";
+							$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/background_cell_active.gif');\"";
 						}
 						echo "<tr>\n";
 						echo "<td class='".$row_style[$c]."' $style_alternate>$extension</td>\n";
@@ -182,7 +182,7 @@ if (permission_exists('extensions_active_assigned_view')) {
 						echo "</tr>\n";
 					}
 					else {
-						$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/images/background_cell_light.gif');\"";
+						$style_alternate = "style=\"color: #444444; background-image: url('".PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/images/background_cell_light.gif');\"";
 						echo "<tr>\n";
 						echo "<td class='".$row_style[$c]."' $style_alternate>$extension</td>\n";
 						if ($_SESSION['user_status_display'] == "false") {
