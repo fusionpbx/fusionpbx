@@ -51,7 +51,7 @@ require_once "resources/paging.php";
 //get the http post values and set them as php variables
 	if (count($_POST)>0) {
 		//include the dnd php class
-		include "resources/classes/do_not_disturb.php";
+		include PROJECT_PATH."/app/calls/resources/classes/do_not_disturb.php";
 
 		foreach($_POST['agents'] as $row) {
 			if (strlen($row['status']) > 0) {
@@ -81,43 +81,17 @@ require_once "resources/paging.php";
 
 				//loop through the list of assigned extensions
 					foreach ($_SESSION['user']['extension'] as &$sub_row) {
-						$extension = $sub_row["user"];
-						//hunt_group information used to determine if this is an add or an update
-							$sql  = "select * from v_hunt_groups ";
-							$sql .= "where domain_uuid = '$domain_uuid' ";
-							$sql .= "and hunt_group_extension = '$extension' ";
-							$prep_statement_2 = $db->prepare(check_sql($sql));
-							$prep_statement_2->execute();
-							$result2 = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-							foreach ($result2 as &$row2) {
-								if ($row2["hunt_group_type"] == 'dnd') {
-									$dnd_action = "update";
-									$dnd_uuid = $row2["hunt_group_uuid"];
-								}
-							}
-							unset ($prep_statement_2, $result2, $row2);
-						//add or update dnd
+						//update dnd
 							$dnd = new do_not_disturb;
 							//$dnd->debug = false;
 							$dnd->domain_uuid = $domain_uuid;
-							$dnd->dnd_uuid = $dnd_uuid;
 							$dnd->domain_name = $_SESSION['domain_name'];
-							$dnd->extension = $extension;
+							$dnd->extension = $sub_row["user"];
 							if ($row['status'] == "Do Not Disturb") {
-								$dnd->dnd_enabled = "true";
-								if ($dnd_action == "add") {
-									$dnd->dnd_add();
-								}
-								if ($dnd_action == "update") {
-									$dnd->dnd_update();
-								}
+								$dnd->enabled = "true";
 							}
 							else {
-								//for other status disable dnd
-								if ($dnd_action == "update") {
-									$dnd->dnd_enabled = "false";
-									$dnd->dnd_update();
-								}
+								$dnd->enabled = "false";
 							}
 							unset($dnd);
 					}
@@ -193,21 +167,29 @@ require_once "resources/paging.php";
 	foreach($agent_array as $row) {
 		$tmp = explode('@',$row["name"]);
 		$agent_name = $tmp[0];
-		if ($tmp[1] == $_SESSION['domain_name']) {
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "		<input type='hidden' name='agents[".$x."][name]' id='agent_".$x."_name' value='".$agent_name."'>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_available' value='Available'><label for='agent_".$x."_status_available'>".$text['option-available']."</label>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_logged_out' value='Logged Out'><label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_on_break' value='On Break'><label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>\n";
-			echo "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>".$text['option-do_not_disturb']."</label>\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
+		$str = '';
+		$str .= "<tr >\n";
+		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
+		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
+		$str .= "	<td valign='top' class='".$row_style[$c]."'>";
+		$str .= "		<input type='hidden' name='agents[".$x."][name]' id='agent_".$x."_name' value='".$agent_name."'>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_available' value='Available'><label for='agent_".$x."_status_available'>".$text['option-available']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_logged_out' value='Logged Out'><label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_on_break' value='On Break'><label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>".$text['option-do_not_disturb']."</label>\n";
+		$str .= "	</td>\n";
+		$str .= "</tr>\n";
+		if (count($_SESSION['domains']) > 1) {
+			if ($tmp[1] == $_SESSION['domain_name']) {
+				echo $str;
+				if ($c==0) { $c=1; } else { $c=0; }
+			}
 		}
-		if ($c==0) { $c=1; } else { $c=0; }
+		else {
+			echo $str;
+			if ($c==0) { $c=1; } else { $c=0; }
+		}
 		$x++;
 	} //end foreach
 	unset($sql, $result, $row_count);
