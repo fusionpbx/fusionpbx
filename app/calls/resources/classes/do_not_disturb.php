@@ -68,7 +68,7 @@ include "root.php";
 			//determine whether to update the dial string
 				$sql = "select * from v_extensions ";
 				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-				if ($this->extension_uuid) > 0) {
+				if (strlen($this->extension_uuid) > 0) {
 					$sql .= "and extension_uuid = '".$this->extension_uuid."' ";
 				}
 				else {
@@ -79,10 +79,10 @@ include "root.php";
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
-						if ($this->extension_uuid) == 0) {
+						if (strlen($this->extension_uuid) == 0) {
 							$this->extension_uuid = $row["extension_uuid"];
 						}
-						if ($this->extension) == 0) {
+						if (strlen($this->extension) == 0) {
 							$this->extension = $row["extension"];
 						}
 					}
