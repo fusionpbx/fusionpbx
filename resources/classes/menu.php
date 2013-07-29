@@ -187,6 +187,148 @@
 
 					}
 
+				//use the app array to restore the default menu
+					//$db->beginTransaction();
+					foreach ($apps as $row) {
+						foreach ($row['menu'] as $menu) {
+							//set the variables
+								$menu_item_title = $menu['title']['en-us'];
+								$menu_item_uuid = $menu['uuid'];
+								$menu_item_parent_uuid = $menu['parent_uuid'];
+								$menu_item_category = $menu['category'];
+								$menu_item_path = $menu['path'];
+								$menu_item_order = $menu['order'];
+								$menu_item_description = $menu['desc'];
+
+							//if the item uuid is not currently in the db then add it
+								$sql = "select * from v_menu_items ";
+								$sql .= "where menu_uuid = '".$this->menu_uuid."' ";
+								$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
+								$prep_statement = $db->prepare(check_sql($sql));
+								if ($prep_statement) {
+									$prep_statement->execute();
+									$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+									if (count($result) == 0) {
+										//insert the default menu into the database
+											$sql = "insert into v_menu_items ";
+											$sql .= "(";
+											$sql .= "menu_item_uuid, ";
+											$sql .= "menu_uuid, ";
+											//$sql .= "menu_item_language, ";
+											$sql .= "menu_item_title, ";
+											$sql .= "menu_item_link, ";
+											$sql .= "menu_item_category, ";
+											if (strlen($menu_item_order) > 0) {
+												$sql .= "menu_item_order, ";
+											}
+											if (strlen($menu_item_parent_uuid) > 0) {
+												$sql .= "menu_item_parent_uuid, ";
+											}
+											$sql .= "menu_item_description ";
+											$sql .= ") ";
+											$sql .= "values ";
+											$sql .= "(";
+											$sql .= "'".$menu_item_uuid."', ";
+											$sql .= "'".$this->menu_uuid."', ";
+											//$sql .= "'$menu_item_language', ";
+											$sql .= "'$menu_item_title', ";
+											$sql .= "'$menu_item_path', ";
+											$sql .= "'$menu_item_category', ";
+											if (strlen($menu_item_order) > 0) {
+												$sql .= "'$menu_item_order', ";
+											}
+											if (strlen($menu_item_parent_uuid) > 0) {
+												$sql .= "'$menu_item_parent_uuid', ";
+											}
+											$sql .= "'$menu_item_description' ";
+											$sql .= ")";
+											if ($menu_item_uuid == $menu_item_parent_uuid) {
+												//echo $sql."<br />\n";
+											}
+											else {
+												$db->exec(check_sql($sql));
+											}
+											unset($sql);
+										//set the menu languages
+											foreach ($menu["title"] as $menu_language => $menu_item_title) {
+												$menu_language_uuid = uuid();
+												$sql = "insert into v_menu_languages ";
+												$sql .= "(";
+												$sql .= "menu_language_uuid, ";
+												$sql .= "menu_item_uuid, ";
+												$sql .= "menu_uuid, ";
+												$sql .= "menu_language, ";
+												$sql .= "menu_item_title ";
+												$sql .= ") ";
+												$sql .= "values ";
+												$sql .= "(";
+												$sql .= "'".$menu_language_uuid."', ";
+												$sql .= "'".$menu_item_uuid."', ";
+												$sql .= "'".$this->menu_uuid."', ";
+												$sql .= "'$menu_language', ";
+												$sql .= "'$menu_item_title' ";
+												$sql .= ")";
+												$db->exec(check_sql($sql));
+												
+												unset($sql);
+											}
+									}
+								}
+						}
+                                        }
+					$sql = "delete from v_group_permissions ";					
+					$db->query($sql);
+					unset($sql);
+					
+					$sql2 = " Select domain_uuid from v_domains ";
+					$prep_statement2 = $db->prepare(check_sql($sql2));
+					$prep_statement2->execute();
+					$result2 = $prep_statement2->fetchAll(PDO::FETCH_ASSOC);					
+					foreach($result2 as $row2) {
+						unset ($prep_statement2, $sql2);
+						foreach($apps as $row) {
+							foreach ($row['permissions'] as $menu) {
+								//set the variables
+								if ($menu['groups']) {
+									foreach ($menu['groups'] as $group) {
+										//if the item uuid is not currently in the db then add it
+										$sql = "select * from v_group_permissions ";
+										$sql .= "where permission_name = '".$menu['name']."' ";
+										$sql .= "and domain_uuid = '".$row2['domain_uuid']."' ";
+										$sql .= "and group_name = '$group' ";
+										$prep_statement = $db->prepare(check_sql($sql));
+										if ($prep_statement) {
+											$prep_statement->execute();
+											$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+											unset ($prep_statement);
+											if (count($result) == 0) {
+												//insert the default menu into the database
+												$sql = "insert into v_group_permissions ";
+												$sql .= "(";
+												$sql .= "group_permission_uuid, ";
+												$sql .= "domain_uuid, ";
+												$sql .= "permission_name, ";
+												$sql .= "group_name ";
+												$sql .= ") ";
+												$sql .= "values ";
+												$sql .= "(";
+												$sql .= "'".uuid()."', ";
+												$sql .= "'".$row2["domain_uuid"]."', ";
+												$sql .= "'".$menu['name']."', ";
+												$sql .= "'".$group."' ";
+												$sql .= ");";
+												$db->exec(check_sql($sql));
+												unset($sql);
+											}
+										}
+									}
+								}
+							}
+
+						}
+					}
+					unset($sql2, $result2);
+
 				//if there are no groups listed in v_menu_item_groups under menu_uuid then add the default groups
 
                                         foreach($apps as $app) {
