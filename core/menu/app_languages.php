@@ -120,6 +120,9 @@
 		$text['button-restore_default']['en-us'] = 'Restore Default';
 		$text['button-restore_default']['pt-pt'] = '';
 
+		$text['button-restore_all']['en-us'] = 'Restore All';
+		$text['button-restore_all']['pt-pt'] = 'Repor Tudo';
+
 		$text['label-protected']['en-us'] = 'Protected';
 		$text['label-protected']['pt-pt'] = '';
 
