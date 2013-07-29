@@ -14,7 +14,7 @@
 <head>
 <title><!--{title}--></title>
 <!--{head}-->
-<link rel="icon" href="<!--{project_path}-->/favicon.ico">
+<link rel="icon" href="<!--{project_path}-->/themes/accessible/favicon.ico">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type='text/css'>
 
@@ -33,7 +33,7 @@ body {
 	margin-right: 0px;
 	margin-left: 0px;
 	/*background-image: url('<!--{project_path}-->/themes/accessible/background.gif');*/
-	background-image: url('<!--{project_path}-->/themes/accessible/menu_background.jpg');
+	background-image: url('<!--{project_path}-->/themes/accessible/images/menu_background.jpg');
 	background-repeat: repeat-x;
 	background-color: #FFFFFF;
 	background-attachment:fixed;
@@ -47,7 +47,7 @@ th {
 	font-family: arial;
 	font-weight: bold;
 	background-color: #FFFFFF;
-	background-image: url('<!--{project_path}-->/themes/accessible/background_th.png');
+	background-image: url('<!--{project_path}-->/themes/accessible/images/background_th.png');
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-right: 7px;
@@ -162,7 +162,7 @@ INPUT.txt {
 	background: #EFEFEF;
 	color: gray;
 	border-bottom: 1px solid #CCCCCC;
-	background-image: url('<!--{project_path}-->/themes/accessible/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/accessible/images/background_cell.gif');
 	padding-right: 20px;
 	padding-left: 8px;
 	text-align: left;
@@ -176,7 +176,7 @@ INPUT.txt {
 .vncell a:active{ color:#555555; }
 
 .vncellreq {
-	background-image: url('<!--{project_path}-->/themes/accessible/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/accessible/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	background-color: #639BC1;
 	padding-right: 20px;
@@ -203,7 +203,7 @@ INPUT.txt {
 }
 
 .row_style0 {
-	background-image: url('<!--{project_path}-->/themes/accessible/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/accessible/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	/*background-color: #ECE9D8; */
 	background-color: #639BC1;
@@ -310,7 +310,7 @@ table tr:last-child td:last-child {
 
 /* begin the menu css*/
 	.menu_bg {
-		background-image: url('<!--{project_path}-->/themes/accessible/menu_background.jpg');
+		background-image: url('<!--{project_path}-->/themes/accessible/images/menu_background.jpg');
 		background-repeat: repeat-x;
 		background-color: #FFFFFF;
 		text-align: left;
@@ -407,7 +407,7 @@ function confirmdelete(url) {
 <table width='90%' class='border' border='0' cellpadding='0' cellspacing='0'>
 <tr>
 <td class='headermain' style='background-color:#FFFFFF;' width='100%'>
-	<table cellpadding='0' cellspacing='0' border='0' style="background-image: url('<!--{project_path}-->/themes/accessible/background_head.png'); color: #FFFFFF; font-size: 20px;" width='100%'>
+	<table cellpadding='0' cellspacing='0' border='0' style="background-image: url('<!--{project_path}-->/themes/accessible/images/background_head.png'); color: #FFFFFF; font-size: 20px;" width='100%'>
 	<tr>
 	<td align='center' colspan='2' style='' width='100%' height='4'>
 	</td>
@@ -418,7 +418,7 @@ function confirmdelete(url) {
 		<table border='0' cellpadding='0' cellspacing='0' width='100%'>
 			<tr>
 				<td width='50%'>
-					<a href='/<!--{project_path}-->'><img src='<!--{project_path}-->/themes/accessible/logo.png' /></a>
+					<a href='/<!--{project_path}-->'><img src='<!--{project_path}-->/themes/accessible/images/logo.png' /></a>
 				</td>
 				<td width='50%' class='' align='right' valign='middle'>
 					<?php
@@ -449,7 +449,7 @@ function confirmdelete(url) {
 	</td>
 	</tr>
 	<tr>
-	<td align='center' colspan='2' style="background-image: url('<!--{project_path}-->/themes/accessible/background_black.png');" width='100%' height='22'>
+	<td align='center' colspan='2' style="background-image: url('<!--{project_path}-->/themes/accessible/images/background_black.png');" width='100%' height='22'>
 		<!--{menu.disabled}-->
 	</td>
 	</tr>
