@@ -77,6 +77,12 @@ else {
 				case "001873":
 					$device_vendor = "cisco";
 					break;
+				case "0021A0":
+					$device_vendor = "cisco";
+					break;
+				case "002155":
+					$device_vendor = "cisco";
+					break;
 				case "00045a":
 					$device_vendor = "linksys";
 					break;
@@ -230,7 +236,7 @@ else {
 							}
 
 						//replace {v_mac} in the file name
-							if (substr($device_mac_address, 0, 6) == "00085d") {
+							if ($device_vendor == "aastra" || $device_vendor == "cisco") {
 								//upper case the mac address for aastra phones
 								$file_name = str_replace("{v_mac}", strtoupper($device_mac_address), $file_name);
 							}
