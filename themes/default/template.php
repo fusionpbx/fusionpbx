@@ -28,7 +28,7 @@
 		$php_self_dir = substr($php_self_dir, strlen(PROJECT_PATH), strlen($php_self_dir));
 	}
 ?>
-<link rel="icon" href="<!--{project_path}-->/favicon.ico">
+<link rel="icon" href="<!--{project_path}-->/themes/default/favicon.ico">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type='text/css'>
 
@@ -46,7 +46,7 @@ body {
 	margin-bottom: 0px;
 	margin-right: 0px;
 	margin-left: 0px;
-	/*background-image: url('<!--{project_path}-->/themes/default/background.jpg');*/
+	/*background-image: url('<!--{project_path}-->/themes/default/images/background.jpg');*/
 	/*background-repeat: repeat-x;*/
 	/*background-attachment: fixed;*/
 	/*background-color: #FFFFFF;*/
@@ -61,7 +61,7 @@ th {
 	font-family: arial;
 	font-weight: bold;
 	/*background-color: #506eab;*/
-	background-image: url('<!--{project_path}-->/themes/default/background_th.png');
+	background-image: url('<!--{project_path}-->/themes/default/images/background_th.png');
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-right: 7px;
@@ -167,7 +167,7 @@ INPUT.txt {
 .vncell {
 	border-bottom: 1px solid #999999;
 	/*background-color: #639BC1;*/
-	background-image: url('<!--{project_path}-->/themes/default/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/default/images/background_cell.gif');
 	padding-right: 20px;
 	padding-left: 8px;
 	text-align: left;
@@ -181,7 +181,7 @@ INPUT.txt {
 
 
 .vncellreq {
-	background-image: url('<!--{project_path}-->/themes/default/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/default/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	background-color: #639BC1;
 	padding-right: 20px;
@@ -207,7 +207,7 @@ INPUT.txt {
 }
 
 .row_style0 {
-	background-image: url('<!--{project_path}-->/themes/default/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/default/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	color: #444444;
 	text-align: left;
@@ -282,7 +282,7 @@ table td {
 
 table tr.even td {
 	background:#eee;
-	background-image: url('<!--{project_path}-->/themes/default/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/default/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	color: #333333;
 }
@@ -320,7 +320,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 /* begin the menu css*/
 
 	.menu_bar {
-		background-image: url('<!--{project_path}-->/themes/default/background_black.png');
+		background-image: url('<!--{project_path}-->/themes/default/images/background_black.png');
 		-webkit-border-radius: 7px 7px 7px 7px;
 		-moz-border-radius: 7px 7px 7px 7px;
 		border-radius: 7px 7px 7px 7px;
@@ -334,10 +334,10 @@ table tr:nth-last-child(-5) td:first-of-type {
 			}
 			else {
 				if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
-					echo "background-image: url('<!--{project_path}-->/themes/default/menu_background.png');";
+					echo "background-image: url('<!--{project_path}-->/themes/default/images/menu_background.png');";
 				}
 				else {
-					echo "background-image: url('<!--{project_path}-->/themes/default/login_background.png');";
+					echo "background-image: url('<!--{project_path}-->/themes/default/images/login_background.png');";
 				}
 			}
 		?>
@@ -368,10 +368,10 @@ table tr:nth-last-child(-5) td:first-of-type {
 			}
 			else {
 				if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
-					echo "background-image: url('<!--{project_path}-->/themes/default/menu_background.png');";
+					echo "background-image: url('<!--{project_path}-->/themes/default/images/menu_background.png');";
 				}
 				else {
-					echo "background-image: url('<!--{project_path}-->/themes/default/login_background.png');";
+					echo "background-image: url('<!--{project_path}-->/themes/default/images/login_background.png');";
 				}
 			}
 		?>
@@ -526,7 +526,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		border-color:#ccc;
 		border-width: 1px;
 		padding-bottom:25px;
-		list-style-image: url(<!--{project_path}-->/themes/default/arrow.png);
+		list-style-image: url(<!--{project_path}-->/themes/default/images/arrow.png);
 		padding-left: 35px;
 		opacity: 1.0;
 	}
@@ -651,7 +651,7 @@ function confirmdelete(url) {
 	<table border='0' cellpadding='0' cellspacing='0' width='100%'>
 		<tr>
 			<td width='50%'>
-				<a href='/<!--{project_path}-->'><img src='<!--{project_path}-->/themes/enhanced/logo.png' /></a>
+				<a href='/<!--{project_path}-->'><img src='<!--{project_path}-->/themes/default/images/logo.png' /></a>
 			</td>
 			<td width='50%' class='' align='right' valign='middle'>
 				<?php

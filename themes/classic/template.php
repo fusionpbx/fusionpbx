@@ -14,7 +14,7 @@
 <head>
 <title><!--{title}--></title>
 <!--{head}-->
-<link rel="icon" href="<!--{project_path}-->/favicon.ico">
+<link rel="icon" href="<!--{project_path}-->/themes/classic/favicon.ico">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type='text/css'>
 
@@ -32,7 +32,7 @@ body {
 	margin-bottom: 0px;
 	margin-right: 0px;
 	margin-left: 0px;
-	background-image: url('<!--{project_path}-->/themes/classic/background.jpg');
+	background-image: url('<!--{project_path}-->/themes/classic/images/background.jpg');
 	background-repeat: repeat-x;
 	background-attachment: fixed;
 	background-color: #FFFFFF;
@@ -47,7 +47,7 @@ th {
 	font-family: arial;
 	font-weight: bold;
 	/*background-color: #506eab;*/
-	background-image: url('<!--{project_path}-->/themes/classic/background_th.png');
+	background-image: url('<!--{project_path}-->/themes/classic/images/background_th.png');
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-right: 7px;
@@ -173,7 +173,7 @@ th:last-child th:first-child {
 .vncell {
 	border-bottom: 1px solid #999999;
 	/*background-color: #639BC1;*/
-	background-image: url('<!--{project_path}-->/themes/classic/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/classic/images/background_cell.gif');
 	padding-right: 20px;
 	padding-left: 8px;
 	text-align: left;
@@ -188,7 +188,7 @@ th:last-child th:first-child {
 */
 
 .vncellreq {
-	background-image: url('<!--{project_path}-->/themes/classic/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/classic/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	background-color: #639BC1;
 	padding-right: 20px;
@@ -215,7 +215,7 @@ th:last-child th:first-child {
 }
 
 .row_style0 {
-	background-image: url('<!--{project_path}-->/themes/classic/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/classic/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	color: #444444;
 	text-align: left;
@@ -290,7 +290,7 @@ table td {
 
 table tr.even td {
 	background:#eee;
-	background-image: url('<!--{project_path}-->/themes/classic/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/classic/images/background_cell.gif');
 	border-bottom: 1px solid #999999;
 	color: #444444;
 }
@@ -437,7 +437,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		-moz-border-radius: 12px 12px 0px 0px;
 		border-radius: 12px 12px 0px 0px;
 		/*background:#1F1F1F url(<!--{project_path}-->/css/images/expand3.gif) no-repeat -999px -9999px;*/
-		/*background:#1F1F1F url(<!--{project_path}-->/themes/classic/background_cell.gif) no-repeat -999px -9999px;*/
+		/*background:#1F1F1F url(<!--{project_path}-->/themes/classic/images/background_cell.gif) no-repeat -999px -9999px;*/
 	}
 
 	div#menu li:hover{
@@ -504,7 +504,7 @@ function confirmdelete(url) {
 <table width='90%' class='border.disabled' style='background-color:#FFFFFF;' border='0' cellpadding='0' cellspacing='0'>
 <tr>
 <td class='headermain' style='background-color:#FFFFFF;' width='100%'>
-	<table cellpadding='0' cellspacing='0' border='0' style="background-image: url('<!--{project_path}-->/themes/classic/background_head.png'); color: #FFFFFF; font-size: 20px;" width='100%'>
+	<table cellpadding='0' cellspacing='0' border='0' style="background-image: url('<!--{project_path}-->/themes/classic/images/background_head.png'); color: #FFFFFF; font-size: 20px;" width='100%'>
 	<tr>
 	<td align='center' colspan='2' style='' width='100%' height='4'>
 	</td>
@@ -515,7 +515,7 @@ function confirmdelete(url) {
 		<table border='0' cellpadding='0' cellspacing='0' width='100%'>
 			<tr>
 				<td>
-					<a href='/<!--{project_path}-->'><img src='<!--{project_path}-->/themes/classic/logo.png' /></a>
+					<a href='/<!--{project_path}-->'><img src='<!--{project_path}-->/themes/classic/images/logo.png' /></a>
 				</td>
 				<td width='50%' class='' align='right' valign='middle'>
 					<?php
@@ -546,7 +546,7 @@ function confirmdelete(url) {
 	</td>
 	</tr>
 	<tr>
-	<td align='center' colspan='2' style="background-image: url('<!--{project_path}-->/themes/classic/background_black.png');" width='100%' height='22'>
+	<td align='center' colspan='2' style="background-image: url('<!--{project_path}-->/themes/classic/images/background_black.png');" width='100%' height='22'>
 	<!--{menu}-->
 	</td>
 	</tr>
