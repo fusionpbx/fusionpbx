@@ -93,6 +93,7 @@ require_once "resources/paging.php";
 							else {
 								$dnd->enabled = "false";
 							}
+							$dnd->set();
 							unset($dnd);
 					}
 					unset ($prep_statement);
