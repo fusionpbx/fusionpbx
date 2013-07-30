@@ -157,30 +157,20 @@ if (count($_GET)>0) {
 						$dnd->domain_name = $_SESSION['domain_name'];
 						$dnd->extension = $extension;
 						if ($user_status == "Do Not Disturb") {
-							$dnd->dnd_enabled = "true";
-							if ($dnd_action == "add") {
-								$dnd->dnd_add();
-							}
-							if ($dnd_action == "update") {
-								$dnd->dnd_update();
-							}
+							$dnd->enabled = "true";
 						}
 						else {
 							//for other status disable dnd
 							if ($dnd_action == "update") {
-								$dnd->dnd_enabled = "false";
-								$dnd->dnd_update();
+								$dnd->enabled = "false";
 							}
 						}
-						$dnd->debug = false;
-						$dnd->dnd_status();
+						//$dnd->debug = false;
+						$dnd->set();
 						unset($dnd);
 				}
 				unset ($prep_statement);
 		}
-
-		//synchronize the xml config
-			save_hunt_group_xml();
 
 		//synchronize the xml config
 			save_dialplan_xml();
