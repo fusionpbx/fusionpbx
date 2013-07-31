@@ -302,9 +302,8 @@
 --session execute
 	if (session:ready()) then
 		--set the variables
-			--session:execute("set", "hangup_after_bridge=true");
-			--session:execute("set", "continue_on_fail=true");
-			--session:execute("set", "uuids="..uuids);
+			session:execute("set", "hangup_after_bridge=true");
+			session:execute("set", "continue_on_fail=true");
 
 		--set bind meta app
 			session:execute("bind_meta_app", "1 ab s execute_extension::dx XML features");
