@@ -32,9 +32,9 @@
 		--flush dtmf digits from the input buffer
 			session:flushDigits();
 		--set the display
-			if (session:ready()) then
-				reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
-			end
+			--if (session:ready()) then
+			--	reply = api:executeString("uuid_display "..session:get_uuid().." "..caller_id_number);
+			--end
 		--say the message number
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
