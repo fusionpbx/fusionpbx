@@ -299,7 +299,7 @@
 									elseif (row.app == "say.number.iterated") then
 										session:say(row.data, default_language, "number", "iterated");
 									end
-									session:streamFile("silence_stream://100");
+									--session:streamFile("silence_stream://100");
 								end --if
 							end --session:ready
 						end --for

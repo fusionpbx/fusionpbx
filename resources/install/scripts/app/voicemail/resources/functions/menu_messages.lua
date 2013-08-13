@@ -99,9 +99,9 @@
 			end
 
 		--set the display
-			if (session:ready()) then
-				reply = api:executeString("uuid_display "..session:get_uuid().." "..destination_number);
-			end
+			--if (session:ready()) then
+			--	reply = api:executeString("uuid_display "..session:get_uuid().." "..destination_number);
+			--end
 
 		--send back to the main menu
 			if (session:ready()) then
