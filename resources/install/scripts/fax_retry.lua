@@ -75,6 +75,9 @@
 	--email_address = api:execute("system", "/bin/echo -n "..email_address.." | /bin/sed -e s/\,/\\\\,/g");
 	email_address = email_address:gsub(",", "\\,");
 	from_address = env:getHeader("mailfrom_address");
+	if (from_address == null) then
+		from_address = email_address;
+	end
 	--needs to be fixed on lesser operating systems that do not have GNU utils.
 	number_dialed = api:execute("system", "/bin/echo -n "..fax_uri.." | sed -e s,.*/,,g");
 	--do not use apostrophies in message, they are not excaped and the mail will fail.
