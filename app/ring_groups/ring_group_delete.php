@@ -57,24 +57,32 @@ else {
 			$result = $prep_statement->fetchAll();
 			foreach ($result as &$row) {
 				$dialplan_uuid = $row["dialplan_uuid"];
+				$ring_group_context = $row["ring_group_context"];
 			}
 			unset ($prep_statement);
 
-		//delete from the ring groups table
+		//delete the ring group
 			$sql = "delete from v_ring_groups ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and ring_group_uuid = '".$id."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-		//delete from the ring group extensions table
-			$sql = "delete from v_ring_group_extensions ";
+		//delete the ring group destinations
+			$sql = "delete from v_ring_group_destinations ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and ring_group_uuid = '".$id."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-		//delete from the dialplan
+		//delete the dialplan details
+			$sql = "delete from v_dialplan_details ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
+		//delete the dialplan
 			$sql = "delete from v_dialplans ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
@@ -90,7 +98,7 @@ else {
 		//delete the dialplan context from memcache
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
-				$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+				$switch_cmd = "memcache delete dialplan:".$ring_group_context;
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 			}
 	}

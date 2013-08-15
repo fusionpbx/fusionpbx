@@ -257,75 +257,78 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($sql);
 					}
 
-				//if it does not exist in the dialplan then add it
-					$sql = "select count(*) as num_rows from v_dialplans ";
+				//delete from the dialplan details
+					$sql = "delete from v_dialplan_details ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						if ($row['num_rows'] == 0) {
-							//add the dialplan
-								require_once "resources/classes/database.php";
-								$database = new database;
-								$database->db = $db;
-								$database->table = "v_dialplans";
-								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database->fields['dialplan_uuid'] = $dialplan_uuid;
-								$database->fields['dialplan_name'] = $ring_group_name;
-								$database->fields['dialplan_order'] = '333';
-								$database->fields['dialplan_context'] = $ring_group_context;
-								$database->fields['dialplan_enabled'] = 'true';
-								$database->fields['dialplan_description'] = $ring_group_description;
-								$database->fields['app_uuid'] = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
-								$database->add();
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-							//add the dialplan details
-								$database->table = "v_dialplan_details";
-								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database->fields['dialplan_uuid'] = $dialplan_uuid;
-								$database->fields['dialplan_detail_uuid'] = uuid();
-								$database->fields['dialplan_detail_tag'] = 'condition'; //condition, action, antiaction
-								$database->fields['dialplan_detail_type'] = 'destination_number';
-								$database->fields['dialplan_detail_data'] = '^'.$ring_group_extension.'$';
-								$database->fields['dialplan_detail_order'] = '000';
-								$database->add();
+				//delete from the dialplan
+					$sql = "delete from v_dialplans ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
-							//add the dialplan details
-								$database->table = "v_dialplan_details";
-								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database->fields['dialplan_uuid'] = $dialplan_uuid;
-								$database->fields['dialplan_detail_uuid'] = uuid();
-								$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-								$database->fields['dialplan_detail_type'] = 'set';
-								$database->fields['dialplan_detail_data'] = 'ring_group_uuid='.$ring_group_uuid;
-								$database->fields['dialplan_detail_order'] = '025';
-								$database->add();
+				//add the dialplan
+					require_once "resources/classes/database.php";
+					$database = new database;
+					$database->db = $db;
+					$database->table = "v_dialplans";
+					$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+					$database->fields['dialplan_uuid'] = $dialplan_uuid;
+					$database->fields['dialplan_name'] = $ring_group_name;
+					$database->fields['dialplan_order'] = '333';
+					$database->fields['dialplan_context'] = $ring_group_context;
+					$database->fields['dialplan_enabled'] = 'true';
+					$database->fields['dialplan_description'] = $ring_group_description;
+					$database->fields['app_uuid'] = '1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2';
+					$database->add();
 
-							//add the dialplan details
-								$database->table = "v_dialplan_details";
-								$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
-								$database->fields['dialplan_uuid'] = $dialplan_uuid;
-								$database->fields['dialplan_detail_uuid'] = uuid();
-								$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
-								$database->fields['dialplan_detail_type'] = 'lua';
-								$database->fields['dialplan_detail_data'] = 'app.lua ring_groups';
-								$database->fields['dialplan_detail_order'] = '030';
-								$database->add();
+				//add the dialplan details
+					$database->table = "v_dialplan_details";
+					$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+					$database->fields['dialplan_uuid'] = $dialplan_uuid;
+					$database->fields['dialplan_detail_uuid'] = uuid();
+					$database->fields['dialplan_detail_tag'] = 'condition'; //condition, action, antiaction
+					$database->fields['dialplan_detail_type'] = 'destination_number';
+					$database->fields['dialplan_detail_data'] = '^'.$ring_group_extension.'$';
+					$database->fields['dialplan_detail_order'] = '000';
+					$database->add();
 
-							//save the xml
-								save_dialplan_xml();
+				//add the dialplan details
+					$database->table = "v_dialplan_details";
+					$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+					$database->fields['dialplan_uuid'] = $dialplan_uuid;
+					$database->fields['dialplan_detail_uuid'] = uuid();
+					$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+					$database->fields['dialplan_detail_type'] = 'set';
+					$database->fields['dialplan_detail_data'] = 'ring_group_uuid='.$ring_group_uuid;
+					$database->fields['dialplan_detail_order'] = '025';
+					$database->add();
 
-							//apply settings reminder
-								$_SESSION["reload_xml"] = true;
-						}
-					}
+				//add the dialplan details
+					$database->table = "v_dialplan_details";
+					$database->fields['domain_uuid'] = $_SESSION['domain_uuid'];
+					$database->fields['dialplan_uuid'] = $dialplan_uuid;
+					$database->fields['dialplan_detail_uuid'] = uuid();
+					$database->fields['dialplan_detail_tag'] = 'action'; //condition, action, antiaction
+					$database->fields['dialplan_detail_type'] = 'lua';
+					$database->fields['dialplan_detail_data'] = 'app.lua ring_groups';
+					$database->fields['dialplan_detail_order'] = '030';
+					$database->add();
+
+				//save the xml
+					save_dialplan_xml();
+
+				//apply settings reminder
+					$_SESSION["reload_xml"] = true;
 
 				//delete the dialplan context from memcache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp) {
-						$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+						$switch_cmd = "memcache delete dialplan:".$ring_group_context;
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 
