@@ -33,6 +33,18 @@
 
 	$text['label-extension']['en-us'] = 'Extension';
 
+	$text['label-ring-group-extension']['en-us'] = 'Ring Group Extension';
+
+	$text['header-ring-group-forward']['en-us'] = 'Ring Group Forward';
+
+	$text['description-ring-group-forward']['en-us'] = 'Forwards calls to an alternate destination for extension ';
+
+	$text['label-call-forward']['en-us'] = 'Call Forward:';
+
+	$text['label-forward_destination']['en-us'] = 'Number:';
+
+	$text['label-tools']['en-us'] = 'Tools';
+
 	$text['label-enabled']['en-us'] = 'Enabled';
 
 	$text['label-description']['en-us'] = 'Description';
@@ -147,6 +159,12 @@
 	$text['confirm-delete']['pt-pt'] = '';
 
 	$text['confirm-copy']['en-us'] = 'Do you really want to copy this?';
-	$text['confirm-copy']['en-us'] = '';
+	$text['confirm-copy']['en-pt'] = '';
+
+	$text['option-enabled']['en-us'] = 'Enabled';
+	$text['option-enabled']['pt-pt'] = '';
+
+	$text['option-disabled']['en-us'] = 'Disabled';
+	$text['option-disabled']['pt-pt'] = '';
 
 ?>
