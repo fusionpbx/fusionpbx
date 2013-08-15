@@ -84,6 +84,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the context.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_forward_destination';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the call forward destination.';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_forward_enabled';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select enable or disable the ring group call forward.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'ring_group_cid_name_prefix';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the caller ID prefix.';
