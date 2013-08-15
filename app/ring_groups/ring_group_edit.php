@@ -484,8 +484,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-destinations'].":</td>";
 	echo "		<td class='vtable' align='left'>";
+	echo "			<table width='52%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "				<tr>\n";
+	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
+	echo "					<td class='vtable'>".$text['label-destination_delay']."</td>\n";
+	echo "					<td class='vtable'>".$text['label-destination_timeout']."</td>\n";
+	echo "					<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
+	echo "					<td></td>\n";
+	echo "				</tr>\n";
 	if ($action == "update") {
-		echo "			<table width='52%' border='0' cellpadding='0' cellspacing='0'>\n";
 		$sql = "SELECT * FROM v_ring_group_destinations ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and ring_group_uuid = '".$ring_group_uuid."' ";
@@ -494,71 +501,63 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
-		echo "<tr>\n";
-		echo "	<td class='vtable'>".$text['label-destination_number']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-destination_delay']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-destination_timeout']."</td>\n";
-		echo "	<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
-		echo "	<td></td>\n";
-		echo "</tr>\n";
 		foreach($result as $field) {
 			if (strlen($field['destination_delay']) == 0) { $field['destination_delay'] = "0"; }
 			if (strlen($field['destination_timeout']) == 0) { $field['destination_timeout'] = "30"; }
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$field['destination_number'];
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$field['destination_delay']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$field['destination_timeout']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
+			echo "				<tr>\n";
+			echo "					<td class='vtable'>\n";
+			echo "						".$field['destination_number'];
+			echo "					</td>\n";
+			echo "					<td class='vtable'>\n";
+			echo "						".$field['destination_delay']."&nbsp;\n";
+			echo "					</td>\n";
+			echo "					<td class='vtable'>\n";
+			echo "						".$field['destination_timeout']."&nbsp;\n";
+			echo "					</td>\n";
+			echo "					<td class='vtable'>\n";
 			if ($field['destination_prompt'] == "1") {
-				echo "					".$text['label-destination_prompt_confirm']."&nbsp;\n";
+				echo "						".$text['label-destination_prompt_confirm']."&nbsp;\n";
 			}
 			elseif ($field['destination_prompt'] == "2") {
-				echo "					".$text['label-destination_prompt_announce']."&nbsp;\n";
+				echo "						".$text['label-destination_prompt_announce']."&nbsp;\n";
 			}
 			else {
-				echo "					&nbsp;\n";
+				echo "						&nbsp;\n";
 			}
-			echo "				</td>\n";
-			echo "				<td>\n";
-			echo "					<a href='ring_group_destination_edit.php?id=".$field['ring_group_destination_uuid']."&ring_group_uuid=".$field['ring_group_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "					<a href='ring_group_destination_delete.php?id=".$field['ring_group_destination_uuid']."&ring_group_uuid=".$ring_group_uuid."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			echo "				</td>\n";
-			echo "			</tr>\n";
+			echo "					</td>\n";
+			echo "					<td>\n";
+			echo "						<a href='ring_group_destination_edit.php?id=".$field['ring_group_destination_uuid']."&ring_group_uuid=".$field['ring_group_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			echo "						<a href='ring_group_destination_delete.php?id=".$field['ring_group_destination_uuid']."&ring_group_uuid=".$ring_group_uuid."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "					</td>\n";
+			echo "				</tr>\n";
 		}
-
-		echo "			<tr>\n";
-		echo "				<td>\n";
-		echo "					<input type=\"text\" name=\"destination_number\" class=\"formfld\" style=\"width: 90%;\"value=\"\">\n";
-		echo "				</td>\n";
-		echo "				<td>\n";
-		destination_select('destination_delay', $destination_delay, '0');
-		echo "				</td>\n";
-		echo "				<td>\n";
-		destination_select('destination_timeout', $destination_timeout, '30');
-		echo "				</td>\n";
-
-		echo "				<td>\n";
-		echo "					<select class='formfld' style='width: 90px;' name='destination_prompt'>\n";
-		echo "					<option value=''></option>\n";
-		echo "					<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
-		//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
-		echo "					</select>\n";
-		echo "				</td>\n";
-		echo "				<td>\n";
-		if ($action == "update") {
-			echo "					<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-		}
-		echo "				</td>\n";
-		echo "			</tr>\n";
-		echo "			</table>\n";
 	}
 	unset($sql, $result);
+
+	echo "				<tr>\n";
+	echo "					<td>\n";
+	echo "					<input type=\"text\" name=\"destination_number\" class=\"formfld\" style=\"width: 90%;\"value=\"\">\n";
+	echo "					</td>\n";
+	echo "					<td>\n";
+	destination_select('destination_delay', $destination_delay, '0');
+	echo "					</td>\n";
+	echo "					<td>\n";
+	destination_select('destination_timeout', $destination_timeout, '30');
+	echo "					</td>\n";
+
+	echo "					<td>\n";
+	echo "						<select class='formfld' style='width: 90px;' name='destination_prompt'>\n";
+	echo "						<option value=''></option>\n";
+	echo "						<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
+	//echo "						<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+	echo "						</select>\n";
+	echo "					</td>\n";
+	echo "					<td>\n";
+	echo "						<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+	echo "					</td>\n";
+	echo "				</tr>\n";
+	echo "			</table>\n";
+
 	echo "			".$text['description-destinations']."\n";
 	echo "			<br />\n";
 	echo "		</td>";
