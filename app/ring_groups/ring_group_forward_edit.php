@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -28,7 +28,7 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit') || permission_exists('ring_call_forward')) {
+	if (permission_exists('ring_group_add') || permission_exists('ring_group_edit') || permission_exists('ring_group_forward')) {
 		//access granted
 	}
 	else {
