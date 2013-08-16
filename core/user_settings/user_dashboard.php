@@ -105,11 +105,11 @@
 		}
 	}
 
-//hunt group forward
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/hunt_group/v_hunt_group_call_forward.php")) {
-		if (permission_exists('hunt_group_call_forward')) {
+//ring group forward
+	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
+		if (permission_exists('ring_group_forward')) { //ring_group_forward
 			$is_included = "true";
-			require_once "app/hunt_group/v_hunt_group_call_forward.php";
+			require_once "app/ring_groups/ring_group_forward.php";
 		}
 	}
 
