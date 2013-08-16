@@ -72,18 +72,23 @@ else {
 //define the destination_select function
 	function destination_select($select_name, $select_value, $select_default) {
 		if (strlen($select_value) == 0) { $select_value = $select_default; }
-		echo "	<select class='formfld' style='width: 45px;' name='$select_name'>\n";
+		echo "	<select class='formfld' style='width: 57px;' name='$select_name'>\n";
 		echo "	<option value=''></option>\n";
 
 		$i = 0;
-		while($i <= 100) {
+		while($i <= 300) {
 			if ($select_value == $i) {
 				echo "	<option value='$i' selected='selected'>$i</option>\n";
 			}
 			else {
 				echo "	<option value='$i'>$i</option>\n";
 			}
-			$i = $i + 5;
+			if ($i < 90) {
+				$i = $i + 5;
+			}
+			else {
+				$i = $i + 30;
+			}
 		}
 		echo "</select>\n";
 	}
