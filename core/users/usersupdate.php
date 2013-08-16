@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -63,16 +63,15 @@ else {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		$username = $row["username"];
-		break; //limit to 1 row
 	}
 	unset ($prep_statement);
 
 //required to be a superadmin to update an account that is a member of the superadmin group
-	$superadmin_list = superadmin_list($db);
-	if (if_superadmin($superadmin_list, $_SESSION['user_uuid'])) {
+	$superadmins = superadmin_list($db);
+	if (if_superadmin($superadmins, $user_uuid)) {
 		if (!if_group("superadmin")) {
 			echo "access denied";
-			return;
+			exit;
 		}
 	}
 
@@ -116,7 +115,7 @@ else {
 		}
 	}
 
-if (count($_POST)>0 && $_POST["persistform"] != "1") {
+if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	$user_uuid = $_REQUEST["id"];
 	$password = check_str($_POST["password"]);
 	$confirm_password = check_str($_POST["confirm_password"]);

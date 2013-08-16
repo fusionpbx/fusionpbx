@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -49,7 +49,7 @@ else {
 	echo "	<table width='100%' border='0'>";
 	echo "		<tr>";
 	echo "		<td align='left' width='100%'>";
-	require_once "userlist.php";
+	require_once "users.php";
 	echo "				<br />";
 	echo "				<br />";
 	echo "				<br />";
