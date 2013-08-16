@@ -68,7 +68,6 @@ else {
 		if (strlen($select_value) == 0) { $select_value = $select_default; }
 		echo "	<select class='formfld' name='$select_name'>\n";
 		echo "	<option value=''></option>\n";
-
 		$i = 0;
 		while($i <= 100) {
 			if ($select_value == $i) {
@@ -153,7 +152,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "destination_number = '$destination_number', ";
 				$sql .= "destination_delay = '$destination_delay', ";
 				$sql .= "destination_timeout = '$destination_timeout', ";
-				$sql .= "destination_prompt = '$destination_prompt' ";
+				if (strlen($destination_prompt) == 0) {
+					$sql .= "destination_prompt = null ";
+				}
+				else {
+					$sql .= "destination_prompt = '$destination_prompt' ";
+				}
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and ring_group_destination_uuid = '$ring_group_destination_uuid' ";
 				$db->exec(check_sql($sql));
@@ -242,30 +246,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_prompt'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "					<select class='formfld' name='destination_prompt'>\n";
-	echo "					<option value=''></option>\n";
-	if ($destination_prompt == "1") {
-		echo "					<option value='1' selected='selected'>".$text['label-destination_prompt_confirm']."</option>\n";
+	if (permission_exists('ring_group_prompt')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_prompt'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "					<select class='formfld' name='destination_prompt'>\n";
+		echo "					<option value=''></option>\n";
+		if ($destination_prompt == "1") {
+			echo "					<option value='1' selected='selected'>".$text['label-destination_prompt_confirm']."</option>\n";
+		}
+		else {
+			echo "					<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
+		}
+		//if ($destination_prompt == "2") {
+			//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+		//}
+		//else {
+			//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+		//}
+		echo "					</select>\n";
+		echo "<br />\n";
+		echo $text['description-destination_prompt']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "					<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
-	}
-	//if ($destination_prompt == "2") {
-		//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
-	//}
-	//else {
-		//echo "					<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
-	//}
-	echo "					</select>\n";
-	echo "<br />\n";
-	echo $text['description-destination_prompt']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "				<input type='hidden' name='ring_group_uuid' value='$ring_group_uuid'>\n";

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,9 @@
 
 	$text['description-ring-group-forward']['en-us'] = 'Forwards calls to an alternate destination for extension ';
 	$text['description-ring-group-forward']['pt-pt'] = '';
+
+	$text['link-call-forward']['en-us'] = 'Call Forward';
+	$text['link-call-forward']['pt-pt'] = '';
 
 	$text['label-call-forward']['en-us'] = 'Call Forward:';
 	$text['label-call-forward']['pt-pt'] = '';

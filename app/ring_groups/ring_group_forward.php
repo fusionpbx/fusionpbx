@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,7 +27,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('ring_group_view')) {
+if (permission_exists('ring_group_forward')) {
 	//access granted
 }
 else {
@@ -69,8 +69,18 @@ require_once "resources/paging.php";
 	//echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_ring_groups ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
+			//show all ring groups
+			$sql = "select count(*) as num_rows from v_ring_groups ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+		}
+		else {
+			//show only assigned fax extensions
+			$sql = "select count(*) as num_rows from v_ring_groups as r, v_ring_group_users as u ";
+			$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
+			$sql .= "and r.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -93,9 +103,24 @@ require_once "resources/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the  list
-		$sql = " select * from v_ring_groups ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
+			//show all ring groups
+			$sql = "select * from v_ring_groups ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+		}
+		else {
+			//show only assigned fax extensions
+			$sql = "select r.ring_group_uuid, r.ring_group_extension, r.ring_group_description from v_ring_groups as r, v_ring_group_users as u ";
+			$sql .= "where r.ring_group_uuid = u.ring_group_uuid ";
+			$sql .= "and r.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+		}
+		if (strlen($order_by) == 0) {
+			$sql .= "order by ring_group_extension asc ";
+		}
+		else {
+			$sql .= "order by $order_by $order ";
+		}
 		$sql .= " limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -133,7 +158,7 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_app']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_data']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['label-call-forward']."'>".$text['label-call-forward']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
