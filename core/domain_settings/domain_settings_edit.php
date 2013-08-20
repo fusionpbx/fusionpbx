@@ -119,7 +119,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=domains_edit.php?id=$domain_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=domain_edit.php?id=$domain_uuid\">\n";
 				echo "<div align='center'>\n";
 				echo $text['message-add']."\n";
 				echo "</div>\n";
@@ -141,7 +141,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=domains_edit.php?id=$domain_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=domain_edit.php?id=$domain_uuid\">\n";
 				echo "<div align='center'>\n";
 				echo $text['message-update']."\n";
 				echo "</div>\n";
