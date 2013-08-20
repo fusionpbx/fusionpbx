@@ -57,7 +57,7 @@ if (strlen($id)>0) {
 
 //redirect the user
 	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=domains_edit.php?id=$domain_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=domain_edit.php?id=$domain_uuid\">\n";
 	echo "<div align='center'>\n";
 	echo $text['message-delete']."\n";
 	echo "</div>\n";
