@@ -92,62 +92,145 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('domain_setting_add')) {
-				$sql = "insert into v_domain_settings ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "domain_setting_uuid, ";
-				$sql .= "domain_setting_category, ";
-				$sql .= "domain_setting_subcategory, ";
-				$sql .= "domain_setting_name, ";
-				$sql .= "domain_setting_value, ";
-				$sql .= "domain_setting_enabled, ";
-				$sql .= "domain_setting_description ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'$domain_setting_category', ";
-				$sql .= "'$domain_setting_subcategory', ";
-				$sql .= "'$domain_setting_name', ";
-				$sql .= "'$domain_setting_value', ";
-				$sql .= "'$domain_setting_enabled', ";
-				$sql .= "'$domain_setting_description' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			//add the domain
+				if ($action == "add" && permission_exists('domain_setting_add')) {
+					$sql = "insert into v_domain_settings ";
+					$sql .= "(";
+					$sql .= "domain_uuid, ";
+					$sql .= "domain_setting_uuid, ";
+					$sql .= "domain_setting_category, ";
+					$sql .= "domain_setting_subcategory, ";
+					$sql .= "domain_setting_name, ";
+					$sql .= "domain_setting_value, ";
+					$sql .= "domain_setting_enabled, ";
+					$sql .= "domain_setting_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'$domain_uuid', ";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'$domain_setting_category', ";
+					$sql .= "'$domain_setting_subcategory', ";
+					$sql .= "'$domain_setting_name', ";
+					$sql .= "'$domain_setting_value', ";
+					$sql .= "'$domain_setting_enabled', ";
+					$sql .= "'$domain_setting_description' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				} //if ($action == "add")
 
+			//update the domain
+				if ($action == "update" && permission_exists('domain_setting_edit')) {
+					$sql = "update v_domain_settings set ";
+					$sql .= "domain_setting_category = '$domain_setting_category', ";
+					$sql .= "domain_setting_subcategory = '$domain_setting_subcategory', ";
+					$sql .= "domain_setting_name = '$domain_setting_name', ";
+					$sql .= "domain_setting_value = '$domain_setting_value', ";
+					$sql .= "domain_setting_enabled = '$domain_setting_enabled', ";
+					$sql .= "domain_setting_description = '$domain_setting_description' ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and domain_setting_uuid = '$domain_setting_uuid'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				} //if ($action == "update")
+
+			//update time zone
+				if ($domain_setting_category == "domain" && $domain_setting_subcategory == "time_zone" && $domain_setting_name == "name" && strlen($domain_setting_value) > 0 ) {
+					$sql = "select * from v_dialplans ";
+					$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
+					$sql .= "and domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$time_zone_found = false;
+					foreach ($result as &$row) {
+						//get the dialplan_uuid
+							$dialplan_uuid = $row["dialplan_uuid"];
+
+						//get the dialplan details
+							$sql = "select * from v_dialplan_details ";
+							$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+							$sql .= "and domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+							$sub_prep_statement = $db->prepare(check_sql($sql));
+							$sub_prep_statement->execute();
+							$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
+							foreach ($sub_result as $field) {
+								$dialplan_detail_uuid = $field["dialplan_detail_uuid"];
+								$dialplan_detail_tag = $field["dialplan_detail_tag"]; //action //condition
+								$dialplan_detail_type = $field["dialplan_detail_type"]; //set
+								$dialplan_detail_data = $field["dialplan_detail_data"];
+								$dialplan_detail_group = $field["dialplan_detail_group"];
+								if ($dialplan_detail_tag == "action" && $dialplan_detail_type == "set") {
+									$data_array = explode("=", $dialplan_detail_data);
+									if ($data_array[0] == "timezone") {
+										$time_zone_found = true;
+										break;
+									}
+								}
+							}
+
+						//add the time zone
+							if (!$time_zone_found) {
+								//$dialplan_detail_uuid = uuid();
+								$dialplan_detail_uuid = "eb3b3a4e-88ea-4306-b2a8-9f52d3c95f2f";
+								$sql = "insert into v_dialplan_details ";
+								$sql .= "(";
+								$sql .= "domain_uuid, ";
+								$sql .= "dialplan_uuid, ";
+								$sql .= "dialplan_detail_uuid, ";
+								$sql .= "dialplan_detail_tag, ";
+								$sql .= "dialplan_detail_type, ";
+								$sql .= "dialplan_detail_data, ";
+								$sql .= "dialplan_detail_group, ";
+								$sql .= "dialplan_detail_order ";
+								$sql .= ") ";
+								$sql .= "values ";
+								$sql .= "(";
+								$sql .= "'".$_SESSION["domain_uuid"]."', "; //8cfd9525-6ccf-4c2c-813a-bca5809067cd
+								$sql .= "'$dialplan_uuid', "; //807b4aa6-4478-4663-a661-779397c1d542
+								$sql .= "'$dialplan_detail_uuid', ";
+								$sql .= "'action', ";
+								$sql .= "'set', ";
+								$sql .= "'timezone=$domain_setting_value', ";
+								if (strlen($dialplan_detail_group) > 0) {
+									$sql .= "'$dialplan_detail_group', ";
+								}
+								else {
+									$sql .= "null, ";
+								}
+								$sql .= "'15' ";
+								$sql .= ")";
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
+
+						//update the time zone
+							if ($time_zone_found) {
+								$sql = "update v_dialplan_details set ";
+								$sql .= "dialplan_detail_data = 'timezone=".$domain_setting_value."' ";
+								$sql .= "where domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+								$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+								$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid' ";
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
+					}
+				}
+
+			//redirect the browser
 				require_once "resources/header.php";
 				echo "<meta http-equiv=\"refresh\" content=\"2;url=domain_edit.php?id=$domain_uuid\">\n";
 				echo "<div align='center'>\n";
-				echo $text['message-add']."\n";
+				if ($action == "add") {
+					echo $text['message-add']."\n";
+				}
+				if ($action == "update") {
+					echo $text['message-update']."\n";
+				}
 				echo "</div>\n";
 				require_once "resources/footer.php";
 				return;
-			} //if ($action == "add")
-
-			if ($action == "update" && permission_exists('domain_setting_edit')) {
-				$sql = "update v_domain_settings set ";
-				$sql .= "domain_setting_category = '$domain_setting_category', ";
-				$sql .= "domain_setting_subcategory = '$domain_setting_subcategory', ";
-				$sql .= "domain_setting_name = '$domain_setting_name', ";
-				$sql .= "domain_setting_value = '$domain_setting_value', ";
-				$sql .= "domain_setting_enabled = '$domain_setting_enabled', ";
-				$sql .= "domain_setting_description = '$domain_setting_description' ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and domain_setting_uuid = '$domain_setting_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=domain_edit.php?id=$domain_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo $text['message-update']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
-			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -325,7 +408,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
 				}
 			}
-			if ($val == $row['default_setting_value']) {
+			if ($val == $row['domain_setting_value']) {
 				echo "			<option value='".$val."' selected='selected'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
 			}
 			else {
@@ -337,10 +420,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		</select>\n";
 	}
 	elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
-		echo "	<input class='formfld' type='password' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
+		echo "	<input class='formfld' type='password' name='domain_setting_value' maxlength='255' value=\"".$row['domain_setting_value']."\">\n";
 	}
 	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
-		echo "	<input class='formfld' type='password' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
+		echo "	<input class='formfld' type='password' name='domain_setting_value' maxlength='255' value=\"".$row['domain_setting_value']."\">\n";
 	} else {
 		echo "	<input class='formfld' type='text' name='domain_setting_value' maxlength='255' value=\"$domain_setting_value\">\n";
 	}
