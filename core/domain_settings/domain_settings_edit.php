@@ -177,7 +177,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		$page["title"] = $text['title-domain_setting-edit'];
 	}
-	if ($action == "add") {
+	elseif ($action == "add") {
 		$page["title"] = $text['title-domain_setting-add'];
 	}
 
@@ -295,33 +295,46 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			closedir($handle);
 		}
 		echo "		</select>\n";
-	} elseif ($category == "domain" && $subcategory == "time" && $name == "zone" ) {
-			echo "		<select id='domain_setting_value' name='domain_setting_value' class='formfld' style=''>\n";
-			echo "		<option value=''></option>\n";
-			//$list = DateTimeZone::listAbbreviations();
-			$time_zone_identifiers = DateTimeZone::listIdentifiers();
-			$previous_category = '';
-			$x = 0;
-			foreach ($time_zone_identifiers as $key => $val) {
-				$time_zone = explode("/", $val);
-				$category = $time_zone[0];
-				if ($category != $previous_category) {
-					if ($x > 0) {
-						echo "		</optgroup>\n";
-					}
-					echo "		<optgroup label='".$category."'>\n";
+	} elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
+		echo "		<select id='domain_setting_value' name='domain_setting_value' class='formfld' style=''>\n";
+		echo "		<option value=''></option>\n";
+		//$list = DateTimeZone::listAbbreviations();
+		$time_zone_identifiers = DateTimeZone::listIdentifiers();
+		$previous_category = '';
+		$x = 0;
+		foreach ($time_zone_identifiers as $key => $val) {
+			$time_zone = explode("/", $val);
+			$category = $time_zone[0];
+			if ($category != $previous_category) {
+				if ($x > 0) {
+					echo "		</optgroup>\n";
 				}
-				if ($val == $row['domain_setting_value']) {
-					echo "			<option value='".$val."' selected='selected'>".$val."</option>\n";
+				echo "		<optgroup label='".$category."'>\n";
+			}
+			if (strlen($val) > 0) {
+				$time_zone_offset = get_time_zone_offset($val)/3600;
+				$time_zone_offset_hours = floor($time_zone_offset);
+				$time_zone_offset_minutes = ($time_zone_offset - $time_zone_offset_hours) * 60;
+				$time_zone_offset_minutes = number_pad($time_zone_offset_minutes, 2);
+				if ($time_zone_offset > 0) {
+					$time_zone_offset_hours = number_pad($time_zone_offset_hours, 2);
+					$time_zone_offset_hours = "+".$time_zone_offset_hours;
 				}
 				else {
-					echo "			<option value='".$val."'>".$val."</option>\n";
+					$time_zone_offset_hours = str_replace("-", "", $time_zone_offset_hours);
+					$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
 				}
-				$previous_category = $category;
-				$x++;
 			}
-			echo "		</select>\n";
-			break;
+			if ($val == $row['default_setting_value']) {
+				echo "			<option value='".$val."' selected='selected'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+			}
+			else {
+				echo "			<option value='".$val."'>(UTC ".$time_zone_offset_hours.":".$time_zone_offset_minutes.") ".$val."</option>\n";
+			}
+			$previous_category = $category;
+			$x++;
+		}
+		echo "		</select>\n";
 	}
 	elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
 		echo "	<input class='formfld' type='password' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
@@ -329,7 +342,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 		echo "	<input class='formfld' type='password' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	} else {
-			echo "	<input class='formfld' type='text' name='domain_setting_value' maxlength='255' value=\"$domain_setting_value\">\n";
+		echo "	<input class='formfld' type='text' name='domain_setting_value' maxlength='255' value=\"$domain_setting_value\">\n";
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";

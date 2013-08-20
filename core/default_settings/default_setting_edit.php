@@ -169,7 +169,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		$page["title"] = $text['title-default_setting-edit'];
 	}
-	else if ($action == "add") {
+	elseif ($action == "add") {
 		$page["title"] = $text['title-default_setting-add'];
 	}
 
