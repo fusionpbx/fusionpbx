@@ -249,7 +249,7 @@ if (permission_exists('log_view')) {
 							$log_line = str_replace($v1["pattern".$i], "<font color=\"{$v1["color".$i]}\">{$v1["pattern".$i]}</font>", htmlentities($log_line));
 						}
 					}
-					$ary_output[] = "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">".htmlentities($log_line)."</font><br>";
+					$ary_output[] = "<font color=\"{$v1[color]}\" face=\"{$v1[font]}\">".$log_line."</font><br>";
 					$noprint = true;
 				}
 			}
