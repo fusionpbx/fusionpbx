@@ -30,6 +30,9 @@ include "root.php";
 		//do nothing
 	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 		//original directory
+	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php")) {
+		//move config.php from the includes to resources directory.
+		rename($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/includes/config.php", $_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php");
 	} elseif (file_exists("/etc/fusionpbx/config.php")){
 		//linux
 	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
