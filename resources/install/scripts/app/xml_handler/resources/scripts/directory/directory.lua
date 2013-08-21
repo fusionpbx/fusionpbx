@@ -81,7 +81,7 @@
 
 		--get the extension from the database
 			if (continue) then
-				sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and extension = '" .. user .. "' and enabled = 'true' ";
+				sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and (extension = '" .. user .. "' or number_alias = '" .. user .. "') and enabled = 'true' ";
 				if (debug["sql"]) then
 					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 				end
