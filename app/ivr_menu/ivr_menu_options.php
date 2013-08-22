@@ -114,10 +114,7 @@ else {
 	echo "</td>\n";
 	echo "<tr>\n";
 
-	if ($result_count == 0) {
-		//no results
-	}
-	else { //received results
+	if ($result_count > 0) {
 		foreach($result as $row) {
 			$ivr_menu_option_param = $row['ivr_menu_option_param'];
 			if (strlen(trim($ivr_menu_option_param)) == 0) {

@@ -40,6 +40,7 @@
 	$text['label-description']['en-us'] = 'Description';
 	$text['label-advanced']['en-us'] = 'Show Advanced';
 	$text['label-option']['en-us'] = 'Option';
+	$text['label-options']['en-us'] = 'Options';
 	$text['label-destination']['en-us'] = 'Destination';
 	$text['label-order']['en-us'] = 'Order';
 
