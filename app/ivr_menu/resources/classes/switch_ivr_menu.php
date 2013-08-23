@@ -78,6 +78,7 @@ require_once "resources/classes/dialplan.php";
 		public function get_domain_uuid() {
 			return $this->domain_uuid;
 		}
+
 		public function set_domain_uuid($domain_uuid){
 			$this->domain_uuid = $domain_uuid;
 		}
@@ -164,7 +165,9 @@ require_once "resources/classes/dialplan.php";
 				if (strlen($this->ivr_menu_option_action) == 0) {
 					if (strlen($this->ivr_menu_extension) > 0) {
 						//set the ivr menu uuid
-							$this->ivr_menu_uuid = uuid();
+							if (strlen($this->ivr_menu_uuid) == 0) {
+								$this->ivr_menu_uuid = uuid();
+							}
 
 						//ensure the dialplan_uuid has a uuid
 							if (strlen($this->dialplan_uuid) == 0) {

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -90,63 +90,52 @@ function recur_sounds_dir($dir) {
 }
 
 //action add or update
-if (isset($_REQUEST["id"])) {
-	$action = "update";
-	$ivr_menu_uuid = check_str($_REQUEST["id"]);
-}
-else {
-	$action = "add";
-}
+	if (strlen($_REQUEST["id"]) > 0) {
+		$action = "update";
+		$ivr_menu_uuid = check_str($_REQUEST["id"]);
+	}
+	else {
+		$action = "add";
+	}
 
 //get http post values and set them to php variables
-if (count($_POST)>0) {
-	//get ivr menu
-		$ivr_menu_name = check_str($_POST["ivr_menu_name"]);
-		$ivr_menu_extension = check_str($_POST["ivr_menu_extension"]);
-		$ivr_menu_greet_long = check_str($_POST["ivr_menu_greet_long"]);
-		$ivr_menu_greet_short = check_str($_POST["ivr_menu_greet_short"]);
-		$ivr_menu_invalid_sound = check_str($_POST["ivr_menu_invalid_sound"]);
-		$ivr_menu_exit_sound = check_str($_POST["ivr_menu_exit_sound"]);
-		$ivr_menu_confirm_macro = check_str($_POST["ivr_menu_confirm_macro"]);
-		$ivr_menu_confirm_key = check_str($_POST["ivr_menu_confirm_key"]);
-		$ivr_menu_tts_engine = check_str($_POST["ivr_menu_tts_engine"]);
-		$ivr_menu_tts_voice = check_str($_POST["ivr_menu_tts_voice"]);
-		$ivr_menu_confirm_attempts = check_str($_POST["ivr_menu_confirm_attempts"]);
-		$ivr_menu_timeout = check_str($_POST["ivr_menu_timeout"]);
-		$ivr_menu_inter_digit_timeout = check_str($_POST["ivr_menu_inter_digit_timeout"]);
-		$ivr_menu_max_failures = check_str($_POST["ivr_menu_max_failures"]);
-		$ivr_menu_max_timeouts = check_str($_POST["ivr_menu_max_timeouts"]);
-		$ivr_menu_digit_len = check_str($_POST["ivr_menu_digit_len"]);
-		$ivr_menu_direct_dial = check_str($_POST["ivr_menu_direct_dial"]);
-		$ivr_menu_ringback = check_str($_POST["ivr_menu_ringback"]);
-		$ivr_menu_cid_prefix = check_str($_POST["ivr_menu_cid_prefix"]);
-		$ivr_menu_enabled = check_str($_POST["ivr_menu_enabled"]);
-		$ivr_menu_description = check_str($_POST["ivr_menu_description"]);
+	if (count($_POST)>0) {
+		//get ivr menu
+			$ivr_menu_name = check_str($_POST["ivr_menu_name"]);
+			$ivr_menu_extension = check_str($_POST["ivr_menu_extension"]);
+			$ivr_menu_greet_long = check_str($_POST["ivr_menu_greet_long"]);
+			$ivr_menu_greet_short = check_str($_POST["ivr_menu_greet_short"]);
+			$ivr_menu_options = $_POST["ivr_menu_options"];
+			$ivr_menu_invalid_sound = check_str($_POST["ivr_menu_invalid_sound"]);
+			$ivr_menu_exit_sound = check_str($_POST["ivr_menu_exit_sound"]);
+			$ivr_menu_confirm_macro = check_str($_POST["ivr_menu_confirm_macro"]);
+			$ivr_menu_confirm_key = check_str($_POST["ivr_menu_confirm_key"]);
+			$ivr_menu_tts_engine = check_str($_POST["ivr_menu_tts_engine"]);
+			$ivr_menu_tts_voice = check_str($_POST["ivr_menu_tts_voice"]);
+			$ivr_menu_confirm_attempts = check_str($_POST["ivr_menu_confirm_attempts"]);
+			$ivr_menu_timeout = check_str($_POST["ivr_menu_timeout"]);
+			$ivr_menu_inter_digit_timeout = check_str($_POST["ivr_menu_inter_digit_timeout"]);
+			$ivr_menu_max_failures = check_str($_POST["ivr_menu_max_failures"]);
+			$ivr_menu_max_timeouts = check_str($_POST["ivr_menu_max_timeouts"]);
+			$ivr_menu_digit_len = check_str($_POST["ivr_menu_digit_len"]);
+			$ivr_menu_direct_dial = check_str($_POST["ivr_menu_direct_dial"]);
+			$ivr_menu_ringback = check_str($_POST["ivr_menu_ringback"]);
+			$ivr_menu_cid_prefix = check_str($_POST["ivr_menu_cid_prefix"]);
+			$ivr_menu_enabled = check_str($_POST["ivr_menu_enabled"]);
+			$ivr_menu_description = check_str($_POST["ivr_menu_description"]);
 
-	//get ivr menu options
-		$ivr_menu_option_digits = check_str($_POST["ivr_menu_option_digits"]);
-		$ivr_menu_option_action = check_str($_POST["ivr_menu_option_action"]);
-		$ivr_menu_option_param = check_str($_POST["ivr_menu_option_param"]);
-		$ivr_menu_option_order = check_str($_POST["ivr_menu_option_order"]);
-		$ivr_menu_option_description = check_str($_POST["ivr_menu_option_description"]);
+		//process the values
+			$ivr_menu_exit_action = check_str($_POST["ivr_menu_exit_action"]);
+			//$ivr_menu_exit_action = "transfer:1001 XML default";
+			$timeout_action_array = explode(":", $ivr_menu_exit_action);
+			$ivr_menu_exit_app = array_shift($timeout_action_array);
+			$ivr_menu_exit_data = join(':', $timeout_action_array);
 
-	//process the values
-		$ivr_menu_exit_action = check_str($_POST["ivr_menu_exit_action"]);
-		//$ivr_menu_exit_action = "transfer:1001 XML default";
-		$timeout_action_array = explode(":", $ivr_menu_exit_action);
-		$ivr_menu_exit_app = array_shift($timeout_action_array);
-		$ivr_menu_exit_data = join(':', $timeout_action_array);
-
-	//set the default ivr_menu_option_action
-		if (strlen($ivr_menu_option_action) == 0) {
-			$ivr_menu_option_action = "menu-exec-app";
-		}
-
-	//seperate the action and the param
-		$options_array = explode(":", $ivr_menu_option_param);
-		$ivr_menu_option_action = array_shift($options_array);
-		$ivr_menu_option_param = join(':', $options_array);
-}
+		//set the default ivr_menu_option_action
+			if (strlen($ivr_menu_option_action) == 0) {
+				$ivr_menu_option_action = "menu-exec-app";
+			}
+	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
@@ -228,6 +217,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//add the data
 				if ($action == "add" && permission_exists('ivr_menu_add')) {
+					//set the ivr_menu_uuid
+						$ivr_menu_uuid = uuid();
+						$ivr->ivr_menu_uuid = $ivr_menu_uuid;
+
 					//run the add method in the ivr menu class
 						$ivr->add();
 
@@ -237,34 +230,43 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//update the data
 				if ($action == "update" && permission_exists('ivr_menu_edit')) {
+					//get the ivr_menu_uuid
+						$ivr_menu_uuid = check_str($_REQUEST["id"]);
+
 					//run the update method in the ivr menu class
-					$ivr->ivr_menu_uuid = $ivr_menu_uuid;
-					$ivr->update();
+						$ivr->ivr_menu_uuid = $ivr_menu_uuid;
+						$ivr->update();
 				}
 
 			//add the ivr menu options
 				if (($action == "add" && permission_exists('ivr_menu_add')) || ($action == "update" && permission_exists('ivr_menu_edit'))) {
-					if (strlen($ivr_menu_option_digits) > 0 && strlen($ivr_menu_option_param) > 0) {
-						require_once "resources/classes/database.php";
-						require_once "resources/classes/switch_ivr_menu.php";
-						$ivr = new switch_ivr_menu;
-						$ivr->domain_uuid = $_SESSION["domain_uuid"];
-						$ivr->ivr_menu_uuid = $ivr_menu_uuid;
-						$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;
-						$ivr->ivr_menu_option_digits = $ivr_menu_option_digits;
-						$ivr->ivr_menu_option_action = $ivr_menu_option_action;
-						$ivr->ivr_menu_option_param = $ivr_menu_option_param;
-						$ivr->ivr_menu_option_order = $ivr_menu_option_order;
-						$ivr->ivr_menu_option_description = $ivr_menu_option_description;
-						$ivr_menu_option_uuid = uuid();
-						$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;
-						$ivr->add();
+					require_once "resources/classes/database.php";
+					require_once "resources/classes/switch_ivr_menu.php";
+					foreach ($ivr_menu_options as $row) {
+						//seperate the action and the param
+							$option_array = explode(":", $row["ivr_menu_option_param"]);
+							$ivr_menu_option_action = array_shift($option_array);
+							$ivr_menu_option_param = join(':', $option_array);
+
+						//add the ivr menu option
+							if (strlen($ivr_menu_option_action) > 0) {
+								$ivr = new switch_ivr_menu;
+								$ivr->domain_uuid = $_SESSION["domain_uuid"];
+								$ivr->ivr_menu_uuid = $ivr_menu_uuid;
+								$ivr->ivr_menu_option_uuid = uuid();
+								$ivr->ivr_menu_option_digits = $row["ivr_menu_option_digits"];
+								$ivr->ivr_menu_option_action = $ivr_menu_option_action;
+								$ivr->ivr_menu_option_param = $ivr_menu_option_param;
+								$ivr->ivr_menu_option_order = $row["ivr_menu_option_order"];
+								$ivr->ivr_menu_option_description = $row["ivr_menu_option_description"];
+								$ivr->add();
+							}
 					}
 				}
 
 			//redirect the user
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
 				echo "<div align='center'>\n";
 				echo $text['message-update']."\n";
 				echo "</div>\n";
@@ -646,44 +648,48 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	unset($sql, $result);
 
-	echo "				<tr>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_option_digits' maxlength='255' value='$ivr_menu_option_digits'>\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
-	$tmp_select_value = '';
-	switch_select_destination("ivr", $ivr_menu_options_label, "ivr_menu_option_param", $tmp_select_value, "width:175px", $ivr_menu_option_action);
-	unset($tmp_select_value);
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select name='ivr_menu_option_order' class='formfld' style='width:55px'>\n";
-	//echo "	<option></option>\n";
-	if (strlen(htmlspecialchars($ivr_menu_option_order))> 0) {
-		echo "	<option selected='yes' value='".htmlspecialchars($ivr_menu_option_order)."'>".htmlspecialchars($ivr_menu_option_order)."</option>\n";
-	}
-	$i=0;
-	while($i<=999) {
-		if (strlen($i) == 1) {
-			echo "	<option value='00$i'>00$i</option>\n";
+	if ($action == "update") { $options = array(0); }
+	if ($action == "add") { $options = array(0,1,2,3,4); }
+	foreach ($options as $x) {
+		echo "				<tr>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_digits]' maxlength='255' value='$ivr_menu_option_digits'>\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
+		$tmp_select_value = '';
+		switch_select_destination("ivr", $ivr_menu_options_label, 'ivr_menu_options['.$x.'][ivr_menu_option_param]', $tmp_select_value, "width:175px", $ivr_menu_option_action);
+		unset($tmp_select_value);
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name='ivr_menu_options[".$x."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
+		//echo "	<option></option>\n";
+		if (strlen(htmlspecialchars($ivr_menu_option_order))> 0) {
+			echo "	<option selected='yes' value='".htmlspecialchars($ivr_menu_option_order)."'>".htmlspecialchars($ivr_menu_option_order)."</option>\n";
 		}
-		if (strlen($i) == 2) {
-			echo "	<option value='0$i'>0$i</option>\n";
+		$i=0;
+		while($i<=999) {
+			if (strlen($i) == 1) {
+				echo "	<option value='00$i'>00$i</option>\n";
+			}
+			if (strlen($i) == 2) {
+				echo "	<option value='0$i'>0$i</option>\n";
+			}
+			if (strlen($i) == 3) {
+				echo "	<option value='$i'>$i</option>\n";
+			}
+			$i++;
 		}
-		if (strlen($i) == 3) {
-			echo "	<option value='$i'>$i</option>\n";
-		}
-		$i++;
-	}
-	echo "	</select>\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_option_description' maxlength='255' value=\"$ivr_menu_option_description\">\n";
-	echo "</td>\n";
+		echo "	</select>\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_description]' maxlength='255' value=\"$ivr_menu_option_description\">\n";
+		echo "</td>\n";
 
-	echo "					<td>\n";
-	echo "						<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-	echo "					</td>\n";
-	echo "				</tr>\n";
+		echo "					<td>\n";
+		echo "						<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+		echo "					</td>\n";
+		echo "				</tr>\n";
+	}
 	echo "			</table>\n";
 
 	echo "			".$text['description-destinations']."\n";
@@ -979,7 +985,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='ivr_menu_uuid' value='$ivr_menu_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
