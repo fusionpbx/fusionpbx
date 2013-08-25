@@ -623,6 +623,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			$ivr_menu_option_param = str_replace("menu-", "", $ivr_menu_option_param);
 			$ivr_menu_option_param = str_replace("XML", "", $ivr_menu_option_param);
+			$ivr_menu_option_param = str_replace("transfer", "", $ivr_menu_option_param);
+			$ivr_menu_option_param = str_replace("bridge", "", $ivr_menu_option_param);
+			$ivr_menu_option_param = str_replace($_SESSION['domain_name'], "", $ivr_menu_option_param);
 			$ivr_menu_option_param = str_replace("\${domain_name}", "", $ivr_menu_option_param);
 			$ivr_menu_option_param = str_replace("\${domain}", "", $ivr_menu_option_param);
 			$ivr_menu_option_param = ucfirst(trim($ivr_menu_option_param));
