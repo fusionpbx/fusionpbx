@@ -375,36 +375,40 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 	//select_type can be ivr, dialplan, or call_center_contact
 	global $config, $db, $domain_uuid;
 
+	//remove special characters from the name
+		$select_id = str_replace("]", "", $select_name);
+		$select_id = str_replace("[", "_", $select_id);
+
 	if (if_group("superadmin")) {
 		echo "<script>\n";
 		echo "var Objs;\n";
 		echo "\n";
-		echo "function changeToInput".$select_name."(obj){\n";
+		echo "function changeToInput".$select_id."(obj){\n";
 		echo "	tb=document.createElement('INPUT');\n";
 		echo "	tb.type='text';\n";
 		echo "	tb.name=obj.name;\n";
 		echo "	tb.className='formfld';\n";
-		echo "	tb.setAttribute('id', '".$select_name."');\n";
+		echo "	tb.setAttribute('id', '".$select_id."');\n";
 		echo "	tb.setAttribute('style', '".$select_style."');\n";
 		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
-		echo "	document.getElementById('btn_select_to_input_".$select_name."').style.visibility = 'hidden';\n";
+		echo "	document.getElementById('btn_select_to_input_".$select_id."').style.visibility = 'hidden';\n";
 		echo "	tbb=document.createElement('INPUT');\n";
 		echo "	tbb.setAttribute('class', 'btn');\n";
 		echo "	tbb.type='button';\n";
 		echo "	tbb.value='<';\n";
 		echo "	tbb.objs=[obj,tb,tbb];\n";
-		echo "	tbb.onclick=function(){ Replace".$select_name."(this.objs); }\n";
+		echo "	tbb.onclick=function(){ Replace".$select_id."(this.objs); }\n";
 		echo "	obj.parentNode.insertBefore(tb,obj);\n";
 		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
 		echo "	obj.parentNode.removeChild(obj);\n";
-		echo "	Replace".$select_name."(this.objs);\n";
+		echo "	Replace".$select_id."(this.objs);\n";
 		echo "}\n";
 		echo "\n";
-		echo "function Replace".$select_name."(obj){\n";
+		echo "function Replace".$select_id."(obj){\n";
 		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
 		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
 		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
-		echo "	document.getElementById('btn_select_to_input_".$select_name."').style.visibility = 'visible';\n";
+		echo "	document.getElementById('btn_select_to_input_".$select_id."').style.visibility = 'visible';\n";
 		echo "}\n";
 		echo "</script>\n";
 		echo "\n";
@@ -414,7 +418,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		$selection_found = false;
 
 	if (if_group("superadmin")) {
-		echo "		<select name='".$select_name."' id='".$select_name."' class='formfld' style='".$select_style."' onchange='changeToInput".$select_name."(this);'>\n";
+		echo "		<select name='".$select_name."' id='".$select_id."' class='formfld' style='".$select_style."' >\n"; //onchange='changeToInput".$select_id."(this);'
 		if (strlen($select_value) > 0) {
 			if ($select_type == "ivr") {
 				echo "		<option value='".$select_value."' selected='selected'>".$select_label."</option>\n";
@@ -425,7 +429,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 	}
 	else {
-		echo "		<select name='".$select_name."' id='".$select_name."' class='formfld' style='".$select_style."'>\n";
+		echo "		<select name='".$select_name."' id='".$select_id."' class='formfld' style='".$select_style."'>\n";
 	}
 
 	echo "		<option></option>\n";
@@ -675,6 +679,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 		unset ($prep_statement);
 		*/
+
 	//list extensions
 		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -690,7 +695,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			$extension = $row["extension"];
 			$context = $row["user_context"];
 			$description = $row["description"];
-			if ("transfer ".$extension." XML ".$context == $select_value || "transfer:".$extension." XML ".$context == $select_value || "user/$extension@".$_SESSION['domains'][$domain_uuid]['domain_name'] == $select_value) {
+			if ("menu-exec-app:transfer ".$extension." XML ".$context == $select_value || "transfer:".$extension." XML ".$context == $select_value || "user/$extension@".$_SESSION['domains'][$domain_uuid]['domain_name'] == $select_value) {
 				if ($select_type == "ivr") {
 					echo "		<option value='menu-exec-app:transfer $extension XML ".$context."' selected='selected'>".$extension." ".$description."</option>\n";
 				}
@@ -1551,7 +1556,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 
 	echo "		</select>\n";
 	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".$select_name."' class='btn' name='' alt='back' onclick='changeToInput".$select_name."(document.getElementById(\"".$select_name."\"));this.style.visibility = \"hidden\";' value='<'>";
+		echo "<input type='button' id='btn_select_to_input_".$select_id."' class='btn' name='' alt='back' onclick='changeToInput".$select_id."(document.getElementById(\"".$select_id."\"));this.style.visibility = \"hidden\";' value='<'>";
 	}
 }
 
