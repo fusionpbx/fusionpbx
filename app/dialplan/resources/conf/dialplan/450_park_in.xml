@@ -1,0 +1,15 @@
+<context name="{v_context}">
+	<extension name="park_in" app_uuid="ffb30da6-30e4-43b8-9847-2ed40e232f89" enabled="false">
+		<condition field="destination_number" expression="^\*5900$" >
+			<action application="set" data="park_direction=in" />
+			<action application="set" data="park_extension=\*5901" />
+			<action application="set" data="park_range=3" />
+			<action application="set" data="park_announce=true" />
+			<action application="set" data="park_timeout_seconds=70" />
+			<action application="set" data="park_timeout_destination=1000" />
+			<action application="set" data="park_music=$${hold_music}" />
+			<action application="set" data="park_caller_id_prefix=" />
+			<action application="lua" data="park.lua" />
+		</condition>
+	</extension>
+</context>

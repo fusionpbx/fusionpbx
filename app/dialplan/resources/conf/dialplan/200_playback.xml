@@ -1,0 +1,10 @@
+<context name="{v_context}">
+	<extension name="SpeakTime" app_uuid="f8b52879-6f9c-4c40-afb1-2b686ca606aa">
+		<condition field="destination_number" expression="^2910$">
+			<action application="set" data="actime=${strftime(%H:%M)}"/>
+			<action application="set" data="tts_engine=flite"/>
+			<action application="set" data="tts_voice=slt"/>
+			<action application="speak" data="It is +${actime}"/>
+		</condition>
+	</extension>
+</context>

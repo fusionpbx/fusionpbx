@@ -1,0 +1,11 @@
+<context name="{v_context}">
+	<extension name="page" app_uuid="2011c518-696d-4878-a9b2-b217b6311311" enabled="false">
+		<condition field="destination_number" expression="^\*724$" >
+			<action application="set" data="caller_id_name=Page" />
+			<action application="set" data="caller_id_number=" />
+			<action application="set" data="pin_number=" />
+			<action application="set" data="extension_list=1001-1003,1005" />
+			<action application="lua" data="page.lua" />
+		</condition>
+	</extension>
+</context>

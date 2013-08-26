@@ -1,0 +1,10 @@
+<context name="{v_context}">
+	<extension name="do-not-disturb" app_uuid="df32d982-e39e-4ae5-a46d-aed1893873f2" enabled="true">
+		<condition field="destination_number" expression="^\*363$" >
+			<action application="set" data="dial_string=loopback/*99{v_unique_id)/{v_context}/XML" />
+			<action application="set" data="direction=both" />
+			<action application="set" data="extension=true" />
+			<action application="lua" data="dial_string.lua" />
+		</condition>
+	</extension>
+</context>

@@ -1,0 +1,8 @@
+<context name="{v_context}">
+	<extension name="milliwatt" app_uuid="296acca3-d30f-42a0-ba90-5af2208ad7f8">
+		<condition field="destination_number" expression="^\*9197$">
+			<action application="answer"/>
+			<action application="playback" data="{loops=-1}tone_stream://%(251,0,1004)"/>
+		</condition>
+	</extension>
+</context>

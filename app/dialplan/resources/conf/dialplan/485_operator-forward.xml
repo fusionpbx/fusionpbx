@@ -1,0 +1,10 @@
+<context name="{v_context}">
+	<extension name="operator-forward" app_uuid="a90d3639-3b82-4905-a65d-85f58b6c4a19" enabled="true">
+		<condition field="destination_number" expression="^\*000$" >
+			<action application="set" data="dial_string=loopback/operator/{v_context}/XML" />
+			<action application="set" data="direction=both" />
+			<action application="set" data="extension=true" />
+			<action application="lua" data="dial_string.lua" />
+		</condition>
+	</extension>
+</context>

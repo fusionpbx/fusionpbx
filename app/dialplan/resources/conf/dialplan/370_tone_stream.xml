@@ -1,0 +1,8 @@
+<context name="{v_context}">
+	<extension name="tone_stream" app_uuid="98ccdb0b-c074-4f74-b28a-9528372faa7d">
+		<condition field="destination_number" expression="^\*9198$">
+			<action application="answer"/>
+			<action application="playback" data="{loops=10}tone_stream://path=${base_dir}/conf/tetris.ttml"/>
+		</condition>
+	</extension>
+</context>

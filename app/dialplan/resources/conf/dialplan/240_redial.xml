@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="redial" app_uuid="459da8c1-073a-458e-ae7e-8194342f9583">
+		<condition field="destination_number" expression="^(redial|\*870)$">
+			<action application="transfer" data="${hash(select/${domain_name}-last_dial/${caller_id_number})}"/>
+		</condition>
+	</extension>
+</context>

@@ -1,0 +1,15 @@
+<context name="{v_context}">
+	<extension name="hold_music" app_uuid="b824b88a-e6da-486e-9f17-7b93cbaa318e">
+		<condition field="destination_number" expression="^\*9664$"/>
+		<condition field="${sip_has_crypto}" expression="^(AES_CM_128_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_80)$">
+			<action application="answer"/>
+			<action application="execute_extension" data="is_secure XML features"/>
+			<action application="playback" data="$${hold_music}"/>
+			<anti-action application="set" data="zrtp_secure_media=true"/>
+			<anti-action application="answer"/>
+			<anti-action application="playback" data="silence_stream://2000"/>
+			<anti-action application="execute_extension" data="is_zrtp_secure XML features"/>
+			<anti-action application="playback" data="$${hold_music}"/>
+		</condition>
+	</extension>
+</context>

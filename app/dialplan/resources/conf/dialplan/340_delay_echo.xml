@@ -1,0 +1,8 @@
+<context name="{v_context}">
+	<extension name="delay_echo" app_uuid="fe638409-b347-46d7-9aca-489561df8b35">
+		<condition field="destination_number" expression="^\*9195$">
+			<action application="answer"/>
+			<action application="delay_echo" data="5000"/>
+		</condition>
+	</extension>
+</context>

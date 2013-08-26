@@ -1,0 +1,8 @@
+<context name="{v_context}">
+	<extension name="echo" app_uuid="1f894dfb-0567-4e20-9026-d538bbaa5261">
+		<condition field="destination_number" expression="^\*9196$">
+			<action application="answer"/>
+			<action application="echo"/>
+		</condition>
+	</extension>
+</context>

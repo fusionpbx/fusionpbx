@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="call_return" app_uuid="fa516204-920f-4802-8bb1-04c6a010bfe1">
+		<condition field="destination_number" expression="^\*69$|^lcr$">
+			<action application="transfer" data="${hash(select/${domain_name}-call_return/${caller_id_number})}"/>
+		</condition>
+	</extension>
+</context>
