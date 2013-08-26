@@ -53,10 +53,8 @@ include "root.php";
 						$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
 					}
 					else {
-						if (!file_exists($dst.'/'.$file)) {
-							//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
-							copy($src.'/'.$file, $dst.'/'.$file);
-						}
+						//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
+						copy($src.'/'.$file, $dst.'/'.$file);
 					}
 				}
 			}
