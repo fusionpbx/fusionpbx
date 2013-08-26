@@ -38,15 +38,18 @@
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'inbound_route_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 
 		$apps[$x]['permissions'][1]['name'] = 'inbound_route_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 
 		$apps[$x]['permissions'][2]['name'] = 'inbound_route_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][3]['name'] = 'inbound_route_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 
 		$apps[$x]['permissions'][4]['name'] = 'inbound_route_copy';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
