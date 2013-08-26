@@ -1,0 +1,10 @@
+<context name="{v_context}">
+	<extension name="call_privacy" app_uuid="eb478e66-f637-4ae7-b1eb-9a7b87a1bd9e">
+		<condition field="destination_number" expression="^\*67(\d+)$">
+			<action application="privacy" data="full"/>
+			<action application="set" data="sip_h_Privacy=id"/>
+			<action application="set" data="privacy=yes"/>
+			<action application="transfer" data="$1 XML ${context}"/>
+		</condition>
+	</extension>
+</context>

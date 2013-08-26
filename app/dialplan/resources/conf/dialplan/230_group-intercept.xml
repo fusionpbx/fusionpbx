@@ -1,0 +1,9 @@
+<context name="{v_context}">
+	<extension name="group-intercept" app_uuid="15332e83-12f5-44d3-8472-633736eb4b9b">
+		<condition field="destination_number" expression="^\*8$">
+			<action application="answer"/>
+			<action application="intercept" data="${hash(select/${domain_name}-last_dial/${call_group})}"/>
+			<action application="sleep" data="2000"/>
+		</condition>
+	</extension>
+</context>

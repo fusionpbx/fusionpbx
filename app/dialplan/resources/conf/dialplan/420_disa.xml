@@ -1,0 +1,10 @@
+<context name="{v_context}">
+	<extension name="disa" app_uuid="3ade2d9a-f55d-4240-bb60-b4a3ab36951c" enabled="false">
+		<condition field="destination_number" expression="^\*(3472)$">
+			<action application="answer"/>
+			<action application="set" data="pin_number={v_pin_number}"/>
+			<action application="set" data="dialplan_context=${context}"/>
+			<action application="lua" data="disa.lua"/>
+		</condition>
+	</extension>
+</context>

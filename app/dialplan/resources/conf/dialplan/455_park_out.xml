@@ -1,0 +1,9 @@
+<context name="{v_context}">
+	<extension name="park_out" app_uuid="cf8234b6-a039-4ec2-87bd-3db0799a3f75" enabled="false">
+		<condition field="destination_number" expression="(^\*5901$|^\*5902$|^\*5903$)" >
+			<action application="set" data="park_direction=out" />
+			<action application="set" data="park_extension=$1" />
+			<action application="lua" data="park.lua" />
+		</condition>
+	</extension>
+</context>
