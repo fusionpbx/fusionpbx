@@ -65,20 +65,17 @@ include "root.php";
 									if ($exception) {
 										//file does not exist, save a copy in the destination directory
 										if (!file_exists($dst.'/'.$file)) {
-											echo "68: ". $dst.'/'.$file."<br />\n";
 											copy($src.'/'.$file, $dst.'/'.$file);
 										}
 									}
 									else {
 										//write over the file
-										echo "74: ". $dst.'/'.$file."<br />\n";
 										copy($src.'/'.$file, $dst.'/'.$file);
 									}
 							}
 							else {
 								//file does not exist, save a copy in the destination directory
 								if (!file_exists($dst.'/'.$file)) {
-									echo "81: ". $dst.'/'.$file."<br />\n";
 									copy($src.'/'.$file, $dst.'/'.$file);
 								}
 							}
@@ -142,7 +139,6 @@ include "root.php";
 			if (is_readable($this->switch_scripts_dir)) {
 				$this->recursive_copy($src_dir, $dst_dir);
 				unset($src_dir, $dst_dir);
-exit;
 			}
 		}
 
