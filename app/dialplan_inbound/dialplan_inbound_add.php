@@ -678,7 +678,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if (permission_exists("inbound_route_edit") && $action == "advanced") {
+	if (permission_exists("inbound_route_edit") && $action == "advanced" && if_group("superadmin")) {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-condition_1'].":\n";
@@ -974,9 +974,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "	<td colspan='5' align='right'>\n";
 	if ($action == "update") {
-		echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		if ($action == "update" && if_group("superadmin")) {
+			echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		}
+		echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	}
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";
 
