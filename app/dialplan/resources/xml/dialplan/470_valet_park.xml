@@ -1,9 +1,0 @@
-<context name="{v_context}">
-	<extension name="valet_park" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="true">
-		<condition field="destination_number" expression="^(park\+)?(\*590[0-9])$" >
-			<action application="set" data="valet_parking_timeout=300" />
-			<action application="set" data="valet_parking_orbit_exten=0" />
-			<action application="valet_park" data="park@${domain_name} $2" />
-		</condition>
-	</extension>
-</context>
