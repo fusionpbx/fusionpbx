@@ -1,8 +1,0 @@
-<context name="{v_context}">
-	<extension name="custom-variables" continue="true" app_uuid="7e0bbdd7-be74-4019-bc5d-2bb9fd0fdb89">
-		<condition field="context" expression="^.*$">
-			<action application="export" data="origination_callee_id_name=${destination_number}"/>
-			<action application="export" data="transfer_ringback=$${uk-ring}"/>
-		</condition>
-	</extension>
-</context>
