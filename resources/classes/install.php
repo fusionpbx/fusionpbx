@@ -60,24 +60,25 @@ include "root.php";
 								//set the exception default
 									$exception = false;
 								//set the exceptions
-									if ($file == "database_handle.lua") {
-										$exception = true;
-									}
+									if ($file == "database_handle.lua") { $exception = true; }
 								//check for exceptions
 									if ($exception) {
-										//write over files
-										copy($src.'/'.$file, $dst.'/'.$file);
-									}
-									else {
-										//copy files that don't exist into the destination directory
+										//file does not exist, save a copy in the destination directory
 										if (!file_exists($dst.'/'.$file)) {
+											echo "68: ". $dst.'/'.$file."<br />\n";
 											copy($src.'/'.$file, $dst.'/'.$file);
 										}
 									}
+									else {
+										//write over the file
+										echo "74: ". $dst.'/'.$file."<br />\n";
+										copy($src.'/'.$file, $dst.'/'.$file);
+									}
 							}
 							else {
-								//copy files that don't exist into the destination directory
+								//file does not exist, save a copy in the destination directory
 								if (!file_exists($dst.'/'.$file)) {
+									echo "81: ". $dst.'/'.$file."<br />\n";
 									copy($src.'/'.$file, $dst.'/'.$file);
 								}
 							}
@@ -141,6 +142,7 @@ include "root.php";
 			if (is_readable($this->switch_scripts_dir)) {
 				$this->recursive_copy($src_dir, $dst_dir);
 				unset($src_dir, $dst_dir);
+exit;
 			}
 		}
 
