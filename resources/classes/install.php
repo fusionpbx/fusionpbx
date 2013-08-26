@@ -53,8 +53,34 @@ include "root.php";
 						$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
 					}
 					else {
-						//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
-						copy($src.'/'.$file, $dst.'/'.$file);
+						//show debug info
+							//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
+						//check the file type by ext
+							if (substr($file, -3) == "lua") {
+								//set the exception default
+									$exception = false;
+								//set the exceptions
+									if ($file == "database_handle.lua") {
+										$exception = true;
+									}
+								//check for exceptions
+									if ($exception) {
+										//write over files
+										copy($src.'/'.$file, $dst.'/'.$file);
+									}
+									else {
+										//copy files that don't exist into the destination directory
+										if (!file_exists($dst.'/'.$file)) {
+											copy($src.'/'.$file, $dst.'/'.$file);
+										}
+									}
+							}
+							else {
+								//copy files that don't exist into the destination directory
+								if (!file_exists($dst.'/'.$file)) {
+									copy($src.'/'.$file, $dst.'/'.$file);
+								}
+							}
 					}
 				}
 			}
