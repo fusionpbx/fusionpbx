@@ -1,9 +1,0 @@
-<context name="{v_context}">
-	<extension name="playback" app_uuid="3d1bcf68-6baa-4b5d-8e70-151c16f245b6">
-		<condition field="destination_number" expression="^(2021)$">
-			<action application="answer"/>
-			<action application="set" data="playback_terminators=#"/>
-			<action application="playback" data="/tmp/recorded.wav"/>
-		</condition>
-	</extension>
-</context>
