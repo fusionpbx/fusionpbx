@@ -43,7 +43,7 @@
 	$text['description-xml-rpc-pw']['en-us'] = 'Enter the XML RPC Auth Password.';
 
 	$text['label-shout-decoder']['en-us'] = 'Mod Shout Decoder:';
-	$text['description-shout-decoder']['en-us'] = 'Ender the Decoder. default: i386';
+	$text['description-shout-decoder']['en-us'] = 'Ender the Decoder.';
 	$text['label-shout-volume']['en-us'] = 'Mod Shout Volume:';
 	$text['description-shout-volume']['en-us'] = 'Enter Mod Shout Volume.';
 
