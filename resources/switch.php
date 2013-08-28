@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1342,10 +1342,10 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		unset ($prep_statement);
 
 	//list voicemail
-		$sql = "select * from v_extensions ";
+		$sql = "select * from v_voicemails ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and enabled = 'true' ";
-		$sql .= "order by extension asc ";
+		$sql .= "and voicemail_enabled = 'true' ";
+		$sql .= "order by voicemail_id asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -1353,24 +1353,23 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			echo "<optgroup label='Voicemail'>\n";
 		}
 		foreach ($result as &$row) {
-			$extension = $row["extension"];
-			$context = $row["user_context"];
-			$description = $row["description"];
-			if ("voicemail default \${domain_name} ".$extension == $select_value || "transfer:*99".$extension." XML ".$_SESSION["context"] == $select_value || "voicemail:default \${domain_name} ".$extension == $select_value) {
+			$voicemail_id = $row["voicemail_id"];
+			$description = $row["voicemail_description"];
+			if ("voicemail default \${domain_name} ".$voicemail_id == $select_value || "transfer:*99".$voicemail_id." XML ".$_SESSION["context"] == $select_value || "voicemail:default \${domain_name} ".$voicemail_id == $select_value) {
 				if ($select_type == "ivr") {
-					echo "		<option value='menu-exec-app:transfer *99".$extension." XML ".$_SESSION["context"]."' selected='selected'>".$extension." ".$description."</option>\n";
+					echo "		<option value='menu-exec-app:transfer *99".$voicemail_id." XML ".$_SESSION["context"]."' selected='selected'>".$voicemail_id." ".$description."</option>\n";
 				}
 				if ($select_type == "dialplan") {
-					echo "		<option value='transfer:*99".$extension." XML ".$_SESSION["context"]."' selected='selected'>".$extension." ".$description."</option>\n";
+					echo "		<option value='transfer:*99".$voicemail_id." XML ".$_SESSION["context"]."' selected='selected'>".$voicemail_id." ".$description."</option>\n";
 				}
 				$selection_found = true;
 			}
 			else {
 				if ($select_type == "ivr") {
-					echo "		<option value='menu-exec-app:transfer *99".$extension." XML ".$_SESSION["context"]."'>".$extension." ".$description."</option>\n";
+					echo "		<option value='menu-exec-app:transfer *99".$voicemail_id." XML ".$_SESSION["context"]."'>".$voicemail_id." ".$description."</option>\n";
 				}
 				if ($select_type == "dialplan") {
-					echo "		<option value='transfer:*99".$extension." XML ".$_SESSION["context"]."'>".$extension." ".$description."</option>\n";
+					echo "		<option value='transfer:*99".$voicemail_id." XML ".$_SESSION["context"]."'>".$voicemail_id." ".$description."</option>\n";
 				}
 			}
 		}
