@@ -414,9 +414,11 @@ require_once "resources/require.php";
 	//cleanup any remaining variables
 		for ($i = 1; $i <= 100; $i++) {
 			$file_contents = str_replace("{v_line".$i."_server_address}", "", $file_contents);
+			$file_contents = str_replace("{v_line".$i."_outbound_proxy}", "", $file_contents);
 			$file_contents = str_replace("{v_line".$i."_displayname}", "", $file_contents);
 			$file_contents = str_replace("{v_line".$i."_shortname}", "", $file_contents);
 			$file_contents = str_replace("{v_line".$i."_user_id}", "", $file_contents);
+			$file_contents = str_replace("{v_line".$i."_auth_id}", "", $file_contents);
 			$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
 		}
 

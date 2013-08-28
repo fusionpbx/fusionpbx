@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012 All Rights Reserved.
+	Copyright (C) 2008-2013 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -194,9 +194,9 @@ else {
 							$sql .= "AND d.device_uuid = '".$device_uuid."' ";
 							$sql .= "AND d.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 							$sql .= "and e.enabled = 'true' ";
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$sub_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+							$sub_prep_statement = $db->prepare(check_sql($sql));
+							$sub_prep_statement->execute();
+							$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
 							foreach($sub_result as $field) {
 								$line_number = $field['device_line'];
 								$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
@@ -205,33 +205,34 @@ else {
 								$file_contents = str_replace("{v_line".$line_number."_user_id}", $field["extension"], $file_contents);
 								$file_contents = str_replace("{v_line".$line_number."_user_password}", $field["password"], $file_contents);
 							}
-							unset ($prep_statement_2);
+							unset ($sub_prep_statement);
 
 						//get the provisioning information from device lines table
 							$sql = "SELECT * FROM v_device_lines ";
 							$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 							$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
-							$prep_statement = $db->prepare(check_sql($sql));
-							$prep_statement->execute();
-							$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-							$result_count = count($result);
-							foreach($result as $row) {
-								$line_number = $row['line_number'];
-								$file_contents = str_replace("{v_line".$line_number."_server_address}", $row["server_address"], $file_contents);
-								$file_contents = str_replace("{v_line".$line_number."_outbound_proxy}", $row["outbound_proxy"], $file_contents);
-								$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["display_name"], $file_contents);
-								$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["user_id"], $file_contents);
-								$file_contents = str_replace("{v_line".$line_number."_auth_id}", $row["auth_id"], $file_contents);
-								$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
+							$sub_prep_statement = $db->prepare(check_sql($sql));
+							$sub_prep_statement->execute();
+							$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
+							foreach($sub_result as $field) {
+								$line_number = $field['line_number'];
+								$file_contents = str_replace("{v_line".$line_number."_server_address}", $field["server_address"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_outbound_proxy}", $field["outbound_proxy"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_displayname}", $field["display_name"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_user_id}", $field["user_id"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_auth_id}", $field["auth_id"], $file_contents);
+								$file_contents = str_replace("{v_line".$line_number."_user_password}", $field["password"], $file_contents);
 							}
-							unset ($prep_statement);
+							unset ($sub_prep_statement);
 
 						//cleanup any remaining variables
 							for ($i = 1; $i <= 100; $i++) {
 								$file_contents = str_replace("{v_line".$i."_server_address}", "", $file_contents);
+								$file_contents = str_replace("{v_line".$i."_outbound_proxy}", "", $file_contents);
 								$file_contents = str_replace("{v_line".$i."_displayname}", "", $file_contents);
 								$file_contents = str_replace("{v_line".$i."_shortname}", "", $file_contents);
 								$file_contents = str_replace("{v_line".$i."_user_id}", "", $file_contents);
+								$file_contents = str_replace("{v_line".$i."_auth_id}", "", $file_contents);
 								$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
 							}
 
@@ -249,7 +250,7 @@ else {
 							if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
 								$dir_array = explode(";", $_SESSION['switch']['provision']['dir']);
 								foreach($dir_array as $directory) {
-									//echo $directory.'/'.$file_name."\n";
+									//echo $directory.'/'.$file_name."<br />\n";
 									$fh = fopen($directory.'/'.$file_name,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
 									fwrite($fh, $file_contents);
 									fclose($fh);
