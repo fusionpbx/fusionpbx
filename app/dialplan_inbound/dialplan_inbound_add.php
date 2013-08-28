@@ -975,12 +975,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "	<td colspan='5' align='right'>\n";
-	if ($action == "update") {
-		if ($action == "update" && if_group("superadmin")) {
-			echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
-		}
-		echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	if ($action == "update" && permission_exists("inbound_route_edit")) {
+		echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";
 
@@ -992,7 +990,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>";
 	echo "</table>";
 	echo "</div>";
-
 	echo "<br><br>";
 
 //include the footer
