@@ -34,7 +34,6 @@
 
 --get the variables
 	domain_name = session:getVariable("domain_name");
-	domain_uuid = session:getVariable("domain_uuid");
 	ring_group_uuid = session:getVariable("ring_group_uuid");
 	recordings_dir = session:getVariable("recordings_dir");
 	sounds_dir = session:getVariable("sounds_dir");
@@ -80,9 +79,10 @@
 	ring_group_forward_destination = "";
 	sql = "SELECT * FROM v_ring_groups ";
 	sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-	status = dbh:query(sql, function(rows)
-		ring_group_forward_enabled = rows["ring_group_forward_enabled"];
-		ring_group_forward_destination = rows["ring_group_forward_destination"];
+	status = dbh:query(sql, function(row)
+		domain_uuid = row["domain_uuid"];
+		ring_group_forward_enabled = row["ring_group_forward_enabled"];
+		ring_group_forward_destination = row["ring_group_forward_destination"];
 	end);
 
 --process the ring group
@@ -358,7 +358,7 @@
 							if (app_data) then
 								session:execute("bridge", app_data);
 							end
-							if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT") then
+							if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" or session:getVariable("originate_disposition") == "NO_ANSWER") then
 								session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							end
 					end
