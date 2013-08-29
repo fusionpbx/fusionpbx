@@ -51,32 +51,36 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		//$domain_uuid = check_str($_POST["domain_uuid"]);
-		$queue_name = check_str($_POST["queue_name"]);
-		$queue_extension = check_str($_POST["queue_extension"]);
-		$queue_strategy = check_str($_POST["queue_strategy"]);
-		$queue_moh_sound = check_str($_POST["queue_moh_sound"]);
-		$queue_record_template = check_str($_POST["queue_record_template"]);
-		$queue_time_base_score = check_str($_POST["queue_time_base_score"]);
-		$queue_max_wait_time = check_str($_POST["queue_max_wait_time"]);
-		$queue_max_wait_time_with_no_agent = check_str($_POST["queue_max_wait_time_with_no_agent"]);
-		$queue_max_wait_time_with_no_agent_time_reached = check_str($_POST["queue_max_wait_time_with_no_agent_time_reached"]);
-		$queue_tier_rules_apply = check_str($_POST["queue_tier_rules_apply"]);
-		$queue_tier_rule_wait_second = check_str($_POST["queue_tier_rule_wait_second"]);
-		$queue_tier_rule_wait_multiply_level = check_str($_POST["queue_tier_rule_wait_multiply_level"]);
-		$queue_tier_rule_no_agent_no_wait = check_str($_POST["queue_tier_rule_no_agent_no_wait"]);
-		$queue_timeout_action = check_str($_POST["queue_timeout_action"]);
-		$queue_discard_abandoned_after = check_str($_POST["queue_discard_abandoned_after"]);
-		$queue_abandoned_resume_allowed = check_str($_POST["queue_abandoned_resume_allowed"]);
-		$queue_cid_prefix = check_str($_POST["queue_cid_prefix"]);
-		$queue_description = check_str($_POST["queue_description"]);
+		//get the post variables a run a security chack on them
+			//$domain_uuid = check_str($_POST["domain_uuid"]);
+			$queue_name = check_str($_POST["queue_name"]);
+			$queue_extension = check_str($_POST["queue_extension"]);
+			$queue_strategy = check_str($_POST["queue_strategy"]);
+			$queue_moh_sound = check_str($_POST["queue_moh_sound"]);
+			$queue_record_template = check_str($_POST["queue_record_template"]);
+			$queue_time_base_score = check_str($_POST["queue_time_base_score"]);
+			$queue_max_wait_time = check_str($_POST["queue_max_wait_time"]);
+			$queue_max_wait_time_with_no_agent = check_str($_POST["queue_max_wait_time_with_no_agent"]);
+			$queue_max_wait_time_with_no_agent_time_reached = check_str($_POST["queue_max_wait_time_with_no_agent_time_reached"]);
+			$queue_tier_rules_apply = check_str($_POST["queue_tier_rules_apply"]);
+			$queue_tier_rule_wait_second = check_str($_POST["queue_tier_rule_wait_second"]);
+			$queue_tier_rule_wait_multiply_level = check_str($_POST["queue_tier_rule_wait_multiply_level"]);
+			$queue_tier_rule_no_agent_no_wait = check_str($_POST["queue_tier_rule_no_agent_no_wait"]);
+			$queue_timeout_action = check_str($_POST["queue_timeout_action"]);
+			$queue_discard_abandoned_after = check_str($_POST["queue_discard_abandoned_after"]);
+			$queue_abandoned_resume_allowed = check_str($_POST["queue_abandoned_resume_allowed"]);
+			$queue_cid_prefix = check_str($_POST["queue_cid_prefix"]);
+			$queue_description = check_str($_POST["queue_description"]);
+
+		//replace the space in the queue name with a dash
+			$queue_name = str_replace(" ", "-", $queue_name);
 
 		//remove invalid characters
-		$queue_cid_prefix = str_replace(":", "-", $queue_cid_prefix);
-		$queue_cid_prefix = str_replace("\"", "", $queue_cid_prefix);
-		$queue_cid_prefix = str_replace("@", "", $queue_cid_prefix);
-		$queue_cid_prefix = str_replace("\\", "", $queue_cid_prefix);
-		$queue_cid_prefix = str_replace("/", "", $queue_cid_prefix);
+			$queue_cid_prefix = str_replace(":", "-", $queue_cid_prefix);
+			$queue_cid_prefix = str_replace("\"", "", $queue_cid_prefix);
+			$queue_cid_prefix = str_replace("@", "", $queue_cid_prefix);
+			$queue_cid_prefix = str_replace("\\", "", $queue_cid_prefix);
+			$queue_cid_prefix = str_replace("/", "", $queue_cid_prefix);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -269,10 +273,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
 			$queue_cid_prefix = $row["queue_cid_prefix"];
 			$queue_description = $row["queue_description"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
+
+//replace the dash in the queue name with a space
+	$queue_name = str_replace("-", " ", $queue_name);
 
 //set default values
 	if (strlen($queue_strategy) == 0) { $queue_strategy = "longest-idle-agent"; }
