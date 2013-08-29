@@ -212,6 +212,7 @@ require_once "resources/require.php";
 					"Cisco/SPA525G2"=>"cisco/spa525g2",
                                         "snom300-SIP"=>"snom/300",
                                         "snom320-SIP"=>"snom/320",
+                                        "snom360-SIP"=>"snom/360",
                                         "snom370-SIP"=>"snom/370",
 					"snom820-SIP"=>"snom/820",
                                         "yealink SIP-T20"=>"yealink/t20",
