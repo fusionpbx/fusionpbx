@@ -441,7 +441,7 @@ require_once "resources/require.php";
 		header ("content-type: text/xml");
 	}
 	header ("Content-Length: ".strlen($file_contents));
-	echo utf8_encode($file_contents);
+	echo $file_contents;
 
 //define the function which checks to see if the mac address exists in devices
 	function mac_exists_in_devices($db, $mac) {
