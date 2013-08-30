@@ -61,7 +61,7 @@ else {
 
 		//use the mac address to find the vendor
 			if (strlen($device_vendor) == 0) {
-				switch (substr($device_mac_address, 0, 6)) {
+				switch (substr($mac, 0, 6)) {
 				case "00085d":
 					$device_vendor = "aastra";
 					break;
@@ -74,13 +74,25 @@ else {
 				case "00907a":
 					$device_vendor = "polycom";
 					break;
+				case "0080f0":
+					$device_vendor = "panasonic";
+					break;
 				case "001873":
+					$device_vendor = "cisco";
+					break;
+				case "a44c11":
 					$device_vendor = "cisco";
 					break;
 				case "0021A0":
 					$device_vendor = "cisco";
 					break;
+				case "30e4db":
+					$device_vendor = "cisco";
+					break;
 				case "002155":
+					$device_vendor = "cisco";
+					break;
+				case "68efbd":
 					$device_vendor = "cisco";
 					break;
 				case "00045a":
@@ -94,6 +106,13 @@ else {
 					break;
 				case "000413":
 					$device_vendor = "snom";
+					break;
+				case "000b82":
+					$device_vendor = "grandstream";
+					break;
+				case "00177d":
+					$device_vendor = "konftel";
+					break;
 				default:
 					$device_vendor = "";
 				}

@@ -108,13 +108,22 @@ require_once "resources/require.php";
 	case "00907a":
 		$device_vendor = "polycom";
 		break;
+	case "0080f0":
+		$device_vendor = "panasonic";
+		break;
 	case "001873":
 		$device_vendor = "cisco";
 		break;
 	case "a44c11":
 		$device_vendor = "cisco";
 		break;
+	case "0021A0":
+		$device_vendor = "cisco";
+		break;
 	case "30e4db":
+		$device_vendor = "cisco";
+		break;
+	case "002155":
 		$device_vendor = "cisco";
 		break;
 	case "68efbd":
