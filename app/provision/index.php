@@ -208,6 +208,7 @@ require_once "resources/require.php";
 			$template_list=array(  
 					"Linksys/SPA-2102"=>"linksys/spa2102",
 					"Linksys/SPA-3102"=>"linksys/spa3102",
+					"Linksys/SPA-9212"=>"linksys/spa921",
 					"Cisco/SPA301"=>"cisco/spa301",
 					"Cisco/SPA301D"=>"cisco/spa302d",
 					"Cisco/SPA303"=>"cisco/spa303",
@@ -219,20 +220,21 @@ require_once "resources/require.php";
 					"Cisco/SPA512G"=>"cisco/spa512g",
 					"Cisco/SPA514G"=>"cisco/spa514g",
 					"Cisco/SPA525G2"=>"cisco/spa525g2",
-                                        "snom300-SIP"=>"snom/300",
-                                        "snom320-SIP"=>"snom/320",
-                                        "snom360-SIP"=>"snom/360",
-                                        "snom370-SIP"=>"snom/370",
+					"snom300-SIP"=>"snom/300",
+					"snom320-SIP"=>"snom/320",
+					"snom360-SIP"=>"snom/360",
+					"snom370-SIP"=>"snom/370",
 					"snom820-SIP"=>"snom/820",
-                                        "yealink SIP-T20"=>"yealink/t20",
-                                        "yealink SIP-T22"=>"yealink/t22",
-                                        "yealink SIP-T26"=>"yealink/t26",
+					"snom-m3-SIP"=>"snom/m3",
+					"yealink SIP-T20"=>"yealink/t20",
+					"yealink SIP-T22"=>"yealink/t22",
+					"yealink SIP-T26"=>"yealink/t26",
 					"Yealink SIP-T32"=>"yealink/t32",
-                                        "HW GXP1450"=>"grandstream/gxp1450",
-                                        "HW GXP2124"=>"grandstream/gxp2124",
-                                        "HW GXV3140"=>"grandstream/gxv3140",
-                                        "HW GXV3175"=>"grandstream/gxv3175",
-                                        "Wget/1.11.3"=>"konftel/kt300ip"
+					"HW GXP1450"=>"grandstream/gxp1450",
+					"HW GXP2124"=>"grandstream/gxp2124",
+					"HW GXV3140"=>"grandstream/gxv3140",
+					"HW GXV3175"=>"grandstream/gxv3175",
+					"Wget/1.11.3"=>"konftel/kt300ip"
 					);
 
 			foreach ($template_list as $key=>$val){
