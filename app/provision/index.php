@@ -444,14 +444,19 @@ require_once "resources/require.php";
 	//need to make sure content-type is correct
 	$cfg_ext = ".cfg";
 	if ($device_vendor === "aastra" && strrpos($file, $cfg_ext, 0) === strlen($file) - strlen($cfg_ext)) {
-		header ("content-type: text/plain");
+		header("Content-Type: text/plain");
+		header("Content-Length: ".strlen($file_contents));
 	} else if ($device_vendor === "yealink") {
-		header ("content-length: ".strval(strlen($file_contents)));
-		header ("content-type: text/plain");
+		header("Content-Type: text/plain");
+		header("Content-Length: ".strval(strlen($file_contents)));
+	} else if ($device_vendor === "snom" && $device_template === "snom/m3") {
+		$file_contents = utf8_decode($file_contents);
+		header("Content-Type: text/plain; charset=iso-8859-1");
+		header("Content-Length: ".strlen($file_contents));
 	} else {
-		header ("content-type: text/xml");
+		header("Content-Type: text/xml; charset=utf-8");
+	  header("Content-Length: ".strlen($file_contents));
 	}
-	header ("Content-Length: ".strlen($file_contents));
 	echo $file_contents;
 
 //define the function which checks to see if the mac address exists in devices
