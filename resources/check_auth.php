@@ -24,7 +24,14 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 require_once "resources/require.php";
-session_start();
+
+//for compatability require this library if less than version 5.5
+	if (version_compare(phpversion(), '5.5', '<')) {
+		require_once "resources/functions/password.php";
+	}
+
+//start the session
+	session_start();
 
 //if the username session is not set the check username and password
 	if (strlen($_SESSION["username"]) == 0) {
