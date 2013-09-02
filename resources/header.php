@@ -77,14 +77,14 @@ require_once "resources/require.php";
 	$sql = "select * from v_menu_items ";
 	$sql .= "where menu_uuid = '".$_SESSION['domain']['menu']['uuid']."' ";
 	$sql .= "and menu_item_link = '".$_SERVER["SCRIPT_NAME"]."' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$_SESSION["menu_item_parent_uuid"] = $row["menu_item_parent_uuid"];
+	$menu_prep_statement = $db->prepare(check_sql($sql));
+	$menu_prep_statement->execute();
+	$menu_result = $menu_prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($menu_result as &$menu_row) {
+		$_SESSION["menu_item_parent_uuid"] = $menu_row["menu_item_parent_uuid"];
 		break;
 	}
-	unset($result);
+	unset($menu_prep_statement, $menu_result, $menu_row);
 
 //get the content
 	$sql = "select * from v_rss ";
@@ -99,31 +99,29 @@ require_once "resources/require.php";
 	$sql .= "and (length(rss_del_date) = 0 ";
 	$sql .= "or rss_del_date is null) ";
 	$sql .= "order by rss_order asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-
+	$content_prep_statement = $db->prepare(check_sql($sql));
+	$content_prep_statement->execute();
+	$result = $content_prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$page["title"] = '';
-	foreach($result as $row) {
-		$template_rss_sub_category = $row['rss_sub_category'];
-		if (strlen($row['rss_group']) == 0) {
+	foreach($content_result as $content_row) {
+		$template_rss_sub_category = $content_row['rss_sub_category'];
+		if (strlen($content_row['rss_group']) == 0) {
 			//content is public
-			$content_from_db = &$row['rss_description'];
-			if (strlen($row['rss_title']) > 0) {
-				$page["title"] = $row['rss_title'];
+			$content_from_db = &$content_row['rss_description'];
+			if (strlen($content_row['rss_title']) > 0) {
+				$page["title"] = $content_row['rss_title'];
 			}
 		}
 		else {
-			if (if_group($row[rss_group])) { //viewable only to designated group
-				$content_from_db = &$row[rss_description];
-				if (strlen($row['rss_title']) > 0) {
-					$page["title"] = $row['rss_title'];
+			if (if_group($content_row[rss_group])) { //viewable only to designated group
+				$content_from_db = &$content_row[rss_description];
+				if (strlen($content_row['rss_title']) > 0) {
+					$page["title"] = $content_row['rss_title'];
 				}
 			}
 		}
 	} //end foreach
-	unset($sql, $result, $row_count);
+	unset($sql, $content_result, $content_row);
 
 //start the output buffer
 	ob_start();
