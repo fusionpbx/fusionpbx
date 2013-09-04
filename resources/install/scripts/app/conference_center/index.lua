@@ -622,7 +622,6 @@
 				dbh:release();
 
 			--send the call to the conference
-				profile = "default";
 				cmd = meeting_uuid.."-"..domain_name.."@"..profile.."+flags{".. flags .."}";
 				session:execute("conference", cmd);
 		end
