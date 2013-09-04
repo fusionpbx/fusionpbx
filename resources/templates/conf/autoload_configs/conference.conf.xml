@@ -137,7 +137,7 @@
 			<!-- <param name="endconf-grace-time" value="120" /> -->
 		</profile>
 
-		<profile name="default-wait-mod">
+		<profile name="wait-mod">
 			<param name="cdr-log-dir" value="auto"/>
 			<param name="conference-flags" value="wait-mod" />
 			<param name="domain" value="$${domain}"/>
