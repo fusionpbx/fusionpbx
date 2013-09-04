@@ -121,14 +121,14 @@ else {
 		//set the mac address in the correct format
 			switch ($device_vendor) {
 			case "aastra":
-				$mac = strtoupper($mac);
+				$device_mac_address = strtoupper($device_mac_address);
 				break;
 			case "snom":
-				$mac = strtoupper($mac);
-				$mac = str_replace("-", "", $mac);
+				$device_mac_address = strtoupper($device_mac_address);
+				$device_mac_address = str_replace("-", "", $device_mac_address);
 			default:
-				$mac = strtolower($mac);
-				$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
+				$device_mac_address = strtolower($device_mac_address);
+				$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			}
 
 		//loop through the provision template directory
