@@ -519,7 +519,7 @@
 						--continue
 					else
 						if (member_type == "participant") then
-							profile = "wait_mod";
+							profile = "wait-mod";
 						end
 					end
 				end
