@@ -359,6 +359,9 @@
 								session:execute("bridge", app_data);
 							end
 							if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" or session:getVariable("originate_disposition") == "NO_ANSWER") then
+								if (ring_group_timeout_app == "voicemail") then
+									session:answer();
+								end
 								session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							end
 					end
