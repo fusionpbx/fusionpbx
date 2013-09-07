@@ -39,11 +39,11 @@ This method causes the script to get its manadatory arguments directly from the 
 ]]
 
 -- Command line parameters
-	local	params = {	cmd="",
+	local	params = {	cmd = "",
 						cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
 						cid_name = session:getVariable("caller_id_name"),
 						domain = session:getVariable("domain"),
-						userid= "", -- session:getVariable("id")
+						userid = "", -- session:getVariable("id")
 						loglevel = "W" -- Warning, Debug, Info
 						}
 
@@ -57,11 +57,6 @@ This method causes the script to get its manadatory arguments directly from the 
 			freeswitch.consoleLog(log, "[Call Block]: " .. data .. "\n")
 		end
 	end
-
---include config.lua
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
-	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(config());
 
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
