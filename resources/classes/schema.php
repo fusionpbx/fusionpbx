@@ -72,10 +72,10 @@ include "root.php";
 										else {
 											$sql .= $field['type'];
 										}
-										if ($field['key']['type'] == "primary") {
+										if ($field['key'] == "primary") {
 											$sql .= " PRIMARY KEY";
 										}
-										if ($field['key']['type'] == "foreign") {
+										if ($field['key'] == "foreign") {
 											if ($this->db_type == "pgsql") {
 												//$sql .= " references ".$field['key']['reference']['table']."(".$field['key']['reference']['field'].")";
 											}

@@ -188,6 +188,9 @@ function db_create_table ($apps, $db_type, $table) {
 						else {
 							$sql .= $field['type'];
 						}
+						if ($field['key'] == "primary") {
+							$sql .= " PRIMARY KEY";
+						}
 						$field_count++;
 					}
 				}
