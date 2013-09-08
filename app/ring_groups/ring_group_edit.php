@@ -533,7 +533,7 @@ else {
 		$sql = "SELECT * FROM v_ring_group_destinations ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and ring_group_uuid = '".$ring_group_uuid."' ";
-		$sql .= "order by destination_number asc ";
+		$sql .= "order by destination_delay, destination_number asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
