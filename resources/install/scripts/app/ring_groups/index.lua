@@ -118,7 +118,7 @@
 			end));
 			--freeswitch.consoleLog("NOTICE", "[ring_group] prompt "..prompt.."\n");
 			--freeswitch.consoleLog("NOTICE", "[ring_group] external "..external.."\n");
-		
+
 		--get the dialplan data and save it to a table
 			if (external) then
 				sql = [[select * from v_dialplans as d, v_dialplan_details as s 
@@ -145,7 +145,7 @@
 					x = x + 1;
 				end));
 			end
-		
+
 		--process the destinations
 			x = 0;
 			for key, row in pairs(destinations) do
@@ -160,7 +160,7 @@
 					destination_delay = row.destination_delay;
 					destination_timeout = row.destination_timeout;
 					destination_prompt = row.destination_prompt;
-		
+
 				--set ringback
 					if (ring_group_ringback == "${uk-ring}") then
 						ring_group_ringback = "tone_stream://%(400,200,400,450);%(400,2200,400,450);loops=-1";
@@ -179,7 +179,7 @@
 					end
 					session:setVariable("ringback", ring_group_ringback);
 					session:setVariable("transfer_ringback", ring_group_ringback);
-		
+
 				--add the caller id prefix
 					if (string.len(ring_group_cid_name_prefix) > 0) then
 						origination_caller_id_name = ring_group_cid_name_prefix .. "#" .. caller_id_name;
@@ -187,7 +187,7 @@
 						origination_caller_id_name = caller_id_name;
 					end
 					origination_caller_id_number = caller_id_number;
-		
+
 				--setup the delimiter
 					delimiter = ",";
 					if (row.ring_group_strategy == "sequence") then
@@ -199,7 +199,7 @@
 					if (row.ring_group_strategy == "enterprise") then
 						delimiter = ":_:";
 					end
-		
+
 				--create a new uuid and add it to the uuid list
 					new_uuid = api:executeString("create_uuid");
 					if (string.len(uuids) == 0) then
@@ -208,7 +208,7 @@
 						uuids = uuids ..",".. new_uuid;
 					end
 					session:execute("set", "uuids="..uuids);
-		
+
 				--process according to user_exists, sip_uri, external number
 					if (user_exists == "true") then
 						--send to user
@@ -278,7 +278,7 @@
 						end
 						--freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
 					end
-		
+
 				--prompt will use the confirm lua script and the content of else will use the concatenated dialstring seperated by the delimiter
 					if (prompt == "true") then
 						--determine confirm prompt
@@ -309,23 +309,23 @@
 						end
 						--freeswitch.consoleLog("notice", "[ring group] app_data: " .. app_data .. "\n");
 					end
-		
+
 				--increment the value of x
 					x = x + 1;
 			end
-		
+
 		--session execute
 			if (session:ready()) then
 				--set the variables
 					session:execute("set", "hangup_after_bridge=true");
 					session:execute("set", "continue_on_fail=true");
-		
+
 				--set bind meta app
 					session:execute("bind_meta_app", "1 ab s execute_extension::dx XML features");
 					session:execute("bind_meta_app", "2 ab s record_session::"..recordings_dir.."}/archive/"..os.date("%Y").."/"..os.date("%m").."/"..os.date("%d").."}/"..uuid..".wav");
 					session:execute("bind_meta_app", "3 ab s execute_extension::cf XML features");
 					session:execute("bind_meta_app", "4 ab s execute_extension::att_xfer XML features");
-		
+
 				--prompt to accept call if true schedule the call timeout
 					if (prompt == "true") then
 						--schedule the timeout and route to the timeout destination
@@ -338,21 +338,20 @@
 							end
 							--freeswitch.consoleLog("NOTICE", "[confirm] schedule timeout: "..cmd.."\n");
 							results = trim(api:executeString(cmd));
-		
+
 						--start the uuid hangup monitor
 							api = freeswitch.API();
 							cmd = "luarun "..scripts_dir.."/app/ring_groups/resources/scripts/monitor.lua "..uuid.." 30";
 							result = api:executeString(cmd);
-		
+
 						--answer the call this is required for uuid_broadcast
 							session:answer();
-		
+
 						--park the call and add the simulated ringback
 							cmd = "bgapi uuid_park "..uuid;
 							result = api:executeString(cmd);
 							cmd = "bgapi uuid_broadcast "..uuid.." "..ring_group_ringback.." aleg";
 							result = api:executeString(cmd);
-		
 					else
 						--no prompt
 							if (app_data) then
