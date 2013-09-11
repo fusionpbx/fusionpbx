@@ -71,7 +71,7 @@
 		 profile that is less than this setting. You may increase this value,
 		 but cannot set it lower than 400. This value cannot exceed 
 		 max-dtmf-duration. -->
-		<!-- <param name="min-dtmf-duration" value="400"/> -->
+		<param name="min-dtmf-duration" value="640"/>
 
 		<!-- 
 		 The max-dtmf-duration caps the playout of a DTMF event at the specified
