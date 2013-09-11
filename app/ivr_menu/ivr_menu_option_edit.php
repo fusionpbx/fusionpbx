@@ -104,8 +104,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			//create the object
 				require_once "resources/classes/database.php";
-				require_once "resources/classes/switch_ivr_menu.php";
-				$ivr = new switch_ivr_menu;
+				require_once "resources/classes/ivr_menu.php";
+				$ivr = new ivr_menu;
 				$ivr->domain_uuid = $_SESSION["domain_uuid"];
 				$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 				$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;

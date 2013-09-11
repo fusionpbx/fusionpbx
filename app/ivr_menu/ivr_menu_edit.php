@@ -186,8 +186,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			//prepare the object
 				require_once "resources/classes/database.php";
-				require_once "resources/classes/switch_ivr_menu.php";
-				$ivr = new switch_ivr_menu;
+				require_once "resources/classes/ivr_menu.php";
+				$ivr = new ivr_menu;
 				$ivr->domain_uuid = $_SESSION["domain_uuid"];
 				$ivr->ivr_menu_name = $ivr_menu_name;
 				$ivr->ivr_menu_extension = $ivr_menu_extension;
@@ -241,7 +241,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//add the ivr menu options
 				if (($action == "add" && permission_exists('ivr_menu_add')) || ($action == "update" && permission_exists('ivr_menu_edit'))) {
 					require_once "resources/classes/database.php";
-					require_once "resources/classes/switch_ivr_menu.php";
+					require_once "resources/classes/ivr_menu.php";
 					foreach ($ivr_menu_options as $row) {
 						//seperate the action and the param
 							$option_array = explode(":", $row["ivr_menu_option_param"]);
@@ -250,7 +250,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 						//add the ivr menu option
 							if (strlen($ivr_menu_option_action) > 0) {
-								$ivr = new switch_ivr_menu;
+								$ivr = new ivr_menu;
 								$ivr->domain_uuid = $_SESSION["domain_uuid"];
 								$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 								$ivr->ivr_menu_option_uuid = uuid();
@@ -278,8 +278,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$ivr_menu_uuid = check_str($_REQUEST["id"]);
-		require_once "resources/classes/switch_ivr_menu.php";
-		$ivr = new switch_ivr_menu;
+		require_once "resources/classes/ivr_menu.php";
+		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 		$result = $ivr->find();

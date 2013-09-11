@@ -47,8 +47,8 @@ if (count($_GET)>0) {
 if (strlen($id)>0) {
 	//include the ivr menu class
 		require_once "resources/classes/database.php";
-		require_once "resources/classes/switch_ivr_menu.php";
-		$ivr = new switch_ivr_menu;
+		require_once "resources/classes/ivr_menu.php";
+		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->ivr_menu_uuid = $id;
 		$ivr->delete();
