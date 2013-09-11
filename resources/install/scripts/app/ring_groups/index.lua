@@ -208,11 +208,16 @@
 						uuids = uuids ..",".. new_uuid;
 					end
 					session:execute("set", "uuids="..uuids);
+					if (prompt == "true") then
+						origination_uuid = "origination_uuid="..new_uuid..",";
+					else
+						origination_uuid = "";
+					end
 
 				--process according to user_exists, sip_uri, external number
 					if (user_exists == "true") then
 						--send to user
-						dial_string = "[origination_uuid="..new_uuid..",sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]user/" .. row.destination_number .. "@" .. domain_name;
+						dial_string = "["..origination_uuid.."sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]user/" .. row.destination_number .. "@" .. domain_name;
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
 						dial_string = "[origination_uuid="..new_uuid..",sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]" .. row.destination_number;
@@ -264,7 +269,11 @@
 										elseif (r.dialplan_detail_type == "bridge") then
 											if (bridge_match) then
 												dial_string = dial_string .. "," .. square .."]"..dialplan_detail_data;
-												square = "[origination_uuid="..new_uuid..",";
+												if (prompt == "true") then
+													square = "[origination_uuid="..new_uuid..",";
+												else
+													square = "[";
+												end
 											else
 												dial_string = square .."]"..dialplan_detail_data;
 											end
@@ -360,6 +369,7 @@
 					else
 						--no prompt
 							if (app_data ~= nil) then
+								--freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
 								session:execute("bridge", app_data);
 								if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" or session:getVariable("originate_disposition") == "NO_ANSWER" or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL") then
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
