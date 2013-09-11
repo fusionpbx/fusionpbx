@@ -292,22 +292,27 @@
 								originate_prompt = "false";
 							end
 						--originate each destination
-						dial_string = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
-						cmd = "";
-						if (tonumber(destination_delay) > 0) then
-							cmd = "sched_api +"..destination_delay.." "..new_uuid.." ";
-						end
-						cmd = cmd .. "bgapi originate "..dial_string.." '&lua('"..scripts_dir.."/app/ring_groups/resources/scripts/confirm.lua' "..uuid.." "..originate_prompt..")'";
-						--freeswitch.consoleLog("notice", "[ring group] cmd: " .. cmd .. "\n");
-						result = trim(api:executeString(cmd));
+							if (dial_string ~= nil) then
+								dial_string = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
+								cmd = "";
+								if (tonumber(destination_delay) > 0) then
+									cmd = "sched_api +"..destination_delay.." "..new_uuid.." ";
+								end
+								cmd = cmd .. "bgapi originate "..dial_string.." '&lua('"..scripts_dir.."/app/ring_groups/resources/scripts/confirm.lua' "..uuid.." "..originate_prompt..")'";
+								--freeswitch.consoleLog("notice", "[ring group] cmd: " .. cmd .. "\n");
+								result = trim(api:executeString(cmd));
+							end
+
 					else
 						--use a delimiter between dialstrings
-						if (x == 0) then
-							app_data = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
-						else
-							app_data = app_data .. delimiter .. dial_string;
-						end
-						--freeswitch.consoleLog("notice", "[ring group] app_data: " .. app_data .. "\n");
+							if (dial_string ~= nil) then
+								if (x == 0) then
+									app_data = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
+								else
+									app_data = app_data .. delimiter .. dial_string;
+								end
+								--freeswitch.consoleLog("notice", "[ring group] app_data: " .. app_data .. "\n");
+							end
 					end
 
 				--increment the value of x
@@ -354,13 +359,12 @@
 							result = api:executeString(cmd);
 					else
 						--no prompt
-							if (app_data) then
+							if (app_data ~= nil) then
 								session:execute("bridge", app_data);
-							end
-							if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" or session:getVariable("originate_disposition") == "NO_ANSWER") then
-								if (ring_group_timeout_app == "voicemail") then
-									session:answer();
+								if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" or session:getVariable("originate_disposition") == "NO_ANSWER" or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL") then
+									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
+							else
 								session:execute(ring_group_timeout_app, ring_group_timeout_data);
 							end
 					end
