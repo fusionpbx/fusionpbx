@@ -91,7 +91,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//	</condition>
 		//</extension>
 		//--------------------------------------------------------
-			$extension_name = $extension_name."_call_queue";
+			$queue_name = $extension_name."@\${domain_name}";
 			$app_uuid = '16589224-c876-aeb3-f59f-523a1c0801f7';
 			$dialplan_uuid = uuid();
 			$dialplan_context = $_SESSION['context'];
@@ -124,7 +124,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//if (strlen($pin_number) > 0) { $pin_number = "+".$pin_number; }
 					//if (strlen($flags) > 0) { $flags = "+{".$flags."}"; }
 					//$queue_action_data = $extension_name."@\${domain_name}".$profile.$flags.$pin_number;
-					$queue_action_data = $extension_name."@\${domain_name} in";
+					$queue_action_data = $queue_name." in";
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'fifo';
 					$dialplan_detail_data = $queue_action_data;
@@ -147,7 +147,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//	</condition>
 		//</extension>
 		//--------------------------------------------------------
-			$queue_name = $extension_name."_agent_queue@\${domain_name}";
+			$queue_name = $extension_name."_agent@\${domain_name}";
 			if (strlen($dialplan_uuid) > 0) {
 				//set the destination number
 					$dialplan_detail_tag = 'condition'; //condition, action, antiaction
@@ -176,7 +176,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//if (strlen($pin_number) > 0) { $pin_number = "+".$pin_number; }
 					//if (strlen($flags) > 0) { $flags = "+{".$flags."}"; }
 					//$queue_action_data = $extension_name."@\${domain_name}".$profile.$flags.$pin_number;
-					$queue_action_data = $queue_name."@\${domain_name} out wait";
+					$queue_action_data = $queue_name." out wait";
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'fifo';
 					$dialplan_detail_data = $queue_action_data;
@@ -198,7 +198,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//	</condition>
 		//</extension>
 		//--------------------------------------------------------
-			$queue_name = $extension_name."_agent_login_logout@\${domain_name}";
+			$queue_name = $extension_name."@\${domain_name}";
 			if (strlen($dialplan_uuid) > 0) {
 				//set the destination number
 					$dialplan_detail_tag = 'condition'; //condition, action, antiaction
