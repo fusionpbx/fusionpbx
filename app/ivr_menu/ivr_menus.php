@@ -76,8 +76,8 @@ else {
 
 	//get the count
 		require_once "resources/classes/database.php";
-		require_once "resources/classes/switch_ivr_menu.php";
-		$ivr = new switch_ivr_menu;
+		require_once "resources/classes/ivr_menu.php";
+		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
 		$ivr->table = "v_ivr_menus";
 		$where[0]['name'] = 'domain_uuid';

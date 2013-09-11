@@ -27,7 +27,7 @@ include "root.php";
 require_once "resources/classes/dialplan.php";
 
 //define the directory class
-	class switch_ivr_menu {
+	class ivr_menu {
 		public $db;
 		public $domain_uuid;
 		public $domain_name;
