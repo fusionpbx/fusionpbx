@@ -49,16 +49,18 @@ else {
 
 //get the http post values and set theme as php variables
 	if (count($_POST)>0) {
-		$dialplan_name = check_str($_POST["dialplan_name"]);
-		$dialplan_order = check_str($_POST["dialplan_order"]);
-		$dialplan_expression = check_str($_POST["dialplan_expression"]);
-		$prefix_number = check_str($_POST["prefix_number"]);
-		$condition_field_1 = check_str($_POST["condition_field_1"]);
-		$condition_expression_1 = check_str($_POST["condition_expression_1"]);
-		$condition_field_2 = check_str($_POST["condition_field_2"]);
-		$condition_expression_2 = check_str($_POST["condition_expression_2"]);
-		$gateway = check_str($_POST["gateway"]);
-		$limit = check_str($_POST["limit"]);
+		//set the variables
+			$dialplan_name = check_str($_POST["dialplan_name"]);
+			$dialplan_order = check_str($_POST["dialplan_order"]);
+			$dialplan_expression = check_str($_POST["dialplan_expression"]);
+			$prefix_number = check_str($_POST["prefix_number"]);
+			$condition_field_1 = check_str($_POST["condition_field_1"]);
+			$condition_expression_1 = check_str($_POST["condition_expression_1"]);
+			$condition_field_2 = check_str($_POST["condition_field_2"]);
+			$condition_expression_2 = check_str($_POST["condition_expression_2"]);
+			$gateway = check_str($_POST["gateway"]);
+			$limit = check_str($_POST["limit"]);
+			$accountcode = check_str($_POST["accountcode"]);
 
 		//set the default type
 			$gateway_type = 'gateway';
@@ -441,12 +443,22 @@ else {
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'sip_h_X-accountcode=${accountcode}';
-					$dialplan_detail_order = '010';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					if (strlen($accountcode) > 0) {
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'sip_h_X-accountcode='.$accountcode;
+						$dialplan_detail_order = '010';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					}
+					else {
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'sip_h_X-accountcode=${accountcode}';
+						$dialplan_detail_order = '010';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					}
 
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
@@ -918,6 +930,17 @@ function type_onchange(dialplan_detail_type) {
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
 	echo "<br />\n";
 	echo $text['description-limit']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-accountcode'].":\n";
+	echo "</td>\n";
+	echo "<td colspan='4' class='vtable' align='left'>\n";
+	echo "    <input class='formfld' style='width: 60%;' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
+	echo "<br />\n";
+	echo $text['description-accountcode']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
