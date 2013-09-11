@@ -55,7 +55,7 @@ else {
 		$page["title"] = $text['title-outbound_routes'];
 	}
 	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		$page["title"] = $text['title-fifo'];
+		$page["title"] = $text['title-queues'];
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 		$page["title"] = $text['title-time_conditions'];
@@ -84,7 +84,7 @@ else {
 		echo "			<strong>".$text['header-outbound_routes']."</strong>\n";
 	}
 	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		echo "			<strong>".$text['header-fifo']."</strong>\n";
+		echo "			<strong>".$text['header-queues']."</strong>\n";
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 		echo "			<strong>".$text['header-time_conditions']."</strong>\n";
@@ -115,7 +115,7 @@ else {
 		echo $text['description-outbound_routes'];
 	}
 	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		echo $text['description-fifo'];
+		echo $text['description-queues'];
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 		echo $text['description-time_conditions'];
