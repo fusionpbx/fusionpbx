@@ -10,6 +10,7 @@
 		$text['title-dialplan_edit']['en-us'] = 'Dialplan Edit';
 		$text['title-dialplan_detail']['en-us'] = 'Dialplan Detail';
 		$text['title-default_dialplan']['en-us'] = 'Default Dialplan';
+		$text['title-queues']['en-us'] = 'Queues';
 
 		$text['header-dialplan_manager']['en-us'] = 'Dialplan Manager';
 		$text['header-inbound_routes']['en-us'] = 'Inbound Routes';
@@ -20,6 +21,7 @@
 		$text['header-conditions_and_actions']['en-us'] = 'Conditions and Actions';
 		$text['header-dialplan_detail']['en-us'] = 'Dialplan Detail';
 		$text['header-default_dialplan']['en-us'] = 'Default Dialplan';
+		$text['header-queues']['en-us'] = 'Queues';
 
 		$text['description-dialplan_manager']['en-us'] = 'The dialplan provides a view of some of the feature codes, as well as the IVR Menu, Conferences, Queues and other destinations.';
 		$text['description-dialplan_manager-superadmin']['en-us'] = 'The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
@@ -29,6 +31,7 @@
 		$text['description-dialplan-edit']['en-us'] = 'Dialplan include general settings.';
 		$text['description-conditions_and_actions']['en-us'] = 'The following conditions, actions and anti-actions are used in the dialplan to direct call flow. Each is processed in order that it is given. Use as many conditions, actions or anti-actions as needed.';
 		$text['description-default_dialplan']['en-us'] = 'The default dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
+		$text['description-queues']['en-us'] = 'Queues are used to setup waiting lines for callers. Also known as FIFO Queues.';
 
 		$text['label-name']['en-us'] = 'Name';
 		$text['label-condition_1']['en-us'] = 'Condition 1';

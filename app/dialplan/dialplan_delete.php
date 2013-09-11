@@ -29,6 +29,7 @@ require_once "resources/check_auth.php";
 if (permission_exists('dialplan_delete')
 	|| permission_exists('inbound_route_delete')
 	|| permission_exists('outbound_route_delete')
+	|| permission_exists('fifo_delete')
 	|| permission_exists('time_conditions_delete')) {
 	//access granted
 }

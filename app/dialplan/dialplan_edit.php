@@ -33,6 +33,8 @@ if (permission_exists('dialplan_add')
 	|| permission_exists('inbound_route_edit')
 	|| permission_exists('outbound_route_add')
 	|| permission_exists('outbound_route_edit')
+	|| permission_exists('fifo_edit')
+	|| permission_exists('fifo_add')
 	|| permission_exists('time_conditions_add')
 	|| permission_exists('time_conditions_edit')) {
 	//access granted
