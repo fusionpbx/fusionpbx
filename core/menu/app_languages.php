@@ -126,7 +126,7 @@
 		$text['label-protected']['en-us'] = 'Protected';
 		$text['label-protected']['pt-pt'] = '';
 
-		$text['description-protected']['en-us'] = "Enable this feature to protect this menu item from being removed by '".$text['button-restore_default']['en-us']."'.";
+		$text['description-protected']['en-us'] = "Enable this to protect the menu item from being removed by '".$text['button-restore_default']['en-us']."'.";
 		$text['description-protected']['pt-pt'] = '';
 
 		$text['label-menu_order']['en-us'] = 'Order';
