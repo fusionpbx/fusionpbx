@@ -171,8 +171,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$dialplan_detail_uuid = $_GET["id"];
-		$sql = "";
-		$sql .= "select * from v_dialplan_details ";
+		$sql = "select * from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -184,7 +183,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dialplan_detail_order = $row["dialplan_detail_order"];
 			$dialplan_detail_type = $row["dialplan_detail_type"];
 			$dialplan_detail_data = $row["dialplan_detail_data"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
