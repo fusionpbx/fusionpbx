@@ -265,22 +265,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    </td>\n";
 	echo "    <td width='70%' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$row['dialplan_uuid']."';}\" value='".$text['button-copy']."'>\n";
-	switch ($app_uuid) {
-		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4":
-			//inbound routes
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php?app_uuid=$app_uuid'\" value='".$text['button-back']."'>\n";
-			break;
-		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3":
-			//outbound routes
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php?app_uuid=$app_uuid'\" value='".$text['button-back']."'>\n";
-			break;
-		case "4b821450-926b-175a-af93-a03c441818b1":
-			//time conditions
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php?app_uuid=$app_uuid'\" value='".$text['button-back']."'>\n";
-			break;
-		default:
-			echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php'\" value='".$text['button-back']."'>\n";
-			break;
+	if (strlen($app_uuid) > 0) {
+		echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php?app_uuid=$app_uuid'\" value='".$text['button-back']."'>\n";
+	}
+	else {
+		echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php'\" value='".$text['button-back']."'>\n";
 	}
 	echo "	</td>\n";
 	echo "  </tr>\n";
