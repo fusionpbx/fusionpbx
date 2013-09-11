@@ -200,6 +200,11 @@ else {
 			echo "			<a href='".PROJECT_PATH."/app/dialplan_outbound/dialplan_outbound_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		if (permission_exists('fifo_add')) {
+			echo "			<a href='".PROJECT_PATH."/app/fifo/fifo_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		}
+	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 		if (permission_exists('time_conditions_add')) {
 			echo "			<a href='".PROJECT_PATH."/app/time_conditions/time_condition_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
@@ -264,6 +269,14 @@ else {
 					echo "		<a href='dialplan_delete.php?id=".$row['dialplan_uuid']."&app_uuid=$app_uuid' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 			}
+			elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+				if (permission_exists('fifo_edit')) {
+					echo "		<a href='dialplan_edit.php?id=".$row['dialplan_uuid']."&app_uuid=$app_uuid' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				}
+				if (permission_exists('fifo_delete')) {
+					echo "		<a href='dialplan_delete.php?id=".$row['dialplan_uuid']."&app_uuid=$app_uuid' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				}
+			}
 			elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 				if (permission_exists('time_conditions_edit')) {
 					echo "		<a href='dialplan_edit.php?id=".$row['dialplan_uuid']."&app_uuid=$app_uuid' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
@@ -303,6 +316,11 @@ else {
 	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
 		if (permission_exists('outbound_route_add')) {
 			echo "			<a href='".PROJECT_PATH."/app/dialplan_outbound/dialplan_outbound_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		}
+	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		if (permission_exists('fifo_add')) {
+			echo "			<a href='".PROJECT_PATH."/app/fifo/fifo_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {

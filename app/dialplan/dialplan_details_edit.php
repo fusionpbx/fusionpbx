@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -32,6 +32,8 @@ if (permission_exists('dialplan_add')
 	|| permission_exists('inbound_route_edit')
 	|| permission_exists('outbound_route_add')
 	|| permission_exists('outbound_route_edit')
+	|| permission_exists('fifo_edit')
+	|| permission_exists('fifo_add')
 	|| permission_exists('time_conditions_add')
 	|| permission_exists('time_conditions_edit')) {
 	//access granted

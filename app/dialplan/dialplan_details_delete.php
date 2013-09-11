@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -29,6 +29,7 @@ require_once "resources/check_auth.php";
 if (permission_exists('dialplan_delete')
 	|| permission_exists('inbound_route_delete')
 	|| permission_exists('outbound_route_delete')
+	|| permission_exists('fifo_delete')
 	|| permission_exists('time_conditions_delete')) {
 	//access granted
 }
@@ -51,8 +52,7 @@ if (count($_GET)>0) {
 if (strlen($id)>0) {
 
 	//delete child data
-		$sql = "";
-		$sql .= "delete from v_dialplan_details ";
+		$sql = "delete from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and dialplan_detail_uuid = '$id' ";
 		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
