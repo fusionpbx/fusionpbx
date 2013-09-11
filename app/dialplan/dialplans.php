@@ -54,6 +54,9 @@ else {
 	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
 		$page["title"] = $text['title-outbound_routes'];
 	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		$page["title"] = $text['title-fifo'];
+	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 		$page["title"] = $text['title-time_conditions'];
 	}
@@ -79,6 +82,9 @@ else {
 	}
 	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
 		echo "			<strong>".$text['header-outbound_routes']."</strong>\n";
+	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		echo "			<strong>".$text['header-fifo']."</strong>\n";
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 		echo "			<strong>".$text['header-time_conditions']."</strong>\n";
@@ -107,6 +113,9 @@ else {
 	}
 	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
 		echo $text['description-outbound_routes'];
+	}
+	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
+		echo $text['description-fifo'];
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
 		echo $text['description-time_conditions'];
