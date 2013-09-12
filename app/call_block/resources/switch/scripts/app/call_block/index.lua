@@ -87,7 +87,7 @@ This method causes the script to get its manadatory arguments directly from the 
 		sql = sql .. "WHERE c.blocked_caller_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
 		status = dbh:query(sql, function(rows)
 			found_cid_num = rows["blocked_caller_number"]
-			found_uuid = rows["blocked_caller_uuid"]
+			found_uuid = rows["call_block_uuid"]
 			found_enabled = rows["block_call_enabled"]
 			found_action = rows["blocked_call_action"]
 			found_count = rows["blocked_call_count"]
@@ -102,7 +102,7 @@ This method causes the script to get its manadatory arguments directly from the 
 					--logger("W", "INFO", "Details: " .. details[k])
 					k = k + 1
 				end
-				dbh:query("UPDATE v_call_block SET blocked_call_count = " .. found_count + 1 .. " WHERE blocked_caller_uuid = '" .. found_uuid .. "'")
+				dbh:query("UPDATE v_call_block SET blocked_call_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
 				session:setVariable("call_block", "block")
 				logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain: " .. params["domain"])
 				if (found_action == "Reject") then
