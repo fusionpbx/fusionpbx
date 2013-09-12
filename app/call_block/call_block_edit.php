@@ -71,7 +71,7 @@ else {
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
-		$blocked_caller_uuid = check_str($_REQUEST["id"]);
+		$call_block_uuid = check_str($_REQUEST["id"]);
 	}
 	else {
 		$action = "add";
@@ -89,7 +89,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
-		//$blocked_caller_uuid = check_str($_POST["blocked_caller_uuid"]);
+		//$call_block_uuid = check_str($_POST["call_block_uuid"]);
 	}
 	
 	//check for all required data
@@ -117,7 +117,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql = "insert into v_call_block ";
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
-				$sql .= "blocked_caller_uuid, ";
+				$sql .= "call_block_uuid, ";
 				$sql .= "blocked_caller_name, ";
 				$sql .= "blocked_caller_number, ";
 				$sql .= "blocked_call_count, ";
@@ -155,7 +155,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "blocked_call_action = '$blocked_call_action', ";
 				$sql .= "block_call_enabled = '$block_call_enabled' ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and blocked_caller_uuid = '$blocked_caller_uuid'";
+				$sql .= "and call_block_uuid = '$call_block_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
@@ -172,10 +172,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$blocked_caller_uuid = $_GET["id"];
+		$call_block_uuid = $_GET["id"];
 		$sql = "select * from v_call_block ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and blocked_caller_uuid = '$blocked_caller_uuid' ";
+		$sql .= "and call_block_uuid = '$call_block_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
@@ -367,7 +367,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='blocked_caller_uuid' value='$blocked_caller_uuid'>\n";
+		echo "				<input type='hidden' name='call_block_uuid' value='$call_block_uuid'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";

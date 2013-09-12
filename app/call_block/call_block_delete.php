@@ -51,7 +51,7 @@ else {
 	if (strlen($id)>0) {
 		$sql = "delete from v_call_block ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and blocked_caller_uuid = '$id' ";
+		$sql .= "and call_block_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($prep_statement, $sql);

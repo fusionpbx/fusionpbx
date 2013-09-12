@@ -65,7 +65,7 @@ else {
 	$sql = "insert into v_call_block ";
 	$sql .= "(";
 	$sql .= "domain_uuid, ";
-	$sql .= "blocked_caller_uuid, ";
+	$sql .= "call_block_uuid, ";
 	$sql .= "blocked_caller_name, ";
 	$sql .= "blocked_caller_number, ";
 	$sql .= "blocked_call_count, ";

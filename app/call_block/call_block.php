@@ -139,10 +139,10 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['block_call_enabled']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('call_block_edit')) {
-				echo "		<a href='call_block_edit.php?id=".$row['blocked_caller_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "		<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('call_block_delete')) {
-				echo "		<a href='call_block_delete.php?id=".$row['blocked_caller_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+				echo "		<a href='call_block_delete.php?id=".$row['call_block_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
 			};
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
