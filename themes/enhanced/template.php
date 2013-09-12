@@ -580,32 +580,47 @@ table tr:nth-last-child(-5) td:first-of-type {
 		-khtml-opacity: 0.9;
 		opacity: 0.9;
 	}
+
+	.message {
+		background-repeat: repeat-x;
+		background-attachment: fixed;
+		padding: 20px;
+		opacity: 0.9;
+		filter:alpha(opacity=90);
+		-moz-opacity:0.9;
+		-khtml-opacity: 0.9;
+		opacity: 0.9;
+		-webkit-border-radius: 7px 7px 7px 7px;
+		-moz-border-radius: 7px 7px 7px 7px;
+		border-radius: 7px 7px 7px 7px;
+		text-align: left;
+	}
 </style>
 
 <script type="text/javascript">
-<!--
-function jsconfirm(title,msg,url) {
-	if (confirm(msg)){
-		window.location = url;
-	}
-	else{
-	}
-}
-//-->
+	<!--
+		function jsconfirm(title,msg,url) {
+			if (confirm(msg)){
+				window.location = url;
+			}
+			else{
+			}
+		}
+	//-->
 </script>
 
 <SCRIPT language="JavaScript">
-<!--
-function confirmdelete(url) {
-	var confirmed = confirm("Are you sure want to delete this.");
-	if (confirmed == true) {
-		window.location=url;
-	}
-}
-//-->
+	<!--
+		function confirmdelete(url) {
+			var confirmed = confirm("Are you sure want to delete this.");
+			if (confirmed == true) {
+				window.location=url;
+			}
+		}
+	//-->
 </SCRIPT>
 </head>
-<body>
+<body onload="message_timeout();">
 	<?php
 	//get a random background image
 		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/enhanced/images/backgrounds';
@@ -694,25 +709,29 @@ function confirmdelete(url) {
 		</tr>
 		<tr>
 			<td valign='top' align='center' width='100%'>
-
 				<table width='100%' cellpadding='0' cellspacing='0' border='0'>
 					<tr>
 						<td class='main_content' align='left' valign='top' width='85%'>
-
+							<script type = "text/javascript">
+								<!--
+								function message_hide() {
+									document.getElementById("message").style.display="none"; 
+								}
+								function message_timeout() {
+									var tim = window.setTimeout("message_hide()", 1000);
+								}
+								-->
+							</script>
+							<?php
+								if (strlen($_SESSION['message']) > 0) {
+									echo "<div id='message' style='position:absolute; left:50%;'>";
+									echo "	<table><tr><td class='vncellreq'>".$_SESSION['message']."</td></tr></table>";
+									echo "</div>";
+									unset($_SESSION['message']);
+								}
+							?>
 							<!--{body}-->
 
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
 							<br /><br />
 							<br /><br />
 							<br /><br />
@@ -728,13 +747,13 @@ function confirmdelete(url) {
 	<?php
 	if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
 		echo "<span class='smalltext'>\n";
-		echo "	<a class='smalltext' target='_blank' href='http://www.fusionpbx.com'>fusionpbx.com</a>. Copyright 2008 - 2012. All Rights Reserved\n";
+		echo "	<a class='smalltext' target='_blank' href='http://www.fusionpbx.com'>fusionpbx.com</a>. Copyright 2008 - 2013. All Rights Reserved\n";
 		echo "</span>\n";
 	}
 	else {
 		echo "<!--\n";
 		echo "	http://www.fusionpbx.com \n";
-		echo "	Copyright 2008 - 2011 \n";
+		echo "	Copyright 2008 - 2013 \n";
 		echo "	All Rights Reserved\n";
 		echo "-->\n";
 	}
