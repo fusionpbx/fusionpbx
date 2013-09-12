@@ -85,7 +85,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'blocked_caller_number';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = 'Enter the full phone number.';
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'blocked_call_count';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
