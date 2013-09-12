@@ -58,12 +58,7 @@ else {
 	}
 
 //redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+	$_SESSION['message'] = $text['message-delete'];
+	header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
 
 ?>

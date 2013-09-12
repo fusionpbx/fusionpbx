@@ -122,12 +122,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$ivr->add();
 
 				//redirect the user
-					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
-					echo "<div align='center'>\n";
-					echo "Add Complete\n";
-					echo "</div>\n";
-					require_once "resources/footer.php";
+					$_SESSION['message'] = $text['message-add'];
+					header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
 					return;
 			} //if ($action == "add")
 
@@ -137,12 +133,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$ivr->update();
 
 				//redirect the user
-					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
-					echo "<div align='center'>\n";
-					echo $text['message-add']."\n";
-					echo "</div>\n";
-					require_once "resources/footer.php";
+					$_SESSION['message'] = $text['message-add'];
+					header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
 					return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
