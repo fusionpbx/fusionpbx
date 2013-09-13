@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = 'Pour recevoir un fax, configurez un Ã©xtension du FAX et aprÃ¨s dirigers un nombre vers lui.';
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = 'Pour recevoir un fax, configurez une extension du FAX et après diriger un numéro vers lui.';
+		$apps[$x]['description']['fr-ca'] = 'Pour recevoir un fax, configurez un Ã©xtension du FAX et aprÃ¨s dirigers un nombre vers lui.';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Para receber uma configuração de fax uma extensão de fax e, em seguida, direcionar o fax com um número dedicado ou você pode detectar o tom de fax, usando na guia Pública.';
 		$apps[$x]['description']['pt-br'] = '';
@@ -24,8 +24,8 @@
 		$apps[$x]['menu'][0]['title']['de'] = 'Faxserver';
 		$apps[$x]['menu'][0]['title']['de-ch'] = 'Faxserver';
 		$apps[$x]['menu'][0]['title']['de-at'] = 'Faxserver';
-		$apps[$x]['menu'][0]['title']['fr'] = 'Serveur du fax';
-		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = 'Serveur Fax';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = 'Serveur du fax';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Servidor de Fax';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';

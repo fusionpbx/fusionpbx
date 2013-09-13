@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = 'Utilisé pour configurer des éxtentions SIP';
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = 'Utilisé pour configurer des extentions SIP';
+		$apps[$x]['description']['fr-ca'] = 'Utilisé pour configurer des éxtentions SIP';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Usado para configurar extensões SIP.';
 		$apps[$x]['description']['pt-br'] = '';
@@ -24,8 +24,8 @@
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = 'Post téléphonique';
-		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = 'Extensions';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = 'Post téléphonique';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Extensões';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';

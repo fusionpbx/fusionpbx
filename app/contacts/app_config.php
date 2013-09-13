@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "C'est un endroit pour posser information des contacts, personnes ou organizations.";
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = "Place pour stocker les information des contacts, personnes ou organizations.";
+		$apps[$x]['description']['fr-ca'] = "C'est un endroit pour posser information des contacts, personnes ou organizations.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Fornece um local para armazenar informações de contato para indivíduos e organizações.';
 		$apps[$x]['description']['pt-br'] = '';

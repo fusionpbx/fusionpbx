@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Appeller avec d'URL";
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = "Appeler avec une URL";
+		$apps[$x]['description']['fr-ca'] = 'Appeller avec d'URL';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Originar chamadas com uma URL.';
 		$apps[$x]['description']['pt-br'] = '';
