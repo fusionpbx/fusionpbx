@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'ivr_menu_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '72259497-a67b-e5aa-cac2-0f2dcef16308';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
