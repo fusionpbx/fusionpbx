@@ -273,7 +273,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = 'uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
-		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'primary';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_follow_me';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'follow_me_uuid';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'enabled';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
