@@ -12,22 +12,22 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = '';
+		$apps[$x]['description']['fr'] = "Le menu peut être personnalisé ici";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
-		$apps[$x]['description']['pt-pt'] = 'O menu pode ser personalizado usando esta ferramenta.';
+		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado usando esta ferramenta.";
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = 'Menu Manager';
+		$apps[$x]['menu'][0]['title']['en-us'] = "Menu Manager";
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = "Gestion des Menus";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Gestor de Menus';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Gestor de Menus";
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = 'da3a9ab4-c28e-ea8d-50cc-e8405ac8e76e';
 		$apps[$x]['menu'][0]['parent_uuid'] = '02194288-6d56-6d3e-0b1a-d53a2bc10788';
@@ -41,7 +41,7 @@
 		$apps[$x]['menu'][1]['title']['de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
-		$apps[$x]['menu'][1]['title']['fr'] = '';
+		$apps[$x]['menu'][1]['title']['fr'] = 'Système';
 		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Sistema';
@@ -60,7 +60,7 @@
 		$apps[$x]['menu'][2]['title']['de'] = '';
 		$apps[$x]['menu'][2]['title']['de-ch'] = '';
 		$apps[$x]['menu'][2]['title']['de-at'] = '';
-		$apps[$x]['menu'][2]['title']['fr'] = '';
+		$apps[$x]['menu'][2]['title']['fr'] = 'Comptes';
 		$apps[$x]['menu'][2]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][2]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][2]['title']['pt-pt'] = 'Contas';
@@ -87,7 +87,7 @@
 		$apps[$x]['menu'][4]['title']['de'] = '';
 		$apps[$x]['menu'][4]['title']['de-ch'] = '';
 		$apps[$x]['menu'][4]['title']['de-at'] = '';
-		$apps[$x]['menu'][4]['title']['fr'] = '';
+		$apps[$x]['menu'][4]['title']['fr'] = 'Etat';
 		$apps[$x]['menu'][4]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][4]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][4]['title']['pt-pt'] = 'Estado';
@@ -106,10 +106,10 @@
 		$apps[$x]['menu'][5]['title']['de'] = '';
 		$apps[$x]['menu'][5]['title']['de-ch'] = '';
 		$apps[$x]['menu'][5]['title']['de-at'] = '';
-		$apps[$x]['menu'][5]['title']['fr'] = '';
+		$apps[$x]['menu'][5]['title']['fr'] = 'Avancé';
 		$apps[$x]['menu'][5]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][5]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][5]['title']['pt-pt'] = 'AvanÃ§ado';
+		$apps[$x]['menu'][5]['title']['pt-pt'] = 'Avançado';
 		$apps[$x]['menu'][5]['title']['pt-br'] = '';
 		$apps[$x]['menu'][5]['uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][5]['parent_uuid'] = '';

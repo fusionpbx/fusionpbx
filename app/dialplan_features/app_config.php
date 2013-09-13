@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Il donne quelqu'options aux dialplans comme transfer, appel en attend et plus.";
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = "Donne des options aux dialplans comme le transfert, transfert supervisé et plus.";
+		$apps[$x]['description']['fr-ca'] = "Il donne quelqu'options aux dialplans comme transfer, appel en attend et plus.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Fornece recursos contexto dialplan inclusive em transferência de chamadas e transferência atendidos e mais.';
 		$apps[$x]['description']['pt-br'] = '';

@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = 'Gerer le contenu des pages au interface.';
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = "Gerer le contenu des pages de l'interface.";
+		$apps[$x]['description']['fr-ca'] = "Gerer le contenu des pages au interface.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Gerir o conteúdo de qualquer página na interface.';
 		$apps[$x]['description']['pt-br'] = '';
@@ -24,8 +24,8 @@
 		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = 'Administrateur';
-		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr'] = 'Contenu';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = 'Administrateur';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Gestor de Conteúdo';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';

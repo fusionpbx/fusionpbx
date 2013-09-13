@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Outil en AJAX pour voir et gerer toutes les conferences actives aux chambres.";
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = "Outil en AJAX pour voir et gerer toutes les conferences actives.";
+		$apps[$x]['description']['fr-ca'] = "Outil en AJAX pour voir et gerer toutes les conferences actives aux chambres.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'A ferramenta AJAX permite visualizar e gerir todas as chamadas ativas numa sala de conferências.';
 		$apps[$x]['description']['pt-br'] = '';

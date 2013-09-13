@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Il fait d' massive appels vers des extensions, IVR, salles de conferences ou quelqu'autre nom.";
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr'] = "Programme des appels multiples vers des extensions, IVR, salles de conferences ou autre.";
+		$apps[$x]['description']['fr-ca'] = 'Il fait d' massive appels vers des extensions, IVR, salles de conferences ou quelqu'autre nom.';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Programação para imediatamente fazer várias chamadas para a extensão de um menu de URA, Sala de Conferência, ou qualquer outro número.';
 		$apps[$x]['description']['pt-br'] = '';

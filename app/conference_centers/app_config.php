@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Le Centre de Conferences permet une ou plus conferences pour audio ou vidéo.";
+		$apps[$x]['description']['fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = '';
@@ -25,7 +25,7 @@
 		$apps[$x]['menu'][$y]['title']['de'] = '';
 		$apps[$x]['menu'][$y]['title']['de-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['de-at'] = '';
-		$apps[$x]['menu'][$y]['title']['fr'] = 'Centre de Conferences';
+		$apps[$x]['menu'][$y]['title']['fr'] = 'Centre de Conférences';
 		$apps[$x]['menu'][$y]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][$y]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['pt-pt'] = 'Conferencias';

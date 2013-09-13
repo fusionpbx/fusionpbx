@@ -8,9 +8,11 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
+		$apps[$x]['description']['fr'] = '';
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Voicemail';
+		$apps[$x]['menu'][0]['title']['fr'] = "Messagerie Vocale";
 		$apps[$x]['menu'][0]['uuid'] = '0347f82a-62a0-49d0-bacd-511d080c46d5';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
