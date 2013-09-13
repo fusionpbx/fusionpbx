@@ -1,7 +1,6 @@
 <?php
 
 	//Call Flows
-
 		$text['title-call_flows']['en-us'] = 'Call Flows';
 		$text['title-call_flows']['pt-pt'] = '';
 
@@ -11,23 +10,17 @@
 		$text['description-call_flows']['en-us'] = 'Direct calls between two destinations by calling a feature code.';
 		$text['description-call_flows']['pt-pt'] = '';
 
-		//------
-
 		$text['title-call_flow-edit']['en-us'] = 'Call Flow Edit';
 		$text['title-call_flow-edit']['pt-pt'] = '';
 
 		$text['header-call_flow-edit']['en-us'] = 'Call Flow Edit';
 		$text['header-call_flow-edit']['pt-pt'] = '';
 
-		//------
-
 		$text['title-call_flow-add']['en-us'] = 'Call Flow Add';
 		$text['title-call_flow-add']['pt-pt'] = '';
 
 		$text['header-call_flow-add']['en-us'] = 'Call Flow Add';
 		$text['header-call_flow-add']['pt-pt'] = '';
-
-		//------
 
 		$text['label-name']['en-us'] = 'Name';
 		$text['label-name']['pt-pt'] = '';
