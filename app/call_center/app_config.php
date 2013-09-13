@@ -7,15 +7,15 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en-us'] = 'Queues for managing inbound calls and routing those calls to available agents.';
-		$apps[$x]['description']['es-mx'] = 'Colas pra administar las llamadas entrantes y enviarlas a los agentes disponibles';
+		$apps[$x]['description']['en-us'] = "Queues for managing inbound calls and routing those calls to available agents.";
+		$apps[$x]['description']['es-mx'] = "Colas pra administar las llamadas entrantes y enviarlas a los agentes disponibles";
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr'] = "Files d'attente d'appels entrants distribués aux agents disponibles";
 		$apps[$x]['description']['fr-ca'] = "Queues pour envoyer les appels entrants vers les agents disponibles.";
 		$apps[$x]['description']['fr-ch'] = '';
-		$apps[$x]['description']['pt-pt'] = 'As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes disponíveis.';
+		$apps[$x]['description']['pt-pt'] = "As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes disponíveis.";
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
@@ -27,7 +27,7 @@
 		$apps[$x]['menu'][0]['title']['fr'] = "Centre d'appel";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "Centre d' appels";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Centro de Chamadas';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Centro de Chamadas";
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '6c072b29-5b6c-49fc-008e-95e24c77de99';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
@@ -45,7 +45,7 @@
 		$apps[$x]['menu'][1]['title']['fr'] = "État d'agent";
 		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Estado do Agente';
+		$apps[$x]['menu'][1]['title']['pt-pt'] = "Estado do Agente";
 		$apps[$x]['menu'][1]['title']['pt-br'] = '';
 		$apps[$x]['menu'][1]['uuid'] = '597c483a-51a9-f95a-8d54-ea7d87ada2b8';
 		$apps[$x]['menu'][1]['parent_uuid'] = '0438b504-8613-7887-c420-c837ffb20cb1';
