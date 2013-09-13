@@ -208,6 +208,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_users';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'user_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 
 		$y = 2; //table array index
@@ -225,8 +228,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = 'char(36)';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = 'foreign';
-		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
-		//$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_domains';
+		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'domain_uuid';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'domain_name';
