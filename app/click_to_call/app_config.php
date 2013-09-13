@@ -7,15 +7,15 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en-us'] = 'Originate calls with a URL.';
-		$apps[$x]['description']['es-mx'] = 'Genera llamadas con un URL.';
+		$apps[$x]['description']['en-us'] = "Originate calls with a URL.";
+		$apps[$x]['description']['es-mx'] = "Genera llamadas con un URL.";
 		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr'] = "Appeler avec une URL";
-		$apps[$x]['description']['fr-ca'] = 'Appeller avec d'URL';
+		$apps[$x]['description']['fr-ca'] = "Appeller avec d'URL";
 		$apps[$x]['description']['fr-ch'] = '';
-		$apps[$x]['description']['pt-pt'] = 'Originar chamadas com uma URL.';
+		$apps[$x]['description']['pt-pt'] = "Originar chamadas com uma URL.";
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
