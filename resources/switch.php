@@ -31,44 +31,46 @@ require_once "resources/require.php";
 	$v_path_show = true;
 
 //get user defined variables
-	if (strlen($_SESSION['user_defined_variables']) == 0) {
-		$sql = "select * from v_vars ";
-		$sql .= "where var_cat = 'Defaults' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		foreach ($result as &$row) {
-			switch ($row["var_name"]) {
-				case "username":
-					//not allowed to override this value
-					break;
-				case "groups":
-					//not allowed to override this value
-					break;
-				case "menu":
-					//not allowed to override this value
-					break;
-				case "template_name":
-					//not allowed to override this value
-					break;
-				case "template_content":
-					//not allowed to override this value
-					break;
-				case "extension_array":
-					//not allowed to override this value
-					break;
-				case "user_extension_array":
-					//not allowed to override this value
-					break;
-				case "user_array":
-					//not allowed to override this value
-					break;
-				default:
-					$_SESSION[$row["var_name"]] = $row["var_value"];
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/vars/app_config.php")) {
+		if (strlen($_SESSION['user_defined_variables']) == 0) {
+			$sql = "select * from v_vars ";
+			$sql .= "where var_cat = 'Defaults' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			foreach ($result as &$row) {
+				switch ($row["var_name"]) {
+					case "username":
+						//not allowed to override this value
+						break;
+					case "groups":
+						//not allowed to override this value
+						break;
+					case "menu":
+						//not allowed to override this value
+						break;
+					case "template_name":
+						//not allowed to override this value
+						break;
+					case "template_content":
+						//not allowed to override this value
+						break;
+					case "extension_array":
+						//not allowed to override this value
+						break;
+					case "user_extension_array":
+						//not allowed to override this value
+						break;
+					case "user_array":
+						//not allowed to override this value
+						break;
+					default:
+						$_SESSION[$row["var_name"]] = $row["var_value"];
+				}
 			}
+			//when this value is cleared it will re-read the user defined variables
+			$_SESSION["user_defined_variables"] = "set";
 		}
-		//when this value is cleared it will re-read the user defined variables
-		$_SESSION["user_defined_variables"] = "set";
 	}
 
 /*
@@ -130,61 +132,65 @@ foreach($settings_array as $name => $value) {
 */
 
 //create the recordings/archive/year/month/day directory structure
-	$v_recording_archive_dir = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d");
-	if(!is_dir($v_recording_archive_dir)) {
-		mkdir($v_recording_archive_dir, 0764, true);
+	$recording_archive_dir = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d");
+	if(!is_dir($recording_archive_dir)) {
+		mkdir($recording_archive_dir, 0764, true);
 		chmod($_SESSION['switch']['recordings']['dir']."/archive/".date("Y"), 0764);
 		chmod($_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M"), 0764);
-		chmod($v_recording_archive_dir, 0764);
+		chmod($recording_archive_dir, 0764);
 	}
 
 //get the event socket information
-	if (strlen($_SESSION['event_socket_ip_address']) == 0) {
-		$sql = "select * from v_settings ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($result as &$row) {
-				$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
-				$_SESSION['event_socket_port'] = $row["event_socket_port"];
-				$_SESSION['event_socket_password'] = $row["event_socket_password"];
-				break; //limit to 1 row
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
+		if (strlen($_SESSION['event_socket_ip_address']) == 0) {
+			$sql = "select * from v_settings ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+				foreach ($result as &$row) {
+					$_SESSION['event_socket_ip_address'] = $row["event_socket_ip_address"];
+					$_SESSION['event_socket_port'] = $row["event_socket_port"];
+					$_SESSION['event_socket_password'] = $row["event_socket_password"];
+					break; //limit to 1 row
+				}
 			}
 		}
 	}
 
 //get the extensions that are assigned to this user
-	if (strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
-		//get the user extension list
-			unset($_SESSION['user']['extension']);
-			$sql = "select e.extension, e.user_context, e.extension_uuid, e.outbound_caller_id_name, e.outbound_caller_id_number from v_extensions as e, v_extension_users as u ";
-			$sql .= "where e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and e.extension_uuid = u.extension_uuid ";
-			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-			$sql .= "and e.enabled = 'true' ";
-			$sql .= "order by e.extension asc ";
-			$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-			if (count($result) > 0) {
-				$x = 0;
-				foreach($result as $row) {
-					$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
-					$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
-					$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
-					$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
-					$_SESSION['user_context'] = $row["user_context"];
-					$x++;
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/extensions/app_config.php")) {
+		if (strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
+			//get the user extension list
+				unset($_SESSION['user']['extension']);
+				$sql = "select e.extension, e.user_context, e.extension_uuid, e.outbound_caller_id_name, e.outbound_caller_id_number from v_extensions as e, v_extension_users as u ";
+				$sql .= "where e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and e.extension_uuid = u.extension_uuid ";
+				$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
+				$sql .= "and e.enabled = 'true' ";
+				$sql .= "order by e.extension asc ";
+				$result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+				if (count($result) > 0) {
+					$x = 0;
+					foreach($result as $row) {
+						$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
+						$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
+						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
+						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
+						$_SESSION['user_context'] = $row["user_context"];
+						$x++;
+					}
 				}
-			}
-		//if no extension has been assigned then setting user_context will still need to be set
-			if (strlen($_SESSION['user_context']) == 0) {
-				if (count($_SESSION['domains']) == 1) {
-					$_SESSION['user_context'] = "default";
+			//if no extension has been assigned then setting user_context will still need to be set
+				if (strlen($_SESSION['user_context']) == 0) {
+					if (count($_SESSION['domains']) == 1) {
+						$_SESSION['user_context'] = "default";
+					}
+					else {
+						$_SESSION['user_context'] = $_SESSION['domain_name'];
+					}
 				}
-				else {
-					$_SESSION['user_context'] = $_SESSION['domain_name'];
-				}
-			}
+		}
 	}
 
 function build_menu() {
@@ -326,17 +332,19 @@ function event_socket_request($fp, $cmd) {
 function event_socket_request_cmd($cmd) {
 	global $db, $domain_uuid, $host;
 
-	$sql = "select * from v_settings ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-	foreach ($result as &$row) {
-		$event_socket_ip_address = $row["event_socket_ip_address"];
-		$event_socket_port = $row["event_socket_port"];
-		$event_socket_password = $row["event_socket_password"];
-		break; //limit to 1 row
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
+		$sql = "select * from v_settings ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($result as &$row) {
+			$event_socket_ip_address = $row["event_socket_ip_address"];
+			$event_socket_port = $row["event_socket_port"];
+			$event_socket_password = $row["event_socket_password"];
+			break; //limit to 1 row
+		}
+		unset ($prep_statement);
 	}
-	unset ($prep_statement);
 
 	$fp = event_socket_create($event_socket_ip_address, $event_socket_port, $event_socket_password);
 	$response = event_socket_request($fp, $cmd);
@@ -3035,13 +3043,27 @@ if (!function_exists('save_switch_xml')) {
 			$extension->xml();
 		}
 		if (is_readable($_SESSION['switch']['conf']['dir'])) {
-			save_setting_xml();
-			save_module_xml();
-			save_var_xml();
-			save_call_center_xml();
-			save_gateway_xml();
-			//save_ivr_menu_xml();
-			save_sip_profile_xml();
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
+				save_setting_xml();
+			}
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/modules/app_config.php")) {
+				save_module_xml();
+			}
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/vars/app_config.php")) {
+				save_var_xml();
+			}
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_center/app_config.php")) {
+				save_call_center_xml();
+			}
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/gateways/app_config.php")) {
+				save_gateway_xml();
+			}
+			//if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/ivr_menu/app_config.php")) {
+			//	save_ivr_menu_xml();
+			//}
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/sip_profiles/app_config.php")) {
+				save_sip_profile_xml();
+			}
 		}
 	}
 }
