@@ -87,41 +87,43 @@ require_once "resources/require.php";
 	unset($menu_prep_statement, $menu_result, $menu_row);
 
 //get the content
-	$sql = "select * from v_rss ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and rss_category = 'content' ";
-	if (strlen($content) == 0) {
-		$sql .= "and rss_link = '".$_SERVER["PHP_SELF"]."' ";
-	}
-	else {
-		$sql .= "and rss_link = '".$content."' ";
-	}
-	$sql .= "and (length(rss_del_date) = 0 ";
-	$sql .= "or rss_del_date is null) ";
-	$sql .= "order by rss_order asc ";
-	$content_prep_statement = $db->prepare(check_sql($sql));
-	$content_prep_statement->execute();
-	$result = $content_prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$page["title"] = '';
-	foreach($content_result as $content_row) {
-		$template_rss_sub_category = $content_row['rss_sub_category'];
-		if (strlen($content_row['rss_group']) == 0) {
-			//content is public
-			$content_from_db = &$content_row['rss_description'];
-			if (strlen($content_row['rss_title']) > 0) {
-				$page["title"] = $content_row['rss_title'];
-			}
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/content/app_config.php")) {
+		$sql = "select * from v_rss ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and rss_category = 'content' ";
+		if (strlen($content) == 0) {
+			$sql .= "and rss_link = '".$_SERVER["PHP_SELF"]."' ";
 		}
 		else {
-			if (if_group($content_row[rss_group])) { //viewable only to designated group
-				$content_from_db = &$content_row[rss_description];
+			$sql .= "and rss_link = '".$content."' ";
+		}
+		$sql .= "and (length(rss_del_date) = 0 ";
+		$sql .= "or rss_del_date is null) ";
+		$sql .= "order by rss_order asc ";
+		$content_prep_statement = $db->prepare(check_sql($sql));
+		$content_prep_statement->execute();
+		$result = $content_prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$page["title"] = '';
+		foreach($content_result as $content_row) {
+			$template_rss_sub_category = $content_row['rss_sub_category'];
+			if (strlen($content_row['rss_group']) == 0) {
+				//content is public
+				$content_from_db = &$content_row['rss_description'];
 				if (strlen($content_row['rss_title']) > 0) {
 					$page["title"] = $content_row['rss_title'];
 				}
 			}
-		}
-	} //end foreach
-	unset($sql, $content_result, $content_row);
+			else {
+				if (if_group($content_row[rss_group])) { //viewable only to designated group
+					$content_from_db = &$content_row[rss_description];
+					if (strlen($content_row['rss_title']) > 0) {
+						$page["title"] = $content_row['rss_title'];
+					}
+				}
+			}
+		} //end foreach
+		unset($sql, $content_result, $content_row);
+	}
 
 //start the output buffer
 	ob_start();
