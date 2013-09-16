@@ -194,40 +194,50 @@
 						event:addHeader("answer-state", "confirmed");
 						event:fire();
 
+					--start the fifo monitor on its own so that it doesn't block the script execution
+						api = freeswitch.API();
+						cmd = "luarun park_monitor.lua "..uuid.." "..domain_name.." "..park_extension.." "..park_timeout_type.." "..park_timeout_seconds.." "..park_timeout_destination;
+						result = api:executeString(cmd);
 				else
-					--bridge the current call to the call that is parked
-					--set the presence to terminated
-						event = freeswitch.Event("PRESENCE_IN");
-						event:addHeader("proto", "sip");
-						event:addHeader("event_type", "presence");
-						event:addHeader("alt_event_type", "dialog");
-						event:addHeader("Presence-Call-Direction", "outbound");
-						--event:addHeader("state", "Active (1 waiting)");
-						event:addHeader("from", park_extension.."@"..domain_name);
-						event:addHeader("login", park_extension.."@"..domain_name);
-						event:addHeader("unique-id", uuid);
-						event:addHeader("answer-state", "terminated");
-						event:fire();
+					context = session:getVariable("context");
+					caller_id_number = session:getVariable("caller_id_number");
+					dialed_extension = session:getVariable("dialed_extension");
+					dialed_user = session:getVariable("dialed_user");
+					cmd = "user_exists id ".. caller_id_number .." "..domain_name;
+					if (api:executeString(cmd) == "true") then
+						--bridge the current call to the call that is parked
+						--set the presence to terminated
+							event = freeswitch.Event("PRESENCE_IN");
+							event:addHeader("proto", "sip");
+							event:addHeader("event_type", "presence");
+							event:addHeader("alt_event_type", "dialog");
+							event:addHeader("Presence-Call-Direction", "outbound");
+							--event:addHeader("state", "Active (1 waiting)");
+							event:addHeader("from", park_extension.."@"..domain_name);
+							event:addHeader("login", park_extension.."@"..domain_name);
+							event:addHeader("unique-id", uuid);
+							event:addHeader("answer-state", "terminated");
+							event:fire();
 
-					--delete the lot from the database
-						dbh:query("DELETE from park WHERE lot = '"..park_extension.."' and domain = '"..domain_name.."' ");
-						--freeswitch.consoleLog("NOTICE", "Park 200- Affected rows: " .. dbh:affected_rows() .. "\n");
+						--delete the lot from the database
+							dbh:query("DELETE from park WHERE lot = '"..park_extension.."' and domain = '"..domain_name.."' ");
+							--freeswitch.consoleLog("NOTICE", "Park 200- Affected rows: " .. dbh:affected_rows() .. "\n");
 
-					--set the park status
-						cmd = "uuid_setvar "..lot_uuid.." park_status unparked";
-						result = trim(api:executeString(cmd));
-						freeswitch.consoleLog("NOTICE", "Park Status: unparked "..park_extension.."\n");
+						--set the park status
+							cmd = "uuid_setvar "..lot_uuid.." park_status unparked";
+							result = trim(api:executeString(cmd));
+							freeswitch.consoleLog("NOTICE", "Park Status: unparked "..park_extension.."\n");
 
-					--connect the calls
-						cmd = "uuid_bridge "..uuid.." "..lot_uuid;
-						result = trim(api:executeString(cmd));
+						--connect the calls
+							cmd = "uuid_bridge "..uuid.." "..lot_uuid;
+							result = trim(api:executeString(cmd));
+					else
+						--transfer the call back to the callee
+							session:execute("transfer", dialed_user .." XML "..context);
+					end
 				end
 
 			--continue running when the session ends
 				session:setAutoHangup(false);
 
-			--start the fifo monitor on its own so that it doesn't block the script execution
-				api = freeswitch.API();
-				cmd = "luarun park_monitor.lua "..uuid.." "..domain_name.." "..park_extension.." "..park_timeout_type.." "..park_timeout_seconds.." "..park_timeout_destination;
-				result = api:executeString(cmd);
 		end
