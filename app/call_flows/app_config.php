@@ -39,6 +39,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'call_flow_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = 'b0939384-7055-44e8-8b4c-9f72293e1878';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;

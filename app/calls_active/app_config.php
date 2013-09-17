@@ -55,6 +55,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'calls_active_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = 'eba3d07f-dd5c-6b7b-6880-493b44113ade';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][1]['name'] = 'calls_active_transfer';
@@ -70,6 +71,7 @@
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][5]['name'] = 'extensions_active_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '6dd85c19-cb6b-5cca-bf32-499bbe936f79';
 		//$apps[$x]['permissions'][5]['groups'][] = 'user';
 		$apps[$x]['permissions'][5]['groups'][] = 'admin';
 		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
@@ -91,11 +93,13 @@
 		$apps[$x]['permissions'][9]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][10]['name'] = 'extensions_active_list_view';
+		$apps[$x]['permissions'][10]['menu']['uuid'] = '';
 		//$apps[$x]['permissions'][10]['groups'][] = 'user';
 		$apps[$x]['permissions'][10]['groups'][] = 'admin';
 		$apps[$x]['permissions'][10]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][11]['name'] = 'extensions_active_assigned_view';
+		$apps[$x]['permissions'][11]['menu']['uuid'] = '';
 		//$apps[$x]['permissions'][11]['groups'][] = 'user';
 		$apps[$x]['permissions'][11]['groups'][] = 'admin';
 		$apps[$x]['permissions'][11]['groups'][] = 'superadmin';

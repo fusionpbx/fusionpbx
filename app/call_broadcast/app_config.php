@@ -38,6 +38,7 @@
 	
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'call_broadcast_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '50153bbf-78c5-b49e-7bd9-4b3e4b1134e6';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 

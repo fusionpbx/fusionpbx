@@ -36,6 +36,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'click_to_call_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = 'f862556f-9ddd-2697-fdf4-bed08ec63aa5';
 		$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';

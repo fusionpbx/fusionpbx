@@ -40,6 +40,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = '9f2a8c08-3e65-c41c-a716-3b53d42bc4d4';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';

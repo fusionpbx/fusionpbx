@@ -39,6 +39,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'conferences_active_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '2d857bbb-43b9-b8f7-a138-642868e0453a';
 		$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';

@@ -40,6 +40,7 @@
 	$text['label-time_zone']['en-us'] = 'Time Zone';
 	$text['label-enabled']['en-us'] = 'Enabled';
 	$text['label-group_name']['en-us'] = 'Name';
+	$text['label-group_check']['en-us'] = 'Protected';
 	$text['label-group_description']['en-us'] = 'Description';
 	$text['label-group_permissions']['en-us'] = 'Permissions';
 	$text['label-group_members']['en-us'] = 'Members';
@@ -68,7 +69,13 @@
 	$text['button-back']['en-us'] = 'Back';
 	$text['button-save']['en-us'] = 'Save';
 	$text['button-restore']['en-us'] = 'Restore Default';
+	$text['button-copy']['en-us'] = 'Copy';
 	$text['button-add_member']['en-us'] = 'Add Member';
+	
+	$text['message-copy']['en-us'] = 'Copy Completed';
+	$text['message-copy']['pt-pt'] = '';
+	$text['message-message']['en-us'] = 'Message';
+	$text['message-message']['pt-pt'] = '';
 
 	$text['confirm-delete']['en-us'] = 'Do you really want to delete this?';
 

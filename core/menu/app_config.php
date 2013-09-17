@@ -284,6 +284,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'group_name';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		
 
 		$y = 3; //table array index
 		$z = 0; //field array index

@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'content_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '90397352-395c-40f6-2087-887144abc06d';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 

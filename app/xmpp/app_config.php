@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'xmpp_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '1808365b-0f7c-7555-89d0-31b3d9a75abb';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][1]['name'] = 'xmpp_add';

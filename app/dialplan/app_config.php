@@ -56,6 +56,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'dialplan_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = 'b94e8bd9-9eb5-e427-9c26-ff7a6c21552a';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
@@ -69,6 +70,7 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][4]['name'] = 'dialplan_advanced_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '52929fee-81d3-4d94-50b7-64842d9393c2';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][5]['name'] = 'dialplan_advanced_edit';
