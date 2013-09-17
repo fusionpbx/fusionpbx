@@ -285,13 +285,13 @@ if (defined('STDIN')) {
 			echo "smtp_from_name: ".$_SESSION['email']['smtp_from_name']['var']."\n";
 			echo "tmp_subject: $tmp_subject\n";
 
-		//add teh attachments
+		//add the attachments
 			if (strlen($fax_name) > 0) {
-				if (!file_exists($dir_fax.'/'.$fax_name.".pdf")) {
-					$mail->AddAttachment($dir_fax.'/'.$fax_name.'.tif'); // tif attachment
-				}
 				if (file_exists($dir_fax.'/'.$fax_name.".pdf")) {
 					$mail->AddAttachment($dir_fax.'/'.$fax_name.'.pdf'); // pdf attachment
+				}
+				else {
+					$mail->AddAttachment($dir_fax.'/'.$fax_name.'.tif'); // tif attachment
 				}
 				//$filename='fax.tif'; $encoding = "base64"; $type = "image/tif";
 				//$mail->AddStringAttachment(base64_decode($strfax),$filename,$encoding,$type);
@@ -359,4 +359,5 @@ if (defined('STDIN')) {
 //write the contents of the buffer
 	fwrite($fp, $content);
 	fclose($fp);
+
 ?>
