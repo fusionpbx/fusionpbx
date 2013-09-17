@@ -100,9 +100,6 @@
 			elseif (digit == "2") then
 				freeswitch.consoleLog("NOTICE", "[confirm] reject\n");
 				session:hangup("CALL_REJECTED"); --LOSE_RACE
-			elseif (digit == "3") then
-				freeswitch.consoleLog("NOTICE", "[confirm] voicemail\n");
-				session:hangup("NO_ANSWER");
 			else
 				--freeswitch.consoleLog("NOTICE", "[confirm] no answer\n");
 				session:hangup("NO_ANSWER");
