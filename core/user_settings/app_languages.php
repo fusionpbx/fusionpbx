@@ -102,7 +102,7 @@
 
 	$text['label-view-messages']['en-us'] = 'View Messages';
 	$text['label-view-messages']['pt-pt'] = 'Ver Mensagens';
-	$text['label-view-messages']['fr-fr'] = 'Voir les messages';
+	$text['label-view-messages']['fr'] = 'Voir les messages';
 
 	$text['table-extension']['en-us'] = 'Extension';
 	$text['table-extension']['pt-pt'] = 'Extensão';
