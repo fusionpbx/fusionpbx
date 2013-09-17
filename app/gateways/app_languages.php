@@ -62,7 +62,7 @@
 
 	$text['description-realm']['en-us'] = 'Enter the realm here.';
 	$text['description-realm']['pt-pt'] = '';
-	$text['description-realm']['pt-pt'] = "Insérer le Royaume d'authentification";
+	$text['description-realm']['fr'] = "Insérer le Royaume d'authentification";
 
 	$text['label-from_user']['en-us'] = 'From User';
 	$text['label-from_user']['pt-pt'] = '';
@@ -106,7 +106,7 @@
 
 	$text['label-expire_seconds']['en-us'] = 'Expire Seconds';
 	$text['label-expire_seconds']['pt-pt'] = '';
-	$text['label-expire_seconds']['pt-pt'] = "Tempo d'expiration";
+	$text['label-expire_seconds']['fr'] = "Tempo d'expiration";
 
 	$text['description-expire_seconds']['en-us'] = 'Enter the expire-seconds here.';
 	$text['description-expire_seconds']['pt-pt'] = '';
@@ -165,7 +165,7 @@
 	$text['label-supress_cng']['fr'] = 'suppression du silence';
 
 	$text['description-supress_cng']['en-us'] = 'Enter the supress-cng';
-	$text['description-supress_cng']['pt-pt'] = "Afin de sauvegarder de la bande passante RTP, on n'envoit pas de RTP pour le silence.";
+	$text['description-supress_cng']['fr'] = "Afin de sauvegarder de la bande passante RTP, on n'envoit pas de RTP pour le silence.";
 
 	$text['label-sip_cid_type']['en-us'] = 'Sip CID Type';
 	$text['label-sip_cid_type']['pt-pt'] = '';

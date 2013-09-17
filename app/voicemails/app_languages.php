@@ -11,7 +11,7 @@
 
 		$text['description-voicemail']['en-us'] = 'Voicemail settings.';
 		$text['description-voicemail']['pt-pt'] = '';
-		$text['description-voicemail']['pt-pt'] = 'Configuration messagerie.';
+		$text['description-voicemail']['fr'] = 'Configuration messagerie.';
 
 		$text['label-voicemail_id']['en-us'] = 'Voicemail ID';
 		$text['label-voicemail_id']['pt-pt'] = '';
@@ -19,7 +19,7 @@
 
 		$text['description-voicemail_id']['en-us'] = 'Enter the Voicemail ID';
 		$text['description-voicemail_id']['pt-pt'] = '';
-		$text['description-voicemail_id']['pt-pt'] = "Choisir l'indentifiant de la messagerie vocale.";
+		$text['description-voicemail_id']['fr'] = "Choisir l'indentifiant de la messagerie vocale.";
 
 		$text['label-voicemail_password']['en-us'] = 'Password';
 		$text['label-voicemail_password']['pt-pt'] = '';
@@ -28,7 +28,6 @@
 		$text['description-voicemail_password']['en-us'] = 'Enter the Password';
 		$text['description-voicemail_password']['pt-pt'] = '';
 		$text['description-voicemail_password']['fr'] = '';
-
 
 		$text['label-greeting_id']['en-us'] = 'Greeting ID';
 		$text['label-greeting_id']['pt-pt'] = '';
@@ -236,6 +235,7 @@
 		$text['label-message_status']['fr'] = 'Etat';
 
 		$text['description-message_status']['en-us'] = 'Status';
+		$text['description-message_status']['pt-pt'] = 'Estado';
 		$text['description-message_status']['fr'] = 'Etat';
 
 		$text['label-message_priority']['en-us'] = 'Priority';

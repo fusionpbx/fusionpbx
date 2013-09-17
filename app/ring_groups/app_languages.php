@@ -100,7 +100,7 @@
 
 	$text['message-enabled']['en-us'] = 'Please provide: Enabled';
 	$text['message-enabled']['pt-pt'] = '';
-	$text['message-enabled']['pt-pt'] = "Merci d'indiquer: Actif";
+	$text['message-enabled']['fr'] = "Merci d'indiquer: Actif";
 
 	$text['message-add']['en-us'] = 'Add Complete';
 	$text['message-add']['pt-pt'] = '';
