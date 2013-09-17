@@ -37,6 +37,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'outbound_route_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '17e14094-1d57-1106-db2a-a787d34015e9';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][1]['name'] = 'outbound_route_add';

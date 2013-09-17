@@ -57,6 +57,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'call_center_queues_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '6c072b29-5b6c-49fc-008e-95e24c77de99';
 		$apps[$x]['permissions'][0]['groups'][] = 'agent';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
@@ -74,7 +75,8 @@
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][4]['name'] = 'call_center_agents_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'agent';
+		$apps[$x]['permissions'][4]['menu']['uuid'] = '597c483a-51a9-f95a-8d54-ea7d87ada2b8';
+		$apps[$x]['permissions'][4]['groups'][] = 'agent';
 		$apps[$x]['permissions'][4]['groups'][] = 'admin';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
@@ -91,7 +93,8 @@
 		$apps[$x]['permissions'][7]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][8]['name'] = 'call_center_tiers_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'agent';
+		$apps[$x]['permissions'][8]['menu']['uuid'] = '';
+		$apps[$x]['permissions'][8]['groups'][] = 'agent';
 		$apps[$x]['permissions'][8]['groups'][] = 'admin';
 		$apps[$x]['permissions'][8]['groups'][] = 'superadmin';
 

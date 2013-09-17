@@ -45,6 +45,21 @@ else {
 //show the header
 	require_once "resources/header.php";
 	$page["title"] = $text['title-group_manager'];
+	
+	if (isset($_REQUEST["change"])) {
+		//get the values from the HTTP POST and save them as PHP variables
+		$change = check_str($_REQUEST["change"]);
+		$group_name = check_str($_REQUEST["group_name"]);
+
+		$sql = "update v_groups set ";
+		$sql .= "group_unchanged = '$change' ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and group_name = '$group_name' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+	}
+	
+	
 
 //show the content
 	echo "<div class='' style='padding:0px;'>\n";
@@ -72,6 +87,7 @@ else {
 	$strlist = "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$strlist .= "<tr class='border'>\n";
 	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_name']." &nbsp; </th>\n";
+	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_check']." &nbsp; </th>\n";
 	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_description']." &nbsp; </th>\n";
 	$strlist .= "	<th align=\"center\" nowrap>&nbsp;</th>\n";
 
@@ -86,6 +102,7 @@ else {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		$group_name = $row["group_name"];
+		$group_unchanged= $row["group_unchanged"];
 		$group_uuid = $row["group_uuid"];
 		$group_description = $row["group_description"];
 		if (strlen($group_name) == 0) { $group_name = "&nbsp;"; }
@@ -98,6 +115,15 @@ else {
 		else {
 			$strlist .= "<tr>";
 			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_name &nbsp; </td>\n";
+			//$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_unchanged &nbsp; </td>\n";
+			$strlist .= "	<td class='".$row_style[$c]."' align=\"left\" nowrap='nowrap' nowrap>\n";
+			if ($group_unchanged == "true") {
+				$strlist .= "		<input type='checkbox' name='group_unchanged' checked='checked' value='true' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=false&group_name=".$group_name."';\">\n";
+			}
+			else {
+				$strlist .= "		<input type='checkbox' name='group_unchanged' value='false' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=true&group_name=".$group_name."';\">\n";
+			}
+			$strlist .= "	</td>\n";
 			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_description &nbsp; </td>\n";
 
 			$strlist .= "<td class='".$row_style[$c]."' align=\"center\" nowrap>\n";
@@ -120,7 +146,7 @@ else {
 	}
 
 	$strlist .= "<tr>\n";
-	$strlist .= "<td colspan='4' align='right' height='20'>\n";
+	$strlist .= "<td colspan='5' align='right' height='20'>\n";
 	if (permission_exists('group_add')) {
 		$strlist .= "	<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}

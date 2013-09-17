@@ -225,6 +225,12 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'groupdesc';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = 'group_unchanged';
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = 'groupdesc';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+
 
 		$y = 2; //table array index
 		$z = 0; //field array index

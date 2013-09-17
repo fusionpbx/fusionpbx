@@ -39,6 +39,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'contacts_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = 'f14e6ab6-6565-d4e6-cbad-a51d2e3e8ec6';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';

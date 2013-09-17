@@ -39,6 +39,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'destination_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = 'fd2a708a-ff03-c707-c19d-5a4194375eba';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
