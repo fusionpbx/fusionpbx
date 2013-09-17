@@ -344,11 +344,11 @@
 					if (prompt == "true") then
 						--schedule the timeout and route to the timeout destination
 							if (ring_group_timeout_app == "transfer") then
-								cmd = "sched_api +"..ring_group_timeout_sec.." "..uuid.." bgapi uuid_transfer "..uuid.." "..ring_group_timeout_data;
+								cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_transfer "..uuid.." "..ring_group_timeout_data;
 							elseif (ring_group_timeout_app == "bridge") then
-								cmd = "sched_api +"..ring_group_timeout_sec.." "..uuid.." bgapi uuid_transfer "..uuid.." bridge:"..ring_group_timeout_data;
+								cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_transfer "..uuid.." bridge:"..ring_group_timeout_data;
 							else
-								cmd = "sched_api +"..ring_group_timeout_sec.." "..uuid.." bgapi uuid_kill "..uuid.." alloted_timeout";
+								cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_kill "..uuid.." alloted_timeout";
 							end
 							--freeswitch.consoleLog("NOTICE", "[confirm] schedule timeout: "..cmd.."\n");
 							results = trim(api:executeString(cmd));
