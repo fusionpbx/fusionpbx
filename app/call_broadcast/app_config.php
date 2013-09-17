@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = "Schedule to immediately make multiple calls to the extension, an IVR Menu, Conference Room, or any other number.";
 		$apps[$x]['description']['es-mx'] = "Realiza llamadas inmediatamente a extensiones, IVR, conferencias o cualquier otro número";
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Programme des appels multiples vers des extensions, IVR, salles de conferences ou autre.";
+		$apps[$x]['description']['fr-fr'] = "Programme des appels multiples vers des extensions, IVR, salles de conferences ou autre.";
 		$apps[$x]['description']['fr-ca'] = "Il fait d' massive appels vers des extensions, IVR, salles de conferences ou quelqu'autre nom.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para a extensão de um menu de URA, Sala de Conferência, ou qualquer outro número.";
@@ -21,10 +21,10 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Call Broadcast";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "Llamada Masiva (Broadcast)";
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = "Appels de masse";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Appels de masse";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Chamada de Broadcast";
