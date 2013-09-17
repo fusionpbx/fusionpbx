@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = "Originate calls with a URL.";
 		$apps[$x]['description']['es-mx'] = "Genera llamadas con un URL.";
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Appeler avec une URL";
+		$apps[$x]['description']['fr-fr'] = "Appeler avec une URL";
 		$apps[$x]['description']['fr-ca'] = "Appeller avec d'URL";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = "Originar chamadas com uma URL.";
@@ -21,10 +21,10 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Click to Call';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Pulse para Llamar';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = 'Cliquez pour Appeller';
+		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Cliquez pour Appeller';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Clicar para Chamadas';

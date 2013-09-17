@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Conferences Centers allows one or more audio and video conference rooms.';
 		$apps[$x]['description']['es-mx'] = 'El Centro de Conferencia permite una o más recámaras de conferencia para audio y video.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
+		$apps[$x]['description']['fr-fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = '';
@@ -22,10 +22,10 @@
 		$y = 0;
 		$apps[$x]['menu'][$y]['title']['en-us'] = 'Conference Center';
 		$apps[$x]['menu'][$y]['title']['es-mx'] = 'Centro de Conferencias';
-		$apps[$x]['menu'][$y]['title']['de'] = '';
+		$apps[$x]['menu'][$y]['title']['de-de'] = '';
 		$apps[$x]['menu'][$y]['title']['de-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['de-at'] = '';
-		$apps[$x]['menu'][$y]['title']['fr'] = 'Centre de Conférences';
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = 'Centre de Conférences';
 		$apps[$x]['menu'][$y]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][$y]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['pt-pt'] = 'Conferencias';

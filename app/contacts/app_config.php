@@ -9,10 +9,10 @@
 		$apps[$x]['contact_url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Provides a place to store contact information for individuals and organizations.';
 		$apps[$x]['description']['es-mx'] = 'Provee un lugar para almacenar informacion de los contactos, para individuos u organizaciones';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Place pour stocker les information des contacts, personnes ou organizations.";
+		$apps[$x]['description']['fr-fr'] = "Place pour stocker les information des contacts, personnes ou organizations.";
 		$apps[$x]['description']['fr-ca'] = "C'est un endroit pour posser information des contacts, personnes ou organizations.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Fornece um local para armazenar informações de contato para indivíduos e organizações.';
@@ -21,10 +21,10 @@
 	//menu details
 		$apps[$x]['menu'][$y]['title']['en-us'] = 'Contacts';
 		$apps[$x]['menu'][$y]['title']['es-mx'] = 'Contactos';
-		$apps[$x]['menu'][$y]['title']['de'] = '';
+		$apps[$x]['menu'][$y]['title']['de-de'] = '';
 		$apps[$x]['menu'][$y]['title']['de-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['de-at'] = '';
-		$apps[$x]['menu'][$y]['title']['fr'] = 'Contacts';
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = 'Contacts';
 		$apps[$x]['menu'][$y]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][$y]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['pt-pt'] = 'Contactos';

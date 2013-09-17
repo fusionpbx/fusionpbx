@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'The menu can be customized using this tool.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Le menu peut être personnalisé ici";
+		$apps[$x]['description']['fr-fr'] = "Le menu peut être personnalisé ici";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado usando esta ferramenta.";
@@ -21,10 +21,10 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Menu Manager";
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = "Gestion des Menus";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Gestion des Menus";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Gestor de Menus";
@@ -37,10 +37,10 @@
 
 		$apps[$x]['menu'][1]['title']['en-us'] = 'System';
 		$apps[$x]['menu'][1]['title']['es-mx'] = '';
-		$apps[$x]['menu'][1]['title']['de'] = '';
+		$apps[$x]['menu'][1]['title']['de-de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
-		$apps[$x]['menu'][1]['title']['fr'] = 'Système';
+		$apps[$x]['menu'][1]['title']['fr-fr'] = 'Système';
 		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Sistema';
@@ -56,10 +56,10 @@
 
 		$apps[$x]['menu'][2]['title']['en-us'] = 'Accounts';
 		$apps[$x]['menu'][2]['title']['es-mx'] = '';
-		$apps[$x]['menu'][2]['title']['de'] = '';
+		$apps[$x]['menu'][2]['title']['de-de'] = '';
 		$apps[$x]['menu'][2]['title']['de-ch'] = '';
 		$apps[$x]['menu'][2]['title']['de-at'] = '';
-		$apps[$x]['menu'][2]['title']['fr'] = 'Comptes';
+		$apps[$x]['menu'][2]['title']['fr-fr'] = 'Comptes';
 		$apps[$x]['menu'][2]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][2]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][2]['title']['pt-pt'] = 'Contas';
@@ -86,10 +86,10 @@
 		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/calls_active/calls_active_extensions.php")) {
 			$apps[$x]['menu'][4]['title']['en-us'] = 'Status';
 			$apps[$x]['menu'][4]['title']['es-mx'] = '';
-			$apps[$x]['menu'][4]['title']['de'] = '';
+			$apps[$x]['menu'][4]['title']['de-de'] = '';
 			$apps[$x]['menu'][4]['title']['de-ch'] = '';
 			$apps[$x]['menu'][4]['title']['de-at'] = '';
-			$apps[$x]['menu'][4]['title']['fr'] = 'Etat';
+			$apps[$x]['menu'][4]['title']['fr-fr'] = 'Etat';
 			$apps[$x]['menu'][4]['title']['fr-ca'] = '';
 			$apps[$x]['menu'][4]['title']['fr-ch'] = '';
 			$apps[$x]['menu'][4]['title']['pt-pt'] = 'Estado';
@@ -106,10 +106,10 @@
 
 		$apps[$x]['menu'][5]['title']['en-us'] = 'Advanced';
 		$apps[$x]['menu'][5]['title']['es-mx'] = '';
-		$apps[$x]['menu'][5]['title']['de'] = '';
+		$apps[$x]['menu'][5]['title']['de-de'] = '';
 		$apps[$x]['menu'][5]['title']['de-ch'] = '';
 		$apps[$x]['menu'][5]['title']['de-at'] = '';
-		$apps[$x]['menu'][5]['title']['fr'] = 'Avancé';
+		$apps[$x]['menu'][5]['title']['fr-fr'] = 'Avancé';
 		$apps[$x]['menu'][5]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][5]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][5]['title']['pt-pt'] = 'Avançado';

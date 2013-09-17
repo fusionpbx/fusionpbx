@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Manage Content for any page in the interface.';
 		$apps[$x]['description']['es-mx'] = 'Administra el Contenido de cualquier pagina en la interfaz.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr'] = "Gerer le contenu des pages de l'interface.";
+		$apps[$x]['description']['fr-fr'] = "Gerer le contenu des pages de l'interface.";
 		$apps[$x]['description']['fr-ca'] = "Gerer le contenu des pages au interface.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Gerir o conteúdo de qualquer página na interface.';
@@ -21,10 +21,10 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Content Manager';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Administrador de Contenido';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr'] = 'Contenu';
+		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Contenu';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = 'Administrateur';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Gestor de Conteúdo';
