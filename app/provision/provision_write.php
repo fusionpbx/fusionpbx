@@ -61,7 +61,7 @@ else {
 
 		//use the mac address to find the vendor
 			if (strlen($device_vendor) == 0) {
-				switch (substr($mac, 0, 6)) {
+				switch (substr($device_mac_address, 0, 6)) {
 				case "00085d":
 					$device_vendor = "aastra";
 					break;
