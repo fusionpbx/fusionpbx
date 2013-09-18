@@ -58,6 +58,13 @@ body {
 	/*background-color: #FFFFFF;*/
 }
 
+.title {
+	color: #952424;
+	font-size: 15px;
+	font-family: arial;
+	font-weight: bold
+}
+
 b {
 	color: #952424;
 	font-size: 15px;
