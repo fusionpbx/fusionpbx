@@ -20,6 +20,14 @@
 	$text['label-destination-number']['pt-pt'] = '';
 	$text['label-destination-number']['fr'] = "Numéro d'appelant";
 
+	$text['label-inbox']['en-us'] = 'Inbox';
+	$text['label-inbox']['pt-pt'] = '';
+	$text['label-inbox']['fr'] = '';
+
+	$text['label-sent']['en-us'] = 'Sent';
+	$text['label-sent']['pt-pt'] = '';
+	$text['label-inbox']['fr'] = '';
+
 	$text['label-name']['en-us'] = 'Name';
 	$text['label-name']['pt-pt'] = 'Nome';
 	$text['label-name']['fr'] = "Nom";
