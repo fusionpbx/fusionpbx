@@ -217,7 +217,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dialplan_detail_break = $row["dialplan_detail_break"];
 			$dialplan_detail_inline = $row["dialplan_detail_inline"];
 			$dialplan_detail_group = $row["dialplan_detail_group"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -237,7 +236,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap><span class='table'>".$text['header-dialplan_detail']."</span></td>\n";
+	echo "<td align='left' width='30%' nowrap=\"nowrap\"><span class=\"title\">".$text['header-dialplan_detail']."</span></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
