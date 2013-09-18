@@ -77,6 +77,7 @@ else {
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "<br />\n";
 
 	//prepare to page the results
 		if (if_group("superadmin") || if_group("admin")) {
