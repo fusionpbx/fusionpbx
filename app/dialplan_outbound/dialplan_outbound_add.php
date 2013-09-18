@@ -634,8 +634,8 @@ function type_onchange(dialplan_detail_type) {
 
 	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>".$text['label-outbound-routes']."\n";
-	echo "			</strong></span></span>\n";
+	echo "		<td align='left'>\n";
+	echo "			<span class=\"title\">".$text['label-outbound-routes']."</span>\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3'\" value='".$text['button-back']."'>\n";

@@ -639,8 +639,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>".$text['title-dialplan-inbound-add']."\n";
-	echo "			</strong></span></span>\n";
+	echo "		<td align='left'>\n";
+	echo "			<span class=\"title\">".$text['title-dialplan-inbound-add']."</span>\n";
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
 	if (permission_exists("inbound_route_advanced")) {

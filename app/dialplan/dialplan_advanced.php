@@ -104,8 +104,8 @@ function sf() { document.forms[0].savetopath.focus(); }
 		<form action="dialplan_advanced.php" method="post" name="iform" id="iform">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 			  <tr>
-				<td align='left' width='100%'><span class="vexpl"><span class="red"><strong><?=$text['header-default_dialplan']?><br><br>
-					</strong></span>
+				<td align='left' width='100%'>
+					<span class="title"><?=$text['header-default_dialplan']?></span><br><br>
 					<?=$text['description-default_dialplan']?>
 					<br />
 					<br />

@@ -261,7 +261,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='30%'>\n";
-	echo"			<span class=\"vexpl\"><span class=\"title\">".$text['title-dialplan_edit']."</span></span><br />\n";
+	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
 	echo "    </td>\n";
 	echo "    <td width='70%' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$row['dialplan_uuid']."';}\" value='".$text['button-copy']."'>\n";
@@ -428,9 +428,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "  <tr>\n";
-		echo "    <td align='left'><p><span class=\"vexpl\"><span class=\"red\"><strong>".$text['header-conditions_and_actions']."</strong></span>\n";
-		echo "		<br /><br />\n";
-		echo "      ".$text['description-conditions_and_actions']."</span></p></td>\n";
+		echo "    <td align='left'><span class=\"title\">".$text['header-conditions_and_actions']."</span>\n";
+		echo "		<br />\n";
+		echo "      ".$text['description-conditions_and_actions']."</td>\n";
 		echo "  </tr>\n";
 		echo "</table>";
 		echo "<br />\n";

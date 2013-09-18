@@ -308,7 +308,7 @@ echo "<div align='center'>\n";
 echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
 echo "		<td align='left'>\n";
-echo "			<span class=\"vexpl\"><span class=\"red\"><strong>".$text['header-dialplan-add']."</strong></span></span>\n";
+echo "			<span class=\"title\">".$text['header-dialplan-add']."</span>\n";
 echo "		</td>\n";
 echo "		<td align='right'>\n";
 echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php'\" value='".$text['button-back']."'>\n";
