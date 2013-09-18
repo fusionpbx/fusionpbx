@@ -167,6 +167,7 @@ else {
 	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "<br />\n";
 
 	//get the conference room count
 		require_once "app/conference_centers/resources/classes/conference_center.php";
