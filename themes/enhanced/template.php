@@ -58,26 +58,32 @@ body {
 	/*background-color: #FFFFFF;*/
 }
 
-th {
-	border-top: 1px solid #444444;
-	border-bottom: 1px solid #444444;
-	text-align: left;
-	color: #FFFFFF;
-	font-size: 12px;
+b {
+	color: #952424;
+	font-size: 15px;
 	font-family: arial;
-	font-weight: bold;
+}
+
+th {
+	/*border-top: 1px solid #444444;*/
+	border-bottom: 1px solid #999999;
+	text-align: left;
+	color: #3164AD;
+	font-size: 13px;
+	font-family: arial;
+	/*font-weight: bold;*/
 	/*background-color: #506eab;*/
-	background-image: url('<!--{project_path}-->/themes/enhanced/images/background_th.png');
+	/*background-image: url('<!--{project_path}-->/themes/enhanced/images/background_th.png');*/
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-right: 7px;
 	padding-left: 7px;
 }
 
-th a:link{ color:#FFFFFF; }
-th a:visited{ color:#FFFFFF; }
-th a:hover{ color:#FFFFFF; }
-th a:active{ color:#FFFFFF; }
+th a:link{ color:#3164AD; }
+th a:visited{ color:#3164AD; }
+th a:hover{ color:#3164AD; }
+th a:active{ color:#3164AD; }
 
 td {
 	color: #5f5f5f;
@@ -214,6 +220,7 @@ INPUT.txt {
 
 .row_style0 {
 	background-image: url('<!--{project_path}-->/themes/enhanced/images/background_cell.gif');
+	/*background-color: #E5EEF6;*/
 	border-bottom: 1px solid #999999;
 	color: #444444;
 	text-align: left;
