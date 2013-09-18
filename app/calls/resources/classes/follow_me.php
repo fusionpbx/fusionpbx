@@ -306,17 +306,20 @@ include "root.php";
 							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#\${caller_id_name}";
 						}
 						if (strlen($this->cid_number_prefix) > 0) {
-							$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
-							//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."#\${caller_id_number}";
+							//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
+							$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."#\${caller_id_number}";
 						}
 						if (strlen($this->accountcode) > 0) {
 							$dial_string .= ",accountcode=".$this->accountcode;
 						}
+						//if ($this->call_prompt == "true") {
+							//$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
+						//}
 						$dial_string .= "}";
 						foreach ($result as &$row) {
 							$dial_string .= "[presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 							if ($this->call_prompt == "true") {
-								$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
+								$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
 							}
 							$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 							$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
