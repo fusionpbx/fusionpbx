@@ -261,7 +261,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='30%'>\n";
-	echo"			<span class=\"vexpl\"><strong>".$text['title-dialplan_edit']."</strong></span><br />\n";
+	echo"			<span class=\"vexpl\"><span class=\"title\">".$text['title-dialplan_edit']."</span></span><br />\n";
 	echo "    </td>\n";
 	echo "    <td width='70%' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$row['dialplan_uuid']."';}\" value='".$text['button-copy']."'>\n";
