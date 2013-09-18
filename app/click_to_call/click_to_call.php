@@ -218,7 +218,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "	<td align='left'>\n";
-	echo "		<span class=\"vexpl\" class=\"red\">\n";
+	echo "		<span class=\"title\">\n";
 	echo "			<strong>".$text['label-click2call']."</strong>\n";
 	echo "		</span>\n";
 	echo "	</td>\n";

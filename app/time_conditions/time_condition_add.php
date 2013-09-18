@@ -736,8 +736,8 @@ echo "<div align='center'>\n";
 
 echo " 	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "		<td align='left'><span class=\"vexpl\"><span class=\"red\"><strong>".$text['title-time-condition-add']."\n";
-echo "			</strong></span></span>\n";
+echo "		<td align='left'>\n";
+echo "			<span class=\"title\">".$text['title-time-condition-add']."</span><br />\n";
 echo "		</td>\n";
 echo "		<td align='right'>\n";
 echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
