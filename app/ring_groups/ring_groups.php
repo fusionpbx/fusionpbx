@@ -84,7 +84,7 @@ require_once "resources/paging.php";
 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
+		$rows_per_page = 150;
 		$param = "";
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
@@ -92,8 +92,8 @@ require_once "resources/paging.php";
 		$offset = $rows_per_page * $page; 
 
 	//get the  list
-		$sql = " select * from v_ring_groups ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
+		$sql = "select * from v_ring_groups ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= " limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
