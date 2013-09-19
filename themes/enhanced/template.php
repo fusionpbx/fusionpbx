@@ -708,6 +708,10 @@ table tr:nth-last-child(-5) td:first-of-type {
 										foreach($text as $key => $value) {
 											$text[$key] = $value[$_SESSION['domain']['language']['code']];
 										}
+									//set a default login destination
+										if (strlen($_SESSION['login']['destination']['url']) == 0) {
+											$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+										}
 									//login form
 										echo "<div align='right'>\n";
 										echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
