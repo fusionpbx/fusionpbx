@@ -127,12 +127,12 @@ else {
 			}
 	}
 
-//assign the extension to the user
+//assign the user
 	if (strlen($_REQUEST["user_uuid"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
 		//set the variables
 			$user_uuid = check_str($_REQUEST["user_uuid"]);
 			$extension_uuid = check_str($_REQUEST["id"]);
-		//assign the user to the extension
+		//assign the user to the ring group
 			$sql_insert = "insert into v_ring_group_users ";
 			$sql_insert .= "(";
 			$sql_insert .= "ring_group_user_uuid, ";
