@@ -116,8 +116,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "domain_uuid, ";
 				$sql .= "ring_group_destination_uuid, ";
 				$sql .= "ring_group_uuid, ";
-				$sql .= "domain_uuid, ";
-				$sql .= "ring_group_uuid, ";
 				$sql .= "destination_number, ";
 				$sql .= "destination_delay, ";
 				$sql .= "destination_timeout, ";
@@ -127,8 +125,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "(";
 				$sql .= "'$domain_uuid', ";
 				$sql .= "'".uuid()."', ";
-				$sql .= "'$ring_group_uuid', ";
-				$sql .= "'$domain_uuid', ";
 				$sql .= "'$ring_group_uuid', ";
 				$sql .= "'$destination_number', ";
 				$sql .= "'$destination_delay', ";
