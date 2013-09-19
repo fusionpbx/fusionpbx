@@ -387,11 +387,8 @@ table tr:nth-last-child(-5) td:first-of-type {
 				echo "background-color: #FFFFFF;";
 			}
 			else {
-				if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
+				if (strlen($_SESSION["username"]) > 0) {
 					echo "background-image: url('<!--{project_path}-->/themes/enhanced/images/content_background.png');";
-				}
-				else {
-					echo "background-image: url('<!--{project_path}-->/themes/enhanced/images/login_background.png');";
 				}
 			}
 		?>
@@ -545,9 +542,8 @@ table tr:nth-last-child(-5) td:first-of-type {
 	}
 
 /* end the menu css*/
-</style>
-<style type="text/css">
-	/* Remove margins from the 'html' and 'body' tags, and ensure the page takes up full screen height */
+
+/* Remove margins from the 'html' and 'body' tags, and ensure the page takes up full screen height */
 	html, body {
 		height:100%;
 		margin:0;
@@ -685,24 +681,88 @@ table tr:nth-last-child(-5) td:first-of-type {
 						</td>
 						<td width='50%' class='' align='right' valign='middle'>
 							<?php
-							if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								//$tmp_style = "style=\"opacity:0.7;filter:alpha(opacity=70)\" ";
-								//$tmp_style .= "onmouseover=\"this.style.opacity=1;this.filters.alpha.opacity=90\" ";
-								//$tmp_style .= "onmouseout=\"this.style.opacity=0.7;this.filters.alpha.opacity=70\" ";
-								$tmp_style = "style=\"opacity:0.7;\" ";
-								$tmp_style .= "onmouseover=\"this.style.opacity=1;\" ";
-								$tmp_style .= "onmouseout=\"this.style.opacity=0.7;\" ";
-								echo "		<select id='domain_uuid' name='domain_uuid' class='formfld' onchange=\"window.location='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid='+this.value+'&domain_change=true';\" $tmp_style>\n";
-								foreach($_SESSION['domains'] as $row) {
-									if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-										echo "	<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+							//logged in show the domains
+								if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+									//$tmp_style = "style=\"opacity:0.7;filter:alpha(opacity=70)\" ";
+									//$tmp_style .= "onmouseover=\"this.style.opacity=1;this.filters.alpha.opacity=90\" ";
+									//$tmp_style .= "onmouseout=\"this.style.opacity=0.7;this.filters.alpha.opacity=70\" ";
+									$tmp_style = "style=\"opacity:0.7;\" ";
+									$tmp_style .= "onmouseover=\"this.style.opacity=1;\" ";
+									$tmp_style .= "onmouseout=\"this.style.opacity=0.7;\" ";
+									echo "		<select id='domain_uuid' name='domain_uuid' class='formfld' onchange=\"window.location='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid='+this.value+'&domain_change=true';\" $tmp_style>\n";
+									foreach($_SESSION['domains'] as $row) {
+										if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
+											echo "	<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+										}
+										else {
+											echo "	<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+										}
 									}
-									else {
-										echo "	<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
-									}
+									echo "	</select>\n";
 								}
-								echo "	</select>\n";
-							}
+
+							//logged out show the login
+								if (strlen($_SESSION["username"]) == 0) {
+									//add multi-lingual support
+										require_once "core/user_settings/app_languages.php";
+										foreach($text as $key => $value) {
+											$text[$key] = $value[$_SESSION['domain']['language']['code']];
+										}
+									//login form
+										echo "<div align='right'>\n";
+										echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
+										echo "<input type='hidden' name='path' value='$path'>\n";
+										echo "<table width='200' border='0'>\n";
+										echo "<tr>\n";
+										//echo "<td align='left'>\n";
+										//echo "	<strong>".$text['label-username'].":</strong>\n";
+										//echo "</td>\n";
+										echo "<td>\n";
+										echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
+										echo "</td>\n";
+										//echo "</tr>\n";
+
+										//echo "<tr>\n";
+										//echo "<td align='left'>\n";
+										//echo "	<strong>".$text['label-password'].":</strong>\n";
+										//echo "</td>\n";
+										echo "<td align='left'>\n";
+										echo "	<input type=\"password\" style='width: 150px;' class='formfld' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
+										echo "</td>\n";
+										//echo "</tr>\n";
+
+										if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
+											//echo "<tr>\n";
+											echo "<td align='left'>\n";
+											echo "	<strong>".$text['label-domain'].":</strong>\n";
+											echo "</td>\n";
+											echo "<td>\n";
+											if (count($_SESSION['login']['domain_name']) > 0) {
+												echo "    <select style='width: 150px;' class='formfld' name='domain_name'>\n";
+												echo "    <option value=''></option>\n";
+												foreach ($_SESSION['login']['domain_name'] as &$row) {
+													echo "    <option value='$row'>$row</option>\n";
+												}
+												echo "    </select>\n";
+											}
+											else {
+												echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
+											}
+											echo "</td>\n";
+											//echo "</tr>\n";
+										}
+
+										//echo "<tr>\n";
+										echo "<td>\n";
+										echo "</td>\n";
+										echo "<td align=\"right\">\n";
+										echo "  <input type=\"submit\" class='btn' value=\"".$text['button-login']."\">\n";
+										echo "</td>\n";
+										echo "</tr>\n";
+										echo "</table>\n";
+										echo "</form>";
+										echo "</div>";
+								}
 							?>
 							&nbsp;
 						</td>
@@ -710,6 +770,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 				</table>
 			</td>
 		</tr>
+		<?php if (strlen($_SESSION["username"]) > 0) { ?>
 		<tr>
 			<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
 		</tr>
@@ -721,6 +782,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		<tr>
 			<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
 		</tr>
+		<?php } ?>
 		<tr>
 			<td valign='top' align='center' width='100%'>
 				<table width='100%' cellpadding='0' cellspacing='0' border='0'>
