@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -233,7 +233,7 @@ else {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width=\"50%\">\n";
-	echo "			<strong>".$text['title'].":</strong><br>\n";
+	echo "			<span class='title'>".$text['title'].":</span><br>\n";
 	echo "		</td>";
 	echo "		<td width='50%' align='right'>\n";
 	echo "			<label for=\"file\">".$text['label-upload'].":</label>\n";
