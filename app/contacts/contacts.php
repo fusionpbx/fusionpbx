@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,17 +62,18 @@ require_once "resources/paging.php";
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "	<td align=\"left\" valign=\"top\"><strong>".$text['header-contacts']."</strong><br>\n";
-	echo "		".$text['description-contacts']."\n";
+	echo "	<td align=\"left\" valign=\"top\">\n";
+	echo "		<span class='title'>".$text['header-contacts']."</span><br>\n";
+	echo "		".$text['description-contacts']."<br /><br />\n";
 	echo "	</td>\n";
-	echo "	<td align=\"right\" valign=\"top\">\n";
-	echo "		<form method=\"GET\" name=\"frm_search\" action=\"\">\n";
+	echo "	<form method=\"GET\" name=\"frm_search\" action=\"\">\n";
+	echo "	<td align=\"right\" valign=\"middle\">\n";
 	echo "			<input class=\"formfld\" type=\"text\" name=\"search_all\" value=\"$search_all\">\n";
 	echo "			<input class=\"btn\" type=\"submit\" name=\"submit\" value=\"".$text['button-search']."\">\n";
-	echo "		</form>\n";
 	echo "	</td>\n";
+	echo "	</form>\n";
 	if (permission_exists('contacts_add')) {
-		echo "	<td align=\"right\" valign=\"top\" width=\"50px\">\n";
+		echo "	<td align=\"right\" valign=\"middle\" width=\"50px\">\n";
 		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
 		echo "	</td>\n";
 	}
