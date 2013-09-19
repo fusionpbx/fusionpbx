@@ -450,7 +450,7 @@ else {
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
 		echo "		<td align='left'>\n";
-		echo "			<span class=\"vexpl\"><span class=\"title\">$text['label-inbox'] $fax_extension</span>\n";
+		echo "			<span class=\"vexpl\"><span class=\"title\">".$text['label-inbox']." ".$fax_extension."</span>\n";
 		echo "		</td>\n";
 		echo "		<td align='right'>";
 		if ($v_path_show) {
