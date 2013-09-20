@@ -57,7 +57,6 @@ else {
 	$sql = "select * from v_users ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and user_uuid = '$user_uuid' ";
-	$sql .= "and user_enabled = 'true' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -307,7 +306,6 @@ else {
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and username = '$username' ";
 	}
-	$sql .= "and user_enabled = 'true' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -317,9 +315,9 @@ else {
 			$username = $row["username"];
 		}
 		$password = $row["password"];
+		$user_enabled = $row["user_enabled"];
 		$contact_uuid = $row["contact_uuid"];
 		$user_status = $row["user_status"];
-		break; //limit to 1 row
 	}
 
 	//get the groups the user is a member of
