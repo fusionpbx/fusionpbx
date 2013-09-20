@@ -504,7 +504,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<th align='center' width='70%'>".$text['label-data']."</th>\n";
 			echo "<th align='center'>".$text['label-order']."</th>\n";
 			echo "<td align='right' width='42'>\n";
-			echo "	<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+			echo "	<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 			echo "</td>\n";
 			echo "<tr>\n";
 
@@ -519,7 +519,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 						echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 						echo "		<td width='33.3%' align='right'>\n";
-						echo "			<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+						echo "			<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 						echo "		</td>\n";
 						echo "	</tr>\n";
 						echo "	</table>\n";
@@ -537,7 +537,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "<th align='center' width='70%'>".$text['label-data']."</th>\n";
 						echo "<th align='center'>".$text['label-order']."</th>\n";
 						echo "<td align='right' width='42'>\n";
-						echo "	<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+						echo "	<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 						echo "</td>\n";
 						echo "<tr>\n";
 					}
@@ -549,8 +549,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".wordwrap($row['dialplan_detail_data'],180,"<br>",1)."</td>\n";
 						echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_detail_order']."</td>\n";
 						echo "	<td valign='top' align='right' nowrap='nowrap'>\n";
-						echo "		<a href='dialplan_details_edit.php?id=".$row['dialplan_detail_uuid']."&id2=".$dialplan_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-						echo "		<a href='dialplan_details_delete.php?id=".$row['dialplan_detail_uuid']."&id2=".$dialplan_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "		<a href='dialplan_details_edit.php?id=".$row['dialplan_detail_uuid']."&id2=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+						echo "		<a href='dialplan_details_delete.php?id=".$row['dialplan_detail_uuid']."&id2=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						echo "	</td>\n";
 						echo "</tr>\n";
 					}
@@ -567,7 +567,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 			echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 			echo "		<td width='33.3%' align='right'>\n";
-			echo "			<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+			echo "			<a href='dialplan_details_edit.php?id2=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 			echo "		</td>\n";
 			echo "	</tr>\n";
 			echo "	</table>\n";

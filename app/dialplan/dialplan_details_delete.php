@@ -46,6 +46,7 @@ else {
 
 if (count($_GET)>0) {
 	$id = $_GET["id"];
+	$app_uuid = check_str($_REQUEST["app_uuid"]);
 	$dialplan_uuid = check_str($_REQUEST["id2"]);
 }
 
@@ -72,7 +73,7 @@ if (strlen($id)>0) {
 
 //redirect the user
 	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."\">\n";
 	echo "<div align='center'>\n";
 	echo $text['message-delete']."\n";
 	echo "</div>\n";

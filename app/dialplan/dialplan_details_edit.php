@@ -63,6 +63,7 @@ else {
 	}
 
 //get the http values and set them as php variables
+	$app_uuid = check_str($_REQUEST["app_uuid"]);
 	if (count($_POST)>0) {
 		if (isset($_REQUEST["dialplan_uuid"])) {
 			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -150,7 +151,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."\">\n";
 				echo "<div align='center'>\n";
 				echo $text['message-add']."\n";
 				echo "</div>\n";
@@ -189,7 +190,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."\">\n";
 				echo "<div align='center'>\n";
 				echo $text['message-update']."\n";
 				echo "</div>\n";
@@ -237,7 +238,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap=\"nowrap\"><span class=\"title\">".$text['header-dialplan_detail']."</span></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."';\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	?>
@@ -565,6 +566,7 @@ function Replaceivr_menu_option_param(obj){
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+	echo "				<input type='hidden' name='app_uuid' value='$app_uuid'>\n";
 	if ($action == "update") {
 		echo "				<input type='hidden' name='dialplan_detail_uuid' value='$dialplan_detail_uuid'>\n";
 	}
