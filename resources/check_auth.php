@@ -44,7 +44,7 @@ require_once "resources/require.php";
 			}
 
 		//if the username from the form is not provided then send to login.php
-			if (strlen(check_str($_REQUEST["username"])) == 0) {
+			if (strlen(check_str($_REQUEST["username"])) == 0 && strlen(check_str($_REQUEST["key"])) == 0) {
 				$php_self = $_SERVER["PHP_SELF"];
 				$msg = "username required";
 				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($php_self)."&msg=".urlencode($msg));
@@ -188,14 +188,14 @@ require_once "resources/require.php";
 				//check the username and password if they don't match then redirect to the login
 					$sql = "select * from v_users ";
 					//$sql .= "where domain_uuid='".$domain_uuid."' ";
-					//$sql .= "and username='".$username."' ";
-					//$sql .= "and key='".$key."' ";
 					$sql .= "where domain_uuid=:domain_uuid ";
 					if (strlen($key) > 0) {
-						$sql .= "and key=:key ";
+						$sql .= "and api_key=:key ";
+						//$sql .= "and api_key='".$key."' ";
 					}
 					else {
 						$sql .= "and username=:username ";
+						//$sql .= "and username='".$username."' ";
 					}
 					$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 					$prep_statement = $db->prepare(check_sql($sql));
@@ -257,7 +257,7 @@ require_once "resources/require.php";
 					}
 				// add session variables
 					$_SESSION["user_uuid"] = $row["user_uuid"];
-					$_SESSION["username"] = check_str($_REQUEST["username"]);
+					$_SESSION["username"] = $row["username"];
 				// user session array
 					$_SESSION["user"]["username"] = $row["username"];
 					$_SESSION["user"]["user_uuid"] = $row["user_uuid"];
