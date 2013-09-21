@@ -41,8 +41,8 @@
 		$apps[$x]['permissions'][0]['name'] = 'contact_view';
 		$apps[$x]['permissions'][0]['menu']['uuid'] = 'f14e6ab6-6565-d4e6-cbad-a51d2e3e8ec6';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][0]['groups'][] = 'user';
 
 		$apps[$x]['permissions'][1]['name'] = 'contact_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
@@ -51,9 +51,72 @@
 		$apps[$x]['permissions'][2]['name'] = 'contact_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][2]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][2]['groups'][] = 'user';
 
 		$apps[$x]['permissions'][3]['name'] = 'contact_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][3]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][0]['name'] = 'contact_address_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][0]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][1]['name'] = 'contact_address_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][2]['name'] = 'contact_address_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][2]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][3]['name'] = 'contact_address_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][3]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][0]['name'] = 'contact_phone_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][0]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][1]['name'] = 'contact_phone_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][2]['name'] = 'contact_phone_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][2]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][3]['name'] = 'contact_phone_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][3]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][0]['name'] = 'contact_note_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][0]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][1]['name'] = 'contact_note_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][2]['name'] = 'contact_note_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][2]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][3]['name'] = 'contact_note_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][3]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][0]['name'] = 'contact_group_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][0]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][1]['name'] = 'contact_group_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][2]['name'] = 'contact_group_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][2]['groups'][] = 'admin';
+
+		$apps[$x]['permissions'][3]['name'] = 'contact_group_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 
