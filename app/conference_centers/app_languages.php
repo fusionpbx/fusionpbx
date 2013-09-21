@@ -82,7 +82,7 @@
 		$text['label-announce']['pt-pt'] = '';
 		$text['label-announce']['fr'] = 'Annonce';
 
-		$text['label-mute']['en-us'] = 'Mute on Entry';
+		$text['label-mute']['en-us'] = 'Mute';
 		$text['label-mute']['pt-pt'] = '';
 		$text['label-mute']['fr'] = 'Entrée Micro désactivé';
 
@@ -94,7 +94,7 @@
 		$text['label-sounds']['pt-pt'] = '';
 		$text['label-sounds']['fr'] = 'Sons';
 
-		$text['label-members']['en-us'] = 'Members';
+		$text['label-members']['en-us'] = 'Count';
 		$text['label-members']['pt-pt'] = '';
 		$text['label-members']['fr'] = 'Membres';
 
@@ -163,11 +163,11 @@
 		$text['button-add']['pt-pt'] = '';
 		$text['button-add']['fr'] = 'Ajouter';
 
-		$text['label-moderator-pin']['en-us'] = 'Moderator PIN';
+		$text['label-moderator-pin']['en-us'] = 'Moderator';
 		$text['label-moderator-pin']['pt-pt'] = '';
 		$text['label-moderator-pin']['fr'] = 'Code Modérateur';
 
-		$text['label-participant-pin']['en-us'] = 'Participant PIN';
+		$text['label-participant-pin']['en-us'] = 'Participant';
 		$text['label-participant-pin']['pt-pt'] = '';
 		$text['label-participant-pin']['fr'] = 'Code Participant';
 
