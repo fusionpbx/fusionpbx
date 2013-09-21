@@ -50,7 +50,7 @@ else {
 //get the groups data
 	$sql = "select * from v_groups ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and group_name = '$group_name' ";	
+	$sql .= "and group_name = '$group_name' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -58,7 +58,6 @@ else {
 		$domain_uuid = $row["domain_uuid"];
 		$group_description = $row["group_description"];
 		$group_name = $row["group_name"];
-		break;
 	}
 	unset ($prep_statement);
 	
@@ -69,14 +68,14 @@ else {
 	$sql .= "group_uuid, ";
 	$sql .= "domain_uuid, ";
 	$sql .= "group_name, ";
-	$sql .= "group_description ";	
+	$sql .= "group_description ";
 	$sql .= ")";
 	$sql .= "values ";
 	$sql .= "(";
 	$sql .= "'$group_uuid', ";
 	$sql .= "'$domain_uuid', ";
 	$sql .= "'$group_new', ";
-	$sql .= "'copy_$group_description' ";	
+	$sql .= "'copy_$group_description' ";
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);
@@ -93,7 +92,7 @@ else {
 		$domain_uuid = $row["domain_uuid"];
 		$permission_name = $row["permission_name"];
 		$group_name = $row["group_name"];
-		
+
 		//copy the group permissions
 		$group_permission_uuid = uuid();
 		$sql = "insert into v_group_permissions ";
@@ -108,7 +107,7 @@ else {
 		$sql .= "'$group_permission_uuid', ";
 		$sql .= "'$domain_uuid', ";
 		$sql .= "'$permission_name', ";
-		$sql .= "'$group_new' ";	
+		$sql .= "'$group_new' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
 		unset($sql);
