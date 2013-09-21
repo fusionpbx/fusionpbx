@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,7 +50,7 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$gateway = check_str($_POST["gateway"]);
 		$username = check_str($_POST["username"]);
 		$password = check_str($_POST["password"]);
@@ -312,7 +312,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$profile = $row["profile"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -358,7 +357,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width=\"50%\">\n";
-	echo "			<strong>".$text['title-gateway']."</strong><br>\n";
+	echo "			<span class=\".title\">".$text['title-gateway']."</span><br>\n";
 	echo "		</td>";
 	echo "		<td width='50%' align='right'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
