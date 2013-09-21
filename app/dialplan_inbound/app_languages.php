@@ -7,11 +7,11 @@
 
 	$text['description-dialplan-inbound-add']['en-us'] = 'The public dialplan is used to route incoming calls to destinations based on one or more conditions and context. It can send incoming calls to an auto attendant, huntgroup, extension, external number, or a script.';
 	$text['description-dialplan-inbound-add']['pt-pt'] = '';
-	$text['description-dialplan-inbound-add']['fr'] = "Le plan de numérotation publique est utilisé pour acheminer les appels aux destinations en se basant sur une ou plusieurs conditions ou contextes. Les appels peuvent être acheminé au opératrices auto, groupements, extensions, numéro externe ou script.";
+	$text['description-dialplan-inbound-add']['fr'] = "Le plan de numÃ©rotation publique est utilisÃ© pour acheminer les appels aux destinations en se basant sur une ou plusieurs conditions ou contextes. Les appels peuvent Ãªtre acheminÃ© au opÃ©ratrices auto, groupements, extensions, numÃ©ro externe ou script.";
 
 	$text['label-access-denied']['en-us'] = 'access denied';
 	$text['label-access-denied']['pt-pt'] = '';
-	$text['label-access-denied']['fr'] = "accès refusé";
+	$text['label-access-denied']['fr'] = "accÃ¨s refusÃ©";
 
 	$text['button-back']['en-us'] = 'Back';
 	$text['button-back']['pt-pt'] = '';
@@ -32,7 +32,7 @@
 
 	$text['label-destination-number']['en-us'] = 'Destination Number';
 	$text['label-destination-number']['pt-pt'] = '';
-	$text['label-destination-number']['fr'] = "Numéro de Destination";
+	$text['label-destination-number']['fr'] = "NumÃ©ro de Destination";
 
 	$text['label-select-inbound-destination-number']['en-us'] = 'Select the inbound destination number.';
 	$text['label-select-inbound-destination-number']['pt-pt'] = '';
@@ -74,7 +74,7 @@
 // advanced
 	$text['button-advanced']['en-us'] = 'Advanced';
 	$text['button-advanced']['pt-pt'] = '';
-	$text['button-advanced']['fr'] = "Avancé";
+	$text['button-advanced']['fr'] = "AvancÃ©";
 
 	$text['label-condition_1']['en-us'] = 'Condition 1';
 	$text['label-condition_1']['pt-pt'] = '';
@@ -114,7 +114,7 @@
 
 	$text['option-destination_number']['en-us'] = 'Destination Number';
 	$text['option-destination_number']['pt-pt'] = '';
-	$text['option-destination_number']['fr'] = "Numéro de Destination";
+	$text['option-destination_number']['fr'] = "NumÃ©ro de Destination";
 
 	$text['option-public']['en-us'] = 'Public';
 	$text['option-public']['pt-pt'] = '';
@@ -126,7 +126,7 @@
 
 	$text['option-caller_id_number']['en-us'] = 'Caller ID Number';
 	$text['option-caller_id_number']['pt-pt'] = '';
-	$text['option-caller_id_number']['fr'] = "Numéro d'appelant";
+	$text['option-caller_id_number']['fr'] = "NumÃ©ro d'appelant";
 
 	$text['option-ani']['en-us'] = 'ANI';
 	$text['option-ani']['pt-pt'] = '';
@@ -150,7 +150,7 @@
 
 	$text['option-network_addr']['en-us'] = 'Network Address';
 	$text['option-network_addr']['pt-pt'] = '';
-	$text['option-network_addr']['fr'] = "Adresse Réseau";
+	$text['option-network_addr']['fr'] = "Adresse RÃ©seau";
 
 // general
 	$text['button-save']['en-us'] = 'Save';
@@ -179,6 +179,6 @@
 
 	$text['confirm-update-complete']['en-us'] = 'Update Complete';
 	$text['confirm-update-complete']['pt-pt'] = '';
-	$text['confirm-update-complete']['fr'] = "Mis à jour";
+	$text['confirm-update-complete']['fr'] = "Mis Ã  jour";
 
 ?>

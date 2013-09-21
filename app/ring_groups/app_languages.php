@@ -32,7 +32,7 @@
 
 	$text['description']['en-us'] = 'A ring group is a set of destinations that can be called with a ring strategy.';
 	$text['description']['pt-pt'] = '';
-	$text['description']['fr'] = "Un groupe de sonnerie est un groupe de destinations pouvant être appelé via une stratégie de sonnerie.";
+	$text['description']['fr'] = "Un groupe de sonnerie est un groupe de destinations pouvant Ãªtre appelÃ© via une stratÃ©gie de sonnerie.";
 
 	$text['label-name']['en-us'] = 'Name';
 	$text['label-name']['pt-pt'] = '';
@@ -64,7 +64,7 @@
 
 	$text['label-forward_destination']['en-us'] = 'Number:';
 	$text['label-forward_destination']['pt-pt'] = '';
-	$text['label-forward_destination']['fr'] = "Numéro:";
+	$text['label-forward_destination']['fr'] = "NumÃ©ro:";
 
 	$text['label-tools']['en-us'] = 'Tools';
 	$text['label-tools']['pt-pt'] = '';
@@ -80,7 +80,7 @@
 
 	$text['message-delete']['en-us'] = 'Delete Complete';
 	$text['message-delete']['pt-pt'] = '';
-	$text['message-delete']['fr'] = 'Supprimé';
+	$text['message-delete']['fr'] = 'SupprimÃ©';
 
 	$text['message-name']['en-us'] = 'Please provide: Name';
 	$text['message-name']['pt-pt'] = '';
@@ -88,7 +88,7 @@
 
 	$text['message-strategy']['en-us'] = 'Please provide: Strategy';
 	$text['message-strategy']['pt-pt'] = '';
-	$text['message-strategy']['fr'] = "Merci d'indiquer: Stratégie";
+	$text['message-strategy']['fr'] = "Merci d'indiquer: StratÃ©gie";
 
 	$text['message-timeout']['en-us'] = 'Please provide: Timeout';
 	$text['message-timeout']['pt-pt'] = '';
@@ -104,11 +104,11 @@
 
 	$text['message-add']['en-us'] = 'Add Complete';
 	$text['message-add']['pt-pt'] = '';
-	$text['message-add']['fr'] = 'Ajouté';
+	$text['message-add']['fr'] = 'AjoutÃ©';
 
 	$text['message-update']['en-us'] = 'Update Complete';
 	$text['message-update']['pt-pt'] = '';
-	$text['message-update']['fr'] = "Mis à jour";
+	$text['message-update']['fr'] = "Mis Ã  jour";
 
 	$text['label-ring-group']['en-us'] = 'Ring Group';
 	$text['label-ring-group']['pt-pt'] = '';
@@ -120,7 +120,7 @@
 
 	$text['description-name']['en-us'] = 'Enter a name.';
 	$text['description-name']['pt-pt'] = '';
-	$text['description-name']['fr'] = 'Insérer un nom.';
+	$text['description-name']['fr'] = 'InsÃ©rer un nom.';
 
 	$text['label-context']['en-us'] = 'Context';
 	$text['label-context']['pt-pt'] = '';
@@ -132,15 +132,15 @@
 
 	$text['label-strategy']['en-us'] = 'Strategy';
 	$text['label-strategy']['pt-pt'] = '';
-	$text['label-strategy']['fr'] = 'Stratégie';
+	$text['label-strategy']['fr'] = 'StratÃ©gie';
 
 	$text['option-sequence']['en-us'] = 'Sequence';
 	$text['option-sequence']['pt-pt'] = '';
-	$text['option-sequence']['fr'] = 'Séquence';
+	$text['option-sequence']['fr'] = 'SÃ©quence';
 
 	$text['option-simultaneous']['en-us'] = 'Simultaneous';
 	$text['option-simultaneous']['pt-pt'] = '';
-	$text['option-simultaneous']['fr'] = 'Simultané';
+	$text['option-simultaneous']['fr'] = 'SimultanÃ©';
 
 	$text['option-enterprise']['en-us'] = 'Enterprise';
 	$text['option-enterprise']['pt-pt'] = '';
@@ -148,11 +148,11 @@
 
 	$text['description-strategy']['en-us'] = 'Select the ring strategy.';
 	$text['description-strategy']['pt-pt'] = '';
-	$text['description-strategy']['fr'] = 'Choisir la statégie de sonnerie.';
+	$text['description-strategy']['fr'] = 'Choisir la statÃ©gie de sonnerie.';
 
 	$text['label-duration']['en-us'] = 'Duration';
 	$text['label-duration']['pt-pt'] = '';
-	$text['label-duration']['fr'] = 'Durée';
+	$text['label-duration']['fr'] = 'DurÃ©e';
 
 	$text['label-call-timeout']['en-us'] = 'Call Timeout';
 	$text['label-call-timeout']['pt-pt'] = '';
@@ -172,15 +172,15 @@
 
 	$text['label-cid-prefix']['en-us'] = 'CID Prefix';
 	$text['label-cid-prefix']['pt-pt'] = '';
-	$text['label-cid-prefix']['fr'] = 'CID Préfixe';
+	$text['label-cid-prefix']['fr'] = 'CID PrÃ©fixe';
 
 	$text['description-cid-prefix']['en-us'] = 'Set a prefix on the caller ID name.';
 	$text['description-cid-prefix']['pt-pt'] = '';
-	$text['description-cid-prefix']['fr'] = "Choisir un préfixe pour le nom de l'appelant.";
+	$text['description-cid-prefix']['fr'] = "Choisir un prÃ©fixe pour le nom de l'appelant.";
 
 	$text['label-ringback']['en-us'] = 'Ring Back';
 	$text['label-ringback']['pt-pt'] = '';
-	$text['label-ringback']['fr'] = "tonalité en retour d'appel";
+	$text['label-ringback']['fr'] = "tonalitÃ© en retour d'appel";
 
 	$text['option-usring']['en-us'] = 'us-ring';
 	$text['option-usring']['pt-pt'] = '';
@@ -200,7 +200,7 @@
 
 	$text['description-ringback']['en-us'] = 'Defines what the caller will hear while the destination is being called.';
 	$text['description-ringback']['pt-pt'] = '';
-	$text['description-ringback']['fr'] = "Définir le retour de sonnerie entendu par l'appelant tant que la destination est en alerte.";
+	$text['description-ringback']['fr'] = "DÃ©finir le retour de sonnerie entendu par l'appelant tant que la destination est en alerte.";
 
 	$text['option-true']['en-us'] = 'True';
 	$text['option-true']['pt-pt'] = '';
@@ -216,11 +216,11 @@
 
 	$text['description-user_list']['en-us'] = 'Assign the users that are assigned to this ring group. ';
 	$text['description-user_list']['pt-pt'] = '';
-	$text['description-user_list']['fr'] = 'Associer les utilisateurs à ce groupe de sonnerie. ';
+	$text['description-user_list']['fr'] = 'Associer les utilisateurs Ã  ce groupe de sonnerie. ';
 
 	$text['description-enabled']['en-us'] ='Set the status of this ring group.';
 	$text['description-enabled']['pt-pt'] = '';
-	$text['description-enabled']['fr'] = "Choisir l'état de ce groupe de sonnerie";
+	$text['description-enabled']['fr'] = "Choisir l'Ã©tat de ce groupe de sonnerie";
 
 	$text['description-description']['en-us'] = 'Enter a description (optional).';
 	$text['description-description']['pt-pt'] = '';
@@ -228,7 +228,7 @@
 
 	$text['label-delay']['en-us'] = 'Delay';
 	$text['label-delay']['pt-pt'] = '';
-	$text['label-delay']['fr'] = 'Délais';
+	$text['label-delay']['fr'] = 'DÃ©lais';
 
 	$text['label-timeout']['en-us'] = 'Timeout';
 	$text['label-timeout']['pt-pt'] = '';
@@ -244,7 +244,7 @@
 
 	$text['label-destination_delay']['en-us'] = 'Delay';
 	$text['label-destination_delay']['pt-pt'] = '';
-	$text['label-destination_delay']['fr'] = 'Délais';
+	$text['label-destination_delay']['fr'] = 'DÃ©lais';
 
 	$text['label-destination_timeout']['en-us'] = 'Timeout';
 	$text['label-destination_timeout']['pt-pt'] = '';
@@ -264,7 +264,7 @@
 
 	$text['description-destinations']['en-us'] = 'Add destinations and parameters to the ring group.';
 	$text['description-destinations']['pt-pt'] = '';
-	$text['description-destinations']['fr'] = "Ajouter des destinations et des paramètres au groupe de sonnerie.";
+	$text['description-destinations']['fr'] = "Ajouter des destinations et des paramÃ¨tres au groupe de sonnerie.";
 
 	$text['button-add']['en-us'] = 'Add';
 	$text['button-add']['pt-pt'] = '';
@@ -284,10 +284,10 @@
 
 	$text['option-enabled']['en-us'] = 'Enabled';
 	$text['option-enabled']['pt-pt'] = '';
-	$text['option-enabled']['fr'] = 'Activé';
+	$text['option-enabled']['fr'] = 'ActivÃ©';
 
 	$text['option-disabled']['en-us'] = 'Disabled';
 	$text['option-disabled']['pt-pt'] = '';
-	$text['option-disabled']['fr'] = 'Désactivé';
+	$text['option-disabled']['fr'] = 'DÃ©sactivÃ©';
 
 ?>

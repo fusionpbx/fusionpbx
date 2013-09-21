@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	$text['title']['en-us'] = 'Fax Server';
 	$text['title']['pt-pt'] = 'Servidor de Fax';

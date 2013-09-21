@@ -5,15 +5,21 @@
 		$text['title-hot_desking']['en-us'] = 'Hot Desking';
 
 		$text['header-hot_desking']['en-us'] = 'Hot Desking';
+
 		$text['header-message']['en-us'] = 'Message';
 
 		$text['description-hot_desking']['en-us'] = 'Log in to hot desking with a unique ID and your voicemail password to direct your calls to a remote extension. Then, make and receive calls as if you were at your extension.';
 
 		$text['label-extension']['en-us'] = 'Extension';
+
 		$text['label-unique_id']['en-us'] = 'Unique ID';
+
 		$text['label-forward_to']['en-us'] = 'Forward To';
+
 		$text['label-description']['en-us'] = 'Description';
+
 		$text['label-voicemail_password']['en-us'] = 'Voicemail Password';
+
 		$text['label-dial_string']['en-us'] = 'Dial String';
 
 		$text['description-extension-add']['en-us'] = 'Select the extension number.';

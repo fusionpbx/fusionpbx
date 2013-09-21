@@ -1,4 +1,4 @@
-<?php
+
 
 	//Call Flows
 		$text['title-call_flows']['en-us'] = 'Call Flows';
