@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Offre un mode pour exécuter des commandes système, PHP ou switch.";
-		$apps[$x]['description']['fr-ca'] = "Il offre un mode d'exécuter des commandes du système, PHP ou switch.";
+		$apps[$x]['description']['fr-fr'] = "Offre un mode pour exÃ©cuter des commandes systÃ¨me, PHP ou switch.";
+		$apps[$x]['description']['fr-ca'] = "Il offre un mode d'exÃ©cuter des commandes du systÃ¨me, PHP ou switch.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Fornece uma maneira conveniente para executar o sistema, PHP e comandos do switch.';
 		$apps[$x]['description']['pt-br'] = '';

@@ -24,7 +24,7 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "cinématiques d'Appel";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "cinÃ©matiques d'Appel";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "Circulation d'Appel";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = '';

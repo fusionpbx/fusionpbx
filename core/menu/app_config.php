@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Le menu peut être personnalisé ici";
+		$apps[$x]['description']['fr-fr'] = "Le menu peut Ãªtre personnalisÃ© ici";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = "O menu pode ser personalizado usando esta ferramenta.";
@@ -40,7 +40,7 @@
 		$apps[$x]['menu'][1]['title']['de-de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
-		$apps[$x]['menu'][1]['title']['fr-fr'] = 'Système';
+		$apps[$x]['menu'][1]['title']['fr-fr'] = 'SystÃ¨me';
 		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Sistema';
@@ -109,10 +109,10 @@
 		$apps[$x]['menu'][5]['title']['de-de'] = '';
 		$apps[$x]['menu'][5]['title']['de-ch'] = '';
 		$apps[$x]['menu'][5]['title']['de-at'] = '';
-		$apps[$x]['menu'][5]['title']['fr-fr'] = 'Avancé';
+		$apps[$x]['menu'][5]['title']['fr-fr'] = 'AvancÃ©';
 		$apps[$x]['menu'][5]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][5]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][5]['title']['pt-pt'] = 'Avançado';
+		$apps[$x]['menu'][5]['title']['pt-pt'] = 'AvanÃ§ado';
 		$apps[$x]['menu'][5]['title']['pt-br'] = '';
 		$apps[$x]['menu'][5]['uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
 		$apps[$x]['menu'][5]['parent_uuid'] = '';

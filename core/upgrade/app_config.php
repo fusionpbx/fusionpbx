@@ -11,7 +11,7 @@
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Mise ‡ jour du SchÈma de la base de donnÈes";
+		$apps[$x]['description']['fr-fr'] = "Mise √† jour du Sch√©ma de la base de donn√©es";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema de base de dados.";
@@ -23,7 +23,7 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "M‡J BDD";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "M√†J BDD";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Actualizar BD";
