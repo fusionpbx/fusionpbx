@@ -37,11 +37,11 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'registrations_domain';
+		$apps[$x]['permissions'][0]['name'] = 'registration_domain';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'registrations_all';
+		$apps[$x]['permissions'][1]['name'] = 'registration_all';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
 ?>
