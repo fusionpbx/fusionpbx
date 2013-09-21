@@ -86,8 +86,11 @@ require_once "resources/require.php";
 					}
 			}
 
-		//get the username
+		//get the username or key
 			$username = check_str($_REQUEST["username"]);
+			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/api/app_config.php')) {
+				$key = check_str($_REQUEST["key"]);
+			}
 
 		//ldap authentication
 			if ($_SESSION["ldap"]["authentication"]["boolean"] == "true") {
@@ -186,31 +189,47 @@ require_once "resources/require.php";
 					$sql = "select * from v_users ";
 					//$sql .= "where domain_uuid='".$domain_uuid."' ";
 					//$sql .= "and username='".$username."' ";
+					//$sql .= "and key='".$key."' ";
 					$sql .= "where domain_uuid=:domain_uuid ";
-					$sql .= "and username=:username ";
+					if (strlen($key) > 0) {
+						$sql .= "and key=:key ";
+					}
+					else {
+						$sql .= "and username=:username ";
+					}
 					$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-					$prep_statement->bindParam(':username', $username);
+					if (strlen($key) > 0) {
+						$prep_statement->bindParam(':key', $key);
+					}
+					else {
+						$prep_statement->bindParam(':username', $username);
+					}
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (count($result) == 0) {
 						$auth_failed = true;
 					}
 					else {
-						foreach ($result as &$row) {
-							//get the salt from the database
-								$salt = $row["salt"];
-							//if salt is not defined then use the default salt for backwards compatibility
-								if (strlen($salt) == 0) {
-									$salt = 'e3.7d.12';
-								}
-							//compare the password provided by the user with the one in the database
-								if (md5($salt.check_str($_REQUEST["password"])) != $row["password"]) {
-									$auth_failed = true;
-								}
-							//end the loop
-								break;
+						if (strlen($key) > 0) {
+							$auth_failed = false;
+						}
+						else {
+							foreach ($result as &$row) {
+								//get the salt from the database
+									$salt = $row["salt"];
+								//if salt is not defined then use the default salt for backwards compatibility
+									if (strlen($salt) == 0) {
+										$salt = 'e3.7d.12';
+									}
+								//compare the password provided by the user with the one in the database
+									if (md5($salt.check_str($_REQUEST["password"])) != $row["password"]) {
+										$auth_failed = true;
+									}
+								//end the loop
+									break;
+							}
 						}
 					}
 			}
