@@ -8,14 +8,14 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.';
-		$apps[$x]['description']['es-mx'] = 'Para recibir un FAX, configure una extensión y después asigne un número a esta.';
+		$apps[$x]['description']['es-mx'] = 'Para recibir un FAX, configure una extensiÃ³n y despuÃ©s asigne un nÃºmero a esta.';
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = 'Pour recevoir un fax, configurez une extension du FAX et apr�s diriger un num�ro vers lui.';
-		$apps[$x]['description']['fr-ca'] = 'Pour recevoir un fax, configurez un éxtension du FAX et après dirigers un nombre vers lui.';
+		$apps[$x]['description']['fr-fr'] = 'Pour recevoir un fax, configurez une extension du FAX et après diriger un numéro vers lui.';
+		$apps[$x]['description']['fr-ca'] = 'Pour recevoir un fax, configurez un Ã©xtension du FAX et aprÃ¨s dirigers un nombre vers lui.';
 		$apps[$x]['description']['fr-ch'] = '';
-		$apps[$x]['description']['pt-pt'] = 'Para receber uma configura��o de fax uma extens�o de fax e, em seguida, direcionar o fax com um n�mero dedicado ou voc� pode detectar o tom de fax, usando na guia P�blica.';
+		$apps[$x]['description']['pt-pt'] = 'Para receber uma configuração de fax uma extensão de fax e, em seguida, direcionar o fax com um número dedicado ou você pode detectar o tom de fax, usando na guia Pública.';
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details

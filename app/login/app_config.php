@@ -41,7 +41,7 @@
 		$apps[$x]['menu'][1]['title']['de-de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
-		$apps[$x]['menu'][1]['title']['fr-fr'] = 'Déconnexion';
+		$apps[$x]['menu'][1]['title']['fr-fr'] = 'DÃ©connexion';
 		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Sair';

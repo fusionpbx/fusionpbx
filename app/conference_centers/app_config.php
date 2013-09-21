@@ -8,11 +8,11 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Conferences Centers allows one or more audio and video conference rooms.';
-		$apps[$x]['description']['es-mx'] = 'El Centro de Conferencia permite una o m·s rec·maras de conferencia para audio y video.';
+		$apps[$x]['description']['es-mx'] = 'El Centro de Conferencia permite una o m√°s rec√°maras de conferencia para audio y video.';
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Centre de ConfÈrences permet une ou plus conferences audio ou vidÈo.";
+		$apps[$x]['description']['fr-fr'] = "Centre de Conf√©rences permet une ou plus conferences audio ou vid√©o.";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = '';
@@ -25,7 +25,7 @@
 		$apps[$x]['menu'][$y]['title']['de-de'] = '';
 		$apps[$x]['menu'][$y]['title']['de-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['de-at'] = '';
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = 'Centre de ConfÈrences';
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = 'Centre de Conf√©rences';
 		$apps[$x]['menu'][$y]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][$y]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['pt-pt'] = 'Conferencias';

@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Follow Me';
-		$apps[$x]['menu'][0]['title']['es-mx'] = 'Sígueme';
+		$apps[$x]['menu'][0]['title']['es-mx'] = 'SÃ­gueme';
 		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
