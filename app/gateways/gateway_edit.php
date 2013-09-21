@@ -357,7 +357,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width=\"50%\">\n";
-	echo "			<span class=\".title\">".$text['title-gateway']."</span><br>\n";
+	echo "			<span class=\"title\">".$text['title-gateway']."</span><br>\n";
 	echo "		</td>";
 	echo "		<td width='50%' align='right'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
