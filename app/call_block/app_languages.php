@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // call_block.php
 	$text['title-call-block']['en-us'] = 'Call Block';
 	$text['title-call-block']['pt-pt'] = '';

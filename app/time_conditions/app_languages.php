@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	$text['title-time-condition-add']['en-us'] = 'Time Conditions';
 	$text['title-time-condition-add']['fr'] = 'Conditions Temporelles';

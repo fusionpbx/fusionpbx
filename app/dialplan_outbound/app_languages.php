@@ -36,7 +36,7 @@
 	$text['label-gateway-name']['fr'] = "Nom de la passerelle";
 
 	$text['label-dialplan-expression']['en-us'] = 'Dialplan Expression';
-	$text['label-dialplan-expression']['fr'] = "Expression du Plan de numérotation";
+	$text['label-dialplan-expression']['fr'] = "Expression du Plan de numÃ©rotation";
 
 	$text['label-2d']['en-us'] = '2 Digits';
 	$text['label-2d']['fr'] = '2 Digits';
@@ -135,7 +135,7 @@
 	$text['label-800']['fr'] = 'Sans Charge';
 
 	$text['message-update']['en-us'] = 'Update Complete';
-	$text['message-update']['fr'] = "Mis à jour";
+	$text['message-update']['fr'] = "Mis Ã  jour";
 
 	$text['label-outbound-routes']['en-us'] = 'Outbound Routes';
 	$text['label-outbound-routes']['fr'] = 'Routes Sortantes';
@@ -144,7 +144,7 @@
 	$text['button-back']['fr'] = 'Retour';
 
 	$text['description-outbound-routes']['en-us'] = 'Outbound dialplans have one or more conditions that are matched to attributes of a call.  When a call matches the conditions the call is then routed to the gateway.';
-	$text['description-outbound-routes']['fr'] = "les Plan de numérotation sortant doivent remplir une ou plusieures conditions afin d'acheminer un appel. Lorsqu'un appel rempli la ou des conditions, l'appel est alors acheminé à la passerelle.";
+	$text['description-outbound-routes']['fr'] = "les Plan de numÃ©rotation sortant doivent remplir une ou plusieures conditions afin d'acheminer un appel. Lorsqu'un appel rempli la ou des conditions, l'appel est alors acheminÃ© Ã  la passerelle.";
 
 	$text['label-gateway']['en-us'] = 'Gateway';
 	$text['label-gateway']['fr'] = 'Passerelle';
@@ -156,28 +156,28 @@
 	$text['label-add-options']['fr'] = 'Autres Options';
 
 	$text['message-add-options']['en-us'] = 'Select the gateway to use with this outbound route.';
-	$text['message-add-options']['fr'] = "Choisir la passerelle utilisée par cette route sortante.";
+	$text['message-add-options']['fr'] = "Choisir la passerelle utilisÃ©e par cette route sortante.";
 
 	$text['label-alt1']['en-us'] = 'Alternate 1';
 	$text['label-alt1']['fr'] = 'Alternative 1';
 
 	$text['message-add-options1']['en-us'] = 'Select another gateway as an alternative to use if the first one fails.';
-	$text['message-add-options1']['fr'] = "Choisir une autre passerelle comme alternative si la première échoue.";
+	$text['message-add-options1']['fr'] = "Choisir une autre passerelle comme alternative si la premiÃ¨re Ã©choue.";
 
 	$text['label-alt2']['en-us'] = 'Alternate 2';
 	$text['label-alt2']['fr'] = 'Alternative 2';
 
 	$text['message-add-options2']['en-us'] = 'Select another gateway as an alternative to use if the second one fails.';
-	$text['message-add-options2']['fr'] = "Choisir une autre passerelle comme alternative si la seconde échoue.";
+	$text['message-add-options2']['fr'] = "Choisir une autre passerelle comme alternative si la seconde Ã©choue.";
 
 	$text['description-shortcut']['en-us'] = 'Shortcut to create the outbound dialplan entries for this Gateway.';
-	$text['description-shortcut']['fr'] = "Raccourci pour créer l'entrée de cette passerelle dans le plan de numérotation sortant.";
+	$text['description-shortcut']['fr'] = "Raccourci pour crÃ©er l'entrÃ©e de cette passerelle dans le plan de numÃ©rotation sortant.";
 
 	$text['label-prefix']['en-us'] = 'Prefix';
-	$text['label-prefix']['fr'] = 'Préfixe';
+	$text['label-prefix']['fr'] = 'PrÃ©fixe';
 
 	$text['description-enter-prefix']['en-us'] = 'Enter a prefix number to add to the beginning of the destination number.';
-	$text['description-enter-prefix']['fr'] = "Choisir un préfixe à ajouter en début de numérotation pour joindre la destination.";
+	$text['description-enter-prefix']['fr'] = "Choisir un prÃ©fixe Ã  ajouter en dÃ©but de numÃ©rotation pour joindre la destination.";
 
 	$text['label-limit']['en-us'] = 'Limit';
 	$text['label-limit']['fr'] = 'Limite';
@@ -193,7 +193,7 @@
 	$text['label-order']['fr'] = 'Ordre';
 
 	$text['description-order']['en-us'] = 'Select the order number. The order number determines the order of the outbound routes when there is more than one.';
-	$text['description-order']['fr'] = "Choisir le numéro d'ordre. Ce nombre détermine l'ordre dans le quel cette route sera utilisées si plusieurs routes correspondant aux conditions de l'appel existent.";
+	$text['description-order']['fr'] = "Choisir le numÃ©ro d'ordre. Ce nombre dÃ©termine l'ordre dans le quel cette route sera utilisÃ©es si plusieurs routes correspondant aux conditions de l'appel existent.";
 
 	$text['label-enabled']['en-us'] = 'Enabled';
 	$text['label-enabled']['fr'] = 'Actif';

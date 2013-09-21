@@ -10,11 +10,11 @@
 
 	$text['description-gateway']['en-us'] = 'Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.';
 	$text['description-gateway']['pt-pt'] = '';
-	$text['description-gateway']['fr'] = "Les passerelles permettent l'accès aux autres réseaux voix. Ceux-ci pouvant être des fournisseurs d'accès ou tout autre système nécessitant un enregistrement SIP.";
+	$text['description-gateway']['fr'] = "Les passerelles permettent l'accÃ¨s aux autres rÃ©seaux voix. Ceux-ci pouvant Ãªtre des fournisseurs d'accÃ¨s ou tout autre systÃ¨me nÃ©cessitant un enregistrement SIP.";
 
 	$text['description-gateway-edit']['en-us'] = 'Defines a connections to a SIP Provider or another SIP server.';
 	$text['description-gateway-edit']['pt-pt'] = '';
-	$text['description-gateway-edit']['fr'] = 'Défini une connexion à un fourniiser SIP ou un autre serveur SIP.';
+	$text['description-gateway-edit']['fr'] = 'DÃ©fini une connexion Ã  un fourniiser SIP ou un autre serveur SIP.';
 
 	$text['label-gateway']['en-us'] = 'Gateway';
 	$text['label-gateway']['pt-pt'] = '';
@@ -46,7 +46,7 @@
 
 	$text['description-distinct_to']['en-us'] = 'Enter the distinct_to here.';
 	$text['description-distinct_to']['pt-pt'] = '';
-	$text['description-distinct_to']['fr'] = 'Insére ici le distinct_to.';
+	$text['description-distinct_to']['fr'] = 'InsÃ©re ici le distinct_to.';
 
 	$text['label-auth_username']['en-us'] = 'Auth Username';
 	$text['label-auth_username']['pt-pt'] = '';
@@ -54,7 +54,7 @@
 
 	$text['description-auth_username']['en-us'] = 'Enter the auth-username here.';
 	$text['description-auth_username']['pt-pt'] = '';
-	$text['description-auth_username']['fr'] = "Insérer l'utilisateur d'authentification";
+	$text['description-auth_username']['fr'] = "InsÃ©rer l'utilisateur d'authentification";
 
 	$text['label-realm']['en-us'] = 'Realm';
 	$text['label-realm']['pt-pt'] = '';
@@ -62,7 +62,7 @@
 
 	$text['description-realm']['en-us'] = 'Enter the realm here.';
 	$text['description-realm']['pt-pt'] = '';
-	$text['description-realm']['fr'] = "Insérer le Royaume d'authentification";
+	$text['description-realm']['fr'] = "InsÃ©rer le Royaume d'authentification";
 
 	$text['label-from_user']['en-us'] = 'From User';
 	$text['label-from_user']['pt-pt'] = '';
@@ -94,7 +94,7 @@
 
 	$text['description-register_proxy']['en-us'] = 'Enter the register proxy here.';
 	$text['description-register_proxy']['pt-pt'] = '';
-	$text['description-register_proxy']['fr'] = "Insérer ici le proxy d'enregistrement.";
+	$text['description-register_proxy']['fr'] = "InsÃ©rer ici le proxy d'enregistrement.";
 
 	$text['label-outbound_proxy']['en-us'] = 'Outbound Proxy';
 	$text['label-outbound_proxy']['pt-pt'] = '';
@@ -102,7 +102,7 @@
 
 	$text['description-outbound_proxy']['en-us'] = 'Enter the outbound proxy here.';
 	$text['description-outbound_proxy']['pt-pt'] = '';
-	$text['description-outbound_proxy']['fr'] = "Insérer ici le proxy sortant.";
+	$text['description-outbound_proxy']['fr'] = "InsÃ©rer ici le proxy sortant.";
 
 	$text['label-expire_seconds']['en-us'] = 'Expire Seconds';
 	$text['label-expire_seconds']['pt-pt'] = '';
@@ -110,7 +110,7 @@
 
 	$text['description-expire_seconds']['en-us'] = 'Enter the expire-seconds here.';
 	$text['description-expire_seconds']['pt-pt'] = '';
-	$text['description-expire_seconds']['fr'] = "Tempo d'enregistrement en secondes (avant de déclarer le proxy HS).";
+	$text['description-expire_seconds']['fr'] = "Tempo d'enregistrement en secondes (avant de dÃ©clarer le proxy HS).";
 
 	$text['label-register']['en-us'] = 'Register';
 	$text['label-register']['pt-pt'] = '';
@@ -126,7 +126,7 @@
 
 	$text['description-register_transport']['en-us'] = 'Choose whether to register-transport.';
 	$text['description-register_transport']['pt-pt'] = '';
-	$text['description-register_transport']['fr'] = 'Insére ici le type de transport utilisé.';
+	$text['description-register_transport']['fr'] = 'InsÃ©re ici le type de transport utilisÃ©.';
 
 	$text['label-retry_seconds']['en-us'] = 'Retry Seconds';
 	$text['label-retry_seconds']['pt-pt'] = '';
@@ -134,7 +134,7 @@
 
 	$text['description-retry_seconds']['en-us'] = 'Enter the retry-seconds here.';
 	$text['description-retry_seconds']['pt-pt'] = '';
-	$text['description-retry_seconds']['fr'] = 'Insérer ici la tempo en secondes de tentative de reconnexion après un timeout ou un échec.';
+	$text['description-retry_seconds']['fr'] = 'InsÃ©rer ici la tempo en secondes de tentative de reconnexion aprÃ¨s un timeout ou un Ã©chec.';
 
 	$text['label-extension']['en-us'] = 'Extension';
 	$text['label-extension']['pt-pt'] = '';
@@ -150,7 +150,7 @@
 
 	$text['description-ping']['en-us'] = 'Enter the ping interval here in seconds.';
 	$text['description-ping']['pt-pt'] = '';
-	$text['description-ping']['fr'] = 'Insérer ici la fréquence de ping en secondes.';
+	$text['description-ping']['fr'] = 'InsÃ©rer ici la frÃ©quence de ping en secondes.';
 
 	$text['label-caller_id_in_from']['en-us'] = 'Caller Id In From';
 	$text['label-caller_id_in_from']['pt-pt'] = '';
@@ -158,7 +158,7 @@
 
 	$text['description-caller_id_in_from']['en-us'] = 'Enter the caller-id-in-from.';
 	$text['description-caller_id_in_from']['pt-pt'] = '';
-	$text['description-caller_id_in_from']['fr'] = "Insérer ici la partie Caller-id à utiliser dans le header SIP From.";
+	$text['description-caller_id_in_from']['fr'] = "InsÃ©rer ici la partie Caller-id Ã  utiliser dans le header SIP From.";
 
 	$text['label-supress_cng']['en-us'] = 'Supress Cng';
 	$text['label-supress_cng']['pt-pt'] = '';
@@ -173,7 +173,7 @@
 
 	$text['description-sip_cid_type']['en-us'] = 'Enter the sip cid type: none, pid, and rpid.';
 	$text['description-sip_cid_type']['pt-pt'] = '';
-	$text['description-sip_cid_type']['fr'] = "Insérer le type d'ID d'appelant : none (utilise le header From) ou pid (P-Asserted-Identity header) ou rpid (remote-Party-ID header).";
+	$text['description-sip_cid_type']['fr'] = "InsÃ©rer le type d'ID d'appelant : none (utilise le header From) ou pid (P-Asserted-Identity header) ou rpid (remote-Party-ID header).";
 
 	$text['label-extension_in_contact']['en-us'] = 'Extension In Contact';
 	$text['label-extension_in_contact']['pt-pt'] = '';
@@ -181,7 +181,7 @@
 
 	$text['description-extension_in_contact']['en-us'] = 'Enter the Extension In Contact';
 	$text['description-extension_in_contact']['pt-pt'] = '';
-	$text['description-extension_in_contact']['fr'] = "Insérer l'Extension dans le Contact.";
+	$text['description-extension_in_contact']['fr'] = "InsÃ©rer l'Extension dans le Contact.";
 
 	$text['label-context']['en-us'] = 'Context';
 	$text['label-context']['pt-pt'] = '';
@@ -213,7 +213,7 @@
 
 	$text['description-description']['en-us'] = 'Enter the description of the gateway here.';
 	$text['description-description']['pt-pt'] = '';
-	$text['description-description']['fr'] = "Insérer ici la description de la passerelle.";
+	$text['description-description']['fr'] = "InsÃ©rer ici la description de la passerelle.";
 
 	$text['label-status']['en-us'] = 'Status';
 	$text['label-status']['pt-pt'] = '';
@@ -221,7 +221,7 @@
 
 	$text['label-status-stopped']['en-us'] = 'Stopped';
 	$text['label-status-stopped']['pt-pt'] = '';
-	$text['label-status-stopped']['fr'] = 'Arrété';
+	$text['label-status-stopped']['fr'] = 'ArrÃ©tÃ©';
 
 	$text['label-status-running']['en-us'] = 'Running';
 	$text['label-status-running']['pt-pt'] = '';
@@ -233,11 +233,11 @@
 
 	$text['label-action-start']['en-us'] = 'Start';
 	$text['label-action-start']['pt-pt'] = '';
-	$text['label-action-start']['fr'] = 'démarrer';
+	$text['label-action-start']['fr'] = 'dÃ©marrer';
 
 	$text['label-action-stop']['en-us'] = 'Stop';
 	$text['label-action-stop']['pt-pt'] = '';
-	$text['label-action-stop']['fr'] = 'Arrêter';
+	$text['label-action-stop']['fr'] = 'ArrÃªter';
 
 	$text['label-state']['en-us'] = 'State';
 	$text['label-state']['pt-pt'] = '';
@@ -277,7 +277,7 @@
 
 	$text['button-refresh']['en-us'] = 'Refresh';
 	$text['button-refresh']['pt-pt'] = '';
-	$text['button-refresh']['fr'] = 'Rafraîchir';
+	$text['button-refresh']['fr'] = 'RafraÃ®chir';
 
 	$text['button-copy']['en-us'] = 'Copy';
 	$text['button-copy']['pt-pt'] = '';
@@ -285,11 +285,11 @@
 
 	$text['button-advanced']['en-us'] = 'Advanced';
 	$text['button-advanced']['pt-pt'] = '';
-	$text['button-advanced']['fr'] = 'Afficher les Paramètres Avancés';
+	$text['button-advanced']['fr'] = 'Afficher les ParamÃ¨tres AvancÃ©s';
 
 	$text['button-advanced-show']['en-us'] = 'Show Advanced';
 	$text['button-advanced-show']['pt-pt'] = '';
-	$text['button-advanced-show']['fr'] = 'Paramètres Avancés';
+	$text['button-advanced-show']['fr'] = 'ParamÃ¨tres AvancÃ©s';
 
 	$text['confirm-delete']['en-us'] = 'Do you really want to delete this?';
 	$text['confirm-delete']['pt-pt'] = '';
@@ -301,15 +301,15 @@
 
 	$text['message-add']['en-us'] = 'Add Completed';
 	$text['message-add']['pt-pt'] = '';
-	$text['message-add']['fr'] = 'Ajouté';
+	$text['message-add']['fr'] = 'AjoutÃ©';
 
 	$text['message-update']['en-us'] = 'Update Completed';
 	$text['message-update']['pt-pt'] = '';
-	$text['message-update']['fr'] = 'Mis à Jour';
+	$text['message-update']['fr'] = 'Mis Ã  Jour';
 
 	$text['message-delete']['en-us'] = 'Delete Completed';
 	$text['message-delete']['pt-pt'] = '';
-	$text['message-delete']['fr'] = 'Supprimé';
+	$text['message-delete']['fr'] = 'SupprimÃ©';
 
 	$text['message-required']['en-us'] = 'Please provide: ';
 	$text['message-required']['pt-pt'] = '';

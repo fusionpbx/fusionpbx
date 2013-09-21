@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	//xml_cdr
 	$text['title']['en-us'] = 'Call Detail Records';

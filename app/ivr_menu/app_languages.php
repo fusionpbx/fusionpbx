@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	$text['title-ivr_menus']['en-us'] = 'IVR Menus';
 	$text['title-ivr_menus']['fr'] = 'Menus SVI';

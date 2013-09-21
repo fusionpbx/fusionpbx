@@ -35,19 +35,19 @@
 
 		$text['description-greeting_id']['en-us'] = 'Enter the Greeting ID';
 		$text['description-greeting_id']['pt-pt'] = '';
-		$text['description-greeting_id']['fr'] = 'Choisir le numéro de message vocal de salutation.';
+		$text['description-greeting_id']['fr'] = 'Choisir le numÃ©ro de message vocal de salutation.';
 
 		$text['label-voicemail_mail_to']['en-us'] = 'Mail To';
 		$text['label-voicemail_mail_to']['pt-pt'] = '';
-		$text['label-voicemail_mail_to']['fr'] = 'Courriel de réception';
+		$text['label-voicemail_mail_to']['fr'] = 'Courriel de rÃ©ception';
 
 		$text['description-voicemail_mail_to']['en-us'] = 'Enter the email address to send voicemail to. ';
 		$text['description-voicemail_mail_to']['pt-pt'] = '';
-		$text['description-voicemail_mail_to']['fr'] = 'Choisir un courriel lié à cette messagerie vocale.';
+		$text['description-voicemail_mail_to']['fr'] = 'Choisir un courriel liÃ© Ã  cette messagerie vocale.';
 
 		$text['label-voicemail_attach_file']['en-us'] = 'Attach File';
 		$text['label-voicemail_attach_file']['pt-pt'] = '';
-		$text['label-voicemail_attach_file']['fr'] = 'Fichier attaché';
+		$text['label-voicemail_attach_file']['fr'] = 'Fichier attachÃ©';
 
 		$text['description-voicemail_attach_file']['en-us'] = 'Choose whether to attach the file to the email.';
 		$text['description-voicemail_attach_file']['pt-pt'] = '';
@@ -59,7 +59,7 @@
 
 		$text['description-voicemail_local_after_email']['en-us'] = 'Choose to keep the voicemail file after sending the email.';
 		$text['description-voicemail_local_after_email']['pt-pt'] = '';
-		$text['description-voicemail_local_after_email']['fr'] = "Garder le message vocal dans la boite vocale après l'envoi du courriel.";
+		$text['description-voicemail_local_after_email']['fr'] = "Garder le message vocal dans la boite vocale aprÃ¨s l'envoi du courriel.";
 
 		$text['label-voicemail_enabled']['en-us'] = 'Enabled';
 		$text['label-voicemail_enabled']['pt-pt'] = '';
@@ -67,7 +67,7 @@
 
 		$text['description-voicemail_enabled']['en-us'] = 'Select to enable or disable this voicemail.';
 		$text['description-voicemail_enabled']['pt-pt'] = '';
-		$text['description-voicemail_enabled']['fr'] ="Messagerie Vocale activée ou non.";
+		$text['description-voicemail_enabled']['fr'] ="Messagerie Vocale activÃ©e ou non.";
 
 		$text['label-voicemail_description']['en-us'] = 'Description';
 		$text['label-voicemail_description']['pt-pt'] = '';
@@ -95,7 +95,7 @@
 
 		$text['label-download']['en-us'] = 'Download';
 		$text['label-download']['pt-pt'] = '';
-		$text['label-download']['fr'] = 'Télécharger';
+		$text['label-download']['fr'] = 'TÃ©lÃ©charger';
 
 		$text['label-view']['en-us'] = 'View';
 		$text['label-view']['pt-pt'] = '';
@@ -151,15 +151,15 @@
 
 		$text['message-add']['en-us'] = 'Add Completed';
 		$text['message-add']['pt-pt'] = '';
-		$text['message-add']['fr'] = 'Ajouté';
+		$text['message-add']['fr'] = 'AjoutÃ©';
 
 		$text['message-update']['en-us'] = 'Update Completed';
 		$text['message-update']['pt-pt'] = '';
-		$text['message-update']['fr'] = 'Mis à jour';
+		$text['message-update']['fr'] = 'Mis Ã  jour';
 
 		$text['message-delete']['en-us'] = 'Delete Completed';
 		$text['message-delete']['pt-pt'] = '';
-		$text['message-delete']['fr'] = 'Supprimé';
+		$text['message-delete']['fr'] = 'SupprimÃ©';
 
 		$text['message-required']['en-us'] = 'Please provide: ';
 		$text['message-required']['pt-pt'] = '';
@@ -176,7 +176,7 @@
 
 		$text['description-voicemail_message']['en-us'] = 'A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.';
 		$text['description-voicemail_message']['pt-pt'] = '';
-		$text['description-voicemail_message']['fr'] = "Liste des messages vocaux et les details tels que la date de création, les informations sur l'appelant, la durée, la taille du fichier et la possibilité de télécharger ou supprimer le message.";
+		$text['description-voicemail_message']['fr'] = "Liste des messages vocaux et les details tels que la date de crÃ©ation, les informations sur l'appelant, la durÃ©e, la taille du fichier et la possibilitÃ© de tÃ©lÃ©charger ou supprimer le message.";
 
 		$text['label-mailbox']['en-us'] = 'Mailbox';
 		$text['label-mailbox']['pt-pt'] = '';
@@ -192,11 +192,11 @@
 
 		$text['label-created_epoch']['en-us'] = 'Created';
 		$text['label-created_epoch']['pt-pt'] = '';
-		$text['label-created_epoch']['fr'] = 'créé';
+		$text['label-created_epoch']['fr'] = 'crÃ©Ã©';
 
 		$text['description-created_epoch']['en-us'] = 'Created';
 		$text['description-created_epoch']['pt-pt'] = '';
-		$text['description-created_epoch']['fr'] = 'Date de création';
+		$text['description-created_epoch']['fr'] = 'Date de crÃ©ation';
 
 		$text['label-read_epoch']['en-us'] = 'Read';
 		$text['label-read_epoch']['pt-pt'] = '';
@@ -216,7 +216,7 @@
 
 		$text['label-caller_id_number']['en-us'] = 'Caller ID Number';
 		$text['label-caller_id_number']['pt-pt'] = '';
-		$text['label-caller_id_number']['fr'] = "Numéro d'appelant";
+		$text['label-caller_id_number']['fr'] = "NumÃ©ro d'appelant";
 
 		$text['description-caller_id_number']['en-us'] = 'Caller ID Number';
 		$text['description-caller_id_number']['pt-pt'] = '';
@@ -224,7 +224,7 @@
 
 		$text['label-message_length']['en-us'] = 'Length';
 		$text['label-message_length']['pt-pt'] = '';
-		$text['label-message_length']['fr'] = 'Durée';
+		$text['label-message_length']['fr'] = 'DurÃ©e';
 
 		$text['description-message_length']['en-us'] = 'Length';
 		$text['description-message_length']['pt-pt'] = '';
@@ -240,10 +240,10 @@
 
 		$text['label-message_priority']['en-us'] = 'Priority';
 		$text['label-message_priority']['pt-pt'] = '';
-		$text['label-message_priority']['fr'] = 'Priorité';
+		$text['label-message_priority']['fr'] = 'PrioritÃ©';
 
 		$text['description-message_priority']['en-us'] = 'Priority';
 		$text['description-message_priority']['pt-pt'] = '';
-		$text['description-message_priority']['fr'] = 'Priorité';
+		$text['description-message_priority']['fr'] = 'PrioritÃ©';
 
 ?>

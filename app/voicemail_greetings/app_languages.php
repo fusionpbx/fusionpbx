@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	//voicemail_greetings
 	$text['title']['en-us'] = 'Voicemail Greetings';

@@ -1,7 +1,6 @@
 <?php
 
 	//Dialplan
-
 		$text['title-dialplan_manager']['en-us'] = 'Dialplan Manager';
 		$text['title-inbound_routes']['en-us'] = 'Inbound Routes';
 		$text['title-outbound_routes']['en-us'] = 'Outbound Routes';
