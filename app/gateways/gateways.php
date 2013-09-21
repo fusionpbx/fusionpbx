@@ -111,8 +111,6 @@ else {
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-
-	echo "<br />\n";
 	echo "<br />\n";
 
 //prepare to page the results
