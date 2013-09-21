@@ -124,6 +124,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 	$contact_uuid = check_str($_POST["contact_uuid"]);
 	$group_member = check_str($_POST["group_member"]);
 	$user_enabled = check_str($_POST["user_enabled"]);
+	$api_key = check_str($_POST["api_key"]);
 
 	if ($password != $confirm_password) { $msg_error .= $text['message-password_mismatch']."<br>\n"; }
 	//if (strlen($contact_uuid) == 0) { $msg_error .= $text['message-required'].$text['label-email']."<br>\n"; }
@@ -247,6 +248,12 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 				$sql .= "password = '".md5($salt.$password)."', ";
 				$sql .= "salt = '".$salt."', ";
 		}
+		if (strlen($api_key) > 0) {
+			$sql .= "api_key = '$api_key', ";
+		}
+		else {
+			$sql .= "api_key = null, ";
+		}
 		$sql .= "user_status = '$user_status', ";
 		$sql .= "user_enabled = '$user_enabled', ";
 		if (strlen($contact_uuid) == 0) {
@@ -315,6 +322,7 @@ else {
 			$username = $row["username"];
 		}
 		$password = $row["password"];
+		$api_key = $row["api_key"];
 		$user_enabled = $row["user_enabled"];
 		$contact_uuid = $row["contact_uuid"];
 		$user_status = $row["user_status"];
@@ -594,6 +602,18 @@ else {
 	echo "		".$text['description-time_zone']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
+
+	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/api/app_config.php')) {
+		echo "	<tr>";
+		echo "		<td class='vncell'>".$text['label-api_key'].":</td>";
+		echo "		<td class='vtable'>\n";
+		echo "			<input type=\"text\" class='formfld' name=\"api_key\" value=\"".$api_key."\" >\n";
+		if (strlen($text['description-api_key']) > 0) {
+			echo "			<br />".$text['description-api_key']."<br />\n";
+		}
+		echo "		</td>";
+		echo "	</tr>";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
