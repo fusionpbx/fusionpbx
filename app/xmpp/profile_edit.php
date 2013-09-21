@@ -33,7 +33,7 @@ function hide_advanced_config() {
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align='left' width="50%">
-						<strong>
+						<span class='title'>
 						<?php
 						if ($action == "update") {
 							echo $text['header-xmpp-edit'];
@@ -42,7 +42,7 @@ function hide_advanced_config() {
 							echo $text['header-xmpp-add'];
 						}
 						?>
-						</strong><br>
+						</span><br>
 					</td>		<td width='50%' align='right'>
 						<input type='submit' name='submit' class='btn' value='<?php echo $text['button-save']?>'>
 						<input type='button' class='btn' name='' alt='back' onclick="window.location='xmpp.php'" value='<?php echo $text['button-back']?>'>
