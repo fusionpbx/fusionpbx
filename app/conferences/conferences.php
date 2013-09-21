@@ -62,7 +62,7 @@ require_once "resources/paging.php";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			".$text['description']." \n";
-	if (permission_exists('conferences_active_advanced_view')) {
+	if (permission_exists('conference_active_advanced_view')) {
 		echo "			Show <a href='".PROJECT_PATH."/app/conferences_active/v_conferences_active.php'>".$text['title-2']."</a> ".$text['description-2']."<br /><br />\n";
 	}
 	echo "		</td>\n";

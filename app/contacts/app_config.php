@@ -38,22 +38,22 @@
 		$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'contacts_view';
+		$apps[$x]['permissions'][0]['name'] = 'contact_view';
 		$apps[$x]['permissions'][0]['menu']['uuid'] = 'f14e6ab6-6565-d4e6-cbad-a51d2e3e8ec6';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 		//$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 
-		$apps[$x]['permissions'][1]['name'] = 'contacts_add';
+		$apps[$x]['permissions'][1]['name'] = 'contact_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 
-		$apps[$x]['permissions'][2]['name'] = 'contacts_edit';
+		$apps[$x]['permissions'][2]['name'] = 'contact_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		//$apps[$x]['permissions'][2]['groups'][] = 'user';
 
-		$apps[$x]['permissions'][3]['name'] = 'contacts_delete';
+		$apps[$x]['permissions'][3]['name'] = 'contact_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 

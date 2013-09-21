@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('call_center_agents_view')) {
+if (permission_exists('call_center_agent_view')) {
 	//access granted
 }
 else {
@@ -128,7 +128,7 @@ require_once "resources/paging.php";
 	//echo th_order_by('agent_reject_delay_time', $text['label-reject_delay_time'], $order_by, $order);
 	//echo th_order_by('agent_busy_delay_time', $text['label-busy_delay_time'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('call_center_agents_add')) {
+	if (permission_exists('call_center_agent_add')) {
 		echo "	<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
@@ -150,10 +150,10 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_reject_delay_time]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_busy_delay_time]."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('call_center_agents_edit')) {
+			if (permission_exists('call_center_agent_edit')) {
 				echo "		<a href='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
-			if (permission_exists('call_center_agents_delete')) {
+			if (permission_exists('call_center_agent_delete')) {
 				echo "		<a href='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."'\" value='e'>\n";
@@ -172,7 +172,7 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('call_center_agents_add')) {
+	if (permission_exists('call_center_agent_add')) {
 		echo "			<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";

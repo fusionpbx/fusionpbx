@@ -28,7 +28,7 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 include "app_languages.php";
 
-if (permission_exists("user_account_settings_view")) {
+if (permission_exists("user_account_setting_view")) {
 	//access granted
 }
 else {
@@ -179,7 +179,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 		$sql .= "user_status = '$user_status' ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and user_uuid = '$user_uuid' ";
-		if (permission_exists("user_account_settings_edit")) {
+		if (permission_exists("user_account_setting_edit")) {
 			$count = $db->exec(check_sql($sql));
 		}
 

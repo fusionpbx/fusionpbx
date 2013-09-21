@@ -27,7 +27,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 include "app_languages.php";
-if (permission_exists('extensions_active_assigned_view')) {
+if (permission_exists('extension_active_assigned_view')) {
 
 //add multi-lingual support
 	foreach($text as $key => $value) {

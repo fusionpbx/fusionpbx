@@ -27,7 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('recordings_add') || permission_exists('recordings_edit')) {
+if (permission_exists('recording_add') || permission_exists('recording_edit')) {
 	//access granted
 }
 else {
@@ -92,7 +92,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add" && permission_exists('recordings_add')) {
+		if ($action == "add" && permission_exists('recording_add')) {
 			$recording_uuid = uuid();
 			$sql = "insert into v_recordings ";
 			$sql .= "(";
@@ -122,7 +122,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update" && permission_exists('recordings_edit')) {
+		if ($action == "update" && permission_exists('recording_edit')) {
 			//get the original filename
 				$sql = "select * from v_recordings ";
 				$sql .= "where recording_uuid = '$recording_uuid' ";

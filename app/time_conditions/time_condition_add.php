@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('time_conditions_add')) {
+if (permission_exists('time_condition_add')) {
 	//access granted
 }
 else {

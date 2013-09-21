@@ -38,12 +38,12 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'user_account_settings_view';
+		$apps[$x]['permissions'][0]['name'] = 'user_account_setting_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'user_account_settings_edit';
+		$apps[$x]['permissions'][1]['name'] = 'user_account_setting_edit';
 		$apps[$x]['permissions'][1]['groups'][] = 'user';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';

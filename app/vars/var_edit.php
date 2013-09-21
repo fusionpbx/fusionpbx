@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('variables_add') || permission_exists('variables_edit')) {
+if (permission_exists('variable_add') || permission_exists('variable_edit')) {
 	//access granted
 }
 else {
@@ -91,7 +91,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('variables_add')) {
+			if ($action == "add" && permission_exists('variable_add')) {
 				$var_uuid = uuid();
 				$sql = "insert into v_vars ";
 				$sql .= "(";
@@ -132,7 +132,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					return;
 			} //if ($action == "add")
 
-			if ($action == "update" && permission_exists('variables_edit')) {
+			if ($action == "update" && permission_exists('variable_edit')) {
 				$sql = "update v_vars set ";
 				$sql .= "var_name = '$var_name', ";
 				$sql .= "var_value = '$var_value', ";

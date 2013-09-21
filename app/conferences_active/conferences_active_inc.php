@@ -27,7 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('conferences_active_advanced_view')) {
+if (permission_exists('conference_active_advanced_view')) {
 	//access granted
 }
 else {

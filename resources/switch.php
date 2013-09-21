@@ -202,8 +202,8 @@ function build_menu() {
 
 		$tab_array = array();
 		$menu_selected = false;
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/settings_edit.php") { $menu_selected = true; }
-		$tab_array[] = array(gettext("Settings"), $menu_selected, $relative_url."/settings_edit.php");
+		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/setting_edit.php") { $menu_selected = true; }
+		$tab_array[] = array(gettext("Settings"), $menu_selected, $relative_url."/setting_edit.php");
 		unset($menu_selected);
 
 		$menu_selected = false;
@@ -232,7 +232,7 @@ function build_menu() {
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/auto_attendant_options_edit.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/modules.php") { $menu_selected = true; }
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/recordings.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/recordings_edit.php") { $menu_selected = true; }
+		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/recording_edit.php") { $menu_selected = true; }
 		unset($menu_selected);
 
 		$menu_selected = false;

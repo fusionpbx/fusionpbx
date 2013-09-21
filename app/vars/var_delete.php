@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('variables_delete')) {
+if (permission_exists('variable_delete')) {
 	//access granted
 }
 else {

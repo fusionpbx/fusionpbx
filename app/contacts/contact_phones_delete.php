@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contacts_delete')) {
+if (permission_exists('contact_delete')) {
 	//access granted
 }
 else {
@@ -56,7 +56,7 @@ if (strlen($id)>0) {
 }
 
 require_once "resources/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
+echo "<meta http-equiv=\"refresh\" content=\"2;url=contact_edit.php?id=$contact_uuid\">\n";
 echo "<div align='center'>\n";
 echo $text['message-delete']."\n";
 echo "</div>\n";

@@ -119,7 +119,7 @@ require_once "resources/paging.php";
 				echo th_order_by('domain_setting_description', $text['label-description'], $order_by, $order);
 				echo "<td align='right' width='42'>\n";
 				if (permission_exists('domain_setting_add')) {
-					echo "	<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+					echo "	<a href='domain_setting_edit.php?domain_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 				}
 				else {
 					echo "	&nbsp;\n";
@@ -161,7 +161,7 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('domain_setting_edit')) {
-			echo "		<a href='domain_settings_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "		<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('domain_setting_delete')) {
 			echo "		<a href='domain_settings_delete.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
@@ -182,7 +182,7 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('domain_setting_add')) {
-		echo "			<a href='domain_settings_edit.php?domain_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "			<a href='domain_setting_edit.php?domain_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	else {
 		echo "			&nbsp;\n";

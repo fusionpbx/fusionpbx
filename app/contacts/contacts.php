@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contacts_view')) {
+if (permission_exists('contact_view')) {
 	//access granted
 }
 else {
@@ -72,7 +72,7 @@ require_once "resources/paging.php";
 	echo "			<input class=\"btn\" type=\"submit\" name=\"submit\" value=\"".$text['button-search']."\">\n";
 	echo "	</td>\n";
 	echo "	</form>\n";
-	if (permission_exists('contacts_add')) {
+	if (permission_exists('contact_add')) {
 		echo "	<td align=\"right\" valign=\"middle\" width=\"50px\">\n";
 		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
 		echo "	</td>\n";
@@ -199,7 +199,7 @@ require_once "resources/paging.php";
 	//echo th_order_by('contact_time_zone', $text['label-contact_time_zone'], $order_by, $order);
 	//echo th_order_by('contact_note', $text['label-contact_note'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	echo "	<a href='contacts_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	echo "	<a href='contact_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -219,8 +219,8 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_time_zone']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_note']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			echo "		<a href='contacts_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			echo "		<a href='contacts_delete.php?id=".$row['contact_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "		<a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			echo "		<a href='contact_delete.php?id=".$row['contact_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
@@ -235,7 +235,7 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	echo "			<a href='contacts_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	echo "			<a href='contact_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";

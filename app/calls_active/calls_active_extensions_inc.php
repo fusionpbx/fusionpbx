@@ -27,7 +27,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 include "app_languages.php";
-if (permission_exists('extensions_active_view')) {
+if (permission_exists('extension_active_view')) {
 	//access granted
 }
 else {
@@ -320,7 +320,7 @@ else {
 				include "calls_active_assigned_extensions_inc.php";
 
 			//list all extensions
-				if (permission_exists('extensions_active_list_view')) {
+				if (permission_exists('extension_active_list_view')) {
 					echo "<table width='100%' border='0' cellpadding='5' cellspacing='0'>\n";
 					echo "<tr>\n";
 					echo "<td valign='top'>\n";
