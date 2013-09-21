@@ -6,7 +6,7 @@
 	$text['title-module_add']['en-us'] = 'Module Add';
 	$text['title-module_edit']['en-us'] = 'Module Edit';
 
-	$text['header-modules']['en-us'] = 'Module List';
+	$text['header-modules']['en-us'] = 'Modules';
 	$text['header-module_add']['en-us'] = 'Module Add';
 	$text['header-module_edit']['en-us'] = 'Module Edit';
 
