@@ -37,19 +37,19 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'active_queues_view';
+		$apps[$x]['permissions'][0]['name'] = 'active_queue_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'active_queues_add';
+		$apps[$x]['permissions'][1]['name'] = 'active_queue_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'active_queues_edit';
+		$apps[$x]['permissions'][2]['name'] = 'active_queue_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'active_queues_delete';
+		$apps[$x]['permissions'][3]['name'] = 'active_queue_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 ?>

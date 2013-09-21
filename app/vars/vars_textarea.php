@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('variables_view')) {
+if (permission_exists('variable_view')) {
 	//access granted
 }
 else {
@@ -45,7 +45,7 @@ else {
 	$page["title"] = $text['title-variables_advanced'];
 
 //restore the default vars.xml
-if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
+if ($_GET['a'] == "default" && permission_exists('variable_edit')) {
 	//read default config file
 	$fd = fopen($_SESSION['switch']['conf']['dir'].".orig/vars.xml", "r");
 	$v_content = fread($fd, filesize($_SESSION['switch']['conf']['dir'].".orig/vars.xml"));
@@ -59,7 +59,7 @@ if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 }
 
 //save the vars.xml
-	if ($_POST['a'] == "save" && permission_exists('variables_edit')) {
+	if ($_POST['a'] == "save" && permission_exists('variable_edit')) {
 		$v_content = str_replace("\r","",$_POST['code']);
 		$fd = fopen($_SESSION['switch']['conf']['dir']."/vars.xml", "w");
 		fwrite($fd, $v_content);
@@ -107,7 +107,7 @@ if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 					<br /><br />
 				</td>
 				<td align='right' valign='top'>
-					<?php if (permission_exists('variables_edit')) { ?>
+					<?php if (permission_exists('variable_edit')) { ?>
 					<input type="submit" class='btn' value="<?=$text['button-save']?>" />
 					<?php } ?>
 				</td>
@@ -133,7 +133,7 @@ if ($_GET['a'] == "default" && permission_exists('variables_edit')) {
 					<input type="hidden" name="f" value="<?php echo $_GET['f']; ?>" />
 					<input type="hidden" name="a" value="save" />
 					<?php
-					if (permission_exists('variables_edit')) {
+					if (permission_exists('variable_edit')) {
 						echo "<input type='button' class='btn' value='".$text['button-restore']."' onclick=\"document.location.href='vars.php?a=default&f=vars.xml';\" />";
 					}
 					?>

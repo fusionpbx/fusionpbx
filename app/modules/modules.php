@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('modules_view')) {
+if (permission_exists('module_view')) {
 	//access granted
 }
 else {
@@ -123,7 +123,7 @@ if (strlen($_GET["a"]) > 0) {
 	$tmp_module_header .= "<th>".$text['label-action']."</th>\n";
 	$tmp_module_header .= "<th>".$text['label-enabled']."</th>\n";
 	$tmp_module_header .= "<td align='right' width='42'>\n";
-	$tmp_module_header .= "	<a href='modules_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	$tmp_module_header .= "	<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	$tmp_module_header .= "</td>\n";
 	$tmp_module_header .= "<tr>\n";
 
@@ -140,8 +140,8 @@ if (strlen($_GET["a"]) > 0) {
 					echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='right'>\n";
-					if (permission_exists('modules_add')) {
-						echo "			<a href='modules_edit.php' alt='add'>$v_link_label_add</a>\n";
+					if (permission_exists('module_add')) {
+						echo "			<a href='module_edit.php' alt='add'>$v_link_label_add</a>\n";
 					}
 					echo "		</td>\n";
 					echo "	</tr>\n";
@@ -181,11 +181,11 @@ if (strlen($_GET["a"]) > 0) {
 			}
 			echo "</td>\n";
 			echo "   <td valign='top' align='right'>\n";
-			if (permission_exists('modules_edit')) {
-				echo "		<a href='modules_edit.php?id=".$row["module_uuid"]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			if (permission_exists('module_edit')) {
+				echo "		<a href='module_edit.php?id=".$row["module_uuid"]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
-			if (permission_exists('modules_delete')) {
-				echo "		<a href='modules_delete.php?id=".$row["module_uuid"]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			if (permission_exists('module_delete')) {
+				echo "		<a href='module_delete.php?id=".$row["module_uuid"]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "   </td>\n";
 			echo "</tr>\n";
@@ -203,8 +203,8 @@ if (strlen($_GET["a"]) > 0) {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('modules_add')) {
-		echo "			<a href='modules_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	if (permission_exists('module_add')) {
+		echo "			<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

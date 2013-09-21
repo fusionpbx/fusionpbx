@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contacts_edit')) {
+if (permission_exists('contact_edit')) {
 	//access granted
 }
 else {
@@ -140,7 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=contact_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
 			echo $text['message-add']."\n";
 			echo "</div>\n";
@@ -168,7 +168,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 
 			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts_edit.php?id=$contact_uuid\">\n";
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=contact_edit.php?id=$contact_uuid\">\n";
 			echo "<div align='center'>\n";
 			echo $text['message-update']."\n";
 			echo "</div>\n";
@@ -232,7 +232,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['header-contact_addresses-add'];
 	}
 	echo "</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";

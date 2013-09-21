@@ -27,7 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('recordings_view')) {
+if (permission_exists('recording_view')) {
 	//access granted
 }
 else {
@@ -50,7 +50,7 @@ require_once "resources/paging.php";
 	$order = $_GET["order"];
 
 //download the recordings
-	if ($_GET['a'] == "download" && permission_exists('recordings_download')) {
+	if ($_GET['a'] == "download" && permission_exists('recording_download')) {
 		session_cache_limiter('public');
 		if ($_GET['type'] = "rec") {
 			if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename']))) {
@@ -82,8 +82,8 @@ require_once "resources/paging.php";
 	}
 
 //upload the recording
-	if (permission_exists('recordings_upload')) {
-		if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recordings_upload')) {
+	if (permission_exists('recording_upload')) {
+		if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recording_upload')) {
 			if ($_POST['type'] == 'rec') {
 				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_FILES['ulfile']['name']);
 				$savemsg = $text['message-uploaded']." ".$_SESSION['switch']['recordings']['dir']."/". htmlentities($_FILES['ulfile']['name']);
@@ -177,7 +177,7 @@ require_once "resources/paging.php";
 		echo $_SESSION['switch']['recordings']['dir'];
 	}
 	echo "		</td>\n";
-	if (permission_exists('recordings_upload')) {
+	if (permission_exists('recording_upload')) {
 		echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
 		echo "		<td valign=\"top\" class=\"label\">\n";
 		echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
@@ -229,8 +229,8 @@ require_once "resources/paging.php";
 	echo "<th width=\"10%\" class=\"listhdr\" nowrap>Size</th>\n";
 	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('recordings_add')) {
-		echo "	<a href='recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('recording_add')) {
+		echo "	<a href='recording_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -247,7 +247,7 @@ require_once "resources/paging.php";
 			echo "	  </a>";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('recordings_play.php?a=download&type=moh&filename=".base64_encode($row['recording_filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('recording_play.php?a=download&type=moh&filename=".base64_encode($row['recording_filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			echo $row['recording_name'];
 			echo "	  </a>";
 			echo 	"</td>\n";
@@ -256,11 +256,11 @@ require_once "resources/paging.php";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='30%'>".$row['recording_description']."</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('recordings_edit')) {
-				echo "		<a href='recordings_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+			if (permission_exists('recording_edit')) {
+				echo "		<a href='recording_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 			}
-			if (permission_exists('recordings_delete')) {
-				echo "		<a href='recordings_delete.php?id=".$row['recording_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>\n";
+			if (permission_exists('recording_delete')) {
+				echo "		<a href='recording_delete.php?id=".$row['recording_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -276,8 +276,8 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('recordings_add')) {
-		echo "			<a href='recordings_edit.php' alt='add'>$v_link_label_add</a>\n";
+	if (permission_exists('recording_add')) {
+		echo "			<a href='recording_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

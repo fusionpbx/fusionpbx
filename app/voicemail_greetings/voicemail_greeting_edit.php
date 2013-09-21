@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('voicemail_greetings_add') || permission_exists('voicemail_greetings_edit')) {
+if (permission_exists('voicemail_greeting_add') || permission_exists('voicemail_greeting_edit')) {
 	//access granted
 }
 else {
@@ -86,7 +86,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add" && permission_exists('voicemail_greetings_add')) {
+		if ($action == "add" && permission_exists('voicemail_greeting_add')) {
 			$voicemail_greeting_uuid = uuid();
 			$sql = "insert into v_voicemail_greetings ";
 			$sql .= "(";
@@ -114,7 +114,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		} //if ($action == "add")
 
-		if ($action == "update" && permission_exists('voicemail_greetings_edit')) {
+		if ($action == "update" && permission_exists('voicemail_greeting_edit')) {
 			//get the original filename
 				$sql = "select * from v_voicemail_greetings ";
 				$sql .= "where voicemail_greeting_uuid = '$voicemail_greeting_uuid' ";

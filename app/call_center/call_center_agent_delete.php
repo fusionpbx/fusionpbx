@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('call_center_agents_delete')) {
+if (permission_exists('call_center_agent_delete')) {
 	//access granted
 }
 else {

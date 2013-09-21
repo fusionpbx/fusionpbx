@@ -36,16 +36,16 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'services_view';
+		$apps[$x]['permissions'][0]['name'] = 'service_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'services_add';
+		$apps[$x]['permissions'][1]['name'] = 'service_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'services_edit';
+		$apps[$x]['permissions'][2]['name'] = 'service_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'services_delete';
+		$apps[$x]['permissions'][3]['name'] = 'service_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 	//schema details

@@ -56,57 +56,57 @@
 		$apps[$x]['menu'][1]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'call_center_queues_view';
+		$apps[$x]['permissions'][0]['name'] = 'call_center_queue_view';
 		$apps[$x]['permissions'][0]['menu']['uuid'] = '6c072b29-5b6c-49fc-008e-95e24c77de99';
 		$apps[$x]['permissions'][0]['groups'][] = 'agent';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'call_center_queues_add';
+		$apps[$x]['permissions'][1]['name'] = 'call_center_queue_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'call_center_queues_edit';
+		$apps[$x]['permissions'][2]['name'] = 'call_center_queue_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'call_center_queues_delete';
+		$apps[$x]['permissions'][3]['name'] = 'call_center_queue_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][4]['name'] = 'call_center_agents_view';
+		$apps[$x]['permissions'][4]['name'] = 'call_center_agent_view';
 		$apps[$x]['permissions'][4]['menu']['uuid'] = '597c483a-51a9-f95a-8d54-ea7d87ada2b8';
 		$apps[$x]['permissions'][4]['groups'][] = 'agent';
 		$apps[$x]['permissions'][4]['groups'][] = 'admin';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][5]['name'] = 'call_center_agents_add';
+		$apps[$x]['permissions'][5]['name'] = 'call_center_agent_add';
 		$apps[$x]['permissions'][5]['groups'][] = 'admin';
 		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][6]['name'] = 'call_center_agents_edit';
+		$apps[$x]['permissions'][6]['name'] = 'call_center_agent_edit';
 		$apps[$x]['permissions'][6]['groups'][] = 'admin';
 		$apps[$x]['permissions'][6]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][7]['name'] = 'call_center_agents_delete';
+		$apps[$x]['permissions'][7]['name'] = 'call_center_agent_delete';
 		$apps[$x]['permissions'][7]['groups'][] = 'admin';
 		$apps[$x]['permissions'][7]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][8]['name'] = 'call_center_tiers_view';
+		$apps[$x]['permissions'][8]['name'] = 'call_center_tier_view';
 		$apps[$x]['permissions'][8]['menu']['uuid'] = '';
 		$apps[$x]['permissions'][8]['groups'][] = 'agent';
 		$apps[$x]['permissions'][8]['groups'][] = 'admin';
 		$apps[$x]['permissions'][8]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][9]['name'] = 'call_center_tiers_add';
+		$apps[$x]['permissions'][9]['name'] = 'call_center_tier_add';
 		$apps[$x]['permissions'][9]['groups'][] = 'admin';
 		$apps[$x]['permissions'][9]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][10]['name'] = 'call_center_tiers_edit';
+		$apps[$x]['permissions'][10]['name'] = 'call_center_tier_edit';
 		$apps[$x]['permissions'][10]['groups'][] = 'admin';
 		$apps[$x]['permissions'][10]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][11]['name'] = 'call_center_tiers_delete';
+		$apps[$x]['permissions'][11]['name'] = 'call_center_tier_delete';
 		$apps[$x]['permissions'][11]['groups'][] = 'admin';
 		$apps[$x]['permissions'][11]['groups'][] = 'superadmin';
 

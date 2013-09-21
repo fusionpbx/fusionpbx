@@ -27,7 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('settings_view') || if_group("superadmin")) {
+if (permission_exists('setting_view') || if_group("superadmin")) {
 	//access granted
 }
 else {
@@ -126,7 +126,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('settings_edit')) {
+			if ($action == "add" && permission_exists('setting_edit')) {
 				$sql = "insert into v_settings ";
 				$sql .= "(";
 				$sql .= "event_socket_ip_address, ";
@@ -158,7 +158,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					save_setting_xml();
 
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=settings_edit.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=setting_edit.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Add Complete\n";
 				echo "</div>\n";
@@ -166,7 +166,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update" && permission_exists('settings_edit')) {
+			if ($action == "update" && permission_exists('setting_edit')) {
 				$sql = "update v_settings set ";
 				$sql .= "event_socket_ip_address = '$event_socket_ip_address', ";
 				$sql .= "event_socket_port = '$event_socket_port', ";
@@ -184,7 +184,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					save_setting_xml();
 
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=settings_edit.php\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=setting_edit.php\">\n";
 				echo "<div align='center'>\n";
 				echo "Update Complete\n";
 				echo "</div>\n";
@@ -453,7 +453,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-shout-volume']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	if (permission_exists('settings_edit')) {
+	if (permission_exists('setting_edit')) {
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
 		echo "			<input type='submit' name='submit' class='btn' value='Save'>\n";

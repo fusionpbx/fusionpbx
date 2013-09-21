@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contacts_edit')) {
+if (permission_exists('contact_edit')) {
 	//access granted
 }
 else {

@@ -28,37 +28,37 @@
 		//$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'voicemail_greetings_view';
+		$apps[$x]['permissions'][0]['name'] = 'voicemail_greeting_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'voicemail_greetings_add';
+		$apps[$x]['permissions'][1]['name'] = 'voicemail_greeting_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'user';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'voicemail_greetings_edit';
+		$apps[$x]['permissions'][2]['name'] = 'voicemail_greeting_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'user';
 		$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'voicemail_greetings_delete';
+		$apps[$x]['permissions'][3]['name'] = 'voicemail_greeting_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'user';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][4]['name'] = 'voicemail_greetings_upload';
+		$apps[$x]['permissions'][4]['name'] = 'voicemail_greeting_upload';
 		$apps[$x]['permissions'][4]['groups'][] = 'user';
 		$apps[$x]['permissions'][4]['groups'][] = 'admin';
 		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][5]['name'] = 'voicemail_greetings_play';
+		$apps[$x]['permissions'][5]['name'] = 'voicemail_greeting_play';
 		$apps[$x]['permissions'][5]['groups'][] = 'user';
 		$apps[$x]['permissions'][5]['groups'][] = 'admin';
 		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][6]['name'] = 'voicemail_greetings_download';
+		$apps[$x]['permissions'][6]['name'] = 'voicemail_greeting_download';
 		$apps[$x]['permissions'][6]['groups'][] = 'user';
 		$apps[$x]['permissions'][6]['groups'][] = 'admin';
 		$apps[$x]['permissions'][6]['groups'][] = 'superadmin';

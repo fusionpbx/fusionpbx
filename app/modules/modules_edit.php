@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('modules_add') || permission_exists('modules_edit')) {
+if (permission_exists('module_add') || permission_exists('module_edit')) {
 	//access granted
 }
 else {
@@ -88,7 +88,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('modules_add')) {
+			if ($action == "add" && permission_exists('module_add')) {
 				$module_uuid = uuid();
 				$sql = "insert into v_modules ";
 				$sql .= "(";
@@ -124,7 +124,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update" && permission_exists('modules_edit')) {
+			if ($action == "update" && permission_exists('module_edit')) {
 				$sql = "update v_modules set ";
 				$sql .= "module_label = '$module_label', ";
 				$sql .= "module_name = '$module_name', ";

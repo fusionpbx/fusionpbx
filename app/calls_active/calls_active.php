@@ -27,7 +27,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 include "app_languages.php";
-if (permission_exists('calls_active_view')) {
+if (permission_exists('call_active_view')) {
 	//access granted
 }
 else {

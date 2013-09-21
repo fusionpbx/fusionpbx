@@ -32,14 +32,14 @@
 		$apps[$x]['menu'][0]['uuid'] = '148ea42a-3711-3d64-181b-07a6a3c3ed60';
 		$apps[$x]['menu'][0]['parent_uuid'] = '02194288-6d56-6d3e-0b1a-d53a2bc10788';
 		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/settings/settings_edit.php';
+		$apps[$x]['menu'][0]['path'] = '/app/settings/setting_edit.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 	
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'settings_view';
+		$apps[$x]['permissions'][0]['name'] = 'setting_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'settings_edit';
+		$apps[$x]['permissions'][1]['name'] = 'setting_edit';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
 	//schema details

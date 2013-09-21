@@ -27,7 +27,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('services_add') || permission_exists('services_edit')) {
+if (permission_exists('service_add') || permission_exists('service_edit')) {
 	//access granted
 }
 else {
@@ -90,7 +90,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('services_add')) {
+			if ($action == "add" && permission_exists('service_add')) {
 				$service_uuid = uuid();
 				$sql = "insert into v_services ";
 				$sql .= "(";
@@ -126,7 +126,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 			} //if ($action == "add")
 
-			if ($action == "update" && permission_exists('services_edit')) {
+			if ($action == "update" && permission_exists('service_edit')) {
 				$sql = "update v_services set ";
 				$sql .= "service_name = '$service_name', ";
 				$sql .= "service_type = '$service_type', ";

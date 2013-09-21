@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('variables_view')) {
+if (permission_exists('variable_view')) {
 	//access granted
 }
 else {
@@ -90,7 +90,7 @@ else {
 	$tmp_var_header .= th_order_by('var_enabled', $text['label-enabled'], $order_by, $order);
 	$tmp_var_header .= "<th>".$text['label-description']."</th>\n";
 	$tmp_var_header .= "<td align='right' width='42'>\n";
-	if (permission_exists('variables_add')) {
+	if (permission_exists('variable_add')) {
 		$tmp_var_header .= "	<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	$tmp_var_header .= "</td>\n";
@@ -111,7 +111,7 @@ else {
 					echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='right'>\n";
-					if (permission_exists('variables_add')) {
+					if (permission_exists('variable_add')) {
 						echo "			<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 					}
 					echo "		</td>\n";
@@ -142,10 +142,10 @@ else {
 			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$var_description."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('variables_edit')) {
+			if (permission_exists('variable_edit')) {
 				echo "		<a href='var_edit.php?id=".$row['var_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
-			if (permission_exists('variables_delete')) {
+			if (permission_exists('variable_delete')) {
 				echo "		<a href='var_delete.php?id=".$row['var_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
@@ -164,7 +164,7 @@ else {
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
-	if (permission_exists('variables_add')) {
+	if (permission_exists('variable_add')) {
 		echo "			<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";

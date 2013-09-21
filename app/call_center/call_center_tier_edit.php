@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('call_center_tiers_add') || permission_exists('call_center_tiers_edit')) {
+if (permission_exists('call_center_tier_add') || permission_exists('call_center_tier_edit')) {
 	//access granted
 }
 else {

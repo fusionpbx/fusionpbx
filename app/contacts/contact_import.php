@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('contacts_add')) {
+if (permission_exists('contact_add')) {
 	//access granted
 }
 else {
@@ -62,7 +62,7 @@ else {
 	$enclosure = check_str($_GET["data_enclosure"]);
 
 //upload the contact csv
-	if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recordings_upload')) {
+	if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recording_upload')) {
 		//copy the csv file
 			if (check_str($_POST['type']) == 'csv') {
 				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['server']['temp']['dir'].'/'.$_FILES['ulfile']['name']);

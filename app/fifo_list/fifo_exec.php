@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('active_queues_edit')) {
+if (permission_exists('active_queue_edit')) {
 	//access granted
 }
 else {

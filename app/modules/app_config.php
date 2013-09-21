@@ -36,16 +36,16 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'modules_view';
+		$apps[$x]['permissions'][0]['name'] = 'module_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'modules_add';
+		$apps[$x]['permissions'][1]['name'] = 'module_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'modules_edit';
+		$apps[$x]['permissions'][2]['name'] = 'module_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'modules_delete';
+		$apps[$x]['permissions'][3]['name'] = 'module_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 	//schema details

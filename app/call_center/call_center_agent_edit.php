@@ -26,7 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('call_center_agents_add') || permission_exists('call_center_agents_edit')) {
+if (permission_exists('call_center_agent_add') || permission_exists('call_center_agent_edit')) {
 	//access granted
 }
 else {
