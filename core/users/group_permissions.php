@@ -61,8 +61,7 @@ require_once "resources/paging.php";
 	}
 
 //if there are no permissions listed in v_group_permissions then set the default permissions
-	$sql = "";
-	$sql .= "select count(*) as count from v_group_permissions ";
+	$sql = "select count(*) as count from v_group_permissions ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -102,8 +101,7 @@ require_once "resources/paging.php";
 	$group_name = $_REQUEST['group_name'];
 
 //get the permissions assigned to this group
-	$sql = "";
-	$sql .= " select * from v_group_permissions ";
+	$sql = " select * from v_group_permissions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and group_name = '$group_name' ";
 	$prep_statement = $db->prepare(check_sql($sql));
