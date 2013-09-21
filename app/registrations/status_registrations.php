@@ -29,7 +29,7 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 
 //check permissions
-	if (permission_exists("registrations_domain") || permission_exists("registrations_all") || if_group("superadmin")) {
+	if (permission_exists("registration_domain") || permission_exists("registration_all") || if_group("superadmin")) {
 		//access granted
 	}
 	else {
@@ -106,7 +106,7 @@ require_once "resources/check_auth.php";
 
 					//remove unrelated domains
 						if (count($_SESSION["domains"]) > 1) {
-							if (count($_SESSION["domains"]) > 1 && !permission_exists('registrations_all')) {
+							if (count($_SESSION["domains"]) > 1 && !permission_exists('registration_all')) {
 								if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
 									unset($registrations[$x]);
 								}
