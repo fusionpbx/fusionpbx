@@ -2598,19 +2598,6 @@ if (!function_exists('save_call_center_xml')) {
 									$dialplan->domain_uuid = $domain_uuid;
 									$dialplan->dialplan_uuid = $dialplan_uuid;
 									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'system';
-									$dialplan->dialplan_detail_data = 'mkdir -p $${base_dir}/recordings/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/';
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '2';
-									$dialplan->dialplan_detail_order = '004';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
 									$dialplan->dialplan_detail_type = 'callcenter';
 									$dialplan->dialplan_detail_data = $queue_name."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
 									$dialplan->dialplan_detail_break = '';
