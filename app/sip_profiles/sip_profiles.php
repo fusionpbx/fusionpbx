@@ -112,7 +112,7 @@ require_once "resources/paging.php";
 	echo "<th align='left' width='60%'>".$text['label-description']."</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('sip_profile_add')) {
-		echo "	<a href='sip_profiles_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "	<a href='sip_profile_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -124,10 +124,10 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='row_stylebg'>".$row['sip_profile_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('sip_profile_edit')) {
-				echo "		<a href='sip_profiles_edit.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "		<a href='sip_profile_edit.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('sip_profile_delete')) {
-				echo "		<a href='sip_profiles_delete.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "		<a href='sip_profile_delete.php?id=".$row['sip_profile_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -144,7 +144,7 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td width='33.3%' align='right'>\n";
 	if (permission_exists('sip_profile_add')) {
-		echo "			<a href='sip_profiles_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "			<a href='sip_profile_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
