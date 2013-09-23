@@ -118,6 +118,12 @@ if ($domains_processed == 1) {
 			if (strlen($_SESSION['switch']['recordings']['dir']) > 0) {
 				$tmp .= "	recordings_dir = \"".$recordings_dir."\";\n";
 			}
+			if (strlen($_SESSION['switch']['storage']['dir']) > 0) {
+				$tmp .= "	storage_dir = \"".$_SESSION['switch']['storage']['dir']."\";\n";
+			}
+			if (strlen($_SESSION['switch']['voicemail']['dir']) > 0) {
+				$tmp .= "	voicemail_dir = \"".$_SESSION['switch']['voicemail']['dir']."\";\n";
+			}
 			$tmp .= "\n";
 			$tmp .= "--database information\n";
 			$tmp .= "	database = {}\n";
