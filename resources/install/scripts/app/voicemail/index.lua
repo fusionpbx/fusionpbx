@@ -79,7 +79,6 @@
 			uuid = session:getVariable("uuid");
 			voicemail_id = session:getVariable("voicemail_id");
 			voicemail_action = session:getVariable("voicemail_action");
-			base_dir = session:getVariable("base_dir");
 			destination_number = session:getVariable("destination_number");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
@@ -118,7 +117,7 @@
 			end
 
 		--set the voicemail_dir
-			voicemail_dir = base_dir.."/storage/voicemail/default/"..domain_name;
+			voicemail_dir = voicemail_dir.."/default/"..domain_name;
 			if (debug["info"]) then
 				freeswitch.consoleLog("notice", "[voicemail] voicemail_dir: " .. voicemail_dir .. "\n");
 			end
