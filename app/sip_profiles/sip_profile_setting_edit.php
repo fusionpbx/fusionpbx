@@ -119,7 +119,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//redirect the browser
 					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=sip_profiles_edit.php?id=$sip_profile_uuid\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=sip_profile_edit.php?id=$sip_profile_uuid\">\n";
 					echo "<div align='center'>\n";
 					echo $text['message-add']."\n";
 					echo "</div>\n";
@@ -147,7 +147,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				//redirect the browser
 					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=sip_profiles_edit.php?id=$sip_profile_uuid\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=sip_profile_edit.php?id=$sip_profile_uuid\">\n";
 					echo "<div align='center'>\n";
 					echo $text['message-update']."\n";
 					echo "</div>\n";
@@ -191,7 +191,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-setting']."</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='sip_profiles_edit.php?id=$sip_profile_uuid'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='sip_profile_edit.php?id=$sip_profile_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2'>\n";
