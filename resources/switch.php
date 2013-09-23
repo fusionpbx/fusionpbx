@@ -243,7 +243,7 @@ function build_menu() {
 
 		$menu_selected = false;
 		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/sip_profiles.php") { $menu_selected = true; }
-		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/sip_profiles_edit.php") { $menu_selected = true; }
+		if ($_SERVER["SCRIPT_NAME"] == $relative_url."/sip_profile_edit.php") { $menu_selected = true; }
 		$tab_array[] = array(gettext("Profiles"), $menu_selected, $relative_url."/sip_profiles.php");
 		unset($menu_selected);
 
