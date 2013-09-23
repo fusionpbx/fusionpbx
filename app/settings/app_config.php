@@ -34,7 +34,7 @@
 		$apps[$x]['menu'][0]['category'] = 'internal';
 		$apps[$x]['menu'][0]['path'] = '/app/settings/setting_edit.php';
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
-	
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'setting_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
