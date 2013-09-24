@@ -63,7 +63,9 @@ else {
 		$register_transport = $row["register_transport"];
 		$retry_seconds = $row["retry_seconds"];
 		$extension = $row["extension"];
+		$codec_prefs = $row["codec_prefs"];
 		$ping = $row["ping"];
+		$limit = $row["concurrent_call_limit"];
 		$caller_id_in_from = $row["caller_id_in_from"];
 		$supress_cng = $row["supress_cng"];
 		$extension_in_contact = $row["extension_in_contact"];
@@ -99,7 +101,9 @@ else {
 	$sql .= "register_transport, ";
 	$sql .= "retry_seconds, ";
 	$sql .= "extension, ";
+	$sql .= "codec_prefs, ";
 	$sql .= "ping, ";
+	$sql .= "concurrent_call_limit, ";
 	$sql .= "caller_id_in_from, ";
 	$sql .= "supress_cng, ";
 	$sql .= "extension_in_contact, ";
@@ -126,7 +130,9 @@ else {
 	$sql .= "'$register_transport', ";
 	$sql .= "'$retry_seconds', ";
 	$sql .= "'$extension', ";
+	$sql .= "'$codec_prefs', ";
 	$sql .= "'$ping', ";
+	$sql .= "'$limit', ";
 	$sql .= "'$caller_id_in_from', ";
 	$sql .= "'$supress_cng', ";
 	$sql .= "'$extension_in_contact', ";
