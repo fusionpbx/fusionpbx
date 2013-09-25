@@ -68,7 +68,7 @@ else {
 		$retry_seconds = check_str($_POST["retry_seconds"]);
 		$extension = check_str($_POST["extension"]);
 		$ping = check_str($_POST["ping"]);
-		$limit = check_str($_POST["limit"]);
+		$channels = check_str($_POST["channels"]);
 		$caller_id_in_from = check_str($_POST["caller_id_in_from"]);
 		$supress_cng = check_str($_POST["supress_cng"]);
 		$sip_cid_type = check_str($_POST["sip_cid_type"]);
@@ -108,9 +108,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($retry_seconds) == 0) { $msg .= $text['message-required']." ".$text['label-retry_seconds']."<br>\n"; }
 		//if (strlen($extension) == 0) { $msg .= $text['message-required']." ".$text['label-extension']."<br>\n"; }
 		//if (strlen($ping) == 0) { $msg .= $text['message-required']." ".$text['label-ping']."<br>\n"; }
-		if (strlen($limit) == 0) {
-			//$msg .= $text['message-required']." ".$text['label-limit']."<br>\n";
-			$limit = 0;
+		if (strlen($channels) == 0) {
+			//$msg .= $text['message-required']." ".$text['label-channels']."<br>\n";
+			$channels = 0;
 		}
 		//if (strlen($caller_id_in_from) == 0) { $msg .= $text['message-required']." ".$text['label-caller_id_in_from']."<br>\n"; }
 		//if (strlen($supress_cng) == 0) { $msg .= $text['message-required']." ".$text['label-supress_cng']."<br>\n"; }
@@ -163,7 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "retry_seconds, ";
 				$sql .= "extension, ";
 				$sql .= "ping, ";
-				$sql .= "concurrent_call_limit, ";
+				$sql .= "channels, ";
 				$sql .= "caller_id_in_from, ";
 				$sql .= "supress_cng, ";
 				$sql .= "sip_cid_type, ";
@@ -195,7 +195,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$retry_seconds', ";
 				$sql .= "'$extension', ";
 				$sql .= "'$ping', ";
-				$sql .= "'$limit', ";
+				$sql .= "'$channels', ";
 				$sql .= "'$caller_id_in_from', ";
 				$sql .= "'$supress_cng', ";
 				$sql .= "'$sip_cid_type', ";
@@ -230,7 +230,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "retry_seconds = '$retry_seconds', ";
 				$sql .= "extension = '$extension', ";
 				$sql .= "ping = '$ping', ";
-				$sql .= "concurrent_call_limit = '$limit', ";
+				$sql .= "channels = '$channels', ";
 				$sql .= "caller_id_in_from = '$caller_id_in_from', ";
 				$sql .= "supress_cng = '$supress_cng', ";
 				$sql .= "sip_cid_type = '$sip_cid_type', ";
@@ -317,7 +317,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$retry_seconds = $row["retry_seconds"];
 			$extension = $row["extension"];
 			$ping = $row["ping"];
-			$limit = $row["concurrent_call_limit"];
+			$channels = $row["channels"];
 			$caller_id_in_from = $row["caller_id_in_from"];
 			$supress_cng = $row["supress_cng"];
 			$sip_cid_type = $row["sip_cid_type"];
@@ -745,12 +745,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-limit'].":\n";
+	echo "    ".$text['label-channels'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
+	echo "    <input class='formfld' type='text' name='channels' maxlength='255' value=\"$channels\">\n";
 	echo "<br />\n";
-	echo $text['description-limit']."\n";
+	echo $text['description-channels']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
