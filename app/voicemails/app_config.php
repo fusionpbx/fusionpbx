@@ -46,11 +46,19 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_delete';
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 
 	//schema details
 		$y = 0; //table array index

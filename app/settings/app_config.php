@@ -36,11 +36,18 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'setting_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'setting_edit';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = 'setting_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'setting_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		//$y++;
+		//$apps[$x]['permissions'][$y]['name'] = 'setting_add';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		//$y++;
+		//$apps[$x]['permissions'][$y]['name'] = 'setting_delete';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index
