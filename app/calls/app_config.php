@@ -38,18 +38,19 @@
 		//$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][1]['name'] = 'follow_me';
-		$apps[$x]['permissions'][1]['groups'][] = 'user';
-		$apps[$x]['permissions'][1]['groups'][] = 'admin';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['name'] = 'follow_me';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'call_forward';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'do_not_disturb';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'call_forward';
-		$apps[$x]['permissions'][2]['groups'][] = 'user';
-		$apps[$x]['permissions'][2]['groups'][] = 'admin';
-		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][3]['name'] = 'do_not_disturb';
-		$apps[$x]['permissions'][3]['groups'][] = 'user';
-		$apps[$x]['permissions'][3]['groups'][] = 'admin';
-		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 ?>

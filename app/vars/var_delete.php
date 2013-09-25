@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('variable_delete')) {
+if (permission_exists('var_delete')) {
 	//access granted
 }
 else {
@@ -40,12 +40,13 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET)>0) {
-	$id = $_GET["id"];
-}
+//get the id
+	if (count($_GET) > 0) {
+		$id = $_GET["id"];
+	}
 
 //delete the data
-	if (strlen($id)>0) {
+	if (strlen($id) > 0) {
 		$sql = "delete from v_vars ";
 		$sql .= "where var_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));

@@ -47,6 +47,7 @@
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -56,10 +57,31 @@
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_add';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_cid_name_prefix';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_cid_number_prefix';
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
