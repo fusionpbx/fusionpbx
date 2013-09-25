@@ -152,11 +152,11 @@
 	$text['description-ping']['pt-pt'] = '';
 	$text['description-ping']['fr-fr'] = 'Insérer ici la fréquence de ping en secondes.';
 
-	$text['label-limit']['en-us'] = 'How many lines';
-	$text['label-limit']['pt-pt'] = 'Número de linhas';
+	$text['label-channels']['en-us'] = 'Channels:';
+	$text['label-channels']['pt-pt'] = 'Canais:';
 
-	$text['description-limit']['en-us'] = 'How many lines will this gateway have?';
-	$text['description-limit']['pt-pt'] = 'Insira o número máximo de linhas do gateway.';
+	$text['description-channels']['en-us'] = 'Maximum number of simultaneous channels available in the gateway.';
+	$text['description-channels']['pt-pt'] = 'Número máximo de canais simultâneos no gateway.';
 
 	$text['label-caller_id_in_from']['en-us'] = 'Caller Id In From';
 	$text['label-caller_id_in_from']['pt-pt'] = '';
