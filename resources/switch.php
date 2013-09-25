@@ -2733,7 +2733,7 @@ if (!function_exists('save_call_center_xml')) {
 					$v_queues .= "<queue name=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\">\n";
 					$v_queues .= "			<param name=\"strategy\" value=\"$queue_strategy\"/>\n";
 					if (strlen($queue_moh_sound) == 0) {
-						$v_queues .= "			<param name=\"moh-sound\" value=\"default\"/>\n";
+						$v_queues .= "			<param name=\"moh-sound\" value=\"local_stream://default\"/>\n";
 					}
 					else {
 						$v_queues .= "			<param name=\"moh-sound\" value=\"$queue_moh_sound\"/>\n";
