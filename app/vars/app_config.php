@@ -36,6 +36,7 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
+		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'var_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
