@@ -254,17 +254,16 @@ if ($db_type == "pgsql") {
 				$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
 				$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
 			}
-			unset($result, $prep_statement);               
-	}        
+			unset($result, $prep_statement);
+	}
 
 //set the setting arrays
 	if (!isset($_SESSION['domain']['menu'])){
-		//domains set()
 		require "resources/classes/domains.php";
 		$domain = new domains();
 		$domain->db = $db;
 		$domain->set();
-	}            
+	}
 
 //set the domain_uuid variable from the session
 	if (strlen($_SESSION["domain_uuid"]) > 0) { 
