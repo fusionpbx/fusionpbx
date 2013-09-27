@@ -89,18 +89,20 @@ require_once "resources/require.php";
 //get the content
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/content/app_config.php")) {
 		$sql = "select * from v_rss ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where domain_uuid =:domain_uuid ";
 		$sql .= "and rss_category = 'content' ";
-		if (strlen($content) == 0) {
-			$sql .= "and rss_link = '".$_SERVER["PHP_SELF"]."' ";
-		}
-		else {
-			$sql .= "and rss_link = '".$content."' ";
-		}
+		$sql .= "and rss_link =:content ";
 		$sql .= "and (length(rss_del_date) = 0 ";
 		$sql .= "or rss_del_date is null) ";
 		$sql .= "order by rss_order asc ";
 		$content_prep_statement = $db->prepare(check_sql($sql));
+		$content_prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
+		if (strlen($content) == 0) {
+			$content_prep_statement->bindParam(':content', $_SERVER["PHP_SELF"]);
+		}
+		else {
+			$content_prep_statement->bindParam(':content', $content);
+		}
 		$content_prep_statement->execute();
 		$result = $content_prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$page["title"] = '';
