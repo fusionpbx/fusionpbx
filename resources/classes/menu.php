@@ -139,13 +139,13 @@
 												$sql .= "'$menu_item_title' ";
 												$sql .= ")";
 												$db->exec(check_sql($sql));
-
 												unset($sql);
 											}
 									}
 								}
 						}
-                                        }
+					}
+
 					foreach($apps as $row) {
 						foreach ($row['permissions'] as $menu) {
 							//set the variables
@@ -184,7 +184,6 @@
 								}
 							}
 						}
-
 					}
 
 				//use the app array to restore the default menu
@@ -269,21 +268,20 @@
 												$sql .= "'$menu_item_title' ";
 												$sql .= ")";
 												$db->exec(check_sql($sql));
-												
 												unset($sql);
 											}
 									}
 								}
 						}
-                                        }
-					$sql = "delete from v_group_permissions ";					
+					}
+					$sql = "delete from v_group_permissions ";
 					$db->query($sql);
 					unset($sql);
-					
+
 					$sql2 = " Select domain_uuid from v_domains ";
 					$prep_statement2 = $db->prepare(check_sql($sql2));
 					$prep_statement2->execute();
-					$result2 = $prep_statement2->fetchAll(PDO::FETCH_ASSOC);					
+					$result2 = $prep_statement2->fetchAll(PDO::FETCH_ASSOC);
 					foreach($result2 as $row2) {
 						unset ($prep_statement2, $sql2);
 						foreach($apps as $row) {
@@ -324,14 +322,12 @@
 									}
 								}
 							}
-
 						}
 					}
 					unset($sql2, $result2);
 
 				//if there are no groups listed in v_menu_item_groups under menu_uuid then add the default groups
-
-                                        foreach($apps as $app) {
+					foreach($apps as $app) {
 						foreach ($app['menu'] as $sub_row) {
 							foreach ($sub_row['groups'] as $group) {
 								$sql = "select count(*) as count from v_menu_item_groups ";
@@ -343,8 +339,6 @@
 								unset ($prep_statement);
 								if ($sub_result['count'] == 0) {
 									//no menu item groups found add the defaults
-
-									//add the record
 									$sql = "insert into v_menu_item_groups ";
 									$sql .= "(";
 									$sql .= "menu_uuid, ";
@@ -460,18 +454,17 @@
 												$sql .= "'$menu_item_title' ";
 												$sql .= ")";
 												$db->exec(check_sql($sql));
-
 												unset($sql);
 											}
 									}
 								}
 						}
-                                        }
+					}
 					$sql = "delete from v_group_permissions ";
 					$db->query($sql);
 					unset($sql);
 
-					$sql2 = " Select domain_uuid from v_domains ";
+					$sql2 = "select domain_uuid from v_domains ";
 					$prep_statement2 = $db->prepare(check_sql($sql2));
 					$prep_statement2->execute();
 					$result2 = $prep_statement2->fetchAll(PDO::FETCH_ASSOC);
@@ -515,13 +508,12 @@
 									}
 								}
 							}
-
 						}
 					}
 					unset($sql2, $result2);
 
 				//if there are no groups listed in v_menu_item_groups under menu_uuid then add the default groups
-                                        $sql = "delete from v_menu_item_groups ";
+					$sql = "delete from v_menu_item_groups ";
 					$db->query($sql);
 					unset($sql);
 
@@ -537,8 +529,6 @@
 								unset ($prep_statement);
 								if ($sub_result['count'] == 0) {
 									//no menu item groups found add the defaults
-
-									//add the record
 									$sql = "insert into v_menu_item_groups ";
 									$sql .= "(";
 									$sql .= "menu_uuid, ";
@@ -603,7 +593,6 @@
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach($result as $field) {
-
 					$sql2 = "select * from v_menu_languages ";
 					$sql2 .= "where menu_language = 'en-us' ";
 					$sql2 .= "and menu_item_uuid = '".$field['menu_item_uuid']."' ";
@@ -614,7 +603,6 @@
 						$menu_icon_name=$field2['menu_item_title'];
 					}
 					unset($prep_statement2, $sql2, $result2);
-
 
 					$menu_tags = '';
 					switch ($field['menu_item_category']) {
@@ -722,10 +710,11 @@
 					$db_menu_sub = "<ul class='menu_sub'>\n";
 
 					foreach($result_2 as $row) {
-						$menu_item_link = $row['menu_item_link'];
-						$menu_item_category = $row['menu_item_category'];
-						$menu_item_uuid = $row['menu_item_uuid'];
-						$menu_item_parent_uuid = $row['menu_item_parent_uuid'];
+						//set the variables
+							$menu_item_link = $row['menu_item_link'];
+							$menu_item_category = $row['menu_item_category'];
+							$menu_item_uuid = $row['menu_item_uuid'];
+							$menu_item_parent_uuid = $row['menu_item_parent_uuid'];
 
 						//prepare the protected menus
 							if ($row['menu_item_protected'] == "true") {
