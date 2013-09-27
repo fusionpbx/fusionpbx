@@ -36,6 +36,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	4 May, 2012: added per_tenant capability (domain based)
 	12 Jun, 2013: update the database connection, change table name from v_callblock to v_call_block
 	14 Jun, 2013: Change Voicemail option to use Transfer, avoids mod_voicemail dependency
+	27 Sep, 2013: Changed the name of the fields to conform with the table name
 ]]
 
 -- Command line parameters
@@ -84,13 +85,13 @@ This method causes the script to get its manadatory arguments directly from the 
 	if (params["cmd"] == "C") then
 		sql = "SELECT * FROM v_call_block as c "
 		sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-		sql = sql .. "WHERE c.blocked_caller_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
+		sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
 		status = dbh:query(sql, function(rows)
-			found_cid_num = rows["blocked_caller_number"]
+			found_cid_num = rows["call_block_number"]
 			found_uuid = rows["call_block_uuid"]
-			found_enabled = rows["block_call_enabled"]
-			found_action = rows["blocked_call_action"]
-			found_count = rows["blocked_call_count"]
+			found_enabled = rows["call_block_enabled"]
+			found_action = rows["call_block_action"]
+			found_count = rows["call_block_count"]
 			end)
 		-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
 		if found_cid_num then	-- caller id exists
@@ -102,7 +103,7 @@ This method causes the script to get its manadatory arguments directly from the 
 					--logger("W", "INFO", "Details: " .. details[k])
 					k = k + 1
 				end
-				dbh:query("UPDATE v_call_block SET blocked_call_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
+				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
 				session:setVariable("call_block", "block")
 				logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain: " .. params["domain"])
 				if (found_action == "Reject") then

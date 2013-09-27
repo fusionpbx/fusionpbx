@@ -79,10 +79,10 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
-		$blocked_caller_name = check_str($_POST["blocked_caller_name"]);
-		$blocked_caller_number = check_str($_POST["blocked_caller_number"]);
-		$blocked_call_action = check_str($_POST["blocked_call_action"]);
-		$block_call_enabled = check_str($_POST["block_call_enabled"]);
+		$call_block_name = check_str($_POST["call_block_name"]);
+		$call_block_number = check_str($_POST["call_block_number"]);
+		$call_block_action = check_str($_POST["call_block_action"]);
+		$call_block_enabled = check_str($_POST["call_block_enabled"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -93,11 +93,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	
 	//check for all required data
-		if (strlen($blocked_caller_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
+		if (strlen($call_block_name) == 0) { $msg .= $text['label-provide-name']."<br>\n"; }
 		if ($action == "add") { 
-			if (strlen($blocked_caller_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
+			if (strlen($call_block_number) == 0) { $msg .= $text['label-provide-number']."<br>\n"; }
 		}
-		if (strlen($block_call_enabled) == 0) { $msg .= $text['label-provide-enabled']."<br>\n"; }
+		if (strlen($call_block_enabled) == 0) { $msg .= $text['label-provide-enabled']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -118,22 +118,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "(";
 				$sql .= "domain_uuid, ";
 				$sql .= "call_block_uuid, ";
-				$sql .= "blocked_caller_name, ";
-				$sql .= "blocked_caller_number, ";
-				$sql .= "blocked_call_count, ";
-				$sql .= "blocked_call_action, ";
-				$sql .= "block_call_enabled, ";
+				$sql .= "call_block_name, ";
+				$sql .= "call_block_number, ";
+				$sql .= "call_block_count, ";
+				$sql .= "call_block_action, ";
+				$sql .= "call_block_enabled, ";
 				$sql .= "date_added ";
 				$sql .= ") ";
 				$sql .= "values ";
 				$sql .= "(";
 				$sql .= "'".$_SESSION['domain_uuid']."', ";
 				$sql .= "'".uuid()."', ";
-				$sql .= "'$blocked_caller_name', ";
-				$sql .= "'$blocked_caller_number', ";
+				$sql .= "'$call_block_name', ";
+				$sql .= "'$call_block_number', ";
 				$sql .= "0, ";
-				$sql .= "'$blocked_call_action', ";
-				$sql .= "'$block_call_enabled', ";
+				$sql .= "'$call_block_action', ";
+				$sql .= "'$call_block_enabled', ";
 				$sql .= "'".time()."' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -150,10 +150,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			if ($action == "update") {
 				$sql = "update v_call_block set ";
-				$sql .= "blocked_caller_name = '$blocked_caller_name', ";
-				//$sql .= "blocked_caller_number = '$blocked_caller_number', ";
-				$sql .= "blocked_call_action = '$blocked_call_action', ";
-				$sql .= "block_call_enabled = '$block_call_enabled' ";
+				$sql .= "call_block_name = '$call_block_name', ";
+				//$sql .= "call_block_number = '$call_block_number', ";
+				$sql .= "call_block_action = '$call_block_action', ";
+				$sql .= "call_block_enabled = '$call_block_enabled' ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and call_block_uuid = '$call_block_uuid'";
 				$db->exec(check_sql($sql));
@@ -180,11 +180,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
-			$blocked_caller_name = $row["blocked_caller_name"];
-			$blocked_caller_number = $row["blocked_caller_number"];
-			$blocked_call_action = $row["blocked_call_action"];
+			$call_block_name = $row["call_block_name"];
+			$call_block_number = $row["call_block_number"];
+			$call_block_action = $row["call_block_action"];
 			$blocked_call_destination = $row["blocked_call_destination"];
-			$block_call_enabled = $row["block_call_enabled"];
+			$call_block_enabled = $row["call_block_enabled"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement, $sql);
@@ -288,12 +288,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if ($action == "add") {
-		echo "	<input class='formfld' type='text' name='blocked_caller_number' maxlength='255' value=\"$blocked_caller_number\">\n";
+		echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"$call_block_number\">\n";
 		echo "<br />\n";
 		echo $text['label-exact-number']."\n";
 	}
 	else {
-		echo $blocked_caller_number;
+		echo $call_block_number;
 	}
 	echo "<br />\n";
 	echo "</td>\n";
@@ -304,7 +304,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Name:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='blocked_caller_name' maxlength='255' value=\"$blocked_caller_name\">\n";
+	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"$call_block_name\">\n";
 	echo "<br />\n";
 	echo "Enter the name.\n";
 	echo "</td>\n";
@@ -315,9 +315,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Action:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='blocked_call_action'>\n";
+	echo "	<select class='formfld' name='call_block_action'>\n";
 	echo "	<option value=''></option>\n";
-	$pieces = explode(" ", $blocked_call_action);
+	$pieces = explode(" ", $call_block_action);
 	$action = $pieces[0];
 	$extension = $pieces[2];
 	if ($action == "Reject") {
@@ -343,15 +343,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	Enabled:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='block_call_enabled'>\n";
+	echo "	<select class='formfld' name='call_block_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($block_call_enabled == "true") { 
+	if ($call_block_enabled == "true") { 
 		echo "	<option value='true' SELECTED >true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($block_call_enabled == "false") { 
+	if ($call_block_enabled == "false") { 
 		echo "	<option value='false' SELECTED >".$text['label-true']."</option>\n";
 	}
 	else {
