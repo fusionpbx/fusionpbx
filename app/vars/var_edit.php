@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('variable_add') || permission_exists('variable_edit')) {
+if (permission_exists('var_add') || permission_exists('var_edit')) {
 	//access granted
 }
 else {
@@ -91,7 +91,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			if ($action == "add" && permission_exists('variable_add')) {
+			if ($action == "add" && permission_exists('var_add')) {
 				$var_uuid = uuid();
 				$sql = "insert into v_vars ";
 				$sql .= "(";
@@ -132,17 +132,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					return;
 			} //if ($action == "add")
 
-			if ($action == "update" && permission_exists('variable_edit')) {
-				$sql = "update v_vars set ";
-				$sql .= "var_name = '$var_name', ";
-				$sql .= "var_value = '$var_value', ";
-				$sql .= "var_cat = '$var_cat', ";
-				$sql .= "var_enabled = '$var_enabled', ";
-				$sql .= "var_order = '$var_order', ";
-				$sql .= "var_description = '".base64_encode($var_description)."' ";
-				$sql .= "where var_uuid = '$var_uuid' ";
-				$db->exec(check_sql($sql));
-				unset($sql);
+			if ($action == "update" && permission_exists('var_edit')) {
+				//update the variables
+					$sql = "update v_vars set ";
+					$sql .= "var_name = '$var_name', ";
+					$sql .= "var_value = '$var_value', ";
+					$sql .= "var_cat = '$var_cat', ";
+					$sql .= "var_enabled = '$var_enabled', ";
+					$sql .= "var_order = '$var_order', ";
+					$sql .= "var_description = '".base64_encode($var_description)."' ";
+					$sql .= "where var_uuid = '$var_uuid' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
 
 				//unset the user defined variables
 					$_SESSION["user_defined_variables"] = "";
@@ -177,7 +178,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$var_enabled = $row["var_enabled"];
 			$var_order = $row["var_order"];
 			$var_description = base64_decode($row["var_description"]);
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -185,10 +185,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //include header
 	require_once "resources/header.php";
 	if ($action == "add") {
-		$page["title"] = $text['title-variable_add'];
+		$page["title"] = $text['title-var_add'];
 	}
 	if ($action == "update") {
-		$page["title"] = $text['title-variable_edit'];
+		$page["title"] = $text['title-var_edit'];
 	}
 
 //show contents
@@ -204,10 +204,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td width='30%' align='left'nowrap><b>".$text['header-variable_add']."</b></td>\n";
+		echo "<td width='30%' align='left'nowrap><b>".$text['header-var_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td width='30%' align='left' nowrap><b>".$text['header-variable_edit']."</b></td>\n";
+		echo "<td width='30%' align='left' nowrap><b>".$text['header-var_edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='vars.php'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
