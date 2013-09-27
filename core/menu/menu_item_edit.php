@@ -81,7 +81,7 @@ else {
 	$_SESSION["menu"] = "";
 
 //get the HTTP POST variables and set them as PHP variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$menu_uuid = check_str($_POST["menu_uuid"]);
 		$menu_item_uuid = check_str($_POST["menu_item_uuid"]);
 		$menu_item_title = check_str($_POST["menu_item_title"]);
@@ -95,7 +95,7 @@ else {
 	}
 
 //when a HTTP POST is available then process it
-	if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if ($action == "update") {
 			$menu_item_uuid = check_str($_POST["menu_item_uuid"]);
@@ -121,6 +121,16 @@ else {
 
 		//add or update the database
 		if ($_POST["persistformvar"] != "true") {
+			//get the language from the menu
+				$sql = "SELECT menu_language FROM v_menus ";
+				$sql .= "where menu_uuid = '$menu_uuid' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$menu_language = $row['menu_language'];
+				}
+
 			//add a menu item
 				if ($action == "add" && permission_exists('menu_add')) {
 					if (strlen($menu_item_parent_uuid) == 0) {
@@ -220,6 +230,40 @@ else {
 						}
 				}
 
+			//add title to menu languages
+				if ($_REQUEST["a"] != "delete" && strlen($menu_item_title) > 0 && permission_exists('menu_add')) {
+					$sql = "select count(*) as num_rows from v_menu_languages ";
+					$sql .= "where menu_item_uuid = '".$menu_item_uuid."' ";
+					$prep_statement = $db->prepare($sql);
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					if ($row['num_rows'] == 0) {
+						$sql_insert = "insert into v_menu_languages ";
+						$sql_insert .= "(";
+						$sql_insert .= "menu_uuid, ";
+						$sql_insert .= "menu_item_uuid, ";
+						$sql_insert .= "menu_language, ";
+						$sql_insert .= "menu_item_title ";
+						$sql_insert .= ")";
+						$sql_insert .= "values ";
+						$sql_insert .= "(";
+						$sql_insert .= "'".$menu_uuid."', ";
+						$sql_insert .= "'".$menu_item_uuid."', ";
+						$sql_insert .= "'".$menu_language."', ";
+						$sql_insert .= "'".$menu_item_title."' ";
+						$sql_insert .= ")";
+						$db->exec($sql_insert);
+					}
+					else {
+						$sql  = "update v_menu_languages set ";
+						$sql .= "menu_language = '$menu_language', ";
+						$sql .= "menu_item_title = '$menu_item_title' ";
+						$sql .= "where menu_uuid = '$menu_uuid' ";
+						$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
+						$count = $db->exec(check_sql($sql));
+					}
+				}
+
 			//redirect the user
 				require_once "resources/header.php";
 					echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_edit.php?id=$menu_uuid\">\n";
@@ -247,7 +291,6 @@ else {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$menu_item_uuid = $row["menu_item_uuid"];
 			$menu_item_title = $row["menu_item_title"];
 			$menu_item_link = $row["menu_item_link"];
 			$menu_item_category = $row["menu_item_category"];
@@ -261,7 +304,6 @@ else {
 			//$menu_item_del_date = $row["menu_item_del_date"];
 			$menu_item_mod_user = $row["menu_item_mod_user"];
 			$menu_item_mod_date = $row["menu_item_mod_date"];
-			break; //limit to 1 row
 		}
 	}
 
@@ -335,7 +377,7 @@ else {
 	}
 	echo "</select>";
 	unset($sql, $result);
-	echo "        </td>";
+	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";

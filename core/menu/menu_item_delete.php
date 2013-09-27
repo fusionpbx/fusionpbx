@@ -55,6 +55,20 @@ if (count($_GET)>0) {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
+	//delete the menu item groups
+		$sql  = "delete from v_menu_item_groups ";
+		$sql .= "where menu_item_uuid = '$menu_item_uuid' ";
+		$sql .= "and menu_uuid = '$menu_uuid' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+	//delete the menu item language
+		$sql  = "delete from v_menu_languages ";
+		$sql .= "where menu_uuid = '$menu_uuid' ";
+		$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
 	//redirect the user
 		require_once "resources/header.php";
 		echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_edit.php?id=$menu_uuid\">\n";
