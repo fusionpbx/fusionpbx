@@ -40,11 +40,11 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET)>0) {
+if (count($_GET) > 0) {
 	$id = check_str($_GET["id"]);
 }
 
-if (strlen($id)>0) {
+if (strlen($id) > 0) {
 	//include the ivr menu class
 		require_once "resources/classes/database.php";
 		require_once "resources/classes/ivr_menu.php";
@@ -55,6 +55,13 @@ if (strlen($id)>0) {
 
 	//synchronize the xml config
 		save_dialplan_xml();
+
+	//delete the dialplan context from memcache
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
+			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		}
 }
 
 //redirect the user
