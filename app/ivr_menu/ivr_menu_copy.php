@@ -73,7 +73,6 @@ else {
 		$ivr_menu_direct_dial = $row["ivr_menu_direct_dial"];
 		$ivr_menu_enabled = $row["ivr_menu_enabled"];
 		$ivr_menu_description = 'copy: '.$row["ivr_menu_description"];
-		break; //limit to 1 row
 	}
 	unset ($prep_statement);
 
@@ -173,6 +172,16 @@ else {
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+	}
+
+//synchronize the xml config
+	save_dialplan_xml();
+
+//delete the dialplan context from memcache
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if ($fp) {
+		$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
+		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 	}
 
 //redirect the user
