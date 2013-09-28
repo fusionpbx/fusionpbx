@@ -293,7 +293,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "extension, ";
 							$sql .= "number_alias, ";
 							$sql .= "password, ";
-							$sql .= "vm_password, ";
+							//$sql .= "vm_password, ";
 							$sql .= "accountcode, ";
 							$sql .= "effective_caller_id_name, ";
 							$sql .= "effective_caller_id_number, ";
@@ -305,10 +305,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "directory_exten_visible, ";
 							$sql .= "limit_max, ";
 							$sql .= "limit_destination, ";
-							$sql .= "vm_enabled, ";
-							$sql .= "vm_mailto, ";
-							$sql .= "vm_attach_file, ";
-							$sql .= "vm_keep_local_after_email, ";
+							//$sql .= "vm_enabled, ";
+							//$sql .= "vm_mailto, ";
+							//$sql .= "vm_attach_file, ";
+							//$sql .= "vm_keep_local_after_email, ";
 							$sql .= "user_context, ";
 							if (permission_exists('extension_toll')) {
 								$sql .= "toll_allow, ";
@@ -342,7 +342,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$extension', ";
 							$sql .= "'$number_alias', ";
 							$sql .= "'$password', ";
-							$sql .= "'user-choose', ";
+							//$sql .= "'user-choose', ";
 							$sql .= "'$accountcode', ";
 							$sql .= "'$effective_caller_id_name', ";
 							$sql .= "'$effective_caller_id_number', ";
@@ -354,10 +354,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$directory_exten_visible', ";
 							$sql .= "'$limit_max', ";
 							$sql .= "'$limit_destination', ";
-							$sql .= "'$vm_enabled', ";
-							$sql .= "'$vm_mailto', ";
-							$sql .= "'$vm_attach_file', ";
-							$sql .= "'$vm_keep_local_after_email', ";
+							//$sql .= "'$vm_enabled', ";
+							//$sql .= "'$vm_mailto', ";
+							//$sql .= "'$vm_attach_file', ";
+							//$sql .= "'$vm_keep_local_after_email', ";
 							$sql .= "'$user_context', ";
 							if (permission_exists('extension_toll')) {
 								$sql .= "'$toll_allow', ";
@@ -436,7 +436,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
-					$sql .= "vm_password = '$vm_password', ";
+					//$sql .= "vm_password = '$vm_password', ";
 					$sql .= "accountcode = '$accountcode', ";
 					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
 					$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
@@ -448,10 +448,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "directory_exten_visible = '$directory_exten_visible', ";
 					$sql .= "limit_max = '$limit_max', ";
 					$sql .= "limit_destination = '$limit_destination', ";
-					$sql .= "vm_enabled = '$vm_enabled', ";
-					$sql .= "vm_mailto = '$vm_mailto', ";
-					$sql .= "vm_attach_file = '$vm_attach_file', ";
-					$sql .= "vm_keep_local_after_email = '$vm_keep_local_after_email', ";
+					//$sql .= "vm_enabled = '$vm_enabled', ";
+					//$sql .= "vm_mailto = '$vm_mailto', ";
+					//$sql .= "vm_attach_file = '$vm_attach_file', ";
+					//$sql .= "vm_keep_local_after_email = '$vm_keep_local_after_email', ";
 					$sql .= "user_context = '$user_context', ";
 					if (permission_exists('extension_toll')) {
 						$sql .= "toll_allow = '$toll_allow', ";
@@ -531,7 +531,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//delete extension from memcache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp) {
-						$switch_cmd = "memcache delete directory:".$extension."@".$_SESSION['domain_name'];
+						$switch_cmd = "memcache delete directory:".$extension."@".$user_context;
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 			}

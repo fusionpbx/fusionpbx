@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010 - 2013
 	All Rights Reserved.
 
 	Contributor(s):
@@ -198,8 +198,8 @@
 						}
 						$call_timeout = $row['call_timeout'];
 						$user_context = $row['user_context'];
-						$vm_password = $row['vm_password'];
-						$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
+						//$vm_password = $row['vm_password'];
+						//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
 
 						//echo "enabled: ".$row['enabled'];
 						if ($row['enabled'] != "false") {
@@ -225,6 +225,7 @@
 							$xml .= "  <user id=\"".$row['extension']."\"".$cidr."".$number_alias.">\n";
 							$xml .= "    <params>\n";
 							$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+							/*
 							$xml .= "      <param name=\"vm-password\" value=\"" . $vm_password . "\"/>\n";
 							switch ($row['vm_enabled']) {
 							case "true":
@@ -261,6 +262,7 @@
 								}
 								$xml .= "      <param name=\"vm-mailto\" value=\"" . $row['vm_mailto'] . "\"/>\n";
 							}
+							*/
 							if (strlen($row['mwi_account']) > 0) {
 								$xml .= "      <param name=\"MWI-Account\" value=\"" . $row['mwi_account'] . "\"/>\n";
 							}
@@ -357,7 +359,7 @@
 					unset ($prep_statement);
 
 				//prepare extension
-					$extension_dir_path = realpath($_SESSION['switch']['extensions']['dir']);
+					$extension_dir = realpath($_SESSION['switch']['extensions']['dir']);
 					$user_context = str_replace(" ", "_", $user_context);
 					$user_context = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $user_context);
 
@@ -439,8 +441,8 @@
 					$xml .= "</include>";
 
 				//write the xml file
-					if (is_readable($extension_dir_path) && strlen($extension_dir_path) > 0) {
-						$fout = fopen($extension_dir_path."/".$user_context.".xml","w");
+					if (is_readable($extension_dir) && strlen($extension_dir) > 0) {
+						$fout = fopen($extension_dir."/".$user_context.".xml","w");
 						fwrite($fout, $xml);
 						unset($xml);
 						fclose($fout);
