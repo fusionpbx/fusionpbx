@@ -43,7 +43,6 @@
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = 'f14e6ab6-6565-d4e6-cbad-a51d2e3e8ec6';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'contact_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
