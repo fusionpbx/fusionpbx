@@ -274,21 +274,17 @@ else {
 						$label = $text['label-11d'];
 						$abbrv = "11d";
 						break;
-					case "^(\d{12})$":
-						$label = $text['label-12d'];
-						$abbrv = "12d";
+					case "^\+?1?(\d{10})$":
+						$label = $text['label-north-america'];
+						$abbrv = "10-11d";
 						break;
-					case "^(\d{13})$":
-						$label = $text['label-13d'];
-						$abbrv = "13d";
+					case "^(011(\d{9,17})$":
+						$label = $text['label-north-america-intl'];
+						$abbrv = "011.9-17d";
 						break;
-					case "^(\d{14})$":
-						$label = $text['label-14d'];
-						$abbrv = "14d";
-						break;
-					case "^(\d{12,15})$":
-						$label = $text['label-int'];
-						$abbrv = "Intl";
+					case "^(\d{12,20})$":
+						$label = $text['label-intl'];
+						$abbrv = $text['label-intl'];
 						break;
 					case "^(311)$":
 						$label = $text['label-311'];
@@ -322,24 +318,13 @@ else {
 						$label = $text['label-9d11'];
 						$abbrv = "9.11d";
 						break;
-					case "^9(\d{12})$":
-						$label = $text['label-9d12'];
-						$abbrv = "9.Intl";
-						break;
-					case "^9(\d{13})$":
-						$label = $text['label-9d13'];
-						$abbrv = "9.13d";
-						break;
-					case "^9(\d{14})$":
-						$label = $text['label-9d14'];
-						break;
-					case "^9(\d{12,15})$":
-						$label = $text['label-9d15'];
-						$abbrv = "9.Intl";
+					case "^9(\d{12,20})$":
+						$label = $text['label-9d.12-20'];
+						$abbrv = "9.12-20";
 						break;
 					case "^1?(8(00|55|66|77|88)[2-9]\d{6})$":
 						$label = $text['label-800'];
-						$abbrv = "tollfree";
+						$abbrv = "800";
 						break;
 					default:
 						$label = $dialplan_expression;
@@ -882,10 +867,9 @@ function type_onchange(dialplan_detail_type) {
 	echo "    <option value='^(\\d{9})\$'>".$text['label-9d']."</option>\n";
 	echo "    <option value='^(\\d{10})\$'>".$text['label-10d']."</option>\n";
 	echo "    <option value='^\+?(\\d{11})\$'>".$text['label-11d']."</option>\n";
-	echo "    <option value='^(\\d{12})\$'>".$text['label-12d']."</option>\n";
-	echo "    <option value='^(\\d{13})\$'>".$text['label-13d']."</option>\n";
-	echo "    <option value='^(\\d{14})\$'>".$text['label-14d']."</option>\n";
-	echo "    <option value='^(\\d{15})\$'>".$text['label-int']."</option>\n";
+	echo "    <option value='^(\+?1?(\\d{10})\$'>".$text['label-north-america']."</option>\n";
+	echo "    <option value='^(011\\d{9,17})\$'>".$text['label-north-america-intl']."</option>\n";
+	echo "    <option value='^(\\d{12,20})\$'>".$text['label-intl']."</option>\n";
 	echo "    <option value='^(311)\$'>".$text['label-311']."</option>\n";
 	echo "    <option value='^(411)\$'>".$text['label-411']."</option>\n";
 	echo "    <option value='^(911)\$'>".$text['label-911']."</option>\n";
@@ -900,10 +884,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    <option value='^9(\\d{9})\$'>".$text['label-9d9']."</option>\n";
 	echo "    <option value='^9(\\d{10})\$'>".$text['label-9d10']."</option>\n";
 	echo "    <option value='^9(\\d{11})\$'>".$text['label-9d11']."</option>\n";
-	echo "    <option value='^9(\\d{12})\$'>".$text['label-9d12']."</option>\n";
-	echo "    <option value='^9(\\d{13})\$'>".$text['label-9d13']."</option>\n";
-	echo "    <option value='^9(\\d{14})\$'>".$text['label-9d14']."</option>\n";
-	echo "    <option value='^9(\\d{15})\$'>".$text['label-9d15']."</option>\n";
+	echo "    <option value='^9(\\d{12-20})\$'>".$text['label-9d.12-20']."</option>\n";
 	echo "    </select>\n";
 	echo "    <span class=\"vexpl\">\n";
 	echo "    <br />\n";
