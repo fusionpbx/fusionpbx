@@ -331,6 +331,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 	}
 
+//set defaults
+	if (strlen($enabled) == 0) { $enabled = "true"; }
+
 //show the header
 	require_once "resources/header.php";
 
