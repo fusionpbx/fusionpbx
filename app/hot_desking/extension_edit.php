@@ -106,31 +106,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
-		//update the extension
-			if ($action == "add" && permission_exists('extension_edit')) {
-				$sql = "update v_extensions set ";
-				$sql .= "unique_id = '$unique_id' ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and extension_uuid = '$extension_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
-
-		//update the extension
-			if ($action == "update" && permission_exists('extension_edit')) {
-				$sql = "update v_extensions set ";
-				$sql .= "unique_id = '$unique_id', ";
-				if (strlen($vm_password) > 0) {
-					$sql .= "vm_password = '$vm_password' ";
-				}
-				else {
-					$sql .= "vm_password = 'user-choose' ";
-				}
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and extension_uuid = '$extension_uuid'";
-				$db->exec(check_sql($sql));
-				unset($sql);
-			}
 
 		//get the extension
 			$sql = "select * from v_extensions ";
@@ -141,8 +116,36 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
 				$extension = $row["extension"];
+				$number_alias = $row["number_alias"];
 			}
 			unset ($prep_statement);
+
+		//update the extension and voicemail
+			if ($action == "update" && permission_exists('extension_edit')) {
+				//update the extension
+					$sql = "update v_extensions set ";
+					$sql .= "unique_id = '$unique_id', ";
+					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "and extension_uuid = '$extension_uuid'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
+				//update the voicemail
+					if (strlen($vm_password) > 0) {
+						$sql = "update v_voicemails set ";
+						$sql .= "unique_id = '$unique_id', ";
+						$sql .= "voicemail_password = '$vm_password' ";
+						$sql .= "where domain_uuid = '$domain_uuid' ";
+						if (is_numeric($extension)) {
+							$sql .= "and voicemail_id = '$extension'";
+						}
+						else {
+							$sql .= "and voicemail_id = '$number_alias'";
+						}
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+			}
 
 		//delete extension from memcache
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);

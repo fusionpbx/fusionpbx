@@ -44,7 +44,7 @@ if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);
 }
 
-//delete the extension
+//delete the hot desking information
 	if (strlen($id)>0) {
 		$sql = "update v_extensions set ";
 		$sql .= "unique_id = null, ";
@@ -59,7 +59,7 @@ if (count($_GET)>0) {
 	}
 
 //get the extension
-	$sql = "select * from v_extensions ";
+	$sql = "select extension from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and extension_uuid = '$id' ";
 	$prep_statement = $db->prepare(check_sql($sql));
