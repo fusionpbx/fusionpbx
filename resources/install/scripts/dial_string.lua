@@ -50,6 +50,7 @@ if ( session:ready() ) then
 	sip_from_host = session:getVariable("sip_from_host");
 	direction = session:getVariable("direction"); --in, out, both
 	extension = tostring(session:getVariable("extension")); --true, false
+	context = session:getVariable("context");
 	dial_string = tostring(session:getVariable("dial_string"));
 	if (dial_string == "nil") then dial_string = ""; end
 
@@ -96,30 +97,43 @@ if ( session:ready() ) then
 		else
 			sql = sql .. "AND e.unique_id = '" .. unique_id .."' ";
 		end
-		if (pin_number) then
-			--do nothing
-		else
-			sql = sql .. "AND e.vm_password = '" .. vm_password .."' ";
-		end
 		if (debug["sql"]) then
 			freeswitch.consoleLog("NOTICE", "sql: ".. sql .. "\n");
 		end
 		dbh:query(sql, function(row)
 			db_domain_uuid = row.domain_uuid;
 			db_extension_uuid = row.extension_uuid;
+			db_extension = row.extension;
+			db_number_alias = row.number_alias;
 			db_dial_string = row.dial_string;
 			db_dial_user = row.dial_user;
 			db_dial_domain = row.dial_domain;
 		end);
 
-		--check to see if the pin number is correct
+	--check to see if the pin number is correct
 		if (pin_number) then
 			if (pin_number ~= caller_pin_number) then
 				--access denied
 				db_extension_uuid = "";
 			end
+		else
+			sql = "SELECT * FROM v_voicemails ";
+			sql = sql .. "WHERE domain_uuid = '" .. db_domain_uuid .."' ";
+			if (tonumber(db_extension) == nil) then
+				sql = sql .. "AND voicemail_id = '" .. db_number_alias .."' ";
+			else
+				sql = sql .. "AND voicemail_id = '" .. db_extension .."' ";
+			end
+			dbh:query(sql, function(row)
+				voicemail_password = row.voicemail_password;
+			end);
+			if (voicemail_password ~= caller_pin_number) then
+				--access denied
+				db_extension_uuid = "";
+			end
 		end
 
+	--process the request
 		if (string.len(db_extension_uuid) > 0) then
 			--add the dial string
 				if (direction == "in") then
@@ -182,6 +196,8 @@ if ( session:ready() ) then
 						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
 					end
 				end
+			--clear the cache
+				session:execute("memcache", "delete directory:"..db_extension.."@"..context);
 		else
 			session:streamFile("phrase:voicemail_fail_auth:#");
 			session:hangup("NORMAL_CLEARING");
