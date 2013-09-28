@@ -68,17 +68,14 @@
 	$text['label-11d']['en-us'] = '11 Digits Long Distance';
 	$text['label-11d']['fr'] = '11 Digits';
 
-	$text['label-12d']['en-us'] = '12 Digits';
-	$text['label-12d']['fr'] = '12 Digits';
+	$text['label-north-america']['en-us'] = 'North America';
+	$text['label-north-america']['fr'] = 'Amérique du Nord';
 
-	$text['label-13d']['en-us'] = '13 Digits';
-	$text['label-13d']['fr'] = '13 Digits';
+	$text['label-north-america-intl']['en-us'] = 'North America International';
+	$text['label-north-america-intl']['fr'] = 'Amérique du Nord International';
 
-	$text['label-14d']['en-us'] = '14 Digits';
-	$text['label-14d']['fr'] = '14 Digits';
-
-	$text['label-int']['en-us'] = '15 Digits International';
-	$text['label-int']['fr'] = '15 Digits';
+	$text['label-intl']['en-us'] = 'International';
+	$text['label-intl']['fr'] = 'International';
 
 	$text['label-311']['en-us'] = '311 Information';
 	$text['label-311']['fr'] = '311 Information';
@@ -119,17 +116,8 @@
 	$text['label-9d11']['en-us'] = 'Dial 9, then 11 Digits';
 	$text['label-9d11']['fr'] = 'Compose 9, puis 11 Digits';
 
-	$text['label-9d12']['en-us'] = 'Dial 9, then 12 Digits';
-	$text['label-9d12']['fr'] = 'Compose 9, puis 12 Digits';
-
-	$text['label-9d13']['en-us'] = 'Dial 9, then 13 Digits';
-	$text['label-9d13']['fr'] = 'Compose 9, puis 13 Digits';
-
-	$text['label-9d14']['en-us'] = 'Dial 9, then 14 Digits';
-	$text['label-9d14']['fr'] = 'Compose 9, puis 14 Digits';
-
-	$text['label-9d15']['en-us'] = 'Dial 9, then International';
-	$text['label-9d15']['fr'] = 'Compose 9, puis International';
+	$text['label-9d.12-20']['en-us'] = 'Dial 9, then International';
+	$text['label-9d.12-20']['fr'] = 'Compose 9, puis International';
 
 	$text['label-800']['en-us'] = 'Toll-Free';
 	$text['label-800']['fr'] = 'Sans Charge';
