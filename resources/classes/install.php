@@ -50,7 +50,9 @@ include "root.php";
 			while(false !== ($file = readdir($dir))) {
 				if (($file != '.') && ($file != '..')) {
 					if (is_dir($src.'/'.$file)) {
-						$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
+						if (!file_exists($dst.'/'.$file)) {
+							$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
+						}
 					}
 					else {
 						//show debug info
