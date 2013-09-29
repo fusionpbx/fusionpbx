@@ -347,21 +347,6 @@
 			end
 	end --if action
 
---if the extension does not exist send "not found"
-	if (trim(XML_STRING) == "-ERR NOT FOUND" or XML_STRING == nil) then
-		--send not found
-			XML_STRING = [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-			<document type="freeswitch/xml">
-				<section name="result">
-					<result status="not found" />
-				</section>
-			</document>]];
-		--set the cache
-			if (user and domain_name) then
-				result = trim(api:execute("memcache", "set directory:" .. user .. "@" .. domain_name .. " '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
-			end
-	end
-
 --send the xml to the console
 	if (debug["xml_string"]) then
 		freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: \n" .. XML_STRING .. "\n");
