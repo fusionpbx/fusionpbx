@@ -56,7 +56,6 @@ else {
 			$password = check_str($_POST["password"]);
 
 		//get the values from the HTTP POST and save them as PHP variables
-			$vm_password = check_str($_POST["vm_password"]);
 			$accountcode = check_str($_POST["accountcode"]);
 			$effective_caller_id_name = check_str($_POST["effective_caller_id_name"]);
 			$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
@@ -70,6 +69,7 @@ else {
 			$limit_destination = check_str($_POST["limit_destination"]);
 			$device_uuid = check_str($_POST["device_uuid"]);
 			$device_line = check_str($_POST["device_line"]);
+			$vm_password = check_str($_POST["vm_password"]);
 			$vm_enabled = check_str($_POST["vm_enabled"]);
 			$vm_mailto = check_str($_POST["vm_mailto"]);
 			$vm_attach_file = check_str($_POST["vm_attach_file"]);
@@ -91,9 +91,6 @@ else {
 			$dial_string = check_str($_POST["dial_string"]);
 			$enabled = check_str($_POST["enabled"]);
 			$description = check_str($_POST["description"]);
-
-		//remove spaces
-			$vm_mailto = str_replace(" ", "", $vm_mailto);
 	}
 
 //delete the user from the v_extension_users
@@ -622,7 +619,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$extension = $row["extension"];
 			$number_alias = $row["number_alias"];
 			$password = $row["password"];
-			$vm_password = $row["vm_password"];
 			$accountcode = $row["accountcode"];
 			$effective_caller_id_name = $row["effective_caller_id_name"];
 			$effective_caller_id_number = $row["effective_caller_id_number"];
@@ -634,10 +630,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$directory_exten_visible = $row["directory_exten_visible"];
 			$limit_max = $row["limit_max"];
 			$limit_destination = $row["limit_destination"];
-			$vm_enabled = $row["vm_enabled"];
-			$vm_mailto = $row["vm_mailto"];
-			$vm_attach_file = $row["vm_attach_file"];
-			$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
+			//$vm_password = $row["vm_password"];
+			//$vm_enabled = $row["vm_enabled"];
+			//$vm_mailto = $row["vm_mailto"];
+			//$vm_attach_file = $row["vm_attach_file"];
+			//$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
 			$user_context = $row["user_context"];
 			$toll_allow = $row["toll_allow"];
 			$call_timeout = $row["call_timeout"];
@@ -653,10 +650,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dial_string = $row["dial_string"];
 			$enabled = $row["enabled"];
 			$description = $row["description"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
+
+//get the voicemail data
+	$sql = "select * from v_voicemails ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	if (is_numeric($extension)) {
+		$sql .= "and voicemail_id = '$extension' ";
+	}
+	else {
+		$sql .= "and voicemail_id = '$number_alias' ";
+	}
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$vm_password = $row["voicemail_password"];
+		//$greeting_id = $row["greeting_id"];
+		$vm_mailto = $row["voicemail_mail_to"];
+		$vm_mailto = str_replace(" ", "", $vm_mailto);
+		$vm_attach_file = $row["voicemail_attach_file"];
+		$vm_keep_local_after_email = $row["voicemail_local_after_email"];
+		$vm_enabled = $row["voicemail_enabled"];
+	}
+	unset ($prep_statement);
 
 //clean the variables
 	$vm_password = str_replace("#", "", $vm_password);
