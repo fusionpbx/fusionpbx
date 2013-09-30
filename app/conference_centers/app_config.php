@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Conferences Centers allows one or more audio and video conference rooms.';
 		$apps[$x]['description']['es-mx'] = 'El Centro de Conferencia permite una o más recámaras de conferencia para audio y video.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Centre de Conférences permet une ou plus conferences audio ou vidéo.";
@@ -22,7 +22,7 @@
 		$y = 0;
 		$apps[$x]['menu'][$y]['title']['en-us'] = 'Conference Center';
 		$apps[$x]['menu'][$y]['title']['es-mx'] = 'Centro de Conferencias';
-		$apps[$x]['menu'][$y]['title']['de'] = '';
+		$apps[$x]['menu'][$y]['title']['de-de'] = '';
 		$apps[$x]['menu'][$y]['title']['de-ch'] = '';
 		$apps[$x]['menu'][$y]['title']['de-at'] = '';
 		$apps[$x]['menu'][$y]['title']['fr-fr'] = 'Centre de Conférences';
@@ -40,6 +40,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_center_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = '95f88726-4706-43f0-b52b-9504a0b8046f';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
@@ -56,6 +57,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_room_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = '';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
@@ -76,6 +78,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'conference_session_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = '';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
@@ -129,6 +132,33 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
+                $apps[$x]['permissions'][$y]['name'] = 'conference_session_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'conference_session_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'conference_session_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'conference_session_detail_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'conference_session_detail_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'conference_session_detail_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'conference_session_detail_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
 
 	//schema details
 		$y = 0; //table array index

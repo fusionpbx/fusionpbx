@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Login into hot desking with an ID and your voicemail password to direct your calls to a remote extension. Then make and receive calls as if you were at your extension.';
 		$apps[$x]['description']['es-mx'] = 'Firmarse en un escritorio con un ID y la contaseña para direccionar las llamadas a una extensión remota. Hace y recibe llamadas';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "S'identifier au bureau avec un ID et un mot de passe pour diriger touts les appels vers autre poste. Passer et recevoir appels."; 
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Hot Desking';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Escritorio remoto';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Itinérance';

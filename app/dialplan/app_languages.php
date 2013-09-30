@@ -18,6 +18,8 @@
 		$text['title-dialplan_detail']['fr-fr'] = 'Détail du plan de num';
 		$text['title-default_dialplan']['en-us'] = 'Default Dialplan';
 		$text['title-default_dialplan']['fr-fr'] = 'Plan de num par Défaut';
+		$text['title-queues']['en-us'] = 'Queues';		
+		$text['title-queues']['fr-fr'] = 'Files';		
 
 		$text['header-dialplan_manager']['en-us'] = 'Dialplan Manager';
 		$text['header-dialplan_manager']['fr-fr'] = 'Gestion du plan de numérotation';
@@ -37,7 +39,8 @@
 		$text['header-dialplan_detail']['fr-fr'] = 'Détail du plan de num';
 		$text['header-default_dialplan']['en-us'] = 'Default Dialplan';
 		$text['header-default_dialplan']['fr-fr'] = 'Plan de num par Défaut';
-
+		$text['header-queues']['en-us'] = 'Queues';
+		$text['header-queues']['fr-fr'] = 'Files';
 
 
 		$text['description-dialplan_manager']['en-us'] = 'The dialplan provides a view of some of the feature codes, as well as the IVR Menu, Conferences, Queues and other destinations.';
@@ -56,6 +59,8 @@
 		$text['description-conditions_and_actions']['fr-fr'] = "Les conditions suivantes, actions et anti-actions sont utilisées dans le dialplan pour acheminer les appels. Elles sont traitées dans l'ordre donné. Utiliser autant de conditions, actions ou anti-actions que nécessaire.";
 		$text['description-default_dialplan']['en-us'] = 'The default dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
 		$text['description-default_dialplan']['fr-fr'] = "Le plan de numérotation par défaut est utilisé pour configurer les destinations en fonction de conditions et du contexte. Le plan de numérotation ser à acheminer les appels aux passerelles, opératrices auto, numéros externes, script, ou tout autre destination.";
+		$text['description-queues']['en-us'] = 'Queues are used to setup waiting lines for callers. Also known as FIFO Queues.';
+		$text['description-queues']['fr-fr'] = "Les files sont utilisées pour configurer les lignes d'attente pour les appelants. Aussi connues sous le nom pile FIFO.";
 
 		$text['label-name']['en-us'] = 'Name';
 		$text['label-name']['fr-fr'] = 'Nom';

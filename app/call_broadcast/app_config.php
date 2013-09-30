@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Schedule to immediately make multiple calls to the extension, an IVR Menu, Conference Room, or any other number.';
 		$apps[$x]['description']['es-mx'] = 'Realiza llamadas inmediatamente a extensiones, IVR, conferencias o cualquier otro número';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Programme des appels multiples vers des extensions, IVR, salles de conferences ou autre.";
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Call Broadcast';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Llamada Masiva (Broadcast)';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Appels de masse';
@@ -38,6 +38,7 @@
 	
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'call_broadcast_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '50153bbf-78c5-b49e-7bd9-4b3e4b1134e6';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 

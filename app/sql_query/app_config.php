@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Run Structur Query Language commands.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = 'Lancer de requêtes SQL';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'SQL Query';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Requête SQL';

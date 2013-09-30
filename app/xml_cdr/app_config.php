@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Call Detail Records with all information about the call.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = 'Historique des Appels complets.';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Apps';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Apps';
@@ -40,7 +40,7 @@
 
 		$apps[$x]['menu'][1]['title']['en-us'] = 'Call Detail Records';
 		$apps[$x]['menu'][1]['title']['es-mx'] = '';
-		$apps[$x]['menu'][1]['title']['de'] = '';
+		$apps[$x]['menu'][1]['title']['de-de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
 		$apps[$x]['menu'][1]['title']['fr-fr'] = 'Historiques Appels';
@@ -59,6 +59,8 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'][] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5'; 		
+	 	$apps[$x]['permissions'][$y]['menu']['uuid'][] = '8f80e71a-31a5-6432-47a0-7f5a7b271f05';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -66,6 +68,15 @@
 		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_domain';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+	 	$y++; 		
+ 		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_add'; 		
+ 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin'; 		
+ 		$y++; 		
+ 		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_edit'; 		
+ 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin'; 		
+ 		$y++; 		
+ 		$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_delete'; 		
+ 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';		
 		//$y++;
 		//$apps[$x]['permissions'][$y]['name'] = 'xml_cdr_all';
 		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';

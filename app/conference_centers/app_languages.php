@@ -82,7 +82,7 @@
 		$text['label-announce']['pt-pt'] = '';
 		$text['label-announce']['fr-fr'] = 'Annonce';
 
-		$text['label-mute']['en-us'] = 'Mute on Entry';
+		$text['label-mute']['en-us'] = 'Mute';
 		$text['label-mute']['pt-pt'] = '';
 		$text['label-mute']['fr-fr'] = 'Entrée Micro désactivé';
 
@@ -94,9 +94,9 @@
 		$text['label-sounds']['pt-pt'] = '';
 		$text['label-sounds']['fr-fr'] = 'Sons';
 
-		$text['label-members']['en-us'] = 'Members';
+		$text['label-members']['en-us'] = 'Count';
 		$text['label-members']['pt-pt'] = '';
-		$text['label-members']['fr-fr'] = 'Membres';
+		$text['label-members']['fr-fr'] = 'Décompte';
 
 		$text['label-tools']['en-us'] = 'Tools';
 		$text['label-tools']['pt-pt'] = 'Ferramentas';

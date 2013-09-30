@@ -21,8 +21,8 @@
 		$text['title-default_setting-edit']['fr-fr'] = 'Editer les Configurations par Défaut';
 
 		$text['header-default_setting-edit']['en-us'] = 'Default Setting Edit';
-		$text['header-default_setting-edit']['pt-pt'] = 'Editer les Configurations par Défaut';
-		$text['header-default_setting-edit']['fr-fr'] = '';
+		$text['header-default_setting-edit']['pt-pt'] = '';
+		$text['header-default_setting-edit']['fr-fr'] = 'Editer les Configurations par Défaut';
 
 		$text['description-default_setting-edit']['en-us'] = 'Settings used for all domains.';
 		$text['description-default_setting-edit']['pt-pt'] = '';

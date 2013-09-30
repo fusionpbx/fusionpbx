@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Storeds database connection information.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = 'Information de connexions au BDD';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Databases';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'BDD';
@@ -36,17 +36,18 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'database_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'database_add';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][2]['name'] = 'database_edit';
-		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][3]['name'] = 'database_delete';
-		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+		$y = 0;
+                $apps[$x]['permissions'][$y]['name'] = 'database_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'database_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'database_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'database_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index

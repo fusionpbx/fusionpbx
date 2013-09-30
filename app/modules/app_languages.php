@@ -9,8 +9,8 @@
 	$text['title-module_edit']['en-us'] = 'Module Edit';
 	$text['title-module_edit']['fr-fr'] = 'Editer le Module';
 
-	$text['header-modules']['en-us'] = 'Module List';
-	$text['header-modules']['fr-fr'] = 'Liste les Modules';
+	$text['header-modules']['en-us'] = 'Modules';
+	$text['header-modules']['fr-fr'] = 'Modules';
 	$text['header-module_add']['en-us'] = 'Module Add';
 	$text['header-module_add']['fr-fr'] = 'Ajouter un Module';
 	$text['header-module_edit']['en-us'] = 'Module Edit';

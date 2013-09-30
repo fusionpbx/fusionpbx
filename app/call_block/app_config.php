@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'A tool to block incoming numbers.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Outil pour bloque les numéro d'appelant";
+		$apps[$x]['description']['fr-fr'] = "Outil pour bloquer les numéro d'appelant";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = '';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Call Block';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Blocage d'appel";
@@ -40,6 +40,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'call_block_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = '29295c90-b1b9-440b-9c7E-c8363c6e8975';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';

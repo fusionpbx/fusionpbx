@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.';
 		$apps[$x]['description']['es-mx'] = 'Las pasarelas proveen acceso a otras redes de voz.  Pueden ser provedores u otro sistema que requiera registo SIP.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP"; 
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Gateways';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Pasarelas';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Passerelles';
@@ -161,6 +161,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'codec_prefs'; 		
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text'; 		
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = ''; 		
+		$z++; 		
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'channels'; 		
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric'; 		
+ 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = ''; 		
+ 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'extension_in_contact';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';

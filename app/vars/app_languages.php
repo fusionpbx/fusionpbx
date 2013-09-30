@@ -2,22 +2,22 @@
 
 	//Variables
 
-	$text['title-variables']['en-us'] = 'System Variables';
+	$text['title-variables']['en-us'] = 'Switch Variables';
 	$text['title-variables']['fr-fr'] = 'Variables Système';
 	$text['title-variable_add']['en-us'] = 'Variable Add';
 	$text['title-variable_add']['fr-fr'] = 'Ajouter une Variable';
 	$text['title-variable_edit']['en-us'] = 'Variable Edit';
 	$text['title-variable_edit']['fr-fr'] = 'Editer la Variable';
-	$text['title-variables_advanced']['en-us'] = 'System Variables: Advanced';
+	$text['title-variables_advanced']['en-us'] = 'Switch Variables: Advanced';
 	$text['title-variables_advanced']['fr-fr'] = 'Variables Système: Avancé';
 
-	$text['header-variables']['en-us'] = 'System Variables';
+	$text['header-variables']['en-us'] = 'Switch Variables';
 	$text['header-variables']['fr-fr'] = 'Variables Système';
 	$text['header-variable_add']['en-us'] = 'Variable Add';
 	$text['header-variable_add']['fr-fr'] = 'Ajouter une Variable';
 	$text['header-variable_edit']['en-us'] = 'Variable Edit';
 	$text['header-variable_edit']['fr-fr'] = 'Editer la Variable';
-	$text['header-variables_advanced']['en-us'] = 'System Variables: Advanced';
+	$text['header-variables_advanced']['en-us'] = 'Switch Variables: Advanced';
 	$text['header-variables_advanced']['fr-fr'] = 'Variables Système: Avancé';
 
 	$text['description-variables']['en-us'] = 'Define preprocessor variables here.';
