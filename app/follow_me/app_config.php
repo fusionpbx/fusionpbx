@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = '';
@@ -21,10 +21,10 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Follow Me';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Sígueme';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Suis-moi';
+		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Follow me';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = '';
@@ -47,7 +47,6 @@
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
@@ -57,31 +56,10 @@
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_view';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'follow_me_destination_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_cid_name_prefix';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'follow_me_cid_number_prefix';
-		$y++;
 
 	//schema details
 		$y = 0; //table array index

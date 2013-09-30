@@ -26,13 +26,13 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 	$text['error-event-socket']['en-us'] = 'Connection to Event Socket failed.';
-	$text['error-event-socket']['fr'] = "Connexion à l'Event Socket en echec.";
+	$text['error-event-socket']['fr-fr'] = "Connexion à l'Event Socket en echec.";
 	$text['label-message']['en-us'] = 'Message';
-	$text['label-message']['fr'] = 'Message';
+	$text['label-message']['fr-fr'] = 'Message';
 	$text['title-sofia-status']['en-us'] = 'sofia status';
-	$text['title-sofia-status']['fr'] = 'sofia statut';
+	$text['title-sofia-status']['fr-fr'] = 'sofia statut';
 	$text['title-sofia-status-profile']['en-us'] = 'sofia status profile';
-	$text['title-sofia-status-profile']['fr'] = 'profile statut sofia';
+	$text['title-sofia-status-profile']['fr-fr'] = 'profile statut sofia';
 	$text['title-status']['en-us'] = 'status';
-	$text['title-status']['fr'] = 'statut';
+	$text['title-status']['fr-fr'] = 'statut';
 ?>

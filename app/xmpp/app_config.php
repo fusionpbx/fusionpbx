@@ -10,7 +10,7 @@
 		$apps[$x]['description']['en-us'] = '';
 		$apps[$x]['description']['en-us'] = 'Allow User to Open a Flash Phone for his Extension.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Permet d'utiliser un téléphone flash comme extension";
@@ -22,13 +22,13 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'XMPP Manager';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Gestion XMPP";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Gestion XMPP';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Gestor de XMPP";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Gestor de XMPP';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '1808365b-0f7c-7555-89d0-31b3d9a75abb';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'bc96d773-ee57-0cdd-c3ac-2d91aba61b55';
@@ -38,7 +38,6 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'xmpp_view';
-		$apps[$x]['permissions'][0]['menu']['uuid'] = '1808365b-0f7c-7555-89d0-31b3d9a75abb';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
 		$apps[$x]['permissions'][1]['name'] = 'xmpp_add';

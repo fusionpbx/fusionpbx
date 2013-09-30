@@ -58,7 +58,7 @@
 
 	$text['label-realm']['en-us'] = 'Realm';
 	$text['label-realm']['pt-pt'] = '';
-	$text['label-realm']['pt-pt'] = 'Royaume';
+	$text['label-realm']['fr-fr'] = 'Royaume';
 
 	$text['description-realm']['en-us'] = 'Enter the realm here.';
 	$text['description-realm']['pt-pt'] = '';
@@ -152,12 +152,6 @@
 	$text['description-ping']['pt-pt'] = '';
 	$text['description-ping']['fr-fr'] = 'Insérer ici la fréquence de ping en secondes.';
 
-	$text['label-channels']['en-us'] = 'Channels:';
-	$text['label-channels']['pt-pt'] = 'Canais:';
-
-	$text['description-channels']['en-us'] = 'Maximum number of simultaneous channels available in the gateway.';
-	$text['description-channels']['pt-pt'] = 'Número máximo de canais simultâneos no gateway.';
-
 	$text['label-caller_id_in_from']['en-us'] = 'Caller Id In From';
 	$text['label-caller_id_in_from']['pt-pt'] = '';
 	$text['label-caller_id_in_from']['fr-fr'] = 'Caller Id In From';
@@ -171,23 +165,16 @@
 	$text['label-supress_cng']['fr-fr'] = 'suppression du silence';
 
 	$text['description-supress_cng']['en-us'] = 'Enter the supress-cng';
+	$text['description-supress_cng']['pt-pt'] = '';
 	$text['description-supress_cng']['fr-fr'] = "Afin de sauvegarder de la bande passante RTP, on n'envoit pas de RTP pour le silence.";
 
 	$text['label-sip_cid_type']['en-us'] = 'Sip CID Type';
 	$text['label-sip_cid_type']['pt-pt'] = '';
-	$text['label-sip_cid_type']['fr-fr'] = "CallerID SIP type";;
+	$text['label-sip_cid_type']['fr-fr'] = "CallerID SIP type";
 
 	$text['description-sip_cid_type']['en-us'] = 'Enter the sip cid type: none, pid, and rpid.';
 	$text['description-sip_cid_type']['pt-pt'] = '';
 	$text['description-sip_cid_type']['fr-fr'] = "Insérer le type d'ID d'appelant : none (utilise le header From) ou pid (P-Asserted-Identity header) ou rpid (remote-Party-ID header).";
-
-	$text['label-codec_prefs']['en-us'] = 'Codec Preferences';
-	$text['label-codec_prefs']['pt-pt'] = 'Lista de Codecs';
-	$text['label-codec_prefs']['fr-fr'] = '';
-
-	$text['description-codec_prefs']['en-us'] = 'Enter the codec preferences as a list. Ex: PCMA,PCMU,G722';
-	$text['description-codec_prefs']['pt-pt'] = 'Introduza os codecs a utilizar no gateway sob a forma de lista. Ex: PCMA,PCMU,G722';
-	$text['description-codec_prefs']['fr-fr'] = "";
 
 	$text['label-extension_in_contact']['en-us'] = 'Extension In Contact';
 	$text['label-extension_in_contact']['pt-pt'] = '';

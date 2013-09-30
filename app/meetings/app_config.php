@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
+		$apps[$x]['description']['fr-fr'] = '';
 
 	//menu details
 		/*
@@ -22,38 +23,27 @@
 		*/
 
 	//permission details
+		/*
 		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = 'meeting_view';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'meeting_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'meeting_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'meeting_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'meeting_user_view';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'meeting_user_add';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'meeting_user_edit';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'meeting_user_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		*/
 
 	//schema details
 		$y = 0; //table array index
