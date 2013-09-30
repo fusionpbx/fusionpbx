@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Queues are used to setup waiting lines for callers. Also known as FIFO Queues.';
 		$apps[$x]['description']['es-mx'] = 'Las cosas son usadas para configurar líneas de espera.  Son conocidas como colas FIFO.';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Les queues sont utilisés pour configurer les salles d'attente (FIFO).";
+		$apps[$x]['description']['fr-fr'] = "Les files sont utilisés pour configurer les salles d'attente (FIFO).";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'As filas são usados​para configurar as filas de espera para chamadores. Também conhecida como filas FIFO.';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Queues';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Colas';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Queues';

@@ -7,12 +7,12 @@
 		$apps[$x]['version'] = '';
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
-		$apps[$x]['description']['en-us'] = "Storeds database connection information.";
+		$apps[$x]['description']['en-us'] = 'Storeds database connection information.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Information de connexions au BDD";
+		$apps[$x]['description']['fr-fr'] = 'Information de connexions au BDD';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Armazena informações de conexão com a base de dados.';
@@ -21,13 +21,13 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Databases';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "BDD";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = 'BDD';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Base de Dados";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Base de Dados';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = 'ebbd754d-ca74-d5b1-a77e-9206ba3ecc3f';
 		$apps[$x]['menu'][0]['parent_uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';
@@ -36,18 +36,17 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = 'database_view';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'database_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'database_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'database_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][0]['name'] = 'database_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][1]['name'] = 'database_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][2]['name'] = 'database_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][3]['name'] = 'database_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index

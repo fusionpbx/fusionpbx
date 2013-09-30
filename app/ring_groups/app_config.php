@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'A tool to call multiple extensions.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Outil pour appeler plusieurs extensions";
+		$apps[$x]['description']['fr-fr'] = 'Outil pour appeler plusieurs extensions';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Uma ferramenta para chamar várias extensões.';
@@ -21,13 +21,13 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Ring Groups';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Groupes de sonnerie";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Groupes de sonnerie';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Grupos de Trabalho";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Grupos de Trabalho';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = 'b30f085f-3ec6-2819-7e62-53dfba5cb8d5';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
@@ -61,40 +61,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = 'ring_group_prompt';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		//$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_destination_view';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_destination_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_destination_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_destination_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_user_view';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_user_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_user_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'ring_group_user_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 
 	//schema details
 		$y = 0; //table array index

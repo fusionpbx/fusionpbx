@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.';
 		$apps[$x]['description']['es-mx'] = 'El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels sélon les conditions et context.  Vous pouvez en utiliser pour diriger les appels vers gateways, IVR, nombres éxterieurs ou quelqu'autre déstination.";
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Dialplan';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Plan de Marcado';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Dialplan';
@@ -39,11 +39,11 @@
 
 		$apps[$x]['menu'][1]['title']['en-us'] = 'Dialplan Manager';
 		$apps[$x]['menu'][1]['title']['es-mx'] = 'Administrador de Planes de Marcado';
-		$apps[$x]['menu'][1]['title']['de-de'] = '';
+		$apps[$x]['menu'][1]['title']['de'] = '';
 		$apps[$x]['menu'][1]['title']['de-ch'] = '';
 		$apps[$x]['menu'][1]['title']['de-at'] = '';
 		$apps[$x]['menu'][1]['title']['fr-fr'] = 'Gestion du Dialplan';
-		$apps[$x]['menu'][1]['title']['fr-ca'] = 'Administrateur de Dialplan';
+		$apps[$x]['menu'][1]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][1]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][1]['title']['pt-pt'] = 'Gestor de Dialplan';
 		$apps[$x]['menu'][1]['title']['pt-br'] = '';
@@ -55,42 +55,24 @@
 		$apps[$x]['menu'][1]['groups'][] = 'superadmin';
 
 	//permission details
-		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_view';
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = 'b94e8bd9-9eb5-e427-9c26-ff7a6c21552a';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_advanced_view';
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = '52929fee-81d3-4d94-50b7-64842d9393c2';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_advanced_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_detail_view';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_detail_add';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_detail_edit';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'dialplan_detail_delete';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][0]['name'] = 'dialplan_view';
+		$apps[$x]['permissions'][0]['groups'][] = 'admin';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][1]['name'] = 'dialplan_add';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][2]['name'] = 'dialplan_edit';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][3]['name'] = 'dialplan_delete';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][4]['name'] = 'dialplan_advanced_view';
+		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][5]['name'] = 'dialplan_advanced_edit';
+		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index

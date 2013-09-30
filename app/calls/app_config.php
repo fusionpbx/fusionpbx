@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Call Forward, Follow Me and Do Not Disturb.';
 		$apps[$x]['description']['es-mx'] = 'Reenvio de llamada, Sígueme y No Molestar.';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Renvoi d'appel, suis-moi et ne pas deranger.";
@@ -21,7 +21,7 @@
 	//menu details
 		//$apps[$x]['menu'][0]['title']['en-us'] = 'Calls';
 		//$apps[$x]['menu'][0]['title']['es-mx'] = 'Llamadas';
-		//$apps[$x]['menu'][0]['title']['de-de'] = '';
+		//$apps[$x]['menu'][0]['title']['de'] = '';
 		//$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		//$apps[$x]['menu'][0]['title']['de-at'] = '';
 		//$apps[$x]['menu'][0]['title']['fr-fr'] = 'Appels';
@@ -38,19 +38,18 @@
 		//$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][$y]['name'] = 'follow_me';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'call_forward';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-		$y++;
-		$apps[$x]['permissions'][$y]['name'] = 'do_not_disturb';
-		$apps[$x]['permissions'][$y]['groups'][] = 'user';
-		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
-		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][1]['name'] = 'follow_me';
+		$apps[$x]['permissions'][1]['groups'][] = 'user';
+		$apps[$x]['permissions'][1]['groups'][] = 'admin';
+		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
+		$apps[$x]['permissions'][2]['name'] = 'call_forward';
+		$apps[$x]['permissions'][2]['groups'][] = 'user';
+		$apps[$x]['permissions'][2]['groups'][] = 'admin';
+		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
+
+		$apps[$x]['permissions'][3]['name'] = 'do_not_disturb';
+		$apps[$x]['permissions'][3]['groups'][] = 'user';
+		$apps[$x]['permissions'][3]['groups'][] = 'admin';
+		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 ?>

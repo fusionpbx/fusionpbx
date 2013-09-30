@@ -9,11 +9,11 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.';
 		$apps[$x]['description']['es-mx'] = 'Las pasarelas proveen acceso a otras redes de voz.  Pueden ser provedores u otro sistema que requiera registo SIP.';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres réseaux vocaux. Ceux-ci peuvent être des opérateurs ou d'autres systèmes reqieérant un enregistrement SIP";
-		$apps[$x]['description']['fr-ca'] = "Les passerelles donnent access autres réseaux vocaux.  Elles pouvent être d'autre furnisseur ou autre système avec la régistration SIP.";
+		$apps[$x]['description']['fr-fr'] = "Les passerelles donnent access autres rÃ©seaux vocaux. Ceux-ci peuvent Ãªtre des opÃ©rateurs ou d'autres systÃ¨mes reqieÃ©rant un enregistrement SIP"; 
+		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Gateways fornecem acesso em redes de voz outros. Estes podem ser os provedores de voz ou outros sistemas que exigem registro SIP.';
 		$apps[$x]['description']['pt-br'] = '';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Gateways';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Pasarelas';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Passerelles';
@@ -159,14 +159,6 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'sip_cid_type';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'codec_prefs';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'channels';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'numeric';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'extension_in_contact';

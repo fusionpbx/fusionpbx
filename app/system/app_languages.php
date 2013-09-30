@@ -27,25 +27,25 @@
 */
 
 	$text['title-sys-info']['en-us'] = 'System Information';
-	$text['title-sys-info']['fr'] = 'Info Système';
+	$text['title-sys-info']['fr-fr'] = 'Info Système';
 	$text['label-os']['en-us'] = 'Operating System:';
-	$text['label-os']['fr'] = 'Operating System:';
+	$text['label-os']['fr-fr'] = 'Operating System:';
 	$text['title-mem']['en-us'] = 'Memory Information';
-	$text['title-mem']['fr'] = 'Information Mémoire';
+	$text['title-mem']['fr-fr'] = 'Information Mémoire';
 	$text['label-mem']['en-us'] = 'Memory Status:';
-	$text['label-mem']['fr'] = 'Statut Mémoire:';
+	$text['label-mem']['fr-fr'] = 'Statut Mémoire:';
 	$text['title-cpu']['en-us'] = 'CPU Information';
-	$text['title-cpu']['fr'] = 'Info CPU';
+	$text['title-cpu']['fr-fr'] = 'Info CPU';
 	$text['label-cpu']['en-us'] = 'CPU Status:';
-	$text['label-cpu']['fr'] = 'CPU Statut:';
+	$text['label-cpu']['fr-fr'] = 'CPU Statut:';
 	$text['title-drive']['en-us'] = 'Drive Information';
-	$text['title-drive']['fr'] = 'Info Disque';
+	$text['title-drive']['fr-fr'] = 'Info Disque';
 	$text['label-drive']['en-us'] = 'Drive Space:';
-	$text['label-drive']['fr'] = 'Espace Disque:';
+	$text['label-drive']['fr-fr'] = 'Espace Disque:';
 	$text['label-drive-capacity']['en-us'] = 'Capacity:';
-	$text['label-drive-capacity']['fr'] = 'Capacité:';
+	$text['label-drive-capacity']['fr-fr'] = 'Capacité:';
 	$text['label-drive-free']['en-us'] = 'Free Space:';
-	$text['label-drive-free']['fr'] = 'Espace Libre:';
+	$text['label-drive-free']['fr-fr'] = 'Espace Libre:';
 	$text['label-drive-percent']['en-us'] = 'Percent Free:';
-	$text['label-drive-percent']['fr'] = 'Pourcent Libre:';
+	$text['label-drive-percent']['fr-fr'] = 'Pourcent Libre:';
 ?>

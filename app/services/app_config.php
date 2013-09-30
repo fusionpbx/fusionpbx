@@ -9,10 +9,10 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Monitor System Services.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de-de'] = '';
+		$apps[$x]['description']['de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = "Contrôler les services du système";
+		$apps[$x]['description']['fr-fr'] = 'Contrôler les services du système';
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Monitorizar Serviços do Sistema.';
@@ -21,10 +21,10 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Services';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de-de'] = '';
+		$apps[$x]['menu'][0]['title']['de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Services";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Services';
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Serviços';
@@ -36,16 +36,16 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'service_view';
+		$apps[$x]['permissions'][0]['name'] = 'services_view';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][1]['name'] = 'service_add';
+		$apps[$x]['permissions'][1]['name'] = 'services_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][2]['name'] = 'service_edit';
+		$apps[$x]['permissions'][2]['name'] = 'services_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
 
-		$apps[$x]['permissions'][3]['name'] = 'service_delete';
+		$apps[$x]['permissions'][3]['name'] = 'services_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
 
 	//schema details

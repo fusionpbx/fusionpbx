@@ -26,132 +26,132 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 	$text['message-denied']['en-us'] = 'access denied';
-	$text['message-denied']['fr'] = "Accès non authorisé";
+	$text['message-denied']['fr-fr'] = "Accès non authorisé";
 
 	$text['label-interactive']['en-us'] = 'Interactive Conference';
-	$text['label-interactive']['fr'] = "Conférence Interactive";
+	$text['label-interactive']['fr-fr'] = "Conférence Interactive";
 
 	$text['description-interactive']['en-us'] = 'Use this to monitor and interact with the members of the conference.';
-	$text['description-interactive']['fr'] = "Superviser et interagir avec les participants de la conférence";
+	$text['description-interactive']['fr-fr'] = "Superviser et interagir avec les participants de la conférence";
 
 	$text['message-connection']['en-us'] = 'Connection to Event Socket failed.';
-	$text['message-connection']['fr'] = "Connexion à l'Event Socket en echec.";
+	$text['message-connection']['fr-fr'] = "Connexion à l'Event Socket en echec.";
 
 	$text['label-message']['en-us'] = 'Message';
-	$text['label-message']['fr'] = "Message";
+	$text['label-message']['fr-fr'] = "Message";
 
 	$text['label-tools']['en-us'] = 'Tools';
-	$text['label-tools']['fr'] = "Outils";
+	$text['label-tools']['fr-fr'] = "Outils";
 
 	$text['button-start-rec']['en-us'] = 'Start Record';
-	$text['button-start-rec']['fr'] = "Commencer l'Enregistrement";
+	$text['button-start-rec']['fr-fr'] = "Commencer l'Enregistrement";
 
 	$text['button-stop-rec']['en-us'] = 'Stop Record';
-	$text['button-stop-rec']['fr'] = "Arrêter l'Enregistrement";
+	$text['button-stop-rec']['fr-fr'] = "Arrêter l'Enregistrement";
 
 	$text['label-recording']['en-us'] = 'Recording';
-	$text['label-recording']['fr'] = "Enregistré";
+	$text['label-recording']['fr-fr'] = "Enregistré";
 
 	$text['label-not-recording']['en-us'] = 'Not Recording';
-	$text['label-not-recording']['fr'] = "Non Enregistré";
+	$text['label-not-recording']['fr-fr'] = "Non Enregistré";
 
 	$text['label-unlock']['en-us'] = 'Unlock';
-	$text['label-unlock']['fr'] = "Débloqué";
+	$text['label-unlock']['fr-fr'] = "Débloqué";
 
 	$text['label-lock']['en-us'] = 'Lock';
-	$text['label-lock']['fr'] = "Bloqué";
+	$text['label-lock']['fr-fr'] = "Bloqué";
 
 	$text['label-id']['en-us'] = 'ID';
-	$text['label-id']['fr'] = "ID";
+	$text['label-id']['fr-fr'] = "ID";
 
 	$text['label-cid-name']['en-us'] = 'Caller ID Name';
-	$text['label-cid-name']['fr'] = "Nom d'appelant";
+	$text['label-cid-name']['fr-fr'] = "Nom d'appelant";
 
 	$text['label-cid-num']['en-us'] = 'Caller ID Number';
-	$text['label-cid-num']['fr'] = "Numéro d'appelant";
+	$text['label-cid-num']['fr-fr'] = "Numéro d'appelant";
 
 	$text['label-moderator']['en-us'] = 'Moderator';
-	$text['label-moderator']['fr'] = "Modérateur";
+	$text['label-moderator']['fr-fr'] = "Modérateur";
 
 	$text['label-joined']['en-us'] = 'Joined';
-	$text['label-joined']['fr'] = "a joint";
+	$text['label-joined']['fr-fr'] = "a joint";
 
 	$text['label-hear']['en-us'] = 'Hear';
-	$text['label-hear']['fr'] = "écouter";
+	$text['label-hear']['fr-fr'] = "écouter";
 
 	$text['label-speak']['en-us'] = 'Speak';
-	$text['label-speak']['fr'] = "parler";
+	$text['label-speak']['fr-fr'] = "parler";
 
 	$text['label-talking']['en-us'] = 'Talking';
-	$text['label-talking']['fr'] = "parle";
+	$text['label-talking']['fr-fr'] = "parle";
 
 	$text['label-last-talk']['en-us'] = 'Last Talked';
-	$text['label-last-talk']['fr'] = "dernier parlant";
+	$text['label-last-talk']['fr-fr'] = "dernier parlant";
 
 	$text['label-video']['en-us'] = 'Video';
-	$text['label-video']['fr'] = "Vidéo";
+	$text['label-video']['fr-fr'] = "Vidéo";
 
 	$text['label-floor']['en-us'] = 'Has Floor';
-	$text['label-floor']['fr'] = "A la parole";
+	$text['label-floor']['fr-fr'] = "A la parole";
 
 	$text['label-tool']['en-us'] = 'Tools';
-	$text['label-tool']['fr'] = "Outils";
+	$text['label-tool']['fr-fr'] = "Outils";
 
 	$text['label-yes']['en-us'] = 'yes';
-	$text['label-yes']['fr'] = "Oui";
+	$text['label-yes']['fr-fr'] = "Oui";
 
 	$text['label-no']['en-us'] = 'no';
-	$text['label-no']['fr'] = "Non";
+	$text['label-no']['fr-fr'] = "Non";
 
 	$text['label-energy']['en-us'] = 'Energy';
-	$text['label-energy']['fr'] = "Energie";
+	$text['label-energy']['fr-fr'] = "Energie";
 
 	$text['label-volume']['en-us'] = 'Vol';
-	$text['label-volume']['fr'] = "Vol";
+	$text['label-volume']['fr-fr'] = "Vol";
 
 	$text['label-gain']['en-us'] = 'Gain';
-	$text['label-gain']['fr'] = "Gain";
+	$text['label-gain']['fr-fr'] = "Gain";
 
 	$text['label-mute']['en-us'] = 'Mute';
-	$text['label-mute']['fr'] = "muet";
+	$text['label-mute']['fr-fr'] = "muet";
 
 	$text['label-unmute']['en-us'] = 'Unmute';
-	$text['label-unmute']['fr'] = "sonore";
+	$text['label-unmute']['fr-fr'] = "sonore";
 
 	$text['label-mute-all']['en-us'] = 'Mute All';
-	$text['label-mute-all']['fr'] = "tous muets";
+	$text['label-mute-all']['fr-fr'] = "tous muets";
 
 	$text['label-mute-all-alt']['en-us'] = 'Mute all but moderator.';
-	$text['label-mute-all-alt']['fr'] = "muets sauf le moderateur.";
+	$text['label-mute-all-alt']['fr-fr'] = "muets sauf le moderateur.";
 
 	$text['label-unmute-all']['en-us'] = 'Unmute All';
-	$text['label-unmute-all']['fr'] = "tous sonore";
+	$text['label-unmute-all']['fr-fr'] = "tous sonore";
 
 	$text['label-end-conference']['en-us'] = 'End Conference';
-	$text['label-end-conference']['fr'] = "finir la conférence";
+	$text['label-end-conference']['fr-fr'] = "finir la conférence";
 
 	$text['label-deaf']['en-us'] = 'Deaf';
-	$text['label-deaf']['fr'] = "sourd";
+	$text['label-deaf']['fr-fr'] = "sourd";
 
 	$text['label-undeaf']['en-us'] = 'Undeaf';
-	$text['label-undeaf']['fr'] = "entandant";
+	$text['label-undeaf']['fr-fr'] = "entandant";
 
 	$text['label-kick']['en-us'] = 'Kick';
-	$text['label-kick']['fr'] = "jeter";
+	$text['label-kick']['fr-fr'] = "jeter";
 
 	$text['label-active']['en-us'] = 'Active Conferences';
-	$text['label-active']['fr'] = "Conférences Avtives";
+	$text['label-active']['fr-fr'] = "Conférences Avtives";
 
 	$text['description-active']['en-us'] = 'List all the conferences that are currently active with one or more members.';
-	$text['description-active']['fr'] = "Liste toutes les conférences actives avec un ou plusieurs participants.";
+	$text['description-active']['fr-fr'] = "Liste toutes les conférences actives avec un ou plusieurs participants.";
 
 	$text['label-name']['en-us'] = 'Name';
-	$text['label-name']['fr'] = "Nom";
+	$text['label-name']['fr-fr'] = "Nom";
 
 	$text['label-member-count']['en-us'] = 'Member Count';
-	$text['label-member-count']['fr'] = "Décompte des participants";
+	$text['label-member-count']['fr-fr'] = "Décompte des participants";
 
 	$text['button-view']['en-us'] = 'view';
-	$text['button-view']['fr'] = "Voir";
+	$text['button-view']['fr-fr'] = "Voir";
 
 ?>

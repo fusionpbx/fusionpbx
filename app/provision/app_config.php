@@ -8,9 +8,11 @@
 		//$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		//$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		//$apps[$x]['description']['en-us'] = 'Writes the provisioning files from templates.';
+		//$apps[$x]['description']['fr-fr'] = 'Ecrit les fichiers de provisioning à partir des modèles.';
 
 	//menu details
 		//$apps[$x]['menu'][0]['title']['en-us'] = 'Provision';
+		//$apps[$x]['menu'][0]['title']['fr-fr'] = 'Provision';
 		//$apps[$x]['menu'][0]['uuid'] = '';
 		//$apps[$x]['menu'][0]['parent_uuid'] = '';
 		//$apps[$x]['menu'][0]['category'] = 'internal';
