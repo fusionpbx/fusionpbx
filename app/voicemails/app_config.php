@@ -12,7 +12,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Voicemail';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Messagerie Vocale';
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Messagerie Vocale";
 		$apps[$x]['menu'][0]['uuid'] = '0347f82a-62a0-49d0-bacd-511d080c46d5';
 		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
 		$apps[$x]['menu'][0]['category'] = 'internal';
@@ -22,43 +22,43 @@
 		//$apps[$x]['menu'][0]['groups'][] = 'user';
 
 	//permission details
-                $y = 0;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_view';
-                $apps[$x]['permissions'][$y]['menu']['uuid'] = '0347f82a-62a0-49d0-bacd-511d080c46d5';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_add';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_edit';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'user';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_delete';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_message_view';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'user';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_message_add';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'user';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_message_edit';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'voicemail_message_delete';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
-                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = '0347f82a-62a0-49d0-bacd-511d080c46d5';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_add';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_add';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_edit';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'voicemail_message_delete';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'user';
 
 	//schema details
 		$y = 0; //table array index

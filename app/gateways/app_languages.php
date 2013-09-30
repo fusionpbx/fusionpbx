@@ -58,7 +58,7 @@
 
 	$text['label-realm']['en-us'] = 'Realm';
 	$text['label-realm']['pt-pt'] = '';
-	$text['label-realm']['fr-fr'] = 'Royaume';
+	$text['label-realm']['pt-pt'] = 'Royaume';
 
 	$text['description-realm']['en-us'] = 'Enter the realm here.';
 	$text['description-realm']['pt-pt'] = '';
@@ -152,13 +152,11 @@
 	$text['description-ping']['pt-pt'] = '';
 	$text['description-ping']['fr-fr'] = 'Insérer ici la fréquence de ping en secondes.';
 
-	$text['label-channels']['en-us'] = 'Channels:'; 		
- 	$text['label-channels']['pt-pt'] = 'Canais:'; 		
- 	$text['label-channels']['fr-fr'] = 'Canaux:'; 		
- 			
- 	$text['description-channels']['en-us'] = 'Maximum number of simultaneous channels available in the gateway.'; 		
- 	$text['description-channels']['pt-pt'] = 'Número máximo de canais simultâneos no gateway.';
- 	$text['description-channels']['fr-fr'] = "Nombre max de canaux simultanés disponible sur la passerelle.";
+	$text['label-channels']['en-us'] = 'Channels:';
+	$text['label-channels']['pt-pt'] = 'Canais:';
+
+	$text['description-channels']['en-us'] = 'Maximum number of simultaneous channels available in the gateway.';
+	$text['description-channels']['pt-pt'] = 'Número máximo de canais simultâneos no gateway.';
 
 	$text['label-caller_id_in_from']['en-us'] = 'Caller Id In From';
 	$text['label-caller_id_in_from']['pt-pt'] = '';
@@ -184,13 +182,13 @@
 	$text['description-sip_cid_type']['pt-pt'] = '';
 	$text['description-sip_cid_type']['fr-fr'] = "Insérer le type d'ID d'appelant : none (utilise le header From) ou pid (P-Asserted-Identity header) ou rpid (remote-Party-ID header).";
 
-	$text['label-codec_prefs']['en-us'] = 'Codec Preferences'; 		
- 	$text['label-codec_prefs']['pt-pt'] = 'Lista de Codecs'; 		
- 	$text['label-codec_prefs']['fr-fr'] = 'Liste des Codecs'; 		
- 			
- 	$text['description-codec_prefs']['en-us'] = 'Enter the codec preferences as a list. Ex: PCMA,PCMU,G722'; 		
- 	$text['description-codec_prefs']['pt-pt'] = 'Introduza os codecs a utilizar no gateway sob a forma de lista. Ex: PCMA,PCMU,G722'; 		
-	$text['description-codec_prefs']['fr-fr'] = "Entrer la liste des codecs préférés. Ex: PCMA,PCMU,G722";
+	$text['label-codec_prefs']['en-us'] = 'Codec Preferences';
+	$text['label-codec_prefs']['pt-pt'] = 'Lista de Codecs';
+	$text['label-codec_prefs']['fr-fr'] = '';
+
+	$text['description-codec_prefs']['en-us'] = 'Enter the codec preferences as a list. Ex: PCMA,PCMU,G722';
+	$text['description-codec_prefs']['pt-pt'] = 'Introduza os codecs a utilizar no gateway sob a forma de lista. Ex: PCMA,PCMU,G722';
+	$text['description-codec_prefs']['fr-fr'] = "";
 
 	$text['label-extension_in_contact']['en-us'] = 'Extension In Contact';
 	$text['label-extension_in_contact']['pt-pt'] = '';
