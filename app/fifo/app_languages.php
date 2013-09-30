@@ -30,7 +30,6 @@
 	$text['header-additional_information']['en-us'] = 'Additional Information';
 	$text['header-additional_information']['fr-fr'] = 'Informations Additionnelles';
 
-
 	$text['description-queues']['en-us'] = 'Queues are used to setup waiting lines for callers. Also known as FIFO Queues.';
 	$text['description-queues']['fr-fr'] = "Les queues sont également appelées files d'attentes ou FIFO queues.";
 	$text['description-queue_add']['en-us'] = 'In simple terms queues are holding patterns for callers to wait until someone is available to take the call. Also known as FIFO Queues.';

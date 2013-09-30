@@ -1,7 +1,6 @@
 <?php
 
 	//Call Flows
-
 		$text['title-call_flows']['en-us'] = 'Call Flows';
 		$text['title-call_flows']['pt-pt'] = '';
 		$text['title-call_flows']['fr-fr'] = "Flux d'appel";
@@ -14,8 +13,6 @@
 		$text['description-call_flows']['pt-pt'] = '';
 		$text['description-call_flows']['fr-fr'] = "Appels directs entre deux destionation en appelant une fonction via un code. ";
 
-		//------
-
 		$text['title-call_flow-edit']['en-us'] = 'Call Flow Edit';
 		$text['title-call_flow-edit']['pt-pt'] = '';
 		$text['title-call_flow-edit']['fr-fr'] = "Editer le flux";
@@ -23,8 +20,6 @@
 		$text['header-call_flow-edit']['en-us'] = 'Call Flow Edit';
 		$text['header-call_flow-edit']['pt-pt'] = '';
 		$text['header-call_flow-edit']['fr-fr'] = "Editer le flux";
-
-		//------
 
 		$text['title-call_flow-add']['en-us'] = 'Call Flow Add';
 		$text['title-call_flow-add']['pt-pt'] = '';
