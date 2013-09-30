@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Originate calls with a URL.';
 		$apps[$x]['description']['es-mx'] = 'Genera llamadas con un URL.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Appeler avec une URL";
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Click to Call';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Pulse para Llamar';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Click to Call';
@@ -36,6 +36,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'click_to_call_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = 'f862556f-9ddd-2697-fdf4-bed08ec63aa5';
 		$apps[$x]['permissions'][0]['groups'][] = 'user';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';

@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Shows active calls, and agents in the call center queue.';
 		$apps[$x]['description']['es-mx'] = 'Muestra las llamadas activas y los agentes en la cola del centro de llamadas.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Affiche les appels actifs et les agents en file sur le centre d'appels.";
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Active Call Center';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Centro de Llamada Activo';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Centre Appels Actifs";
@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'call_center_active_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '7fb0dd87-e984-9980-c512-2c76b887aeb2';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
 

@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Provides the ability to quickly define information to store and dynamically makes tools available to view, add, edit, delete, and search.';
 		$apps[$x]['description']['es-mx'] = '';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Fourni la possibilité de rapidement définir les informations à stocker et dynamiquement rendre disponible des outils pour voir, éditer, supprimer et chercher. ";
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Schemas';
 		$apps[$x]['menu'][0]['title']['es-mx'] = '';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Schémas';
@@ -37,37 +37,54 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'schema_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'admin';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'schema_add';
-		$apps[$x]['permissions'][1]['groups'][] = 'admin';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][2]['name'] = 'schema_edit';
-		$apps[$x]['permissions'][2]['groups'][] = 'admin';
-		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][3]['name'] = 'schema_delete';
-		$apps[$x]['permissions'][3]['groups'][] = 'admin';
-		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][4]['name'] = 'schema_data_view';
-		$apps[$x]['permissions'][4]['groups'][] = 'admin';
-		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][5]['name'] = 'schema_data_add';
-		$apps[$x]['permissions'][5]['groups'][] = 'admin';
-		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][6]['name'] = 'schema_data_edit';
-		$apps[$x]['permissions'][6]['groups'][] = 'admin';
-		$apps[$x]['permissions'][6]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][7]['name'] = 'schema_data_delete';
-		$apps[$x]['permissions'][7]['groups'][] = 'admin';
-		$apps[$x]['permissions'][7]['groups'][] = 'superadmin';
+                $y = 0;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_data_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_data_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_data_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_data_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_name_value_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_name_value_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_name_value_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_name_value_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_field_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_field_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_field_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'schema_field_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index

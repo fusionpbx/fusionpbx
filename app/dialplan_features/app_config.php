@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Provides dialplan context features including in call transfer and attended transfer and more.';
 		$apps[$x]['description']['es-mx'] = 'Provee opciones bajo contexto a los planes de marcado, incluyendo transferencia, espera y mÃ¡s.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Donne des options aux dialplans comme le transfert, transfert supervisé et plus.";

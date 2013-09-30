@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Used Configure SIP extensions.';
 		$apps[$x]['description']['es-mx'] = 'Utilizado para configurar Extensiones SIP.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = 'Utilisé pour configurer des extentions SIP';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Extensions';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Extensiones';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Extensions';
@@ -37,28 +37,44 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'extension_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'admin';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][1]['name'] = 'extension_add';
-		$apps[$x]['permissions'][1]['groups'][] = 'admin';
-		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][2]['name'] = 'extension_edit';
-		$apps[$x]['permissions'][2]['groups'][] = 'admin';
-		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][3]['name'] = 'extension_delete';
-		$apps[$x]['permissions'][3]['groups'][] = 'admin';
-		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][4]['name'] = 'extension_toll';
-		$apps[$x]['permissions'][4]['groups'][] = 'superadmin';
-
-		$apps[$x]['permissions'][5]['name'] = 'outbound_caller_id_select';
-		//$apps[$x]['permissions'][3]['groups'][] = 'admin';
-		//$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['name'] = 'extension_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_toll';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'outbound_caller_id_select';
+                //$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                //$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_user_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_user_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_user_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'extension_user_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
 
 	//schema details
 		$y = 0; //table array index
@@ -115,14 +131,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'mailbox';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'vm_password';
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
-		$z++;
+		//$apps[$x]['db'][$y]['fields'][$z]['name'] = 'mailbox';
+		//$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		//$z++;
+		//$apps[$x]['db'][$y]['fields'][$z]['name'] = 'vm_password';
+		//$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		//$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';
+		//$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'accountcode';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = '';

@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Manage Content for any page in the interface.';
 		$apps[$x]['description']['es-mx'] = 'Administra el Contenido de cualquier pagina en la interfaz.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Gerer le contenu des pages de l'interface.";
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Content Manager';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Administrador de Contenido';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Contenu';
@@ -38,20 +38,81 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'content_view';
+		$apps[$x]['permissions'][0]['menu']['uuid'] = '90397352-395c-40f6-2087-887144abc06d';
 		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-
+		$y++;
 		$apps[$x]['permissions'][1]['name'] = 'content_add';
 		$apps[$x]['permissions'][1]['groups'][] = 'admin';
 		$apps[$x]['permissions'][1]['groups'][] = 'superadmin';
-
+		$y++;
 		$apps[$x]['permissions'][2]['name'] = 'content_edit';
 		$apps[$x]['permissions'][2]['groups'][] = 'admin';
 		$apps[$x]['permissions'][2]['groups'][] = 'superadmin';
-
+		$y++;
 		$apps[$x]['permissions'][3]['name'] = 'content_delete';
 		$apps[$x]['permissions'][3]['groups'][] = 'admin';
 		$apps[$x]['permissions'][3]['groups'][] = 'superadmin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_category_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_category_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_category_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'rss_sub_category_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'user';
 
 	//schema details
 		$y = 0; //table array index

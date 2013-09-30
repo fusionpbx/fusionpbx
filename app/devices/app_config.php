@@ -9,7 +9,7 @@
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = 'Devices for provisioning.';
 		$apps[$x]['description']['es-mx'] = 'Provicionamiento de dispositivos.';
-		$apps[$x]['description']['de'] = '';
+		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = 'Equipements pour provisioning.';
@@ -21,7 +21,7 @@
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = 'Devices';
 		$apps[$x]['menu'][0]['title']['es-mx'] = 'Dispositivos';
-		$apps[$x]['menu'][0]['title']['de'] = '';
+		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Equipements';
@@ -39,6 +39,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = 'device_view';
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = 'f9dce498-b7f9-740f-e592-9e8ff3dac2a0';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
@@ -53,6 +54,37 @@
 		$apps[$x]['permissions'][$y]['name'] = 'device_delete';
 		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['name'] = 'device_extension_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_extension_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_extension_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_extension_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_line_view';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_line_add';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_line_edit';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = 'device_line_delete';
+                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+                $apps[$x]['permissions'][$y]['groups'][] = 'admin';
 
 	//schema details
 		$y = 0; //table array index

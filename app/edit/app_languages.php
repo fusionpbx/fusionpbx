@@ -45,7 +45,7 @@
 	$text['message-problem']['fr-fr'] = "Il y a une un problème avec la requête.";
 	$text['label-clip-library']['en-us'] = 'Clip Library';
 	$text['label-clip-library']['fr-fr'] = 'Clip Libraries';
-	$text['button-edit-clip']['en-us'] = 'Editer le Clip';
+	$text['button-edit-clip']['en-us'] = 'Edit Clip';
 	$text['button-edit-clip']['fr-fr'] = 'Editer le Clip';
 	$text['button-add-clip']['en-us'] = 'Add Clip';
 	$text['button-add-clip']['fr-fr'] = 'Ajouter un Clip';
