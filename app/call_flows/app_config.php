@@ -19,13 +19,13 @@
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = 'Call Flows';
-		$apps[$x]['menu'][0]['title']['es-mx'] = 'Flujo de Llamada';
+		$apps[$x]['menu'][0]['title']['en-us'] = "Call Flows";
+		$apps[$x]['menu'][0]['title']['es-mx'] = "Flujo de Llamada";
 		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "cinématiques d'Appel";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = "Circulation d'Appel";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = '';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';

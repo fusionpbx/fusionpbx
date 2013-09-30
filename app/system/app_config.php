@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = 'Affiche les information sur le sytème comme les informations sur la RAM, la CPU et le Disque Dur';
+		$apps[$x]['description']['fr-fr'] = "Affiche les information sur le sytème comme les informations sur la RAM, la CPU et le Disque Dur";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Exibe informações do CPU, disco rígido, memória RAM e muito mais.';
@@ -36,33 +36,33 @@
 		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
-                $y = 0;
-                $apps[$x]['permissions'][$y]['name'] = 'system_view_info';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'system_view_cpu';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'system_view_hdd';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'system_view_ram';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'system_view_backup';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'software_view';
-                $apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'software_add';
-                //$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'software_edit';
-                //$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
-                $y++;
-                $apps[$x]['permissions'][$y]['name'] = 'software_delete';
-                //$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = 'system_view_info';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'system_view_cpu';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'system_view_hdd';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'system_view_ram';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'system_view_backup';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'software_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'software_add';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'software_edit';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'software_delete';
+		//$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 
 	//schema details
 		$y = 0; //table array index

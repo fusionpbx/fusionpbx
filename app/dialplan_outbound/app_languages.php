@@ -68,15 +68,14 @@
 	$text['label-11d']['en-us'] = '11 Digits Long Distance';
 	$text['label-11d']['fr-fr'] = '11 Digits';
 
-        $text['label-north-america']['en-us'] = 'North America';
-        $text['label-north-america']['fr-fr'] = 'Amérique du Nord';
+	$text['label-north-america']['en-us'] = 'North America';
+	$text['label-north-america']['fr-fr'] = 'Amérique du Nord';
 
-        $text['label-north-america-intl']['en-us'] = 'North America International';
-        $text['label-north-america-intl']['fr'] = 'Amérique du Nord International';
+	$text['label-north-america-intl']['en-us'] = 'North America International';
+	$text['label-north-america-intl']['fr-fr'] = 'Amérique du Nord International';
 
-        $text['label-intl']['en-us'] = 'International';
-        $text['label-intl']['fr'] = 'International';
-
+	$text['label-intl']['en-us'] = 'International';
+	$text['label-intl']['fr-fr'] = 'International';
 
 	$text['label-311']['en-us'] = '311 Information';
 	$text['label-311']['fr-fr'] = '311 Information';

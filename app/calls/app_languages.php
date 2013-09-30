@@ -66,19 +66,17 @@
 
 	$text['label-cid-name-prefix']['en-us'] = 'Caller ID Name';
 	$text['label-cid-name-prefix']['pt-pt'] = '';
-	$text['label-cid-name-prefix']['fr-fr'] = "Nom de l'appelant";
+	$text['label-cid-name-prefix']['fr-fr'] = "Préfixe de l'appelant";
 
 	$text['description-cid-name-prefix']['en-us'] = 'Set the caller ID name prefix.';
 	$text['description-cid-name-prefix']['pt-pt'] = '';
 	$text['description-cid-name-prefix']['fr-fr'] = '';
 
-        $text['label-cid-number-prefix']['en-us'] = 'Caller ID Number';
-        $text['label-cid-number-prefix']['pt-pt'] = '';
-        $text['label-cid-number-prefix']['fr-fr'] = "Numéro de l'appelant";
+	$text['label-cid-number-prefix']['en-us'] = 'Caller ID Number';
+	$text['label-cid-number-prefix']['pt-pt'] = '';
 
-        $text['description-cid-number-prefix']['en-us'] = 'Set the caller ID number prefix.';
-        $text['description-cid-number-prefix']['pt-pt'] = '';
-        $text['description-cid-number-prefix']['fr-fr'] = "Préfixe de l'appelant";
+	$text['description-cid-number-prefix']['en-us'] = 'Set the caller ID number prefix.';
+	$text['description-cid-number-prefix']['pt-pt'] = '';
 
 	$text['label-call-prompt']['en-us'] = 'Call Prompt';
 	$text['label-call-prompt']['pt-pt'] = '';
