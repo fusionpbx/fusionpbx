@@ -64,7 +64,7 @@
 
 		$text['checkbox-range']['en-us'] = 'Auto-generate user with extension as login name';
 		$text['checkbox-range']['pt-pt'] = '';
-                $text['checkbox-range']['fr-fr'] = "Auto-générer l'usager avec l'extension comme ID de login";
+		$text['checkbox-range']['fr-fr'] = "Auto-générer l'usager avec l'extension comme ID de login";
 
 		$text['label-user_list']['en-us'] = 'User List';
 		$text['label-user_list']['pt-pt'] = '';

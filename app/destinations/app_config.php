@@ -13,7 +13,7 @@
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
 		$apps[$x]['description']['fr-fr'] = "Défini les numéros externes.";
-		$apps[$x]['description']['fr-ca'] = '';
+		$apps[$x]['description']['fr-ca'] = "Usé pour définir cibler nombres externe.";
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Utilizado para definir os números de destino externos.';
 		$apps[$x]['description']['pt-br'] = '';
@@ -25,7 +25,7 @@
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
 		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Destinations';
-		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
+		$apps[$x]['menu'][0]['title']['fr-ca'] = 'Cibler';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Destinos';
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';

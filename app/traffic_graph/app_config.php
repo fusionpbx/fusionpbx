@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = 'Affiche le traffique Réseau via SVG';
+		$apps[$x]['description']['fr-fr'] = "Affiche le traffique Réseau via SVG";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
 		$apps[$x]['description']['pt-pt'] = 'Utiliza SVG para mostrar o tráfego de rede.';
@@ -24,7 +24,7 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = 'Traffic Graphe';
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Traffic Graphe";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
 		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Grafico de Trafego';

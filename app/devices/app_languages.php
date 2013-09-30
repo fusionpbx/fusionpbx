@@ -109,6 +109,10 @@
 		$text['description-server_address']['pt-pt'] = '';
 		$text['description-server_address']['fr-fr'] = '';
 
+		$text['description-server_address']['en-us'] = 'Select a server address.';
+		$text['description-server_address']['pt-pt'] = '';
+		$text['description-server_address']['fr-fr'] = '';
+
 		$text['label-outbound_proxy']['en-us'] = 'Outbound Proxy';
 		$text['label-outbound_proxy']['pt-pt'] = '';
 		$text['label-outbound_proxy']['fr-fr'] = 'Proxy Sortant';

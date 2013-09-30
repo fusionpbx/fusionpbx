@@ -23,8 +23,6 @@
 		$text['button-search']['pt-pt'] = '';
 		$text['button-search']['fr-fr'] = 'Chercher';
 
-
-
 	// contact
 
 		$text['title-contact-add']['en-us'] = 'Contact Add';

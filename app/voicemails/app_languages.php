@@ -29,7 +29,6 @@
 		$text['description-voicemail_password']['pt-pt'] = '';
 		$text['description-voicemail_password']['fr-fr'] = '';
 
-
 		$text['label-greeting_id']['en-us'] = 'Greeting ID';
 		$text['label-greeting_id']['pt-pt'] = '';
 		$text['label-greeting_id']['fr-fr'] = 'ID de Salutation';
@@ -236,7 +235,7 @@
 		$text['label-message_status']['fr-fr'] = 'Etat';
 
 		$text['description-message_status']['en-us'] = 'Status';
-		$text['description-message_status']['pt-pt'] = '';
+		$text['description-message_status']['pt-pt'] = 'Estado';
 		$text['description-message_status']['fr-fr'] = 'Etat';
 
 		$text['label-message_priority']['en-us'] = 'Priority';

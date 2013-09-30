@@ -163,13 +163,13 @@
 		$text['button-add']['pt-pt'] = '';
 		$text['button-add']['fr-fr'] = 'Ajouter';
 
-		$text['label-moderator-pin']['en-us'] = 'Moderator PIN';
+		$text['label-moderator-pin']['en-us'] = 'Moderator';
 		$text['label-moderator-pin']['pt-pt'] = '';
-		$text['label-moderator-pin']['fr-fr'] = 'Code Modérateur';
+		$text['label-moderator-pin']['fr-fr'] = 'Modérateur';
 
-		$text['label-participant-pin']['en-us'] = 'Participant PIN';
+		$text['label-participant-pin']['en-us'] = 'Participant';
 		$text['label-participant-pin']['pt-pt'] = '';
-		$text['label-participant-pin']['fr-fr'] = 'Code Participant';
+		$text['label-participant-pin']['fr-fr'] = 'Participant';
 
 		$text['label-member-pin']['en-us'] = 'PIN Numbers';
 		$text['label-member-pin']['pt-pt'] = '';

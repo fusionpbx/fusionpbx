@@ -37,11 +37,14 @@
 	$text['button-clear']['en-us'] = 'Clear';
 	$text['button-clear']['fr-fr'] = 'Nettoyer';
 	$text['label-sampling']['en-us'] = 'Sampling';
+	$text['label-sampling']['fr-ca'] = 'échatillage';
 	$text['label-sampling']['fr-fr'] = 'échantillonnage';
 	$text['label-category']['en-us'] = 'Category';
 	$text['label-category']['fr-fr'] = 'Categorie';
 	$text['opt-default']['en-us'] = 'Default';
+	$text['opt-default']['en-us'] = 'Défaut';
 	$text['opt-default']['fr-fr'] = 'Défaut';
+
 	$text['opt-new']['en-us'] = 'New...';
 	$text['opt-new']['fr-fr'] = 'Nouveau...';
 	$text['message-click-select']['en-us'] = 'Double-Click to Select an Existing Category';

@@ -11,10 +11,10 @@
 		$apps[$x]['description']['de-de'] = '';
 		$apps[$x]['description']['de-ch'] = '';
 		$apps[$x]['description']['de-at'] = '';
-		$apps[$x]['description']['fr-fr'] = 'Mise à jour du Schéma de la base de données';
+		$apps[$x]['description']['fr-fr'] = "Mise à jour du Schéma de la base de données";
 		$apps[$x]['description']['fr-ca'] = '';
 		$apps[$x]['description']['fr-ch'] = '';
-		$apps[$x]['description']['pt-pt'] = 'Atualizar o esquema de base de dados.';
+		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema de base de dados.";
 		$apps[$x]['description']['pt-br'] = '';
 
 	//menu details
@@ -23,10 +23,10 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = '';
 		$apps[$x]['menu'][0]['title']['de-ch'] = '';
 		$apps[$x]['menu'][0]['title']['de-at'] = '';
-		$apps[$x]['menu'][0]['title']['fr-fr'] = 'MàJ BDD';
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "MàJ BDD";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = '';
 		$apps[$x]['menu'][0]['title']['fr-ch'] = '';
-		$apps[$x]['menu'][0]['title']['pt-pt'] = 'Actualizar BD';
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Actualizar BD";
 		$apps[$x]['menu'][0]['title']['pt-br'] = '';
 		$apps[$x]['menu'][0]['uuid'] = '8c826e92-be3c-0944-669a-24e5b915d562';
 		$apps[$x]['menu'][0]['parent_uuid'] = '594d99c5-6128-9c88-ca35-4b33392cec0f';

@@ -261,12 +261,10 @@
 	$text['button-reload']['en-us'] = 'Reload';
 	$text['button-reload']['fr-fr'] = "recharger";
 
-
 	$text['confirm-delete']['en-us'] = 'Do you really want to delete this?';
 	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 	$text['confirm-copy']['en-us'] = 'Do you really want to copy this?';
 	$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
-
 
 	$text['message-add']['en-us'] = 'Add Completed';
 	$text['message-add']['fr-fr'] = "Ajouté";
