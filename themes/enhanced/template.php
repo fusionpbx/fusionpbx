@@ -78,9 +78,6 @@ th {
 	color: #3164AD;
 	font-size: 13px;
 	font-family: arial;
-	/*font-weight: bold;*/
-	/*background-color: #506eab;*/
-	/*background-image: url('<!--{project_path}-->/themes/enhanced/images/background_th.png');*/
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-right: 7px;
@@ -550,15 +547,6 @@ table tr:nth-last-child(-5) td:first-of-type {
 		padding:0;
 	}
 
-	/* Set the position and dimensions of the background image. */
-	#page-background {
-		position:fixed; 
-		top:0;
-		left:0;
-		width:100%;
-		height:100%;
-	}
-
 	/* Specify the position and layering for the content that needs to 
 	appear in front of the background image. Must have a higher z-index 
 	value than the background image. Also add some padding to compensate 
@@ -631,38 +619,6 @@ table tr:nth-last-child(-5) td:first-of-type {
 </SCRIPT>
 </head>
 <body onload="message_timeout();">
-	<?php
-	//get a random background image
-		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/enhanced/images/backgrounds';
-		$dir_list = opendir($dir);
-		$v_background_array = array();
-		$x = 0;
-		while (false !== ($file = readdir($dir_list))) {
-			if ($file != "." AND $file != ".."){
-				$new_path = $dir.'/'.$file;
-				$level = explode('/',$new_path);
-				if (substr($new_path, -4) == ".svn") {
-					//ignore .svn dir and subdir
-				}
-				elseif (substr($new_path, -3) == ".db") {
-					//ignore .db files
-				}
-				else {
-					$new_path = str_replace($_SERVER["DOCUMENT_ROOT"], "", $new_path);
-					$v_background_array[] = $new_path;
-				}
-				if ($x > 1000) { break; };
-				$x++;
-			}
-		}
-		if (strlen($_SESSION['background_image'])== 0) {
-			$_SESSION['background_image'] = $v_background_array[array_rand($v_background_array, 1)];
-		}
-
-		//show the background
-		echo "<div id=\"page-background\"><img src=\"".$_SESSION['background_image']."\" width='100%' height='100%' alt=''></div>\n";
-	?>
-
 	<div id="page" align='center'>
 	<table width='90%' class='border.disabled' border='0' cellpadding='0' cellspacing='0'>
 		<tr>
