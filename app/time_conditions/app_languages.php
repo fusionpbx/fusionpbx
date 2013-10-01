@@ -3,7 +3,7 @@
 	$text['title-time-condition-add']['en-us'] = 'Time Conditions';
 	$text['title-time-condition-add']['fr-fr'] = 'Conditions Temporelles';
 	$text['description-time-condition-add']['en-us'] = 'Time conditions route calls based on time conditions. You can use time conditions to send calls to an IVR Menu, External numbers, Scripts, or other destinations.';
-	$text['description-time-condition-add']['fr-fr'] = "Configurer l'acheminement d'apppel en fonction de conditions temporelles. Ces conditions temporelles permettent de diriger les appels vers un menu SVI, un numéro externe, un script, ou tout autre destination.";
+	$text['description-time-condition-add']['fr-fr'] = "Configurer l'acheminement d'appel en fonction de conditions temporelles. Ces conditions temporelles permettent de diriger les appels vers un menu SVI, un numéro externe, un script, ou tout autre destination.";
 
 	$text['button-back']['en-us'] = 'Back';
 	$text['button-back']['fr-fr'] = 'Retour';

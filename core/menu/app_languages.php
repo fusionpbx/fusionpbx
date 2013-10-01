@@ -46,7 +46,7 @@
 
 		$text['label-name']['en-us'] = 'Name';
 		$text['label-name']['pt-pt'] = '';
-		$text['label-name']['fr-fr'] = '';
+		$text['label-name']['fr-fr'] = 'Nom';
 
 		$text['description-name']['en-us'] = 'Enter the name of the menu.';
 		$text['description-name']['pt-pt'] = '';
@@ -165,7 +165,7 @@
 
 		$text['description-protected']['en-us'] = "Enable this to protect the menu item from being removed by '".$text['button-restore_default']['en-us']."'.";
 		$text['description-protected']['pt-pt'] = '';
-		$text['description-protected']['fr-fr'] = "# Activer cette fonctionnalité pour protéger cet objet menu par '".$text['button-restore_default']['fr-fr']."'.";
+		$text['description-protected']['fr-fr'] = "Activer cette fonctionnalité pour que ce menu ne soit pas supprimé en cas d'activation de la fonction '".$text['button-restore_default']['fr-fr']."'.";
 
 		$text['label-menu_order']['en-us'] = 'Order';
 		$text['label-menu_order']['pt-pt'] = '';

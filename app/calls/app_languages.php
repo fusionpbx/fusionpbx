@@ -10,7 +10,7 @@
 
 	$text['description-2']['en-us'] = 'Use the links to configure call forward follow me, or do no disturb.';
 	$text['description-2']['pt-pt'] = 'Utilizar os links para definir as funcinalidades de encaminhamento de chamada, segue-me, ou de não perturbar.';
-	$text['description-2']['fr-fr'] = "Utiliser les liens afin de configurer le renvoi \"follow me\", ou ne pas derranger.";
+	$text['description-2']['fr-fr'] = "Utiliser les liens afin de configurer le renvoi \"follow me\", ou ne pas déranger.";
 
 	$text['description-3']['en-us'] = 'The following list the extensions that have been assigned to this user account.';
 	$text['description-3']['pt-pt'] = 'A tabela a seguir lista as extensões que foram atribuídas a esta conta de utilizador.';
@@ -120,7 +120,7 @@
 
 	$text['label-dnd']['en-us'] = 'Do Not Disturb';
 	$text['label-dnd']['pt-pt'] = 'Não Perturbar';
-	$text['label-dnd']['fr-fr'] = "Ne pas derranger";
+	$text['label-dnd']['fr-fr'] = "Ne pas déranger";
 
 	$text['button-back']['en-us'] = 'Back';
 	$text['button-back']['pt-pt'] = 'Voltar';

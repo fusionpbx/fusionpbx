@@ -54,7 +54,7 @@
 
 	$text['description-status']['en-us'] = 'Select a the user status.';
 	$text['description-status']['pt-pt'] = 'Selecione um estado para o utilizador.';
-	$text['description-status']['fr-fr'] = "Selection de l'état de l'usager.";
+	$text['description-status']['fr-fr'] = "Sélection de l'état de l'usager.";
 
 	$text['check-available-status']['en-us'] = 'Available';
 	$text['check-available-status']['pt-pt'] = 'Disponível';
@@ -82,7 +82,7 @@
 
 	$text['description-timezone']['en-us'] = 'Select the default time zone.';
 	$text['description-timezone']['pt-pt'] = 'Selecione o fuso horário padrão.';
-	$text['description-timezone']['fr-fr'] = 'Selection du Fuseau Horaire par défaut.';
+	$text['description-timezone']['fr-fr'] = 'Sélection du Fuseau Horaire par défaut.';
 
 	$text['confirm-password']['en-us'] = 'Passwords did not match.';
 	$text['confirm-password']['pt-pt'] = 'As palavras chave não coincidem.';
