@@ -84,7 +84,7 @@
 	$text['confirm-add']['fr-fr'] = "Ajouté";
 
 	$text['confirm-update']['en-us'] = "Update Complete";
-	$text['confirm-update']['pt-pt'] = "Actualização Completa";        
+	$text['confirm-update']['pt-pt'] = "Actualização Completa";
 	$text['confirm-update']['fr-fr'] = "Mis à jour";
 
 	$text['confirm-ext']['en-us'] = "Please provide: Extension";
@@ -100,7 +100,7 @@
 	$text['confirm-fax-add']['fr-fr'] = "Ajout de Fax";
 
 	$text['confirm-fax-edit']['en-us'] = "Fax Edit";
-	$text['confirm-fax-edit']['pt-pt'] = "Edição de Fax"; 
+	$text['confirm-fax-edit']['pt-pt'] = "Edição de Fax";
 	$text['confirm-fax-edit']['fr-fr'] = "Editer le Fax";
 
 	$text['confirm-copy-info']['en-us'] = "Do you really want to copy this?";

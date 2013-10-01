@@ -15,7 +15,7 @@
 
 		$text['description-conference-center']['en-us'] = "Conference Center is used to setup one or more conference rooms with a name, extension number, a required pin number length, and a description.";
 		$text['description-conference-center']['pt-pt'] = "";
-		$text['description-conference-center']['fr-fr'] = "Utilisé pour configurer une ou plusieures salles de conférence avec un nom, un numéro, une longueur de code d'identification et une description.";
+		$text['description-conference-center']['fr-fr'] = "Il est possible de configurer une ou plusieures salles de conférence avec un nom, un neméro, une taille de code d'identification et une description.";
 
 		$text['label-name']['en-us'] = "Name";
 		$text['label-name']['pt-pt'] = "";

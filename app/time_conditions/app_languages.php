@@ -3,14 +3,14 @@
 	$text['title-time-condition-add']['en-us'] = "Time Conditions";
 	$text['title-time-condition-add']['fr-fr'] = "Conditions Temporelles";
 	$text['description-time-condition-add']['en-us'] = "Time conditions route calls based on time conditions. You can use time conditions to send calls to an IVR Menu, External numbers, Scripts, or other destinations.";
-	$text['description-time-condition-add']['fr-fr'] = "Configurer l'acheminement d'appel en fonction de conditions temporelles. Ces conditions temporelles permettent de diriger les appels vers un menu SVI, un numéro externe, un script, ou tout autre destination.";
+	$text['description-time-condition-add']['fr-fr'] = "Configurer l'acheminement d'apppel en fonction de conditions temporelles. Ces conditions temporelles permettent de diriger les appels vers un menu SVI, un numéro externe, un script, ou tout autre destination.";
 
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['fr-fr'] = "Retour";
 
 	$text['label-name']['en-us'] = "Name";
 	$text['label-name']['fr-fr'] = "Nom";
-	$text['description-name']['en-us'] = "Enter the name for the time condition."; 
+	$text['description-name']['en-us'] = "Enter the name for the time condition.";
 	$text['description-name']['fr-fr'] = "Choisir un nom pour cette condition temporelle.";
 
 	$text['label-extension']['en-us'] = "Extension";
@@ -30,7 +30,7 @@
 	$text['label-option-office-8am-5pm']['fr-fr'] = "Heures de Bureau Lun-Ven 8h-17h";
 	$text['label-option-office-9am-6pm']['en-us'] = "Office Hours Mon-Fri 9am-6pm";
 	$text['label-option-office-9am-6pm']['fr-fr'] = "Heures de Bureau Lun-Ven 9h-18h";
-	
+
 	$text['label-optgroup-us-holidays']['en-us'] = "US Holidays";
 	$text['label-optgroup-us-holidays']['fr-fr'] = "Vacances US";
 	$text['label-option-us-holidays-new-year']['en-us'] = "New Year\'s Day";
@@ -51,8 +51,8 @@
 	$text['label-option-us-holidays-veteran']['fr-fr'] = "Veteran\'s Day";
 	$text['label-option-us-holidays-thanksgiving']['en-us'] = "Thanksgiving";
 	$text['label-option-us-holidays-thanksgiving']['fr-fr'] = "Thanksgiving";
-	$text['label-option-us-holidays-christmas']['en-us'] = "Christmas";	
-	$text['label-option-us-holidays-christmas']['fr-fr'] = "Noël";	
+	$text['label-option-us-holidays-christmas']['en-us'] = "Christmas";
+	$text['label-option-us-holidays-christmas']['fr-fr'] = "Noël";
 //end: TemplateOptions
 
 	$text['label-day-of-month']['en-us'] = "Day of Month";
