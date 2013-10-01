@@ -185,7 +185,7 @@
 
 		$text['description-provisioning']['en-us'] = "Select a device and line number to assign to this extension.";
 		$text['description-provisioning']['pt-pt'] = "";
-		$text['description-provisioning']['fr-fr'] = "Choisir un équipement et un nombre de ligne à assigner à cette extension.";
+		$text['description-provisioning']['fr-fr'] = "Choisir un équipement et un nombre de lignes a assigner à cette extension.";
 
 		$text['label-vm_enabled']['en-us'] = "Voicemail Enabled";
 		$text['label-vm_enabled']['pt-pt'] = "";
@@ -273,7 +273,7 @@
 
 		$text['description-auth_acl']['en-us'] = "Enter the Auth ACL here.";
 		$text['description-auth_acl']['pt-pt'] = "";
-		$text['description-auth_acl']['fr-fr'] = "ACL authorisée pour l'extension. De la forme abc.def.ghi.jkl/masque ";
+		$text['description-auth_acl']['fr-fr'] = "ACL authorisée pour l'extension. De la forme abc.def.ghi.jkl/mask ";
 
 		$text['label-cidr']['en-us'] = "CIDR";
 		$text['label-cidr']['pt-pt'] = "";
@@ -281,7 +281,7 @@
 
 		$text['description-cidr']['en-us'] = "Enter the CIDR here.";
 		$text['description-cidr']['pt-pt'] = "";
-		$text['description-cidr']['fr-fr'] = "Classless Inter-Domain Routing. De la forme abc.def.ghi.jkl/masque";
+		$text['description-cidr']['fr-fr'] = "Classless Inter-Domain Routing. De la forme abc.def.ghi.jkl/mask";
 
 		$text['label-sip_force_contact']['en-us'] = "SIP Force Contact";
 		$text['label-sip_force_contact']['pt-pt'] = "";
@@ -325,11 +325,11 @@
 
 		$text['label-dial_string']['en-us'] = "Dial String";
 		$text['label-dial_string']['pt-pt'] = "";
-		$text['label-dial_string']['fr-fr'] = "Numéro d'appel";
+		$text['label-dial_string']['fr-fr'] = "Dial String";
 
 		$text['description-dial_string']['en-us'] = "Location of the endpoint.";
 		$text['description-dial_string']['pt-pt'] = "";
-		$text['description-dial_string']['fr-fr'] = "Localisation de l'équipement.";
+		$text['description-dial_string']['fr-fr'] = "Location of the endpoint.";
 
 		$text['label-enabled']['en-us'] = "Enabled";
 		$text['label-enabled']['pt-pt'] = "";

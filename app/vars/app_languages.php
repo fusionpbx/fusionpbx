@@ -23,7 +23,7 @@
 	$text['description-variables']['en-us'] = "Define preprocessor variables here.";
 	$text['description-variables']['fr-fr'] = "Définir ici les variables préprocessées.";
 	$text['description-variables_advanced']['en-us'] = "Define preprocessor variables here. Can be accessed in the xml configation with $${var_name}.";
-	$text['description-variables_advanced']['fr-fr'] = "Définir ici les variables préprocessées. Se retrouve dans la configuration XML avec $${var_name}."; 
+	$text['description-variables_advanced']['fr-fr'] = "Définir ici les variables préprocessées. Se retrouve dans la configuration XML avec $${var_name}.";
 
 
 	$text['label-name']['en-us'] = "Name";
