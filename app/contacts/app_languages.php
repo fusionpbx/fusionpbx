@@ -12,7 +12,7 @@
 
 		$text['description-contacts']['en-us'] = 'The contact is a list of individuals and organizations.';
 		$text['description-contacts']['pt-pt'] = '';
-		$text['description-contacts']['fr-fr'] = "Fourni une liste d'individus et d'organisations.";
+		$text['description-contacts']['fr-fr'] = "Fourni une liste de personnes et d'organisations.";
 
 
 		$text['button-import']['en-us'] = 'Import';

@@ -63,7 +63,7 @@
 	$text['label-shout-decoder']['en-us'] = 'Mod Shout Decoder:';
 	$text['label-shout-decoder']['fr-fr'] = 'Décodeur Mod Shout (MP3):';
 	$text['description-shout-decoder']['en-us'] = 'Ender the Decoder. default: i386';
-	$text['description-shout-decoder']['fr-fr'] = 'Type de Decoder. défaut: i386';
+	$text['description-shout-decoder']['fr-fr'] = 'Type de Décodeur. défaut: i386';
 	$text['label-shout-volume']['en-us'] = 'Mod Shout Volume:';
 	$text['label-shout-volume']['fr-fr'] = 'Mod Shout Volume:';
 	$text['description-shout-volume']['en-us'] = 'Enter Mod Shout Volume.';
