@@ -25,25 +25,25 @@
 	James Rose <james.o.rose@gmail.com>
 	Philippe Rioual <bhouba@gmail.com>
 */
-	$text['error-event-socket']['en-us'] = 'Connection to Event Socket failed.';
+	$text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 	$text['error-event-socket']['fr-fr'] = "Connexion a l'Event Socket en echec.";
-	$text['label-message']['en-us'] = 'Message';
-	$text['label-message']['fr-fr'] = 'Message';
-	$text['label-message']['en-us'] = 'Invalid Profile!';
-	$text['label-message']['fr-fr'] = 'Profile Invalide!';
-	$text['button-back']['en-us'] = 'back';
-	$text['button-back']['fr-fr'] = 'Retour';
-	$text['label-domain']['en-us'] = 'Domain';
-	$text['label-domain']['fr-fr'] = 'Domaine';
-	$text['label-user']['en-us'] = 'User';
-	$text['label-user']['fr-fr'] = 'Usager';
-	$text['label-agent']['en-us'] = 'Agent';
-	$text['label-agent']['fr-fr'] = 'Agent';
-	$text['label-ip']['en-us'] = 'IP';
-	$text['label-ip']['fr-fr'] = 'IP';
-	$text['label-port']['en-us'] = 'Port';
-	$text['label-port']['fr-fr'] = 'Port';
-	$text['label-status']['en-us'] = 'Status';
-	$text['label-status']['fr-fr'] = 'Statut';
+	$text['label-message']['en-us'] = "Message";
+	$text['label-message']['fr-fr'] = "Message";
+	$text['label-message']['en-us'] = "Invalid Profile!";
+	$text['label-message']['fr-fr'] = "Profile Invalide!";
+	$text['button-back']['en-us'] = "back";
+	$text['button-back']['fr-fr'] = "Retour";
+	$text['label-domain']['en-us'] = "Domain";
+	$text['label-domain']['fr-fr'] = "Domaine";
+	$text['label-user']['en-us'] = "User";
+	$text['label-user']['fr-fr'] = "Usager";
+	$text['label-agent']['en-us'] = "Agent";
+	$text['label-agent']['fr-fr'] = "Agent";
+	$text['label-ip']['en-us'] = "IP";
+	$text['label-ip']['fr-fr'] = "IP";
+	$text['label-port']['en-us'] = "Port";
+	$text['label-port']['fr-fr'] = "Port";
+	$text['label-status']['en-us'] = "Status";
+	$text['label-status']['fr-fr'] = "Statut";
 
 ?>
