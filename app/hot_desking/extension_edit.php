@@ -121,7 +121,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			unset ($prep_statement);
 
 		//update the extension and voicemail
-			if ($action == "update" && permission_exists('extension_edit')) {
+			if (($action == "add" && permission_exists('extension_add')) || ($action == "update" && permission_exists('extension_edit'))) {
 				//update the extension
 					$sql = "update v_extensions set ";
 					$sql .= "unique_id = '$unique_id' ";
