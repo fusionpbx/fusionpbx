@@ -40,54 +40,55 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-function recur_sounds_dir($dir) {
-	global $dir_array;
-	global $dir_path;
-	$dir_list = opendir($dir);
-	while ($file = readdir ($dir_list)) {
-		if ($file != '.' && $file != '..') {
-			$newpath = $dir.'/'.$file;
-			$level = explode('/',$newpath);
-			if (substr($newpath, -4) == ".svn") {
-				//ignore .svn dir and subdir
-			}
-			else {
-				if (is_dir($newpath)) { //directories
-					recur_sounds_dir($newpath);
+//function to show the list of sound files
+	function recur_sounds_dir($dir) {
+		global $dir_array;
+		global $dir_path;
+		$dir_list = opendir($dir);
+		while ($file = readdir ($dir_list)) {
+			if ($file != '.' && $file != '..') {
+				$newpath = $dir.'/'.$file;
+				$level = explode('/',$newpath);
+				if (substr($newpath, -4) == ".svn") {
+					//ignore .svn dir and subdir
 				}
-				else { //files
-					if (strlen($newpath) > 0) {
-						//make the path relative
-							$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
-						//remove the 8000-48000 khz from the path
-							$relative_path = str_replace("/8000/", "/", $relative_path);
-							$relative_path = str_replace("/16000/", "/", $relative_path);
-							$relative_path = str_replace("/32000/", "/", $relative_path);
-							$relative_path = str_replace("/48000/", "/", $relative_path);
-						//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
-							$file_array = explode( "/", $relative_path );
-							$x = 1;
-							$relative_path = '';
-							foreach( $file_array as $tmp) {
-								if ($x == 5) { $relative_path .= $tmp; }
-								if ($x > 5) { $relative_path .= '/'.$tmp; }
-								$x++;
-							}
-						//add the file if it does not exist in the array
-							if (isset($dir_array[$relative_path])) {
-								//already exists
-							}
-							else {
-								//add the new path
-									if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
-							}
+				else {
+					if (is_dir($newpath)) { //directories
+						recur_sounds_dir($newpath);
+					}
+					else { //files
+						if (strlen($newpath) > 0) {
+							//make the path relative
+								$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
+							//remove the 8000-48000 khz from the path
+								$relative_path = str_replace("/8000/", "/", $relative_path);
+								$relative_path = str_replace("/16000/", "/", $relative_path);
+								$relative_path = str_replace("/32000/", "/", $relative_path);
+								$relative_path = str_replace("/48000/", "/", $relative_path);
+							//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
+								$file_array = explode( "/", $relative_path );
+								$x = 1;
+								$relative_path = '';
+								foreach( $file_array as $tmp) {
+									if ($x == 5) { $relative_path .= $tmp; }
+									if ($x > 5) { $relative_path .= '/'.$tmp; }
+									$x++;
+								}
+							//add the file if it does not exist in the array
+								if (isset($dir_array[$relative_path])) {
+									//already exists
+								}
+								else {
+									//add the new path
+										if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
+								}
+						}
 					}
 				}
 			}
 		}
+		closedir($dir_list);
 	}
-	closedir($dir_list);
-}
 
 //action add or update
 	if (strlen($_REQUEST["id"]) > 0) {
@@ -99,7 +100,7 @@ function recur_sounds_dir($dir) {
 	}
 
 //get http post values and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//get ivr menu
 			$ivr_menu_name = check_str($_POST["ivr_menu_name"]);
 			$ivr_menu_extension = check_str($_POST["ivr_menu_extension"]);
@@ -137,7 +138,7 @@ function recur_sounds_dir($dir) {
 			}
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -226,6 +227,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 					//synchronize the xml config
 						save_dialplan_xml();
+
+					//set the message
+						$_SESSION['message'] = $text['message-add'];
 				}
 
 			//update the data
@@ -236,6 +240,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//run the update method in the ivr menu class
 						$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 						$ivr->update();
+
+					//set the message
+						$_SESSION['message'] = $text['message-update'];
 				}
 
 			//add the ivr menu options
@@ -262,6 +269,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$ivr->add();
 							}
 					}
+					if ($action == "add") {
+						$action == "update";
+					}
 				}
 
 			//delete the dialplan context from memcache
@@ -270,15 +280,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
-
-			//set the message
-				$_SESSION['message'] = $text['message-update'];
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$ivr_menu_uuid = check_str($_REQUEST["id"]);
+	if (strlen($ivr_menu_uuid) == 0) { $ivr_menu_uuid = check_str($_REQUEST["id"]); }
+	if (strlen($ivr_menu_uuid) > 0 && $_POST["persistformvar"] != "true") {
 		require_once "resources/classes/ivr_menu.php";
 		$ivr = new ivr_menu;
 		$ivr->domain_uuid = $_SESSION["domain_uuid"];
@@ -608,7 +615,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "					<td class='vtable'>".$text['label-description']."</td>\n";
 	echo "					<td></td>\n";
 	echo "				</tr>\n";
-	if ($action == "update") {
+	if (strlen($ivr_menu_uuid) > 0) {
 		$sql = "select * from v_ivr_menu_options ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and ivr_menu_uuid = '$ivr_menu_uuid' ";
@@ -652,8 +659,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	unset($sql, $result);
 
-	if ($action == "update") { $options = array(0); }
-	if ($action == "add") { $options = array(0,1,2,3,4); }
+	if (strlen($ivr_menu_uuid) > 0) { $options = array(0); }
+	if (strlen($ivr_menu_uuid) == 0) { $options = array(0,1,2,3,4); }
 	foreach ($options as $x) {
 		echo "				<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -986,7 +993,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
+	if (strlen($ivr_menu_uuid) > 0) {
 		echo "				<input type='hidden' name='ivr_menu_uuid' value='$ivr_menu_uuid'>\n";
 	}
 	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
