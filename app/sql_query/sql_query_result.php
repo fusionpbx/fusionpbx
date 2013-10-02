@@ -180,7 +180,12 @@ if (count($_POST)>0) {
 		echo "".$sql."<br /><br />";
 
 		//get the table data
-			$sql = "select * from $table_name";
+			if (strlen($sql_cmd) == 0) {
+				$sql = "select * from $table_name";
+			}
+			else {
+				$sql = $sql_cmd;
+			}
 			if (strlen($sql) > 0) {
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
@@ -225,12 +230,22 @@ if (count($_POST)>0) {
 					foreach ($column_array as $column) {
 						if ($x < $column_array_count) {
 							if ($column != "menuid" && $column != "menuparentid") {
-								echo "'".check_str($row[$column])."',";
+								if (is_null($row[$column])) {
+									echo "null,";
+								}
+								else {
+									echo "'".check_str($row[$column])."',";
+								}
 							}
 						}
 						else {
 							if ($column != "menuid" && $column != "menuparentid") {
-								echo "'".check_str($row[$column])."'";
+								if (is_null($row[$column])) {
+									echo "null";
+								}
+								else {
+									echo "'".check_str($row[$column])."'";
+								}
 							}
 						}
 						$x++;
