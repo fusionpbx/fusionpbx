@@ -128,8 +128,8 @@
 	$text['description-strategy']['fr-fr'] = "";
 	$text['description-music_on_hold']['en-us'] = "Select the desired hold music.";
 	$text['description-music_on_hold']['fr-fr'] = "";
-	$text['description-record_template']['en-us'] = "Enter a record template. $${base_dir}/recordings/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.wav";
-	$text['description-record_template']['fr-fr'] = "Entrer un modèle d\'enregistrement. $${base_dir}/recordings/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.wav";
+	$text['description-record_template']['en-us'] = "Enter a record template. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
+	$text['description-record_template']['fr-fr'] = "Entrer un modèle d\'enregistrement. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
 	$text['description-time_base_score']['en-us'] = "Select the time base score.";
 	$text['description-time_base_score']['fr-fr'] = "";
 	$text['description-max_wait_time']['en-us'] = "Enter the max wait time.";
