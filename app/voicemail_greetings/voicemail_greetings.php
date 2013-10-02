@@ -89,6 +89,7 @@ else {
 			}
 			unset($tmp_greeting);
 			if ($_REQUEST['greeting']) {
+				mkdir($v_greeting_dir, 0777, true);
 				move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$_REQUEST['greeting']);
 				$save_msg = "Uploaded ".$_REQUEST['greeting'];
 			}
