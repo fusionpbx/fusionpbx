@@ -49,7 +49,7 @@ else {
 	}
 
 //get the http values and set them as php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//get the values from the HTTP POST and save them as PHP variables
 		$extension_uuid = check_str($_POST["extension_uuid"]);
 		$unique_id = check_str($_POST["unique_id"]);
@@ -57,7 +57,7 @@ else {
 		$dial_string = check_str($_POST["dial_string"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//check for all required data
 		if (strlen($extension_uuid) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
@@ -124,7 +124,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "update" && permission_exists('extension_edit')) {
 				//update the extension
 					$sql = "update v_extensions set ";
-					$sql .= "unique_id = '$unique_id', ";
+					$sql .= "unique_id = '$unique_id' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
 					$sql .= "and extension_uuid = '$extension_uuid'";
 					$db->exec(check_sql($sql));
@@ -133,7 +133,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//update the voicemail
 					if (strlen($vm_password) > 0) {
 						$sql = "update v_voicemails set ";
-						$sql .= "unique_id = '$unique_id', ";
 						$sql .= "voicemail_password = '$vm_password' ";
 						$sql .= "where domain_uuid = '$domain_uuid' ";
 						if (is_numeric($extension)) {
@@ -182,22 +181,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if ($_POST["persistformvar"] != "true") {
-		//$extension_uuid = $_GET["id"];
-		$sql = "select * from v_extensions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and extension_uuid = '$extension_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$extension = $row["extension"];
-			$dial_string = $row["dial_string"];
-			$unique_id = $row["unique_id"];
-			$password = $row["password"];
-			$vm_password = $row["vm_password"];
-			$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
-		}
-		unset ($prep_statement);
+		//get the extension data
+			$sql = "select * from v_extensions ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and extension_uuid = '$extension_uuid' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$extension = $row["extension"];
+				$dial_string = $row["dial_string"];
+				$unique_id = $row["unique_id"];
+			}
+			unset ($prep_statement);
+
+		//get the voicemail data
+			$sql = "select * from v_voicemails ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			if (is_numeric($extension)) {
+				$sql .= "and voicemail_id = '$extension' ";
+			}
+			else {
+				$sql .= "and voicemail_id = '$number_alias' ";
+			}
+			//$sql .= "and voicemail_enabled = 'true' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$vm_password = $row["voicemail_password"];
+			}
+			unset ($prep_statement);
 	}
 
 //set the defaults

@@ -40,12 +40,13 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-}
+//get the id
+	if (count($_GET) > 0) {
+		$id = check_str($_GET["id"]);
+	}
 
 //delete the hot desking information
-	if (strlen($id)>0) {
+	if (strlen($id) > 0) {
 		$sql = "update v_extensions set ";
 		$sql .= "unique_id = null, ";
 		$sql .= "dial_user = null, ";
