@@ -82,6 +82,7 @@
 			destination_number = session:getVariable("destination_number");
 			caller_id_name = session:getVariable("caller_id_name");
 			caller_id_number = session:getVariable("caller_id_number");
+			voicemail_greeting_number = session:getVariable("voicemail_greeting_number");
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
