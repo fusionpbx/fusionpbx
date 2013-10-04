@@ -27,8 +27,8 @@
 	function record_message()
 
 		--record your message at the tone press any key or stop talking to end the recording
-			if (skip_greeting == "true") then
-				--skip the greeting
+			if (skip_instructions == "true") then
+				--skip the instructions
 			else
 				if (string.len(dtmf_digits) == 0) then
 					dtmf_digits = macro(session, "record_message", 1, 100);

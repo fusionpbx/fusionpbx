@@ -30,15 +30,23 @@
 			--skip the greeting
 		else
 			if (session:ready()) then
-				dtmf_digits = '';
-				if (string.len(greeting_id) > 0) then
-					--play the custom greeting
-					session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
-					session:streamFile("silence_stream://200");
-				else
-					--play the default greeting
-					dtmf_digits = macro(session, "person_not_available_record_message", 1, 200);
-				end
+				--set the greeting based on the voicemail_greeting_number variable
+					if (voicemail_greeting_number ~= nil) then
+						if (string.len(voicemail_greeting_number) > 0) then
+							greeting_id = voicemail_greeting_number;
+						end
+					end
+
+				--play the greeting
+					dtmf_digits = '';
+					if (string.len(greeting_id) > 0) then
+						--custom greeting
+						session:streamFile(voicemail_dir.."/"..voicemail_id.."/greeting_"..greeting_id..".wav");
+						session:streamFile("silence_stream://200");
+					else
+						--default greeting
+						dtmf_digits = macro(session, "person_not_available_record_message", 1, 200);
+					end
 			end
 		end
 	end
