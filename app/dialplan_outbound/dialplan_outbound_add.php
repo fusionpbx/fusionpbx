@@ -278,7 +278,7 @@ else {
 						$label = $text['label-north-america'];
 						$abbrv = "10-11d";
 						break;
-					case "^(011(\d{9,17})$":
+					case "^(011\d{9,17})$":
 						$label = $text['label-north-america-intl'];
 						$abbrv = "011.9-17d";
 						break;
