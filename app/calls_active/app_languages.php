@@ -6,7 +6,7 @@
 	$text['title']['fr-fr'] = "Communications Actives";
 
 	$text['description']['en-us'] = "Use this to monitor and interact with the active calls.";
-	$text['description']['pt-pt'] = "Utilize este menu para monitorizar e interagir com as chamadas ativas.";
+	$text['description']['pt-pt'] = "Utilize este menu para monitorizar e interagir com as chamadas activas.";
 	$text['description']['fr-fr'] = "Superviser et interagir avec les Communications Actives.";
 
 	//v_calls_active_extensions
@@ -19,11 +19,11 @@
 	$text['label-status']['fr-fr'] = "Etat";
 
 	$text['label-transfer']['en-us'] = "Transfer To";
-	$text['label-transfer']['pt-pt'] = "Transferir para";
+	$text['label-transfer']['pt-pt'] = "Transferir Para";
 	$text['label-transfer']['fr-fr'] = "Transférer à";
 
 	$text['description-2']['en-us'] = "Use this to view all extensions and monitor and interact with active calls.";
-	$text['description-2']['pt-pt'] = "Utilize este menu para ver todas as extensões, monitorizar e interagir com as chamadas ativas.";
+	$text['description-2']['pt-pt'] = "Utilize este menu para ver todas as extensões, monitorizar e interagir com as chamadas activas.";
 	$text['description-2']['fr-fr'] = "Voir toutes les extensions, superviser et interagir avec les Communications Actives.";
 
 	$text['check-available-status']['en-us'] = "Available";
@@ -88,7 +88,7 @@
 	$text['label-park']['fr-fr'] = "Parquer";
 
 	$text['confirm-hangup']['en-us'] = "Do you really want to hangup this call?";
-	$text['confirm-hangup']['pt-pt'] = "Quer realmente terminar esta chamada?";
+	$text['confirm-hangup']['pt-pt'] = "Deseja realmente terminar esta chamada?";
 	$text['confirm-hangup']['fr-fr'] = "Voulez-vous vraiment raccrocher cette communication?";
 
 	$text['label-hangup']['en-us'] = "hangup";
@@ -105,7 +105,7 @@
 
 	//v_calls_active_extensions_inc
 	$text['confirm-socket']['en-us'] = "Connection to Event Socket failed.";
-	$text['confirm-socket']['pt-pt'] = "Conexão com socket falhou.";
+	$text['confirm-socket']['pt-pt'] = "A conexão ao Event Socket falhou.";
 	$text['confirm-socket']['fr-fr'] = "la Connexion au Event Socket a échoué.";
 
 	$text['label-message']['en-us'] = "Message";
