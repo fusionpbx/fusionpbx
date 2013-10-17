@@ -93,13 +93,13 @@
 		$apps[$x]['permissions'][9]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][10]['name'] = "extension_active_list_view";
-		$apps[$x]['permissions'][10]['menu']['uuid'] = "";
+		$apps[$x]['permissions'][10]['menu']['uuid'] = "6dd85c19-cb6b-5cca-bf32-499bbe936f79";
 		//$apps[$x]['permissions'][10]['groups'][] = "user";
 		$apps[$x]['permissions'][10]['groups'][] = "admin";
 		$apps[$x]['permissions'][10]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][11]['name'] = "extension_active_assigned_view";
-		$apps[$x]['permissions'][11]['menu']['uuid'] = "";
+		$apps[$x]['permissions'][11]['menu']['uuid'] = "6dd85c19-cb6b-5cca-bf32-499bbe936f79";
 		//$apps[$x]['permissions'][11]['groups'][] = "user";
 		$apps[$x]['permissions'][11]['groups'][] = "admin";
 		$apps[$x]['permissions'][11]['groups'][] = "superadmin";

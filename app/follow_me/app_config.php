@@ -40,6 +40,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "a1144e12-873e-4722-9818-02da1adb6ba3";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";

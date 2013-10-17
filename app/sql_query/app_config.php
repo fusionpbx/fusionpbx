@@ -37,6 +37,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "sql_query_execute";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "a894fed7-5a17-f695-c3de-e32ce58b3794";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "sql_query_backup";

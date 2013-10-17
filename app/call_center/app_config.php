@@ -94,7 +94,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_center_tier_view";
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = "";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "6c072b29-5b6c-49fc-008e-95e24c77de99";
 		$apps[$x]['permissions'][$y]['groups'][] = "agent";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -112,6 +112,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "call_center_log_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "6c072b29-5b6c-49fc-008e-95e24c77de99";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;

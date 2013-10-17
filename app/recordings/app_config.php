@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "recording_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "e4290fd2-3ccc-a758-1714-660d38453104";
 		$apps[$x]['permissions'][0]['groups'][] = "admin";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 

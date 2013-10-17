@@ -38,6 +38,7 @@
 	//permission details
                 $y = 0;
                 $apps[$x]['permissions'][$y]['name'] = "sip_profile_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "47014b1d-13ad-921c-313d-ca42c0424b37";
                 $apps[$x]['permissions'][$y]['groups'][] = "superadmin";
                 $y++;
                 $apps[$x]['permissions'][$y]['name'] = "sip_profile_add";

@@ -37,11 +37,14 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "exec_command_line";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "06493580-9131-ce57-23cd-d42d69dd8526";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "exec_php_command";
+		$apps[$x]['permissions'][1]['menu']['uuid'] = "06493580-9131-ce57-23cd-d42d69dd8526";
 		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][2]['name'] = "exec_switch";
+		$apps[$x]['permissions'][2]['menu']['uuid'] = "06493580-9131-ce57-23cd-d42d69dd8526";
 		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
 ?>

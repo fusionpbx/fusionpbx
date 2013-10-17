@@ -38,6 +38,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "schema_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "6be94b46-2126-947f-2365-0bea23651a6b";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "schema_add";
@@ -50,6 +51,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "schema_data_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "6be94b46-2126-947f-2365-0bea23651a6b";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "schema_data_add";

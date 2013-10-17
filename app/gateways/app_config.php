@@ -37,6 +37,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "gateway_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "gateway_add";

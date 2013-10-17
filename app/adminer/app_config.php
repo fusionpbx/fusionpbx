@@ -37,7 +37,6 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "adminer";
-		//$apps[$x]['permissions'][0]['menu']['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 		$apps[$x]['permissions'][0]['menu']['uuid'] = "1f59d07b-b4f7-4f9e-bde9-312cf491d66e";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 

@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "active_queue_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "450f1225-9187-49ac-a119-87bc26025f7d";
 		$apps[$x]['permissions'][0]['groups'][] = "admin";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
