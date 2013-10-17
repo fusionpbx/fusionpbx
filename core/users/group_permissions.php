@@ -26,12 +26,6 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-require_once "resources/classes/logging.php";
-// Logging class initialization
-$log = new Logging();
-
-// set path and name of log file (optional)
-$log->lfile('/tmp/mylog.txt');
 
 if (permission_exists('group_permissions') || if_group("superadmin")) {
 	//access granted
@@ -178,10 +172,7 @@ require_once "resources/paging.php";
 						foreach($apps as $app) {							
 							foreach ($app['permissions'] as $row) {
 								if ($row['name'] == $permission) {
-									
-									$log->lwrite("2");
-									$log->lwrite($row['menu']['uuid']);
-									
+																		
 									$sql = "delete from v_menu_item_groups ";
 									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
 									$sql .= "and group_name = '$group_name' ";
@@ -251,11 +242,7 @@ require_once "resources/paging.php";
 						foreach($apps as $app) {							
 							foreach ($app['permissions'] as $row) {
 								if ($row['name'] == $permission) {
-									
-									$log->lwrite("1");
-									$log->lwrite($row['menu']['uuid']);
-									$log->lwrite($row['menu']['parent_uuid']);
-									
+																		
 									$sql = "insert into v_menu_item_groups ";
 									$sql .= "(";
 									$sql .= "menu_uuid, ";
