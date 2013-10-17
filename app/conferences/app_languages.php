@@ -6,7 +6,7 @@
 	$text['title']['fr-fr'] = "Conférences";
 
 	$text['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
-	$text['description']['pt-pt'] = "As conferências são utilizadas para configurar salas de conferências com um nome, descrição e número pin opcional.";
+	$text['description']['pt-pt'] = "As conferências são utilizadas para configurar salas de conferência com um nome, descrição e número pin opcional.";
 	$text['description']['fr-fr'] = "Ce menu est utilisé pour créer des salles de conférence avec un nom, une description et en option un code PIN.";
 
 	$text['title-2']['en-us'] = "Active Conferences";
@@ -18,7 +18,7 @@
 	$text['title-3']['fr-fr'] = "Conférence actives";
 
 	$text['description-2']['en-us'] = "and then select a conference to monitor and interact with it.";
-	$text['description-2']['pt-pt'] = "e selecione uma conferência para monitorizar e interagir com ele.";
+	$text['description-2']['pt-pt'] = "e selecione uma conferência para monitorizar e poder interagir.";
 	$text['description-2']['fr-fr'] = "et ensuite sélectionner la conférence à superviser et à gérer.";
 
 	$text['table-name']['en-us'] = "Name";
@@ -47,32 +47,32 @@
 
 	//conferences_delete
 	$text['confirm-delete']['en-us'] = "Delete Complete";
-	$text['confirm-delete']['pt-pt'] = "Eliminação Completa";
+	$text['confirm-delete']['pt-pt'] = "Remoçãp Efectuada";
 	$text['confirm-delete']['fr-fr'] = "Supprimé";
 
 	//conferences_add
 	$text['confirm-add']['en-us'] = "Add Complete";
-	$text['confirm-add']['pt-pt'] = "Adição Completa";
+	$text['confirm-add']['pt-pt'] = "Adição Efectuada";
 	$text['confirm-add']['fr-fr'] = "Ajouté";
 
 	$text['confirm-update']['en-us'] = "Update Complete";
-	$text['confirm-update']['pt-pt'] = "Actualização Completa";
+	$text['confirm-update']['pt-pt'] = "Actualização Efectuada";
 	$text['confirm-update']['fr-fr'] = "Mis a jour";
 
 	$text['confirm-name']['en-us'] = "Please provide: Name";
-	$text['confirm-name']['pt-pt'] = "Por favor, forneça: Nome";
+	$text['confirm-name']['pt-pt'] = "Por favor indique: Nome";
 	$text['confirm-name']['fr-fr'] = "Merci d'indiquer: Nom";
 
 	$text['confirm-extension']['en-us'] = "Please provide: Extension";
-	$text['confirm-extension']['pt-pt'] = "Por favor, forneça: Extensão";
+	$text['confirm-extension']['pt-pt'] = "Por favor indique: Extensão";
 	$text['confirm-extension']['fr-fr'] = "Merci d'indiquer: Extension";
 
 	$text['confirm-profile']['en-us'] = "Please provide: Profile";
-	$text['confirm-profile']['pt-pt'] = "Por favor, forneça: Perfil";
+	$text['confirm-profile']['pt-pt'] = "Por favor indique: Perfil";
 	$text['confirm-profile']['fr-fr'] = "Merci d'indiquer: Profile";
 
 	$text['confirm-enabled']['en-us'] = "Please provide: Enabled";
-	$text['confirm-enabled']['pt-pt'] = "Por favor, forneça: Ativado";
+	$text['confirm-enabled']['pt-pt'] = "Por favor indique: Ativado";
 	$text['confirm-enabled']['fr-fr'] = "Merci d'indiquer: Actif";
 
 	$text['label-conference-add']['en-us'] = "Conferences Add";
@@ -108,11 +108,11 @@
 	$text['description-3']['fr-fr'] = "Superviser et interagir avec la salle de conférence.";
 
 	$text['label-pin']['en-us'] = "Pin Number";
-	$text['label-pin']['pt-pt'] = "Numero Pin";
+	$text['label-pin']['pt-pt'] = "Código Pin";
 	$text['label-pin']['fr-fr'] = "Code Pin";
 
 	$text['description-pin']['en-us'] = "Optional pin number to secure access to the conference.";
-	$text['description-pin']['pt-pt'] = "Número de pin opcional para garantir o acesso à conferência.";
+	$text['description-pin']['pt-pt'] = "Código pin opcional para garantir o acesso à conferência.";
 	$text['description-pin']['fr-fr'] = "Numéro d'identifiant pour sécuriser l'accès à la conf. (Optionnel)";
 
 	$text['confirm-delete-2']['en-us'] = "Do you really want to delete this?";
@@ -136,7 +136,7 @@
 	$text['description-info']['fr-fr'] = "";
 
 	$text['description-conference-enable']['en-us'] = "Select whether to enable or disable the conference.";
-	$text['description-conference-enable']['pt-pt'] = "Selecione se deseja ativar ou desativar a conferência.";
+	$text['description-conference-enable']['pt-pt'] = "Seleccione se deseja ativar ou desativar a conferência.";
 	$text['description-conference-enable']['fr-fr'] = "Choisir d'activer ou non la conférence.";
 
 	$text['description-order']['en-us'] = "Enter the order number.";
@@ -148,7 +148,7 @@
 	$text['label-order']['fr-fr'] = "Ordre";
 
 	$text['description-user-add']['en-us'] = "Assign the users that are can manage this conference extension.";
-	$text['description-user-add']['pt-pt'] = "Atribuir os utilizadores que podem gerir esta extensão de conferência.";
+	$text['description-user-add']['pt-pt'] = "Atribuir utilizadores que podem gerir esta extensão de conferência.";
 	$text['description-user-add']['fr-fr'] = "Selectionner les usagers pouvant gérer cette conférence.";
 
 	$text['description-profile']['en-us'] = "Conference Profile is a collection of settings for the conference.";
@@ -156,7 +156,7 @@
 	$text['description-profile']['fr-fr'] = "Le profile de la conférence est une liste de paramètres pour la conférence.";
 
 	$text['description-flags']['en-us'] = "Optional conference flags. examples: mute|deaf|waste|moderator";
-	$text['description-flags']['pt-pt'] = "Flags opcionais de conferências. exemplos: mute|deaf|waste|moderator";
+	$text['description-flags']['pt-pt'] = "Flags opcionais de conferências. Exemplos: mute|deaf|waste|moderator";
 	$text['description-flags']['fr-fr'] = "Flags Optionnels de la conférence. exemple: mute|deaf|waste|moderator";
 
 ?>

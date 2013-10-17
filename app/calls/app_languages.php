@@ -9,11 +9,11 @@
 	$text['description']['fr-fr'] = "Rediriger les appels entrant pour l'extension:";
 
 	$text['description-2']['en-us'] = "Use the links to configure call forward follow me, or do no disturb.";
-	$text['description-2']['pt-pt'] = "Utilizar os links para definir as funcinalidades de encaminhamento de chamada, segue-me, ou de não perturbar.";
+	$text['description-2']['pt-pt'] = "Utilizar os links para definir as funcinalidades de encaminhamento de chamada, seguimento ou de não perturbar.";
 	$text['description-2']['fr-fr'] = "Utiliser les liens afin de configurer le renvoi \"follow me\", ou ne pas déranger.";
 
 	$text['description-3']['en-us'] = "The following list the extensions that have been assigned to this user account.";
-	$text['description-3']['pt-pt'] = "A tabela a seguir lista as extensões que foram atribuídas a esta conta de utilizador.";
+	$text['description-3']['pt-pt'] = "A tabela seguinte lista as extensões que foram atribuídas a esta conta de utilizador.";
 	$text['description-3']['fr-fr'] = "Ici la liste des extensions assignées à cet usager.";
 
 	$text['label-call-forward']['en-us'] = "Call Forward";
@@ -65,25 +65,25 @@
 	$text['label-ring-5']['fr-fr'] = "Sonner le 5ème Numéro";
 
 	$text['label-cid-name-prefix']['en-us'] = "Caller ID Name";
-	$text['label-cid-name-prefix']['pt-pt'] = "";
+	$text['label-cid-name-prefix']['pt-pt'] = "Nome do Originador";
 	$text['label-cid-name-prefix']['fr-fr'] = "Préfixe de l'appelant";
 
 	$text['description-cid-name-prefix']['en-us'] = "Set the caller ID name prefix.";
-	$text['description-cid-name-prefix']['pt-pt'] = "";
+	$text['description-cid-name-prefix']['pt-pt'] = "Defina o nome do Originador";
 	$text['description-cid-name-prefix']['fr-fr'] = "";
 
 	$text['label-cid-number-prefix']['en-us'] = "Caller ID Number";
-	$text['label-cid-number-prefix']['pt-pt'] = "";
+	$text['label-cid-number-prefix']['pt-pt'] = "Número do Originador";
 
 	$text['description-cid-number-prefix']['en-us'] = "Set the caller ID number prefix.";
-	$text['description-cid-number-prefix']['pt-pt'] = "";
+	$text['description-cid-number-prefix']['pt-pt'] = "Defina o número do Originador";
 
 	$text['label-call-prompt']['en-us'] = "Call Prompt";
-	$text['label-call-prompt']['pt-pt'] = "";
+	$text['label-call-prompt']['pt-pt'] = "Espoletar Chamada";
 	$text['label-call-prompt']['fr-fr'] = "Annonce d'appel";
 
 	$text['description-call-prompt']['en-us'] = "Prompt to accept the call for external destinations.";
-	$text['description-call-prompt']['pt-pt'] = "";
+	$text['description-call-prompt']['pt-pt'] = "Aceitar chamada para destinos externos.";
 	$text['description-call-prompt']['fr-fr'] = "Annonce pour accepter l'appel venant de destinations externes.";
 
 	$text['label-ring-order']['en-us'] = "Ring Order";
@@ -91,15 +91,15 @@
 	$text['label-ring-order']['fr-fr'] = "Ordre de sonnerie";
 
 	$text['label-ring-delay']['en-us'] = "Delay";
-	$text['label-ring-delay']['pt-pt'] = "";
+	$text['label-ring-delay']['pt-pt'] = "Atraso";
 	$text['label-ring-delay']['fr-fr'] = "Délais";
 
 	$text['label-ring-timeout']['en-us'] = "Timeout";
-	$text['label-ring-timeout']['pt-pt'] = "";
+	$text['label-ring-timeout']['pt-pt'] = "Timeout";
 	$text['label-ring-timeout']['fr-fr'] = "Timeout";
 
 	$text['check-sequence']['en-us'] = "sequence";
-	$text['ckeck-sequence']['pt-pt'] = "sequêncial";
+	$text['ckeck-sequence']['pt-pt'] = "sequência";
 	$text['check-sequence']['fr-fr'] = "sequence";
 
 	$text['check-simultaneous']['en-us'] = "simultaneous";
@@ -111,11 +111,11 @@
 	$text['label-prompt']['fr-fr'] = "Annonce pour accepter l'appel";
 
 	$text['check-true']['en-us'] = "true";
-	$text['ckeck-true']['pt-pt'] = "verdadeiro";
+	$text['ckeck-true']['pt-pt'] = "Sim";
 	$text['ckeck-true']['fr-fr'] = "Oui";
 
 	$text['check-false']['en-us'] = "false";
-	$text['ckeck-false']['pt-pt'] = "falso";
+	$text['ckeck-false']['pt-pt'] = "Não";
 	$text['ckeck-false']['fr-fr'] = "Non";
 
 	$text['label-dnd']['en-us'] = "Do Not Disturb";
@@ -131,7 +131,7 @@
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
 	$text['confirm-update']['en-us'] = "Update Complete";
-	$text['confirm-update']['pt-pt'] = "Actualização Completa";
+	$text['confirm-update']['pt-pt'] = "Actualização Efectuada";
 	$text['confirm-update']['fr-fr'] = "Mis à jour"; 
 
 	$text['table-extension']['en-us'] = "Extension";

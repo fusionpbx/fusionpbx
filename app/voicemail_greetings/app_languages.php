@@ -6,7 +6,7 @@
 	$text['title']['fr-fr'] = "Salutations de la messagerie";
 
 	$text['description']['en-us'] = "Select the active greeting message to play for extension:";
-	$text['description']['pt-pt'] = "Selecione e active mensagem de saudação para executar na extensão:";
+	$text['description']['pt-pt'] = "Escolha e active uma mensagem de saudação a tocar na extensão:";
 	$text['description']['fr-fr'] = "Choisir le message de salutation à jouer pour l'extension:";
 
 	$text['label-upload']['en-us'] = "File to Upload";
@@ -43,20 +43,20 @@
 
 	//voicemail_greeting_delete
 	$text['confirm-delete']['en-us'] = "Delete Complete";
-	$text['confirm-delete']['pt-pt'] = "Eliminação Completa";
+	$text['confirm-delete']['pt-pt'] = "Remoção Efectuada";
 	$text['confirm-delete']['fr-fr'] = "Supprimé";
 
 	//voicemail_greeting_edit
 	$text['confirm-name']['en-us'] = "Please provide: Greeting Name (play)";
-	$text['confirm-name']['pt-pt'] = "Por favor, forneça: Nome da saudação (execução)";
+	$text['confirm-name']['pt-pt'] = "Por favor indique: Nome da saudação (tocar)";
 	$text['confirm-name']['fr-fr'] = "Merci d'indiquer: Nom de salutation (jouer)";
 
 	$text['confirm-add']['en-us'] = "Add Complete";
-	$text['confirm-add']['pt-pt'] = "Adição Completa";
+	$text['confirm-add']['pt-pt'] = "Adição Efectuada";
 	$text['confirm-add']['fr-fr'] = "Ajouté";
 
 	$text['confirm-update']['en-us'] = "Update Complete";
-	$text['confirm-update']['pt-pt'] = "Actualização Completa";
+	$text['confirm-update']['pt-pt'] = "Actualização Efectuada";
 	$text['confirm-update']['fr-fr'] = "Mis à jour";
 
 	$text['label-add']['en-us'] = "Add Greeting";
@@ -80,7 +80,7 @@
 	$text['label-description']['fr-fr'] = "Description";
 
 	$text['description-info']['en-us'] = "You may enter a description here for your reference (not parsed).";
-	$text['description-info']['pt-pt'] = "Pode inserir aqui uma descrição para referência.";
+	$text['description-info']['pt-pt'] = "Pode inserir uma descrição para referência futura aqui.";
 	$text['description-info']['fr-fr'] = "";
 
 ?>

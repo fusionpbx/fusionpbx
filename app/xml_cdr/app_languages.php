@@ -2,23 +2,23 @@
 
 	//xml_cdr
 	$text['title']['en-us'] = "Call Detail Records";
-	$text['title']['pt-pt'] = "Detalhes da Gravação de Chamadas";
+	$text['title']['pt-pt'] = "Registo Detalhado de Chamadas";
 	$text['title']['fr-fr'] = "Historique détaillé des appels";
 
 	$text['description']['en-us'] = "Call Detail Records (CDRs) are detailed information on the calls.";
-	$text['description']['pt-pt'] = "Detalhes da Gravação de Chamadas, são informações detalhadas sobre as chamadas.";
+	$text['description']['pt-pt'] = "O registo detalhado de chamadas mostra informações detalhadas sobre as chamadas.";
 	$text['description']['fr-fr'] = "Ici se trouve l'historique des tous les appels passés sur cette plateforme. En Anglais: Call Detail Records (CDR).";
 
 	$text['description-2']['en-us'] = "The information contains source, destination, duration, and other useful call details.";
-	$text['description-2']['pt-pt'] = "A informação contém fonte, destino, duração e outros detalhes úteis da chamada.";
+	$text['description-2']['pt-pt'] = "A informação contem fonte, destino, duração e outros detalhes úteis da chamada.";
 	$text['description-2']['fr-fr'] = "Les informations contiennent la source, la destination, la durée et pleins d'autres informations utiles.";
 
 	$text['description-3']['en-us'] = "Use the fields to filter the information for the specific call records that are desired.";
-	$text['description-3']['pt-pt'] = "Utilize os campos para filtrar a informação para os registos de chamadas específicas que são desejados.";
+	$text['description-3']['pt-pt'] = "Utilize os campos para filtrar a informação sobre os registos de chamadas desejados.";
 	$text['description-3']['fr-fr'] = "Utiliser les filtres pour afficher les appels désirés. ";
 
 	$text['description-4']['en-us'] = "Then view the calls in the list or download them as comma seperated file by using the 'csv' button.";
-	$text['description-4']['pt-pt'] = "Então pode ver as chamadas na lista ou descarrega-las como arquivo separadas por vírgulas usando o botão 'csv'.";
+	$text['description-4']['pt-pt'] = "Veja as chamadas na lista ou descarregue-as como arquivo, separadas por vírgulas, usando o botão 'csv'.";
 	$text['description-4']['fr-fr'] = "Ensuite visualisez les informations dans la liste ci-dessous, ou téléchargez les sous forme d'un fichier CSV.";
 
 	$text['label-description']['en-us'] = "Description";
@@ -34,7 +34,7 @@
 	$text['label-inbound']['fr-fr'] = "entrant";
 
 	$text['label-outbound']['en-us'] = "outbound";
-	$text['label-outbound']['pt-pt'] = "saida";
+	$text['label-outbound']['pt-pt'] = "saída";
 	$text['label-outbound']['fr-fr'] = "sortant";
 
 	$text['label-local']['en-us'] = "local";
@@ -50,7 +50,7 @@
 	$text['label-destination']['fr-fr'] = "Destination";
 
 	$text['label-start']['en-us'] = "Start";
-	$text['label-start']['pt-pt'] = "Inicio";
+	$text['label-start']['pt-pt'] = "Início";
 	$text['label-start']['fr-fr'] = "Début";
 
 	$text['label-status']['en-us'] = "Status";
@@ -62,27 +62,27 @@
 	$text['label-name']['fr-fr'] = "Nom";
 
 	$text['label-number']['en-us'] = "Number";
-	$text['label-number']['pt-pt'] = "Numero";
+	$text['label-number']['pt-pt'] = "Número";
 	$text['label-number']['fr-fr'] = "Numéro";
 
 	$text['label-length']['en-us'] = "Length";
-	$text['label-length']['pt-pt'] = "Comprimento";
+	$text['label-length']['pt-pt'] = "Duração";
 	$text['label-length']['fr-fr'] = "Durée";
 
 	$text['label-tools']['en-us'] = "Tools";
-	$text['label-tools']['pt-pt'] = "";
+	$text['label-tools']['pt-pt'] = "Ferramentas";
 	$text['label-tools']['fr-fr'] = "Outils";
 
 	$text['label-play']['en-us'] = "Play";
-	$text['label-play']['pt-pt'] = "";
+	$text['label-play']['pt-pt'] = "Tocar";
 	$text['label-play']['fr-fr'] = "Jouer";
 
 	$text['label-download']['en-us'] = "Download";
-	$text['label-download']['pt-pt'] = "";
+	$text['label-download']['pt-pt'] = "Descarregar";
 	$text['label-download']['fr-fr'] = "Télécharger";
 
 	$text['button-statistics']['en-us'] = "Statistics";
-	$text['button-statistics']['pt-pt'] = "Estatisticas";
+	$text['button-statistics']['pt-pt'] = "Estatísticas";
 	$text['button-statistics']['fr-fr'] = "Statistiques";
 
 	$text['button-missed']['en-us'] = "Missed Calls";
@@ -99,19 +99,19 @@
 	$text['button-back']['fr-fr'] = "Retour";
 
 	$text['description-5']['en-us'] = "A detailed view of the call and all information regarding it.";
-	$text['description-5']['pt-pt'] = "Uma visão detalhada da chamada e todas as informações sobre ela.";
+	$text['description-5']['pt-pt'] = "Uma visão detalhada da chamada e de todas as informações sobre ela.";
 	$text['description-5']['fr-fr'] = "Une vue détaillée de l'appel et toutes les informations en relation.";
 
 	$text['description-6']['en-us'] = "The information contains caller id name and number, channel data, ";
-	$text['description-6']['pt-pt'] = "A informação contém o nome e numero de origem, dados do canal, ";
+	$text['description-6']['pt-pt'] = "A informação contem o nome e o número de origem, dados do canal, ";
 	$text['description-6']['fr-fr'] = "L'information contient le nom et le numéro d'appelant, données du canal, ";
 
 	$text['description-7']['en-us'] = "call variables, call flow, timing information, and other useful call details.";
-	$text['description-7']['pt-pt'] = "variáveis de chamada, fluxo da chamada, informações de tempo e outros detalhes úteis da chamada.";
+	$text['description-7']['pt-pt'] = "variáveis de chamada, fluxo da chamada, informações de tempo e outras informações úteis.";
 	$text['description-7']['fr-fr'] = "les variables de l'appel, le chemin, les temporisations et d'autres détails.";
 
 	$text['label-summary']['en-us'] = "Summary";
-	$text['label-summary']['pt-pt'] = "Sumario";
+	$text['label-summary']['pt-pt'] = "Resumo";
 	$text['label-summary']['fr-fr'] = "Résumé";
 
 	$text['table-direction']['en-us'] = "Direction";
@@ -119,19 +119,19 @@
 	$text['table-direction']['fr-fr'] = "Direction";
 
 	$text['table-name']['en-us'] = "Name (play)";
-	$text['table-name']['pt-pt'] = "None (executar)";
+	$text['table-name']['pt-pt'] = "Nome (tocar)";
 	$text['table-name']['fr-fr'] = "Nom (jouer)";
 
 	$text['table-download']['en-us'] = "Number (download)";
-	$text['table-download']['pt-pt'] = "Numero (descarregar)";
+	$text['table-download']['pt-pt'] = "Número (descarregar)";
 	$text['table-download']['fr-fr'] = "Numéro (télécharger)";
 
 	$text['table-end']['en-us'] = "End";
-	$text['table-end']['pt-pt'] = "Final";
+	$text['table-end']['pt-pt'] = "Fim";
 	$text['table-end']['fr-fr'] = "Fin";
 
 	$text['label-channel']['en-us'] = "Channel Data";
-	$text['label-channel']['pt-pt'] = "Dados de Canal";
+	$text['label-channel']['pt-pt'] = "Dados do Canal";
 	$text['label-channel']['fr-fr'] = "Données de canal";
 
 	$text['label-value']['en-us'] = "Value";
@@ -147,32 +147,32 @@
 	$text['label-data']['fr-fr'] = "Données";
 
 	$text['label-call-flow']['en-us'] = "Call Flow: Attributes";
-	$text['label-call-flow']['pt-pt'] = "Fluxos de chamada: Atributos";
+	$text['label-call-flow']['pt-pt'] = "Fluxo de chamada: Atributos";
 	$text['label-call-flow']['fr-fr'] = "Flux d'appel: Attibuts";
 
 	$text['label-call-flow-2']['en-us'] = "Call Flow: Extension: Attributes";
-	$text['label-call-flow-2']['pt-pt'] = "Fluxos de chamada: Extensão: Atributos";
+	$text['label-call-flow-2']['pt-pt'] = "Fluxo de chamada: Extensão: Atributos";
 	$text['label-call-flow-2']['fr-fr'] = "Flux d'appel: Extension: Attibuts";
 
 	$text['label-call-flow-3']['en-us'] = "Call Flow: Extension: Application";
-	$text['label-call-flow-3']['pt-pt'] = "Fluxos de chamada: Extensão: Aplicação";
+	$text['label-call-flow-3']['pt-pt'] = "Fluxo de chamada: Extensão: Aplicação";
 	$text['label-call-flow-3']['fr-fr'] = "Flux d'appel: Extension: Application";
 
 	$text['label-call-flow-4']['en-us'] = "Call Flow: Caller Profile";
-	$text['label-call-flow-4']['pt-pt'] = "Fluxos de chamada: Perfil de chamador";
+	$text['label-call-flow-4']['pt-pt'] = "Fluxo de chamada: Perfil do Originador";
 	$text['label-call-flow-4']['fr-fr'] = "Flux d'appel: Profile de l'appelant";
 
 	$text['label-call-flow-5']['en-us'] = "Call Flow: Times";
-	$text['label-call-flow-5']['pt-pt'] = "Fluxos de chamada: Tempos";
+	$text['label-call-flow-5']['pt-pt'] = "Fluxo de chamada: Tempos";
 	$text['label-call-flow-5']['fr-fr'] = "Flux d'appel: temporisations ";
 
 	//xml_cdr_statistics
 	$text['label-call-statistics']['en-us'] = "Call Detail Record Statistics";
-	$text['label-call-statistics']['pt-pt'] = "Estatisticas dos Detalhes da Gravação de Chamadas";
+	$text['label-call-statistics']['pt-pt'] = "Estatísticas do Registo Detalhado de Chamadas";
 	$text['label-call-statistics']['fr-fr'] = "Statistiques sur l'historique des appels";
 
 	$text['label-call-statistics-description']['en-us'] = "Call Detail Records Statics summarize the call information.";
-	$text['label-call-statistics-description']['pt-pt'] = "As Estatisticas dos Detalhes da Gravação de Chamadas resumem as informações da chamada.";
+	$text['label-call-statistics-description']['pt-pt'] = "As Estatisticas do Registo Detalhado de Chamadas resume as informações da chamada.";
 	$text['label-call-statistics-description']['fr-fr'] = "Résumé de l'historique des appels.";
 
 	$text['table-hours']['en-us'] = "Hours";
