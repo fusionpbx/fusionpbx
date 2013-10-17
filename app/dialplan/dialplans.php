@@ -77,19 +77,19 @@ else {
 	echo "	<td align='left'>\n";
 	echo "		<span class=\"title\">\n";
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
-		echo "			".$text['header-inbound_routes']."\n";
+		echo "			<strong>".$text['header-inbound_routes']."</strong>\n";
 	}
 	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
-		echo "			".$text['header-outbound_routes']."\n";
+		echo "			<strong>".$text['header-outbound_routes']."</strong>\n";
 	}
 	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		echo "			".$text['header-queues']."\n";
+		echo "			<strong>".$text['header-queues']."</strong>\n";
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
-		echo "			".$text['header-time_conditions']."\n";
+		echo "			<strong>".$text['header-time_conditions']."</strong>\n";
 	}
 	else {
-		echo "			".$text['header-dialplan_manager']."\n";
+		echo "			<strong>".$text['header-dialplan_manager']."</strong>\n";
 	}
 	echo "		</span>\n";
 	echo "	</td>\n";

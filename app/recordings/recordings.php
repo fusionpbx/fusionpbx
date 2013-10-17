@@ -161,7 +161,7 @@ require_once "resources/paging.php";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\">".$text['title'].":</span><br />\n";
+	echo "			<span class=\"title\"><strong>".$text['title'].":</strong></span><br />\n";
 	echo "			".$text['description']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
