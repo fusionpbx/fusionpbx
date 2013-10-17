@@ -63,7 +63,7 @@ require_once "resources/paging.php";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "	<td align=\"left\" valign=\"top\">\n";
-	echo "		<span class='title'>".$text['header-contacts']."</span><br>\n";
+	echo "		<span class='title'><strong>".$text['header-contacts']."</strong></span><br>\n";
 	echo "		".$text['description-contacts']."<br /><br />\n";
 	echo "	</td>\n";
 	echo "	<form method=\"GET\" name=\"frm_search\" action=\"\">\n";

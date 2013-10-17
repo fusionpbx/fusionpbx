@@ -237,7 +237,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\">".$text['label-moh']."</span><br />\n";
+	echo "			<span class=\"title\"><strong>".$text['label-moh']."</strong></span><br />\n";
 	echo "			".$text['desc-moh']."\n";
 	echo "			<br /><br />\n";
 	echo "		</td>\n";
