@@ -37,6 +37,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "service_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "c28f14e9-e5ad-e992-0931-d5f5f0db6a79";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "service_add";

@@ -38,6 +38,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "var_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "7a4e9ec5-24b9-7200-89b8-d70bf8afdd8f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "var_add";

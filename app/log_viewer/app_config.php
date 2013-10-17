@@ -37,9 +37,12 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "log_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "781ebbec-a55a-9d60-f7bb-f54ab2ee4e7e";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
+		
 		$apps[$x]['permissions'][1]['name'] = "log_download";
 		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
+		
 		$apps[$x]['permissions'][2]['name'] = "log_path_view";
 		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
 ?>

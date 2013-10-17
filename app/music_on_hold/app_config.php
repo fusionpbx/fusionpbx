@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "music_on_hold_default_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "music_on_hold_default_add";
@@ -47,6 +48,7 @@
 		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][3]['name'] = "music_on_hold_view";
+		$apps[$x]['permissions'][3]['menu']['uuid'] = "1cd1d6cb-912d-db32-56c3-e0d5699feb9d";
 		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][3]['groups'][] = "admin";
 

@@ -37,6 +37,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "module_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "49fdb4e1-5417-0e7a-84b3-eb77f5263ea7";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "module_add";

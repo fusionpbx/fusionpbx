@@ -38,6 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "fifo_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "c535ac0b-1da1-0f9c-4653-7934c6f4732c";
 		$apps[$x]['permissions'][0]['groups'][] = "admin";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 

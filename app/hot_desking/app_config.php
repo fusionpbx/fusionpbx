@@ -37,6 +37,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "hot_desk_view";
+		$apps[$x]['permissions'][0]['menu']['uuid'] = "baa57691-37d4-4c7d-b227-f2929202b480";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][1]['name'] = "hot_desk_add";

@@ -59,8 +59,7 @@
 	//permission details
 		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_view";
-		$apps[$x]['permissions'][$y]['menu']['uuid'][] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		$apps[$x]['permissions'][$y]['menu']['uuid'][] = "8f80e71a-31a5-6432-47a0-7f5a7b271f05";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "8f80e71a-31a5-6432-47a0-7f5a7b271f05";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
