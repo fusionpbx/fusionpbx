@@ -122,13 +122,13 @@ else {
 			$x = 0;
 			foreach($_SESSION['user']['extension'] as $row) {
 				if ($x==0) {
-					if ($row['user'] > 0) { $sql_where .= "caller_id_number = '".$row['user']."' \n"; } //source
+					if (strlen($row['user']) > 0) { $sql_where .= "caller_id_number = '".$row['user']."' \n"; } //source
 				}
 				else {
-					if ($row['user'] > 0) { $sql_where .= "or caller_id_number = '".$row['user']."' \n"; } //source
+					if (strlen($row['user']) > 0) { $sql_where .= "or caller_id_number = '".$row['user']."' \n"; } //source
 				}
-				if ($row['user'] > 0) { $sql_where .= "or destination_number = '".$row['user']."' \n"; } //destination
-				if ($row['user'] > 0) { $sql_where .= "or destination_number = '*99".$row['user']."' \n"; } //destination
+				if (strlen($row['user']) > 0) { $sql_where .= "or destination_number = '".$row['user']."' \n"; } //destination
+				if (strlen($row['user']) > 0) { $sql_where .= "or destination_number = '*99".$row['user']."' \n"; } //destination
 				$x++;
 			}
 		}
