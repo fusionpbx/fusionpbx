@@ -447,7 +447,7 @@
 
   <Display_Name_2_ ua="na">{v_line2_displayname}</Display_Name_2_>
   <User_ID_2_ ua="na">{v_line2_user_id}</User_ID_2_>
-  <Password_2_ ua="na"></Password_2_>
+  <Password_2_ ua="na">{v_line2_user_password}</Password_2_>
   <Use_Auth_ID_2_ ua="na">No</Use_Auth_ID_2_>
   <Auth_ID_2_ ua="na"></Auth_ID_2_>
   <Mini_Certificate_2_ ua="na"></Mini_Certificate_2_>
