@@ -121,12 +121,20 @@ else {
 		//set the mac address in the correct format
 			switch ($device_vendor) {
 			case "aastra":
+				//upper case no formatting
 				$device_mac_address = strtoupper($device_mac_address);
 				break;
+			case "polycom":
+				//lower case no formatting
+				$device_mac_address = strtolower($device_mac_address);
+				$device_mac_address = str_replace("-", "", $device_mac_address);
+				break;
 			case "snom":
+				//upper case with dashes
 				$device_mac_address = strtoupper($device_mac_address);
 				$device_mac_address = str_replace("-", "", $device_mac_address);
 			default:
+				//lower case with dashes
 				$device_mac_address = strtolower($device_mac_address);
 				$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			}
