@@ -85,6 +85,9 @@
 				forward_voicemail_local_after_email = row["voicemail_local_after_email"];
 			end);
 
+		--get a new uuid
+			voicemail_message_uuid = session:get_uuid();
+
 		--save the message to the voicemail messages
 			local sql = {}
 			table.insert(sql, "INSERT INTO v_voicemail_messages ");
@@ -101,7 +104,7 @@
 			table.insert(sql, ") ");
 			table.insert(sql, "VALUES ");
 			table.insert(sql, "( ");
-			table.insert(sql, "'".. uuid .."', ");
+			table.insert(sql, "'".. voicemail_message_uuid .."', ");
 			table.insert(sql, "'".. domain_uuid .."', ");
 			table.insert(sql, "'".. forward_voicemail_uuid .."', ");
 			table.insert(sql, "'".. created_epoch .."', ");
@@ -125,7 +128,7 @@
 
 		--if local after email is true then copy the recording file
 			mkdir(voicemail_dir.."/"..forward_voicemail_id);
-			copy(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, voicemail_dir.."/"..forward_voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+			copy(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, voicemail_dir.."/"..forward_voicemail_id.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
 
 		--send the email with the voicemail recording attached
 			send_email(forward_voicemail_id, uuid);
