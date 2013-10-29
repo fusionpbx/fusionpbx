@@ -375,7 +375,16 @@
 									session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
 							else
-								session:execute(ring_group_timeout_app, ring_group_timeout_data);
+								if (ring_group_timeout_app ~= nil) then
+									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+								else
+									sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
+									sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
+									freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+									dbh:query(sql, function(row)
+										session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
+									end);
+								end
 							end
 					end
 			end
