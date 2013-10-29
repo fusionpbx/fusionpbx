@@ -74,19 +74,13 @@ if ( session:ready() ) then
 
 	--authenticate the user
 		if (pin_number) then
-			--get the pin number from the caller
-				min_digits = string.len(pin_number);
-				max_digits = string.len(pin_number)+1;
-				caller_pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+			min_digits = string.len(pin_number);
+			max_digits = string.len(pin_number)+1;
 		else
-			--get the vm_password
-				min_digits = 1;
-				max_digits = 12;
-				vm_password = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-				if (debug["sql"]) then
-					freeswitch.consoleLog("NOTICE", "unique_id ".. unique_id .. " vm_password " .. vm_password .. "\n");
-				end
+			min_digits = 1;
+			max_digits = 12;
 		end
+		caller_pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 
 	--get the dial_string, and extension_uuid
 		sql = "SELECT * FROM v_extensions as e, v_domains as d ";
@@ -197,7 +191,7 @@ if ( session:ready() ) then
 					end
 				end
 			--clear the cache
-				session:execute("memcache", "delete directory:"..db_extension.."@"..context);
+				api:execute("memcache", "delete directory:"..db_extension.."@"..context);
 		else
 			session:streamFile("phrase:voicemail_fail_auth:#");
 			session:hangup("NORMAL_CLEARING");
