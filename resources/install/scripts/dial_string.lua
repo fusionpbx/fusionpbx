@@ -25,7 +25,8 @@
 --set default variables
 	max_tries = "3";
 	digit_timeout = "5000";
-
+	api = freeswitch.API();
+	
 --set the debug level
 	debug["sql"] = false;
 	debug["var"] = false;
@@ -200,9 +201,21 @@ if ( session:ready() ) then
 
 	--log to the console
 		if (debug["var"]) then
-			freeswitch.consoleLog("NOTICE", "sip_from_host: ".. sip_from_host .. "\n");
-			freeswitch.consoleLog("NOTICE", "extension_uuid: ".. extension_uuid .. "\n");
-			freeswitch.consoleLog("NOTICE", "dial_string: ".. dial_string .. "\n");
+			if sip_from_host~=nil then
+				freeswitch.consoleLog("NOTICE", "sip_from_host: ".. sip_from_host .. "\n");
+			else
+				freeswitch.consoleLog("NOTICE", "sip_from_host: NIL\n");
+			end
+			if extension_uuid~=nil then
+				freeswitch.consoleLog("NOTICE", "extension_uuid: ".. extension_uuid .. "\n");
+			else
+			freeswitch.consoleLog("NOTICE", "extension_uuid: NIL\n");
+			end
+			if dial_string~=nil then
+				freeswitch.consoleLog("NOTICE", "dial_string: ".. dial_string .. "\n");
+			else
+				freeswitch.consoleLog("NOTICE", "dial_string: NIL\n");
+			end
 		end
 
 	--show call variables
