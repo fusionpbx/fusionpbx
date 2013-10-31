@@ -77,8 +77,9 @@ require_once "resources/paging.php";
 		$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
 	}
+
+	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
-		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		if ($row['num_rows'] > 0) {
@@ -93,8 +94,8 @@ require_once "resources/paging.php";
 	$rows_per_page = 150;
 	$param = "";
 	$page = check_str($_GET['page']);
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 	$offset = $rows_per_page * $page;
 
 	if (if_group("superadmin") || if_group("admin")) {
@@ -109,8 +110,8 @@ require_once "resources/paging.php";
 		$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-	$sql .= " limit $rows_per_page offset $offset ";
+	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
+	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
