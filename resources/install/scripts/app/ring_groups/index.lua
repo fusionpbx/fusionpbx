@@ -371,8 +371,14 @@
 							if (app_data ~= nil) then
 								--freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
 								session:execute("bridge", app_data);
-								if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" or session:getVariable("originate_disposition") == "NO_ANSWER" or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL") then
-									session:execute(ring_group_timeout_app, ring_group_timeout_data);
+								if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" 
+									or session:getVariable("originate_disposition") == "NO_ANSWER" 
+									or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL" 
+									or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED" 
+									or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE" 
+									or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION" 
+									or session:getVariable("originate_disposition") == "USER_BUSY") then
+										session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
 							else
 								if (ring_group_timeout_app ~= nil) then
