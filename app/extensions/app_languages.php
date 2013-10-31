@@ -6,9 +6,9 @@
 		$text['title-extensions']['pt-pt'] = "Extensões";
 		$text['title-extensions']['fr-fr'] = "Extensions";
 
-		$text['title-extension-edit']['en-us'] = "Extension Edit";
-		$text['title-extension-edit']['pt-pt'] = "Editar Extensão";
-		$text['title-extension-edit']['fr-fr'] = "Edition de l'Extension";
+		$text['title-extension-edit']['en-us'] = "Extension";
+		$text['title-extension-edit']['pt-pt'] = "Extensão";
+		$text['title-extension-edit']['fr-fr'] = "Extension";
 
 		$text['title-extension-add']['en-us'] = "Extension Add";
 		$text['title-extension-add']['pt-pt'] = "Adicionar Extensão";
@@ -22,9 +22,9 @@
 		$text['description-extensions']['pt-pt'] = "Utilize isto para configurar as suas extensões SIP";
 		$text['description-extensions']['fr-fr'] = "Page de configuration des extensions SIP.";
 
-		$text['header-extension-edit']['en-us'] = "Extension Edit";
-		$text['header-extension-edit']['pt-pt'] = "Editar Extensão";
-		$text['header-extension-edit']['fr-fr'] = "Editer l'extension";
+		$text['header-extension-edit']['en-us'] = "Extension";
+		$text['header-extension-edit']['pt-pt'] = "Extensão";
+		$text['header-extension-edit']['fr-fr'] = "Extension";
 
 		$text['header-extension-add']['en-us'] = "Extension Add";
 		$text['header-extension-add']['pt-pt'] = "Adicionar Extensão";
@@ -294,9 +294,9 @@
 		$text['label-sip_force_expires']['pt-pt'] = "SIP Force Expires";
 		$text['label-sip_force_expires']['fr-fr'] = "SIP Force Expires";
 
-		$text['description-sip_force_expires']['en-us'] = "Choose whether to rewrite the contact port, or rewrite both the contact IP and port.";
-		$text['description-sip_force_expires']['pt-pt'] = "Escolha se deseja reescrever o porto de contacto ou reescrever o endereço IP e o porto.";
-		$text['description-sip_force_expires']['fr-fr'] = "Choisir de forcer l'expiration de l'enregistrement de l'enxtension ou non.";
+		$text['description-sip_force_expires']['en-us'] = "To prevent stale registrations SIP Force expires can override the client expire.";
+		$text['description-sip_force_expires']['pt-pt'] = "";
+		$text['description-sip_force_expires']['fr-fr'] = "";
 
 		$text['label-nibble_account']['en-us'] = "Nibble Account";
 		$text['label-nibble_account']['pt-pt'] = "Nibble Account";
