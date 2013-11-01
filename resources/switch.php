@@ -160,7 +160,7 @@ foreach($settings_array as $name => $value) {
 
 //get the extensions that are assigned to this user
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/extensions/app_config.php")) {
-		if (strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
+		if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 			//get the user extension list
 				unset($_SESSION['user']['extension']);
 				$sql = "select e.extension, e.user_context, e.extension_uuid, e.outbound_caller_id_name, e.outbound_caller_id_number from v_extensions as e, v_extension_users as u ";
