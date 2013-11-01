@@ -49,7 +49,7 @@ else {
 		$device_uuid = $row["device_uuid"];
 		$device_mac_address = $row["device_mac_address"];
 		$device_label = $row["device_label"];
-		$device_vendor = $row["device_vendor"];
+		$device_vendor = strtolower($row["device_vendor"]);
 		$device_model = $row["device_model"];
 		$device_firmware_version = $row["device_firmware_version"];
 		$device_provision_enable = $row["device_provision_enable"];
