@@ -55,6 +55,7 @@ if ( session:ready() ) then
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
 		domain_name = session:getVariable("domain_name");
+		context = session:getVariable("context");
 
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
@@ -100,7 +101,7 @@ if ( session:ready() ) then
 			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
 		else
 			if (domain_count > 1) then
-				sql = sql .. "and context = '"..domain_name.."' ";
+				sql = sql .. "and context = '"..context.."' ";
 			end
 		end
 		if (debug["sql"]) then
