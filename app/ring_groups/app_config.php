@@ -126,7 +126,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_forward_destination";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "varchar(255)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the call forward destination.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_forward_enabled";
@@ -195,7 +197,9 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "foreign";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_number";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "varchar(255)";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$z++;
