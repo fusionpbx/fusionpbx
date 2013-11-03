@@ -6,21 +6,21 @@
 	$text['title-user_manager']['pt-pt'] = "Gestor de Utilizadores";
 	$text['title-user_manager']['fr-fr'] = "Gestion Usagers";
 
-	$text['title-user_add']['en-us'] = "User Add";
+	$text['title-user_add']['en-us'] = "User";
 	$text['title-user_add']['pt-pt'] = "Adicionar Utilizador";
 	$text['title-user_add']['fr-fr'] = "Ajout de l'Usager";
 
-	$text['title-user_edit']['en-us'] = "User Edit";
-	$text['title-user_edit']['pt-pt'] = "Editar Utilizador";
+	$text['title-user_edit']['en-us'] = "User";
+	$text['title-user_edit']['pt-pt'] = "Utilizador";
 	$text['title-user_edit']['fr-fr'] = "Edition de l'Usager";
 
 	$text['title-group_manager']['en-us'] = "Group Manager";
 	$text['title-group_manager']['pt-pt'] = "Gestor de Grupos";
 	$text['title-group_manager']['fr-fr'] = "Gestion de Groupe";
 
-	$text['title-group_add']['en-us'] = "Group Add";
-	$text['title-group_add']['pt-pt'] = "Adicionar Grupo";
-	$text['title-group_add']['fr-fr'] = "Ajout de Groupe";
+	$text['title-group_add']['en-us'] = "Group";
+	$text['title-group_add']['pt-pt'] = "Grupo";
+	$text['title-group_add']['fr-fr'] = "Groupe";
 
 	$text['title-group_permissions']['en-us'] = "Group Permissions";
 	$text['title-group_permissions']['pt-pt'] = "Permissões do Grupo";
@@ -34,7 +34,7 @@
 	$text['header-user_manager']['pt-pt'] = "Gestor de Utilizadores";
 	$text['header-user_manager']['fr-fr'] = "Gestion Usagers";
 
-	$text['header-user_add']['en-us'] = "User Add";
+	$text['header-user_add']['en-us'] = "User";
 	$text['header-user_add']['pt-pt'] = "Adicionar Utilizador";
 	$text['header-user_add']['fr-fr'] = "Ajout de l'Usager";
 
@@ -46,7 +46,7 @@
 	$text['header-group_manager']['pt-pt'] = "Gestor de Grupos";
 	$text['header-group_manager']['fr-fr'] = "Gestion de Groupe";
 
-	$text['header-group_add']['en-us'] = "Group Add";
+	$text['header-group_add']['en-us'] = "Group";
 	$text['header-group_add']['pt-pt'] = "Adicionar Grupo";
 	$text['header-group_add']['fr-fr'] = "Ajout de Groupe";
 
