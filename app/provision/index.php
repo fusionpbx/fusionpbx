@@ -23,8 +23,13 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
+include "resources/raintpl/rain.tpl.class.php";
 require_once "resources/require.php";
 
+// setup raintpl
+  raintpl::configure('tpl_ext','');
+  raintpl::configure('tmp_dir',$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/tmp/");
+  
 //set default variables
 	$dir_count = 0;
 	$file_count = 0;
@@ -332,8 +337,11 @@ require_once "resources/require.php";
 		//$proxy2_address= "";
 		//$proxy3_address= "";
 
-//get the contents of the template
-	$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/".$file);
+//set the location of the template
+  raintpl::configure( "tpl_dir",  $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template."/");
+  
+//start raintpl instance
+  $template = new raintpl();
 
 //replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 
@@ -353,7 +361,7 @@ require_once "resources/require.php";
 				$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
 			}
 			$time_zone_offset = $time_zone_offset_hours.":".$time_zone_offset_minutes;
-			$file_contents = str_replace("{v_time_zone_offset}", $time_zone_offset, $file_contents);
+			$template -> assign("v_time_zone_offset" , $time_zone_offset);
 		}
 
 	//create a mac address with back slashes for backwards compatability
@@ -372,11 +380,11 @@ require_once "resources/require.php";
 		$result_count = count($result);
 		foreach($result as $row) {
 			$line_number = $row['device_line'];
-			$file_contents = str_replace("{v_line".$line_number."_server_address}", $_SESSION['domain_name'], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["effective_caller_id_name"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_shortname}", $row["extension"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["extension"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
+			$template ->assign( "v_line".$line_number."_server_address", $_SESSION['domain_name']);
+      $template ->assign( "v_line".$line_number."_displayname", $row["effective_caller_id_name"]);
+      $template ->assign( "v_line".$line_number."_shortname", $row["extension"]);
+      $template ->assign( "v_line".$line_number."_user_id", $row["extension"]);
+      $template ->assign( "v_line".$line_number."_user_password", $row["password"]);
 		}
 		unset ($prep_statement);
 
@@ -390,12 +398,12 @@ require_once "resources/require.php";
 		$result_count = count($result);
 		foreach($result as $row) {
 			$line_number = $row['line_number'];
-			$file_contents = str_replace("{v_line".$line_number."_server_address}", $row["server_address"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_outbound_proxy}", $row["outbound_proxy"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_displayname}", $row["display_name"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_user_id}", $row["user_id"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_auth_id}", $row["auth_id"], $file_contents);
-			$file_contents = str_replace("{v_line".$line_number."_user_password}", $row["password"], $file_contents);
+			$template ->assign( "v_line".$line_number."_server_address", $row["server_address"]);
+      $template ->assign( "v_line".$line_number."_outbound_proxy", $row["outbound_proxy"]);
+      $template ->assign( "v_line".$line_number."_displayname", $row["display_name"]);
+      $template ->assign( "v_line".$line_number."_auth_id", $row["auth_id"]);
+      $template ->assign( "v_line".$line_number."_user_id", $row["user_id"]);
+      $template ->assign( "v_line".$line_number."_user_password", $row["password"]);
 		}
 		unset ($prep_statement);
 
@@ -413,32 +421,36 @@ require_once "resources/require.php";
 		}
 
 	//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-		$file_contents = str_replace("{v_mac}", $mac, $file_contents);
-		$file_contents = str_replace("{v_label}", $device_label, $file_contents);
-		$file_contents = str_replace("{v_firmware_version}", $device_firmware_version, $file_contents);
-		$file_contents = str_replace("{domain_time_zone}", $device_time_zone, $file_contents);
-		$file_contents = str_replace("{domain_name}", $_SESSION['domain_name'], $file_contents);
-		$file_contents = str_replace("{v_project_path}", PROJECT_PATH, $file_contents);
-		$file_contents = str_replace("{v_server1_address}", $server1_address, $file_contents);
-		$file_contents = str_replace("{v_proxy1_address}", $proxy1_address, $file_contents);
-		$file_contents = str_replace("{v_password}", $password, $file_contents);
+		$template ->assign( "v_mac" , $mac);
+    $template ->assign( "v_label", $device_label);
+    $template ->assign( "v_firmware_version", $device_firmware_version);
+    $template ->assign( "domain_time_zone", $device_time_zone);
+    $template ->assign( "domain_name", $_SESSION['domain_name']);
+    $template ->assign( "v_project_path", PROJECT_PATH);
+    $template ->assign( "v_server1_address", $server1_address);
+    $template ->assign( "v_proxy1_address", $proxy1_address);
+    $template ->assign( "v_password",$password);
 
-	//cleanup any remaining variables
-		for ($i = 1; $i <= 100; $i++) {
-			$file_contents = str_replace("{v_line".$i."_server_address}", "", $file_contents);
-			$file_contents = str_replace("{v_line".$i."_outbound_proxy}", "", $file_contents);
-			$file_contents = str_replace("{v_line".$i."_displayname}", "", $file_contents);
-			$file_contents = str_replace("{v_line".$i."_shortname}", "", $file_contents);
-			$file_contents = str_replace("{v_line".$i."_user_id}", "", $file_contents);
-			$file_contents = str_replace("{v_line".$i."_auth_id}", "", $file_contents);
-			$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
-		}
+	//cleanup any remaining variables ( no longer required as raintpl blanks non assigned variables )
+  //		for ($i = 1; $i <= 100; $i++) {
+  //  	$file_contents = str_replace("{v_line".$i."_server_address}", "", $file_contents);
+  //  	$file_contents = str_replace("{v_line".$i."_outbound_proxy}", "", $file_contents);
+  //  	$file_contents = str_replace("{v_line".$i."_displayname}", "", $file_contents);
+  //  	$file_contents = str_replace("{v_line".$i."_shortname}", "", $file_contents);
+  //  	$file_contents = str_replace("{v_line".$i."_user_id}", "", $file_contents);
+  //  	$file_contents = str_replace("{v_line".$i."_auth_id}", "", $file_contents);
+  //  	$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
+  //  }
 
 	//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings'
 		//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
 		foreach($_SESSION['provision'] as $key=>$value) {
-			$file_contents = str_replace('{v_'.$key.'}', $value['var'], $file_contents);
+			$template ->assign("v_".$key, $value['var']);
 		}
+      
+     
+//output raintpl template to string for headder processing
+  $file_contents = $template -> draw( $file, $return_string=true );
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
