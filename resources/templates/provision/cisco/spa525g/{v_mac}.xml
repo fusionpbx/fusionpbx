@@ -70,7 +70,7 @@
   <Resync_Trigger_1 ua="na"></Resync_Trigger_1>
   <Resync_Trigger_2 ua="na"></Resync_Trigger_2>
   <Resync_Fails_On_FNF ua="na">Yes</Resync_Fails_On_FNF>
-  <Profile_Rule ua="na">http://{domain_name}{v_project_path}/app/provision/?mac=$MA</Profile_Rule>
+  <Profile_Rule ua="na">http://{$domain_name}{$v_project_path}/app/provision/?mac=$MA</Profile_Rule>
   <Profile_Rule_B ua="na"></Profile_Rule_B>
   <Profile_Rule_C ua="na"></Profile_Rule_C>
   <Profile_Rule_D ua="na"></Profile_Rule_D>
@@ -308,7 +308,7 @@
 
   <!-- Proxy and Registration -->
 
-  <Proxy_1_ ua="na">{domain_name}</Proxy_1_>
+  <Proxy_1_ ua="na">{$domain_name}</Proxy_1_>
   <Outbound_Proxy_1_ ua="na"></Outbound_Proxy_1_>
   <Use_Outbound_Proxy_1_ ua="na">No</Use_Outbound_Proxy_1_>
   <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
@@ -323,9 +323,9 @@
 
   <!-- Subscriber Information -->
 
-  <Display_Name_1_ ua="na">{v_line1_displayname}</Display_Name_1_>
-  <User_ID_1_ ua="na">{v_line1_user_id}</User_ID_1_>
-  <Password_1_ ua="na">{v_line1_user_password}</Password_1_>
+  <Display_Name_1_ ua="na">{$v_line1_displayname}</Display_Name_1_>
+  <User_ID_1_ ua="na">{$v_line1_user_id}</User_ID_1_>
+  <Password_1_ ua="na">{$v_line1_user_password}</Password_1_>
   <Use_Auth_ID_1_ ua="na">No</Use_Auth_ID_1_>
   <Auth_ID_1_ ua="na"></Auth_ID_1_>
   <Mini_Certificate_1_ ua="na"></Mini_Certificate_1_>
@@ -430,7 +430,7 @@
 
   <!-- Proxy and Registration -->
 
-  <Proxy_2_ ua="na">{domain_name}</Proxy_2_>
+  <Proxy_2_ ua="na">{$domain_name}</Proxy_2_>
   <Outbound_Proxy_2_ ua="na"></Outbound_Proxy_2_>
   <Use_Outbound_Proxy_2_ ua="na">No</Use_Outbound_Proxy_2_>
   <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
@@ -445,9 +445,9 @@
 
   <!-- Subscriber Information -->
 
-  <Display_Name_2_ ua="na">{v_line2_displayname}</Display_Name_2_>
-  <User_ID_2_ ua="na">{v_line2_user_id}</User_ID_2_>
-  <Password_2_ ua="na">{v_line2_user_password}</Password_2_>
+  <Display_Name_2_ ua="na">{$v_line2_displayname}</Display_Name_2_>
+  <User_ID_2_ ua="na">{$v_line2_user_id}</User_ID_2_>
+  <Password_2_ ua="na">{$v_line2_user_password}</Password_2_>
   <Use_Auth_ID_2_ ua="na">No</Use_Auth_ID_2_>
   <Auth_ID_2_ ua="na"></Auth_ID_2_>
   <Mini_Certificate_2_ ua="na"></Mini_Certificate_2_>
@@ -552,7 +552,7 @@
 
   <!-- Proxy and Registration -->
 
-  <Proxy_3_ ua="na">{domain_name}</Proxy_3_>
+  <Proxy_3_ ua="na">{$domain_name}</Proxy_3_>
   <Outbound_Proxy_3_ ua="na"></Outbound_Proxy_3_>
   <Use_Outbound_Proxy_3_ ua="na">No</Use_Outbound_Proxy_3_>
   <Use_OB_Proxy_In_Dialog_3_ ua="na">Yes</Use_OB_Proxy_In_Dialog_3_>
@@ -567,9 +567,9 @@
 
   <!-- Subscriber Information -->
 
-  <Display_Name_3_ ua="na">{v_line3_displayname}</Display_Name_3_>
-  <User_ID_3_ ua="na">{v_line3_user_id}</User_ID_3_>
-  <Password_3_ ua="na">{v_line3_user_password}</Password_3_>
+  <Display_Name_3_ ua="na">{$v_line3_displayname}</Display_Name_3_>
+  <User_ID_3_ ua="na">{$v_line3_user_id}</User_ID_3_>
+  <Password_3_ ua="na">{$v_line3_user_password}</Password_3_>
   <Use_Auth_ID_3_ ua="na">No</Use_Auth_ID_3_>
   <Auth_ID_3_ ua="na"></Auth_ID_3_>
   <Mini_Certificate_3_ ua="na"></Mini_Certificate_3_>
@@ -674,7 +674,7 @@
 
   <!-- Proxy and Registration -->
 
-  <Proxy_4_ ua="na">{domain_name}</Proxy_4_>
+  <Proxy_4_ ua="na">{$domain_name}</Proxy_4_>
   <Outbound_Proxy_4_ ua="na"></Outbound_Proxy_4_>
   <Use_Outbound_Proxy_4_ ua="na">No</Use_Outbound_Proxy_4_>
   <Use_OB_Proxy_In_Dialog_4_ ua="na">Yes</Use_OB_Proxy_In_Dialog_4_>
@@ -689,9 +689,9 @@
 
   <!-- Subscriber Information -->
 
-  <Display_Name_4_ ua="na">{v_line4_displayname}</Display_Name_4_>
-  <User_ID_4_ ua="na">{v_line4_user_id}</User_ID_4_>
-  <Password_4_ ua="na">{v_line4_user_password}</Password_4_>
+  <Display_Name_4_ ua="na">{$v_line4_displayname}</Display_Name_4_>
+  <User_ID_4_ ua="na">{$v_line4_user_id}</User_ID_4_>
+  <Password_4_ ua="na">{$v_line4_user_password}</Password_4_>
   <Use_Auth_ID_4_ ua="na">No</Use_Auth_ID_4_>
   <Auth_ID_4_ ua="na"></Auth_ID_4_>
   <Mini_Certificate_4_ ua="na"></Mini_Certificate_4_>
@@ -797,7 +797,7 @@
   <!-- Proxy and Registration -->
 
   <Proxy_5_ ua="na"></Proxy_5_>
-  <Outbound_Proxy_5_ ua="na">{domain_name}</Outbound_Proxy_5_>
+  <Outbound_Proxy_5_ ua="na">{$domain_name}</Outbound_Proxy_5_>
   <Use_Outbound_Proxy_5_ ua="na">No</Use_Outbound_Proxy_5_>
   <Use_OB_Proxy_In_Dialog_5_ ua="na">Yes</Use_OB_Proxy_In_Dialog_5_>
   <Register_5_ ua="na">Yes</Register_5_>
@@ -811,9 +811,9 @@
 
   <!-- Subscriber Information -->
 
-  <Display_Name_5_ ua="na">{v_line5_displayname}</Display_Name_5_>
-  <User_ID_5_ ua="na">{v_line5_user_id}</User_ID_5_>
-  <Password_5_ ua="na">{v_line5_user_password}</Password_5_>
+  <Display_Name_5_ ua="na">{$v_line5_displayname}</Display_Name_5_>
+  <User_ID_5_ ua="na">{$v_line5_user_id}</User_ID_5_>
+  <Password_5_ ua="na">{$v_line5_user_password}</Password_5_>
   <Use_Auth_ID_5_ ua="na">No</Use_Auth_ID_5_>
   <Auth_ID_5_ ua="na"></Auth_ID_5_>
   <Mini_Certificate_5_ ua="na"></Mini_Certificate_5_>
@@ -1769,7 +1769,7 @@
 
   <!-- General -->
 
-  <Station_Name ua="na">{v_line1_displayname}</Station_Name>
+  <Station_Name ua="na">{$v_line1_displayname}</Station_Name>
   <Station_Display_Name ua="na"></Station_Display_Name>
   <Voice_Mail_Number ua="na"></Voice_Mail_Number>
   <Text_Logo ua="na"></Text_Logo>
@@ -2125,7 +2125,7 @@
 
   <Set_Local_Date__mm_dd_ ua="na"></Set_Local_Date__mm_dd_>
   <Set_Local_Time__HH_mm_ ua="na"></Set_Local_Time__HH_mm_>
-  <Time_Zone ua="na">GMT-{v_time_zone_offset}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
+  <Time_Zone ua="na">GMT-{$v_time_zone_offset}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
   <Time_Offset__HH_mm_ ua="na"></Time_Offset__HH_mm_>
   <Ignore_DHCP_Time_Offset ua="na">Yes</Ignore_DHCP_Time_Offset>
   <Daylight_Saving_Time_Rule ua="na"></Daylight_Saving_Time_Rule>

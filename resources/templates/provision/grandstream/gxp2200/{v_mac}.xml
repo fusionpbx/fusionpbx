@@ -5,19 +5,19 @@
 			<!-- Account Active. Values 0 - No 1 - Yes -->
 			<P271>1</P271>
 			<!-- Account Name -->
-			<P270>{v_line1_displayname}</P270>
+			<P270>{$v_line1_displayname}</P270>
 			<!-- Sip Server -->
-			<P47>{domain_name}</P47>
+			<P47>{$domain_name}</P47>
 			<!-- SIP User ID. -->
-			<P35>{v_line1_user_id}</P35>
+			<P35>{$v_line1_user_id}</P35>
 			<!-- SIP Authenticate ID. -->
-			<P36>{v_line1_user_id}</P36>
+			<P36>{$v_line1_user_id}</P36>
 			<!-- SIP Authenticate Password -->
-			<P34>{v_line1_user_password}</P34>
+			<P34>{$v_line1_user_password}</P34>
 			<!-- Voice Mail UserID. -->
 			<P33>*97</P33>
 			<!-- Name (Display Name, e.g., John Doe) -->
-			<P3>{v_line1_displayname}</P3>
+			<P3>{$v_line1_displayname}</P3>
 			<!-- Tel URI 0 - Disable, 1 - User=Phone, 2 - Enabled. Default value is 0 -->
 		<!-- Account 1 Network Settings -->
 			<!-- Outbound Proxy -->
