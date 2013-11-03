@@ -38,7 +38,7 @@
 	$text['header-user_add']['pt-pt'] = "Adicionar Utilizador";
 	$text['header-user_add']['fr-fr'] = "Ajout de l'Usager";
 
-	$text['header-user_edit']['en-us'] = "User Edit";
+	$text['header-user_edit']['en-us'] = "User";
 	$text['header-user_edit']['pt-pt'] = "Editar Utilizador";
 	$text['header-user_edit']['fr-fr'] = "Edition de l'Usager";
 
