@@ -7,12 +7,12 @@
  <DTMFMethod OUTBANDDTMF_1="Y" OUTBANDDTMF_2="Y"/>
  <DigitMap DIAL_PLAN_1="1XXXXXXXXXX|X11|480XXXXXXX|602XXXXXXX|623XXXXXXX" DIAL_PLAN_2=""/>
 <SIP>
- <ProxyServer SIP_PRXY_ADDR_1="{domain_name}" SIP_PRXY_ADDR_2=""/>
+ <ProxyServer SIP_PRXY_ADDR_1="{$domain_name}" SIP_PRXY_ADDR_2=""/>
  <ProxyServerPort SIP_PRXY_PORT_1="5060" SIP_PRXY_PORT_2="5060"/>
  <ProxyServerTransport SIP_TRANSPORT_1="0" SIP_TRANSPORT_2="0"/>
- <RegistrarServer SIP_RGSTR_ADDR_1="{domain_name}" SIP_RGSTR_ADDR_2=""/>
+ <RegistrarServer SIP_RGSTR_ADDR_1="{$domain_name}" SIP_RGSTR_ADDR_2=""/>
  <RegistrarServerPort SIP_RGSTR_PORT_1="5060" SIP_RGSTR_PORT_2="5060"/>
- <UserAgentDomain SIP_SVCDOMAIN_1="{domain_name}" SIP_SVCDOMAIN_2=""/>
+ <UserAgentDomain SIP_SVCDOMAIN_1="{$domain_name}" SIP_SVCDOMAIN_2=""/>
  <UserAgentPort1 SIP_SRC_PORT_1="5060"/>
  <UserAgentPort2 SIP_SRC_PORT_2="5070"/>
  <OutboundProxy SIP_OUTPROXY_ADDR_1="" SIP_OUTPROXY_ADDR_2=""/>
@@ -38,7 +38,7 @@
  <HoldSoundPath HOLD_SOUND_PATH_1="0" HOLD_SOUND_PATH_2="0"/>
  <SIPRequestURIPort SIP_REQURI_PORT_1="Y" SIP_REQURI_PORT_2="Y"/>
 <EventSubscribe>
- <Notifier SIP_PRSNC_ADDR_1="{domain_name}" SIP_PRSNC_ADDR_2=""/>
+ <Notifier SIP_PRSNC_ADDR_1="{$domain_name}" SIP_PRSNC_ADDR_2=""/>
  <NotifierPort SIP_PRSNC_PORT_1="5060" SIP_PRSNC_PORT_2="5060"/>
  <ExpireTime SIP_SUBS_EXPIRE_1="3600" SIP_SUBS_EXPIRE_2="3600"/>
  <X_P_IPTEL_SIPNotifier2 SIP_2NDPRSNC_ADDR_1="" SIP_2NDPRSNC_ADDR_2=""/>
@@ -61,14 +61,14 @@
  </Codec>
 <Line ID="1">
  <Enable LINE_ENABLE_1="Enabled"/>
- <DirectoryNumber PHONE_NUMBER_1="{v_line1_user_id}"/>
+ <DirectoryNumber PHONE_NUMBER_1="{$v_line1_user_id}"/>
 <SIP>
- <AuthUserName SIP_AUTHID_1="{v_line1_user_id}"/>
- <AuthPassword SIP_PASS_1="{v_line1_user_password}"/>
- <URI SIP_URI_1="{v_line1_user_id}"/>
+ <AuthUserName SIP_AUTHID_1="{$v_line1_user_id}"/>
+ <AuthPassword SIP_PASS_1="{$v_line1_user_password}"/>
+ <URI SIP_URI_1="{$v_line1_user_id}"/>
  </SIP>
 <CallingFeatures>
- <CallerIDName DISPLAY_NAME_1="{v_line1_displayname}"/>
+ <CallerIDName DISPLAY_NAME_1="{$v_line1_displayname}"/>
  <CallWaitingEnable CW_ENABLE_1="Y"/>
  </CallingFeatures>
 <CallFeat>
@@ -263,12 +263,12 @@
  <USER_DNS2_ADDR USER_DNS2_ADDR=""/>
  <X_P_IPTEL_DNSManualSettingEnable DHCP_DNS_ENABLE="N"/>
  <X_P_IPTEL_NetworkSettingEnable NW_SETTING_ENABLE="Y"/>
- <X_P_IPTEL_HostName HOST_NAME="{MODEL}"/>
+ <X_P_IPTEL_HostName HOST_NAME="{$MODEL}"/>
  </LAN>
 <X_P_IPTEL_HTTP>
  <Version HTTP_VER="1"/>
  <CustomWebPage CUSTOM_WEB_PAGE="0"/>
- <UserAgent HTTP_USER_AGENT="Panasonic_{MODEL}/{fwver} ({mac})"/>
+ <UserAgent HTTP_USER_AGENT="Panasonic_{$MODEL}/{$fwver} ({$mac})"/>
  <SSLVerify HTTP_SSL_VERIFY="0"/>
  <CertificateFileURL CFG_ROOT_CERTIFICATE_PATH=""/>
  </X_P_IPTEL_HTTP>
@@ -304,7 +304,7 @@
  <AutoPortOpenEnable HTTPD_PORTOPEN_AUTO="N"/>
  </X_P_IPTEL_HTTPD>
 <X_P_IPTEL_SIP>
- <UserAgent SIP_USER_AGENT="Panasonic_{MODEL}/{fwver} ({mac})"/>
+ <UserAgent SIP_USER_AGENT="Panasonic_{$MODEL}/{$fwver} ({$mac})"/>
 <ResCode>
  <Dnd SIP_RESPONSE_CODE_DND="403"/>
  <CallReject SIP_RESPONSE_CODE_CALL_REJECT="603"/>
@@ -321,7 +321,7 @@
  <ProvisionEnable PROVISION_ENABLE="Y"/>
  <Option66Enable OPTION66_ENABLE="Y"/>
  <Option66Reboot OPTION66_REBOOT="Y"/>
- <StandardFileURL CFG_STANDARD_FILE_PATH="tftp://{domain_name}{v_project_path}/{mac}.xml"/>
+ <StandardFileURL CFG_STANDARD_FILE_PATH="tftp://{$domain_name}{$v_project_path}/{$mac}.xml"/>
  <ProductFileURL CFG_PRODUCT_FILE_PATH=""/>
  <MasterFileURL CFG_MASTER_FILE_PATH=""/>
  <CyclicEnable CFG_CYCLIC="Y"/>
