@@ -361,7 +361,7 @@ require_once "resources/require.php";
 				$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
 			}
 			$time_zone_offset = $time_zone_offset_hours.":".$time_zone_offset_minutes;
-			$template -> assign("v_time_zone_offset" , $time_zone_offset);
+			$template -> assign("time_zone_offset" , $time_zone_offset);
 		}
 
 	//create a mac address with back slashes for backwards compatability
@@ -380,11 +380,11 @@ require_once "resources/require.php";
 		$result_count = count($result);
 		foreach($result as $row) {
 			$line_number = $row['device_line'];
-			$template ->assign( "v_line".$line_number."_server_address", $_SESSION['domain_name']);
-      $template ->assign( "v_line".$line_number."_displayname", $row["effective_caller_id_name"]);
-      $template ->assign( "v_line".$line_number."_shortname", $row["extension"]);
-      $template ->assign( "v_line".$line_number."_user_id", $row["extension"]);
-      $template ->assign( "v_line".$line_number."_user_password", $row["password"]);
+			$template ->assign( "server_address_".$line_number, $_SESSION['domain_name']);
+      $template ->assign( "display_name_".$line_number, $row["effective_caller_id_name"]);
+      $template ->assign( "shortname_".$line_number, $row["extension"]);
+      $template ->assign( "user_id_".$line_number, $row["extension"]);
+      $template ->assign( "user_password_".$line_number, $row["password"]);
 		}
 		unset ($prep_statement);
 
@@ -398,12 +398,12 @@ require_once "resources/require.php";
 		$result_count = count($result);
 		foreach($result as $row) {
 			$line_number = $row['line_number'];
-			$template ->assign( "v_line".$line_number."_server_address", $row["server_address"]);
-      $template ->assign( "v_line".$line_number."_outbound_proxy", $row["outbound_proxy"]);
-      $template ->assign( "v_line".$line_number."_displayname", $row["display_name"]);
-      $template ->assign( "v_line".$line_number."_auth_id", $row["auth_id"]);
-      $template ->assign( "v_line".$line_number."_user_id", $row["user_id"]);
-      $template ->assign( "v_line".$line_number."_user_password", $row["password"]);
+			$template ->assign( "server_address_".$line_number, $row["server_address"]);
+      $template ->assign( "outbound_proxy_".$line_number, $row["outbound_proxy"]);
+      $template ->assign( "display_name_".$line_number, $row["display_name"]);
+      $template ->assign( "auth_id_".$line_number, $row["auth_id"]);
+      $template ->assign( "user_id_".$line_number, $row["user_id"]);
+      $template ->assign( "user_password_".$line_number, $row["password"]);
 		}
 		unset ($prep_statement);
 
@@ -421,15 +421,15 @@ require_once "resources/require.php";
 		}
 
 	//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-		$template ->assign( "v_mac" , $mac);
-    $template ->assign( "v_label", $device_label);
-    $template ->assign( "v_firmware_version", $device_firmware_version);
-    $template ->assign( "domain_time_zone", $device_time_zone);
-    $template ->assign( "domain_name", $_SESSION['domain_name']);
-    $template ->assign( "v_project_path", PROJECT_PATH);
-    $template ->assign( "v_server1_address", $server1_address);
-    $template ->assign( "v_proxy1_address", $proxy1_address);
-    $template ->assign( "v_password",$password);
+		$template ->assign( "mac" , $mac);
+		$template ->assign( "label", $device_label);
+		$template ->assign( "firmware_version", $device_firmware_version);
+		$template ->assign( "domain_time_zone", $device_time_zone);
+		$template ->assign( "domain_name", $_SESSION['domain_name']);
+		$template ->assign( "project_path", PROJECT_PATH);
+		$template ->assign( "server1_address", $server1_address);
+		$template ->assign( "proxy1_address", $proxy1_address);
+		$template ->assign( "password",$password);
 
 	//cleanup any remaining variables ( no longer required as raintpl blanks non assigned variables )
   //		for ($i = 1; $i <= 100; $i++) {
@@ -445,7 +445,7 @@ require_once "resources/require.php";
 	//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings'
 		//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
 		foreach($_SESSION['provision'] as $key=>$value) {
-			$template ->assign("v_".$key, $value['var']);
+			$template ->assign($key, $value['var']);
 		}
       
      
