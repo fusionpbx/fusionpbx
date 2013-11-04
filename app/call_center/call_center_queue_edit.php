@@ -433,25 +433,25 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 
 	$select_options = "";
-	if ($ring_group_ringback == "\${us-ring}" || $ring_group_ringback == "us-ring") {
+	if ($queue_moh_sound == "\${us-ring}" || $queue_moh_sound == "us-ring") {
 		$select_options .= "		<option value='\${us-ring}' selected='selected'>".$text['option-usring']."</option>\n";
 	}
 	else {
 		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
 	}
-	if ($ring_group_ringback == "\${fr-ring}" || $ring_group_ringback == "fr-ring") {
+	if ($queue_moh_sound == "\${fr-ring}" || $queue_moh_sound == "fr-ring") {
 		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
 	}
 	else {
 		$select_options .= "		<option value='\${fr-ring}'>".$text['option-frring']."</option>\n";
 	}
-	if ($ring_group_ringback == "\${uk-ring}" || $ring_group_ringback == "uk-ring") {
+	if ($queue_moh_sound == "\${uk-ring}" || $queue_moh_sound == "uk-ring") {
 		$select_options .= "		<option value='\${uk-ring}' selected='selected'>".$text['option-ukring']."</option>\n";
 	}
 	else {
 		$select_options .= "		<option value='\${uk-ring}'>".$text['option-ukring']."</option>\n";
 	}
-	if ($ring_group_ringback == "\${rs-ring}" || $ring_group_ringback == "rs-ring") {
+	if ($queue_moh_sound == "\${rs-ring}" || $queue_moh_sound == "rs-ring") {
 		$select_options .= "		<option value='\${rs-ring}' selected='selected'>".$text['option-rsring']."</option>\n";
 	}
 	else {
