@@ -60,7 +60,6 @@ require_once "resources/paging.php";
 					header("Content-Type: application/octet-stream");
 					header("Content-Type: application/download");
 					header("Content-Description: File Transfer");
-					header('Content-Disposition: attachment; filename="'.base64_decode($_GET['filename']).'"');
 				}
 				else {
 					$file_ext = substr(base64_decode($_GET['filename']), -3);
@@ -71,6 +70,7 @@ require_once "resources/paging.php";
 						header("Content-Type: audio/mp3");
 					}
 				}
+				header('Content-Disposition: attachment; filename="'.base64_decode($_GET['filename']).'"');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 				header("Content-Length: " . filesize($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename'])));
