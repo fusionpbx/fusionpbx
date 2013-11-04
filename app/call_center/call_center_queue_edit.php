@@ -432,10 +432,36 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
+	$select_options = "";
+	if ($ring_group_ringback == "\${us-ring}" || $ring_group_ringback == "us-ring") {
+		$select_options .= "		<option value='\${us-ring}' selected='selected'>".$text['option-usring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
+	}
+	if ($ring_group_ringback == "\${fr-ring}" || $ring_group_ringback == "fr-ring") {
+		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${fr-ring}'>".$text['option-frring']."</option>\n";
+	}
+	if ($ring_group_ringback == "\${uk-ring}" || $ring_group_ringback == "uk-ring") {
+		$select_options .= "		<option value='\${uk-ring}' selected='selected'>".$text['option-ukring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${uk-ring}'>".$text['option-ukring']."</option>\n";
+	}
+	if ($ring_group_ringback == "\${rs-ring}" || $ring_group_ringback == "rs-ring") {
+		$select_options .= "		<option value='\${rs-ring}' selected='selected'>".$text['option-rsring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
+	}
 	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 	$moh= new switch_music_on_hold;
 	$moh->select_name = "queue_moh_sound";
 	$moh->select_value = $queue_moh_sound;
+	$moh->select_options = $select_options;
 	echo $moh->select();
 
 	echo "<br />\n";

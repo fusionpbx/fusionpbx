@@ -113,6 +113,22 @@
 	$text['label-music_on_hold']['pt-pt'] = "Música em Espera";
 	$text['label-music_on_hold']['fr-fr'] = "Mise de Garde";
 
+	$text['option-usring']['en-us'] = "us-ring";
+	$text['option-usring']['pt-pt'] = "us-ring";
+	$text['option-usring']['fr-fr'] = "us-ring";
+
+	$text['option-frring']['en-us'] = "fr-ring";
+	$text['option-frring']['pt-pt'] = "fr-ring";
+	$text['option-frring']['fr-fr'] = "fr-ring";
+
+	$text['option-ukring']['en-us'] = "uk-ring";
+	$text['option-ukring']['pt-pt'] = "uk-ring";
+	$text['option-ukring']['fr-fr'] = "uk-ring";
+
+	$text['option-rsring']['en-us'] = "rs-ring";
+	$text['option-rsring']['pt-pt'] = "rs-ring";
+	$text['option-rsring']['fr-fr'] = "rs-ring";
+
 	$text['label-record_template']['en-us'] = "Record Template";
 	$text['label-record_template']['pt-pt'] = "Gravar Template";
 	$text['label-record_template']['fr-fr'] = "Modèle d'enregistrement";
