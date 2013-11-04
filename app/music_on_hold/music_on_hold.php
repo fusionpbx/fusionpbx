@@ -71,7 +71,6 @@ if ($_GET['a'] == "download") {
 				header("Content-Type: application/octet-stream");
 				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
-				header('Content-Disposition: attachment; file_name="'.base64_decode($_GET['file_name']).'"');
 			}
 			else {
 				$file_ext = substr(base64_decode($_GET['file_name']), -3);
@@ -82,6 +81,7 @@ if ($_GET['a'] == "download") {
 					header("Content-Type: audio/mp3");
 				}
 			}
+			header('Content-Disposition: attachment; filename="'.base64_decode($_GET['file_name']).'"');
 			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 			header("Content-Length: " . filesize($music_on_hold_dir."/".$path_mod.$sampling_rate_dir."/".base64_decode($_GET['file_name'])));
