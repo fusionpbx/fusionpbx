@@ -1,0 +1,21 @@
+image_version: {$firmware_version}
+
+sntp_server: {$ntp_server}
+sntp_mode: unicast
+time_zone: CST
+time_format_24hr: 0
+
+preferred_codec: g729
+messages_uri: *97
+phone_password: {$device_password}
+
+dst_offset: 1
+dst_start_month: March
+dst_start_day_of_week: Sun
+dst_start_week_of_month: 2
+dst_start_time: 02
+dst_stop_month: Nov
+dst_stop_day_of_week: Sunday
+dst_stop_week_of_month: 1
+dst_stop_time: 2
+dst_auto_adjust: 1
