@@ -1,4 +1,4 @@
-F<flat-profile>
+<flat-profile>
 <Syslog_Server group="System/Optional_Network_Configuration"/>
 <Debug_Server group="System/Optional_Network_Configuration"/>
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
