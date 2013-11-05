@@ -326,13 +326,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						//<action application="system" data="$switch_scripts_dir/emailfax.sh USER DOMAIN {$_SESSION['switch']['scripts']['dir']}/fax/inbox/9872/${last_fax}.tif"/>
 							$dialplan_detail_tag = 'action'; //condition, action, antiaction
 							$dialplan_detail_type = 'set';
-							$dialplan_detail_data = "api_hangup_hook=system \"".PHP_BINDIR."/".$php_bin."\" \"".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php\" ";
+							$dialplan_detail_data = "api_hangup_hook=system '".PHP_BINDIR."/".$php_bin."' '".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php' ";
 							$dialplan_detail_data .= "email=".$fax_email." ";
 							$dialplan_detail_data .= "extension=".$fax_extension." ";
 							$dialplan_detail_data .= "name=".$fax_prefix."\\\\\\\${last_fax} ";
-							$dialplan_detail_data .= "messages=\"result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}\" ";
+							$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
 							$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
-							$dialplan_detail_data .= "caller_id_name=\"\\\\\\\${caller_id_name}\" ";
+							$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
 							$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
 							$dialplan_detail_data .= "fax_relay=true ";
 
@@ -436,13 +436,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					//update dialplan detail action
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = "api_hangup_hook=system \"".PHP_BINDIR."/".$php_bin."\" \"".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php\" ";
+						$dialplan_detail_data = "api_hangup_hook=system '".PHP_BINDIR."/".$php_bin."' '".$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/secure/fax_to_email.php' ";
 						$dialplan_detail_data .= "email=".$fax_email." ";
 						$dialplan_detail_data .= "extension=".$fax_extension." ";
 						$dialplan_detail_data .= "name=".$fax_prefix."\\\\\\\${last_fax} ";
-						$dialplan_detail_data .= "messages=\"result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}\" ";
+						$dialplan_detail_data .= "messages='result: \\\\\\\${fax_result_text} sender:\\\\\\\${fax_remote_station_id} pages:\\\\\\\${fax_document_total_pages}' ";
 						$dialplan_detail_data .= "domain=".$_SESSION['domain_name']." ";
-						$dialplan_detail_data .= "caller_id_name=\"\\\\\\\${caller_id_name}\" ";
+						$dialplan_detail_data .= "caller_id_name='\\\\\\\${caller_id_name}' ";
 						$dialplan_detail_data .= "caller_id_number=\\\\\\\${caller_id_number} ";
 						$dialplan_detail_data .= "fax_relay=true ";
 						$sql = "update v_dialplan_details set ";
