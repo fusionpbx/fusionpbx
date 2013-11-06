@@ -103,8 +103,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "destination_uuid, ";
 				$sql .= "destination_type, ";
 				$sql .= "destination_number, ";
-				$sql .= "destination_caller_id_name, ";
-				$sql .= "destination_caller_id_number, ";
+				if (permission_exists('outbound_caller_id_select')) {
+					$sql .= "destination_caller_id_name, ";
+					$sql .= "destination_caller_id_number, ";
+				}
 				$sql .= "destination_context, ";
 				if (strlen($fax_uuid) > 0) {
 					$sql .= "fax_uuid, ";
@@ -121,8 +123,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'".uuid()."', ";
 				$sql .= "'$destination_type', ";
 				$sql .= "'$destination_number', ";
-				$sql .= "'$destination_caller_id_name', ";
-				$sql .= "'$destination_caller_id_number', ";
+				if (permission_exists('outbound_caller_id_select')) {
+					$sql .= "'$destination_caller_id_name', ";
+					$sql .= "'$destination_caller_id_number', ";
+				}
 				$sql .= "'$destination_context', ";
 				if (strlen($fax_uuid) > 0) {
 					$sql .= "'$fax_uuid', ";
@@ -149,8 +153,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				$sql .= "destination_type = '$destination_type', ";
 				$sql .= "destination_number = '$destination_number', ";
-				$sql .= "destination_caller_id_name = '$destination_caller_id_name', ";
-				$sql .= "destination_caller_id_number = '$destination_caller_id_number', ";
+				if (permission_exists('outbound_caller_id_select')) {
+					$sql .= "destination_caller_id_name = '$destination_caller_id_name', ";
+					$sql .= "destination_caller_id_number = '$destination_caller_id_number', ";
+				}
 				$sql .= "destination_context = '$destination_context', ";
 				if (strlen($fax_uuid) > 0) {
 					$sql .= "fax_uuid = '$fax_uuid', ";
@@ -267,27 +273,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_caller_id_name'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_caller_id_name' maxlength='255' value=\"$destination_caller_id_name\">\n";
-	echo "<br />\n";
-	echo $text['description-destination_caller_id_name']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('outbound_caller_id_select')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_caller_id_name'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_caller_id_name' maxlength='255' value=\"$destination_caller_id_name\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_caller_id_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_caller_id_number'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='destination_caller_id_number' maxlength='255' value=\"$destination_caller_id_number\">\n";
-	echo "<br />\n";
-	echo $text['description-destination_caller_id_number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-destination_caller_id_number'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_caller_id_number' maxlength='255' value=\"$destination_caller_id_number\">\n";
+		echo "<br />\n";
+		echo $text['description-destination_caller_id_number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
