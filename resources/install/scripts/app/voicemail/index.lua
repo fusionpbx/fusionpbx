@@ -264,12 +264,35 @@
 						end
 						dbh:query(sql);
 					end
+				
+				--get saved and new message counts
+					sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
+						WHERE domain_uuid = ']] .. domain_uuid ..[['
+						AND voicemail_uuid = ']] .. voicemail_uuid ..[['
+						AND (message_status is null or message_status = '') ]];
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+					status = dbh:query(sql, function(row)
+						new_messages = row["new_messages"];
+					end);
+					sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
+						WHERE domain_uuid = ']] .. domain_uuid ..[['
+						AND voicemail_uuid = ']] .. voicemail_uuid ..[['
+						AND message_status = 'saved' ]];
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+					status = dbh:query(sql, function(row)
+						saved_messages = row["saved_messages"];
+					end);
 
 				--set the message waiting event
 					if (message_length > 2) then
 						local event = freeswitch.Event("message_waiting");
 						event:addHeader("MWI-Messages-Waiting", "yes");
 						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+						event:addHeader("MWI-Voice-Message", new_messages.."/"..saved_messages.." (0/0)");
 						event:fire();
 					end
 
