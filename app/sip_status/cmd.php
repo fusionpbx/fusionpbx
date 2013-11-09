@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2013
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -34,14 +34,21 @@ else {
 	exit;
 }
 
-$cmd = $_GET['cmd'];
-$rdr = $_GET['rdr'];
+//set the variables
+	$cmd = check_str($_GET['cmd']);
+	$rdr = check_str($_GET['rdr']);
 
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
 		//if reloadxml then run reloadacl, reloadxml and rescan the external profile for new gateways
 			if ($cmd == "api reloadxml") {
+				//reloadxml
+					if ($cmd == "api reloadxml") {
+						$response = event_socket_request($fp, $cmd);
+						unset($cmd);
+					}
+
 				//clear the apply settings reminder
 					$_SESSION["reload_xml"] = false;
 
@@ -51,18 +58,29 @@ $rdr = $_GET['rdr'];
 					unset($tmp_cmd);
 			}
 
-		//run the requested command
-			$response = event_socket_request($fp, $cmd);
+		//memcache flush
+			if ($cmd == "api memcache flush") {
+				$response = event_socket_request($fp, $cmd);
+				unset($cmd);
+			}
+
+		//reloadacl
+			if ($cmd == "api reloadacl") {
+				$response = event_socket_request($fp, $cmd);
+				unset($cmd);
+			}
 
 		//close the connection
 			fclose($fp);
 	}
 
-if ($rdr == "false") {
-	//redirect false
-	echo $response;
-}
-else {
-	header("Location: sip_status.php?savemsg=".urlencode($response));
-}
+//redirect the user
+	if ($rdr == "false") {
+		//redirect false
+		echo $response;
+	}
+	else {
+		header("Location: sip_status.php?savemsg=".urlencode($response));
+	}
+
 ?>
