@@ -42,6 +42,7 @@ else {
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
+
 //define variables
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -108,6 +109,7 @@ if (strlen($msg) > 0) {
 		echo "  <b>".$text['title-sofia-status']."</b> \n";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
+		echo "  <input type='button' class='btn' value='Memcache Flush' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
 		echo "  <input type='button' class='btn' value='Reload ACL' onclick=\"document.location.href='cmd.php?cmd=api+reloadacl';\" />\n";
 		echo "  <input type='button' class='btn' value='Reload XML' onclick=\"document.location.href='cmd.php?cmd=api+reloadxml';\" />\n";
 		echo "</td>\n";
