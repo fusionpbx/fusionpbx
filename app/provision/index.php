@@ -23,13 +23,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-include "resources/raintpl/rain.tpl.class.php";
 require_once "resources/require.php";
+include "resources/classes/template.php";
 
-// setup raintpl
-  raintpl::configure('tpl_ext','');
-  raintpl::configure('tmp_dir',$_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/tmp/");
-  
 //set default variables
 	$dir_count = 0;
 	$file_count = 0;
@@ -336,12 +332,12 @@ require_once "resources/require.php";
 		//$proxy1_address= "10.2.0.2";
 		//$proxy2_address= "";
 		//$proxy3_address= "";
-
-//set the location of the template
-  raintpl::configure( "tpl_dir",  $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template."/");
   
-//start raintpl instance
-  $template = new raintpl();
+//initialize a template object
+	$view = new template();
+	$view->engine = "smarty";
+	$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template."/";
+	$view->cache_dir = $_SESSION['server']['temp']['dir'];
 
 //replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 
@@ -361,7 +357,7 @@ require_once "resources/require.php";
 				$time_zone_offset_hours = "-".number_pad($time_zone_offset_hours, 2);
 			}
 			$time_zone_offset = $time_zone_offset_hours.":".$time_zone_offset_minutes;
-			$template -> assign("time_zone_offset" , $time_zone_offset);
+			$view->assign("time_zone_offset" , $time_zone_offset);
 		}
 
 	//create a mac address with back slashes for backwards compatability
@@ -380,11 +376,11 @@ require_once "resources/require.php";
 		$result_count = count($result);
 		foreach($result as $row) {
 			$line_number = $row['device_line'];
-			$template ->assign( "server_address_".$line_number, $_SESSION['domain_name']);
-      $template ->assign( "display_name_".$line_number, $row["effective_caller_id_name"]);
-      $template ->assign( "shortname_".$line_number, $row["extension"]);
-      $template ->assign( "user_id_".$line_number, $row["extension"]);
-      $template ->assign( "user_password_".$line_number, $row["password"]);
+			$view->assign("server_address_".$line_number, $_SESSION['domain_name']);
+			$view->assign("display_name_".$line_number, $row["effective_caller_id_name"]);
+			$view->assign("shortname_".$line_number, $row["extension"]);
+			$view->assign("user_id_".$line_number, $row["extension"]);
+			$view->assign("user_password_".$line_number, $row["password"]);
 		}
 		unset ($prep_statement);
 
@@ -398,12 +394,12 @@ require_once "resources/require.php";
 		$result_count = count($result);
 		foreach($result as $row) {
 			$line_number = $row['line_number'];
-			$template ->assign( "server_address_".$line_number, $row["server_address"]);
-      $template ->assign( "outbound_proxy_".$line_number, $row["outbound_proxy"]);
-      $template ->assign( "display_name_".$line_number, $row["display_name"]);
-      $template ->assign( "auth_id_".$line_number, $row["auth_id"]);
-      $template ->assign( "user_id_".$line_number, $row["user_id"]);
-      $template ->assign( "user_password_".$line_number, $row["password"]);
+			$view->assign("server_address_".$line_number, $row["server_address"]);
+			$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy"]);
+			$view->assign("display_name_".$line_number, $row["display_name"]);
+			$view->assign("auth_id_".$line_number, $row["auth_id"]);
+			$view->assign("user_id_".$line_number, $row["user_id"]);
+			$view->assign("user_password_".$line_number, $row["password"]);
 		}
 		unset ($prep_statement);
 
@@ -421,15 +417,15 @@ require_once "resources/require.php";
 		}
 
 	//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-		$template ->assign( "mac" , $mac);
-		$template ->assign( "label", $device_label);
-		$template ->assign( "firmware_version", $device_firmware_version);
-		$template ->assign( "domain_time_zone", $device_time_zone);
-		$template ->assign( "domain_name", $_SESSION['domain_name']);
-		$template ->assign( "project_path", PROJECT_PATH);
-		$template ->assign( "server1_address", $server1_address);
-		$template ->assign( "proxy1_address", $proxy1_address);
-		$template ->assign( "password",$password);
+		$view->assign( "mac" , $mac);
+		$view->assign( "label", $device_label);
+		$view->assign( "firmware_version", $device_firmware_version);
+		$view->assign( "domain_time_zone", $device_time_zone);
+		$view->assign( "domain_name", $_SESSION['domain_name']);
+		$view->assign( "project_path", PROJECT_PATH);
+		$view->assign( "server1_address", $server1_address);
+		$view->assign( "proxy1_address", $proxy1_address);
+		$view->assign( "password",$password);
 
 	//cleanup any remaining variables ( no longer required as raintpl blanks non assigned variables )
   //		for ($i = 1; $i <= 100; $i++) {
@@ -442,15 +438,14 @@ require_once "resources/require.php";
   //  	$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
   //  }
 
-	//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings'
-		//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
-		foreach($_SESSION['provision'] as $key=>$value) {
-			$template ->assign($key, $value['var']);
-		}
-      
-     
-//output raintpl template to string for headder processing
-  $file_contents = $template -> draw( $file, $return_string=true );
+//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings'
+	//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
+	foreach($_SESSION['provision'] as $key=>$value) {
+		$view->assign($key, $value['var']);
+	}
+
+//output template to string for headder processing
+	$file_contents = $view->render($file);
 
 //deliver the customized config over HTTP/HTTPS
 	//need to make sure content-type is correct
@@ -467,7 +462,7 @@ require_once "resources/require.php";
 		header("Content-Length: ".strlen($file_contents));
 	} else {
 		header("Content-Type: text/xml; charset=utf-8");
-	  header("Content-Length: ".strlen($file_contents));
+		  header("Content-Length: ".strlen($file_contents));
 	}
 	echo $file_contents;
 
