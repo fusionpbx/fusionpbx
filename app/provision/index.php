@@ -335,10 +335,10 @@ include "resources/classes/template.php";
   
 //initialize a template object
 	$view = new template();
-	$view->engine = "smarty";
+	$view->engine = "twig";
 	$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template."/";
 	$view->cache_dir = $_SESSION['server']['temp']['dir'];
-
+	$view->init();
 //replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 
 	//get the time zone
@@ -462,7 +462,7 @@ include "resources/classes/template.php";
 		header("Content-Length: ".strlen($file_contents));
 	} else {
 		header("Content-Type: text/xml; charset=utf-8");
-		  header("Content-Length: ".strlen($file_contents));
+		header("Content-Length: ".strlen($file_contents));
 	}
 	echo $file_contents;
 
