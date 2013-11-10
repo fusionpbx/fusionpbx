@@ -285,14 +285,14 @@ include "resources/classes/template.php";
 
 //if $file is not provided then look for a default file that exists
 	if (strlen($file) == 0) { 
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{v_mac}")) {
-			$file = "{v_mac}";
+		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{\$mac}")) {
+			$file = "{\$mac}";
 		}
-		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{v_mac}.xml")) {
-			$file = "{v_mac}.xml";
+		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{\$mac}.xml")) {
+			$file = "{\$mac}.xml";
 		}
-		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{v_mac}.cfg")) {
-			$file = "{v_mac}.cfg";
+		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{\$mac}.cfg")) {
+			$file = "{\$mac}.cfg";
 		}
 		else {
 			echo "file not found";
