@@ -30,31 +30,39 @@ include "root.php";
 		class template {
 
 			public $engine;
-			public $name;
 			public $template_dir;
 			public $cache_dir;
 			private $object;
-			private $x = 0;
-
-			public function __construct() {
+			private $var_array;
+			
+			public function __construct(){
+			}
+			
+			public function init() {
 				if ($this->engine === 'smarty') {
 					include "resources/templates/engine/smarty/Smarty.class.php";
 					$this->object = new Smarty();
-					$this->object->setTemplateDir($template_dir);
-					$this->object->setCompileDir($compile_dir);
-					$this->object->setCacheDir($cache_dir);
+					$this->object->setTemplateDir($this->template_dir);
+					$this->object->setCompileDir($this->cache_dir);
+					$this->object->setCacheDir($this->cache_dir);
 				}
 				if ($this->engine === 'raintpl') {
 					include "resources/templates/engine/raintpl/rain.tpl.class.php";
 					$this->object = new RainTPL();
-					raintpl::configure( 'tpl_dir', $this->template_dir);
-					raintpl::configure( 'cache_dir', $this->cache_dir);
+					RainTPL::configure( 'tpl_dir', $this->template_dir);
+					RainTPL::configure( 'cache_dir', $this->cache_dir);
 				}
 				if ($this->engine === 'twig') {
 					require_once "resources/templates/engine/twig/Autoloader.php";
 					Twig_Autoloader::register();
-					$loader = new Twig_Loader_Filesystem($template_dir);
+					$loader = new Twig_Loader_Filesystem($this->template_dir);
 					$this->object = new Twig_Environment($loader);
+					$lexer = new Twig_Lexer($this->object, array(
+							'tag_comment'  => array('{*', '*}'),
+							'tag_block'    => array('{', '}'),
+							'tag_variable' => array('{$', '}'),
+					));
+					$this->object->setLexer($lexer);
 				}
 			}
 
@@ -72,20 +80,19 @@ include "root.php";
 					$this->object->assign($key, $value);
 				}
 				if ($this->engine === 'twig') {
-					$this->var_array[$this->x][$key] = $value; 
-					$this->x++;
+					$this->var_array[$key] = $value; 
 				}
 			}
 
-			public function render() {
+			public function render($name) {
 				if ($this->engine === 'smarty') {
-					return $this->object->fetch($this->name);
+					return $this->object->fetch($name);
 				}
 				if ($this->engine === 'raintpl') {
-					return $this->object-> draw($this->name, 'return_string=true');
+					return $this->object-> draw($name, 'return_string=true');
 				}
 				if ($this->engine === 'twig') {
-					return $twig->render($this->name,$this->var_array);
+					return $this->object->render($name,$this->var_array);
 				}
 			}
 		}
