@@ -28,7 +28,7 @@ include "root.php";
 //define the template class
 	if (!class_exists('template')) {
 		class template {
-			//variables
+
 			public $engine;
 			public $name;
 			public $template_dir;
@@ -38,20 +38,20 @@ include "root.php";
 
 			public function __construct() {
 				if ($this->engine === 'smarty') {
-					include "resources/smarty/Smarty.class.php";
+					include "resources/templates/engine/smarty/Smarty.class.php";
 					$this->object = new Smarty();
 					$this->object->setTemplateDir($template_dir);
 					$this->object->setCompileDir($compile_dir);
 					$this->object->setCacheDir($cache_dir);
 				}
 				if ($this->engine === 'raintpl') {
-					include "resources/raintpl/rain.tpl.class.php";
+					include "resources/templates/engine/raintpl/rain.tpl.class.php";
 					$this->object = new RainTPL();
 					raintpl::configure( 'tpl_dir', $this->template_dir);
 					raintpl::configure( 'cache_dir', $this->cache_dir);
 				}
 				if ($this->engine === 'twig') {
-					require_once "resources/twig/Autoloader.php";
+					require_once "resources/templates/engine/twig/Autoloader.php";
 					Twig_Autoloader::register();
 					$loader = new Twig_Loader_Filesystem($template_dir);
 					$this->object = new Twig_Environment($loader);
@@ -88,6 +88,7 @@ include "root.php";
 					return $twig->render($this->name,$this->var_array);
 				}
 			}
-
 		}
 	}
+
+?>
