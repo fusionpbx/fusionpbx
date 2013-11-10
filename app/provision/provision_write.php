@@ -197,7 +197,7 @@ else {
 
 						//prepare the files
 							//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-								$file_contents = str_replace("{v_mac}", $device_mac_address, $file_contents);
+								$file_contents = str_replace("{\$mac}", $device_mac_address, $file_contents);
 								$file_contents = str_replace("{v_label}", $device_label, $file_contents);
 								$file_contents = str_replace("{v_firmware_version}", $device_firmware_version, $file_contents);
 								$file_contents = str_replace("{domain_time_zone}", $device_time_zone, $file_contents);
@@ -208,7 +208,7 @@ else {
 						//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings';
 							//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
 							foreach($_SESSION['provision'] as $key=>$value) {
-								$file_contents = str_replace('{v_'.$key.'}', $value['var'], $file_contents);
+								$file_contents = str_replace('{$'.$key.'}', $value['var'], $file_contents);
 							}
 
 						//create a mac address with back slashes for backwards compatability
@@ -263,14 +263,14 @@ else {
 								$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
 							}
 
-						//replace {v_mac} in the file name
+						//replace {$mac} in the file name
 							if ($device_vendor == "aastra" || $device_vendor == "cisco") {
 								//upper case the mac address for aastra phones
-								$file_name = str_replace("{v_mac}", strtoupper($device_mac_address), $file_name);
+								$file_name = str_replace("{\$mac}", strtoupper($device_mac_address), $file_name);
 							}
 							else {
 								//all other phones
-								$file_name = str_replace("{v_mac}", $device_mac_address, $file_name);
+								$file_name = str_replace("{\$mac}", $device_mac_address, $file_name);
 							}
 
 						//write the configuration to the directory
