@@ -312,6 +312,9 @@ class RainTPL{
 
 		// fix the php-eating-newline-after-closing-tag-problem
 		$template_compiled = str_replace( "?>\n", "?>\n\n", $template_compiled );
+		
+		// fix the php-eating-carridge-returns-after-closing-tag-problem
+		$template_compiled = str_replace( "?>\r", "?>\r\r", $template_compiled );
 
 		// create directories
 		if( !is_dir( $cache_dir ) )
