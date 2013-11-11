@@ -34,10 +34,10 @@ include "root.php";
 			public $cache_dir;
 			private $object;
 			private $var_array;
-			
+
 			public function __construct(){
 			}
-			
+
 			public function init() {
 				if ($this->engine === 'smarty') {
 					include "resources/templates/engine/smarty/Smarty.class.php";
@@ -49,8 +49,8 @@ include "root.php";
 				if ($this->engine === 'raintpl') {
 					include "resources/templates/engine/raintpl/rain.tpl.class.php";
 					$this->object = new RainTPL();
-					RainTPL::configure( 'tpl_dir', $this->template_dir);
-					RainTPL::configure( 'cache_dir', $this->cache_dir);
+					RainTPL::configure('tpl_dir', realpath($this->template_dir)."/");
+					RainTPL::configure('cache_dir', realpath($this->cache_dir)."/");
 				}
 				if ($this->engine === 'twig') {
 					require_once "resources/templates/engine/twig/Autoloader.php";
@@ -58,9 +58,9 @@ include "root.php";
 					$loader = new Twig_Loader_Filesystem($this->template_dir);
 					$this->object = new Twig_Environment($loader);
 					$lexer = new Twig_Lexer($this->object, array(
-							'tag_comment'  => array('{*', '*}'),
-							'tag_block'    => array('{', '}'),
-							'tag_variable' => array('{$', '}'),
+						'tag_comment'  => array('{*', '*}'),
+						'tag_block'    => array('{', '}'),
+						'tag_variable' => array('{$', '}'),
 					));
 					$this->object->setLexer($lexer);
 				}
