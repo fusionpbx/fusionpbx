@@ -332,13 +332,19 @@ include "resources/classes/template.php";
 		//$proxy1_address= "10.2.0.2";
 		//$proxy2_address= "";
 		//$proxy3_address= "";
-  
+
 //initialize a template object
 	$view = new template();
-	$view->engine = "twig";
+	if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
+		$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
+	}
+	else {
+		$view->engine = "smarty";
+	}
 	$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template."/";
 	$view->cache_dir = $_SESSION['server']['temp']['dir'];
 	$view->init();
+
 //replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
 
 	//get the time zone
