@@ -44,6 +44,8 @@
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/message-count.lua");
 	elseif (action == "group_call") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/group_call.lua");
+	elseif (action == "reverse-auth-lookup") then
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/reverse-auth-lookup.lua");
 	elseif (params:getHeader("Event-Calling-Function") == "switch_xml_locate_domain") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/directory/action/domains.lua");
 	else
