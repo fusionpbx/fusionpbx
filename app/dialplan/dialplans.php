@@ -193,6 +193,7 @@ else {
 	echo "<tr>\n";
 	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order);
+	echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order);
 	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order);
 	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order);
@@ -256,6 +257,7 @@ else {
 			echo "<tr >\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_name']."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_number']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_context']."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_order']."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_enabled']."</td>\n";
 			echo "   <td valign='top' class='row_stylebg' width='30%'>".$row['dialplan_description']."&nbsp;</td>\n";
