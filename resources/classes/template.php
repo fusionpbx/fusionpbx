@@ -53,7 +53,7 @@ include "root.php";
 					RainTPL::configure('cache_dir', realpath($this->cache_dir)."/");
 				}
 				if ($this->engine === 'twig') {
-					require_once "resources/templates/engine/twig/Autoloader.php";
+					require_once "resources/templates/engine/Twig/Autoloader.php";
 					Twig_Autoloader::register();
 					$loader = new Twig_Loader_Filesystem($this->template_dir);
 					$this->object = new Twig_Environment($loader);
