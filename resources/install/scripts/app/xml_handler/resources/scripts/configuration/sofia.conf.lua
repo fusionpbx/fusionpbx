@@ -25,8 +25,9 @@
 --	POSSIBILITY OF SUCH DAMAGE.
 
 --get the cache
+	hostname = trim(api:execute("switchname", ""));
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		XML_STRING = trim(api:execute("memcache", "get configuration:sofia.conf"));
+		XML_STRING = trim(api:execute("memcache", "get configuration:sofia.conf:" .. hostname));
 	else
 		XML_STRING = "-ERR NOT FOUND";
 	end
@@ -58,8 +59,9 @@
 		--run the query
 			sql = "select p.sip_profile_name, p.sip_profile_description, s.sip_profile_setting_name, s.sip_profile_setting_value ";
 			sql = sql .. "from v_sip_profiles as p, v_sip_profile_settings as s ";
-			sql = sql .. "where p.sip_profile_uuid = s.sip_profile_uuid ";
-			sql = sql .. "and s.sip_profile_setting_enabled = 'true' ";
+			sql = sql .. "where s.sip_profile_setting_enabled = 'true' ";
+			sql = sql .. "and p.sip_profile_hostname = '" .. hostname.. "' ";
+			sql = sql .. "and p.sip_profile_uuid = s.sip_profile_uuid ";
 			sql = sql .. "order by p.sip_profile_name asc ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
@@ -92,7 +94,7 @@
 								sql = sql .. "and g.domain_uuid = d.domain_uuid ";
 							else
 								sql = "select * from v_gateways ";
-								sql = sql .. "where profile = '"..sip_profile_name.."' and enabled = 'true' ";
+								sql = sql .. "where enabled = 'true' and profile = '"..sip_profile_name.."' ";
 							end
 							if (debug["sql"]) then
 								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
@@ -241,7 +243,7 @@
 			end
 
 		--set the cache
-			result = trim(api:execute("memcache", "set configuration:sofia.conf '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia.conf"]));
+			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .."'"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia.conf"]));
 
 		--send the xml to the console
 			if (debug["xml_string"]) then
