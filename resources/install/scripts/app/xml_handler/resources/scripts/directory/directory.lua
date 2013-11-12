@@ -79,6 +79,32 @@
 				continue = false;
 			end
 
+		--if load balancing is set to true then get the hostname
+			if (load_balancing) then
+				--get the hostname
+					local_hostname = trim(api:execute("hostname", ""));
+
+				--add the file_exists function
+					dofile(scripts_dir.."/resources/functions/file_exists.lua");
+
+				--connect to the switch database
+					if (file_exists(database_dir.."/core.db")) then
+						--dbh_switch = freeswitch.Dbh("core:core"); -- when using sqlite
+						dbh_switch = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+					else
+						dofile(scripts_dir.."/resources/functions/database_handle.lua");
+						dbh_switch = database_handle('switch');
+					end
+
+				--get the hostname from the registration
+					sql = "SELECT hostname FROM registrations ";
+					sql = sql .. "WHERE reg_user = '"..user.."' ";
+					sql = sql .. "AND realm = '"..domain_name.."'";
+					status = dbh_switch:query(sql, function(row)
+						database_hostname = row["hostname"];
+					end);
+			end
+
 		--get the extension from the database
 			if (continue) then
 				sql = "SELECT * FROM v_extensions WHERE domain_uuid = '" .. domain_uuid .. "' and (extension = '" .. user .. "' or number_alias = '" .. user .. "') and enabled = 'true' ";
@@ -147,7 +173,16 @@
 						if (string.len(row.dial_string) > 0) then
 							dial_string = row.dial_string;
 						else
-							dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+							--set a default dial string
+								dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+							--set the an alternative dial string if the hostnames don't match
+								if (load_balancing) then
+									if (local_hostname ~= database_hostname) then
+										--sofia/internal/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name};fs_path=sip:server
+										user_id = trim(api:execute("user_data", user .."@" .. domain_name .. " attr id"));
+										dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:server";
+									end
+								end
 						end
 				end);
 			end
