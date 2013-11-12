@@ -28,6 +28,7 @@
 	expire["directory"] = "3600";
 	expire["dialplan"] = "300";
 	expire["sofia.conf"] = "3600";
+	load_balancing = false;
 
 --set the debug options
 	debug["params"] = false;
