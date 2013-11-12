@@ -58,8 +58,12 @@ require_once "resources/paging.php";
 
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' width='50%' nowrap='nowrap'><b>".$text['header-sip_profiles']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<td align='left' width='33%' nowrap='nowrap'><b>".$text['header-sip_profiles']."</b></td>\n";
+	echo "		<td width='33%' align='right'>&nbsp;</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align='left' width='33%' nowrap='nowrap'><b>".$text['header-hostname']."</b></td>\n";
+	echo "		<td width='33%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -109,6 +113,7 @@ require_once "resources/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('sip_profile_name', $text['label-name'], $order_by, $order);
+	echo "<th align='left' >".$text['label-hostname']."</th>\n";
 	echo "<th align='left' width='60%'>".$text['label-description']."</th>\n";
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('sip_profile_add')) {
@@ -121,6 +126,7 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_hostname']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['sip_profile_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('sip_profile_edit')) {
@@ -140,9 +146,10 @@ require_once "resources/paging.php";
 	echo "<td colspan='3' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td width='25%' nowrap>&nbsp;</td>\n";
+	echo "		<td width='25%' nowrap>&nbsp;</td>\n";
+	echo "		<td width='25%' align='center' nowrap>$paging_controls</td>\n";
+	echo "		<td width='25%' align='right'>\n";
 	if (permission_exists('sip_profile_add')) {
 		echo "			<a href='sip_profile_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 	}

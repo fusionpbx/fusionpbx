@@ -53,6 +53,7 @@ else {
 	if (count($_POST)>0) {
 		$sip_profile_name = check_str($_POST["sip_profile_name"]);
 		$sip_profile_description = check_str($_POST["sip_profile_description"]);
+		$sip_profile_hostname = check_str($_POST["sip_profile_hostname"]);
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -86,12 +87,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "(";
 					$sql .= "sip_profile_uuid, ";
 					$sql .= "sip_profile_name, ";
+					$sql .= "sip_profile_hostname, ";
 					$sql .= "sip_profile_description ";
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'$sip_profile_name', ";
+					$sql .= "'$sip_profile_hostname', ";
 					$sql .= "'$sip_profile_description' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -102,6 +105,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "update") {
 					$sql = "update v_sip_profiles set ";
 					$sql .= "sip_profile_name = '$sip_profile_name', ";
+					$sql .= "sip_profile_hostname = '$sip_profile_hostname', ";
 					$sql .= "sip_profile_description = '$sip_profile_description' ";
 					$sql .= "where sip_profile_uuid = '$sip_profile_uuid'";
 					$db->exec(check_sql($sql));
@@ -136,6 +140,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll();
 		foreach ($result as &$row) {
 			$sip_profile_name = $row["sip_profile_name"];
+			$sip_profile_hostname = $row["sip_profile_hostname"];
 			$sip_profile_description = $row["sip_profile_description"];
 			break; //limit to 1 row
 		}
@@ -177,6 +182,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='sip_profile_name' maxlength='255' value=\"$sip_profile_name\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-hostname'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='sip_profile_hostname' maxlength='255' value=\"$sip_profile_hostname\">\n";
+	echo "<br />\n";
+	echo $text['description-hostname']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
