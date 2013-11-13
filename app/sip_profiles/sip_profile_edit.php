@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <daniel.lucio@astraqom.com> 
 */
 require_once "root.php";
 require_once "resources/require.php";
