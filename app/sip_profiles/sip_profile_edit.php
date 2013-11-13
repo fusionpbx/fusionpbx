@@ -95,7 +95,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "(";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'$sip_profile_name', ";
-					$sql .= "'$sip_profile_hostname', ";
+					if (strlen($sip_profile_hostname) > 0) {
+						$sql .= "'$sip_profile_hostname', ";
+					}
+					else {
+						$sql .= "null, ";
+					}
 					$sql .= "'$sip_profile_description' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -106,7 +111,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "update") {
 					$sql = "update v_sip_profiles set ";
 					$sql .= "sip_profile_name = '$sip_profile_name', ";
-					$sql .= "sip_profile_hostname = '$sip_profile_hostname', ";
+					if (strlen($sip_profile_hostname) > 0) {
+						$sql .= "sip_profile_hostname = '$sip_profile_hostname', ";
+					}
+					else {
+						$sql .= "sip_profile_hostname = null, ";
+					}
 					$sql .= "sip_profile_description = '$sip_profile_description' ";
 					$sql .= "where sip_profile_uuid = '$sip_profile_uuid'";
 					$db->exec(check_sql($sql));
