@@ -61,10 +61,10 @@ require_once "resources/paging.php";
 	echo "		<td align='left' width='33%' nowrap='nowrap'><b>".$text['header-sip_profiles']."</b></td>\n";
 	echo "		<td width='33%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' width='33%' nowrap='nowrap'><b>".$text['header-hostname']."</b></td>\n";
-	echo "		<td width='33%' align='right'>&nbsp;</td>\n";
-	echo "	</tr>\n";
+	//echo "	<tr>\n";
+	//echo "		<td align='left' width='33%' nowrap='nowrap'><b>".$text['header-hostname']."</b></td>\n";
+	//echo "		<td width='33%' align='right'>&nbsp;</td>\n";
+	//echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
 	echo "			".$text['description-sip_profiles']."<br /><br />\n";
@@ -143,7 +143,7 @@ require_once "resources/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='3' align='left'>\n";
+	echo "<td colspan='4' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='25%' nowrap>&nbsp;</td>\n";
