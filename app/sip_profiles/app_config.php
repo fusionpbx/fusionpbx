@@ -88,6 +88,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the SIP Profile name.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_hostname";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "vachar(255)";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
@@ -123,10 +128,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_setting_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the description.";
-		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "sip_profile_hostname";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "vachar(255)";
 		$z++;
 ?>
