@@ -217,6 +217,14 @@
 		$text['button-back']['pt-pt'] = "Voltar";
 		$text['button-back']['fr-fr'] = "Retour";
 
+		$text['label-tools']['en-us'] = "Tools";
+		$text['label-tools']['pt-pt'] = "Ferramentas";
+		$text['label-tools']['fr-fr'] = "Outils";
+		
+		$text['label-settings']['en-us'] = "Settings";
+		$text['label-settings']['pt-pt'] = "Definições";
+		$text['label-settings']['fr-fr'] = "Configurations";
+
 		$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 		$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
 		$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
@@ -236,5 +244,53 @@
 		$text['message-required']['en-us'] = "Please provide: ";
 		$text['message-required']['pt-pt'] = "Por favor indique: ";
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
+		
+		$text['label-category']['en-us'] = "Category";
+		$text['label-category']['pt-pt'] = "Categoria";
+		$text['label-category']['fr-fr'] = "Catégorie";
+
+		$text['description-category']['en-us'] = "Enter the category.";
+		$text['description-category']['pt-pt'] = "Introduza a categoria.";
+		$text['description-category']['fr-fr'] = "";
+
+		$text['label-subcategory']['en-us'] = "Subcategory";
+		$text['label-subcategory']['pt-pt'] = "Subcategoria";
+		$text['label-subcategory']['fr-fr'] = "Sous-Catégorie";
+
+		$text['description-subcategory']['en-us'] = "Enter the subcategory.";
+		$text['description-subcategory']['pt-pt'] = "Introduza a subcategoria";
+		$text['description-subcategory']['fr-fr'] = "";
+
+		$text['label-type']['en-us'] = "Type";
+		$text['label-type']['pt-pt'] = "Tipo";
+		$text['label-type']['fr-fr'] = "Type";
+
+		$text['description-type']['en-us'] = "Enter the setting type (ie. uuid, name, var, dir, etc).";
+		$text['description-type']['pt-pt'] = "Introduza o tipo de definição (ex: uuid, name, var, dir, etc).";
+		$text['description-type']['fr-fr'] = "Entrer le type du paramètre (ie. uuid, nom, var, dir, etc).";
+
+		$text['label-value']['en-us'] = "Value";
+		$text['label-value']['pt-pt'] = "Valor";
+		$text['label-value']['fr-fr'] = "Valeur";
+
+		$text['description-value']['en-us'] = "Enter the value of this setting.";
+		$text['description-value']['pt-pt'] = "Introduza o valor desta definição.";
+		$text['description-value']['fr-fr'] = "";
+
+		$text['label-enabled']['en-us'] = "Enabled";
+		$text['label-enabled']['pt-pt'] = "Activado";
+		$text['label-enabled']['fr-fr'] = "Actif";
+
+		$text['description-enabled']['en-us'] = "Set the status of this default setting.";
+		$text['description-enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
+		$text['description-enabled']['fr-fr'] = "Choisir l'état de ce paramètre";
+
+		$text['label-description']['en-us'] = "Description";
+		$text['label-description']['pt-pt'] = "Descrição";
+		$text['label-description']['fr-fr'] = "Description";
+
+		$text['description-description']['en-us'] = "Enter a description, if desired.";
+		$text['description-description']['pt-pt'] = "Introduza uma descrição, caso queira.";
+		$text['description-description']['fr-fr'] = "";
 
 ?>
