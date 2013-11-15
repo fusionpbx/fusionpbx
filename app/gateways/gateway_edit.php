@@ -333,6 +333,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //set defaults
 	if (strlen($enabled) == 0) { $enabled = "true"; }
+	if (strlen($register) == 0) { $register = "true"; }
 
 //show the header
 	require_once "resources/header.php";
@@ -490,7 +491,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='register'>\n";
 	echo "    <option value=''></option>\n";
-	if ($register == "true") { 
+	if ($register == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
