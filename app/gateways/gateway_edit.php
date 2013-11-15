@@ -334,6 +334,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //set defaults
 	if (strlen($enabled) == 0) { $enabled = "true"; }
 	if (strlen($register) == 0) { $register = "true"; }
+	if (strlen($retry_seconds) == 0) { $retry_seconds = "30"; }
 
 //show the header
 	require_once "resources/header.php";
@@ -514,7 +515,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-retry_seconds'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if (strlen($retry_seconds) == 0) { $retry_seconds = "60"; }
 	echo "  <input class='formfld' type='text' name='retry_seconds' maxlength='255' value='$retry_seconds'>\n";
 	echo "<br />\n";
 	echo $text['description-retry_seconds']."\n";
