@@ -231,9 +231,9 @@ else {
 		}
 		$fax_name = $_FILES['fax_file']['name'];
 		$fax_name = str_replace(" ", "_", $fax_name);
-		$fax_name = str_replace(".tif", "", $fax_name);
-		$fax_name = str_replace(".tiff", "", $fax_name);
-		$fax_name = str_replace(".pdf", "", $fax_name);
+		$fax_name = str_ireplace(".tif", "", $fax_name);
+		$fax_name = str_ireplace(".tiff", "", $fax_name);
+		$fax_name = str_ireplace(".pdf", "", $fax_name);
 		//lua doesn't seem to like special chars with env:GetHeader
 		$fax_name = str_replace(";", "_", $fax_name);
 		$fax_name = str_replace(",", "_", $fax_name);
@@ -264,7 +264,9 @@ else {
 
 		//get the fax file extension
 			$fax_file_extension = substr($dir_fax_temp.'/'.$_FILES['fax_file']['name'], -4);
-			if ($fax_file_extension == "tiff") { $fax_file_extension = ".tif"; }
+			if (strtolower($fax_file_extension) == "tiff") { $fax_file_extension = ".tif"; }
+			if (strtolower($fax_file_extension) == ".tif") { $fax_file_extension = ".tif"; }
+			if (strtolower($fax_file_extension) == ".pdf") { $fax_file_extension = ".pdf"; }
 
 		//upload the file
 			move_uploaded_file($_FILES['fax_file']['tmp_name'], $dir_fax_temp.'/'.$fax_name.$fax_file_extension);
@@ -300,7 +302,7 @@ else {
 
 			if ($mailto_address_user != $mailto_address_fax) {
 				$mailto_address = "'".$mailto_address_fax."\,".$mailto_address_user."'";
-			}		
+			}
 			else {
 			$mailto_address = $mailto_address_user;
 			}
@@ -350,8 +352,9 @@ else {
 				exec($_SESSION['switch']['bin']['dir']."/tiff2pdf -f -o ".$fax_name.".pdf ".$dir_fax_sent.$fax_name.".tif");
 			}
 
-		header("Location: fax_view.php?id=".$fax_uuid."&msg=".$response);
-		exit;
+		//redirect the browser
+			header("Location: fax_view.php?id=".$fax_uuid."&msg=".$response);
+			exit;
 	} //end upload and send fax
 
 //delete the fax
@@ -474,7 +477,6 @@ else {
 		echo "		<th width=\"20%\" class=\"listhdr\">".$text['table-modified']."</td>\n";
 		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size".$text['table-size']."</td>\n";
 		echo "	</tr>";
-
 
 		if ($handle = opendir($dir_fax_inbox)) {
 			//build an array of the files in the inbox
