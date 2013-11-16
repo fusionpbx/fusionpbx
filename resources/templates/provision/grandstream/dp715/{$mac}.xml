@@ -8,18 +8,18 @@
 <!--################################################################################################################ -->
 
 <!--################################################################################################################ -->
-<!-- Changes from 1.0.0.8									                                                                    		 -->
-<!-- 1.Added P-value for MWI LED Blinking (0 - diable, 1 - enable) P20001=1					 -->
-<!-- 2.Added P-value for Authenticate incoming INVITE (0 - No, 1 - Yes) P2346=0					 -->
-<!-- 3.Added P-value for Authenticate incoming INVITE (0 - No, 1 - Yes) P2446=0					 -->
+<!-- Changes from 1.0.0.8                                                                                            -->
+<!-- 1.Added P-value for MWI LED Blinking (0 - diable, 1 - enable) P20001=1                                          -->
+<!-- 2.Added P-value for Authenticate incoming INVITE (0 - No, 1 - Yes) P2346=0                                      -->
+<!-- 3.Added P-value for Authenticate incoming INVITE (0 - No, 1 - Yes) P2446=0                                      -->
 <!-- 4.Time Zone P64 avaliable value changed -->
 <!--################################################################################################################# -->
 
 <!--################################################################################################################# -->
-<!-- Changes from 1.0.0.5									                                                                    		 -->
-<!-- 1.Changed Preferred DTMF method default value from P850/851/852=100/100/100 to 101/102/100 	               	 -->
-<!-- 2.Changed Preferred DTMF method default value from P860/861/862=100/100/100 ot 101/102/100 	               		 -->
-<!-- 3.Added P-value (Update Handset Time) P20000=0 - Skip when reboot due to provisioning, 1 - Never, 2 - Always	 -->
+<!-- Changes from 1.0.0.5                                                                                             -->
+<!-- 1.Changed Preferred DTMF method default value from P850/851/852=100/100/100 to 101/102/100                       -->
+<!-- 2.Changed Preferred DTMF method default value from P860/861/862=100/100/100 ot 101/102/100                       -->
+<!-- 3.Added P-value (Update Handset Time) P20000=0 - Skip when reboot due to provisioning, 1 - Never, 2 - Always     -->
 <!--################################################################################################################# -->
 
 <!--############################################################################# -->
@@ -261,7 +261,7 @@
 <P40>5060</P40>
 
 <!-- Local RTP port (1024-65535, default 5004) -->
-<P39>5{v_line1_user_id}</P39>
+<P39>5{$user_id_1}</P39>
 
 <!-- Use Random Port. 0 - No, 1 - Yes -->
 <P78>1</P78>
@@ -732,16 +732,16 @@
 <P4300>0</P4300>
 
 <!--SIP User ID -->
-<P4060>{v_line1_user_id}</P4060>
+<P4060>{$user_id_1}</P4060>
 
 <!--Authenticate ID -->
-<P4090>{v_line1_user_id}</P4090>
+<P4090>{$user_id_2}</P4090>
 
 <!--Authenticate Password -->
-<P4120>{v_line1_user_password}</P4120>
+<P4120>{$user_password_1}</P4120>
 
 <!--Name -->
-<P4180>{v_line1_displayname}</P4180>
+<P4180>{$displayname_1}</P4180>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4150>0</P4150>
@@ -758,16 +758,16 @@
 <P4301>0</P4301>
 
 <!--SIP User ID -->
-<P4061>{v_line2_user_id}</P4061>
+<P4061>{$user_id_2}</P4061>
 
 <!--Authenticate ID -->
-<P4091>{v_line2_user_id}</P4091>
+<P4091>{$user_id_2}</P4091>
 
 <!--Authenticate Password -->
-<P4121>{v_line2_user_password}</P4121>
+<P4121>{$user_password_2}</P4121>
 
 <!--Name -->
-<P4181>{v_line2_displayname}</P4181>
+<P4181>{$displayname_2}</P4181>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4151>0</P4151>
@@ -783,16 +783,16 @@
 <P4302>0</P4302>
 
 <!--SIP User ID -->
-<P4062>{v_line3_user_id}</P4062>
+<P4062>{$user_id_3}</P4062>
 
 <!--Authenticate ID -->
-<P4092>{v_line3_user_id}</P4092>
+<P4092>{$user_id_3}</P4092>
 
 <!--Authenticate Password -->
-<P4122>{v_line3_user_password}</P4122>
+<P4122>{$password_3}</P4122>
 
 <!--Name -->
-<P4182>{v_line3_displayname}</P4182>
+<P4182>{$displayname_3}</P4182>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4152>0</P4152>
@@ -808,16 +808,16 @@
 <P4303>0</P4303>
 
 <!--SIP User ID -->
-<P4063>{v_line4_user_id}</P4063>
+<P4063>{$user_id_4}</P4063>
 
 <!--Authenticate ID -->
-<P4093>{v_line4_user_id}</P4093>
+<P4093>{$user_id_4}</P4093>
 
 <!--Authenticate Password -->
-<P4123>{v_line4_user_password}</P4123>
+<P4123>{$user_password_4}</P4123>
 
 <!--Name -->
-<P4183>{v_line4_displayname}</P4183>
+<P4183>{$displayname_4}</P4183>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4153>0</P4153>
@@ -833,16 +833,16 @@
 <P4304>0</P4304>
 
 <!--SIP User ID -->
-<P4064>{v_line5_user_id}</P4064>
+<P4064>{$user_id_5}</P4064>
 
 <!--Authenticate ID -->
-<P4094>{v_line5_user_id}</P4094>
+<P4094>{$user_id_5}</P4094>
 
 <!--Authenticate Password -->
-<P4124>{v_line5_user_password}</P4124>
+<P4124>{$user_password_5}</P4124>
 
 <!--Name -->
-<P4184>{v_line4_displayname}</P4184>
+<P4184>{$displayname_5}</P4184>
 
 <!--Profile ID (0 - Profile 1, 1 - Profile 2) -->
 <P4154>0</P4154>
