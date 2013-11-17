@@ -23,6 +23,10 @@
 --	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
+--
+--	Contributor(s):
+--	Mark J Crane <markjcrane@fusionpbx.com>
+--	Luis Daniel Lucio Quiroz <daniel.lucio@astraqom.com> 
 
 --set the default
 	continue = true;
@@ -63,8 +67,6 @@
 				end
 				if (XML_STRING == "-ERR NOT FOUND") then
 					continue = true;
-				else
-					continue = false;
 				end
 			else
 				XML_STRING = "";
@@ -81,10 +83,34 @@
 				continue = false;
 			end
 
+		--show the params in the console
+			--if (params:serialize() ~= nil) then
+			--	freeswitch.consoleLog("notice", "[xml_handler-directory.lua] Params:\n" .. params:serialize() .. "\n");
+			--end
+
+		--set the variable from the params
+			dialed_extension = params:getHeader("dialed_extension");
+			if (dialed_extension == nil) then
+				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
+				load_balancing = false;
+			else
+				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
+			end
+
 		--if load balancing is set to true then get the hostname
 			if (load_balancing) then
-				--get the hostname
+				--get the domain_name from domains
+					if (domain_name == nil) then
+						sql = "SELECT domain_name FROM v_domains ";
+						sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' ";
+						status = dbh_switch:query(sql, function(row)
+							domain_name = row["domain_name"];
+						end);
+					end
+
+				--get the caller hostname
 					local_hostname = trim(api:execute("hostname", ""));
+					--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_hostname is " .. local_hostname .. "\n");
 
 				--add the file_exists function
 					dofile(scripts_dir.."/resources/functions/file_exists.lua");
@@ -98,13 +124,18 @@
 						dbh_switch = database_handle('switch');
 					end
 
-				--get the hostname from the registration
+				--get the destination hostname from the registration
 					sql = "SELECT hostname FROM registrations ";
-					sql = sql .. "WHERE reg_user = '"..user.."' ";
+					sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
 					sql = sql .. "AND realm = '"..domain_name.."'";
 					status = dbh_switch:query(sql, function(row)
 						database_hostname = row["hostname"];
 					end);
+					--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
+					--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
+
+				--close the database connection
+					dbh_switch:release();
 			end
 
 		--get the extension from the database
@@ -179,12 +210,22 @@
 								dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
 							--set the an alternative dial string if the hostnames don't match
 								if (load_balancing) then
-									if (local_hostname ~= database_hostname) then
+									if (local_hostname == database_hostname) then
+										freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_host and database_host are the same\n");
+									else
 										--sofia/internal/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name};fs_path=sip:server
-										user_id = trim(api:execute("user_data", user .."@" .. domain_name .. " attr id"));
-										dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:server";
+										user_id = trim(api:execute("user_data", user .. "@" .. domain_name .. " attr id"));
+										dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}sofia/internal/" .. user_id .. "@" .. domain_name .. ";fs_path=sip:" .. database_hostname;
+										--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dial_string " .. dial_string .. "\n");
 									end
+								else
+									--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] seems balancing is false??" .. tostring(load_balancing) .. "\n");
 								end
+
+							--show debug informationa
+								--if (load_balancing) then
+								--	freeswitch.consoleLog("notice", "[xml_handler] local_hostname: " .. local_hostname.. " database_hostname: " .. database_hostname .. " dial_string: " .. dial_string .. "\n");
+								--end
 						end
 				end);
 			end
@@ -227,6 +268,9 @@
 					sip_bypass_media = row.sip_bypass_media;
 				end);
 			end
+
+		--close the database connection
+			dbh:release();
 
 		--set the xml array and then concatenate the array to a string
 			if (continue and password) then
