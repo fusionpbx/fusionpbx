@@ -449,12 +449,14 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$tmp_config .= "		error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings";
 		$tmp_config .= "\n";
 		$tmp_config .= "?>";
-		if (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources")) {
-			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
-		} elseif (is_dir("/etc/fusionpbx")){
+
+		if (is_dir("/etc/fusionpbx")){
 			$config = "/etc/fusionpbx/config.php";
 		} elseif (is_dir("/usr/local/etc/fusionpbx")){
 			$config = "/usr/local/etc/fusionpbx/config.php";
+		}
+		elseif (is_dir($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources")) {
+			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
 		}
 		else {
 			$config = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php";
