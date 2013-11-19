@@ -134,6 +134,11 @@
 					--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
 					--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 
+				--hostname was not found set load_balancing to false to prevent a database_hostname concatenation error
+					if (database_hostname == nil) then
+						load_balancing = false;
+					end
+
 				--close the database connection
 					dbh_switch:release();
 			end
