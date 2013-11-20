@@ -39,6 +39,11 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//set the voicemail_id array
+	foreach ($_SESSION['user']['extension'] as $value) {
+		$voicemail_ids[]['voicemail_id'] = $value['user'];
+	}
+
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
@@ -69,6 +74,22 @@ else {
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_voicemails ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (!permission_exists('voicemail_delete')) {
+			$x = 0;
+			if (count($voicemail_ids) > 0) {
+				$sql .= "and (";
+				foreach($voicemail_ids as $row) {
+					if ($x == 0) {
+						$sql .= "voicemail_id = '".$row['voicemail_id']."' ";
+					}
+					else {
+						$sql .= " or voicemail_id = '".$row['voicemail_id']."'";
+					}
+					$x++;
+				}
+				$sql .= ")";
+			}
+		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -93,6 +114,22 @@ else {
 	//get the list
 		$sql = "select * from v_voicemails ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (!permission_exists('voicemail_delete')) {
+			$x = 0;
+			if (count($voicemail_ids) > 0) {
+				$sql .= "and (";
+				foreach($voicemail_ids as $row) {
+					if ($x == 0) {
+						$sql .= "voicemail_id = '".$row['voicemail_id']."' ";
+					}
+					else {
+						$sql .= " or voicemail_id = '".$row['voicemail_id']."'";
+					}
+					$x++;
+				}
+				$sql .= ")";
+			}
+		}
 		if (strlen($order_by) == 0) {
 			$sql .= "order by voicemail_id asc ";
 		}
