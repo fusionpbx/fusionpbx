@@ -337,7 +337,7 @@
 
 		--check if someone has already joined the conference
 			local_hostname = trim(api:execute("hostname", ""));
-			--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_hostname is " .. local_hostname .. "\n");
+			freeswitch.consoleLog("notice", "[conference] local_hostname is " .. local_hostname .. "\n");
 			sql = "SELECT hostname FROM channels WHERE application = 'conference' AND dest = '" .. destination_number .. "' AND cid_num <> '".. caller_id_number .."' LIMIT 1";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
@@ -347,11 +347,14 @@
 			end);
 
 		if (conference_hostname ~= nil) then
+			freeswitch.consoleLog("notice", "[conference] conference_hostname is " .. conference_hostname .. "\n");
 			--if conference hosntame exist, then we bridge there
-			session:execute("bridge","sofia/internal/" .. destination_number .. "@" .. domain_name .. ";fs_path=sip:" .. conference_hostname);
+			if (conference_hostname ~= local_hostname) then
+				session:execute("bridge","sofia/internal/" .. destination_number .. "@" .. domain_name .. ";fs_path=sip:" .. conference_hostname);
+			end
 		end
 
-		-- call not bridged, so we answer
+		--call not bridged, so we answer
 			session:answer();
 
 		--set the hangup hook function
