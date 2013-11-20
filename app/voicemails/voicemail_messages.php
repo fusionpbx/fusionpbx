@@ -146,8 +146,12 @@ else {
 		echo "	\n";
 		echo "</td>\n";
 		echo "<td valign='bottom' align='right'>\n";
+		if (permission_exists('voicemail_greeting_view')) {
 		echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$voicemail_id."'\" value='".$text['button-greetings']."'>\n";
-		echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$voicemail_uuid."'\" value='".$text['button-settings']."'>\n";
+		}
+		if (permission_exists('voicemail_view')) {
+			echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$voicemail_uuid."'\" value='".$text['button-settings']."'>\n";
+		}
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo $table_header;
