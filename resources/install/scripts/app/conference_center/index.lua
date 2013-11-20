@@ -1,4 +1,4 @@
---	conference.lua
+--	conference_center/index.lua
 --	Part of FusionPBX
 --	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
@@ -23,6 +23,10 @@
 --	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
+--
+--	Contributor(s):
+--	Mark J Crane <markjcrane@fusionpbx.com>
+--	Luis Daniel Lucio Quiroz <daniel.lucio@astraqom.com> 
 
 --set variables
 	flags = "";
@@ -305,17 +309,19 @@
 
 --make sure the session is ready
 	if (session:ready()) then
-		--answer the call
-			session:answer();
 
-		--set the hangup hook function
-			session:setHangupHook("session_hangup_hook");
+		--answer the call
+			session:preAnswer();
 
 		--get session variables
 			sounds_dir = session:getVariable("sounds_dir");
 			hold_music = session:getVariable("hold_music");
 			domain_name = session:getVariable("domain_name");
 			pin_number = session:getVariable("pin_number");
+			destination_number = session:getVariable("destination_number");
+			caller_id_number = session:getVariable("caller_id_number");
+			freeswitch.consoleLog("notice", "[conference] destination_number: " .. destination_number .. "\n");
+			freeswitch.consoleLog("notice", "[conference] caller_id_number: " .. caller_id_number .. "\n");
 
 		--get the domain_uuid
 			if (domain_name ~= nil) then
@@ -328,6 +334,28 @@
 					domain_uuid = string.lower(rows["domain_uuid"]);
 				end);
 			end
+
+		--check if someone has already joined the conference
+			local_hostname = trim(api:execute("hostname", ""));
+			--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] local_hostname is " .. local_hostname .. "\n");
+			sql = "SELECT hostname FROM channels WHERE application = 'conference' AND dest = '" .. destination_number .. "' AND cid_num <> '".. caller_id_number .."' LIMIT 1";
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
+			end
+			status = dbh:query(sql, function(rows)
+				conference_hostname = string.lower(rows["hostname"]);
+			end);
+
+		if (conference_hostname ~= nil) then
+			--if conference hosntame exist, then we bridge there
+			session:execute("bridge","sofia/internal/" .. destination_number .. "@" .. domain_name .. ";fs_path=sip:" .. conference_hostname);
+		end
+
+		-- call not bridged, so we answer
+			session:answer();
+
+		--set the hangup hook function
+			session:setHangupHook("session_hangup_hook");
 
 		--add the domain to the recording directory
 			if (domain_count > 1) then
