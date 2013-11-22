@@ -40,37 +40,93 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//get the uuid and voicemail_id
+//set the voicemail_uuid
 	if (strlen($_REQUEST["id"]) > 0) {
 		$voicemail_uuid = check_str($_REQUEST["id"]);
-		$sql = "select * from v_voicemails ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$voicemail_id = $row["voicemail_id"];
-			$voicemail_uuid = $row["voicemail_uuid"];
-		}
-		unset ($prep_statement);
 	}
 
 //set the voicemail_id array
-	if (strlen($_REQUEST["id"]) == 0) {
-		foreach ($_SESSION['user']['extension'] as $value) {
-			$voicemail_id[]['voicemail_id'] = $value['user'];
+	foreach ($_SESSION['user']['extension'] as $value) {
+		$voicemail_ids[]['voicemail_id'] = $value['user'];
+	}
+
+//get the uuid and voicemail_id
+	$sql = "select * from v_voicemails ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	if (strlen($voicemail_uuid) > 0) {
+		if (permission_exists('voicemail_delete')) {
+			//view specific voicemail box usually reserved for an admin or superadmin
+			$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
+		}
+		else {
+			//ensure that the requested voicemail id is assigned to this user
+			$found = false;
+			foreach($voicemail_ids as $row) {
+				if ($voicemail_uuid == $row['voicemail_id']) {
+					$sql .= "and voicemail_id = '".$row['voicemail_id']."' ";
+					$found = true;
+				}
+				$x++;
+			}
+			//id requested is not owned by the user return no results
+			if (!$found) {
+				$sql .= "and voicemail_uuid = '' ";
+			}
 		}
 	}
+	else {
+		$x = 0;
+		if (count($voicemail_ids) > 0) {
+			//show only the assigned voicemail ids
+			$sql .= "and (";
+			foreach($voicemail_ids as $row) {
+				if ($x == 0) {
+					$sql .= "voicemail_id = '".$row['voicemail_id']."' ";
+				}
+				else {
+					$sql .= " or voicemail_id = '".$row['voicemail_id']."'";
+				}
+				$x++;
+			}
+			$sql .= ")";
+		}
+		else {
+			//no assigned voicemail ids so return no results
+			$sql .= "and voicemail_uuid = '' ";
+		}
+	}
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$voicemails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement);
+
+//add the voicemail messages to the array
+	foreach ($voicemails as &$row) {
+			//get the voicemail messages
+			require_once "app/voicemails/resources/classes/voicemail.php";
+			$voicemail = new voicemail;
+			$voicemail->db = $db;
+			$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+			$voicemail->voicemail_uuid = $row['voicemail_uuid'];
+			$voicemail->voicemail_id = $row['voicemail_id'];
+			$voicemail->order_by = $order_by;
+			$voicemail->order = $order;
+			$result = $voicemail->messages();
+			$voicemail_count = count($result);
+			$row['messages'] = $result;
+	}
+	//echo "<pre>\n";
+	//print_r($voicemails);
+	//echo "</pre>\n";
 
 //download the message
 	if (check_str($_REQUEST["action"]) == "download") {
 		$voicemail_message_uuid = check_str($_REQUEST["uuid"]);
+		$voicemail_id = check_str($_REQUEST["id"]);
 		require_once "resources/classes/voicemail.php";
 		$voicemail = new voicemail;
 		$voicemail->db = $db;
 		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-		$voicemail->voicemail_uuid = $voicemail_uuid;
 		$voicemail->voicemail_id = $voicemail_id;
 		$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
 		$result = $voicemail->message_download();
@@ -112,97 +168,78 @@ else {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
+//set the table header
 	$table_header = "<tr>\n";
 	$table_header .= th_order_by('created_epoch', $text['label-created_epoch'], $order_by, $order);
 	//$table_header .= th_order_by('read_epoch', $text['label-read_epoch'], $order_by, $order);
-	$table_header .=  th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
-	$table_header .=  th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
-	$table_header .=  th_order_by('message_length', $text['label-message_length'], $order_by, $order);
-	$table_header .=  "<th>".$text['label-message_size']."</th>\n";
-	$table_header .=  "<th>".$text['label-tools']."</th>\n";
-	//$table_header .=  th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
-	$table_header .=  "<td align='right' width='21'>\n";
-	$table_header .=  "	&nbsp;\n";
-	$table_header .=  "</td>\n";
-	$table_header .=  "<tr>\n";
+	$table_header .= th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
+	$table_header .= th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
+	$table_header .= th_order_by('message_length', $text['label-message_length'], $order_by, $order);
+	$table_header .= "<th>".$text['label-message_size']."</th>\n";
+	$table_header .= "<th>".$text['label-tools']."</th>\n";
+	//$table_header .= th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
+	$table_header .= "<td align='right' width='21'>\n";
+	$table_header .= "	&nbsp;\n";
+	$table_header .= "</td>\n";
+	$table_header .= "<tr>\n";
 
-	//get the voicemail messages
-	require_once "app/voicemails/resources/classes/voicemail.php";
-	$voicemail = new voicemail;
-	$voicemail->db = $db;
-	$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-	//$voicemail->voicemail_uuid = $voicemail_uuid;
-	$voicemail->voicemail_id = $voicemail_id;
-	$voicemail->order_by = $order_by;
-	$voicemail->order = $order;
-	$result = $voicemail->messages();
-	$result_count = count($result);
-
-	//loop throug the voicemail messages
-	if ($result_count == 0) {
-		echo "<tr><td colspan='5' align='left'>\n";
-		echo "	<br /><br />\n";
-		echo "	<b>".$text['label-mailbox'].": ".$voicemail_id."</b>&nbsp;\n";
-		echo "	\n";
-		echo "</td>\n";
-		echo "<td valign='bottom' align='right'>\n";
-		if (permission_exists('voicemail_greeting_view')) {
-		echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$voicemail_id."'\" value='".$text['button-greetings']."'>\n";
-		}
-		if (permission_exists('voicemail_view')) {
-			echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$voicemail_uuid."'\" value='".$text['button-settings']."'>\n";
-		}
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo $table_header;
-	}
-	else {
+//loop through the voicemail messages
+	if (count($voicemails) > 0) {
 		$previous_voicemail_id = '';
-		foreach($result as $row) {
-			if ($previous_voicemail_id != $row['voicemail_id']) {
-				echo "<tr><td colspan='5' align='left'>\n";
-				echo "	<br /><br />\n";
-				echo "	<b>".$text['label-mailbox'].": ".$row['voicemail_id']."</b>&nbsp;\n";
-				echo "	\n";
-				echo "</td>\n";
-				echo "<td valign='bottom' align='right'>\n";
-				echo "	<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$row['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
-				echo "	<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$row['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
-				echo "</td>\n";
+		foreach($voicemails as $field) {
+			if ($previous_voicemail_id != $field['voicemail_id']) {
+				echo "<tr>\n";
+				echo "	<td colspan='3' align='left'>\n";
+				echo "		<br /><br />\n";
+				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b>&nbsp;\n";
+				echo "	</td>\n";
+				echo "	<td colspan='3' valign='bottom' align='right'>\n";
+				if (permission_exists('voicemail_greeting_view')) {
+					echo "		<input type='button' class='btn' name='' alt='greetings' onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=".$field['voicemail_id']."'\" value='".$text['button-greetings']."'>\n";
+				}
+				if (permission_exists('voicemail_view')) {
+					echo "		<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
+				}
+				echo "	</td>\n";
+				echo "	<td>&nbsp;</td>\n";
 				echo "</tr>\n";
 				echo $table_header;
 			}
-			if ($row['message_status'] == '') { $style = "style=\"font-weight:bold;\""; } else { $style = ''; }
-			echo "<td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">";
-			echo "	".$row['created_date'];
-			echo "</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_number']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_length_label']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_status']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['file_size_label']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' $style>\n";
-			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?action=download&type=vm&uuid=".$row['voicemail_message_uuid']."&id=".$row['voicemail_id']."&ext=".$row['file_ext']."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
-			//echo "			".$text['label-play']."\n";
-			//echo "		</a>\n";
-			echo "		&nbsp;&nbsp;\n";
-			echo "		<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\">\n";
-			echo "			".$text['label-download']."\n";
-			echo "		</a>\n";
-			echo "	</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('voicemail_message_delete')) {
-				echo "		<a href='voicemail_message_delete.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			}
-			echo "	</td>\n";
-			echo "</tr>\n";
 
-			$previous_voicemail_id = $row['voicemail_id'];
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $result_count);
+			foreach($field['messages'] as &$row) {
+				if ($row['message_status'] == '') { $style = "style=\"font-weight:bold;\""; } else { $style = ''; }
+				echo "<td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">";
+				echo "	".$row['created_date'];
+				echo "</td>\n";
+				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_name']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_number']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_length_label']."&nbsp;</td>\n";
+				//echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_status']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['file_size_label']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' $style>\n";
+				//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?action=download&type=vm&uuid=".$row['voicemail_message_uuid']."&id=".$row['voicemail_id']."&ext=".$row['file_ext']."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+				//echo "			".$text['label-play']."\n";
+				//echo "		</a>\n";
+				echo "		&nbsp;&nbsp;\n";
+				echo "		<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&uuid=".$row['voicemail_message_uuid']."\">\n";
+				echo "			".$text['label-download']."\n";
+				echo "		</a>\n";
+				echo "	</td>\n";
+				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
+				echo "	<td valign='top' align='right'>\n";
+				if (permission_exists('voicemail_message_delete')) {
+					echo "		<a href='voicemail_message_delete.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				}
+				echo "	</td>\n";
+				echo "</tr>\n";
+				if ($c==0) { $c=1; } else { $c=0; }
+			} //end foreach
+			unset($row);
+
+			$previous_voicemail_id = $field['voicemail_id'];
+			unset($sql, $result, $result_count);
+		}
 	} //end if results
 
 	echo "<tr>\n";
