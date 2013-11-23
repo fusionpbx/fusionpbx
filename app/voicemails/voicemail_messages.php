@@ -45,80 +45,6 @@ else {
 		$voicemail_uuid = check_str($_REQUEST["id"]);
 	}
 
-//set the voicemail_id array
-	foreach ($_SESSION['user']['extension'] as $value) {
-		$voicemail_ids[]['voicemail_id'] = $value['user'];
-	}
-
-//get the uuid and voicemail_id
-	$sql = "select * from v_voicemails ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	if (strlen($voicemail_uuid) > 0) {
-		if (permission_exists('voicemail_delete')) {
-			//view specific voicemail box usually reserved for an admin or superadmin
-			$sql .= "and voicemail_uuid = '$voicemail_uuid' ";
-		}
-		else {
-			//ensure that the requested voicemail id is assigned to this user
-			$found = false;
-			foreach($voicemail_ids as $row) {
-				if ($voicemail_uuid == $row['voicemail_id']) {
-					$sql .= "and voicemail_id = '".$row['voicemail_id']."' ";
-					$found = true;
-				}
-				$x++;
-			}
-			//id requested is not owned by the user return no results
-			if (!$found) {
-				$sql .= "and voicemail_uuid = '' ";
-			}
-		}
-	}
-	else {
-		$x = 0;
-		if (count($voicemail_ids) > 0) {
-			//show only the assigned voicemail ids
-			$sql .= "and (";
-			foreach($voicemail_ids as $row) {
-				if ($x == 0) {
-					$sql .= "voicemail_id = '".$row['voicemail_id']."' ";
-				}
-				else {
-					$sql .= " or voicemail_id = '".$row['voicemail_id']."'";
-				}
-				$x++;
-			}
-			$sql .= ")";
-		}
-		else {
-			//no assigned voicemail ids so return no results
-			$sql .= "and voicemail_uuid = '' ";
-		}
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$voicemails = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	unset ($prep_statement);
-
-//add the voicemail messages to the array
-	foreach ($voicemails as &$row) {
-			//get the voicemail messages
-			require_once "app/voicemails/resources/classes/voicemail.php";
-			$voicemail = new voicemail;
-			$voicemail->db = $db;
-			$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-			$voicemail->voicemail_uuid = $row['voicemail_uuid'];
-			$voicemail->voicemail_id = $row['voicemail_id'];
-			$voicemail->order_by = $order_by;
-			$voicemail->order = $order;
-			$result = $voicemail->messages();
-			$voicemail_count = count($result);
-			$row['messages'] = $result;
-	}
-	//echo "<pre>\n";
-	//print_r($voicemails);
-	//echo "</pre>\n";
-
 //download the message
 	if (check_str($_REQUEST["action"]) == "download") {
 		$voicemail_message_uuid = check_str($_REQUEST["uuid"]);
@@ -137,6 +63,16 @@ else {
 //get the html values and set them as variables
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
+
+//get the voicemail
+	require_once "app/voicemails/resources/classes/voicemail.php";
+	$vm = new voicemail;
+	$vm->db = $db;
+	$vm->domain_uuid = $_SESSION['domain_uuid'];
+	$vm->voicemail_uuid = $voicemail_uuid;
+	$vm->order_by = $order_by;
+	$vm->order = $order;
+	$voicemails = $vm->messages();
 
 //additional includes
 	require_once "resources/header.php";
