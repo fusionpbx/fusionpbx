@@ -40,11 +40,16 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//get the id
+//get the HTTP values and set them as variables
 	if (count($_GET)>0) {
 		$id = check_str($_GET["id"]);
 		$voicemail_uuid = check_str($_GET["voicemail_uuid"]);
 	}
+
+//set the referrer
+	$http_referer = parse_url($_SERVER["HTTP_REFERER"]);
+	$referer_path = $http_referer['path'];
+	$referer_query = $http_referer['query'];
 
 //delete the voicemail message
 	if (strlen($id)>0) {
@@ -53,7 +58,6 @@ else {
 		$voicemail->db = $db;
 		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 		$voicemail->voicemail_uuid = $voicemail_uuid;
-		$voicemail->voicemail_id = $voicemail_id;
 		$voicemail->voicemail_message_uuid = $id;
 		$result = $voicemail->message_delete();
 		unset($voicemail);
@@ -61,7 +65,12 @@ else {
 
 //redirect the user
 	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_messages.php?id=$voicemail_uuid\">\n";
+	if ($referer_path == "/app/voicemails/voicemail_messages.php") {
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_messages.php?".$referer_query."\">\n";
+	}
+	else {
+		echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemails.php\">\n";
+	}
 	echo "<div align='center'>\n";
 	echo "Delete Complete\n";
 	echo "</div>\n";
