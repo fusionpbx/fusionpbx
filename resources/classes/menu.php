@@ -153,59 +153,6 @@
 						}
 					}
 
-				//set default group permissions
-					$sql = "DELETE FROM v_group_permissions ";
-					$db->query($sql);
-					unset($sql);
-
-					$sql2 = "SELECT domain_uuid FROM v_domains ";
-					$prep_statement2 = $db->prepare(check_sql($sql2));
-					$prep_statement2->execute();
-					$result2 = $prep_statement2->fetchAll(PDO::FETCH_ASSOC);
-					foreach($result2 as $row2) {
-						unset ($prep_statement2, $sql2);
-						foreach($apps as $row) {
-							foreach ($row['permissions'] as $menu) {
-								//set the variables
-								if ($menu['groups']) {
-									foreach ($menu['groups'] as $group) {
-										//assign the groups to the permissions
-										$sql = "SELECT * FROM v_group_permissions ";
-										$sql .= "WHERE permission_name = '".$menu['name']."' ";
-										$sql .= "AND domain_uuid = '".$row2['domain_uuid']."' ";
-										$sql .= "AND group_name = '$group' ";
-										$prep_statement = $db->prepare(check_sql($sql));
-										if ($prep_statement) {
-											$prep_statement->execute();
-											$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-											unset ($prep_statement);
-											if (count($result) == 0) {
-												//insert the default menu into the database
-												$sql = "insert into v_group_permissions ";
-												$sql .= "(";
-												$sql .= "group_permission_uuid, ";
-												$sql .= "domain_uuid, ";
-												$sql .= "permission_name, ";
-												$sql .= "group_name ";
-												$sql .= ") ";
-												$sql .= "values ";
-												$sql .= "(";
-												$sql .= "'".uuid()."', ";
-												$sql .= "'".$row2["domain_uuid"]."', ";
-												$sql .= "'".$menu['name']."', ";
-												$sql .= "'".$group."' ";
-												$sql .= ");";
-												$db->exec(check_sql($sql));
-												unset($sql);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					unset($sql2, $result2);
-
 				//if there are no groups listed in v_menu_item_groups under menu_item_uuid then add the default groups
 					foreach($apps as $app) {
 						foreach ($app['menu'] as $sub_row) {
@@ -242,8 +189,8 @@
 					$db->commit();
 			} //end function
 
-			//restore the menu
-			function restore2() {
+			//restore the menu and group permissions
+			function restore_all() {
 				//set the variables
 					$db = $this->db;
 
@@ -364,39 +311,25 @@
 						unset ($prep_statement2, $sql2);
 						foreach($apps as $row) {
 							foreach ($row['permissions'] as $menu) {
-								//set the variables
 								if ($menu['groups']) {
 									foreach ($menu['groups'] as $group) {
-										//if the item uuid is not currently in the db then add it
-										$sql = "select * from v_group_permissions ";
-										$sql .= "where permission_name = '".$menu['name']."' ";
-										$sql .= "and domain_uuid = '".$row2['domain_uuid']."' ";
-										$sql .= "and group_name = '$group' ";
-										$prep_statement = $db->prepare(check_sql($sql));
-										if ($prep_statement) {
-											$prep_statement->execute();
-											$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-											unset ($prep_statement);
-											if (count($result) == 0) {
-												//insert the default menu into the database
-												$sql = "insert into v_group_permissions ";
-												$sql .= "(";
-												$sql .= "group_permission_uuid, ";
-												$sql .= "domain_uuid, ";
-												$sql .= "permission_name, ";
-												$sql .= "group_name ";
-												$sql .= ") ";
-												$sql .= "values ";
-												$sql .= "(";
-												$sql .= "'".uuid()."', ";
-												$sql .= "'".$row2["domain_uuid"]."', ";
-												$sql .= "'".$menu['name']."', ";
-												$sql .= "'".$group."' ";
-												$sql .= ");";
-												$db->exec(check_sql($sql));
-												unset($sql);
-											}
-										}
+										//assign the groups to the permissions
+										$sql = "insert into v_group_permissions ";
+										$sql .= "(";
+										$sql .= "group_permission_uuid, ";
+										$sql .= "domain_uuid, ";
+										$sql .= "permission_name, ";
+										$sql .= "group_name ";
+										$sql .= ") ";
+										$sql .= "values ";
+										$sql .= "(";
+										$sql .= "'".uuid()."', ";
+										$sql .= "'".$row2["domain_uuid"]."', ";
+										$sql .= "'".$menu['name']."', ";
+										$sql .= "'".$group."' ";
+										$sql .= ");";
+										$db->exec(check_sql($sql));
+										unset($sql);
 									}
 								}
 							}

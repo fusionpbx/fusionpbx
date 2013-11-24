@@ -61,7 +61,7 @@ else {
 
 //show a message to the user
 	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/core/menu/menu_edit.php?id=$menu_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"1;url=".PROJECT_PATH."/core/menu/menu_edit.php?id=$menu_uuid\">\n";
 	echo "<div align='center'>\n";
 	echo $text['message-restore']."\n";
 	echo "</div>\n";
