@@ -45,7 +45,7 @@ else {
 	$menu->menu_uuid = $menu_uuid;
 	$menu->menu_language = $menu_language;
 	$menu->delete();
-	$menu->restore2();
+	$menu->restore_all();
 
 //unset the menu session variable
 	$_SESSION["menu"] = "";
@@ -55,7 +55,7 @@ else {
 
 //show a message to the user
 	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=/core/menu/menu_edit.php?id=$menu_uuid\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"1;url=/core/menu/menu_edit.php?id=$menu_uuid\">\n";
 	echo "<div align='center'>\n";
 	echo "Restore Complete\n";
 	echo "</div>\n";
