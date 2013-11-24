@@ -144,7 +144,7 @@
 			//$sql .= "limit $this->rows_per_page offset $this->offset ";
 			$prep_statement = $this->db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			$result = $prep_statement->fetchAll();
+			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			$result_count = count($result);
 			unset ($prep_statement, $sql);
 			if ($result_count > 0) {
