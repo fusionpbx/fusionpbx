@@ -70,7 +70,7 @@
 	$text['label-unlock']['fr-fr'] = "Débloqué";
 
 	$text['label-lock']['en-us'] = "Lock";
-	$text['label-lock']['en-us'] = "Bloquear";
+	$text['label-lock']['pt-pt'] = "Bloquear";
 	$text['label-lock']['fr-fr'] = "Bloqué";
 
 	$text['label-id']['en-us'] = "ID";
