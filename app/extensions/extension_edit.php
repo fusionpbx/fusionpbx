@@ -113,14 +113,14 @@ else {
 	}
 
 //delete the line from the v_device_lines
-	if ($_GET["a"] == "delete" && strlen($_REQUEST["extension_uuid"]) > 0 && permission_exists("extension_delete")) {
+	if ($_GET["a"] == "delete" && strlen($_REQUEST["device_line_uuid"]) > 0 && permission_exists("extension_delete")) {
 		//set the variables
-			$id = check_str($_REQUEST["id"]);
-			$extension_uuid = check_str($_REQUEST["extension_uuid"]);
+			$extension_uuid = check_str($_REQUEST["id"]);
+			$device_line_uuid = check_str($_REQUEST["device_line_uuid"]);
 		//delete device_line
 			$sql = "delete from v_device_lines ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and device_line_uuid = '$id' ";
+			$sql .= "and device_line_uuid = '$device_line_uuid' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 		//redirect the browser
@@ -172,23 +172,41 @@ else {
 			$device_mac_address = strtolower($device_mac_address);
 			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
-		//add the device
-			$sql_insert = "insert into v_devices ";
-			$sql_insert .= "(";
-			$sql_insert .= "device_uuid, ";
-			$sql_insert .= "domain_uuid, ";
-			$sql_insert .= "device_mac_address, ";
-			$sql_insert .= "device_template ";
-			$sql_insert .= ") ";
-			$sql_insert .= "values ";
-			$sql_insert .= "(";
-			$sql_insert .= "'".$device_uuid."', ";
-			$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
-			$sql_insert .= "'".$device_mac_address."', ";
-			$sql_insert .= "'".$device_template."' ";
-			$sql_insert .= ")";
-			//echo $sql_insert."<br />\n";
-			$db->exec($sql_insert);
+		//add the device if it doesn't exist, if it does exist get the device_uuid
+			$sql = "select device_uuid from v_devices ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and device_mac_address = '$device_mac_address' ";
+			if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if (strlen($row['device_uuid']) > 0) {
+					//device found
+					$device_uuid = $row['device_uuid'];
+				}
+				else {
+					//device not found
+					$sql_insert = "insert into v_devices ";
+					$sql_insert .= "(";
+					$sql_insert .= "device_uuid, ";
+					$sql_insert .= "domain_uuid, ";
+					$sql_insert .= "device_mac_address, ";
+					$sql_insert .= "device_template, ";
+					$sql_insert .= "device_provision_enable ";
+					$sql_insert .= ") ";
+					$sql_insert .= "values ";
+					$sql_insert .= "(";
+					$sql_insert .= "'".$device_uuid."', ";
+					$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
+					$sql_insert .= "'".$device_mac_address."', ";
+					$sql_insert .= "'".$device_template."', ";
+					$sql_insert .= "'true' ";
+					$sql_insert .= ")";
+					//echo $sql_insert."<br />\n";
+					$db->exec($sql_insert);
+				}
+			}
 
 		//assign the line to the device
 			$sql_insert = "insert into v_device_lines ";
@@ -1165,11 +1183,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			echo "		<tr>\n";
 			echo "			<td class='vtable'>".$row['line_number']."</td>\n";
-			echo "			<td class='vtable'>".$device_mac_address."</td>\n";
+			echo "			<td class='vtable'><a href='/app/devices/device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a></td>\n";
 			echo "			<td class='vtable'>".$row['device_template']."&nbsp;</td>\n";
 			//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 			echo "			<td>\n";
-			echo "				<a href='device_line_delete.php?id=".$row['device_line_uuid']."&domain_uuid=".$_SESSION['domain_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "				<a href='extension_edit.php?id=".$extension_uuid."&device_line_uuid=".$row['device_line_uuid']."&domain_uuid=".$_SESSION['domain_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "			</td>\n";
 			echo "		</tr>\n";
 		}
@@ -1279,11 +1297,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "</select>\n";
 		echo "		</td>\n";
+		echo "		<td>\n";
+		echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+		echo "		</td>\n";
 		echo "		</table>\n";
 		echo "		<br />\n";
-
-		echo "	<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-		echo "<br />\n";
 		echo $text['description-provisioning']."\n";
 
 		echo "</td>\n";
