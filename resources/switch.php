@@ -698,7 +698,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		*/
 
 	//list extensions
-		if ($select_type == "dialplan" || $select_type == "ivr") {
+		if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
 			$sql = "select * from v_extensions ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
 			$sql .= "and enabled = 'true' ";
@@ -706,9 +706,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
-				echo "<optgroup label='Extensions'>\n";
-			}
+			echo "<optgroup label='Extensions'>\n";
 			foreach ($result as &$row) {
 				$extension = $row["extension"];
 				$context = $row["user_context"];
@@ -737,9 +735,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					}
 				}
 			}
-			if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
-				echo "</optgroup>\n";
-			}
+			echo "</optgroup>\n";
 			unset ($prep_statement, $extension);
 		}
 
