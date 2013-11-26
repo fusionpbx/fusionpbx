@@ -471,112 +471,12 @@ require_once "resources/require.php";
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "			</td>\n";
 	echo "			</tr>\n";
-
 	echo "			</table>\n";
-	echo "			<br>\n";
-	echo "			".$text['description-extensions']."\n";
-	echo "			<br />\n";
+	if (strlen($text['description-lines']) > 0) {
+		echo "			<br>".$text['description-lines']."\n";
+	}
 	echo "		</td>";
 	echo "	</tr>";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-extension'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-
-	echo "		<table width='52%'>\n";
-	$sql = "SELECT e.extension, e.description, d.extension_uuid, d.device_uuid, d.device_line \n";
-	$sql .= "FROM v_device_extensions as d, v_extensions as e \n";
-	$sql .= "WHERE e.extension_uuid = d.extension_uuid \n";
-	$sql .= "AND d.device_uuid = '".$device_uuid."' \n";
-	$sql .= "AND d.domain_uuid = '".$_SESSION['domain_uuid']."' \n";
-	$sql .= "ORDER BY e.extension asc\n";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	foreach($result as $row) {
-		echo "		<tr>\n";
-		echo "			<td class='vtable'>".$row['extension']."</td>\n";
-		echo "			<td class='vtable'>".$row['device_line']."</td>\n";
-		echo "			<td class='vtable'>".$row['description']."&nbsp;</td>\n";
-		//echo "			<td>\n";
-		//echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&device_extension_uuid=".$row['device_extension_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-		//echo "			</td>\n";
-		echo "		</tr>\n";
-	}
-	echo "		</table>\n";
-	echo "		<br />\n";
-	/*
-	$sql = "SELECT * FROM v_devices ";
-	$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
-	$sql .= "ORDER BY device_mac_address asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	unset ($prep_statement, $sql);
-	echo "<select name=\"device_uuid\" id=\"select_mac_address\" class=\"formfld\" style=\"width:37%;\">\n";
-	echo "<option value=''></option>\n";
-	foreach($result as $row) {
-		$device_mac_address = $row['device_mac_address'];
-		$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
-		if ($row['device_uuid'] == $device_uuid) {
-			echo "<option value='".$row['device_uuid']."' selected='selected'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
-		}
-		else {
-			echo "<option value='".$row['device_uuid']."'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
-		}
-	} //end foreach
-	unset($sql, $result, $row_count);
-	echo "</select>\n";
-
-	echo "	<select id='device_line' name='device_line' style='width: 50;' onchange=\"$onchange\" class='formfld'>\n";
-	echo "	<option value=''></option>\n";
-	echo "	<option value='1'>1</option>\n";
-	echo "	<option value='2'>2</option>\n";
-	echo "	<option value='3'>3</option>\n";
-	echo "	<option value='4'>4</option>\n";
-	echo "	<option value='5'>5</option>\n";
-	echo "	<option value='6'>6</option>\n";
-	echo "	<option value='7'>7</option>\n";
-	echo "	<option value='8'>8</option>\n";
-	echo "	<option value='9'>9</option>\n";
-	echo "	<option value='10'>10</option>\n";
-	echo "	<option value='11'>11</option>\n";
-	echo "	<option value='12'>12</option>\n";
-	echo "	<option value='13'>13</option>\n";
-	echo "	<option value='14'>14</option>\n";
-	echo "	<option value='15'>15</option>\n";
-	echo "	<option value='16'>16</option>\n";
-	echo "	<option value='17'>17</option>\n";
-	echo "	<option value='18'>18</option>\n";
-	echo "	<option value='19'>19</option>\n";
-	echo "	<option value='20'>20</option>\n";
-	echo "	<option value='21'>21</option>\n";
-	echo "	<option value='22'>22</option>\n";
-	echo "	<option value='23'>23</option>\n";
-	echo "	<option value='24'>24</option>\n";
-	echo "	<option value='25'>25</option>\n";
-	echo "	<option value='26'>26</option>\n";
-	echo "	<option value='27'>27</option>\n";
-	echo "	<option value='28'>28</option>\n";
-	echo "	<option value='29'>29</option>\n";
-	echo "	<option value='30'>30</option>\n";
-	echo "	<option value='31'>31</option>\n";
-	echo "	<option value='32'>32</option>\n";
-	echo "	<option value='50'>50</option>\n";
-	echo "	<option value='100'>100</option>\n";
-	echo "	<option value='120'>120</option>\n";
-	echo "	<option value='150'>150</option>\n";
-	echo "	</select>\n";
-	echo "	<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-	echo "<br />\n";
-	echo $text['description-extension']."\n";
-	*/
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

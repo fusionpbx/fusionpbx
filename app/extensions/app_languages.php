@@ -178,13 +178,25 @@
 		$text['description-limit_destination']['pt-pt'] = "Introduza o destino para enviar as chamadas quando o número máximo de chamadas de saída for atingido.";
 		$text['description-limit_destination']['fr-fr'] = "Insérer la destination où déborder quand la limite des appels sortant est atteinte.";
 
-		$text['label-provisioning']['en-us'] = "Phone Provisioning";
-		$text['label-provisioning']['pt-pt'] = "Aprovisionamento do Telefone";
-		$text['label-provisioning']['fr-fr'] = "Provisioning du Téléphone";
+		$text['label-provisioning']['en-us'] = "Device Provisioning";
+		$text['label-provisioning']['pt-pt'] = "Aprovisionamento do Dispositivo";
+		$text['label-provisioning']['fr-fr'] = "Provisioning du Equipement";
 
 		$text['description-provisioning']['en-us'] = "Select a device and line number to assign to this extension.";
 		$text['description-provisioning']['pt-pt'] = "Escolha um dispositivo e um número para atribuir a esta extensão.";
 		$text['description-provisioning']['fr-fr'] = "Choisir un équipement et un nombre de lignes a assigner à cette extension.";
+
+		$text['label-line']['en-us'] = "Line";
+		$text['label-line']['pt-pt'] = "Linha";
+		$text['label-line']['fr-fr'] = "Ligne";
+
+		$text['label-device_mac_address']['en-us'] = "MAC Address";
+		$text['label-device_mac_address']['pt-pt'] = "Endereço MAC";
+		$text['label-device_mac_address']['fr-fr'] = "Adresse MAC";
+
+		$text['label-device_template']['en-us'] = "Template";
+		$text['label-device_template']['pt-pt'] = "Template";
+		$text['label-device_template']['fr-fr'] = "Template";
 
 		$text['label-vm_enabled']['en-us'] = "Voicemail Enabled";
 		$text['label-vm_enabled']['pt-pt'] = "Voicemail Activado";

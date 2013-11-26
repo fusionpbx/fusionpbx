@@ -112,17 +112,17 @@ else {
 			return;
 	}
 
-//delete the user from the v_device_extensions
-	if ($_GET["a"] == "delete" && strlen($_REQUEST["device_extension_uuid"]) > 0 && permission_exists("extension_delete")) {
+//delete the line from the v_device_lines
+	if ($_GET["a"] == "delete" && strlen($_REQUEST["extension_uuid"]) > 0 && permission_exists("extension_delete")) {
 		//set the variables
-			$device_extension_uuid = check_str($_REQUEST["device_extension_uuid"]);
-			$extension_uuid = check_str($_REQUEST["id"]);
-		//delete the group from the users
-			$sql = "delete from v_device_extensions ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			$sql .= "and extension_uuid = '".$extension_uuid."' ";
-			$sql .= "and device_extension_uuid = '".$device_extension_uuid."' ";
+			$id = check_str($_REQUEST["id"]);
+			$extension_uuid = check_str($_REQUEST["extension_uuid"]);
+		//delete device_line
+			$sql = "delete from v_device_lines ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and device_line_uuid = '$id' ";
 			$db->exec(check_sql($sql));
+			unset($sql);
 		//redirect the browser
 			require_once "resources/header.php";
 			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
@@ -160,28 +160,58 @@ else {
 			return;
 	}
 
-//assign the device to the extension
-	if (strlen($_REQUEST["device_uuid"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
+//assign the line to the device
+	if (strlen($_REQUEST["device_mac_address"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
 		//set the variables
 			$extension_uuid = check_str($_REQUEST["id"]);
+			$device_uuid= uuid();
+			$device_line_uuid = uuid();
+			$device_template = check_str($_REQUEST["device_template"]);
+			$line_number = check_str($_REQUEST["line_number"]);
+			$device_mac_address = check_str($_REQUEST["device_mac_address"]);
+			$device_mac_address = strtolower($device_mac_address);
+			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
-		//assign the user to the extension
-			$sql_insert = "insert into v_device_extensions ";
+		//add the device
+			$sql_insert = "insert into v_devices ";
 			$sql_insert .= "(";
-			$sql_insert .= "device_extension_uuid, ";
-			$sql_insert .= "domain_uuid, ";
-			$sql_insert .= "extension_uuid, ";
 			$sql_insert .= "device_uuid, ";
-			$sql_insert .= "device_line ";
-			$sql_insert .= ")";
+			$sql_insert .= "domain_uuid, ";
+			$sql_insert .= "device_mac_address, ";
+			$sql_insert .= "device_template ";
+			$sql_insert .= ") ";
 			$sql_insert .= "values ";
 			$sql_insert .= "(";
-			$sql_insert .= "'".uuid()."', ";
-			$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
-			$sql_insert .= "'".$extension_uuid."', ";
 			$sql_insert .= "'".$device_uuid."', ";
-			$sql_insert .= "'".$device_line."' ";
+			$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
+			$sql_insert .= "'".$device_mac_address."', ";
+			$sql_insert .= "'".$device_template."' ";
 			$sql_insert .= ")";
+			//echo $sql_insert."<br />\n";
+			$db->exec($sql_insert);
+
+		//assign the line to the device
+			$sql_insert = "insert into v_device_lines ";
+			$sql_insert .= "(";
+			$sql_insert .= "device_uuid, ";
+			$sql_insert .= "device_line_uuid, ";
+			$sql_insert .= "domain_uuid, ";
+			$sql_insert .= "server_address, ";
+			$sql_insert .= "user_id, ";
+			$sql_insert .= "password, ";
+			$sql_insert .= "line_number ";
+			$sql_insert .= ") ";
+			$sql_insert .= "values ";
+			$sql_insert .= "(";
+			$sql_insert .= "'".$device_uuid."', ";
+			$sql_insert .= "'".$device_line_uuid."', ";
+			$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
+			$sql_insert .= "'".$_SESSION['domain_name']."', ";
+			$sql_insert .= "'".$extension."', ";
+			$sql_insert .= "'".$password."', ";
+			$sql_insert .= "'".$line_number."' ";
+			$sql_insert .= ")";
+			//echo $sql_insert."<br />\n";
 			$db->exec($sql_insert);
 
 		//redirect the browser
@@ -1099,11 +1129,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 
 		echo "		<table width='52%'>\n";
-		$sql = "SELECT d.device_mac_address, d.device_model, d.device_description, e.device_extension_uuid, e.device_uuid, e.extension_uuid, e.device_line ";
-		$sql .= "FROM v_device_extensions as e, v_devices as d ";
-		$sql .= "WHERE e.device_uuid = d.device_uuid ";
-		$sql .= "AND e.extension_uuid = '".$extension_uuid."' ";
-		$sql .= "AND e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		echo "			<tr>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$text['label-line']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$text['label-device_mac_address']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$text['label-device_template']."&nbsp;\n";
+		echo "				</td>\n";
+
+		echo "				<td>\n";
+		//if (permission_exists('device_edit')) {
+		//	echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+		//}
+		//if (permission_exists('device_delete')) {
+		//	echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+		//}
+		echo "				</td>\n";
+		echo "			</tr>\n";
+
+		$sql = "SELECT d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
+		$sql .= "FROM v_device_lines as l, v_devices as d ";
+		$sql .= "WHERE l.user_id = '".$extension."' ";
+		$sql .= "AND l.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "AND l.device_uuid = d.device_uuid ";
 		$sql .= "ORDER BY d.device_mac_address asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -1113,18 +1164,61 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$device_mac_address = $row['device_mac_address'];
 			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			echo "		<tr>\n";
+			echo "			<td class='vtable'>".$row['line_number']."</td>\n";
 			echo "			<td class='vtable'>".$device_mac_address."</td>\n";
-			echo "			<td class='vtable'>".$row['device_model']."&nbsp;</td>\n";
-			echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
-			echo "			<td class='vtable'>".$row['device_line']."</td>\n";
+			echo "			<td class='vtable'>".$row['device_template']."&nbsp;</td>\n";
+			//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 			echo "			<td>\n";
-			echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&device_extension_uuid=".$row['device_extension_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "				<a href='device_line_delete.php?id=".$row['device_line_uuid']."&domain_uuid=".$_SESSION['domain_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			echo "			</td>\n";
 			echo "		</tr>\n";
 		}
-		echo "		</table>\n";
-		echo "		<br />\n";
 
+		echo "		<tr>\n";
+		echo "		<td class='vtable'>";
+		echo "			<select id='line_number' name='line_number' style='width: 50;' onchange=\"$onchange\" class='formfld'>\n";
+		echo "			<option value=''></option>\n";
+		echo "			<option value='1'>1</option>\n";
+		echo "			<option value='2'>2</option>\n";
+		echo "			<option value='3'>3</option>\n";
+		echo "			<option value='4'>4</option>\n";
+		echo "			<option value='5'>5</option>\n";
+		echo "			<option value='6'>6</option>\n";
+		echo "			<option value='7'>7</option>\n";
+		echo "			<option value='8'>8</option>\n";
+		echo "			<option value='9'>9</option>\n";
+		echo "			<option value='10'>10</option>\n";
+		echo "			<option value='11'>11</option>\n";
+		echo "			<option value='12'>12</option>\n";
+		echo "			<option value='13'>13</option>\n";
+		echo "			<option value='14'>14</option>\n";
+		echo "			<option value='15'>15</option>\n";
+		echo "			<option value='16'>16</option>\n";
+		echo "			<option value='17'>17</option>\n";
+		echo "			<option value='18'>18</option>\n";
+		echo "			<option value='19'>19</option>\n";
+		echo "			<option value='20'>20</option>\n";
+		echo "			<option value='21'>21</option>\n";
+		echo "			<option value='22'>22</option>\n";
+		echo "			<option value='23'>23</option>\n";
+		echo "			<option value='24'>24</option>\n";
+		echo "			<option value='25'>25</option>\n";
+		echo "			<option value='26'>26</option>\n";
+		echo "			<option value='27'>27</option>\n";
+		echo "			<option value='28'>28</option>\n";
+		echo "			<option value='29'>29</option>\n";
+		echo "			<option value='30'>30</option>\n";
+		echo "			<option value='31'>31</option>\n";
+		echo "			<option value='32'>32</option>\n";
+		echo "			<option value='50'>50</option>\n";
+		echo "			<option value='100'>100</option>\n";
+		echo "			<option value='120'>120</option>\n";
+		echo "			<option value='150'>150</option>\n";
+		echo "			</select>\n";
+		echo "		</td>\n";
+		echo "		<td class='vtable'>";
+		echo "			<input class='formfld' style='width: 100%' type='text' name='device_mac_address' maxlength='255' value=\"\">\n";
+		/*
 		$sql = "SELECT * FROM v_devices ";
 		$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
 		$sql .= "ORDER BY device_mac_address asc ";
@@ -1147,46 +1241,47 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		} //end foreach
 		unset($sql, $result, $row_count);
 		echo "</select>\n";
+		*/
+		echo "		</td>\n";
+		echo "		<td class='vtable'>";
+		echo "<select id='device_template' name='device_template' class='formfld'>\n";
+		echo "<option value=''></option>\n";
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"])) {
+			$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"];
+		} else {
+			$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+		}
+		if($dh = opendir($temp_dir)) {
+			while($dir = readdir($dh)) {
+				if($file != "." && $dir != ".." && $dir[0] != '.') {
+					if(is_dir($temp_dir . "/" . $dir)) {
+						echo "<optgroup label='$dir'>";
+						if($dh_sub = opendir($temp_dir.'/'.$dir)) {
+							while($dir_sub = readdir($dh_sub)) {
+								if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
+									if(is_dir($temp_dir . '/' . $dir .'/'. $dir_sub)) {
+										if ($device_template == $dir."/".$dir_sub) {
+											echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
+										}
+										else {
+											echo "<option value='".$dir."/".$dir_sub."'>".$dir."/".$dir_sub."</option>\n";
+										}
+									}
+								}
+							}
+							closedir($dh_sub);
+						}
+						echo "</optgroup>";
+					}
+				}
+			}
+			closedir($dh);
+		}
+		echo "</select>\n";
+		echo "		</td>\n";
+		echo "		</table>\n";
+		echo "		<br />\n";
 
-		echo "	<select id='device_line' name='device_line' style='width: 50;' onchange=\"$onchange\" class='formfld'>\n";
-		echo "	<option value=''></option>\n";
-		echo "	<option value='1'>1</option>\n";
-		echo "	<option value='2'>2</option>\n";
-		echo "	<option value='3'>3</option>\n";
-		echo "	<option value='4'>4</option>\n";
-		echo "	<option value='5'>5</option>\n";
-		echo "	<option value='6'>6</option>\n";
-		echo "	<option value='7'>7</option>\n";
-		echo "	<option value='8'>8</option>\n";
-		echo "	<option value='9'>9</option>\n";
-		echo "	<option value='10'>10</option>\n";
-		echo "	<option value='11'>11</option>\n";
-		echo "	<option value='12'>12</option>\n";
-		echo "	<option value='13'>13</option>\n";
-		echo "	<option value='14'>14</option>\n";
-		echo "	<option value='15'>15</option>\n";
-		echo "	<option value='16'>16</option>\n";
-		echo "	<option value='17'>17</option>\n";
-		echo "	<option value='18'>18</option>\n";
-		echo "	<option value='19'>19</option>\n";
-		echo "	<option value='20'>20</option>\n";
-		echo "	<option value='21'>21</option>\n";
-		echo "	<option value='22'>22</option>\n";
-		echo "	<option value='23'>23</option>\n";
-		echo "	<option value='24'>24</option>\n";
-		echo "	<option value='25'>25</option>\n";
-		echo "	<option value='26'>26</option>\n";
-		echo "	<option value='27'>27</option>\n";
-		echo "	<option value='28'>28</option>\n";
-		echo "	<option value='29'>29</option>\n";
-		echo "	<option value='30'>30</option>\n";
-		echo "	<option value='31'>31</option>\n";
-		echo "	<option value='32'>32</option>\n";
-		echo "	<option value='50'>50</option>\n";
-		echo "	<option value='100'>100</option>\n";
-		echo "	<option value='120'>120</option>\n";
-		echo "	<option value='150'>150</option>\n";
-		echo "	</select>\n";
 		echo "	<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 		echo "<br />\n";
 		echo $text['description-provisioning']."\n";
