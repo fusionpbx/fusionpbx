@@ -423,34 +423,23 @@ include "resources/classes/template.php";
 		}
 
 	//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-		$view->assign( "mac" , $mac);
-		$view->assign( "label", $device_label);
-		$view->assign( "firmware_version", $device_firmware_version);
-		$view->assign( "domain_time_zone", $device_time_zone);
-		$view->assign( "domain_name", $_SESSION['domain_name']);
-		$view->assign( "project_path", PROJECT_PATH);
-		$view->assign( "server1_address", $server1_address);
-		$view->assign( "proxy1_address", $proxy1_address);
-		$view->assign( "password",$password);
-
-	//cleanup any remaining variables ( no longer required as raintpl blanks non assigned variables )
-  //		for ($i = 1; $i <= 100; $i++) {
-  //  	$file_contents = str_replace("{v_line".$i."_server_address}", "", $file_contents);
-  //  	$file_contents = str_replace("{v_line".$i."_outbound_proxy}", "", $file_contents);
-  //  	$file_contents = str_replace("{v_line".$i."_displayname}", "", $file_contents);
-  //  	$file_contents = str_replace("{v_line".$i."_shortname}", "", $file_contents);
-  //  	$file_contents = str_replace("{v_line".$i."_user_id}", "", $file_contents);
-  //  	$file_contents = str_replace("{v_line".$i."_auth_id}", "", $file_contents);
-  //  	$file_contents = str_replace("{v_line".$i."_user_password}", "", $file_contents);
-  //  }
+		$view->assign("mac" , $mac);
+		$view->assign("label", $device_label);
+		$view->assign("firmware_version", $device_firmware_version);
+		$view->assign("domain_time_zone", $device_time_zone);
+		$view->assign("domain_name", $_SESSION['domain_name']);
+		$view->assign("project_path", PROJECT_PATH);
+		$view->assign("server1_address", $server1_address);
+		$view->assign("proxy1_address", $proxy1_address);
+		$view->assign("password",$password);
 
 //replace the dynamic provision variables that are defined in 'default settings' and 'domain settings'
-	//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {v_sip_transport}
+	//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {$sip_transport}
 	foreach($_SESSION['provision'] as $key=>$value) {
 		$view->assign($key, $value['var']);
 	}
 
-//output template to string for headder processing
+//output template to string for header processing
 	$file_contents = $view->render($file);
 
 //deliver the customized config over HTTP/HTTPS
