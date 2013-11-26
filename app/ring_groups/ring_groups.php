@@ -75,7 +75,7 @@ require_once "resources/paging.php";
 		if ($prep_statement) {
 		$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
+			if (strlen($row['num_rows']) > 0) {
 				$num_rows = $row['num_rows'];
 			}
 			else {
