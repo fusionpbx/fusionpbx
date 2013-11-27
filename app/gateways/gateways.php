@@ -52,12 +52,12 @@ else {
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
 		if (strlen($_GET["a"]) > 0) {
-			$profile = $_GET["profile"];
+			$profile = check_str($_GET["profile"]);
 			if (strlen($profile) == 0) {
 				$profile = 'external';
 			}
 			if ($_GET["a"] == "stop") {
-				$gateway_name = $_GET["gateway"];
+				$gateway_name = check_str($_GET["gateway"]);
 				if (count($_SESSION["domains"]) > 1) {
 					$cmd = 'api sofia profile '.$profile.' killgw '.$_SESSION['domain_name'].'-'.$gateway_name;
 				}

@@ -54,7 +54,6 @@ if (strlen($_GET["id"])>0) {
 		foreach ($result as &$row) {
 			$gateway = $row["gateway"];
 			$profile = $row["profile"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 
@@ -65,25 +64,26 @@ if (strlen($_GET["id"])>0) {
 		else {
 			$gateway_xml_file = $_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$gateway.".xml";
 		}
-		unlink($gateway_xml_file);
+		if (file_exists($gateway_xml_file)) {
+			unlink($gateway_xml_file);
+		}
 
 	//create the event socket connection and stop the gateway
 		if (!$fp) {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		}
-		if ($fp) {
-			//send the api gateway stop command over event socket
-				if (count($_SESSION["domains"]) > 1) {
-					$tmp_cmd = 'api sofia profile '.$profile.' killgw '.$_SESSION['domain_name'].'-'.$gateway;
-				}
-				else {
-					$tmp_cmd = 'api sofia profile '.$profile.' killgw '.$gateway;
-				}
-				$response = event_socket_request($fp, $tmp_cmd);
-				unset($tmp_cmd);
-		}
 
-	//delete gateway
+	//send the api gateway stop command over event socket
+		if (count($_SESSION["domains"]) > 1) {
+			$cmd = 'api sofia profile '.$profile.' killgw '.$_SESSION['domain_name'].'-'.$gateway;
+		}
+		else {
+			$cmd = 'api sofia profile '.$profile.' killgw '.$gateway;
+		}
+		$response = event_socket_request($fp, $cmd);
+		unset($cmd);
+
+	//delete the gateway
 		$sql = "delete from v_gateways ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and gateway_uuid = '$id' ";
@@ -94,12 +94,13 @@ if (strlen($_GET["id"])>0) {
 		save_gateway_xml();
 
 	//synchronize the xml config
-		save_dialplan_xml();
+		//save_dialplan_xml();
 
 	//delete the gateways from memcache
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
-			$switch_cmd = "memcache delete configuration:sofia.conf";
+			$hostname = trim(event_socket_request($fp, 'api switchname'));
+			$switch_cmd = "memcache delete configuration:sofia.conf:".$hostname;
 			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 		}
 
@@ -110,9 +111,9 @@ if (strlen($_GET["id"])>0) {
 			}
 			if ($fp) {
 				//send the api commandover event socket
-					$tmp_cmd = 'api sofia profile '.$profile.' rescan';
-					$response = event_socket_request($fp, $tmp_cmd);
-					unset($tmp_cmd);
+					$cmd = 'api sofia profile '.$profile.' rescan';
+					$response = event_socket_request($fp, $cmd);
+					unset($cmd);
 				//close the connection
 					fclose($fp);
 			}
