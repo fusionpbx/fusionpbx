@@ -70,6 +70,11 @@ else {
 				unset($cmd);
 			}
 
+		//sofia profile
+			if (substr($cmd, 0, 17) == "api sofia profile") {
+				$response = event_socket_request($fp, $cmd);
+			}
+
 		//close the connection
 			fclose($fp);
 	}
