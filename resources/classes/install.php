@@ -55,32 +55,35 @@ include "root.php";
 						}
 					}
 					else {
-						//show debug info
-							//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
+						//copy only missing files
+							if (!file_exists($dst.'/'.$file)) {
+								copy($src.'/'.$file, $dst.'/'.$file);
+								//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
+							}
 						//check the file type by ext
-							if (substr($file, -3) == "lua") {
+							//if (substr($file, -3) == "lua") {
 								//set the exception default
-									$exception = false;
+									//$exception = false;
 								//set the exceptions
-									if ($file == "database_handle.lua") { $exception = true; }
+									//if ($file == "database_handle.lua") { $exception = true; }
 								//check for exceptions
-									if ($exception) {
-										//file does not exist, save a copy in the destination directory
-										if (!file_exists($dst.'/'.$file)) {
-											copy($src.'/'.$file, $dst.'/'.$file);
-										}
-									}
-									else {
+									//if ($exception) {
+									//	//file does not exist, save a copy in the destination directory
+									//	if (!file_exists($dst.'/'.$file)) {
+									//		copy($src.'/'.$file, $dst.'/'.$file);
+									//	}
+									//}
+									//else {
 										//write over the file
-										copy($src.'/'.$file, $dst.'/'.$file);
-									}
-							}
-							else {
+									//	copy($src.'/'.$file, $dst.'/'.$file);
+									//}
+							//}
+							//else {
 								//file does not exist, save a copy in the destination directory
-								if (!file_exists($dst.'/'.$file)) {
-									copy($src.'/'.$file, $dst.'/'.$file);
-								}
-							}
+								//if (!file_exists($dst.'/'.$file)) {
+								//	copy($src.'/'.$file, $dst.'/'.$file);
+								//}
+							//}
 					}
 				}
 			}
