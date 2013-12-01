@@ -217,7 +217,7 @@
 				--process according to user_exists, sip_uri, external number
 					if (user_exists == "true") then
 						--send to user
-						dial_string = "["..origination_uuid.."sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]user/" .. row.destination_number .. "@" .. domain_name;
+						dial_string = "["..origination_uuid.."sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. "]user/" .. row.destination_number .. "@" .. domain_name;
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
 						dial_string = "[origination_uuid="..new_uuid..",sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]" .. row.destination_number;
