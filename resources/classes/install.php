@@ -50,9 +50,7 @@ include "root.php";
 			while(false !== ($file = readdir($dir))) {
 				if (($file != '.') && ($file != '..')) {
 					if (is_dir($src.'/'.$file)) {
-						if (!file_exists($dst.'/'.$file)) {
-							$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
-						}
+						$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
 					}
 					else {
 						//copy only missing files
