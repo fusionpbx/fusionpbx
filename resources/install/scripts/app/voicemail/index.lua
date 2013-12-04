@@ -86,6 +86,7 @@
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
+			voicemail_authorized = session:getVariable("voicemail_authorized");
 			if (not vm_message_ext) then vm_message_ext = 'wav'; end
 
 		--set the sounds path for the language, dialect and voice
@@ -213,7 +214,19 @@
 	if (voicemail_action == "check") then
 		if (session:ready()) then
 			--check the voicemail password
-				check_password(voicemail_id, password_tries);
+				if (voicemail_id) then
+					if (voicemail_authorized == nil) then
+						check_password(voicemail_id, password_tries);
+					else
+						if (voicemail_authorized == "true") then
+							--skip the password check
+						else
+							check_password(voicemail_id, password_tries);
+						end
+					end
+				else
+					check_password(voicemail_id, password_tries);
+				end
 			--send to the main menu
 				timeouts = 0;
 				main_menu();
