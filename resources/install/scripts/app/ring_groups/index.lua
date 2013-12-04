@@ -23,6 +23,11 @@
 --	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
+--
+--	Contributor(s):
+--	Mark J Crane <markjcrane@fusionpbx.com>
+--	Luis Daniel Lucio Qurioz <daniel.lucio@astraqom.com>
+
 
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
@@ -105,7 +110,16 @@
 				if (row.destination_prompt == "1" or row.destination_prompt == "2") then
 					prompt = "true";
 				end
-				cmd = "user_exists id ".. row.destination_number .." "..domain_name;
+
+				local array = explode("@",row.destination_number);
+				if (array[2] == nil) then
+					-- no @
+					leg_domain_name = domain_name;
+				else
+					leg_domain_name = array[2];
+					row.destination_number = array[1]
+				end
+				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
 				user_exists = api:executeString(cmd);
 				if (user_exists == "true") then
 					row['user_exists'] = "true";
@@ -113,6 +127,7 @@
 					external = "true";
 					row['user_exists'] = "false";
 				end
+				row['domain_name'] = leg_domain_name;
 				destinations[x] = row;
 				x = x + 1;
 			end));
@@ -160,6 +175,7 @@
 					destination_delay = row.destination_delay;
 					destination_timeout = row.destination_timeout;
 					destination_prompt = row.destination_prompt;
+					domain_name = row.domain_name;
 
 				--set ringback
 					if (ring_group_ringback == "${uk-ring}") then
@@ -285,8 +301,8 @@
 							end
 							previous_dialplan_uuid = r.dialplan_uuid;
 						end
-						--freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
 					end
+					freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
 
 				--prompt will use the confirm lua script and the content of else will use the concatenated dialstring seperated by the delimiter
 					if (prompt == "true") then
