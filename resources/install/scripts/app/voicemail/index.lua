@@ -277,7 +277,7 @@
 						end
 						dbh:query(sql);
 					end
-				
+
 				--get saved and new message counts
 					sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
 						WHERE domain_uuid = ']] .. domain_uuid ..[['
