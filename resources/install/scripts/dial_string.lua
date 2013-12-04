@@ -26,7 +26,7 @@
 	max_tries = "3";
 	digit_timeout = "5000";
 	api = freeswitch.API();
-	
+
 --set the debug level
 	debug["sql"] = false;
 	debug["var"] = false;
