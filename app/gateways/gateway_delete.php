@@ -52,6 +52,7 @@ if (strlen($_GET["id"])>0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$gateway_uuid = $row["gateway_uuid"];
 			$gateway = $row["gateway"];
 			$profile = $row["profile"];
 		}
@@ -62,7 +63,7 @@ if (strlen($_GET["id"])>0) {
 			$gateway_xml_file = $_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$_SESSION['domain_name'].'-'.$gateway.".xml";
 		}
 		else {
-			$gateway_xml_file = $_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$gateway.".xml";
+			$gateway_xml_file = $_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
 		}
 		if (file_exists($gateway_xml_file)) {
 			unlink($gateway_xml_file);
@@ -74,12 +75,7 @@ if (strlen($_GET["id"])>0) {
 		}
 
 	//send the api gateway stop command over event socket
-		if (count($_SESSION["domains"]) > 1) {
-			$cmd = 'api sofia profile '.$profile.' killgw '.$_SESSION['domain_name'].'-'.$gateway;
-		}
-		else {
-			$cmd = 'api sofia profile '.$profile.' killgw '.$gateway;
-		}
+		$cmd = 'api sofia profile '.$profile.' killgw '.$gateway_uuid;
 		$response = event_socket_request($fp, $cmd);
 		unset($cmd);
 

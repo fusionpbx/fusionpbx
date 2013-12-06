@@ -48,7 +48,7 @@ else {
 	require_once "resources/paging.php";
 
 //get the http post values and set theme as php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//set the variables
 			$dialplan_name = check_str($_POST["dialplan_name"]);
 			$dialplan_order = check_str($_POST["dialplan_order"]);
@@ -139,52 +139,11 @@ else {
 				$gateway_3_id = '';
 				$gateway_3_name = '';
 			}
-
-		if (permission_exists('outbound_route_any_gateway')) {
-			//get the domain_uuid for gateway
-				$sql = "select * from v_gateways ";
-				$sql .= "where gateway_uuid = '$gateway_uuid' ";
-				$sql .= "and gateway = '$gateway_name' ";
-				$sql .= "and enabled = 'true' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$gateway_domain_uuid = $row["domain_uuid"];
-					break;
-				}
-				unset ($prep_statement);
-			//get the domain_uuid for gateway_2
-				$sql = "select * from v_gateways ";
-				$sql .= "where gateway_uuid = '$gateway_2_id' ";
-				$sql .= "and gateway = '$gateway_2_name' ";
-				$sql .= "and enabled = 'true' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$gateway_2_domain_uuid = $row["domain_uuid"];
-					break;
-				}
-				unset ($prep_statement);
-			//get the domain_uuid for gateway_3
-				$sql = "select * from v_gateways ";
-				$sql .= "where gateway_uuid = '$gateway_3_id' ";
-				$sql .= "and gateway = '$gateway_3_name' ";
-				$sql .= "and enabled = 'true' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$gateway_3_domain_uuid = $row["domain_uuid"];
-					break;
-				}
-				unset ($prep_statement);
-		}
-
-		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
-		$dialplan_description = check_str($_POST["dialplan_description"]);
-		if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; } //set default to enabled
+		//set additional variables
+			$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
+			$dialplan_description = check_str($_POST["dialplan_description"]);
+		//set default to enabled
+			if (strlen($dialplan_enabled) == 0) { $dialplan_enabled = "true"; }
 	}
 
 //process the http form values
@@ -219,40 +178,7 @@ else {
 
 			foreach($tmp_array as $dialplan_expression) {
 				$dialplan_expression = trim($dialplan_expression);
-				if (strlen($dialplan_expression)>0) {
-					if (count($_SESSION["domains"]) > 1) {
-						if (permission_exists('outbound_route_any_gateway')) {
-							$tmp_gateway_name = $_SESSION['domains'][$gateway_domain_uuid]['domain_name'] .'-'.$gateway_name;
-						}
-						else {
-							$tmp_gateway_name = $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name'] .'-'.$gateway_name;
-						}
-						if (strlen($gateway_2_name) > 0) {
-							if (permission_exists('outbound_route_any_gateway')) {
-								$tmp_gateway_2_name = $_SESSION['domains'][$gateway_2_domain_uuid]['domain_name'] .'-'.$gateway_2_name;
-							}
-							else {
-								$tmp_gateway_2_name = $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name'] .'-'.$gateway_2_name;
-							}
-						}
-						if (strlen($gateway_3_name) > 0) {
-							if (permission_exists('outbound_route_any_gateway')) {
-								$tmp_gateway_3_name = $_SESSION['domains'][$gateway_3_domain_uuid]['domain_name'] .'-'.$gateway_3_name;
-							}
-							else {
-								$tmp_gateway_3_name = $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name'] .'-'.$gateway_3_name;
-							}
-						}
-					}
-					else {
-						$tmp_gateway_name = $gateway_name;
-						if (strlen($gateway_2_name) > 0) {
-							$tmp_gateway_2_name = $gateway_2_name;
-						}
-						if (strlen($gateway_3_name) > 0) {
-							$tmp_gateway_3_name = $gateway_3_name;
-						}
-					}
+				if (strlen($dialplan_expression) > 0) {
 					switch ($dialplan_expression) {
 					case "^(\d{7})$":
 						$label = $text['label-7d'];
@@ -333,15 +259,15 @@ else {
 
 					if ($gateway_type == "gateway") {
 						$dialplan_name = $gateway_name.".".$abbrv;
-						$action_data = "sofia/gateway/".$tmp_gateway_name."/".$prefix_number."\$1";
+						$action_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
 					}
 					if (strlen($gateway_2_name) > 0 && $gateway_2_type == "gateway") {
-						$extension_2_name = $gateway_2_name.".".$abbrv;
-						$bridge_2_data .= "sofia/gateway/".$tmp_gateway_2_name."/".$prefix_number."\$1";
+						$extension_2_name = $gateway_2_id.".".$abbrv;
+						$bridge_2_data .= "sofia/gateway/".$gateway_2_id."/".$prefix_number."\$1";
 					}
 					if (strlen($gateway_3_name) > 0 && $gateway_3_type == "gateway") {
-						$extension_3_name = $gateway_3_name.".".$abbrv;
-						$bridge_3_data .= "sofia/gateway/".$tmp_gateway_3_name."/".$prefix_number."\$1";
+						$extension_3_name = $gateway_3_id.".".$abbrv;
+						$bridge_3_data .= "sofia/gateway/".$gateway_3_id."/".$prefix_number."\$1";
 					}
 					if ($gateway_type == "freetdm") {
 						$dialplan_name = "freetdm.".$abbrv;
@@ -492,14 +418,12 @@ else {
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					if (strlen($bridge_2_data) > 0) {
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'continue_on_fail=true';
-						$dialplan_detail_order = '040';
-						$dialplan_detail_group = '';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-					}
+					$dialplan_detail_tag = 'action'; //condition, action, antiaction
+					$dialplan_detail_type = 'set';
+					$dialplan_detail_data = 'continue_on_fail=true';
+					$dialplan_detail_order = '040';
+					$dialplan_detail_group = '';
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 					if ($gateway_type == "enum" || $gateway_2_type == "enum") {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
@@ -639,7 +563,6 @@ function type_onchange(dialplan_detail_type) {
 	echo "<br />\n";
 
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "    ".$text['label-gateway'].":\n";

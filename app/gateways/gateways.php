@@ -57,18 +57,13 @@ else {
 				$profile = 'external';
 			}
 			if ($_GET["a"] == "stop") {
-				$gateway_name = check_str($_GET["gateway"]);
-				if (count($_SESSION["domains"]) > 1) {
-					$cmd = 'api sofia profile '.$profile.' killgw '.$_SESSION['domain_name'].'-'.$gateway_name;
-				}
-				else {
-					$cmd = 'api sofia profile '.$profile.' killgw '.$gateway_name;
-				}
+				$gateway_uuid = check_str($_GET["gateway"]);
+				$cmd = 'api sofia profile '.$profile.' killgw '.$gateway_uuid;
 				$response = trim(event_socket_request($fp, $cmd));
 				$msg = '<strong>Stop Gateway:</strong><pre>'.$response.'</pre>';
 			}
 			if ($_GET["a"] == "start") {
-				$gateway_name = $_GET["gateway"];
+				$gateway_uuid = $_GET["gateway"];
 				$cmd = 'api sofia profile '.$profile.' rescan';
 				$response = trim(event_socket_request($fp, $cmd));
 				$msg = '<strong>Start Gateway:</strong><pre>'.$response.'</pre>';
@@ -76,14 +71,9 @@ else {
 		}
 
 		if (!function_exists('switch_gateway_status')) {
-			function switch_gateway_status($gateway_name, $result_type = 'xml') {
+			function switch_gateway_status($gateway_uuid, $result_type = 'xml') {
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if (count($_SESSION["domains"]) > 1) {
-					$cmd = 'api sofia xmlstatus gateway '.$_SESSION['domain_name'].'-'.$gateway_name;
-				}
-				else {
-					$cmd = 'api sofia xmlstatus gateway '.$gateway_name;
-				}
+				$cmd = 'api sofia xmlstatus gateway '.$gateway_uuid;
 				return trim(event_socket_request($fp, $cmd));
 			}
 		}
@@ -179,11 +169,11 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["context"]."</td>\n";
 			if ($fp) {
 				if ($row["enabled"] == "true") {
-					$response = switch_gateway_status($row["gateway"]);
+					$response = switch_gateway_status($row["gateway_uuid"]);
 					if ($response == "Invalid Gateway!") {
 						//not running
 						echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-status-stopped']."</td>\n";
-						echo "	<td valign='top' class='".$row_style[$c]."'><a href='gateways.php?a=start&gateway=".$row["gateway"]."&profile=".$row["profile"]."' alt='".$text['label-action-start']."'>".$text['label-action-start']."</a></td>\n";
+						echo "	<td valign='top' class='".$row_style[$c]."'><a href='gateways.php?a=start&gateway=".$row["gateway_uuid"]."&profile=".$row["profile"]."' alt='".$text['label-action-start']."'>".$text['label-action-start']."</a></td>\n";
 						echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
 					}
 					else {
@@ -192,7 +182,7 @@ else {
 							$xml = new SimpleXMLElement($response);
 							$state = $xml->state;
 							echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-status-running']."</td>\n";
-							echo "	<td valign='top' class='".$row_style[$c]."'><a href='gateways.php?a=stop&gateway=".$row["gateway"]."&profile=".$row["profile"]."' alt='".$text['label-action-stop']."'>".$text['label-action-stop']."</a></td>\n";
+							echo "	<td valign='top' class='".$row_style[$c]."'><a href='gateways.php?a=stop&gateway=".$row["gateway_uuid"]."&profile=".$row["profile"]."' alt='".$text['label-action-stop']."'>".$text['label-action-stop']."</a></td>\n";
 							echo "	<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n"; //REGED, NOREG, UNREGED
 						}
 						catch(Exception $e) {
