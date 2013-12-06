@@ -288,7 +288,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($queue_max_wait_time_with_no_agent) == 0) { $queue_max_wait_time_with_no_agent = "30"; }
 	if (strlen($queue_max_wait_time_with_no_agent_time_reached) == 0) { $queue_max_wait_time_with_no_agent_time_reached = "60"; }
 	if (strlen($queue_tier_rules_apply) == 0) { $queue_tier_rules_apply = "false"; }
-	if (strlen($queue_tier_rule_wait_second) == 0) { $queue_tier_rule_wait_second = "300"; }
+	if (strlen($queue_tier_rule_wait_second) == 0) { $queue_tier_rule_wait_second = "3"; }
 	if (strlen($queue_tier_rule_wait_multiply_level) == 0) { $queue_tier_rule_wait_multiply_level = "true"; }
 	if (strlen($queue_tier_rule_no_agent_no_wait) == 0) { $queue_tier_rule_no_agent_no_wait = "false"; }
 	if (strlen($queue_discard_abandoned_after) == 0) { $queue_discard_abandoned_after = "60"; }
