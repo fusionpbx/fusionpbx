@@ -101,15 +101,7 @@
 							end
 							x = 0;
 							dbh:query(sql, function(field)
-								--set as variables
-								gateway = field.gateway;
-								gateway = gateway:gsub(" ", "_");
-
-								if (domain_count > 1) then
-									table.insert(xml, [[						<gateway name="]] .. field.domain_name .."-".. gateway .. [[">]]);
-								else
-									table.insert(xml, [[						<gateway name="]] .. gateway .. [[">]]);
-								end
+								table.insert(xml, [[						<gateway name="]] .. field.gateway_uuid .. [[">]]);
 
 								if (string.len(field.username) > 0) then
 									table.insert(xml, [[							<param name="username" value="]] .. field.username .. [["/>]]);
@@ -254,7 +246,7 @@
 
 		--send to the console
 			if (debug["cache"]) then
-				freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf source: database\n");
+				freeswitch.consoleLog("notice", "[xml_handler] configuration:sofia.conf:" .. hostname .." source: database\n");
 			end
 	else
 		--replace the &#39 back to a single quote
