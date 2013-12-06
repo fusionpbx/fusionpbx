@@ -1725,116 +1725,108 @@ function save_gateway_xml() {
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($result as &$row) {
 			if ($row['enabled'] != "false") {
-					//remove invalid characters from the file names
-						$gateway = $row['gateway'];
-						$gateway = str_replace(" ", "_", $gateway);
-						$gateway = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $gateway);
 					//set the default profile as external
 						$profile = $row['profile'];
 						if (strlen($profile) == 0) {
 							$profile = "external";
 						}
-					if (count($_SESSION["domains"]) > 1) {
-						$fout = fopen($_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$_SESSION['domain_name'].'-'.$gateway.".xml","w");
+					//open the xml file
+						$fout = fopen($_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$row['gateway_uuid'].".xml","w");
+					//build the xml
 						$xml .= "<include>\n";
-						$xml .= "    <gateway name=\"". $_SESSION['domain_name'] .'-'. $gateway . "\">\n";
-					}
-					else {
-						$fout = fopen($_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$gateway.".xml","w");
-						$xml .= "<include>\n";
-						$xml .= "    <gateway name=\"" . $gateway . "\">\n";
-					}
-					if (strlen($row['username']) > 0) {
-						$xml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
-					}
-					else {
-						$xml .= "      <param name=\"username\" value=\"register:false\"/>\n";
-					}
-					if (strlen($row['distinct_to']) > 0) {
-						$xml .= "      <param name=\"distinct-to\" value=\"" . $row['distinct_to'] . "\"/>\n";
-					}
-					if (strlen($row['auth_username']) > 0) {
-						$xml .= "      <param name=\"auth-username\" value=\"" . $row['auth_username'] . "\"/>\n";
-					}
-					if (strlen($row['password']) > 0) {
-						$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
-					}
-					else {
-						$xml .= "      <param name=\"password\" value=\"register:false\"/>\n";
-					}
-					if (strlen($row['realm']) > 0) {
-						$xml .= "      <param name=\"realm\" value=\"" . $row['realm'] . "\"/>\n";
-					}
-					if (strlen($row['from_user']) > 0) {
-						$xml .= "      <param name=\"from-user\" value=\"" . $row['from_user'] . "\"/>\n";
-					}
-					if (strlen($row['from_domain']) > 0) {
-						$xml .= "      <param name=\"from-domain\" value=\"" . $row['from_domain'] . "\"/>\n";
-					}
-					if (strlen($row['proxy']) > 0) {
-						$xml .= "      <param name=\"proxy\" value=\"" . $row['proxy'] . "\"/>\n";
-					}
-					if (strlen($row['register_proxy']) > 0) {
-										$xml .= "      <param name=\"register-proxy\" value=\"" . $row['register_proxy'] . "\"/>\n";
-					}
-					if (strlen($row['outbound_proxy']) > 0) {
-							$xml .= "      <param name=\"outbound-proxy\" value=\"" . $row['outbound_proxy'] . "\"/>\n";
-					}
-					if (strlen($row['expire_seconds']) > 0) {
-						$xml .= "      <param name=\"expire-seconds\" value=\"" . $row['expire_seconds'] . "\"/>\n";
-					}
-					if (strlen($row['register']) > 0) {
-						$xml .= "      <param name=\"register\" value=\"" . $row['register'] . "\"/>\n";
-					}
-
-					if (strlen($row['register_transport']) > 0) {
-						switch ($row['register_transport']) {
-						case "udp":
-							$xml .= "      <param name=\"register-transport\" value=\"udp\"/>\n";
-							break;
-						case "tcp":
-							$xml .= "      <param name=\"register-transport\" value=\"tcp\"/>\n";
-							break;
-						case "tls":
-							$xml .= "      <param name=\"register-transport\" value=\"tls\"/>\n";
-							$xml .= "      <param name=\"contact-params\" value=\"transport=tls\"/>\n";
-							break;
-						default:
-							$xml .= "      <param name=\"register-transport\" value=\"" . $row['register_transport'] . "\"/>\n";
+						$xml .= "    <gateway name=\"" . $row['gateway_uuid'] . "\">\n";
+						if (strlen($row['username']) > 0) {
+							$xml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
 						}
-					  }
+						else {
+							$xml .= "      <param name=\"username\" value=\"register:false\"/>\n";
+						}
+						if (strlen($row['distinct_to']) > 0) {
+							$xml .= "      <param name=\"distinct-to\" value=\"" . $row['distinct_to'] . "\"/>\n";
+						}
+						if (strlen($row['auth_username']) > 0) {
+							$xml .= "      <param name=\"auth-username\" value=\"" . $row['auth_username'] . "\"/>\n";
+						}
+						if (strlen($row['password']) > 0) {
+							$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+						}
+						else {
+							$xml .= "      <param name=\"password\" value=\"register:false\"/>\n";
+						}
+						if (strlen($row['realm']) > 0) {
+							$xml .= "      <param name=\"realm\" value=\"" . $row['realm'] . "\"/>\n";
+						}
+						if (strlen($row['from_user']) > 0) {
+							$xml .= "      <param name=\"from-user\" value=\"" . $row['from_user'] . "\"/>\n";
+						}
+						if (strlen($row['from_domain']) > 0) {
+							$xml .= "      <param name=\"from-domain\" value=\"" . $row['from_domain'] . "\"/>\n";
+						}
+						if (strlen($row['proxy']) > 0) {
+							$xml .= "      <param name=\"proxy\" value=\"" . $row['proxy'] . "\"/>\n";
+						}
+						if (strlen($row['register_proxy']) > 0) {
+							$xml .= "      <param name=\"register-proxy\" value=\"" . $row['register_proxy'] . "\"/>\n";
+						}
+						if (strlen($row['outbound_proxy']) > 0) {
+							$xml .= "      <param name=\"outbound-proxy\" value=\"" . $row['outbound_proxy'] . "\"/>\n";
+						}
+						if (strlen($row['expire_seconds']) > 0) {
+							$xml .= "      <param name=\"expire-seconds\" value=\"" . $row['expire_seconds'] . "\"/>\n";
+						}
+						if (strlen($row['register']) > 0) {
+							$xml .= "      <param name=\"register\" value=\"" . $row['register'] . "\"/>\n";
+						}
 
-					if (strlen($row['retry_seconds']) > 0) {
-						$xml .= "      <param name=\"retry-seconds\" value=\"" . $row['retry_seconds'] . "\"/>\n";
-					}
-					if (strlen($row['extension']) > 0) {
-						$xml .= "      <param name=\"extension\" value=\"" . $row['extension'] . "\"/>\n";
-					}
-					if (strlen($row['ping']) > 0) {
-						$xml .= "      <param name=\"ping\" value=\"" . $row['ping'] . "\"/>\n";
-					}
-					if (strlen($row['context']) > 0) {
-						$xml .= "      <param name=\"context\" value=\"" . $row['context'] . "\"/>\n";
-					}
-					if (strlen($row['caller_id_in_from']) > 0) {
-						$xml .= "      <param name=\"caller-id-in-from\" value=\"" . $row['caller_id_in_from'] . "\"/>\n";
-					}
-					if (strlen($row['supress_cng']) > 0) {
-						$xml .= "      <param name=\"supress-cng\" value=\"" . $row['supress_cng'] . "\"/>\n";
-					}
-					if (strlen($row['sip_cid_type']) > 0) {
-						$xml .= "      <param name=\"sip_cid_type\" value=\"" . $row['sip_cid_type'] . "\"/>\n";
-					}
-					if (strlen($row['extension_in_contact']) > 0) {
-						$xml .= "      <param name=\"extension-in-contact\" value=\"" . $row['extension_in_contact'] . "\"/>\n";
-					}
+						if (strlen($row['register_transport']) > 0) {
+							switch ($row['register_transport']) {
+							case "udp":
+								$xml .= "      <param name=\"register-transport\" value=\"udp\"/>\n";
+								break;
+							case "tcp":
+								$xml .= "      <param name=\"register-transport\" value=\"tcp\"/>\n";
+								break;
+							case "tls":
+								$xml .= "      <param name=\"register-transport\" value=\"tls\"/>\n";
+								$xml .= "      <param name=\"contact-params\" value=\"transport=tls\"/>\n";
+								break;
+							default:
+								$xml .= "      <param name=\"register-transport\" value=\"" . $row['register_transport'] . "\"/>\n";
+							}
+						}
 
-					$xml .= "    </gateway>\n";
-					$xml .= "</include>";
+						if (strlen($row['retry_seconds']) > 0) {
+							$xml .= "      <param name=\"retry-seconds\" value=\"" . $row['retry_seconds'] . "\"/>\n";
+						}
+						if (strlen($row['extension']) > 0) {
+							$xml .= "      <param name=\"extension\" value=\"" . $row['extension'] . "\"/>\n";
+						}
+						if (strlen($row['ping']) > 0) {
+							$xml .= "      <param name=\"ping\" value=\"" . $row['ping'] . "\"/>\n";
+						}
+						if (strlen($row['context']) > 0) {
+							$xml .= "      <param name=\"context\" value=\"" . $row['context'] . "\"/>\n";
+						}
+						if (strlen($row['caller_id_in_from']) > 0) {
+							$xml .= "      <param name=\"caller-id-in-from\" value=\"" . $row['caller_id_in_from'] . "\"/>\n";
+						}
+						if (strlen($row['supress_cng']) > 0) {
+							$xml .= "      <param name=\"supress-cng\" value=\"" . $row['supress_cng'] . "\"/>\n";
+						}
+						if (strlen($row['sip_cid_type']) > 0) {
+							$xml .= "      <param name=\"sip_cid_type\" value=\"" . $row['sip_cid_type'] . "\"/>\n";
+						}
+						if (strlen($row['extension_in_contact']) > 0) {
+							$xml .= "      <param name=\"extension-in-contact\" value=\"" . $row['extension_in_contact'] . "\"/>\n";
+						}
 
-					fwrite($fout, $xml);
-					unset($xml);
-					fclose($fout);
+						$xml .= "    </gateway>\n";
+						$xml .= "</include>";
+
+					//write the xml
+						fwrite($fout, $xml);
+						unset($xml);
+						fclose($fout);
 			}
 
 		} //end foreach
