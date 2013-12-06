@@ -136,7 +136,7 @@ if (strlen($msg) > 0) {
 		foreach ($xml->gateway as $row) {
 			//print_r($row);
 			echo "<tr>\n";
-			echo "	<td class='".$row_style[$c]."'>".$row->name."</td>\n";
+			echo "	<td class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".$row->name."'>".$row->name."</a></td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
