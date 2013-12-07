@@ -102,7 +102,7 @@
 <Retry_Reg_RSC></Retry_Reg_RSC>
 <RTP_Port_Min>16384</RTP_Port_Min>
 <RTP_Port_Max>16482</RTP_Port_Max>
-<RTP_Packet_Size>0.030</RTP_Packet_Size>
+<RTP_Packet_Size>0.020</RTP_Packet_Size>
 <Max_RTP_ICMP_Err>0</Max_RTP_ICMP_Err>
 <RTCP_Tx_Interval>0</RTCP_Tx_Interval>
 <No_UDP_Checksum>No</No_UDP_Checksum>

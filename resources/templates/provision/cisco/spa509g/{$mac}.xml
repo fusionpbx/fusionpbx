@@ -106,7 +106,7 @@
 <!-- SIP/RTP_Parameters -->	
   <RTP_Port_Min group="SIP/RTP_Parameters">16384</RTP_Port_Min> 
   <RTP_Port_Max group="SIP/RTP_Parameters">16538</RTP_Port_Max> 
-  <RTP_Packet_Size group="SIP/RTP_Parameters">0.030</RTP_Packet_Size> 
+  <RTP_Packet_Size group="SIP/RTP_Parameters">0.020</RTP_Packet_Size> 
   <Max_RTP_ICMP_Err group="SIP/RTP_Parameters">0</Max_RTP_ICMP_Err> 
   <RTCP_Tx_Interval group="SIP/RTP_Parameters">0</RTCP_Tx_Interval> 
   <No_UDP_Checksum group="SIP/RTP_Parameters">No</No_UDP_Checksum> 
