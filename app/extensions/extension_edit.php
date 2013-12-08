@@ -169,8 +169,6 @@ else {
 			$device_template = check_str($_REQUEST["device_template"]);
 			$line_number = check_str($_REQUEST["line_number"]);
 			$device_mac_address = check_str($_REQUEST["device_mac_address"]);
-			$device_mac_address_other = check_str($_REQUEST["device_mac_address_other"]);
-			if (strlen($device_mac_address_other) > 0) { $device_mac_address = $device_mac_address_other; }
 			$device_mac_address = strtolower($device_mac_address);
 			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
@@ -572,8 +570,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 				//write the provision files
-					require_once "app/provision/provision_write.php";
-					$ext = new extension;
+//					require_once "app/provision/provision_write.php";
+//					$ext = new extension;
 
 				//delete extension from memcache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -1236,40 +1234,69 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<option value='150'>150</option>\n";
 		echo "			</select>\n";
 		echo "		</td>\n";
+
 		echo "		<td class='vtable'>";
-		$html  = "			<table width='90%' border='0' cellpadding='1' cellspacing='0'>\n";
-		$html .= "			<tr>\n";
-		$html .= "			<td id=\"cell_device_mac_address_1\" width='100%'>\n";
+		echo "			<table width='90%' border='0' cellpadding='1' cellspacing='0'>\n";
+		echo "			<tr>\n";
+		echo "			<td id=\"cell_device_mac_address_1\" width='80%' nowrap='nowrap'>\n";
+		?>
+		<script>
+		var Objs;
+		function changeToInput_device_mac_address(obj){
+			tb=document.createElement('INPUT');
+			tb.type='text';
+			tb.name=obj.name;
+			tb.className='formfld';
+			tb.setAttribute('id', 'device_mac_address');
+			tb.setAttribute('style', 'width: 80%;');
+			tb.value=obj.options[obj.selectedIndex].value;
+			document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'hidden';
+			tbb=document.createElement('INPUT');
+			tbb.setAttribute('class', 'btn');
+			tbb.type='button';
+			tbb.value='<';
+			tbb.objs=[obj,tb,tbb];
+			tbb.onclick=function(){ replace_device_mac_address(this.objs); }
+			obj.parentNode.insertBefore(tb,obj);
+			obj.parentNode.insertBefore(tbb,obj);
+			obj.parentNode.removeChild(obj);
+			replace_device_mac_address(this.objs);
+		}
+
+		function replace_device_mac_address(obj){
+			obj[2].parentNode.insertBefore(obj[0],obj[2]);
+			obj[0].parentNode.removeChild(obj[1]);
+			obj[0].parentNode.removeChild(obj[2]);
+			document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'visible';
+		}
+		</script>
+		<?php
 		$sql = "SELECT * FROM v_devices ";
 		$sql .= "WHERE domain_uuid = '".$_SESSION["domain_uuid"]."' ";
 		$sql .= "ORDER BY device_mac_address asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$html .= "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 100%;' onchange=\"if (document.getElementById('device_mac_address').value == 'Other') { /*enabled*/ document.getElementById('device_mac_address_other').style.width='95%'; document.getElementById('cell_device_mac_address_2').width='70%'; document.getElementById('cell_device_mac_address_1').width='30%'; document.getElementById('device_mac_address_other').disabled = false; document.getElementById('device_mac_address_other').className='txt'; document.getElementById('device_mac_address_other').focus(); } else { /*disabled*/ document.getElementById('device_mac_address_other').value = ''; document.getElementById('cell_device_mac_address_1').width='95%'; document.getElementById('cell_device_mac_address_2').width='5%'; document.getElementById('device_mac_address_other').disabled = true; document.getElementById('device_mac_address_other').className='frmdisabled' } \">\n";
-		$html .= "					<option value=''></option>\n";
+		echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 80;' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
+		echo "					<option value=''></option>\n";
 		if (count($result) > 0) {
 			foreach($result as $field) {
 				if (strlen($field["device_mac_address"]) > 0) {
 					if ($field_current_value == $field["device_mac_address"]) {
-						$html .= "					<option value=\"".$field["device_mac_address"]."\" selected>".$field["device_mac_address"]."</option>\n";
+						echo "					<option value=\"".$field["device_mac_address"]."\" selected>".$field["device_mac_address"]."</option>\n";
 					}
 					else {
-						$html .= "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$row['device_model']." ".$row['device_description']."</option>\n";
+						echo "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$row['device_model']." ".$row['device_description']."</option>\n";
 					}
 				}
 			}
 		}
 		unset($sql, $result, $result_count);
-		$html .= "					<option value='Other'>Other</option>\n";
-		$html .= "				</select>\n";
-		$html .= "			</td>\n";
-		$html .= "			<td id=\"cell_device_mac_address_2\" width='5'>\n";
-		$html .= "				<input id=\"device_mac_address_other\" name=\"device_mac_address_other\" value='' style='width: 5%;' disabled onload='document.getElementById('device_mac_address_other').disabled = true;' type='text' class='frmdisabled'>\n";
-		$html .= "			</td>\n";
-		$html .= "			</tr>\n";
-		$html .= "			</table>";
-		echo $html;
+		echo "				</select>\n";
+		echo "				<input type='button' id='btn_select_to_input_device_mac_address' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_device_mac_address(document.getElementById(\"device_mac_address\"));this.style.visibility = \"hidden\";' value='<'>\n";
+		echo "	</td>\n";
+		echo "	</tr>\n";
+		echo "	</table>\n";
 
 		echo "		</td>\n";
 		echo "		<td class='vtable'>";
