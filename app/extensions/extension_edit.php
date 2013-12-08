@@ -169,6 +169,8 @@ else {
 			$device_template = check_str($_REQUEST["device_template"]);
 			$line_number = check_str($_REQUEST["line_number"]);
 			$device_mac_address = check_str($_REQUEST["device_mac_address"]);
+			$device_mac_address_other = check_str($_REQUEST["device_mac_address_other"]);
+			if (strlen($device_mac_address_other) > 0) { $device_mac_address = $device_mac_address_other; }
 			$device_mac_address = strtolower($device_mac_address);
 			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 
@@ -1235,34 +1237,43 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			</select>\n";
 		echo "		</td>\n";
 		echo "		<td class='vtable'>";
-		echo "			<input class='formfld' style='width: 100%' type='text' name='device_mac_address' maxlength='255' value=\"\">\n";
-		/*
+		$html  = "			<table width='90%' border='0' cellpadding='1' cellspacing='0'>\n";
+		$html .= "			<tr>\n";
+		$html .= "			<td id=\"cell_device_mac_address_1\" width='100%'>\n";
 		$sql = "SELECT * FROM v_devices ";
-		$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
+		$sql .= "WHERE domain_uuid = '".$_SESSION["domain_uuid"]."' ";
 		$sql .= "ORDER BY device_mac_address asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-		echo "<select name=\"device_uuid\" id=\"select_mac_address\" class=\"formfld\" style=\"width:37%;\">\n";
-		echo "<option value=''></option>\n";
-		foreach($result as $row) {
-			$device_mac_address = $row['device_mac_address'];
-			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
-			if ($row['device_uuid'] == $device_uuid) {
-				echo "<option value='".$row['device_uuid']."' selected='selected'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
+		$html .= "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 100%;' onchange=\"if (document.getElementById('device_mac_address').value == 'Other') { /*enabled*/ document.getElementById('device_mac_address_other').style.width='95%'; document.getElementById('cell_device_mac_address_2').width='70%'; document.getElementById('cell_device_mac_address_1').width='30%'; document.getElementById('device_mac_address_other').disabled = false; document.getElementById('device_mac_address_other').className='txt'; document.getElementById('device_mac_address_other').focus(); } else { /*disabled*/ document.getElementById('device_mac_address_other').value = ''; document.getElementById('cell_device_mac_address_1').width='95%'; document.getElementById('cell_device_mac_address_2').width='5%'; document.getElementById('device_mac_address_other').disabled = true; document.getElementById('device_mac_address_other').className='frmdisabled' } \">\n";
+		$html .= "					<option value=''></option>\n";
+		if (count($result) > 0) {
+			foreach($result as $field) {
+				if (strlen($field["device_mac_address"]) > 0) {
+					if ($field_current_value == $field["device_mac_address"]) {
+						$html .= "					<option value=\"".$field["device_mac_address"]."\" selected>".$field["device_mac_address"]."</option>\n";
+					}
+					else {
+						$html .= "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$row['device_model']." ".$row['device_description']."</option>\n";
+					}
+				}
 			}
-			else {
-				echo "<option value='".$row['device_uuid']."'>".$device_mac_address." ".$row['device_model']." ".$row['device_description']."</option>\n";
-			}
-		} //end foreach
-		unset($sql, $result, $row_count);
-		echo "</select>\n";
-		*/
+		}
+		unset($sql, $result, $result_count);
+		$html .= "					<option value='Other'>Other</option>\n";
+		$html .= "				</select>\n";
+		$html .= "			</td>\n";
+		$html .= "			<td id=\"cell_device_mac_address_2\" width='5'>\n";
+		$html .= "				<input id=\"device_mac_address_other\" name=\"device_mac_address_other\" value='' style='width: 5%;' disabled onload='document.getElementById('device_mac_address_other').disabled = true;' type='text' class='frmdisabled'>\n";
+		$html .= "			</td>\n";
+		$html .= "			</tr>\n";
+		$html .= "			</table>";
+		echo $html;
+
 		echo "		</td>\n";
 		echo "		<td class='vtable'>";
-		echo "<select id='device_template' name='device_template' class='formfld'>\n";
+		echo "<select id='device_template' name='device_template' style='width: 90%' class='formfld'>\n";
 		echo "<option value=''></option>\n";
 		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"])) {
 			$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"];
