@@ -58,8 +58,6 @@ else {
 		$domain_uuid = $row["domain_uuid"];
 		$extension = $row["extension"];
 		$password = $row["password"];
-		//$provisioning_list = $row["provisioning_list"];
-		//$provisioning_list = strtolower($provisioning_list);
 		//$vm_password = $row["vm_password"];
 		//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
 		$accountcode = $row["accountcode"];
@@ -79,7 +77,6 @@ else {
 		$sip_force_contact = $row["sip_force_contact"];
 		$enabled = $row["enabled"];
 		$description = 'copy: '.$row["description"];
-		break; //limit to 1 row
 	}
 	unset ($prep_statement);
 
@@ -92,7 +89,6 @@ else {
 	$sql .= "extension_uuid, ";
 	$sql .= "extension, ";
 	$sql .= "password, ";
-	//$sql .= "provisioning_list, ";
 	//$sql .= "vm_password, ";
 	$sql .= "accountcode, ";
 	$sql .= "effective_caller_id_name, ";
@@ -118,7 +114,6 @@ else {
 	$sql .= "'$extension_uuid', ";
 	$sql .= "'$extension_new', ";
 	$sql .= "'$password', ";
-	//$sql .= "'$provisioning_list', ";
 	//$sql .= "'".generate_password(4, 1)."', ";
 	$sql .= "'', ";
 	$sql .= "'$effective_caller_id_name', ";
