@@ -185,6 +185,7 @@
 		$text['description-device_description']['pt-pt'] = "Introduza a descrição.";
 		$text['description-device_description']['fr-fr'] = "";
 
+	//general translations
 		$text['label-true']['en-us'] = "true";
 		$text['label-true']['pt-pt'] = "sim";
 		$text['label-true']['fr-fr'] = "Oui";
@@ -220,7 +221,7 @@
 		$text['label-tools']['en-us'] = "Tools";
 		$text['label-tools']['pt-pt'] = "Ferramentas";
 		$text['label-tools']['fr-fr'] = "Outils";
-		
+
 		$text['label-settings']['en-us'] = "Settings";
 		$text['label-settings']['pt-pt'] = "Definições";
 		$text['label-settings']['fr-fr'] = "Configurations";
@@ -244,7 +245,7 @@
 		$text['message-required']['en-us'] = "Please provide: ";
 		$text['message-required']['pt-pt'] = "Por favor indique: ";
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
-		
+
 		$text['label-category']['en-us'] = "Category";
 		$text['label-category']['pt-pt'] = "Categoria";
 		$text['label-category']['fr-fr'] = "Catégorie";
@@ -252,6 +253,18 @@
 		$text['description-category']['en-us'] = "Enter the category.";
 		$text['description-category']['pt-pt'] = "Introduza a categoria.";
 		$text['description-category']['fr-fr'] = "";
+
+		$text['label-device_setting_name']['en-us'] = "Name";
+		$text['label-device_setting_name']['pt-pt'] = "Name";
+		$text['label-device_setting_name']['fr-fr'] = "Nom";
+
+		$text['label-device_setting_value']['en-us'] = "Value";
+		$text['label-device_setting_value']['pt-pt'] = "Valor";
+		$text['label-device_setting_value']['fr-fr'] = "Valeur";
+
+		$text['label-device_setting_description']['en-us'] = "Description";
+		$text['label-device_setting_description']['pt-pt'] = "";
+		$text['label-device_setting_description']['fr-fr'] = "";
 
 		$text['label-subcategory']['en-us'] = "Subcategory";
 		$text['label-subcategory']['pt-pt'] = "Subcategoria";

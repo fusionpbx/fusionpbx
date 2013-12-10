@@ -115,7 +115,6 @@ else {
 	//echo th_order_by('device_username', $text['label-device_username'], $order_by, $order);
 	//echo th_order_by('device_password', $text['label-device_password'], $order_by, $order);
 	//echo th_order_by('device_time_zone', $text['label-device_time_zone'], $order_by, $order);
-	echo "<th>".$text['label-tools']."</th>\n";
 	echo th_order_by('device_description', $text['label-device_description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
 	if (permission_exists('device_add')) {
@@ -144,9 +143,6 @@ else {
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_username']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_password']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_time_zone']."&nbsp;</td>\n";
-			echo "	<td valign='middle' class='".$row_style[$c]."'>\n";
-			echo "		<a href='device_settings.php?id=".$row['device_uuid']."'>".$text['label-settings']."</a>&nbsp;&nbsp;\n";
-			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['device_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
 			if (permission_exists('device_edit')) {

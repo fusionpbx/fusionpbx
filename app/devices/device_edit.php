@@ -74,6 +74,13 @@ require_once "resources/require.php";
 			$user_id = check_str($_POST["user_id"]);
 			$auth_id = check_str($_POST["auth_id"]);
 			$password = check_str($_POST["password"]);
+		//settings
+			//$device_setting_category = check_str($_POST["device_setting_category"]);
+			$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
+			//$device_setting_name = check_str($_POST["device_setting_name"]);
+			$device_setting_value = check_str($_POST["device_setting_value"]);
+			$device_setting_enabled = check_str($_POST["device_setting_enabled"]);
+			$device_setting_description = check_str($_POST["device_setting_description"]);
 	}
 
 //use the mac address to find the vendor
@@ -233,6 +240,38 @@ require_once "resources/require.php";
 						$sql .= "'$user_id', ";
 						$sql .= "'$auth_id', ";
 						$sql .= "'$password' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+
+				//add the device settings
+					if (strlen($device_setting_subcategory) > 0 && permission_exists('device_setting_add')) {
+						$device_setting_category = "provision";
+						$device_setting_name = "text";
+						$sql = "insert into v_device_settings ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "device_uuid, ";
+						$sql .= "device_setting_uuid, ";
+						$sql .= "device_setting_category, ";
+						$sql .= "device_setting_subcategory, ";
+						$sql .= "device_setting_name, ";
+						$sql .= "device_setting_value, ";
+						$sql .= "device_setting_enabled, ";
+						$sql .= "device_setting_description ";
+						$sql .= ")";
+						$sql .= "values ";
+						$sql .= "(";
+						$sql .= "'$domain_uuid', ";
+						$sql .= "'$device_uuid', ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'$device_setting_category', ";
+						$sql .= "'$device_setting_subcategory', ";
+						$sql .= "'$device_setting_name', ";
+						$sql .= "'$device_setting_value', ";
+						$sql .= "'$device_setting_enabled', ";
+						$sql .= "'$device_setting_description' ";
 						$sql .= ")";
 						$db->exec(check_sql($sql));
 						unset($sql);
@@ -474,6 +513,93 @@ require_once "resources/require.php";
 	echo "			</table>\n";
 	if (strlen($text['description-lines']) > 0) {
 		echo "			<br>".$text['description-lines']."\n";
+	}
+	echo "		</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-settings'].":</td>";
+	echo "		<td class='vtable' align='left'>";
+	echo "			<table width='75%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "			<tr>\n";
+	echo "				<td class='vtable'>".$text['label-device_setting_name']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-enabled']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
+	echo "				<td>&nbsp;</td>\n";
+	echo "			</tr>\n";
+	$sql = "SELECT * FROM v_device_settings ";
+	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "ORDER by device_setting_subcategory asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	foreach($result as $row) {
+		//if (strlen($row['line_number']) == 0) { $row['line_number'] = "1"; }
+		echo "			<tr>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_setting_subcategory']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_setting_value']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_setting_enabled']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_setting_description']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td>\n";
+		if (permission_exists('device_edit')) {
+			echo "					<a href='device_setting_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+		}
+		if (permission_exists('device_delete')) {
+			echo "					<a href='device_setting_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+		}
+		echo "				</td>\n";
+		echo "			</tr>\n";
+	}
+
+	echo "<tr>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_setting_subcategory' style='width: 120px;' maxlength='255' value=\"$device_setting_subcategory\">\n";
+	echo "</td>\n";
+
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_setting_value' style='width: 120px;' maxlength='255' value=\"$device_setting_value\">\n";
+	echo "</td>\n";
+
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='device_setting_enabled' style='width: 90px;'>\n";
+	echo "    <option value=''></option>\n";
+	if ($device_setting_enabled == "true") {
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+	}
+	else {
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
+	}
+	if ($device_setting_enabled == "false") {
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+	}
+	else {
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
+	}
+	echo "    </select>\n";
+	echo "</td>\n";
+
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_setting_description' style='width: 150px;' maxlength='255' value=\"$device_setting_description\">\n";
+	echo "</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			</td>\n";
+	echo "			</tr>\n";
+	echo "			</table>\n";
+	if (strlen($text['description-settings']) > 0) {
+		echo "			<br>".$text['description-settings']."\n";
 	}
 	echo "		</td>";
 	echo "	</tr>";
