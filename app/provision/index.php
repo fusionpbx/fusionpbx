@@ -47,10 +47,17 @@ include "resources/classes/template.php";
 		}
 		unset($result, $prep_statement);
 
+//build the provision array
+	foreach($_SESSION['provision'] as $key=>$val) {
+		if (strlen($val['var']) > 0) { $value = $val['var']; }
+		if (strlen($val['text']) > 0) { $value = $val['text']; }
+		$provision[$key] = $value;
+	}
+
 //if password was defined in the system -> variables page then require the password.
-	if (strlen($_SESSION['provision']['password']['var']) > 0) {
+	if (strlen($provision['password']) > 0) {
 		//deny access if the password doesn't match
-			if ($_SESSION['provision']['password']['var'] != check_str($_REQUEST['password'])) {
+			if ($provision_password != check_str($_REQUEST['password'])) {
 				//log the failed auth attempt to the system, to be available for fail2ban.
 				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
@@ -207,36 +214,36 @@ include "resources/classes/template.php";
 	else {
 		//use the user_agent to pre-assign a template for 1-hit provisioning. Enter the a unique string to match in the user agent, and the template it should match.
 			$template_list=array(  
-					"Linksys/SPA-2102"=>"linksys/spa2102",
-					"Linksys/SPA-3102"=>"linksys/spa3102",
-					"Linksys/SPA-9212"=>"linksys/spa921",
-					"Cisco/SPA301"=>"cisco/spa301",
-					"Cisco/SPA301D"=>"cisco/spa302d",
-					"Cisco/SPA303"=>"cisco/spa303",
-					"Cisco/SPA501G"=>"cisco/spa501g",
-					"Cisco/SPA502G"=>"cisco/spa502g",
-					"Cisco/SPA504G"=>"cisco/spa504g",
-					"Cisco/SPA508G"=>"cisco/spa508g",
-					"Cisco/SPA509G"=>"cisco/spa509g",
-					"Cisco/SPA512G"=>"cisco/spa512g",
-					"Cisco/SPA514G"=>"cisco/spa514g",
-					"Cisco/SPA525G2"=>"cisco/spa525g2",
-					"snom300-SIP"=>"snom/300",
-					"snom320-SIP"=>"snom/320",
-					"snom360-SIP"=>"snom/360",
-					"snom370-SIP"=>"snom/370",
-					"snom820-SIP"=>"snom/820",
-					"snom-m3-SIP"=>"snom/m3",
-					"yealink SIP-T20"=>"yealink/t20",
-					"yealink SIP-T22"=>"yealink/t22",
-					"yealink SIP-T26"=>"yealink/t26",
-					"Yealink SIP-T32"=>"yealink/t32",
-					"HW GXP1450"=>"grandstream/gxp1450",
-					"HW GXP2124"=>"grandstream/gxp2124",
-					"HW GXV3140"=>"grandstream/gxv3140",
-					"HW GXV3175"=>"grandstream/gxv3175",
-					"Wget/1.11.3"=>"konftel/kt300ip"
-					);
+				"Linksys/SPA-2102"=>"linksys/spa2102",
+				"Linksys/SPA-3102"=>"linksys/spa3102",
+				"Linksys/SPA-9212"=>"linksys/spa921",
+				"Cisco/SPA301"=>"cisco/spa301",
+				"Cisco/SPA301D"=>"cisco/spa302d",
+				"Cisco/SPA303"=>"cisco/spa303",
+				"Cisco/SPA501G"=>"cisco/spa501g",
+				"Cisco/SPA502G"=>"cisco/spa502g",
+				"Cisco/SPA504G"=>"cisco/spa504g",
+				"Cisco/SPA508G"=>"cisco/spa508g",
+				"Cisco/SPA509G"=>"cisco/spa509g",
+				"Cisco/SPA512G"=>"cisco/spa512g",
+				"Cisco/SPA514G"=>"cisco/spa514g",
+				"Cisco/SPA525G2"=>"cisco/spa525g2",
+				"snom300-SIP"=>"snom/300",
+				"snom320-SIP"=>"snom/320",
+				"snom360-SIP"=>"snom/360",
+				"snom370-SIP"=>"snom/370",
+				"snom820-SIP"=>"snom/820",
+				"snom-m3-SIP"=>"snom/m3",
+				"yealink SIP-T20"=>"yealink/t20",
+				"yealink SIP-T22"=>"yealink/t22",
+				"yealink SIP-T26"=>"yealink/t26",
+				"Yealink SIP-T32"=>"yealink/t32",
+				"HW GXP1450"=>"grandstream/gxp1450",
+				"HW GXP2124"=>"grandstream/gxp2124",
+				"HW GXV3140"=>"grandstream/gxv3140",
+				"HW GXV3175"=>"grandstream/gxv3175",
+				"Wget/1.11.3"=>"konftel/kt300ip"
+				);
 
 			foreach ($template_list as $key=>$val){
 				if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
@@ -277,6 +284,23 @@ include "resources/classes/template.php";
 			$db->exec(check_sql($sql));
 			unset($sql);
 	}
+
+//get the device settings table in the provision category and update the provision array
+	$sql = "SELECT * FROM v_device_settings ";
+	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+	$sql .= "AND device_setting_category = 'provision' ";
+	$sql .= "AND device_setting_enabled = 'true' ";
+	$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	foreach($result as $row) {
+		$key = $row['device_setting_subcategory'];
+		$value = $row['device_setting_value'];
+		$provision[$key] = $value;
+	}
+	unset ($prep_statement);
 
 //if the domain name directory exists then only use templates from it
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision/'.$_SESSION['domain_name'])) {
@@ -369,27 +393,6 @@ include "resources/classes/template.php";
 	//create a mac address with back slashes for backwards compatability
 		$mac_dash = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
 
-	//get the provisioning information for this MAC address.
-		$sql = "SELECT e.extension, e.password, e.effective_caller_id_name, d.device_extension_uuid, d.extension_uuid, d.device_line ";
-		$sql .= "FROM v_device_extensions as d, v_extensions as e ";
-		$sql .= "WHERE e.extension_uuid = d.extension_uuid ";
-		$sql .= "AND d.device_uuid = '".$device_uuid."' ";
-		$sql .= "AND d.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and e.enabled = 'true' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		foreach($result as $row) {
-			$line_number = $row['device_line'];
-			$view->assign("server_address_".$line_number, $_SESSION['domain_name']);
-			$view->assign("display_name_".$line_number, $row["effective_caller_id_name"]);
-			$view->assign("shortname_".$line_number, $row["extension"]);
-			$view->assign("user_id_".$line_number, $row["extension"]);
-			$view->assign("user_password_".$line_number, $row["password"]);
-		}
-		unset ($prep_statement);
-
 	//get the provisioning information from device lines table
 		$sql = "SELECT * FROM v_device_lines ";
 		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
@@ -433,11 +436,10 @@ include "resources/classes/template.php";
 		$view->assign("proxy1_address", $proxy1_address);
 		$view->assign("password",$password);
 
-//replace the dynamic provision variables that are defined in 'default settings' and 'domain settings'
-	//example: category=provision, subcategory=sip_transport, name=var, value=tls - used in the template as {$sip_transport}
-	foreach($_SESSION['provision'] as $key=>$value) {
-		$view->assign($key, $value['var']);
-	}
+	//replace the dynamic provision variables that are defined in default, domain, and device settings
+		foreach($provision as $key=>$val) {
+			$view->assign($key, $val);
+		}
 
 //output template to string for header processing
 	$file_contents = $view->render($file);
