@@ -57,7 +57,7 @@ include "resources/classes/template.php";
 //if password was defined in the system -> variables page then require the password.
 	if (strlen($provision['password']) > 0) {
 		//deny access if the password doesn't match
-			if ($provision_password != check_str($_REQUEST['password'])) {
+			if ($provision['password'] != check_str($_REQUEST['password'])) {
 				//log the failed auth attempt to the system, to be available for fail2ban.
 				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
