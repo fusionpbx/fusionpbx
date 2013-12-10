@@ -129,7 +129,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//redirect the browser
 				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=device_settings.php?id=$device_uuid\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
 				echo "<div align='center'>\n";
 				if ($action == "add") {
 					echo $text['message-add']."\n";
