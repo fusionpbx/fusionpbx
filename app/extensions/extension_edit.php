@@ -274,7 +274,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($cidr) == 0) { $msg .= $text['message-required']."CIDR<br>\n"; }
 		//if (strlen($sip_force_contact) == 0) { $msg .= $text['message-required']."SIP Force Contact<br>\n"; }
 		//if (strlen($dial_string) == 0) { $msg .= $text['message-required']."Dial String<br>\n"; }
-		if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		if (permission_exists('extension_enabled')) {
+			if (strlen($enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		}
 		//if (strlen($description) == 0) { $msg .= $text['message-required']."Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
@@ -377,9 +379,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							}
 							$sql .= "sip_bypass_media, ";
 							$sql .= "dial_string, ";
-							if (permission_exists('extension_enabled')) {
-								$sql .= "enabled, ";
-							}
+							$sql .= "enabled, ";
 							$sql .= "description ";
 							$sql .= ")";
 							$sql .= "values ";
@@ -438,6 +438,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$dial_string', ";
 							if (permission_exists('extension_enabled')) {
 								$sql .= "'$enabled', ";
+							}
+							else {
+								$sql .= "'true', ";
 							}
 							$sql .= "'$description' ";
 							$sql .= ")";
@@ -538,7 +541,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "mwi_account = '$mwi_account', ";
 					$sql .= "sip_bypass_media = '$sip_bypass_media', ";
 					$sql .= "dial_string = '$dial_string', ";
-					$sql .= "enabled = '$enabled', ";
+					if (permission_exists('extension_enabled')) {
+						$sql .= "enabled = '$enabled', ";
+					}
 					$sql .= "description = '$description' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
 					$sql .= "and extension_uuid = '$extension_uuid'";
