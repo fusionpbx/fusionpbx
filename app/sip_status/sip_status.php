@@ -72,25 +72,34 @@ if ($_GET['a'] == "download") {
 	exit;
 }
 
-require_once "resources/header.php";
+//show the content
+	require_once "resources/header.php";
 
-$msg = $_GET["savemsg"];
-$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-if (!$fp) {
-	$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>"; 
-}
-if (strlen($msg) > 0) {
-	echo "<div align='center'>\n";
-	echo "<table width='40%'>\n";
-	echo "<tr>\n";
-	echo "<th align='left'>".$text['label-message']."</th>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td class='row_style1'><strong>$msg</strong></td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
-	echo "</div>\n";
-}
+	$msg = $_GET["savemsg"];
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if (!$fp) {
+		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>"; 
+	}
+	if (strlen($msg) > 0) {
+		echo "<div align='center'>\n";
+		echo "<table width='40%'>\n";
+		echo "<tr>\n";
+		echo "<th align='left'>".$text['label-message']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+		echo "</div>\n";
+	}
+
+//get the gateways
+	$sql = "select g.domain_uuid, g.gateway, g.gateway_uuid, d.domain_name from v_gateways as g, v_domains as d ";
+	$sql .= "where d.domain_uuid = g.domain_uuid ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	unset ($prep_statement, $sql);
 
 //sofia status
 	if ($fp && permission_exists('system_status_sofia_status')) {
@@ -124,7 +133,6 @@ if (strlen($msg) > 0) {
 		echo "<th>State</th>\n";
 		echo "</tr>\n";
 		foreach ($xml->profile as $row) {
-			//print_r($row);
 			echo "<tr>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->name."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
@@ -134,9 +142,17 @@ if (strlen($msg) > 0) {
 			if ($c==0) { $c=1; } else { $c=0; }
 		}
 		foreach ($xml->gateway as $row) {
-			//print_r($row);
+			$gateway_name = '';
+			$gateway_domain_name = '';
+			foreach($gateways as $field) {
+				if ($field["gateway_uuid"] == $row->name) {
+					$gateway_name = $field["gateway"];
+					$gateway_domain_name = $field["domain_name"];
+					break;
+				}
+			}
 			echo "<tr>\n";
-			echo "	<td class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".$row->name."'>".$row->name."</a></td>\n";
+			echo "	<td class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".$row->name."'>".$gateway_name."@".$gateway_domain_name."</a></td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
