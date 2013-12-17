@@ -58,6 +58,9 @@ else {
 		$line_number = check_str($_POST["line_number"]);
 		$server_address = check_str($_POST["server_address"]);
 		$outbound_proxy = check_str($_POST["outbound_proxy"]);
+		$sip_port = check_str($_POST["sip_port"]);
+		$sip_transport = check_str($_POST["sip_transport"]);
+		$register_expires = check_str($_POST["register_expires"]);
 		$display_name = check_str($_POST["display_name"]);
 		$user_id = check_str($_POST["user_id"]);
 		$auth_id = check_str($_POST["auth_id"]);
@@ -104,6 +107,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "line_number, ";
 					$sql .= "server_address, ";
 					$sql .= "outbound_proxy, ";
+					$sql .= "sip_port, ";
+					$sql .= "sip_transport, ";
+					$sql .= "register_expires, ";
 					$sql .= "display_name, ";
 					$sql .= "user_id, ";
 					$sql .= "auth_id, ";
@@ -117,6 +123,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$line_number', ";
 					$sql .= "'$server_address', ";
 					$sql .= "'$outbound_proxy', ";
+					$sql .= "'$sip_port', ";
+					$sql .= "'$sip_transport', ";
+					$sql .= "'$register_expires', ";
 					$sql .= "'$display_name', ";
 					$sql .= "'$user_id', ";
 					$sql .= "'$auth_id', ";
@@ -133,6 +142,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "line_number = '$line_number', ";
 					$sql .= "server_address = '$server_address', ";
 					$sql .= "outbound_proxy = '$outbound_proxy', ";
+					$sql .= "sip_port = '$sip_port', ";
+					$sql .= "sip_transport = '$sip_transport', ";
+					$sql .= "register_expires = '$register_expires', ";
 					$sql .= "display_name = '$display_name', ";
 					$sql .= "user_id = '$user_id', ";
 					$sql .= "auth_id = '$auth_id', ";
@@ -172,6 +184,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$line_number = $row["line_number"];
 			$server_address = $row["server_address"];
 			$outbound_proxy = $row["outbound_proxy"];
+			$sip_port = $row["sip_port"];
+			$sip_transport = $row["sip_transport"];
+			$register_expires = $row["register_expires"];
 			$display_name = $row["display_name"];
 			$user_id = $row["user_id"];
 			$auth_id = $row["auth_id"];
@@ -289,6 +304,40 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-password']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-sip_port'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='sip_port' maxlength='255' value=\"$sip_port\">\n";
+	echo "<br />\n";
+	echo $text['description-sip_port']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-sip_transport'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='sip_transport' maxlength='255' value=\"$sip_transport\">\n";
+	echo "<br />\n";
+	echo $text['description-sip_transport']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-register_expires'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='register_expires' maxlength='255' value=\"$register_expires\">\n";
+	echo "<br />\n";
+	echo $text['description-register_expires']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "				<input type='hidden' name='device_uuid' value='$device_uuid'>\n";
