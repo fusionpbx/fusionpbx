@@ -74,6 +74,11 @@ require_once "resources/require.php";
 			$user_id = check_str($_POST["user_id"]);
 			$auth_id = check_str($_POST["auth_id"]);
 			$password = check_str($_POST["password"]);
+		//keys
+			$device_key_id = check_str($_POST["device_key_id"]);
+			$device_key_type = check_str($_POST["device_key_type"]);
+			$device_key_value = check_str($_POST["device_key_value"]);
+			$device_key_label = check_str($_POST["device_key_label"]);
 		//settings
 			//$device_setting_category = check_str($_POST["device_setting_category"]);
 			$device_setting_subcategory = check_str($_POST["device_setting_subcategory"]);
@@ -245,7 +250,33 @@ require_once "resources/require.php";
 						unset($sql);
 					}
 
-				//add the device settings
+				//add a device key
+					if (strlen($device_key_id) > 0 && permission_exists('device_key_add')) {
+						$sql = "insert into v_device_keys ";
+						$sql .= "(";
+						$sql .= "domain_uuid, ";
+						$sql .= "device_uuid, ";
+						$sql .= "device_key_uuid, ";
+						$sql .= "device_key_id, ";
+						$sql .= "device_key_type, ";
+						$sql .= "device_key_value, ";
+						$sql .= "device_key_label ";
+						$sql .= ")";
+						$sql .= " values ";
+						$sql .= "(";
+						$sql .= "'$domain_uuid', ";
+						$sql .= "'$device_uuid', ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'$device_key_id', ";
+						$sql .= "'$device_key_type', ";
+						$sql .= "'$device_key_value', ";
+						$sql .= "'$device_key_label' ";
+						$sql .= ")";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
+
+				//add a device setting
 					if (strlen($device_setting_subcategory) > 0 && permission_exists('device_setting_add')) {
 						$device_setting_category = "provision";
 						$device_setting_name = "text";
@@ -451,7 +482,7 @@ require_once "resources/require.php";
 		echo "					".$row['auth_id']."&nbsp;\n";
 		echo "				</td>\n";
 		echo "				<td class='vtable'>\n";
-		echo "					".$row['password']."&nbsp;\n";
+		echo "					******** &nbsp;\n"; //$row['password']
 		echo "				</td>\n";
 		echo "				<td>\n";
 		if (permission_exists('device_edit')) {
@@ -513,6 +544,91 @@ require_once "resources/require.php";
 	echo "			</table>\n";
 	if (strlen($text['description-lines']) > 0) {
 		echo "			<br>".$text['description-lines']."\n";
+	}
+	echo "		</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-keys'].":</td>";
+	echo "		<td class='vtable' align='left'>";
+	echo "			<table width='75%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "			<tr>\n";
+	echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
+	echo "				<td>&nbsp;</td>\n";
+	echo "			</tr>\n";
+	$sql = "SELECT * FROM v_device_keys ";
+	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "ORDER by device_key_id asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach($result as $row) {
+		echo "			<tr>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_key_id']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_key_type']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_key_value']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td class='vtable'>\n";
+		echo "					".$row['device_key_label']."&nbsp;\n";
+		echo "				</td>\n";
+		echo "				<td>\n";
+		if (permission_exists('device_key_edit')) {
+			echo "					<a href='device_key_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+		}
+		if (permission_exists('device_key_delete')) {
+			echo "					<a href='device_key_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+		}
+		echo "				</td>\n";
+		echo "			</tr>\n";
+	}
+
+	echo "<tr>\n";
+	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "				<select class='formfld' style='width: 45px;' name='device_key_id'>\n";
+	echo "				<option value=''></option>\n";
+	echo "				<option value='1'>1</option>\n";
+	echo "				<option value='2'>2</option>\n";
+	echo "				<option value='3'>3</option>\n";
+	echo "				<option value='4'>4</option>\n";
+	echo "				<option value='5'>5</option>\n";
+	echo "				<option value='6'>6</option>\n";
+	echo "				<option value='7'>7</option>\n";
+	echo "				<option value='8'>8</option>\n";
+	echo "				<option value='9'>9</option>\n";
+	echo "				<option value='10'>10</option>\n";
+	echo "				<option value='11'>11</option>\n";
+	echo "				<option value='12'>12</option>\n";
+	echo "				</select>\n";
+	echo "			</td>\n";
+
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_key_type' style='width: 120px;' maxlength='255' value=\"$device_key_type\">\n";
+	echo "</td>\n";
+
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_key_value' style='width: 120px;' maxlength='255' value=\"$device_key_value\">\n";
+	echo "</td>\n";
+
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_key_label' style='width: 150px;' maxlength='255' value=\"$device_key_label\">\n";
+	echo "</td>\n";
+
+	echo "			<td class='vtable' align='left'>\n";
+	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			</td>\n";
+	echo "			</tr>\n";
+	echo "			</table>\n";
+	if (strlen($text['description-settings']) > 0) {
+		echo "			<br>".$text['description-settings']."\n";
 	}
 	echo "		</td>";
 	echo "	</tr>";

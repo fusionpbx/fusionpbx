@@ -121,6 +121,30 @@
 		$text['description-outbound_proxy']['pt-pt'] = "Introduza o outbound proxy.";
 		$text['description-outbound_proxy']['fr-fr'] = "";
 
+		$text['label-sip_port']['en-us'] = "Port";
+		$text['label-sip_port']['pt-pt'] = "";
+		$text['label-sip_port']['fr-fr'] = "";
+
+		$text['description-sip_port']['en-us'] = "Enter the SIP port.";
+		$text['description-sip_port']['pt-pt'] = "";
+		$text['description-sip_port']['fr-fr'] = "";
+
+		$text['label-sip_transport']['en-us'] = "Transport";
+		$text['label-sip_transport']['pt-pt'] = "";
+		$text['label-sip_transport']['fr-fr'] = "";
+
+		$text['description-sip_transport']['en-us'] = "Enter the SIP transport protocol.";
+		$text['description-sip_transport']['pt-pt'] = "Introduza o .";
+		$text['description-sip_transport']['fr-fr'] = "";
+
+		$text['label-register_expires']['en-us'] = "Register Expires";
+		$text['label-register_expires']['pt-pt'] = "";
+		$text['label-register_expires']['fr-fr'] = "";
+
+		$text['description-register_expires']['en-us'] = "Enter the expire time for the SIP registration.";
+		$text['description-register_expires']['pt-pt'] = ".";
+		$text['description-register_expires']['fr-fr'] = "";
+
 		$text['label-display_name']['en-us'] = "Display Name";
 		$text['label-display_name']['pt-pt'] = "Nome no visor";
 		$text['label-display_name']['fr-fr'] = "Nom affiché";
@@ -184,6 +208,53 @@
 		$text['description-device_description']['en-us'] = "Enter the description.";
 		$text['description-device_description']['pt-pt'] = "Introduza a descrição.";
 		$text['description-device_description']['fr-fr'] = "";
+
+	//keys
+		$text['label-keys']['en-us'] = "Keys";
+		$text['label-keys']['pt-pt'] = "";
+		$text['label-keys']['fr-fr'] = "";
+
+		$text['title-device_keys']['en-us'] = 'Device Keys';
+		$text['title-device_keys']['pt-pt'] = '';
+
+		$text['title-device_key']['en-us'] = 'Device Key';
+		$text['title-device_key']['pt-pt'] = '';
+
+		$text['description-device_key']['en-us'] = '';
+		$text['description-device_key']['pt-pt'] = '';
+
+		$text['label-device_key_id']['en-us'] = 'Key';
+		$text['label-device_key_id']['pt-pt'] = '';
+
+		$text['description-device_key']['en-us'] = 'Select the key.';
+		$text['description-device_key']['pt-pt'] = '';
+
+		$text['label-device_key_type']['en-us'] = 'Type';
+		$text['label-device_key_type']['pt-pt'] = '';
+
+		$text['description-device_key_type']['en-us'] = 'Select the type of key.';
+		$text['description-device_key_type']['pt-pt'] = '';
+
+		$text['label-device_key_value']['en-us'] = 'Value';
+		$text['label-device_key_value']['pt-pt'] = '';
+
+		$text['description-device_key_value']['en-us'] = 'Enter the value.';
+		$text['description-device_key_value']['pt-pt'] = '';
+
+		$text['label-device_key_label']['en-us'] = 'Label';
+		$text['label-device_key_label']['pt-pt'] = '';
+
+		$text['description-device_key_label']['en-us'] = 'Enter the label.';
+		$text['description-device_key_label']['pt-pt'] = '';
+
+		$text['label-line']['en-us'] = 'line';
+		$text['label-line']['pt-pt'] = '';
+
+		$text['label-blf']['en-us'] = 'blf';
+		$text['label-blf']['pt-pt'] = '';
+
+		$text['label-park']['en-us'] = 'park';
+		$text['label-park']['pt-pt'] = '';
 
 	//general translations
 		$text['label-true']['en-us'] = "true";
