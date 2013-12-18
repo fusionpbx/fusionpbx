@@ -261,7 +261,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$ivr->domain_uuid = $_SESSION["domain_uuid"];
 								$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 								$ivr->ivr_menu_option_uuid = uuid();
-								$ivr->ivr_menu_option_digits = $row["ivr_menu_option_digits"];
+								$ivr->ivr_menu_option_digits = trim($row["ivr_menu_option_digits"]);
 								$ivr->ivr_menu_option_action = $ivr_menu_option_action;
 								$ivr->ivr_menu_option_param = $ivr_menu_option_param;
 								$ivr->ivr_menu_option_order = $row["ivr_menu_option_order"];
