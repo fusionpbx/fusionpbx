@@ -143,9 +143,9 @@
 	$text['description-exit_action']['en-us'] = "Select the exit action to be performed if the IVR exits.";
 	$text['description-exit_action']['pt-pt'] = "Escolher a acção de saída a realizar se o IVR existir.";
 	$text['description-exit_action']['fr-fr'] = "Choisir l'action à executer en sortie si on sort du SVI par ailleurs qu'un des choix proposé.";
-	$text['description-direct_dial']['en-us'] = "Define whether callers can dial directly to extensions and feature codes.";
+	$text['description-direct_dial']['en-us'] = "Define whether callers can dial directly to registered extensions.";
 	$text['description-direct_dial']['pt-pt'] = "Defina se os originadores de chamadas podem ligar directamente para extensões.";
-	$text['description-direct_dial']['fr-fr'] = "Défini si on peut appeler directement le SVI via une extension ou un code.";
+	$text['description-direct_dial']['fr-fr'] = "Défini si on peut appeler directement le SVI via une extension.";
 	$text['description-ring_back']['en-us'] = "Defines what the caller will hear while the destination is being called.";
 	$text['description-ring_back']['pt-pt'] = "Defina o que é que o originador da chamada ouvirá enquanto o destino estiver a ser chamado.";
 	$text['description-ring_back']['fr-fr'] = "Défini ce que l'appelant entendra lorsque la destination sera en sonnerie.";
