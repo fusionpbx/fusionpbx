@@ -109,7 +109,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$ivr->domain_uuid = $_SESSION["domain_uuid"];
 				$ivr->ivr_menu_uuid = $ivr_menu_uuid;
 				$ivr->ivr_menu_option_uuid = $ivr_menu_option_uuid;
-				$ivr->ivr_menu_option_digits = $ivr_menu_option_digits;
+				$ivr->ivr_menu_option_digits = trim($ivr_menu_option_digits);
 				$ivr->ivr_menu_option_action = $ivr_menu_option_action;
 				$ivr->ivr_menu_option_param = $ivr_menu_option_param;
 				$ivr->ivr_menu_option_order = $ivr_menu_option_order;
@@ -152,7 +152,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
 			$ivr_menu_uuid = $row["ivr_menu_uuid"];
-			$ivr_menu_option_digits = $row["ivr_menu_option_digits"];
+			$ivr_menu_option_digits = trim($row["ivr_menu_option_digits"]);
 			$ivr_menu_option_action = $row["ivr_menu_option_action"];
 			$ivr_menu_option_param = $row["ivr_menu_option_param"];
 
