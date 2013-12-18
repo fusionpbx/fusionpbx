@@ -225,9 +225,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//run the add method in the ivr menu class
 						$ivr->add();
 
-					//synchronize the xml config
-						save_dialplan_xml();
-
 					//set the message
 						$_SESSION['message'] = $text['message-add'];
 				}
@@ -244,6 +241,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//set the message
 						$_SESSION['message'] = $text['message-update'];
 				}
+
+			//synchronize the xml config
+				save_dialplan_xml();
 
 			//add the ivr menu options
 				if (($action == "add" && permission_exists('ivr_menu_add')) || ($action == "update" && permission_exists('ivr_menu_edit'))) {
