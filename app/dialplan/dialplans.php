@@ -41,10 +41,29 @@ else {
 	}
 
 //set the http values as php variables
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
-	$dialplan_context = $_GET["dialplan_context"];
-	$app_uuid = $_GET["app_uuid"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
+	$dialplan_context = check_str($_GET["dialplan_context"]);
+	$app_uuid = check_str($_GET["app_uuid"]);
+
+//custom table header order by to accomodate the app_uuid
+	function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid) {
+		if (strlen($app_uuid) > 0) { $app_uuid = "app_uuid=".$app_uuid; }
+		$html = "<th nowrap>&nbsp; &nbsp; ";
+		if (strlen($order_by)==0) {
+			$html .= "<a href='?order_by=$field_name&order=desc&$app_uuid' title='ascending'>$columntitle</a>";
+		}
+		else {
+			if ($order=="asc") {
+				$html .= "<a href='?order_by=$field_name&order=desc&$app_uuid' title='ascending'>$columntitle</a>";
+			}
+			else {
+				$html .= "<a href='?order_by=$field_name&order=asc&$app_uuid' title='descending'>$columntitle</a>";
+			}
+		}
+		$html .= "&nbsp; &nbsp; </th>";
+		return $html;
+	}
 
 //includes
 	require_once "resources/header.php";
@@ -77,19 +96,19 @@ else {
 	echo "	<td align='left'>\n";
 	echo "		<span class=\"title\">\n";
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
-		echo "			<strong>".$text['header-inbound_routes']."</strong>\n";
+		echo "			".$text['header-inbound_routes']."\n";
 	}
 	elseif ($app_uuid == "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3") {
-		echo "			<strong>".$text['header-outbound_routes']."</strong>\n";
+		echo "			".$text['header-outbound_routes']."\n";
 	}
 	elseif ($app_uuid == "16589224-c876-aeb3-f59f-523a1c0801f7") {
-		echo "			<strong>".$text['header-queues']."</strong>\n";
+		echo "			".$text['header-queues']."\n";
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1") {
-		echo "			<strong>".$text['header-time_conditions']."</strong>\n";
+		echo "			".$text['header-time_conditions']."\n";
 	}
 	else {
-		echo "			<strong>".$text['header-dialplan_manager']."</strong>\n";
+		echo "			".$text['header-dialplan_manager']."\n";
 	}
 	echo "		</span>\n";
 	echo "	</td>\n";
@@ -191,12 +210,12 @@ else {
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order);
-	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order);
-	echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order);
-	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order);
-	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order);
-	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order);
+	echo th_order_by('dialplan_name', $text['label-name'], $order_by, $order, $app_uuid);
+	echo th_order_by('dialplan_number', $text['label-number'], $order_by, $order, $app_uuid);
+	echo th_order_by('dialplan_context', $text['label-context'], $order_by, $order, $app_uuid);
+	echo th_order_by('dialplan_order', $text['label-order'], $order_by, $order, $app_uuid);
+	echo th_order_by('dialplan_enabled', $text['label-enabled'], $order_by, $order, $app_uuid);
+	echo th_order_by('dialplan_description', $text['label-description'], $order_by, $order, $app_uuid);
 	echo "<td align='right' width='42'>\n";
 	if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
 		if (permission_exists('inbound_route_add')) {
