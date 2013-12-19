@@ -1293,7 +1293,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "					<option value=\"".$field["device_mac_address"]."\" selected>".$field["device_mac_address"]."</option>\n";
 					}
 					else {
-						echo "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$row['device_model']." ".$row['device_description']."</option>\n";
+						echo "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$field['device_model']." ".$field['device_description']."</option>\n";
 					}
 				}
 			}
