@@ -804,9 +804,17 @@ table tr:nth-last-child(-5) td:first-of-type {
 							</script>
 							<?php
 								if (strlen($_SESSION['message']) > 0) {
-									echo "<div id='message' style='position:absolute; left:50%;'>";
-									echo "	<table><tr><td class='vncellreq'>".$_SESSION['message']."</td></tr></table>";
-									echo "</div>";
+									echo "<div id='message' align='center'>\n";
+									echo "	<table width='40%' border='0'>\n";
+									echo "		<tr>\n";
+									echo "			<th align='left'>".$text['message-message']."</th>\n";
+									echo "		</tr>\n";
+									echo "		<tr>\n";
+									echo "			<td class='row_style1'><strong>".$_SESSION['message']."</strong></td>\n";
+									echo "		</tr>\n";
+									echo "	</table>\n";
+									echo "<br />\n";
+									echo "</div>\n";
 									unset($_SESSION['message']);
 								}
 							?>
