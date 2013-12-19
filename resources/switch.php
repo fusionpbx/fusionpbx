@@ -2476,26 +2476,27 @@ if (!function_exists('save_call_center_xml')) {
 		unset ($prep_statement, $sql);
 		if ($result_count > 0) { //found results
 			foreach($result as $row) {
-				$call_center_queue_uuid = $row["call_center_queue_uuid"];
-				$domain_uuid = $row["domain_uuid"];
-				$dialplan_uuid = $row["dialplan_uuid"];
-				$queue_name = check_str($row["queue_name"]);
-				$queue_extension = $row["queue_extension"];
-				$queue_strategy = $row["queue_strategy"];
-				$queue_moh_sound = $row["queue_moh_sound"];
-				$queue_record_template = $row["queue_record_template"];
-				$queue_time_base_score = $row["queue_time_base_score"];
-				$queue_max_wait_time = $row["queue_max_wait_time"];
-				$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
-				$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
-				$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
-				$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
-				$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
-				$queue_timeout_action = $row["queue_timeout_action"];
-				$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
-				$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
-				$queue_cid_prefix = $row["queue_cid_prefix"];
-				$queue_description = check_str($row["queue_description"]);
+				//set the variables
+					$call_center_queue_uuid = $row["call_center_queue_uuid"];
+					$domain_uuid = $row["domain_uuid"];
+					$dialplan_uuid = $row["dialplan_uuid"];
+					$queue_name = check_str($row["queue_name"]);
+					$queue_extension = $row["queue_extension"];
+					$queue_strategy = $row["queue_strategy"];
+					$queue_moh_sound = $row["queue_moh_sound"];
+					$queue_record_template = $row["queue_record_template"];
+					$queue_time_base_score = $row["queue_time_base_score"];
+					$queue_max_wait_time = $row["queue_max_wait_time"];
+					$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
+					$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
+					$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
+					$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
+					$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
+					$queue_timeout_action = $row["queue_timeout_action"];
+					$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
+					$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
+					$queue_cid_prefix = $row["queue_cid_prefix"];
+					$queue_description = check_str($row["queue_description"]);
 
 				//replace space with an underscore
 					$queue_name = str_replace(" ", "_", $queue_name);
@@ -2513,7 +2514,6 @@ if (!function_exists('save_call_center_xml')) {
 							$prep_statement_2->execute();
 							while($row2 = $prep_statement_2->fetch(PDO::FETCH_ASSOC)) {
 								$action = 'update';
-								break; //limit to 1 row
 							}
 							unset ($sql, $prep_statement_2);
 						}
@@ -2529,200 +2529,160 @@ if (!function_exists('save_call_center_xml')) {
 								$dialplan_uuid = uuid();
 								dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
-								//add the dialplan_uuid to the call center table
-									$sql = "update v_call_center_queues set ";
-									$sql .= "dialplan_uuid = '$dialplan_uuid' ";
-									$sql .= "where domain_uuid = '$domain_uuid' ";
-									$sql .= "and call_center_queue_uuid = '".$row['call_center_queue_uuid']."' ";
-									$db->exec(check_sql($sql));
-									unset($sql);
-
-								//group 1
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = '${caller_id_name}';
-									$dialplan->dialplan_detail_data = '^([^#]+#)(.*)$';
-									$dialplan->dialplan_detail_break = 'never';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '1';
-									$dialplan->dialplan_detail_order = '000';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'set';
-									$dialplan->dialplan_detail_data = 'caller_id_name=$2';
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '1';
-									$dialplan->dialplan_detail_order = '001';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-								//group 2
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'destination_number';
-									$dialplan->dialplan_detail_data = '^'.$row['queue_extension'].'$';
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '2';
-									$dialplan->dialplan_detail_order = '000';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'answer';
-									$dialplan->dialplan_detail_data = '';
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '2';
-									$dialplan->dialplan_detail_order = '001';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'set';
-									$dialplan->dialplan_detail_data = 'hangup_after_bridge=true';
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '2';
-									$dialplan->dialplan_detail_order = '002';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'set';
-									$dialplan->dialplan_detail_data = "caller_id_name=".$queue_cid_prefix."#\${caller_id_name}";
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '2';
-									$dialplan->dialplan_detail_order = '003';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'callcenter';
-									$dialplan->dialplan_detail_data = $queue_name."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '2';
-									$dialplan->dialplan_detail_order = '005';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
-
-									if (strlen($queue_timeout_action) > 0) {
-										$action_array = explode(":",$queue_timeout_action);
-										$dialplan = new dialplan;
-										$dialplan->domain_uuid = $domain_uuid;
-										$dialplan->dialplan_uuid = $dialplan_uuid;
-										$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-										$dialplan->dialplan_detail_type = $action_array[0];
-										$dialplan->dialplan_detail_data = substr($queue_timeout_action, strlen($action_array[0])+1, strlen($queue_timeout_action));
-										$dialplan->dialplan_detail_break = '';
-										$dialplan->dialplan_detail_inline = '';
-										$dialplan->dialplan_detail_group = '2';
-										$dialplan->dialplan_detail_order = '006';
-										$dialplan->dialplan_detail_add();
-										unset($dialplan);
-									}
-
-									$dialplan = new dialplan;
-									$dialplan->domain_uuid = $domain_uuid;
-									$dialplan->dialplan_uuid = $dialplan_uuid;
-									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-									$dialplan->dialplan_detail_type = 'hangup';
-									$dialplan->dialplan_detail_data = '';
-									$dialplan->dialplan_detail_break = '';
-									$dialplan->dialplan_detail_inline = '';
-									$dialplan->dialplan_detail_group = '2';
-									$dialplan->dialplan_detail_order = '007';
-									$dialplan->dialplan_detail_add();
-									unset($dialplan);
+							//add the dialplan_uuid to the call center table
+								$sql = "update v_call_center_queues set ";
+								$sql .= "dialplan_uuid = '$dialplan_uuid' ";
+								$sql .= "where domain_uuid = '$domain_uuid' ";
+								$sql .= "and call_center_queue_uuid = '".$row['call_center_queue_uuid']."' ";
+								$db->exec(check_sql($sql));
+								unset($sql);
 						}
 						if ($action == 'update') {
-							//update the queue entry in the dialplan
-
-								$dialplan_name = $queue_name;
-								$dialplan_order = '9';
-								//$context = $row['queue_context'];
-								$context = 'default';
-								$enabled = 'true';
-								$descr = $queue_description;
-								$call_center_queue_uuid = $row['call_center_queue_uuid'];
-
+							//add the dialplan_uuid to the call center table
 								$sql = "update v_dialplans set ";
-								$sql .= "dialplan_name = '$dialplan_name', ";
-								$sql .= "dialplan_order = '$dialplan_order', ";
-								$sql .= "context = '$context', ";
-								$sql .= "enabled = '$enabled', ";
-								$sql .= "descr = '$descr' ";
-								$sql .= "where domain_uuid = '$domain_uuid' ";
-								$sql .= "and dialplan_uuid = 'dialplan_uuid' ";
-								//echo "sql: ".$sql."<br />";
-								$db->query($sql);
+								$sql .= "dialplan_name = '".$queue_name."', ";
+								$sql .= "dialplan_description = '".$queue_description."' ";
+								$sql .= "where domain_uuid = '".$domain_uuid."' ";
+								$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+								$db->exec(check_sql($sql));
 								unset($sql);
 
-								//update the condition
-								$sql = "update v_dialplan_details set ";
-								$sql .= "dialplan_detail_data = '^".$row['queue_extension']."$' ";
+							//add the dialplan_uuid to the call center table
+								$sql = "delete from v_dialplan_details ";
 								$sql .= "where domain_uuid = '$domain_uuid' ";
-								$sql .= "and dialplan_detail_tag = 'condition' ";
-								$sql .= "and dialplan_detail_type = 'destination_number' ";
 								$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-								//echo $sql."<br />";
-								$db->query($sql);
+								$db->exec(check_sql($sql));
 								unset($sql);
-
-								//update the action
-								$sql = "update v_dialplan_details set ";
-								$sql .= "dialplan_detail_data = 'caller_id_name=".$queue_cid_prefix."\${caller_id_name}' ";
-								$sql .= "where domain_uuid = '$domain_uuid' ";
-								$sql .= "and dialplan_detail_tag = 'action' ";
-								$sql .= "and dialplan_detail_type = 'set' ";
-								$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-								$sql .= "and dialplan_detail_data like '%{caller_id_name}%' ";
-								//echo $sql."<br />";
-								$db->query($sql);
-
-								//update the action
-								$sql = "update v_dialplan_details set ";
-								$sql .= "dialplan_detail_data = '".$queue_name."@".$_SESSION['domains'][$domain_uuid]['domain_name']."' ";
-								$sql .= "where domain_uuid = '$domain_uuid' ";
-								$sql .= "and dialplan_detail_tag = 'action' ";
-								$sql .= "and dialplan_detail_type = 'callcenter' ";
-								$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-								//echo $sql."<br />";
-								$db->query($sql);
-
-								unset($dialplan_name);
-								unset($order);
-								unset($context);
-								unset($enabled);
-								unset($descr);
-								unset($dialplan_uuid);
 						}
-						unset($action);
-						unset($dialplanincludeid);
+
+						//group 1
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = '${caller_id_name}';
+							$dialplan->dialplan_detail_data = '^([^#]+#)(.*)$';
+							$dialplan->dialplan_detail_break = 'never';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '1';
+							$dialplan->dialplan_detail_order = '000';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = 'set';
+							$dialplan->dialplan_detail_data = 'caller_id_name=$2';
+							$dialplan->dialplan_detail_break = '';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '1';
+							$dialplan->dialplan_detail_order = '001';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+						//group 2
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = 'destination_number';
+							$dialplan->dialplan_detail_data = '^'.$row['queue_extension'].'$';
+							$dialplan->dialplan_detail_break = '';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '2';
+							$dialplan->dialplan_detail_order = '000';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = 'answer';
+							$dialplan->dialplan_detail_data = '';
+							$dialplan->dialplan_detail_break = '';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '2';
+							$dialplan->dialplan_detail_order = '001';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = 'set';
+							$dialplan->dialplan_detail_data = 'hangup_after_bridge=true';
+							$dialplan->dialplan_detail_break = '';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '2';
+							$dialplan->dialplan_detail_order = '002';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = 'set';
+							$dialplan->dialplan_detail_data = "caller_id_name=".$queue_cid_prefix."#\${caller_id_name}";
+							$dialplan->dialplan_detail_break = '';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '2';
+							$dialplan->dialplan_detail_order = '003';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = 'callcenter';
+							$dialplan->dialplan_detail_data = $queue_name."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+							$dialplan->dialplan_detail_break = '';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '2';
+							$dialplan->dialplan_detail_order = '005';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+							if (strlen($queue_timeout_action) > 0) {
+								$action_array = explode(":",$queue_timeout_action);
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = $action_array[0];
+								$dialplan->dialplan_detail_data = substr($queue_timeout_action, strlen($action_array[0])+1, strlen($queue_timeout_action));
+								$dialplan->dialplan_detail_break = '';
+								$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '006';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
+							}
+
+							$dialplan = new dialplan;
+							$dialplan->domain_uuid = $domain_uuid;
+							$dialplan->dialplan_uuid = $dialplan_uuid;
+							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan->dialplan_detail_type = 'hangup';
+							$dialplan->dialplan_detail_data = '';
+							$dialplan->dialplan_detail_break = '';
+							$dialplan->dialplan_detail_inline = '';
+							$dialplan->dialplan_detail_group = '2';
+							$dialplan->dialplan_detail_order = '007';
+							$dialplan->dialplan_detail_add();
+							unset($dialplan);
+
+						//synchronize the xml config
+							save_dialplan_xml();
+
+						//unset variables
+							unset($action);
+
 					} //end if strlen call_center_queue_uuid; add the call center queue to the dialplan
 			}
 
