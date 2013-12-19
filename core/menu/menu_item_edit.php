@@ -256,10 +256,10 @@ else {
 					}
 					else {
 						$sql  = "update v_menu_languages set ";
-						$sql .= "menu_language = '$menu_language', ";
 						$sql .= "menu_item_title = '$menu_item_title' ";
 						$sql .= "where menu_uuid = '$menu_uuid' ";
 						$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
+						$sql .= "and menu_language = '$menu_language' ";
 						$count = $db->exec(check_sql($sql));
 					}
 				}
