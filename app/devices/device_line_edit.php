@@ -142,9 +142,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "line_number = '$line_number', ";
 					$sql .= "server_address = '$server_address', ";
 					$sql .= "outbound_proxy = '$outbound_proxy', ";
-					$sql .= "sip_port = '$sip_port', ";
+					if (strlen($sip_port) > 0) {
+						$sql .= "sip_port = '$sip_port', ";
+					}
+					else {
+						$sql .= "sip_port = null, ";
+					}
 					$sql .= "sip_transport = '$sip_transport', ";
-					$sql .= "register_expires = '$register_expires', ";
+					if (strlen($register_expires) > 0) {
+						$sql .= "register_expires = '$register_expires', ";
+					}
+					else {
+						$sql .= "register_expires = null, ";
+					}
 					$sql .= "display_name = '$display_name', ";
 					$sql .= "user_id = '$user_id', ";
 					$sql .= "auth_id = '$auth_id', ";
