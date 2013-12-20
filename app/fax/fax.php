@@ -127,8 +127,8 @@ require_once "resources/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('fax_extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('fax_name', $text['label-name'], $order_by, $order);
+	echo th_order_by('fax_extension', $text['label-extension'], $order_by, $order);
 	echo th_order_by('fax_email', $text['label-email'], $order_by, $order);
 	echo th_order_by('fax_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
@@ -141,8 +141,8 @@ require_once "resources/paging.php";
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_email']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>\n";
