@@ -612,21 +612,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-profile'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='profile'>\n";
-		//if the profile has no value set it to default
-		if ($profile == "") { $profile = "default"; }
-		if ($profile == "default") { echo "<option value='default' selected='selected'>default</option>\n"; } else {	echo "<option value='default'>default</option>\n"; }
-		if ($profile == "wideband") { echo "<option value='wideband' selected='selected'>wideband</option>\n"; } else {	echo "<option value='wideband'>wideband</option>\n"; }
-		if ($profile == "ultrawideband") { echo "<option value='ultrawideband' selected='selected'>ultrawideband</option>\n"; } else {	echo "<option value='ultrawideband'>ultrawideband</option>\n"; }
-		if ($profile == "cdquality") { echo "<option value='cdquality' selected='selected'>cdquality</option>\n"; } else {	echo "<option value='cdquality'>cdquality</option>\n"; }
-		echo "    </select>\n";
-		echo "<br />\n";
-		echo $text['description-profile']."\n";
+		echo "	<input class='formfld' type='text' name='profile' maxlength='255' value='$profile'>\n";
+		echo "	<br />\n";
+		echo "	".$text['description-profile']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
 
-	if (permission_exists('conference_room_profile')) {
+	if (permission_exists('conference_room_record')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-record'].":\n";
