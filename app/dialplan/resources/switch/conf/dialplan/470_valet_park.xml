@@ -7,7 +7,6 @@
 		<condition field="destination_number" expression="^(park\+)?(\*59[0-9][0-9])$" break="never">
 			<action application="set" data="park_in_use=false" inline="true"/>
 			<action application="set" data="park_lot=$2" inline="true"/>
-			<action application="log" data="INFO park_in_use is [${park_in_use}]"/>
 		</condition>
 		<condition field="destination_number" expression="^(park\+)?(\*59[0-9][0-9])$"/>
 		<condition field="${cond ${sip_h_Referred-By} == 0 ? false : true}" expression="true" break="never">
