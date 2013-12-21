@@ -402,13 +402,49 @@ include "resources/classes/template.php";
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
 		foreach($result as $row) {
-			$line_number = $row['line_number'];
-			$view->assign("server_address_".$line_number, $row["server_address"]);
-			$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy"]);
-			$view->assign("display_name_".$line_number, $row["display_name"]);
-			$view->assign("auth_id_".$line_number, $row["auth_id"]);
-			$view->assign("user_id_".$line_number, $row["user_id"]);
-			$view->assign("user_password_".$line_number, $row["password"]);
+			//set the variables
+				$line_number = $row['line_number'];
+				$register_expires = $row['register_expires'];
+				$sip_transport = $row['sip_transport'];
+				$sip_port = $row['sip_port'];
+
+			//set defaults
+				if (strlen($register_expires) == 0) { $register_expires = "90"; }
+				if (strlen($sip_transport) == 0) { $sip_transport = "TCP"; }
+				if (strlen($sip_port) == 0) { $sip_port = "506".$line_number; }
+
+			//assign the variables
+				$view->assign("server_address_".$line_number, $row["server_address"]);
+				$view->assign("outbound_proxy_".$line_number, $row["outbound_proxy"]);
+				$view->assign("display_name_".$line_number, $row["display_name"]);
+				$view->assign("auth_id_".$line_number, $row["auth_id"]);
+				$view->assign("user_id_".$line_number, $row["user_id"]);
+				$view->assign("user_password_".$line_number, $row["password"]);
+				$view->assign("sip_transport_".$line_number, $sip_transport);
+				$view->assign("sip_port_".$line_number, $sip_port);
+				$view->assign("register_expires_".$line_number, $register_expires);
+		}
+		unset ($prep_statement);
+
+	//get the provisioning information from device keys table
+		$sql = "SELECT * FROM v_device_keys ";
+		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+		$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		foreach($result as $row) {
+			//set the variables
+				$device_key_id = $row['device_key_id']; //1
+				$device_key_type = $row['device_key_type']; //line
+				$device_key_value = $row['device_key_value']; //1
+				$device_key_label = $row['device_key_label']; //label
+			//assign the variables
+				$view->assign("key_id_".$device_key_id, $device_key_id);
+				$view->assign("key_type_".$device_key_id, $device_key_type);
+				$view->assign("key_value_".$device_key_id, $device_key_value);
+				$view->assign("key_label_".$device_key_id, $device_key_label);
 		}
 		unset ($prep_statement);
 
