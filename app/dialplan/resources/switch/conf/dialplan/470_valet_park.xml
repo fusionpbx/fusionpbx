@@ -15,7 +15,7 @@
 		</condition>
 		<condition field="${park_in_use}" expression="true" break="never">
 			<action application="transfer" data="${referred_by_user} XML ${context}"/>
-			<anti-action application="set" data="valet_parking_timeout=20"/>
+			<anti-action application="set" data="valet_parking_timeout=90"/>
 			<anti-action application="set" data="valet_parking_orbit_exten=${referred_by_user}"/>
 			<anti-action application="valet_park" data="park@${domain_name} ${park_lot}"/>
 		</condition>
