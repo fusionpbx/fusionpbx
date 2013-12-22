@@ -91,10 +91,15 @@
 		--set the variable from the params
 			dialed_extension = params:getHeader("dialed_extension");
 			if (dialed_extension == nil) then
-				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
-				load_balancing = false;
+				freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null, trying to build from user\n");
+				if (user == nil) then
+					load_balancing = false;
+				else
+					freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension built from user: " .. dialed_extension .. "\n");
+					dialed_extension = user;
+				end
 			else
-				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
+				freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 		--if load balancing is set to true then get the hostname
