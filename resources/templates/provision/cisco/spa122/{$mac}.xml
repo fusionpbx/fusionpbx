@@ -21,7 +21,7 @@
 <Resync_Trigger_1></Resync_Trigger_1>
 <Resync_Trigger_2></Resync_Trigger_2>
 <Resync_Fails_On_FNF>Yes</Resync_Fails_On_FNF>
-<Profile_Rule>http://{domain_name}{v_project_path}/app/provision/?mac=$MA</Profile_Rule>
+<Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
 <Profile_Rule_B></Profile_Rule_B>
 <Profile_Rule_C></Profile_Rule_C>
 <Profile_Rule_D></Profile_Rule_D>
@@ -182,7 +182,7 @@
 <Enable_IP_Dialing_1_>No</Enable_IP_Dialing_1_>
 <Emergency_Number_1_></Emergency_Number_1_>
 <Mailbox_ID_1_></Mailbox_ID_1_>
-<Proxy_1_>{domain_name}</Proxy_1_>
+<Proxy_1_>{$domain_name}</Proxy_1_>
 <Outbound_Proxy_1_></Outbound_Proxy_1_>
 <Use_Outbound_Proxy_1_>No</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_>Yes</Use_OB_Proxy_In_Dialog_1_>
@@ -196,9 +196,9 @@
 <Proxy_Redundancy_Method_1_>Normal</Proxy_Redundancy_Method_1_>
 <Mailbox_Subscribe_URL_1_></Mailbox_Subscribe_URL_1_>
 <Mailbox_Subscribe_Expires_1_></Mailbox_Subscribe_Expires_1_>
-<Display_Name_1_>{v_line1_displayname}</Display_Name_1_>
-<User_ID_1_>{v_line1_user_id}</User_ID_1_>
-<Password_1_>{v_line1_user_password}</Password_1_>
+<Display_Name_1_>{$display_name_1}</Display_Name_1_>
+<User_ID_1_>{$user_id_1}</User_ID_1_>
+<Password_1_>{$user_password_1}</Password_1_>
 <Use_Auth_ID_1_>No</Use_Auth_ID_1_>
 <Auth_ID_1_></Auth_ID_1_>
 <Resident_Online_Number_1_></Resident_Online_Number_1_>
@@ -308,7 +308,7 @@
 <Enable_IP_Dialing_2_>No</Enable_IP_Dialing_2_>
 <Emergency_Number_2_></Emergency_Number_2_>
 <Mailbox_ID_2_></Mailbox_ID_2_>
-<Proxy_2_>{domain_name}</Proxy_2_>
+<Proxy_2_>{$domain_name}</Proxy_2_>
 <Outbound_Proxy_2_></Outbound_Proxy_2_>
 <Use_Outbound_Proxy_2_>No</Use_Outbound_Proxy_2_>
 <Use_OB_Proxy_In_Dialog_2_>Yes</Use_OB_Proxy_In_Dialog_2_>
@@ -323,9 +323,9 @@
 <Proxy_Redundancy_Method_2_>Normal</Proxy_Redundancy_Method_2_>
 <Mailbox_Subscribe_URL_2_></Mailbox_Subscribe_URL_2_>
 <Mailbox_Subscribe_Expires_2_></Mailbox_Subscribe_Expires_2_>
-<Display_Name_2_>{v_line2_displayname}</Display_Name_2_>
-<User_ID_2_>{v_line2_user_id}</User_ID_2_>
-<Password_2_>{v_line2_user_password}</Password_2_>
+<Display_Name_2_>{$display_name_2}</Display_Name_2_>
+<User_ID_2_>{$user_id_2}</User_ID_2_>
+<Password_2_>{$user_password_2}</Password_2_>
 <Use_Auth_ID_2_>No</Use_Auth_ID_2_>
 <Auth_ID_2_></Auth_ID_2_>
 <Resident_Online_Number_2_></Resident_Online_Number_2_>
