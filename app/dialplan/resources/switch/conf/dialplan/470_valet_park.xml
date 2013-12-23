@@ -10,7 +10,7 @@
 		</condition>
 		<condition field="destination_number" expression="^(park\+)?(\*59[0-9][0-9])$"/>
 		<condition field="${cond ${sip_h_Referred-By} == 0 ? false : true}" expression="true" break="never">
-			<action application="set" data="park_in_use=${regex ${valet_info park@${context}}|${park_lot}}" inline="true"/>
+			<action application="set" data="park_in_use=${regex ${valet_info park@${domain_name}}|${park_lot}}" inline="true"/>
 		</condition>
 		<condition field="${park_in_use}" expression="true" break="never">
 			<action application="transfer" data="${referred_by_user} XML ${context}"/>
