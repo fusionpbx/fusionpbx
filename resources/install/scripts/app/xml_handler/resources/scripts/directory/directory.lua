@@ -91,15 +91,10 @@
 		--set the variable from the params
 			dialed_extension = params:getHeader("dialed_extension");
 			if (dialed_extension == nil) then
-				freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null, trying to build from user\n");
-				if (user == nil) then
-					load_balancing = false;
-				else
-					dialed_extension = user;
-					freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension built from user: " .. dialed_extension .. "\n");
-				end
+				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is null\n");
+				load_balancing = false;
 			else
-				freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
+				--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
 			end
 
 		--if load balancing is set to true then get the hostname
@@ -133,16 +128,15 @@
 					sql = "SELECT hostname FROM registrations ";
 					sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
 					sql = sql .. "AND realm = '"..domain_name.."'";
-					dbh:query(sql, function(row)
+					status = dbh_switch:query(sql, function(row)
 						database_hostname = row["hostname"];
 					end);
 					--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
+					--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 
 				--hostname was not found set load_balancing to false to prevent a database_hostname concatenation error
 					if (database_hostname == nil) then
 						load_balancing = false;
-					else
-					--freeswitch.consoleLog("notice", "[xml_handler-directory.lua] database_hostname is " .. database_hostname .. "\n");
 					end
 
 				--close the database connection
@@ -279,6 +273,9 @@
 					sip_bypass_media = row.sip_bypass_media;
 				end);
 			end
+
+		--close the database connection
+			dbh:release();
 
 		--set the xml array and then concatenate the array to a string
 			if (continue and password) then
