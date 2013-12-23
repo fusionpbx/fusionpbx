@@ -308,6 +308,16 @@ include "resources/classes/template.php";
 	}
 	unset ($prep_statement);
 
+//check to see if the IP address is in the CIDR range
+	function check_cidr ($cidr,$ip_address) {
+		list ($subnet, $mask) = explode ('/', $cidr);
+		return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+	}
+	if (!check_cidr($provision["cidr"], $_SERVER['REMOTE_ADDR'])) {
+		echo "access denied";
+		exit;
+	}
+
 //if the domain name directory exists then only use templates from it
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision/'.$_SESSION['domain_name'])) {
 		$device_template = $_SESSION['domain_name'].'/'.$device_template;
