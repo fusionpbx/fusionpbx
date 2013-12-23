@@ -133,7 +133,7 @@
 					sql = "SELECT hostname FROM registrations ";
 					sql = sql .. "WHERE reg_user = '"..dialed_extension.."' ";
 					sql = sql .. "AND realm = '"..domain_name.."'";
-					status = dbh_switch:query(sql, function(row)
+					dbh:query(sql, function(row)
 						database_hostname = row["hostname"];
 					end);
 					--freeswitch.consoleLog("notice", "[xml_handler] sql: " .. sql .. "\n");
