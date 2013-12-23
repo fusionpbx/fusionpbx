@@ -54,6 +54,12 @@ include "resources/classes/template.php";
 		$provision[$key] = $value;
 	}
 
+//check if provisioning has been enabled
+	if ($provision["enabled"] != "true") {
+		echo "access denied";
+		exit;
+	}
+
 //if password was defined in the system -> variables page then require the password.
 	if (strlen($provision['password']) > 0) {
 		//deny access if the password doesn't match
