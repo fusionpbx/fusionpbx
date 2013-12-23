@@ -95,8 +95,8 @@
 				if (user == nil) then
 					load_balancing = false;
 				else
-					freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension built from user: " .. dialed_extension .. "\n");
 					dialed_extension = user;
+					freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension built from user: " .. dialed_extension .. "\n");
 				end
 			else
 				freeswitch.consoleLog("notice", "[xml_handler-directory.lua] dialed_extension is " .. dialed_extension .. "\n");
