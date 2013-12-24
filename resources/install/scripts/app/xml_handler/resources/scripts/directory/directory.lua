@@ -274,9 +274,6 @@
 				end);
 			end
 
-		--close the database connection
-			dbh:release();
-
 		--set the xml array and then concatenate the array to a string
 			if (continue and password) then
 				--build the xml
