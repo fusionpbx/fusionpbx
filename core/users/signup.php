@@ -51,12 +51,12 @@ $user_email = check_str($_POST["user_email"]);
 
 if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
-	$msgerror = '';
+	$msg = '';
 
 	//--- begin captcha verification ---------------------
 		//session_start(); //make sure sessions are started
 		if (strtolower($_SESSION["captcha"]) != strtolower($_REQUEST["captcha"]) || strlen($_SESSION["captcha"]) == 0) {
-			//$msgerror .= "Captcha Verification Failed<br>\n";
+			//$msg .= "Captcha Verification Failed<br>\n";
 		}
 		else {
 			//echo "verified";
@@ -65,32 +65,34 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	//username is already used.
 	if (strlen($username) == 0) {
-		$msgerror .= $text['message-required'].$text['label-username']."<br>\n";
+		$msg .= $text['message-required'].$text['label-username']."<br>\n";
 	}
 	else {
 		$sql = "SELECT * FROM v_users ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and username = '$username' ";
-		$sql .= "and user_enabled = 'true' ";
+		$sql .= "WHERE username = '$username' ";
+		if ($_SESSION["user"]["unique"]["text"] != "global") {
+			$sql .= "AND domain_uuid = '$domain_uuid' ";
+		}
+		//$sql .= "and user_enabled = 'true' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		if (count($prep_statement->fetchAll(PDO::FETCH_NAMED)) > 0) {
-			$msgerror .= "Please choose a different Username.<br>\n";
+			$msg .= "Please choose a different Username.<br>\n";
 		}
 	}
 
-	if (strlen($password) == 0) { $msgerror .= $text['message-password_blank']."<br>\n"; }
-	if ($password != $confirmpassword) { $msgerror .= $text['message-password_mismatch']."<br>\n"; }
-	//if (strlen($contact_organization) == 0) { $msgerror .= $text['message-required'].$text['label-company_name']."<br>\n"; }
-	//if (strlen($contact_name_given) == 0) { $msgerror .= $text['message-required'].$text['label-first_name']."<br>\n"; }
-	//if (strlen($contact_name_family) == 0) { $msgerror .= $text['message-required'].$text['label-last_name']."<br>\n"; }
-	if (strlen($user_email) == 0) { $msgerror .= $text['message-required'].$text['label-email']."<br>\n"; }
+	if (strlen($password) == 0) { $msg .= $text['message-password_blank']."<br>\n"; }
+	if ($password != $confirmpassword) { $msg .= $text['message-password_mismatch']."<br>\n"; }
+	//if (strlen($contact_organization) == 0) { $msg .= $text['message-required'].$text['label-company_name']."<br>\n"; }
+	//if (strlen($contact_name_given) == 0) { $msg .= $text['message-required'].$text['label-first_name']."<br>\n"; }
+	//if (strlen($contact_name_family) == 0) { $msg .= $text['message-required'].$text['label-last_name']."<br>\n"; }
+	if (strlen($user_email) == 0) { $msg .= $text['message-required'].$text['label-email']."<br>\n"; }
 
-	if (strlen($msgerror) > 0) {
+	if (strlen($msg) > 0) {
 		require_once "resources/header.php";
 		echo "<div align='center'>";
 		echo "<table><tr><td>";
-		echo $msgerror;
+		echo $msg;
 		echo "</td></tr></table>";
 		require_once "resources/persist_form.php";
 		echo persistform($_POST);
