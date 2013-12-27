@@ -73,10 +73,7 @@ require_once "resources/require.php";
 								//set the domain session variables
 									$domain_uuid = $row["domain_uuid"];
 									$_SESSION["domain_uuid"] = $row["domain_uuid"];
-									$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
-									$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $domain_name;
-									$_SESSION["domain_name"] = $domain_name;
-
+									$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 								//set the setting arrays
 									$domain = new domains();
 									$domain->db = $db;
@@ -186,20 +183,37 @@ require_once "resources/require.php";
 		//database authentication
 			else {
 				//check the username and password if they don't match then redirect to the login
-					$sql = "select * from v_users ";
-					//$sql .= "where domain_uuid='".$domain_uuid."' ";
-					$sql .= "where domain_uuid=:domain_uuid ";
-					if (strlen($key) > 0) {
-						$sql .= "and api_key=:key ";
-						//$sql .= "and api_key='".$key."' ";
+					if ($_SESSION["user"]["unique"]["text"] == "global") {
+						//globally unique users
+						$sql = "select * from v_users as u ";
+						if (strlen($key) > 0) {
+							$sql .= "where api_key=:key ";
+							//$sql .= "and api_key='".$key."' ";
+						}
+						else {
+							$sql .= "where username=:username ";
+							//$sql .= "and username='".$username."' ";
+						}
+						$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+						$prep_statement = $db->prepare(check_sql($sql));
 					}
 					else {
-						$sql .= "and username=:username ";
-						//$sql .= "and username='".$username."' ";
+						//unique per domain
+						$sql = "select * from v_users ";
+						if (strlen($key) > 0) {
+							$sql .= "where api_key=:key ";
+							//$sql .= "and api_key='".$key."' ";
+						}
+						else {
+							$sql .= "where username=:username ";
+							//$sql .= "and username='".$username."' ";
+						}
+						//$sql .= "and domain_uuid='".$domain_uuid."' ";
+						$sql .= "and domain_uuid=:domain_uuid ";
+						$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 					}
-					$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
-					$prep_statement = $db->prepare(check_sql($sql));
-					$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 					if (strlen($key) > 0) {
 						$prep_statement->bindParam(':key', $key);
 					}
@@ -217,6 +231,15 @@ require_once "resources/require.php";
 						}
 						else {
 							foreach ($result as &$row) {
+								//get the domain uuid
+									$domain_uuid = $row["domain_uuid"];
+								//set the domain session variables
+									$_SESSION["domain_uuid"] = $domain_uuid;
+									$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
+								//set the setting arrays
+									$domain = new domains();
+									$domain->db = $db;
+									$domain->set();
 								//get the salt from the database
 									$salt = $row["salt"];
 								//if salt is not defined then use the default salt for backwards compatibility
