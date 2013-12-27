@@ -312,17 +312,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//add the extension to the database
 			if ($action == "add" && permission_exists('extension_add')) {
 				$user_email = '';
-				if ($autogen_users == "true") {
-					$auto_user = $extension;
-					for ($i=1; $i<=$range; $i++) {
-						$user_last_name = $auto_user;
-						$user_password = generate_password();
-						user_add($auto_user, $user_password, $user_email);
-						$generated_users[$i]['username'] = $auto_user;
-						$generated_users[$i]['password'] = $user_password;
-						$auto_user++;
+				if ($_SESSION["user"]["unique"]["text"] != "global") {
+					if ($autogen_users == "true") {
+						$auto_user = $extension;
+						for ($i=1; $i<=$range; $i++) {
+							$user_last_name = $auto_user;
+							$user_password = generate_password();
+							user_add($auto_user, $user_password, $user_email);
+							$generated_users[$i]['username'] = $auto_user;
+							$generated_users[$i]['password'] = $user_password;
+							$auto_user++;
+						}
+						unset($auto_user);
 					}
-					unset($auto_user);
 				}
 
 				for ($i=1; $i<=$range; $i++) {
@@ -869,8 +871,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-range']."<br />\n";
-		echo "<input type=\"checkbox\" name=\"autogen_users\" value=\"true\"> ".$text['checkbox-range']."<br>\n";
-		echo "\n";
+		if ($_SESSION["user"]["unique"]["text"] != "global") {
+			echo "<input type=\"checkbox\" name=\"autogen_users\" value=\"true\"> ".$text['checkbox-range']."<br>\n";
+		}
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
