@@ -98,7 +98,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_uuid, ";
 				$sql .= "device_uuid, ";
 				$sql .= "device_key_id, ";
-				$sql .= "device_key_type, ";
+				$sql .= "device_key_category, ";
 				$sql .= "device_key_type, ";
 				$sql .= "device_key_value, ";
 				$sql .= "device_key_label ";
@@ -109,7 +109,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'".uuid()."', ";
 				$sql .= "'$device_uuid', ";
 				$sql .= "'$device_key_id', ";
-				$sql .= "'$device_key_type', ";
+				$sql .= "'$device_key_category', ";
 				$sql .= "'$device_key_type', ";
 				$sql .= "'$device_key_value', ";
 				$sql .= "'$device_key_label' ";
@@ -129,7 +129,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "update" && permission_exists('device_key_edit')) {
 				$sql = "update v_device_keys set ";
 				$sql .= "device_key_id = '$device_key_id', ";
-				$sql .= "device_key_type = '$device_key_type', ";
+				$sql .= "device_key_category = '$device_key_category', ";
 				$sql .= "device_key_type = '$device_key_type', ";
 				$sql .= "device_key_value = '$device_key_value', ";
 				$sql .= "device_key_label = '$device_key_label' ";
@@ -160,7 +160,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$device_key_id = $row["device_key_id"];
-			$device_key_type = $row["device_key_type"];
+			$device_key_category = $row["device_key_category"];
 			$device_key_type = $row["device_key_type"];
 			$device_key_value = $row["device_key_value"];
 			$device_key_label = $row["device_key_label"];
