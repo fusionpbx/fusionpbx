@@ -349,6 +349,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = 'v_devices';
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = 'device_uuid';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_category';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the type.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_id';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the key ID.';

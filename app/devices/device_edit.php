@@ -555,6 +555,7 @@ require_once "resources/require.php";
 		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
@@ -593,23 +594,53 @@ require_once "resources/require.php";
 		}
 
 		echo "<tr>\n";
-		echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "				<select class='formfld' style='width: 45px;' name='device_key_id'>\n";
-		echo "				<option value=''></option>\n";
-		echo "				<option value='1'>1</option>\n";
-		echo "				<option value='2'>2</option>\n";
-		echo "				<option value='3'>3</option>\n";
-		echo "				<option value='4'>4</option>\n";
-		echo "				<option value='5'>5</option>\n";
-		echo "				<option value='6'>6</option>\n";
-		echo "				<option value='7'>7</option>\n";
-		echo "				<option value='8'>8</option>\n";
-		echo "				<option value='9'>9</option>\n";
-		echo "				<option value='10'>10</option>\n";
-		echo "				<option value='11'>11</option>\n";
-		echo "				<option value='12'>12</option>\n";
-		echo "				</select>\n";
-		echo "			</td>\n";
+		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	<select class='formfld' style='width: 45px;' name='device_key_id'>\n";
+		echo "	<option value=''></option>\n";
+		echo "	<option value='1'>1</option>\n";
+		echo "	<option value='2'>2</option>\n";
+		echo "	<option value='3'>3</option>\n";
+		echo "	<option value='4'>4</option>\n";
+		echo "	<option value='5'>5</option>\n";
+		echo "	<option value='6'>6</option>\n";
+		echo "	<option value='7'>7</option>\n";
+		echo "	<option value='8'>8</option>\n";
+		echo "	<option value='9'>9</option>\n";
+		echo "	<option value='10'>10</option>\n";
+		echo "	<option value='11'>11</option>\n";
+		echo "	<option value='12'>12</option>\n";
+		echo "	</select>\n";
+		echo "</td>\n";
+
+		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	<select class='formfld' name='device_key_category'>\n";
+		echo "	<option value=''></option>\n";
+		if ($device_key_category == "line") { 
+			echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
+		}
+		else {
+			echo "	<option value='line'>".$text['label-line']."</option>\n";
+		}
+		if ($device_key_category == "memory") { 
+			echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
+		}
+		else {
+			echo "	<option value='memory'>".$text['label-memory']."</option>\n";
+		}
+		if ($device_key_category == "programmable") { 
+			echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
+		}
+		else {
+			echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
+		}
+		if ($device_key_category == "expansion") { 
+			echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+		}
+		else {
+			echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+		}
+		echo "	</select>\n";
+		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='device_key_type' style='width: 120px;' maxlength='255' value=\"$device_key_type\">\n";
