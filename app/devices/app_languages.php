@@ -229,6 +229,12 @@
 		$text['description-device_key']['en-us'] = 'Select the key.';
 		$text['description-device_key']['pt-pt'] = '';
 
+		$text['label-device_key_category']['en-us'] = 'Category';
+		$text['label-device_key_category']['pt-pt'] = '';
+
+		$text['description-device_key_category']['en-us'] = 'Select the category.';
+		$text['description-device_key_category']['pt-pt'] = '';
+
 		$text['label-device_key_type']['en-us'] = 'Type';
 		$text['label-device_key_type']['pt-pt'] = '';
 
@@ -255,6 +261,15 @@
 
 		$text['label-park']['en-us'] = 'park';
 		$text['label-park']['pt-pt'] = '';
+
+		$text['label-programmable']['en-us'] = 'programmable';
+		$text['label-programmable']['pt-pt'] = '';
+
+		$text['label-memory']['en-us'] = 'memory';
+		$text['label-memory']['pt-pt'] = '';
+
+		$text['label-expansion']['en-us'] = 'expansion';
+		$text['label-expansion']['pt-pt'] = '';
 
 	//general translations
 		$text['label-true']['en-us'] = "true";
