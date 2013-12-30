@@ -237,6 +237,7 @@ require_once "resources/require.php";
 									$_SESSION["domain_uuid"] = $domain_uuid;
 									$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 								//set the setting arrays
+									require_once "resources/classes/domains.php";
 									$domain = new domains();
 									$domain->db = $db;
 									$domain->set();
