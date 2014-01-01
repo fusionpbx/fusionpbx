@@ -166,24 +166,6 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	//$log_type = 'user'; $log_status='add'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." user added.";
 	//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
 
-	$group_name = 'user';
-	$sql = "insert into v_group_users ";
-	$sql .= "(";
-	$sql .= "group_user_uuid, ";
-	$sql .= "domain_uuid, ";
-	$sql .= "group_name, ";
-	$sql .= "user_uuid ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'".uuid()."', ";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'$group_name', ";
-	$sql .= "'$user_uuid' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
-
 	require_once "resources/header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"3;url=index.php\">\n";
 	echo "<div align='center'>".$text['message-add']."</div>";
