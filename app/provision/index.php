@@ -451,7 +451,9 @@ include "resources/classes/template.php";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
+	//assign the keys array
+		$view->assign("keys", $result);
+	//set the variables
 		foreach($result as $row) {
 			//set the variables
 				$device_key_id = $row['device_key_id']; //1
@@ -459,10 +461,12 @@ include "resources/classes/template.php";
 				$device_key_value = $row['device_key_value']; //1
 				$device_key_label = $row['device_key_label']; //label
 			//assign the variables
-				$view->assign("key_id_".$device_key_id, $device_key_id);
-				$view->assign("key_type_".$device_key_id, $device_key_type);
-				$view->assign("key_value_".$device_key_id, $device_key_value);
-				$view->assign("key_label_".$device_key_id, $device_key_label);
+				if ($device_key_type == "line") {
+					$view->assign("key_id_".$device_key_id, $device_key_id);
+					$view->assign("key_type_".$device_key_id, $device_key_type);
+					$view->assign("key_value_".$device_key_id, $device_key_value);
+					$view->assign("key_label_".$device_key_id, $device_key_label);
+				}
 		}
 		unset ($prep_statement);
 
