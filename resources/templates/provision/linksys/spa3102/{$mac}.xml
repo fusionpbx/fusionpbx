@@ -70,7 +70,7 @@
 
   <!-- SIP settings -->
   <Proxy_1_>{$server_address_1}</Proxy_1_>
-  <SIP_Port_1_>5060</SIP_Port_1_>
+  <SIP_Port_1_>{$sip_port_1}</SIP_Port_1_>
   <Use_Outbound_Proxy_1_>no</Use_Outbound_Proxy_1_>
   <!-- only allow proxy IP to connect
   <Restrict_Source_IP_1_>yes</Restrict_Source_IP_1_>
