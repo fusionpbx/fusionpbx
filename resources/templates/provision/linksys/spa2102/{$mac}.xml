@@ -1,6 +1,6 @@
 <flat-profile>
 <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA&amp;password={$password}</Profile_Rule>
-<Resync_Periodic>3600</Resync_Periodic>
+<Resync_Periodic>0</Resync_Periodic>
 
 <!--<GPP_B>{$v_agent}</GPP_B>-->
 <!--Sets the time. Dunno what else.-->

@@ -29,7 +29,7 @@
 <flat-profile>
   <!-- provisioning config -->
   <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
-  <Resync_Periodic>7200</Resync_Periodic>
+  <Resync_Periodic>0</Resync_Periodic>
   <Resync_On_Reset>yes</Resync_On_Reset>
   <Resync_Error_Retry_Delay>10</Resync_Error_Retry_Delay>
 
