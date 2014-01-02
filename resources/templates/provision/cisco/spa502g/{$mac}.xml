@@ -516,8 +516,8 @@
 <Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
 
 <!-- Ext_1/SIP_Settings -->
-<SIP_Transport_1_ group="Ext_1/SIP_Settings">UDP</SIP_Transport_1_>
-<SIP_Port_1_ group="Ext_1/SIP_Settings">5060</SIP_Port_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1}</SIP_Transport_1_>
+<SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ group="Ext_1/SIP_Settings" />
 <Auth_Resync-Reboot_1_ group="Ext_1/SIP_Settings">Yes</Auth_Resync-Reboot_1_>
@@ -566,7 +566,7 @@
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">180</Register_Expires_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
 <Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>

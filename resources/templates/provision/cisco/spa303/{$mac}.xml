@@ -246,8 +246,8 @@
 <Jitter_Buffer_Adjustment_1_ ua="na">up and down</Jitter_Buffer_Adjustment_1_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_1_ ua="na">UDP</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_1_ ua="na">5060</SIP_Port_1_>
+<SIP_Transport_1_ ua="na">{$sip_transport_1}</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_1_ ua="na">{$sip_port_1}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ ua="na">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ ua="na"></EXT_SIP_Port_1_>
 <Auth_Resync-Reboot_1_ ua="na">Yes</Auth_Resync-Reboot_1_>
@@ -290,7 +290,7 @@
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ ua="na">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ ua="na">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ ua="na">3600</Register_Expires_1_>
+<Register_Expires_1_ ua="na">{$register_expires_1}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ ua="na">No</Ans_Call_Without_Reg_1_>
 <Use_DNS_SRV_1_ ua="na">No</Use_DNS_SRV_1_>
 <DNS_SRV_Auto_Prefix_1_ ua="na">No</DNS_SRV_Auto_Prefix_1_>
@@ -358,8 +358,8 @@
 <Jitter_Buffer_Adjustment_2_ ua="na">up and down</Jitter_Buffer_Adjustment_2_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_2_ ua="na">UDP</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_2_ ua="na">5061</SIP_Port_2_>
+<SIP_Transport_2_ ua="na">{$sip_transport_2}</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_2_ ua="na">{$sip_port_2}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ ua="na">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ ua="na"></EXT_SIP_Port_2_>
 <Auth_Resync-Reboot_2_ ua="na">Yes</Auth_Resync-Reboot_2_>
@@ -402,7 +402,7 @@
 <Use_OB_Proxy_In_Dialog_2_ ua="na">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ ua="na">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ ua="na">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ ua="na">3600</Register_Expires_2_>
+<Register_Expires_2_ ua="na">{$register_expires_2}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ ua="na">No</Ans_Call_Without_Reg_2_>
 <Use_DNS_SRV_2_ ua="na">No</Use_DNS_SRV_2_>
 <DNS_SRV_Auto_Prefix_2_ ua="na">No</DNS_SRV_Auto_Prefix_2_>
@@ -470,8 +470,8 @@
 <Jitter_Buffer_Adjustment_3_ ua="na">up and down</Jitter_Buffer_Adjustment_3_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_3_ ua="na">UDP</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_3_ ua="na">5062</SIP_Port_3_>
+<SIP_Transport_3_ ua="na">{$sip_transport_3}</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_3_ ua="na">{$sip_port_3}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ ua="na">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ ua="na"></EXT_SIP_Port_3_>
 <Auth_Resync-Reboot_3_ ua="na">Yes</Auth_Resync-Reboot_3_>
@@ -514,7 +514,7 @@
 <Use_OB_Proxy_In_Dialog_3_ ua="na">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ ua="na">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ ua="na">No</Make_Call_Without_Reg_3_>
-<Register_Expires_3_ ua="na">3600</Register_Expires_3_>
+<Register_Expires_3_ ua="na">{$register_expires_3}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ ua="na">No</Ans_Call_Without_Reg_3_>
 <Use_DNS_SRV_3_ ua="na">No</Use_DNS_SRV_3_>
 <DNS_SRV_Auto_Prefix_3_ ua="na">No</DNS_SRV_Auto_Prefix_3_>
@@ -582,8 +582,8 @@
 <Jitter_Buffer_Adjustment_4_ ua="na">up and down</Jitter_Buffer_Adjustment_4_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_4_ ua="na">UDP</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_4_ ua="na">5063</SIP_Port_4_>
+<SIP_Transport_4_ ua="na">{$sip_transport_4}</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_4_ ua="na">{$sip_port_4}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ ua="na">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ ua="na"></EXT_SIP_Port_4_>
 <Auth_Resync-Reboot_4_ ua="na">Yes</Auth_Resync-Reboot_4_>
@@ -626,7 +626,7 @@
 <Use_OB_Proxy_In_Dialog_4_ ua="na">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ ua="na">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ ua="na">No</Make_Call_Without_Reg_4_>
-<Register_Expires_4_ ua="na">3600</Register_Expires_4_>
+<Register_Expires_4_ ua="na">{$register_expires_4}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ ua="na">No</Ans_Call_Without_Reg_4_>
 <Use_DNS_SRV_4_ ua="na">No</Use_DNS_SRV_4_>
 <DNS_SRV_Auto_Prefix_4_ ua="na">No</DNS_SRV_Auto_Prefix_4_>
@@ -694,8 +694,8 @@
 <Jitter_Buffer_Adjustment_5_ ua="na">up and down</Jitter_Buffer_Adjustment_5_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_5_ ua="na">UDP</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_5_ ua="na">5064</SIP_Port_5_>
+<SIP_Transport_5_ ua="na">{$sip_transport_5}</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_5_ ua="na">{$sip_port_5}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ ua="na">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ ua="na"></EXT_SIP_Port_5_>
 <Auth_Resync-Reboot_5_ ua="na">Yes</Auth_Resync-Reboot_5_>
@@ -738,7 +738,7 @@
 <Use_OB_Proxy_In_Dialog_5_ ua="na">Yes</Use_OB_Proxy_In_Dialog_5_>
 <Register_5_ ua="na">Yes</Register_5_>
 <Make_Call_Without_Reg_5_ ua="na">No</Make_Call_Without_Reg_5_>
-<Register_Expires_5_ ua="na">3600</Register_Expires_5_>
+<Register_Expires_5_ ua="na">{$register_expires_5}</Register_Expires_5_>
 <Ans_Call_Without_Reg_5_ ua="na">No</Ans_Call_Without_Reg_5_>
 <Use_DNS_SRV_5_ ua="na">No</Use_DNS_SRV_5_>
 <DNS_SRV_Auto_Prefix_5_ ua="na">No</DNS_SRV_Auto_Prefix_5_>
@@ -806,8 +806,8 @@
 <Jitter_Buffer_Adjustment_6_ ua="na">up and down</Jitter_Buffer_Adjustment_6_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_6_ ua="na">UDP</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_6_ ua="na">5065</SIP_Port_6_>
+<SIP_Transport_6_ ua="na">{$sip_transport_6}</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_6_ ua="na">{$sip_port_6}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ ua="na">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ ua="na"></EXT_SIP_Port_6_>
 <Auth_Resync-Reboot_6_ ua="na">Yes</Auth_Resync-Reboot_6_>
@@ -850,7 +850,7 @@
 <Use_OB_Proxy_In_Dialog_6_ ua="na">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ ua="na">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ ua="na">No</Make_Call_Without_Reg_6_>
-<Register_Expires_6_ ua="na">3600</Register_Expires_6_>
+<Register_Expires_6_ ua="na">{$register_expires_6}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ ua="na">No</Ans_Call_Without_Reg_6_>
 <Use_DNS_SRV_6_ ua="na">No</Use_DNS_SRV_6_>
 <DNS_SRV_Auto_Prefix_6_ ua="na">No</DNS_SRV_Auto_Prefix_6_>
@@ -918,8 +918,8 @@
 <Jitter_Buffer_Adjustment_7_ ua="na">up and down</Jitter_Buffer_Adjustment_7_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_7_ ua="na">UDP</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_7_ ua="na">5066</SIP_Port_7_>
+<SIP_Transport_7_ ua="na">{$sip_transport_7}</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_7_ ua="na">{$sip_port_7}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ ua="na">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ ua="na"></EXT_SIP_Port_7_>
 <Auth_Resync-Reboot_7_ ua="na">Yes</Auth_Resync-Reboot_7_>
@@ -962,7 +962,7 @@
 <Use_OB_Proxy_In_Dialog_7_ ua="na">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ ua="na">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ ua="na">No</Make_Call_Without_Reg_7_>
-<Register_Expires_7_ ua="na">3600</Register_Expires_7_>
+<Register_Expires_7_ ua="na">{$register_expires_7}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ ua="na">No</Ans_Call_Without_Reg_7_>
 <Use_DNS_SRV_7_ ua="na">No</Use_DNS_SRV_7_>
 <DNS_SRV_Auto_Prefix_7_ ua="na">No</DNS_SRV_Auto_Prefix_7_>
@@ -1030,8 +1030,8 @@
 <Jitter_Buffer_Adjustment_8_ ua="na">up and down</Jitter_Buffer_Adjustment_8_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_8_ ua="na">UDP</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_8_ ua="na">5067</SIP_Port_8_>
+<SIP_Transport_8_ ua="na">{$sip_transport_8}</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_8_ ua="na">{$sip_port_8}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ ua="na">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ ua="na"></EXT_SIP_Port_8_>
 <Auth_Resync-Reboot_8_ ua="na">Yes</Auth_Resync-Reboot_8_>
@@ -1074,7 +1074,7 @@
 <Use_OB_Proxy_In_Dialog_8_ ua="na">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ ua="na">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ ua="na">No</Make_Call_Without_Reg_8_>
-<Register_Expires_8_ ua="na">3600</Register_Expires_8_>
+<Register_Expires_8_ ua="na">{$register_expires_8}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ ua="na">No</Ans_Call_Without_Reg_8_>
 <Use_DNS_SRV_8_ ua="na">No</Use_DNS_SRV_8_>
 <DNS_SRV_Auto_Prefix_8_ ua="na">No</DNS_SRV_Auto_Prefix_8_>
@@ -1142,8 +1142,8 @@
 <Jitter_Buffer_Adjustment_9_ ua="na">up and down</Jitter_Buffer_Adjustment_9_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_9_ ua="na">UDP</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_9_ ua="na">5068</SIP_Port_9_>
+<SIP_Transport_9_ ua="na">{$sip_transport_9}</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_9_ ua="na">{$sip_port_9}</SIP_Port_9_>
 <SIP_100REL_Enable_9_ ua="na">No</SIP_100REL_Enable_9_>
 <EXT_SIP_Port_9_ ua="na"></EXT_SIP_Port_9_>
 <Auth_Resync-Reboot_9_ ua="na">Yes</Auth_Resync-Reboot_9_>
@@ -1186,7 +1186,7 @@
 <Use_OB_Proxy_In_Dialog_9_ ua="na">Yes</Use_OB_Proxy_In_Dialog_9_>
 <Register_9_ ua="na">Yes</Register_9_>
 <Make_Call_Without_Reg_9_ ua="na">No</Make_Call_Without_Reg_9_>
-<Register_Expires_9_ ua="na">3600</Register_Expires_9_>
+<Register_Expires_9_ ua="na">{$register_expires_9}</Register_Expires_9_>
 <Ans_Call_Without_Reg_9_ ua="na">No</Ans_Call_Without_Reg_9_>
 <Use_DNS_SRV_9_ ua="na">No</Use_DNS_SRV_9_>
 <DNS_SRV_Auto_Prefix_9_ ua="na">No</DNS_SRV_Auto_Prefix_9_>
@@ -1254,8 +1254,8 @@
 <Jitter_Buffer_Adjustment_10_ ua="na">up and down</Jitter_Buffer_Adjustment_10_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_10_ ua="na">UDP</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_10_ ua="na">5069</SIP_Port_10_>
+<SIP_Transport_10_ ua="na">{$sip_transport_10}</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_10_ ua="na">{$sip_port_10}</SIP_Port_10_>
 <SIP_100REL_Enable_10_ ua="na">No</SIP_100REL_Enable_10_>
 <EXT_SIP_Port_10_ ua="na"></EXT_SIP_Port_10_>
 <Auth_Resync-Reboot_10_ ua="na">Yes</Auth_Resync-Reboot_10_>
@@ -1366,8 +1366,8 @@
 <Jitter_Buffer_Adjustment_11_ ua="na">up and down</Jitter_Buffer_Adjustment_11_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_11_ ua="na">UDP</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_11_ ua="na">5070</SIP_Port_11_>
+<SIP_Transport_11_ ua="na">{$sip_transport_11}</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_11_ ua="na">{$sip_port_11}</SIP_Port_11_>
 <SIP_100REL_Enable_11_ ua="na">No</SIP_100REL_Enable_11_>
 <EXT_SIP_Port_11_ ua="na"></EXT_SIP_Port_11_>
 <Auth_Resync-Reboot_11_ ua="na">Yes</Auth_Resync-Reboot_11_>
@@ -1478,8 +1478,8 @@
 <Jitter_Buffer_Adjustment_12_ ua="na">up and down</Jitter_Buffer_Adjustment_12_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_12_ ua="na">UDP</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
-<SIP_Port_12_ ua="na">5071</SIP_Port_12_>
+<SIP_Transport_12_ ua="na">{$sip_transport_12}</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
+<SIP_Port_12_ ua="na">{$sip_port_12}</SIP_Port_12_>
 <SIP_100REL_Enable_12_ ua="na">No</SIP_100REL_Enable_12_>
 <EXT_SIP_Port_12_ ua="na"></EXT_SIP_Port_12_>
 <Auth_Resync-Reboot_12_ ua="na">Yes</Auth_Resync-Reboot_12_>

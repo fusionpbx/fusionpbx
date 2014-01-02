@@ -23,7 +23,7 @@
 <Password_1_>{$user_password_1}</Password_1_>
 <Use_Auth_ID_1_>No</Use_Auth_ID_1_>
 <Preferred_Codec_1_>G729a</Preferred_Codec_1_>
-<Register_Expires_1_>3600</Register_Expires_1_><!--*9 will perform intercom and call the other line on the box. There is no other way, from my testing to call from jack to jack on the box, without without the media being proxied.-->
+<Register_Expires_1_>{$register_expires_1}</Register_Expires_1_><!--*9 will perform intercom and call the other line on the box. There is no other way, from my testing to call from jack to jack on the box, without without the media being proxied.-->
 <Dial_Plan_1_>
 (1xxx[2-9]xxxxxxS0|[*#x]x.)  
 </Dial_Plan_1_>
@@ -35,7 +35,7 @@
 <Password_2_>{$user_password_2}</Password_2_>
 <Use_Auth_ID_2_>No</Use_Auth_ID_2_>
 <Preferred_Codec_2_>G729a</Preferred_Codec_2_>
-<Register_Expires_2_>3600</Register_Expires_2_>
+<Register_Expires_2_>{$register_expires_2}</Register_Expires_2_>
 <Dial_Plan_2_>
 (1xxx[2-9]xxxxxxS0|[*#x]x.) 
 </Dial_Plan_2_><!--|&lt;*9:{$user_id_1}@127.0.0.1:5061&gt;-->

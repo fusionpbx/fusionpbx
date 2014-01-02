@@ -299,7 +299,7 @@
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">180</Register_Expires_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
 <Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
@@ -370,7 +370,7 @@
 <Jitter_Buffer_Adjustment_2_ group="Ext_2/Network_Settings">up and down</Jitter_Buffer_Adjustment_2_>
 
 <!-- Ext_2/SIP_Settings -->
-<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_1}</SIP_Transport_2_>
+<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2}</SIP_Transport_2_>
 <SIP_Port_2_ group="Ext_2/SIP_Settings">{$sip_port_2}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ group="Ext_2/SIP_Settings">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ group="Ext_2/SIP_Settings" />
@@ -420,7 +420,7 @@
 <Use_OB_Proxy_In_Dialog_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ group="Ext_2/Proxy_and_Registration">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">180</Register_Expires_2_>
+<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$register_expires_2}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Ans_Call_Without_Reg_2_>
 <Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">No</Use_DNS_SRV_2_>
 <DNS_SRV_Auto_Prefix_2_ group="Ext_2/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_2_>
@@ -489,7 +489,7 @@
 <RTP_CoS_Value_3_ group="Ext_3/Network_Settings">6</RTP_CoS_Value_3_>
 <Network_Jitter_Level_3_ group="Ext_3/Network_Settings">high</Network_Jitter_Level_3_>
 <Jitter_Buffer_Adjustment_3_ group="Ext_3/Network_Settings">up and down</Jitter_Buffer_Adjustment_3_>
-<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_1}</SIP_Transport_3_>
+<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3}</SIP_Transport_3_>
 <SIP_Port_3_ group="Ext_3/SIP_Settings">{$sip_port_3}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ group="Ext_3/SIP_Settings">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ group="Ext_3/SIP_Settings" />
@@ -539,7 +539,7 @@
 <Use_OB_Proxy_In_Dialog_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ group="Ext_3/Proxy_and_Registration">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Make_Call_Without_Reg_3_>
-<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">180</Register_Expires_3_>
+<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">{$register_expires_3}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Ans_Call_Without_Reg_3_>
 <Use_DNS_SRV_3_ group="Ext_3/Proxy_and_Registration">No</Use_DNS_SRV_3_>
 <DNS_SRV_Auto_Prefix_3_ group="Ext_3/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_3_>
@@ -608,7 +608,7 @@
 <RTP_CoS_Value_4_ group="Ext_4/Network_Settings">6</RTP_CoS_Value_4_>
 <Network_Jitter_Level_4_ group="Ext_4/Network_Settings">high</Network_Jitter_Level_4_>
 <Jitter_Buffer_Adjustment_4_ group="Ext_4/Network_Settings">up and down</Jitter_Buffer_Adjustment_4_>
-<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_1}</SIP_Transport_4_>
+<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_4}</SIP_Transport_4_>
 <SIP_Port_4_ group="Ext_4/SIP_Settings">{$sip_port_4}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ group="Ext_4/SIP_Settings">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ group="Ext_4/SIP_Settings" />
@@ -658,7 +658,7 @@
 <Use_OB_Proxy_In_Dialog_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ group="Ext_4/Proxy_and_Registration">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Make_Call_Without_Reg_4_>
-<Register_Expires_4_ group="Ext_4/Proxy_and_Registration">180</Register_Expires_4_>
+<Register_Expires_4_ group="Ext_4/Proxy_and_Registration">{$register_expires_4}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Ans_Call_Without_Reg_4_>
 <Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>
 <DNS_SRV_Auto_Prefix_4_ group="Ext_4/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_4_>
