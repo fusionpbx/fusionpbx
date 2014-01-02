@@ -54,7 +54,7 @@
 <Resync_On_Reset ua="na">Yes</Resync_On_Reset>
 <Resync_Random_Delay ua="na">2</Resync_Random_Delay>
 <Resync_At__HHmm_ ua="na"></Resync_At__HHmm_>
-<Resync_Periodic ua="na">3600</Resync_Periodic>
+<Resync_Periodic ua="na">0</Resync_Periodic>
 <Resync_Error_Retry_Delay ua="na">3600</Resync_Error_Retry_Delay>
 <Forced_Resync_Delay ua="na">14400</Forced_Resync_Delay>
 <Resync_From_SIP ua="na">Yes</Resync_From_SIP>

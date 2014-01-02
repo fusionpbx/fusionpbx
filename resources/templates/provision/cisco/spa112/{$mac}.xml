@@ -3,7 +3,7 @@
 <Provision_Enable>Yes</Provision_Enable>
 <Resync_On_Reset>Yes</Resync_On_Reset>
 <Resync_Random_Delay>2</Resync_Random_Delay>
-<Resync_Periodic>3600</Resync_Periodic>
+<Resync_Periodic>0</Resync_Periodic>
 <Resync_Error_Retry_Delay>3600</Resync_Error_Retry_Delay>
 <Forced_Resync_Delay>14400</Forced_Resync_Delay>
 <Resync_From_SIP>Yes</Resync_From_SIP>

@@ -75,7 +75,7 @@
 <Resync_Random_Delay group="Provisioning/Configuration_Profile" />
 <Resync_At_HHmm_ group="Provisioning/Configuration_Profile" />
 <Resync_At_Random_Delay group="Provisioning/Configuration_Profile" />
-<Resync_Periodic group="Provisioning/Configuration_Profile" />
+<Resync_Periodic group="Provisioning/Configuration_Profile" />0</Resync_Periodic>
 <Resync_Error_Retry_Delay group="Provisioning/Configuration_Profile">60</Resync_Error_Retry_Delay>
 <Forced_Resync_Delay group="Provisioning/Configuration_Profile"></Forced_Resync_Delay>
 <Resync_From_SIP group="Provisioning/Configuration_Profile">Yes</Resync_From_SIP>
