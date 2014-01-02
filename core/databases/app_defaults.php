@@ -134,8 +134,8 @@ if ($domains_processed == 1) {
 
 				if ($db_type == "pgsql") {
 					if ($db_host == "localhost") { $db_host = "127.0.0.1"; }
-					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='-c client_min_messages=NOTICE' application_name='".$db_name."'\";\n";
-					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='-c client_min_messages=NOTICE' application_name='freeswitch'\";\n";
+					$tmp .= "	database[\"system\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_password." options='' application_name='".$db_name."'\";\n";
+					$tmp .= "	database[\"switch\"] = \"pgsql://hostaddr=".$db_host." port=".$db_port." dbname=freeswitch user=".$db_username." password=".$db_password." options='' application_name='freeswitch'\";\n";
 				}
 				elseif ($db_type == "sqlite") {
 					$tmp .= "	database[\"system\"] = \"sqlite://".$db_path."/".$db_name."\";\n";
