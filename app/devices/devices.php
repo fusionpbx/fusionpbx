@@ -65,7 +65,7 @@ else {
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_devices ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		//if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -89,7 +89,12 @@ else {
 	//get the list
 		$sql = "select * from v_devices ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) == 0) {
+			$sql .= "order by device_label, device_mac_address asc ";
+		}
+		else {
+			$sql .= "order by $order_by $order ";
+		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
