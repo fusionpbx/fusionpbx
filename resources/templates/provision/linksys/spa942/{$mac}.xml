@@ -1,7 +1,7 @@
 <flat-profile>
 <Station_Name>{$v_line1_display_name}</Station_Name>
 <Profile_Rule>http://{$domain_name}{$project_path}/app/provision/?mac=$MA</Profile_Rule>
-<Resync_Periodic>3600</Resync_Periodic>
+<Resync_Periodic>0</Resync_Periodic>
 <Primary_NTP_Server>pool.ntp.org</Primary_NTP_Server>
 <Upgrade_Rule></Upgrade_Rule>
 <Voice_Mail_Number>*97</Voice_Mail_Number>
