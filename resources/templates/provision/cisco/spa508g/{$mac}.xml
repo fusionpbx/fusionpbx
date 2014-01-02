@@ -681,7 +681,7 @@
 <Use_OB_Proxy_In_Dialog_1_ group="Ext_1/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_1_>
 <Register_1_ group="Ext_1/Proxy_and_Registration">Yes</Register_1_>
 <Make_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Make_Call_Without_Reg_1_>
-<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expire_1}</Register_Expires_1_>
+<Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
 <Ans_Call_Without_Reg_1_ group="Ext_1/Proxy_and_Registration">No</Ans_Call_Without_Reg_1_>
 <Use_DNS_SRV_1_ group="Ext_1/Proxy_and_Registration">No</Use_DNS_SRV_1_>
 <DNS_SRV_Auto_Prefix_1_ group="Ext_1/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_1_>
@@ -802,7 +802,7 @@
 <Use_OB_Proxy_In_Dialog_2_ group="Ext_2/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_2_>
 <Register_2_ group="Ext_2/Proxy_and_Registration">Yes</Register_2_>
 <Make_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Make_Call_Without_Reg_2_>
-<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$register_expire_2}</Register_Expires_2_>
+<Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$register_expires_2}</Register_Expires_2_>
 <Ans_Call_Without_Reg_2_ group="Ext_2/Proxy_and_Registration">No</Ans_Call_Without_Reg_2_>
 <Use_DNS_SRV_2_ group="Ext_2/Proxy_and_Registration">No</Use_DNS_SRV_2_>
 <DNS_SRV_Auto_Prefix_2_ group="Ext_2/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_2_>
@@ -923,7 +923,7 @@
 <Use_OB_Proxy_In_Dialog_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_3_>
 <Register_3_ group="Ext_3/Proxy_and_Registration">Yes</Register_3_>
 <Make_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Make_Call_Without_Reg_3_>
-<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">{$register_expire_3}</Register_Expires_3_>
+<Register_Expires_3_ group="Ext_3/Proxy_and_Registration">{$register_expires_3}</Register_Expires_3_>
 <Ans_Call_Without_Reg_3_ group="Ext_3/Proxy_and_Registration">No</Ans_Call_Without_Reg_3_>
 <Use_DNS_SRV_3_ group="Ext_3/Proxy_and_Registration">No</Use_DNS_SRV_3_>
 <DNS_SRV_Auto_Prefix_3_ group="Ext_3/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_3_>
@@ -1043,7 +1043,7 @@
 <Use_OB_Proxy_In_Dialog_4_ group="Ext_4/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_4_>
 <Register_4_ group="Ext_4/Proxy_and_Registration">Yes</Register_4_>
 <Make_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Make_Call_Without_Reg_4_>
-<Register_Expires_4_ group="Ext_4/Proxy_and_Registration">{$register_expire_4}</Register_Expires_4_>
+<Register_Expires_4_ group="Ext_4/Proxy_and_Registration">{$register_expires_4}</Register_Expires_4_>
 <Ans_Call_Without_Reg_4_ group="Ext_4/Proxy_and_Registration">No</Ans_Call_Without_Reg_4_>
 <Use_DNS_SRV_4_ group="Ext_4/Proxy_and_Registration">No</Use_DNS_SRV_4_>
 <DNS_SRV_Auto_Prefix_4_ group="Ext_4/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_4_>
@@ -1164,7 +1164,7 @@
 <Use_OB_Proxy_In_Dialog_5_ group="Ext_5/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_5_>
 <Register_5_ group="Ext_5/Proxy_and_Registration">Yes</Register_5_>
 <Make_Call_Without_Reg_5_ group="Ext_5/Proxy_and_Registration">No</Make_Call_Without_Reg_5_>
-<Register_Expires_5_ group="Ext_5/Proxy_and_Registration">{$register_expire_5}</Register_Expires_5_>
+<Register_Expires_5_ group="Ext_5/Proxy_and_Registration">{$register_expires_5}</Register_Expires_5_>
 <Ans_Call_Without_Reg_5_ group="Ext_5/Proxy_and_Registration">No</Ans_Call_Without_Reg_5_>
 <Use_DNS_SRV_5_ group="Ext_5/Proxy_and_Registration">No</Use_DNS_SRV_5_>
 <DNS_SRV_Auto_Prefix_5_ group="Ext_5/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_5_>
@@ -1285,7 +1285,7 @@
 <Use_OB_Proxy_In_Dialog_6_ group="Ext_6/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_6_>
 <Register_6_ group="Ext_6/Proxy_and_Registration">Yes</Register_6_>
 <Make_Call_Without_Reg_6_ group="Ext_6/Proxy_and_Registration">No</Make_Call_Without_Reg_6_>
-<Register_Expires_6_ group="Ext_6/Proxy_and_Registration">{$register_expire_6}</Register_Expires_6_>
+<Register_Expires_6_ group="Ext_6/Proxy_and_Registration">{$register_expires_6}</Register_Expires_6_>
 <Ans_Call_Without_Reg_6_ group="Ext_6/Proxy_and_Registration">No</Ans_Call_Without_Reg_6_>
 <Use_DNS_SRV_6_ group="Ext_6/Proxy_and_Registration">No</Use_DNS_SRV_6_>
 <DNS_SRV_Auto_Prefix_6_ group="Ext_6/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_6_>
@@ -1406,7 +1406,7 @@
 <Use_OB_Proxy_In_Dialog_7_ group="Ext_7/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_7_>
 <Register_7_ group="Ext_7/Proxy_and_Registration">Yes</Register_7_>
 <Make_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Make_Call_Without_Reg_7_>
-<Register_Expires_7_ group="Ext_7/Proxy_and_Registration">{$register_expire_7}</Register_Expires_7_>
+<Register_Expires_7_ group="Ext_7/Proxy_and_Registration">{$register_expires_7}</Register_Expires_7_>
 <Ans_Call_Without_Reg_7_ group="Ext_7/Proxy_and_Registration">No</Ans_Call_Without_Reg_7_>
 <Use_DNS_SRV_7_ group="Ext_7/Proxy_and_Registration">No</Use_DNS_SRV_7_>
 <DNS_SRV_Auto_Prefix_7_ group="Ext_7/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_7_>
@@ -1527,7 +1527,7 @@
 <Use_OB_Proxy_In_Dialog_8_ group="Ext_8/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_8_>
 <Register_8_ group="Ext_8/Proxy_and_Registration">Yes</Register_8_>
 <Make_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Make_Call_Without_Reg_8_>
-<Register_Expires_8_ group="Ext_8/Proxy_and_Registration">{$register_expire_8}</Register_Expires_8_>
+<Register_Expires_8_ group="Ext_8/Proxy_and_Registration">{$register_expires_8}</Register_Expires_8_>
 <Ans_Call_Without_Reg_8_ group="Ext_8/Proxy_and_Registration">No</Ans_Call_Without_Reg_8_>
 <Use_DNS_SRV_8_ group="Ext_8/Proxy_and_Registration">No</Use_DNS_SRV_8_>
 <DNS_SRV_Auto_Prefix_8_ group="Ext_8/Proxy_and_Registration">No</DNS_SRV_Auto_Prefix_8_>
