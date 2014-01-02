@@ -556,8 +556,8 @@ require_once "resources/require.php";
 		echo "		<td class='vtable' align='left'>";
 		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "			<tr>\n";
-		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
@@ -566,17 +566,24 @@ require_once "resources/require.php";
 		$sql = "SELECT * FROM v_device_keys ";
 		$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "AND device_uuid = '".$device_uuid."' ";
-		$sql .= "ORDER by device_key_id asc ";
+		$sql .= "ORDER by ";
+		$sql .= "CASE device_key_category ";
+		$sql .= "WHEN 'line' THEN 1 ";
+		$sql .= "WHEN 'memort' THEN 2 ";
+		$sql .= "WHEN 'programmable' THEN 3 ";
+		$sql .= "WHEN 'expansion' THEN 4 ";
+		$sql .= "ELSE 100 END, ";
+		$sql .= "device_key_id asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach($result as $row) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_id']."&nbsp;\n";
+			echo "					".$row['device_key_category']."&nbsp;\n";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_category']."&nbsp;\n";
+			echo "					".$row['device_key_id']."&nbsp;\n";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$row['device_key_type']."&nbsp;\n";
@@ -599,24 +606,6 @@ require_once "resources/require.php";
 		}
 
 		echo "<tr>\n";
-		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	<select class='formfld' style='width: 45px;' name='device_key_id'>\n";
-		echo "	<option value=''></option>\n";
-		echo "	<option value='1'>1</option>\n";
-		echo "	<option value='2'>2</option>\n";
-		echo "	<option value='3'>3</option>\n";
-		echo "	<option value='4'>4</option>\n";
-		echo "	<option value='5'>5</option>\n";
-		echo "	<option value='6'>6</option>\n";
-		echo "	<option value='7'>7</option>\n";
-		echo "	<option value='8'>8</option>\n";
-		echo "	<option value='9'>9</option>\n";
-		echo "	<option value='10'>10</option>\n";
-		echo "	<option value='11'>11</option>\n";
-		echo "	<option value='12'>12</option>\n";
-		echo "	</select>\n";
-		echo "</td>\n";
-
 		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	<select class='formfld' name='device_key_category'>\n";
 		echo "	<option value=''></option>\n";
@@ -647,8 +636,96 @@ require_once "resources/require.php";
 		echo "	</select>\n";
 		echo "</td>\n";
 
+		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	<select class='formfld' style='width: 45px;' name='device_key_id'>\n";
+		echo "	<option value=''></option>\n";
+		echo "	<option value='1'>1</option>\n";
+		echo "	<option value='2'>2</option>\n";
+		echo "	<option value='3'>3</option>\n";
+		echo "	<option value='4'>4</option>\n";
+		echo "	<option value='5'>5</option>\n";
+		echo "	<option value='6'>6</option>\n";
+		echo "	<option value='7'>7</option>\n";
+		echo "	<option value='8'>8</option>\n";
+		echo "	<option value='9'>9</option>\n";
+		echo "	<option value='10'>10</option>\n";
+		echo "	<option value='11'>11</option>\n";
+		echo "	<option value='12'>12</option>\n";
+		echo "	</select>\n";
+		echo "</td>\n";
+
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_key_type' style='width: 120px;' maxlength='255' value=\"$device_key_type\">\n";
+		//echo "	<input class='formfld' type='text' name='device_key_type' style='width: 120px;' maxlength='255' value=\"$device_key_type\">\n";
+		?>
+
+		<?php $selected = "selected='selected'"; ?>
+		<?php $found = false; ?>
+		<select class='formfld' name='device_key_type'>
+		<option value=''></option>
+		<optgroup label='Cisco'>
+			<option value='line' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>line</option>
+			<option value='disabled' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>disabled</option>
+		</optgroup>
+		<optgroup label='Yealink'>
+			<option value='0' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>0-N/A(default for memory key)</option>
+			<option value='1' <?php if ($device_key_type == "1") { echo $selected;$found=true; } ?>>1-Conference</option>
+			<option value='2' <?php if ($device_key_type == "2") { echo $selected;$found=true; } ?>>2-Forward</option>
+			<option value='3' <?php if ($device_key_type == "3") { echo $selected;$found=true; } ?>>3-Transfer</option>
+			<option value='4' <?php if ($device_key_type == "4") { echo $selected;$found=true; } ?>>4-Hold</option>
+			<option value='5' <?php if ($device_key_type == "5") { echo $selected;$found=true; } ?>>5-DND</option>
+			<option value='6' <?php if ($device_key_type == "6") { echo $selected;$found=true; } ?>>6-Redial</option>
+			<option value='7' <?php if ($device_key_type == "7") { echo $selected;$found=true; } ?>>7-Call Return</option>
+			<option value='8' <?php if ($device_key_type == "8") { echo $selected;$found=true; } ?>>8-SMS</option>
+			<option value='9' <?php if ($device_key_type == "9") { echo $selected;$found=true; } ?>>9-Call Pickup</option>
+			<option value='10' <?php if ($device_key_type == "10") { echo $selected;$found=true; } ?>>10-Call Park</option>
+			<option value='11' <?php if ($device_key_type == "11") { echo $selected;$found=true; } ?>>11-DTMF</option>
+			<option value='12' <?php if ($device_key_type == "12") { echo $selected;$found=true; } ?>>12-Voicemail</option>
+			<option value='13' <?php if ($device_key_type == "13") { echo $selected;$found=true; } ?>>13-SpeedDial</option>
+			<option value='14' <?php if ($device_key_type == "14") { echo $selected;$found=true; } ?>>14-Intercom</option>
+			<option value='15' <?php if ($device_key_type == "15") { echo $selected;$found=true; } ?>>15-Line(default for line key)</option>
+			<option value='16' <?php if ($device_key_type == "16") { echo $selected;$found=true; } ?>>16-BLF</option>
+			<option value='17' <?php if ($device_key_type == "17") { echo $selected;$found=true; } ?>>17-URL</option>
+			<option value='19' <?php if ($device_key_type == "19") { echo $selected;$found=true; } ?>>19-Public Hold</option>
+			<option value='20' <?php if ($device_key_type == "20") { echo $selected;$found=true; } ?>>20-Private</option>
+			<option value='21' <?php if ($device_key_type == "21") { echo $selected;$found=true; } ?>>21-Shared Line</option>
+			<option value='22' <?php if ($device_key_type == "22") { echo $selected;$found=true; } ?>>22-XML Group</option>
+			<option value='23' <?php if ($device_key_type == "23") { echo $selected;$found=true; } ?>>23-Group Pickup</option>
+			<option value='24' <?php if ($device_key_type == "24") { echo $selected;$found=true; } ?>>24-Paging</option>
+			<option value='25' <?php if ($device_key_type == "25") { echo $selected;$found=true; } ?>>25-Record</option>
+			<option value='27' <?php if ($device_key_type == "27") { echo $selected;$found=true; } ?>>27-XML Browser</option>
+			<option value='28' <?php if ($device_key_type == "28") { echo $selected;$found=true; } ?>>28-History</option>
+			<option value='29' <?php if ($device_key_type == "29") { echo $selected;$found=true; } ?>>29-Directory</option>
+			<option value='30' <?php if ($device_key_type == "30") { echo $selected;$found=true; } ?>>30-Menu</option>
+			<option value='32' <?php if ($device_key_type == "32") { echo $selected;$found=true; } ?>>32-New SMS</option>
+			<option value='33' <?php if ($device_key_type == "33") { echo $selected;$found=true; } ?>>33-Status</option>
+			<option value='34' <?php if ($device_key_type == "34") { echo $selected;$found=true; } ?>>34-Hot Desking</option>
+			<option value='35' <?php if ($device_key_type == "35") { echo $selected;$found=true; } ?>>35-URL Record</option>
+			<option value='38' <?php if ($device_key_type == "38") { echo $selected;$found=true; } ?>>38-LDAP</option>
+			<option value='39' <?php if ($device_key_type == "39") { echo $selected;$found=true; } ?>>39-BLF List</option>
+			<option value='40' <?php if ($device_key_type == "40") { echo $selected;$found=true; } ?>>40-Prefix</option>
+			<option value='41' <?php if ($device_key_type == "41") { echo $selected;$found=true; } ?>>41-Zero-Sp-Touch</option>
+			<option value='42' <?php if ($device_key_type == "42") { echo $selected;$found=true; } ?>>42-ACD</option>
+			<option value='43' <?php if ($device_key_type == "43") { echo $selected;$found=true; } ?>>43-Local Phonebook</option>
+			<option value='44' <?php if ($device_key_type == "44") { echo $selected;$found=true; } ?>>44-Broadsoft Phonebook</option>
+			<option value='45' <?php if ($device_key_type == "45") { echo $selected;$found=true; } ?>>45-Local Group</option>
+			<option value='46' <?php if ($device_key_type == "46") { echo $selected;$found=true; } ?>>46-Broadsoft Group</option>
+			<option value='47' <?php if ($device_key_type == "47") { echo $selected;$found=true; } ?>>47-XML Phonebook</option>
+			<option value='48' <?php if ($device_key_type == "48") { echo $selected;$found=true; } ?>>48-Switch Account Up</option>
+			<option value='49' <?php if ($device_key_type == "49") { echo $selected;$found=true; } ?>>49-Switch Account Down</option>
+			<option value='50' <?php if ($device_key_type == "50") { echo $selected;$found=true; } ?>>50-Keypad Lock</option>
+		</optgroup>
+		<optgroup label='Other'>
+			<option value='line' <?php if ($device_key_type == "line") { echo $selected;$found=true; } ?>>line</option>
+			<option value='other'>other</option>
+		<?php
+			if (!$found) {
+				echo "<option value='".$device_key_type."'>".$device_key_type."</option>\n";
+			}
+		?>
+		</optgroup>
+		</select>
+
+		<?php
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
