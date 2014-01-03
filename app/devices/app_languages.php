@@ -253,6 +253,12 @@
 		$text['description-device_key_value']['en-us'] = 'Enter the value.';
 		$text['description-device_key_value']['pt-pt'] = '';
 
+		$text['label-device_key_extension']['en-us'] = 'Extension';
+		$text['label-device_key_extension']['pt-pt'] = '';
+
+		$text['description-device_key_extension']['en-us'] = 'Enter the extension.';
+		$text['description-device_key_extension']['pt-pt'] = '';
+
 		$text['label-device_key_label']['en-us'] = 'Label';
 		$text['label-device_key_label']['pt-pt'] = '';
 
