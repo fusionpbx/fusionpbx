@@ -61,6 +61,7 @@ else {
 		$device_key_type = check_str($_POST["device_key_type"]);
 		$device_key_line = check_str($_POST["device_key_line"]);
 		$device_key_value = check_str($_POST["device_key_value"]);
+		$device_key_extension = check_str($_POST["device_key_extension"]);
 		$device_key_label = check_str($_POST["device_key_label"]);
 	}
 
@@ -77,6 +78,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($device_key_type) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_type']."<br>\n"; }
 		//if (strlen($device_key_line) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_line']."<br>\n"; }
 		//if (strlen($device_key_value) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_value']."<br>\n"; }
+		//if (strlen($device_key_extension) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_extension']."<br>\n"; }
 		//if (strlen($device_key_label) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_label']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
@@ -104,6 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_type, ";
 				$sql .= "device_key_line, ";
 				$sql .= "device_key_value, ";
+				$sql .= "device_key_extension, ";
 				$sql .= "device_key_label ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -115,6 +118,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$device_key_category', ";
 				$sql .= "'$device_key_type', ";
 				$sql .= "'$device_key_line', ";
+				$sql .= "'$device_key_value', ";
+				$sql .= "'$device_key_extension', ";
 				$sql .= "'$device_key_label' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -136,6 +141,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_type = '$device_key_type', ";
 				$sql .= "device_key_line = '$device_key_line', ";
 				$sql .= "device_key_value = '$device_key_value', ";
+				$sql .= "device_key_extension = '$device_key_extension', ";
 				$sql .= "device_key_label = '$device_key_label' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and device_key_uuid = '$device_key_uuid' ";
@@ -168,6 +174,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$device_key_type = $row["device_key_type"];
 			$device_key_line = $row["device_key_line"];
 			$device_key_value = $row["device_key_value"];
+			$device_key_extension = $row["device_key_extension"];
 			$device_key_label = $row["device_key_label"];
 		}
 		unset ($prep_statement);
@@ -528,6 +535,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='device_key_value' maxlength='255' value=\"$device_key_value\">\n";
 	echo "<br />\n";
 	echo $text['description-device_key_value']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-device_key_extension'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='device_key_extension' maxlength='255' value=\"$device_key_extension\">\n";
+	echo "<br />\n";
+	echo $text['description-device_key_extension']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

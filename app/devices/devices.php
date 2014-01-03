@@ -112,8 +112,8 @@ else {
 	//echo th_order_by('device_uuid', $text['label-device_uuid'], $order_by, $order);
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
-	//echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
-	echo th_order_by('device_model', $text['label-device_model'], $order_by, $order);
+	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
+	//echo th_order_by('device_model', $text['label-device_model'], $order_by, $order);
 	//echo th_order_by('device_firmware_version', $text['label-device_firmware_version'], $order_by, $order);
 	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
 	echo th_order_by('device_template', $text['label-device_template'], $order_by, $order);
@@ -140,8 +140,8 @@ else {
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_uuid']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_mac_address']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_model']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
+			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_model']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_firmware_version']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_provision_enable']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_template']."&nbsp;</td>\n";

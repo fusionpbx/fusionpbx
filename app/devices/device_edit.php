@@ -41,6 +41,9 @@ require_once "resources/require.php";
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//include the device class
+	require_once "app/devices/resources/classes/device.php";
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -80,6 +83,7 @@ require_once "resources/require.php";
 			$device_key_type = check_str($_POST["device_key_type"]);
 			$device_key_line = check_str($_POST["device_key_line"]);
 			$device_key_value = check_str($_POST["device_key_value"]);
+			$device_key_extension = check_str($_POST["device_key_extension"]);
 			$device_key_label = check_str($_POST["device_key_label"]);
 		//settings
 			//$device_setting_category = check_str($_POST["device_setting_category"]);
@@ -90,38 +94,9 @@ require_once "resources/require.php";
 			$device_setting_description = check_str($_POST["device_setting_description"]);
 	}
 
-//use the mac address to find the vendor
+//use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
-		switch (substr($device_mac_address, 0, 6)) {
-		case "00085d":
-			$device_vendor = "aastra";
-			break;
-		case "000e08":
-			$device_vendor = "linksys";
-			break;
-		case "0004f2":
-			$device_vendor = "polycom";
-			break;
-		case "00907a":
-			$device_vendor = "polycom";
-			break;
-		case "001873":
-			$device_vendor = "cisco";
-			break;
-		case "00045a":
-			$device_vendor = "linksys";
-			break;
-		case "000625":
-			$device_vendor = "linksys";
-			break;
-		case "001565":
-			$device_vendor = "yealink";
-			break;
-		case "000413":
-			$device_vendor = "snom";
-		default:
-			$device_vendor = "";
-		}
+		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
 //add or update the database
@@ -264,6 +239,7 @@ require_once "resources/require.php";
 						$sql .= "device_key_type, ";
 						$sql .= "device_key_line, ";
 						$sql .= "device_key_value, ";
+						$sql .= "device_key_extension, ";
 						$sql .= "device_key_label ";
 						$sql .= ")";
 						$sql .= " values ";
@@ -276,6 +252,7 @@ require_once "resources/require.php";
 						$sql .= "'$device_key_type', ";
 						$sql .= "'$device_key_line', ";
 						$sql .= "'$device_key_value', ";
+						$sql .= "'$device_key_extension', ";
 						$sql .= "'$device_key_label' ";
 						$sql .= ")";
 						$db->exec(check_sql($sql));
@@ -329,7 +306,7 @@ require_once "resources/require.php";
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$device_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_devices ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -352,6 +329,11 @@ require_once "resources/require.php";
 			$device_description = $row["device_description"];
 		}
 		unset ($prep_statement);
+	}
+
+//use the mac address to get the vendor
+	if (strlen($device_vendor) == 0) {
+		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
 //show the header
@@ -565,6 +547,7 @@ require_once "resources/require.php";
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_extension']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
@@ -598,6 +581,9 @@ require_once "resources/require.php";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$row['device_key_value']."&nbsp;\n";
+			echo "				</td>\n";
+			echo "				<td class='vtable'>\n";
+			echo "					".$row['device_key_extension']."&nbsp;\n";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$row['device_key_label']."&nbsp;\n";
@@ -756,6 +742,10 @@ require_once "resources/require.php";
 
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='device_key_value' style='width: 120px;' maxlength='255' value=\"$device_key_value\">\n";
+		echo "</td>\n";
+
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='device_key_extension' style='width: 120px;' maxlength='255' value=\"$device_key_extension\">\n";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
