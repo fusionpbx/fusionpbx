@@ -103,7 +103,7 @@
 					if (domain_name == nil) then
 						sql = "SELECT domain_name FROM v_domains ";
 						sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' ";
-						status = dbh_switch:query(sql, function(row)
+						status = dbh:query(sql, function(row)
 							domain_name = row["domain_name"];
 						end);
 					end
