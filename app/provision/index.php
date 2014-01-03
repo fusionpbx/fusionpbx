@@ -448,6 +448,7 @@ include "resources/classes/template.php";
 		$sql = "SELECT * FROM v_device_keys ";
 		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 		$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "ORDER BY device_key_id asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
