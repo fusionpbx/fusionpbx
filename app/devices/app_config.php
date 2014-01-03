@@ -361,6 +361,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Select the type.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_line';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the value.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_value';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the value.';
