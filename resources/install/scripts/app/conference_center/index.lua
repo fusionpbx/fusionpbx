@@ -335,6 +335,15 @@
 				end);
 			end
 
+		--connect to the switch database
+			if (file_exists(database_dir.."/core.db")) then
+				dbh_switch = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+				freeswitch.consoleLog("notice", "[conference center] dbh_switch sqlite\n");
+			else
+				freeswitch.consoleLog("notice", "[conference center] dbh_switch pgsql/mysql\n");
+				dbh_switch = database_handle('switch');
+			end
+
 		--check if someone has already joined the conference
 			local_hostname = trim(api:execute("hostname", ""));
 			freeswitch.consoleLog("notice", "[conference] local_hostname is " .. local_hostname .. "\n");
@@ -342,17 +351,17 @@
 			if (debug["sql"]) then
 				freeswitch.consoleLog("notice", "[conference] SQL: " .. sql .. "\n");
 			end
-			status = dbh:query(sql, function(rows)
+			status = dbh_switch:query(sql, function(rows)
 				conference_hostname = string.lower(rows["hostname"]);
 			end);
 
-		if (conference_hostname ~= nil) then
-			freeswitch.consoleLog("notice", "[conference] conference_hostname is " .. conference_hostname .. "\n");
-			--if conference hosntame exist, then we bridge there
-			if (conference_hostname ~= local_hostname) then
-				session:execute("bridge","sofia/internal/" .. destination_number .. "@" .. domain_name .. ";fs_path=sip:" .. conference_hostname);
+		--if conference hosntame exist, then we bridge there
+			if (conference_hostname ~= nil) then
+				freeswitch.consoleLog("notice", "[conference center] conference_hostname is " .. conference_hostname .. "\n");
+				if (conference_hostname ~= local_hostname) then
+					session:execute("bridge","sofia/internal/" .. destination_number .. "@" .. domain_name .. ";fs_path=sip:" .. conference_hostname);
+				end
 			end
-		end
 
 		--call not bridged, so we answer
 			session:answer();
