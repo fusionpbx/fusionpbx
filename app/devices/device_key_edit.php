@@ -59,6 +59,7 @@ else {
 		$device_key_id = check_str($_POST["device_key_id"]);
 		$device_key_category = check_str($_POST["device_key_category"]);
 		$device_key_type = check_str($_POST["device_key_type"]);
+		$device_key_line = check_str($_POST["device_key_line"]);
 		$device_key_value = check_str($_POST["device_key_value"]);
 		$device_key_label = check_str($_POST["device_key_label"]);
 	}
@@ -74,6 +75,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($device_key_id) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_id']."<br>\n"; }
 		//if (strlen($device_key_category) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_category']."<br>\n"; }
 		//if (strlen($device_key_type) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_type']."<br>\n"; }
+		//if (strlen($device_key_line) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_line']."<br>\n"; }
 		//if (strlen($device_key_value) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_value']."<br>\n"; }
 		//if (strlen($device_key_label) == 0) { $msg .= $text['message-required']." ".$text['label-device_key_label']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -100,6 +102,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_id, ";
 				$sql .= "device_key_category, ";
 				$sql .= "device_key_type, ";
+				$sql .= "device_key_line, ";
 				$sql .= "device_key_value, ";
 				$sql .= "device_key_label ";
 				$sql .= ")";
@@ -111,7 +114,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$device_key_id', ";
 				$sql .= "'$device_key_category', ";
 				$sql .= "'$device_key_type', ";
-				$sql .= "'$device_key_value', ";
+				$sql .= "'$device_key_line', ";
 				$sql .= "'$device_key_label' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -131,6 +134,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "device_key_id = '$device_key_id', ";
 				$sql .= "device_key_category = '$device_key_category', ";
 				$sql .= "device_key_type = '$device_key_type', ";
+				$sql .= "device_key_line = '$device_key_line', ";
 				$sql .= "device_key_value = '$device_key_value', ";
 				$sql .= "device_key_label = '$device_key_label' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -162,6 +166,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$device_key_id = $row["device_key_id"];
 			$device_key_category = $row["device_key_category"];
 			$device_key_type = $row["device_key_type"];
+			$device_key_line = $row["device_key_line"];
 			$device_key_value = $row["device_key_value"];
 			$device_key_label = $row["device_key_label"];
 		}
@@ -341,6 +346,97 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-device_key_id']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-device_key_line'].": \n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='device_key_line'>\n";
+	echo "	<option value=''></option>\n";
+	if ($device_key_line == "0") { 
+		echo "	<option value='0' selected='selected'>0</option>\n";
+	}
+	else {
+		echo "	<option value='0'>0</option>\n";
+	}
+	if ($device_key_line == "1") { 
+		echo "	<option value='1' selected='selected'>1</option>\n";
+	}
+	else {
+		echo "	<option value='1'>1</option>\n";
+	}
+	if ($device_key_line == "2") { 
+		echo "	<option value='2' selected='selected'>2</option>\n";
+	}
+	else {
+		echo "	<option value='2'>2</option>\n";
+	}
+	if ($device_key_line == "3") { 
+		echo "	<option value='3' selected='selected'>3</option>\n";
+	}
+	else {
+		echo "	<option value='3'>3</option>\n";
+	}
+	if ($device_key_line == "4") { 
+		echo "	<option value='4' selected='selected'>4</option>\n";
+	}
+	else {
+		echo "	<option value='4'>4</option>\n";
+	}
+	if ($device_key_line == "5") { 
+		echo "	<option value='5' selected='selected'>5</option>\n";
+	}
+	else {
+		echo "	<option value='5'>5</option>\n";
+	}
+	if ($device_key_line == "6") { 
+		echo "	<option value='6' selected='selected'>6</option>\n";
+	}
+	else {
+		echo "	<option value='6'>6</option>\n";
+	}
+	if ($device_key_line == "7") { 
+		echo "	<option value='7' selected='selected'>7</option>\n";
+	}
+	else {
+		echo "	<option value='7'>7</option>\n";
+	}
+	if ($device_key_line == "8") { 
+		echo "	<option value='8' selected='selected'>8</option>\n";
+	}
+	else {
+		echo "	<option value='8'>8</option>\n";
+	}
+	if ($device_key_line == "9") { 
+		echo "	<option value='9' selected='selected'>9</option>\n";
+	}
+	else {
+		echo "	<option value='9'>9</option>\n";
+	}
+	if ($device_key_line == "10") { 
+		echo "	<option value='10' selected='selected'>10</option>\n";
+	}
+	else {
+		echo "	<option value='10'>10</option>\n";
+	}
+	if ($device_key_line == "11") { 
+		echo "	<option value='11' selected='selected'>11</option>\n";
+	}
+	else {
+		echo "	<option value='11'>11</option>\n";
+	}
+	if ($device_key_line == "12") { 
+		echo "	<option value='12' selected='selected'>12</option>\n";
+	}
+	else {
+		echo "	<option value='12'>12</option>\n";
+	}
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-device_key_line']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

@@ -241,6 +241,12 @@
 		$text['description-device_key_type']['en-us'] = 'Select the type of key.';
 		$text['description-device_key_type']['pt-pt'] = '';
 
+		$text['label-device_key_line']['en-us'] = 'Line';
+		$text['label-device_key_line']['pt-pt'] = '';
+
+		$text['description-device_key_line']['en-us'] = 'Select the line number.';
+		$text['description-device_key_line']['pt-pt'] = '';
+
 		$text['label-device_key_value']['en-us'] = 'Value';
 		$text['label-device_key_value']['pt-pt'] = '';
 

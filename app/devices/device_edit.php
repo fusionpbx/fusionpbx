@@ -75,8 +75,10 @@ require_once "resources/require.php";
 			$auth_id = check_str($_POST["auth_id"]);
 			$password = check_str($_POST["password"]);
 		//keys
+			$device_key_category = check_str($_POST["device_key_category"]);
 			$device_key_id = check_str($_POST["device_key_id"]);
 			$device_key_type = check_str($_POST["device_key_type"]);
+			$device_key_line = check_str($_POST["device_key_line"]);
 			$device_key_value = check_str($_POST["device_key_value"]);
 			$device_key_label = check_str($_POST["device_key_label"]);
 		//settings
@@ -260,6 +262,7 @@ require_once "resources/require.php";
 						$sql .= "device_key_id, ";
 						$sql .= "device_key_category, ";
 						$sql .= "device_key_type, ";
+						$sql .= "device_key_line, ";
 						$sql .= "device_key_value, ";
 						$sql .= "device_key_label ";
 						$sql .= ")";
@@ -271,6 +274,7 @@ require_once "resources/require.php";
 						$sql .= "'$device_key_id', ";
 						$sql .= "'$device_key_category', ";
 						$sql .= "'$device_key_type', ";
+						$sql .= "'$device_key_line', ";
 						$sql .= "'$device_key_value', ";
 						$sql .= "'$device_key_label' ";
 						$sql .= ")";
@@ -559,6 +563,7 @@ require_once "resources/require.php";
 		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_type']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-device_key_line']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_value']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
@@ -587,6 +592,9 @@ require_once "resources/require.php";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$row['device_key_type']."&nbsp;\n";
+			echo "				</td>\n";
+			echo "				<td class='vtable'>\n";
+			echo "					".$row['device_key_line']."&nbsp;\n";
 			echo "				</td>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$row['device_key_value']."&nbsp;\n";
@@ -726,6 +734,24 @@ require_once "resources/require.php";
 		</select>
 
 		<?php
+		echo "</td>\n";
+
+		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	<select class='formfld' style='width: 45px;' name='device_key_line'>\n";
+		echo "	<option value=''></option>\n";
+		echo "	<option value='1'>1</option>\n";
+		echo "	<option value='2'>2</option>\n";
+		echo "	<option value='3'>3</option>\n";
+		echo "	<option value='4'>4</option>\n";
+		echo "	<option value='5'>5</option>\n";
+		echo "	<option value='6'>6</option>\n";
+		echo "	<option value='7'>7</option>\n";
+		echo "	<option value='8'>8</option>\n";
+		echo "	<option value='9'>9</option>\n";
+		echo "	<option value='10'>10</option>\n";
+		echo "	<option value='11'>11</option>\n";
+		echo "	<option value='12'>12</option>\n";
+		echo "	</select>\n";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
