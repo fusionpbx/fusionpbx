@@ -27,7 +27,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('ring_group_add')) {
+if (permission_exists('ring_group_delete')) {
 	//access granted
 }
 else {
