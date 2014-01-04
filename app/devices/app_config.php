@@ -369,6 +369,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the value.';
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_extension';
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the extension.';
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = 'device_key_label';
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = 'text';
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = 'Enter the label.';
