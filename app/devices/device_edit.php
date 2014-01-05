@@ -486,6 +486,7 @@ require_once "resources/require.php";
 	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "				<select class='formfld' style='width: 45px;' name='line_number'>\n";
 	echo "				<option value=''></option>\n";
+	echo "				<option value='0'>0</option>\n";
 	echo "				<option value='1'>1</option>\n";
 	echo "				<option value='2'>2</option>\n";
 	echo "				<option value='3'>3</option>\n";
