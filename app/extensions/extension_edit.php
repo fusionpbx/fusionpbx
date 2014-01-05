@@ -1185,7 +1185,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "WHERE l.user_id = '".$extension."' ";
 		$sql .= "AND l.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "AND l.device_uuid = d.device_uuid ";
-		$sql .= "ORDER BY d.device_mac_address asc ";
+		$sql .= "ORDER BY l.line_number, d.device_mac_address asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -1238,12 +1238,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<option value='28'>28</option>\n";
 		echo "			<option value='29'>29</option>\n";
 		echo "			<option value='30'>30</option>\n";
-		echo "			<option value='31'>31</option>\n";
-		echo "			<option value='32'>32</option>\n";
-		echo "			<option value='50'>50</option>\n";
-		echo "			<option value='100'>100</option>\n";
-		echo "			<option value='120'>120</option>\n";
-		echo "			<option value='150'>150</option>\n";
 		echo "			</select>\n";
 		echo "		</td>\n";
 
