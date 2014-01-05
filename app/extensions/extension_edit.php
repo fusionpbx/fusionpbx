@@ -216,6 +216,7 @@ else {
 			$sql_insert .= "domain_uuid, ";
 			$sql_insert .= "server_address, ";
 			$sql_insert .= "user_id, ";
+			$sql_insert .= "auth_id, ";
 			$sql_insert .= "password, ";
 			$sql_insert .= "line_number ";
 			$sql_insert .= ") ";
@@ -225,6 +226,7 @@ else {
 			$sql_insert .= "'".$device_line_uuid."', ";
 			$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
 			$sql_insert .= "'".$_SESSION['domain_name']."', ";
+			$sql_insert .= "'".$extension."', ";
 			$sql_insert .= "'".$extension."', ";
 			$sql_insert .= "'".$password."', ";
 			$sql_insert .= "'".$line_number."' ";
