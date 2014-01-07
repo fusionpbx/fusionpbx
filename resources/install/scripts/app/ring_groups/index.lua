@@ -366,7 +366,7 @@
 							else
 								cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_kill "..uuid.." alloted_timeout";
 							end
-							--freeswitch.consoleLog("NOTICE", "[confirm] schedule timeout: "..cmd.."\n");
+							--freeswitch.consoleLog("NOTICE", "[ring group] schedule timeout: "..cmd.."\n");
 							results = trim(api:executeString(cmd));
 
 						--start the uuid hangup monitor
@@ -394,7 +394,8 @@
 									or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED" 
 									or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE" 
 									or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION" 
-									or session:getVariable("originate_disposition") == "USER_BUSY") then
+									or session:getVariable("originate_disposition") == "USER_BUSY"
+									or session:getVariable("originate_disposition") == "failure") then
 										session:execute(ring_group_timeout_app, ring_group_timeout_data);
 								end
 							else
@@ -403,7 +404,7 @@
 								else
 									sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 									sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-									freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+									freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "\n");
 									dbh:query(sql, function(row)
 										session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
 									end);
