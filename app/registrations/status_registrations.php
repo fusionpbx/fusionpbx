@@ -153,6 +153,7 @@ require_once "resources/check_auth.php";
 			echo "	<th>".$text['label-port']."</th>\n";
 			//echo "	<th class='vncell'>mwi-account</th>\n";
 			echo "	<th>".$text['label-status']."</th>\n";
+			echo "	<th>".$text['label-tools']."&nbsp;</th>\n";
 			echo "</tr>\n";
 
 		//order the array
@@ -163,26 +164,35 @@ require_once "resources/check_auth.php";
 		//display the array
 			if (count($registrations) > 0) {
 				foreach ($registrations as $row) {
-					echo "<tr>\n";
-					if (count($_SESSION["domains"]) > 1) {
-						echo "<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-realm']."&nbsp;</td>\n";
-					}
-					//<td class='".$row_style[$c]."'>&nbsp;".$row['call-id']."&nbsp;</td>\n";
-					//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['user']."&nbsp;</td>\n";
-					//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['contact']."&nbsp;</td>\n";
-					echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-user']."&nbsp;</td>\n";
-					echo "	<td class='".$row_style[$c]."'>&nbsp;".htmlentities($row['agent'])."&nbsp;</td>\n";
-					//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['host']."&nbsp;</td>\n";
-					echo "	<td class='".$row_style[$c]."'>&nbsp;<a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
-					echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['network-port']."&nbsp;</td>\n";
-					//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['mwi-account']."&nbsp;</td>\n";
-					echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['status']."&nbsp;</td>\n";
-					echo "</tr>\n";
-					if ($c==0) { $c=1; } else { $c=0; }
+					//set the user agent
+						$agent = $row['agent'];
+
+					//show the registrations
+						echo "<tr>\n";
+						if (count($_SESSION["domains"]) > 1) {
+							echo "<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-realm']."&nbsp;</td>\n";
+						}
+						//<td class='".$row_style[$c]."'>&nbsp;".$row['call-id']."&nbsp;</td>\n";
+						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['user']."&nbsp;</td>\n";
+						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['contact']."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-user']."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'>&nbsp;".htmlentities($row['agent'])."&nbsp;</td>\n";
+						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['host']."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'>&nbsp;<a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['network-port']."&nbsp;</td>\n";
+						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['mwi-account']."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['status']."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."' align='right'>\n";
+						//echo "		<input type='button' class='btn' value='resync' onclick=\"document.location.href='cmd.php?cmd=resync&user=".$row['sip-auth-user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
+						echo "		<input type='button' class='btn' value='reboot' onclick=\"document.location.href='cmd.php?cmd=reboot&user=".$row['sip-auth-user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
+						echo "	</td>\n";
+						echo "</tr>\n";
+						if ($c==0) { $c=1; } else { $c=0; }
 				}
 			}
 			echo "</table>\n";
 
+		//close the connection and unset the variable
 			fclose($fp);
 			unset($xml);
 	}
