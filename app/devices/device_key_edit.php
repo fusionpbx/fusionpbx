@@ -169,6 +169,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$device_uuid = $row["device_uuid"];
 			$device_key_id = $row["device_key_id"];
 			$device_key_category = $row["device_key_category"];
 			$device_key_type = $row["device_key_type"];
@@ -195,7 +196,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-device_key']."</b></td>\n";
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_key_edit.php?id=$device_key_uuid'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='device_edit.php?id=$device_uuid'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
@@ -460,7 +461,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	<option value=''></option>
 	<optgroup label='Cisco'>
 		<option value='line' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>line</option>
-		<option value='disabled' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>disabled</option>
+		<option value='disabled' <?php if ($device_key_type == "disabled") { echo $selected;$found=true; } ?>>disabled</option>
 	</optgroup>
 	<optgroup label='Yealink'>
 		<option value='0' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>0-N/A(default for memory key)</option>
