@@ -296,7 +296,7 @@ require_once "resources/require.php";
 
 				//redirect the user
 					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=devices.php\">\n";
+					echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
 					echo "<div align='center'>\n";
 					echo $text['message-add']."\n";
 					echo "</div>\n";
