@@ -36,8 +36,8 @@ require_once "resources/require.php";
 	//get the domain
 		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 	//get the domain_uuid
-		$sql = "select * from v_domains ";
-		$sql .= "where domain_name = '".$_SESSION['domain_name']."' ";
+		$sql = "SELECT * FROM v_domains ";
+		$sql .= "WHERE domain_name = '".$_SESSION['domain_name']."' ";
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -109,15 +109,15 @@ require_once "resources/require.php";
 
 //use the mac address to get the vendor
 	require_once "app/devices/resources/classes/device.php";
-	$device_vendor = device::get_vendor($device_mac_address);
+	$device_vendor = device::get_vendor($mac);
 
 //check to see if the mac_address exists in v_devices
 	if (mac_exists_in_devices($db, $mac)) {
 		//get the device_template
 			if (strlen($device_template) == 0) {
 				$sql = "SELECT * FROM v_devices ";
-				//$sql .= "where domain_uuid=:domain_uuid ";
-				$sql .= "where device_mac_address=:mac ";
+				//$sql .= "WHERE domain_uuid=:domain_uuid ";
+				$sql .= "WHERE device_mac_address=:mac ";
 				$prep_statement_2 = $db->prepare(check_sql($sql));
 				if ($prep_statement_2) {
 					//$prep_statement_2->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
@@ -142,14 +142,14 @@ require_once "resources/require.php";
 		//find a template that was defined on another phone and use that as the default.
 			if (strlen($device_template) == 0) {
 				$sql = "SELECT * FROM v_devices ";
-				$sql .= "where domain_uuid=:domain_uuid ";
-				$sql .= "and device_template like '%/%' ";
-				$prep_statement3 = $db->prepare(check_sql($sql));
-				if ($prep_statement3) {
-					$prep_statement3->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
-					$prep_statement3->bindParam(':mac', $mac);
-					$prep_statement3->execute();
-					$row = $prep_statement3->fetch();
+				$sql .= "WHERE domain_uuid=:domain_uuid ";
+				$sql .= "AND device_template LIKE '%/%' ";
+				$prep_statement_3 = $db->prepare(check_sql($sql));
+				if ($prep_statement_3) {
+					$prep_statement_3->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
+					$prep_statement_3->bindParam(':mac', $mac);
+					$prep_statement_3->execute();
+					$row = $prep_statement_3->fetch();
 					$device_label = $row["device_label"];
 					$device_vendor = strtolower($row["device_vendor"]);
 					$device_model = $row["device_model"];
@@ -199,7 +199,7 @@ require_once "resources/require.php";
 
 			foreach ($template_list as $key=>$val){
 				if(stripos($_SERVER['HTTP_USER_AGENT'],$key)!== false) {
-					$device_template=$val;
+					$device_template = $val;
 					break;
 				}
 			}
@@ -207,7 +207,7 @@ require_once "resources/require.php";
 
 		//mac address does not exist in the table so add it
 			$device_uuid = uuid();
-			$sql = "insert into v_devices ";
+			$sql = "INSERT INTO v_devices ";
 			$sql .= "(";
 			$sql .= "domain_uuid, ";
 			$sql .= "device_uuid, ";
@@ -220,7 +220,7 @@ require_once "resources/require.php";
 			$sql .= "device_password, ";
 			$sql .= "device_description ";
 			$sql .= ")";
-			$sql .= "values ";
+			$sql .= "VALUES ";
 			$sql .= "(";
 			$sql .= "'".$_SESSION['domain_uuid']."', ";
 			$sql .= "'$device_uuid', ";
