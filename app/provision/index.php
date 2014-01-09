@@ -370,12 +370,12 @@ require_once "resources/require.php";
 			//set the variables
 				$line_number = $row['line_number'];
 				$register_expires = $row['register_expires'];
-				$sip_transport = $row['sip_transport'];
+				$sip_transport = strtolower($row['sip_transport']);
 				$sip_port = $row['sip_port'];
 
 			//set defaults
 				if (strlen($register_expires) == 0) { $register_expires = "90"; }
-				if (strlen($sip_transport) == 0) { $sip_transport = "TCP"; }
+				if (strlen($sip_transport) == 0) { $sip_transport = "tcp"; }
 				if (strlen($sip_port) == 0) {
 					if ($line_number == "" || $line_number == "1") {
 						$sip_port = "5060";
