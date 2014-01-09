@@ -24,7 +24,6 @@
 */
 include "root.php";
 require_once "resources/require.php";
-include "resources/classes/template.php";
 
 //set default variables
 	$dir_count = 0;
@@ -108,62 +107,9 @@ include "resources/classes/template.php";
 			exit;
 		}
 
-//use the mac address to find the vendor
-	switch (substr($mac, 0, 6)) {
-	case "00085d":
-		$device_vendor = "aastra";
-		break;
-	case "000e08":
-		$device_vendor = "linksys";
-		break;
-	case "0004f2":
-		$device_vendor = "polycom";
-		break;
-	case "00907a":
-		$device_vendor = "polycom";
-		break;
-	case "0080f0":
-		$device_vendor = "panasonic";
-		break;
-	case "001873":
-		$device_vendor = "cisco";
-		break;
-	case "a44c11":
-		$device_vendor = "cisco";
-		break;
-	case "0021A0":
-		$device_vendor = "cisco";
-		break;
-	case "30e4db":
-		$device_vendor = "cisco";
-		break;
-	case "002155":
-		$device_vendor = "cisco";
-		break;
-	case "68efbd":
-		$device_vendor = "cisco";
-		break;
-	case "00045a":
-		$device_vendor = "linksys";
-		break;
-	case "000625":
-		$device_vendor = "linksys";
-		break;
-	case "001565":
-		$device_vendor = "yealink";
-		break;
-	case "000413":
-		$device_vendor = "snom";
-		break;
-	case "000b82":
-		$device_vendor = "grandstream";
-		break;
-	case "00177d":
-		$device_vendor = "konftel";
-		break;
-	default:
-		$device_vendor = "";
-	}
+//use the mac address to get the vendor
+	require_once "app/devices/resources/classes/device.php";
+	$device_vendor = device::get_vendor($device_mac_address);
 
 //check to see if the mac_address exists in v_devices
 	if (mac_exists_in_devices($db, $mac)) {
@@ -376,6 +322,7 @@ include "resources/classes/template.php";
 		//$proxy3_address= "";
 
 //initialize a template object
+	include "resources/classes/template.php";
 	$view = new template();
 	if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
 		$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
@@ -429,7 +376,14 @@ include "resources/classes/template.php";
 			//set defaults
 				if (strlen($register_expires) == 0) { $register_expires = "90"; }
 				if (strlen($sip_transport) == 0) { $sip_transport = "TCP"; }
-				if (strlen($sip_port) == 0) { $sip_port = "506".$line_number; }
+				if (strlen($sip_port) == 0) {
+					if ($line_number == "" || $line_number == "1") {
+						$sip_port = "5060";
+					}
+					else {
+						$sip_port = "506".($line_number + 1);
+					}
+				}
 
 			//assign the variables
 				$view->assign("server_address_".$line_number, $row["server_address"]);
