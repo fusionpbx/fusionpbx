@@ -34,17 +34,10 @@ require_once "resources/require.php";
 
 //get the domain_uuid
 	//get the domain
-		$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-	//get the domain_uuid
-		$sql = "SELECT * FROM v_domains ";
-		$sql .= "WHERE domain_name = '".$_SESSION['domain_name']."' ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach($result as $row) {
-			$_SESSION["domain_uuid"] = $row["domain_uuid"];
+		if ($_SESSION['domain_name'] == 0) {
+			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+			$_SESSION['domain_name'] = $domain_array[0];
 		}
-		unset($result, $prep_statement);
 
 //build the provision array
 	foreach($_SESSION['provision'] as $key=>$val) {
@@ -92,10 +85,14 @@ require_once "resources/require.php";
 
 //check alternate MAC source
 	if (empty($mac)){
-		if($_SERVER['HTTP_USER_AGENT'][strlen($_SERVER['HTTP_USER_AGENT'])-17-1] == " ") {
-			$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
-		} //Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
-	}//check alternates
+		//set the http user agent
+			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
+		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
+			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink") {
+				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
+				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
+			}
+	}
 
 //prepare the mac address
 	//normalize the mac address to lower case
@@ -116,34 +113,49 @@ require_once "resources/require.php";
 		//get the device_template
 			if (strlen($device_template) == 0) {
 				$sql = "SELECT * FROM v_devices ";
-				//$sql .= "WHERE domain_uuid=:domain_uuid ";
 				$sql .= "WHERE device_mac_address=:mac ";
 				$prep_statement_2 = $db->prepare(check_sql($sql));
 				if ($prep_statement_2) {
-					//$prep_statement_2->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
-					$prep_statement_2->bindParam(':mac', $mac);
-					$prep_statement_2->execute();
-					$row = $prep_statement_2->fetch();
-					$device_uuid = $row["device_uuid"];
-					$device_label = $row["device_label"];
-					if (strlen($row["device_vendor"]) > 0) {
-						$device_vendor = strtolower($row["device_vendor"]);
-					}
-					$device_model = $row["device_model"];
-					$device_firmware_version = $row["device_firmware_version"];
-					$device_provision_enable = $row["device_provision_enable"];
-					$device_template = $row["device_template"];
-					$device_username = $row["device_username"];
-					$device_password = $row["device_password"];
-					$device_time_zone = $row["device_time_zone"];
-					$device_description = $row["device_description"];
+					//use the prepared statement
+						$prep_statement_2->bindParam(':mac', $mac);
+						$prep_statement_2->execute();
+						$row = $prep_statement_2->fetch();
+						$domain_uuid = $row["domain_uuid"];
+					//set the variables from values in the database
+						$device_uuid = $row["device_uuid"];
+						$device_label = $row["device_label"];
+						if (strlen($row["device_vendor"]) > 0) {
+							$device_vendor = strtolower($row["device_vendor"]);
+						}
+						$device_model = $row["device_model"];
+						$device_firmware_version = $row["device_firmware_version"];
+						$device_provision_enable = $row["device_provision_enable"];
+						$device_template = $row["device_template"];
+						$device_username = $row["device_username"];
+						$device_password = $row["device_password"];
+						$device_time_zone = $row["device_time_zone"];
+						$device_description = $row["device_description"];
+					//set the domain uuid
+						$_SESSION["domain_uuid"] = $row["domain_uuid"];
 				}
+			}
+		//get the domain_uuid
+			if (strlen($_SESSION['domain_name']) == 0) {
+				$sql = "SELECT * FROM v_domains ";
+				$sql .= "WHERE domain_name = '".$_SESSION['domain_name']."' ";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($result as $row) {
+					$_SESSION["domain_uuid"] = $row["domain_uuid"];
+				}
+				unset($result, $prep_statement);
 			}
 		//find a template that was defined on another phone and use that as the default.
 			if (strlen($device_template) == 0) {
 				$sql = "SELECT * FROM v_devices ";
-				$sql .= "WHERE domain_uuid=:domain_uuid ";
-				$sql .= "AND device_template LIKE '%/%' ";
+				$sql .= "WHERE device_template LIKE '%/%' ";
+				$sql .= "AND domain_uuid=:domain_uuid ";
 				$prep_statement_3 = $db->prepare(check_sql($sql));
 				if ($prep_statement_3) {
 					$prep_statement_3->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
@@ -204,6 +216,19 @@ require_once "resources/require.php";
 				}
 			}
 			unset($template_list);
+
+		//get the domain_uuid
+			if (strlen($_SESSION['domain_name']) == 0) {
+				$sql = "SELECT * FROM v_domains ";
+				$sql .= "WHERE domain_name = '".$_SESSION['domain_name']."' ";
+				$prep_statement = $db->prepare($sql);
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($result as $row) {
+					$_SESSION["domain_uuid"] = $row["domain_uuid"];
+				}
+				unset($result, $prep_statement);
+			}
 
 		//mac address does not exist in the table so add it
 			$device_uuid = uuid();
