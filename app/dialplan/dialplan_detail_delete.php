@@ -44,19 +44,18 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET)>0) {
-	$id = $_GET["id"];
+if (count($_GET) > 0) {
+	$dialplan_detail_uuid = check_str($_GET["id"]);
 	$app_uuid = check_str($_REQUEST["app_uuid"]);
-	$dialplan_uuid = check_str($_REQUEST["id2"]);
+	$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
 }
 
-if (strlen($id)>0) {
+if (strlen($dialplan_detail_uuid) > 0) {
 
 	//delete child data
 		$sql = "delete from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_detail_uuid = '$id' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+		$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid' ";
 		$db->query($sql);
 		unset($sql);
 
@@ -73,7 +72,7 @@ if (strlen($id)>0) {
 
 //redirect the user
 	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."\">\n";
+	echo "<meta http-equiv=\"refresh\" content=\"0;url=dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."\">\n";
 	echo "<div align='center'>\n";
 	echo $text['message-delete']."\n";
 	echo "</div>\n";

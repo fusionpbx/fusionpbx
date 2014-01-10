@@ -56,18 +56,13 @@ else {
 	}
 	else {
 		$action = "add";
-		$dialplan_uuid = check_str($_REQUEST["id2"]);
 	}
-	if (isset($_REQUEST["id2"])) {
-		$dialplan_uuid = check_str($_REQUEST["id2"]);
-	}
+	$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
 
 //get the http values and set them as php variables
 	$app_uuid = check_str($_REQUEST["app_uuid"]);
 	if (count($_POST)>0) {
-		if (isset($_REQUEST["dialplan_uuid"])) {
-			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
-		}
+		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$dialplan_detail_tag = check_str($_POST["dialplan_detail_tag"]);
 		$dialplan_detail_order = check_str($_POST["dialplan_detail_order"]);
 		$dialplan_detail_type = check_str($_POST["dialplan_detail_type"]);
@@ -241,37 +236,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."';\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
-	?>
-	<script type="text/javascript">
-	function public_include_details_tag_onchange() {
-		var dialplan_detail_tag = document.getElementById("form_tag").value;
-		if (dialplan_detail_tag == "condition") {
-		  document.getElementById("label_field_type").innerHTML = "<?=$text['label-field']?>";
-		  document.getElementById("label_field_data").innerHTML = "<?=$text['label-expression']?>";
-		}
-		else if (dialplan_detail_tag == "regex") {
-		  document.getElementById("label_field_type").innerHTML = "<?=$text['label-field']?>";
-		  document.getElementById("label_field_data").innerHTML = "<?=$text['label-expression']?>";
-		}
-		else if (dialplan_detail_tag == "action") {
-		  document.getElementById("label_field_type").innerHTML = "<?=$text['label-application']?>";
-		  document.getElementById("label_field_data").innerHTML = "<?=$text['label-data']?>";
-		}
-		else if (dialplan_detail_tag == "anti-action") {
-		  document.getElementById("label_field_type").innerHTML = "<?=$text['label-application']?>";
-		  document.getElementById("label_field_data").innerHTML = "<?=$text['label-data']?>";
-		}
-		else if (dialplan_detail_tag == "param") {
-		  document.getElementById("label_field_type").innerHTML = "<?=$text['label-name']?>";
-		  document.getElementById("label_field_data").innerHTML = "<?=$text['label-value']?>";
-		}
-		if (dialplan_detail_tag == "") {
-		  document.getElementById("label_field_type").innerHTML = "<?=$text['label-type']?>";
-		  document.getElementById("label_field_data").innerHTML = "<?=$text['label-data']?>";
-		}
-	}
-	</script>
-	<?php
 	echo "<tr>\n";
 	echo "	<td>\n";
 	echo "		&nbsp;\n";
@@ -283,59 +247,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-tag'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "                <select name='dialplan_detail_tag' class='formfld' id='form_tag' onchange='public_include_details_tag_onchange();'>\n";
-	echo "                <option></option>\n";
-	switch ($dialplan_detail_tag) {
-	case "condition":
-		echo "                <option value='condition' selected='yes'>".$text['option-condition']."</option>\n";
-		echo "                <option value='action'>".$text['option-action']."</option>\n";
-		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
-		echo "                <option value='regex'>".$text['option-regex']."</option>\n";
-		break;
-	case "regex":
-		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
-		echo "                <option value='action'>".$text['option-action']."</option>\n";
-		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
-		echo "                <option value='regex' selected='yes'>".$text['option-regex']."</option>\n";
-		break;
-	case "action":
-		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
-		echo "                <option value='action' selected='yes'>".$text['option-action']."</option>\n";
-		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
-		echo "                <option value='regex'>".$text['option-regex']."</option>\n";
-		break;
-	case "anti-action":
-		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
-		echo "                <option value='action'>".$text['option-action']."</option>\n";
-		echo "                <option value='anti-action' selected='yes'>".$text['option-anti-action']."</option>\n";
-		echo "                <option value='regex'>".$text['option-regex']."</option>\n";
-		break;
-	case "param":
-		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
-		echo "                <option value='action'>".$text['option-action']."</option>\n";
-		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
-		echo "                <option value='regex'>".$text['option-regex']."</option>\n";
-		break;
-	default:
-		echo "                <option value='condition'>".$text['option-condition']."</option>\n";
-		echo "                <option value='action'>".$text['option-action']."</option>\n";
-		echo "                <option value='anti-action'>".$text['option-anti-action']."</option>\n";
-		echo "                <option value='regex'>".$text['option-regex']."</option>\n";
-	}
-	echo "                </select>\n";
-
-	//condition
-		//field expression
-	//action
-		//application
-		//data
-	//antiaction
-		//application
-		//data
-	//param
-		//name
-		//value
-	//echo "    <input class='formfld' type='text' name='dialplan_detail_tag' maxlength='255' value=\"$dialplan_detail_tag\">\n";
+	echo "	<select name='dialplan_detail_tag' class='formfld' id='form_tag'>\n";
+	echo "	<option></option>\n";
+	echo "	<option value='condition' ".($dialplan_detail_tag == "condition" ? $selected:"").">".$text['option-condition']."</option>\n";
+	echo "	<option value='regex' ".($dialplan_detail_tag == "regex" ? $selected:"").">".$text['option-regex']."</option>\n";
+	echo "	<option value='action' ".($dialplan_detail_tag == "action" ? $selected:"").">".$text['option-condition']."</option>\n";
+	echo "	<option value='anti-action' ".($dialplan_detail_tag == "anti-action" ? $selected:"").">".$text['option-condition']."</option>\n";
+	echo "	<option value='param' ".($dialplan_detail_tag == "param" ? $selected:"").">".$text['option-condition']."</option>\n";
+	echo "	<option value='condition' ".($dialplan_detail_tag == "condition" ? $selected:"").">".$text['option-condition']."</option>\n";
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -372,7 +292,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 <script language="javascript">
 var Objs;
 
-function changeToInput_dialplan_detail_type(obj){
+function change_to_input(obj){
 	tb=document.createElement('INPUT');
 	tb.type='text';
 	tb.name=obj.name;
@@ -386,14 +306,14 @@ function changeToInput_dialplan_detail_type(obj){
 	tbb.type='button';
 	tbb.value='<';
 	tbb.objs=[obj,tb,tbb];
-	tbb.onclick=function(){ Replaceivr_menu_option_param(this.objs); }
+	tbb.onclick=function(){ replace_param(this.objs); }
 	obj.parentNode.insertBefore(tb,obj);
 	obj.parentNode.insertBefore(tbb,obj);
 	obj.parentNode.removeChild(obj);
-	Replaceivr_menu_option_param(this.objs);
+	replace_param(this.objs);
 }
 
-function Replaceivr_menu_option_param(obj){
+function replace_param(obj){
 	obj[2].parentNode.insertBefore(obj[0],obj[2]);
 	obj[0].parentNode.removeChild(obj[1]);
 	obj[0].parentNode.removeChild(obj[2]);
@@ -406,7 +326,7 @@ function Replaceivr_menu_option_param(obj){
 	echo "    ".$text['label-type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "<select name='dialplan_detail_type' id='dialplan_detail_type' class='formfld' onchange='changeToInput_dialplan_detail_type(this);'>\n";
+	echo "<select name='dialplan_detail_type' id='dialplan_detail_type' class='formfld' onchange='change_to_input(this);'>\n";
 	if (strlen($dialplan_detail_type) > 0) {
 		echo "<optgroup label='selected'>\n";
 		echo "	<option value='".htmlspecialchars($dialplan_detail_type)."'>".htmlspecialchars($dialplan_detail_type)."</option>\n";
@@ -459,7 +379,7 @@ function Replaceivr_menu_option_param(obj){
 		}
 		echo "</optgroup>\n";
 	}
-	echo "<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_dialplan_detail_type(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='<'>\n";
+	echo "<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' name='' alt='".$text['button-back']."' onclick='change_to_input(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='<'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
