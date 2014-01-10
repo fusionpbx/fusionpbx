@@ -87,6 +87,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		if (strlen($domain_uuid) == 0) { $msg .= "".$text['label-required-domain_uuid']."<br>\n"; }
 		if (strlen($dialplan_name) == 0) { $msg .= "".$text['label-required-dialplan_name']."<br>\n"; }
+		if (strlen($dialplan_number) == 0) { $msg .= "".$text['label-required-dialplan_number']."<br>\n"; }
 		//if (strlen($condition_field_1) == 0) { $msg .= "Please provide: Condition Field<br>\n"; }
 		//if (strlen($condition_expression_1) == 0) { $msg .= "Please provide: Condition Expression<br>\n"; }
 		//if (strlen($action_application_1) == 0) { $msg .= "Please provide: Action Application<br>\n"; }
@@ -771,7 +772,7 @@ echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
-echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-extension'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
