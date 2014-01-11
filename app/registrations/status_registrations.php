@@ -132,6 +132,7 @@ require_once "resources/check_auth.php";
 			echo "	<b>Registrations: ".count($registrations)."</b>\n";
 			echo "</td>\n";
 			echo "<td colspan='1' align='right'>\n";
+			echo "  <input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"window.location='status_registrations.php'\" />\n";
 			echo "  <input type='button' class='btn' value='".$text['button-back']."' onclick=\"history.back();\" />\n";
 			echo "</td>\n";
 			echo "</tr>\n";

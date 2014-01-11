@@ -28,30 +28,43 @@
 	$text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 	$text['error-event-socket']['pt-pt'] = "A conexão ao Event Socket falhou.";
 	$text['error-event-socket']['fr-fr'] = "Connexion a l'Event Socket en echec.";
+
 	$text['label-message']['en-us'] = "Message";
 	$text['label-message']['pt-pt'] = "Mensagem";
 	$text['label-message']['fr-fr'] = "Message";
+
 	$text['label-message']['en-us'] = "Invalid Profile!";
 	$text['label-message']['pt-pt'] = "Perfil Inválido!";
 	$text['label-message']['fr-fr'] = "Profile Invalide!";
+
 	$text['button-back']['en-us'] = "back";
-	$text['button-back']['pt-pt'] = "voltar";
+	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
+
+	$text['button-refresh']['en-us'] = "Refresh";
+	$text['button-refresh']['pt-pt'] = "Actualizar";
+	$text['button-refresh']['fr-fr'] = "Rafraîchir";
+
 	$text['label-domain']['en-us'] = "Domain";
 	$text['label-domain']['pt-pt'] = "Domínio";
 	$text['label-domain']['fr-fr'] = "Domaine";
+
 	$text['label-user']['en-us'] = "User";
 	$text['label-user']['pt-pt'] = "Utilizador";
 	$text['label-user']['fr-fr'] = "Usager";
+
 	$text['label-agent']['en-us'] = "Agent";
 	$text['label-agent']['pt-pt'] = "Agente";
 	$text['label-agent']['fr-fr'] = "Agent";
+
 	$text['label-ip']['en-us'] = "IP";
 	$text['label-ip']['pt-pt'] = "IP";
 	$text['label-ip']['fr-fr'] = "IP";
+
 	$text['label-port']['en-us'] = "Port";
 	$text['label-port']['pt-pt'] = "Porto";
 	$text['label-port']['fr-fr'] = "Port";
+
 	$text['label-status']['en-us'] = "Status";
 	$text['label-status']['pt-pt'] = "Estado";
 	$text['label-status']['fr-fr'] = "Statut";
