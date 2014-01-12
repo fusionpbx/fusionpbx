@@ -381,6 +381,10 @@
 		$text['confirm-copy']['pt-pt'] = "Deseja realmente copiar isto?";
 		$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
 
+		$text['message-message']['en-us'] = "Message";
+		$text['message-message']['pt-pt'] = "Mensagem";
+		$text['message-message']['fr-fr'] = "Message";
+
 		$text['message-add']['en-us'] = "Add Completed";
 		$text['message-add']['pt-pt'] = "Adição Efectuada";
 		$text['message-add']['fr-fr'] = "Ajouté";
