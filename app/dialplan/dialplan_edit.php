@@ -399,7 +399,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			tb.name=obj.name;
 			tb.className='formfld';
 			//tb.setAttribute('id', 'ivr_menu_option_param');
-			tb.setAttribute('style', 'width:195px;');
+			tb.setAttribute('style', 'width:175px;');
 			tb.value=obj.options[obj.selectedIndex].value;
 			tbb=document.createElement('INPUT');
 			tbb.setAttribute('class', 'btn');
@@ -648,8 +648,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							echo "	</select>\n";
 							echo "</td>\n";
 						//type
-							if ($element['hidden']) { $element['width'] = '0'; } else { $element['width'] = '195'; }
-							echo "<td class='vtable' onclick=\"label_to_form('label_dialplan_detail_type_".$x."','dialplan_detail_type_".$x."','195');\" style='width:195px;' nowrap='nowrap'>\n";
+							if ($element['hidden']) { $element['width'] = '0'; } else { $element['width'] = '185'; }
+							echo "<td class='vtable' onclick=\"label_to_form('label_dialplan_detail_type_".$x."','dialplan_detail_type_".$x."','185');\" style='width:185px;' nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_type_".$x."\">".$dialplan_detail_type."</label>\n";
 							}
