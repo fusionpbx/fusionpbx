@@ -332,7 +332,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen(htmlspecialchars($dialplan_order))> 0) {
 		echo "              <option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 	}
-	$i=0;
+	$i=300;
 	while($i<=999) {
 		if (strlen($i) == 1) { echo "              <option value='00$i'>00$i</option>\n"; }
 		if (strlen($i) == 2) { echo "              <option value='0$i'>0$i</option>\n"; }
