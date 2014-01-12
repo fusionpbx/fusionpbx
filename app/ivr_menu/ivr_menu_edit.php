@@ -379,6 +379,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "	<td align='left' width='30%' nowrap='nowrap' align='left'><b>".$text['header-ivr_menu']."</b></td>\n";
 	echo "	<td width='70%' align='right'>\n";
+	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='ivr_menu_copy.php?id=".$ivr_menu_uuid."';}\" value='".$text['button-copy']."'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ivr_menus.php'\" value='".$text['button-back']."'>\n";
 	echo "	</td>\n";
