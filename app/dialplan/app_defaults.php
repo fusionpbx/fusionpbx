@@ -25,6 +25,7 @@
 */
 
 //if there is more than one domain then set the default context to the domain name
+	/*
 	if (count($_SESSION['domains']) > 1) {
 		$sql = "select * from v_dialplans ";
 		$sql .= "where dialplan_context = 'default' ";
@@ -43,6 +44,7 @@
 			unset($sql);
 		}
 	}
+	*/
 
 //only run the following code if the directory exists
 	if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
@@ -79,7 +81,7 @@
 				$dialplan_order = 0;
 			}
 		//dialplan class
-			require_once "resources/classes/dialplan.php";
+			require_once "app/dialplan/resources/classes/dialplan.php";
 			$dialplan = new dialplan;
 			$dialplan->domain_uuid = $domain_uuid;
 			$dialplan->dialplan_order = $dialplan_order;

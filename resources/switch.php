@@ -2466,7 +2466,7 @@ if (!function_exists('save_call_center_xml')) {
 		global $db, $domain_uuid;
 
 		//include the classes
-		include "resources/classes/dialplan.php";
+		include "app/dialplan/resources/classes/dialplan.php";
 
 		$sql = "select * from v_call_center_queues ";
 		$prep_statement = $db->prepare(check_sql($sql));

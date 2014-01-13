@@ -223,7 +223,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
 				//dialplan group 1
-					require_once "resources/classes/dialplan.php";
+					require_once "app/dialplan/resources/classes/dialplan.php";
 
 					//<condition destination_number="300" break="on-true"/>
 					$dialplan = new dialplan;

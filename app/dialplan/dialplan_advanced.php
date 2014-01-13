@@ -45,7 +45,7 @@ $page["title"] = $text['title-default_dialplan'];
 
 if ($_GET['a'] == "default" && permission_exists('dialplan_advanced_edit')) {
 	//create the dialplan/default.xml for single tenant or dialplan/domain.xml
-	require_once "resources/classes/dialplan.php";
+	require_once "app/dialplan/resources/classes/dialplan.php";
 	$dialplan = new dialplan;
 	$dialplan->domain_uuid = $_SESSION['domain_uuid'];
 	$dialplan->switch_dialplan_dir = $_SESSION['switch']['dialplan']['dir'];

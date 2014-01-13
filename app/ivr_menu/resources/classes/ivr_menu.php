@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
-require_once "resources/classes/dialplan.php";
+require_once "app/dialplan/resources/classes/dialplan.php";
 
 //define the directory class
 	class ivr_menu {
