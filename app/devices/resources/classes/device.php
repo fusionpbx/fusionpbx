@@ -44,7 +44,7 @@ include "root.php";
 			return $this->domain_uuid;
 		}
 
-		public function get_vendor($mac){
+		public static function get_vendor($mac){
 			//use the mac address to find the vendor
 				$mac = preg_replace('#[^a-fA-F0-9./]#', '', $mac);
 				$mac = strtolower($mac);
