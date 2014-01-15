@@ -1640,7 +1640,7 @@
 
 <!-- Phone/Line_Key_1 -->
 {if $key_type_1 == 'line'}
-	<Extension_1_ group="Phone/Line_Key_1">{$key_id_1}</Extension_1_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+	<Extension_1_ group="Phone/Line_Key_1">{$key_value_1}</Extension_1_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 	<Short_Name_1_ group="Phone/Line_Key_1">{$key_label_1}</Short_Name_1_>
 	<Share_Call_Appearance_1_ group="Phone/Line_Key_1">private</Share_Call_Appearance_1_> <!-- options: private/shared -->
 	<Extended_Function_1_ group="Phone/Line_Key_1"/>
@@ -1653,7 +1653,7 @@
 
 <!-- Phone/Line_Key_2 -->
 {if $key_type_2 == 'line'}
-	<Extension_2_ group="Phone/Line_Key_2">{$key_id_2}</Extension_2_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+	<Extension_2_ group="Phone/Line_Key_2">{$key_value_2}</Extension_2_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 	<Short_Name_2_ group="Phone/Line_Key_2">{$key_label_2}</Short_Name_2_>
 	<Share_Call_Appearance_2_ group="Phone/Line_Key_2">private</Share_Call_Appearance_2_> <!-- options: private/shared -->
 	<Extended_Function_2_ group="Phone/Line_Key_2"/>
@@ -1666,7 +1666,7 @@
 
 <!-- Phone/Line_Key_3 -->
 {if $key_type_3 == 'line'}
-	<Extension_3_ group="Phone/Line_Key_3">{$key_id_3}</Extension_3_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+	<Extension_3_ group="Phone/Line_Key_3">{$key_value_3}</Extension_3_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 	<Short_Name_3_ group="Phone/Line_Key_3">{$key_label_3}</Short_Name_3_>
 	<Share_Call_Appearance_3_ group="Phone/Line_Key_3">private</Share_Call_Appearance_3_> <!-- options: private/shared -->
 	<Extended_Function_3_ group="Phone/Line_Key_3"/>
@@ -1679,7 +1679,7 @@
 
 <!-- Phone/Line_Key_4 -->
 {if $key_type_4 == 'line'}
-	<Extension_4_ group="Phone/Line_Key_4">{$key_id_4}</Extension_4_>
+	<Extension_4_ group="Phone/Line_Key_4">{$key_value_4}</Extension_4_>
 	<Short_Name_4_ group="Phone/Line_Key_4">{$key_label_4}</Short_Name_4_>
 	<Share_Call_Appearance_4_ group="Phone/Line_Key_4">private</Share_Call_Appearance_4_>
 	<Extended_Function_4_ group="Phone/Line_Key_4"/>
@@ -1692,7 +1692,7 @@
 
 <!-- Phone/Line_Key_5 -->
 {if $key_type_5 == 'line'}
-	<Extension_5_ group="Phone/Line_Key_5">{$key_id_5}</Extension_5_>
+	<Extension_5_ group="Phone/Line_Key_5">{$key_value_5}</Extension_5_>
 	<Short_Name_5_ group="Phone/Line_Key_5">{$key_label_5}</Short_Name_5_>
 	<Share_Call_Appearance_5_ group="Phone/Line_Key_5">private</Share_Call_Appearance_5_>
 	<Extended_Function_5_ group="Phone/Line_Key_5"/>
@@ -1705,8 +1705,8 @@
 
 <!-- Phone/Line_Key_6 -->
 {if $key_type_6 == 'line'}
-	<Extension_6_ group="Phone/Line_Key_6">{$key_id_5}</Extension_6_>
-	<Short_Name_6_ group="Phone/Line_Key_6">{$key_label_5}</Short_Name_6_>
+	<Extension_6_ group="Phone/Line_Key_6">{$key_value_6}</Extension_6_>
+	<Short_Name_6_ group="Phone/Line_Key_6">{$key_label_6}</Short_Name_6_>
 	<Share_Call_Appearance_6_ group="Phone/Line_Key_6">private</Share_Call_Appearance_6_>
 	<Extended_Function_6_ group="Phone/Line_Key_6"/>
 {else}
@@ -1718,8 +1718,8 @@
 
 <!-- Phone/Line_Key_7 -->
 {if $key_type_7 == 'line'}
-	<Extension_7_ group="Phone/Line_Key_7">{$key_id_5}</Extension_7_>
-	<Short_Name_7_ group="Phone/Line_Key_7">{$key_label_5}</Short_Name_7_>
+	<Extension_7_ group="Phone/Line_Key_7">{$key_value_7}</Extension_7_>
+	<Short_Name_7_ group="Phone/Line_Key_7">{$key_label_7}</Short_Name_7_>
 	<Share_Call_Appearance_7_ group="Phone/Line_Key_7">private</Share_Call_Appearance_7_>
 	<Extended_Function_7_ group="Phone/Line_Key_7"/>
 {else}
@@ -1731,7 +1731,7 @@
 
 <!-- Phone/Line_Key_8 -->
 {if $key_type_8 == 'line'}
-	<Extension_8_ group="Phone/Line_Key_8">{$key_id_8}</Extension_8_>
+	<Extension_8_ group="Phone/Line_Key_8">{$key_value_8}</Extension_8_>
 	<Short_Name_8_ group="Phone/Line_Key_8">{$key_label_8}</Short_Name_8_>
 	<Share_Call_Appearance_8_ group="Phone/Line_Key_8">private</Share_Call_Appearance_8_>
 	<Extended_Function_8_ group="Phone/Line_Key_8"/>
@@ -1744,7 +1744,7 @@
 
 <!-- Phone/Line_Key_9 -->
 {if $key_type_9 == 'line'}
-	<Extension_9_ group="Phone/Line_Key_9">{$key_id_9}</Extension_9_>
+	<Extension_9_ group="Phone/Line_Key_9">{$key_value_9}</Extension_9_>
 	<Short_Name_9_ group="Phone/Line_Key_9">{$key_label_9}</Short_Name_9_>
 	<Share_Call_Appearance_9_ group="Phone/Line_Key_9">private</Share_Call_Appearance_9_>
 	<Extended_Function_9_ group="Phone/Line_Key_9"/>
@@ -1757,7 +1757,7 @@
 
 <!-- Phone/Line_Key_10 -->
 {if $key_type_10 == 'line'}
-	<Extension_10_ group="Phone/Line_Key_10">{$key_id_10}</Extension_10_>
+	<Extension_10_ group="Phone/Line_Key_10">{$key_value_10}</Extension_10_>
 	<Short_Name_10_ group="Phone/Line_Key_10">{$key_label_10}</Short_Name_10_>
 	<Share_Call_Appearance_10_ group="Phone/Line_Key_10">private</Share_Call_Appearance_10_>
 	<Extended_Function_10_ group="Phone/Line_Key_10"/>
@@ -1770,7 +1770,7 @@
 
 <!-- Phone/Line_Key_11 -->
 {if $key_type_11 == 'line'}
-	<Extension_11_ group="Phone/Line_Key_11">{$key_id_11}</Extension_11_>
+	<Extension_11_ group="Phone/Line_Key_11">{$key_value_11}</Extension_11_>
 	<Short_Name_11_ group="Phone/Line_Key_11">{$key_label_11}</Short_Name_11_>
 	<Share_Call_Appearance_11_ group="Phone/Line_Key_11">private</Share_Call_Appearance_11_>
 	<Extended_Function_11_ group="Phone/Line_Key_11"/>
@@ -1783,7 +1783,7 @@
 
 <!-- Phone/Line_Key_12 -->
 {if $key_type_12 == 'line'}
-	<Extension_12_ group="Phone/Line_Key_12">{$key_id_12}</Extension_12_>
+	<Extension_12_ group="Phone/Line_Key_12">{$key_value_12}</Extension_12_>
 	<Short_Name_12_ group="Phone/Line_Key_12">{$key_label_12}</Short_Name_12_>
 	<Share_Call_Appearance_12_ group="Phone/Line_Key_12">private</Share_Call_Appearance_12_>
 	<Extended_Function_12_ group="Phone/Line_Key_12"/>
