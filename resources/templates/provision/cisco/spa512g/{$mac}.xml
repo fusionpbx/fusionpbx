@@ -359,7 +359,7 @@
 
 <!-- Phone/Line_Key_1-->
 {if $key_type_1 == 'line'}
-	<Extension_1_ group="Phone/Line_Key_1">{$key_id_1}</Extension_1_>
+	<Extension_1_ group="Phone/Line_Key_1">{$key_value_1}</Extension_1_>
 	<Short_Name_1_ group="Phone/Line_Key_1">{$key_label_1}</Short_Name_1_>
 	<Share_Call_Appearance_1_ group="Phone/Line_Key_1">private</Share_Call_Appearance_1_>
 	<Extended_Function_1_ group="Phone/Line_Key_1"/>

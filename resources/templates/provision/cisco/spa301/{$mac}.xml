@@ -338,7 +338,7 @@
 
 <!-- Phone/Line_Key_1 -->
 {if $key_type_1 == 'line'}
-	<Extension_1_ group="Phone/Line_Key_1">{$key_id_1}</Extension_1_> 
+	<Extension_1_ group="Phone/Line_Key_1">{$key_value_1}</Extension_1_> 
 <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 	<Short_Name_1_ group="Phone/Line_Key_1">{$key_label_1}</Short_Name_1_>
 	<Share_Call_Appearance_1_ group="Phone/Line_Key_1">private</Share_Call_Appearance_1_> 
