@@ -22,6 +22,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
+
 include "root.php";
 require_once "resources/require.php";
 
@@ -32,12 +33,20 @@ require_once "resources/require.php";
 	$tmp_array = '';
 	$device_template = '';
 
+//get the domain_name
+	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+	$domain_name = $domain_array[0];
+
 //get the domain_uuid
-	//get the domain
-		if ($_SESSION['domain_name'] == 0) {
-			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-			$_SESSION['domain_name'] = $domain_array[0];
-		}
+	$sql = "SELECT * FROM v_domains ";
+	$sql .= "WHERE domain_name = '".$domain_name."' ";
+	$prep_statement = $db->prepare($sql);
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach($result as $row) {
+		$domain_uuid = $row["domain_uuid"];
+	}
+	unset($result, $prep_statement);
 
 //build the provision array
 	foreach($_SESSION['provision'] as $key=>$val) {
@@ -120,7 +129,6 @@ require_once "resources/require.php";
 						$prep_statement_2->bindParam(':mac', $mac);
 						$prep_statement_2->execute();
 						$row = $prep_statement_2->fetch();
-						$domain_uuid = $row["domain_uuid"];
 					//set the variables from values in the database
 						$device_uuid = $row["device_uuid"];
 						$device_label = $row["device_label"];
@@ -135,22 +143,9 @@ require_once "resources/require.php";
 						$device_password = $row["device_password"];
 						$device_time_zone = $row["device_time_zone"];
 						$device_description = $row["device_description"];
-					//set the domain uuid
-						$_SESSION["domain_uuid"] = $row["domain_uuid"];
 				}
 			}
-		//get the domain_uuid
-			if (strlen($_SESSION['domain_name']) == 0) {
-				$sql = "SELECT * FROM v_domains ";
-				$sql .= "WHERE domain_name = '".$_SESSION['domain_name']."' ";
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $row) {
-					$_SESSION["domain_uuid"] = $row["domain_uuid"];
-				}
-				unset($result, $prep_statement);
-			}
+
 		//find a template that was defined on another phone and use that as the default.
 			if (strlen($device_template) == 0) {
 				$sql = "SELECT * FROM v_devices ";
@@ -158,7 +153,7 @@ require_once "resources/require.php";
 				$sql .= "AND domain_uuid=:domain_uuid ";
 				$prep_statement_3 = $db->prepare(check_sql($sql));
 				if ($prep_statement_3) {
-					$prep_statement_3->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
+					$prep_statement_3->bindParam(':domain_uuid', $domain_uuid);
 					$prep_statement_3->bindParam(':mac', $mac);
 					$prep_statement_3->execute();
 					$row = $prep_statement_3->fetch();
@@ -217,19 +212,6 @@ require_once "resources/require.php";
 			}
 			unset($template_list);
 
-		//get the domain_uuid
-			if (strlen($_SESSION['domain_name']) == 0) {
-				$sql = "SELECT * FROM v_domains ";
-				$sql .= "WHERE domain_name = '".$_SESSION['domain_name']."' ";
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach($result as $row) {
-					$_SESSION["domain_uuid"] = $row["domain_uuid"];
-				}
-				unset($result, $prep_statement);
-			}
-
 		//mac address does not exist in the table so add it
 			$device_uuid = uuid();
 			$sql = "INSERT INTO v_devices ";
@@ -244,10 +226,10 @@ require_once "resources/require.php";
 			$sql .= "device_username, ";
 			$sql .= "device_password, ";
 			$sql .= "device_description ";
-			$sql .= ")";
+			$sql .= ") ";
 			$sql .= "VALUES ";
 			$sql .= "(";
-			$sql .= "'".$_SESSION['domain_uuid']."', ";
+			$sql .= "'".$domain_uuid."', ";
 			$sql .= "'$device_uuid', ";
 			$sql .= "'$mac', ";
 			$sql .= "'$device_vendor', ";
@@ -267,7 +249,7 @@ require_once "resources/require.php";
 	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 	$sql .= "AND device_setting_category = 'provision' ";
 	$sql .= "AND device_setting_enabled = 'true' ";
-	$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -292,8 +274,8 @@ require_once "resources/require.php";
 	}
 
 //if the domain name directory exists then only use templates from it
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision/'.$_SESSION['domain_name'])) {
-		$device_template = $_SESSION['domain_name'].'/'.$device_template;
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision/'.$domain_name)) {
+		$device_template = $domain_name.'/'.$device_template;
 	}
 
 //if $file is not provided then look for a default file that exists
@@ -386,7 +368,7 @@ require_once "resources/require.php";
 	//get the provisioning information from device lines table
 		$sql = "SELECT * FROM v_device_lines ";
 		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-		$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -426,7 +408,7 @@ require_once "resources/require.php";
 	//get the provisioning information from device keys table
 		$sql = "SELECT * FROM v_device_keys ";
 		$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-		$sql .= "AND domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 		$sql .= "ORDER BY device_key_id asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -468,7 +450,7 @@ require_once "resources/require.php";
 		$view->assign("label", $device_label);
 		$view->assign("firmware_version", $device_firmware_version);
 		$view->assign("domain_time_zone", $device_time_zone);
-		$view->assign("domain_name", $_SESSION['domain_name']);
+		$view->assign("domain_name", $domain_name);
 		$view->assign("project_path", PROJECT_PATH);
 		$view->assign("server1_address", $server1_address);
 		$view->assign("proxy1_address", $proxy1_address);
@@ -508,7 +490,7 @@ require_once "resources/require.php";
 		$sql .= "WHERE device_mac_address=:mac ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
-			//$prep_statement->bindParam(':domain_uuid', $_SESSION['domain_uuid']);
+			//$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 			$prep_statement->bindParam(':mac', $mac);
 			$prep_statement->execute();
 			$row = $prep_statement->fetch();
