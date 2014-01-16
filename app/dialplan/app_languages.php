@@ -18,9 +18,9 @@
 		$text['title-time_conditions']['pt-pt'] = "Condições Temporais";
 		$text['title-time_conditions']['fr-fr'] = "Conditions Temporelles";
 
-		$text['title-dialplan_add']['en-us'] = "Dialplan Add";
-		$text['title-dialplan_add']['pt-pt'] = "Adicionar Dialplan";
-		$text['title-dialplan_add']['fr-fr'] = "Ajout au plan de num";
+		$text['title-dialplan_add']['en-us'] = "Dialplan";
+		$text['title-dialplan_add']['pt-pt'] = "Dialplan";
+		$text['title-dialplan_add']['fr-fr'] = "Plan de num";
 
 		$text['title-dialplan_edit']['en-us'] = "Dialplan";
 		$text['title-dialplan_edit']['pt-pt'] = "Dialplan";
