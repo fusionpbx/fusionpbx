@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -850,24 +850,24 @@ function type_onchange(dialplan_detail_type) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-order'].":\n";
+	echo "	".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "              <select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
-	//echo "              <option></option>\n";
+	echo "	<select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
+	//echo "		<option></option>\n";
 	if (strlen(htmlspecialchars($dialplan_order))> 0) {
-		echo "              <option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+		echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 	}
-	$i=0;
-	while($i<=999) {
-		if (strlen($i) == 1) { echo "              <option value='00$i'>00$i</option>\n"; }
-		if (strlen($i) == 2) { echo "              <option value='0$i'>0$i</option>\n"; }
-		if (strlen($i) == 3) { echo "              <option value='$i'>$i</option>\n"; }
-		$i++;
+	$i = 100;
+	while($i <= 999) {
+		if (strlen($i) == 1) { echo "		<option value='00$i'>00$i</option>\n"; }
+		if (strlen($i) == 2) { echo "		<option value='0$i'>0$i</option>\n"; }
+		if (strlen($i) == 3) { echo "		<option value='$i'>$i</option>\n"; }
+		$i = $i + 10;
 	}
-	echo "              </select>\n";
-	echo "<br />\n";
-	echo $text['description-order']."\n";
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo "	".$text['description-order']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
