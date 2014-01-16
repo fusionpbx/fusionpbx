@@ -50,9 +50,9 @@
 		$text['header-time_conditions']['pt-pt'] = "Condições Temporais";
 		$text['header-time_conditions']['fr-fr'] = "Conditions Temporelles";
 
-		$text['header-dialplan-add']['en-us'] = "Dialplan Add";
-		$text['header-dialplan-add']['pt-pt'] = "Adicionar Dialplan";
-		$text['header-dialplan-add']['fr-fr'] = "Ajout au plan de num";
+		$text['header-dialplan-add']['en-us'] = "Dialplan";
+		$text['header-dialplan-add']['pt-pt'] = "Dialplan";
+		$text['header-dialplan-add']['fr-fr'] = "Plan de num";
 
 		$text['header-dialplan-edit']['en-us'] = "Dialplan";
 		$text['header-dialplan-edit']['pt-pt'] = "Dialplan";
