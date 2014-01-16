@@ -42,9 +42,9 @@ foreach($text as $key => $value) {
 	$text[$key] = $value[$_SESSION['domain']['language']['code']];
 }
 
-$order_by = $_GET["order_by"];
-$order = $_GET["order"];
-
+//set the variables
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //get the post form variables and se them to php variables
 	if (count($_POST)>0) {
@@ -1013,18 +1013,19 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-order'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "              <select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
+echo "	<select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
 if (strlen(htmlspecialchars($dialplan_order))> 0) {
-	echo "              <option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+	echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 }
-$i=0;
-while($i<=999) {
-	if (strlen($i) == 1) { echo "              <option value='00$i'>00$i</option>\n"; }
-	if (strlen($i) == 2) { echo "              <option value='0$i'>0$i</option>\n"; }
-	if (strlen($i) == 3) { echo "              <option value='$i'>$i</option>\n"; }
-	$i++;
+
+$i = 300;
+while($i <= 999) {
+	if (strlen($i) == 1) { echo "		<option value='00$i'>00$i</option>\n"; }
+	if (strlen($i) == 2) { echo "		<option value='0$i'>0$i</option>\n"; }
+	if (strlen($i) == 3) { echo "		<option value='$i'>$i</option>\n"; }
+	$i = $i + 10;
 }
-echo "              </select>\n";
+echo "	</select>\n";
 echo "<br />\n";
 echo "\n";
 echo "</td>\n";
