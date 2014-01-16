@@ -184,6 +184,9 @@
 					if (ring_group_ringback == "${us-ring}") then
 						ring_group_ringback = "tone_stream://%(2000,4000,440.0,480.0);loops=-1";
 					end
+					if (ring_group_ringback == "${pt-ring}") then
+						ring_group_ringback = "tone_stream://%(1000,5000,400.0,0.0);loops=-1";
+					end
 					if (ring_group_ringback == "${fr-ring}") then
 						ring_group_ringback = "tone_stream://%(1500,3500,440.0,0.0);loops=-1";
 					end
