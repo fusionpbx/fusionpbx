@@ -139,6 +139,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$dialplan_name = str_replace(" ", "_", $dialplan_name);
 		$dialplan_name = str_replace("/", "", $dialplan_name);
 
+	//set the context
+		if (count($_SESSION["domains"]) > 1) {
+			$context = 'default';
+		}
+		else {
+			$context = '$${domain_name}';
+		}
+
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
 
@@ -241,60 +249,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$condition_field_2', ";
 			$sql .= "'$condition_expression_2', ";
 			$sql .= "'30' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
-
-	//set domain
-		if (count($_SESSION["domains"]) > 1) {
-			$dialplan_detail_uuid = uuid();
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$dialplan_uuid', ";
-			$sql .= "'$dialplan_detail_uuid', ";
-			$sql .= "'action', ";
-			$sql .= "'set', ";
-			$sql .= "'domain=".$_SESSION['domain_name']."', ";
-			$sql .= "'40' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
-		}
-
-	//set domain_name
-		if (count($_SESSION["domains"]) > 1) {
-			$dialplan_detail_uuid = uuid();
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$dialplan_uuid', ";
-			$sql .= "'$dialplan_detail_uuid', ";
-			$sql .= "'action', ";
-			$sql .= "'set', ";
-			$sql .= "'domain_name=".$_SESSION['domain_name']."', ";
-			$sql .= "'50' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -918,23 +872,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-order'].":\n";
+	echo "	".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "              <select name='public_order' class='formfld' style='width: 60%;'>\n";
+	echo "	<select name='public_order' class='formfld' style='width: 60%;'>\n";
 	if (strlen(htmlspecialchars($public_order))> 0) {
-		echo "              <option selected='yes' value='".htmlspecialchars($public_order)."'>".htmlspecialchars($public_order)."</option>\n";
+		echo "		<option selected='yes' value='".htmlspecialchars($public_order)."'>".htmlspecialchars($public_order)."</option>\n";
 	}
-	$i=0;
-	while($i<=999) {
-		if (strlen($i) == 1) { echo "              <option value='00$i'>00$i</option>\n"; }
-		if (strlen($i) == 2) { echo "              <option value='0$i'>0$i</option>\n"; }
-		if (strlen($i) == 3) { echo "              <option value='$i'>$i</option>\n"; }
-		$i++;
+	$i = 100;
+	while($i <= 999) {
+		if (strlen($i) == 1) { echo "		<option value='00$i'>00$i</option>\n"; }
+		if (strlen($i) == 2) { echo "		<option value='0$i'>0$i</option>\n"; }
+		if (strlen($i) == 3) { echo "		<option value='$i'>$i</option>\n"; }
+		$i = $i + 10;
 	}
-	echo "              </select>\n";
-	echo "<br />\n";
-	echo "\n";
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo "	\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
