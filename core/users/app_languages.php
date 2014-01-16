@@ -162,6 +162,14 @@
 	$text['label-permission_description']['pt-pt'] = "Descrição";
 	$text['label-permission_description']['fr-fr'] = "Description";
 
+	$text['label-api_key']['en-us'] = "API Key";
+	$text['label-api_key']['pt-pt'] = "API Key";
+	$text['label-api_key']['fr-fr'] = "API Key";
+
+	$text['description-api_key']['en-us'] = "Enter the API key is often a UUID. The API key should be 128 bit or greater.";
+	$text['description-api_key']['pt-pt'] = "";
+	$text['description-api_key']['fr-fr'] = "";
+
 	$text['description-contact']['en-us'] = "Assign a contact to this user account.";
 	$text['description-contact']['pt-pt'] = "Atribuir um contacto a esta conta de utilizador.";
 	$text['description-contact']['fr-fr'] = "Attacher un contact à ce compte utilisateur";
