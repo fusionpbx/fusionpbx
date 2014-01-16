@@ -488,7 +488,7 @@
 <State_Agent_3_ group="Ext_3/Call_Feature_Settings" />
 <CFWD_Notify_Serv_3_ group="Ext_3/Call_Feature_Settings">No</CFWD_Notify_Serv_3_>
 <CFWD_Notifier_3_ group="Ext_3/Call_Feature_Settings" />
-<Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3</Proxy_3_>
+<Proxy_3_ group="Ext_3/Proxy_and_Registration">{$server_address_3}</Proxy_3_>
 <Use_Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration">No</Use_Outbound_Proxy_3_>
 <Outbound_Proxy_3_ group="Ext_3/Proxy_and_Registration" />
 <Use_OB_Proxy_In_Dialog_3_ group="Ext_3/Proxy_and_Registration">Yes</Use_OB_Proxy_In_Dialog_3_>
