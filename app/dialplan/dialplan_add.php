@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -585,15 +585,13 @@ echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "	<select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
 //echo "		<option></option>\n";
-if (strlen(htmlspecialchars($dialplan_order))> 0) {
-	echo "		 <option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+if (strlen(htmlspecialchars($dialplan_order)) > 0) {
+	echo "		 <option selected='selected' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
 }
-$i=0;
-while($i<=999) {
-	if (strlen($i) == 1) { echo "		<option value='00$i'>00$i</option>\n"; }
-	if (strlen($i) == 2) { echo "		<option value='0$i'>0$i</option>\n"; }
-	if (strlen($i) == 3) { echo "		<option value='$i'>$i</option>\n"; }
-	$i++;
+$i = 200;
+while($i <= 999) {
+	echo "		<option value='$i'>$i</option>\n";
+	$i = $i + 10;
 }
 echo "	</select>\n";
 echo "	<br />\n";
@@ -607,13 +605,13 @@ echo "	</td>\n";
 echo "	<td class='vtable' align='left'>\n";
 echo "		<select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
 if ($dialplan_enabled == "true") {
-	echo "			<option value='true' SELECTED >".$text['option-true']."</option>\n";
+	echo "			<option value='true' selected='selected' >".$text['option-true']."</option>\n";
 }
 else {
 	echo "			<option value='true'>".$text['option-true']."</option>\n";
 }
 if ($dialplan_enabled == "false") {
-	echo "			<option value='false' SELECTED >".$text['option-false']."</option>\n";
+	echo "			<option value='false' selected='selected' >".$text['option-false']."</option>\n";
 }
 else {
 	echo "			<option value='false'>".$text['option-false']."</option>\n";
