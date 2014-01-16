@@ -267,7 +267,7 @@
 												//echo $sql."<br />\n";
 											}
 											else {
-												$db->exec(check_sql($sql));
+												$db->exec(utf8_encode(check_sql($sql)));
 											}
 											unset($sql);
 
@@ -290,7 +290,7 @@
 												$sql .= "'".$menu_language."', ";
 												$sql .= "'".check_str($menu_item_title)."' ";
 												$sql .= ")";
-												$db->exec(check_sql($sql));
+												$db->exec(utf8_encode(check_sql($sql)));
 												unset($sql);
 											}
 									}

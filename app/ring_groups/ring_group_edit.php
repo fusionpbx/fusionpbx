@@ -654,6 +654,12 @@ else {
 	else {
 		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
 	}
+	if ($ring_group_ringback == "\${pt-ring}" || $ring_group_ringback == "pt-ring") {
+		$select_options .= "		<option value='\${pt-ring}' selected='selected'>".$text['option-ptring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${pt-ring}'>".$text['option-ptring']."</option>\n";
+	}
 	if ($ring_group_ringback == "\${fr-ring}" || $ring_group_ringback == "fr-ring") {
 		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
 	}
