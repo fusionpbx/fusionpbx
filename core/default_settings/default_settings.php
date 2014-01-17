@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2014
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -160,7 +160,7 @@ require_once "resources/paging.php";
 			elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 				echo "		******** &nbsp;\n";
 			} else {
-				echo "		".$row['default_setting_value'];
+				echo "		".substr($row['default_setting_value'],0,58);
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
