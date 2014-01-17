@@ -44,11 +44,12 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET)>0) {
-    $dialplan_uuid = check_str($_GET["id"]);
-}
+//set the dialplan uuid
+	if (count($_GET) > 0) {
+		$dialplan_uuid = check_str($_GET["id"]);
+	}
 
-if (strlen($dialplan_uuid)>0) {
+if (strlen($dialplan_uuid) > 0) {
 	//get the dialplan data
 		$sql = "select * from v_dialplans ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -64,7 +65,7 @@ if (strlen($dialplan_uuid)>0) {
 		unset ($prep_statement);
 
 	//start the atomic transaction
-		$count = $db->exec("BEGIN;");
+		$db->beginTransaction();
 
 	//delete child data
 		$sql = "delete from v_dialplan_details ";
@@ -81,7 +82,7 @@ if (strlen($dialplan_uuid)>0) {
 		unset($sql);
 
 	//commit the atomic transaction
-		$count = $db->exec("COMMIT;");
+		$db->commit();
 
 	//synchronize the xml config
 		save_dialplan_xml();
