@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010 - 2014
 	All Rights Reserved.
 
 	Contributor(s):
@@ -334,7 +334,9 @@ include "root.php";
 								}
 								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
-								$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
+							
+								$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
+								//$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 							}
 							else {
 
