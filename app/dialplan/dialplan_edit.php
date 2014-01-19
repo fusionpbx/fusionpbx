@@ -103,192 +103,63 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//remove the invalid characters from the extension name
-		$dialplan_name = str_replace(" ", "_", $dialplan_name);
-		$dialplan_name = str_replace("/", "", $dialplan_name);
+		foreach ($_POST as $key => $value) {
+			if ($key == "dialplan_name") {
+				$dialplan_name = str_replace(" ", "_", $value);
+				$dialplan_name = str_replace("/", "", $dialplan_name);
+				$_POST["dialplan_name"] = $dialplan_name;
+			}
+		}
+	//array cleanup
+		$x = 0;
+		foreach ($_POST["dialplan_details"] as $row) {
+			//unset the empty row
+				if (strlen($row["dialplan_detail_tag"]) == 0) {
+					unset($_POST["dialplan_details"][$x]);
+				}
+			//unset dialplan_detail_uuid if the field has no value
+				if (strlen($row["dialplan_detail_uuid"]) == 0) {
+					unset($_POST["dialplan_details"][$x]["dialplan_detail_uuid"]);
+				}
+			//increment the row
+				$x++;
+		}
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
-			//add the data into the database
-				if ($action == "add" && permission_exists('dialplan_add')) {
-					$dialplan_context = $_SESSION['context'];
-					$dialplan_uuid = uuid();
-					$sql = "insert into v_dialplans ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "app_uuid, ";
-					$sql .= "dialplan_name, ";
-					$sql .= "dialplan_number, ";
-					$sql .= "dialplan_order, ";
-					$sql .= "dialplan_continue, ";
-					$sql .= "dialplan_context, ";
-					$sql .= "dialplan_enabled, ";
-					$sql .= "dialplan_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$_SESSION['domain_uuid']."', ";
-					$sql .= "'$dialplan_uuid', ";
-					$sql .= "'742714e5-8cdf-32fd-462c-cbe7e3d655db', ";
-					$sql .= "'$dialplan_name', ";
-					$sql .= "'$dialplan_number', ";
-					$sql .= "'$dialplan_order', ";
-					$sql .= "'$dialplan_continue', ";
-					$sql .= "'$dialplan_context', ";
-					$sql .= "'$dialplan_enabled', ";
-					$sql .= "'$dialplan_description' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
+			$orm = new orm;
+			$orm->name('dialplans');
+			$orm->uuid($dialplan_uuid);
+			$orm->save($_POST);
+			//$message = $orm->message;
+		}
 
-			//update the dialplan
-				if ($action == "update" && permission_exists('dialplan_edit')) {
-					$sql = "update v_dialplans set ";
-					$sql .= "dialplan_name = '$dialplan_name', ";
-					$sql .= "dialplan_number = '$dialplan_number', ";
-					$sql .= "dialplan_order = '$dialplan_order', ";
-					$sql .= "dialplan_continue = '$dialplan_continue', ";
-					$sql .= "dialplan_context = '$dialplan_context', ";
-					$sql .= "dialplan_enabled = '$dialplan_enabled', ";
-					$sql .= "dialplan_description = '$dialplan_description' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_uuid = '$dialplan_uuid'";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
+	//delete the cache
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			$switch_cmd = "memcache delete dialplan:".$dialplan_context;
+			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+		}
 
-			//add or update the dialplan details
-				foreach ($dialplan_details as $row) {
-					//set the variables
-						$dialplan_detail_uuid = check_str($row["dialplan_detail_uuid"]);
-						$dialplan_detail_tag = check_str($row["dialplan_detail_tag"]);
-						$dialplan_detail_order = check_str($row["dialplan_detail_order"]);
-						$dialplan_detail_type = check_str($row["dialplan_detail_type"]);
-						$dialplan_detail_data = check_str($row["dialplan_detail_data"]);
-						$dialplan_detail_break = check_str($row["dialplan_detail_break"]);
-						$dialplan_detail_inline = check_str($row["dialplan_detail_inline"]);
-						$dialplan_detail_group = check_str($row["dialplan_detail_group"]);
+	//synchronize the xml config
+		save_dialplan_xml();
 
-					//add the details
-						if (strlen($dialplan_detail_uuid) == 0 && permission_exists('dialplan_detail_add')) {
-							$dialplan_detail_uuid = uuid();
-							$sql = "insert into v_dialplan_details ";
-							$sql .= "(";
-							$sql .= "dialplan_uuid, ";
-							$sql .= "dialplan_detail_uuid, ";
-							$sql .= "dialplan_detail_tag, ";
-							$sql .= "dialplan_detail_order, ";
-							$sql .= "dialplan_detail_type, ";
-							$sql .= "dialplan_detail_data, ";
-							$sql .= "dialplan_detail_break, ";
-							$sql .= "dialplan_detail_inline, ";
-							$sql .= "dialplan_detail_group, ";
-							$sql .= "domain_uuid ";
-							$sql .= ")";
-							$sql .= "values ";
-							$sql .= "(";
-							$sql .= "'$dialplan_uuid', ";
-							$sql .= "'$dialplan_detail_uuid', ";
-							$sql .= "'$dialplan_detail_tag', ";
-							$sql .= "'$dialplan_detail_order', ";
-							$sql .= "'$dialplan_detail_type', ";
-							$sql .= "'$dialplan_detail_data', ";
-							$sql .= "'$dialplan_detail_break', ";
-							$sql .= "'$dialplan_detail_inline', ";
-							if (strlen($dialplan_detail_group) == 0) {
-								$sql .= "null, ";
-							}
-							else {
-								$sql .= "'$dialplan_detail_group', ";
-							}
-							$sql .= "'".$_SESSION['domain_uuid']."' ";
-							$sql .= ")";
-							$db->exec(check_sql($sql));
-							unset($sql);
-						}
+	//set the message
+		if ($action == "add") {
+			$_SESSION['message'] = $text['message-add'];
+		}
+		if ($action == "update") {
+			$_SESSION['message'] = $text['message-update'];
+		}
 
-					//update the details
-						if (strlen($dialplan_detail_uuid) > 0 && permission_exists('dialplan_detail_edit')) {
-							$sql = "update v_dialplan_details set ";
-							$sql .= "dialplan_uuid = '".$dialplan_uuid."', ";
-							$sql .= "dialplan_detail_tag = '".$dialplan_detail_tag."', ";
-							$sql .= "dialplan_detail_order = '".$dialplan_detail_order."', ";
-							$sql .= "dialplan_detail_type = '".$dialplan_detail_type."', ";
-							$sql .= "dialplan_detail_data = '".$dialplan_detail_data."', ";
-							$sql .= "dialplan_detail_break = '".$dialplan_detail_break."', ";
-							$sql .= "dialplan_detail_inline = '".$dialplan_detail_inline."', ";
-							if (strlen($dialplan_detail_group) == 0) {
-								$sql .= "dialplan_detail_group = null ";
-							}
-							else {
-								$sql .= "dialplan_detail_group = '".$dialplan_detail_group."' ";
-							}
-							$sql .= "where dialplan_detail_uuid = '".$dialplan_detail_uuid."'";
-							$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-							$db->exec(check_sql($sql));
-							unset($sql);
-						}
-				}
-
-			//delete the dialplan context from memcache
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "memcache delete dialplan:".$dialplan_context;
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-				}
-
-			//synchronize the xml config
-				save_dialplan_xml();
-
-			//redirect the user
-				/*
-				require_once "resources/header.php";
-				switch ($app_uuid) {
-					case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4":
-						//inbound routes
-						echo "<meta http-equiv=\"refresh\" content=\"0;url=".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=$app_uuid\">\n";
-						break;
-					case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3":
-						//outbound routes
-						echo "<meta http-equiv=\"refresh\" content=\"0;url=".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=$app_uuid\">\n";
-						break;
-					case "4b821450-926b-175a-af93-a03c441818b1":
-						//time conditions
-						echo "<meta http-equiv=\"refresh\" content=\"0;url=".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=$app_uuid\">\n";
-						break;
-					default:
-						echo "<meta http-equiv=\"refresh\" content=\"0;url=".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."\">\n";
-						break;
-				}
-				echo "<div align='center'>\n";
-				if ($action == "add") {
-					echo $text['message-add']."\n";
-				}
-				if ($action == "update") {
-					echo $text['message-update']."\n";
-				}
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
-				*/
-
-			//set the message
-				if ($action == "add") {
-					$_SESSION['message'] = $text['message-add'];
-				}
-				if ($action == "update") {
-					$_SESSION['message'] = $text['message-update'];
-				}
-		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$dialplan_uuid = $_GET["id"];
 		$sql = "select * from v_dialplans ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+//		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -307,8 +178,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+//	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -372,7 +243,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 				}
 			//increment the highest order by 5
-				$dialplan_detail_order = $dialplan_detail_order + 5;
+				$dialplan_detail_order = $dialplan_detail_order + 10;
 			//set the rest of the empty array
 				//$details[$group][$x]['domain_uuid'] = '';
 				//$details[$group][$x]['dialplan_uuid'] = '';
@@ -418,9 +289,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			obj[0].parentNode.removeChild(obj[1]);
 			obj[0].parentNode.removeChild(obj[2]);
 		}
-
 	</script>
-
 <?php
 
 //show the content
@@ -439,7 +308,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$row['dialplan_uuid']."';}\" value='".$text['button-copy']."'>\n";
 	if (strlen($app_uuid) > 0) {
 		echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php?app_uuid=$app_uuid'\" value='".$text['button-back']."'>\n";
@@ -629,7 +498,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$element['visibility'] = "visibility:hidden;";
 							}
 						//add the primary key uuid
-							echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$dialplan_detail_uuid."\">\n";
+							if (strlen($dialplan_detail_uuid) > 0) {
+								echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$dialplan_detail_uuid."\">\n";
+							}
 						//tag
 							$selected = "selected=\"selected\" ";
 							if ($element['hidden']) { $element['width'] = '0'; } else { $element['width'] = '97'; }
@@ -892,7 +763,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
