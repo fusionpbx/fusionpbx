@@ -23,21 +23,43 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-if (file_exists("/etc/fusionpbx/config.php")) {
-	include "/etc/fusionpbx/config.php";
-}
-elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
-	include "/usr/local/etc/fusionpbx/config.php";
-}
-elseif (file_exists("resources/config.php")) {
-	include "resources/config.php";
-}
-else {
-	include "resources/config.php";
-}
-require_once "resources/php.php";
-require "resources/pdo.php";
-require_once "resources/functions.php";
-require_once "resources/switch.php";
+
+//ensure that $_SERVER["DOCUMENT_ROOT"] is defined
+	include "root.php";
+
+//find and include the config.php file
+	if (file_exists("/etc/fusionpbx/config.php")) {
+		include "/etc/fusionpbx/config.php";
+	}
+	elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
+		include "/usr/local/etc/fusionpbx/config.php";
+	}
+	elseif (file_exists("resources/config.php")) {
+		include "resources/config.php";
+	}
+	else {
+		include "resources/config.php";
+	}
+
+//class auto loader
+	class auto_loader {
+		public function __construct() {
+			spl_autoload_register(array($this, 'loader'));
+		}
+		private function loader($class_name) {
+			//use glob to check "/resources/classes", "/{core,app}/*/resources/classes";
+				$results = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "{/*/*,}/resources/classes/".$class_name.".php", GLOB_BRACE);
+			//include the class
+				foreach ($results as &$class_file) {
+					include $class_file;
+				}
+		}
+	}
+	$autoload = new auto_loader();
+
+//additional includes
+	require_once "resources/php.php";
+	require "resources/pdo.php";
+	require_once "resources/functions.php";
+	require_once "resources/switch.php";
 ?>
