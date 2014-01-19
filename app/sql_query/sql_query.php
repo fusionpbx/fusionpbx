@@ -174,6 +174,5 @@ else {
 	echo "<iframe id='frame' width='100%' height='400' FRAMEBORDER='0' name='frame' style='background-color : #FFFFFF;'></iframe>\n";
 
 //show the footer
-	include "resources/require.php";
 	require_once "resources/footer.php";
 ?>
