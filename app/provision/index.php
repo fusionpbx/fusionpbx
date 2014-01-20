@@ -273,20 +273,26 @@ require_once "resources/require.php";
 		}
 	}
 
+//set the template directory
+	$template_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+	if (strlen($provision["template_directory"]) > 0) {
+		$template_directory = $provision["template_directory"];
+	}
+
 //if the domain name directory exists then only use templates from it
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision/'.$domain_name)) {
+	if (is_dir($template_directory.'/'.$domain_name)) {
 		$device_template = $domain_name.'/'.$device_template;
 	}
 
 //if $file is not provided then look for a default file that exists
 	if (strlen($file) == 0) { 
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{\$mac}")) {
+		if (file_exists($template_directory."/".$device_template ."/{\$mac}")) {
 			$file = "{\$mac}";
 		}
-		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{\$mac}.xml")) {
+		elseif (file_exists($template_directory."/".$device_template ."/{\$mac}.xml")) {
 			$file = "{\$mac}.xml";
 		}
-		elseif (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/{\$mac}.cfg")) {
+		elseif (file_exists($template_directory."/".$device_template ."/{\$mac}.cfg")) {
 			$file = "{\$mac}.cfg";
 		}
 		else {
@@ -296,7 +302,7 @@ require_once "resources/require.php";
 	}
 	else {
 		//make sure the file exists
-		if (!file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template ."/".$file)) {
+		if (!file_exists($template_directory."/".$device_template ."/".$file)) {
 			echo "file not found";
 			exit;
 		}
