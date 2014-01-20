@@ -58,7 +58,7 @@ require_once "resources/require.php";
 		//devices
 			$device_mac_address = check_str($_POST["device_mac_address"]);
 			$device_mac_address = strtolower($device_mac_address);
-			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+			$_POST["device_mac_address"] = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
 			$device_label = check_str($_POST["device_label"]);
 			$device_vendor = check_str($_POST["device_vendor"]);
 			$device_model = check_str($_POST["device_model"]);
@@ -134,186 +134,107 @@ require_once "resources/require.php";
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-				if ($action == "add" && permission_exists('device_add')) {
-					//set the device_uuid
-						$device_uuid = uuid();
-
-					//add device
-						$sql = "insert into v_devices ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "device_uuid, ";
-						$sql .= "device_mac_address, ";
-						$sql .= "device_label, ";
-						$sql .= "device_vendor, ";
-						$sql .= "device_model, ";
-						$sql .= "device_firmware_version, ";
-						$sql .= "device_provision_enable, ";
-						$sql .= "device_template, ";
-						$sql .= "device_username, ";
-						$sql .= "device_password, ";
-						$sql .= "device_time_zone, ";
-						$sql .= "device_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$device_uuid', ";
-						$sql .= "'$device_mac_address', ";
-						$sql .= "'$device_label', ";
-						$sql .= "'$device_vendor', ";
-						$sql .= "'$device_model', ";
-						$sql .= "'$device_firmware_version', ";
-						$sql .= "'$device_provision_enable', ";
-						$sql .= "'$device_template', ";
-						$sql .= "'$device_username', ";
-						$sql .= "'$device_password', ";
-						$sql .= "'$device_time_zone', ";
-						$sql .= "'$device_description' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-				} //if ($action == "add")
-
-				//update the device
-					if ($action == "update" && permission_exists('device_edit')) {
-						$sql = "update v_devices set ";
-						$sql .= "device_mac_address = '$device_mac_address', ";
-						$sql .= "device_label = '$device_label', ";
-						$sql .= "device_vendor = '$device_vendor', ";
-						$sql .= "device_model = '$device_model', ";
-						$sql .= "device_firmware_version = '$device_firmware_version', ";
-						$sql .= "device_provision_enable = '$device_provision_enable', ";
-						$sql .= "device_template = '$device_template', ";
-						$sql .= "device_username = '$device_username', ";
-						$sql .= "device_password = '$device_password', ";
-						$sql .= "device_time_zone = '$device_time_zone', ";
-						$sql .= "device_description = '$device_description' ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and device_uuid = '$device_uuid'";
-						$db->exec(check_sql($sql));
-						unset($sql);
+				/*
+				//remove the invalid characters from the extension name
+					foreach ($_POST as $key => $value) {
+						if ($key == "dialplan_name") {
+							$dialplan_name = str_replace(" ", "_", $value);
+							$dialplan_name = str_replace("/", "", $dialplan_name);
+							$_POST["dialplan_name"] = $dialplan_name;
+						}
+					}
+				*/
+				//add domain_uuid to the array
+					if (!isset($_POST["domain_uuid"])) {
+						$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
+					}
+					foreach ($_POST as $key => $value) {
+						if (is_array($value)) {
+							$y = 0;
+							foreach ($value as $k => $v) {
+								if (!isset($v["domain_uuid"])) {
+									$_POST[$key][$y]["domain_uuid"] = $_SESSION["domain_uuid"];
+								}
+								$y++;
+							}
+						}
+					}
+				//array cleanup
+					$x = 0;
+					foreach ($_POST["device_lines"] as $row) {
+						//
+						//unset the empty row
+							if (strlen($row["line_number"]) == 0) {
+								unset($_POST["device_lines"][$x]);
+							}
+						//unset dialplan_detail_uuid if the field has no value
+							if (strlen($row["device_line_uuid"]) == 0) {
+								unset($_POST["device_lines"][$x]["device_line_uuid"]);
+							}
+						//increment the row
+							$x++;
+					}
+					$x = 0;
+					foreach ($_POST["device_keys"] as $row) {
+						//unset the empty row
+							if (strlen($row["device_key_id"]) == 0) {
+								unset($_POST["device_keys"][$x]);
+							}
+						//unset dialplan_detail_uuid if the field has no value
+							if (strlen($row["device_key_uuid"]) == 0) {
+								unset($_POST["device_keys"][$x]["device_key_uuid"]);
+							}
+						//increment the row
+							$x++;
+					}
+					$x = 0;
+					foreach ($_POST["device_settings"] as $row) {
+						//unset the empty row
+							if (strlen($row["device_setting_subcategory"]) == 0) {
+								unset($_POST["device_settings"][$x]);
+							}
+						//unset dialplan_detail_uuid if the field has no value
+							if (strlen($row["device_setting_uuid"]) == 0) {
+								unset($_POST["device_settings"][$x]["device_setting_uuid"]);
+							}
+						//increment the row
+							$x++;
 					}
 
-				//add line to the device
-					if (strlen($user_id) > 0 && permission_exists('device_add')) {
-						$sql = "insert into v_device_lines ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "device_line_uuid, ";
-						$sql .= "device_uuid, ";
-						$sql .= "line_number, ";
-						$sql .= "server_address, ";
-						$sql .= "outbound_proxy, ";
-						$sql .= "display_name, ";
-						$sql .= "user_id, ";
-						$sql .= "auth_id, ";
-						$sql .= "password ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'$device_uuid', ";
-						$sql .= "'$line_number', ";
-						$sql .= "'$server_address', ";
-						$sql .= "'$outbound_proxy', ";
-						$sql .= "'$display_name', ";
-						$sql .= "'$user_id', ";
-						$sql .= "'$auth_id', ";
-						$sql .= "'$password' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
+				//add or update the database
+					if ($_POST["persistformvar"] != "true") {
+						$orm = new orm;
+						$orm->name('devices');
+						if (strlen($device_uuid) > 0) {
+							$orm->uuid($device_uuid);
+						}
 
-				//add a device key
-					if (strlen($device_key_id) > 0 && permission_exists('device_key_add')) {
-						$sql = "insert into v_device_keys ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "device_uuid, ";
-						$sql .= "device_key_uuid, ";
-						$sql .= "device_key_id, ";
-						$sql .= "device_key_category, ";
-						$sql .= "device_key_type, ";
-						$sql .= "device_key_line, ";
-						$sql .= "device_key_value, ";
-						$sql .= "device_key_extension, ";
-						$sql .= "device_key_label ";
-						$sql .= ")";
-						$sql .= " values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$device_uuid', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'$device_key_id', ";
-						$sql .= "'$device_key_category', ";
-						$sql .= "'$device_key_type', ";
-						$sql .= "'$device_key_line', ";
-						$sql .= "'$device_key_value', ";
-						$sql .= "'$device_key_extension', ";
-						$sql .= "'$device_key_label' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
-
-				//add a device setting
-					if (strlen($device_setting_subcategory) > 0 && permission_exists('device_setting_add')) {
-						$device_setting_category = "provision";
-						$device_setting_name = "text";
-						$sql = "insert into v_device_settings ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "device_uuid, ";
-						$sql .= "device_setting_uuid, ";
-						$sql .= "device_setting_category, ";
-						$sql .= "device_setting_subcategory, ";
-						$sql .= "device_setting_name, ";
-						$sql .= "device_setting_value, ";
-						$sql .= "device_setting_enabled, ";
-						$sql .= "device_setting_description ";
-						$sql .= ")";
-						$sql .= "values ";
-						$sql .= "(";
-						$sql .= "'$domain_uuid', ";
-						$sql .= "'$device_uuid', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'$device_setting_category', ";
-						$sql .= "'$device_setting_subcategory', ";
-						$sql .= "'$device_setting_name', ";
-						$sql .= "'$device_setting_value', ";
-						$sql .= "'$device_setting_enabled', ";
-						$sql .= "'$device_setting_description' ";
-						$sql .= ")";
-						$db->exec(check_sql($sql));
-						unset($sql);
+						$orm->save($_POST);
+						$message = $orm->message;
 					}
 
 				//write the provision files
-					require_once "app/provision/provision_write.php";
+//					require_once "app/provision/provision_write.php";
 
-				//redirect the user
-					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
-					echo "<div align='center'>\n";
-					echo $text['message-add']."\n";
-					echo "</div>\n";
-					require_once "resources/footer.php";
-					return;
+				//set the message
+					if ($action == "add") {
+						$_SESSION['message'] = $text['message-add'];
+					}
+					if ($action == "update") {
+						$_SESSION['message'] = $text['message-update'];
+					}
+
 			} //if ($_POST["persistformvar"] != "true")
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$device_uuid = check_str($_GET["id"]);
-		$sql = "select * from v_devices ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and device_uuid = '$device_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$dialplan_uuid = check_str($_GET["id"]);
+		$orm = new orm;
+		$orm->name('devices');
+		$orm->uuid($dialplan_uuid);
+		$result = $orm->find()->get();
+		//$message = $orm->message;
 		foreach ($result as &$row) {
 			$device_mac_address = $row["device_mac_address"];
 			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
@@ -331,13 +252,81 @@ require_once "resources/require.php";
 		unset ($prep_statement);
 	}
 
+//get device lines
+	$sql = "SELECT * FROM v_device_lines ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and device_uuid = '".$device_uuid."' ";
+	$sql .= "order by line_number asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+//get device keys
+	$sql = "SELECT * FROM v_device_keys ";
+	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "ORDER by ";
+	$sql .= "CASE device_key_category ";
+	$sql .= "WHEN 'line' THEN 1 ";
+	$sql .= "WHEN 'memort' THEN 2 ";
+	$sql .= "WHEN 'programmable' THEN 3 ";
+	$sql .= "WHEN 'expansion' THEN 4 ";
+	$sql .= "ELSE 100 END, ";
+	$sql .= "device_key_id asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+//get device settings
+	$sql = "SELECT * FROM v_device_settings ";
+	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "ORDER by device_setting_subcategory asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$device_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
 		$device_vendor = device::get_vendor($device_mac_address);
 	}
 
+//name='dialplan_details[".$x."][dialplan_detail_type]'
+
 //show the header
 	require_once "resources/header.php";
+
+//javascript to change select to input and back again
+	?><script language="javascript">
+		var objs;
+
+		function change_to_input(obj){
+			tb=document.createElement('INPUT');
+			tb.type='text';
+			tb.name=obj.name;
+			tb.className='formfld';
+			//tb.setAttribute('id', 'ivr_menu_option_param');
+			tb.setAttribute('style', 'width:175px;');
+			tb.value=obj.options[obj.selectedIndex].value;
+			tbb=document.createElement('INPUT');
+			tbb.setAttribute('class', 'btn');
+			tbb.type='button';
+			tbb.value='<';
+			tbb.objs=[obj,tb,tbb];
+			tbb.onclick=function(){ replace_param(this.objs); }
+			obj.parentNode.insertBefore(tb,obj);
+			obj.parentNode.insertBefore(tbb,obj);
+			obj.parentNode.removeChild(obj);
+			replace_param(this.objs);
+		}
+
+		function replace_param(obj){
+			obj[2].parentNode.insertBefore(obj[0],obj[2]);
+			obj[0].parentNode.removeChild(obj[1]);
+			obj[0].parentNode.removeChild(obj[2]);
+		}
+	</script>
+<?php
 
 //show the content
 	echo "<div align='center'>";
@@ -352,7 +341,7 @@ require_once "resources/require.php";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-device']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -443,15 +432,9 @@ require_once "resources/require.php";
 	echo "				<td class='vtable'>".$text['label-password']."</td>\n";
 	echo "				<td>&nbsp;</td>\n";
 	echo "			</tr>\n";
-	$sql = "SELECT * FROM v_device_lines ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and device_uuid = '".$device_uuid."' ";
-	$sql .= "order by line_number asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
-	foreach($result as $row) {
+
+	$x = 0;
+	foreach($device_lines as $row) {
 		//if (strlen($row['line_number']) == 0) { $row['line_number'] = "1"; }
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>\n";
@@ -484,10 +467,13 @@ require_once "resources/require.php";
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
+		$x++;
 	}
+//device lines
+	$x = 0;
 	echo "			<tr>\n";
 	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "				<select class='formfld' style='width: 45px;' name='line_number'>\n";
+	echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
 	echo "				<option value=''></option>\n";
 	echo "				<option value='1'>1</option>\n";
 	echo "				<option value='2'>2</option>\n";
@@ -505,31 +491,31 @@ require_once "resources/require.php";
 	echo "			</td>\n";
 
 	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "				<input class='formfld' style='width: 125px;' type='text' name='server_address' maxlength='255' value=\"$server_address\">\n";
+	echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"$server_address\">\n";
 	echo "			</td>\n";
 
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 125px;' type='text' name='outbound_proxy' maxlength='255' value=\"$outbound_proxy\">\n";
+	echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][outbound_proxy]' maxlength='255' value=\"$outbound_proxy\">\n";
 	echo "			</td>\n";
 
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 95px;' type='text' name='display_name' maxlength='255' value=\"$display_name\">\n";
+	echo "				<input class='formfld' style='width: 95px;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"$display_name\">\n";
 	echo "			</td>\n";
 
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 75px;' type='text' name='user_id' maxlength='255' value=\"$user_id\">\n";
+	echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' value=\"$user_id\">\n";
 	echo "			</td>\n";
 
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 75px;' type='text' name='auth_id' maxlength='255' value=\"$auth_id\">\n";
+	echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"$auth_id\">\n";
 	echo "			</td>\n";
 
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 90px;' type='text' name='password' maxlength='255' value=\"$password\">\n";
+	echo "				<input class='formfld' style='width: 90px;' type='text' name='device_lines[".$x."][password]' maxlength='255' value=\"$password\">\n";
 	echo "			</td>\n";
 
 	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "			</td>\n";
 	echo "			</tr>\n";
 	echo "			</table>\n";
@@ -554,21 +540,9 @@ require_once "resources/require.php";
 		echo "				<td class='vtable'>".$text['label-device_key_label']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
-		$sql = "SELECT * FROM v_device_keys ";
-		$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "AND device_uuid = '".$device_uuid."' ";
-		$sql .= "ORDER by ";
-		$sql .= "CASE device_key_category ";
-		$sql .= "WHEN 'line' THEN 1 ";
-		$sql .= "WHEN 'memort' THEN 2 ";
-		$sql .= "WHEN 'programmable' THEN 3 ";
-		$sql .= "WHEN 'expansion' THEN 4 ";
-		$sql .= "ELSE 100 END, ";
-		$sql .= "device_key_id asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach($result as $row) {
+
+		$x = 0;
+		foreach($device_keys as $row) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$row['device_key_category']."&nbsp;\n";
@@ -600,11 +574,13 @@ require_once "resources/require.php";
 			}
 			echo "				</td>\n";
 			echo "			</tr>\n";
+			$x++;
 		}
 
+		$x = 0;
 		echo "<tr>\n";
 		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	<select class='formfld' name='device_key_category'>\n";
+		echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_category]'>\n";
 		echo "	<option value=''></option>\n";
 		if ($device_key_category == "line") { 
 			echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
@@ -634,7 +610,7 @@ require_once "resources/require.php";
 		echo "</td>\n";
 
 		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	<select class='formfld' style='width: 45px;' name='device_key_id'>\n";
+		echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_id]'>\n";
 		echo "	<option value=''></option>\n";
 		echo "	<option value='1'>1</option>\n";
 		echo "	<option value='2'>2</option>\n";
@@ -652,12 +628,12 @@ require_once "resources/require.php";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
-		//echo "	<input class='formfld' type='text' name='device_key_type' style='width: 120px;' maxlength='255' value=\"$device_key_type\">\n";
+		//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$device_key_type\">\n";
 		?>
 
 		<?php $selected = "selected='selected'"; ?>
 		<?php $found = false; ?>
-		<select class='formfld' name='device_key_type'>
+		<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]'>
 		<option value=''></option>
 		<optgroup label='Cisco'>
 			<option value='line' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>line</option>
@@ -726,7 +702,7 @@ require_once "resources/require.php";
 		echo "</td>\n";
 
 		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	<select class='formfld' style='width: 45px;' name='device_key_line'>\n";
+		echo "	<select class='formfld' style='width: 45px;' name='device_keys[".$x."][device_key_line]'>\n";
 		echo "	<option value=''></option>\n";
 		echo "	<option value='0'>0</option>\n";
 		echo "	<option value='1'>1</option>\n";
@@ -745,19 +721,19 @@ require_once "resources/require.php";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_key_value' style='width: 120px;' maxlength='255' value=\"$device_key_value\">\n";
+		echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"$device_key_value\">\n";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_key_extension' style='width: 120px;' maxlength='255' value=\"$device_key_extension\">\n";
+		echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"$device_key_extension\">\n";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_key_label' style='width: 150px;' maxlength='255' value=\"$device_key_label\">\n";
+		echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"$device_key_label\">\n";
 		echo "</td>\n";
 
 		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+		echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 		echo "			</td>\n";
 		echo "			</tr>\n";
 		echo "			</table>\n";
@@ -768,6 +744,7 @@ require_once "resources/require.php";
 		echo "	</tr>";
 	}
 
+//device settings
 	if (permission_exists('device_setting_add')) {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-settings'].":</td>";
@@ -780,15 +757,9 @@ require_once "resources/require.php";
 		echo "				<td class='vtable'>".$text['label-device_setting_description']."</td>\n";
 		echo "				<td>&nbsp;</td>\n";
 		echo "			</tr>\n";
-		$sql = "SELECT * FROM v_device_settings ";
-		$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "AND device_uuid = '".$device_uuid."' ";
-		$sql .= "ORDER by device_setting_subcategory asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		foreach($result as $row) {
+
+		$x = 0;
+		foreach($device_settings as $row) {
 			//if (strlen($row['line_number']) == 0) { $row['line_number'] = "1"; }
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>\n";
@@ -812,19 +783,21 @@ require_once "resources/require.php";
 			}
 			echo "				</td>\n";
 			echo "			</tr>\n";
+			$x++;
 		}
 
+		$x = 0;
 		echo "<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_setting_subcategory' style='width: 120px;' maxlength='255' value=\"$device_setting_subcategory\">\n";
+		echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"$device_setting_subcategory\">\n";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_setting_value' style='width: 120px;' maxlength='255' value=\"$device_setting_value\">\n";
+		echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"$device_setting_value\">\n";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='device_setting_enabled' style='width: 90px;'>\n";
+		echo "    <select class='formfld' name='device_settings[".$x."][device_setting_enabled]' style='width: 90px;'>\n";
 		echo "    <option value=''></option>\n";
 		if ($device_setting_enabled == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -842,11 +815,11 @@ require_once "resources/require.php";
 		echo "</td>\n";
 
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_setting_description' style='width: 150px;' maxlength='255' value=\"$device_setting_description\">\n";
+		echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"$device_setting_description\">\n";
 		echo "</td>\n";
 
 		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+		echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 		echo "			</td>\n";
 		echo "			</tr>\n";
 		echo "			</table>\n";
@@ -967,7 +940,7 @@ require_once "resources/require.php";
 	if ($action == "update") {
 		echo "				<input type='hidden' name='device_uuid' value='$device_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
