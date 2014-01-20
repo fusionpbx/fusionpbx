@@ -137,10 +137,10 @@ require_once "resources/require.php";
 				/*
 				//remove the invalid characters from the extension name
 					foreach ($_POST as $key => $value) {
-						if ($key == "dialplan_name") {
-							$dialplan_name = str_replace(" ", "_", $value);
-							$dialplan_name = str_replace("/", "", $dialplan_name);
-							$_POST["dialplan_name"] = $dialplan_name;
+						if ($key == "device_name") {
+							$device_name = str_replace(" ", "_", $value);
+							$device_name = str_replace("/", "", $device_name);
+							$_POST["device_name"] = $device_name;
 						}
 					}
 				*/
@@ -167,7 +167,7 @@ require_once "resources/require.php";
 							if (strlen($row["line_number"]) == 0) {
 								unset($_POST["device_lines"][$x]);
 							}
-						//unset dialplan_detail_uuid if the field has no value
+						//unset device_detail_uuid if the field has no value
 							if (strlen($row["device_line_uuid"]) == 0) {
 								unset($_POST["device_lines"][$x]["device_line_uuid"]);
 							}
@@ -180,7 +180,7 @@ require_once "resources/require.php";
 							if (strlen($row["device_key_id"]) == 0) {
 								unset($_POST["device_keys"][$x]);
 							}
-						//unset dialplan_detail_uuid if the field has no value
+						//unset device_detail_uuid if the field has no value
 							if (strlen($row["device_key_uuid"]) == 0) {
 								unset($_POST["device_keys"][$x]["device_key_uuid"]);
 							}
@@ -193,7 +193,7 @@ require_once "resources/require.php";
 							if (strlen($row["device_setting_subcategory"]) == 0) {
 								unset($_POST["device_settings"][$x]);
 							}
-						//unset dialplan_detail_uuid if the field has no value
+						//unset device_detail_uuid if the field has no value
 							if (strlen($row["device_setting_uuid"]) == 0) {
 								unset($_POST["device_settings"][$x]["device_setting_uuid"]);
 							}
@@ -208,7 +208,6 @@ require_once "resources/require.php";
 						if (strlen($device_uuid) > 0) {
 							$orm->uuid($device_uuid);
 						}
-
 						$orm->save($_POST);
 						$message = $orm->message;
 					}
@@ -225,14 +224,14 @@ require_once "resources/require.php";
 					}
 
 			} //if ($_POST["persistformvar"] != "true")
-	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$dialplan_uuid = check_str($_GET["id"]);
+		$device_uuid = check_str($_GET["id"]);
 		$orm = new orm;
 		$orm->name('devices');
-		$orm->uuid($dialplan_uuid);
+		$orm->uuid($device_uuid);
 		$result = $orm->find()->get();
 		//$message = $orm->message;
 		foreach ($result as &$row) {
@@ -252,6 +251,9 @@ require_once "resources/require.php";
 		unset ($prep_statement);
 	}
 
+//set the sub array index
+	$x = "999";
+
 //get device lines
 	$sql = "SELECT * FROM v_device_lines ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -260,6 +262,13 @@ require_once "resources/require.php";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_lines = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$device_lines[$x]['line_number'] = '';
+	$device_lines[$x]['server_address'] = '';
+	$device_lines[$x]['outbound_proxy'] = '';
+	$device_lines[$x]['display_name'] = '';
+	$device_lines[$x]['user_id'] = '';
+	$device_lines[$x]['auth_id'] = '';
+	$device_lines[$x]['password'] = '';
 
 //get device keys
 	$sql = "SELECT * FROM v_device_keys ";
@@ -276,6 +285,13 @@ require_once "resources/require.php";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$device_keys[$x]['device_key_category'] = '';
+	$device_keys[$x]['device_key_id'] = '';
+	$device_keys[$x]['device_key_type'] = '';
+	$device_keys[$x]['device_key_line'] = '';
+	$device_keys[$x]['device_key_value'] = '';
+	$device_keys[$x]['device_key_extension'] = '';
+	$device_keys[$x]['device_key_label'] = '';
 
 //get device settings
 	$sql = "SELECT * FROM v_device_settings ";
@@ -285,13 +301,15 @@ require_once "resources/require.php";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$device_settings[$x]['device_setting_name'] = '';
+	$device_settings[$x]['device_setting_value'] = '';
+	$device_settings[$x]['enabled'] = '';
+	$device_settings[$x]['device_setting_description'] = '';
 
 //use the mac address to get the vendor
 	if (strlen($device_vendor) == 0) {
 		$device_vendor = device::get_vendor($device_mac_address);
 	}
-
-//name='dialplan_details[".$x."][dialplan_detail_type]'
 
 //show the header
 	require_once "resources/header.php";
@@ -435,89 +453,80 @@ require_once "resources/require.php";
 
 	$x = 0;
 	foreach($device_lines as $row) {
-		//if (strlen($row['line_number']) == 0) { $row['line_number'] = "1"; }
-		echo "			<tr>\n";
-		echo "				<td class='vtable'>\n";
-		echo "					".$row['line_number']."&nbsp;\n";
-		echo "				</td>\n";
-		echo "				<td class='vtable'>\n";
-		echo "					".$row['server_address']."&nbsp;\n";
-		echo "				</td>\n";
-		echo "				<td class='vtable'>\n";
-		echo "					".$row['outbound_proxy']."&nbsp;\n";
-		echo "				</td>\n";
-		echo "				<td class='vtable'>\n";
-		echo "					".$row['display_name']."&nbsp;\n";
-		echo "				</td>\n";
-		echo "				<td class='vtable'>\n";
-		echo "					".$row['user_id']."&nbsp;\n";
-		echo "				</td>\n";
-		echo "				<td class='vtable'>\n";
-		echo "					".$row['auth_id']."&nbsp;\n";
-		echo "				</td>\n";
-		echo "				<td class='vtable'>\n";
-		echo "					******** &nbsp;\n"; //$row['password']
-		echo "				</td>\n";
+		//determine whether to hide the element
+			if (strlen($device_line_uuid) == 0) {
+				$element['hidden'] = false;
+				$element['visibility'] = "visibility:visible;";
+			}
+			else {
+				$element['hidden'] = true;
+				$element['visibility'] = "visibility:hidden;";
+			}
+		//add the primary key uuid
+			if (strlen($row['device_line_uuid']) > 0) {
+				echo "	<input name='device_lines[".$x."][device_line_uuid]' type='hidden' value=\"".$row['device_line_uuid']."\">\n";
+			}
+		//show each row in the array
+			echo "			<tr>\n";
+			echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+			$selected = "selected=\"selected\" ";
+			echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
+			echo "				<option value=''></option>\n";
+			echo "				<option value='1' ".($row['line_number'] == "1" ? $selected:"").">1</option>\n";
+			echo "				<option value='2' ".($row['line_number'] == "2" ? $selected:"").">2</option>\n";
+			echo "				<option value='3' ".($row['line_number'] == "3" ? $selected:"").">3</option>\n";
+			echo "				<option value='4' ".($row['line_number'] == "4" ? $selected:"").">4</option>\n";
+			echo "				<option value='5' ".($row['line_number'] == "5" ? $selected:"").">5</option>\n";
+			echo "				<option value='6' ".($row['line_number'] == "6" ? $selected:"").">6</option>\n";
+			echo "				<option value='7' ".($row['line_number'] == "7" ? $selected:"").">7</option>\n";
+			echo "				<option value='8' ".($row['line_number'] == "8" ? $selected:"").">8</option>\n";
+			echo "				<option value='9' ".($row['line_number'] == "9" ? $selected:"").">9</option>\n";
+			echo "				<option value='10' ".($row['line_number'] == "10" ? $selected:"").">10</option>\n";
+			echo "				<option value='11' ".($row['line_number'] == "11" ? $selected:"").">11</option>\n";
+			echo "				<option value='12' ".($row['line_number'] == "12" ? $selected:"").">12</option>\n";
+			echo "				</select>\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"".$row['server_address']."\">\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][outbound_proxy]' maxlength='255' value=\"".$row['outbound_proxy']."\">\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input class='formfld' style='width: 95px;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"".$row['display_name']."\">\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' value=\"".$row['user_id']."\">\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"".$row['auth_id']."\">\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input class='formfld' style='width: 90px;' type='text' name='device_lines[".$x."][password]' maxlength='255' value=\"".$row['password']."\">\n";
+			echo "			</td>\n";
+
+			//echo "			<td class='vtable' align='left'>\n";
+			//echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+			//echo "			</td>\n";
 		echo "				<td>\n";
-		if (permission_exists('device_edit')) {
-			echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-		}
-		if (permission_exists('device_delete')) {
-			echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+		if (strlen($row['device_line_uuid']) > 0) {
+			if (permission_exists('device_edit')) {
+				echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('device_delete')) {
+				echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			}
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
 		$x++;
 	}
-//device lines
-	$x = 0;
-	echo "			<tr>\n";
-	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "				<select class='formfld' style='width: 45px;' name='device_lines[".$x."][line_number]'>\n";
-	echo "				<option value=''></option>\n";
-	echo "				<option value='1'>1</option>\n";
-	echo "				<option value='2'>2</option>\n";
-	echo "				<option value='3'>3</option>\n";
-	echo "				<option value='4'>4</option>\n";
-	echo "				<option value='5'>5</option>\n";
-	echo "				<option value='6'>6</option>\n";
-	echo "				<option value='7'>7</option>\n";
-	echo "				<option value='8'>8</option>\n";
-	echo "				<option value='9'>9</option>\n";
-	echo "				<option value='10'>10</option>\n";
-	echo "				<option value='11'>11</option>\n";
-	echo "				<option value='12'>12</option>\n";
-	echo "				</select>\n";
-	echo "			</td>\n";
-
-	echo "			<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][server_address]' maxlength='255' value=\"$server_address\">\n";
-	echo "			</td>\n";
-
-	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 125px;' type='text' name='device_lines[".$x."][outbound_proxy]' maxlength='255' value=\"$outbound_proxy\">\n";
-	echo "			</td>\n";
-
-	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 95px;' type='text' name='device_lines[".$x."][display_name]' maxlength='255' value=\"$display_name\">\n";
-	echo "			</td>\n";
-
-	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][user_id]' maxlength='255' value=\"$user_id\">\n";
-	echo "			</td>\n";
-
-	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][auth_id]' maxlength='255' value=\"$auth_id\">\n";
-	echo "			</td>\n";
-
-	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input class='formfld' style='width: 90px;' type='text' name='device_lines[".$x."][password]' maxlength='255' value=\"$password\">\n";
-	echo "			</td>\n";
-
-	echo "			<td class='vtable' align='left'>\n";
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "			</td>\n";
-	echo "			</tr>\n";
 	echo "			</table>\n";
 	if (strlen($text['description-lines']) > 0) {
 		echo "			<br>".$text['description-lines']."\n";
@@ -543,199 +552,193 @@ require_once "resources/require.php";
 
 		$x = 0;
 		foreach($device_keys as $row) {
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_category']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_id']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_type']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_line']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_value']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_extension']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_key_label']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td>\n";
-			if (permission_exists('device_key_edit')) {
-				echo "					<a href='device_key_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			}
-			if (permission_exists('device_key_delete')) {
-				echo "					<a href='device_key_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			}
-			echo "				</td>\n";
-			echo "			</tr>\n";
-			$x++;
+			//determine whether to hide the element
+				if (strlen($device_key_uuid) == 0) {
+					$element['hidden'] = false;
+					$element['visibility'] = "visibility:visible;";
+				}
+				else {
+					$element['hidden'] = true;
+					$element['visibility'] = "visibility:hidden;";
+				}
+			//add the primary key uuid
+				if (strlen($row['device_key_uuid']) > 0) {
+					echo "	<input name='device_keys[".$x."][device_key_uuid]' type='hidden' value=\"".$row['device_key_uuid']."\">\n";
+				}
+			//show all the rows in the array
+				echo "			<tr>\n";
+				echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_category]'>\n";
+				echo "	<option value=''></option>\n";
+				if ($row['device_key_category'] == "line") { 
+					echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
+				}
+				else {
+					echo "	<option value='line'>".$text['label-line']."</option>\n";
+				}
+				if ($row['device_key_category'] == "memory") { 
+					echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
+				}
+				else {
+					echo "	<option value='memory'>".$text['label-memory']."</option>\n";
+				}
+				if ($row['device_key_category'] == "programmable") { 
+					echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
+				}
+				else {
+					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
+				}
+				if ($row['device_key_category'] == "expansion") { 
+					echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+				}
+				else {
+					echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+				}
+				echo "	</select>\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+				$selected = "selected='selected'";
+				echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_id]'>\n";
+				echo "	<option value=''></option>\n";
+				echo "	<option value='0' ".($row['device_key_id'] == "0" ? $selected:"").">0</option>\n";
+				echo "	<option value='1' ".($row['device_key_id'] == "1" ? $selected:"").">1</option>\n";
+				echo "	<option value='2' ".($row['device_key_id'] == "2" ? $selected:"").">2</option>\n";
+				echo "	<option value='3' ".($row['device_key_id'] == "3" ? $selected:"").">3</option>\n";
+				echo "	<option value='4' ".($row['device_key_id'] == "4" ? $selected:"").">4</option>\n";
+				echo "	<option value='5' ".($row['device_key_id'] == "5" ? $selected:"").">5</option>\n";
+				echo "	<option value='6' ".($row['device_key_id'] == "6" ? $selected:"").">6</option>\n";
+				echo "	<option value='7' ".($row['device_key_id'] == "7" ? $selected:"").">7</option>\n";
+				echo "	<option value='8' ".($row['device_key_id'] == "8" ? $selected:"").">8</option>\n";
+				echo "	<option value='9' ".($row['device_key_id'] == "9" ? $selected:"").">9</option>\n";
+				echo "	<option value='10' ".($row['device_key_id'] == "10" ? $selected:"").">10</option>\n";
+				echo "	<option value='11' ".($row['device_key_id'] == "11" ? $selected:"").">11</option>\n";
+				echo "	<option value='12' ".($row['device_key_id'] == "12" ? $selected:"").">12</option>\n";
+				echo "	</select>\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' align='left'>\n";
+				//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$row['device_key_type']\">\n";
+				?>
+
+				<?php $selected = "selected='selected'"; ?>
+				<?php $found = false; ?>
+				<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]'>
+				<option value=''></option>
+				<optgroup label='Cisco'>
+					<option value='line' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>line</option>
+					<option value='disabled' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>disabled</option>
+				</optgroup>
+				<optgroup label='Yealink'>
+					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>0-N/A(default for memory key)</option>
+					<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>>1-Conference</option>
+					<option value='2' <?php if ($row['device_key_type'] == "2") { echo $selected;$found=true; } ?>>2-Forward</option>
+					<option value='3' <?php if ($row['device_key_type'] == "3") { echo $selected;$found=true; } ?>>3-Transfer</option>
+					<option value='4' <?php if ($row['device_key_type'] == "4") { echo $selected;$found=true; } ?>>4-Hold</option>
+					<option value='5' <?php if ($row['device_key_type'] == "5") { echo $selected;$found=true; } ?>>5-DND</option>
+					<option value='6' <?php if ($row['device_key_type'] == "6") { echo $selected;$found=true; } ?>>6-Redial</option>
+					<option value='7' <?php if ($row['device_key_type'] == "7") { echo $selected;$found=true; } ?>>7-Call Return</option>
+					<option value='8' <?php if ($row['device_key_type'] == "8") { echo $selected;$found=true; } ?>>8-SMS</option>
+					<option value='9' <?php if ($row['device_key_type'] == "9") { echo $selected;$found=true; } ?>>9-Call Pickup</option>
+					<option value='10' <?php if ($row['device_key_type'] == "10") { echo $selected;$found=true; } ?>>10-Call Park</option>
+					<option value='11' <?php if ($row['device_key_type'] == "11") { echo $selected;$found=true; } ?>>11-DTMF</option>
+					<option value='12' <?php if ($row['device_key_type'] == "12") { echo $selected;$found=true; } ?>>12-Voicemail</option>
+					<option value='13' <?php if ($row['device_key_type'] == "13") { echo $selected;$found=true; } ?>>13-SpeedDial</option>
+					<option value='14' <?php if ($row['device_key_type'] == "14") { echo $selected;$found=true; } ?>>14-Intercom</option>
+					<option value='15' <?php if ($row['device_key_type'] == "15") { echo $selected;$found=true; } ?>>15-Line(default for line key)</option>
+					<option value='16' <?php if ($row['device_key_type'] == "16") { echo $selected;$found=true; } ?>>16-BLF</option>
+					<option value='17' <?php if ($row['device_key_type'] == "17") { echo $selected;$found=true; } ?>>17-URL</option>
+					<option value='19' <?php if ($row['device_key_type'] == "19") { echo $selected;$found=true; } ?>>19-Public Hold</option>
+					<option value='20' <?php if ($row['device_key_type'] == "20") { echo $selected;$found=true; } ?>>20-Private</option>
+					<option value='21' <?php if ($row['device_key_type'] == "21") { echo $selected;$found=true; } ?>>21-Shared Line</option>
+					<option value='22' <?php if ($row['device_key_type'] == "22") { echo $selected;$found=true; } ?>>22-XML Group</option>
+					<option value='23' <?php if ($row['device_key_type'] == "23") { echo $selected;$found=true; } ?>>23-Group Pickup</option>
+					<option value='24' <?php if ($row['device_key_type'] == "24") { echo $selected;$found=true; } ?>>24-Paging</option>
+					<option value='25' <?php if ($row['device_key_type'] == "25") { echo $selected;$found=true; } ?>>25-Record</option>
+					<option value='27' <?php if ($row['device_key_type'] == "27") { echo $selected;$found=true; } ?>>27-XML Browser</option>
+					<option value='28' <?php if ($row['device_key_type'] == "28") { echo $selected;$found=true; } ?>>28-History</option>
+					<option value='29' <?php if ($row['device_key_type'] == "29") { echo $selected;$found=true; } ?>>29-Directory</option>
+					<option value='30' <?php if ($row['device_key_type'] == "30") { echo $selected;$found=true; } ?>>30-Menu</option>
+					<option value='32' <?php if ($row['device_key_type'] == "32") { echo $selected;$found=true; } ?>>32-New SMS</option>
+					<option value='33' <?php if ($row['device_key_type'] == "33") { echo $selected;$found=true; } ?>>33-Status</option>
+					<option value='34' <?php if ($row['device_key_type'] == "34") { echo $selected;$found=true; } ?>>34-Hot Desking</option>
+					<option value='35' <?php if ($row['device_key_type'] == "35") { echo $selected;$found=true; } ?>>35-URL Record</option>
+					<option value='38' <?php if ($row['device_key_type'] == "38") { echo $selected;$found=true; } ?>>38-LDAP</option>
+					<option value='39' <?php if ($row['device_key_type'] == "39") { echo $selected;$found=true; } ?>>39-BLF List</option>
+					<option value='40' <?php if ($row['device_key_type'] == "40") { echo $selected;$found=true; } ?>>40-Prefix</option>
+					<option value='41' <?php if ($row['device_key_type'] == "41") { echo $selected;$found=true; } ?>>41-Zero-Sp-Touch</option>
+					<option value='42' <?php if ($row['device_key_type'] == "42") { echo $selected;$found=true; } ?>>42-ACD</option>
+					<option value='43' <?php if ($row['device_key_type'] == "43") { echo $selected;$found=true; } ?>>43-Local Phonebook</option>
+					<option value='44' <?php if ($row['device_key_type'] == "44") { echo $selected;$found=true; } ?>>44-Broadsoft Phonebook</option>
+					<option value='45' <?php if ($row['device_key_type'] == "45") { echo $selected;$found=true; } ?>>45-Local Group</option>
+					<option value='46' <?php if ($row['device_key_type'] == "46") { echo $selected;$found=true; } ?>>46-Broadsoft Group</option>
+					<option value='47' <?php if ($row['device_key_type'] == "47") { echo $selected;$found=true; } ?>>47-XML Phonebook</option>
+					<option value='48' <?php if ($row['device_key_type'] == "48") { echo $selected;$found=true; } ?>>48-Switch Account Up</option>
+					<option value='49' <?php if ($row['device_key_type'] == "49") { echo $selected;$found=true; } ?>>49-Switch Account Down</option>
+					<option value='50' <?php if ($row['device_key_type'] == "50") { echo $selected;$found=true; } ?>>50-Keypad Lock</option>
+				</optgroup>
+				<optgroup label='Other'>
+					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>>line</option>
+					<option value='other'>other</option>
+				<?php
+					if (!$found) {
+						echo "<option value='".$row['device_key_type']."'>".$row['device_key_type']."</option>\n";
+					}
+				?>
+				</optgroup>
+				</select>
+
+				<?php
+				echo "</td>\n";
+				$selected = "selected='selected'";
+				echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
+				echo "	<select class='formfld' style='width: 45px;' name='device_keys[".$x."][device_key_line]'>\n";
+				echo "	<option value=''></option>\n";
+				echo "	<option value='0' ".($row['device_key_line'] == "0" ? $selected:"").">0</option>\n";
+				echo "	<option value='1' ".($row['device_key_line'] == "1" ? $selected:"").">1</option>\n";
+				echo "	<option value='2' ".($row['device_key_line'] == "2" ? $selected:"").">2</option>\n";
+				echo "	<option value='3' ".($row['device_key_line'] == "3" ? $selected:"").">3</option>\n";
+				echo "	<option value='4' ".($row['device_key_line'] == "4" ? $selected:"").">4</option>\n";
+				echo "	<option value='5' ".($row['device_key_line'] == "5" ? $selected:"").">5</option>\n";
+				echo "	<option value='6' ".($row['device_key_line'] == "6" ? $selected:"").">6</option>\n";
+				echo "	<option value='7' ".($row['device_key_line'] == "7" ? $selected:"").">7</option>\n";
+				echo "	<option value='8' ".($row['device_key_line'] == "8" ? $selected:"").">8</option>\n";
+				echo "	<option value='9' ".($row['device_key_line'] == "9" ? $selected:"").">9</option>\n";
+				echo "	<option value='10' ".($row['device_key_line'] == "10" ? $selected:"").">10</option>\n";
+				echo "	<option value='11' ".($row['device_key_line'] == "11" ? $selected:"").">11</option>\n";
+				echo "	<option value='12' ".($row['device_key_line'] == "12" ? $selected:"").">12</option>\n";
+				echo "	</select>\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_value']."\">\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"".$row['device_key_extension']."\">\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"".$row['device_key_label']."\">\n";
+				echo "</td>\n";
+
+				//echo "			<td class='vtable' align='left'>\n";
+				//echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+				//echo "			</td>\n";
+				echo "				<td nowrap='nowrap'>\n";
+				if (strlen($row['device_key_uuid']) > 0) {
+					if (permission_exists('device_key_edit')) {
+						echo "					<a href='device_key_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('device_key_delete')) {
+						echo "					<a href='device_key_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					}
+				}
+				echo "				</td>\n";
+				echo "			</tr>\n";
+			//increment the array key
+				$x++;
 		}
-
-		$x = 0;
-		echo "<tr>\n";
-		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_category]'>\n";
-		echo "	<option value=''></option>\n";
-		if ($device_key_category == "line") { 
-			echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
-		}
-		else {
-			echo "	<option value='line'>".$text['label-line']."</option>\n";
-		}
-		if ($device_key_category == "memory") { 
-			echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
-		}
-		else {
-			echo "	<option value='memory'>".$text['label-memory']."</option>\n";
-		}
-		if ($device_key_category == "programmable") { 
-			echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
-		}
-		else {
-			echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
-		}
-		if ($device_key_category == "expansion") { 
-			echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
-		}
-		else {
-			echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
-		}
-		echo "	</select>\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_id]'>\n";
-		echo "	<option value=''></option>\n";
-		echo "	<option value='1'>1</option>\n";
-		echo "	<option value='2'>2</option>\n";
-		echo "	<option value='3'>3</option>\n";
-		echo "	<option value='4'>4</option>\n";
-		echo "	<option value='5'>5</option>\n";
-		echo "	<option value='6'>6</option>\n";
-		echo "	<option value='7'>7</option>\n";
-		echo "	<option value='8'>8</option>\n";
-		echo "	<option value='9'>9</option>\n";
-		echo "	<option value='10'>10</option>\n";
-		echo "	<option value='11'>11</option>\n";
-		echo "	<option value='12'>12</option>\n";
-		echo "	</select>\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' align='left'>\n";
-		//echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_type]' style='width: 120px;' maxlength='255' value=\"$device_key_type\">\n";
-		?>
-
-		<?php $selected = "selected='selected'"; ?>
-		<?php $found = false; ?>
-		<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]'>
-		<option value=''></option>
-		<optgroup label='Cisco'>
-			<option value='line' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>line</option>
-			<option value='disabled' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>disabled</option>
-		</optgroup>
-		<optgroup label='Yealink'>
-			<option value='0' <?php if ($device_key_type == "0") { echo $selected;$found=true; } ?>>0-N/A(default for memory key)</option>
-			<option value='1' <?php if ($device_key_type == "1") { echo $selected;$found=true; } ?>>1-Conference</option>
-			<option value='2' <?php if ($device_key_type == "2") { echo $selected;$found=true; } ?>>2-Forward</option>
-			<option value='3' <?php if ($device_key_type == "3") { echo $selected;$found=true; } ?>>3-Transfer</option>
-			<option value='4' <?php if ($device_key_type == "4") { echo $selected;$found=true; } ?>>4-Hold</option>
-			<option value='5' <?php if ($device_key_type == "5") { echo $selected;$found=true; } ?>>5-DND</option>
-			<option value='6' <?php if ($device_key_type == "6") { echo $selected;$found=true; } ?>>6-Redial</option>
-			<option value='7' <?php if ($device_key_type == "7") { echo $selected;$found=true; } ?>>7-Call Return</option>
-			<option value='8' <?php if ($device_key_type == "8") { echo $selected;$found=true; } ?>>8-SMS</option>
-			<option value='9' <?php if ($device_key_type == "9") { echo $selected;$found=true; } ?>>9-Call Pickup</option>
-			<option value='10' <?php if ($device_key_type == "10") { echo $selected;$found=true; } ?>>10-Call Park</option>
-			<option value='11' <?php if ($device_key_type == "11") { echo $selected;$found=true; } ?>>11-DTMF</option>
-			<option value='12' <?php if ($device_key_type == "12") { echo $selected;$found=true; } ?>>12-Voicemail</option>
-			<option value='13' <?php if ($device_key_type == "13") { echo $selected;$found=true; } ?>>13-SpeedDial</option>
-			<option value='14' <?php if ($device_key_type == "14") { echo $selected;$found=true; } ?>>14-Intercom</option>
-			<option value='15' <?php if ($device_key_type == "15") { echo $selected;$found=true; } ?>>15-Line(default for line key)</option>
-			<option value='16' <?php if ($device_key_type == "16") { echo $selected;$found=true; } ?>>16-BLF</option>
-			<option value='17' <?php if ($device_key_type == "17") { echo $selected;$found=true; } ?>>17-URL</option>
-			<option value='19' <?php if ($device_key_type == "19") { echo $selected;$found=true; } ?>>19-Public Hold</option>
-			<option value='20' <?php if ($device_key_type == "20") { echo $selected;$found=true; } ?>>20-Private</option>
-			<option value='21' <?php if ($device_key_type == "21") { echo $selected;$found=true; } ?>>21-Shared Line</option>
-			<option value='22' <?php if ($device_key_type == "22") { echo $selected;$found=true; } ?>>22-XML Group</option>
-			<option value='23' <?php if ($device_key_type == "23") { echo $selected;$found=true; } ?>>23-Group Pickup</option>
-			<option value='24' <?php if ($device_key_type == "24") { echo $selected;$found=true; } ?>>24-Paging</option>
-			<option value='25' <?php if ($device_key_type == "25") { echo $selected;$found=true; } ?>>25-Record</option>
-			<option value='27' <?php if ($device_key_type == "27") { echo $selected;$found=true; } ?>>27-XML Browser</option>
-			<option value='28' <?php if ($device_key_type == "28") { echo $selected;$found=true; } ?>>28-History</option>
-			<option value='29' <?php if ($device_key_type == "29") { echo $selected;$found=true; } ?>>29-Directory</option>
-			<option value='30' <?php if ($device_key_type == "30") { echo $selected;$found=true; } ?>>30-Menu</option>
-			<option value='32' <?php if ($device_key_type == "32") { echo $selected;$found=true; } ?>>32-New SMS</option>
-			<option value='33' <?php if ($device_key_type == "33") { echo $selected;$found=true; } ?>>33-Status</option>
-			<option value='34' <?php if ($device_key_type == "34") { echo $selected;$found=true; } ?>>34-Hot Desking</option>
-			<option value='35' <?php if ($device_key_type == "35") { echo $selected;$found=true; } ?>>35-URL Record</option>
-			<option value='38' <?php if ($device_key_type == "38") { echo $selected;$found=true; } ?>>38-LDAP</option>
-			<option value='39' <?php if ($device_key_type == "39") { echo $selected;$found=true; } ?>>39-BLF List</option>
-			<option value='40' <?php if ($device_key_type == "40") { echo $selected;$found=true; } ?>>40-Prefix</option>
-			<option value='41' <?php if ($device_key_type == "41") { echo $selected;$found=true; } ?>>41-Zero-Sp-Touch</option>
-			<option value='42' <?php if ($device_key_type == "42") { echo $selected;$found=true; } ?>>42-ACD</option>
-			<option value='43' <?php if ($device_key_type == "43") { echo $selected;$found=true; } ?>>43-Local Phonebook</option>
-			<option value='44' <?php if ($device_key_type == "44") { echo $selected;$found=true; } ?>>44-Broadsoft Phonebook</option>
-			<option value='45' <?php if ($device_key_type == "45") { echo $selected;$found=true; } ?>>45-Local Group</option>
-			<option value='46' <?php if ($device_key_type == "46") { echo $selected;$found=true; } ?>>46-Broadsoft Group</option>
-			<option value='47' <?php if ($device_key_type == "47") { echo $selected;$found=true; } ?>>47-XML Phonebook</option>
-			<option value='48' <?php if ($device_key_type == "48") { echo $selected;$found=true; } ?>>48-Switch Account Up</option>
-			<option value='49' <?php if ($device_key_type == "49") { echo $selected;$found=true; } ?>>49-Switch Account Down</option>
-			<option value='50' <?php if ($device_key_type == "50") { echo $selected;$found=true; } ?>>50-Keypad Lock</option>
-		</optgroup>
-		<optgroup label='Other'>
-			<option value='line' <?php if ($device_key_type == "line") { echo $selected;$found=true; } ?>>line</option>
-			<option value='other'>other</option>
-		<?php
-			if (!$found) {
-				echo "<option value='".$device_key_type."'>".$device_key_type."</option>\n";
-			}
-		?>
-		</optgroup>
-		</select>
-
-		<?php
-		echo "</td>\n";
-
-		echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	<select class='formfld' style='width: 45px;' name='device_keys[".$x."][device_key_line]'>\n";
-		echo "	<option value=''></option>\n";
-		echo "	<option value='0'>0</option>\n";
-		echo "	<option value='1'>1</option>\n";
-		echo "	<option value='2'>2</option>\n";
-		echo "	<option value='3'>3</option>\n";
-		echo "	<option value='4'>4</option>\n";
-		echo "	<option value='5'>5</option>\n";
-		echo "	<option value='6'>6</option>\n";
-		echo "	<option value='7'>7</option>\n";
-		echo "	<option value='8'>8</option>\n";
-		echo "	<option value='9'>9</option>\n";
-		echo "	<option value='10'>10</option>\n";
-		echo "	<option value='11'>11</option>\n";
-		echo "	<option value='12'>12</option>\n";
-		echo "	</select>\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_value]' style='width: 120px;' maxlength='255' value=\"$device_key_value\">\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_extension]' style='width: 120px;' maxlength='255' value=\"$device_key_extension\">\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_keys[".$x."][device_key_label]' style='width: 150px;' maxlength='255' value=\"$device_key_label\">\n";
-		echo "</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
 		echo "			</table>\n";
 		if (strlen($text['description-keys']) > 0) {
 			echo "			<br>".$text['description-keys']."\n";
@@ -760,74 +763,77 @@ require_once "resources/require.php";
 
 		$x = 0;
 		foreach($device_settings as $row) {
-			//if (strlen($row['line_number']) == 0) { $row['line_number'] = "1"; }
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_setting_subcategory']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_setting_value']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_setting_enabled']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td class='vtable'>\n";
-			echo "					".$row['device_setting_description']."&nbsp;\n";
-			echo "				</td>\n";
-			echo "				<td>\n";
-			if (permission_exists('device_edit')) {
-				echo "					<a href='device_setting_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			//determine whether to hide the element
+				if (strlen($device_setting_uuid) == 0) {
+					$element['hidden'] = false;
+					$element['visibility'] = "visibility:visible;";
+				}
+				else {
+					$element['hidden'] = true;
+					$element['visibility'] = "visibility:hidden;";
+				}
+			//add the primary key uuid
+				if (strlen($row['device_setting_uuid']) > 0) {
+					echo "	<input name='device_settings[".$x."][device_setting_uuid]' type='hidden' value=\"".$row['device_setting_uuid']."\">\n";
+				}
+
+			//show alls rows in the array
+				echo "<tr>\n";
+				echo "<td class='vtable' align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_subcategory']."\">\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"".$row['device_setting_value']."\">\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' align='left'>\n";
+				echo "    <select class='formfld' name='device_settings[".$x."][device_setting_enabled]' style='width: 90px;'>\n";
+				echo "    <option value=''></option>\n";
+				if ($row['device_setting_enabled'] == "true") {
+					echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+				}
+				else {
+					echo "    <option value='true'>".$text['label-true']."</option>\n";
+				}
+				if ($row['device_setting_enabled'] == "false") {
+					echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+				}
+				else {
+					echo "    <option value='false'>".$text['label-false']."</option>\n";
+				}
+				echo "    </select>\n";
+				echo "</td>\n";
+
+				echo "<td class='vtable' align='left'>\n";
+				echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"".$row['device_setting_description']."\">\n";
+				echo "</td>\n";
+
+				if (strlen($text['description-settings']) > 0) {
+					echo "			<br>".$text['description-settings']."\n";
+				}
+				echo "		</td>";
+
+				echo "				<td>\n";
+				if (strlen($row['device_setting_uuid']) > 0) {
+					if (permission_exists('device_edit')) {
+						echo "					<a href='device_setting_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+					}
+					if (permission_exists('device_delete')) {
+						echo "					<a href='device_setting_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					}
+				}
+				echo "				</td>\n";
+				echo "			</tr>\n";
+				$x++;
 			}
-			if (permission_exists('device_delete')) {
-				echo "					<a href='device_setting_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			}
-			echo "				</td>\n";
+			/*
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+			*/
+			echo "			</table>\n";
+			echo "			</td>\n";
 			echo "			</tr>\n";
-			$x++;
-		}
-
-		$x = 0;
-		echo "<tr>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_subcategory]' style='width: 120px;' maxlength='255' value=\"$device_setting_subcategory\">\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_value]' style='width: 120px;' maxlength='255' value=\"$device_setting_value\">\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' align='left'>\n";
-		echo "    <select class='formfld' name='device_settings[".$x."][device_setting_enabled]' style='width: 90px;'>\n";
-		echo "    <option value=''></option>\n";
-		if ($device_setting_enabled == "true") {
-			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
-		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
-		}
-		if ($device_setting_enabled == "false") {
-			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
-		echo "    </select>\n";
-		echo "</td>\n";
-
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='device_settings[".$x."][device_setting_description]' style='width: 150px;' maxlength='255' value=\"$device_setting_description\">\n";
-		echo "</td>\n";
-
-		echo "			<td class='vtable' align='left'>\n";
-		echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-		echo "			</td>\n";
-		echo "			</tr>\n";
-		echo "			</table>\n";
-		if (strlen($text['description-settings']) > 0) {
-			echo "			<br>".$text['description-settings']."\n";
-		}
-		echo "		</td>";
-		echo "	</tr>";
 	}
 
 	echo "<tr>\n";
