@@ -770,6 +770,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		$select_options .= "		<option value='\${us-ring}'>us-ring</option>\n";
 	}
+	if ($ivr_menu_ringback == "\${pt-ring}" || $ivr_menu_ringback == "pt-ring") {
+		$select_options .= "		<option value='\${pt-ring}' selected='selected'>pt-ring</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${pt-ring}'>pt-ring</option>\n";
+	}
 	if ($ivr_menu_ringback == "\${fr-ring}" || $ivr_menu_ringback == "fr-ring") {
 		$select_options .= "		<option value='\${fr-ring}' selected='selected'>fr-ring</option>\n";
 	}

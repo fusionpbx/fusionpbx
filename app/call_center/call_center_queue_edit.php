@@ -439,6 +439,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
 	}
+	if ($queue_moh_sound == "\${pt-ring}" || $queue_moh_sound == "pt-ring") {
+		$select_options .= "		<option value='\${pt-ring}' selected='selected'>".$text['option-ptring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${pt-ring}'>".$text['option-ptring']."</option>\n";
+	}
 	if ($queue_moh_sound == "\${fr-ring}" || $queue_moh_sound == "fr-ring") {
 		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
 	}

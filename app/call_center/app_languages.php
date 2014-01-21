@@ -121,6 +121,10 @@
 	$text['option-frring']['pt-pt'] = "fr-ring";
 	$text['option-frring']['fr-fr'] = "fr-ring";
 
+	$text['option-ptring']['en-us'] = "pt-ring";
+	$text['option-ptring']['pt-pt'] = "pt-ring";
+	$text['option-ptring']['fr-fr'] = "pt-ring";
+
 	$text['option-ukring']['en-us'] = "uk-ring";
 	$text['option-ukring']['pt-pt'] = "uk-ring";
 	$text['option-ukring']['fr-fr'] = "uk-ring";

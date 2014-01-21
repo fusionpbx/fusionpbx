@@ -87,6 +87,9 @@
 			elseif (ringback == "us-ring") then
 				session:setVariable("ringback", "%(2000, 4000, 440.0, 480.0)");
 				session:setVariable("transfer_ringback", "%(2000, 4000, 440.0, 480.0)");
+			elseif (ringback == "pt-ring") then
+				session:setVariable("ringback", "%(1000, 5000, 400.0, 0.0)");
+				session:setVariable("transfer_ringback", "%(1000, 5000, 400.0, 0.0)");
 			elseif (ringback == "fr-ring") then
 				session:setVariable("ringback", "%(1500, 3500, 440.0, 0.0)");
 				session:setVariable("transfer_ringback", "%(1500, 3500, 440.0, 0.0)");
