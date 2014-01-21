@@ -28,6 +28,7 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "resources/paging.php";
 require_once "resources/classes/logging.php";
+require_once "resources/classes/orm.php";
 if (permission_exists('dialplan_add')
 	|| permission_exists('dialplan_edit')
 	|| permission_exists('inbound_route_add')

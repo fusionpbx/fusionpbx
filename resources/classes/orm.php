@@ -24,6 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 include "root.php";
+require_once "database.php";
 
 //define the orm class
 	if (!class_exists('orm')) {
