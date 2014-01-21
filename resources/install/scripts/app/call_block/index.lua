@@ -70,8 +70,8 @@ This method causes the script to get its manadatory arguments directly from the 
 
 -- We have a single command letter
 -- Use session variables
-	logger("D", "NOTICE", "params default from session, count " .. string.format("%d", #argv[1]) .. " \n")
-	params["cmd"] = argv[1]
+	logger("D", "NOTICE", "params default from session, count " .. string.format("%d", #argv[2]) .. " \n")
+	params["cmd"] = argv[2]
 
 -- ensure that we have a fresh status on exit
 	session:setVariable("call_block", "")
