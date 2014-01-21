@@ -16,9 +16,9 @@
 	$text['label-name']['pt-pt'] = "Nome";
 	$text['label-name']['fr-fr'] = "Nom";
 
-	$text['label-Count']['en-us'] = "Count";
-	$text['label-Count']['pt-pt'] = "Contagem";
-	$text['label-Count']['fr-fr'] = "Décompte";
+	$text['label-count']['en-us'] = "Count";
+	$text['label-count']['pt-pt'] = "Contagem";
+	$text['label-count']['fr-fr'] = "Décompte";
 
 	$text['label-date-added']['en-us'] = "Date Added";
 	$text['label-date-added']['pt-pt'] = "Data adicionada";

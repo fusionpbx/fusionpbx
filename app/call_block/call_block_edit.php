@@ -321,14 +321,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$action = $pieces[0];
 	$extension = $pieces[2];
 	if ($action == "Reject") {
-		echo "	<option value='Reject' SELECTED >Reject</option>\n";
-	} else {
-		echo "   <option value='Reject' >Reject</option>\n";
+		echo "	<option value='Reject' SELECTED >".$text['label-reject']."</option>\n";
+		echo "   <option value='Busy' >".$text['label-busy']."</option>\n";
 	}
 	if ($action == "Busy") {
-		echo "	<option value='Busy' SELECTED >".$text['label-reject']."</option>\n";
-	} else {
-		echo "   <option value='Busy' >".$text['label-busy']."</option>\n";
+		echo "	<option value='Busy' SELECTED >".$text['label-busy']."</option>\n";
+		echo "   <option value='Reject' >".$text['label-reject']."</option>\n";
 	}
 	call_block_get_extensions($extension);
 	echo "	</select>\n";
@@ -346,16 +344,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='call_block_enabled'>\n";
 	echo "	<option value=''></option>\n";
 	if ($call_block_enabled == "true") { 
-		echo "	<option value='true' SELECTED >true</option>\n";
-	}
-	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true' SELECTED >".$text['label-true']."</option>\n";
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	if ($call_block_enabled == "false") { 
-		echo "	<option value='false' SELECTED >".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
+		echo "	<option value='false' SELECTED >".$text['label-false']."</option>\n";
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
