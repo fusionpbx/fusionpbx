@@ -3,7 +3,7 @@
 --set default variables
 	fax_retry_sleep = 30;
 	fax_retry_limit = 4;
-	fax_busy_limit = 3;
+	fax_busy_limit = 5;
 	api = freeswitch.API();
 
 -- show all channel variables
@@ -42,7 +42,7 @@
 	fax_busy_attempts = tonumber(env:getHeader("fax_busy_attempts"));
 
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
-	
+
 
 --set default values
 	if (not origination_caller_id_name) then
@@ -56,13 +56,13 @@
 	end
 	--we got a busy signal....  hack we should really check sip_term_cause
 	if (not fax_success) then
-		fax_success = 0;
+		fax_success = "0";
 		fax_result_code = 2;
 	end
 	
 	if (hangup_cause_q850 == "17") then
-		fax_success = 0;
-		fax_result_code=2;
+		fax_success = "0";
+		fax_result_code = 2;
 	end
 
 	if (not fax_result_text) then
@@ -73,6 +73,9 @@
 --for email
 	email_address = env:getHeader("mailto_address");
 	--email_address = api:execute("system", "/bin/echo -n "..email_address.." | /bin/sed -e s/\,/\\\\,/g");
+	--if (not email_address) then
+	--	email_address = '';
+	--end
 	email_address = email_address:gsub(",", "\\,");
 	from_address = env:getHeader("mailfrom_address");
 	if (from_address == null) then
