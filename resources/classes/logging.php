@@ -69,6 +69,7 @@ class Logging
 
 		if ($log_file) {
 			$this->lfile($log_file);
+			$this->lopen();
 		}
 		else {
 			$this->lopen();
