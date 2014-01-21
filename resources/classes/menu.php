@@ -122,7 +122,7 @@
 												//echo $sql."<br />\n";
 											}
 											else {
-												$db->exec(utf8_encode(check_sql($sql)));
+												$db->exec(check_sql($sql));
 											}
 											unset($sql);
 
@@ -145,7 +145,7 @@
 												$sql .= "'".$menu_language."', ";
 												$sql .= "'".check_str($menu_item_title)."' ";
 												$sql .= ")";
-												$db->exec(utf8_encode(check_sql($sql)));
+												$db->exec(check_sql($sql));
 												unset($sql);
 											}
 									}
@@ -178,7 +178,7 @@
 									$sql .= "'".$sub_row['uuid']."', ";
 									$sql .= "'".$group."' ";
 									$sql .= ")";
-									$db->exec(utf8_encode(check_sql($sql)));
+									$db->exec(check_sql($sql));
 									unset($sql);
 								}
 							}
@@ -267,7 +267,7 @@
 												//echo $sql."<br />\n";
 											}
 											else {
-												$db->exec(utf8_encode(check_sql($sql)));
+												$db->exec(check_sql($sql));
 											}
 											unset($sql);
 
@@ -290,7 +290,7 @@
 												$sql .= "'".$menu_language."', ";
 												$sql .= "'".check_str($menu_item_title)."' ";
 												$sql .= ")";
-												$db->exec(utf8_encode(check_sql($sql)));
+												$db->exec(check_sql($sql));
 												unset($sql);
 											}
 									}
@@ -328,7 +328,7 @@
 										$sql .= "'".$menu['name']."', ";
 										$sql .= "'".$group."' ";
 										$sql .= ");";
-										$db->exec(utf8_encode(check_sql($sql)));
+										$db->exec(check_sql($sql));
 										unset($sql);
 									}
 								}
@@ -367,7 +367,7 @@
 									$sql .= "'".$sub_row['uuid']."', ";
 									$sql .= "'".$group."' ";
 									$sql .= ")";
-									$db->exec(utf8_encode(check_sql($sql)));
+									$db->exec(check_sql($sql));
 									unset($sql);
 								}
 							}
