@@ -43,6 +43,7 @@ $vars = <<<EOD
 {"var_name":"default_areacode","var_value":"208","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"uk-ring","var_value":"%(400,200,400,450);%(400,2200,400,450)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"us-ring","var_value":"%(2000, 4000, 440.0, 480.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
+{"var_name":"pt-ring","var_value":"%(1000, 5000, 400.0, 0.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"fr-ring","var_value":"%(1500, 3500, 440.0, 0.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"rs-ring","var_value":"%(1000, 4000, 425.0, 0.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"bong-ring","var_value":"v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)","var_cat":"Defaults","var_enabled":"true","var_description":""},

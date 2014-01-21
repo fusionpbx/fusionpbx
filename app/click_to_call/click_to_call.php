@@ -99,6 +99,9 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 			case "fr-ring":
 				$ringback_value = "\'%(1500,3500,440.0,0.0)\'";
 				break;
+			case "pt-ring":
+				$ringback_value = "\'%(1000,5000,400.0,0.0)\'";
+				break;
 			case "rs-ring":
 				$ringback_value = "\'%(1000,4000,425.0,0.0)\'";
 				break;
@@ -362,6 +365,12 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	}
 	else {
 		echo "    <option value='fr-ring'>".$text['opt-frring']."</option>\n";
+	}
+	if ($ringback == "pt-ring") {
+		echo "    <option value='pt-ring' selected='selected'>".$text['opt-ptring']."</option>\n";
+	}
+	else {
+		echo "    <option value='pt-ring'>".$text['opt-ptring']."</option>\n";
 	}
 	if ($ringback == "uk-ring") { 
 		echo "    <option value='uk-ring' selected='selected'>".$text['opt-ukring']."</option>\n";
