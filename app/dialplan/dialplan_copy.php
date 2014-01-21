@@ -27,6 +27,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "resources/paging.php";
+require_once "resources/classes/logging.php";
 if (permission_exists('dialplan_add')
 	|| permission_exists('inbound_route_add')
 	|| permission_exists('outbound_route_add')
@@ -45,9 +46,14 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+	//logger
+	$log = new Logging();
+
 //set the http get/post variable(s) to a php variable
 	if (isset($_REQUEST["id"])) {
 		$dialplan_uuid = check_str($_REQUEST["id"]);
+		$log->log("debug", "isset id.");
+		$log->log("debug", $dialplan_uuid);
 	}
 
 //get the dialplan data
@@ -55,9 +61,11 @@ else {
 	$sql = "select * from v_dialplans ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+	$log->log("debug", check_sql($sql));
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$log->log("debug", $result);
 	foreach ($result as &$row) {
 		$database_dialplan_uuid = $row["dialplan_uuid"];
 		$app_uuid = $row["app_uuid"];

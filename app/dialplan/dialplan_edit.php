@@ -27,6 +27,7 @@ include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "resources/paging.php";
+require_once "resources/classes/logging.php";
 if (permission_exists('dialplan_add')
 	|| permission_exists('dialplan_edit')
 	|| permission_exists('inbound_route_add')
@@ -49,6 +50,9 @@ else {
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
+
+//logger
+	$log = new Logging();
 
 //set the action as an add or an update
 	if (isset($_REQUEST["id"])) {
@@ -309,7 +313,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$row['dialplan_uuid']."';}\" value='".$text['button-copy']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$dialplan_uuid."';}\" value='".$text['button-copy']."'>\n";
 	if (strlen($app_uuid) > 0) {
 		echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php?app_uuid=$app_uuid'\" value='".$text['button-back']."'>\n";
 	}
