@@ -42,20 +42,26 @@ else {
 	$agent = check_str($_GET['agent']);
 
 //get the vendor
-	if (substr($agent, 0, 6) == "Aastra") {
+	if (preg_replace('/^.*?(aastra).*$/i', '$1', strtolower($agent)) == "aastra") {
 		$vendor = "aastra";
 	}
-	if (substr($agent, 0, 9) == "Cisco/SPA") {
+	if (preg_replace('/^.*?(cisco).*$/i', '$1', strtolower($agent)) == "cisco") {
 		$vendor = "cisco";
 	}
-	if (substr($agent, 0,11) == "Grandstream") {
+	if (preg_replace('/^.*?(grandstream).*$/i', '$1', strtolower($agent)) == "grandstream") {
 		$vendor = "grandstream";
 	}
-	if (substr($agent, 0, 10) == "PolycomVVX") {
+	if (preg_replace('/^.*?(polycom).*$/i', '$1', strtolower($agent)) == "polycom") {
 		$vendor = "polycom";
 	}
-	if (substr($agent, 0, 7) == "Yealink") {
+	if (preg_replace('/^.*?(yealink).*$/i', '$1', strtolower($agent)) == "yealink") {
 		$vendor = "yealink";
+	}
+	if (preg_replace('/^.*?(vp530p).*$/i', '$1', strtolower($agent)) == "vp530p") {
+		$vendor = "yealink";
+	}
+	if (preg_replace('/^.*?(snom).*$/i', '$1', strtolower($agent)) == "snom") {
+		$vendor = "snom";
 	}
 
 //create the event socket connection
