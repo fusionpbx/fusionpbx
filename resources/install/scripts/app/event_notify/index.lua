@@ -67,9 +67,15 @@
 			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 	end
+--snom
+	if (vendor == "snom") then
+		if (command == "reboot") then
+			event:addHeader('event-string', 'check-sync;reboot=true');
+		end
+	end
 
 --send the event
 	event:fire();
 
 --log the event
-	freeswitch.consoleLog("notice", "[event_notify] command "..command.." "..user.."@"..domain.." vendor "..vendor.."\n");
+	freeswitch.consoleLog("notice", "[event_notify] command "..command.." "..user.."@"..domain.." vendor "..tostring(vendor).."\n");
