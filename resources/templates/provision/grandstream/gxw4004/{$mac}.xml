@@ -4,7 +4,10 @@
 
 	<!-- Advanced Settings -->
 		<!-- Admin password for web interface,String Max Length: 30; between ascii values 33 and 126, Mandatory -->
-		<P2>admin</P2>
+		<P2>{$admin_password}</P2>
+
+		<!-- End User Password, MaxLength 32 -->
+		<P196>{$user_password}</P196>
 
 	<!-- Firmware Upgrade -->
 		<!-- Firmware Upgrade and Privisioning. 0 - TFTP Upgrade, 1 - HTTP Upgrade, 2 - HTTPS Upgrade., Number: 0 to 2. Mandatory -->

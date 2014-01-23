@@ -4,13 +4,10 @@
 
 <!-- Configuration template for GXP2000/GXP2020/GXP1200/GXP2010/GXP280/GXP285 firmware version 1.2.5.3 -->
 
-
-
 <!-- Advanced/System-wide Options -->
 
-
 <!--  Admin password for web interface -->
-<P2>admin</P2>
+<P2>{$admin_password}</P2>
 
 <!--  G723 rate. 0 - 6.3kbps encoding rate, 1 - 5.3kbps encoding rate -->
 <P49>0</P49>
@@ -1577,7 +1574,7 @@
 
 
 <!--  End User Password -->
-<P196>123</P196>
+<P196>{$user_password}</P196>
 
 <!--  DHCP support. 0 - yes, 1 - no -->
 <!-- P8 = 0 -->
@@ -3360,190 +3357,5 @@
 <!--  UserID  -->
 <P6699></P6699>
 
-<!--  EXT Key 100  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6100></P6100>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6300></P6300>
-
-<!--  Name  -->
-<P6500></P6500>
-
-<!--  UserID  -->
-<P6700></P6700>
-
-<!--  EXT Key 101  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6101></P6101>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6301></P6301>
-
-<!--  Name  -->
-<P6501></P6501>
-
-<!--  UserID  -->
-<P6701></P6701>
-
-<!--  EXT Key 102  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6102></P6102>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6302></P6302>
-
-<!--  Name  -->
-<P6502></P6502>
-
-<!--  UserID  -->
-<P6702></P6702>
-
-<!--  EXT Key 103  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6103></P6103>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6303></P6303>
-
-<!--  Name  -->
-<P6503></P6503>
-
-<!--  UserID  -->
-<P6703></P6703>
-
-<!--  EXT Key 104  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6104></P6104>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6304></P6304>
-
-<!--  Name  -->
-<P6504></P6504>  
-
-<!--  UserID  -->
-<P6704></P6704>
-
-<!--  EXT Key 105  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6105></P6105>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6305></P6305>
-
-<!--  Name  -->
-<P6505></P6505>
-
-<!--  UserID  -->
-<P6705></P6705>
-
-<!--  EXT Key 106  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6106></P6106>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6306></P6306>
-
-<!--  Name  -->
-<P6506></P6506>
-
-<!--  UserID  -->
-<P6706></P6706>
-
-<!--  EXT Key 107  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6107></P6107>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6307></P6307>
-
-<!--  Name  -->
-<P6507></P6507>
-
-<!--  UserID  -->
-<P6707></P6707>
-
-<!--  EXT Key 108  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6108></P6108>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6308></P6308>
-
-<!--  Name  -->
-<P6508></P6508>
-
-<!--  UserID  -->
-<P6708></P6708>
-
-<!--  EXT Key 109  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6109></P6109>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4  -->
-<P6309></P6309>
-
-<!--  Name  -->
-<P6509></P6509>
-
-<!--  UserID  -->
-<P6709></P6709>
-
-<!--  EXT Key 110  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6110></P6110>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6310></P6310>
-
-<!--  Name  -->
-<P6510></P6510>
-
-<!--  UserID  -->
-<P6710></P6710>
-
-<!--  EXT Key 111  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6111></P6111>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6311></P6311>
-
-<!--  Name  -->
-<P6511></P6511>
-
-<!--  UserID  -->
-<P6711></P6711>
-
-<!--  EXT Key 112  -->
-
-<!--  Key Mode. 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
-<P6112></P6112>
-
-<!--  Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4   -->
-<P6312></P6312>
-
-<!--  Name  -->
-<P6512></P6512>
-
-<!--  UserID  -->
-<P6712></P6712>
-
-
 </config>
 </gs_provision>
-
-

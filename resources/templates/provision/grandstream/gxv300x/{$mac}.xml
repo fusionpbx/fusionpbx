@@ -4,7 +4,9 @@
     <!-- Configuration template for GXV-300x firmware version 1.2.3.7 -->
     <!-- Advanced/System-wide Options -->
     <!-- Admin password for web interface, max. length is 30 -->
-    <P2>admin</P2>
+    <P2>{$admin_password}</P2>
+    <!-- End User Password --> 
+    <P196>{$user_password}</P196>
     <!-- G.723 rate: 0 - 6.3kbps encoding rate,  1 - 5.3kbps encoding rate -->
     <P49></P49>
     <!-- Silence Suppression. 0 - no, 1 - yes -->

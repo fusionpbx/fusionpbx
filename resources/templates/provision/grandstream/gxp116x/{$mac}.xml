@@ -757,11 +757,11 @@
 
 <!--  End User Password -->   
 <!--  String: a-z, A-Z, 0-9 -->   
-<P196></P196>
+<P196>{$user_password}</P196>
 
 <!--  Admin password for web interface -->   
 <!--  String: a-z, A-Z, 0-9 -->   
-<P2>admin</P2>
+<P2>{$admin_password}</P2>
 
 
 

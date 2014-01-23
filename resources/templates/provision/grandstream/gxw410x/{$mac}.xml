@@ -4,7 +4,9 @@
     <!-- Configuration template for GXW410x version 1.3.4.13 -->
     <!-- Advanced/System-wide Options -->
     <!--  Admin password for web interface, max. length is 30 -->
-    <P2>admin</P2>
+    <P2>{$admin_password}</P2>
+    <!-- End User Password, MaxLength 32 -->
+    <P196>{$user_password}</P196>
     <!--  G.723 rate: 0 - 6.3kbps encoding rate,  1 - 5.3kbps encoding rate -->
     <P49>0</P49>
     <!--  Voice Frames per TX (up to 10/20/32/64 frames for G711/G726/G723/other codecs respectively) -->
