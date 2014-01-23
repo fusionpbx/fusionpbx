@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <gs_provision version="1">
 	<config version="1">
-		
+
 <!-- Configuration template for GXW42XX firmware version 1.0.4.7 -->                                                                 
 
 <!-- Change Log -->                                                                                             
@@ -20,6 +20,11 @@
 
 <!-- Maintenance-Network setting --> 
 
+<!-- Admin Password for web interface, MaxLength 32 -->
+<P2>{$admin_password}</P2>
+
+<!-- End User Password, MaxLength 32 -->
+<P196>{$user_password}</P196>
 
 <!-- IP Address Mode. 0 - DHCP, 1 - Static IP, 2 - PPPoE --> 
 <!-- Number: 0,1,2 --> 

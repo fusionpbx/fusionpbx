@@ -1223,8 +1223,11 @@
 <!-- Web Port: HTTP default is 80 and HTTPS default is 443 -->       
 <P901>80</P901> 
 
-<!-- Admin password for web interface, max. length is 32 -->     
-<P2>admin</P2> 
+<!-- Admin password for web interface, max. length is 30 -->
+<P2>{$admin_password}</P2>
+
+<!-- End User Password --> 
+<P196>{$user_password}</P196>
 
 <!-- End User Password, MaxLength 32 -->     
 <!-- P196 = 123 -->     

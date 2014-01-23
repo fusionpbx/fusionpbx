@@ -3182,10 +3182,10 @@ VNumber: 0, 1, 2. -->
 <P901>80</P901>
 
 <!-- Admin password for web interface --> 
-<P2>admin</P2>
+<P2>{$admin_password}</P2>
 
 <!-- End User Password --> 
-<P196>123</P196>
+<P196>{$user_password}</P196>
 
 <!--  Maintenance - Upgrade    -->                                       
 
