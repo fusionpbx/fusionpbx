@@ -77,7 +77,7 @@ require_once "database.php";
 				return $this->result;
 			}
 
-			public function find($array) {
+			public function find() {
 
 				//connect to the database if needed
 					if (!$this->db) {

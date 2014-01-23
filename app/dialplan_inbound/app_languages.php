@@ -7,7 +7,7 @@
 
 	$text['description-dialplan-inbound-add']['en-us'] = "The public dialplan is used to route incoming calls to destinations based on one or more conditions and context. It can send incoming calls to an auto attendant, huntgroup, extension, external number, or a script.";
 	$text['description-dialplan-inbound-add']['pt-pt'] = "O dialplan público é usado para encaminhar chamadas de entrada para destinos baseados em uma ou mais condições. As chamadas de entrada podem ser enviadas para um atendimento automático, um huntgroup, uma extensão, um número externo, ou um script.";
-	$text['description-dialplan-inbound-add']['fr-fr'] = "Le plan de numérotation publique est utilisé pour acheminer les appels aux destinations en se basant sur une ou plusieurs conditions ou contextes. Les appels peuvent être acheminé au opératrices auto, groupements, extensions, numéro externe ou script.";
+	$text['description-dialplan-inbound-add']['fr-fr'] = "Le plan de numérotation public est utilisé pour acheminer les appels aux destinations en se basant sur une ou plusieurs conditions ou contextes. Les appels peuvent être acheminé au opératrices auto, groupements, extensions, numéro externe ou script.";
 
 	$text['label-access-denied']['en-us'] = "access denied";
 	$text['label-access-denied']['pt-pt'] = "Acesso negado";

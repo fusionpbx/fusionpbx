@@ -53,7 +53,7 @@
 
 	$text['label-category']['en-us'] = "Category";
 	$text['label-category']['pt-pt'] = "Categoria";
-	$text['label-category']['fr-fr'] = "Categorie";
+	$text['label-category']['fr-fr'] = "Catégorie";
 
 	$text['opt-default']['en-us'] = "Default";
 	$text['opt-default']['pt-pt'] = "Omissão";
