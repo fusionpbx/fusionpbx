@@ -44,7 +44,7 @@
 	$text['label-value']['fr-fr'] = "Valeur";
 	$text['label-category']['en-us'] = "Category";
 	$text['label-category']['pt-pt'] = "Categoria";
-	$text['label-category']['fr-fr'] = "Cateégorie";
+	$text['label-category']['fr-fr'] = "Catégorie";
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['pt-pt'] = "Activado";
 	$text['label-enabled']['fr-fr'] = "Actif";

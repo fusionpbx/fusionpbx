@@ -60,7 +60,7 @@
 
 		$text['description-range']['en-us'] = "Enter the number of extensions to create. Increments each extension by 1.";
 		$text['description-range']['pt-pt'] = "Introduza o número de extensões a criar. Incrementa 1 a cada extensão.";
-		$text['description-range']['fr-fr'] = "Choisir le nombre d'extensions à créer. Leur numéro s'incrémentent unitairement.";
+		$text['description-range']['fr-fr'] = "Choisir le nombre d'extensions à créer. Le numéro d'extension s'incrémente unitairement.";
 
 		$text['checkbox-range']['en-us'] = "Auto-generate user with extension as login name";
 		$text['checkbox-range']['pt-pt'] = "Geração Automática do utilizador com a extensão como nome de login";
@@ -108,7 +108,7 @@
 
 		$text['label-outbound_caller_id_name']['en-us'] = "Outbound Caller ID Name";
 		$text['label-outbound_caller_id_name']['pt-pt'] = "Nome de Saída do Originador";
-		$text['label-outbound_caller_id_name']['fr-fr'] = "Nom publique";
+		$text['label-outbound_caller_id_name']['fr-fr'] = "Nom public";
 
 		$text['description-outbound_caller_id_name-select']['en-us'] = "Select the external (public) caller ID name.";
 		$text['description-outbound_caller_id_name-select']['pt-pt'] = "Escolha o nome externo (público) do originador.";
@@ -120,7 +120,7 @@
 
 		$text['label-outbound_caller_id_number']['en-us'] = "Outbound Caller ID Number";
 		$text['label-outbound_caller_id_number']['pt-pt'] = "Número de Saída do Originador";
-		$text['label-outbound_caller_id_number']['fr-fr'] = "Numéro publique";
+		$text['label-outbound_caller_id_number']['fr-fr'] = "Numéro public";
 
 		$text['description-outbound_caller_id_number-select']['en-us'] = "Select the external (public) caller ID number.";
 		$text['description-outbound_caller_id_number-select']['pt-pt'] = "Escolha o número externo (público) do originador.";

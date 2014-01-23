@@ -12,8 +12,8 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Les dialpans sortants attribuent un appel en fonction d'une ou plusieurs conditions. Quand les conditions sont remplies, l'appel est dirigés vers la passarelle séléctionée.";
-		$apps[$x]['description']['fr-ca'] = "Les dialpants sortants ont une ou plus conditions qui devent répondre.  Quand les conditions son tout répondres, l'appel est dirigers vers la passarelle séléctioné.";
+		$apps[$x]['description']['fr-fr'] = "Les routes sortantes attribuent un appel en fonction d'une ou plusieurs conditions. Quand les conditions sont remplies, l'appel est dirigés vers la passerelle séléctionée.";
+		$apps[$x]['description']['fr-ca'] = "Les routes sortantes ont une ou plus conditions qui devent répondre.  Quand les conditions son tout répondres, l'appel est dirigers vers la passarelle séléctioné.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Dialplans de saída tem uma ou mais condições que são compatíveis com os atributos de uma chamada. Quando uma chamada coincide com as condições da chamada é então encaminhado para o gateway.";
 		$apps[$x]['description']['pt-br'] = "";
@@ -24,7 +24,7 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Dialplan Sortants";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Routes Sortantes";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Rotas de Saida";

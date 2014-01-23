@@ -93,11 +93,11 @@
 
 	$text['label-phone']['en-us'] = "Phone Number List";
 	$text['label-phone']['pt-pt'] = "Lista de Números de Telefone";
-	$text['label-phone']['fr-fr'] = "Liste de Numéros de téléphone.";
+	$text['label-phone']['fr-fr'] = "Liste de Numéros de téléphone";
 
 	$text['description-phone']['en-us'] = "Optional, set a list of phone numbers one per row in the following format: 123-123-1234|Last Name, First Name";
 	$text['description-phone']['pt-pt'] = "Opcional, definir uma lista de números de telefone, um por linha, no seguinte formato: 123-123-1234 | Apelido, Primeiro Nome";
-	$text['description-phone']['fr-fr'] = "Optionnél, Insérer une liste de numéros de téléphone, un par ligne, dans le format suivant ; 0123456789 | Nom, Prénom";
+	$text['description-phone']['fr-fr'] = "Optionnel, Insérer une liste de numéros de téléphone, un par ligne, dans le format suivant ; 0123456789 | Nom, Prénom";
 
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['pt-pt'] = "Descrição";

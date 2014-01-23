@@ -14,7 +14,7 @@
 
 	$text['description-gateway-edit']['en-us'] = "Defines a connections to a SIP Provider or another SIP server.";
 	$text['description-gateway-edit']['pt-pt'] = "Define uma conexão a um provedor SIP ou outro servidor SIP.";
-	$text['description-gateway-edit']['fr-fr'] = "Défini une connexion à un fourniiser SIP ou un autre serveur SIP.";
+	$text['description-gateway-edit']['fr-fr'] = "Défini une connexion à un fournisseur SIP ou un autre serveur SIP.";
 
 	$text['label-gateway']['en-us'] = "Gateway";
 	$text['label-gateway']['pt-pt'] = "Gateway";
@@ -58,7 +58,7 @@
 
 	$text['label-realm']['en-us'] = "Realm";
 	$text['label-realm']['pt-pt'] = "Realm";
-	$text['label-realm']['pt-pt'] = "Royaume";
+	$text['label-realm']['fr-fr'] = "Royaume";
 
 	$text['description-realm']['en-us'] = "Enter the realm here.";
 	$text['description-realm']['pt-pt'] = "Introduza o realm aqui.";

@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Renvoi d'appel, suis-moi et ne pas deranger.";
+		$apps[$x]['description']['fr-fr'] = "Renvoi d'appel, Follow Me et ne pas deranger.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Desvio de Chamadas, Seguir-me e Não Perturbar.";

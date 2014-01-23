@@ -80,12 +80,20 @@
 	$text['label-shout-decoder']['fr-fr'] = "Décodeur Mod Shout (MP3):";
 	$text['description-shout-decoder']['en-us'] = "Ender the Decoder. default: i386";
 	$text['description-shout-decoder']['pt-pt'] = "Tipo de descodificador. omissão: i386";
-	$text['description-shout-decoder']['fr-fr'] = "Type de Decoder. défaut: i386";
+	$text['description-shout-decoder']['fr-fr'] = "Type de Décodeur. défaut: i386";
 	$text['label-shout-volume']['en-us'] = "Mod Shout Volume:";
 	$text['label-shout-volume']['pt-pt'] = "Volume do Mod Shout:";
 	$text['label-shout-volume']['fr-fr'] = "Mod Shout Volume:";
 	$text['description-shout-volume']['en-us'] = "Enter Mod Shout Volume.";
 	$text['description-shout-volume']['pt-pt'] = "Introduza o volume do Mod Shout.";
 	$text['description-shout-volume']['fr-fr'] = "Choisir l'amplification du volume pour Mod Shout.";
+
+	$text['button-back']['en-us'] = "Back";
+	$text['button-back']['pt-pt'] = "Voltar";
+	$text['button-back']['fr-fr'] = "Retour";
+
+	$text['button-save']['en-us'] = "Save";
+	$text['button-save']['pt-pt'] = "Guardar";
+	$text['button-save']['fr-fr'] = "Sauvegarder";
 
 ?>
