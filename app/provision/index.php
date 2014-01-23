@@ -424,22 +424,23 @@ require_once "resources/require.php";
 	//set the variables
 		foreach($result as $row) {
 			//set the variables
+				$device_key_category = $row['device_key_category'];
 				$device_key_id = $row['device_key_id']; //1
 				$device_key_type = $row['device_key_type']; //line
 				$device_key_value = $row['device_key_value']; //1
 				$device_key_label = $row['device_key_label']; //label
 			//assign the variables
-				if (strlen($device_key_type) == 0) {
+				if (strlen($device_key_category) == 0) {
 					$view->assign("key_id_".$device_key_id, $device_key_id);
 					$view->assign("key_type_".$device_key_id, $device_key_type);
 					$view->assign("key_value_".$device_key_id, $device_key_value);
 					$view->assign("key_label_".$device_key_id, $device_key_label);
 				}
 				else {
-					$view->assign($device_key_type."_key_id_".$device_key_id, $device_key_id);
-					$view->assign($device_key_type."_key_type_".$device_key_id, $device_key_type);
-					$view->assign($device_key_type."_key_value_".$device_key_id, $device_key_value);
-					$view->assign($device_key_type."_key_label_".$device_key_id, $device_key_label);
+					$view->assign($device_key_category."_key_id_".$device_key_id, $device_key_id);
+					$view->assign($device_key_category."_key_type_".$device_key_id, $device_key_type);
+					$view->assign($device_key_category."_key_value_".$device_key_id, $device_key_value);
+					$view->assign($device_key_category."_key_label_".$device_key_id, $device_key_label);
 				}
 		}
 		unset ($prep_statement);
