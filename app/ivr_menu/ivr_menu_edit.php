@@ -285,6 +285,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
+
+				//redirect the user
+				require_once "resources/header.php";
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=ivr_menu_edit.php?id=$ivr_menu_uuid\">\n";
+				echo "<div align='center'>\n";
+				echo $text['message-update']."\n";
+				echo "</div>\n";
+				require_once "resources/footer.php";
+				return;
+
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
