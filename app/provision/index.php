@@ -247,9 +247,7 @@ require_once "resources/require.php";
 //get the device settings table in the provision category and update the provision array
 	$sql = "SELECT * FROM v_device_settings ";
 	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-	$sql .= "AND device_setting_category = 'provision' ";
 	$sql .= "AND device_setting_enabled = 'true' ";
-	$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
