@@ -26,6 +26,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/classes/logging.php";
 if (permission_exists('ivr_menu_add') || permission_exists('ivr_menu_edit')) {
 	//access granted
 }
@@ -39,6 +40,10 @@ else {
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
+
+	$log = new Logging();
+	$log->log("debug", "passed validation, line 45");
+	$log->log("debug", check_str($_POST["ivr_menu_uuid"]));
 
 //function to show the list of sound files
 	function recur_sounds_dir($dir) {
@@ -658,22 +663,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "				</tr>\n";
 		}
 	}
-	unset($sql, $result);
+unset($sql, $result);
 
-	if (strlen($ivr_menu_uuid) > 0) { $options = array(0); }
-	if (strlen($ivr_menu_uuid) == 0) { $options = array(0,1,2,3,4); }
-	foreach ($options as $x) {
+for ($c = 0; $c < 1; $c++) {
 		echo "				<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_digits]' maxlength='255' value='$ivr_menu_option_digits'>\n";
+		echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_digits]' maxlength='255' value='$ivr_menu_option_digits'>\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' nowrap='nowrap'>\n";
 		$tmp_select_value = '';
-		switch_select_destination("ivr", $ivr_menu_options_label, 'ivr_menu_options['.$x.'][ivr_menu_option_param]', $tmp_select_value, "width:175px", $ivr_menu_option_action);
+		switch_select_destination("ivr", $ivr_menu_options_label, 'ivr_menu_options['.$c.'][ivr_menu_option_param]', $tmp_select_value, "width:175px", $ivr_menu_option_action);
 		unset($tmp_select_value);
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select name='ivr_menu_options[".$x."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
+		echo "	<select name='ivr_menu_options[".$c."][ivr_menu_option_order]' class='formfld' style='width:55px'>\n";
 		//echo "	<option></option>\n";
 		if (strlen(htmlspecialchars($ivr_menu_option_order))> 0) {
 			echo "	<option selected='yes' value='".htmlspecialchars($ivr_menu_option_order)."'>".htmlspecialchars($ivr_menu_option_order)."</option>\n";
@@ -694,7 +697,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	</select>\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_options[".$x."][ivr_menu_option_description]' maxlength='255' value=\"$ivr_menu_option_description\">\n";
+		echo "	<input class='formfld' style='width:100px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_description]' maxlength='255' value=\"$ivr_menu_option_description\">\n";
 		echo "</td>\n";
 
 		echo "					<td>\n";
