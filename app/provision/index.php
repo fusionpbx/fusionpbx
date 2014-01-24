@@ -61,21 +61,6 @@ require_once "resources/require.php";
 		exit;
 	}
 
-//if password was defined in the system -> variables page then require the password.
-	if (strlen($provision['password']) > 0) {
-		//deny access if the password doesn't match
-			if ($provision['password'] != check_str($_REQUEST['password'])) {
-				//log the failed auth attempt to the system, to be available for fail2ban.
-				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
-				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
-				closelog();
-
-				usleep(rand(1000000,3500000));//1-3.5 seconds.
-				echo "access denied";
-				return;
-			}
-	}
-
 //send a request to a remote server to validate the MAC address and secret
 	if (strlen($_SERVER['auth_server']) > 0) {
 		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
@@ -269,6 +254,45 @@ require_once "resources/require.php";
 			echo "access denied";
 			exit;
 		}
+	}
+
+//http authentication
+	//http://www.php.net/manual/en/features.http-auth.php
+	if (strlen($provision["http_username"]) > 0 && strlen($provision["http_password"]) > 0) {
+		if (!isset($_SERVER['PHP_AUTH_USER'])) {
+			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
+			header('HTTP/1.0 401 Unauthorized');
+			header("Content-Type: text/plain");
+			echo 'Authorization Required';
+			exit;
+		} else {
+			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_password"]) {
+				//authorized
+			}
+			else {
+				//access denied
+				header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
+				unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
+				usleep(rand(1000000,3000000));//1-3 seconds.
+				echo 'Authorization Required';
+				exit;
+			}
+		}
+	}
+
+//if password was defined in the system -> variables page then require the password.
+	if (strlen($provision['password']) > 0) {
+		//deny access if the password doesn't match
+			if ($provision['password'] != check_str($_REQUEST['password'])) {
+				//log the failed auth attempt to the system, to be available for fail2ban.
+				openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
+				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
+				closelog();
+
+				usleep(rand(1000000,3500000));//1-3.5 seconds.
+				echo "access denied";
+				return;
+			}
 	}
 
 //set the template directory
