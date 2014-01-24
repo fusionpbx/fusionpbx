@@ -289,7 +289,7 @@ require_once "resources/require.php";
 				syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 				closelog();
 
-				usleep(rand(1000000,3500000));//1-3.5 seconds.
+				usleep(rand(1000000,3000000));//1-3 seconds.
 				echo "access denied";
 				return;
 			}
