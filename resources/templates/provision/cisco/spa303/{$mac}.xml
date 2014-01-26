@@ -1628,7 +1628,7 @@
 <!-- General -->
 <Station_Name ua="na">{$display_name_1}</Station_Name>
 <Station_Display_Name ua="na"></Station_Display_Name>
-<Voice_Mail_Number ua="na"></Voice_Mail_Number>
+<Voice_Mail_Number ua="na">*97</Voice_Mail_Number>
 <Text_Logo ua="na"></Text_Logo>
 <BMP_Picture_Download_URL ua="na"></BMP_Picture_Download_URL>
 <Select_Logo ua="na"></Select_Logo> <!-- options: Default/BMP Picture/Text Logo/None -->
@@ -1638,44 +1638,21 @@
 <Screen_Saver_Wait ua="rw">300</Screen_Saver_Wait>
 <Screen_Saver_Icon ua="rw">Background Picture</Screen_Saver_Icon> <!-- options: StationTime/Lock/Phone/DateTime/Background Picture -->
 
-<!-- Phone/Line_Key_1 -->
-{if $key_type_1 == 'line'}
-	<Extension_1_ group="Phone/Line_Key_1">{$key_value_1}</Extension_1_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-	<Short_Name_1_ group="Phone/Line_Key_1">{$key_label_1}</Short_Name_1_>
-	<Share_Call_Appearance_1_ group="Phone/Line_Key_1">private</Share_Call_Appearance_1_> <!-- options: private/shared -->
-	<Extended_Function_1_ group="Phone/Line_Key_1"/>
+{foreach $keys as $row}
+{if $row.device_key_category == "line"}
+<!-- Phone/Line_Key_{$row.device_key_id} -->
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}"/>
 {else}
-	<Extension_1_ group="Phone/Line_Key_1">Disabled</Extension_1_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-	<Short_Name_1_ group="Phone/Line_Key_1">{$key_label_1}</Short_Name_1_>
-	<Share_Call_Appearance_1_ group="Phone/Line_Key_1">private</Share_Call_Appearance_1_> <!-- options: private/shared -->
-	<Extended_Function_1_ group="Phone/Line_Key_1">{$key_value_1}</Extended_Function_1_>
+<Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">Disabled</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
+<Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
+<Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
+<Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
 {/if}
 
-<!-- Phone/Line_Key_2 -->
-{if $key_type_2 == 'line'}
-	<Extension_2_ group="Phone/Line_Key_2">{$key_value_2}</Extension_2_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-	<Short_Name_2_ group="Phone/Line_Key_2">{$key_label_2}</Short_Name_2_>
-	<Share_Call_Appearance_2_ group="Phone/Line_Key_2">private</Share_Call_Appearance_2_> <!-- options: private/shared -->
-	<Extended_Function_2_ group="Phone/Line_Key_2"/>
-{else}
-	<Extension_2_ group="Phone/Line_Key_2">Disabled</Extension_2_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-	<Short_Name_2_ group="Phone/Line_Key_2">{$key_label_2}</Short_Name_2_>
-	<Share_Call_Appearance_2_ group="Phone/Line_Key_2">private</Share_Call_Appearance_2_> <!-- options: private/shared -->
-	<Extended_Function_2_ group="Phone/Line_Key_2">{$key_value_2}</Extended_Function_2_>
-{/if}
-
-<!-- Phone/Line_Key_3 -->
-{if $key_type_3 == 'line'}
-	<Extension_3_ group="Phone/Line_Key_3">{$key_value_3}</Extension_3_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-	<Short_Name_3_ group="Phone/Line_Key_3">{$key_label_3}</Short_Name_3_>
-	<Share_Call_Appearance_3_ group="Phone/Line_Key_3">private</Share_Call_Appearance_3_> <!-- options: private/shared -->
-	<Extended_Function_3_ group="Phone/Line_Key_3"/>
-{else}
-	<Extension_3_ group="Phone/Line_Key_3">Disabled</Extension_3_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
-	<Short_Name_3_ group="Phone/Line_Key_3">{$key_label_3}</Short_Name_3_>
-	<Share_Call_Appearance_3_ group="Phone/Line_Key_3">private</Share_Call_Appearance_3_> <!-- options: private/shared -->
-	<Extended_Function_3_ group="Phone/Line_Key_3">{$key_value_3}</Extended_Function_3_>
-{/if}
+{/foreach}
 
 <!-- Miscellaneous Line Key Settings -->
 <Line_ID_Mapping ua="na">Vertical First</Line_ID_Mapping> <!-- options: Horizontal First/Vertical First -->
@@ -1920,10 +1897,10 @@
 <!-- Miscellaneous -->
 <Set_Local_Date__mm_dd_ ua="na"></Set_Local_Date__mm_dd_>
 <Set_Local_Time__HH_mm_ ua="na"></Set_Local_Time__HH_mm_>
-<Time_Zone ua="na">GMT{$v_time_zone_offset}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
+<Time_Zone ua="na">{$time_zone}</Time_Zone> <!-- options: GMT-12:00/GMT-11:00/GMT-10:00/GMT-09:00/GMT-08:00/GMT-07:00/GMT-06:00/GMT-05:00/GMT-04:00/GMT-03:30/GMT-03:00/GMT-02:00/GMT-01:00/GMT/GMT+01:00/GMT+02:00/GMT+03:00/GMT+03:30/GMT+04:00/GMT+05:00/GMT+05:30/GMT+05:45/GMT+06:00/GMT+06:30/GMT+07:00/GMT+08:00/GMT+09:00/GMT+09:30/GMT+10:00/GMT+11:00/GMT+12:00/GMT+13:00 -->
 <Time_Offset__HH_mm_ ua="na"></Time_Offset__HH_mm_>
 <Ignore_DHCP_Time_Offset ua="na">Yes</Ignore_DHCP_Time_Offset>
-<Daylight_Saving_Time_Rule ua="na"></Daylight_Saving_Time_Rule>
+<Daylight_Saving_Time_Rule ua="na">start=3/8/7/02:0:0;end=11/1/7/02:0:0;save=1</Daylight_Saving_Time_Rule>
 <Daylight_Saving_Time_Enable ua="na">No</Daylight_Saving_Time_Enable>
 <DTMF_Playback_Level ua="na">-16</DTMF_Playback_Level>
 <DTMF_Playback_Length ua="na">.1</DTMF_Playback_Length>
