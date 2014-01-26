@@ -1417,151 +1417,162 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 
 	//other
-		if (if_group("superadmin")) {
-			if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
-				echo "<optgroup label='Other'>\n";
-			}
-			if ($select_type == "dialplan" || $select_type == "ivr") {
-				//set the default value
-					$selected = '';
-				//answer
-					if ($select_value == "answer") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='answer' $selected>answer</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:answer' $selected>answer</option>\n";
-					}
-				//bridge
-					if ($select_value == "bridge") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='bridge:' $selected>bridge</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:bridge ' $selected>bridge</option>\n";
-					}
-				//db
-					if ($select_value == "db") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='db:' $selected>db</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:db ' $selected>db</option>\n";
-					}
-				//export
-					if ($select_value == "export") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='export:' $selected>export</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:export ' $selected>export</option>\n";
-					}
-				//global_set
-					if ($select_value == "global_set") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='global_set:' $selected>global_set</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:global_set ' $selected>global_set</option>\n";
-					}
-				//group
-					if ($select_value == "group") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='group:' $selected>group</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:group ' $selected>group</option>\n";
-					}
-				//hangup
-					if ($select_value == "hangup") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='hangup' $selected>hangup</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:hangup' $selected>hangup</option>\n";
-					}
-				//info
-					if ($select_value == "info") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='info' $selected>info</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:info' $selected>info</option>\n";
-					}
-				//javascript
-					if ($select_value == "javascript") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='javascript:' $selected>javascript</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:javascript ' $selected>javascript</option>\n";
-					}
-				//lua
-					if ($select_value == "lua") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='lua:' $selected>lua</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:lua ' $selected>lua</option>\n";
-					}
-				//perl
-					if ($select_value == "perl") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='perl:' $selected>perl</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:perl ' $selected>perl</option>\n";
-					}
-				//reject
-					if ($select_value == "reject") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='reject' $selected>reject</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:reject' $selected>reject</option>\n";
-					}
-				//set
-					if ($select_value == "set") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='set:' $selected>set</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:set ' $selected>set</option>\n";
-					}
-				//sleep
-					if ($select_value == "sleep") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='sleep:' $selected>sleep</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:sleep ' $selected>sleep</option>\n";
-					}
-				//transfer
-					if ($select_value == "transfer") { $selected = "selected='selected'"; }
-					if ($select_type == "dialplan") {
-						echo "		<option value='transfer:' $selected>transfer</option>\n";
-					}
-					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:transfer ' $selected>transfer</option>\n";
-					}
-				//other
-					if ($select_value == "other") {
-						echo "		<option value='' selected='selected'>other</option>\n";
-					} else {
-						echo "		<option value=''>other</option>\n";
-					}
-			}
-			if (!$selection_found) {
-				if (strlen($select_label) > 0) {
-					echo "		<option value='".$select_value."' selected='selected'>".$select_label."</option>\n";
+		if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
+			echo "<optgroup label='Other'>\n";
+		}
+		if ($select_type == "dialplan" || $select_type == "ivr") {
+			//set the default value
+				$selected = '';
+			//answer
+				if ($select_value == "answer") { $selected = "selected='selected'"; }
+				if ($select_type == "dialplan") {
+					echo "		<option value='answer' $selected>answer</option>\n";
 				}
-				else {
-					echo "		<option value='".$select_value."' selected='selected'>".$select_value."</option>\n";
+				if ($select_type == "ivr") {
+					echo "		<option value='menu-exec-app:answer' $selected>answer</option>\n";
 				}
-			}
-			if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
-				echo "</optgroup>\n";
-			}
+			//hangup
+				if ($select_value == "hangup") { $selected = "selected='selected'"; }
+				if ($select_type == "dialplan") {
+					echo "		<option value='hangup' $selected>hangup</option>\n";
+				}
+				if ($select_type == "ivr") {
+					echo "		<option value='menu-exec-app:hangup' $selected>hangup</option>\n";
+				}
+			//info
+				if ($select_value == "info") { $selected = "selected='selected'"; }
+				if ($select_type == "dialplan") {
+					echo "		<option value='info' $selected>info</option>\n";
+				}
+				if ($select_type == "ivr") {
+					echo "		<option value='menu-exec-app:info' $selected>info</option>\n";
+				}
+			//company directory
+				if ($select_type == "dialplan") {
+					if ($select_value == "transfer:*411 XML ".$_SESSION["context"]) { $selected = "selected='selected'"; }
+					echo "		<option value='transfer:*411 XML ".$_SESSION["context"]."' $selected>company directory</option>\n";
+				}
+				if ($select_type == "ivr") {
+					if ($select_value == "menu-exec-app:transfer *411 XML ".$_SESSION["context"]) { $selected = "selected='selected'"; }
+					echo "		<option value='menu-exec-app:transfer *411 XML ".$_SESSION["context"]."' $selected>company directory</option>\n";
+				}
+			//advanced
+				if (if_group("superadmin")) {
+					//bridge
+						if ($select_value == "bridge") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='bridge:' $selected>bridge</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:bridge ' $selected>bridge</option>\n";
+						}
+					//db
+						if ($select_value == "db") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='db:' $selected>db</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:db ' $selected>db</option>\n";
+						}
+					//export
+						if ($select_value == "export") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='export:' $selected>export</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:export ' $selected>export</option>\n";
+						}
+					//global_set
+						if ($select_value == "global_set") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='global_set:' $selected>global_set</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:global_set ' $selected>global_set</option>\n";
+						}
+					//group
+						if ($select_value == "group") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='group:' $selected>group</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:group ' $selected>group</option>\n";
+						}
+					//javascript
+						if ($select_value == "javascript") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='javascript:' $selected>javascript</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:javascript ' $selected>javascript</option>\n";
+						}
+					//lua
+						if ($select_value == "lua") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='lua:' $selected>lua</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:lua ' $selected>lua</option>\n";
+						}
+					//perl
+						if ($select_value == "perl") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='perl:' $selected>perl</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:perl ' $selected>perl</option>\n";
+						}
+					//reject
+						if ($select_value == "reject") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='reject' $selected>reject</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:reject' $selected>reject</option>\n";
+						}
+					//set
+						if ($select_value == "set") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='set:' $selected>set</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:set ' $selected>set</option>\n";
+						}
+					//sleep
+						if ($select_value == "sleep") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='sleep:' $selected>sleep</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:sleep ' $selected>sleep</option>\n";
+						}
+					//transfer
+						if ($select_value == "transfer") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='transfer:' $selected>transfer</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:transfer ' $selected>transfer</option>\n";
+						}
+					//other
+						if ($select_value == "other") {
+							echo "		<option value='' selected='selected'>other</option>\n";
+						} else {
+							echo "		<option value=''>other</option>\n";
+						}
+				}
+			//selected
+				if (!$selection_found) {
+					if (strlen($select_label) > 0) {
+						echo "		<option value='".$select_value."' selected='selected'>".$select_label."</option>\n";
+					}
+					else {
+						echo "		<option value='".$select_value."' selected='selected'>".$select_value."</option>\n";
+					}
+				}
+				if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
+					echo "</optgroup>\n";
+				}
 		}
 
 		/*
@@ -2157,7 +2168,6 @@ function save_dialplan_xml() {
 
 					$sql = " select * from v_dialplan_details ";
 					$sql .= " where dialplan_uuid = '".$row['dialplan_uuid']."' ";
-					$sql .= " and domain_uuid = '".$row['domain_uuid']."' ";
 					$sql .= " order by dialplan_detail_group asc, dialplan_detail_order asc ";
 					$prep_statement_2 = $db->prepare($sql);
 					if ($prep_statement_2) {
