@@ -630,18 +630,18 @@ require_once "resources/require.php";
 					<option value='disabled' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>disabled</option>
 				</optgroup>
 				<optgroup label='Grandstream'>
-					<option value='line' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>0-Speed Dial</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>>1-BLF</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "2") { echo $selected;$found=true; } ?>>2-Presence Watcher</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "3") { echo $selected;$found=true; } ?>>3-eventlist BLF</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "4") { echo $selected;$found=true; } ?>>4-Speed Dial via active account</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "5") { echo $selected;$found=true; } ?>>5-DialDTMF</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "6") { echo $selected;$found=true; } ?>>6-Voicemail</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "7") { echo $selected;$found=true; } ?>>7-CallReturn</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "8") { echo $selected;$found=true; } ?>>8-Transfer</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "9") { echo $selected;$found=true; } ?>>9-CallPark</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "10") { echo $selected;$found=true; } ?>>10-Intercom</option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "11") { echo $selected;$found=true; } ?>>11-LDAP Search</option>
+					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>0-Speed Dial</option>
+					<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>>1-BLF</option>
+					<option value='2' <?php if ($row['device_key_type'] == "2") { echo $selected;$found=true; } ?>>2-Presence Watcher</option>
+					<option value='3' <?php if ($row['device_key_type'] == "3") { echo $selected;$found=true; } ?>>3-eventlist BLF</option>
+					<option value='4' <?php if ($row['device_key_type'] == "4") { echo $selected;$found=true; } ?>>4-Speed Dial via active account</option>
+					<option value='5' <?php if ($row['device_key_type'] == "5") { echo $selected;$found=true; } ?>>5-DialDTMF</option>
+					<option value='6' <?php if ($row['device_key_type'] == "6") { echo $selected;$found=true; } ?>>6-Voicemail</option>
+					<option value='7' <?php if ($row['device_key_type'] == "7") { echo $selected;$found=true; } ?>>7-CallReturn</option>
+					<option value='8' <?php if ($row['device_key_type'] == "8") { echo $selected;$found=true; } ?>>8-Transfer</option>
+					<option value='9' <?php if ($row['device_key_type'] == "9") { echo $selected;$found=true; } ?>>9-CallPark</option>
+					<option value='10' <?php if ($row['device_key_type'] == "10") { echo $selected;$found=true; } ?>>10-Intercom</option>
+					<option value='11' <?php if ($row['device_key_type'] == "11") { echo $selected;$found=true; } ?>>11-LDAP Search</option>
 				</optgroup>
 				<optgroup label='Yealink'>
 					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>0-N/A(default for memory key)</option>
