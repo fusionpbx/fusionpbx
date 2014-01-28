@@ -3217,333 +3217,333 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
     <P1476></P1476>
-    <!-- End User Multi Purpose Keys. -->
+    <!-- End Line Keys. -->
     <!-- Account 5 and Account 6 setting is for GXP2120 only -->
-    <!--  Multipupose Key 1 -->
+    <!--  Multipurpose Key 1 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P323>0</P323>
+    <P323>{$memory_key_type_1}</P323>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P301>0</P301>
+    <P301>{$memory_key_line_1}</P301>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P302></P302>
+    <P302>{$memory_key_label_1}</P302>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P303></P303>
-    <!-- Multipupose Key 2 -->
+    <P303>{$memory_key_value_1}</P303>
+    <!-- Multipurpose Key 2 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF  -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P324>0</P324>
+    <P324>{$memory_key_type_2}</P324>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P304>0</P304>
+    <P304>{$memory_key_line_2}</P304>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P305></P305>
+    <P305>{$memory_key_label_2}</P305>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P306></P306>
-    <!-- Multipupose Key 3 -->
+    <P306>{$memory_key_value_2}</P306>
+    <!-- Multipurpose Key 3 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P325>0</P325>
+    <P325>{$memory_key_type_3}</P325>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P307>0</P307>
+    <P307>{$memory_key_line_3}</P307>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P308></P308>
+    <P308>{$memory_key_label_3}</P308>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P309></P309>
-    <!-- Multipupose Key 4 -->
+    <P309>{$memory_key_value_3}</P309>
+    <!-- Multipurpose Key 4 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P326>0</P326>
+    <P326>{$memory_key_type_4}</P326>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P310>0</P310>
+    <P310>{$memory_key_line_4}</P310>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P311></P311>
+    <P311>{$memory_key_label_4}</P311>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P312></P312>
-    <!-- Multipupose Key 5 -->
+    <P312>{$memory_key_value_4}</P312>
+    <!-- Multipurpose Key 5 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P327>0</P327>
+    <P327>{$memory_key_type_5}</P327>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P313>0</P313>
+    <P313>{$memory_key_line_5}</P313>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P314></P314>
+    <P314>{$memory_key_value_5}</P314>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P315></P315>
-    <!-- Multipupose Key 6 -->
+    <P315>{$memory_key_label_5}</P315>
+    <!-- Multipurpose Key 6 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P328>0</P328>
+    <P328>{$memory_key_type_6}</P328>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P316>0</P316>
+    <P316>{$memory_key_line_6}</P316>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P317></P317>
+    <P317>{$memory_key_label_6}</P317>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P318></P318>
-    <!-- Multipupose Key 7 -->
+    <P318>{$memory_key_value_6}</P318>
+    <!-- Multipurpose Key 7 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P329>0</P329>
+    <P329>{$memory_key_type_7}</P329>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P319>0</P319>
+    <P319>{$memory_key_line_7}</P319>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P320></P320>
+    <P320>{$memory_key_label_7}</P320>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P321></P321>
+    <P321>{$memory_key_value_7}</P321>
     <!-- Mutlipurpose Key 8 - 18 FOR GXP2110 ONLY -->
-    <!-- Multipupose Key 8 -->
+    <!-- Multipurpose Key 8 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P353>0</P353>
+    <P353>{$memory_key_type_8}</P353>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P354>0</P354>
+    <P354>{$memory_key_line_8}</P354>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P355></P355>
+    <P355>{$memory_key_label_8}</P355>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P356></P356>
-    <!-- Multipupose Key 9 -->
+    <P356>{$memory_key_value_8}</P356>
+    <!-- Multipurpose Key 9 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P357>0</P357>
+    <P357>{$memory_key_type_9}</P357>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P358>0</P358>
+    <P358>{$memory_key_line_9}</P358>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P359></P359>
+    <P359>{$memory_key_label_9}</P359>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P360></P360>
-    <!-- Multipupose Key 10 -->
+    <P360>{$memory_key_value_9}</P360>
+    <!-- Multipurpose Key 10 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P361>0</P361>
+    <P361>{$memory_key_type_10}</P361>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P362>0</P362>
+    <P362>{$memory_key_line_10}</P362>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P363></P363>
+    <P363>{$memory_key_label_10}</P363>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P364></P364>
-    <!-- Multipupose Key 11 -->
+    <P364>{$memory_key_value_10}</P364>
+    <!-- Multipurpose Key 11 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P365>0</P365>
+    <P365>{$memory_key_type_11}</P365>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P366>0</P366>
+    <P366>{$memory_key_line_11}</P366>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P367></P367>
+    <P367>{$memory_key_label_11}</P367>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P368></P368>
-    <!-- Multipupose Key 12 -->
+    <P368>{$memory_key_value_11}</P368>
+    <!-- Multipurpose Key 12 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P369>0</P369>
+    <P369>{$memory_key_type_12}</P369>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P370>0</P370>
+    <P370>{$memory_key_line_12}</P370>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P371></P371>
+    <P371>{$memory_key_label_12}</P371>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P372></P372>
-    <!-- Multipupose Key 13 -->
+    <P372>{$memory_key_value_12}</P372>
+    <!-- Multipurpose Key 13 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P373>0</P373>
+    <P373>{$memory_key_type_13}</P373>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P374>0</P374>
+    <P374>{$memory_key_line_13}</P374>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P375></P375>
+    <P375>{$memory_key_label_13}</P375>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P376></P376>
-    <!-- Multipupose Key 14 -->
+    <P376>{$memory_key_value_13}</P376>
+    <!-- Multipurpose Key 14 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P377>0</P377>
+    <P377>{$memory_key_type_14}</P377>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P378>0</P378>
+    <P378>{$memory_key_line_14}</P378>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
     <P379></P379>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P380></P380>
-    <!-- Multipupose Key 15 -->
+    <P380>{$memory_key_value_14}</P380>
+    <!-- Multipurpose Key 15 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P381>0</P381>
+    <P381>{$memory_key_type_15}</P381>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P382>0</P382>
+    <P382>{$memory_key_line_15}</P382>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P383></P383>
+    <P383>{$memory_key_label_15}</P383>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P384></P384>
-    <!-- Multipupose Key 16 -->
+    <P384>{$memory_key_value_15}</P384>
+    <!-- Multipurpose Key 16 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P385>0</P385>
+    <P385>{$memory_key_type_16}</P385>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P386>0</P386>
+    <P386>{$memory_key_line_16}</P386>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
     <P387></P387>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P388></P388>
-    <!-- Multipupose Key 17 -->
+    <P388>{$memory_key_value_16}</P388>
+    <!-- Multipurpose Key 17 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P389>0</P389>
+    <P389>{$memory_key_type_17}</P389>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P390>0</P390>
+    <P390>{$memory_key_line_17}</P390>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P391></P391>
+    <P391>{$memory_key_label_17}</P391>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P392></P392>
-    <!-- Multipupose Key 18 -->
+    <P392>{$memory_key_value_17}</P392>
+    <!-- Multipurpose Key 18 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
     <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
     <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
     <!-- Number: 0-11 -->
     <!-- Mandatory -->
-    <P393>0</P393>
+    <P393>{$memory_key_type_18}</P393>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
     <!-- Number: 0 - 5 -->
     <!-- Mandatory -->
-    <P394>0</P394>
+    <P394>{$memory_key_line_18}</P394>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P395></P395>
+    <P395>{$memory_key_label_18}</P395>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P396></P396>
+    <P396>{$memory_key_value_18}</P396>
     <!-- Extension Boards FOR GXP2110 and GXP2120 ONLY -->
     <!-- Extension Board 1 Settings. -->
 
