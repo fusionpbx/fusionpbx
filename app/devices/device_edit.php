@@ -251,6 +251,12 @@ require_once "resources/require.php";
 		unset ($prep_statement);
 	}
 
+//use the mac address to get the vendor
+	if (strlen($device_vendor) == 0) {
+		$template_array = explode("/", $device_template);
+		$device_vendor = $template_array[0];
+	}
+
 //set the sub array index
 	$x = "999";
 
@@ -625,10 +631,15 @@ require_once "resources/require.php";
 				<?php $found = false; ?>
 				<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]'>
 				<option value=''></option>
+				<?php if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0) { ?>
 				<optgroup label='Cisco'>
 					<option value='line' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>line</option>
 					<option value='disabled' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>disabled</option>
 				</optgroup>
+				<?php
+				}
+				if (strtolower($device_vendor) == "grandstream" || strlen($device_vendor) == 0) {
+				?>
 				<optgroup label='Grandstream'>
 					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>0-Speed Dial</option>
 					<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>>1-BLF</option>
@@ -643,6 +654,10 @@ require_once "resources/require.php";
 					<option value='10' <?php if ($row['device_key_type'] == "10") { echo $selected;$found=true; } ?>>10-Intercom</option>
 					<option value='11' <?php if ($row['device_key_type'] == "11") { echo $selected;$found=true; } ?>>11-LDAP Search</option>
 				</optgroup>
+				<?php
+				}
+				if (strtolower($device_vendor) == "yealink" || strlen($device_vendor) == 0) {
+				?>
 				<optgroup label='Yealink'>
 					<option value='0' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>>0-N/A(default for memory key)</option>
 					<option value='1' <?php if ($row['device_key_type'] == "1") { echo $selected;$found=true; } ?>>1-Conference</option>
@@ -691,8 +706,10 @@ require_once "resources/require.php";
 					<option value='49' <?php if ($row['device_key_type'] == "49") { echo $selected;$found=true; } ?>>49-Switch Account Down</option>
 					<option value='50' <?php if ($row['device_key_type'] == "50") { echo $selected;$found=true; } ?>>50-Keypad Lock</option>
 				</optgroup>
+				<?php
+				}
+				?>
 				<optgroup label='Other'>
-					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>>line</option>
 					<option value='other'>other</option>
 				<?php
 					if (!$found) {
