@@ -3111,18 +3111,18 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom, 21 - LDAP Search -->
     <!-- Number: 0, 1, 10-21 -->
     <!-- Mandatory -->
-    <P1363>0</P1363>
+    <P1363>{$line_key_type_1}</P1363>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
     <!-- For GXP2120 only: 4 - Account 5, 5- Account 6. -->
     <!-- Number: 0-3 for GXP2100/2110/2120, 4 and 5 for GXP2120 only -->
     <!-- Mandatory -->
-    <P1364>0</P1364>
+    <P1364>{$line_key_line_1}</P1364>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P1465></P1465>
+    <P1465>{$line_key_label_1}</P1465>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P1466></P1466>
+    <P1466>{$line_key_value_1}</P1466>
     <!-- Line Key 2 -->
     <!-- Key Mode. 0 - Line ,1 - Shared Line -->
     <!-- 10 - Speeddial, 11 - BLF, 12 - Presence Watcher, 13 - Eventlist BLF -->
@@ -3130,18 +3130,18 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom, 21 - LDAP Search -->
     <!-- Number: 0, 1, 10-21 -->
     <!-- Mandatory -->
-    <P1365>0</P1365>
+    <P1365>{$line_key_type_2}</P1365>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
     <!-- For GXP2120 only: 4 - Account 5, 5- Account 6. -->
     <!-- Number: 0-3 for GXP2100/2110/2120, 4 and 5 for GXP2120 only -->
     <!-- Mandatory  -->
-    <P1366>0</P1366>
+    <P1366>{$line_key_line_2}</P1366>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P1467></P1467>
+    <P1467>{$line_key_label_2}</P1467>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P1468></P1468>
+    <P1468>{$line_key_value_2}</P1468>
     <!-- Line Key 3. -->
     <!-- Key Mode. 0 - Line ,1 - Shared Line -->
     <!-- 10 - Speeddial, 11 - BLF, 12 - Presence Watcher, 13 - Eventlist BLF -->
@@ -3149,18 +3149,18 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom, 21 - LDAP Search -->
     <!-- Number: 0, 1, 10-21 -->
     <!-- Mandatory -->
-    <P1367>0</P1367>
+    <P1367>{$line_key_type_3}</P1367>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
     <!-- For GXP2120 only: 4 - Account 5, 5- Account 6. -->
     <!-- Number: 0-3 for GXP2100/2110/2120, 4 and 5 for GXP2120 only -->
     <!-- Mandatory -->
-    <P1368>0</P1368>
+    <P1368>{$line_key_line_3}</P1368>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P1469></P1469>
+    <P1469>{$line_key_label_3}</P1469>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P1470></P1470>
+    <P1470>{$line_key_value_3}</P1470>
     <!-- Line Key 4. -->
     <!-- Key Mode. 0 - Line ,1 - Shared Line -->
     <!-- 10 - Speeddial, 11 - BLF, 12 - Presence Watcher, 13 - Eventlist BLF -->
@@ -3168,18 +3168,18 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom, 21 - LDAP Search -->
     <!-- Number: 0, 1, 10-21 -->
     <!-- Mandatory -->
-    <P1369>0</P1369>
+    <P1369>{$line_key_type_4}</P1369>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4 -->
     <!-- For GXP2120 only: 4 - Account 5, 5- Account 6. -->
     <!-- Number: 0-3 for GXP2100/2110/2120, 4 and 5 for GXP2120 only -->
     <!-- Mandatory -->
-    <P1370>0</P1370>
+    <P1370>{$line_key_line_4}</P1370>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P1471></P1471>
+    <P1471>{$line_key_label_4}</P1471>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P1472></P1472>
+    <P1472>{$line_key_value_4}</P1472>
     <!-- Line Key 5, 6 FOR GXP2120 ONLY -->
     <!-- Line Key 5 -->
     <!-- Key Mode. 0 - Line ,1 - Shared Line -->
@@ -3188,17 +3188,17 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom, 21 - LDAP Search -->
     <!-- Number: 0, 1, 10-21 -->
     <!-- Mandatory -->
-    <P1371>0</P1371>
+    <P1371>{$line_key_type_5}</P1371>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5- Account 6. -->
     <!-- Number: 0-5 -->
     <!-- Mandatory -->
-    <P1372>0</P1372>
+    <P1372>{$line_key_line_5}</P1372>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P1473></P1473>
+    <P1473>{$line_key_label_5}</P1473>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P1474></P1474>
+    <P1474>{$line_key_value_5}</P1474>
     <!-- Line Key 6 -->
     <!-- Key Mode. 0 - Line ,1 - Shared Line -->
     <!-- 10 - Speeddial, 11 - BLF, 12 - Presence Watcher, 13 - Eventlist BLF -->
@@ -3206,17 +3206,17 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- 17 - Call Return, 18 - Transfer, 19 - CallPark, 20 - Intercom, 21 - LDAP Search -->
     <!-- Number: 0, 1, 10-21 -->
     <!-- Mandatory -->
-    <P1373>0</P1373>
+    <P1373>{$line_key_type_6}</P1373>
     <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5- Account 6. -->
     <!-- Number: 0-5 -->
     <!-- Mandatory -->
-    <P1374>0</P1374>
+    <P1374>{$line_key_line_6}</P1374>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P1475></P1475>
+    <P1475>{$line_key_label_6}</P1475>
     <!-- User ID. Max length allowed is 64 characters. -->
     <!-- String -->
-    <P1476></P1476>
+    <P1476>{$line_key_value_6}</P1476>
     <!-- End Line Keys. -->
     <!-- Account 5 and Account 6 setting is for GXP2120 only -->
     <!--  Multipurpose Key 1 -->
@@ -3546,27 +3546,6 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <P396>{$memory_key_value_18}</P396>
     <!-- Extension Boards FOR GXP2110 and GXP2120 ONLY -->
     <!-- Extension Board 1 Settings. -->
-
-{foreach $keys as $row}
-    <!-- EXT Key {$row.device_key_id} -->
-    <!-- Key Mode. -->
-    <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
-    <!-- 4 - Speed Dial via active account, 5 - DialDTMF, 6 - Voicemail, 7 - CallReturn -->
-    <!-- 8 - Transfer, 9 - CallPark, 10 - Intercom, 11 - LDAP Search -->
-    <!-- Number: 0-11 -->
-    <!-- Mandatory -->
-    <P600{$row.device_key_id}>{$row.device_key_type}</P600{$row.device_key_id}>
-    <!-- Account. 0 - Account 1, 1 - Account 2, 2 - Account 3, 3 - Account 4, 4 - Account 5, 5 - Account 6 -->
-    <!-- Number: 0 - 5 -->
-    <!-- Mandatory -->
-    <P620{$row.device_key_id}>{$row.device_key_line}</P620{$row.device_key_id}>
-    <!-- Name -->
-    <!-- String -->
-    <P640{$row.device_key_id}>{$row.device_key_value}</P640{$row.device_key_id}>
-    <!-- UserID -->
-    <!-- String -->
-    <P660{$row.device_key_id}>{$row.device_key_extension}</P660{$row.device_key_id}>
-{/foreach}
 
   </config>
 </gs_provision>
