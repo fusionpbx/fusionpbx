@@ -1527,7 +1527,7 @@ VNumber: 0, 1, 2. -->
 <P602>{$server_address_4}</P602>
 
 <!-- SIP User ID -->
-<P604>{{user_id_4}</P604>
+<P604>{$user_id_4}</P604>
 
 <!-- SIP Authenticate ID -->
 <P605>{$user_id_4}</P605> 
