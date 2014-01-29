@@ -40,14 +40,14 @@ include "root.php";
 
 			public function init() {
 				if ($this->engine === 'smarty') {
-					include "resources/templates/engine/smarty/Smarty.class.php";
+					require_once "resources/templates/engine/smarty/Smarty.class.php";
 					$this->object = new Smarty();
 					$this->object->setTemplateDir($this->template_dir);
 					$this->object->setCompileDir($this->cache_dir);
 					$this->object->setCacheDir($this->cache_dir);
 				}
 				if ($this->engine === 'raintpl') {
-					include "resources/templates/engine/raintpl/rain.tpl.class.php";
+					require_once "resources/templates/engine/raintpl/rain.tpl.class.php";
 					$this->object = new RainTPL();
 					RainTPL::configure('tpl_dir', realpath($this->template_dir)."/");
 					RainTPL::configure('cache_dir', realpath($this->cache_dir)."/");
