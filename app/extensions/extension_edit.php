@@ -581,8 +581,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 				//write the provision files
-//					require_once "app/provision/provision_write.php";
-//					$ext = new extension;
+					require_once "app/provision/provision_write.php";
+					$ext = new extension;
 
 				//delete extension from memcache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
