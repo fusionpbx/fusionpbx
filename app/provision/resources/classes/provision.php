@@ -30,11 +30,16 @@ include "root.php";
 		public $db;
 		public $domain_uuid;
 		public $domain_name;
-		public $device_template;
-		public $template_directory;
+		public $template_dir;
 
 		public function __construct() {
-
+			//get the database object
+				global $db;
+				$this->db = $db;
+			//set the default template directory
+				if (strlen($this->template_dir) == 0) {
+					$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+				}
 		}
 
 		public function __destruct() {
@@ -49,39 +54,35 @@ include "root.php";
 
 		//define the function which checks to see if the mac address exists in devices
 		private function mac_exists($mac) {
-			$sql = "SELECT count(*) as count FROM v_devices ";
-			//$sql .= "WHERE domain_uuid=:domain_uuid ";
-			$sql .= "WHERE device_mac_address=:mac ";
-			$prep_statement = $this->db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				//$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-				$prep_statement->bindParam(':mac', $mac);
-				$prep_statement->execute();
-				$row = $prep_statement->fetch();
-				$count = $row['count'];
-				if ($row['count'] > 0) {
-					return true;
+			//check in the devices table for a specific mac address
+				$sql = "SELECT count(*) as count FROM v_devices ";
+				//$sql .= "WHERE domain_uuid=:domain_uuid ";
+				$sql .= "WHERE device_mac_address=:mac ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				if ($prep_statement) {
+					//$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+					$prep_statement->bindParam(':mac', $mac);
+					$prep_statement->execute();
+					$row = $prep_statement->fetch();
+					$count = $row['count'];
+					if ($row['count'] > 0) {
+						return true;
+					}
+					else {
+						return false;
+					}
 				}
 				else {
 					return false;
 				}
-			}
-			else {
-				return false;
-			}
 		}
 
 		function render() {
-			//create the database object
-				$database = new database;
-				if (!$this->db) {
-					$this->db = $database->connect();
-				}
 
 			//get the variables
 				$domain_uuid = $this->domain_uuid;
 				$device_template = $this->device_template;
-				$template_directory = $this->template_directory;
+				$template_dir = $this->template_dir;
 				$mac = $this->mac;
 				$file = $this->file;
 
@@ -97,12 +98,12 @@ include "root.php";
 					//get the device_template
 						//if (strlen($device_template) == 0) {
 							$sql = "SELECT * FROM v_devices ";
-							//$sql .= "WHERE device_mac_address=:mac ";
-							$sql .= "WHERE device_mac_address= '$mac' ";
+							$sql .= "WHERE device_mac_address=:mac ";
+							//$sql .= "WHERE device_mac_address= '$mac' ";
 							$prep_statement_2 = $this->db->prepare(check_sql($sql));
 							if ($prep_statement_2) {
 								//use the prepared statement
-									//$prep_statement_2->bindParam(':mac', $mac);
+									$prep_statement_2->bindParam(':mac', $mac);
 									$prep_statement_2->execute();
 									$row = $prep_statement_2->fetch();
 								//set the variables from values in the database
@@ -244,7 +245,7 @@ include "root.php";
 				else {
 					$view->engine = "smarty";
 				}
-				$view->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$device_template."/";
+				$view->template_dir = $template_dir ."/".$device_template."/";
 				$view->cache_dir = $_SESSION['server']['temp']['dir'];
 				$view->init();
 
@@ -382,35 +383,34 @@ include "root.php";
 					}
 
 				//set the template directory
-					$template_directory = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
-					if (strlen($provision["template_directory"]) > 0) {
-						$template_directory = $provision["template_directory"];
+					if (strlen($provision["template_dir"]) > 0) {
+						$template_dir = $provision["template_dir"];
 					}
 
 				//if the domain name directory exists then only use templates from it
-					if (is_dir($template_directory.'/'.$domain_name)) {
+					if (is_dir($template_dir.'/'.$domain_name)) {
 						$device_template = $domain_name.'/'.$device_template;
 					}
 
 				//if $file is not provided then look for a default file that exists
 					if (strlen($file) == 0) {
-						if (file_exists($template_directory."/".$device_template ."/{\$mac}")) {
+						if (file_exists($template_dir."/".$device_template ."/{\$mac}")) {
 							$file = "{\$mac}";
 						}
-						elseif (file_exists($template_directory."/".$device_template ."/{\$mac}.xml")) {
+						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.xml")) {
 							$file = "{\$mac}.xml";
 						}
-						elseif (file_exists($template_directory."/".$device_template ."/{\$mac}.cfg")) {
+						elseif (file_exists($template_dir."/".$device_template ."/{\$mac}.cfg")) {
 							$file = "{\$mac}.cfg";
 						}
 						else {
-							echo "file not found 178 test";
+							echo "file not found";
 							exit;
 						}
 					}
 					else {
 						//make sure the file exists
-						if (!file_exists($template_directory."/".$device_template ."/".$file)) {
+						if (!file_exists($template_dir."/".$device_template ."/".$file)) {
 							echo "file not found";
 							exit;
 						}
@@ -431,6 +431,115 @@ include "root.php";
 
 		} //end render function
 
+
+		function write() {
+
+			//set default variables
+				$dir_count = 0;
+				$file_count = 0;
+				$row_count = 0;
+				$tmp_array = '';
+				$i = 0;
+
+			//get the devices
+				$sql = "select * from v_devices ";
+				//$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$prep_statement = $this->db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					//get the values from the database and set as variables
+						$device_uuid = $row["device_uuid"];
+						$device_mac_address = $row["device_mac_address"];
+						$device_label = $row["device_label"];
+						$device_vendor = strtolower($row["device_vendor"]);
+						$device_model = $row["device_model"];
+						$device_firmware_version = $row["device_firmware_version"];
+						$device_provision_enable = $row["device_provision_enable"];
+						$device_template = $row["device_template"];
+						$device_username = $row["device_username"];
+						$device_password = $row["device_password"];
+						$device_time_zone = $row["device_time_zone"];
+						$device_description = $row["device_description"];
+
+					//loop through the provision template directory
+						clearstatcache();
+						$dir_list = '';
+						$file_list = '';
+						if (strlen($device_template) > 0) {
+							$dir_list = opendir($this->template_dir."/".$device_template);
+							$dir_array = array();
+							while (false !== ($file = readdir($dir_list))) {
+								if ($file != "." AND $file != ".."){
+									$new_path = $dir.'/'.$file;
+									$level = explode('/',$new_path);
+									if (substr($new_path, -4) == ".svn") {
+										//ignore .svn dir and subdir
+									}
+									elseif (substr($new_path, -3) == ".db") {
+										//ignore .db files
+									}
+									else {
+										$dir_array[] = $new_path;
+									}
+									if ($x > 1000) { break; };
+									$x++;
+								}
+							}
+						}
+
+						//asort($dir_array);
+						foreach ($dir_array as $new_path){
+								$level = explode('/',$new_path);
+								if (is_dir($new_path)) {
+									$dir_name = end($level);
+									//$file_list .=  "$dir_name\n";
+									//$dir_list .= recur_dir($new_path);
+								}
+								else {
+									$file_name = end($level);
+									//debug information
+										//$file_size = round(filesize($new_path)/1024, 2);
+										//echo $this->template_dir."/".$device_template."/".$file_name." $file_size\n";
+									//write the configuration to the directory
+										if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
+											$dir_array = explode(";", $_SESSION['switch']['provision']['dir']);
+											foreach($dir_array as $directory) {
+
+												if (file_exists($this->template_dir."/".$device_template."/".$file_name)) {
+													//output template to string for header processing
+														//output template to string for header processing
+															//$prov->domain_uuid = $domain_uuid;
+															$this->mac = $device_mac_address;
+															$this->file = $file_name;
+															$file_contents = $this->render();
+
+													//replace {$mac} in the file name
+														if ($device_vendor == "aastra" || $device_vendor == "cisco") {
+															//upper case the mac address for aastra phones
+															$file_name = str_replace("{\$mac}", strtoupper($device_mac_address), $file_name);
+														}
+														else {
+															//all other phones
+															$file_name = str_replace("{\$mac}", $device_mac_address, $file_name);
+														}
+
+													//write the file
+														//echo $directory.'/'.$file_name."\n";
+														$fh = fopen($directory.'/'.$file_name,"w") or die("Unable to write to $directory for provisioning. Make sure the path exists and permissons are set correctly.");
+														fwrite($fh, $file_contents);
+														fclose($fh);
+												}
+											}
+											unset($file_name);
+										}
+								}
+						} //end for each
+						closedir($dir_list);
+						//echo "<hr size='1'>\n";
+				}
+				unset ($prep_statement);
+		} //end write function
 	} //end provision class
 
 ?>
