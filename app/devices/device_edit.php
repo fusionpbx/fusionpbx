@@ -213,7 +213,7 @@ require_once "resources/require.php";
 					}
 
 				//write the provision files
-//					require_once "app/provision/provision_write.php";
+					require_once "app/provision/provision_write.php";
 
 				//set the message
 					if ($action == "add") {
