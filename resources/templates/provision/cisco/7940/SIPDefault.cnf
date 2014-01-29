@@ -71,7 +71,7 @@ timer_invite_expires: "180"        ; Default 180 sec
 messages_uri: "*98"
 
 # TFTP Phone Specific Configuration File Directory
-tftp_cfg_dir: "./"
+tftp_cfg_dir: ""
  
 # Time Server
 sntp_mode: "unicast"
