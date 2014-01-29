@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2013 All Rights Reserved.
+	Copyright (C) 2008-2014 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -154,11 +154,9 @@ require_once "resources/require.php";
 
 //output template to string for header processing
 	$prov = new provision;
-	//$prov->template_directory = $template_directory;
 	$prov->domain_uuid = $domain_uuid;
 	$prov->mac = $mac;
 	$prov->file = $file;
-	$prov->db = $db;
 	$file_contents = $prov->render();
 
 //deliver the customized config over HTTP/HTTPS
