@@ -6,13 +6,13 @@ preferred_codec: g711ulaw
 enable_vad: 0
 dial_template: "dialplan"
 
-line1_name: {$user_id_1}
+line1_name: "{$user_id_1}"
 line1_displayname: "{$user_id_1}"
 line1_shortname: "{$short_name_1}"
 line1_authname: "{$auth_id_1}"
 line1_password: "{$user_password_1}"
 
-line2_name: {$user_id_2}
+line2_name: "{$user_id_2}"
 line2_displayname: "{$user_id_2}"
 line2_shortname: "{$short_name_2}"
 line2_authname: "{$auth_id_2}"
