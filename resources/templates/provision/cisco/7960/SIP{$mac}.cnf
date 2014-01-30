@@ -1,0 +1,43 @@
+phone_label: "{$display_name_1}"
+proxy1_address: "{$server_address_1}"
+proxy_register: 1
+timer_register_expires: 300
+preferred_codec: g711ulaw
+enable_vad: 0
+dial_template: "dialplan"
+
+line1_name: "{$user_id_1}"
+line1_displayname: "{$user_id_1}"
+line1_shortname: "{$short_name_1}"
+line1_authname: "{$auth_id_1}"
+line1_password: "{$user_password_1}"
+
+line2_name: "{$user_id_2}"
+line2_displayname: "{$user_id_2}"
+line2_shortname: "{$short_name_2}"
+line2_authname: "{$auth_id_2}"
+line2_password: "{$user_password_2}"
+
+line3_name: "{$user_id_3}"
+line3_displayname: "{$user_id_3}"
+line3_shortname: "{$short_name_3}"
+line3_authname: "{$auth_id_3}"
+line3_password: "{$user_password_3}"
+
+line4_name: "{$user_id_4}"
+line4_displayname: "{$user_id_4}"
+line4_shortname: "{$short_name_4}"
+line4_authname: "{$auth_id_4}"
+line4_password: "{$user_password_4}"
+
+line5_name: "{$user_id_5}"
+line5_displayname: "{$user_id_5}"
+line5_shortname: "{$short_name_5}"
+line5_authname: "{$auth_id_5}"
+line5_password: "{$user_password_5}"
+
+line6_name: "{$user_id_6}"
+line6_displayname: "{$user_id_6}"
+line6_shortname: "{$short_name_6}"
+line6_authname: "{$auth_id_6}"
+line6_password: "{$user_password_6}"
