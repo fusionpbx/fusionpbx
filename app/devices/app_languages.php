@@ -214,74 +214,313 @@
 		$text['label-keys']['pt-pt'] = "";
 		$text['label-keys']['fr-fr'] = "";
 
-		$text['title-device_keys']['en-us'] = 'Device Keys';
-		$text['title-device_keys']['pt-pt'] = '';
+		$text['title-device_keys']['en-us'] = "Device Keys";
+		$text['title-device_keys']['pt-pt'] = "";
+		$text['title-device_keys']['fr-fr'] = "";
 
-		$text['title-device_key']['en-us'] = 'Device Key';
-		$text['title-device_key']['pt-pt'] = '';
+		$text['title-device_key']['en-us'] = "Device Key";
+		$text['title-device_key']['pt-pt'] = "";
+		$text['title-device_key']['fr-fr'] = "";
 
-		$text['description-device_key']['en-us'] = '';
-		$text['description-device_key']['pt-pt'] = '';
+		$text['description-device_key']['en-us'] = "";
+		$text['description-device_key']['pt-pt'] = "";
+		$text['description-device_key']['fr-fr'] = "";
 
-		$text['label-device_key_id']['en-us'] = 'Key';
-		$text['label-device_key_id']['pt-pt'] = '';
+		$text['label-device_key_id']['en-us'] = "Key";
+		$text['label-device_key_id']['pt-pt'] = "";
+		$text['label-device_key_id']['fr-fr'] = "";
 
-		$text['description-device_key']['en-us'] = 'Select the key.';
-		$text['description-device_key']['pt-pt'] = '';
+		$text['description-device_key']['en-us'] = "Select the key.";
+		$text['description-device_key']['pt-pt'] = "";
+		$text['description-device_key']['fr-fr'] = "";
 
-		$text['label-device_key_category']['en-us'] = 'Category';
-		$text['label-device_key_category']['pt-pt'] = '';
+		$text['label-device_key_category']['en-us'] = "Category";
+		$text['label-device_key_category']['pt-pt'] = "";
+		$text['label-device_key_category']['fr-fr'] = "";
 
-		$text['description-device_key_category']['en-us'] = 'Select the category.';
-		$text['description-device_key_category']['pt-pt'] = '';
+		$text['description-device_key_category']['en-us'] = "Select the category.";
+		$text['description-device_key_category']['pt-pt'] = "";
+		$text['description-device_key_category']['fr-fr'] = "";
 
-		$text['label-device_key_type']['en-us'] = 'Type';
-		$text['label-device_key_type']['pt-pt'] = '';
+		$text['label-device_key_type']['en-us'] = "Type";
+		$text['label-device_key_type']['pt-pt'] = "";
+		$text['label-device_key_type']['fr-fr'] = "";
 
-		$text['description-device_key_type']['en-us'] = 'Select the type of key.';
-		$text['description-device_key_type']['pt-pt'] = '';
+		$text['description-device_key_type']['en-us'] = "Select the type of key.";
+		$text['description-device_key_type']['pt-pt'] = "";
+		$text['description-device_key_type']['fr-fr'] = "";
 
-		$text['label-device_key_line']['en-us'] = 'Line';
-		$text['label-device_key_line']['pt-pt'] = '';
+		$text['label-device_key_line']['en-us'] = "Line";
+		$text['label-device_key_line']['pt-pt'] = "";
+		$text['label-device_key_line']['fr-fr'] = "";
 
-		$text['description-device_key_line']['en-us'] = 'Select the line number.';
-		$text['description-device_key_line']['pt-pt'] = '';
+		$text['description-device_key_line']['en-us'] = "Select the line number.";
+		$text['description-device_key_line']['pt-pt'] = "";
+		$text['description-device_key_line']['fr-fr'] = "";
 
-		$text['label-device_key_value']['en-us'] = 'Value';
-		$text['label-device_key_value']['pt-pt'] = '';
+		$text['label-device_key_value']['en-us'] = "Value";
+		$text['label-device_key_value']['pt-pt'] = "";
+		$text['label-device_key_value']['fr-fr'] = "";
 
-		$text['description-device_key_value']['en-us'] = 'Enter the value.';
-		$text['description-device_key_value']['pt-pt'] = '';
+		$text['description-device_key_value']['en-us'] = "Enter the value.";
+		$text['description-device_key_value']['pt-pt'] = "";
+		$text['description-device_key_value']['fr-fr'] = "";
 
-		$text['label-device_key_extension']['en-us'] = 'Extension';
-		$text['label-device_key_extension']['pt-pt'] = '';
+		$text['label-device_key_extension']['en-us'] = "Extension";
+		$text['label-device_key_extension']['pt-pt'] = "";
+		$text['label-device_key_extension']['fr-fr'] = "";
 
-		$text['description-device_key_extension']['en-us'] = 'Enter the extension.';
-		$text['description-device_key_extension']['pt-pt'] = '';
+		$text['description-device_key_extension']['en-us'] = "Enter the extension.";
+		$text['description-device_key_extension']['pt-pt'] = "";
+		$text['description-device_key_extension']['fr-fr'] = "";
 
-		$text['label-device_key_label']['en-us'] = 'Label';
-		$text['label-device_key_label']['pt-pt'] = '';
+		$text['label-device_key_label']['en-us'] = "Label";
+		$text['label-device_key_label']['pt-pt'] = "";
+		$text['label-device_key_label']['fr-fr'] = "";
 
-		$text['description-device_key_label']['en-us'] = 'Enter the label.';
-		$text['description-device_key_label']['pt-pt'] = '';
+		$text['description-device_key_label']['en-us'] = "Enter the label.";
+		$text['description-device_key_label']['pt-pt'] = "";
+		$text['description-device_key_label']['fr-fr'] = "";
 
-		$text['label-line']['en-us'] = 'line';
-		$text['label-line']['pt-pt'] = '';
+		$text['label-line']['en-us'] = "Line";
+		$text['label-line']['pt-pt'] = "";
+		$text['label-line']['fr-fr'] = "";
 
-		$text['label-blf']['en-us'] = 'blf';
-		$text['label-blf']['pt-pt'] = '';
+		$text['label-programmable']['en-us'] = "Programmable";
+		$text['label-programmable']['pt-pt'] = "";
+		$text['label-programmable']['fr-fr'] = "";
 
-		$text['label-park']['en-us'] = 'park';
-		$text['label-park']['pt-pt'] = '';
+		$text['label-memory']['en-us'] = "Memory";
+		$text['label-memory']['pt-pt'] = "";
+		$text['label-memory']['fr-fr'] = "";
 
-		$text['label-programmable']['en-us'] = 'programmable';
-		$text['label-programmable']['pt-pt'] = '';
+		$text['label-expansion']['en-us'] = "Expansion";
+		$text['label-expansion']['pt-pt'] = "";
+		$text['label-expansion']['fr-fr'] = "";
 
-		$text['label-memory']['en-us'] = 'memory';
-		$text['label-memory']['pt-pt'] = '';
+		$text['label-disabled']['en-us'] = "Disabled";
+		$text['label-disabled']['pt-pt'] = "";
+		$text['label-disabled']['fr-fr'] = "";
 
-		$text['label-expansion']['en-us'] = 'expansion';
-		$text['label-expansion']['pt-pt'] = '';
+		$text['label-shared_line']['en-us'] = "Shared Line";
+		$text['label-shared_line']['pt-pt'] = "";
+		$text['label-shared_line']['fr-fr'] = "";
+
+		$text['label-speed_dial']['en-us'] = "Speed Dial";
+		$text['label-speed_dial']['pt-pt'] = "";
+		$text['label-speed_dial']['fr-fr'] = "";
+
+		$text['label-blf']['en-us'] = "BLF";
+		$text['label-blf']['pt-pt'] = "";
+		$text['label-blf']['fr-fr'] = "";
+
+		$text['label-presence_watcher']['en-us'] = "Presence Watcher";
+		$text['label-presence_watcher']['pt-pt'] = "";
+		$text['label-presence_watcher']['fr-fr'] = "";
+
+		$text['label-eventlist_blf']['en-us'] = "Eventlist BLF";
+		$text['label-eventlist_blf']['pt-pt'] = "";
+		$text['label-eventlist_blf']['fr-fr'] = "";
+
+		$text['label-speed_dial_active']['en-us'] = "Speed Dial Active";
+		$text['label-speed_dial_active']['pt-pt'] = "";
+		$text['label-speed_dial_active']['fr-fr'] = "";
+
+		$text['label-voicemail']['en-us'] = "Voicemail";
+		$text['label-voicemail']['pt-pt'] = "";
+		$text['label-voicemail']['fr-fr'] = "";
+
+		$text['label-call_return']['en-us'] = "Call Return";
+		$text['label-call_return']['pt-pt'] = "";
+		$text['label-call_return']['fr-fr'] = "";
+
+		$text['label-dial_dtmf']['en-us'] = "Dial DTMF";
+		$text['label-dial_dtmf']['pt-pt'] = "";
+		$text['label-dial_dtmf']['fr-fr'] = "";
+
+		$text['label-transfer']['en-us'] = "Transfer";
+		$text['label-transfer']['pt-pt'] = "";
+		$text['label-transfer']['fr-fr'] = "";
+
+		$text['label-call_park']['en-us'] = "Call Park";
+		$text['label-call_park']['pt-pt'] = "";
+		$text['label-call_park']['fr-fr'] = "";
+
+		$text['label-intercom']['en-us'] = "Intercom";
+		$text['label-intercom']['pt-pt'] = "";
+		$text['label-intercom']['fr-fr'] = "";
+
+		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['pt-pt'] = "";
+		$text['label-ldap_search']['fr-fr'] = "";
+
+		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['pt-pt'] = "";
+		$text['label-ldap_search']['fr-fr'] = "";
+
+		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['pt-pt'] = "";
+		$text['label-ldap_search']['fr-fr'] = "";
+
+		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['pt-pt'] = "";
+		$text['label-ldap_search']['fr-fr'] = "";
+
+		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['pt-pt'] = "";
+		$text['label-ldap_search']['fr-fr'] = "";
+
+		$text['label-na']['en-us'] = "N/A";
+		$text['label-na']['pt-pt'] = "";
+		$text['label-na']['fr-fr'] = "";
+
+		$text['label-conference']['en-us'] = "Conference";
+		$text['label-conference']['pt-pt'] = "";
+		$text['label-conference']['fr-fr'] = "";
+
+		$text['label-forward']['en-us'] = "Forward";
+		$text['label-forward']['pt-pt'] = "";
+		$text['label-forward']['fr-fr'] = "";
+
+		$text['label-hold']['en-us'] = "Hold";
+		$text['label-hold']['pt-pt'] = "";
+		$text['label-hold']['fr-fr'] = "";
+
+		$text['label-dnd']['en-us'] = "DND";
+		$text['label-dnd']['pt-pt'] = "";
+		$text['label-dnd']['fr-fr'] = "";
+
+		$text['label-redial']['en-us'] = "Redial";
+		$text['label-redial']['pt-pt'] = "";
+		$text['label-redial']['fr-fr'] = "";
+
+		$text['label-call_return']['en-us'] = "Call Return";
+		$text['label-call_return']['pt-pt'] = "";
+		$text['label-call_return']['fr-fr'] = "";
+
+		$text['label-sms']['en-us'] = "SMS";
+		$text['label-sms']['pt-pt'] = "";
+		$text['label-sms']['fr-fr'] = "";
+
+		$text['label-call_pickup']['en-us'] = "Call Pickup";
+		$text['label-call_pickup']['pt-pt'] = "";
+		$text['label-call_pickup']['fr-fr'] = "";
+
+		$text['label-dtmf']['en-us'] = "DTMF";
+		$text['label-dtmf']['pt-pt'] = "";
+		$text['label-dtmf']['fr-fr'] = "";
+
+		$text['label-url']['en-us'] = "URL";
+		$text['label-url']['pt-pt'] = "";
+		$text['label-url']['fr-fr'] = "";
+
+		$text['label-public_hold']['en-us'] = "Public Hold";
+		$text['label-public_hold']['pt-pt'] = "";
+		$text['label-public_hold']['fr-fr'] = "";
+
+		$text['label-private']['en-us'] = "Private";
+		$text['label-private']['pt-pt'] = "";
+		$text['label-private']['fr-fr'] = "";
+
+		$text['label-xml_group']['en-us'] = "XML Group";
+		$text['label-xml_group']['pt-pt'] = "";
+		$text['label-xml_group']['fr-fr'] = "";
+
+		$text['label-group_pickup']['en-us'] = "Group Pickup";
+		$text['label-group_pickup']['pt-pt'] = "";
+		$text['label-group_pickup']['fr-fr'] = "";
+
+		$text['label-paging']['en-us'] = "Paging";
+		$text['label-paging']['pt-pt'] = "";
+		$text['label-paging']['fr-fr'] = "";
+
+		$text['label-record']['en-us'] = "Record";
+		$text['label-record']['pt-pt'] = "";
+		$text['label-record']['fr-fr'] = "";
+
+		$text['label-xml_browser']['en-us'] = "XML Browser";
+		$text['label-xml_browser']['pt-pt'] = "";
+		$text['label-xml_browser']['fr-fr'] = "";
+
+		$text['label-history']['en-us'] = "History";
+		$text['label-history']['pt-pt'] = "";
+		$text['label-history']['fr-fr'] = "";
+
+		$text['label-directory']['en-us'] = "Directory";
+		$text['label-directory']['pt-pt'] = "";
+		$text['label-directory']['fr-fr'] = "";
+
+		$text['label-menu']['en-us'] = "Menu";
+		$text['label-menu']['pt-pt'] = "";
+		$text['label-menu']['fr-fr'] = "";
+
+		$text['label-new_sms']['en-us'] = "New SMS";
+		$text['label-new_sms']['pt-pt'] = "";
+		$text['label-new_sms']['fr-fr'] = "";
+
+		$text['label-status']['en-us'] = "Status";
+		$text['label-status']['pt-pt'] = "";
+		$text['label-status']['fr-fr'] = "";
+
+		$text['label-hot_desking']['en-us'] = "Hot Desking";
+		$text['label-hot_desking']['pt-pt'] = "";
+		$text['label-hot_desking']['fr-fr'] = "";
+
+		$text['label-url_record']['en-us'] = "URL Record";
+		$text['label-url_record']['pt-pt'] = "";
+		$text['label-url_record']['fr-fr'] = "";
+
+		$text['label-ldap']['en-us'] = "LDAP";
+		$text['label-ldap']['pt-pt'] = "";
+		$text['label-ldap']['fr-fr'] = "";
+
+		$text['label-blf_list']['en-us'] = "BLF List";
+		$text['label-blf_list']['pt-pt'] = "";
+		$text['label-blf_list']['fr-fr'] = "";
+
+		$text['label-prefix']['en-us'] = "Prefix";
+		$text['label-prefix']['pt-pt'] = "";
+		$text['label-prefix']['fr-fr'] = "";
+
+		$text['label-zero_sp_touch']['en-us'] = "Zero-Sp-Touch";
+		$text['label-zero_sp_touch']['pt-pt'] = "";
+		$text['label-zero_sp_touch']['fr-fr'] = "";
+
+		$text['label-acd']['en-us'] = "ACD";
+		$text['label-acd']['pt-pt'] = "";
+		$text['label-acd']['fr-fr'] = "";
+
+		$text['label-local_phonebook']['en-us'] = "Local Phonebook";
+		$text['label-local_phonebook']['pt-pt'] = "";
+		$text['label-local_phonebook']['fr-fr'] = "";
+
+		$text['label-broadsoft_phonebook']['en-us'] = "Broadsoft Phonebook";
+		$text['label-broadsoft_phonebook']['pt-pt'] = "";
+		$text['label-broadsoft_phonebook']['fr-fr'] = "";
+
+		$text['label-local_group']['en-us'] = "Local Group";
+		$text['label-local_group']['pt-pt'] = "";
+		$text['label-local_group']['fr-fr'] = "";
+
+		$text['label-broadsoft_group']['en-us'] = "Broadsoft Group";
+		$text['label-broadsoft_group']['pt-pt'] = "";
+		$text['label-broadsoft_group']['fr-fr'] = "";
+
+		$text['label-xml_phonebook']['en-us'] = "XML Phonebook";
+		$text['label-xml_phonebook']['pt-pt'] = "";
+		$text['label-xml_phonebook']['fr-fr'] = "";
+
+		$text['label-switch_account_up']['en-us'] = "Switch Account Up";
+		$text['label-switch_account_up']['pt-pt'] = "";
+		$text['label-switch_account_up']['fr-fr'] = "";
+
+		$text['label-switch_account_down']['en-us'] = "Switch Account Down";
+		$text['label-switch_account_down']['pt-pt'] = "";
+		$text['label-switch_account_down']['fr-fr'] = "";
+
+		$text['label-keypad_lock']['en-us'] = "Keypad Lock";
+		$text['label-keypad_lock']['pt-pt'] = "";
+		$text['label-keypad_lock']['fr-fr'] = "";
 
 	//general translations
 		$text['label-true']['en-us'] = "true";
