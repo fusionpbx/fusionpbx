@@ -86,6 +86,22 @@ include "root.php";
 				$mac = $this->mac;
 				$file = $this->file;
 
+			//get the domain_name
+				if (strlen($domain_uuid) == 0) {
+					$sql = "SELECT domain_name FROM v_domains ";
+					$sql .= "WHERE domain_uuid=:domain_uuid ";
+					$prep_statement = $this->db->prepare(check_sql($sql));
+					if ($prep_statement) {
+						//use the prepared statement
+							$prep_statement->bindParam(':domain_uuid', $domain_uuid);
+							$prep_statement->execute();
+							$row = $prep_statement->fetch();
+							unset($prep_statement);
+						//set the variables from values in the database
+							$domain_name = $row["domain_name"];
+					}
+				}
+
 			//build the provision array
 				foreach($_SESSION['provision'] as $key=>$val) {
 					if (strlen($val['var']) > 0) { $value = $val['var']; }
@@ -488,6 +504,7 @@ include "root.php";
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach ($result as &$row) {
 					//get the values from the database and set as variables
+						$domain_uuid = $row["domain_uuid"];
 						$device_uuid = $row["device_uuid"];
 						$device_mac_address = $row["device_mac_address"];
 						$device_label = $row["device_label"];
@@ -548,7 +565,7 @@ include "root.php";
 												if (file_exists($this->template_dir."/".$device_template."/".$file_name)) {
 													//output template to string for header processing
 														//output template to string for header processing
-															//$prov->domain_uuid = $domain_uuid;
+															$prov->domain_uuid = $domain_uuid;
 															$this->mac = $device_mac_address;
 															$this->file = $file_name;
 															$file_contents = $this->render();
