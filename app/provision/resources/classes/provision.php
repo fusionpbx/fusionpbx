@@ -87,7 +87,7 @@ include "root.php";
 				$file = $this->file;
 
 			//get the domain_name
-				if (strlen($domain_uuid) == 0) {
+				if (strlen($domain_name) == 0) {
 					$sql = "SELECT domain_name FROM v_domains ";
 					$sql .= "WHERE domain_uuid=:domain_uuid ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
