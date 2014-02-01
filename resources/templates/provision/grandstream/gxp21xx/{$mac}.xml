@@ -1762,6 +1762,7 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
+
     {if $sip_transport_5 == 'udp'}<P1748>0</P1748>{/if}
     {if $sip_transport_5 == 'tcp'}<P1748>1</P1748>{/if}
     {if $sip_transport_5 == 'tls'}<P1748>2</P1748>{/if}
@@ -2693,7 +2694,7 @@
     <P212>2</P212>
     <!-- Firmware Server Path -->
     <!-- String -->
-    <P192>fm.grandstream.com/gs</P192>
+    <P192>{$domain_name}{$project_path}/app/provision</P192>
     <!-- Config Server Path -->
     <!-- String -->
     <P237>{$domain_name}{$project_path}/app/provision</P237>
