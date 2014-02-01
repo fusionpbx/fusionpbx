@@ -3332,10 +3332,10 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <P313>{$memory_key_line_5}</P313>
     <!-- Name. Max length allowed is 32 characters. -->
     <!-- String -->
-    <P314>{$memory_key_value_5}</P314>
+    <P314>{$memory_key_label_5}</P314>
     <!-- User ID. Max length allowed is 64 character -->
     <!-- String -->
-    <P315>{$memory_key_label_5}</P315>
+    <P315>{$memory_key_value_5}</P315>
     <!-- Multipurpose Key 6 -->
     <!-- Key Mode. -->
     <!-- 0 - Speed Dial, 1 - BLF, 2 - Presence Watcher, 3 - eventlist BLF -->
