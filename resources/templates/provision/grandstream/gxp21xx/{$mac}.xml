@@ -60,7 +60,10 @@
     <!-- 200 - 2 sec, 400 - 4 sec, 800 - 8 sec. Default is 400 -->
     <P250>400</P250>
     <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TLS/TCP. Default is 0 -->
-    <P130>0</P130>
+    {if $sip_transport_1 == 'udp'}<P130>0</P130>{/if}
+    {if $sip_transport_1 == 'tcp'}<P130>1</P130>{/if}
+    {if $sip_transport_1 == 'tls'}<P130>2</P130>{/if}
+    {if $sip_transport_1 == 'dns srv'}<P130>1</P130>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <P2329>1</P2329>
     <!-- Use Actual Ephemeral Port in Contact with TCP/TLS. 0 - No, 1 - Yes. Default is 0 -->
@@ -473,7 +476,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    <P448>0</P448>
+    {if $sip_transport_2 == 'udp'}<P448>0</P448>{/if}
+    {if $sip_transport_2 == 'tcp'}<P448>1</P448>{/if}
+    {if $sip_transport_2 == 'tls'}<P448>2</P448>{/if}
+    {if $sip_transport_2 == 'dns srv'}<P448>1</P448>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -901,7 +907,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP. 2- TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    <P548>0</P548>
+    {if $sip_transport_3 == 'udp'}<P548>0</P548>{/if}
+    {if $sip_transport_3 == 'tcp'}<P548>1</P548>{/if}
+    {if $sip_transport_3 == 'tls'}<P548>2</P548>{/if}
+    {if $sip_transport_3 == 'dns srv'}<P548>1</P548>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -1328,7 +1337,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    <P648>0</P648>
+    {if $sip_transport_4 == 'udp'}<P648>0</P648>{/if}
+    {if $sip_transport_4 == 'tcp'}<P648>1</P648>{/if}
+    {if $sip_transport_4 == 'tls'}<P648>2</P648>{/if}
+    {if $sip_transport_4 == 'dns srv'}<P648>1</P648>{/if}
     <!-- SIP URI Scheme When Using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -1750,7 +1762,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP. 2 - TCP/TLS. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    <P1748>0</P1748>
+    {if $sip_transport_5 == 'udp'}<P1748>0</P1748>{/if}
+    {if $sip_transport_5 == 'tcp'}<P1748>1</P1748>{/if}
+    {if $sip_transport_5 == 'tls'}<P1748>2</P1748>{/if}
+    {if $sip_transport_5 == 'dns srv'}<P1748>1</P1748>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
@@ -2176,7 +2191,10 @@
     <!-- SIP Transport. 0 - UDP, 1 - TCP, 2 - TCP/TLS. Default is 2 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
-    <P1848>0</P1848>
+    {if $sip_transport_6 == 'udp'}<P1848>0</P1848>{/if}
+    {if $sip_transport_6 == 'tcp'}<P1848>1</P1848>{/if}
+    {if $sip_transport_6 == 'tls'}<P1848>2</P1848>{/if}
+    {if $sip_transport_6 == 'dns srv'}<P1848>1</P1848>{/if}
     <!-- SIP URI Scheme when using TLS. 0 - sip, 1 - sips. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
