@@ -3037,6 +3037,14 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
     <P1302>0</P1302>
+    <!-- Date Display Format -->
+    <!-- 0: yyyy-mm-dd      eg. 2011-10-31 -->
+    <!-- 1: mm-dd-yyyy      eg. 10-31-2011 -->
+    <!-- 2: dd-mm-yyyy      eg. 31-10-2011 -->
+    <!-- 3: dddd, MMMM dd   eg. Monday, October 31 -->
+    <!-- 4: MMMM dd, dddd   eg. October 31, Monday -->
+    <!-- (some options might not fit for the screen layout) -->
+    <P102>1</P102>
     <!-- Handset TX gain(db). 1 - -6, 0 - 0, 2 - +6. Default is 0 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
