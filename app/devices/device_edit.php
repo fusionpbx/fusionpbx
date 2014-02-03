@@ -634,8 +634,8 @@ require_once "resources/require.php";
 				<?php if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0) {
 					if (strlen($device_vendor) == 0) { echo "<optgroup label='Cisco'>"; }
 					?>
-					<option value='line' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
-					<option value='disabled' <?php if ($row['device_key_type'] == "0") { echo $selected;$found=true; } ?>><?php echo $text['label-disabled'] ?></option>
+					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
+					<option value='disabled' <?php if ($row['device_key_type'] == "disabled") { echo $selected;$found=true; } ?>><?php echo $text['label-disabled'] ?></option>
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
