@@ -1423,29 +1423,14 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		if ($select_type == "dialplan" || $select_type == "ivr") {
 			//set the default value
 				$selected = '';
-			//answer
-				if ($select_value == "answer") { $selected = "selected='selected'"; }
+			//check voicemail
 				if ($select_type == "dialplan") {
-					echo "		<option value='answer' $selected>answer</option>\n";
+					if ($select_value == "transfer:*98 XML ".$_SESSION["context"]) { $selected = "selected='selected'"; }
+					echo "		<option value='transfer:*98 XML ".$_SESSION["context"]."' $selected>check voicemail</option>\n";
 				}
 				if ($select_type == "ivr") {
-					echo "		<option value='menu-exec-app:answer' $selected>answer</option>\n";
-				}
-			//hangup
-				if ($select_value == "hangup") { $selected = "selected='selected'"; }
-				if ($select_type == "dialplan") {
-					echo "		<option value='hangup' $selected>hangup</option>\n";
-				}
-				if ($select_type == "ivr") {
-					echo "		<option value='menu-exec-app:hangup' $selected>hangup</option>\n";
-				}
-			//info
-				if ($select_value == "info") { $selected = "selected='selected'"; }
-				if ($select_type == "dialplan") {
-					echo "		<option value='info' $selected>info</option>\n";
-				}
-				if ($select_type == "ivr") {
-					echo "		<option value='menu-exec-app:info' $selected>info</option>\n";
+					if ($select_value == "menu-exec-app:transfer *98 XML ".$_SESSION["context"]) { $selected = "selected='selected'"; }
+					echo "		<option value='menu-exec-app:transfer *98 XML ".$_SESSION["context"]."' $selected>check voicemail</option>\n";
 				}
 			//company directory
 				if ($select_type == "dialplan") {
@@ -1458,6 +1443,30 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				}
 			//advanced
 				if (if_group("superadmin")) {
+					//answer
+						if ($select_value == "answer") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='answer' $selected>answer</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:answer' $selected>answer</option>\n";
+						}
+					//hangup
+						if ($select_value == "hangup") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='hangup' $selected>hangup</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:hangup' $selected>hangup</option>\n";
+						}
+					//info
+						if ($select_value == "info") { $selected = "selected='selected'"; }
+						if ($select_type == "dialplan") {
+							echo "		<option value='info' $selected>info</option>\n";
+						}
+						if ($select_type == "ivr") {
+							echo "		<option value='menu-exec-app:info' $selected>info</option>\n";
+						}
 					//bridge
 						if ($select_value == "bridge") { $selected = "selected='selected'"; }
 						if ($select_type == "dialplan") {
@@ -2428,7 +2437,7 @@ function save_dialplan_xml() {
 							mkdir($_SESSION['switch']['dialplan']['dir']."/".$row['dialplan_context'],0755,true);
 						}
 						if ($row['dialplan_context'] == "public") {
-							if (count($_SESSION['domains']) > 1) {
+							if (count($_SESSION['domains']) > 1 && strlen($row['domain_uuid']) > 0) {
 								if (!is_dir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'])) {
 									mkdir($_SESSION['switch']['dialplan']['dir']."/public/".$_SESSION['domains'][$row['domain_uuid']]['domain_name'],0755,true);
 								}
