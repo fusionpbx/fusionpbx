@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="user_status" continue="false" app_uuid="2eb032c5-c79d-4096-ac90-8a47fe40f411">
+		<condition field="destination_number" expression="^\*22$">
+			<action application="lua" data="app.lua user_status"/>
+		</condition>
+	</extension>
+</context>
