@@ -257,7 +257,7 @@
 								if (r.dialplan_detail_type == "destination_number") then
 									if (api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data) == "true") then
 										--get the regex result
-											destination_result = trim(api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data.."~\$1"));
+											destination_result = trim(api:execute("regex", "m:~"..destination_number.."~"..r.dialplan_detail_data.."~$1"));
 										--set match equal to true
 											regex_match = true
 									end
