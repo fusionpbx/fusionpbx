@@ -43,7 +43,7 @@ require_once "resources/require.php";
 				$_SESSION["template_content"] = '';
 			}
 
-		//if the username from the form is not provided then send to login.php
+		//if the username is not provided then send to login.php
 			if (strlen(check_str($_REQUEST["username"])) == 0 && strlen(check_str($_REQUEST["key"])) == 0) {
 				$php_self = $_SERVER["PHP_SELF"];
 				$msg = "username required";
@@ -56,10 +56,12 @@ require_once "resources/require.php";
 				//get the domain from the url
 					$domain_name = $_SERVER["HTTP_HOST"];
 				//get the domain name from the username
-					$username_array = explode("@", check_str($_REQUEST["username"]));
-					if (count($username_array) > 1) {
-						$domain_name = $username_array[count($username_array) -1];
-						$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+					if ($_SESSION["user"]["unique"]["text"] != "global") {
+						$username_array = explode("@", check_str($_REQUEST["username"]));
+						if (count($username_array) > 1) {
+							$domain_name = $username_array[count($username_array) -1];
+							$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
+						}
 					}
 				//get the domain name from the http value
 					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
@@ -67,7 +69,6 @@ require_once "resources/require.php";
 					}
 				//set the domain information
 					if (strlen($domain_name) > 0) {
-						require_once "resources/classes/domains.php";
 						foreach ($_SESSION['domains'] as &$row) {
 							if ($row['domain_name'] == $domain_name) {
 								//set the domain session variables
@@ -185,14 +186,14 @@ require_once "resources/require.php";
 				//check the username and password if they don't match then redirect to the login
 					if ($_SESSION["user"]["unique"]["text"] == "global") {
 						//globally unique users
-						$sql = "select * from v_users as u ";
+						$sql = "select * from v_users ";
 						if (strlen($key) > 0) {
 							$sql .= "where api_key=:key ";
-							//$sql .= "and api_key='".$key."' ";
+							//$sql .= "where api_key='".$key."' ";
 						}
 						else {
 							$sql .= "where username=:username ";
-							//$sql .= "and username='".$username."' ";
+							//$sql .= "where username='".$username."' ";
 						}
 						$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
 						$prep_statement = $db->prepare(check_sql($sql));
@@ -237,7 +238,6 @@ require_once "resources/require.php";
 									$_SESSION["domain_uuid"] = $domain_uuid;
 									$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 								//set the setting arrays
-									require_once "resources/classes/domains.php";
 									$domain = new domains();
 									$domain->db = $db;
 									$domain->set();
