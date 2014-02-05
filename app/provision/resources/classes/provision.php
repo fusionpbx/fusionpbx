@@ -31,6 +31,7 @@ include "root.php";
 		public $domain_uuid;
 		public $domain_name;
 		public $template_dir;
+		public $mac;
 
 		public function __construct() {
 			//get the database object
@@ -39,6 +40,10 @@ include "root.php";
 			//set the default template directory
 				if (strlen($this->template_dir) == 0) {
 					$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+				}
+			//normalize the mac address
+				if (isset($this->mac)) {
+					$this->mac = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $this->mac));
 				}
 		}
 
@@ -54,9 +59,10 @@ include "root.php";
 
 		//define the function which checks to see if the mac address exists in devices
 		private function mac_exists($mac) {
+			//normalize the mac address
+				$mac = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $mac));
 			//check in the devices table for a specific mac address
 				$sql = "SELECT count(*) as count FROM v_devices ";
-				//$sql .= "WHERE domain_uuid=:domain_uuid ";
 				$sql .= "WHERE device_mac_address=:mac ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				if ($prep_statement) {
