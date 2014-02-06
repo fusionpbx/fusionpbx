@@ -461,6 +461,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			unset ($prep_statement);
 		}
 
+//set default profile
+	if (strlen($profile) == 0) { $profile = 'default'; }
+
 //get default pins
 	if (strlen($moderator_pin) == 0) {
 		$moderator_pin = get_meeting_pin($pin_length, $meeting_uuid);
