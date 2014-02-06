@@ -115,7 +115,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$_POST["dialplan_name"] = $dialplan_name;
 			}
 		}
-	//array cleanup
+	//array preparation
 		$x = 0;
 		foreach ($_POST["dialplan_details"] as $row) {
 			//unset the empty row
@@ -125,6 +125,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//unset dialplan_detail_uuid if the field has no value
 				if (strlen($row["dialplan_detail_uuid"]) == 0) {
 					unset($_POST["dialplan_details"][$x]["dialplan_detail_uuid"]);
+				}
+			//set the domain_uuid
+				if (strlen($row["domain_uuid"]) == 0) {
+					$_POST["dialplan_details"][$x]["domain_uuid"]  = $_SESSION['domain_uuid'];
 				}
 			//increment the row
 				$x++;
@@ -162,12 +166,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$dialplan_uuid = $_GET["id"];
-		$sql = "select * from v_dialplans ";
-//		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$orm = new orm;
+		$orm->name('dialplans');
+		$orm->uuid($dialplan_uuid);
+		$result = $orm->find()->get();
+		//$message = $orm->message;
 		foreach ($result as &$row) {
 			$app_uuid = $row["app_uuid"];
 			$dialplan_name = $row["dialplan_name"];
@@ -736,13 +739,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    <select class='formfld' name='dialplan_enabled'>\n";
 	echo "    <option value=''></option>\n";
 	if ($dialplan_enabled == "true") {
-		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
+		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	if ($dialplan_enabled == "false") {
-		echo "    <option value='false' SELECTED >".$text['option-false']."</option>\n";
+		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
 		echo "    <option value='false'>".$text['option-false']."</option>\n";
