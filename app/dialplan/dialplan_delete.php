@@ -52,8 +52,8 @@ else {
 if (strlen($dialplan_uuid) > 0) {
 	//get the dialplan data
 		$sql = "select * from v_dialplans ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+		//$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -69,15 +69,15 @@ if (strlen($dialplan_uuid) > 0) {
 
 	//delete child data
 		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+		//$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where dialplan_uuid = '$dialplan_uuid'; ";
 		$db->query($sql);
 		unset($sql);
 
 	//delete parent data
 		$sql = "delete from v_dialplans ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+		//$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where dialplan_uuid = '$dialplan_uuid'; ";
 		$db->query($sql);
 		unset($sql);
 
