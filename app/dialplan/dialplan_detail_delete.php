@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -44,31 +44,32 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET) > 0) {
-	$dialplan_detail_uuid = check_str($_GET["id"]);
-	$app_uuid = check_str($_REQUEST["app_uuid"]);
-	$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
-}
+//set the variables
+	if (count($_GET) > 0) {
+		$dialplan_detail_uuid = check_str($_GET["id"]);
+		$app_uuid = check_str($_REQUEST["app_uuid"]);
+		$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
+	}
 
-if (strlen($dialplan_detail_uuid) > 0) {
+//delete the dialplan detail
+	if (strlen($dialplan_detail_uuid) > 0) {
+		//delete child data
+			$sql = "delete from v_dialplan_details ";
+			//$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "where dialplan_detail_uuid = '$dialplan_detail_uuid' ";
+			$db->query($sql);
+			unset($sql);
 
-	//delete child data
-		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid' ";
-		$db->query($sql);
-		unset($sql);
+		//synchronize the xml config
+			save_dialplan_xml();
 
-	//synchronize the xml config
-		save_dialplan_xml();
-
-	//delete the dialplan context from memcache
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-		}
-}
+		//delete the dialplan context from memcache
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_cmd = "memcache delete dialplan:".$_SESSION["context"];
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+			}
+	}
 
 //redirect the user
 	require_once "resources/header.php";
