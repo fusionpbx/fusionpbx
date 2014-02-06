@@ -77,7 +77,6 @@ require_once "resources/paging.php";
 		$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
 	}
-
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -101,8 +100,8 @@ require_once "resources/paging.php";
 	if (if_group("superadmin") || if_group("admin")) {
 		//show all fax extensions
 		$sql = "select * from v_fax ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "order by fax_name asc ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		if (strlen($order_by) == 0) { $sql .= "order by fax_name asc "; }
 	}
 	else {
 		//show only assigned fax extensions
@@ -110,9 +109,11 @@ require_once "resources/paging.php";
 		$sql .= "where f.fax_uuid = u.fax_uuid ";
 		$sql .= "and f.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
-		$sql .= "order by f.fax_name asc ";
+		if (strlen($order_by) == 0) { $sql .= "order by f.fax_name asc "; }
 	}
-	if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
+	if (strlen($order_by) > 0) {
+		$sql .= "order by $order_by $order "; 
+	}
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
