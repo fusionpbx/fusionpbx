@@ -287,7 +287,7 @@ require_once "resources/require.php";
 	$sql .= "WHEN 'programmable' THEN 3 ";
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "ELSE 100 END, ";
-	$sql .= "device_key_id asc ";
+	$sql .= "cast(device_key_id as numeric) asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -607,19 +607,11 @@ require_once "resources/require.php";
 				$selected = "selected='selected'";
 				echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_id]'>\n";
 				echo "	<option value=''></option>\n";
-				echo "	<option value='0' ".($row['device_key_id'] == "0" ? $selected:"").">0</option>\n";
-				echo "	<option value='1' ".($row['device_key_id'] == "1" ? $selected:"").">1</option>\n";
-				echo "	<option value='2' ".($row['device_key_id'] == "2" ? $selected:"").">2</option>\n";
-				echo "	<option value='3' ".($row['device_key_id'] == "3" ? $selected:"").">3</option>\n";
-				echo "	<option value='4' ".($row['device_key_id'] == "4" ? $selected:"").">4</option>\n";
-				echo "	<option value='5' ".($row['device_key_id'] == "5" ? $selected:"").">5</option>\n";
-				echo "	<option value='6' ".($row['device_key_id'] == "6" ? $selected:"").">6</option>\n";
-				echo "	<option value='7' ".($row['device_key_id'] == "7" ? $selected:"").">7</option>\n";
-				echo "	<option value='8' ".($row['device_key_id'] == "8" ? $selected:"").">8</option>\n";
-				echo "	<option value='9' ".($row['device_key_id'] == "9" ? $selected:"").">9</option>\n";
-				echo "	<option value='10' ".($row['device_key_id'] == "10" ? $selected:"").">10</option>\n";
-				echo "	<option value='11' ".($row['device_key_id'] == "11" ? $selected:"").">11</option>\n";
-				echo "	<option value='12' ".($row['device_key_id'] == "12" ? $selected:"").">12</option>\n";
+				$i = 0;
+				while ($i < 100) {
+					echo "	<option value='$i' ".($row['device_key_id'] == $i ? $selected:"").">$i</option>\n";
+					$i++;
+				}
 				echo "	</select>\n";
 				echo "</td>\n";
 
