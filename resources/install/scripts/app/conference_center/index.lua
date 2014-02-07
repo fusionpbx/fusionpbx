@@ -34,7 +34,7 @@
 	digit_timeout = 5000;
 
 --debug
-	debug["sql"] = true;
+	debug["sql"] = false;
 
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
@@ -634,7 +634,7 @@
 							--send a command to record the conference
 								if (not file_exists(recording..".wav")) then
 									cmd = "conference "..meeting_uuid.."-"..domain_name.." record "..recording..".wav";
-									freeswitch.consoleLog("notice", "[conference center] cmd: " .. cmd .. "\n");
+									--freeswitch.consoleLog("notice", "[conference center] cmd: " .. cmd .. "\n");
 									response = api:executeString(cmd);
 								end
 						end
@@ -644,11 +644,11 @@
 				if (announce == "true") then
 					--announce the caller - play the recording
 						cmd = "conference "..meeting_uuid.."-"..domain_name.." play /tmp/conference-"..uuid..".wav";
-						freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
+						--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 						response = api:executeString(cmd);
 					--play has entered the conference
 						cmd = "conference "..meeting_uuid.."-"..domain_name.." play "..sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-has_joined.wav";
-						freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
+						--freeswitch.consoleLog("notice", "[conference center] ".. cmd .."\n");
 						response = api:executeString(cmd);
 				else
 					if (not conference_locked) then
@@ -658,9 +658,6 @@
 						end
 					end
 				end
-
-			--close the database connection
-				dbh:release();
 
 			--send the call to the conference
 				cmd = meeting_uuid.."-"..domain_name.."@"..profile.."+flags{".. flags .."}";
