@@ -90,7 +90,7 @@ else {
 		$sql = "select * from v_devices ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by) == 0) {
-			$sql .= "order by device_label, device_mac_address asc ";
+			$sql .= "order by device_mac_address asc ";
 		}
 		else {
 			$sql .= "order by $order_by $order ";
