@@ -5,14 +5,14 @@
 <Prof>
  <Enable PROFILE_ENABLE1="Enabled"/>
  <DTMFMethod OUTBANDDTMF_1="Y" OUTBANDDTMF_2="Y"/>
- <DigitMap DIAL_PLAN_1="1XXXXXXXXXX|X11|480XXXXXXX|602XXXXXXX|623XXXXXXX" DIAL_PLAN_2=""/>
+ <DigitMap DIAL_PLAN_1="1XXXXXXXXXX|X11|480XXXXXXX|602XXXXXXX|623XXXXXXX" DIAL_PLAN_2="1XXXXXXXXXX|X11|480XXXXXXX|602XXXXXXX|623XXXXXXX"/>
 <SIP>
- <ProxyServer SIP_PRXY_ADDR_1="{$server_address_1}" SIP_PRXY_ADDR_2=""/>
+ <ProxyServer SIP_PRXY_ADDR_1="{$server_address_1}" SIP_PRXY_ADDR_2="{$server_address_2}"/>
  <ProxyServerPort SIP_PRXY_PORT_1="5060" SIP_PRXY_PORT_2="5060"/>
  <ProxyServerTransport SIP_TRANSPORT_1="0" SIP_TRANSPORT_2="0"/>
- <RegistrarServer SIP_RGSTR_ADDR_1="{$server_address_1}" SIP_RGSTR_ADDR_2=""/>
+ <RegistrarServer SIP_RGSTR_ADDR_1="{$server_address_1}" SIP_RGSTR_ADDR_2="{$server_address_2}"/>
  <RegistrarServerPort SIP_RGSTR_PORT_1="5060" SIP_RGSTR_PORT_2="5060"/>
- <UserAgentDomain SIP_SVCDOMAIN_1="{$server_address_1}" SIP_SVCDOMAIN_2=""/>
+ <UserAgentDomain SIP_SVCDOMAIN_1="{$server_address_1}" SIP_SVCDOMAIN_2="{$server_address_2}"/>
  <UserAgentPort1 SIP_SRC_PORT_1="5060"/>
  <UserAgentPort2 SIP_SRC_PORT_2="5070"/>
  <OutboundProxy SIP_OUTPROXY_ADDR_1="" SIP_OUTPROXY_ADDR_2=""/>
@@ -38,7 +38,7 @@
  <HoldSoundPath HOLD_SOUND_PATH_1="0" HOLD_SOUND_PATH_2="0"/>
  <SIPRequestURIPort SIP_REQURI_PORT_1="Y" SIP_REQURI_PORT_2="Y"/>
 <EventSubscribe>
- <Notifier SIP_PRSNC_ADDR_1="{$server_address_1}" SIP_PRSNC_ADDR_2=""/>
+ <Notifier SIP_PRSNC_ADDR_1="{$server_address_1}" SIP_PRSNC_ADDR_2="{$server_address_2}"/>
  <NotifierPort SIP_PRSNC_PORT_1="5060" SIP_PRSNC_PORT_2="5060"/>
  <ExpireTime SIP_SUBS_EXPIRE_1="3600" SIP_SUBS_EXPIRE_2="3600"/>
  <X_P_IPTEL_SIPNotifier2 SIP_2NDPRSNC_ADDR_1="" SIP_2NDPRSNC_ADDR_2=""/>
@@ -144,18 +144,18 @@
  </Line>
 <Line ID="2">
  <Enable LINE_ENABLE_2="Enabled"/>
- <DirectoryNumber PHONE_NUMBER_2=""/>
+ <DirectoryNumber PHONE_NUMBER_2="{$user_id_2}"/>
 <SIP>
- <AuthUserName SIP_AUTHID_2=""/>
- <AuthPassword SIP_PASS_2=""/>
- <URI SIP_URI_2=""/>
+ <AuthUserName SIP_AUTHID_2="{$user_id_2}"/>
+ <AuthPassword SIP_PASS_2="{$user_password_2}"/>
+ <URI SIP_URI_2="{$user_id_2}"/>
  </SIP>
 <CallingFeatures>
- <CallerIDName DISPLAY_NAME_2=""/>
+ <CallerIDName DISPLAY_NAME_2="{$display_name_2}"/>
  <CallWaitingEnable CW_ENABLE_2="Y"/>
  </CallingFeatures>
 <CallFeat>
- <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_2=""/>
+ <X_P_IPTEL_VoiceMailAccessNumber VM_NUMBER_2="*97"/>
  <X_P_IPTEL_DialPlanNotMatchEnable DIAL_PLAN_NOT_MATCH_ENABLE_2="N"/>
  <X_P_IPTEL_SharedCallEnable SHARED_CALL_ENABLE_2="N"/>
  <X_P_IPTEL_FwdDndSynchroEnable FWD_DND_SYNCHRO_ENABLE_2="N"/>
@@ -240,7 +240,7 @@
 <Time>
  <NTPServer1 NTP_ADDR="time-a.nist.gov"/>
  <LocalTimeZone LOCAL_TIME_ZONE_POSIX=""/>
- <LocalTimeZone_TIME_ZONE TIME_ZONE="-420"/>
+ <LocalTimeZone_TIME_ZONE TIME_ZONE="{$time_zone}"/>
  <LocalTimeZone_DST_ENABLE DST_ENABLE="N"/>
  <LocalTimeZone_DST_OFFSET DST_OFFSET="60"/>
  <LocalTimeZone_DST_START_MONTH DST_START_MONTH="3"/>
@@ -263,12 +263,12 @@
  <USER_DNS2_ADDR USER_DNS2_ADDR=""/>
  <X_P_IPTEL_DNSManualSettingEnable DHCP_DNS_ENABLE="N"/>
  <X_P_IPTEL_NetworkSettingEnable NW_SETTING_ENABLE="Y"/>
- <X_P_IPTEL_HostName HOST_NAME="{$MODEL}"/>
+ <X_P_IPTEL_HostName HOST_NAME="{literal}{MODEL}{/literal}"/>
  </LAN>
 <X_P_IPTEL_HTTP>
  <Version HTTP_VER="1"/>
  <CustomWebPage CUSTOM_WEB_PAGE="0"/>
- <UserAgent HTTP_USER_AGENT="Panasonic_{$MODEL}/{$fwver} ({$mac})"/>
+ <UserAgent HTTP_USER_AGENT="Panasonic_{literal}{MODEL}/{fwver} ({mac}{/literal})"/>
  <SSLVerify HTTP_SSL_VERIFY="0"/>
  <CertificateFileURL CFG_ROOT_CERTIFICATE_PATH=""/>
  </X_P_IPTEL_HTTP>
@@ -304,7 +304,7 @@
  <AutoPortOpenEnable HTTPD_PORTOPEN_AUTO="N"/>
  </X_P_IPTEL_HTTPD>
 <X_P_IPTEL_SIP>
- <UserAgent SIP_USER_AGENT="Panasonic_{$MODEL}/{$fwver} ({$mac})"/>
+ <UserAgent SIP_USER_AGENT="Panasonic_{literal}{MODEL}/{fwver} ({mac}{/literal})"/>
 <ResCode>
  <Dnd SIP_RESPONSE_CODE_DND="403"/>
  <CallReject SIP_RESPONSE_CODE_CALL_REJECT="603"/>
@@ -321,7 +321,7 @@
  <ProvisionEnable PROVISION_ENABLE="Y"/>
  <Option66Enable OPTION66_ENABLE="Y"/>
  <Option66Reboot OPTION66_REBOOT="Y"/>
- <StandardFileURL CFG_STANDARD_FILE_PATH="tftp://{$domain_name}{$project_path}/{$mac}.xml"/>
+ <StandardFileURL CFG_STANDARD_FILE_PATH="tftp://{$server_address_1}{$project_path}/{literal}{$mac}{/literal}.xml"/>
  <ProductFileURL CFG_PRODUCT_FILE_PATH=""/>
  <MasterFileURL CFG_MASTER_FILE_PATH=""/>
  <CyclicEnable CFG_CYCLIC="N"/>
