@@ -88,7 +88,15 @@
 		domain_uuid = row["domain_uuid"];
 		ring_group_forward_enabled = row["ring_group_forward_enabled"];
 		ring_group_forward_destination = row["ring_group_forward_destination"];
+		ring_group_cid_name_prefix = row["ring_group_cid_name_prefix"];
 	end);
+
+--set the caller id
+	if (session:ready()) then
+			if (string.len(ring_group_cid_name_prefix) > 0) then
+				session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
+			end
+	end
 
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
@@ -198,14 +206,6 @@
 					end
 					session:setVariable("ringback", ring_group_ringback);
 					session:setVariable("transfer_ringback", ring_group_ringback);
-
-				--add the caller id prefix
-					if (string.len(ring_group_cid_name_prefix) > 0) then
-						origination_caller_id_name = ring_group_cid_name_prefix .. "#" .. caller_id_name;
-					else
-						origination_caller_id_name = caller_id_name;
-					end
-					origination_caller_id_number = caller_id_number;
 
 				--setup the delimiter
 					delimiter = ",";
@@ -321,7 +321,7 @@
 							end
 						--originate each destination
 							if (dial_string ~= nil) then
-								dial_string = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
+								dial_string = "{ignore_early_media=true,origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
 								cmd = "";
 								if (tonumber(destination_delay) > 0) then
 									cmd = "sched_api +"..destination_delay.." "..new_uuid.." ";
@@ -330,12 +330,11 @@
 								--freeswitch.consoleLog("notice", "[ring group] cmd: " .. cmd .. "\n");
 								result = trim(api:executeString(cmd));
 							end
-
 					else
 						--use a delimiter between dialstrings
 							if (dial_string ~= nil) then
 								if (x == 0) then
-									app_data = "{ignore_early_media=true,origination_caller_id_name="..origination_caller_id_name..",origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
+									app_data = "{ignore_early_media=true}"..dial_string;
 								else
 									app_data = app_data .. delimiter .. dial_string;
 								end
