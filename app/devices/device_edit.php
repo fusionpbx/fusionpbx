@@ -177,7 +177,7 @@ require_once "resources/require.php";
 					$x = 0;
 					foreach ($_POST["device_keys"] as $row) {
 						//unset the empty row
-							if (strlen($row["device_key_id"]) == 0) {
+							if (strlen($row["device_key_category"]) == 0) {
 								unset($_POST["device_keys"][$x]);
 							}
 						//unset device_detail_uuid if the field has no value
