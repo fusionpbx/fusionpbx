@@ -40,8 +40,8 @@
 		//regenerate sessions to avoid session id attacks such as session fixation
 			if (!isset($_SESSION['session']['created'])) {
 				$_SESSION['session']['created'] = time();
-			} else if (time() - $_SESSION['session']['created'] > 1800) {
-				// session started more than 30 minutes ago
+			} else if (time() - $_SESSION['session']['created'] > 28800) {
+				// session started more than 8 hours ago
 				session_regenerate_id(true);    // rotate the session id
 				$_SESSION['session']['created'] = time();  // update creation time
 			}
