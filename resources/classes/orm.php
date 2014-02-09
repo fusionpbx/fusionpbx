@@ -339,6 +339,7 @@ require_once "database.php";
 
 									$message["message"] = "OK";
 									$message["code"] = "200";
+									$message["uuid"] = $parent_key_value;
 									$message["details"][$m]["name"] = $this->name;
 									$message["details"][$m]["message"] = "OK";
 									$message["details"][$m]["code"] = "200";
