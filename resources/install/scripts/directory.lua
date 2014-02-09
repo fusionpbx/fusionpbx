@@ -288,8 +288,8 @@
 			if (row.directory_full_name) then
 				name = row.directory_full_name;
 			else
-				if (row.directory_full_name) then
-					name = row.effective_caller_id_name;
+				if (string.len(effective_caller_id_name) > 0) then
+					name = effective_caller_id_name;
 				end
 			end
 			if (name) then
@@ -311,6 +311,7 @@
 
 			end
 		--add the row to the array
+			--freeswitch.consoleLog("notice", "[directory] extension="..row.extension..",context="..row.user_context..",first_name="..name_table[1]..",last_name="..name_table[2]..",first_name_digits="..first_name_digits..",last_name_digits="..last_name_digits..",directory_exten_visible="..row.directory_exten_visible.."\n");
 			table.insert(directory, {extension=row.extension,context=row.user_context,first_name=name_table[1],last_name=name_table[2],first_name_digits=first_name_digits,last_name_digits=last_name_digits,directory_exten_visible=row.directory_exten_visible});
 
 		--increment x
