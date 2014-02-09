@@ -43,6 +43,7 @@
 					event:addHeader("MWI-Messages-Waiting", "yes");
 				end
 				event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
+				event:addHeader("MWI-Voice-Message", row["message_count"].."/0 ("..row["message_count"].."/0)");
 				event:fire();
 			--log to console
 				if (debug["info"]) then
