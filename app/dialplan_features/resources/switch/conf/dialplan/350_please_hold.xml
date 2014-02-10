@@ -1,11 +1,11 @@
-<context name="features">
+<context name="{v_context}">
 	<extension name="please_hold" app_uuid="c3ea29d1-db41-421e-91b7-b0984e50bcae">
 		<condition field="destination_number" expression="^(10[01][0-9])$">
 			<action application="set" data="transfer_ringback=$${hold_music}"/>
 			<action application="answer"/>
 			<action application="sleep" data="1500"/>
 			<action application="playback" data="ivr/ivr-hold_connect_call.wav"/>
-			<action application="transfer" data="$1 XML default"/>
+			<action application="transfer" data="$1 XML ${context}"/>
 		</condition>
 	</extension>
 </context>

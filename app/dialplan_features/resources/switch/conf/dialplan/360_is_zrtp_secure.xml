@@ -1,4 +1,4 @@
-<context name="features">
+<context name="{v_context}">
 	<extension name="is_zrtp_secure" app_uuid="951808c2-b778-404d-bd17-50b5df4b88f4" continue="true">
 		<condition field="${zrtp_secure_media_confirmed}" expression="^true$">
 			<action application="sleep" data="1000"/>
