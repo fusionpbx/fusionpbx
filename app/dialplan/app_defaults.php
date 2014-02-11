@@ -101,34 +101,21 @@
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] == 0) {
-				//create the dialplan array
-					$array["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
-					$array["dialplan_context"] = "public";
-					$array["dialplan_name"] = "global";
-					$array["dialplan_continue"] = "true";
-					$array["dialplan_order"] = "0";
-					$array["dialplan_enabled"] = "true";
-					$y = 0;
-					$array["dialplan_details"][$y]["dialplan_detail_uuid"] = "5e1062d8-6842-4890-a78a-388e8dd5bbaf";
-					$array["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-					$array["dialplan_details"][$y]["dialplan_detail_type"] = "context";
-					$array["dialplan_details"][$y]["dialplan_detail_data"] = "public";
-					$array["dialplan_details"][$y]["dialplan_detail_order"] = "10";
-					$y++;
-					$array["dialplan_details"][$y]["dialplan_detail_uuid"] = "bdafd4aa-6633-48fc-970e-bc2778f3f022";
-					$array["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					$array["dialplan_details"][$y]["dialplan_detail_type"] = "lua";
-					$array["dialplan_details"][$y]["dialplan_detail_data"] = "app.lua dialplan";
-					$array["dialplan_details"][$y]["dialplan_detail_order"] = "20";
+				$sql = "INSERT INTO v_dialplans ";
+				$sql .= "(dialplan_uuid, app_uuid, dialplan_context, dialplan_name, dialplan_continue, dialplan_order, dialplan_enabled) ";
+				$sql .= "VALUES ('d4e06654-e394-444a-b3af-4c3d54aebbec', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'global', 'true', '0', 'true');";
+				$db->query($sql);
 
-				//save the dialplan with a specific uuid
-					$orm = new orm;
-					$orm->domain_uuid = $domain_uuid;
-					$orm->uuid('d4e06654-e394-444a-b3af-4c3d54aebbec');
-					$orm->name('dialplans');
-					$orm->save($array);
-					//$message = $orm->message;
-					unset($array);
+				$sql = "INSERT INTO v_dialplan_details ";
+				$sql .= "(dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, dialplan_detail_order) ";
+				$sql .= "VALUES ('d4e06654-e394-444a-b3af-4c3d54aebbec', '5e1062d8-6842-4890-a78a-388e8dd5bbaf', 'condition', 'context', 'public', '10');";
+				$db->query($sql);
+
+				$sql = "INSERT INTO v_dialplan_details ";
+				$sql .= "(dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, dialplan_detail_order) ";
+				$sql .= "VALUES ('d4e06654-e394-444a-b3af-4c3d54aebbec', 'bdafd4aa-6633-48fc-970e-bc2778f3f022', 'action', 'lua', 'app.lua dialplan', '20');";
+				$db->query($sql);
+				unset($sql);
 			}
 		}
 	}
