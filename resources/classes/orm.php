@@ -174,10 +174,7 @@ require_once "database.php";
 								$sql .= "WHERE ".$this->singular($this->name)."_uuid = '".$uuid."' ";
 								$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 								try {
-									$prep_statement = $this->db->prepare(check_sql($sql));
-									$prep_statement->execute();
-									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-									$this->result = $result;
+									$this->db->query(check_sql($sql));
 									$message["message"] = "OK";
 									$message["code"] = "200";
 									$message["details"][$m]["name"] = $this->name;
@@ -213,10 +210,7 @@ require_once "database.php";
 										$sql .= "WHERE ".$row['key']['field']." = '".$uuid."' ";
 										$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 										try {
-											$sub_prep_statement = $this->db->prepare($sql);
-											$sub_prep_statement->execute();
-											$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
-											unset ($sub_prep_statement, $sub_result);
+											$this->db->query(check_sql($sql));
 											$message["details"][$m]["name"] = $schema_name;
 											$message["details"][$m]["message"] = "OK";
 											$message["details"][$m]["code"] = "200";
@@ -334,8 +328,7 @@ require_once "database.php";
 								$sql = str_replace(", )", ")", $sql);
 								$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 								try {
-									$prep_statement = $this->db->prepare(check_sql($sql));
-									$prep_statement->execute();
+									$this->db->query(check_sql($sql));
 
 									$message["message"] = "OK";
 									$message["code"] = "200";
@@ -420,9 +413,7 @@ require_once "database.php";
 													$sql = str_replace(", )", ")", $sql);
 													$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 													try {
-														$prep_statement = $this->db->prepare(check_sql($sql));
-														$prep_statement->execute();
-														//$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+														$this->db->query(check_sql($sql));
 														$message["details"][$m]["name"] = $key;
 														$message["details"][$m]["message"] = "OK";
 														$message["details"][$m]["code"] = "200";
@@ -490,9 +481,7 @@ require_once "database.php";
 								$sql = str_replace(", WHERE", " WHERE", $sql);
 								$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 								try {
-									$prep_statement = $this->db->prepare(check_sql($sql));
-									$prep_statement->execute();
-									$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+									$this->db->query(check_sql($sql));
 									$message["message"] = "OK";
 									$message["code"] = "200";
 									$message["details"][$m]["name"] = $this->name;
@@ -563,9 +552,7 @@ require_once "database.php";
 														$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	//													if (strlen($child_key_value) > 0) {
 															try {
-																$prep_statement = $this->db->prepare(check_sql($sql));
-																$prep_statement->execute();
-																$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+																$this->db->query(check_sql($sql));
 																$message["details"][$m]["name"] = $key;
 																$message["details"][$m]["message"] = "OK";
 																$message["details"][$m]["code"] = "200";
@@ -624,8 +611,7 @@ require_once "database.php";
 														$sql = str_replace(", )", ")", $sql);
 														$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 														try {
-															$prep_statement = $this->db->prepare(check_sql($sql));
-															$prep_statement->execute();
+															$this->db->query(check_sql($sql));
 															$message["details"][$m]["name"] = $key;
 															$message["details"][$m]["message"] = "OK";
 															$message["details"][$m]["code"] = "200";
