@@ -29,6 +29,10 @@
 	$text['error-event-socket']['pt-pt'] = "A conexão ao Event Socket falhou.";
 	$text['error-event-socket']['fr-fr'] = "Connexion a l'Event Socket en echec.";
 
+	$text['button-reboot']['en-us'] = "Reboot";
+	$text['button-reboot']['pt-pt'] = "Reinicialização";
+	$text['button-reboot']['fr-fr'] = "Redémarrage";
+
 	$text['label-message']['en-us'] = "Message";
 	$text['label-message']['pt-pt'] = "Mensagem";
 	$text['label-message']['fr-fr'] = "Message";
@@ -37,7 +41,7 @@
 	$text['label-message']['pt-pt'] = "Perfil Inválido!";
 	$text['label-message']['fr-fr'] = "Profile Invalide!";
 
-	$text['button-back']['en-us'] = "back";
+	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
