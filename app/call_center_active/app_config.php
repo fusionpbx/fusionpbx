@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Shows active calls, and agents in the call center queue.";
-		$apps[$x]['description']['es-mx'] = "Muestra las llamadas activas y los agentes en la cola del centro de llamadas.";
+		$apps[$x]['description']['es-cl'] = "Muestra las llamadas activas y los agentes en la cola del centro de llamadas.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Active Call Center";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Centro de Llamada Activo";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Centro de Llamada Activo";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";

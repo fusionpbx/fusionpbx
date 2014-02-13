@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Display the switch logs.";
+		$apps[$x]['description']['es-cl'] = "Muestra los registros del switch";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Log Viewer";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Visor de eventos";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
@@ -39,10 +41,10 @@
 		$apps[$x]['permissions'][0]['name'] = "log_view";
 		$apps[$x]['permissions'][0]['menu']['uuid'] = "781ebbec-a55a-9d60-f7bb-f54ab2ee4e7e";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-		
+
 		$apps[$x]['permissions'][1]['name'] = "log_download";
 		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-		
+
 		$apps[$x]['permissions'][2]['name'] = "log_path_view";
 		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
 ?>

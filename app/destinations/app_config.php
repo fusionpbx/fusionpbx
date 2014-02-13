@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used to define external destination numbers.";
+		$apps[$x]['description']['es-cl'] = "Utilizado para definir números de destino externos.";
 		$apps[$x]['description']['es-mx'] = "Utilizado para definir numeros destinos externos.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Destinations";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Destinos";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "Destinos";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";

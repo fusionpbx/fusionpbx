@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Script Editor can be used to edit lua, javascript or other scripts.";
+		$apps[$x]['description']['es-cl'] = "Editor de scripts. Puede ser utilizado para editar archivos lua, javascript, etc.";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -21,6 +22,7 @@
 	//menu details
 		$y = 0;
 		$apps[$x]['menu'][$y]['title']['en-us'] = "Script Editor";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Editor de Scripts";
 		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -37,6 +39,7 @@
 		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['menu'][$y]['title']['en-us'] = "XML Editor";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Editor XML";
 		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -53,6 +56,7 @@
 		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['menu'][$y]['title']['en-us'] = "Provision Editor";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Editor de Provisionamiento";
 		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -69,6 +73,7 @@
 		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['menu'][$y]['title']['en-us'] = "PHP Editor";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Editor PHP";
 		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
@@ -85,6 +90,7 @@
 		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['menu'][$y]['title']['en-us'] = "Grammar Editor";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Editor GramÃ¡tico";
 		$apps[$x]['menu'][$y]['title']['es-mx'] = "Editor Gramático";
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";

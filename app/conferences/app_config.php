@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Conferences is used to setup conference rooms with a name, description, and optional pin number.";
-		$apps[$x]['description']['es-mx'] = "Las conferencias son usadas para configurar cuartos con un nombre, descripciÃ³n y un nÃºmero de acceso (opcional)";
+		$apps[$x]['description']['es-cl'] = "Las conferencias son usadas para configurar salas con un nombre, descripción y un número de acceso (opcional)";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Conferences";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Conferencias";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Conferencias";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";

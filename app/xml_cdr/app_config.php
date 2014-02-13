@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Call Detail Records with all information about the call.";
+		$apps[$x]['description']['es-cl'] = "Registro de detalle de llamados con toda la información de la llamada";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][1]['title']['en-us'] = "Call Detail Records";
+		$apps[$x]['menu'][1]['title']['es-cl'] = "Registro de detalle de llamada";
 		$apps[$x]['menu'][1]['title']['es-mx'] = "";
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";
@@ -48,13 +50,13 @@
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-	 	$y++; 		
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_add";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
- 		$y++; 		
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
- 		$y++; 		
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		//$y++;

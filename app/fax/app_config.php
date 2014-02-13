@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming FAX with a dedicated number or you can detect the FAX tone by using on the Public tab.";
+		$apps[$x]['description']['es-cl'] = "Para recibir un FAX, configure una extensión y después asigne un número a esta o puede detectar el tono de FAX utilizando la pestaña Público.";
 		$apps[$x]['description']['es-mx'] = "Para recibir un FAX, configure una extensiÃ³n y despuÃ©s asigne un nÃºmero a esta.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Fax Server";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Servidor de Fax";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "Servidor de Fax";
 		$apps[$x]['menu'][0]['title']['de-de'] = "Faxserver";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "Faxserver";

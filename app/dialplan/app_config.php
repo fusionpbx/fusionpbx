@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "The dialplan is used to setup call destinations based on conditions and context. You can use the dialplan to send calls to gateways, auto attendants, external numbers, to scripts, or any destination.";
+		$apps[$x]['description']['es-cl'] = "El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.";
 		$apps[$x]['description']['es-mx'] = "El plan de marcado es usado para configurar los destinos de llamadas basados en condiciones y contexto. Usted puede usar los planes de marcado para enviar hacia pasarelas, IVR, números externos, scripts o cualquier otro destino.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Dialplan";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Plan de Marcado";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "Plan de Marcado";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
@@ -38,6 +40,7 @@
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['menu'][1]['title']['en-us'] = "Dialplan Manager";
+		$apps[$x]['menu'][1]['title']['es-cl'] = "Gest. de Plan de Marcado";
 		$apps[$x]['menu'][1]['title']['es-mx'] = "Administrador de Planes de Marcado";
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";

@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Schedule to immediately make multiple calls to the extension, an IVR Menu, Conference Room, or any other number.";
-		$apps[$x]['description']['es-mx'] = "Realiza llamadas inmediatamente a extensiones, IVR, conferencias o cualquier otro número";
+		$apps[$x]['description']['es-cl'] = "Realiza llamadas inmediatamente a extensiones, IVR, conferencias o cualquier otro número";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Call Broadcast";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Llamada Masiva (Broadcast)";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Llamada Broadcast";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
