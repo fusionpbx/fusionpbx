@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Modules extend the features of the system. Use this page to enable or disable modules.";
+		$apps[$x]['description']['es-cl'] = "Los módulos extienden las funcionalidades del sistema. Utilice esta página para activar o desactivar los diferentes módulos.";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Modules";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Módulos";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";

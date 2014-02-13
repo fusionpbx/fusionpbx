@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage Content for any page in the interface.";
+		$apps[$x]['description']['es-cl'] = "Administra el Contenido de cualquier pagina en la interfaz.";
 		$apps[$x]['description']['es-mx'] = "Administra el Contenido de cualquier pagina en la interfaz.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Content Manager";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Gestor de Contenido";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "Administrador de Contenido";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";

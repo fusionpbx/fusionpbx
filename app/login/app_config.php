@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Used to login to a user account";
+		$apps[$x]['description']['es-cl'] = "Utilizado para iniciar sesión";
 		$apps[$x]['description']['es-mx'] = "";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Login";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Ingresar";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
@@ -37,6 +39,7 @@
 		$apps[$x]['menu'][0]['order'] = "99";
 
 		$apps[$x]['menu'][1]['title']['en-us'] = "Logout";
+		$apps[$x]['menu'][1]['title']['es-cl'] = "Salir";
 		$apps[$x]['menu'][1]['title']['es-mx'] = "";
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";

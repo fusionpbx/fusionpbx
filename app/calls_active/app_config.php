@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Active channels on the system.";
-		$apps[$x]['description']['es-mx'] = "Canales activos en el sistema.";
+		$apps[$x]['description']['es-cl'] = "Canales activos en el sistema.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Active Calls";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Llamadas Activas";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Llamadas Activas";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
@@ -36,7 +36,7 @@
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['menu'][1]['title']['en-us'] = "Active Extensions";
-		$apps[$x]['menu'][1]['title']['es-mx'] = "Extensiones activas";
+		$apps[$x]['menu'][1]['title']['es-cl'] = "Extensiones activas";
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";
 		$apps[$x]['menu'][1]['title']['de-at'] = "";

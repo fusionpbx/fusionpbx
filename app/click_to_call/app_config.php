@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Originate calls with a URL.";
-		$apps[$x]['description']['es-mx'] = "Genera llamadas con un URL.";
+		$apps[$x]['description']['es-cl'] = "Genera llamadas con un URL.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Click to Call";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Pulse para Llamar";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Pulse para Llamar";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";

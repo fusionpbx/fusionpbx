@@ -8,6 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Devices for provisioning.";
+		$apps[$x]['description']['es-cl'] = "Provicionamiento de dispositivos.";
 		$apps[$x]['description']['es-mx'] = "Provicionamiento de dispositivos.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -20,6 +21,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Devices";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Dispositivos";
 		$apps[$x]['menu'][0]['title']['es-mx'] = "Dispositivos";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";

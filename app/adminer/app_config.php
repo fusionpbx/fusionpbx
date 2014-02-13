@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0";
 		$apps[$x]['url'] = "http://www.adminer.org/";
 		$apps[$x]['description']['en-us'] = "Adminer (formerly phpMinAdmin) is a full-featured database management tool written in PHP. Adminer is available for MySQL, PostgreSQL, SQLite, MS SQL and Oracle.";
-		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['es-cl'] = "Adminer (anteriormente phpMinAdmin) es una herramienta completa para la gestión de bases de datos escrita en PHP. Adminer está disponible para MySQL, PostgreSQL, SQLite, MS SQL y Oracle)";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Adminer";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Administrador";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
