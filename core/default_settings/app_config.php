@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Default settings that apply to all domains.";
-		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['es-cl'] = "Configuraciones predeterminadas que aplican a todos los dominios.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Default Settings";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Conf. Predeterminada";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";

@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "The menu can be customized using this tool.";
-		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['es-cl'] = "El menú puede ser personalizado utilizando esta herramienta";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Menu Manager";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Gestor de Menú";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
@@ -36,7 +36,7 @@
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['menu'][1]['title']['en-us'] = "System";
-		$apps[$x]['menu'][1]['title']['es-mx'] = "";
+		$apps[$x]['menu'][1]['title']['es-cl'] = "Sistema";
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";
 		$apps[$x]['menu'][1]['title']['de-at'] = "";
@@ -55,7 +55,7 @@
 		$apps[$x]['menu'][1]['groups'][] = "superadmin";
 
 		$apps[$x]['menu'][2]['title']['en-us'] = "Accounts";
-		$apps[$x]['menu'][2]['title']['es-mx'] = "";
+		$apps[$x]['menu'][2]['title']['es-cl'] = "Cuentas";
 		$apps[$x]['menu'][2]['title']['de-de'] = "";
 		$apps[$x]['menu'][2]['title']['de-ch'] = "";
 		$apps[$x]['menu'][2]['title']['de-at'] = "";
@@ -85,7 +85,7 @@
 
 		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/calls_active/calls_active_extensions.php")) {
 			$apps[$x]['menu'][4]['title']['en-us'] = "Status";
-			$apps[$x]['menu'][4]['title']['es-mx'] = "";
+			$apps[$x]['menu'][4]['title']['es-cl'] = "Estado";
 			$apps[$x]['menu'][4]['title']['de-de'] = "";
 			$apps[$x]['menu'][4]['title']['de-ch'] = "";
 			$apps[$x]['menu'][4]['title']['de-at'] = "";
@@ -105,7 +105,7 @@
 		}
 
 		$apps[$x]['menu'][5]['title']['en-us'] = "Advanced";
-		$apps[$x]['menu'][5]['title']['es-mx'] = "";
+		$apps[$x]['menu'][5]['title']['es-cl'] = "Avanzado";
 		$apps[$x]['menu'][5]['title']['de-de'] = "";
 		$apps[$x]['menu'][5]['title']['de-ch'] = "";
 		$apps[$x]['menu'][5]['title']['de-at'] = "";

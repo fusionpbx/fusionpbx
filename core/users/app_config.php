@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Add, edit, delete, and search for users.";
-		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -19,7 +19,7 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 		$apps[$x]['menu'][2]['title']['en-us'] = "User Manager";
-		$apps[$x]['menu'][2]['title']['es-mx'] = "";
+		$apps[$x]['menu'][2]['title']['es-cl'] = "Gestor de Usuarios";
 		$apps[$x]['menu'][2]['title']['de-de'] = "";
 		$apps[$x]['menu'][2]['title']['de-ch'] = "";
 		$apps[$x]['menu'][2]['title']['de-at'] = "";
@@ -36,7 +36,7 @@
 		$apps[$x]['menu'][2]['groups'][] = "superadmin";
 
 		$apps[$x]['menu'][3]['title']['en-us'] = "Group Manager";
-		$apps[$x]['menu'][3]['title']['es-mx'] = "";
+		$apps[$x]['menu'][3]['title']['es-cl'] = "Administración de Grupos";
 		$apps[$x]['menu'][3]['title']['de-de'] = "";
 		$apps[$x]['menu'][3]['title']['de-ch'] = "";
 		$apps[$x]['menu'][3]['title']['de-at'] = "";
@@ -153,6 +153,7 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
+
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
