@@ -8,7 +8,7 @@
 		$apps[$x]['license'] = "Mozilla Public License 1.1";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Manage a single domain or multiple domains for multi-tenant.";
-		$apps[$x]['description']['es-mx'] = "";
+		$apps[$x]['description']['es-cl'] = "Administre un único dominio o múltiples dominios";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
@@ -20,7 +20,7 @@
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Domains";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Dominios";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
