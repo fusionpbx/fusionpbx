@@ -58,15 +58,14 @@ require_once "resources/require.php";
 		//devices
 			$device_mac_address = check_str($_POST["device_mac_address"]);
 			$device_mac_address = strtolower($device_mac_address);
-			$_POST["device_mac_address"] = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+			$_POST["device_mac_address"] = $device_mac_address;
 			$device_label = check_str($_POST["device_label"]);
 			$device_vendor = check_str($_POST["device_vendor"]);
 			$device_model = check_str($_POST["device_model"]);
 			$device_firmware_version = check_str($_POST["device_firmware_version"]);
 			$device_provision_enable = check_str($_POST["device_provision_enable"]);
 			$device_template = check_str($_POST["device_template"]);
-			$device_username = check_str($_POST["device_username"]);
-			$device_password = check_str($_POST["device_password"]);
 			$device_time_zone = check_str($_POST["device_time_zone"]);
 			$device_description = check_str($_POST["device_description"]);
 		//lines
@@ -102,12 +101,8 @@ require_once "resources/require.php";
 //add or update the database
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-		$msg = '';
-		if ($action == "update") {
-			$device_uuid = check_str($_POST["device_uuid"]);
-		}
-
 		//check for all required data
+			$msg = '';
 			if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 			//if (strlen($device_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
 			//if (strlen($device_vendor) == 0) { $msg .= "Please provide: Vendor<br>\n"; }
@@ -134,16 +129,7 @@ require_once "resources/require.php";
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-				/*
-				//remove the invalid characters from the extension name
-					foreach ($_POST as $key => $value) {
-						if ($key == "device_name") {
-							$device_name = str_replace(" ", "_", $value);
-							$device_name = str_replace("/", "", $device_name);
-							$_POST["device_name"] = $device_name;
-						}
-					}
-				*/
+
 				//add domain_uuid to the array
 					if (!isset($_POST["domain_uuid"])) {
 						$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
@@ -162,7 +148,6 @@ require_once "resources/require.php";
 				//array cleanup
 					$x = 0;
 					foreach ($_POST["device_lines"] as $row) {
-						//
 						//unset the empty row
 							if (strlen($row["line_number"]) == 0) {
 								unset($_POST["device_lines"][$x]);
@@ -201,26 +186,63 @@ require_once "resources/require.php";
 							$x++;
 					}
 
-				//add or update the database
-					if ($_POST["persistformvar"] != "true") {
+				//set the default
+					$save = true;
+
+				//check to see if the mac address exists
+					if ($action == "add") {
+						$sql = "SELECT count(*) AS num_rows FROM v_devices ";
+						$sql .= "WHERE device_mac_address = '".$device_mac_address."' ";
+						$prep_statement = $db->prepare($sql);
+						if ($prep_statement) {
+							$prep_statement->execute();
+							$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+							if ($row['num_rows'] == "0") {
+								$save = true;
+							}
+							else {
+								$save = false;
+								$_SESSION['message'] =  $text['message-duplicate'];
+							}
+						}
+						unset($prep_statement);
+					}
+					else {
+						$save = true;
+					}
+
+				//save the device
+					if ($save) {
 						$orm = new orm;
 						$orm->name('devices');
 						if (strlen($device_uuid) > 0) {
 							$orm->uuid($device_uuid);
 						}
 						$orm->save($_POST);
-						$message = $orm->message;
+						$response = $orm->message;
+						if (strlen($response['uuid']) > 0) {
+							$device_uuid = $response['uuid'];
+						}
 					}
 
 				//write the provision files
 					require_once "app/provision/provision_write.php";
 
 				//set the message
-					if ($action == "add") {
-						$_SESSION['message'] = $text['message-add'];
-					}
-					if ($action == "update") {
-						$_SESSION['message'] = $text['message-update'];
+					if (!isset($_SESSION['message'])) {
+						if ($save) {
+							if ($action == "add") {
+								//save the message to a session variable
+									$_SESSION['message'] = $text['message-add'];
+								//redirect the browser
+									header("Location: device_edit.php?id=$device_uuid");
+									exit;
+							}
+							if ($action == "update") {
+								//save the message to a session variable
+									$_SESSION['message'] = $text['message-update'];
+							}
+						}
 					}
 
 			} //if ($_POST["persistformvar"] != "true")
@@ -228,7 +250,6 @@ require_once "resources/require.php";
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$device_uuid = check_str($_GET["id"]);
 		$orm = new orm;
 		$orm->name('devices');
 		$orm->uuid($device_uuid);
@@ -243,8 +264,6 @@ require_once "resources/require.php";
 			$device_firmware_version = $row["device_firmware_version"];
 			$device_provision_enable = $row["device_provision_enable"];
 			$device_template = $row["device_template"];
-			$device_username = $row["device_username"];
-			$device_password = $row["device_password"];
 			$device_time_zone = $row["device_time_zone"];
 			$device_description = $row["device_description"];
 		}
