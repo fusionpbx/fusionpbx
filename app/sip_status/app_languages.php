@@ -27,22 +27,27 @@
 */
 
 	$text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
+	$text['error-event-socket']['es-cl'] = "Conexión a Socket de Eventos fallida.";
 	$text['error-event-socket']['pt-pt'] = "A ligação ao Event Socket falhou.";
 	$text['error-event-socket']['fr-fr'] = "Connexion à l'Event Socket en echec.";
 
 	$text['label-message']['en-us'] = "Message";
+	$text['label-message']['es-cl'] = "Mensaje";
 	$text['label-message']['pt-pt'] = "Mensagem";
 	$text['label-message']['fr-fr'] = "Message";
 
 	$text['title-sofia-status']['en-us'] = "sofia status";
+	$text['title-sofia-status']['es-cl'] = "estado sofia";
 	$text['title-sofia-status']['pt-pt'] = "estado do módulo sofia";
 	$text['title-sofia-status']['fr-fr'] = "sofia statut";
 
 	$text['title-sofia-status-profile']['en-us'] = "sofia status profile";
+	$text['title-sofia-status-profile']['es-cl'] = "perfil de estado sofia";
 	$text['title-sofia-status-profile']['pt-pt'] = "estado do perfil do módulo sofia";
 	$text['title-sofia-status-profile']['fr-fr'] = "profile statut sofia";
 
 	$text['title-status']['en-us'] = "status";
+	$text['title-status']['es-cl'] = "estado";
 	$text['title-status']['pt-pt'] = "estado";
 	$text['title-status']['fr-fr'] = "statut";
 ?>

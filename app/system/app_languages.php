@@ -27,36 +27,57 @@
 */
 
 	$text['title-sys-info']['en-us'] = "System Information";
+	$text['title-sys-info']['es-cl'] = "Información de Sistema";
 	$text['title-sys-info']['pt-pt'] = "Informação do Sistema";
 	$text['title-sys-info']['fr-fr'] = "Info Système";
+
 	$text['label-os']['en-us'] = "Operating System:";
+	$text['label-os']['es-cl'] = "Sistema Operativo:";
 	$text['label-os']['pt-pt'] = "Sistema Operativo:";
 	$text['label-os']['fr-fr'] = "Operating System:";
+
 	$text['title-mem']['en-us'] = "Memory Information";
+	$text['title-mem']['es-cl'] = "Información de Memoria";
 	$text['title-mem']['pt-pt'] = "Informação da Memória";
 	$text['title-mem']['fr-fr'] = "Information Mémoire";
+
 	$text['label-mem']['en-us'] = "Memory Status:";
+	$text['label-mem']['es-cl'] = "Estado de Memoria:";
 	$text['label-mem']['pt-pt'] = "Estado da Memória:";
 	$text['label-mem']['fr-fr'] = "Statut Mémoire:";
+
 	$text['title-cpu']['en-us'] = "CPU Information";
+	$text['title-cpu']['es-cl'] = "Info CPU";
 	$text['title-cpu']['pt-pt'] = "Informação de CPU";
 	$text['title-cpu']['fr-fr'] = "Info CPU";
+
 	$text['label-cpu']['en-us'] = "CPU Status:";
+	$text['label-cpu']['es-cl'] = "Estado de CPU:";
 	$text['label-cpu']['pt-pt'] = "Estado do CPU:";
 	$text['label-cpu']['fr-fr'] = "CPU Statut:";
+
 	$text['title-drive']['en-us'] = "Drive Information";
+	$text['title-drive']['es-cl'] = "Información de Disco";
 	$text['title-drive']['pt-pt'] = "Informação do Disco";
 	$text['title-drive']['fr-fr'] = "Info Disque";
+
 	$text['label-drive']['en-us'] = "Drive Space:";
+	$text['label-drive']['es-cl'] = "Espacio en Disco:";
 	$text['label-drive']['pt-pt'] = "Espaço do Disco:";
 	$text['label-drive']['fr-fr'] = "Espace Disque:";
+
 	$text['label-drive-capacity']['en-us'] = "Capacity:";
+	$text['label-drive-capacity']['es-cl'] = "Capacidad:";
 	$text['label-drive-capacity']['pt-pt'] = "Capacidade:";
 	$text['label-drive-capacity']['fr-fr'] = "Capacité:";
+
 	$text['label-drive-free']['en-us'] = "Free Space:";
+	$text['label-drive-free']['es-cl'] = "Espacio Libre:";
 	$text['label-drive-free']['pt-pt'] = "Espaço Livre:";
 	$text['label-drive-free']['fr-fr'] = "Espace Libre:";
+
 	$text['label-drive-percent']['en-us'] = "Percent Free:";
+	$text['label-drive-percent']['es-cl'] = "Porcentaje Libre:";
 	$text['label-drive-percent']['pt-pt'] = "Percentagem Livre:";
 	$text['label-drive-percent']['fr-fr'] = "Pourcent Libre:";
 ?>
