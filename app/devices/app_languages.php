@@ -54,7 +54,7 @@
 		$text['description-device_label']['en-us'] = "Enter the device label.";
 		$text['description-device_label']['es-cl'] = "Ingrese la etiqueta del dispositivo";
 		$text['description-device_label']['pt-pt'] = "Introduza o rótulo do dispositivo.";
-		$text['description-device_label']['fr-fr'] = "";
+		$text['description-device_label']['fr-fr'] = "Entrez le nom de l'appareil.";
 
 		$text['label-device_vendor']['en-us'] = "Vendor";
 		$text['label-device_vendor']['es-cl'] = "Proveedor";
@@ -102,9 +102,9 @@
 		$text['label-device_template']['fr-fr'] = "Template";
 
 		$text['description-device_template']['en-us'] = "Select a template.";
-		$text['description-device_template']['es-cl'] = "Seleccione una plantilla";
+		$text['description-device_template']['es-cl'] = "Seleccione una plantilla.";
 		$text['description-device_template']['pt-pt'] = "Seleccione um template.";
-		$text['description-device_template']['fr-fr'] = "";
+		$text['description-device_template']['fr-fr'] = "Sélectionnez un modèle.";
 
 		$text['label-lines']['en-us'] = "Lines";
 		$text['label-lines']['es-cl'] = "Líneas";
@@ -134,12 +134,7 @@
 		$text['description-server_address']['en-us'] = "Select a server address.";
 		$text['description-server_address']['es-cl'] = "Seleccione una dirección de servidor.";
 		$text['description-server_address']['pt-pt'] = "Seleccione um endereço de servidor.";
-		$text['description-server_address']['fr-fr'] = "";
-
-		$text['description-server_address']['en-us'] = "Select a server address.";
-		$text['description-server_address']['es-cl'] = "Seleccione una dirección de servidor.";
-		$text['description-server_address']['pt-pt'] = "Seleccione um endereço de servidor.";
-		$text['description-server_address']['fr-fr'] = "";
+		$text['description-server_address']['fr-fr'] = "Sélectionnez une adresse de serveur.";
 
 		$text['label-outbound_proxy']['en-us'] = "Outbound Proxy";
 		$text['label-outbound_proxy']['es-cl'] = "Proxy de salida";
@@ -149,31 +144,37 @@
 		$text['description-outbound_proxy']['en-us'] = "Enter the outbound proxy.";
 		$text['description-outbound_proxy']['es-cl'] = "Ingrese un proxy de salida";
 		$text['description-outbound_proxy']['pt-pt'] = "Introduza o outbound proxy.";
-		$text['description-outbound_proxy']['fr-fr'] = "";
+		$text['description-outbound_proxy']['fr-fr'] = "Entrez le proxy sortant.";
 
 		$text['label-sip_port']['en-us'] = "Port";
-		$text['label-sip_port']['pt-pt'] = "";
-		$text['label-sip_port']['fr-fr'] = "";
+		$text['label-sip_port']['es-cl'] = "puerto";
+		$text['label-sip_port']['pt-pt'] = "puerto";
+		$text['label-sip_port']['fr-fr'] = "Port";
 
 		$text['description-sip_port']['en-us'] = "Enter the SIP port.";
-		$text['description-sip_port']['pt-pt'] = "";
-		$text['description-sip_port']['fr-fr'] = "";
+		$text['description-sip_port']['es-cl'] = "Introduzca el puerto SIP.";
+		$text['description-sip_port']['pt-pt'] = "Introduzca el puerto SIP.";
+		$text['description-sip_port']['fr-fr'] = "Entrez le port SIP.";
 
 		$text['label-sip_transport']['en-us'] = "Transport";
-		$text['label-sip_transport']['pt-pt'] = "";
-		$text['label-sip_transport']['fr-fr'] = "";
+		$text['label-sip_transport']['es-cl'] = "Transporte";
+		$text['label-sip_transport']['pt-pt'] = "Transporte";
+		$text['label-sip_transport']['fr-fr'] = "Transport";
 
 		$text['description-sip_transport']['en-us'] = "Enter the SIP transport protocol.";
-		$text['description-sip_transport']['pt-pt'] = "Introduza o .";
-		$text['description-sip_transport']['fr-fr'] = "";
+		$text['description-sip_transport']['es-cl'] = "Introduzca el transporte del protocolo SIP.";
+		$text['description-sip_transport']['pt-pt'] = "Digite o transporte protocolo SIP.";
+		$text['description-sip_transport']['fr-fr'] = "Entrez le protocole de transport SIP.";
 
 		$text['label-register_expires']['en-us'] = "Register Expires";
-		$text['label-register_expires']['pt-pt'] = "";
-		$text['label-register_expires']['fr-fr'] = "";
+		$text['label-register_expires']['es-cl'] = "Registro Expira";
+		$text['label-register_expires']['pt-pt'] = "Register Expires";
+		$text['label-register_expires']['fr-fr'] = "S'inscrire Expire";
 
 		$text['description-register_expires']['en-us'] = "Enter the expire time for the SIP registration.";
-		$text['description-register_expires']['pt-pt'] = ".";
-		$text['description-register_expires']['fr-fr'] = "";
+		$text['description-register_expires']['es-cl'] = "Introduzca el tiempo se ha cumplido para el registro SIP.";
+		$text['description-register_expires']['pt-pt'] = "Digite o tempo expira para o registro SIP.";
+		$text['description-register_expires']['fr-fr'] = "Entrez la date d'expiration de l'enregistrement SIP.";
 
 		$text['label-display_name']['en-us'] = "Display Name";
 		$text['label-display_name']['es-cl'] = "Nombre a mostrar";
@@ -183,7 +184,7 @@
 		$text['description-display_name']['en-us'] = "Enter the display name.";
 		$text['description-display_name']['es-cl'] = "Ingrese un nombre para mostrar.";
 		$text['description-display_name']['pt-pt'] = "Introduza o nome no visor.";
-		$text['description-display_name']['fr-fr'] = "";
+		$text['description-display_name']['fr-fr'] = "Entrez le nom d'affichage.";
 
 		$text['label-user_id']['en-us'] = "User ID";
 		$text['label-user_id']['es-cl'] = "ID de usuario";
@@ -193,7 +194,7 @@
 		$text['description-user_id']['en-us'] = "Enter the user ID.";
 		$text['description-user_id']['es-cl'] = "Ingrese el ID de usuario.";
 		$text['description-user_id']['pt-pt'] = "Introduza o ID do utilizador.";
-		$text['description-user_id']['fr-fr'] = "";
+		$text['description-user_id']['fr-fr'] = "Entrez l'ID utilisateur.";
 
 		$text['label-auth_id']['en-us'] = "Auth ID";
 		$text['label-auth_id']['es-cl'] = "Auth ID";
@@ -203,7 +204,7 @@
 		$text['description-auth_id']['en-us'] = "Enter the auth ID.";
 		$text['description-auth_id']['es-cl'] = "Ingrese el auth ID.";
 		$text['description-auth_id']['pt-pt'] = "Introduza o auth ID.";
-		$text['description-auth_id']['fr-fr'] = "";
+		$text['description-auth_id']['fr-fr'] = "Entrez l'ID d'authentification.";
 
 		$text['label-password']['en-us'] = "Password";
 		$text['label-password']['es-cl'] = "Contraseña";
@@ -213,7 +214,7 @@
 		$text['description-password']['en-us'] = "Enter the password.";
 		$text['description-password']['es-cl'] = "Ingrese una contraseña.";
 		$text['description-password']['pt-pt'] = "Introduza a password.";
-		$text['description-password']['fr-fr'] = "";
+		$text['description-password']['fr-fr'] = "Entrez le mot de passe.";
 
 
 		$text['label-device_time_zone']['en-us'] = "Time Zone";
@@ -224,7 +225,7 @@
 		$text['description-device_time_zone']['en-us'] = "Enter the time zone.";
 		$text['description-device_time_zone']['es-cl'] = "Ingrese una zona horaria.";
 		$text['description-device_time_zone']['pt-pt'] = "Introduza o time zone.";
-		$text['description-device_time_zone']['fr-fr'] = "";
+		$text['description-device_time_zone']['fr-fr'] = "Entrez le fuseau horaire.";
 
 		$text['label-device_description']['en-us'] = "Description";
 		$text['label-device_description']['es-cl'] = "Descripción";
@@ -234,318 +235,396 @@
 		$text['description-device_description']['en-us'] = "Enter the description.";
 		$text['description-device_description']['es-cl'] = "Ingrese una descripción";
 		$text['description-device_description']['pt-pt'] = "Introduza a descrição.";
-		$text['description-device_description']['fr-fr'] = "";
+		$text['description-device_description']['fr-fr'] = "Entrez la description.";
 
 	//keys
 		$text['label-keys']['en-us'] = "Keys";
-		$text['label-keys']['pt-pt'] = "";
-		$text['label-keys']['fr-fr'] = "";
+		$text['label-keys']['es-cl'] = "Claves";
+		$text['label-keys']['pt-pt'] = "Chaves";
+		$text['label-keys']['fr-fr'] = "Clés";
 
 		$text['title-device_keys']['en-us'] = "Device Keys";
-		$text['title-device_keys']['pt-pt'] = "";
-		$text['title-device_keys']['fr-fr'] = "";
+		$text['title-device_keys']['es-cl'] = "Teclas de Dispositivos";
+		$text['title-device_keys']['pt-pt'] = "Teclas do dispositivo";
+		$text['title-device_keys']['fr-fr'] = "Touches appareil";
 
 		$text['title-device_key']['en-us'] = "Device Key";
-		$text['title-device_key']['pt-pt'] = "";
-		$text['title-device_key']['fr-fr'] = "";
+		$text['title-device_key']['es-cl'] = "Clave del dispositivo";
+		$text['title-device_key']['pt-pt'] = "Chave do dispositivo";
+		$text['title-device_key']['fr-fr'] = "Key Device";
 
 		$text['description-device_key']['en-us'] = "";
+		$text['description-device_key']['es-cl'] = "";
 		$text['description-device_key']['pt-pt'] = "";
 		$text['description-device_key']['fr-fr'] = "";
 
 		$text['label-device_key_id']['en-us'] = "Key";
-		$text['label-device_key_id']['pt-pt'] = "";
-		$text['label-device_key_id']['fr-fr'] = "";
+		$text['label-device_key_id']['es-cl'] = "Clave";
+		$text['label-device_key_id']['pt-pt'] = "Chave";
+		$text['label-device_key_id']['fr-fr'] = "Clés";
 
 		$text['description-device_key']['en-us'] = "Select the key.";
-		$text['description-device_key']['pt-pt'] = "";
-		$text['description-device_key']['fr-fr'] = "";
+		$text['description-device_key']['es-cl'] = "Seleccione la clave.";
+		$text['description-device_key']['pt-pt'] = "Selecione a chave.";
+		$text['description-device_key']['fr-fr'] = "Sélectionnez la clé.";
 
 		$text['label-device_key_category']['en-us'] = "Category";
-		$text['label-device_key_category']['pt-pt'] = "";
-		$text['label-device_key_category']['fr-fr'] = "";
+		$text['label-device_key_category']['es-cl'] = "Categoría";
+		$text['label-device_key_category']['pt-pt'] = "Categoria";
+		$text['label-device_key_category']['fr-fr'] = "Catégorie";
 
 		$text['description-device_key_category']['en-us'] = "Select the category.";
-		$text['description-device_key_category']['pt-pt'] = "";
-		$text['description-device_key_category']['fr-fr'] = "";
+		$text['description-device_key_category']['es-cl'] = "Seleccione la categoría.";
+		$text['description-device_key_category']['pt-pt'] = "Selecione a categoria.";
+		$text['description-device_key_category']['fr-fr'] = "Sélectionnez la catégorie.";
 
 		$text['label-device_key_type']['en-us'] = "Type";
-		$text['label-device_key_type']['pt-pt'] = "";
-		$text['label-device_key_type']['fr-fr'] = "";
+		$text['label-device_key_type']['es-cl'] = "Tipo";
+		$text['label-device_key_type']['pt-pt'] = "Tipo";
+		$text['label-device_key_type']['fr-fr'] = "Type";
 
 		$text['description-device_key_type']['en-us'] = "Select the type of key.";
-		$text['description-device_key_type']['pt-pt'] = "";
-		$text['description-device_key_type']['fr-fr'] = "";
+		$text['description-device_key_type']['es-cl'] = "Seleccione el tipo de clave.";
+		$text['description-device_key_type']['pt-pt'] = "Selecione o tipo de chave.";
+		$text['description-device_key_type']['fr-fr'] = "Sélectionnez le type de clé.";
 
 		$text['label-device_key_line']['en-us'] = "Line";
-		$text['label-device_key_line']['pt-pt'] = "";
-		$text['label-device_key_line']['fr-fr'] = "";
+		$text['label-device_key_line']['es-cl'] = "Línea";
+		$text['label-device_key_line']['pt-pt'] = "Linha";
+		$text['label-device_key_line']['fr-fr'] = "Ligne";
 
 		$text['description-device_key_line']['en-us'] = "Select the line number.";
-		$text['description-device_key_line']['pt-pt'] = "";
-		$text['description-device_key_line']['fr-fr'] = "";
+		$text['description-device_key_line']['es-cl'] = "Seleccione el número de línea.";
+		$text['description-device_key_line']['pt-pt'] = "Selecione o número da linha.";
+		$text['description-device_key_line']['fr-fr'] = "Sélectionnez le numéro de la ligne.";
 
 		$text['label-device_key_value']['en-us'] = "Value";
-		$text['label-device_key_value']['pt-pt'] = "";
-		$text['label-device_key_value']['fr-fr'] = "";
+		$text['label-device_key_value']['es-cl'] = "Valor";
+		$text['label-device_key_value']['pt-pt'] = "Valor";
+		$text['label-device_key_value']['fr-fr'] = "Valeur";
 
 		$text['description-device_key_value']['en-us'] = "Enter the value.";
-		$text['description-device_key_value']['pt-pt'] = "";
-		$text['description-device_key_value']['fr-fr'] = "";
+		$text['description-device_key_value']['es-cl'] = "Introduzca el valor.";
+		$text['description-device_key_value']['pt-pt'] = "Digite o valor.";
+		$text['description-device_key_value']['fr-fr'] = "Entrez la valeur.";
 
 		$text['label-device_key_extension']['en-us'] = "Extension";
+		$text['label-device_key_extension']['es-cl'] = "";
 		$text['label-device_key_extension']['pt-pt'] = "";
 		$text['label-device_key_extension']['fr-fr'] = "";
 
 		$text['description-device_key_extension']['en-us'] = "Enter the extension.";
+		$text['description-device_key_extension']['es-cl'] = "";
 		$text['description-device_key_extension']['pt-pt'] = "";
 		$text['description-device_key_extension']['fr-fr'] = "";
 
 		$text['label-device_key_label']['en-us'] = "Label";
+		$text['label-device_key_label']['es-cl'] = "";
 		$text['label-device_key_label']['pt-pt'] = "";
 		$text['label-device_key_label']['fr-fr'] = "";
 
 		$text['description-device_key_label']['en-us'] = "Enter the label.";
+		$text['description-device_key_label']['es-cl'] = "";
 		$text['description-device_key_label']['pt-pt'] = "";
 		$text['description-device_key_label']['fr-fr'] = "";
 
 		$text['label-line']['en-us'] = "Line";
-		$text['label-line']['pt-pt'] = "";
-		$text['label-line']['fr-fr'] = "";
+		$text['label-line']['es-cl'] = "Línea";
+		$text['label-line']['pt-pt'] = "Linha";
+		$text['label-line']['fr-fr'] = "Ligne";
 
 		$text['label-programmable']['en-us'] = "Programmable";
+		$text['label-programmable']['es-cl'] = "";
 		$text['label-programmable']['pt-pt'] = "";
 		$text['label-programmable']['fr-fr'] = "";
 
 		$text['label-memory']['en-us'] = "Memory";
+		$text['label-memory']['es-cl'] = "";
 		$text['label-memory']['pt-pt'] = "";
 		$text['label-memory']['fr-fr'] = "";
 
 		$text['label-expansion']['en-us'] = "Expansion";
+		$text['label-expansion']['es-cl'] = "";
 		$text['label-expansion']['pt-pt'] = "";
 		$text['label-expansion']['fr-fr'] = "";
 
 		$text['label-disabled']['en-us'] = "Disabled";
+		$text['label-disabled']['es-cl'] = "";
 		$text['label-disabled']['pt-pt'] = "";
 		$text['label-disabled']['fr-fr'] = "";
 
 		$text['label-shared_line']['en-us'] = "Shared Line";
+		$text['label-shared_line']['es-cl'] = "";
 		$text['label-shared_line']['pt-pt'] = "";
 		$text['label-shared_line']['fr-fr'] = "";
 
 		$text['label-speed_dial']['en-us'] = "Speed Dial";
+		$text['label-speed_dial']['es-cl'] = "";
 		$text['label-speed_dial']['pt-pt'] = "";
 		$text['label-speed_dial']['fr-fr'] = "";
 
 		$text['label-blf']['en-us'] = "BLF";
+		$text['label-blf']['es-cl'] = "";
 		$text['label-blf']['pt-pt'] = "";
 		$text['label-blf']['fr-fr'] = "";
 
 		$text['label-presence_watcher']['en-us'] = "Presence Watcher";
+		$text['label-presence_watcher']['es-cl'] = "";
 		$text['label-presence_watcher']['pt-pt'] = "";
 		$text['label-presence_watcher']['fr-fr'] = "";
 
 		$text['label-eventlist_blf']['en-us'] = "Eventlist BLF";
+		$text['label-eventlist_blf']['es-cl'] = "";
 		$text['label-eventlist_blf']['pt-pt'] = "";
 		$text['label-eventlist_blf']['fr-fr'] = "";
 
 		$text['label-speed_dial_active']['en-us'] = "Speed Dial Active";
+		$text['label-speed_dial_active']['es-cl'] = "";
 		$text['label-speed_dial_active']['pt-pt'] = "";
 		$text['label-speed_dial_active']['fr-fr'] = "";
 
 		$text['label-voicemail']['en-us'] = "Voicemail";
+		$text['label-voicemail']['es-cl'] = "";
 		$text['label-voicemail']['pt-pt'] = "";
 		$text['label-voicemail']['fr-fr'] = "";
 
 		$text['label-call_return']['en-us'] = "Call Return";
+		$text['label-call_return']['es-cl'] = "";
 		$text['label-call_return']['pt-pt'] = "";
 		$text['label-call_return']['fr-fr'] = "";
 
 		$text['label-dial_dtmf']['en-us'] = "Dial DTMF";
+		$text['label-dial_dtmf']['es-cl'] = "";
 		$text['label-dial_dtmf']['pt-pt'] = "";
 		$text['label-dial_dtmf']['fr-fr'] = "";
 
 		$text['label-transfer']['en-us'] = "Transfer";
+		$text['label-transfer']['es-cl'] = "";
 		$text['label-transfer']['pt-pt'] = "";
 		$text['label-transfer']['fr-fr'] = "";
 
 		$text['label-call_park']['en-us'] = "Call Park";
+		$text['label-call_park']['es-cl'] = "";
 		$text['label-call_park']['pt-pt'] = "";
 		$text['label-call_park']['fr-fr'] = "";
 
 		$text['label-intercom']['en-us'] = "Intercom";
+		$text['label-intercom']['es-cl'] = "";
 		$text['label-intercom']['pt-pt'] = "";
 		$text['label-intercom']['fr-fr'] = "";
 
 		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['es-cl'] = "";
 		$text['label-ldap_search']['pt-pt'] = "";
 		$text['label-ldap_search']['fr-fr'] = "";
 
 		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['es-cl'] = "";
 		$text['label-ldap_search']['pt-pt'] = "";
 		$text['label-ldap_search']['fr-fr'] = "";
 
 		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['es-cl'] = "";
 		$text['label-ldap_search']['pt-pt'] = "";
 		$text['label-ldap_search']['fr-fr'] = "";
 
 		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['es-cl'] = "";
 		$text['label-ldap_search']['pt-pt'] = "";
 		$text['label-ldap_search']['fr-fr'] = "";
 
 		$text['label-ldap_search']['en-us'] = "LDAP Search";
+		$text['label-ldap_search']['es-cl'] = "";
 		$text['label-ldap_search']['pt-pt'] = "";
 		$text['label-ldap_search']['fr-fr'] = "";
 
 		$text['label-na']['en-us'] = "N/A";
+		$text['label-na']['es-cl'] = "";
 		$text['label-na']['pt-pt'] = "";
 		$text['label-na']['fr-fr'] = "";
 
 		$text['label-conference']['en-us'] = "Conference";
+		$text['label-conference']['es-cl'] = "";
 		$text['label-conference']['pt-pt'] = "";
 		$text['label-conference']['fr-fr'] = "";
 
 		$text['label-forward']['en-us'] = "Forward";
+		$text['label-forward']['es-cl'] = "";
 		$text['label-forward']['pt-pt'] = "";
 		$text['label-forward']['fr-fr'] = "";
 
 		$text['label-hold']['en-us'] = "Hold";
+		$text['label-hold']['es-cl'] = "";
 		$text['label-hold']['pt-pt'] = "";
 		$text['label-hold']['fr-fr'] = "";
 
 		$text['label-dnd']['en-us'] = "DND";
+		$text['label-dnd']['es-cl'] = "";
 		$text['label-dnd']['pt-pt'] = "";
 		$text['label-dnd']['fr-fr'] = "";
 
 		$text['label-redial']['en-us'] = "Redial";
+		$text['label-redial']['es-cl'] = "";
 		$text['label-redial']['pt-pt'] = "";
 		$text['label-redial']['fr-fr'] = "";
 
 		$text['label-call_return']['en-us'] = "Call Return";
+		$text['label-call_return']['es-cl'] = "";
 		$text['label-call_return']['pt-pt'] = "";
 		$text['label-call_return']['fr-fr'] = "";
 
 		$text['label-sms']['en-us'] = "SMS";
+		$text['label-sms']['es-cl'] = "";
 		$text['label-sms']['pt-pt'] = "";
 		$text['label-sms']['fr-fr'] = "";
 
 		$text['label-call_pickup']['en-us'] = "Call Pickup";
+		$text['label-call_pickup']['es-cl'] = "";
 		$text['label-call_pickup']['pt-pt'] = "";
 		$text['label-call_pickup']['fr-fr'] = "";
 
 		$text['label-dtmf']['en-us'] = "DTMF";
+		$text['label-dtmf']['es-cl'] = "";
 		$text['label-dtmf']['pt-pt'] = "";
 		$text['label-dtmf']['fr-fr'] = "";
 
 		$text['label-url']['en-us'] = "URL";
+		$text['label-url']['es-cl'] = "";
 		$text['label-url']['pt-pt'] = "";
 		$text['label-url']['fr-fr'] = "";
 
 		$text['label-public_hold']['en-us'] = "Public Hold";
+		$text['label-public_hold']['es-cl'] = "";
 		$text['label-public_hold']['pt-pt'] = "";
 		$text['label-public_hold']['fr-fr'] = "";
 
 		$text['label-private']['en-us'] = "Private";
+		$text['label-private']['es-cl'] = "";
 		$text['label-private']['pt-pt'] = "";
 		$text['label-private']['fr-fr'] = "";
 
 		$text['label-xml_group']['en-us'] = "XML Group";
+		$text['label-xml_group']['es-cl'] = "";
 		$text['label-xml_group']['pt-pt'] = "";
 		$text['label-xml_group']['fr-fr'] = "";
 
 		$text['label-group_pickup']['en-us'] = "Group Pickup";
+		$text['label-group_pickup']['es-cl'] = "";
 		$text['label-group_pickup']['pt-pt'] = "";
 		$text['label-group_pickup']['fr-fr'] = "";
 
 		$text['label-paging']['en-us'] = "Paging";
+		$text['label-paging']['es-cl'] = "";
 		$text['label-paging']['pt-pt'] = "";
 		$text['label-paging']['fr-fr'] = "";
 
 		$text['label-record']['en-us'] = "Record";
+		$text['label-record']['es-cl'] = "";
 		$text['label-record']['pt-pt'] = "";
 		$text['label-record']['fr-fr'] = "";
 
 		$text['label-xml_browser']['en-us'] = "XML Browser";
+		$text['label-xml_browser']['es-cl'] = "";
 		$text['label-xml_browser']['pt-pt'] = "";
 		$text['label-xml_browser']['fr-fr'] = "";
 
 		$text['label-history']['en-us'] = "History";
+		$text['label-history']['es-cl'] = "";
 		$text['label-history']['pt-pt'] = "";
 		$text['label-history']['fr-fr'] = "";
 
 		$text['label-directory']['en-us'] = "Directory";
+		$text['label-directory']['es-cl'] = "";
 		$text['label-directory']['pt-pt'] = "";
 		$text['label-directory']['fr-fr'] = "";
 
 		$text['label-menu']['en-us'] = "Menu";
+		$text['label-menu']['es-cl'] = "";
 		$text['label-menu']['pt-pt'] = "";
 		$text['label-menu']['fr-fr'] = "";
 
 		$text['label-new_sms']['en-us'] = "New SMS";
+		$text['label-new_sms']['es-cl'] = "";
 		$text['label-new_sms']['pt-pt'] = "";
 		$text['label-new_sms']['fr-fr'] = "";
 
 		$text['label-status']['en-us'] = "Status";
+		$text['label-status']['es-cl'] = "";
 		$text['label-status']['pt-pt'] = "";
 		$text['label-status']['fr-fr'] = "";
 
 		$text['label-hot_desking']['en-us'] = "Hot Desking";
+		$text['label-hot_desking']['es-cl'] = "";
 		$text['label-hot_desking']['pt-pt'] = "";
 		$text['label-hot_desking']['fr-fr'] = "";
 
 		$text['label-url_record']['en-us'] = "URL Record";
+		$text['label-url_record']['es-cl'] = "";
 		$text['label-url_record']['pt-pt'] = "";
 		$text['label-url_record']['fr-fr'] = "";
 
 		$text['label-ldap']['en-us'] = "LDAP";
+		$text['label-ldap']['es-cl'] = "";
 		$text['label-ldap']['pt-pt'] = "";
 		$text['label-ldap']['fr-fr'] = "";
 
 		$text['label-blf_list']['en-us'] = "BLF List";
+		$text['label-blf_list']['es-cl'] = "";
 		$text['label-blf_list']['pt-pt'] = "";
 		$text['label-blf_list']['fr-fr'] = "";
 
 		$text['label-prefix']['en-us'] = "Prefix";
+		$text['label-prefix']['es-cl'] = "";
 		$text['label-prefix']['pt-pt'] = "";
 		$text['label-prefix']['fr-fr'] = "";
 
 		$text['label-zero_sp_touch']['en-us'] = "Zero-Sp-Touch";
+		$text['label-zero_sp_touch']['es-cl'] = "";
 		$text['label-zero_sp_touch']['pt-pt'] = "";
 		$text['label-zero_sp_touch']['fr-fr'] = "";
 
 		$text['label-acd']['en-us'] = "ACD";
+		$text['label-acd']['es-cl'] = "";
 		$text['label-acd']['pt-pt'] = "";
 		$text['label-acd']['fr-fr'] = "";
 
 		$text['label-local_phonebook']['en-us'] = "Local Phonebook";
+		$text['label-local_phonebook']['es-cl'] = "";
 		$text['label-local_phonebook']['pt-pt'] = "";
 		$text['label-local_phonebook']['fr-fr'] = "";
 
 		$text['label-broadsoft_phonebook']['en-us'] = "Broadsoft Phonebook";
+		$text['label-broadsoft_phonebook']['es-cl'] = "";
 		$text['label-broadsoft_phonebook']['pt-pt'] = "";
 		$text['label-broadsoft_phonebook']['fr-fr'] = "";
 
 		$text['label-local_group']['en-us'] = "Local Group";
+		$text['label-local_group']['es-cl'] = "";
 		$text['label-local_group']['pt-pt'] = "";
 		$text['label-local_group']['fr-fr'] = "";
 
 		$text['label-broadsoft_group']['en-us'] = "Broadsoft Group";
+		$text['label-broadsoft_group']['es-cl'] = "";
 		$text['label-broadsoft_group']['pt-pt'] = "";
 		$text['label-broadsoft_group']['fr-fr'] = "";
 
 		$text['label-xml_phonebook']['en-us'] = "XML Phonebook";
+		$text['label-xml_phonebook']['es-cl'] = "";
 		$text['label-xml_phonebook']['pt-pt'] = "";
 		$text['label-xml_phonebook']['fr-fr'] = "";
 
 		$text['label-switch_account_up']['en-us'] = "Switch Account Up";
+		$text['label-switch_account_up']['es-cl'] = "";
 		$text['label-switch_account_up']['pt-pt'] = "";
 		$text['label-switch_account_up']['fr-fr'] = "";
 
 		$text['label-switch_account_down']['en-us'] = "Switch Account Down";
+		$text['label-switch_account_down']['es-cl'] = "";
 		$text['label-switch_account_down']['pt-pt'] = "";
 		$text['label-switch_account_down']['fr-fr'] = "";
 
 		$text['label-keypad_lock']['en-us'] = "Keypad Lock";
+		$text['label-keypad_lock']['es-cl'] = "";
 		$text['label-keypad_lock']['pt-pt'] = "";
 		$text['label-keypad_lock']['fr-fr'] = "";
 
@@ -591,10 +670,12 @@
 		$text['button-back']['fr-fr'] = "Retour";
 
 		$text['label-tools']['en-us'] = "Tools";
+		$text['label-tools']['es-cl'] = "Instrumentos";
 		$text['label-tools']['pt-pt'] = "Ferramentas";
 		$text['label-tools']['fr-fr'] = "Outils";
 
 		$text['label-settings']['en-us'] = "Settings";
+		$text['label-settings']['es-cl'] = "Configuración";
 		$text['label-settings']['pt-pt'] = "Definições";
 		$text['label-settings']['fr-fr'] = "Configurations";
 
@@ -604,6 +685,7 @@
 		$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
 		$text['message-message']['en-us'] = "Message";
+		$text['message-message']['es-cl'] = "Mensaje";
 		$text['message-message']['pt-pt'] = "Mensagem";
 		$text['message-message']['fr-fr'] = "Message";
 
@@ -611,6 +693,11 @@
 		$text['message-add']['es-cl'] = "Agregar Completo";
 		$text['message-add']['pt-pt'] = "Adição Efectuada";
 		$text['message-add']['fr-fr'] = "Ajout Complet";
+
+		$text['message-duplicate']['en-us'] = "Duplicate Detected";
+		$text['message-duplicate']['es-cl'] = "duplicar detectado";
+		$text['message-duplicate']['pt-pt'] = "duplicar detectado";
+		$text['message-duplicate']['fr-fr'] = "dupliquer détecté";
 
 		$text['message-update']['en-us'] = "Update Completed";
 		$text['message-update']['es-cl'] = "Actualización Completada";
@@ -628,63 +715,78 @@
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
 		$text['label-category']['en-us'] = "Category";
+		$text['label-category']['es-cl'] = "Categoría";
 		$text['label-category']['pt-pt'] = "Categoria";
 		$text['label-category']['fr-fr'] = "Catégorie";
 
 		$text['description-category']['en-us'] = "Enter the category.";
+		$text['description-category']['es-cl'] = "Introduzca la categoría.";
 		$text['description-category']['pt-pt'] = "Introduza a categoria.";
-		$text['description-category']['fr-fr'] = "";
+		$text['description-category']['fr-fr'] = "Entrer dans la catégorie.";
 
 		$text['label-device_setting_name']['en-us'] = "Name";
+		$text['label-device_setting_name']['es-cl'] = "Nombre";
 		$text['label-device_setting_name']['pt-pt'] = "Name";
 		$text['label-device_setting_name']['fr-fr'] = "Nom";
 
 		$text['label-device_setting_value']['en-us'] = "Value";
+		$text['label-device_setting_value']['es-cl'] = "Valor";
 		$text['label-device_setting_value']['pt-pt'] = "Valor";
 		$text['label-device_setting_value']['fr-fr'] = "Valeur";
 
 		$text['label-device_setting_description']['en-us'] = "Description";
-		$text['label-device_setting_description']['pt-pt'] = "";
-		$text['label-device_setting_description']['fr-fr'] = "";
+		$text['label-device_setting_description']['es-cl'] = "Descripción";
+		$text['label-device_setting_description']['pt-pt'] = "Descrição";
+		$text['label-device_setting_description']['fr-fr'] = "Description";
 
 		$text['label-subcategory']['en-us'] = "Subcategory";
+		$text['label-subcategory']['es-cl'] = "Subcategoría";
 		$text['label-subcategory']['pt-pt'] = "Subcategoria";
 		$text['label-subcategory']['fr-fr'] = "Sous-Catégorie";
 
 		$text['description-subcategory']['en-us'] = "Enter the subcategory.";
+		$text['description-subcategory']['es-cl'] = "Introduzca la subcategoría.";
 		$text['description-subcategory']['pt-pt'] = "Introduza a subcategoria";
-		$text['description-subcategory']['fr-fr'] = "";
+		$text['description-subcategory']['fr-fr'] = "Entrez la sous-catégorie.";
 
 		$text['label-type']['en-us'] = "Type";
+		$text['label-type']['es-cl'] = "Tipo";
 		$text['label-type']['pt-pt'] = "Tipo";
 		$text['label-type']['fr-fr'] = "Type";
 
 		$text['description-type']['en-us'] = "Enter the setting type (ie. uuid, name, var, dir, etc).";
+		$text['description-type']['es-cl'] = "Introduzca el tipo de ajuste (ie. uuid, name, var, dir, etc).";
 		$text['description-type']['pt-pt'] = "Introduza o tipo de definição (ex: uuid, name, var, dir, etc).";
 		$text['description-type']['fr-fr'] = "Entrer le type du paramètre (ie. uuid, nom, var, dir, etc).";
 
 		$text['label-value']['en-us'] = "Value";
+		$text['label-value']['es-cl'] = "Valor";
 		$text['label-value']['pt-pt'] = "Valor";
 		$text['label-value']['fr-fr'] = "Valeur";
 
 		$text['description-value']['en-us'] = "Enter the value of this setting.";
+		$text['description-value']['es-cl'] = "Introduzca el valor de esta configuración.";
 		$text['description-value']['pt-pt'] = "Introduza o valor desta definição.";
-		$text['description-value']['fr-fr'] = "";
+		$text['description-value']['fr-fr'] = "Entrez la valeur de ce paramètre.";
 
 		$text['label-enabled']['en-us'] = "Enabled";
+		$text['label-enabled']['es-cl'] = "Habilitado";
 		$text['label-enabled']['pt-pt'] = "Activado";
 		$text['label-enabled']['fr-fr'] = "Actif";
 
 		$text['description-enabled']['en-us'] = "Set the status of this default setting.";
+		$text['description-enabled']['es-cl'] = "Ajuste el estado de la configuración predeterminada.";
 		$text['description-enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
 		$text['description-enabled']['fr-fr'] = "Choisir l'état de ce paramètre";
 
 		$text['label-description']['en-us'] = "Description";
+		$text['label-description']['es-cl'] = "Descripción";
 		$text['label-description']['pt-pt'] = "Descrição";
 		$text['label-description']['fr-fr'] = "Description";
 
 		$text['description-description']['en-us'] = "Enter a description, if desired.";
+		$text['description-description']['es-cl'] = "Introduzca una descripción, si se desea.";
 		$text['description-description']['pt-pt'] = "Introduza uma descrição, caso queira.";
-		$text['description-description']['fr-fr'] = "";
+		$text['description-description']['fr-fr'] = "Entrez une description, si vous le souhaitez.";
 
 ?>
