@@ -21,7 +21,7 @@
 	$text['description-3']['fr-fr'] = "Utiliser les filtres pour afficher les appels désirés. ";
 
 	$text['description-4']['en-us'] = "Then view the calls in the list or download them as comma seperated file by using the 'csv' button.";
-	$text['description-4']['pt-pt'] = "Luego puede ver la información o descargarla como un archivo separado por comas utlizando el botón "csv".";
+	$text['description-4']['pt-pt'] = "Luego puede ver la información o descargarla como un archivo separado por comas utlizando el botón 'csv'.";
 	$text['description-4']['pt-pt'] = "Veja as chamadas na lista ou descarregue-as como arquivo, separadas por vírgulas, usando o botão 'csv'.";
 	$text['description-4']['fr-fr'] = "Ensuite visualisez les informations dans la liste ci-dessous, ou téléchargez les sous forme d'un fichier CSV.";
 
