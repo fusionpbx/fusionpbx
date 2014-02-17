@@ -82,7 +82,7 @@
 	$text['label-8d']['fr-fr'] = "8 Digits";
 
 	$text['label-9d']['en-us'] = "9 Digits";
-	$text['label-9d']['es-cl'] = "9 Dígitos'
+	$text['label-9d']['es-cl'] = "9 Dígitos";
 	$text['label-9d']['pt-pt'] = "9 Dígitos";
 	$text['label-9d']['fr-fr'] = "9 Digits";
 
