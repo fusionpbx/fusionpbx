@@ -99,14 +99,18 @@
 
 //call forward, follow me and dnd
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/calls/calls.php")) {
+		if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
 			$is_included = "true";
 			require_once "app/calls/calls.php";
+		}
 	}
 
 //ring group forward
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/ring_groups/ring_group_forward.php")) {
+		if (permission_exists('ring_group_forward')) { //ring_group_forward
 			$is_included = "true";
 			require_once "app/ring_groups/ring_group_forward.php";
+		}
 	}
 
 //show the footer
