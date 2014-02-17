@@ -6,7 +6,7 @@
 	$text['title']['fr-fr'] = "Serveur de Fax";
 
 	$text['description']['en-us'] = "To receive a FAX setup a fax extension and then direct the incoming to it.";
-	$text['description']['es-cl'] = "Para recibir un FAX, configure una extensión y después dirija el tráfico entrante a esta.'
+	$text['description']['es-cl'] = "Para recibir un FAX, configure una extensión y después dirija el tráfico entrante a esta.'";
 	$text['description']['pt-pt'] = "Para receber um FAX configure uma extensão de fax e encaminhe o tráfego de entrada para essa extensão.";
 	$text['description']['fr-fr'] = "Afin de recevoir un Fax, configurer une extension et rediriger l'appel sur celle-ci.";
 
