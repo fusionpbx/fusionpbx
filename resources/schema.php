@@ -436,7 +436,9 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 									//change the data type if it has been changed
 										//if the data type in the app db array is different than the type in the database then change the data type
 										$db_field_type = db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name);
-										if ($db_field_type != $field_type) {
+										$field_type_array = explode("(", $field_type);
+										$field_type = $field_type_array[0];
+										if (trim($db_field_type) != trim($field_type)) {
 											if ($db_type == "pgsql") {
 												if (strtolower($field_type) == "uuid") {
 													$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE uuid USING\n";
@@ -448,7 +450,11 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 														//field type has not changed
 													} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "timestamp") {
 														//field type has not changed
-													} elseif ($db_field_type = "character" && strtolower($field_type) == "char(1)") {
+													} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "datetime") {
+														//field type has not changed
+													} elseif ($db_field_type = "integer" && strtolower($field_type) == "numeric") {
+														//field type has not changed
+													} elseif ($db_field_type = "character" && strtolower($field_type) == "char") {
 														//field type has not changed
 													}
 													else {
