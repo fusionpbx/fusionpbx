@@ -36,6 +36,8 @@ include "root.php";
 			public $json;
 			public $display_type;
 			public $default_context;
+			public $bridges;
+			public $variables;
 
 			//dialplans
 			public $dialplan_name;
@@ -360,6 +362,107 @@ include "root.php";
 							}
 					}
 			}
+
+			public function outbound_routes($destination_number) {
+				//get the database connection
+					global $db;
+
+				//normalize the destination number
+					$destination_number = trim($destination_number);
+
+				//check the session array if it doesn't exist then build the array
+					if (!is_array($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'])) {
+						//get the outbound routes from the database
+							$sql = "select * from v_dialplans as d, v_dialplan_details as s ";
+							$sql .= "where d.domain_uuid = '".$this->domain_uuid."' ";
+							$sql .= "and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
+							$sql .= "and d.dialplan_enabled = 'true' ";
+							$sql .= "and d.dialplan_uuid = s.dialplan_uuid ";
+							$sql .= "order by ";
+							$sql .= "d.dialplan_order asc, ";
+							$sql .= "d.dialplan_name asc, ";
+							$sql .= "d.dialplan_uuid asc, ";
+							$sql .= "s.dialplan_detail_group asc, ";
+							$sql .= "CASE s.dialplan_detail_tag ";
+							$sql .= "WHEN 'condition' THEN 1 ";
+							$sql .= "WHEN 'action' THEN 2 ";
+							$sql .= "WHEN 'anti-action' THEN 3 ";
+							$sql .= "ELSE 100 END, ";
+							$sql .= "s.dialplan_detail_order asc ";
+							$prep_statement = $db->prepare(check_sql($sql));
+							$prep_statement->execute();
+							$dialplans = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+							$x = 0; $y = 0;
+							foreach ($dialplans as &$row) {
+								//if the previous dialplan uuid has not been set then set it
+									if (!isset($previous_dialplan_uuid)) { $previous_dialplan_uuid = $row['dialplan_uuid']; }
+
+								//increment dialplan ordinal number
+									if ($previous_dialplan_uuid != $row['dialplan_uuid']) {
+										$x++; $y = 0;
+									}
+
+								//build the array
+									$array[$x]['dialplan_uuid'] = $row['dialplan_uuid'];
+									$array[$x]['dialplan_context'] = $row['dialplan_context'];
+									$array[$x]['dialplan_name'] = $row['dialplan_name'];
+									$array[$x]['dialplan_continue'] = $row['dialplan_continue'];
+									$array[$x]['dialplan_order'] = $row['dialplan_order'];
+									$array[$x]['dialplan_enabled'] = $row['dialplan_enabled'];
+									$array[$x]['dialplan_description'] = $row['dialplan_description'];
+									if (strlen($row['dialplan_detail_uuid']) > 0) {
+										$array[$x]['dialplan_details'][$y]['dialplan_uuid'] = $row['dialplan_uuid'];
+										$array[$x]['dialplan_details'][$y]['dialplan_detail_uuid'] = $row['dialplan_detail_uuid'];
+										$array[$x]['dialplan_details'][$y]['dialplan_detail_tag'] = $row['dialplan_detail_tag'];
+										$array[$x]['dialplan_details'][$y]['dialplan_detail_type'] = $row['dialplan_detail_type'];
+										$array[$x]['dialplan_details'][$y]['dialplan_detail_data'] = $row['dialplan_detail_data'];
+										$y++;
+									}
+
+								//set the previous dialplan_uuid
+									$previous_dialplan_uuid = $row['dialplan_uuid'];
+							}
+							unset ($prep_statement);
+						//set the session array
+							$_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] = $array;
+					}
+				//find the matching outbound routes
+					foreach ($_SESSION[$_SESSION['domain_uuid']]['outbound_routes'] as $row) {
+						foreach ($row['dialplan_details'] as $field) {
+							if ($field['dialplan_detail_tag'] == "condition") {
+								if ($field['dialplan_detail_type'] == "destination_number") {
+									$dialplan_detail_data = $field['dialplan_detail_data'];
+									$pattern = '/'.$dialplan_detail_data.'/';
+									preg_match($pattern, $destination_number, $matches, PREG_OFFSET_CAPTURE);
+									if (count($matches) == 0) {
+										$regex_match = false;
+									}
+									else {
+										$regex_match = true;
+										$regex_match_1 = $matches[1][0];
+										$regex_match_2 = $matches[2][0];
+										$regex_match_3 = $matches[3][0];
+									}
+								}
+							}
+							if ($regex_match) {
+								//get the variables
+									if ($field[dialplan_detail_type] == "set" && $field[dialplan_detail_tag] == "action") {
+										$this->variables .= $field[dialplan_detail_data].",";
+									}
+								//process the $x detail data variables
+									if ($field['dialplan_detail_tag'] == "action" && $field['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
+										$dialplan_detail_data = $field['dialplan_detail_data'];
+										$dialplan_detail_data = str_replace("\$1", $regex_match_1, $dialplan_detail_data);
+										$dialplan_detail_data = str_replace("\$2", $regex_match_2, $dialplan_detail_data);
+										$dialplan_detail_data = str_replace("\$3", $regex_match_3, $dialplan_detail_data);
+										$this->bridges = $dialplan_detail_data; 
+									}
+							}
+						}
+					}
+			}
 		}
 	}
+
 ?>
