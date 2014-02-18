@@ -78,11 +78,12 @@ if ( session:ready() ) then
 		if (pin_number) then
 			min_digits = string.len(pin_number);
 			max_digits = string.len(pin_number)+1;
-			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/please_enter_the_pin_number.wav", "", "\\d+");
+			--digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
 			if (digits == pin_number) then
 				--pin is correct
 			else
-				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/your_pin_number_is_incorect_goodbye.wav");
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
 				session:hangup("NORMAL_CLEARING");
 				return;
 			end
@@ -91,6 +92,7 @@ if ( session:ready() ) then
 	--check the database to get the uuid
 		--eavesdrop
 			sql = "select uuid from channels where presence_id = '"..extension.."@"..domain_name.."' ";
+			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
 		dbh:query(sql, function(result)
 			for key, val in pairs(result) do
 				freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
