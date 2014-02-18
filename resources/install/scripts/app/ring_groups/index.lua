@@ -269,7 +269,7 @@
 										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 									--if the session is set then process the actions
 										if (y == 0) then
-											square = "[sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",origination_caller_id_name="..origination_caller_id_name..",";
+											square = "[sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",";
 										end
 										if (r.dialplan_detail_type == "set") then
 											--session:execute("eval", dialplan_detail_data);
