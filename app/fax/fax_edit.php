@@ -202,7 +202,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
-	//escape the commas with a backslash
+	//escape the commas with a backslash and remove the spaces
+		$fax_email = str_replace(" ", "", $fax_email);
 		$fax_email = str_replace(",", "\\,", $fax_email);
 
 	//set the $php_bin
