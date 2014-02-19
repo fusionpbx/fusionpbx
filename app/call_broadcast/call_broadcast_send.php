@@ -170,7 +170,7 @@ function cmd_async($cmd) {
 						}
 
 					//set the command
-						$cmd = "bgapi sched_api +".$sched_seconds." none bgapi originate ".$origination_url." ".$broadcast_destination_data." XML $context";
+						$cmd = "bgapi sched_api +".$sched_seconds." ".$call_broadcast_uuid." bgapi originate ".$origination_url." ".$broadcast_destination_data." XML $context";
 
 					//if the event socket connection is lost then re-connect
 						if (!$fp) {
@@ -233,7 +233,6 @@ require_once "resources/header.php";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
 	echo "		<br>";
-
 
 	echo "<table width='100%' border='0'><tr>\n";
 	echo "<td width='50%' nowrap><b>Contact List</b></td>\n";
