@@ -133,6 +133,11 @@
 	$text['description-info']['pt-pt'] = "Insira a descrição aqui.";
 	$text['description-info']['fr-fr'] = "";
 
+	$text['message-message']['en-us'] = "Message";
+	$text['message-message']['es-cl'] = "Mensaje";
+	$text['message-message']['pt-pt'] = "Mensagem";
+	$text['message-message']['fr-fr'] = "Message";
+
 	$text['button-send']['en-us'] = "Send Broadcast";
 	$text['button-send']['es-cl'] = "Enviar Llamada Masiva";
 	$text['button-send']['pt-pt'] = "Enviar Broadcast";
