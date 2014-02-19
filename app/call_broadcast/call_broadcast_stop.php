@@ -46,8 +46,7 @@ else {
 	}
 
 //show the header
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=call_broadcast_edit.php?id=$uuid\">\n";
+	header('Location: call_broadcast_edit.php?id='.$uuid);
 
 //show the result
 	if (count($_GET) > 0) {
@@ -55,10 +54,8 @@ else {
 		if ($fp) {
 			$cmd = "sched_del ".$uuid;
 			$result = event_socket_request($fp, 'api '.$cmd);
-			echo htmlentities($result);
+			$_SESSION['message'] = htmlentities($result);
 		}
 	}
 
-//show the footer
-	require_once "resources/footer.php";
 ?>
