@@ -143,6 +143,11 @@
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
+	$text['button-cancel']['en-us'] = "Cancel";
+	$text['button-cancel']['es-cl'] = "Cancelar";
+	$text['button-cancel']['pt-pt'] = "Cancelar";
+	$text['button-cancel']['fr-fr'] = "Annuler";
+
 	//v_call_broadcast_send
 	$text['label-view-calls']['en-us'] = "View Calls";
 	$text['label-view-calls']['es-cl'] = "Ver llamadas";
