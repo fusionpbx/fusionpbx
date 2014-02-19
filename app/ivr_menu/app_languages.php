@@ -408,6 +408,7 @@
 	$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
 	$text['message-message']['en-us'] = "Message";
+	$text['message-message']['es-cl'] = "Mensaje";
 	$text['message-message']['pt-pt'] = "Mensagem";
 	$text['message-message']['fr-fr'] = "Message";
 
