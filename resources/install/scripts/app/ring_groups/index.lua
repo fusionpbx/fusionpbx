@@ -392,7 +392,6 @@
 								if (session:getVariable("originate_disposition") == "ALLOTTED_TIMEOUT" 
 									or session:getVariable("originate_disposition") == "NO_ANSWER" 
 									or session:getVariable("originate_disposition") == "NO_USER_RESPONSE" 
-									or session:getVariable("originate_disposition") == "ORIGINATOR_CANCEL" 
 									or session:getVariable("originate_disposition") == "USER_NOT_REGISTERED" 
 									or session:getVariable("originate_disposition") == "NORMAL_TEMPORARY_FAILURE" 
 									or session:getVariable("originate_disposition") == "NO_ROUTE_DESTINATION" 
