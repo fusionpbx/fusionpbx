@@ -202,6 +202,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
+	//escape the commas with a backslash
+		$fax_email = str_replace(",", "\\,", $fax_email);
+
 	//set the $php_bin
 		//if (file_exists(PHP_BINDIR."/php")) { $php_bin = 'php'; }
 		if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
@@ -512,6 +515,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset ($prep_statement);
 	}
+
+//remove the backslash
+	$fax_email = str_replace("\\", "", $fax_email);
 
 //set the dialplan_uuid
 	if (strlen($dialplan_uuid) == 0) {
