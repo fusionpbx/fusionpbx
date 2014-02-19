@@ -134,7 +134,7 @@
 	$text['description-info']['fr-fr'] = "";
 
 	$text['button-send']['en-us'] = "Send Broadcast";
-	$text['button-send']['es-cl'] = "Enviar Llamada Masiva (Broadcast)";
+	$text['button-send']['es-cl'] = "Enviar Llamada Masiva";
 	$text['button-send']['pt-pt'] = "Enviar Broadcast";
 	$text['button-send']['fr-fr'] = "Lancer les appels";
 
@@ -143,10 +143,10 @@
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
-	$text['button-cancel']['en-us'] = "Cancel";
-	$text['button-cancel']['es-cl'] = "Cancelar";
-	$text['button-cancel']['pt-pt'] = "Cancelar";
-	$text['button-cancel']['fr-fr'] = "Annuler";
+	$text['button-stop']['en-us'] = "Stop Broadcast";
+	$text['button-stop']['es-cl'] = "Detener Broadcast";
+	$text['button-stop']['pt-pt'] = "Pare de Transmissão";
+	$text['button-stop']['fr-fr'] = "Arrêter la diffusion";
 
 	//v_call_broadcast_send
 	$text['label-view-calls']['en-us'] = "View Calls";

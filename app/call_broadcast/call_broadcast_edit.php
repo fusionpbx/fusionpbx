@@ -231,7 +231,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' nowrap='nowrap'><b>".$text['label-call-broadcast']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='cancel' alt='cancel' onclick=\"window.location='call_broadcast_cancel.php'\" value='".$text['button-cancel']."'>\n";
 	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -385,7 +384,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
 		echo "			<input type='hidden' name='call_broadcast_uuid' value='$call_broadcast_uuid'>\n";
-		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_broadcast_send.php?call_broadcast_uuid=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='call_broadcast_send.php?id=$call_broadcast_uuid'\" value='".$text['button-send']."'>\n";
+		echo "			<input type='button' class='btn' name='' alt='stop' onclick=\"window.location='call_broadcast_stop.php?id=".$call_broadcast_uuid."'\" value='".$text['button-stop']."'>\n";
 	}
 
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
