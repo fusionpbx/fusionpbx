@@ -62,7 +62,7 @@ function cmd_async($cmd) {
 
 //get the http get values and set as php variables
 	$group_name = $_GET["group_name"];
-	$call_broadcast_uuid = $_GET["call_broadcast_uuid"];
+	$call_broadcast_uuid = $_GET["id"];
 	$user_category = $_GET["user_category"];
 	$gateway = $_GET["gateway"];
 	$phonetype1 = $_GET["phonetype1"];
