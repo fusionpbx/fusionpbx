@@ -1,14 +1,14 @@
 <?php
 
-	//v_call_broadcast
+	//call_broadcast
 	$text['title']['en-us'] = "Call Broadcasts";
-	$text['title']['pt-pt'] = "Chamadas de Broadcast";
 	$text['title']['es-cl'] = "Llamada Masiva (Broadcast)";
+	$text['title']['pt-pt'] = "Chamadas de Broadcast";
 	$text['title']['fr-fr'] = "Appels de Masse";
 
 	$text['label-name']['en-us'] = "Name";
-	$text['label-name']['pt-pt'] = "Nome";
 	$text['label-name']['es-cl'] = "Nombre";
+	$text['label-name']['pt-pt'] = "Nome";
 	$text['label-name']['fr-fr'] = "Nom";
 
 	$text['label-concurrent-limit']['en-us'] = "Concurrent Limit";
@@ -129,7 +129,7 @@
 	$text['label-description']['fr-fr'] = "Description";
 
 	$text['description-info']['en-us'] = "Enter the description here.";
-	$text['description-info']['en-us'] = "Ingrese descripción aquí.";
+	$text['description-info']['es-cl'] = "Ingrese descripción aquí.";
 	$text['description-info']['pt-pt'] = "Insira a descrição aqui.";
 	$text['description-info']['fr-fr'] = "";
 
