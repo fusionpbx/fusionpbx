@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -141,21 +141,25 @@ require_once "resources/paging.php";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_name']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_email']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
-			if (permission_exists('fax_extension_edit')) {
-				echo "		<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			}
-			if (permission_exists('fax_extension_delete')) {
-				echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
+			//remove the backslash
+				$row['fax_email'] = str_replace("\\", "", $row['fax_email']);
+			//show the fax extensions
+				echo "<tr >\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_name']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_email']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
+				echo "	<td valign='top' align='right'>\n";
+				if (permission_exists('fax_extension_edit')) {
+					echo "		<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				}
+				if (permission_exists('fax_extension_delete')) {
+					echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				}
+				echo "	</td>\n";
+				echo "</tr>\n";
+			//alternate the CSS class
+				if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
