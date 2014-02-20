@@ -96,27 +96,28 @@ if (strlen($dialplan_uuid) > 0) {
 }
 
 //redirect the user
+
+//save the message to a session variable
+	$_SESSION['message'] = $text['message-delete'];
+
 	require_once "resources/header.php";
 	switch ($app_uuid) {
 		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4":
 			//inbound routes
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=$app_uuid\">\n";
+			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid);
 			break;
 		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3":
 			//outbound routes
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=$app_uuid\">\n";
+			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid);
 			break;
 		case "4b821450-926b-175a-af93-a03c441818b1":
 			//time conditions
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=$app_uuid\">\n";
+			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid);
+			echo "<meta http-equiv=\"refresh\" content=\"2;url=\">\n";
 			break;
 		default:
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php\">\n";
+			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php);
 			break;
 	}
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+
 ?>
