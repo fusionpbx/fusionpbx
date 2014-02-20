@@ -91,10 +91,10 @@
 	$text['label-description']['pt-pt'] = "Descrição";
 	$text['label-description']['fr-fr'] = "Description";
 
-	$text['label-message']['en-us'] = "Message";
-	$text['label-message']['es-cl'] = "Mensaje";
-	$text['label-message']['pt-pt'] = "Mensagem";
-	$text['label-message']['fr-fr'] = "Message";
+	$text['message-message']['en-us'] = "Message";
+	$text['message-message']['es-cl'] = "Mensaje";
+	$text['message-message']['pt-pt'] = "Mensagem";
+	$text['message-message']['fr-fr'] = "Message";
 
 	$text['message-delete']['en-us'] = "Delete Complete";
 	$text['message-delete']['es-cl'] = "Eliminación Completada";
