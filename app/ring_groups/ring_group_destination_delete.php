@@ -46,23 +46,21 @@ else {
 		$ring_group_uuid = check_str($_GET["ring_group_uuid"]);
 	}
 
-if (strlen($id)>0) {
-	//delete ring_group_destination
+//delete ring_group_destination
+	if (strlen($id)>0) {
 		$sql = "delete from v_ring_group_destinations ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and ring_group_destination_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
-}
+	}
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=ring_group_edit.php?id=$ring_group_uuid\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+//save the message to a session variable
+	$_SESSION['message'] = $text['message-delete'];
+
+//redirect the browser
+	header("Location: ring_group_edit.php?id=$ring_group_uuid");
+	exit;
 
 ?>
