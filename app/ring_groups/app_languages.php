@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2013
+	Portions created by the Initial Developer are Copyright (C) 2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,11 @@
 	$text['label-extension']['es-cl'] = "Extensión";
 	$text['label-extension']['pt-pt'] = "Extensão";
 	$text['label-extension']['fr-fr'] = "Extension";
+
+	$text['description-extension']['en-us'] = "Enter the extension number.";
+	$text['description-extension']['es-cl'] = "Introduzca el número de extensión.";
+	$text['description-extension']['pt-pt'] = "Digite o número do ramal.";
+	$text['description-extension']['fr-fr'] = "Entrez le numéro de poste.";
 
 	$text['label-ring-group-extension']['en-us'] = "Ring Group Extension";
 	$text['label-ring-group-extension']['es-cl'] = "Extensión de grupo de llamado";
