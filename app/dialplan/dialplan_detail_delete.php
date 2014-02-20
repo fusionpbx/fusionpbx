@@ -71,12 +71,11 @@ else {
 			}
 	}
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"0;url=dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+//save the message to a session variable
+	$_SESSION['message'] = $text['message-delete'];
+
+//redirect the browser
+	header("Location: dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
+	exit;
 
 ?>
