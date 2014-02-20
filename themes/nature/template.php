@@ -218,7 +218,7 @@ INPUT.txt {
 	border-bottom: 1px solid #999999;
 	font-size: 11px;
 	background-color: #990000;
-	color: #444444;	
+	color: #444444;
 	padding-right: 16px;
 	padding-left: 6px;
 	padding-top: 4px;
@@ -294,7 +294,7 @@ table {
 table th {
 	padding:4px 10px
 }
- 
+
 table td {
 	/*background:#fff;*/
 	/*padding:2px 10px 4px 10px*/
@@ -306,7 +306,7 @@ table tr.even td {
 	border-bottom: 1px solid #999999;
 	color: #333333;
 }
- 
+
 table tr.odd td {
 	border-bottom: 1px solid #999999;
 	color: #000000;
@@ -552,25 +552,25 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 	/* Set the position and dimensions of the background image. */
 	#page-background {
-		position:fixed; 
+		position:fixed;
 		top:0;
 		left:0;
 		width:100%;
 		height:100%;
 	}
 
-	/* Specify the position and layering for the content that needs to 
-	appear in front of the background image. Must have a higher z-index 
-	value than the background image. Also add some padding to compensate 
+	/* Specify the position and layering for the content that needs to
+	appear in front of the background image. Must have a higher z-index
+	value than the background image. Also add some padding to compensate
 	for removing the margin from the 'html' and 'body' tags. */
 	#page {
-		position:relative; 
+		position:relative;
 		z-index:1;
 		padding:10px;
 	}
 
 	.vtable {
-		position:relative; 
+		position:relative;
 		z-index:1;
 		padding:7px;
 		color: 000;
@@ -591,19 +591,38 @@ table tr:nth-last-child(-5) td:first-of-type {
 		opacity: 0.9;
 	}
 
-	.message {
+	#message_container {
+		z-index: 99999;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		-moz-opacity:0;
+		-khtml-opacity: 0;
+	}
+
+	#message_block {
+		margin: 0px auto;
+		width: 300px;
+		height: auto;
+		background-color: #000;
 		background-repeat: repeat-x;
-		background-attachment: fixed;
-		padding: 20px;
-		opacity: 0.9;
-		filter:alpha(opacity=90);
-		-moz-opacity:0.9;
-		-khtml-opacity: 0.9;
-		opacity: 0.9;
-		-webkit-border-radius: 7px 7px 7px 7px;
-		-moz-border-radius: 7px 7px 7px 7px;
-		border-radius: 7px 7px 7px 7px;
-		text-align: left;
+		background-image: url('<?=PROJECT_PATH?>/themes/nature/images/background_black.png');
+		background-position: top center;
+		padding: 10px;
+		-webkit-border-radius: 0px 0px 7px 7px;
+		-moz-border-radius: 0px 0px 7px 7px;
+		border-radius: 0px 0px 7px 7px;
+		text-align: center;
+	}
+
+	#message_block .text {
+		font-family: arial, san-serif;
+		font-size: 10pt;
+		font-weight: bold;
+		color: #fff;
 	}
 </style>
 
@@ -629,8 +648,31 @@ table tr:nth-last-child(-5) td:first-of-type {
 		}
 	//-->
 </SCRIPT>
+
+<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+	function display_message() {
+		$(document).ready(function() {
+			$("#message_container").animate({ opacity: 0.9 }, "fast").delay(1750).animate({marginTop: '-=200'}, 1000);
+		});
+	}
+</script>
+
 </head>
-<body onload="message_timeout();">
+<body onload="display_message();">
+
+	<?php
+		if (strlen($_SESSION['message']) > 0) {
+			echo "<div id='message_container'>";
+			echo "	<div id='message_block'>";
+			echo "		<span class='text'>".$_SESSION['message']."</span>";
+			echo "	</div>";
+			echo "</div>";
+			unset($_SESSION['message']);
+		}
+	?>
+
 	<?php
 	//get a random background image
 		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/nature/images/backgrounds';
@@ -792,32 +834,6 @@ table tr:nth-last-child(-5) td:first-of-type {
 				<table width='100%' cellpadding='0' cellspacing='0' border='0'>
 					<tr>
 						<td class='main_content' align='left' valign='top' width='85%'>
-							<script type = "text/javascript">
-								<!--
-								function message_hide() {
-									document.getElementById("message").style.display="none"; 
-								}
-								function message_timeout() {
-									var tim = window.setTimeout("message_hide()", 1000);
-								}
-								-->
-							</script>
-							<?php
-								if (strlen($_SESSION['message']) > 0) {
-									echo "<div id='message' align='center'>\n";
-									echo "	<table width='40%' border='0'>\n";
-									echo "		<tr>\n";
-									echo "			<th align='left'>".$text['message-message']."</th>\n";
-									echo "		</tr>\n";
-									echo "		<tr>\n";
-									echo "			<td class='row_style1'><strong>".$_SESSION['message']."</strong></td>\n";
-									echo "		</tr>\n";
-									echo "	</table>\n";
-									echo "<br />\n";
-									echo "</div>\n";
-									unset($_SESSION['message']);
-								}
-							?>
 							<!--{body}-->
 
 							<br /><br />
