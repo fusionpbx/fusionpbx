@@ -38,9 +38,47 @@ include "root.php";
 				global $db;
 				$this->db = $db;
 			//set the default template directory
-				if (strlen($this->template_dir) == 0) {
-					$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
+				switch (PHP_OS) {
+				case "Linux":
+					//set the default template dir
+						if (strlen($this->template_dir) == 0) {
+							if (file_exists('/etc/fusionpbx/templates/provision')) {
+								$this->template_dir = '/etc/fusionpbx/templates/provision';
+							}
+						}
+					break;
+				case "FreeBSD":
+					//if the FreeBSD port is installed use the following paths by default.
+						if (file_exists('/usr/local/etc/fusionpbx/templates/provision')) {
+							if (strlen($this->template_dir) == 0) {
+								$this->template_dir = '/usr/local/etc/fusionpbx/templates/provision';
+							}
+						}
+						else {
+							if (strlen($this->template_dir) == 0) {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
+						}
+					break;
+				case "NetBSD":
+					//set the default template_dir
+						if (strlen($this->template_dir) == 0) {
+							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+						}
+					break;
+				case "OpenBSD":
+					//set the default template_dir
+						if (strlen($this->template_dir) == 0) {
+							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+						}
+					break;
+				default:
+					//set the default template_dir
+						if (strlen($this->template_dir) == 0) {
+							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+						}
 				}
+
 			//normalize the mac address
 				if (isset($this->mac)) {
 					$this->mac = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $this->mac));
@@ -259,7 +297,6 @@ include "root.php";
 				unset ($prep_statement);
 
 			//initialize a template object
-				//include "resources/classes/template.php";
 				$view = new template();
 				if (strlen($_SESSION['provision']['template_engine']['text']) > 0) {
 					$view->engine = $_SESSION['provision']['template_engine']['text']; //raintpl, smarty, twig
