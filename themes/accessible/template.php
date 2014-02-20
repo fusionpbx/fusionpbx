@@ -375,7 +375,42 @@ table tr:last-child td:last-child {
 		/*list-style-image: url("images/img.gif");*/
 	}
 
-/* end the menu css */
+/* end the menu css*/
+
+	#message_container {
+		z-index: 99999;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		right: 0px;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		-moz-opacity:0;
+		-khtml-opacity: 0;
+	}
+
+	#message_block {
+		margin: 0px auto;
+		width: 300px;
+		height: auto;
+		background-color: #000;
+		background-repeat: repeat-x;
+		background-image: url('<?=PROJECT_PATH?>/themes/accessible/images/background_black.png');
+		background-position: top center;
+		padding: 10px;
+		-webkit-border-radius: 0px 0px 7px 7px;
+		-moz-border-radius: 0px 0px 7px 7px;
+		border-radius: 0px 0px 7px 7px;
+		text-align: center;
+	}
+
+	#message_block .text {
+		font-family: arial, san-serif;
+		font-size: 10pt;
+		font-weight: bold;
+		color: #fff;
+	}
+
 </style>
 
 <script type="text/javascript">
@@ -400,8 +435,30 @@ function confirmdelete(url) {
 }
 //-->
 </SCRIPT>
+
+<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+	function display_message() {
+		$(document).ready(function() {
+			$("#message_container").animate({ opacity: 0.9 }, "fast").delay(1750).animate({marginTop: '-=200'}, 1000);
+		});
+	}
+</script>
+
 </head>
-<body>
+<body onload="display_message();">
+
+	<?php
+		if (strlen($_SESSION['message']) > 0) {
+			echo "<div id='message_container'>";
+			echo "	<div id='message_block'>";
+			echo "		<span class='text'>".$_SESSION['message']."</span>";
+			echo "	</div>";
+			echo "</div>";
+			unset($_SESSION['message']);
+		}
+	?>
 
 <div align='center'>
 <table width='90%' class='border' border='0' cellpadding='0' cellspacing='0'>
