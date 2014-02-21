@@ -35,12 +35,21 @@ require_once "resources/require.php";
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/vars/app_config.php")) {
 		if (strlen($_SESSION['user_defined_variables']) == 0) {
 			$sql = "select * from v_vars ";
-			$sql .= "where var_cat = 'Defaults' ";
+			$sql .= "where var_cat = 'Defaults' and enabled = 'true' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			foreach ($result as &$row) {
 				switch ($row["var_name"]) {
+					case "domain":
+						//not allowed to override this value
+						break;
+					case "domain_name":
+						//not allowed to override this value
+						break;
+					case "domain_uuid":
+						//not allowed to override this value
+						break;
 					case "username":
 						//not allowed to override this value
 						break;
