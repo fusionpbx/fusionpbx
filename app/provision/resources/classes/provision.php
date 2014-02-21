@@ -45,6 +45,9 @@ include "root.php";
 							if (file_exists('/etc/fusionpbx/templates/provision')) {
 								$this->template_dir = '/etc/fusionpbx/templates/provision';
 							}
+							else {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
 						}
 					break;
 				case "FreeBSD":
@@ -53,9 +56,15 @@ include "root.php";
 							if (strlen($this->template_dir) == 0) {
 								$this->template_dir = '/usr/local/etc/fusionpbx/templates/provision';
 							}
+							else {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
 						}
 						else {
 							if (strlen($this->template_dir) == 0) {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
+							else {
 								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
 							}
 						}
