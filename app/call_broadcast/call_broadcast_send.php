@@ -118,7 +118,7 @@ function cmd_async($cmd) {
 //get information over event socket
 	if (!$fp) {
 		require_once "resources/header.php";
-		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+		$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -179,13 +179,13 @@ function cmd_async($cmd) {
 
 					//method 1
 						$response = trim(event_socket_request($fp, 'api '.$cmd));
-						
+
 					//method 2
 						//cmd_async($_SESSION['switch']['bin']['dir']."/fs_cli -x \"".$cmd."\";");
 
 					//spread the calls out so that they are scheduled with different times
 						if (strlen($broadcast_concurrent_limit) > 0 && strlen($broadcast_timeout) > 0) {
-							if ($broadcast_concurrent_limit == $count) { 
+							if ($broadcast_concurrent_limit == $count) {
 								$sched_seconds = $sched_seconds + $broadcast_timeout;
 								$count=0;
 							}
@@ -195,7 +195,6 @@ function cmd_async($cmd) {
 				}
 				fclose($fp);
 
-				//echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/calls_active/v_calls_active.php\">\n";
 				echo "<div align='center'>\n";
 				echo "<table width='50%'>\n";
 				echo "<tr>\n";
@@ -203,19 +202,23 @@ function cmd_async($cmd) {
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "<td class='row_style1' align='center'>\n";
-				echo "	<strong>".$text['label-call-broadcast']." $broadcast_name ".$text['label-has-been']."</strong>\n";
-				echo "	<br /><br />\n";
-				echo "	<table width='100%'>\n";
-				echo "	<tr>\n";
-				echo "	<td align='center'>\n";
-				echo "		<a href='".PROJECT_PATH."/app/calls_active/calls_active.php'>".$text['label-view-calls']."</a>\n";
-				echo "	</td>\n";
-				echo "	</table>\n";
+				echo "	<strong>".$text['label-call-broadcast']." ".$broadcast_name." ".$text['label-has-been']."</strong>\n";
+
+				if (permission_exists('call_active_view')) {
+					echo "	<br /><br />\n";
+					echo "	<table width='100%'>\n";
+					echo "	<tr>\n";
+					echo "	<td align='center'>\n";
+					echo "		<a href='".PROJECT_PATH."/app/calls_active/calls_active.php'>".$text['label-view-calls']."</a>\n";
+					echo "	</td>\n";
+					echo "	</table>\n";
+				}
+
 				echo "</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
 				echo "</div>\n";
-				
+
 			}
 
 		//show the footer

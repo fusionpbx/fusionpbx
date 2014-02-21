@@ -141,12 +141,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_broadcast.php\">\n";
-			echo "<div align='center'>\n";
-			echo "".$text['confirm-add']."\n";
-			echo "</div>\n";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['confirm-add'];
+			header("Location: call_broadcast.php");
 			return;
 		} //if ($action == "add")
 
@@ -177,12 +173,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=call_broadcast.php\">\n";
-			echo "<div align='center'>\n";
-			echo "".$text['confirm-update']."\n";
-			echo "</div>\n";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['confirm-update'];
+			header("Location: call_broadcast.php");
 			return;
 		} //if ($action == "update")
 	} //if ($_POST["persistformvar"] != "true")

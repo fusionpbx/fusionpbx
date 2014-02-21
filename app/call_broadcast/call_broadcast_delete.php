@@ -55,13 +55,9 @@ else {
 		unset($sql);
 	}
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=call_broadcast.php\">\n";
-	echo "<div align='center'>\n";
-	echo "".$text['confirm-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+
+$_SESSION["message"] = $text['confirm-delete'];
+header("Location: call_broadcast.php");
+return;
 
 ?>
