@@ -87,12 +87,7 @@ else {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=call_block.php\">\n";
-	echo "<div align='center'>\n";
-	echo $text['label-add-complete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
 
+$_SESSION["message"] = $text['label-add-complete'];
+header("Location: call_block.php");
 ?>

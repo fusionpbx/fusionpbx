@@ -37,7 +37,7 @@ else {
 
 //add multi-lingual support
 	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //define the destination_select function
@@ -348,12 +348,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//redirect the user
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/core/user_settings/user_dashboard.php\">\n";
-		echo "<div align='center'>\n";
-		echo "".$text['confirm-update']."<br />\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
+		$_SESSION["message"] = $text['confirm-update'];
+		header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
 		return;
 
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -560,9 +556,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<input class='formfld' type='text' name='destination_data_1' id='destination_data_1' maxlength='255' value=\"$destination_data_1\">\n";
 
-	echo "	".$text['label-ring-delay']."\n"; 
+	echo "	".$text['label-ring-delay']."\n";
 	destination_select('destination_delay_1', $destination_delay_1, '0');
-	echo "	".$text['label-ring-timeout']."\n"; 
+	echo "	".$text['label-ring-timeout']."\n";
 	destination_select('destination_timeout_1', $destination_timeout_1, '30');
 	//echo "<br />\n";
 	//echo "This number rings first.\n";
@@ -575,9 +571,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_2' id='destination_data_2' maxlength='255' value=\"$destination_data_2\">\n";
-	echo "	".$text['label-ring-delay']."\n"; 
+	echo "	".$text['label-ring-delay']."\n";
 	destination_select('destination_delay_2', $destination_delay_2, '0');
-	echo "	".$text['label-ring-timeout']."\n"; 
+	echo "	".$text['label-ring-timeout']."\n";
 	destination_select('destination_timeout_2', $destination_timeout_2, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
@@ -590,9 +586,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_3' id='destination_data_3' maxlength='255' value=\"$destination_data_3\">\n";
-	echo "	".$text['label-ring-delay']."\n"; 
+	echo "	".$text['label-ring-delay']."\n";
 	destination_select('destination_delay_3', $destination_delay_3, '0');
-	echo "	".$text['label-ring-timeout']."\n"; 
+	echo "	".$text['label-ring-timeout']."\n";
 	destination_select('destination_timeout_3', $destination_timeout_3, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
@@ -605,9 +601,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_4' id='destination_data_4' maxlength='255' value=\"$destination_data_4\">\n";
-	echo "	".$text['label-ring-delay']."\n"; 
+	echo "	".$text['label-ring-delay']."\n";
 	destination_select('destination_delay_4', $destination_delay_4, '0');
-	echo "	".$text['label-ring-timeout']."\n"; 
+	echo "	".$text['label-ring-timeout']."\n";
 	destination_select('destination_timeout_4', $destination_timeout_4, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
@@ -620,9 +616,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_data_5' id='destination_data_5' maxlength='255' value=\"$destination_data_5\">\n";
-	echo "	".$text['label-ring-delay']."\n"; 
+	echo "	".$text['label-ring-delay']."\n";
 	destination_select('destination_delay_5', $destination_delay_5, '0');
-	echo "	".$text['label-ring-timeout']."\n"; 
+	echo "	".$text['label-ring-timeout']."\n";
 	destination_select('destination_timeout_5', $destination_timeout_5, '30');
 	//echo "<br />\n";
 	//echo "Enter the destination number.\n";
