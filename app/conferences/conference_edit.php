@@ -37,7 +37,7 @@ else {
 //add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 //action add or update
@@ -77,12 +77,10 @@ else {
 			$sql .= "and conference_uuid = '".$conference_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
-		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences_edit.php?id=$conference_uuid\">\n";
-			echo "<div align='center'>".$text['confirm-delete']."</div>";
-			require_once "resources/footer.php";
-			return;
+
+		$_SESSION["message"] = $text['confirm-delete'];
+		header("Location: conference_edit.php?id=".$conference_uuid);
+		return;
 	}
 
 //add the user to the v_conference_users
@@ -106,12 +104,10 @@ else {
 			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
-		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences_edit.php?id=$conference_uuid\">\n";
-			echo "<div align='center'>".$text['confirm-add']."</div>";
-			require_once "resources/footer.php";
-			return;
+
+		$_SESSION["message"] = $text['confirm-add'];
+		header("Location: conference_edit.php?id=".$conference_uuid);
+		return;
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -217,6 +213,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan_detail_group = '2';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
+				$_SESSION["message"] = $text['confirm-add'];
+
 			} //if ($action == "add")
 
 			if ($action == "update") {
@@ -271,6 +269,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 					$db->query($sql);
 
+				$_SESSION["message"] = $text['confirm-update'];
+
 			} //if ($action == "update")
 
 			//save the xml
@@ -286,16 +286,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
-			//redirect the browser
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences.php\">\n";
-				echo "<div align='center'>\n";
-				echo "".$text['confirm-update']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
+			header("Location: conferences.php");
+			return;
 
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -408,7 +402,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".$field['username']."</td>\n";
 				echo "				<td>\n";
-				echo "					<a href='conferences_edit.php?id=".$conference_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
+				echo "					<a href='conference_edit.php?id=".$conference_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}
@@ -495,13 +489,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($conference_enabled == "true") { 
+	if ($conference_enabled == "true") {
 		echo "	<option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($conference_enabled == "false") { 
+	if ($conference_enabled == "false") {
 		echo "	<option value='false' selected='selected'>false</option>\n";
 	}
 	else {
