@@ -226,7 +226,7 @@
 	$text['description-active']['fr-fr'] = "Liste toutes les conférences actives avec un ou plusieurs participants.";
 
 	$text['label-name']['en-us'] = "Name";
-	$text['label-name']['en-us'] = "Nombre";
+	$text['label-name']['es-cl'] = "Nombre";
 	$text['label-name']['pt-pt'] = "Nome";
 	$text['label-name']['fr-fr'] = "Nom";
 
