@@ -89,9 +89,9 @@ else {
 		$rows_per_page = 10;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the  list
 		$sql = " select * from v_call_block ";
@@ -142,7 +142,7 @@ else {
 				echo "		<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 			}
 			if (permission_exists('call_block_delete')) {
-				echo "		<a href='call_block_delete.php?id=".$row['call_block_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
+				echo "		<a href='call_block_delete.php?id=".$row['call_block_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			};
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }

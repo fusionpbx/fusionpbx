@@ -57,22 +57,9 @@ else {
 		unset($prep_statement, $sql);
 	}
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=call_block.php\">\n";
-	echo "<br />\n";
-	echo "<div align='center'>\n";
-	echo "	<table width='40%'>\n";
-	echo "		<tr>\n";
-	echo "			<th align='left'>".$text['label-message']."</th>\n";
-	echo "		</tr>\n";
-	echo "		<tr>\n";
-	echo "			<td class='row_style1'><strong>".$text['label-delete-complete']."</strong></td>\n";
-	echo "		</tr>\n";
-	echo "	</table>\n";
-	echo "	<br />\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+
+	$_SESSION["message"] = $text['label-delete-complete'];
+	header("Location: call_block.php");
 	return;
 
 ?>

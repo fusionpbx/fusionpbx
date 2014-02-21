@@ -107,6 +107,11 @@
 	$text['label-edit-add']['pt-pt'] = "Adicionar Bloqueio de Chamadas";
 	$text['label-edit-add']['fr-fr'] = "Ajouter bloquage d'appel";
 
+	$text['label-edit-add-recent']['en-us'] = "Recent Calls";
+	$text['label-edit-add-recent']['es-cl'] = "Llamadas Recientes";
+	$text['label-edit-add-recent']['pt-pt'] = "Chamadas Recentes";
+	$text['label-edit-add-recent']['fr-fr'] = "Appels Récents";
+
 	$text['label-edit-edit']['en-us'] = "Call Block Edit";
 	$text['label-edit-edit']['es-cl'] = "Editar bloqueo de llamada";
 	$text['label-edit-edit']['pt-pt'] = "Editar Bloqueio de Chamadas";
