@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);
 }
@@ -87,13 +93,9 @@ if (strlen($id)>0) {
 		unset($sql);
 }
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_rooms.php\">\n";
-	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+
+$_SESSION["message"] = $text['message-delete'];
+header("Location: conference_rooms.php");
+return;
 
 ?>

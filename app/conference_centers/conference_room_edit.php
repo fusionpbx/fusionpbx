@@ -151,12 +151,10 @@ else {
 				$db->exec(check_sql($sql));
 				unset($sql);
 		}
-		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_room_edit.php?id=$conference_room_uuid\">\n";
-			echo "<div align='center'>Delete Complete</div>";
-			require_once "resources/footer.php";
-			return;
+
+		$_SESSION["message"] = $text['message-delete'];
+		header("Location: conference_room_edit.php?id=".$conference_room_uuid);
+		return;
 	}
 
 
@@ -333,6 +331,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$db->exec(check_sql($sql));
 						unset($sql);
 					}
+
+				$_SESSION["message"] = $text['message-add'];
 			} //if ($action == "add")
 
 			if ($action == "update" && permission_exists('conference_room_edit')) {
@@ -394,6 +394,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "and conference_room_uuid = '$conference_room_uuid' ";
 					$db->exec(check_sql($sql));
 					unset($sql);
+
+				$_SESSION["message"] = $text['message-update'];
 			} //if ($action == "update")
 
 			//assign the user to the meeting
@@ -416,16 +418,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//echo $sql; //exit;
 					$db->exec(check_sql($sql));
 					unset($sql);
+
+					$_SESSION["message"] = $text['message-add'];
 				}
 
-			//redirect the user
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_room_edit.php?id=$conference_room_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo $text['confirm-update']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
+			header("Location: conference_room_edit.php?id=".$conference_room_uuid);
+			return;
 
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -630,13 +628,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='record'>\n";
 		echo "	<option value=''></option>\n";
-		if ($record == "true") { 
+		if ($record == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($record == "false") { 
+		if ($record == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -670,13 +668,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='wait_mod'>\n";
 		echo "	<option value=''></option>\n";
-		if ($wait_mod == "true") { 
+		if ($wait_mod == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($wait_mod == "false") { 
+		if ($wait_mod == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -697,13 +695,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='announce'>\n";
 		echo "	<option value=''></option>\n";
-		if ($announce == "true") { 
+		if ($announce == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($announce == "false") { 
+		if ($announce == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -735,13 +733,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='mute'>\n";
 		echo "	<option value=''></option>\n";
-		if ($mute == "true") { 
+		if ($mute == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($mute == "false") { 
+		if ($mute == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -793,13 +791,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='enabled'>\n";
 		echo "	<option value=''></option>\n";
-		if ($enabled == "true") { 
+		if ($enabled == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($enabled == "false") { 
+		if ($enabled == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {
@@ -820,13 +818,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='sounds'>\n";
 		echo "	<option value=''></option>\n";
-		if ($sounds == "true") { 
+		if ($sounds == "true") {
 			echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
 			echo "	<option value='true'>".$text['label-true']."</option>\n";
 		}
-		if ($sounds == "false") { 
+		if ($sounds == "false") {
 			echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 		}
 		else {

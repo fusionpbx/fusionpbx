@@ -201,14 +201,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//save the xml
 					save_dialplan_xml();
 
-				//redirect the browser
-					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_centers.php\">\n";
-					echo "<div align='center'>\n";
-					echo "Add Complete\n";
-					echo "</div>\n";
-					require_once "resources/footer.php";
-					return;
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: conference_centers.php");
+				return;
 			} //if ($action == "add")
 
 			if ($action == "update") {
@@ -271,16 +266,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//save the xml
 					save_dialplan_xml();
 
-				//redirect the browser
-					require_once "resources/header.php";
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=conference_centers.php\">\n";
-					echo "<div align='center'>\n";
-					echo "Update Complete\n";
-					echo "</div>\n";
-					require_once "resources/footer.php";
-					return;
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: conference_centers.php");
+				return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -378,13 +368,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($conference_center_enabled == "true") { 
+	if ($conference_center_enabled == "true") {
 		echo "	<option value='true' selected='selected'>true</option>\n";
 	}
 	else {
 		echo "	<option value='true'>true</option>\n";
 	}
-	if ($conference_center_enabled == "false") { 
+	if ($conference_center_enabled == "false") {
 		echo "	<option value='false' selected='selected'>false</option>\n";
 	}
 	else {
