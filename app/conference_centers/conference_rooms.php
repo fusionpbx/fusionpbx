@@ -187,8 +187,8 @@ else {
 		$param = "";
 		$page = check_str($_GET['page']);
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($row_count, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		list($paging_controls, $rows_per_page, $var3) = paging($row_count, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the conference rooms
 		$conference_center->rows_per_page = $rows_per_page;
@@ -342,10 +342,10 @@ else {
 				echo "	<td valign='top' align='right' nowrap='nowrap'>\n";
 				echo "		&nbsp;\n";
 				if (permission_exists('conference_room_edit')) {
-					echo "		<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "		<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='".$text['label-edit']."'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('conference_room_delete')) {
-					echo "		<a href='conference_room_delete.php?id=".$row['conference_room_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+					echo "		<a href='conference_room_delete.php?id=".$row['conference_room_uuid']."' alt='".$text['label-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 

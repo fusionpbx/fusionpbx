@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	//conference centers
 		$text['title-conference-centers']['en-us'] = "Conference Centers";
@@ -173,15 +173,25 @@
 		$text['button-back']['pt-pt'] = "Voltar";
 		$text['button-back']['fr-fr'] = "Retour";
 
-		$text['confirm-update']['en-us'] = "Update Complete";
-		$text['confirm-update']['es-cl'] = "Actualización Completa";
-		$text['confirm-update']['pt-pt'] = "Actualização Efectuada";
-		$text['confirm-update']['fr-fr'] = "Mis à jour";
-
 		$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 		$text['confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
 		$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
 		$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
+
+		$text['message-add']['en-us'] = "Add Completed";
+		$text['message-add']['es-cl'] = "Agregar Completado";
+		$text['message-add']['pt-pt'] = "Adição Efectuada";
+		$text['message-add']['fr-fr'] = "Ajouté";
+
+		$text['message-update']['en-us'] = "Update Completed";
+		$text['message-update']['es-cl'] = "Actualización Completada";
+		$text['message-update']['pt-pt'] = "Actualização Efectuada";
+		$text['message-update']['fr-fr'] = "Mis à jour";
+
+		$text['message-delete']['en-us'] = "Delete Completed";
+		$text['message-delete']['es-cl'] = "Eliminación Completada";
+		$text['message-delete']['pt-pt'] = "Remoção Efectuada";
+		$text['message-delete']['fr-fr'] = "Supprimé";
 
 		$text['label-conference-name']['en-us'] = "Conference Name";
 		$text['label-conference-name']['es-cl'] = "Nombre de la conferencia";
