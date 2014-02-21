@@ -78,7 +78,7 @@ if ($_GET['a'] == "download") {
 	$msg = $_GET["savemsg"];
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>"; 
+		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
 	}
 	if (strlen($msg) > 0) {
 		echo "<div align='center'>\n";
@@ -112,10 +112,10 @@ if ($_GET['a'] == "download") {
 			echo $e->getMessage();
 		}
 		echo "<br />\n";
-		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 10px;'>\n";
 		echo "<tr>\n";
 		echo "<td width='50%'>\n";
-		echo "  <b>".$text['title-sofia-status']."</b> \n";
+		echo "  <b><a href='javascript:void(0);' onclick=\"$('#sofia_status').slideToggle();\">".$text['title-sofia-status']."</a></b> \n";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
 		echo "  <input type='button' class='btn' value='memcache flush' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
@@ -125,6 +125,7 @@ if ($_GET['a'] == "download") {
 		echo "</tr>\n";
 		echo "</table>\n";
 
+		echo "<div id='sofia_status' style='margin-top: 20px; margin-bottom: 30px;'>";
 		echo "<table width='100%' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<th>Name</th>\n";
@@ -170,8 +171,8 @@ if ($_GET['a'] == "download") {
 			if ($c==0) { $c=1; } else { $c=0; }
 		}
 		echo "</table>\n";
+		echo "</div>\n";
 		unset($xml);
-		echo "<br />\n\n";
 	}
 
 //sofia status profile
@@ -192,12 +193,10 @@ if ($_GET['a'] == "download") {
 						echo $e->getMessage();
 						exit;
 					}
-					echo "<br />\n";
-					echo "<br />\n";
-					echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+					echo "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 10px;'>\n";
 					echo "<tr>\n";
 					echo "<td width='50%'>\n";
-					echo "  <b>".$text['title-sofia-status-profile']." $sip_profile_name</b> \n";
+					echo "  <b><a href='javascript:void(0);' onclick=\"$('#".$sip_profile_name."').slideToggle();\">".$text['title-sofia-status-profile']." ".$sip_profile_name."</a></b> \n";
 					echo "</td>\n";
 					echo "<td width='50%' align='right'>\n";
 					echo "  <input type='button' class='btn' value='registrations' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/status_registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
@@ -212,6 +211,7 @@ if ($_GET['a'] == "download") {
 					echo "</tr>\n";
 					echo "</table>\n";
 
+					echo "<div id='".$sip_profile_name."' style='display: none; margin-bottom: 30px;'>";
 					echo "<table width='100%' cellspacing='0' cellpadding='5'>\n";
 					echo "<tr>\n";
 					echo "<th width='20%'>&nbsp;</th>\n";
@@ -258,8 +258,8 @@ if ($_GET['a'] == "download") {
 						echo "	<tr><td class='vncell'>failed-calls-out</td><td class='vtable'>&nbsp;".$row->{'failed-calls-out'}."&nbsp;</td></tr>\n";
 					}
 					echo "</table>\n";
+					echo "</div>";
 					unset($xml);
-					echo "<br /><br />\n\n";
 				}
 			}
 		}
@@ -269,12 +269,13 @@ if ($_GET['a'] == "download") {
 	if ($fp && permission_exists('sip_status_switch_status')) {
 		$cmd = "api status";
 		$response = event_socket_request($fp, $cmd);
-		echo "<b>".$text['title-status']."</b><br />\n";
-		echo "<pre style=\"font-size: 9pt;\">";
+		echo "<b><a href='javascript:void(0);' onclick=\"$('#status').slideToggle();\">".$text['title-status']."</a></b>\n";
+		echo "<div id='status' style='margin-top: 20px; font-size: 9pt;'>";
+		echo "<pre>";
 		echo trim($response);
 		echo "</pre>\n";
+		echo "</div>";
 		fclose($fp);
-		echo "<br /><br />\n\n";
 	}
 
 //include the footer
