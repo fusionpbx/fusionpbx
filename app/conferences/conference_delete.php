@@ -35,9 +35,9 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app/calls/app_languages.php";
+	require_once "app_languages.php";
 	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 if (count($_GET)>0) {
@@ -93,13 +93,9 @@ if (strlen($id)>0) {
 
 }
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=conferences.php\">\n";
-	echo "<div align='center'>\n";
-	echo "".$text['confirm-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+
+$_SESSION["message"] = $text['confirm-delete'];
+header("Location: conferences.php");
+return;
 
 ?>
