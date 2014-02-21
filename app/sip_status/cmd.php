@@ -85,7 +85,8 @@ else {
 		echo $response;
 	}
 	else {
-		header("Location: sip_status.php?savemsg=".urlencode($response));
+		$_SESSION["message"] = $response;
+		header("Location: sip_status.php");
 	}
 
 ?>

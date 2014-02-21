@@ -53,13 +53,8 @@ if (strlen($id)>0) {
 	unset($sql);
 }
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=default_settings.php\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+$_SESSION["message"] = $text['message-delete'];
+header("Location: default_settings.php");
+return;
 
 ?>
