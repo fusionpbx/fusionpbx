@@ -422,22 +422,21 @@ require_once "resources/require.php";
 	echo "	".$text['label-device_template'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	$device = new device;
+	$template_dir = $device->get_template_dir();
+
 	echo "<select id='device_template' name='device_template' class='formfld'>\n";
 	echo "<option value=''></option>\n";
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"])) {
-		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/".$_SESSION["domain_name"];
-	} else {
-		$temp_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision";
-	}
-	if($dh = opendir($temp_dir)) {
+
+	if ($dh = opendir($template_dir)) {
 		while($dir = readdir($dh)) {
 			if($file != "." && $dir != ".." && $dir[0] != '.') {
-				if(is_dir($temp_dir . "/" . $dir)) {
+				if(is_dir($template_dir . "/" . $dir)) {
 					echo "<optgroup label='$dir'>";
-					if($dh_sub = opendir($temp_dir.'/'.$dir)) {
+					if($dh_sub = opendir($template_dir.'/'.$dir)) {
 						while($dir_sub = readdir($dh_sub)) {
 							if($file_sub != '.' && $dir_sub != '..' && $dir_sub[0] != '.') {
-								if(is_dir($temp_dir . '/' . $dir .'/'. $dir_sub)) {
+								if(is_dir($template_dir . '/' . $dir .'/'. $dir_sub)) {
 									if ($device_template == $dir."/".$dir_sub) {
 										echo "<option value='".$dir."/".$dir_sub."' selected='selected'>".$dir."/".$dir_sub."</option>\n";
 									}
