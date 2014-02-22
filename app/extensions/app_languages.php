@@ -6,7 +6,7 @@
 	$text['title-extensions']['fr-fr'] = "Extensions";
 
 	$text['title-extension-edit']['en-us'] = "Extension";
-	$text['title-extension-edit']['es-cl'] = "Editar Extensión";
+	$text['title-extension-edit']['es-cl'] = "Extensión";
 	$text['title-extension-edit']['pt-pt'] = "Extensão";
 	$text['title-extension-edit']['fr-fr'] = "Extension";
 
@@ -26,7 +26,7 @@
 	$text['description-extensions']['fr-fr'] = "Page de configuration des extensions SIP.";
 
 	$text['header-extension-edit']['en-us'] = "Extension";
-	$text['header-extension-edit']['es-cl'] = "Editar Extensión";
+	$text['header-extension-edit']['es-cl'] = "Extensión";
 	$text['header-extension-edit']['pt-pt'] = "Extensão";
 	$text['header-extension-edit']['fr-fr'] = "Extension";
 
