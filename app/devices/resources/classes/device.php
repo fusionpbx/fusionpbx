@@ -29,6 +29,7 @@ include "root.php";
 	class device {
 		public $db;
 		public $domain_uuid;
+		public $template_dir;
 
 		public function __construct() {
 			//require_once "resources/classes/database.php";
@@ -106,6 +107,66 @@ include "root.php";
 				return $device_vendor;
 		}
 
+		public function get_template_dir() {
+			//set the default template directory
+				switch (PHP_OS) {
+				case "Linux":
+					//set the default template dir
+						if (strlen($this->template_dir) == 0) {
+							if (file_exists('/etc/fusionpbx/templates/provision')) {
+								$this->template_dir = '/etc/fusionpbx/templates/provision';
+							}
+							else {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
+						}
+					break;
+				case "FreeBSD":
+					//if the FreeBSD port is installed use the following paths by default.
+						if (file_exists('/usr/local/etc/fusionpbx/templates/provision')) {
+							if (strlen($this->template_dir) == 0) {
+								$this->template_dir = '/usr/local/etc/fusionpbx/templates/provision';
+							}
+							else {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
+						}
+						else {
+							if (strlen($this->template_dir) == 0) {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
+							else {
+								$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+							}
+						}
+					break;
+				case "NetBSD":
+					//set the default template_dir
+						if (strlen($this->template_dir) == 0) {
+							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+						}
+					break;
+				case "OpenBSD":
+					//set the default template_dir
+						if (strlen($this->template_dir) == 0) {
+							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+						}
+					break;
+				default:
+					//set the default template_dir
+						if (strlen($this->template_dir) == 0) {
+							$this->template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+						}
+				}
+
+			//check to see if the domain name sub directory exists
+				if (is_dir($this->template_dir."/".$_SESSION["domain_name"])) {
+					$this->template_dir = $this->template_dir."/".$_SESSION["domain_name"];
+				}
+
+			//return the template directory
+				return $this->template_dir;
+		}
 	}
 
 ?>
