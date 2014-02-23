@@ -488,14 +488,9 @@ else {
 		//synchronize the xml config
 			save_dialplan_xml();
 
-		//redirect the user
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3\">\n";
-			echo "<div align='center'>\n";
-			echo $text['message-update']."\n";
-			echo "</div>\n";
-			require_once "resources/footer.php";
-			return;
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
+		return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 ?>
 

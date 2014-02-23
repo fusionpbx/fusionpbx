@@ -158,29 +158,18 @@ else {
 			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 		}
 
-	//redirect the user
-		require_once "resources/header.php";
-		switch ($app_uuid) {
-			case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4":
-				//inbound routes
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=$app_uuid\">\n";
-				break;
-			case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3":
-				//outbound routes
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=$app_uuid\">\n";
-				break;
-			case "4b821450-926b-175a-af93-a03c441818b1":
-				//time conditions
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=$app_uuid\">\n";
-				break;
-			default:
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php\">\n";
-				break;
-		}
-		echo "<div align='center'>\n";
-		echo $text['message-copy']."\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
-		return;
+
+	$_SESSION["message"] = $text['message-copy'];
+	switch ($app_uuid) {
+		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": //inbound routes
+		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": //outbound routes
+		case "4b821450-926b-175a-af93-a03c441818b1": //time conditions
+			$redirect_url = PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid;
+			break;
+		default:
+			$redirect_url = PROJECT_PATH."/app/dialplan/dialplans.php";
+	}
+	header("Location: ".$redirect_url);
+	return;
 
 ?>

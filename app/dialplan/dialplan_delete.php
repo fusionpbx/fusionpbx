@@ -95,29 +95,18 @@ if (strlen($dialplan_uuid) > 0) {
 		}
 }
 
-//redirect the user
 
-//save the message to a session variable
-	$_SESSION['message'] = $text['message-delete'];
-
-	require_once "resources/header.php";
-	switch ($app_uuid) {
-		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4":
-			//inbound routes
-			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid);
-			break;
-		case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3":
-			//outbound routes
-			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid);
-			break;
-		case "4b821450-926b-175a-af93-a03c441818b1":
-			//time conditions
-			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid);
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=\">\n";
-			break;
-		default:
-			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php);
-			break;
-	}
+$_SESSION["message"] = $text['message-delete'];
+switch ($app_uuid) {
+	case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": //inbound routes
+	case "8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3": //outbound routes
+	case "4b821450-926b-175a-af93-a03c441818b1": //time conditions
+		$redirect_url = PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=".$app_uuid;
+		break;
+	default:
+		$redirect_url = PROJECT_PATH."/app/dialplan/dialplans.php";
+}
+header("Location: ".$redirect_url);
+return;
 
 ?>

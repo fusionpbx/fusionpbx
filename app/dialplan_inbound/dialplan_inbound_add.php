@@ -539,14 +539,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//synchronize the xml config
 		save_dialplan_xml();
 
-	//redirect the user
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4\">\n";
-		echo "<div align='center'>\n";
-		echo "".$text['confirm-update-complete']."\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
-		return;
+	$_SESSION["message"] = $text['confirm-update-complete'];
+	header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4");
+	return;
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 ?>
