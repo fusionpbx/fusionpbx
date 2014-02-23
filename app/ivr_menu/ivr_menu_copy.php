@@ -185,12 +185,8 @@ else {
 	}
 
 //redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=ivr_menus.php\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-copy']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-copy'];
+	header("Location: ivr_menus.php");
 	return;
 
 ?>
