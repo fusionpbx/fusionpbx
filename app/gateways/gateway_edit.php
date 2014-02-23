@@ -276,17 +276,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//redirect the user
 		if (isset($action)) {
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=gateways.php\">\n";
-			echo "<div align='center'>\n";
 			if ($action == "add") {
-				echo "	".$text['message-add']."\n";
+				$_SESSION["message"] = $text['message-add'];
 			}
 			if ($action == "update") {
-				echo "	".$text['message-update']."\n";
+				$_SESSION["message"] = $text['message-update'];
 			}
-			echo "</div>\n";
-			require_once "resources/footer.php";
+			header("Location: gateways.php");
 			return;
 		}
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -501,7 +497,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($register == "false") { 
+	if ($register == "false") {
 		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -549,13 +545,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='distinct_to'>\n";
 	echo "    <option value=''></option>\n";
-	if ($distinct_to == "true") { 
+	if ($distinct_to == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($distinct_to == "false") { 
+	if ($distinct_to == "false") {
 		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -596,19 +592,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='register_transport'>\n";
 	echo "    <option value=''></option>\n";
-	if ($register_transport == "udp") { 
+	if ($register_transport == "udp") {
 		echo "    <option value='udp' selected='selected'>udp</option>\n";
 	}
 	else {
 		echo "    <option value='udp'>udp</option>\n";
 	}
-	if ($register_transport == "tcp") { 
+	if ($register_transport == "tcp") {
 		echo "    <option value='tcp' selected='selected'>tcp</option>\n";
 	}
 	else {
 		echo "    <option value='tcp'>tcp</option>\n";
 	}
-	if ($register_transport == "tls") { 
+	if ($register_transport == "tls") {
 		echo "    <option value='tls' selected='selected'>tls</option>\n";
 	}
 	else {
@@ -649,13 +645,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<select class='formfld' name='caller_id_in_from'>\n";
 	echo "		<option value=''></option>\n";
-	if ($caller_id_in_from == "true") { 
+	if ($caller_id_in_from == "true") {
 		echo "		<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "		<option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($caller_id_in_from == "false") { 
+	if ($caller_id_in_from == "false") {
 		echo "		<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -674,13 +670,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='supress_cng'>\n";
 	echo "    <option value=''></option>\n";
-	if ($supress_cng == "true") { 
+	if ($supress_cng == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($supress_cng == "false") { 
+	if ($supress_cng == "false") {
 		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -721,13 +717,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='extension_in_contact'>\n";
 	echo "    <option value=''></option>\n";
-	if ($extension_in_contact == "true") { 
+	if ($extension_in_contact == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($extension_in_contact == "false") { 
+	if ($extension_in_contact == "false") {
 		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -799,13 +795,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($enabled == "true") { 
+	if ($enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($enabled == "false") { 
+	if ($enabled == "false") {
 		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
