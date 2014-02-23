@@ -257,7 +257,7 @@ require_once "resources/require.php";
 		//$message = $orm->message;
 		foreach ($result as &$row) {
 			$device_mac_address = $row["device_mac_address"];
-			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
+			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			$device_label = $row["device_label"];
 			$device_vendor = $row["device_vendor"];
 			$device_model = $row["device_model"];
