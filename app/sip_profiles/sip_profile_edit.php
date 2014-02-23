@@ -22,7 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Luis Daniel Lucio Quiroz <daniel.lucio@astraqom.com> 
+	Luis Daniel Lucio Quiroz <daniel.lucio@astraqom.com>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -131,12 +131,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			//redirect the browser
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=sip_profiles.php\">\n";
-				echo "<div align='center'>\n";
-				echo $text['message-update']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: sip_profiles.php");
 				return;
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

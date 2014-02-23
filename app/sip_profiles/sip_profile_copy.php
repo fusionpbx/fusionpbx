@@ -123,12 +123,8 @@ else {
 		$_SESSION["reload_xml"] = true;
 
 	//redirect the user
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/sip_profiles/sip_profiles.php\">\n";
-		echo "<div align='center'>\n";
-		echo $text['message-copy']."\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
+		$_SESSION["message"] = $text['message-copy'];
+		header("Location: ".PROJECT_PATH."/app/sip_profiles/sip_profiles.php");
 		return;
 
 ?>
