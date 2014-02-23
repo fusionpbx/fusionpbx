@@ -33,6 +33,29 @@
 
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND") then
+
+		--connect to the database
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			dbh = database_handle('system');
+
+		--exits the script if we didn't connect properly
+			assert(dbh:connected());
+
+		--get the domain_uuid
+			if (domain_uuid == nil) then
+				--get the domain_uuid
+					if (domain_name ~= nil) then
+						sql = "SELECT domain_uuid FROM v_domains ";
+						sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(rows)
+							domain_uuid = rows["domain_uuid"];
+						end);
+					end
+			end
+
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -54,9 +77,6 @@
 			sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
 			sql = sql .. "and d.dialplan_enabled = 'true' ";
 			sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
-			--if (call_context ~= "public") then
-			--	sql = sql .. "and d.domain_uuid = '" .. domain_uuid .. "' ";
-			--end
 			sql = sql .. "order by ";
 			sql = sql .. "d.dialplan_order asc, ";
 			sql = sql .. "d.dialplan_name asc, ";
@@ -253,6 +273,9 @@
 			if (debug["cache"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] dialplan:"..call_context.." source: database\n");
 			end
+
+		--close the database connection
+			dbh:release();
 	else
 		--replace the &#39 back to a single quote
 			XML_STRING = XML_STRING:gsub("&#39;", "'");

@@ -24,6 +24,13 @@
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
 
+--connect to the database
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
+
+--exits the script if we didn't connect properly
+	assert(dbh:connected());
+
 --process when the sip profile is rescanned, sofia is reloaded, or sip redirect
 	local xml = {}
 	table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -36,3 +43,6 @@
 	table.insert(xml, [[	</section>]]);
 	table.insert(xml, [[</document>]]);
 	XML_STRING = table.concat(xml, "\n");
+
+--close the database connection
+	dbh:release();

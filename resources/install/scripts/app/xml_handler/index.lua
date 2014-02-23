@@ -42,13 +42,6 @@
 	dofile(scripts_dir.."/resources/functions/file_exists.lua");
 	dofile(scripts_dir.."/resources/functions/explode.lua");
 
---connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
-	dbh = database_handle('system');
-
---exits the script if we didn't connect properly
-	assert(dbh:connected());
-
 --if the params class and methods do not exist then add them to prevent errors
 	if (not params) then
 		params = {}
@@ -103,21 +96,6 @@
 --prepare the api object
 	api = freeswitch.API();
 
---get the domain_uuid
-	if (domain_uuid == nil) then
-		--get the domain_uuid
-			if (domain_name ~= nil) then
-				sql = "SELECT domain_uuid FROM v_domains ";
-				sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-				end
-				status = dbh:query(sql, function(rows)
-					domain_uuid = rows["domain_uuid"];
-				end);
-			end
-	end
-
 --process the sections
 	if (XML_REQUEST["section"] == "configuration") then
 		configuration = scripts_dir.."/app/xml_handler/resources/scripts/configuration/"..XML_REQUEST["key_value"]..".lua";
@@ -134,6 +112,3 @@
 	if (XML_REQUEST["section"] == "dialplan") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/dialplan/dialplan.lua");
 	end
-
---close the database connection
-	dbh:release();

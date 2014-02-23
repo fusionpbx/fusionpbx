@@ -35,6 +35,28 @@
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND") then
 
+		--connect to the database
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			dbh = database_handle('system');
+
+		--exits the script if we didn't connect properly
+			assert(dbh:connected());
+
+		--get the domain_uuid
+			if (domain_uuid == nil) then
+				--get the domain_uuid
+					if (domain_name ~= nil) then
+						sql = "SELECT domain_uuid FROM v_domains ";
+						sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(rows)
+							domain_uuid = rows["domain_uuid"];
+						end);
+					end
+			end
+
 		--get the variables
 			vars = trim(api:execute("global_getvar", ""));
 
@@ -233,6 +255,9 @@
 			if (debug["xml_string"]) then
 				freeswitch.consoleLog("notice", "[xml_handler] XML_STRING: " .. XML_STRING .. "\n");
 			end
+
+		--close the database connection
+			dbh:release();
 
 		--set the cache
 			result = trim(api:execute("memcache", "set configuration:sofia.conf:" .. hostname .." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["sofia.conf"]));
