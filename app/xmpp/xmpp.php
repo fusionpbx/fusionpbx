@@ -42,6 +42,7 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+
 require_once "resources/header.php";
 $page["title"] = $text['title-xmpp'];
 

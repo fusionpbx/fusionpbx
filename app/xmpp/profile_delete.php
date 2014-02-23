@@ -42,7 +42,6 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "resources/header.php";
 
 $domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
 
@@ -94,8 +93,5 @@ if ($fp) {
 $action = "delete";
 
 include "update_complete.php";
-
-//show the footer
-require_once "resources/footer.php";
 
 ?>
