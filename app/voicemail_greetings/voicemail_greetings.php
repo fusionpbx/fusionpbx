@@ -91,7 +91,7 @@ else {
 			if ($_REQUEST['greeting']) {
 				mkdir($v_greeting_dir, 0777, true);
 				move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$_REQUEST['greeting']);
-				$save_msg = "Uploaded ".$_REQUEST['greeting'];
+				$_SESSION["message"] = $text['message-uploaded'].": ".$_REQUEST['greeting'];
 			}
 		}
 	}
@@ -196,7 +196,7 @@ else {
 		}
 	}
 
-//get the number of rows in v_extensions 
+//get the number of rows in v_extensions
 	$sql = "select greeting_id from v_voicemails ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$sql .= "and voicemail_id = '$voicemail_id' ";
@@ -210,11 +210,6 @@ else {
 
 //include the header
 	require_once "resources/header.php";
-
-//show the message
-	if (strlen($save_msg) > 0) {
-		echo "Message: ".$save_msg;
-	}
 
 //begin the content
 	echo "<script>\n";
@@ -234,7 +229,7 @@ else {
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width=\"50%\">\n";
-	echo "			<span class='title'>".$text['title'].":</span><br>\n";
+	echo "			<span class='title'>".$text['title']."</span><br>\n";
 	echo "		</td>";
 	echo "		<td width='50%' align='right'>\n";
 	echo "			<label for=\"file\">".$text['label-upload'].":</label>\n";
@@ -254,7 +249,7 @@ else {
 
 	echo "<br />\n";
 
-	//get the number of rows in v_voicemail_greetings 
+	//get the number of rows in v_voicemail_greetings
 		$sql = "select count(*) as num_rows from v_voicemail_greetings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and voicemail_id = '$voicemail_id' ";
@@ -275,9 +270,9 @@ else {
 		$rows_per_page = 100;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the greetings list
 		$sql = "select * from v_voicemail_greetings ";

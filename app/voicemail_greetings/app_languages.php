@@ -51,27 +51,31 @@
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
-	//voicemail_greeting_delete
-	$text['confirm-delete']['en-us'] = "Delete Complete";
-	$text['message-delete']['es-cl'] = "Eliminación Completada";
-	$text['confirm-delete']['pt-pt'] = "Remoção Efectuada";
-	$text['confirm-delete']['fr-fr'] = "Supprimé";
-
 	//voicemail_greeting_edit
 	$text['confirm-name']['en-us'] = "Please provide: Greeting Name (play)";
 	$text['confirm-name']['es-cl'] = "Por favor indique: Nombre de Bienvenida (reproducir)";
 	$text['confirm-name']['pt-pt'] = "Por favor indique: Nome da saudação (tocar)";
 	$text['confirm-name']['fr-fr'] = "Merci d'indiquer: Nom de salutation (jouer)";
 
-	$text['confirm-add']['en-us'] = "Add Complete";
+	$text['message-add']['en-us'] = "Add Complete";
 	$text['message-add']['es-cl'] = "Agregar Completado";
-	$text['confirm-add']['pt-pt'] = "Adição Efectuada";
-	$text['confirm-add']['fr-fr'] = "Ajouté";
+	$text['message-add']['pt-pt'] = "Adição Efectuada";
+	$text['message-add']['fr-fr'] = "Ajouté";
 
-	$text['confirm-update']['en-us'] = "Update Complete";
+	$text['message-update']['en-us'] = "Update Complete";
 	$text['message-update']['es-cl'] = "Actualización Completada";
-	$text['confirm-update']['pt-pt'] = "Actualização Efectuada";
-	$text['confirm-update']['fr-fr'] = "Mis à jour";
+	$text['message-update']['pt-pt'] = "Actualização Efectuada";
+	$text['message-update']['fr-fr'] = "Mis à jour";
+
+	$text['message-delete']['en-us'] = "Delete Complete";
+	$text['message-delete']['es-cl'] = "Eliminación Completada";
+	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
+	$text['message-delete']['fr-fr'] = "Supprimé";
+
+	$text['message-uploaded']['en-us'] = "Upload Complete";
+	$text['message-uploaded']['es-cl'] = "Subida Finalizada";
+	$text['message-uploaded']['pt-pt'] = "Carregar Completa";
+	$text['message-uploaded']['fr-fr'] = "Enregistrer Complet";
 
 	$text['label-add']['en-us'] = "Add Greeting";
 	$text['label-add']['es-cl'] = "Agregar Saludo";
