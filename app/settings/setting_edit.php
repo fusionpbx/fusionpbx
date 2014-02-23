@@ -34,14 +34,14 @@ else {
 	echo "access denied";
 	exit;
 }
-	
+
 //add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//get the number of rows in v_extensions 
+//get the number of rows in v_extensions
 	$sql = " select count(*) as num_rows from v_settings ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$num_rows = 0;
@@ -123,7 +123,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/footer.php";
 			return;
 		}
-	
+
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('setting_edit')) {
@@ -155,14 +155,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				//synchronize settings
-					save_setting_xml();
+				save_setting_xml();
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=setting_edit.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Add Complete\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: setting_edit.php");
 				return;
 			} //if ($action == "add")
 
@@ -181,14 +177,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				//synchronize settings
-					save_setting_xml();
+				save_setting_xml();
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=setting_edit.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Update Complete\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: setting_edit.php");
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
@@ -234,12 +226,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-	echo "<td align='left' width='30%' nowrap><b>Setting Add</b></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-update']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='javascript:history.go(-1)'\" value='".$text['button-back']."'></td>\n";
+	//echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='javascript:history.go(-1)'\" value='".$text['button-back']."'></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
@@ -338,19 +330,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='smtp_secure'>\n";
 	echo "    <option value=''></option>\n";
-	if ($smtp_secure == "none") { 
+	if ($smtp_secure == "none") {
 	echo "    <option value='none' SELECTED >none</option>\n";
 	}
 	else {
 	echo "    <option value='none'>none</option>\n";
 	}
-	if ($smtp_secure == "tls") { 
+	if ($smtp_secure == "tls") {
 	echo "    <option value='tls' SELECTED >tls</option>\n";
 	}
 	else {
 	echo "    <option value='tls'>tls</option>\n";
 	}
-	if ($smtp_secure == "ssl") { 
+	if ($smtp_secure == "ssl") {
 	echo "    <option value='ssl' SELECTED >ssl</option>\n";
 	}
 	else {
@@ -369,13 +361,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='smtp_auth'>\n";
 	echo "    <option value=''></option>\n";
-	if ($smtp_auth == "true") { 
+	if ($smtp_auth == "true") {
 	echo "    <option value='true' SELECTED >true</option>\n";
 	}
 	else {
 	echo "    <option value='true'>true</option>\n";
 	}
-	if ($smtp_auth == "false") { 
+	if ($smtp_auth == "false") {
 	echo "    <option value='false' SELECTED >false</option>\n";
 	}
 	else {
