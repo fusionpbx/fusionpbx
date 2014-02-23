@@ -55,13 +55,8 @@ if (strlen($id)>0) {
 		unset($sql);
 }
 
-//redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+$_SESSION["message"] = $text['message-delete'];
+header("Location: device_edit.php?id=".$device_uuid);
+return;
 
 ?>

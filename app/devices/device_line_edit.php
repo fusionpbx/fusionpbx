@@ -165,20 +165,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 				} //if ($action == "update")
 
-			//redirect the browser
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
-				echo "<div align='center'>\n";
-				if ($action == "add") {
-					echo "	".$text['message-add']."\n";
-				}
-				if ($action == "update") {
-					echo "	".$text['message-update']."\n";
-				}
-				echo "</div>\n";
-				require_once "resources/footer.php";
-				return;
-		} //if ($_POST["persistformvar"] != "true") 
+
+			if ($action == "add") {
+				$_SESSION["message"] = $text['message-add'];
+			}
+			if ($action == "update") {
+				$_SESSION["message"] = $text['message-update'];
+			}
+			header("Location: device_edit.php?id=".$device_uuid);
+			return;
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form

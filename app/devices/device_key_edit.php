@@ -125,12 +125,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "	".$text['message-add']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: device_edit.php?id=".$device_uuid);
 				return;
 			} //if ($action == "add")
 
@@ -148,15 +144,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=device_edit.php?id=$device_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "	".$text['message-update']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: device_edit.php?id=".$device_uuid);
 				return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -206,25 +198,25 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='device_key_category'>\n";
 	echo "	<option value=''></option>\n";
-	if ($device_key_category == "line") { 
+	if ($device_key_category == "line") {
 		echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
 	}
 	else {
 		echo "	<option value='line'>".$text['label-line']."</option>\n";
 	}
-	if ($device_key_category == "memory") { 
+	if ($device_key_category == "memory") {
 		echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
 	}
 	else {
 		echo "	<option value='memory'>".$text['label-memory']."</option>\n";
 	}
-	if ($device_key_category == "programmable") { 
+	if ($device_key_category == "programmable") {
 		echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
 	}
 	else {
 		echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 	}
-	if ($device_key_category == "expansion") { 
+	if ($device_key_category == "expansion") {
 		echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
 	}
 	else {
@@ -243,109 +235,109 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='device_key_id'>\n";
 	echo "	<option value=''></option>\n";
-	if ($device_key_id == "1") { 
+	if ($device_key_id == "1") {
 		echo "	<option value='1' selected='selected'>1</option>\n";
 	}
 	else {
 		echo "	<option value='1'>1</option>\n";
 	}
-	if ($device_key_id == "2") { 
+	if ($device_key_id == "2") {
 		echo "	<option value='2' selected='selected'>2</option>\n";
 	}
 	else {
 		echo "	<option value='2'>2</option>\n";
 	}
-	if ($device_key_id == "3") { 
+	if ($device_key_id == "3") {
 		echo "	<option value='3' selected='selected'>3</option>\n";
 	}
 	else {
 		echo "	<option value='3'>3</option>\n";
 	}
-	if ($device_key_id == "4") { 
+	if ($device_key_id == "4") {
 		echo "	<option value='4' selected='selected'>4</option>\n";
 	}
 	else {
 		echo "	<option value='4'>4</option>\n";
 	}
-	if ($device_key_id == "5") { 
+	if ($device_key_id == "5") {
 		echo "	<option value='5' selected='selected'>5</option>\n";
 	}
 	else {
 		echo "	<option value='5'>5</option>\n";
 	}
-	if ($device_key_id == "6") { 
+	if ($device_key_id == "6") {
 		echo "	<option value='6' selected='selected'>6</option>\n";
 	}
 	else {
 		echo "	<option value='6'>6</option>\n";
 	}
-	if ($device_key_id == "7") { 
+	if ($device_key_id == "7") {
 		echo "	<option value='7' selected='selected'>7</option>\n";
 	}
 	else {
 		echo "	<option value='7'>7</option>\n";
 	}
-	if ($device_key_id == "8") { 
+	if ($device_key_id == "8") {
 		echo "	<option value='8' selected='selected'>8</option>\n";
 	}
 	else {
 		echo "	<option value='8'>8</option>\n";
 	}
-	if ($device_key_id == "9") { 
+	if ($device_key_id == "9") {
 		echo "	<option value='9' selected='selected'>9</option>\n";
 	}
 	else {
 		echo "	<option value='9'>9</option>\n";
 	}
-	if ($device_key_id == "10") { 
+	if ($device_key_id == "10") {
 		echo "	<option value='10' selected='selected'>10</option>\n";
 	}
 	else {
 		echo "	<option value='10'>10</option>\n";
 	}
-	if ($device_key_id == "11") { 
+	if ($device_key_id == "11") {
 		echo "	<option value='11' selected='selected'>11</option>\n";
 	}
 	else {
 		echo "	<option value='11'>11</option>\n";
 	}
-	if ($device_key_id == "12") { 
+	if ($device_key_id == "12") {
 		echo "	<option value='12' selected='selected'>12</option>\n";
 	}
 	else {
 		echo "	<option value='12'>12</option>\n";
 	}
-	if ($device_key_id == "13") { 
+	if ($device_key_id == "13") {
 		echo "	<option value='13' selected='selected'>13</option>\n";
 	}
 	else {
 		echo "	<option value='13'>13</option>\n";
 	}
-	if ($device_key_id == "14") { 
+	if ($device_key_id == "14") {
 		echo "	<option value='14' selected='selected'>14</option>\n";
 	}
 	else {
 		echo "	<option value='14'>14</option>\n";
 	}
-	if ($device_key_id == "15") { 
+	if ($device_key_id == "15") {
 		echo "	<option value='15' selected='selected'>15</option>\n";
 	}
 	else {
 		echo "	<option value='15'>15</option>\n";
 	}
-	if ($device_key_id == "16") { 
+	if ($device_key_id == "16") {
 		echo "	<option value='16' selected='selected'>16</option>\n";
 	}
 	else {
 		echo "	<option value='16'>16</option>\n";
 	}
-	if ($device_key_id == "17") { 
+	if ($device_key_id == "17") {
 		echo "	<option value='17' selected='selected'>17</option>\n";
 	}
 	else {
 		echo "	<option value='17'>17</option>\n";
 	}
-	if ($device_key_id == "18") { 
+	if ($device_key_id == "18") {
 		echo "	<option value='18' selected='selected'>18</option>\n";
 	}
 	else {
@@ -364,79 +356,79 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='device_key_line'>\n";
 	echo "	<option value=''></option>\n";
-	if ($device_key_line == "0") { 
+	if ($device_key_line == "0") {
 		echo "	<option value='0' selected='selected'>0</option>\n";
 	}
 	else {
 		echo "	<option value='0'>0</option>\n";
 	}
-	if ($device_key_line == "1") { 
+	if ($device_key_line == "1") {
 		echo "	<option value='1' selected='selected'>1</option>\n";
 	}
 	else {
 		echo "	<option value='1'>1</option>\n";
 	}
-	if ($device_key_line == "2") { 
+	if ($device_key_line == "2") {
 		echo "	<option value='2' selected='selected'>2</option>\n";
 	}
 	else {
 		echo "	<option value='2'>2</option>\n";
 	}
-	if ($device_key_line == "3") { 
+	if ($device_key_line == "3") {
 		echo "	<option value='3' selected='selected'>3</option>\n";
 	}
 	else {
 		echo "	<option value='3'>3</option>\n";
 	}
-	if ($device_key_line == "4") { 
+	if ($device_key_line == "4") {
 		echo "	<option value='4' selected='selected'>4</option>\n";
 	}
 	else {
 		echo "	<option value='4'>4</option>\n";
 	}
-	if ($device_key_line == "5") { 
+	if ($device_key_line == "5") {
 		echo "	<option value='5' selected='selected'>5</option>\n";
 	}
 	else {
 		echo "	<option value='5'>5</option>\n";
 	}
-	if ($device_key_line == "6") { 
+	if ($device_key_line == "6") {
 		echo "	<option value='6' selected='selected'>6</option>\n";
 	}
 	else {
 		echo "	<option value='6'>6</option>\n";
 	}
-	if ($device_key_line == "7") { 
+	if ($device_key_line == "7") {
 		echo "	<option value='7' selected='selected'>7</option>\n";
 	}
 	else {
 		echo "	<option value='7'>7</option>\n";
 	}
-	if ($device_key_line == "8") { 
+	if ($device_key_line == "8") {
 		echo "	<option value='8' selected='selected'>8</option>\n";
 	}
 	else {
 		echo "	<option value='8'>8</option>\n";
 	}
-	if ($device_key_line == "9") { 
+	if ($device_key_line == "9") {
 		echo "	<option value='9' selected='selected'>9</option>\n";
 	}
 	else {
 		echo "	<option value='9'>9</option>\n";
 	}
-	if ($device_key_line == "10") { 
+	if ($device_key_line == "10") {
 		echo "	<option value='10' selected='selected'>10</option>\n";
 	}
 	else {
 		echo "	<option value='10'>10</option>\n";
 	}
-	if ($device_key_line == "11") { 
+	if ($device_key_line == "11") {
 		echo "	<option value='11' selected='selected'>11</option>\n";
 	}
 	else {
 		echo "	<option value='11'>11</option>\n";
 	}
-	if ($device_key_line == "12") { 
+	if ($device_key_line == "12") {
 		echo "	<option value='12' selected='selected'>12</option>\n";
 	}
 	else {
