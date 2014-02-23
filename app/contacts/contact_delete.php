@@ -80,13 +80,9 @@ if (strlen($id)>0) {
 		unset($prep_statement, $sql);
 }
 
-//redirect the browser
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=contacts.php\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+
+$_SESSION["message"] = $text['message-delete'];
+header("Location: contacts.php");
+return;
 
 ?>
