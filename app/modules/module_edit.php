@@ -115,12 +115,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				save_module_xml();
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=modules.php\">\n";
-				echo "<div align='center'>\n";
-				echo $text['message-add']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: modules.php");
 				return;
 			} //if ($action == "add")
 
@@ -138,12 +134,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 				save_module_xml();
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=modules.php\">\n";
-				echo "<div align='center'>\n";
-				echo $text['message-update']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: modules.php");
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
