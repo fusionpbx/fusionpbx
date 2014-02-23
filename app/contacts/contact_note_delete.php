@@ -55,12 +55,8 @@ if (strlen($id)>0) {
 	unset($sql);
 }
 
-require_once "resources/header.php";
-echo "<meta http-equiv=\"refresh\" content=\"2;url=contact_edit.php?id=$contact_uuid\">\n";
-echo "<div align='center'>\n";
-echo $text['message-delete']."\n";
-echo "</div>\n";
-require_once "resources/footer.php";
+$_SESSION["message"] = $text['message-delete'];
+header("Location: contact_edit.php?id=".$contact_uuid);
 return;
 
 ?>
