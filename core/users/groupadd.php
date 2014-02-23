@@ -71,12 +71,8 @@ if (strlen($group_name) > 0) {
 	}
 
 	//redirect the user
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=groups.php\">\n";
-		echo "<div align='center'>\n";
-		echo $text['message-add']."\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
+		$_SESSION["message"] = $text['message-add'];
+		header("Location: groups.php");
 		return;
 }
 

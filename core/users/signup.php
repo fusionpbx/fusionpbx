@@ -166,10 +166,8 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	//$log_type = 'user'; $log_status='add'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." user added.";
 	//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
 
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"3;url=index.php\">\n";
-	echo "<div align='center'>".$text['message-add']."</div>";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-add'];
+	header("Location: index.php");
 	return;
 }
 
