@@ -162,7 +162,7 @@ include "root.php";
 					$provision[$key] = $value;
 				}
 
-			//check to see if the mac_address exists in v_devices
+			//check to see if the mac_address exists in devices
 				if ($this->mac_exists($mac)) {
 					//get the device_template
 						//if (strlen($device_template) == 0) {
@@ -259,35 +259,37 @@ include "root.php";
 						unset($template_list);
 
 					//mac address does not exist in the table so add it
-						$device_uuid = uuid();
-						$sql = "INSERT INTO v_devices ";
-						$sql .= "(";
-						$sql .= "domain_uuid, ";
-						$sql .= "device_uuid, ";
-						$sql .= "device_mac_address, ";
-						$sql .= "device_vendor, ";
-						$sql .= "device_model, ";
-						$sql .= "device_provision_enable, ";
-						$sql .= "device_template, ";
-						$sql .= "device_username, ";
-						$sql .= "device_password, ";
-						$sql .= "device_description ";
-						$sql .= ") ";
-						$sql .= "VALUES ";
-						$sql .= "(";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'$device_uuid', ";
-						$sql .= "'$mac', ";
-						$sql .= "'$device_vendor', ";
-						$sql .= "'', ";
-						$sql .= "'true', ";
-						$sql .= "'$device_template', ";
-						$sql .= "'', ";
-						$sql .= "'', ";
-						$sql .= "'auto {$_SERVER['HTTP_USER_AGENT']}' ";
-						$sql .= ")";
-						$this->db->exec(check_sql($sql));
-						unset($sql);
+						if (strlen($domain_uuid) > 0) {
+							$device_uuid = uuid();
+							$sql = "INSERT INTO v_devices ";
+							$sql .= "(";
+							$sql .= "domain_uuid, ";
+							$sql .= "device_uuid, ";
+							$sql .= "device_mac_address, ";
+							$sql .= "device_vendor, ";
+							$sql .= "device_model, ";
+							$sql .= "device_provision_enable, ";
+							$sql .= "device_template, ";
+							$sql .= "device_username, ";
+							$sql .= "device_password, ";
+							$sql .= "device_description ";
+							$sql .= ") ";
+							$sql .= "VALUES ";
+							$sql .= "(";
+							$sql .= "'".$domain_uuid."', ";
+							$sql .= "'$device_uuid', ";
+							$sql .= "'$mac', ";
+							$sql .= "'$device_vendor', ";
+							$sql .= "'', ";
+							$sql .= "'true', ";
+							$sql .= "'$device_template', ";
+							$sql .= "'', ";
+							$sql .= "'', ";
+							$sql .= "'auto {$_SERVER['HTTP_USER_AGENT']}' ";
+							$sql .= ")";
+							$this->db->exec(check_sql($sql));
+							unset($sql);
+						}
 				}
 
 			//get the device settings table in the provision category and update the provision array
@@ -357,7 +359,7 @@ include "root.php";
 							$sip_port = $row['sip_port'];
 
 						//set defaults
-							if (strlen($register_expires) == 0) { $register_expires = "90"; }
+							if (strlen($register_expires) == 0) { $register_expires = "120"; }
 							if (strlen($sip_transport) == 0) { $sip_transport = "tcp"; }
 							if (strlen($sip_port) == 0) {
 								if ($line_number == "" || $line_number == "1") {
