@@ -350,23 +350,20 @@ else {
 			$i++;
 		}
 
-		//show the header
-			require_once "resources/header.php";
+		//redirect user
+			if ($action == "add") {
+				$_SESSION["message"] = $text['message-add'];
+			]
+			else if ($action == "update") {
+				$_SESSION["message"] = $text['message-update'];
+			}
 
-		//set the meta redirect
 			if (strlen($data_parent_row_uuid) == 0) {
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_edit.php?id=$schema_uuid&data_row_uuid=$data_row_uuid\">\n";
+				header("Location: schema_data_edit.php?id=".$schema_uuid."&data_row_uuid=".$data_row_uuid);
 			}
 			else {
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid\">\n";
+				header("Location: schema_data_edit.php?schema_uuid=".$schema_parent_id."&data_row_uuid=".$data_parent_row_uuid);
 			}
-
-		//show a message to the user before the redirect
-			echo "<div align='center'>\n";
-			if ($action == "add") { echo $text['message-add']."\n"; }
-			if ($action == "update") { echo $text['message-update']."\n"; }
-			echo "</div>\n";
-			require_once "resources/footer.php";
 			return;
 	}
 

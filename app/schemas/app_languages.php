@@ -260,8 +260,8 @@ $text['description-parent_schema']['fr-fr'] = "Choisir un schéma parent.";
 
 $text['description-description']['en-us'] = "Enter a description (optional).";
 $text['description-description']['es-cl'] = "Ingrese una descripción (opcional).";
-$text['description-description']['en-us'] = "Introduza uma descrição (opcional).";
-$text['description-description']['fr-fr'] = "";
+$text['description-description']['pt-pt'] = "Introduza uma descrição (opcional).";
+$text['description-description']['fr-fr'] = "Entrez une description (en option).";
 
 $text['description-field_label']['en-us'] = "Enter the field label.";
 $text['description-field_label']['es-cl'] = "Ingrese una etiqueta de campo.";
