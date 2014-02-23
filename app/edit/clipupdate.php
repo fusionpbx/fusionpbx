@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_POST)>0) {
 	$clip_uuid = check_str($_POST["id"]);
 	$clip_name = check_str($_POST["clip_name"]);
@@ -58,7 +64,7 @@ if (count($_POST)>0) {
 	//redirect the browser
 	require_once "header.php";
 	echo "<meta http-equiv=\"refresh\" content=\"1;url=clipoptions.php\">\n";
-	echo "Update Complete";
+	echo $text['message-update'];
 	require_once "footer.php";
 	return;
 }

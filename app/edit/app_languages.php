@@ -61,6 +61,11 @@
 	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
 	$text['message-delete']['fr-fr'] = "Supprimé";
 
+	$text['message-update']['en-us'] = "Update Completed";
+	$text['message-update']['es-cl'] = "Actualización Completada";
+	$text['message-update']['pt-pt'] = "Actualização Efectuada";
+	$text['message-update']['fr-fr'] = "Mis à jour";
+
 	$text['message-give-up']['en-us'] = "Giving up :( Cannot create an XMLHTTP instance";
 	$text['message-give-up']['es-cl'] = "Cancelando, no se puede crear una instancia XMLHTTP";
 	$text['message-give-up']['pt-pt'] = "Desistindo :( Não é possível criar uma instância do XMLHTTP";
@@ -89,7 +94,7 @@
 	$text['message-delete-clip']['en-us'] = "Are you sure you want to delete the selected clip?";
 	$text['message-delete-clip']['es-cl'] = "&iquest;Realmente desea eliminar el clip seleccionado?";
 	$text['message-delete-clip']['pt-pt'] = "Tem a certeza que pretende remover o clip seleccionado?";
-	$text['message-delete-clip']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le CLIP sélectionné?"; 
+	$text['message-delete-clip']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le CLIP sélectionné?";
 
 	$text['button-delete']['en-us'] = "  Delete   ";
 	$text['button-delete']['es-cl'] = "  Eliminar   ";
