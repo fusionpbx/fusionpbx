@@ -112,7 +112,7 @@ require_once "resources/paging.php";
 		if (strlen($order_by) == 0) { $sql .= "order by f.fax_name asc "; }
 	}
 	if (strlen($order_by) > 0) {
-		$sql .= "order by $order_by $order "; 
+		$sql .= "order by $order_by $order ";
 	}
 	$sql .= "limit $rows_per_page offset $offset ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -154,7 +154,7 @@ require_once "resources/paging.php";
 					echo "		<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
 				}
 				if (permission_exists('fax_extension_delete')) {
-					echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
