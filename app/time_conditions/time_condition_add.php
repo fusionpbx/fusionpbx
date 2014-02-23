@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 	FusionPBX
 	Version: MPL 1.1
@@ -484,12 +484,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//redirect the browser
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1\">\n";
-		echo "<div align='center'>\n";
-		echo "".$text['confirm-update-complete']."\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
+		$_SESSION["message"] = $text['confirm-update-complete'];
+		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1");
 		return;
 
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -789,13 +785,13 @@ echo "</tr>\n";
 //echo "<td class='vtable' align='left'>\n";
 //echo "    <select class='formfld' name='dialplan_continue' style='width: 60%;'>\n";
 //echo "    <option value=''></option>\n";
-//if ($dialplan_continue == "true") { 
+//if ($dialplan_continue == "true") {
 //	echo "    <option value='true' SELECTED >true</option>\n";
 //}
 //else {
 //	echo "    <option value='true'>true</option>\n";
 //}
-//if ($dialplan_continue == "false") { 
+//if ($dialplan_continue == "false") {
 //	echo "    <option value='false' SELECTED >false</option>\n";
 //}
 //else {
@@ -1037,13 +1033,13 @@ echo "    ".$text['label-enabled'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
-if ($dialplan_enabled == "true") { 
+if ($dialplan_enabled == "true") {
 	echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
 }
 else {
 	echo "    <option value='true'>".$text['label-true']."</option>\n";
 }
-if ($dialplan_enabled == "false") { 
+if ($dialplan_enabled == "false") {
 	echo "    <option value='false' SELECTED >".$text['label-false']."</option>\n";
 }
 else {
