@@ -644,6 +644,26 @@
 		$text['button-view']['pt-pt'] = "Vista";
 		$text['button-view']['fr-fr'] = "Voir";
 
+		$text['button-copy']['en-us'] = "Copy";
+		$text['button-copy']['es-cl'] = "Copiar";
+		$text['button-copy']['pt-pt'] = "Copiar";
+		$text['button-copy']['fr-fr'] = "Copier";
+
+		$text['confirm-copy']['en-us'] = "Do you really want to copy this?";
+		$text['confirm-copy']['es-cl'] = "&iquest;Realmente desea copiar esto?";
+		$text['confirm-copy']['pt-pt'] = "Deseja realmente copiar isto?";
+		$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
+
+		$text['message-copy']['en-us'] = "Copy Completed";
+		$text['message-copy']['es-cl'] = "Copia Completada";
+		$text['message-copy']['pt-pt'] = "Cópia Efectuada";
+		$text['message-copy']['fr-fr'] = "Copié";
+
+		$text['message_device']['en-us'] = "Enter the new MAC Address.";
+		$text['message_device']['es-cl'] = "Introduzca la nueva dirección MAC.";
+		$text['message_device']['pt-pt'] = "Digite o novo endereço MAC.";
+		$text['message_device']['fr-fr'] = "Insérer la nouvelle adresse MAC.";
+
 		$text['button-back']['en-us'] = "Back";
 		$text['button-back']['es-cl'] = "Volver";
 		$text['button-back']['pt-pt'] = "Voltar";
