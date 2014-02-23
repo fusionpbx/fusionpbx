@@ -105,10 +105,8 @@ else {
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
-			echo "<div align='center'>".$text['message-delete']."</div>";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['message-delete'];
+			header("Location: extension_edit.php?id=".$extension_uuid);
 			return;
 	}
 
@@ -124,10 +122,8 @@ else {
 			$db->exec(check_sql($sql));
 			unset($sql);
 		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
-			echo "<div align='center'>".$text['message-delete']."</div>";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['message-delete'];
+			header("Location: extension_edit.php?id=".$extension_uuid);
 			return;
 	}
 
@@ -153,10 +149,8 @@ else {
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
 		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
-			echo "<div align='center'>".$text['message-add']."</div>";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['message-add'];
+			header("Location: extension_edit.php?id=".$extension_uuid);
 			return;
 	}
 
@@ -235,10 +229,8 @@ else {
 			$db->exec($sql_insert);
 
 		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=extension_edit.php?id=$extension_uuid\">\n";
-			echo "<div align='center'>".$text['message-add']."</div>";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['message-add'];
+			header("Location: extension_edit.php?id=".$extension_uuid);
 			return;
 	}
 
@@ -600,24 +592,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$row_style["1"] = "row_style1";
 
 				//show the action and redirect the user
-					require_once "resources/header.php";
-					echo "<br />\n";
-					echo "<div align='center'>\n";
 					if (count($generated_users) == 0) {
 						//action add
-							echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
-							echo "	<table width='40%'>\n";
-							echo "		<tr>\n";
-							echo "			<th align='left'>".$text['message-message']."</th>\n";
-							echo "		</tr>\n";
-							echo "		<tr>\n";
-							echo "			<td class='row_style1'><strong>".$text['message-add']."</strong></td>\n";
-							echo "		</tr>\n";
-							echo "	</table>\n";
-							echo "	<br />\n";
+							$_SESSION["message"] = $text['message-add'];
+							header("Location: extensions.php");
 					}
 					else {
 						//auto-generate user with extension as login name
+							require_once "resources/header.php";
+							echo "<br />\n";
+							echo "<div align='center'>\n";
 							echo "	<table width='40%' border='0' cellpadding='0' cellspacing='0'>\n";
 							echo "		<tr>\n";
 							echo "			<td colspan='2'><strong>New User Accounts</strong></td>\n";
@@ -634,32 +618,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							}
 							if ($c==0) { $c=1; } else { $c=0; }
 							echo "	</table>";
+							echo "</div>\n";
+							require_once "resources/footer.php";
 					}
-					echo "</div>\n";
-					require_once "resources/footer.php";
 					return;
 			}
 			if ($action == "update") {
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=extensions.php\">\n";
-				echo "<br />\n";
-				echo "<div align='center'>\n";
-				echo "	<table width='40%'>\n";
-				echo "		<tr>\n";
-				echo "			<th align='left'>".$text['message-message']."</th>\n";
-				echo "		</tr>\n";
-				echo "		<tr>\n";
 				if ($action == "update") {
-					echo "			<td class='row_style1'><strong>".$text['message-update']."</strong></td>\n";
+					$_SESSION["message"] = $text['message-update'];
 				}
 				else {
-					echo "			<td class='row_style1'><strong>".$text['message-add']."</strong></td>\n";
+					$_SESSION["message"] = $text['message-add'];
 				}
-				echo "		</tr>\n";
-				echo "	</table>\n";
-				echo "<br />\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				header("Location: extensions.php");
 				return;
 			}
 	} //if ($_POST["persistformvar"] != "true")
