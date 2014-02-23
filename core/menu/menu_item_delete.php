@@ -70,12 +70,8 @@ if (count($_GET)>0) {
 		unset($sql);
 
 	//redirect the user
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=menu_edit.php?id=$menu_uuid\">\n";
-		echo "<div align='center'>";
-		echo $text['message-delete'];
-		echo "</div>";
-		require_once "resources/footer.php";
+		$_SESSION["message"] = $text['message-delete'];
+		header("Location: menu_edit.php?id=".$menu_uuid);
 		return;
 }
 
