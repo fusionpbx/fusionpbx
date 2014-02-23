@@ -49,7 +49,7 @@ if (count($_POST)>0) {
 	$rss_sub_category_description = check_str($_POST["rss_sub_category_description"]);
 	$rss_add_user = check_str($_POST["rss_add_user"]);
 	$rss_add_date = check_str($_POST["rss_add_date"]);
-	
+
 	$sql = "insert into v_rss_sub_category ";
 	$sql .= "(";
 	$sql .= "domain_uuid, ";
@@ -73,10 +73,8 @@ if (count($_POST)>0) {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"5;url=rss_sub_categorylist.php\">\n";
-	echo $text['message-add'];
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-add'];
+	header("Location: rss_sub_categorylist.php");
 	return;
 }
 

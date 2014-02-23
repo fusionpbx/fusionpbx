@@ -62,11 +62,8 @@ if (count($_POST)>0) {
 	$count = $db->exec(check_sql($sql));
 	//echo "Affected Rows: ".$count;
 
-	//edit: make sure the meta redirect url is correct 
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"5;url=rss_sub_categorylist.php\">\n";
-	echo $text['message-update'];
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-update'];
+	header("Location: rss_sub_categorylist.php");
 	return;
 }
 else {
