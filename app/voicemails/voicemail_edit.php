@@ -133,12 +133,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemails.php\">\n";
-				echo "<div align='center'>\n";
-				echo "	".$text['message-add']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: voicemails.php");
 				return;
 			} //if ($action == "add")
 
@@ -162,20 +158,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
+				$_SESSION["message"] = $text['message-update'];
 				if ($referer_path == "/app/voicemails/voicemail_messages.php") {
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_messages.php?".$referer_query."\">\n";
+					header("Location: voicemail_messages.php?".$referer_query);
 				}
 				else {
-					echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemails.php\">\n";
+					header("Location: voicemails.php");
 				}
-				echo "<div align='center'>\n";
-				echo "	".$text['message-update']."\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
 				return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -280,13 +272,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='voicemail_attach_file'>\n";
 	echo "	<option value=''></option>\n";
-	if ($voicemail_attach_file == "true") { 
+	if ($voicemail_attach_file == "true") {
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($voicemail_attach_file == "false") { 
+	if ($voicemail_attach_file == "false") {
 		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -305,13 +297,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='voicemail_local_after_email'>\n";
 	echo "	<option value=''></option>\n";
-	if ($voicemail_local_after_email == "true") { 
+	if ($voicemail_local_after_email == "true") {
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($voicemail_local_after_email == "false") { 
+	if ($voicemail_local_after_email == "false") {
 		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
@@ -330,13 +322,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='voicemail_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($voicemail_enabled == "true") { 
+	if ($voicemail_enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($voicemail_enabled == "false") { 
+	if ($voicemail_enabled == "false") {
 		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {

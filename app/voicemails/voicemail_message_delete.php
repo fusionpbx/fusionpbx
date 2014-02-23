@@ -64,17 +64,13 @@ else {
 	}
 
 //redirect the user
-	require_once "resources/header.php";
+	$_SESSION["message"] = $text['message-delete'];
 	if ($referer_path == "/app/voicemails/voicemail_messages.php") {
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_messages.php?".$referer_query."\">\n";
+		header("Location: voicemail_messages.php?".$referer_query);
 	}
 	else {
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemails.php\">\n";
+		header("Location: voicemails.php");
 	}
-	echo "<div align='center'>\n";
-	echo "Delete Complete\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
 	return;
 
 ?>
