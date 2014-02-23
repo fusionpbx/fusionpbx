@@ -74,7 +74,7 @@ else {
 				chmod($dir_fax_inbox,0774);
 			}
 			if (!is_dir($dir_fax_sent)) {
-				mkdir($dir_fax_sent,0774,true); 
+				mkdir($dir_fax_sent,0774,true);
 				chmod($dir_fax_sent,0774);
 			}
 			if (!is_dir($dir_fax_temp)) {
@@ -133,10 +133,8 @@ else {
 			$db->exec(check_sql($sql));
 
 		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
-			echo "<div align='center'>".$text['confirm-delete']."</div>";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['confirm-delete'];
+			header("Location: fax_edit.php?id=".$fax_uuid);
 			return;
 	}
 
@@ -163,15 +161,13 @@ else {
 			$db->exec($sql_insert);
 
 		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=fax_edit.php?id=$fax_uuid\">\n";
-			echo "<div align='center'>".$text['confirm-add']."</div>";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['confirm-add'];
+			header("Location: fax_edit.php?id=".$fax_uuid);
 			return;
 	}
 
 //clear file status cache
-	clearstatcache(); 
+	clearstatcache();
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
@@ -473,17 +469,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			//redirect the browser
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
-				echo "<div align='center'>\n";
 				if ($action == "update" && permission_exists('fax_extension_edit')) {
-					echo "".$text['confirm-update']."\n";
+					$_SESSION["message"] = $text['confirm-update'];
 				}
 				if ($action == "add" && permission_exists('fax_extension_add')) {
-					echo "".$text['confirm-add']."\n";
+					$_SESSION["message"] = $text['confirm-add'];
 				}
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				header("Location: fax.php");
 				return;
 
 		} //if ($_POST["persistformvar"] != "true")
@@ -657,7 +649,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<tr>\n";
 				echo "				<td class='vtable'>".$field['username']."</td>\n";
 				echo "				<td>\n";
-				echo "					<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "					<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
 			}

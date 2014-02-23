@@ -46,7 +46,7 @@ else {
 		$fax_uuid = check_str($_REQUEST["id"]);
 	}
 
-//get the data 
+//get the data
 	$sql = "select * from v_fax ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and fax_uuid = '$fax_uuid' ";
@@ -108,12 +108,8 @@ else {
 	unset($sql);
 
 //redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
-	echo "<div align='center'>\n";
-	echo "".$text['confirm-copy']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['confirm-copy'];
+	header("Location: fax.php");
 	return;
 
 ?>

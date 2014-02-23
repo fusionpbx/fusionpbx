@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	$text['title']['en-us'] = "Fax Server";
 	$text['title']['es-cl'] = "Servidor de Fax";
@@ -10,10 +10,10 @@
 	$text['description']['pt-pt'] = "Para receber um FAX configure uma extensão de fax e encaminhe o tráfego de entrada para essa extensão.";
 	$text['description']['fr-fr'] = "Afin de recevoir un Fax, configurer une extension et rediriger l'appel sur celle-ci.";
 
-	$text['confirm-delete']['en-us'] = "Are you sure you want to delete this?";
-	$text['confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
-	$text['confirm-delete']['pt-pt'] = "Tem a certeza que deseja remover?";
-	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
+	$text['message-confirm-delete']['en-us'] = "Are you sure you want to delete this?";
+	$text['message-confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
+	$text['message-confirm-delete']['pt-pt'] = "Tem a certeza que deseja remover?";
+	$text['message-confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
 	$text['label-extension']['en-us'] = "Extension";
 	$text['label-extension']['es-cl'] = "Extensión";

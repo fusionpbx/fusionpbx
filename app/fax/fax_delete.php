@@ -96,12 +96,8 @@ else {
 	}
 
 //redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=fax.php\">\n";
-	echo "<div align='center'>\n";
-	echo "".$text['confirm-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['confirm-delete'];
+	header("Location: fax.php");
 	return;
 
 ?>
