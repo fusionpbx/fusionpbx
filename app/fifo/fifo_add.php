@@ -263,12 +263,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//redirect the user
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=fifo.php\">\n";
-		echo "<div align='center'>\n";
-		echo $text['message-update']."\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: fifo.php");
 		return;
 
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
