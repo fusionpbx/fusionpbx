@@ -402,6 +402,11 @@
 	$text['message-update']['pt-pt'] = "Actualização Efectuada";
 	$text['message-update']['fr-fr'] = "Mis à Jour";
 
+	$text['message-copy']['en-us'] = "Copy Completed";
+	$text['message-copy']['es-cl'] = "Copia Completada";
+	$text['message-copy']['pt-pt'] = "Cópia Efectuada";
+	$text['message-copy']['fr-fr'] = "Copié";
+
 	$text['message-delete']['en-us'] = "Delete Completed";
 	$text['message-delete']['es-cl'] = "Eliminación Completada";
 	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
