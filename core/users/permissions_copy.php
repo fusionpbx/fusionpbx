@@ -46,7 +46,7 @@ else {
 		$group_name = check_str($_REQUEST["id"]);
 		$group_new = check_str($_REQUEST["ext"]);
 	}
-	
+
 //get the groups data
 	$sql = "select * from v_groups ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -60,7 +60,7 @@ else {
 		$group_name = $row["group_name"];
 	}
 	unset ($prep_statement);
-	
+
 	//copy the groups
 	$group_uuid = uuid();
 	$sql = "insert into v_groups ";
@@ -100,7 +100,7 @@ else {
 		$sql .= "group_permission_uuid, ";
 		$sql .= "domain_uuid, ";
 		$sql .= "permission_name, ";
-		$sql .= "group_name ";	
+		$sql .= "group_name ";
 		$sql .= ")";
 		$sql .= "values ";
 		$sql .= "(";
@@ -115,21 +115,8 @@ else {
 	unset ($prep_statement);
 
 //redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=groups.php\">\n";
-	echo "<br />\n";
-	echo "<div align='center'>\n";
-	echo "	<table width='40%'>\n";
-	echo "		<tr>\n";
-	echo "			<th align='left'>".$text['message-message']."</th>\n";
-	echo "		</tr>\n";
-	echo "		<tr>\n";
-	echo "			<td class='row_style1'><strong>".$text['message-copy']."</strong></td>\n";
-	echo "		</tr>\n";
-	echo "	</table>\n";
-	echo "	<br />\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-copy'];
+	header("Location: groups.php");
 	return;
 
 ?>

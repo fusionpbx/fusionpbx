@@ -85,10 +85,8 @@ else {
 			$sql .= "and user_uuid = '$user_uuid' ";
 			$db->exec(check_sql($sql));
 		//redirect the user
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=usersupdate.php?id=$user_uuid\">\n";
-			echo "<div align='center'>".$text['message-update']."</div>";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['message-update'];
+			header("Location: usersupdate.php?id=".$user_uuid);
 			return;
 	}
 
@@ -285,15 +283,13 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		//$_SESSION["template_content"] = '';
 
 	//redirect the browser
-		require_once "resources/header.php";
+		$_SESSION["message"] = $text['message-update'];
 		if (if_group("admin")) {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=usersupdate.php?id=$user_uuid\">\n";
+			header("Location: usersupdate.php?id=".$user_uuid);
 		}
 		else {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=usersupdate.php?id=$user_uuid\">\n";
+			header("Location: usersupdate.php");
 		}
-		echo "<div align='center'>".$text['message-update']."</div>";
-		require_once "resources/footer.php";
 		return;
 }
 else {

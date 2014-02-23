@@ -49,7 +49,7 @@ else {
 //required to be a superadmin to update an account that is a member of the superadmin group
 	$superadmin_list = superadmin_list($db);
 	if (if_superadmin($superadmin_list, $user_uuid)) {
-		if (!if_group("superadmin")) { 
+		if (!if_group("superadmin")) {
 			echo "access denied";
 			return;
 		}
@@ -105,7 +105,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 		return;
 	}
 
-	//get the number of rows in v_user_settings 
+	//get the number of rows in v_user_settings
 		$sql = "select count(*) as num_rows from v_user_settings ";
 		$sql .= "where user_setting_category = 'domain' ";
 		$sql .= "and user_setting_subcategory = 'time_zone' ";
@@ -199,10 +199,8 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 		//$_SESSION["template_content"] = '';
 
 	//redirect the browser
-		require_once "resources/header.php";
-		echo "<meta http-equiv=\"refresh\" content=\"2;url=".PROJECT_PATH."/core/user_settings/user_edit.php\">\n";
-		echo "<div align='center'>".$text['confirm-update']."</div>";
-		require_once "resources/footer.php";
+		$_SESSION["message"] = $text['confirm-update'];
+		header("Location: ".PROJECT_PATH."/core/user_settings/user_edit.php");
 		return;
 }
 else {
