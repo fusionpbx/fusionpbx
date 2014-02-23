@@ -133,7 +133,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$ivr->update();
 
 				//redirect the user
-					$_SESSION['message'] = $text['message-add'];
+					$_SESSION['message'] = $text['message-update'];
 					header('Location: ivr_menu_edit.php?id='.$ivr_menu_uuid);
 					return;
 			} //if ($action == "update")

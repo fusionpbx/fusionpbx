@@ -66,7 +66,7 @@
 	$text['description-option_add_edit']['fr-fr'] = "Le guide vocal présente les options possibles à l'appelant. Ces options correspondent aux digits (DTMF) émises par l'appelant et lui permettant de choisir une destination.";
 
 	$text['label-name']['en-us'] = "Name";
-	$text['label-name']['en-us'] = "Nombre";
+	$text['label-name']['es-cl'] = "Nombre";
 	$text['label-name']['pt-pt'] = "Nome";
 	$text['label-name']['fr-fr'] = "Nom";
 
@@ -411,21 +411,5 @@
 	$text['message-message']['es-cl'] = "Mensaje";
 	$text['message-message']['pt-pt'] = "Mensagem";
 	$text['message-message']['fr-fr'] = "Message";
-
-	$text['message-add']['en-us'] = "Add Completed";
-	$text['message-add']['pt-pt'] = "Adição Efectuada";
-	$text['message-add']['fr-fr'] = "Ajouté";
-
-	$text['message-update']['en-us'] = "Update Completed";
-	$text['message-update']['pt-pt'] = "Actualização Efectuada";
-	$text['message-update']['fr-fr'] = "Mis à Jour";
-
-	$text['message-delete']['en-us'] = "Delete Completed";
-	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
-	$text['message-delete']['fr-fr'] = "Supprimé";
-
-	$text['message-copy']['en-us'] = "Copy Completed";
-	$text['message-copy']['pt-pt'] = "Cópia Efectuada";
-	$text['message-copy']['fr-fr'] = "Copié";
 
 ?>
