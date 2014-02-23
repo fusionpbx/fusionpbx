@@ -79,21 +79,8 @@ else {
 	}
 
 //redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=index.php\">\n";
-	echo "<br />\n";
-	echo "<div align='center'>\n";
-	echo "	<table width='40%'>\n";
-	echo "		<tr>\n";
-	echo "			<th align='left'>".$text['header-message']."</th>\n";
-	echo "		</tr>\n";
-	echo "		<tr>\n";
-	echo "			<td class='row_style1'><strong>".$text['message-delete']."</strong></td>\n";
-	echo "		</tr>\n";
-	echo "	</table>\n";
-	echo "	<br />\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: index.php");
 	return;
 
 ?>
