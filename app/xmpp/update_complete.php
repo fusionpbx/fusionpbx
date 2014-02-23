@@ -1,10 +1,10 @@
-<meta http-equiv="refresh" content="2;url=xmpp.php">
-<div align='center'>
 <?php
+
 switch ($action) {
-	case "add" : 		echo $text['message-add']."\n"; 	break;
-	case "update" : 	echo $text['message-update']."\n";	break;
-	case "delete" :		echo $text['message-delete']."\n";	break;
+	case "add" : 		$_SESSION["message"] = $text['message-add']; 		break;
+	case "update" : 	$_SESSION["message"] = $text['message-update']; 	break;
+	case "delete" : 	$_SESSION["message"] = $text['message-delete']; 	break;
 }
+header("Location: xmpp.php");
+
 ?>
-</div>
