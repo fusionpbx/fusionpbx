@@ -117,12 +117,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=services.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Add Complete\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: services.php");
 				return;
 			} //if ($action == "add")
 
@@ -139,12 +135,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=services.php\">\n";
-				echo "<div align='center'>\n";
-				echo "Update Complete\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: services.php");
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
@@ -217,13 +209,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='service_type'>\n";
 	echo "	<option value=''></option>\n";
-	if ($service_type == "pid_file") { 
+	if ($service_type == "pid_file") {
 		echo "	<option value='pid_file' SELECTED >pid file</option>\n";
 	}
 	else {
 		echo "	<option value='pid_file'>pid file</option>\n";
 	}
-	if ($service_type == "php") { 
+	if ($service_type == "php") {
 		echo "	<option value='php' SELECTED >php</option>\n";
 	}
 	else {

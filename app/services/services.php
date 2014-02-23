@@ -33,6 +33,13 @@ else {
 	echo "access denied";
 	exit;
 }
+
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 require_once "resources/header.php";
 require_once "resources/paging.php";
 
@@ -59,20 +66,14 @@ if (strlen($_GET["a"]) > 0) {
 	unset ($prep_statement);
 
 	if ($_GET["a"] == "stop") {
-		$msg = 'Service: '.$service_name. ' stopping. ';
+		$_SESSION["message"] = $text['message-stopping'].': '.$service_name;
 		shell_exec($service_cmd_stop);
 	}
 	if ($_GET["a"] == "start") {
-		$msg = 'Service: '.$service_name. ' starting. ';
+		$_SESSION["message"] = $text['message-starting'].': '.$service_name;
 		shell_exec($service_cmd_start);
 	}
-
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"5;url=services.php\">\n";
-	echo "<div align='center'>\n";
-	echo $msg."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+	header("Location: services.php");
 	return;
 }
 
@@ -116,9 +117,9 @@ if (strlen($_GET["a"]) > 0) {
 	$rows_per_page = 10;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_services ";
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -154,7 +155,7 @@ if (strlen($_GET["a"]) > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[service_name]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[service_description]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[service_description]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			$pid = file_get_contents($row[service_data]);
 			if (is_process_running($pid)) {

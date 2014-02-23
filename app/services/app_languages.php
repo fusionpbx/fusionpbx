@@ -31,6 +31,16 @@
 	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
 	$text['message-delete']['fr-fr'] = "Supprimé";
 
+	$text['message-add']['en-us'] = "Add Completed";
+	$text['message-add']['es-cl'] = "Agregar Completado";
+	$text['message-add']['pt-pt'] = "Adição Efectuada";
+	$text['message-add']['fr-fr'] = "Ajouté";
+
+	$text['message-update']['en-us'] = "Update Completed";
+	$text['message-update']['es-cl'] = "Actualización Completada";
+	$text['message-update']['pt-pt'] = "Actualização Efectuada";
+	$text['message-update']['fr-fr'] = "Mis à Jour";
+
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['es-cl'] = "Volver";
 	$text['button-back']['pt-pt'] = "Voltar";
@@ -55,6 +65,16 @@
 	$text['label-name']['es-cl'] = "Nombre:";
 	$text['label-name']['pt-pt'] = "Nome:";
 	$text['label-name']['fr-fr'] = "Nom:";
+
+	$text['message-starting']['en-us'] = "Starting Service";
+	$text['message-starting']['es-cl'] = "Servicio de Inicio";
+	$text['message-starting']['pt-pt'] = "Serviço Começando";
+	$text['message-starting']['fr-fr'] = "Démarrage du Service";
+
+	$text['message-stopping']['en-us'] = "Stopping Service";
+	$text['message-stopping']['es-cl'] = "Servicio de Detención";
+	$text['message-stopping']['pt-pt'] = "Serviço Parando";
+	$text['message-stopping']['fr-fr'] = "Service de L'arrêt";
 
 	$text['description-name']['en-us'] = "Enter the service name.";
 	$text['description-name']['es-cl'] = "Ingrese el nombre del servicio.";
