@@ -153,27 +153,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 			}
 
-		//show the action and redirect the user
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=index.php\">\n";
-			echo "<br />\n";
-			echo "<div align='center'>\n";
-			echo "	<table width='40%'>\n";
-			echo "		<tr>\n";
-			echo "			<th align='left'>".$text['header-message']."</th>\n";
-			echo "		</tr>\n";
-			echo "		<tr>\n";
+		//set message and redirect user
 			if ($action == "add") {
-				echo "			<td class='row_style1'><strong>".$text['message-add']."</strong></td>\n";
+				$_SESSION["message"] = $text['message-add'];
 			}
 			if ($action == "update") {
-				echo "			<td class='row_style1'><strong>".$text['message-update']."</strong></td>\n";
+				$_SESSION["message"] = $text['message-update'];
 			}
-			echo "		</tr>\n";
-			echo "	</table>\n";
-			echo "<br />\n";
-			echo "</div>\n";
-			require_once "resources/footer.php";
+			header("Location: index.php");
 			return;
 
 	} //if ($_POST["persistformvar"] != "true")
