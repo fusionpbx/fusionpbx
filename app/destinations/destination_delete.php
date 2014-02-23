@@ -54,13 +54,8 @@ if (count($_GET)>0) {
 		unset($sql);
 	}
 
-//redirect the browser
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=destinations.php\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
-	return;
+$_SESSION["message"] = $text['message-delete'];
+header("Location: destinations.php");
+return;
 
 ?>
