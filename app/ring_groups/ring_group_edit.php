@@ -53,7 +53,7 @@ else {
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//save the message to a session variable
-			$_SESSION['message'] = $text['message-add'];
+			$_SESSION['message'] = $text['message-delete'];
 		//redirect the browser
 			header("Location: ring_group_edit.php?id=$ring_group_uuid");
 			exit;
@@ -219,7 +219,7 @@ else {
 						$ring_group_uuid = $message['uuid'];
 						$_GET["id"] = $ring_group_uuid;
 					}
-			} 
+			}
 
 		//delete the dialplan details
 			$sql = "delete from v_dialplan_details ";
