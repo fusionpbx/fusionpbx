@@ -86,12 +86,8 @@ require_once "resources/check_auth.php";
 			unset($sql);
 
 		//redirect the user
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"3;url=".PROJECT_PATH."/app/ring_groups/ring_group_forward.php\">\n";
-			echo "<div align='center'>\n";
-			echo $text['message-update']."<br />\n";
-			echo "</div>\n";
-			require_once "resources/footer.php";
+			$_SESSION["message"] = $text['message-update'];
+			header("Location: ".PROJECT_PATH."/app/ring_groups/ring_group_forward.php");
 			return;
 	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
