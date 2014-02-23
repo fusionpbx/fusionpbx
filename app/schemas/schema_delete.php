@@ -45,9 +45,6 @@ else {
 		$id = check_str($_GET["id"]);
 	}
 
-//show the header
-	require_once "resources/header.php";
-
 if (strlen($id) > 0) {
 	$sql = "delete from v_schemas ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -58,13 +55,8 @@ if (strlen($id) > 0) {
 }
 
 //redirect the user
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=schemas.php\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-
-//show the footer
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: schemas.php");
 	return;
 
 ?>

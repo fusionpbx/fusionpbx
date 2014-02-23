@@ -125,8 +125,11 @@ require_once "resources/paging.php";
 			if ($row['schema_auth'] == 'yes') {
 				echo $text['option-true'];
 			}
-			else if ($row['schema_auth'] == 'false') {
+			else if ($row['schema_auth'] == 'no') {
 				echo $text['option-false'];
+			}
+			else {
+				echo "&nbsp;";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['schema_description']."&nbsp;</td>\n";

@@ -90,19 +90,14 @@ if (count($_GET)>0) {
 		//$lastinsertid = $db->lastInsertId($id);
 		//unset($sql);
 
-	//set the meta redirect
+	//redirect user
+		$_SESSION["message"] = $text['message-delete'];
 		if (strlen($data_parent_row_uuid) == 0) {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_view.php?id=$schema_uuid&data_row_uuid=$data_row_uuid\">\n";
+			header("Location: schema_data_view.php?id=".$schema_uuid."&data_row_uuid=".$data_row_uuid);
 		}
 		else {
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=schema_data_edit.php?schema_uuid=$schema_parent_id&data_row_uuid=$data_parent_row_uuid\">\n";
+			header("Location: schema_data_edit.php?schema_uuid=".$schema_parent_id."&data_row_uuid=".$data_parent_row_uuid);
 		}
-
-	//show a message to the user before the redirect
-		echo "<div align='center'>\n";
-		echo $text['message-delete']."\n";
-		echo "</div>\n";
-		require_once "resources/footer.php";
 		return;
 }
 
