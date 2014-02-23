@@ -90,13 +90,8 @@ if (count($_POST)>0) {
 	//echo "Affected Rows: ".$count;
 	//exit;
 
-	//edit: make sure the meta redirect url is correct
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsslist.php\">\n";
-	echo "<div align='center'>";
-	echo $text['message-update'];
-	echo "</div>";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-update'];
+	header("Location: rsslist.php");
 	return;
 }
 else {

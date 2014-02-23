@@ -94,12 +94,8 @@ if (count($_POST)>0) {
 	$db->exec(check_sql($sql));
 	unset($sql);
 
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsssublist.php?rss_uuid=$rss_uuid\">\n";
-	echo "<div align='center'>";
-	echo $text['message-add'];
-	echo "</div>";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-add'];
+	header("Location: rsssublist.php?rss_uuid=".$rss_uuid);
 	return;
 }
 

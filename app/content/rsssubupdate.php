@@ -104,13 +104,8 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 	$count = $db->exec(check_sql($sql));
 	//echo "Affected Rows: ".$count;
 
-	//edit: make sure the meta redirect url is correct 
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=rsssublist.php?rss_uuid=$rss_uuid&rss_sub_uuid=$rss_sub_uuid\">\n";
-	echo "<div align='center'>";
-	echo $text['message-update'];
-	echo "</div>";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-update'];
+	header("Location: rsssublist.php?rss_uuid=".$rss_uuid."&rss_sub_uuid=".$rss_sub_uuid);
 	return;
 }
 else {
