@@ -517,10 +517,10 @@
 	$text['message-copy']['pt-pt'] = "Cópia Efectuada";
 	$text['message-copy']['fr-fr'] = "Copié";
 
-	$text['message_extension']['en-us'] = "# Enter the new Extension to use...";
-	$text['message_extension']['es-cl'] = "# Ingrese la nueva Extensión a usar...";
-	$text['message_extension']['pt-pt'] = "# Introuza a nova Extensão a utilizar...";
-	$text['message_extension']['fr-fr'] = "# Insérer la nouvelle Extension à utiliser...";
+	$text['message_extension']['en-us'] = "Enter the new Extension.";
+	$text['message_extension']['es-cl'] = "Ingrese la nueva Extensión.";
+	$text['message_extension']['pt-pt'] = "Introuza a nova Extensão.";
+	$text['message_extension']['fr-fr'] = "Insérer la nouvelle Extension.";
 
 	$text['message-required']['en-us'] = "Please provide: ";
 	$text['message-required']['es-cl'] = "Por favor ingrese: ";
