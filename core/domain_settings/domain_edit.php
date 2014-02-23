@@ -126,17 +126,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($_SESSION['switch']);
 
 		//redirect the browser
-			require_once "resources/header.php";
-			echo "<meta http-equiv=\"refresh\" content=\"2;url=domains.php\">\n";
-			echo "<div align='center'>\n";
 			if ($action == "update") {
-				echo $text['message-update']."\n";
+				$_SESSION["message"] = $text['message-update'];
 			}
 			if ($action == "add") {
-				echo $text['message-add']."\n";
+				$_SESSION["message"] = $text['message-add'];
 			}
-			echo "</div>\n";
-			require_once "resources/footer.php";
+			header("Location: domains.php");
 			return;
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)

@@ -219,17 +219,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			//redirect the browser
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=domain_edit.php?id=$domain_uuid\">\n";
-				echo "<div align='center'>\n";
-				if ($action == "add") {
-					echo $text['message-add']."\n";
-				}
 				if ($action == "update") {
-					echo $text['message-update']."\n";
+					$_SESSION["message"] = $text['message-update'];
 				}
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				if ($action == "add") {
+					$_SESSION["message"] = $text['message-add'];
+				}
+				header("Location: domain_edit.php?id=".$domain_uuid);
 				return;
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
