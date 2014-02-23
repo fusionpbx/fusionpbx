@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 if (count($_GET)>0) {
 	$id = check_str($_GET["id"]);
 }
@@ -48,12 +54,8 @@ if (count($_GET)>0) {
 	}
 
 //redirect the user
-	require_once "resources/header.php";
-	echo "<meta http-equiv=\"refresh\" content=\"2;url=services.php\">\n";
-	echo "<div align='center'>\n";
-	echo $text['message-delete']."\n";
-	echo "</div>\n";
-	require_once "resources/footer.php";
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: services.php");
 	return;
 
 ?>
