@@ -127,12 +127,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_edit.php?id=$voicemail_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "Add Complete\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 				return;
 			} //if ($action == "add")
 
@@ -152,15 +148,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 
-				require_once "resources/header.php";
-				echo "<meta http-equiv=\"refresh\" content=\"2;url=voicemail_edit.php?id=$voicemail_uuid\">\n";
-				echo "<div align='center'>\n";
-				echo "Update Complete\n";
-				echo "</div>\n";
-				require_once "resources/footer.php";
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 				return;
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
