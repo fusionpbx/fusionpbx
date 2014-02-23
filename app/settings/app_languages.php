@@ -26,10 +26,15 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
-	$text['title-settings']['en-us'] = "Setting Update";
-	$text['title-settings']['es-cl'] = "Actualizar Configuración";
-	$text['title-settings']['pt-pt'] = "Actualiza a Configuração";
-	$text['title-settings']['fr-fr'] = "Mise à jour de la configuration";
+	$text['title-settings-add']['en-us'] = "Setting Add";
+	$text['title-settings-add']['es-cl'] = "Añadir Configuración";
+	$text['title-settings-add']['pt-pt'] = "Adicionar Configuração";
+	$text['title-settings-add']['fr-fr'] = "Ajouter Cadre";
+
+	$text['title-settings-update']['en-us'] = "Setting Update";
+	$text['title-settings-update']['es-cl'] = "Actualizar Configuración";
+	$text['title-settings-update']['pt-pt'] = "Actualiza a Configuração";
+	$text['title-settings-update']['fr-fr'] = "Mise à jour de la configuration";
 
 	$text['label-event-socket-ip']['en-us'] = "Event Socket IP Address:";
 	$text['label-event-socket-ip']['es-cl'] = "Dirección IP del Socket de Eventos:";
@@ -122,11 +127,23 @@
 	$text['description-shout-volume']['fr-fr'] = "Choisir l'amplification du volume pour Mod Shout.";
 
 	$text['button-back']['en-us'] = "Back";
+	$text['button-back']['es-cl'] = "Volver";
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
 	$text['button-save']['en-us'] = "Save";
+	$text['button-back']['es-cl'] = "Guardar";
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
+
+	$text['message-add']['en-us'] = "Add Completed";
+	$text['message-add']['es-cl'] = "Agregar Completado";
+	$text['message-add']['pt-pt'] = "Adição Efectuada";
+	$text['message-add']['fr-fr'] = "Ajouté";
+
+	$text['message-update']['en-us'] = "Update Completed";
+	$text['message-update']['es-cl'] = "Actualización Completada";
+	$text['message-update']['pt-pt'] = "Actualização Efectuada";
+	$text['message-update']['fr-fr'] = "Mis à Jour";
 
 ?>
