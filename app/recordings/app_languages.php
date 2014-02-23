@@ -106,6 +106,11 @@
 	$text['message-update']['pt-pt'] = "Actualização Efectuada";
 	$text['message-update']['fr-fr'] = "Mis à jour";
 
+	$text['message-delete']['en-us'] = "Delete Complete";
+	$text['message-delete']['es-cl'] = "EliminaciÃ³n Completa";
+	$text['message-delete']['pt-pt'] = "RemoÃ§Ã£o Realizada";
+	$text['message-delete']['fr-fr'] = "SupprimÃ©";
+
 	$text['title-add']['en-us'] = "Add Recording";
 	$text['title-add']['es-cl'] = "Agregar Grabación";
 	$text['title-add']['pt-pt'] = "Adicionar Gravação";
