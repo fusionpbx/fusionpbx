@@ -33,6 +33,28 @@
 
 --set the cache
 	if (XML_STRING == "-ERR NOT FOUND") then
+		--connect to the database
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			dbh = database_handle('system');
+
+		--exits the script if we didn't connect properly
+			assert(dbh:connected());
+
+		--get the domain_uuid
+			if (domain_uuid == nil) then
+				--get the domain_uuid
+					if (domain_name ~= nil) then
+						sql = "SELECT domain_uuid FROM v_domains ";
+						sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+						end
+						status = dbh:query(sql, function(rows)
+							domain_uuid = rows["domain_uuid"];
+						end);
+					end
+			end
+
 		--build the call group array
 			sql = [[
 			select * from v_extensions 
@@ -97,6 +119,9 @@
 			table.insert(xml, [[	</section>]]);
 			table.insert(xml, [[</document>]]);
 			XML_STRING = table.concat(xml, "\n");
+
+		--close the database connection
+			dbh:release();
 
 		--set the cache
 			result = trim(api:execute("memcache", "set directory:groups:"..domain_name.." '"..XML_STRING:gsub("'", "&#39;").."' "..expire["directory"]));
