@@ -38,6 +38,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type='text/css'>
 
+html, body {
+	margin: 0;
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-right: 0;
+	margin-left: 0;
+	overflow: hidden;
+}
+
+DIV#page {
+	z-index: 1;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	padding: 10px;
+	overflow: auto;
+}
+
 img {
 	border: none;
 }
@@ -45,17 +66,6 @@ img {
 A {
 	color: #004083;
 	width: 100%;
-}
-
-body {
-	margin-top: 0px;
-	margin-bottom: 0px;
-	margin-right: 0px;
-	margin-left: 0px;
-	/*background-image: url('<!--{project_path}-->/themes/enhanced/images/background.jpg');*/
-	/*background-repeat: repeat-x;*/
-	/*background-attachment: fixed;*/
-	/*background-color: #FFFFFF;*/
 }
 
 .title {
@@ -540,23 +550,6 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 /* end the menu css*/
 
-/* Remove margins from the 'html' and 'body' tags, and ensure the page takes up full screen height */
-	html, body {
-		height:100%;
-		margin:0;
-		padding:0;
-	}
-
-	/* Specify the position and layering for the content that needs to
-	appear in front of the background image. Must have a higher z-index
-	value than the background image. Also add some padding to compensate
-	for removing the margin from the 'html' and 'body' tags. */
-	#page {
-		position:relative;
-		z-index:1;
-		padding:10px;
-	}
-
 	.vtable {
 		position:relative;
 		z-index:1;
@@ -613,6 +606,72 @@ table tr:nth-last-child(-5) td:first-of-type {
 		color: #fff;
 	}
 
+
+	#domains_show_icon {
+		filter: alpha(opacity=50);
+		opacity: 0.5;
+		-moz-opacity: 0.5;
+		-khtml-opacity: 0.5;
+		margin-left: 20px;
+	}
+
+	#domains_show_icon:hover {
+		filter: alpha(opacity=100);
+		opacity: 1;
+		-moz-opacity: 1;
+		-khtml-opacity: 1;
+		cursor: pointer;
+	}
+
+	#domains_container {
+		z-index: 99998;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		bottom: 0px;
+		width: 400px;
+		overflow: hidden;
+		display: none;
+	}
+
+	#domains_block {
+		position: absolute;
+		right: -300px;
+		top: 0px;
+		bottom: 0px;
+		width: 300px;
+		padding: 20px 20px 100px 20px;
+		font-family: arial, san-serif;
+		font-size: 10pt;
+		overflow: hidden;
+		background-color: #eee;
+		border-left: 1px solid #ccc;
+		-webkit-box-shadow: 0px 0px 20px #555;
+		-moz-box-shadow: 0px 0px 20px #555;
+		box-shadow: 0px 0px 20px #555;
+	}
+
+	#domains_header {
+		position: relative;
+		width: 300px;
+		height: 55px;
+		margin-bottom: 20px;
+	}
+
+	#domains_list {
+		position: relative;
+		overflow: auto;
+		width: 296px;
+		height: 100%;
+		padding: 1px;
+		background-color: #fff;
+		border: 1px solid #ccc;
+	}
+
+	DIV.domains_list_item {
+		padding: 5px 8px 8px 8px;
+		}
+
 </style>
 
 <script type="text/javascript">
@@ -648,18 +707,91 @@ table tr:nth-last-child(-5) td:first-of-type {
 	}
 </script>
 
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function() {
+
+		$("#domains_show_icon,#domains_show_text").click(function() {
+			$("#domains_container").show();
+			$("#domains_block").animate({marginRight: '+=300'}, 400);
+		});
+
+		$("#domains_hide").click(function() {
+			$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
+				$("#domains_container").hide();
+			});
+
+		});
+
+	});
+
+	function hide_domains() {
+		$(document).ready(function() {
+			$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
+				$("#domains_container").hide();
+			});
+
+		});
+	}
+</script>
+
 </head>
 <body onload="display_message();">
 
 	<?php
-		if (strlen($_SESSION['message']) > 0) {
-			echo "<div id='message_container'>";
-			echo "	<div id='message_block'>";
-			echo "		<span class='text'>".$_SESSION['message']."</span>";
-			echo "	</div>";
-			echo "</div>";
-			unset($_SESSION['message']);
-		}
+	// message block
+	if (strlen($_SESSION['message']) > 0) {
+		echo "<div id='message_container'>";
+		echo "	<div id='message_block'>";
+		echo "		<span class='text'>".$_SESSION['message']."</span>";
+		echo "	</div>";
+		echo "</div>";
+		unset($_SESSION['message']);
+	}
+
+	//logged in show the domains block
+	if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+		?>
+		<div id="domains_container">
+			<div id="domains_block">
+				<div id="domains_header">
+					<input id="domains_hide" type="button" style="float: right; font-size: 11px;" value="Close">
+					<b style="color: #000;">Domain Selector</b>
+					<br><br>
+					<input type="text" id="domain_filter" style="width: 100%;" value="Search..." onfocus="(this.value == 'Search...') ? this.value = '' : void(0);" onblur="(this.value == '') ? this.value = 'Search...' : void(0);" onkeyup="domain_search(this.value);">
+				</div>
+				<div id="domains_list">
+					<?
+					$bgcolor1 = "#eaedf2";
+					$bgcolor2 = "#fff";
+					foreach($_SESSION['domains'] as $domain) {
+						if ($domain['domain_uuid'] != $_SESSION['domain_uuid']) {
+							$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
+							?><div id="<?=$domain['domain_name']?>" class="domains_list_item" style="background-color: <?=$bgcolor?>"><a href="<?=PROJECT_PATH?>/core/domain_settings/domains.php?domain_uuid=<?=$domain['domain_uuid']?>&domain_change=true"><?=$domain['domain_name']?></a></div><?
+							$ary_domains[] = $domain['domain_name'];
+						}
+					}
+					?>
+				</div>
+
+				<script>
+					var domains = new Array("<?=implode('","', $ary_domains)?>");
+
+					function domain_search(criteria) {
+						for (var x = 0; x < domains.length; x++) {
+							if (domains[x].match(criteria)) {
+								document.getElementById(domains[x]).style.display = '';
+							}
+							else {
+								document.getElementById(domains[x]).style.display = 'none';
+							}
+						}
+					}
+				</script>
+
+			</div>
+		</div>
+		<?
+	}
 	?>
 
 	<div id="page" align='center'>
@@ -680,25 +812,13 @@ table tr:nth-last-child(-5) td:first-of-type {
 						</td>
 						<td width='50%' class='' align='right' valign='middle'>
 							<?php
-							//logged in show the domains
-								if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-									//$tmp_style = "style=\"opacity:0.7;filter:alpha(opacity=70)\" ";
-									//$tmp_style .= "onmouseover=\"this.style.opacity=1;this.filters.alpha.opacity=90\" ";
-									//$tmp_style .= "onmouseout=\"this.style.opacity=0.7;this.filters.alpha.opacity=70\" ";
-									$tmp_style = "style=\"opacity:0.7;\" ";
-									$tmp_style .= "onmouseover=\"this.style.opacity=1;\" ";
-									$tmp_style .= "onmouseout=\"this.style.opacity=0.7;\" ";
-									echo "		<select id='domain_uuid' name='domain_uuid' class='formfld' onchange=\"window.location='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid='+this.value+'&domain_change=true';\" $tmp_style>\n";
-									foreach($_SESSION['domains'] as $row) {
-										if ($row['domain_uuid'] == $_SESSION['domain_uuid']) {
-											echo "	<option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
-										}
-										else {
-											echo "	<option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
-										}
-									}
-									echo "	</select>\n";
-								}
+							//logged in show the domains block
+							if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+								?>
+								<a href="javascript:void(0);" id="domains_show_text"><?=$_SESSION['domain_name']?></a>
+								<img id="domains_show_icon" src="<?=PROJECT_PATH?>/themes/enhanced/images/icon_domains_show.png" style="width: 23px; height: 16px; border: none;" title="Open Domain Selector" align="absmiddle">
+								<?
+							}
 
 							//logged out show the login
 								if (strlen($_SESSION["username"]) == 0) {
@@ -811,14 +931,14 @@ table tr:nth-last-child(-5) td:first-of-type {
 	<?php
 	if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
 		echo "<span class='smalltext'>\n";
-		echo "	<a class='smalltext' target='_blank' href='http://www.fusionpbx.com'>fusionpbx.com</a>. Copyright 2008 - 2013. All Rights Reserved\n";
-		echo "</span>\n";
+		echo "	<a class='smalltext' target='_blank' href='http://www.fusionpbx.com'>fusionpbx.com</a>. Copyright 2008 - ".date("Y").". All rights reserved.\n";
+		echo "</span><br><br>\n";
 	}
 	else {
 		echo "<!--\n";
 		echo "	http://www.fusionpbx.com \n";
-		echo "	Copyright 2008 - 2013 \n";
-		echo "	All Rights Reserved\n";
+		echo "	Copyright 2008 - ".date("Y")." \n";
+		echo "	All rights reserved.\n";
 		echo "-->\n";
 	}
 	?>
