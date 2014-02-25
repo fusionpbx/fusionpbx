@@ -161,7 +161,7 @@
 		$text['button-delete']['fr-fr'] = "Supprimé";
 
 		$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-		$text['confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
+		$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 		$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
 		$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 

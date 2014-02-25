@@ -157,12 +157,12 @@
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-	$text['confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
+	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
 	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
 	$text['confirm-copy']['en-us'] = "Do you really want to copy this?";
-	$text['confirm-copy']['es-cl'] = "&iquest;Realmente desea copiar esto?";
+	$text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
 	$text['confirm-copy']['pt-pt'] = "Tem a certeza que pretende copiar isto?";
 	$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
 

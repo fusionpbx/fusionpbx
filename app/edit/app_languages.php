@@ -92,7 +92,7 @@
 	$text['button-add-clip']['fr-fr'] = "Ajouter un Clip";
 
 	$text['message-delete-clip']['en-us'] = "Are you sure you want to delete the selected clip?";
-	$text['message-delete-clip']['es-cl'] = "&iquest;Realmente desea eliminar el clip seleccionado?";
+	$text['message-delete-clip']['es-cl'] = "¿Realmente desea eliminar el clip seleccionado?";
 	$text['message-delete-clip']['pt-pt'] = "Tem a certeza que pretende remover o clip seleccionado?";
 	$text['message-delete-clip']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le CLIP sélectionné?";
 
@@ -151,7 +151,7 @@
 	$text['button-rename-file']['fr-fr'] = "Renommer le Fichier";
 
 	$text['message-delete-file']['en-us'] = "Are you sure you want to delete the selected file?";
-	$text['message-delete-file']['es-cl'] = "&iquest;Realmente desea eliminar el archivo seleccionado?";
+	$text['message-delete-file']['es-cl'] = "¿Realmente desea eliminar el archivo seleccionado?";
 	$text['message-delete-file']['pt-pt'] = "Tem a certeza que pretende remover o ficheiro seleccionado?";
 	$text['message-delete-file']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le fichier sélectionné?";
 
@@ -186,7 +186,7 @@
 	$text['button-new-folder']['fr-fr'] = "Nouveau Répertoire";
 
 	$text['button-delete-this']['en-us'] = "Are you sure want to delete this?";
-	$text['button-delete-this']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
+	$text['button-delete-this']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['button-delete-this']['pt-pt'] = "Tem a certeza que pretende remover isto?";
 	$text['button-delete-this']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 

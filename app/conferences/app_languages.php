@@ -144,7 +144,7 @@
 	$text['description-pin']['fr-fr'] = "Numéro d'identifiant pour sécuriser l'accès à la conf. (Optionnel)";
 
 	$text['confirm-delete-2']['en-us'] = "Do you really want to delete this?";
-	$text['confirm-delete-2']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
+	$text['confirm-delete-2']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['confirm-delete-2']['pt-pt'] = "Deseja realmente apagar isto?";
 	$text['confirm-delete-2']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
