@@ -670,7 +670,15 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 	DIV.domains_list_item {
 		padding: 5px 8px 8px 8px;
+		overflow: hidden;
+		white-space: nowrap;
 		}
+
+	DIV.domains_list_item SPAN.domain_list_item_description {
+		color: #999;
+		font-size: 11px;
+		}
+
 
 </style>
 
@@ -766,7 +774,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 					foreach($_SESSION['domains'] as $domain) {
 						if ($domain['domain_uuid'] != $_SESSION['domain_uuid']) {
 							$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
-							?><div id="<?=$domain['domain_name']?>" class="domains_list_item" style="background-color: <?=$bgcolor?>"><a href="<?=PROJECT_PATH?>/core/domain_settings/domains.php?domain_uuid=<?=$domain['domain_uuid']?>&domain_change=true"><?=$domain['domain_name']?></a></div><?
+							?><div id="<?=$domain['domain_name']?>" class="domains_list_item" style="background-color: <?=$bgcolor?>"><a href="<?=PROJECT_PATH?>/core/domain_settings/domains.php?domain_uuid=<?=$domain['domain_uuid']?>&domain_change=true"><?=$domain['domain_name']?></a><? if ($domain['domain_description'] != '') { ?><span class="domain_list_item_description"> - <?=$domain['domain_description']?></span><? } ?></div><?
 							$ary_domain_names[] = $domain['domain_name'];
 							$ary_domain_descs[] = str_replace('"','\"',$domain['domain_description']);
 						}
