@@ -448,7 +448,10 @@ include "root.php";
 							if ($regex_match) {
 								//get the variables
 									if ($field[dialplan_detail_type] == "set" && $field[dialplan_detail_tag] == "action") {
-										$this->variables .= $field[dialplan_detail_data].",";
+										//only set variables with values not variables
+										if (strpos($field[dialplan_detail_data], '$') === false) {
+											$this->variables .= $field[dialplan_detail_data].",";
+										}
 									}
 								//process the $x detail data variables
 									if ($field['dialplan_detail_tag'] == "action" && $field['dialplan_detail_type'] == "bridge" && $dialplan_detail_data != "\${enum_auto_route}") {
