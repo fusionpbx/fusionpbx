@@ -1,5 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <flat-profile>
+<!--<Restricted_Access_Domains/>-->
+<!--<Enable_Web_Admin_Access>Yes</Enable_Web_Admin_Access>-->
+<!--<IVR_Admin_Passwd></IVR_Admin_Passwd>-->
 <Provision_Enable>Yes</Provision_Enable>
 <Resync_On_Reset>Yes</Resync_On_Reset>
 <Resync_Random_Delay>2</Resync_Random_Delay>
@@ -24,6 +27,7 @@
 <Use_Auth_ID_1_>No</Use_Auth_ID_1_>
 <Auth_ID_1_></Auth_ID_1_>
 <Dial_Plan_1_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>
+<!--<Dial_Plan_1_>(&lt;:31516&gt;xxxxxxx|&lt;:3&gt;xxxxxxxxxx|&lt;:3&gt;xxxxxxxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>-->
 <Line_Enable_2_>Yes</Line_Enable_2_>
 <Mailbox_ID_2_>*97</Mailbox_ID_2_>
 <Proxy_2_>{$server_address_2}</Proxy_2_>
@@ -37,5 +41,22 @@
 <Use_Auth_ID_2_>No</Use_Auth_ID_2_>
 <Auth_ID_2_></Auth_ID_2_>
 <Dial_Plan_2_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
+<!--<Dial_Plan_1_>(&lt;:31516&gt;xxxxxxx|&lt;:3&gt;xxxxxxxxxx|&lt;:3&gt;xxxxxxxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>-->
 <Time_Zone>GMT-07:00</Time_Zone>
+<!--
+<Reset_Button_Enable>0</Reset_Button_Enable>
+<Web_Management>
+<Web_Utility_Access_HTTP>1</Web_Utility_Access_HTTP>
+<Web_Utility_Access_HTTPS>1</Web_Utility_Access_HTTPS>
+<Web_Remote_Management>1</Web_Remote_Management>
+<Remote_Web_Utility_Access>1</Remote_Web_Utility_Access>
+<Web_Remote_Upgrade>1</Web_Remote_Upgrade>
+<Allowed_Remote_IP_Type>1</Allowed_Remote_IP_Type>
+<Remote_Management_Port>80</Remote_Management_Port>
+</Web_Management>
+-->
+<Web_Login_Admin_Name>{$admin_name}</Web_Login_Admin_Name>
+<Web_Login_Admin_Password>{$admin_password}</Web_Login_Admin_Password>
+<Web_Login_Guest_Name>{$user_name}</Web_Login_Guest_Name>
+<Web_Login_Guest_Password>{$user_password}</Web_Login_Guest_Password>
 </flat-profile>
