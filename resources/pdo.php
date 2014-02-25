@@ -253,6 +253,7 @@ if ($db_type == "pgsql") {
 				}
 				$_SESSION['domains'][$row['domain_uuid']]['domain_uuid'] = $row['domain_uuid'];
 				$_SESSION['domains'][$row['domain_uuid']]['domain_name'] = $row['domain_name'];
+				$_SESSION['domains'][$row['domain_uuid']]['domain_description'] = $row['domain_description'];
 			}
 			unset($result, $prep_statement);
 	}
