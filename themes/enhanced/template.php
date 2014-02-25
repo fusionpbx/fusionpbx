@@ -767,22 +767,24 @@ table tr:nth-last-child(-5) td:first-of-type {
 						if ($domain['domain_uuid'] != $_SESSION['domain_uuid']) {
 							$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
 							?><div id="<?=$domain['domain_name']?>" class="domains_list_item" style="background-color: <?=$bgcolor?>"><a href="<?=PROJECT_PATH?>/core/domain_settings/domains.php?domain_uuid=<?=$domain['domain_uuid']?>&domain_change=true"><?=$domain['domain_name']?></a></div><?
-							$ary_domains[] = $domain['domain_name'];
+							$ary_domain_names[] = $domain['domain_name'];
+							$ary_domain_descs[] = str_replace('"','\"',$domain['domain_description']);
 						}
 					}
 					?>
 				</div>
 
 				<script>
-					var domains = new Array("<?=implode('","', $ary_domains)?>");
+					var domain_names = new Array("<?=implode('","', $ary_domain_names)?>");
+					var domain_descs = new Array("<?=implode('","', $ary_domain_descs)?>");
 
 					function domain_search(criteria) {
-						for (var x = 0; x < domains.length; x++) {
-							if (domains[x].match(criteria)) {
-								document.getElementById(domains[x]).style.display = '';
+						for (var x = 0; x < domain_names.length; x++) {
+							if (domain_names[x].match(criteria) || domain_descs[x].match(criteria)) {
+								document.getElementById(domain_names[x]).style.display = '';
 							}
 							else {
-								document.getElementById(domains[x]).style.display = 'none';
+								document.getElementById(domain_names[x]).style.display = 'none';
 							}
 						}
 					}
