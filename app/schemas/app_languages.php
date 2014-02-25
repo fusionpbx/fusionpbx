@@ -421,7 +421,7 @@
 	$text['option-label']['en-us'] = "Label";
 	$text['option-label']['es-cl'] = "Etiqueta";
 	$text['option-label']['fr-fr'] = "Label";
-	$text['option-label']['pt-pt'] = "Rótulo";
+	$text['option-label']['pt-pt'] = "Etiqueta";
 
 	$text['option-modified_date']['en-us'] = "Modified Date";
 	$text['option-modified_date']['es-cl'] = "Fecha de modificación";
@@ -511,12 +511,12 @@
 	$text['title-import']['en-us'] = "Schema Import";
 	$text['title-import']['es-cl'] = "Importar Esquema";
 	$text['title-import']['fr-fr'] = "Importer Schéma";
-	$text['title-import']['pt-pt'] = "Importar Esquema";
+	$text['title-import']['pt-pt'] = "Importar Estrutura";
 
 	$text['title-import_results']['en-us'] = "Schema Import Results";
 	$text['title-import_results']['es-cl'] = "Resultados de importación de Esquema";
 	$text['title-import_results']['fr-fr'] = "Résultat de l'import";
-	$text['title-import_results']['pt-pt'] = "Resutlados da Importação do Esquema";
+	$text['title-import_results']['pt-pt'] = "Resutlados da Importação da Estrutura";
 
 	$text['title-name_value']['en-us'] = "Select Box Option";
 	$text['title-name_value']['es-cl'] = "Seleccione un campo";

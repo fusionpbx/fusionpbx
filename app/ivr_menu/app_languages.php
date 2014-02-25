@@ -12,12 +12,12 @@
 
 	$text['title-option_add']['en-us'] = "IVR Menu Option Add";
 	$text['title-option_add']['es-cl'] = "Agregar Menú IVR";
-	$text['title-option_add']['pt-pt'] = "Menu IVR Adicionar uma Opção";
+	$text['title-option_add']['pt-pt'] = "IVR Adicionar uma Opção";
 	$text['title-option_add']['fr-fr'] = "Menu SVI Ajouter une Option";
 
 	$text['title-option_edit']['en-us'] = "IVR Menu Option Edit";
 	$text['title-option_edit']['es-cl'] = "Editar Menú IVR";
-	$text['title-option_edit']['pt-pt'] = "Menu IVR Editar uma Opção";
+	$text['title-option_edit']['pt-pt'] = "IVR Editar uma Opção";
 	$text['title-option_edit']['fr-fr'] = "Menu SVI Editer un Option";
 
 	$text['header-ivr_menus']['en-us'] = "IVR Menus";
@@ -37,32 +37,32 @@
 
 	$text['header-option_add']['en-us'] = "IVR Menu Option Add";
 	$text['header-option_add']['es-cl'] = "Agregar Menú IVR";
-	$text['header-option_add']['pt-pt'] = "IVR Menu Adicionar uma Opção";
+	$text['header-option_add']['pt-pt'] = "IVR Adicionar uma Opção";
 	$text['header-option_add']['fr-fr'] = "Menu SVI Ajouter une Option";
 
 	$text['header-option_edit']['en-us'] = "IVR Menu Option Edit";
 	$text['header-option_edit']['es-cl'] = "Editar Menú IVR";
-	$text['header-option_edit']['pt-pt'] = "IVR Menu Editar uma Opção";
+	$text['header-option_edit']['pt-pt'] = "IVR Editar uma Opção";
 	$text['header-option_edit']['fr-fr'] = "Menu SVI Editer un Option";
 
 	$text['description-ivr_menus']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
 	$text['description-ivr_menus']['es-cl'] = "El menú IVR reproduce una grabación o una frase predefinida que presenta opciones para elegir. Cada opción corresponde a un destino. Los destinos pueden ser extensiones, correo de voz, IVR, grupos, fax entre otros.";
-	$text['description-ivr_menus']['pt-pt'] = "O Menu de IVR toca uma gravação ou uma frase pré-definida que indica ao originador as opções que pode escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, voicemail, outros menus de IVR, grupos de chamdas, extensões de FAX, entre outros.";
+	$text['description-ivr_menus']['pt-pt'] = "O IVR toca uma gravação ou uma frase pré-definidos que são apresentados ao chamador na forma de opções que pode escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, correio de voz, outros IVRs, grupos, extensões de FAX, etc.";
 	$text['description-ivr_menus']['fr-fr'] = "Le Menu SVI joue un guide vocal ou un texte prédéfini qui présente à l'appelant des options à choisir. Chaque option est configurée avec une destination correspondante. Ces destnations peuvent être des extensions, messageries vocales, d'autres menus SVI, groupes d'appel, Fax, ou autres.";
 
 	$text['description-ivr_menu']['en-us'] = "The IVR Menu plays a recording or a pre-defined phrase that presents the caller with options to choose from. Each option has a corresponding destination. The destinations can be extensions, voicemail, other IVR menus, call groups, FAX extensions, and more.";
 	$text['description-ivr_menu']['es-cl'] = "El menú IVR reproduce una grabación o una frase predefinida que presenta opciones para elegir. Cada opción corresponde a un destino. Los destinos pueden ser extensiones, correo de voz, IVR, grupos, fax entre otros.";
-	$text['description-ivr_menu']['pt-pt'] = ".";
+	$text['description-ivr_menu']['pt-pt'] = "O IVR toca uma gravação ou uma frase pré-definidos que são apresentados ao chamador na forma de opções que pode escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, correio de voz, outros IVRs, grupos, extensões de FAX, etc.";
 	$text['description-ivr_menu']['fr-fr'] = "Le Menu SVI joue un guide vocal ou un texte prédéfini qui présente à l'appelant des options à choisir. Chaque option est configurée avec une destination correspondante. Ces destnations peuvent être des extensions, messageries vocales, d'autres menus SVI, groupes d'appel, Fax, ou autres.";
 
 	$text['description-option_list']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations.";
 	$text['description-option_list']['es-cl'] = "La grabación presenta un menú de opciones. Cada opción corresponde a una tecla presionada (dígitos DMTF) desde el dipositivo de quien llama, el cual dirige la llamada a destino.";
-	$text['description-option_list']['pt-pt'] = "O Menu de IVR toca uma gravação ou uma frase pré-definida que indica ao originador as opções que pode escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, voicemail, outros menus de IVR, grupos de chamdas, extensões de FAX, entre outros.";
+	$text['description-option_list']['pt-pt'] = "A gravação apresenta ao chamador opções que pode escolher. As opções correspondem a teclas primidas pelo chamador (dígitos DTMF) que redirecionam a chamada para os destinos desejados.";
 	$text['description-option_list']['fr-fr'] = "Le guide vocal présente les options possibles à l'appelant. Ces options correspondent aux digits (DTMF) émises par l'appelant et lui permettant de choisir une destination.";
 
 	$text['description-option_add_edit']['en-us'] = "The recording presents options to the caller. Options match key presses (DTMF digits) from the caller which directs the call to the destinations. ";
 	$text['description-option_add_edit']['es-cl'] = "La grabación presenta un menú de opciones. Cada opción corresponde a una tecla presionada (dígitos DMTF) desde el dipositivo de quien llama, el cual dirige la llamada a destino.";
-	$text['description-option_add_edit']['pt-pt'] = "A gravação apresenta opções ao originador da chamada. O originador atinge as opções que pretende através da marcação de dígitos (DTMF) que redireccionam a chamada para os respectivos destinos.";
+	$text['description-option_add_edit']['pt-pt'] = "A gravação apresenta ao chamador opções que pode escolher. As opções correspondem a teclas primidas pelo chamador (dígitos DTMF) que redirecionam a chamada para os destinos desejados.";
 	$text['description-option_add_edit']['fr-fr'] = "Le guide vocal présente les options possibles à l'appelant. Ces options correspondent aux digits (DTMF) émises par l'appelant et lui permettant de choisir une destination.";
 
 	$text['label-name']['en-us'] = "Name";
@@ -77,12 +77,12 @@
 
 	$text['label-greet_long']['en-us'] = "Greet Long";
 	$text['label-greet_long']['es-cl'] = "Mensaje Largo";
-	$text['label-greet_long']['pt-pt'] = "Longa Saudação";
+	$text['label-greet_long']['pt-pt'] = "Saudação Longa";
 	$text['label-greet_long']['fr-fr'] = "Message Long";
 
 	$text['label-greet_short']['en-us'] = "Greet Short";
 	$text['label-greet_short']['es-cl'] = "Mensaje Corto";
-	$text['label-greet_short']['pt-pt'] = "Pequena Saudação";
+	$text['label-greet_short']['pt-pt'] = "Saudação Curta";
 	$text['label-greet_short']['fr-fr'] = "Message Court";
 
 	$text['label-timeout']['en-us'] = "Timeout";
@@ -97,7 +97,7 @@
 
 	$text['label-direct_dial']['en-us'] = "Direct Dial";
 	$text['label-direct_dial']['es-cl'] = "Discado Directo";
-	$text['label-direct_dial']['pt-pt'] = "Ligação Directa";
+	$text['label-direct_dial']['pt-pt'] = "Marcações Directas";
 	$text['label-direct_dial']['fr-fr'] = "Appel Direct";
 
 	$text['label-ring_back']['en-us'] = "Ring Back";
@@ -107,7 +107,7 @@
 
 	$text['label-caller_id_name_prefix']['en-us'] = "Caller ID Name Prefix";
 	$text['label-caller_id_name_prefix']['es-cl'] = "Prefijo de Nombre de Caller ID";
-	$text['label-caller_id_name_prefix']['pt-pt'] = "Nome do Originador";
+	$text['label-caller_id_name_prefix']['pt-pt'] = "Nome do Chamador";
 	$text['label-caller_id_name_prefix']['fr-fr'] = "Préfixe ajouté au nom de l'appelant";
 
 	$text['label-invalid_sound']['en-us'] = "Invalid Sound";
@@ -127,7 +127,7 @@
 
 	$text['label-comfirm_key']['en-us'] = "Confirm Key";
 	$text['label-comfirm_key']['es-cl'] = "Tecla de Confirmación";
-	$text['label-comfirm_key']['pt-pt'] = "Confirmar Chave";
+	$text['label-comfirm_key']['pt-pt'] = "Tecla de Confirmação";
 	$text['label-comfirm_key']['fr-fr'] = "Touche de Confirmation";
 
 	$text['label-tts_engine']['en-us'] = "TTS Engine";
@@ -150,12 +150,12 @@
 
 	$text['label-max_failures']['en-us'] = "Max Failures";
 	$text['label-max_failures']['es-cl'] = "Máximo de Fallos";
-	$text['label-max_failures']['pt-pt'] = "Máximo Nº Falhas";
+	$text['label-max_failures']['pt-pt'] = "Nº Máximo de Falhas";
 	$text['label-max_failures']['fr-fr'] = "Echecs Max";
 
 	$text['label-max_timeouts']['en-us'] = "Max Timeouts";
 	$text['label-max_timeouts']['es-cl'] = "Máximo de Timeouts";
-	$text['label-max_timeouts']['pt-pt'] = "Máximo Nº Timeouts";
+	$text['label-max_timeouts']['pt-pt'] = "Nº Máximo de Timeouts";
 	$text['label-max_timeouts']['fr-fr'] = "Timeouts Max";
 
 	$text['label-digit_length']['en-us'] = "Digit Length";
@@ -165,7 +165,7 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['label-description']['en-us'] = "Description";
@@ -210,12 +210,12 @@
 
 	$text['description-greet_long']['en-us'] = "The long greeting is played when entering the menu.";
 	$text['description-greet_long']['es-cl'] = "El mensaje largo se reproduce cuando se entra en el menú.";
-	$text['description-greet_long']['pt-pt'] = "A longa saudação é tocada quando se entra no menu.";
+	$text['description-greet_long']['pt-pt'] = "A saudação longa é tocada quando se entra no menu.";
 	$text['description-greet_long']['fr-fr'] = "Le message long est joué une fois lorsque l'on entre dans le menu.";
 
 	$text['description-greet_short']['en-us'] = "The short greeting is played when returning to the menu.";
 	$text['description-greet_short']['es-cl'] = "El mensaje corto se reproduce cuando se regresa al menú.";
-	$text['description-greet_short']['pt-pt'] = "A pequena saudação é tocada quando ao retornar ao menu.";
+	$text['description-greet_short']['pt-pt'] = "A saudação curta é tocada ao retornar ao menu.";
 	$text['description-greet_short']['fr-fr'] = "Le message court est joué lors du retour dans le menu, donc à la suite du message long.";
 
 	$text['description-timeout']['en-us'] = "The number of milliseconds to wait after playing the greeting or the confirm macro.";
@@ -230,17 +230,17 @@
 
 	$text['description-direct_dial']['en-us'] = "Define whether callers can dial directly to registered extensions.";
 	$text['description-direct_dial']['es-cl'] = "Define si quienes llaman pueden marcar directamente a las extensiones y códigos.";
-	$text['description-direct_dial']['pt-pt'] = "Defina se os originadores de chamadas podem ligar directamente para extensões.";
+	$text['description-direct_dial']['pt-pt'] = "Defina se os chamadores podem ligar directamente para extensões.";
 	$text['description-direct_dial']['fr-fr'] = "Défini si on peut appeler directement le SVI via une extension.";
 
 	$text['description-ring_back']['en-us'] = "Defines what the caller will hear while the destination is being called.";
 	$text['description-ring_back']['es-cl'] = "Define qué va a escuchar quien llama mientras el destino es llamado.";
-	$text['description-ring_back']['pt-pt'] = "Defina o que é que o originador da chamada ouvirá enquanto o destino estiver a ser chamado.";
+	$text['description-ring_back']['pt-pt'] = "Defina o que é que o chamador ouve enquanto o destino estiver a ser chamado.";
 	$text['description-ring_back']['fr-fr'] = "Défini ce que l'appelant entendra lorsque la destination sera en sonnerie.";
 
 	$text['description-caller_id_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
 	$text['description-caller_id_name_prefix']['es-cl'] = "Configurar el prefijo del nombre de Caller ID.";
-	$text['description-caller_id_name_prefix']['pt-pt'] = "Escolha um prefixo a adicionar ao nome do originador de chamada.";
+	$text['description-caller_id_name_prefix']['pt-pt'] = "Escolha um prefixo a adicionar ao nome do chamador.";
 	$text['description-caller_id_name_prefix']['fr-fr'] = "Choisie un préfixe à ajouter au nom de l'appelant.";
 
 	$text['description-invalid_sound']['en-us'] = "Played when and invalid option is chosen.";
@@ -260,7 +260,7 @@
 
 	$text['description-comfirm_key']['en-us'] = "Enter the confirm key.";
 	$text['description-comfirm_key']['en-us'] = "Ingrese la llave de confirmación.";
-	$text['description-comfirm_key']['pt-pt'] = "Introduza a chave de confirmação.";
+	$text['description-comfirm_key']['pt-pt'] = "Introduza a tecla de confirmação.";
 	$text['description-comfirm_key']['fr-fr'] = "Entrer la touche de confirmation.";
 
 	$text['description-tts_engine']['en-us'] = "Text to speech engine.";
@@ -369,7 +369,7 @@
 
 	$text['button-restore']['en-us'] = "Restore Default";
 	$text['button-restore']['es-cl'] = "Restaurar Predeterminado";
-	$text['button-restore']['pt-pt'] = "Restaurar por omissão.";
+	$text['button-restore']['pt-pt'] = "Restaurar Predefinições.";
 	$text['button-restore']['fr-fr'] = "Restaurer les paramètres par défaut";
 
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";

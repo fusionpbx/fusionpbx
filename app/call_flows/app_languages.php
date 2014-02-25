@@ -2,17 +2,17 @@
 
 	$text['title-call_flows']['en-us'] = "Call Flows";
 	$text['title-call_flows']['es-cl'] = "Flujo de Llamada";
-	$text['title-call_flows']['pt-pt'] = "Fluxos de Chamadas";
+	$text['title-call_flows']['pt-pt'] = "Fluxo de Chamadas";
 	$text['title-call_flows']['fr-fr'] = "Flux d'appel";
 
 	$text['header-call_flows']['en-us'] = "Call Flows";
 	$text['header-call_flows']['es-cl'] = "flujo de Llamada";
-	$text['header-call_flows']['pt-pt'] = "Fluxos de Chamadas";
+	$text['header-call_flows']['pt-pt'] = "Fluxo de Chamadas";
 	$text['header-call_flows']['fr-fr'] = "Flux d'appel";
 
 	$text['description-call_flows']['en-us'] = "Direct calls between two destinations by calling a feature code.";
 	$text['description-call_flows']['es-cl'] = "Llamadas directas entre dos destinatarios llamando a un código distintivo.";
-	$text['description-call_flows']['pt-pt'] = "Chamadas directas entre dois destinos através da chamada de um feature code.";
+	$text['description-call_flows']['pt-pt'] = "Chamadas directas entre dois destinos recorrendo a um código de função.";
 	$text['description-call_flows']['fr-fr'] = "Appels directs entre deux destionation en appelant une fonction via un code. ";
 
 	$text['title-call_flow-edit']['en-us'] = "Call Flow Edit";
@@ -57,12 +57,12 @@
 
 	$text['label-feature_code']['en-us'] = "Feature Code";
 	$text['label-feature_code']['es-cl'] = "Código distintivo";
-	$text['label-feature_code']['pt-pt'] = "Feature Code";
+	$text['label-feature_code']['pt-pt'] = "Código de Função";
 	$text['label-feature_code']['fr-fr'] = "Code Fonction";
 
 	$text['description-feature_code']['en-us'] = "Enter the feature code.";
 	$text['description-feature_code']['es-cl'] = "Ingrese el código distintivo.";
-	$text['description-feature_code']['pt-pt'] = "Introduza a feature code.";
+	$text['description-feature_code']['pt-pt'] = "Introduza o código de função.";
 	$text['description-feature_code']['fr-fr'] = "";
 
 	$text['label-context']['en-us'] = "Context";
@@ -117,7 +117,7 @@
 
 	$text['label-alternate_label']['en-us'] = "Alternate Label";
 	$text['label-alternate_label']['es-cl'] = "Etiqueta alternativa";
-	$text['label-alternate_label']['pt-pt'] = "Label Alternativo";
+	$text['label-alternate_label']['pt-pt'] = "Etiqueta Alternativa";
 	$text['label-alternate_label']['fr-fr'] = "Label alternatif";
 
 	$text['description-alternate_label']['en-us'] = "Enter the alternate destination label.";

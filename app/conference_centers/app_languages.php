@@ -165,7 +165,7 @@
 
 		$text['button-view']['en-us'] = "View";
 		$text['button-view']['es-cl'] = "Ver";
-		$text['button-view']['pt-pt'] = "";
+		$text['button-view']['pt-pt'] = "Ver";
 		$text['button-view']['fr-fr'] = "Vue";
 
 		$text['button-back']['en-us'] = "Back";
@@ -362,12 +362,12 @@
 
 		$text['label-caller-id-name']['en-us'] = "Caller ID Name";
 		$text['label-caller-id-name']['es-cl'] = "Nombre de Caller ID";
-		$text['label-caller-id-name']['pt-pt'] = "Nome do Originador";
+		$text['label-caller-id-name']['pt-pt'] = "Nome do Chamador";
 		$text['label-caller-id-name']['fr-fr'] = "Nom d'appelant";
 
 		$text['label-caller-id-number']['en-us'] = "Caller ID Number";
 		$text['label-caller-id-number']['es-cl'] = "Número de Caller ID";
-		$text['label-caller-id-number']['pt-pt'] = "Número do Originador";
+		$text['label-caller-id-number']['pt-pt'] = "Número do Chamador";
 		$text['label-caller-id-number']['fr-fr'] = "Numéro d'appelant";
 
 		$text['label-moderator']['en-us'] = "Moderator";
@@ -402,6 +402,6 @@
 
 		$text['label-cdr']['en-us'] = "CDR";
 		$text['label-cdr']['es-cl'] = "CDR";
-		$text['label-cdr']['pt-pt'] = "Detalhes das Chamadas";
+		$text['label-cdr']['pt-pt'] = "Detalhe de Chamadas";
 		$text['label-cdr']['fr-fr'] = "Historique d'appels";
 ?>

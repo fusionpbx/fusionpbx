@@ -12,12 +12,12 @@
 
 	$text['description-gateway']['en-us'] = "Gateways provide access into other voice networks. These can be voice providers or other systems that require SIP registration.";
 	$text['description-gateway']['es-cl'] = "Las pasarelas proveen acceso a otras redes de voz. Pueden ser provedores u otro sistema que requiera registo SIP.";
-	$text['description-gateway']['pt-pt'] = "Os Gateways oferecem acesso a outras redes de voz. Podem pertencer a provedores de voz ou outros sistmas que requeiram registos SIP.";
+	$text['description-gateway']['pt-pt'] = "Os Gateways oferecem acesso a outras redes de voz. Podem pertencer a operadores de voz ou outros sistmas que requeiram registos SIP.";
 	$text['description-gateway']['fr-fr'] = "Les passerelles permettent l'accès aux autres réseaux voix. Ceux-ci pouvant être des fournisseurs d'accès ou tout autre système nécessitant un enregistrement SIP.";
 
 	$text['description-gateway-edit']['en-us'] = "Defines a connections to a SIP Provider or another SIP server.";
 	$text['description-gateway-edit']['es-cl'] = "Define una conexión con un proveedor SIP u otro servidor SIP.";
-	$text['description-gateway-edit']['pt-pt'] = "Define uma conexão a um provedor SIP ou outro servidor SIP.";
+	$text['description-gateway-edit']['pt-pt'] = "Define uma ligação a um operador SIP ou outro servidor SIP.";
 	$text['description-gateway-edit']['fr-fr'] = "Défini une connexion à un fournisseur SIP ou un autre serveur SIP.";
 
 	$text['label-gateway']['en-us'] = "Gateway";
@@ -52,7 +52,7 @@
 
 	$text['label-distinct_to']['en-us'] = "Distinct To";
 	$text['label-distinct_to']['es-cl'] = "Distinct_To";
-	$text['label-distinct_to']['pt-pt'] = "Distinto Para";
+	$text['label-distinct_to']['pt-pt'] = "Para Distinto";
 	$text['label-distinct_to']['fr-fr'] = "Disctinct_To";
 
 	$text['description-distinct_to']['en-us'] = "Enter the distinct_to here.";
@@ -121,12 +121,12 @@
 
 	$text['label-outbound_proxy']['en-us'] = "Outbound Proxy";
 	$text['label-outbound_proxy']['es-cl'] = "Proxy de Salida";
-	$text['label-outbound_proxy']['pt-pt'] = "Outbound Proxy";
+	$text['label-outbound_proxy']['pt-pt'] = "Proxy de Saída";
 	$text['label-outbound_proxy']['fr-fr'] = "Proxy Sortant";
 
 	$text['description-outbound_proxy']['en-us'] = "Enter the outbound proxy here.";
 	$text['description-outbound_proxy']['es-cl'] = "Ingrese un proxy de salida aquí";
-	$text['description-outbound_proxy']['pt-pt'] = "Introduza o outound proxy aqui.";
+	$text['description-outbound_proxy']['pt-pt'] = "Introduza o proxy de saída aqui.";
 	$text['description-outbound_proxy']['fr-fr'] = "Insérer ici le proxy sortant.";
 
 	$text['label-expire_seconds']['en-us'] = "Expire Seconds";
@@ -151,7 +151,7 @@
 
 	$text['label-register_transport']['en-us'] = "Register Transport";
 	$text['label-register_transport']['es-cl'] = "Transporte de Registro";
-	$text['label-register_transport']['pt-pt'] = "Registar Transporte";
+	$text['label-register_transport']['pt-pt'] = "Transporte do Registo";
 	$text['label-register_transport']['fr-fr'] = "Transport de l'enregistrement";
 
 	$text['description-register_transport']['en-us'] = "Choose whether to register-transport.";
@@ -219,7 +219,7 @@
 
 	$text['label-sip_cid_type']['en-us'] = "Sip CID Type";
 	$text['label-sip_cid_type']['es-cl'] = "Tipo de Caller ID SIP ";
-	$text['label-sip_cid_type']['pt-pt'] = "CallerID SIP Type";
+	$text['label-sip_cid_type']['pt-pt'] = "Tipo de Caller ID SIP";
 	$text['label-sip_cid_type']['fr-fr'] = "CallerID SIP type";
 
 	$text['description-sip_cid_type']['en-us'] = "Enter the sip cid type: none, pid, and rpid.";
@@ -239,12 +239,12 @@
 
 	$text['label-extension_in_contact']['en-us'] = "Extension In Contact";
 	$text['label-extension_in_contact']['es-cl'] = "Extensión en Contacto";
-	$text['label-extension_in_contact']['pt-pt'] = "A extensão em Contacto";
+	$text['label-extension_in_contact']['pt-pt'] = "Extensão no Contacto";
 	$text['label-extension_in_contact']['fr-fr'] = "L'extension dans Contact";
 
 	$text['description-extension_in_contact']['en-us'] = "Enter the Extension In Contact";
 	$text['description-extension_in_contact']['es-cl'] = "Ingrese la extensión en contacto.";
-	$text['description-extension_in_contact']['pt-pt'] = "Introduza a extensão em contacto";
+	$text['description-extension_in_contact']['pt-pt'] = "Introduza a extensão no contacto";
 	$text['description-extension_in_contact']['fr-fr'] = "Insérer l'Extension dans le Contact.";
 
 	$text['label-context']['en-us'] = "Context";
@@ -269,12 +269,12 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['description-enabled']['en-us'] = "Enable or Disable the Gateway";
 	$text['description-enabled']['es-cl'] = "Activar o Desactivar la Pasarela";
-	$text['description-enabled']['pt-pt'] = "Active ou Desactive o Gateway";
+	$text['description-enabled']['pt-pt'] = "Habilitar ou Desabilitar o Gateway";
 	$text['description-enabled']['fr-fr'] = "Activer ou non la Passerelle.";
 
 	$text['label-description']['en-us'] = "Description";
@@ -309,7 +309,7 @@
 
 	$text['label-action-start']['en-us'] = "Start";
 	$text['label-action-start']['es-cl'] = "Inicio";
-	$text['label-action-start']['pt-pt'] = "Início";
+	$text['label-action-start']['pt-pt'] = "Iniciar";
 	$text['label-action-start']['fr-fr'] = "démarrer";
 
 	$text['label-action-stop']['en-us'] = "Stop";
@@ -369,7 +369,7 @@
 
 	$text['button-copy']['en-us'] = "Copy";
 	$text['button-copy']['es-cl'] = "Copiar";
-	$text['button-copy']['pt-pt'] = "Cópia";
+	$text['button-copy']['pt-pt'] = "Copiar";
 	$text['button-copy']['fr-fr'] = "Copier";
 
 	$text['button-advanced']['en-us'] = "Advanced";

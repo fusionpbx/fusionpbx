@@ -90,7 +90,7 @@
 		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['menu'][$y]['title']['en-us'] = "Grammar Editor";
-		$apps[$x]['menu'][$y]['title']['es-cl'] = "Editor GramÃ¡tico";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Editor Gramático";
 		$apps[$x]['menu'][$y]['title']['es-mx'] = "Editor Gramático";
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";

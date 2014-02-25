@@ -33,22 +33,22 @@
 
 	$text['desc-click2call']['en-us'] = "Provide the following information to make a call from the source number to the destination number.";
 	$text['desc-click2call']['es-cl'] = "Ingrese la siguiente información para realizar una llamada desde un número de origen a un número de destino.";
-	$text['desc-click2call']['pt-pt'] = "Forneça a informação seguinte para realizar uma chamada do originador para o destinatário.";
+	$text['desc-click2call']['pt-pt'] = "Forneça a informação seguinte para realizar uma chamada com uma determinada origem para um determinado destino.";
 	$text['desc-click2call']['fr-fr'] = "Fournissez les informations suivantes afin de lancer un appel d'un numéro vers un autre.";
 
 	$text['label-src-caller-id-nam']['en-us'] = "Source Caller ID Name";
 	$text['label-src-caller-id-nam']['es-cl'] = "Nombre de Caller ID de origen";
-	$text['label-src-caller-id-nam']['pt-pt'] = "Nome do Originador";
+	$text['label-src-caller-id-nam']['pt-pt'] = "Nome do Chamador";
 	$text['label-src-caller-id-nam']['fr-fr'] = "Nom Caller ID Source";
 
 	$text['desc-src-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to your phone.";
 	$text['desc-src-caller-id-nam']['es-cl'] = "Ingrese el nombre del Caller ID para enviar a su teléfono.";
-	$text['desc-src-caller-id-nam']['pt-pt'] = "Introduza o nome do Originador para ser enviado para o seu telefone.";
+	$text['desc-src-caller-id-nam']['pt-pt'] = "Introduza o nome do chamador para ser enviado para o seu telefone.";
 	$text['desc-src-caller-id-nam']['fr-fr'] = "Choisir le nom d'appelant à émettre à votre téléphone.";
 
 	$text['label-src-caller-id-num']['en-us'] = "Source Caller ID Number";
 	$text['label-src-caller-id-num']['es-cl'] = "Número de Caller ID de origen";
-	$text['label-src-caller-id-num']['pt-pt'] = "Número do Originador";
+	$text['label-src-caller-id-num']['pt-pt'] = "Número do Chamador";
 	$text['label-src-caller-id-num']['fr-fr'] = "Numéro Caller ID Source";
 
 	$text['desc-src-caller-id-num']['en-us'] = "Enter the Caller ID number to send to your phone (you probably want this to be the same as the destination number).";
@@ -58,12 +58,12 @@
 
 	$text['label-dest-caller-id-nam']['en-us'] = "Destination Caller ID Name";
 	$text['label-dest-caller-id-nam']['es-cl'] = "Nombre de Caller ID de destino";
-	$text['label-dest-caller-id-nam']['pt-pt'] = "Nome do Originador";
+	$text['label-dest-caller-id-nam']['pt-pt'] = "Nome do Chamador";
 	$text['label-dest-caller-id-nam']['fr-fr'] = "Nom Caller ID Destination";
 
 	$text['desc-dest-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to the destination number.";
 	$text['desc-dest-caller-id-nam']['es-cl'] = "Ingrese el nombre de Caller ID para enviar al número de destino.";
-	$text['desc-dest-caller-id-nam']['pt-pt'] = "Introduza o identificador do originador a ser enviado para o destinatário.";
+	$text['desc-dest-caller-id-nam']['pt-pt'] = "Introduza o identificador do chamador a ser enviado para o destinatário.";
 	$text['desc-dest-caller-id-nam']['fr-fr'] = "Choisir le nom d'appelant à émettre à la destination";
 
 	$text['label-dest-caller-id-num']['en-us'] = "Destination Caller ID Number";
@@ -78,7 +78,7 @@
 
 	$text['label-src-num']['en-us'] = "Source Number";
 	$text['label-src-num']['es-cl'] = "Número de origen";
-	$text['label-src-num']['pt-pt'] = "Número do Originador";
+	$text['label-src-num']['pt-pt'] = "Número de origem";
 	$text['label-src-num']['fr-fr'] = "Numéro Source";
 
 	$text['desc-src-num']['en-us'] = "Enter your phone number. This can be an extension on the system, or another number (eg: mobile phone).";
@@ -93,7 +93,7 @@
 
 	$text['desc-dest-num']['en-us'] = "Enter the number to call. This can be an extension on the system, another number, or a sip uri.  Sip URI's are of the form 5551234567@voip.example.com:5080 (5080 for freeswitch, or 5060 for other systems).";
 	$text['desc-dest-num']['es-cl'] = "Ingrese el número a llamar. Este puede ser una extensión en el sistema, otro número o un uri sip. Uri's sip son de la forma 5551234567@voip.example.com:5080 (5080 para freeswitch, o 5060 para otros sistemas).";
-	$text['desc-dest-num']['pt-pt'] = "Introduza o número para chamar. Poderá ser uma extensão do sistema, outro número, ou um SIP URI.  Os SIP URI's são da seguinte forma: 5551234567@voip.example.com:5080 (5080 para o freeswitch, ou 5060 para outros sistemas).";
+	$text['desc-dest-num']['pt-pt'] = "Introduza o número para chamar. Poderá ser uma extensão do sistema, outro número, ou um SIP URI.  Os SIP URI's respeitam a seguinte nomenclatura: +351210000000@voip.example.com";
 	$text['desc-dest-num']['fr-fr'] = "Choisir un numéro à appeler. Il peut être une extension du système, un autre numéro, une URI SIP. les URI SIP sont de la forme : 5551234567@voip.example.com:5080 (5080 pour freeswitch, ou 5060 pour d'autre système).";
 
 	$text['label-auto-answer']['en-us'] = "Auto Answer";

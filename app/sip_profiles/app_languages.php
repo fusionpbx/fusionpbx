@@ -12,7 +12,7 @@
 
 	$text['title-setting']['en-us'] = "Profile Setting";
 	$text['title-setting']['es-cl'] = "Configuración de Perfil";
-	$text['title-setting']['pt-pt'] = "Definições de Perfil";
+	$text['title-setting']['pt-pt'] = "Definições do Perfil";
 	$text['title-setting']['fr-fr'] = "Paramètres du Profile";
 
 	$text['header-sip_profiles']['en-us'] = "SIP Profiles";
@@ -32,7 +32,7 @@
 
 	$text['header-setting']['en-us'] = "Profile Setting";
 	$text['header-setting']['es-cl'] = "Configuración de Perfil";
-	$text['header-setting']['pt-pt'] = "Definições de Perfil";
+	$text['header-setting']['pt-pt'] = "Definições do Perfil";
 	$text['header-setting']['fr-fr'] = "Paramètres du Profile";
 
 	$text['description-sip_profiles']['en-us'] = "Manage settings for SIP profiles.";
@@ -67,7 +67,7 @@
 
 	$text['label-setting_enabled']['en-us'] = "Enabled";
 	$text['label-setting_enabled']['es-cl'] = "Activado";
-	$text['label-setting_enabled']['pt-pt'] = "Activado";
+	$text['label-setting_enabled']['pt-pt'] = "Habilitado";
 	$text['label-setting_enabled']['fr-fr'] = "Actif";
 
 	$text['label-setting_description']['en-us'] = "Description";
@@ -97,7 +97,7 @@
 
 	$text['description-setting_enabled']['en-us'] = "Choose to enable or disable this.";
 	$text['description-setting_enabled']['es-cl'] = "Indique si desea activar o desactivar esto.";
-	$text['description-setting_enabled']['pt-pt'] = "Escolha se o parâmetro será activo ou desactivo.";
+	$text['description-setting_enabled']['pt-pt'] = "Escolha se o parâmetro fica habilitado ou desabilitado.";
 	$text['description-setting_enabled']['fr-fr'] = "Choisir si le paramètre sera actif ou non.";
 
 	$text['description-setting_description']['en-us'] = "Enter the description.";
@@ -106,16 +106,16 @@
 	$text['description-setting_description']['fr-fr'] = "Entrer la description.";
 
 	$text['header-hostname']['en-us'] = "Hostname";
-	$text['header-hostname']['pt-pt'] = "";
+	$text['header-hostname']['pt-pt'] = "Hostname";
 	$text['header-hostname']['fr-fr'] = "";
 
-	$text['label-hostname']['en-us'] = 'Hostname';
-	$text['label-hostname']['pt-pt'] = '';
-	$text['label-hostname']['fr-fr'] = '';
+	$text['label-hostname']['en-us'] = "Hostname";
+	$text['label-hostname']['pt-pt'] = "Hostname";
+	$text['label-hostname']['fr-fr'] = "";
 
-	$text['description-hostname']['en-us'] = 'Enter the hostname / switchname.';
-	$text['description-hostname']['pt-pt'] = '';
-	$text['description-hostname']['fr-fr'] = '';
+	$text['description-hostname']['en-us'] = "Enter the hostname / switchname.";
+	$text['description-hostname']['pt-pt'] = "Introduza o hostname";
+	$text['description-hostname']['fr-fr'] = "";
 
 	$text['option-true']['en-us'] = "True";
 	$text['option-true']['es-cl'] = "Verdadero";
@@ -144,7 +144,7 @@
 
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['es-cl'] = "Volver";
-	$text['button-back']['pt-pt'] = "voltar";
+	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
 	$text['button-copy']['en-us'] = "Copy";

@@ -4,12 +4,12 @@
 
 		$text['title-default_settings']['en-us'] = "Default Settings";
 		$text['title-default_settings']['es-cl'] = "Condiciones Predeterminadas";
-		$text['title-default_settings']['pt-pt'] = "Definições por Omissão";
+		$text['title-default_settings']['pt-pt'] = "Predefinições";
 		$text['title-default_settings']['fr-fr'] = "Configurations par Défaut";
 
 		$text['header-default_settings']['en-us'] = "Default Settings";
 		$text['header-default_settings']['es-cl'] = "Condiciones Predeterminadas";
-		$text['header-default_settings']['pt-pt'] = "Definições por Omissão";
+		$text['header-default_settings']['pt-pt'] = "Predefinições";
 		$text['header-default_settings']['fr-fr'] = "Configurations par Défaut";
 
 		$text['description-default_settings']['en-us'] = "Settings used for all domains.";
@@ -21,12 +21,12 @@
 
 		$text['title-default_setting-edit']['en-us'] = "Default Setting Edit";
 		$text['title-default_setting-edit']['es-cl'] = "Editar Configuraciones Predeterminadas";
-		$text['title-default_setting-edit']['pt-pt'] = "Editar Definições por Omissão";
+		$text['title-default_setting-edit']['pt-pt'] = "Editar Predefinições";
 		$text['title-default_setting-edit']['fr-fr'] = "Editer les Configurations par Défaut";
 
 		$text['header-default_setting-edit']['en-us'] = "Default Setting Edit";
 		$text['header-default_setting-edit']['es-cl'] = "Editar Configuraciones Predeterminadas";
-		$text['header-default_setting-edit']['pt-pt'] = "Editar Definições por Omissão";
+		$text['header-default_setting-edit']['pt-pt'] = "Editar Predefinições";
 		$text['header-default_setting-edit']['fr-fr'] = "Editer les Configurations par Défaut";
 
 		$text['description-default_setting-edit']['en-us'] = "Settings used for all domains.";
@@ -38,12 +38,12 @@
 
 		$text['title-default_setting-add']['en-us'] = "Default Setting Add";
 		$text['title-default_setting-add']['es-cl'] = "Agregar Configuración Predeterminada";
-		$text['title-default_setting-add']['pt-pt'] = "Adicionar Definição por Omissão";
+		$text['title-default_setting-add']['pt-pt'] = "Adicionar Predefinição";
 		$text['title-default_setting-add']['fr-fr'] = "Ajouter une configuration per défaut";
 
 		$text['header-default_setting-add']['en-us'] = "Default Setting Add";
 		$text['header-default_setting-add']['es-cl'] = "Agregar Configuración Predeterminada";
-		$text['header-default_setting-add']['pt-pt'] = "Adicionar Definição por Omissão ";
+		$text['header-default_setting-add']['pt-pt'] = "Adicionar Predefinição ";
 		$text['header-default_setting-add']['fr-fr'] = "Ajouter une configuration per défaut";
 
 		$text['description-default_setting-add']['en-us'] = "Settings used for all domains.";
@@ -90,17 +90,17 @@
 
 		$text['description-value']['en-us'] = "Enter the value of this setting.";
 		$text['description-value']['es-cl'] = "Ingrese el valor de esta configuración";
-		$text['description-value']['pt-pt'] = "Insira o valor desta definição.";
+		$text['description-value']['pt-pt'] = "Introduza o valor desta definição.";
 		$text['description-value']['fr-fr'] = "Entrer la valeur de ce paramètre.";
 
 		$text['label-enabled']['en-us'] = "Enabled";
 		$text['label-enabled']['es-cl'] = "Activado";
-		$text['label-enabled']['pt-pt'] = "Activado";
+		$text['label-enabled']['pt-pt'] = "Habilitado";
 		$text['label-enabled']['fr-fr'] = "Actif";
 
 		$text['description-enabled']['en-us'] = "Set the status of this default setting.";
 		$text['description-enabled']['es-cl'] = "Ingrese el estado de esta configuración.";
-		$text['description-enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
+		$text['description-enabled']['pt-pt'] = "Escolha o estado desta predefinição.";
 		$text['description-enabled']['fr-fr'] = "Choisir l'état de ce paraètre";
 
 		$text['label-description']['en-us'] = "Description";

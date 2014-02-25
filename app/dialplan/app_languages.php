@@ -197,7 +197,7 @@
 
 		$text['label-enabled']['en-us'] = "Enabled";
 		$text['label-enabled']['es-cl'] = "Activado";
-		$text['label-enabled']['pt-pt'] = "Activado";
+		$text['label-enabled']['pt-pt'] = "Habilitado";
 		$text['label-enabled']['fr-fr'] = "Activé";
 
 		$text['label-description']['en-us'] = "Description";
@@ -287,12 +287,12 @@
 
 		$text['option-caller_id_name']['en-us'] = "Caller ID Name";
 		$text['option-caller_id_name']['es-cl'] = "Nombre de Caller ID";
-		$text['option-caller_id_name']['pt-pt'] = "Nome do Originador";
+		$text['option-caller_id_name']['pt-pt'] = "Nome do Chamador";
 		$text['option-caller_id_name']['fr-fr'] = "Caller ID Name";
 
 		$text['option-caller_id_number']['en-us'] = "Caller ID Number";
 		$text['option-caller_id_number']['es-cl'] = "Número de Caller ID";
-		$text['option-caller_id_number']['pt-pt'] = "Número do Originador";
+		$text['option-caller_id_number']['pt-pt'] = "Número do Chamador";
 		$text['option-caller_id_number']['fr-fr'] = "Caller ID Number";
 
 		$text['option-ani']['en-us'] = "ANI";

@@ -64,7 +64,7 @@
 
 	$text['opt-default']['en-us'] = "Default";
 	$text['opt-default']['es-cl'] = "Predeterminado";
-	$text['opt-default']['pt-pt'] = "Omissão";
+	$text['opt-default']['pt-pt'] = "Predefinido";
 	$text['opt-default']['fr-fr'] = "Défaut";
 
 	$text['opt-new']['en-us'] = "New...";
@@ -84,7 +84,7 @@
 
 	$text['message-available-to-all']['en-us'] = "Available to All Domains";
 	$text['message-available-to-all']['es-cl'] = "Disponible para todos los Dominios";
-	$text['message-available-to-all']['pt-pt'] = "Disponível para Todos os Domínios";
+	$text['message-available-to-all']['pt-pt'] = "Disponível para todos os domínios";
 	$text['message-available-to-all']['fr-fr'] = "Disponible pour tous Domaines";
 
 	$text['label-download']['en-us'] = "Download";
@@ -134,7 +134,7 @@
 
 	$text['label-default']['en-us'] = "Default";
 	$text['label-default']['es-cl'] = "Predeterminado";
-	$text['label-default']['pt-pt'] = "Omissão";
+	$text['label-default']['pt-pt'] = "Predefinido";
 	$text['label-default']['fr-fr'] = "Défaut";
 
 	$text['message-event-socket']['en-us'] = "Connection to Event Socket failed.";

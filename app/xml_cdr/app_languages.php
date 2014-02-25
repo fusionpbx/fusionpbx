@@ -2,7 +2,7 @@
 
 	$text['title']['en-us'] = "Call Detail Records";
 	$text['title']['es-cl'] = "Registro de Detalle de Llamadas";
-	$text['title']['pt-pt'] = "Registo Detalhado de Chamadas";
+	$text['title']['pt-pt'] = "Registo de Chamadas";
 	$text['title']['fr-fr'] = "Historique détaillé des appels";
 
 	$text['description']['en-us'] = "Call Detail Records (CDRs) are detailed information on the calls.";
@@ -12,7 +12,7 @@
 
 	$text['description-2']['en-us'] = "The information contains source, destination, duration, and other useful call details.";
 	$text['description-2']['es-cl'] = "La información contiene origen, destino, duración y otra información útil.";
-	$text['description-2']['pt-pt'] = "A informação contem fonte, destino, duração e outros detalhes úteis da chamada.";
+	$text['description-2']['pt-pt'] = "A informação contem a origem, destino, duração e outros detalhes úteis da chamada.";
 	$text['description-2']['fr-fr'] = "Les informations contiennent la source, la destination, la durée et pleins d'autres informations utiles.";
 
 	$text['description-3']['en-us'] = "Use the fields to filter the information for the specific call records that are desired.";
@@ -21,7 +21,7 @@
 	$text['description-3']['fr-fr'] = "Utiliser les filtres pour afficher les appels désirés. ";
 
 	$text['description-4']['en-us'] = "Then view the calls in the list or download them as comma seperated file by using the 'csv' button.";
-	$text['description-4']['pt-pt'] = "Luego puede ver la información o descargarla como un archivo separado por comas utlizando el botón 'csv'.";
+	$text['description-4']['es-cl'] = "Luego puede ver la información o descargarla como un archivo separado por comas utlizando el botón 'csv'.";
 	$text['description-4']['pt-pt'] = "Veja as chamadas na lista ou descarregue-as como arquivo, separadas por vírgulas, usando o botão 'csv'.";
 	$text['description-4']['fr-fr'] = "Ensuite visualisez les informations dans la liste ci-dessous, ou téléchargez les sous forme d'un fichier CSV.";
 
@@ -100,6 +100,10 @@
 	$text['label-download']['pt-pt'] = "Descarregar";
 	$text['label-download']['fr-fr'] = "Télécharger";
 
+	$text['label-phoneip']['en-us'] = "Phone IP";
+	$text['label-phoneip']['pt-pt'] = "IP do Telefone";
+	$text['label-phoneip']['fr-fr'] = "Phone IP";
+
 	$text['button-statistics']['en-us'] = "Statistics";
 	$text['button-statistics']['es-cl'] = "Estadísticas";
 	$text['button-statistics']['pt-pt'] = "Estatísticas";
@@ -138,8 +142,12 @@
 
 	$text['label-summary']['en-us'] = "Summary";
 	$text['label-summary']['es-cl'] = "Sumario";
-	$text['label-summary']['pt-pt'] = "Resumo";
+	$text['label-summary']['pt-pt'] = "Sumário";
 	$text['label-summary']['fr-fr'] = "Résumé";
+
+	$text['label-variables']['en-us'] = "Variables";
+	$text['label-variables']['pt-pt'] = "Variáveis";
+	$text['label-variables']['fr-fr'] = "Variables";
 
 	$text['table-direction']['en-us'] = "Direction";
 	$text['table-direction']['es-cl'] = "Dirección";
@@ -176,6 +184,14 @@
 	$text['label-application-log']['pt-pt'] = "Log de Aplicação";
 	$text['label-application-log']['fr-fr'] = "Log de l'Application Log";
 
+	$text['label-a-leg']['en-us'] = "A-leg";
+	$text['label-a-leg']['pt-pt'] = "A-leg";
+	$text['label-a-leg']['fr-fr'] = "A-leg";
+
+	$text['label-b-leg']['en-us'] = "B-leg";
+	$text['label-b-leg']['pt-pt'] = "B-leg";
+	$text['label-b-leg']['fr-fr'] = "B-leg";
+
 	$text['label-data']['en-us'] = "Data";
 	$text['label-data']['es-cl'] = "Datos";
 	$text['label-data']['pt-pt'] = "Dados";
@@ -198,7 +214,7 @@
 
 	$text['label-call-flow-4']['en-us'] = "Call Flow: Caller Profile";
 	$text['label-call-flow-4']['es-cl'] = "Flujos de llamada: Perfil de quien llama";
-	$text['label-call-flow-4']['pt-pt'] = "Fluxo de chamada: Perfil do Originador";
+	$text['label-call-flow-4']['pt-pt'] = "Fluxo de chamada: Perfil do Chamador";
 	$text['label-call-flow-4']['fr-fr'] = "Flux d'appel: Profile de l'appelant";
 
 	$text['label-call-flow-5']['en-us'] = "Call Flow: Times";
@@ -214,7 +230,7 @@
 
 	$text['label-call-statistics-description']['en-us'] = "Call Detail Records Statics summarize the call information.";
 	$text['label-call-statistics-description']['es-cl'] = "Estadísticas de los registros de llamadas.";
-	$text['label-call-statistics-description']['pt-pt'] = "As Estatisticas do Registo Detalhado de Chamadas resume as informações da chamada.";
+	$text['label-call-statistics-description']['pt-pt'] = "As estatisticas sobre o detalhe das chamadas resumem as informações acerca chamada.";
 	$text['label-call-statistics-description']['fr-fr'] = "Résumé de l'historique des appels.";
 
 	$text['table-hours']['en-us'] = "Hours";

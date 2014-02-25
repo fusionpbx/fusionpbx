@@ -53,7 +53,7 @@
 
 		$text['description-domain-add']['en-us'] = "Enter the domain details below.";
 		$text['description-domain-add']['es-cl'] = "Ingrese los detalles del dominio a continuación.";
-		$text['description-domain-add']['pt-pt'] = "Introduza os detalhes do domínio em baixo.";
+		$text['description-domain-add']['pt-pt'] = "Introduza os detalhes do domínio abaixo.";
 		$text['description-domain-add']['fr-fr'] = "Entrer les détails du domaine ci-dessous.";
 
 		//------
@@ -162,7 +162,7 @@
 
 		$text['label-enabled']['en-us'] = "Enabled";
 		$text['label-enabled']['es-cl'] = "Activado";
-		$text['label-enabled']['pt-pt'] = "Activado";
+		$text['label-enabled']['pt-pt'] = "Habilitado";
 		$text['label-enabled']['fr-fr'] = "Actif";
 
 		$text['description-enabled']['en-us'] = "Set the status of this default setting.";

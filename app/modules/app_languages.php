@@ -33,12 +33,12 @@
 
 	$text['description-modules']['en-us'] = "Modules extend the features of the system. Use this page to enable or disable modules.";
 	$text['description-modules']['es-cl'] = "Los módulos extienden las funcionalidades del sistema. Utilice esta página para activar o desactivar los diferentes módulos.";
-	$text['description-modules']['pt-pt'] = "Os módulos extendem características do sistema. Utilize esta página para activar ou desactivar módulos.";
+	$text['description-modules']['pt-pt'] = "Os módulos extendem as funcionalidades do sistema. Utilize esta página para habilitar ou desabilitar módulos.";
 	$text['description-modules']['fr-fr'] = "Les modules augmentent les fonctionnalités du système. Cette page permet de les activer ou les désactiver.";
 
 	$text['label-label']['en-us'] = "Label";
 	$text['label-label']['es-cl'] = "Etiqueta";
-	$text['label-label']['pt-pt'] = "Rótulo";
+	$text['label-label']['pt-pt'] = "Etiqueta";
 	$text['label-label']['fr-fr'] = "Label";
 
 	$text['label-module_name']['en-us'] = "Module Name";
@@ -68,12 +68,12 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activo";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['label-default_enabled']['en-us'] = "Default Enabled";
 	$text['label-default_enabled']['es-cl'] = "Activo Predeterminado";
-	$text['label-default_enabled']['pt-pt'] = "Activado por omissão";
+	$text['label-default_enabled']['pt-pt'] = "Habilitado por Omissão";
 	$text['label-default_enabled']['fr-fr'] = "Activé par Défaut";
 
 	$text['label-stopped']['en-us'] = "Stopped";
@@ -98,7 +98,7 @@
 
 	$text['label-unload_module']['en-us'] = "Unload Module";
 	$text['label-unload_module']['es-cl'] = "Descargar Módulo";
-	$text['label-unload_module']['pt-pt'] = "Desligar Módulo";
+	$text['label-unload_module']['pt-pt'] = "Desactivar Módulo";
 	$text['label-unload_module']['fr-fr'] = "Décharger le Module";
 
 	$text['label-load_module']['en-us'] = "Load Module";

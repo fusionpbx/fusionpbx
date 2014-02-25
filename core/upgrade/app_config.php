@@ -14,7 +14,7 @@
 		$apps[$x]['description']['fr-fr'] = "Mise à jour du Schéma de la base de données";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema de base de dados.";
+		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema da base de dados.";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details

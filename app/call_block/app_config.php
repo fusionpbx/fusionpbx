@@ -15,7 +15,7 @@
 		$apps[$x]['description']['fr-fr'] = "Outil pour bloquer les numéro d'appelant";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para bloquear números indesejados";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details
@@ -27,7 +27,7 @@
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Blocage d'appel";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Bloqueio de Chamadas";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "29295c90-b1b9-440b-9c7E-c8363c6e8975";
 		$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";

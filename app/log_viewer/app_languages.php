@@ -92,7 +92,7 @@
 	$text['label-open-file']['fr-fr'] = "Ouvrir le fichier entier";
 
 	$text['error-open-file']['en-us'] = "Unable to open file!";
-	$text['error-open-file']['es-cl'] = "&iexcl;Imposible abrir el archivo!";
+	$text['error-open-file']['es-cl'] = "¡Imposible abrir el archivo!";
 	$text['error-open-file']['pt-pt'] = "Impossível abrir o ficheiro!";
 	$text['error-open-file']['fr-fr'] = "Impossible d'ouvrir le fichier!";
 

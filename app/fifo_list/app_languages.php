@@ -67,12 +67,12 @@
 
 	$text['label-caller_id_name']['en-us'] = "Caller ID Name";
 	$text['label-caller_id_name']['es-cl'] = "Nombre de Caller ID";
-	$text['label-caller_id_name']['pt-pt'] = "Nome do Originador";
+	$text['label-caller_id_name']['pt-pt'] = "Nome do Chamador";
 	$text['label-caller_id_name']['fr-fr'] = "Nom d'appelant";
 
 	$text['label-caller_id_number']['en-us'] = "Caller ID Number";
 	$text['label-caller_id_number']['es-cl'] = "Número de Caller ID";
-	$text['label-caller_id_number']['pt-pt'] = "Número do Originador";
+	$text['label-caller_id_number']['pt-pt'] = "Número do Chamador";
 	$text['label-caller_id_number']['fr-fr'] = "Numéro d'appelant";
 
 	$text['label-language']['en-us'] = "Language";

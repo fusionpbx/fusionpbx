@@ -293,7 +293,7 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activo";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['label-true']['en-us'] = "True";

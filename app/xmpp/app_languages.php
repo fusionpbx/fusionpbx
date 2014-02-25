@@ -92,12 +92,12 @@
 
 	$text['label-default_exten']['en-us'] = "Default Extension";
 	$text['label-default_exten']['es-cl'] = "Extensión predeterminada";
-	$text['label-default_exten']['pt-pt'] = "Extensão por Omissão";
+	$text['label-default_exten']['pt-pt'] = "Extensão predefinida";
 	$text['label-default_exten']['fr-fr'] = "Extension par Défaut";
 
 	$text['description-default_exten']['en-us'] = "Default extension (if one cannot be determined) .";
 	$text['description-default_exten']['es-cl'] = "Extensión predeterminada (si no puede ser determinada)";
-	$text['description-default_exten']['pt-pt'] = "Extensão por Omissão";
+	$text['description-default_exten']['pt-pt'] = "Extensão predefinida";
 	$text['description-default_exten']['fr-fr'] = "Extension par défaut (si aucune ne peut être déterminé).";
 
 	$text['label-context']['en-us'] = "Context";
@@ -123,7 +123,6 @@
 	$text['label-ext_rtp_ip']['en-us'] = "External RTP IP";
 	$text['label-ext_rtp_ip']['es-cl'] = "RTP IP Externo";
 	$text['label-ext_rtp_ip']['pt-pt'] = "IP Externo do RTP";
-	$text['label-ext_rtp_ip']['pt-pt'] = "";
 	$text['label-ext_rtp_ip']['fr-fr'] = "RTP IP Externe";
 
 	$text['description-ext_rtp_ip']['en-us'] = "External IP Address for RTP.";
@@ -133,7 +132,7 @@
 
 	$text['label-sasl_type']['en-us'] = "SASL Type";
 	$text['label-sasl_type']['es-cl'] = "Tipo de SASL";
-	$text['label-sasl_type']['pt-pt'] = "Tipo do SASL";
+	$text['label-sasl_type']['pt-pt'] = "Tipo de SASL";
 	$text['label-sasl_type']['fr-fr'] = "Type SASL";
 
 	$text['description-sasl_type']['en-us'] = "Select an SASL type.";
@@ -143,12 +142,12 @@
 
 	$text['label-tls_enable']['en-us'] = "Enable TLS";
 	$text['label-tls_enable']['es-cl'] = "Activar TLS";
-	$text['label-tls_enable']['pt-pt'] = "Activar TLS";
+	$text['label-tls_enable']['pt-pt'] = "Habilitar TLS";
 	$text['label-tls_enable']['fr-fr'] = "Activer TLS";
 
 	$text['description-tls_enable']['en-us'] = "Set the status of TLS support.";
 	$text['description-tls_enable']['es-cl'] = "Indicar el estado del soporte TLS";
-	$text['description-tls_enable']['pt-pt'] = "Escolha o estado suporte TLS.";
+	$text['description-tls_enable']['pt-pt'] = "Defina o estado do suporte TLS.";
 	$text['description-tls_enable']['fr-fr'] = "Choisir le statut du support TLS.";
 
 	$text['label-use_rtp_timer']['en-us'] = "Use RTP Timer";
@@ -158,7 +157,7 @@
 
 	$text['description-use_rtp_timer']['en-us'] = "Disable to trade async for more calls.";
 	$text['description-use_rtp_timer']['es-cl'] = "Desactivar asincronía de intercambio para más llamadas";
-	$text['description-use_rtp_timer']['pt-pt'] = "Desactive a sincronização para mais chamadas";
+	$text['description-use_rtp_timer']['pt-pt'] = "Desabilitar sincronização para mais chamadas";
 	$text['description-use_rtp_timer']['fr-fr'] = "désactiver la synchronisation pour augmenter le nombre d'appels";
 
 	$text['label-vad']['en-us'] = "Voice Activity Detection (VAD)";
@@ -213,7 +212,7 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['description-enabled']['en-us'] = "Set the current status of this profile.";

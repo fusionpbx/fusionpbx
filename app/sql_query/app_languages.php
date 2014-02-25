@@ -4,7 +4,7 @@
 
 		$text['title-sql_query']['en-us'] = "SQL Query";
 		$text['title-sql_query']['es-cl'] = "Consulta SQL";
-		$text['title-sql_query']['pt-pt'] = "Query SQL";
+		$text['title-sql_query']['pt-pt'] = "Consulta SQL";
 		$text['title-sql_query']['fr-fr'] = "Requête SQL";
 
 		$text['title-databases']['en-us'] = "Databases";
@@ -14,7 +14,7 @@
 
 		$text['header-sql_query']['en-us'] = "SQL Query";
 		$text['header-sql_query']['es-cl'] = "Consulta SQL";
-		$text['header-sql_query']['pt-pt'] = "Query SQL";
+		$text['header-sql_query']['pt-pt'] = "Consulta SQL";
 		$text['header-sql_query']['fr-fr'] = "Requêtes SQL";
 
 		$text['header-databases']['en-us'] = "Databases";
@@ -74,7 +74,7 @@
 
 		$text['option-result_type_view']['en-us'] = "View";
 		$text['option-result_type_view']['es-cl'] = "Ver";
-		$text['option-result_type_view']['pt-pt'] = "Vista";
+		$text['option-result_type_view']['pt-pt'] = "Ver";
 		$text['option-result_type_view']['fr-fr'] = "Voir";
 
 		$text['option-result_type_csv']['en-us'] = "CSV Download";
@@ -94,7 +94,7 @@
 
 		$text['button-backup']['en-us'] = "Backup";
 		$text['button-backup']['es-cl'] = "Respaldar";
-		$text['button-backup']['pt-pt'] = "Voltar";
+		$text['button-backup']['pt-pt'] = "Backup";
 		$text['button-backup']['fr-fr'] = "Sauvegarder";
 
 		$text['button-select_database']['en-us'] = "Select Database";

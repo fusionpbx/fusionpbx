@@ -43,7 +43,7 @@
 
 	$text['title-sofia-status-profile']['en-us'] = "sofia status profile";
 	$text['title-sofia-status-profile']['es-cl'] = "perfil de estado sofia";
-	$text['title-sofia-status-profile']['pt-pt'] = "estado do perfil do módulo sofia";
+	$text['title-sofia-status-profile']['pt-pt'] = "perfil associado ao estado do módulo sofia";
 	$text['title-sofia-status-profile']['fr-fr'] = "profile statut sofia";
 
 	$text['title-status']['en-us'] = "status";
