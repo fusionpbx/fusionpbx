@@ -479,6 +479,12 @@ else {
 	else {
 		echo "	<option value='enterprise'>".$text['option-enterprise']."</option>\n";
 	}
+	if ($ring_group_strategy == "rollover") {
+		echo "	<option value='rollover' selected='selected'>".$text['option-rollover']."</option>\n";
+	}
+	else {
+		echo "	<option value='rollover'>".$text['option-rollover']."</option>\n";
+	}
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-strategy']."\n";

@@ -81,8 +81,10 @@
 	$text['description-enter-context']['fr-fr'] = "";
 	$text['description-enter-context']['pt-pt'] = "Introduza um contexto.";
 
-//HERE ALONE
+	$text['description-extension']['en-us'] = "Enter the extension number.";
 	$text['description-extension']['es-cl'] = "Introduzca el número de extensión.";
+	$text['description-extension']['pt-pt'] = "Digite o número do ramal.";
+	$text['description-extension']['fr-fr'] = "Entrez le numéro de poste.";
 
 	$text['description-name']['en-us'] = "Enter a name.";
 	$text['description-name']['es-cl'] = "Ingrese un nombre.";
@@ -321,6 +323,11 @@
 	$text['option-enterprise']['es-cl'] = "Compañia";
 	$text['option-enterprise']['fr-fr'] = "Entreprise";
 	$text['option-enterprise']['pt-pt'] = "Empresa";
+
+	$text['option-rollover']['en-us'] = "Rollover";
+	$text['option-rollover']['es-cl'] = "Rollover";
+	$text['option-rollover']['pt-pt'] = "Rollover";
+	$text['option-rollover']['fr-fr'] = "capotage";
 
 	$text['option-false']['en-us'] = "False";
 	$text['option-false']['es-cl'] = "Falso";
