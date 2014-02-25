@@ -14,7 +14,7 @@
 
 		$text['description-databases']['en-us'] = "Database information.";
 		$text['description-databases']['es-cl'] = "Información de bases de datos.";
-		$text['description-databases']['pt-pt'] = "Informações da Base de Dados";
+		$text['description-databases']['pt-pt'] = "Informação da Base de Dados";
 		$text['description-databases']['fr-fr'] = "Informations sur les bases de données";
 
 		//------
@@ -31,7 +31,7 @@
 
 		$text['description-database-edit']['en-us'] = "Database connection information.";
 		$text['description-database-edit']['es-cl'] = "Información de conexión a base de datos.";
-		$text['description-database-edit']['pt-pt'] = "Informação da Conexão à Base de Dados.";
+		$text['description-database-edit']['pt-pt'] = "Informação da ligação à base de dados.";
 		$text['description-database-edit']['fr-fr'] = "Informations de connexion à la Base";
 
 		//------
@@ -48,7 +48,7 @@
 
 		$text['description-database-add']['en-us'] = "Database connection information.";
 		$text['description-database-add']['es-cl'] = "Información de conexión a base de datos.";
-		$text['description-database-add']['pt-pt'] = "Informação da Conexão à Base de Dados.";
+		$text['description-database-add']['pt-pt'] = "Informação da ligação à base de dados.";
 		$text['description-database-add']['fr-fr'] = "Informations de connexion à la Base.";
 
 		//------
@@ -60,7 +60,7 @@
 
 		$text['description-driver']['en-us'] = "Select the database driver.";
 		$text['description-driver']['es-cl'] = "Seleccione un controlador de base de datos.";
-		$text['description-driver']['pt-pt'] = "Escolha o driver da Base de Dados";
+		$text['description-driver']['pt-pt'] = "Escolha o driver da base de dados";
 		$text['description-driver']['fr-fr'] = "Choisir le driver de la Base de données.";
 
 		$text['label-type']['en-us'] = "Type";
@@ -70,7 +70,7 @@
 
 		$text['description-type']['en-us'] = "Select the database type.";
 		$text['description-type']['es-cl'] = "Seleccione el tipo de base de datos";
-		$text['description-type']['pt-pt'] = "Escolha o tipo de Base de Dados.";
+		$text['description-type']['pt-pt'] = "Escolha o tipo de base de dados.";
 		$text['description-type']['fr-fr'] = "Choisir le type de Base de données.";
 
 		$text['label-host']['en-us'] = "Host";
@@ -100,7 +100,7 @@
 
 		$text['description-name']['en-us'] = "Enter the database name.";
 		$text['description-name']['es-cl'] = "Ingrese el nombre de la base de datos.";
-		$text['description-name']['pt-pt'] = "Introduza o nome da Base de Dados.";
+		$text['description-name']['pt-pt'] = "Introduza o nome da base de dados.";
 		$text['description-name']['fr-fr'] = "Entrer le nom de la Base de données.";
 
 		$text['label-username']['en-us'] = "Username";
@@ -110,7 +110,7 @@
 
 		$text['description-username']['en-us'] = "Enter the database username.";
 		$text['description-username']['es-cl'] = "Ingrese el nombre de usuario de la base de datos.";
-		$text['description-username']['pt-pt'] = "Introduza o utilizador da Base de Dados.";
+		$text['description-username']['pt-pt'] = "Introduza o utilizador da base de dados.";
 		$text['description-username']['fr-fr'] = "Entrer le nom d'utilisateur de la Base de données.";
 
 		$text['label-password']['en-us'] = "Password";
@@ -120,7 +120,7 @@
 
 		$text['description-password']['en-us'] = "Enter the database password.";
 		$text['description-password']['es-cl'] = "Ingrese la contraseña de la base de datos.";
-		$text['description-password']['pt-pt'] = "Introduza a palavra-chave da Base de Dados.";
+		$text['description-password']['pt-pt'] = "Introduza a palavra-chave da base de dados.";
 		$text['description-password']['fr-fr'] = "Entrer le mot de passe pour la Base de données.";
 
 		$text['label-path']['en-us'] = "Path";
@@ -130,7 +130,7 @@
 
 		$text['description-path']['en-us'] = "Enter the database file path (SQLite only).";
 		$text['description-path']['es-cl'] = "Ingrese la ruta al archivo de datos (solo SQLite).";
-		$text['description-path']['pt-pt'] = "Introduza o caminho da Base de Dados (apenas SQLite)";
+		$text['description-path']['pt-pt'] = "Introduza o caminho da base de dados (apenas SQLite)";
 		$text['description-path']['fr-fr'] = "Entrer le chemin du fichier Base de données (Spécifique SQLite).";
 
 		$text['label-description']['en-us'] = "Description";
@@ -140,7 +140,7 @@
 
 		$text['description-description']['en-us'] = "Enter a description for this database, if desired.";
 		$text['description-description']['es-cl'] = "Ingrese una descripción para esta base de datos, opcional.";
-		$text['description-description']['pt-pt'] = "Introduza a descrição para a Base de Dados (opcional).";
+		$text['description-description']['pt-pt'] = "Introduza a descrição para a base de dados (opcional).";
 		$text['description-description']['fr-fr'] = "Entrer une description pour cette Base de données. (optionnel)";
 
 		//------

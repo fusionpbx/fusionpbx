@@ -21,12 +21,12 @@
 
 		$text['title-app-edit']['en-us'] = "App Edit";
 		$text['title-app-edit']['es-cl'] = "Editar Aplicaciones";
-		$text['title-app-edit']['pt-pt'] = "Editar a Aplicação";
+		$text['title-app-edit']['pt-pt'] = "Editar aplicação";
 		$text['title-app-edit']['fr-fr'] = "Editer l'application";
 
 		$text['header-app-edit']['en-us'] = "App Edit";
 		$text['header-app-edit']['es-cl'] = "Editar Aplicaciones";
-		$text['header-app-edit']['pt-pt'] = "Editar a Aplicação";
+		$text['header-app-edit']['pt-pt'] = "Editar aplicação";
 		$text['header-app-edit']['fr-fr'] = "Editer l'application";
 
 		$text['description-app-edit']['en-us'] = "Manage the applications that are installed.";

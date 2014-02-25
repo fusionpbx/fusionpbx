@@ -16,7 +16,7 @@
 		$apps[$x]['description']['fr-fr'] = "S'identifier au bureau avec un ID et un mot de passe pour diriger touts les appels vers autre poste. Passer et recevoir appels."; 
 		$apps[$x]['description']['fr-ca'] = "S'identifier au bureau avec un ID et la mot de passe pour diriger touts les appels vers autre bureau lointain.  Faites et recevoyez appels.";
 		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Entrar em desking quente com um ID e sua senha de correio de voz para encaminhar as chamadas para um ramal remoto. Em seguida, fazer e receber ligações como se estivesse em sua extensão.";
+		$apps[$x]['description']['pt-pt'] = "Habilitar o escritório remoto recorrendo a um ID e à password do correio de voz para encaminhar as chamadas para uma extensão remota. Em seguida, fazer e receber ligações como se estivesse a utilizar a sua extensão.";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details
@@ -29,7 +29,7 @@
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Itinérance";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "Bureau Lointain";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Hot Desking";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Escritório Remoto";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "baa57691-37d4-4c7d-b227-f2929202b480";
 		$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";

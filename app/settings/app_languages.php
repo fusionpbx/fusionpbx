@@ -33,7 +33,7 @@
 
 	$text['title-settings-update']['en-us'] = "Setting Update";
 	$text['title-settings-update']['es-cl'] = "Actualizar Configuración";
-	$text['title-settings-update']['pt-pt'] = "Actualiza a Configuração";
+	$text['title-settings-update']['pt-pt'] = "Actualizar a Configuração";
 	$text['title-settings-update']['fr-fr'] = "Mise à jour de la configuration";
 
 	$text['label-event-socket-ip']['en-us'] = "Event Socket IP Address:";

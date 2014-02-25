@@ -16,7 +16,7 @@
 		$apps[$x]['description']['fr-fr'] = "Offre un mode pour exécuter des commandes système, PHP ou switch.";
 		$apps[$x]['description']['fr-ca'] = "Il offre un mode d'exécuter des commandes du système, PHP ou switch.";
 		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Fornece uma maneira conveniente para executar o sistema, PHP e comandos do switch.";
+		$apps[$x]['description']['pt-pt'] = "Ofere�e uma forma conveniente para executar comandos de sistema, PHP e switch.";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details
@@ -29,7 +29,7 @@
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Commande";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "Command";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Comando";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Comandos";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "06493580-9131-ce57-23cd-d42d69dd8526";
 		$apps[$x]['menu'][0]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";

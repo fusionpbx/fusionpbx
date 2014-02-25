@@ -4,7 +4,7 @@
 
 	$text['title-user_manager']['en-us'] = "User Manager";
 	$text['title-user_manager']['es-cl'] = "Administración de Usuarios";
-	$text['title-user_manager']['pt-pt'] = "Gestor de Utilizadores";
+	$text['title-user_manager']['pt-pt'] = "Gestão de Utilizadores";
 	$text['title-user_manager']['fr-fr'] = "Gestion Usagers";
 
 	$text['title-user_add']['en-us'] = "User";
@@ -19,7 +19,7 @@
 
 	$text['title-group_manager']['en-us'] = "Group Manager";
 	$text['title-group_manager']['es-cl'] = "Administración de Grupo";
-	$text['title-group_manager']['pt-pt'] = "Gestor de Grupos";
+	$text['title-group_manager']['pt-pt'] = "Gestão de Grupos";
 	$text['title-group_manager']['fr-fr'] = "Gestion de Groupe";
 
 	$text['title-group_add']['en-us'] = "Group";
@@ -39,7 +39,7 @@
 
 	$text['header-user_manager']['en-us'] = "User Manager";
 	$text['header-user_manager']['es-cl'] = "Administración de Usuario";
-	$text['header-user_manager']['pt-pt'] = "Gestor de Utilizadores";
+	$text['header-user_manager']['pt-pt'] = "Gestão de Utilizadores";
 	$text['header-user_manager']['fr-fr'] = "Gestion Usagers";
 
 	$text['header-user_add']['en-us'] = "User";
@@ -54,7 +54,7 @@
 
 	$text['header-group_manager']['en-us'] = "Group Manager";
 	$text['header-group_manager']['es-cl'] = "Administración de Grupo";
-	$text['header-group_manager']['pt-pt'] = "Gestor de Grupos";
+	$text['header-group_manager']['pt-pt'] = "Gestão de Grupos";
 	$text['header-group_manager']['fr-fr'] = "Gestion de Groupe";
 
 	$text['header-group_add']['en-us'] = "Group";
@@ -169,7 +169,7 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activo";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['label-group_name']['en-us'] = "Name";
@@ -219,7 +219,7 @@
 
 	$text['description-contact_view']['en-us'] = "View";
 	$text['description-contact_view']['es-cl'] = "Ver";
-	$text['description-contact_view']['pt-pt'] = "Vista";
+	$text['description-contact_view']['pt-pt'] = "Ver";
 	$text['description-contact_view']['fr-fr'] = "Voir";
 
 	$text['description-status']['en-us'] = "Set the user\'s presence.";
@@ -229,7 +229,7 @@
 
 	$text['description-time_zone']['en-us'] = "Select the default time zone.";
 	$text['description-time_zone']['es-cl'] = "Seleccione la zona horaria por defecto.";
-	$text['description-time_zone']['pt-pt'] = "Escolha o time zone por omissão.";
+	$text['description-time_zone']['pt-pt'] = "Escolha o fuso horário por omissão.";
 	$text['description-time_zone']['fr-fr'] = "Choisir le fuseau horaire par défaut.";
 
 	$text['description-enabled']['en-us'] = "Set the status of this account.";
@@ -254,7 +254,7 @@
 
 	$text['option-available_on_demand']['en-us'] = "Available (On Demand)";
 	$text['option-available_on_demand']['es-cl'] = "Disponible (A Pedido)";
-	$text['option-available_on_demand']['pt-pt'] = "Disponível (On Demand)";
+	$text['option-available_on_demand']['pt-pt'] = "Disponível (A Pedido)";
 	$text['option-available_on_demand']['fr-fr'] = "Disponible (sur demande)";
 
 	$text['option-logged_out']['en-us'] = "Logged Out";
@@ -309,7 +309,7 @@
 
 	$text['button-restore']['en-us'] = "Restore Default";
 	$text['button-restore']['es-cl'] = "Restaurar Predeterminados";
-	$text['button-restore']['pt-pt'] = "Restaurar Valores por Omissão";
+	$text['button-restore']['pt-pt'] = "Restaurar Predefinições";
 	$text['button-restore']['fr-fr'] = "Restaurer";
 
 	$text['button-copy']['en-us'] = "Copy";

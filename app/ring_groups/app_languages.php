@@ -312,12 +312,12 @@
 	$text['option-disabled']['en-us'] = "Disabled";
 	$text['option-disabled']['es-cl'] = "Desactivado";
 	$text['option-disabled']['fr-fr'] = "Désactivé";
-	$text['option-disabled']['pt-pt'] = "Desactivado";
+	$text['option-disabled']['pt-pt'] = "Desabilitado";
 
 	$text['option-enabled']['en-us'] = "Enabled";
 	$text['option-enabled']['es-cl'] = "Activado";
 	$text['option-enabled']['fr-fr'] = "Activé";
-	$text['option-enabled']['pt-pt'] = "Activado";
+	$text['option-enabled']['pt-pt'] = "Habilitado";
 
 	$text['option-enterprise']['en-us'] = "Enterprise";
 	$text['option-enterprise']['es-cl'] = "Compañia";

@@ -82,21 +82,21 @@
 
 	$text['label-cid-name-prefix']['en-us'] = "Caller ID Name";
 	$text['label-cid-name-prefix']['es-cl'] = "Nombre de Caller ID";
-	$text['label-cid-name-prefix']['pt-pt'] = "Nome do Originador";
+	$text['label-cid-name-prefix']['pt-pt'] = "Nome do Chamador";
 	$text['label-cid-name-prefix']['fr-fr'] = "Préfixe de l'appelant";
 
 	$text['description-cid-name-prefix']['en-us'] = "Set the caller ID name prefix.";
 	$text['description-cid-name-prefix']['es-cl'] = "Configure el prefijo de nombre de caller ID";
-	$text['description-cid-name-prefix']['pt-pt'] = "Defina o nome do Originador";
+	$text['description-cid-name-prefix']['pt-pt'] = "Defina o nome do Chamador";
 	$text['description-cid-name-prefix']['fr-fr'] = "";
 
 	$text['label-cid-number-prefix']['en-us'] = "Caller ID Number";
 	$text['label-cid-number-prefix']['es-cl'] = "Número de Caller ID";
-	$text['label-cid-number-prefix']['pt-pt'] = "Número do Originador";
+	$text['label-cid-number-prefix']['pt-pt'] = "Número do Chamador";
 
 	$text['description-cid-number-prefix']['en-us'] = "Set the caller ID number prefix.";
 	$text['description-cid-number-prefix']['es-cl'] = "Configure el prefijo de número de caller ID.";
-	$text['description-cid-number-prefix']['pt-pt'] = "Defina o número do Originador";
+	$text['description-cid-number-prefix']['pt-pt'] = "Defina o número do Chamador";
 
 	$text['label-call-prompt']['en-us'] = "Call Prompt";
 	$text['label-call-prompt']['es-cl'] = "Aviso de Llamadas";

@@ -92,11 +92,11 @@
 
 		$text['header-menu_item-edit']['en-us'] = "Menu Item Edit";
 		$text['header-menu_item-edit']['es-cl'] = "Editar Ítem de Menú";
-		$text['header-menu_item-edit']['pt-pt'] = "Editar o Item Menu";
+		$text['header-menu_item-edit']['pt-pt'] = "Editar o Item do Menu";
 		$text['header-menu_item-edit']['fr-fr'] = "Editer l'objet menu";
 
-		$text['description-menu_item-edit']['en-us'] = "";
-		$text['description-menu_item-edit']['pt-pt'] = "";
+		$text['description-menu_item-edit']['en-us'] = "Description";
+		$text['description-menu_item-edit']['pt-pt'] = "Descrição";
 		$text['description-menu_item-edit']['fr-fr'] = "";
 
 
@@ -112,9 +112,9 @@
 		$text['header-menu_item-add']['pt-pt'] = "Adicionar um Item ao Menu";
 		$text['header-menu_item-add']['fr-fr'] = "Ajouter un objet menu";
 
-		$text['description-menu_item-add']['en-us'] = "";
+		$text['description-menu_item-add']['en-us'] = "Description";
 		$text['description-menu_item-add']['es-cl'] = "";
-		$text['description-menu_item-add']['pt-pt'] = "";
+		$text['description-menu_item-add']['pt-pt'] = "Descrição";
 		$text['description-menu_item-add']['fr-fr'] = "";
 
 		//------
@@ -124,9 +124,9 @@
 		$text['label-title']['pt-pt'] = "Título";
 		$text['label-title']['fr-fr'] = "Titre";
 
-		$text['description-title']['en-us'] = "";
+		$text['description-title']['en-us'] = "Description";
 		$text['description-title']['es-cl'] = "";
-		$text['description-title']['pt-pt'] = "";
+		$text['description-title']['pt-pt'] = "Descrição";
 		$text['description-title']['fr-fr'] = "";
 
 		$text['label-link']['en-us'] = "Link";
@@ -134,19 +134,19 @@
 		$text['label-link']['pt-pt'] = "Ligação";
 		$text['label-link']['fr-fr'] = "Lien";
 
-		$text['description-link']['en-us'] = "";
+		$text['description-link']['en-us'] = "Description";
 		$text['description-link']['es-cl'] = "";
-		$text['description-link']['pt-pt'] = "";
+		$text['description-link']['pt-pt'] = "Descrição";
 		$text['description-link']['fr-fr'] = "";
 
 		$text['label-category']['en-us'] = "Target";
 		$text['label-category']['es-cl'] = "Destino";
-		$text['label-category']['pt-pt'] = "Alvo";
+		$text['label-category']['pt-pt'] = "Destino";
 		$text['label-category']['fr-fr'] = "Cible";
 
-		$text['description-category']['en-us'] = "";
+		$text['description-category']['en-us'] = "Description";
 		$text['description-category']['es-cl'] = "";
-		$text['description-category']['pt-pt'] = "";
+		$text['description-category']['pt-pt'] = "Descrição";
 		$text['description-category']['fr-fr'] = "";
 
 		$text['option-internal']['en-us'] = "Internal";
@@ -161,7 +161,7 @@
 
 		$text['option-email']['en-us'] = "E-mail";
 		$text['option-email']['es-cl'] = "E-mail";
-		$text['option-email']['pt-pt'] = "Email";
+		$text['option-email']['pt-pt'] = "E-mail";
 		$text['option-email']['fr-fr'] = "Courriel";
 
 		$text['label-parent_menu']['en-us'] = "Parent Menu";
@@ -169,9 +169,9 @@
 		$text['label-parent_menu']['pt-pt'] = "Menu Pai";
 		$text['label-parent_menu']['fr-fr'] = "Menu Parent";
 
-		$text['description-parent_menu']['en-us'] = "";
+		$text['description-parent_menu']['en-us'] = "Description";
 		$text['description-parent_menu']['es-cl'] = "";
-		$text['description-parent_menu']['pt-pt'] = "";
+		$text['description-parent_menu']['pt-pt'] = "Descrição";
 		$text['description-parent_menu']['fr-fr'] = "";
 
 		$text['label-groups']['en-us'] = "Groups";
@@ -179,14 +179,14 @@
 		$text['label-groups']['pt-pt'] = "Grupos";
 		$text['label-groups']['fr-fr'] = "Groupes";
 
-		$text['description-groups']['en-us'] = "";
+		$text['description-groups']['en-us'] = "Description";
 		$text['description-groups']['es-cl'] = "";
-		$text['description-groups']['pt-pt'] = "";
+		$text['description-groups']['pt-pt'] = "Descrição";
 		$text['description-groups']['fr-fr'] = "";
 
 		$text['button-restore_default']['en-us'] = "Restore Default";
 		$text['button-restore_default']['es-cl'] = "Restaurar Predeterminados";
-		$text['button-restore_default']['pt-pt'] = "Restaurar Definições";
+		$text['button-restore_default']['pt-pt'] = "Restaurar Predefinições";
 		$text['button-restore_default']['fr-fr'] = "Restaurer";
 
 		$text['button-restore_all']['en-us'] = "Restore All";
@@ -209,9 +209,9 @@
 		$text['label-menu_order']['pt-pt'] = "Ordem";
 		$text['label-menu_order']['fr-fr'] = "Ordre";
 
-		$text['description-menu_order']['en-us'] = "";
+		$text['description-menu_order']['en-us'] = "Description";
 		$text['description-menu_order']['es-cl'] = "";
-		$text['description-menu_order']['pt-pt'] = "";
+		$text['description-menu_order']['pt-pt'] = "Descrição";
 		$text['description-menu_order']['fr-fr'] = "";
 
 		$text['label-description']['en-us'] = "Description";

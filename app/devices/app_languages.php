@@ -148,12 +148,12 @@
 
 		$text['label-sip_port']['en-us'] = "Port";
 		$text['label-sip_port']['es-cl'] = "puerto";
-		$text['label-sip_port']['pt-pt'] = "puerto";
+		$text['label-sip_port']['pt-pt'] = "Porto";
 		$text['label-sip_port']['fr-fr'] = "Port";
 
 		$text['description-sip_port']['en-us'] = "Enter the SIP port.";
 		$text['description-sip_port']['es-cl'] = "Introduzca el puerto SIP.";
-		$text['description-sip_port']['pt-pt'] = "Introduzca el puerto SIP.";
+		$text['description-sip_port']['pt-pt'] = "Introduza o porto SIP.";
 		$text['description-sip_port']['fr-fr'] = "Entrez le port SIP.";
 
 		$text['label-sip_transport']['en-us'] = "Transport";
@@ -163,17 +163,17 @@
 
 		$text['description-sip_transport']['en-us'] = "Enter the SIP transport protocol.";
 		$text['description-sip_transport']['es-cl'] = "Introduzca el transporte del protocolo SIP.";
-		$text['description-sip_transport']['pt-pt'] = "Digite o transporte protocolo SIP.";
+		$text['description-sip_transport']['pt-pt'] = "Introduza o protocolo de transporte SIP.";
 		$text['description-sip_transport']['fr-fr'] = "Entrez le protocole de transport SIP.";
 
 		$text['label-register_expires']['en-us'] = "Register Expires";
 		$text['label-register_expires']['es-cl'] = "Registro Expira";
-		$text['label-register_expires']['pt-pt'] = "Register Expires";
+		$text['label-register_expires']['pt-pt'] = "Expiração do Registo";
 		$text['label-register_expires']['fr-fr'] = "S'inscrire Expire";
 
 		$text['description-register_expires']['en-us'] = "Enter the expire time for the SIP registration.";
 		$text['description-register_expires']['es-cl'] = "Introduzca el tiempo se ha cumplido para el registro SIP.";
-		$text['description-register_expires']['pt-pt'] = "Digite o tempo expira para o registro SIP.";
+		$text['description-register_expires']['pt-pt'] = "Introduza ao fim de quanto tempo expira o registro SIP.";
 		$text['description-register_expires']['fr-fr'] = "Entrez la date d'expiration de l'enregistrement SIP.";
 
 		$text['label-display_name']['en-us'] = "Display Name";
@@ -216,6 +216,17 @@
 		$text['description-password']['pt-pt'] = "Introduza a password.";
 		$text['description-password']['fr-fr'] = "Entrez le mot de passe.";
 
+
+		$text['label-device_time_zone']['en-us'] = "Time Zone";
+		$text['label-device_time_zone']['es-cl'] = "Zona Horaria";
+		$text['label-device_time_zone']['pt-pt'] = "Fuso Horário";
+		$text['label-device_time_zone']['fr-fr'] = "Fuseau Horaire";
+
+		$text['description-device_time_zone']['en-us'] = "Enter the time zone.";
+		$text['description-device_time_zone']['es-cl'] = "Ingrese una zona horaria.";
+		$text['description-device_time_zone']['pt-pt'] = "Introduza o fuso horário.";
+		$text['description-device_time_zone']['fr-fr'] = "Entrez le fuseau horaire.";
+
 		$text['label-device_description']['en-us'] = "Description";
 		$text['label-device_description']['es-cl'] = "Descripción";
 		$text['label-device_description']['pt-pt'] = "Descrição";
@@ -229,7 +240,7 @@
 	//keys
 		$text['label-keys']['en-us'] = "Keys";
 		$text['label-keys']['es-cl'] = "Claves";
-		$text['label-keys']['pt-pt'] = "Chaves";
+		$text['label-keys']['pt-pt'] = "Teclas";
 		$text['label-keys']['fr-fr'] = "Clés";
 
 		$text['title-device_keys']['en-us'] = "Device Keys";
@@ -239,7 +250,7 @@
 
 		$text['title-device_key']['en-us'] = "Device Key";
 		$text['title-device_key']['es-cl'] = "Clave del dispositivo";
-		$text['title-device_key']['pt-pt'] = "Chave do dispositivo";
+		$text['title-device_key']['pt-pt'] = "Tecla do dispositivo";
 		$text['title-device_key']['fr-fr'] = "Key Device";
 
 		$text['description-device_key']['en-us'] = "";
@@ -249,12 +260,12 @@
 
 		$text['label-device_key_id']['en-us'] = "Key";
 		$text['label-device_key_id']['es-cl'] = "Clave";
-		$text['label-device_key_id']['pt-pt'] = "Chave";
+		$text['label-device_key_id']['pt-pt'] = "Tecla";
 		$text['label-device_key_id']['fr-fr'] = "Clés";
 
 		$text['description-device_key']['en-us'] = "Select the key.";
 		$text['description-device_key']['es-cl'] = "Seleccione la clave.";
-		$text['description-device_key']['pt-pt'] = "Selecione a chave.";
+		$text['description-device_key']['pt-pt'] = "Selecione a tecla.";
 		$text['description-device_key']['fr-fr'] = "Sélectionnez la clé.";
 
 		$text['label-device_key_category']['en-us'] = "Category";
@@ -274,7 +285,7 @@
 
 		$text['description-device_key_type']['en-us'] = "Select the type of key.";
 		$text['description-device_key_type']['es-cl'] = "Seleccione el tipo de clave.";
-		$text['description-device_key_type']['pt-pt'] = "Selecione o tipo de chave.";
+		$text['description-device_key_type']['pt-pt'] = "Selecione o tipo de tecla.";
 		$text['description-device_key_type']['fr-fr'] = "Sélectionnez le type de clé.";
 
 		$text['label-device_key_line']['en-us'] = "Line";
@@ -294,17 +305,17 @@
 
 		$text['description-device_key_value']['en-us'] = "Enter the value.";
 		$text['description-device_key_value']['es-cl'] = "Introduzca el valor.";
-		$text['description-device_key_value']['pt-pt'] = "Digite o valor.";
+		$text['description-device_key_value']['pt-pt'] = "Introduza o valor.";
 		$text['description-device_key_value']['fr-fr'] = "Entrez la valeur.";
 
 		$text['label-device_key_extension']['en-us'] = "Extension";
 		$text['label-device_key_extension']['es-cl'] = "Extensión";
-		$text['label-device_key_extension']['pt-pt'] = "Extension";
-		$text['label-device_key_extension']['fr-fr'] = "Extensão";
+		$text['label-device_key_extension']['pt-pt'] = "Extensão";
+		$text['label-device_key_extension']['fr-fr'] = "Extension";
 
 		$text['description-device_key_extension']['en-us'] = "Enter the extension.";
 		$text['description-device_key_extension']['es-cl'] = "Introduzca la extensión.";
-		$text['description-device_key_extension']['pt-pt'] = "Digite a extensão.";
+		$text['description-device_key_extension']['pt-pt'] = "Introduza a extensão.";
 		$text['description-device_key_extension']['fr-fr'] = "Entrez l'extension.";
 
 		$text['label-device_key_label']['en-us'] = "Label";
@@ -314,7 +325,7 @@
 
 		$text['description-device_key_label']['en-us'] = "Enter the label.";
 		$text['description-device_key_label']['es-cl'] = "Introduzca la etiqueta.";
-		$text['description-device_key_label']['pt-pt'] = "Digite o rótulo.";
+		$text['description-device_key_label']['pt-pt'] = "Introduza uma etiqueta.";
 		$text['description-device_key_label']['fr-fr'] = "Entrez le nom.";
 
 		$text['label-line']['en-us'] = "Line";
@@ -344,12 +355,12 @@
 
 		$text['label-shared_line']['en-us'] = "Shared Line";
 		$text['label-shared_line']['es-cl'] = "Línea compartida";
-		$text['label-shared_line']['pt-pt'] = "Linha compartilhada";
+		$text['label-shared_line']['pt-pt'] = "Linha partilhada";
 		$text['label-shared_line']['fr-fr'] = "Ligne partagée";
 
 		$text['label-speed_dial']['en-us'] = "Speed Dial";
 		$text['label-speed_dial']['es-cl'] = "Speed Dial";
-		$text['label-speed_dial']['pt-pt'] = "Speed Dial";
+		$text['label-speed_dial']['pt-pt'] = "Discagem Rápida";
 		$text['label-speed_dial']['fr-fr'] = "Speed Dial";
 
 		$text['label-blf']['en-us'] = "BLF";
@@ -359,7 +370,7 @@
 
 		$text['label-presence_watcher']['en-us'] = "Presence Watcher";
 		$text['label-presence_watcher']['es-cl'] = "Presencia Watcher";
-		$text['label-presence_watcher']['pt-pt'] = "Presença Watcher";
+		$text['label-presence_watcher']['pt-pt'] = "Vigilante de Presença";
 		$text['label-presence_watcher']['fr-fr'] = "Présence Watcher";
 
 		$text['label-eventlist_blf']['en-us'] = "Eventlist BLF";
@@ -369,12 +380,12 @@
 
 		$text['label-speed_dial_active']['en-us'] = "Speed Dial Active";
 		$text['label-speed_dial_active']['es-cl'] = "Speed ​​Dial activo";
-		$text['label-speed_dial_active']['pt-pt'] = "Discagem rápida visita";
+		$text['label-speed_dial_active']['pt-pt'] = "Discagem Rápida Ativa";
 		$text['label-speed_dial_active']['fr-fr'] = "Speed ​​Dial active";
 
 		$text['label-voicemail']['en-us'] = "Voicemail";
 		$text['label-voicemail']['es-cl'] = "Correo de voz";
-		$text['label-voicemail']['pt-pt'] = "Voicemail";
+		$text['label-voicemail']['pt-pt'] = "Correio de Voz";
 		$text['label-voicemail']['fr-fr'] = "Messagerie vocale";
 
 		$text['label-call_return']['en-us'] = "Call Return";
@@ -384,7 +395,7 @@
 
 		$text['label-dial_dtmf']['en-us'] = "Dial DTMF";
 		$text['label-dial_dtmf']['es-cl'] = "Marcación DTMF";
-		$text['label-dial_dtmf']['pt-pt'] = "Disque DTMF";
+		$text['label-dial_dtmf']['pt-pt'] = "Marque DTMF";
 		$text['label-dial_dtmf']['fr-fr'] = "Composez DTMF";
 
 		$text['label-transfer']['en-us'] = "Transfer";
@@ -394,12 +405,12 @@
 
 		$text['label-call_park']['en-us'] = "Call Park";
 		$text['label-call_park']['es-cl'] = "Aparcado de llamadas";
-		$text['label-call_park']['pt-pt'] = "Estacionamento de chamadas";
+		$text['label-call_park']['pt-pt'] = "Parqueamento de chamada";
 		$text['label-call_park']['fr-fr'] = "Mise en garde";
 
 		$text['label-intercom']['en-us'] = "Intercom";
 		$text['label-intercom']['es-cl'] = "Intercomunicador";
-		$text['label-intercom']['pt-pt'] = "Interfone";
+		$text['label-intercom']['pt-pt'] = "Intercom";
 		$text['label-intercom']['fr-fr'] = "Interphone";
 
 		$text['label-ldap_search']['en-us'] = "LDAP Search";
@@ -419,7 +430,7 @@
 
 		$text['label-forward']['en-us'] = "Forward";
 		$text['label-forward']['es-cl'] = "Adelante";
-		$text['label-forward']['pt-pt'] = "Para a Frente";
+		$text['label-forward']['pt-pt'] = "Encaminhar";
 		$text['label-forward']['fr-fr'] = "Avant";
 
 		$text['label-hold']['en-us'] = "Hold";
@@ -434,7 +445,7 @@
 
 		$text['label-redial']['en-us'] = "Redial";
 		$text['label-redial']['es-cl'] = "Redial";
-		$text['label-redial']['pt-pt'] = "Remarcação";
+		$text['label-redial']['pt-pt'] = "Remarcar";
 		$text['label-redial']['fr-fr'] = "Bis";
 
 		$text['label-call_return']['en-us'] = "Call Return";
@@ -449,7 +460,7 @@
 
 		$text['label-call_pickup']['en-us'] = "Call Pickup";
 		$text['label-call_pickup']['es-cl'] = "Captura de llamadas";
-		$text['label-call_pickup']['pt-pt'] = "Captura de chamadas";
+		$text['label-call_pickup']['pt-pt'] = "Captura de chamada";
 		$text['label-call_pickup']['fr-fr'] = "Prise d'appel";
 
 		$text['label-dtmf']['en-us'] = "DTMF";
@@ -474,7 +485,7 @@
 
 		$text['label-xml_group']['en-us'] = "XML Group";
 		$text['label-xml_group']['es-cl'] = "Grupo XML";
-		$text['label-xml_group']['pt-pt'] = "XML Grupo";
+		$text['label-xml_group']['pt-pt'] = "Grupo XML";
 		$text['label-xml_group']['fr-fr'] = "Groupe XML";
 
 		$text['label-group_pickup']['en-us'] = "Group Pickup";
@@ -484,12 +495,12 @@
 
 		$text['label-paging']['en-us'] = "Paging";
 		$text['label-paging']['es-cl'] = "Paging";
-		$text['label-paging']['pt-pt'] = "Paging";
+		$text['label-paging']['pt-pt'] = "Paginação";
 		$text['label-paging']['fr-fr'] = "Pagination";
 
 		$text['label-record']['en-us'] = "Record";
 		$text['label-record']['es-cl'] = "Registro";
-		$text['label-record']['pt-pt'] = "Registro";
+		$text['label-record']['pt-pt'] = "Registo";
 		$text['label-record']['fr-fr'] = "Record";
 
 		$text['label-xml_browser']['en-us'] = "XML Browser";
@@ -499,7 +510,7 @@
 
 		$text['label-history']['en-us'] = "History";
 		$text['label-history']['es-cl'] = "Histoire";
-		$text['label-history']['pt-pt'] = "História";
+		$text['label-history']['pt-pt'] = "Histórico";
 		$text['label-history']['fr-fr'] = "Histoire";
 
 		$text['label-directory']['en-us'] = "Directory";
@@ -519,17 +530,17 @@
 
 		$text['label-status']['en-us'] = "Status";
 		$text['label-status']['es-cl'] = "Estado";
-		$text['label-status']['pt-pt'] = "estado";
+		$text['label-status']['pt-pt'] = "Estado";
 		$text['label-status']['fr-fr'] = "Statut";
 
 		$text['label-hot_desking']['en-us'] = "Hot Desking";
 		$text['label-hot_desking']['es-cl'] = "Hot Desking";
-		$text['label-hot_desking']['pt-pt'] = "Secretária Temporária Hot";
+		$text['label-hot_desking']['pt-pt'] = "Hot Desking";
 		$text['label-hot_desking']['fr-fr'] = "Hot Desk";
 
 		$text['label-url_record']['en-us'] = "URL Record";
 		$text['label-url_record']['es-cl'] = "URL Record";
-		$text['label-url_record']['pt-pt'] = "URL Registro";
+		$text['label-url_record']['pt-pt'] = "URL de Registo";
 		$text['label-url_record']['fr-fr'] = "URL de la fiche";
 
 		$text['label-ldap']['en-us'] = "LDAP";
@@ -559,12 +570,12 @@
 
 		$text['label-local_phonebook']['en-us'] = "Local Phonebook";
 		$text['label-local_phonebook']['es-cl'] = "Agenda telefónica local";
-		$text['label-local_phonebook']['pt-pt'] = "Agenda telefônica local";
+		$text['label-local_phonebook']['pt-pt'] = "Agenda telefónica local";
 		$text['label-local_phonebook']['fr-fr'] = "Annuaire local";
 
 		$text['label-broadsoft_phonebook']['en-us'] = "Broadsoft Phonebook";
 		$text['label-broadsoft_phonebook']['es-cl'] = "Broadsoft agenda telefónica";
-		$text['label-broadsoft_phonebook']['pt-pt'] = "Broadsoft Lista Telefônica";
+		$text['label-broadsoft_phonebook']['pt-pt'] = "Lista Telefónica Broadsoft";
 		$text['label-broadsoft_phonebook']['fr-fr'] = "Broadsoft annuaire";
 
 		$text['label-local_group']['en-us'] = "Local Group";
@@ -574,22 +585,22 @@
 
 		$text['label-broadsoft_group']['en-us'] = "Broadsoft Group";
 		$text['label-broadsoft_group']['es-cl'] = "Broadsoft Grupo";
-		$text['label-broadsoft_group']['pt-pt'] = "Broadsoft Grupo";
+		$text['label-broadsoft_group']['pt-pt'] = "Grupo Broadsoft";
 		$text['label-broadsoft_group']['fr-fr'] = "Broadsoft Groupe";
 
 		$text['label-xml_phonebook']['en-us'] = "XML Phonebook";
 		$text['label-xml_phonebook']['es-cl'] = "Agenda telefónica XML";
-		$text['label-xml_phonebook']['pt-pt'] = "Phonebook XML";
+		$text['label-xml_phonebook']['pt-pt'] = "Agenda telefónica XML";
 		$text['label-xml_phonebook']['fr-fr'] = "Répertoire XML";
 
 		$text['label-switch_account_up']['en-us'] = "Switch Account Up";
 		$text['label-switch_account_up']['es-cl'] = "Cambie Cuenta Up";
-		$text['label-switch_account_up']['pt-pt'] = "Mudar Conta Up";
+		$text['label-switch_account_up']['pt-pt'] = "Habilitar conta";
 		$text['label-switch_account_up']['fr-fr'] = "Mettez-vous compte";
 
 		$text['label-switch_account_down']['en-us'] = "Switch Account Down";
 		$text['label-switch_account_down']['es-cl'] = "Cambie la cuenta de Down";
-		$text['label-switch_account_down']['pt-pt'] = "Mudar Conta de Down";
+		$text['label-switch_account_down']['pt-pt'] = "Desabilitar conta";
 		$text['label-switch_account_down']['fr-fr'] = "Mettez compte vers le bas";
 
 		$text['label-keypad_lock']['en-us'] = "Keypad Lock";
@@ -650,7 +661,7 @@
 
 		$text['message_device']['en-us'] = "Enter the new MAC Address.";
 		$text['message_device']['es-cl'] = "Introduzca la nueva dirección MAC.";
-		$text['message_device']['pt-pt'] = "Digite o novo endereço MAC.";
+		$text['message_device']['pt-pt'] = "Introduza o novo endereço MAC.";
 		$text['message_device']['fr-fr'] = "Insérer la nouvelle adresse MAC.";
 
 		$text['button-back']['en-us'] = "Back";
@@ -685,7 +696,7 @@
 
 		$text['message-duplicate']['en-us'] = "Duplicate Detected";
 		$text['message-duplicate']['es-cl'] = "duplicar detectado";
-		$text['message-duplicate']['pt-pt'] = "duplicar detectado";
+		$text['message-duplicate']['pt-pt'] = "Detectado um duplicado";
 		$text['message-duplicate']['fr-fr'] = "dupliquer détecté";
 
 		$text['message-update']['en-us'] = "Update Completed";
@@ -715,7 +726,7 @@
 
 		$text['label-device_setting_name']['en-us'] = "Name";
 		$text['label-device_setting_name']['es-cl'] = "Nombre";
-		$text['label-device_setting_name']['pt-pt'] = "Name";
+		$text['label-device_setting_name']['pt-pt'] = "Nome";
 		$text['label-device_setting_name']['fr-fr'] = "Nom";
 
 		$text['label-device_setting_value']['en-us'] = "Value";
@@ -760,7 +771,7 @@
 
 		$text['label-enabled']['en-us'] = "Enabled";
 		$text['label-enabled']['es-cl'] = "Habilitado";
-		$text['label-enabled']['pt-pt'] = "Activado";
+		$text['label-enabled']['pt-pt'] = "Habilitado";
 		$text['label-enabled']['fr-fr'] = "Actif";
 
 		$text['description-enabled']['en-us'] = "Set the status of this default setting.";

@@ -33,7 +33,7 @@
 
 	$text['description-execute']['en-us'] = "Provides a conventient way to execute system, PHP, and switch commands.";
 	$text['description-execute']['es-cl'] = "Provee un modo conveniente de ejecutar comandos de sistema, PHP o del switch.";
-	$text['description-execute']['pt-pt'] = "Oferece uma maneira fácil de executar no sistema, PHP, e comandos do freeswitch.";
+	$text['description-execute']['pt-pt'] = "Oferece uma maneira fácil de executar comandos de sistema, PHP, e switch.";
 	$text['description-execute']['fr-fr'] = "Fournir un moyen pour executer des commandes système, PHP et freeswitch. ";
 
 	$text['label-shell']['en-us'] = "Shell command";

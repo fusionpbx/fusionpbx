@@ -15,7 +15,7 @@
 		$apps[$x]['description']['fr-fr'] = "Programme des appels multiples vers des extensions, IVR, salles de conferences ou autre.";
 		$apps[$x]['description']['fr-ca'] = "Il fait d' massive appels vers des extensions, IVR, salles de conferences ou quelqu'autre nom.";
 		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para a extensão de um menu de URA, Sala de Conferência, ou qualquer outro número.";
+		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details
@@ -27,7 +27,7 @@
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Appels de masse";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Chamada de Broadcast";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Chamada em Broadcast";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "50153bbf-78c5-b49e-7bd9-4b3e4b1134e6";
 		$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";

@@ -68,7 +68,7 @@
 
 	$text['message-give-up']['en-us'] = "Giving up :( Cannot create an XMLHTTP instance";
 	$text['message-give-up']['es-cl'] = "Cancelando, no se puede crear una instancia XMLHTTP";
-	$text['message-give-up']['pt-pt'] = "Desistindo :( Não é possível criar uma instância do XMLHTTP";
+	$text['message-give-up']['pt-pt'] = "Desistindo :( Não é possível criar uma instância XMLHTTP";
 	$text['message-give-up']['fr-fr'] = "Abandon :( Ne peut pas créer un instance XMLHTTP";
 
 	$text['message-problem']['en-us'] = "There was a problem with the request.";
@@ -161,7 +161,7 @@
 	$text['button-del-file']['fr-fr'] = "Supprimer le Fichier";
 
 	$text['message-delete-folder']['en-us'] = "Are you sure you want to delete the selected folder?";
-	$text['message-delete-folder']['es-cl'] = "&iquestRealmente desea eliminar la carpeta seleccionada?";
+	$text['message-delete-folder']['es-cl'] = "¿Realmente desea eliminar la carpeta seleccionada?";
 	$text['message-delete-folder']['pt-pt'] = "Tem a certeza que pretende remover a pasta seleccionada?";
 	$text['message-delete-folder']['fr-fr'] = "Etes-vous sûr de vouloir supprimer le répertoire sélectionné?";
 

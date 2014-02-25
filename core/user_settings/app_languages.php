@@ -77,7 +77,7 @@
 
 	$text['check-available-ondemand-status']['en-us'] = "Available (On Demand)";
 	$text['check-available-ondemand-status']['es-cl'] = "Disponible (A Pedido)";
-	$text['check-available-ondemand-status']['pt-pt'] = "Disponível (On Demand)";
+	$text['check-available-ondemand-status']['pt-pt'] = "Disponível (A Pedido)";
 	$text['check-available-ondemand-status']['fr-fr'] = "Disponble (sur demande)";
 
 	$text['check-loggedout-status']['en-us'] = "Logged Out";

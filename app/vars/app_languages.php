@@ -2,7 +2,7 @@
 
 	$text['title-variables']['en-us'] = "Switch Variables";
 	$text['title-variables']['es-cl'] = "Variables de Switch";
-	$text['title-variables']['pt-pt'] = "Variáveis do Freeswitch";
+	$text['title-variables']['pt-pt'] = "Variáveis do Softswitch";
 	$text['title-variables']['fr-fr'] = "Variables Système";
 
 	$text['title-variable_add']['en-us'] = "Variable Add";
@@ -16,12 +16,12 @@
 
 	$text['title-variables_advanced']['en-us'] = "Switch Variables: Advanced";
 	$text['title-variables_advanced']['es-cl'] = "Variables de Switch: Avanzadas";
-	$text['title-variables_advanced']['pt-pt'] = "Variáveis do Freeswitch: Avançadas";
+	$text['title-variables_advanced']['pt-pt'] = "Variáveis do Softswitch: Avançadas";
 	$text['title-variables_advanced']['fr-fr'] = "Variables Système: Avancé";
 
 	$text['header-variables']['en-us'] = "Switch Variables";
 	$text['header-variables']['es-cl'] = "Variables de Switch";
-	$text['header-variables']['pt-pt'] = "Variáveis do Freeswitch";
+	$text['header-variables']['pt-pt'] = "Variáveis do Softswitch";
 	$text['header-variables']['fr-fr'] = "Variables Système";
 
 	$text['header-variable_add']['en-us'] = "Variable Add";
@@ -36,7 +36,7 @@
 
 	$text['header-variables_advanced']['en-us'] = "Switch Variables: Advanced";
 	$text['header-variables_advanced']['es-cl'] = "Variables de Switch: Avanzadas";
-	$text['header-variables_advanced']['pt-pt'] = "Variáveis do Freeswitch: Avançadas";
+	$text['header-variables_advanced']['pt-pt'] = "Variáveis do Softswitch: Avançadas";
 	$text['header-variables_advanced']['fr-fr'] = "Variables Système: Avancé";
 
 	$text['description-variables']['en-us'] = "Define preprocessor variables here.";
@@ -66,7 +66,7 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activada";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['label-order']['en-us'] = "Order";

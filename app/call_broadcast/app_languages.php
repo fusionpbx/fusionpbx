@@ -85,12 +85,12 @@
 
 	$text['label-caller-id-name']['en-us'] = "Caller ID Name";
 	$text['label-caller-id-name']['es-cl'] = "Nombre de origen";
-	$text['label-caller-id-name']['pt-pt'] = "Nome do Originador";
+	$text['label-caller-id-name']['pt-pt'] = "Nome do Chamador";
 	$text['label-caller-id-name']['fr-fr'] = "Nom d'appelant";
 
 	$text['label-callerid-number']['en-us'] = "Caller ID Number";
 	$text['label-callerid-number']['es-cl'] = "Número de Origen";
-	$text['label-callerid-number']['pt-pt'] = "Número do Originador";
+	$text['label-callerid-number']['pt-pt'] = "Número do Chamador";
 	$text['label-callerid-number']['fr-fr'] = "Numéro d'appelant";
 
 	$text['description-caller-id-name']['en-us'] = "Applicable if the provider allow the Caller ID Name to be set. default: anonymous";
@@ -120,7 +120,7 @@
 
 	$text['description-phone']['en-us'] = "Optional, set a list of phone numbers one per row in the following format: 123-123-1234|Last Name, First Name";
 	$text['description-phone']['es-cl'] = "Opcional, definir una lista de números de telefono, uno por línea en el siguiente formato:  123-123-1234 | Apellido, Nombre";
-	$text['description-phone']['pt-pt'] = "Opcional, definir uma lista de números de telefone, um por linha, no seguinte formato: 123-123-1234 | Apelido, Primeiro Nome";
+	$text['description-phone']['pt-pt'] = "Opcional, definir uma lista de números de telefone, um por linha, no seguinte formato: 210000000 | Apelido, Primeiro Nome";
 	$text['description-phone']['fr-fr'] = "Optionnel, Insérer une liste de numéros de téléphone, un par ligne, dans le format suivant ; 0123456789 | Nom, Prénom";
 
 	$text['label-description']['en-us'] = "Description";
@@ -150,7 +150,7 @@
 
 	$text['button-stop']['en-us'] = "Stop Broadcast";
 	$text['button-stop']['es-cl'] = "Detener Broadcast";
-	$text['button-stop']['pt-pt'] = "Pare de Transmissão";
+	$text['button-stop']['pt-pt'] = "Parar Broadcast";
 	$text['button-stop']['fr-fr'] = "Arrêter la diffusion";
 
 	//v_call_broadcast_send

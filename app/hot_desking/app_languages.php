@@ -3,12 +3,12 @@
 	//Hot Desking
 		$text['title-hot_desking']['en-us'] = "Hot Desking";
 		$text['title-hot_desking']['es-cl'] = "Escritorio Remoto";
-		$text['title-hot_desking']['pt-pt'] = "Hot Desking";
+		$text['title-hot_desking']['pt-pt'] = "Escritório Remoto";
 		$text['title-hot_desking']['fr-fr'] = "Itinérance";
 
 		$text['header-hot_desking']['en-us'] = "Hot Desking";
 		$text['header-hot_desking']['es-cl'] = "Escritorio Remoto";
-		$text['header-hot_desking']['pt-pt'] = "Hot Desking";
+		$text['header-hot_desking']['pt-pt'] = "Escritório Remoto";
 		$text['header-hot_desking']['fr-fr'] = "Itinérance";
 
 		$text['header-message']['en-us'] = "Message";
@@ -18,7 +18,7 @@
 
 		$text['description-hot_desking']['en-us'] = "Log in to hot desking with a unique ID and your voicemail password to direct your calls to a remote extension. Then, make and receive calls as if you were at your extension.";
 		$text['description-hot_desking']['es-cl'] = "Ingrese en un escritorio con un ID y la contaseña para direccionar las llamadas a una extensión remota. Hace y recibe llamadas";
-		$text['description-hot_desking']['pt-pt'] = "Entre no hot desking com o único ID e a sua password do voicemail para encaminhar as suas chamadas para uma extensão remota. Depois, faça e receba chamadas como se estivesse na sua extensão.";
+		$text['description-hot_desking']['pt-pt'] = "Habilite o escritório remoto recorrendo a um ID único e à sua password do correio de voz para encaminhar as suas chamadas para uma extensão remota. Depois, faça e receba chamadas como se estivesse na sua extensão.";
 		$text['description-hot_desking']['fr-fr'] = "Se connecter à l'itinérance avec votre Identifiant et votre mot de passe de messagerie pour rediriger vos appels vers une extensions distante. Alors, passez et recevez des appels comme si vous étiez sur votre extensions. ";
 
 		$text['label-extension']['en-us'] = "Extension";
@@ -43,7 +43,7 @@
 
 		$text['label-voicemail_password']['en-us'] = "Voicemail Password";
 		$text['label-voicemail_password']['es-cl'] = "Contraseña de correo de voz";
-		$text['label-voicemail_password']['pt-pt'] = "Password do Voicemail";
+		$text['label-voicemail_password']['pt-pt'] = "Password do Correio de Voz";
 		$text['label-voicemail_password']['fr-fr'] = "Mot de passe de la messagerie";
 
 		$text['label-dial_string']['en-us'] = "Dial String";
@@ -68,7 +68,7 @@
 
 		$text['description-voicemail_password']['en-us'] = "Enter the voicemail password here.";
 		$text['description-voicemail_password']['es-cl'] = "Ingrese la contraseña del correo de voz aquí.";
-		$text['description-voicemail_password']['pt-pt'] = "Introduza a password do voicemail aqui.";
+		$text['description-voicemail_password']['pt-pt'] = "Introduza a password do correio de voz aqui.";
 		$text['description-voicemail_password']['fr-fr'] = "Insérer le Mot de passe de la messagerie ici.";
 
 		$text['description-password']['en-us'] = "Password";
@@ -78,7 +78,7 @@
 
 		$text['description-dial_string']['en-us'] = "Location of the endpoint.";
 		$text['description-dial_string']['es-cl'] = "Localización del extremo.";
-		$text['description-dial_string']['pt-pt'] = "Localização do endpoint.";
+		$text['description-dial_string']['pt-pt'] = "Localização do terminal.";
 		$text['description-dial_string']['fr-fr'] = "Localisation de l'équipement.";
 
 		$text['button-add']['en-us'] = "Add";
@@ -133,6 +133,6 @@
 
 		$text['message-unique']['en-us'] = "The Unique ID is not unique.  Please provide a numeric ID not already in use by a different extension.";
 		$text['message-unique']['es-cl'] = "El ID no es único. Por favor ingrese un ID numérico que no este asignado actualmente a una extensión diferente.";
-		$text['message-unique']['pt-pt'] = "O ID único não é único. Por favor indique um ID numérico que ainda não esteja em uso por uma extensão diferente.";
+		$text['message-unique']['pt-pt'] = "O ID único não é único. Por favor indique um ID numérico que ainda não esteja em utilização noutra extensão.";
 		$text['message-unique']['fr-fr'] = "Le \"Unique ID\" n'est pas unique. Merci d'indiquer un identifiant numérique n'étant pas déjà utilisé par une autre extension.";
 ?>

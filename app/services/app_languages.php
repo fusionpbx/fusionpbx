@@ -68,12 +68,12 @@
 
 	$text['message-starting']['en-us'] = "Starting Service";
 	$text['message-starting']['es-cl'] = "Servicio de Inicio";
-	$text['message-starting']['pt-pt'] = "Serviço Começando";
+	$text['message-starting']['pt-pt'] = "A Iniciar Serviço";
 	$text['message-starting']['fr-fr'] = "Démarrage du Service";
 
 	$text['message-stopping']['en-us'] = "Stopping Service";
 	$text['message-stopping']['es-cl'] = "Servicio de Detención";
-	$text['message-stopping']['pt-pt'] = "Serviço Parando";
+	$text['message-stopping']['pt-pt'] = "A Parar Serviço";
 	$text['message-stopping']['fr-fr'] = "Service de L'arrêt";
 
 	$text['description-name']['en-us'] = "Enter the service name.";
@@ -88,22 +88,22 @@
 
 	$text['description-type']['en-us'] = "Select the service type.";
 	$text['description-type']['es-cl'] = "Seleccione el tipo de servicio.";
-	$text['description-type']['pt-pt'] = "Select the service type.";
+	$text['description-type']['pt-pt'] = "Seleccione o tipo de serviço.";
 	$text['description-type']['fr-fr'] = "Choisir le type de service.";
 
 	$text['label-data']['en-us'] =  "Data:";
 	$text['label-data']['es-cl'] =  "Datos:";
-	$text['label-data']['pt-pt'] =  "Data:";
+	$text['label-data']['pt-pt'] =  "Dados:";
 	$text['label-data']['fr-fr'] =  "Données:";
 
 	$text['description-data']['en-us'] = "Enter the service data.";
 	$text['description-data']['es-cl'] = "Ingrese los datos del servicio.";
-	$text['description-data']['pt-pt'] = "Enter the service data.";
+	$text['description-data']['pt-pt'] = "Introduza os dados do serviço.";
 	$text['description-data']['fr-fr'] = "Entrer les données du service.";
 
 	$text['label-start']['en-us'] = "Start Command:";
 	$text['label-start']['es-cl'] = "Comando para Iniciar:";
-	$text['label-start']['pt-pt'] = "Start Command:";
+	$text['label-start']['pt-pt'] = "Comando para Iniciar:";
 	$text['label-start']['fr-fr'] = "Commande démarrage:";
 
 	$text['description-start']['en-us'] = "Enter the command to start the service.";
@@ -113,7 +113,7 @@
 
 	$text['label-stop']['en-us'] = "Stop Comand";
 	$text['label-stop']['es-cl'] = "Comando para Detener";
-	$text['label-stop']['pt-pt'] = "Comando de Paragem";
+	$text['label-stop']['pt-pt'] = "Comando para Parar";
 	$text['label-stop']['fr-fr'] = "Comande d'arrêt";
 
 	$text['description-stop']['en-us'] = "Enter the command to stop the service.";

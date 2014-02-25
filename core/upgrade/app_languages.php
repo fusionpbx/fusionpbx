@@ -2,7 +2,7 @@
 
 	$text['title-upgrade_schema']['en-us'] = "Upgrade Schema";
 	$text['title-upgrade_schema']['es-cl'] = "Actualizar Esquema";
-	$text['title-upgrade_schema']['pt-pt'] = "Actualizar Esquema";
+	$text['title-upgrade_schema']['pt-pt'] = "Actualizar Esquema de Base de Dados";
 	$text['title-upgrade_schema']['fr-fr'] = "Mise à jour du Schéma";
 
 	$text['header-database_type']['en-us'] = "Database Type";

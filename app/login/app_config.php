@@ -16,7 +16,7 @@
 		$apps[$x]['description']['fr-fr'] = "Pour connecter un compte usager";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "";
+		$apps[$x]['description']['pt-pt'] = "Utilizado para iniciar a sessão de um utilizador";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details

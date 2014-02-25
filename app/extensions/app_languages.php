@@ -47,12 +47,12 @@
 
 	$text['label-number_alias']['en-us'] = "Number Alias";
 	$text['label-number_alias']['es-cl'] = "Alias de Número";
-	$text['label-number_alias']['pt-pt'] = "Número Alias";
+	$text['label-number_alias']['pt-pt'] = "Alias númérico";
 	$text['label-number_alias']['fr-fr'] = "Alias";
 
 	$text['description-number_alias']['en-us'] = "If the extension is numeric then number alias is optional.";
 	$text['description-number_alias']['es-cl'] = "Si la extensión es numérica, entonces el alias numérico es opcional";
-	$text['description-number_alias']['pt-pt'] = "Se a extensão é numérica o número alias é opcional.";
+	$text['description-number_alias']['pt-pt'] = "Se a extensão é numérica o alias é opcional.";
 	$text['description-number_alias']['fr-fr'] = "Le numéro de l'extension. Optionnel si l'extension est au format numérique.";
 
 	$text['label-password']['en-us'] = "Password";
@@ -67,7 +67,7 @@
 
 	$text['label-range']['en-us'] = "Range";
 	$text['label-range']['es-cl'] = "Rango";
-	$text['label-range']['pt-pt'] = "Alcance";
+	$text['label-range']['pt-pt'] = "Gama";
 	$text['label-range']['fr-fr'] = "Nombre";
 
 	$text['description-range']['en-us'] = "Enter the number of extensions to create. Increments each extension by 1.";
@@ -82,7 +82,7 @@
 
 	$text['label-user_list']['en-us'] = "User List";
 	$text['label-user_list']['es-cl'] = "Lista de usuarios";
-	$text['label-user_list']['pt-pt'] = "Lista de Utilizadores";
+	$text['label-user_list']['pt-pt'] = "Utilizadores";
 	$text['label-user_list']['fr-fr'] = "Liste des utilisateurs";
 
 	$text['description-user_list']['en-us'] = "Assign the users that are assigned to this extension. ";
@@ -92,87 +92,87 @@
 
 	$text['label-vm_password']['en-us'] = "Voicemail Password";
 	$text['label-vm_password']['es-cl'] = "Contraseña de correo de voz";
-	$text['label-vm_password']['pt-pt'] = "Password do Voicemail";
+	$text['label-vm_password']['pt-pt'] = "Password do Correio de Voz";
 	$text['label-vm_password']['fr-fr'] = "Mot de passe de la messagerie vocale";
 
 	$text['description-vm_password']['en-us'] = "Enter the numeric voicemail  password here.";
 	$text['description-vm_password']['es-cl'] = "Ingrese la contraseña numérica para el correo de voz aquí.";
-	$text['description-vm_password']['pt-pt'] = "Introduza uma password numérica para o voicemail aqui.";
+	$text['description-vm_password']['pt-pt'] = "Introduza uma password numérica para o correio de voz aqui.";
 	$text['description-vm_password']['fr-fr'] = "Insérer un mot de passe numérique pour la messagerie vocale.";
 
 	$text['label-accountcode']['en-us'] = "Account Code";
 	$text['label-accountcode']['es-cl'] = "Código de Cuenta";
-	$text['label-accountcode']['pt-pt'] = "Conta";
+	$text['label-accountcode']['pt-pt'] = "Código de Conta";
 	$text['label-accountcode']['fr-fr'] = "Centre de frais";
 
 	$text['description-accountcode']['en-us'] = "Enter the account code here.";
 	$text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta aquí.";
-	$text['description-accountcode']['pt-pt'] = "Introduza a conta aqui.";
+	$text['description-accountcode']['pt-pt'] = "Introduza o código de conta aqui.";
 	$text['description-accountcode']['fr-fr'] = "";
 
 	$text['label-effective_caller_id_name']['en-us'] = "Effective Caller ID Name";
 	$text['label-effective_caller_id_name']['es-cl'] = "Nombre de Caller ID Efectivo";
-	$text['label-effective_caller_id_name']['pt-pt'] = "Nome Efectivo do Originador";
+	$text['label-effective_caller_id_name']['pt-pt'] = "Nome Interno";
 	$text['label-effective_caller_id_name']['fr-fr'] = "Nom interne";
 
 	$text['description-effective_caller_id_name']['en-us'] = "Enter the internal caller ID name here.";
 	$text['description-effective_caller_id_name']['es-cl'] = "Ingrese el nombre de Caller ID interno aquí.";
-	$text['description-effective_caller_id_name']['pt-pt'] = "Introduza o nome interno do originador aqui.";
+	$text['description-effective_caller_id_name']['pt-pt'] = "Introduza o nome interno do chamador aqui.";
 	$text['description-effective_caller_id_name']['fr-fr'] = "Nom d'appelant affiché pour les appels internes";
 
 	$text['label-effective_caller_id_number']['en-us'] = "Effective Caller ID Number";
 	$text['label-effective_caller_id_number']['es-cl'] = "Número de Caller ID Efectivo";
-	$text['label-effective_caller_id_number']['pt-pt'] = "Número Efectivo do Originador";
+	$text['label-effective_caller_id_number']['pt-pt'] = "Número interno";
 	$text['label-effective_caller_id_number']['fr-fr'] = "Numéro interne";
 
 	$text['description-effective_caller_id_number']['en-us'] = "Enter the internal caller ID number here.";
 	$text['description-effective_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID interno aquí.";
-	$text['description-effective_caller_id_number']['pt-pt'] = "Introduza o número interno do originador aqui.";
+	$text['description-effective_caller_id_number']['pt-pt'] = "Introduza o número interno do chamador aqui.";
 	$text['description-effective_caller_id_number']['fr-fr'] = "Numéro d'appelant affiché pour les appels internes";
 
 	$text['label-outbound_caller_id_name']['en-us'] = "Outbound Caller ID Name";
 	$text['label-outbound_caller_id_name']['es-cl'] = "Nombre de Caller ID Saliente";
-	$text['label-outbound_caller_id_name']['pt-pt'] = "Nome de Saída do Originador";
+	$text['label-outbound_caller_id_name']['pt-pt'] = "Nome público";
 	$text['label-outbound_caller_id_name']['fr-fr'] = "Nom public";
 
 	$text['description-outbound_caller_id_name-select']['en-us'] = "Select the external (public) caller ID name.";
 	$text['description-outbound_caller_id_name-select']['es-cl'] = "Seleccione el nombre de Caller ID externo (público).";
-	$text['description-outbound_caller_id_name-select']['pt-pt'] = "Escolha o nome externo (público) do originador.";
+	$text['description-outbound_caller_id_name-select']['pt-pt'] = "Escolha o nome externo (público) do chamador.";
 	$text['description-outbound_caller_id_name-select']['fr-fr'] = "Choisir le nom d'appelant affiché pour les appels externes (public).";
 
 	$text['description-outbound_caller_id_name-custom']['en-us'] = "Enter the external (public) caller ID name here.";
 	$text['description-outbound_caller_id_name-custom']['es-cl'] = "Ingrese el el nombre de Caller ID externo (público) aquí.";
-	$text['description-outbound_caller_id_name-custom']['pt-pt'] = "Introduza o nome externo (público) do originador aqui.";
+	$text['description-outbound_caller_id_name-custom']['pt-pt'] = "Introduza o nome externo (público) do chamador aqui.";
 	$text['description-outbound_caller_id_name-custom']['fr-fr'] = "Nom d'appelant affiché pour les appels externes (public).";
 
 	$text['label-outbound_caller_id_number']['en-us'] = "Outbound Caller ID Number";
 	$text['label-outbound_caller_id_number']['es-cl'] = "Número de Caller ID Saliente";
-	$text['label-outbound_caller_id_number']['pt-pt'] = "Número de Saída do Originador";
+	$text['label-outbound_caller_id_number']['pt-pt'] = "Número público";
 	$text['label-outbound_caller_id_number']['fr-fr'] = "Numéro public";
 
 	$text['description-outbound_caller_id_number-select']['en-us'] = "Select the external (public) caller ID number.";
 	$text['description-outbound_caller_id_number-select']['es-cl'] = "Seleccione el número de caller ID externo (público).";
-	$text['description-outbound_caller_id_number-select']['pt-pt'] = "Escolha o número externo (público) do originador.";
+	$text['description-outbound_caller_id_number-select']['pt-pt'] = "Escolha o número externo (público) do chamador.";
 	$text['description-outbound_caller_id_number-select']['fr-fr'] = "Choisir le numéro d'appelant affiché pour les appels externes (public).";
 
 	$text['description-outbound_caller_id_number-custom']['en-us'] = "Enter the external (public) caller ID number here.";
 	$text['description-outbound_caller_id_number-custom']['es-cl'] = "Ingrese el número de caller ID externo (público) aquí.";
-	$text['description-outbound_caller_id_number-custom']['pt-pt'] = "Introduza o número externo (público) do originador aqui.";
+	$text['description-outbound_caller_id_number-custom']['pt-pt'] = "Introduza o número externo (público) do chamador aqui.";
 	$text['description-outbound_caller_id_number-custom']['fr-fr'] = "Numéro d'appelant affiché pour les appels externes (public).";
 
 	$text['label-emergency_caller_id_number']['en-us'] = "Emergency Caller ID Number";
 	$text['label-emergency_caller_id_number']['es-cl'] = "Número de Caller ID de emergencia";
-	$text['label-emergency_caller_id_number']['pt-pt'] = "Número de Emergência do Originador";
+	$text['label-emergency_caller_id_number']['pt-pt'] = "Número de Emergência do Chamador";
 	$text['label-emergency_caller_id_number']['fr-fr'] = "Numéro d'appelant pour les Urgences";
 
 	$text['description-emergency_caller_id_number']['en-us'] = "Enter the emergency caller ID number here.";
 	$text['description-emergency_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID de emergencia aquí.";
-	$text['description-emergency_caller_id_number']['pt-pt'] = "Introduza o número de emergência do originador aqui.";
+	$text['description-emergency_caller_id_number']['pt-pt'] = "Introduza o número de emergência do chamador aqui.";
 	$text['description-emergency_caller_id_number']['fr-fr'] = "";
 
 	$text['label-directory_full_name']['en-us'] = "Directory Full Name";
 	$text['label-directory_full_name']['es-cl'] = "Nombre Completo de Directorio";
-	$text['label-directory_full_name']['pt-pt'] = "Nome do Directório";
+	$text['label-directory_full_name']['pt-pt'] = "Nome de Directório Completo";
 	$text['label-directory_full_name']['fr-fr'] = "Nom pour annuaire";
 
 	$text['description-directory_full_name']['en-us'] = "Enter the first name followed by the last name.";
@@ -212,7 +212,7 @@
 
 	$text['label-limit_destination']['en-us'] = "Limit Destination";
 	$text['label-limit_destination']['es-cl'] = "Límitar Destino";
-	$text['label-limit_destination']['pt-pt'] = "Limite Destino";
+	$text['label-limit_destination']['pt-pt'] = "Limitar Destino";
 	$text['label-limit_destination']['fr-fr'] = "Limite Destination";
 
 	$text['description-limit_destination']['en-us'] = "Enter the destination to send the calls when the max number of outgoing calls has been reached.";
@@ -244,37 +244,37 @@
 
 	$text['label-vm_enabled']['en-us'] = "Voicemail Enabled";
 	$text['label-vm_enabled']['es-cl'] = "Correo de Voz Activado";
-	$text['label-vm_enabled']['pt-pt'] = "Voicemail Activado";
+	$text['label-vm_enabled']['pt-pt'] = "Correio de Voz Habilitado";
 	$text['label-vm_enabled']['fr-fr'] = "Messagerie Vocale Active";
 
 	$text['description-vm_enabled']['en-us'] = "Enable/disable voicemail for this extension.";
 	$text['description-vm_enabled']['es-cl'] = "Activar/desactivar el correo de voz para esta extensión.";
-	$text['description-vm_enabled']['pt-pt'] = "Activar/Desactivar o voicemail para esta extensão.";
+	$text['description-vm_enabled']['pt-pt'] = "Habilitar/Desabilitar o correio de voz para esta extensão.";
 	$text['description-vm_enabled']['fr-fr'] = "Messagerie Vocale disponible ou non pour cette extension.";
 
 	$text['label-vm_mailto']['en-us'] = "Voicemail Mail To";
 	$text['label-vm_mailto']['es-cl'] = "Enviar correo de voz a";
-	$text['label-vm_mailto']['pt-pt'] = "Enviar Voicemail Para";
+	$text['label-vm_mailto']['pt-pt'] = "Enviar correio de voz para";
 	$text['label-vm_mailto']['fr-fr'] = "Courriel destination";
 
 	$text['description-vm_mailto']['en-us'] = "Enter the email address to send voicemail to (optional).";
 	$text['description-vm_mailto']['es-cl'] = "Ingrese una dirección de correo electrónico para enviar el correo de voz (opcional).";
-	$text['description-vm_mailto']['pt-pt'] = "Introduza o endereço de email para enviar o voicemail (opcional).";
+	$text['description-vm_mailto']['pt-pt'] = "Introduza o endereço de email para enviar o correio de voz (opcional).";
 	$text['description-vm_mailto']['fr-fr'] = "Insérer le courriel où sera envoyé le message de notification (optionnel).";
 
 	$text['label-vm_attach_file']['en-us'] = "Voicemail Attach File";
 	$text['label-vm_attach_file']['es-cl'] = "Adjuntar Archivo de Correo de Voz";
-	$text['label-vm_attach_file']['pt-pt'] = "Ficheiro Áudio";
+	$text['label-vm_attach_file']['pt-pt'] = "Anexar Ficheiro Áudio";
 	$text['label-vm_attach_file']['fr-fr'] = "Fichier Audio";
 
 	$text['description-vm_attach_file']['en-us'] = "Choose whether to attach the voicemail to the email as an audio file.";
 	$text['description-vm_attach_file']['es-cl'] = "Seleccione si desea adjuntar el correo de voz al correo electrónico como un archivo de audio.";
-	$text['description-vm_attach_file']['pt-pt'] = "Escolha se deseja anexar o voicemail ao email como um ficheiro de áudio.";
+	$text['description-vm_attach_file']['pt-pt'] = "Escolha se deseja anexar o correio de voz ao email como um ficheiro de áudio.";
 	$text['description-vm_attach_file']['fr-fr'] = "Choisir si l'enregistrement audio est attaché au courriel.";
 
 	$text['label-vm_keep_local_after_email']['en-us'] = "VM Keep Local After Email";
 	$text['label-vm_keep_local_after_email']['es-cl'] = "Mantener Mensaje de Voz despues de enviar por Email";
-	$text['label-vm_keep_local_after_email']['pt-pt'] = "Manter mensagem de voicemail depois de enviado o email";
+	$text['label-vm_keep_local_after_email']['pt-pt'] = "Manter mensagem de correio de voz depois de enviado o email";
 	$text['label-vm_keep_local_after_email']['fr-fr'] = "Message gardé en local après courriel";
 
 	$text['description-vm_keep_local_after_email']['en-us'] = "Keep local file after sending the email.";
@@ -304,12 +304,12 @@
 
 	$text['label-call_group']['en-us'] = "Call Group";
 	$text['label-call_group']['es-cl'] = "Llamar a Grupo";
-	$text['label-call_group']['pt-pt'] = "Grupo de Chamadas";
+	$text['label-call_group']['pt-pt'] = "Grupo";
 	$text['label-call_group']['fr-fr'] = "Groupe d'appel";
 
 	$text['description-call_group']['en-us'] = "Enter the user call group here. Groups available by default: sales, support, billing.";
 	$text['description-call_group']['es-cl'] = "Ingrese el grupo a llamar aquí. Los grupos disponible de forma predeterminada son: ventas, soporte, facturación.";
-	$text['description-call_group']['pt-pt'] = "Introduza o utilizador do grupo de chamadas aqui. Grupos disponíveis por omissão: vendas, suporte, facturação.";
+	$text['description-call_group']['pt-pt'] = "Introduza o grupo a associar ao utilizador aqui. Grupos disponíveis por omissão: vendas, suporte, facturação.";
 	$text['description-call_group']['fr-fr'] = "Insérer le groupe d'appel de l'utilisateur. Les groupes disponibles par défaut sont: sales, support, billing.";
 
 	$text['label-hold_music']['en-us'] = "Hold Music";
@@ -359,52 +359,52 @@
 
 	$text['description-cidr']['en-us'] = "Enter the CIDR here.";
 	$text['description-cidr']['es-cl'] = "Ingrese el CIDR aquí";
-	$text['description-cidr']['pt-pt'] = "Introduza o CIRD aqui.";
+	$text['description-cidr']['pt-pt'] = "Introduza o CIDR aqui.";
 	$text['description-cidr']['fr-fr'] = "Classless Inter-Domain Routing. De la forme abc.def.ghi.jkl/mask";
 
 	$text['label-sip_force_contact']['en-us'] = "SIP Force Contact";
 	$text['label-sip_force_contact']['es-cl'] = "Forzar Contacto SIP";
-	$text['label-sip_force_contact']['pt-pt'] = "SIP Force Contact";
+	$text['label-sip_force_contact']['pt-pt'] = "Forçar Contacto SIP";
 	$text['label-sip_force_contact']['fr-fr'] = "SIP Force Contact";
 
 	$text['description-sip_force_contact']['en-us'] = "Choose whether to rewrite the contact port, or rewrite both the contact IP and port.";
 	$text['description-sip_force_contact']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
-	$text['description-sip_force_contact']['pt-pt'] = "Escolha se pretende reescrever o porto de contacto ou reescrever o endereço IP e o porto.";
+	$text['description-sip_force_contact']['pt-pt'] = "Escolha se pretende reescrever o porto do contacto ou reescrever o endereço IP e o porto.";
 	$text['description-sip_force_contact']['fr-fr'] = "Choisir de ré-écrire le contact ou non.";
 
 	$text['label-sip_force_expires']['en-us'] = "SIP Force Expires";
 	$text['label-sip_force_expires']['es-cl'] = "Forzado SIP Expira";
-	$text['label-sip_force_expires']['pt-pt'] = "SIP Force Expires";
+	$text['label-sip_force_expires']['pt-pt'] = "Forçar o tempo de expiração SIP";
 	$text['label-sip_force_expires']['fr-fr'] = "SIP Force Expires";
 
 	$text['description-sip_force_expires']['en-us'] = "To prevent stale registrations SIP Force expires can override the client expire.";
 	$text['description-sip_force_expires']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
-	$text['description-sip_force_expires']['pt-pt'] = "";
+	$text['description-sip_force_expires']['pt-pt'] = "Para prevenir registos SIP \"agarrados\", o forçar do tempo de expiração pode sobrepor-se ao tempo de expiração do cliente.";
 	$text['description-sip_force_expires']['fr-fr'] = "";
 
 	$text['label-nibble_account']['en-us'] = "Nibble Account";
 	$text['label-nibble_account']['es-cl'] = "Cuenta Nibble";
-	$text['label-nibble_account']['pt-pt'] = "Nibble Account";
+	$text['label-nibble_account']['pt-pt'] = "Conta Nibble";
 	$text['label-nibble_account']['fr-fr'] = "Compte Nibble";
 
 	$text['description-nibble_account']['en-us'] = "Enter the account number for nibblebill to use.";
 	$text['description-nibble_account']['es-cl'] = "Ingrese el número de cuenta para ser usada por nibblebill.";
-	$text['description-nibble_account']['pt-pt'] = "Introduza o número de conta.";
+	$text['description-nibble_account']['pt-pt'] = "Introduza o número de conta nibblebill.";
 	$text['description-nibble_account']['fr-fr'] = "Insérer un compte Nibble pour la facturation. Pour cela Nibble doit être installé.";
 
 	$text['label-mwi_account']['en-us'] = "MWI Account";
 	$text['label-mwi_account']['es-cl'] = "Cuenta MWI";
-	$text['label-mwi_account']['pt-pt'] = "MWI Account";
+	$text['label-mwi_account']['pt-pt'] = "Conta MWI";
 	$text['label-mwi_account']['fr-fr'] = "Compte MWI";
 
 	$text['description-mwi_account']['en-us'] = "MWI Account with user@domain of the voicemail to monitor.";
 	$text['description-mwi_account']['es-cl'] = "Cuenta MWI con usuario@dominio del correo de voz para monitorear.";
-	$text['description-mwi_account']['pt-pt'] = "MWI Account with user@domain of the voicemail to monitor.";
+	$text['description-mwi_account']['pt-pt'] = "Conta MWI com utilizador@domínio do correio de voz a monitorizar.";
 	$text['description-mwi_account']['fr-fr'] = "Récupérer les informations de message en attente. User@domain de la messagerie vocale à gérer.";
 
 	$text['label-sip_bypass_media']['en-us'] = "SIP Bypass Media";
 	$text['label-sip_bypass_media']['es-cl'] = "Bypass de Medios SIP";
-	$text['label-sip_bypass_media']['pt-pt'] = "SIP Bypass Media";
+	$text['label-sip_bypass_media']['pt-pt'] = "Fazer Bypass à media SIP";
 	$text['label-sip_bypass_media']['fr-fr'] = "SIP Bypass Media";
 
 	$text['description-sip_bypass_media']['en-us'] = "Choose whether to send the media stream point to point or in transparent proxy mode.";
@@ -424,7 +424,7 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitada";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['description-enabled']['en-us'] = "Set the status of the extension.";
@@ -439,7 +439,7 @@
 
 	$text['description-description']['en-us'] = "";
 	$text['description-description']['es-cl'] = "";
-	$text['description-description']['pt-pt'] = "";
+	$text['description-description']['pt-pt'] = "Descrição";
 	$text['description-description']['fr-fr'] = "";
 
 	$text['label-true']['en-us'] = "true";

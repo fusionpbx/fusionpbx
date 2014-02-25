@@ -92,12 +92,12 @@
 
 	$text['label-cid-name']['en-us'] = "Caller ID Name";
 	$text['label-cid-name']['es-cl'] = "Nombre de Caller ID";
-	$text['label-cid-name']['pt-pt'] = "Nome do Originador";
+	$text['label-cid-name']['pt-pt'] = "Nome do Chamador";
 	$text['label-cid-name']['fr-fr'] = "Nom d'appelant";
 
 	$text['label-cid-num']['en-us'] = "Caller ID Number";
 	$text['label-cid-num']['es-cl'] = "Número de Caller ID";
-	$text['label-cid-num']['pt-pt'] = "Número do Originador";
+	$text['label-cid-num']['pt-pt'] = "Número do Chamador";
 	$text['label-cid-num']['fr-fr'] = "Numéro d'appelant";
 
 	$text['label-moderator']['en-us'] = "Moderator";
@@ -187,7 +187,7 @@
 
 	$text['label-mute-all-alt']['en-us'] = "Mute all but moderator.";
 	$text['label-mute-all-alt']['es-cl'] = "Silenciar a todos excepto al moderador.";
-	$text['label-mute-all-alt']['pt-pt'] = "Silenciar tudo mas moderador.";
+	$text['label-mute-all-alt']['pt-pt'] = "Silenciar tudo menos o moderador.";
 	$text['label-mute-all-alt']['fr-fr'] = "muets sauf le moderateur.";
 
 	$text['label-unmute-all']['en-us'] = "Unmute All";

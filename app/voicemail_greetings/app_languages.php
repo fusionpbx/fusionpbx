@@ -8,7 +8,7 @@
 
 	$text['description']['en-us'] = "Select the active greeting message to play for extension:";
 	$text['description']['es-cl'] = "Seleccione el mensaje activo para reproducir:";
-	$text['description']['pt-pt'] = "Escolha e active uma mensagem de saudação a tocar na extensão:";
+	$text['description']['pt-pt'] = "Escolha e active uma mensagem de saudação a aplicar na extensão:";
 	$text['description']['fr-fr'] = "Choisir le message de salutation à jouer pour l'extension:";
 
 	$text['label-upload']['en-us'] = "File to Upload";
@@ -74,17 +74,17 @@
 
 	$text['message-uploaded']['en-us'] = "Upload Complete";
 	$text['message-uploaded']['es-cl'] = "Subida Finalizada";
-	$text['message-uploaded']['pt-pt'] = "Carregar Completa";
+	$text['message-uploaded']['pt-pt'] = "Carregamento Finalizado";
 	$text['message-uploaded']['fr-fr'] = "Enregistrer Complet";
 
 	$text['label-add']['en-us'] = "Add Greeting";
 	$text['label-add']['es-cl'] = "Agregar Saludo";
-	$text['label-add']['pt-pt'] = "Adição de Saudação";
+	$text['label-add']['pt-pt'] = "Adicionar Saudação";
 	$text['label-add']['fr-fr'] = "Ajouter salutation";
 
 	$text['label-edit']['en-us'] = "Edit Greeting";
 	$text['label-edit']['es-cl'] = "Edición de Saludo";
-	$text['label-edit']['pt-pt'] = "Edição de Saudação";
+	$text['label-edit']['pt-pt'] = "Editar Saudação";
 	$text['label-edit']['fr-fr'] = "Editer Salutation";
 
 	$text['label-name']['en-us'] = "Greeting Name";

@@ -30,7 +30,7 @@
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Gestion XMPP";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Gestor de XMPP";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Gestor XMPP";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "1808365b-0f7c-7555-89d0-31b3d9a75abb";
 		$apps[$x]['menu'][0]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";

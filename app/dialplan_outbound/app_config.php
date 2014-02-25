@@ -29,7 +29,7 @@
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Routes Sortantes";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Rotas de Saida";
+		$apps[$x]['menu'][0]['title']['pt-pt'] = "Rotas de Saída";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "17e14094-1d57-1106-db2a-a787d34015e9";
 		$apps[$x]['menu'][0]['parent_uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";

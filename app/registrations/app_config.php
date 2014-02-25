@@ -16,7 +16,7 @@
 		$apps[$x]['description']['fr-fr'] = "Afficher les enregistrements des équipements";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
-		$apps[$x]['description']['pt-pt'] = "Exibe registos de endpoints.";
+		$apps[$x]['description']['pt-pt'] = "Exibe registos de terminais SIP.";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details

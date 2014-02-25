@@ -3,7 +3,7 @@
 	//Voicemails
 		$text['title-voicemails']['en-us'] = "Voicemails";
 		$text['title-voicemails']['es-cl'] = "Correo de Voz";
-		$text['title-voicemails']['pt-pt'] = "Correios de Voz";
+		$text['title-voicemails']['pt-pt'] = "Correio de Voz";
 		$text['title-voicemails']['fr-fr'] = "Messageries Vocales";
 
 		$text['title-voicemail']['en-us'] = "Voicemail";
@@ -13,7 +13,7 @@
 
 		$text['description-voicemail']['en-us'] = "Voicemail settings.";
 		$text['description-voicemail']['es-cl'] = "Configuración de correo de voz";
-		$text['description-voicemail']['pt-pt'] = "Saudações de Correio de Voz";
+		$text['description-voicemail']['pt-pt'] = "Definições do Correio de Voz";
 		$text['description-voicemail']['fr-fr'] = "Configuration messagerie.";
 
 		$text['label-voicemail_id']['en-us'] = "Voicemail ID";
@@ -78,12 +78,12 @@
 
 		$text['label-voicemail_enabled']['en-us'] = "Enabled";
 		$text['label-voicemail_enabled']['es-cl'] = "Activado";
-		$text['label-voicemail_enabled']['pt-pt'] = "Activado";
+		$text['label-voicemail_enabled']['pt-pt'] = "Habilitado";
 		$text['label-voicemail_enabled']['fr-fr'] = "Actif";
 
 		$text['description-voicemail_enabled']['en-us'] = "Select to enable or disable this voicemail.";
 		$text['description-voicemail_enabled']['es-cl'] = "Indique si desea activar este correo";
-		$text['description-voicemail_enabled']['pt-pt'] = "Escolha se pretende activar ou desactivar este correio de voz.";
+		$text['description-voicemail_enabled']['pt-pt'] = "Escolha se pretende habilitar ou desabilitar esta caixa de correio de voz.";
 		$text['description-voicemail_enabled']['fr-fr'] ="Messagerie Vocale activée ou non.";
 
 		$text['label-voicemail_description']['en-us'] = "Description";
@@ -123,7 +123,7 @@
 
 		$text['label-view']['en-us'] = "View";
 		$text['label-view']['es-cl'] = "Ver";
-		$text['label-view']['pt-pt'] = "Vista";
+		$text['label-view']['pt-pt'] = "Ver";
 		$text['label-view']['fr-fr'] = "Voir";
 
 		$text['label-true']['en-us'] = "true";
@@ -219,22 +219,22 @@
 
 		$text['description-voicemail_message']['en-us'] = "A list of recorded voice messages which shows when the message was created, caller ID information, length, file size and download or delete the message.";
 		$text['description-voicemail_message']['es-cl'] = "Un listado de grabaciones de mensajes de voz que muestran la fecha de creación, información del Caller ID, duración, tamaño del archivo y permite descargar o eliminar el archivo";
-		$text['description-voicemail_message']['pt-pt'] = "Uma lista de mensagens gravadas que mostra quando uma mensagem foi criada, o ID fo chamador, a duração, o tamanho do ficheiro e opção de descarregar ou remover a mensagem.";
+		$text['description-voicemail_message']['pt-pt'] = "Uma lista de mensagens gravadas que mostra quando uma mensagem foi criada, o ID do chamador, a duração, o tamanho do ficheiro e opção de descarregar ou remover a mensagem.";
 		$text['description-voicemail_message']['fr-fr'] = "Liste des messages vocaux et les details tels que la date de création, les informations sur l'appelant, la durée, la taille du fichier et la possibilité de télécharger ou supprimer le message.";
 
 		$text['label-mailbox']['en-us'] = "Mailbox";
 		$text['label-mailbox']['es-cl'] = "Bandeja de entrada";
-		$text['label-mailbox']['pt-pt'] = "Caixa de Email";
+		$text['label-mailbox']['pt-pt'] = "Caixa de Entrada de Email";
 		$text['label-mailbox']['fr-fr'] = "Boite mail";
 
 		$text['label-voicemail_uuid']['en-us'] = "Voicemail UUID";
 		$text['label-voicemail_uuid']['es-cl'] = "UUID";
-		$text['label-voicemail_uuid']['pt-pt'] = "UUID do Correio de Voz";
+		$text['label-voicemail_uuid']['pt-pt'] = "UUID da caixa de Correio de Voz";
 		$text['label-voicemail_uuid']['fr-fr'] = "UUID Messagerie Vocale";
 
 		$text['description-voicemail_uuid']['en-us'] = "Voicemail UUID";
 		$text['description-voicemail_uuid']['es-cl'] = "UUID";
-		$text['description-voicemail_uuid']['pt-pt'] = "UUID do Correio de Voz";
+		$text['description-voicemail_uuid']['pt-pt'] = "UUID da caixa de Correio de Voz";
 		$text['description-voicemail_uuid']['fr-fr'] = "";
 
 		$text['label-created_epoch']['en-us'] = "Created";
@@ -259,22 +259,22 @@
 
 		$text['label-caller_id_name']['en-us'] = "Caller ID Name";
 		$text['label-caller_id_name']['es-cl'] = "Nombre de Caller ID";
-		$text['label-caller_id_name']['pt-pt'] = "Nome do Originador";
+		$text['label-caller_id_name']['pt-pt'] = "Nome do Chamador";
 		$text['label-caller_id_name']['fr-fr'] = "Nom d'appelant";
 
 		$text['description-caller_id_name']['en-us'] = "Caller ID Name";
 		$text['description-caller_id_name']['es-cl'] = "Nombre de Caller ID";
-		$text['description-caller_id_name']['pt-pt'] = "Nome do Originador";
+		$text['description-caller_id_name']['pt-pt'] = "Nome do Chamador";
 		$text['description-caller_id_name']['fr-fr'] = "";
 
 		$text['label-caller_id_number']['en-us'] = "Caller ID Number";
 		$text['label-caller_id_number']['es-cl'] = "Número de Caller ID";
-		$text['label-caller_id_number']['pt-pt'] = "Número do Originador";
+		$text['label-caller_id_number']['pt-pt'] = "Número do Chamador";
 		$text['label-caller_id_number']['fr-fr'] = "Numéro d'appelant";
 
 		$text['description-caller_id_number']['en-us'] = "Caller ID Number";
 		$text['description-caller_id_number']['es-cl'] = "Número de Caller ID";
-		$text['description-caller_id_number']['pt-pt'] = "Número do Originador";
+		$text['description-caller_id_number']['pt-pt'] = "Número do Chamador";
 		$text['description-caller_id_number']['fr-fr'] = "";
 
 		$text['label-message_length']['en-us'] = "Length";

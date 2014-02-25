@@ -13,7 +13,7 @@
 
 	$text['label-access-denied']['en-us'] = "access denied";
 	$text['label-access-denied']['es-cl'] = "acceso denegado";
-	$text['label-access-denied']['pt-pt'] = "Acesso negado";
+	$text['label-access-denied']['pt-pt'] = "acesso negado";
 	$text['label-access-denied']['fr-fr'] = "accès refusé";
 
 	$text['button-back']['en-us'] = "Back";
@@ -69,7 +69,7 @@
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";
-	$text['label-enabled']['pt-pt'] = "Activado";
+	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
 	$text['label-true']['en-us'] = "True";
@@ -151,12 +151,12 @@
 
 	$text['option-caller_id_name']['en-us'] = "Caller ID Name";
 	$text['option-caller_id_name']['es-cl'] = "Nombre de Caller ID";
-	$text['option-caller_id_name']['pt-pt'] = "Nome do Originador";
+	$text['option-caller_id_name']['pt-pt'] = "Nome do Chamador";
 	$text['option-caller_id_name']['fr-fr'] = "Nom d'appelant";
 
 	$text['option-caller_id_number']['en-us'] = "Caller ID Number";
 	$text['option-caller_id_number']['es-cl'] = "Número de Caller ID";
-	$text['option-caller_id_number']['pt-pt'] = "Número do Originador";
+	$text['option-caller_id_number']['pt-pt'] = "Número do Chamador";
 	$text['option-caller_id_number']['fr-fr'] = "Numéro d'appelant";
 
 	$text['option-ani']['en-us'] = "ANI";
@@ -212,12 +212,12 @@
 
 	$text['label-required-condition_expression_1']['en-us'] = "Please provide: Condition Expression";
 	$text['label-required-condition_expression_1']['es-cl'] = "Por favor indique: Expresión de Condición";
-	$text['label-required-condition_expression_1']['pt-pt'] = "Por favor indique: Condição Expressão";
+	$text['label-required-condition_expression_1']['pt-pt'] = "Por favor indique: Expressão para Condição";
 	$text['label-required-condition_expression_1']['fr-fr'] = "Merci d'indiquer: Expression Condition";
 
 	$text['label-required-action_application_1']['en-us'] = "Please provide: Action Application";
 	$text['label-required-action_application_1']['es-cl'] = "Por favor indique: Aplicación de Acción";
-	$text['label-required-action_application_1']['pt-pt'] = "Por favor indique: Acção Aplicação";
+	$text['label-required-action_application_1']['pt-pt'] = "Por favor indique: Acção para Aplicação";
 	$text['label-required-action_application_1']['fr-fr'] = "Merci d'indiquer: Application Action";
 
 	$text['confirm-update-complete']['en-us'] = "Update Complete";
