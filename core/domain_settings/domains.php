@@ -79,6 +79,16 @@ else {
 				$domain = new domains();
 				$domain->db = $db;
 				$domain->set();
+
+			// on domain change, redirect user
+			if ($_SESSION["login"]["destination"] != '') {
+				// to default, or domain specific, login destination
+				header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
+			}
+			else {
+				header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
+			}
+			return;
 		}
 	}
 
