@@ -101,7 +101,7 @@
 	$text['label-edit']['fr-fr'] = "Editer";
 
 	$text['message-confirm-delete']['en-us'] = "Do you really want to delete this?";
-	$text['message-confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
+	$text['message-confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['message-confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
 	$text['message-confirm-delete']['fr-fr'] = "Voulez-vous vraiment faire cela?";
 

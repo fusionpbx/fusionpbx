@@ -6,12 +6,12 @@
 	$text['title-call-block']['fr-fr'] = "Bloquage d'appel";
 
 	$text['description-call-block']['en-us'] = "A list of numbers from which to block calls.";
-	$text['description-call-block']['es-cl'] = "Un listado de n&uacute;meros desde los cuales se bloquean las llamadas";
+	$text['description-call-block']['es-cl'] = "Un listado de números desde los cuales se bloquean las llamadas";
 	$text['description-call-block']['pt-pt'] = "Uma lista de números que deseje bloquear as chamadas";
 	$text['description-call-block']['fr-fr'] = "Une liste de numéro dont on veut bloquer les appels";
 
 	$text['label-number']['en-us'] = "Number";
-	$text['label-number']['es-cl'] = "N&uacute;mero";
+	$text['label-number']['es-cl'] = "Número";
 	$text['label-number']['pt-pt'] = "Número";
 	$text['label-number']['fr-fr'] = "Numéro";
 
@@ -31,7 +31,7 @@
 	$text['label-date-added']['fr-fr'] = "Date Ajoutée";
 
 	$text['label-action']['en-us'] = "Action";
-	$text['label-action']['es-cl'] = "Acci&oacute;n";
+	$text['label-action']['es-cl'] = "Acción";
 	$text['label-action']['pt-pt'] = "Acção";
 	$text['label-action']['fr-fr'] = "Action";
 
@@ -55,7 +55,7 @@
 	$text['button-add']['fr-fr'] = "Ajouter";
 
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
-	$text['confirm-delete']['es-cl'] = "&iquest;Realmente desea eliminar el n&oacute;mero?";
+	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar el número?";
 	$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
 	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
@@ -83,7 +83,7 @@
 	$text['label-provide-name']['fr-fr'] = "Merci d'indiquer: Nom";
 
 	$text['label-provide-number']['en-us'] = "Please provide: Number";
-	$text['label-provide-number']['es-cl'] = "Por favor agregue: N&uacute;mero";
+	$text['label-provide-number']['es-cl'] = "Por favor agregue: Número";
 	$text['label-provide-number']['pt-pt'] = "Por favor indique: Número";
 	$text['label-provide-number']['fr-fr'] = "Merci d'indiquer: Numéro";
 
@@ -93,12 +93,12 @@
 	$text['label-provide-enabled']['fr-fr'] = "Merci d'indiquer: Actif";
 
 	$text['label-update-complete']['en-us'] = "Update Complete";
-	$text['label-update-complete']['es-cl'] = "Actualizaci&oacute;n Completa";
+	$text['label-update-complete']['es-cl'] = "Actualización Completa";
 	$text['label-update-complete']['pt-pt'] = "Actualização Efectuada";
 	$text['label-update-complete']['fr-fr'] = "Mis à jour";
 
 	$text['label-called-on']['en-us'] = "Called on";
-	$text['label-called-on']['es-cl'] = "Llam&oacute; en";
+	$text['label-called-on']['es-cl'] = "Llamó en";
 	$text['label-called-on']['pt-pt'] = "Chamado em";
 	$text['label-called-on']['fr-fr'] = "Appelé sur";
 
@@ -118,17 +118,17 @@
 	$text['label-edit-edit']['fr-fr'] = "Editer le bloquage d'appel";
 
 	$text['label-add-note']['en-us'] = "Block calls from a number. Either select a number from the list above or enter the number, name and enable below.";
-	$text['label-add-note']['es-cl'] = "Bloquea llamadas desde un n&uacute;mero. Puede elegir un n&uacute;mero de la lista de arriba o ingresar el n&uacute, nombre y activarlo abajo.";
+	$text['label-add-note']['es-cl'] = "Bloquea llamadas desde un número. Puede elegir un número de la lista de arriba o ingresar el n&uacute, nombre y activarlo abajo.";
 	$text['label-add-note']['pt-pt'] = "Bloquear chamadas a partir de um número. Seleccione um número a partir da lista indicada ou introduza um número, nome e active.";
 	$text['label-add-note']['fr-fr'] = "Bloquer les appels à partir d'un numéro. Choisissez un numéro dans liste ou entrez un numéro, nom et activer le.";
 
 	$text['label-edit-note']['en-us'] = "Block calls from a number. Edit the name and enable/disable below.";
-	$text['label-edit-note']['es-cl'] = "Bloquea llamadas desde un n&uacute;mero. Edite el nombre y active/desactive abajo.";
+	$text['label-edit-note']['es-cl'] = "Bloquea llamadas desde un número. Edite el nombre y active/desactive abajo.";
 	$text['label-edit-note']['pt-pt'] = "Bloquear chamadas a partir de um número. Edite o nome e active/desactive.";
 	$text['label-edit-note']['fr-fr'] = "Bloquer les appels à partir d'un numéro. Editer le nom et activer/désactiver ci-dessous.";
 
 	$text['label-exact-number']['en-us'] = "Enter the exact number.";
-	$text['label-exact-number']['es-cl'] = "Ingrese el n&uacute; exacto.";
+	$text['label-exact-number']['es-cl'] = "Ingrese el nú exacto.";
 	$text['label-exact-number']['pt-pt'] = "Introduza o número exacto.";
 	$text['label-exact-number']['fr-fr'] = "Entrer le numéro exact.";
 
@@ -143,7 +143,7 @@
 	$text['label-busy']['fr-fr'] = "Occupé";
 
 	$text['label-action-message']['en-us'] = "Set an action for calls from this number.";
-	$text['label-action-message']['es-cl'] = "Configurar una acci&oacute;n para llamadas desde este n&uacute;mero.";
+	$text['label-action-message']['es-cl'] = "Configurar una acción para llamadas desde este número.";
 	$text['label-action-message']['pt-pt'] = "Escolha uma acção para chamadas com origem neste número.";
 	$text['label-action-message']['fr-fr'] = "Choisir une action pour les appels venant de ce numéro.";
 
@@ -158,7 +158,7 @@
 	$text['label-false']['fr-fr'] = "Non";
 
 	$text['label-enable-message']['en-us'] = "Set to true to enable call blocking for this number.";
-	$text['label-enable-message']['es-cl'] = "Seleccione verdadero para activar el bloqueo de llamadas desde este n&uacute;mero.";
+	$text['label-enable-message']['es-cl'] = "Seleccione verdadero para activar el bloqueo de llamadas desde este número.";
 	$text['label-enable-message']['pt-pt'] = "Escolha 'sim' para activar o bloqueio de chamadas para este número.";
 	$text['label-enable-message']['fr-fr'] = "Choisir Oui pour activer le bloquage d'appel. ";
 

@@ -82,7 +82,7 @@
 	$text['description-description']['fr-fr'] = "";
 
 	$text['message-delete']['en-us'] = "Do you really want to delete this?";
-	$text['message-delete']['es-cl'] = "&iquest;Realmente desea eliminar esto?";
+	$text['message-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['message-delete']['pt-pt'] = "Deseja realmente remover isto?";
 	$text['message-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 

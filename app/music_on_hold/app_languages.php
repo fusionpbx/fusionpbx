@@ -113,7 +113,7 @@
 	$text['label-sampling']['fr-fr'] = "Echantillonage";
 
 	$text['message-delete']['en-us'] = "Do you really want to delete this file?";
-	$text['message-delete']['es-cl'] = "&iquest;Realmente desea eliminar este archivo?";	
+	$text['message-delete']['es-cl'] = "¿Realmente desea eliminar este archivo?";	
 	$text['message-delete']['pt-pt'] = "Deseja realmente remover este ficheiro?";
 	$text['message-delete']['fr-fr'] = "Voulez-vous vraiment supprimer ce fichier?";
 

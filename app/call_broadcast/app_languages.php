@@ -12,23 +12,23 @@
 	$text['label-name']['fr-fr'] = "Nom";
 
 	$text['label-concurrent-limit']['en-us'] = "Concurrent Limit";
-	$text['label-concurrent-limit']['es-cl'] = "L&iacute;mite de concurrencia";
+	$text['label-concurrent-limit']['es-cl'] = "Límite de concurrencia";
 	$text['label-concurrent-limit']['pt-pt'] = "Limite de chamadas concorrentes";
 	$text['label-concurrent-limit']['fr-fr'] = "Limite concurrents";
 
 	$text['label-description']['en-us'] = "Description";
-	$text['label-description']['es-cl'] = "Descripci&oacute;n";
+	$text['label-description']['es-cl'] = "Descripción";
 	$text['label-description']['pt-pt'] = "Descrição";
 	$text['label-description']['fr-fr'] = "Description";
 
 	$text['confirm-delete-info']['en-us'] = "Do you really want to delete this?";
-	$text['confirm-delete-info']['es-cl'] = "&iquest;Desea realmente eliminar esto?";
+	$text['confirm-delete-info']['es-cl'] = "¿Desea realmente eliminar esto?";
 	$text['confirm-delete-info']['pt-pt'] = "Deseja realmente remover isto?";
 	$text['confirm-delete-info']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
 	//v_call_broadcast_delete
 	$text['confirm-delete']['en-us'] = "Delete Complete";
-	$text['confirm-delete']['es-cl'] = "Eliminaci&oacute;n Completa";
+	$text['confirm-delete']['es-cl'] = "Eliminación Completa";
 	$text['confirm-delete']['pt-pt'] = "Remoção Efectuada";
 	$text['confirm-delete']['fr-fr'] = "Supprimé";
 
@@ -44,7 +44,7 @@
 	$text['confirm-add']['fr-fr'] = "Ajouté";
 
 	$text['confirm-update']['en-us'] = "Update Complete";
-	$text['confirm-update']['es-cl'] = "Actualizaci&oacute;n Completa";
+	$text['confirm-update']['es-cl'] = "Actualización Completa";
 	$text['confirm-update']['pt-pt'] = "Actualização Efectuada";
 	$text['confirm-update']['fr-fr'] = "Mis à jour";
 
@@ -64,22 +64,22 @@
 	$text['button-back']['fr-fr'] = "Retour";
 
 	$text['description-name']['en-us'] = "Enter the name here.";
-	$text['description-name']['es-cl'] = "Ingrese el nombre aqu&iacute;.";
+	$text['description-name']['es-cl'] = "Ingrese el nombre aquí.";
 	$text['description-name']['pt-pt'] = "Introduza o nome aqui.";
 	$text['description-name']['fr-fr'] = "Insérer le Nom.";
 
 	$text['label-timeout']['en-us'] = "Timeout";
-	$text['label-timeout']['es-cl'] = "Tiempo L&iacute;imite";
+	$text['label-timeout']['es-cl'] = "Tiempo Líimite";
 	$text['label-timeout']['pt-pt'] = "Timeout";
 	$text['label-timeout']['fr-fr'] = "Timeout";
 
 	$text['description-timeout']['en-us'] = "Limit the length of the call. Leave this empty for no limit.";
-	$text['description-timeout']['es-cl'] = "Limitar la duraci&oacute;n de la llamada. Deje en blanco para no establecer un l&iacute;mite.";
+	$text['description-timeout']['es-cl'] = "Limitar la duración de la llamada. Deje en blanco para no establecer un límite.";
 	$text['description-timeout']['pt-pt'] = "Limitar a duração da chamada. Deixe este campo em branco para não ter limite.";
 	$text['description-timeout']['fr-fr'] = "Limiter la durée de l'appel. Laisser vide pour illimité.";
 
 	$text['description-concurrent-limit']['en-us'] = "Limit the approximate number of concurrent calls. Leave this empty for no limit.";
-	$text['description-concurrent-limit']['es-cl'] = "Limitar el n&iacute;mero de llamadas simultaneas. Deje en blanco para no establecer un l&iacute;mite.";
+	$text['description-concurrent-limit']['es-cl'] = "Limitar el número de llamadas simultaneas. Deje en blanco para no establecer un límite.";
 	$text['description-concurrent-limit']['pt-pt'] = "Limitar o número de chamadas concurrentes. Deixe este campo em branco para não ter limite.";
 	$text['description-concurrent-limit']['fr-fr'] = "Limite le nombre d'appels concurrents. Laisser vide pour illimité.";
 
@@ -89,7 +89,7 @@
 	$text['label-caller-id-name']['fr-fr'] = "Nom d'appelant";
 
 	$text['label-callerid-number']['en-us'] = "Caller ID Number";
-	$text['label-callerid-number']['es-cl'] = "N&uacute;mero de Origen";
+	$text['label-callerid-number']['es-cl'] = "Número de Origen";
 	$text['label-callerid-number']['pt-pt'] = "Número do Originador";
 	$text['label-callerid-number']['fr-fr'] = "Numéro d'appelant";
 
@@ -99,12 +99,12 @@
 	$text['description-caller-id-name']['fr-fr'] = "Applicable uniquement si le fournisseur d'accès authorise l'acheminement du nom d'appelant. Par défaut: anonymous";
 
 	$text['description-caller-id-number']['en-us'] = "Applicable if the provider that allow the Caller ID number to be sent. default: 0000000000";
-	$text['description-caller-id-name']['es-cl'] = "Applicable si el proveedor permite enviar el n&uacute;mero de origen. Por defecto: 0000000000";
+	$text['description-caller-id-name']['es-cl'] = "Applicable si el proveedor permite enviar el número de origen. Por defecto: 0000000000";
 	$text['description-caller-id-number']['pt-pt'] = "Aplicável se o provedor permitir o envio do número do originador das chamadas. Omissão: 0000000000";
 	$text['description-caller-id-number']['fr-fr'] = "Applicable uniquement si le fournisseur d'accès authorise l'acheminement du numéro d'appelant. Par défaut: 0000000000";
 
 	$text['label-destination']['en-us'] = "Destination Number";
-	$text['label-destination']['es-cl'] = "N&uacute;mero de Destino";
+	$text['label-destination']['es-cl'] = "Número de Destino";
 	$text['label-destination']['pt-pt'] = "Número de Destino";
 	$text['label-destination']['fr-fr'] = "Numéro de Destination";
 
