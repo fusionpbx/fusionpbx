@@ -187,7 +187,6 @@ include "root.php";
 									$device_template = $row["device_template"];
 									$device_username = $row["device_username"];
 									$device_password = $row["device_password"];
-									$device_time_zone = $row["device_time_zone"];
 									$device_description = $row["device_description"];
 							}
 						//}
@@ -211,7 +210,6 @@ include "root.php";
 								$device_template = $row["device_template"];
 								$device_username = $row["device_username"];
 								$device_password = $row["device_password"];
-								$device_time_zone = $row["device_time_zone"];
 								$device_description = $row["device_description"];
 							}
 						}
@@ -479,7 +477,6 @@ include "root.php";
 					$view->assign("mac" , $mac);
 					$view->assign("label", $device_label);
 					$view->assign("firmware_version", $device_firmware_version);
-					$view->assign("domain_time_zone", $device_time_zone);
 					$view->assign("domain_name", $domain_name);
 					$view->assign("project_path", PROJECT_PATH);
 					$view->assign("server1_address", $server1_address);
@@ -569,7 +566,6 @@ include "root.php";
 						$device_template = $row["device_template"];
 						$device_username = $row["device_username"];
 						$device_password = $row["device_password"];
-						$device_time_zone = $row["device_time_zone"];
 						$device_description = $row["device_description"];
 
 					//loop through the provision template directory
