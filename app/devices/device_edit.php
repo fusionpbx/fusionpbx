@@ -625,7 +625,7 @@ require_once "resources/require.php";
 				$selected = "selected='selected'";
 				echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_id]'>\n";
 				echo "	<option value=''></option>\n";
-				$i = 0;
+				$i = 1;
 				while ($i < 100) {
 					echo "	<option value='$i' ".($row['device_key_id'] == $i ? $selected:"").">$i</option>\n";
 					$i++;
