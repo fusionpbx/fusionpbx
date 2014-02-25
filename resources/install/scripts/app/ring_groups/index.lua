@@ -174,6 +174,7 @@
 			for key, row in pairs(destinations) do
 				--set the values from the database as variables
 					user_exists = row.user_exists;
+					ring_group_strategy = row.ring_group_strategy;
 					ring_group_timeout_sec = row.ring_group_timeout_sec;
 					ring_group_timeout_app = row.ring_group_timeout_app;
 					ring_group_timeout_data = row.ring_group_timeout_data;
@@ -209,13 +210,16 @@
 
 				--setup the delimiter
 					delimiter = ",";
-					if (row.ring_group_strategy == "sequence") then
+					if (ring_group_strategy == "rollover") then
 						delimiter = "|";
 					end
-					if (row.ring_group_strategy == "simultaneous") then
+					if (ring_group_strategy == "sequence") then
+						delimiter = "|";
+					end
+					if (ring_group_strategy == "simultaneous") then
 						delimiter = ",";
 					end
-					if (row.ring_group_strategy == "enterprise") then
+					if (ring_group_strategy == "enterprise") then
 						delimiter = ":_:";
 					end
 
@@ -385,6 +389,56 @@
 							cmd = "bgapi uuid_broadcast "..uuid.." "..ring_group_ringback.." aleg";
 							result = api:executeString(cmd);
 					else
+
+						--if the user is buy rollover to the next destination
+							if (ring_group_strategy == "rollover") then
+								for key, row in pairs(destinations) do
+									--set the values from the database as variables
+										user_exists = row.user_exists;
+										destination_number = row.destination_number;
+										domain_name = row.domain_name;
+
+									--set the timeout
+										session:execute("set", "call_timeout="..row.destination_timeout);
+
+									--check if the user is busy
+										extension_status = "show channels like "..destination_number.."@";
+										reply = trim(api:executeString(extension_status));
+										if (reply == "0 total.") then
+											--not found: user is available
+												if (user_exists == "true") then
+													dial_string = "[sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
+													session:execute("bridge", dial_string);
+												elseif (tonumber(destination_number) == nil) then
+													--sip uri
+													dial_string = "[sip_invite_domain="..domain_name.."]" .. destination_number;
+													session:execute("bridge", dial_string);
+												else
+													dial_string = "[sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
+													session:execute("bridge", dial_string);
+												end
+										else
+											--look inside the reply to check for the correct domain_name
+											if string.find(reply, domain_name) then
+												--found: extension number is busy
+											else
+												--not found: user is available
+												if (user_exists == "true") then
+													dial_string = "[sip_invite_domain="..domain_name.."dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
+													session:execute("bridge", dial_string);
+												elseif (tonumber(destination_number) == nil) then
+													--sip uri
+													dial_string = "[sip_invite_domain="..domain_name.."]" .. destination_number;
+													session:execute("bridge", dial_string);
+												else
+													dial_string = "[sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
+													session:execute("bridge", dial_string);
+												end
+											end
+										end
+								end
+							end
+
 						--no prompt
 							if (app_data ~= nil) then
 								--freeswitch.consoleLog("NOTICE", "[ring group] app_data: "..app_data.."\n");
