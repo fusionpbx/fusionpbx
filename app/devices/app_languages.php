@@ -216,17 +216,6 @@
 		$text['description-password']['pt-pt'] = "Introduza a password.";
 		$text['description-password']['fr-fr'] = "Entrez le mot de passe.";
 
-
-		$text['label-device_time_zone']['en-us'] = "Time Zone";
-		$text['label-device_time_zone']['es-cl'] = "Zona Horaria";
-		$text['label-device_time_zone']['pt-pt'] = "Time Zone";
-		$text['label-device_time_zone']['fr-fr'] = "Fuseau Horaire";
-
-		$text['description-device_time_zone']['en-us'] = "Enter the time zone.";
-		$text['description-device_time_zone']['es-cl'] = "Ingrese una zona horaria.";
-		$text['description-device_time_zone']['pt-pt'] = "Introduza o time zone.";
-		$text['description-device_time_zone']['fr-fr'] = "Entrez le fuseau horaire.";
-
 		$text['label-device_description']['en-us'] = "Description";
 		$text['label-device_description']['es-cl'] = "Descripción";
 		$text['label-device_description']['pt-pt'] = "Descrição";

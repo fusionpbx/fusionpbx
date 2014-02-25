@@ -201,6 +201,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_time_zone";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "device_description";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "phone_description";
