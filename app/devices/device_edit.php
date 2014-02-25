@@ -66,7 +66,6 @@ require_once "resources/require.php";
 			$device_firmware_version = check_str($_POST["device_firmware_version"]);
 			$device_provision_enable = check_str($_POST["device_provision_enable"]);
 			$device_template = check_str($_POST["device_template"]);
-			$device_time_zone = check_str($_POST["device_time_zone"]);
 			$device_description = check_str($_POST["device_description"]);
 		//lines
 			$line_number = check_str($_POST["line_number"]);
@@ -112,7 +111,6 @@ require_once "resources/require.php";
 			//if (strlen($device_template) == 0) { $msg .= "Please provide: Template<br>\n"; }
 			//if (strlen($device_username) == 0) { $msg .= "Please provide: Username<br>\n"; }
 			//if (strlen($device_password) == 0) { $msg .= "Please provide: Password<br>\n"; }
-			//if (strlen($device_time_zone) == 0) { $msg .= "Please provide: Time Zone<br>\n"; }
 			//if (strlen($device_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 			if (strlen($msg) > 0) {
 				require_once "resources/header.php";
@@ -264,7 +262,6 @@ require_once "resources/require.php";
 			$device_firmware_version = $row["device_firmware_version"];
 			$device_provision_enable = $row["device_provision_enable"];
 			$device_template = $row["device_template"];
-			$device_time_zone = $row["device_time_zone"];
 			$device_description = $row["device_description"];
 		}
 		unset ($prep_statement);
@@ -956,17 +953,6 @@ require_once "resources/require.php";
 	echo $text['description-device_provision_enable']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_time_zone'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_time_zone' maxlength='255' value=\"$device_time_zone\">\n";
-	echo "<br />\n";
-	echo $text['description-device_time_zone']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
