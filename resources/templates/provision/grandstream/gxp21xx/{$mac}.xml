@@ -297,7 +297,7 @@
     <!-- Dial Plan. Default value is { x+ | *x+ | *xx*x+ } -->
     <!-- String -->
     <!-- Mandatory -->
-    <P290>{ x+ | *x+ | *xx*x+ }</P290>
+    <P290>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P290>
     <!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
     <!-- Number: 1 - 120 -->
     <!-- Mandatory -->
@@ -728,7 +728,7 @@
     <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
     <!-- String -->
     <!-- Mandatory -->
-    <P459>{ x+ | *x+ | *xx*x+ }</P459>
+    <P459>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P459>
     <!-- Delayed Call Forward Wait Time (in seconds). Default 20 -->
     <!-- Number: 1 - 120 -->
     <!-- Mandatory -->
@@ -1158,7 +1158,7 @@
     <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
     <!-- String -->
     <!-- Mandatory -->
-    <P559>{ x+ | *x+ | *xx*x+ }</P559>
+    <P559>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P559>
     <!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
     <!-- Number: 1 - 120 -->
     <!-- Mandatory -->
@@ -2012,7 +2012,7 @@
     <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
     <!-- String -->
     <!-- Mandatory -->
-    <P1759>{ x+ | *x+ | *xx*x+ }</P1759>
+    <P1759>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P1759>
     <!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
     <!-- Number: 1 - 120 -->
     <!-- Mandatory -->
@@ -2445,7 +2445,7 @@
     <!-- Dial Plan. Default is { x+ | *x+ | *xx*x+ } -->
     <!-- String -->
     <!-- Mandatory -->
-    <P1859>{ x+ | *x+ | *xx*x+ }</P1859>
+    <P1859>{ x+ | *x+ | *xx | *xxx | *xxxx | *xxxxx | *xxxxxx | **xx | **xxx | **xxxx | **xxxxx | **xxxxxx | **xxxxxxx | **xxxxxxxx | *xx*x+ }</P1859>
     <!-- Delayed Call Forward Wait Time (in seconds). Default is 20 -->
     <!-- Number: 1 - 120 -->
     <!-- Mandatory -->
@@ -3102,7 +3102,12 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Enable stocke update. 0 - No, 1 - Yes. Default is 1 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P1403>1</P1403>
+    <P1403>0</P1403>
+    <!-- Currency Update -->
+    <!-- Enable Currency update. 0 - No, 1 - Yes. Default is 1 --><!-- Enable stock update. 0 - No, 1 - Yes. Default is 1 -->
+    <!-- Number: 0, 1 -->
+    <!-- Mandatory -->
+    <P1404>0</P1404>   
     <!-- Settings/XML Applications -->
     <!-- Enable Idle Screen XML Download -->
     <!-- 0 - No, 1 - YES, HTTP, 2 - YES, TFTP, 3 - YES, HTTPS. Default is 0 -->
