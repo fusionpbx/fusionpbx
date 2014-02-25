@@ -1177,7 +1177,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "		<tr>\n";
 		echo "		<td class='vtable'>";
-		echo "			<select id='line_number' name='line_number' style='width: 50;' onchange=\"$onchange\" class='formfld'>\n";
+		echo "			<select id='line_number' name='line_number' class='formfld' style='width: 50px;' onchange=\"$onchange\">\n";
 		echo "			<option value=''></option>\n";
 		echo "			<option value='1'>1</option>\n";
 		echo "			<option value='2'>2</option>\n";
