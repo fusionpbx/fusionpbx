@@ -110,9 +110,9 @@ else {
 		$strlist .= "<tr'>";
 		$strlist .= "<td align=\"left\"  class='".$row_style[$c]."' nowrap> &nbsp; $username &nbsp; </td>\n";
 		$strlist .= "<td align=\"left\"  class='".$row_style[$c]."' nowrap> &nbsp; </td>\n";
-		$strlist .= "<td align=\"right\" nowrap>\n";
+		$strlist .= "<td class='list_control_icons' style='width: 25px;'>";
 		if (permission_exists('group_member_delete')) {
-			$strlist .= "	<a href='groupmemberdelete.php?user_uuid=$user_uuid&group_name=$group_name' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+			$strlist .= "<a href='groupmemberdelete.php?user_uuid=$user_uuid&group_name=$group_name' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
 		}
 		$strlist .= "</td>\n";
 		$strlist .= "</tr>\n";

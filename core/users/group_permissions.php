@@ -105,7 +105,7 @@ require_once "resources/paging.php";
 		$permission_name = $row["permission_name"];
 		$permissions_db[$permission_name] = "true";
 	}
-		
+
 //show the db checklist
 	//echo "<pre>";
 	//print_r($permissions_db);
@@ -121,8 +121,8 @@ require_once "resources/paging.php";
 				$permissions_db_checklist[$row['name']] = "false";
 			}
 		}
-	}	
-	
+	}
+
 //show the db checklist
 	//echo "<pre>";
 	//print_r($permissions_db_checklist);
@@ -168,18 +168,18 @@ require_once "resources/paging.php";
 							$sql .= "and permission_name = '$permission' ";
 							$db->exec(check_sql($sql));
 							unset($sql);
-							
-						foreach($apps as $app) {							
+
+						foreach($apps as $app) {
 							foreach ($app['permissions'] as $row) {
 								if ($row['name'] == $permission) {
-																		
+
 									$sql = "delete from v_menu_item_groups ";
 									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
 									$sql .= "and group_name = '$group_name' ";
-									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";									
+									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
 									$db->exec(check_sql($sql));
 									unset($sql);
-									
+
 									$sql = "";
 									$sql .= " select menu_item_parent_uuid from v_menu_items ";
 									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
@@ -191,7 +191,7 @@ require_once "resources/paging.php";
 										$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
 									}
 									unset ($prep_statement);
-									
+
 									$sql = "";
 									$sql .= " select * from v_menu_items as i, v_menu_item_groups as g  ";
 									$sql .= "where i.menu_item_uuid = g.menu_item_uuid ";
@@ -206,16 +206,16 @@ require_once "resources/paging.php";
 										$sql = "delete from v_menu_item_groups ";
 										$sql .= "where menu_item_uuid = '$menu_item_parent_uuid' ";
 										$sql .= "and group_name = '$group_name' ";
-										$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";									
+										$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
 										$db->exec(check_sql($sql));
 										unset($sql);
 									}
 									unset ($prep_statement);
-									
-									
-									
+
+
+
 								}
-							}							
+							}
 						}
 						//set the permission to false in the permissions_db_checklist
 							$permissions_db_checklist[$permission] = "false";
@@ -238,11 +238,11 @@ require_once "resources/paging.php";
 							$sql .= ")";
 							$db->exec(check_sql($sql));
 							unset($sql);
-							
-						foreach($apps as $app) {							
+
+						foreach($apps as $app) {
 							foreach ($app['permissions'] as $row) {
 								if ($row['name'] == $permission) {
-																		
+
 									$sql = "insert into v_menu_item_groups ";
 									$sql .= "(";
 									$sql .= "menu_uuid, ";
@@ -257,7 +257,7 @@ require_once "resources/paging.php";
 									$sql .= ")";
 									$db->exec(check_sql($sql));
 									unset($sql);
-									
+
 									$sql = "";
 									$sql .= " select menu_item_parent_uuid from v_menu_items ";
 									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
@@ -269,7 +269,7 @@ require_once "resources/paging.php";
 										$menu_item_parent_uuid = $row["menu_item_parent_uuid"];
 									}
 									unset ($prep_statement);
-									
+
 									$sql = "";
 									$sql .= " select * from v_menu_item_groups ";
 									$sql .= "where menu_item_uuid = '$menu_item_parent_uuid' ";
@@ -294,10 +294,10 @@ require_once "resources/paging.php";
 										$sql .= ")";
 										$db->exec(check_sql($sql));
 										unset($sql);
-									}									
+									}
 									unset ($prep_statement);
 								}
-							}							
+							}
 						}
 						//set the permission to true in the permissions_db_checklist
 							$permissions_db_checklist[$permission] = "true";
@@ -348,7 +348,7 @@ require_once "resources/paging.php";
 			echo "<tr>\n";
 			echo "	<td valign='top' style='width:80%' nowrap='nowrap'>\n";
 			echo "<strong>".$app_name."</strong><br />\n";
-			echo "	</td>\n";			
+			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "<tr>\n";
 			echo "	<td valign='top'>\n";
@@ -356,7 +356,7 @@ require_once "resources/paging.php";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "</table>";
-			
+
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
 			echo "<th>".$text['label-permission_permissions']."</th>\n";
@@ -382,7 +382,7 @@ require_once "resources/paging.php";
 			}
 
 			echo "<tr>\n";
-			echo "	<td colspan='3' align='right'>\n";
+			echo "	<td colspan='3' align='right' style='padding-top: 5px;'>\n";
 			echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 			echo "	</td>\n";
 			echo "</tr>\n";

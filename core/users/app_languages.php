@@ -64,13 +64,13 @@
 
 	$text['header-group_permissions']['en-us'] = "Group Permissions: ";
 	$text['header-group_permissions']['es-cl'] = "Permisos de Grupo: ";
-	$text['header-group_permissions']['pt-pt'] = "Permissões do Grupo";
-	$text['header-group_permissions']['fr-fr'] = "Permissions du Groupe";
+	$text['header-group_permissions']['pt-pt'] = "Permissões do Grupo: ";
+	$text['header-group_permissions']['fr-fr'] = "Permissions du Groupe: ";
 
-	$text['header-group_members']['en-us'] = "Group Members";
+	$text['header-group_members']['en-us'] = "Group Members: ";
 	$text['header-group_members']['es-cl'] = "Miembros de Grupo: ";
-	$text['header-group_members']['pt-pt'] = "Membros do Grupo";
-	$text['header-group_members']['fr-fr'] = "Membres du Groupe";
+	$text['header-group_members']['pt-pt'] = "Membros do Grupo: ";
+	$text['header-group_members']['fr-fr'] = "Membres du Groupe: ";
 
 	$text['description-user_manager']['en-us'] = "Add, edit, delete, and search users. ";
 	$text['description-user_manager']['es-cl'] = "Agregar, Editar, Eliminar y Buscar Usuarios. ";

@@ -89,9 +89,9 @@ else {
 	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_description']." &nbsp; </th>\n";
 	$strlist .= "	<th align=\"center\" nowrap>&nbsp;</th>\n";
 
-	$strlist .= "	<td width='22px' align=\"right\" nowrap>\n";
+	$strlist .= "	<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
-		$strlist .= "	<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		$strlist .= "<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	$strlist .= "	</td>\n";
 	$strlist .= "</tr>\n";
@@ -133,8 +133,8 @@ else {
 			}
 			$strlist .= "</td>\n";
 
-			$strlist .= "<td align=\"right\" nowrap>\n";
-			$strlist .= "<a href='groupdelete.php?id=$group_uuid' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+			$strlist .= "<td class='list_control_icons' style='width: 25px;'>";
+			$strlist .= "<a href='groupdelete.php?id=$group_uuid' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
 
 			$strlist .= "</td>\n";
 			$strlist .= "</tr>\n";
@@ -144,9 +144,10 @@ else {
 	}
 
 	$strlist .= "<tr>\n";
-	$strlist .= "<td colspan='5' align='right' height='20'>\n";
+	$strlist .= "<td colspan='4'>&nbsp;</td>";
+	$strlist .= "<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
-		$strlist .= "	<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		$strlist .= "<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	$strlist .= "</td>\n";
 	$strlist .= "</tr>\n";
