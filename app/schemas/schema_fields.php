@@ -91,9 +91,9 @@ $order = $_GET["order"];
 	echo th_order_by('field_order', $text['label-field_order'], $order_by, $order);
 	echo th_order_by('field_order_tab', $text['label-field_tab_order'], $order_by, $order);
 	echo th_order_by('field_description', $text['label-field_description'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('schema_view')) {
-		echo "	<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -154,12 +154,12 @@ $order = $_GET["order"];
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order_tab']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('schema_edit')) {
-				echo "		<a href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('schema_delete')) {
-				echo "		<a href='schema_field_delete.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='schema_field_delete.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -174,9 +174,9 @@ $order = $_GET["order"];
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('schema_add')) {
-		echo "			<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo 		"<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
