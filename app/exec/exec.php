@@ -161,7 +161,7 @@ else {
 		echo "	".$text['label-shell'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='shell_cmd' id='shell_cmd' rows='2' class='txt' wrap='off'>$shell_cmd</textarea\n";
+		echo "	<textarea name='shell_cmd' id='shell_cmd' rows='2' class='formfld' style='width: 100%;' wrap='off'>$shell_cmd</textarea\n";
 		echo "	<br />\n";
 		echo "	".$text['description-shell']."\n";
 		echo "</td>\n";
@@ -173,7 +173,7 @@ else {
 		echo "	".$text['label-php'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='php_cmd' id='php_cmd' rows='7' class='txt' wrap='off'>$php_cmd</textarea\n";
+		echo "	<textarea name='php_cmd' id='php_cmd' rows='7' class='formfld' style='width: 100%;' wrap='off'>$php_cmd</textarea\n";
 		echo "	<br />\n";
 		echo "	".$text['description-php']."</a>\n";
 		echo "</td>\n";
@@ -185,7 +185,7 @@ else {
 		echo "	".$text['label-switch'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='switch_cmd' id='switch_cmd' rows='2' class='txt' wrap='off'>$switch_cmd</textarea\n";
+		echo "	<textarea name='switch_cmd' id='switch_cmd' rows='2' class='formfld' style='width: 100%;' wrap='off'>$switch_cmd</textarea\n";
 		echo "	<br />\n";
 		echo "	".$text['description-switch']."\n";
 		echo "</td>\n";
