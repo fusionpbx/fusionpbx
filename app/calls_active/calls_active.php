@@ -37,7 +37,7 @@ else {
 
 //add multi-lingual support
 	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 $conference_name = trim($_REQUEST["c"]);
@@ -127,7 +127,7 @@ echo "			<div id=\"form_label\">\n";
 echo "			<div id=\"url\"></div>\n";
 echo "		</td>\n";
 echo "		<td align='left' valign='middle'>\n";
-echo "			<div id=\"form_label\"></div><input type=\"text\" id=\"form_value\" name=\"form_value\" />\n";
+echo "			<div id=\"form_label\"></div><input type=\"text\" class=\"formfld\" style=\"width: 100%;\" id=\"form_value\" name=\"form_value\" />\n";
 echo "		</td>\n";
 echo "		</tr>\n";
 echo "		</table>\n";
