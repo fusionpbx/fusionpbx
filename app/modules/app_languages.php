@@ -7,7 +7,7 @@
 	$text['title-modules']['fr-fr'] = "Modules";
 
 	$text['title-module_add']['en-us'] = "Module Add";
-	$text['title-module_add']['en-us'] = "Agregar Módulo";
+	$text['title-module_add']['es-cl'] = "Agregar Módulo";
 	$text['title-module_add']['pt-pt'] = "Adicionado Módulo";
 	$text['title-module_add']['fr-fr'] = "Ajouter un Module";
 
@@ -22,7 +22,7 @@
 	$text['header-modules']['fr-fr'] = "Modules";
 
 	$text['header-module_add']['en-us'] = "Module Add";
-	$text['header-module_add']['en-us'] = "Agregar Módulo";
+	$text['header-module_add']['es-cl'] = "Agregar Módulo";
 	$text['header-module_add']['pt-pt'] = "Adicionar Módulo";
 	$text['header-module_add']['fr-fr'] = "Ajouter un Module";
 
