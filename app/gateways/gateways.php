@@ -155,9 +155,9 @@ else {
 	}
 	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
 	echo th_order_by('description', $text['label-description'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('gateway_add')) {
-		echo "	<a href='gateway_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='gateway_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -202,12 +202,12 @@ else {
 					echo "	<td valign='top' class='".$row_style[$c]."' style='align: center;'>".$text['label-false']."</td>\n";
 				}
 				echo "	<td valign='top' class='row_stylebg'>".$row["description"]."&nbsp;</td>\n";
-				echo "	<td valign='top' align='right'>\n";
+				echo "	<td class='list_control_icons'>";
 				if (permission_exists('gateway_edit')) {
-					echo "		<a href='gateway_edit.php?id=".$row['gateway_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+					echo "<a href='gateway_edit.php?id=".$row['gateway_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('gateway_delete')) {
-					echo "		<a href='gateway_delete.php?id=".$row['gateway_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "<a href='gateway_delete.php?id=".$row['gateway_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -223,12 +223,12 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('gateway_add')) {
-		echo "			<a href='gateway_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='gateway_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
-		echo "			&nbsp;\n";
+		echo "&nbsp;";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
