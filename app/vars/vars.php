@@ -89,9 +89,9 @@ else {
 	$tmp_var_header .= th_order_by('var_value', $text['label-value'], $order_by, $order);
 	$tmp_var_header .= th_order_by('var_enabled', $text['label-enabled'], $order_by, $order);
 	$tmp_var_header .= "<th>".$text['label-description']."</th>\n";
-	$tmp_var_header .= "<td align='right' width='42'>\n";
+	$tmp_var_header .= "<td class='list_control_icons'>";
 	if (permission_exists('var_add')) {
-		$tmp_var_header .= "	<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		$tmp_var_header .= "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	$tmp_var_header .= "</td>\n";
 	$tmp_var_header .= "<tr>\n";
@@ -110,9 +110,9 @@ else {
 					echo "	<tr>\n";
 					echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 					echo "		<td width='33.3%' align='center' nowrap>&nbsp;</td>\n";
-					echo "		<td width='33.3%' align='right'>\n";
+					echo "		<td width='33.3%' align='right'>";
 					if (permission_exists('var_add')) {
-						echo "			<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+						echo "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 					}
 					echo "		</td>\n";
 					echo "	</tr>\n";
@@ -141,12 +141,12 @@ else {
 			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
 			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$var_description."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td valign='top' align='right'>";
 			if (permission_exists('var_edit')) {
-				echo "		<a href='var_edit.php?id=".$row['var_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='var_edit.php?id=".$row['var_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('var_delete')) {
-				echo "		<a href='var_delete.php?id=".$row['var_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='var_delete.php?id=".$row['var_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -163,9 +163,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('var_add')) {
-		echo "			<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='var_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
