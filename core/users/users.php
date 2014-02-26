@@ -54,7 +54,7 @@ echo "	<td align=\"center\">\n";
 	echo "<td align='left' width='90%' nowrap><b>".$text['header-user_manager']."</b></td>\n";
 	echo "<td align='right' nowrap='nowrap'>".$text['label-search_by'].":&nbsp;</td>";
 	echo "<td align='left'>\n";
-	echo "	<select name='field_name' style='width:150px' class='frm'>\n";
+	echo "	<select name='field_name' style='width:150px' class='formfld'>\n";
 	echo "	<option value=''></option>\n";
 	if ($field_name == "username") {
 		echo "	<option value='username' selected='selected'>".$text['label-username']."</option>\n";
@@ -65,7 +65,7 @@ echo "	<td align=\"center\">\n";
 	echo "	</select>\n";
 	echo "</td>\n";
 	echo "<td align='left' width='3px'>&nbsp;</td>";
-	echo "<td align='left'><input type='text' class='txt' style='width: 150px' name='field_value' value='$field_value'></td>";
+	echo "<td align='left'><input type='text' class='txt' style='width: 150px; margin-right: 3px;' name='field_value' value='$field_value'></td>";
 	echo "<td align='left' width='60px'><input type='submit' class='btn' name='submit' value='".$text['button-search']."'></td>";
 	echo "</tr>\n";
 	echo "</form>";
