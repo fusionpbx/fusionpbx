@@ -284,7 +284,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	//redirect the browser
 		$_SESSION["message"] = $text['message-update'];
-		if (if_group("admin")) {
+		if (if_group("admin") || if_group("superadmin")) {
 			header("Location: usersupdate.php?id=".$user_uuid);
 		}
 		else {
