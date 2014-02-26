@@ -121,9 +121,9 @@ require_once "resources/paging.php";
 		echo th_order_by('unique_id', $text['label-unique_id'], $order_by, $order);
 		echo th_order_by('dial_user', $text['label-forward_to'], $order_by, $order);
 		echo th_order_by('description', $text['label-description'], $order_by, $order);
-		echo "<td align='right' width='42'>\n";
+		echo "<td class='list_control_icons'>";
 		if (permission_exists('extension_add')) {
-			echo "	<a href='extension_edit.php' alt='".$text['message-add']."'>$v_link_label_add</a>\n";
+			echo "<a href='extension_edit.php' alt='".$text['message-add']."'>$v_link_label_add</a>";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -140,12 +140,12 @@ require_once "resources/paging.php";
 					echo "	<td valign='top' class='".$row_style[$c]."'>&nbsp;</td>\n";
 				}
 				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
-				echo "	<td valign='top' align='right'>\n";
+				echo "	<td class='list_control_icons'>";
 				if (permission_exists('extension_edit')) {
-					echo "		<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+					echo "<a href='extension_edit.php?id=".$row['extension_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('extension_delete')) {
-					echo "		<a href='extension_delete.php?id=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "<a href='extension_delete.php?id=".$row['extension_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -160,9 +160,9 @@ require_once "resources/paging.php";
 		echo "	<tr>\n";
 		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-		echo "		<td width='33.3%' align='right'>\n";
+		echo "		<td class='list_control_icons'>";
 		if (permission_exists('extension_add')) {
-			echo "			<a href='extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+			echo 		"<a href='extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";
