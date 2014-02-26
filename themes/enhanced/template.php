@@ -109,13 +109,22 @@ td {
 	font-family: arial;
 }
 
+td.list_control_icons {
+	padding: none;
+	padding-left: 3px;
+	width: 50px;
+	text-align: right;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
 img.list_control_icon {
+	margin: 2px;
 	width: 21px;
 	height: 21px;
 	border: none;
 	opacity: 0.9;
 	-moz-opacity: 0.9;
-	vertical-align: middle;
 	}
 
 input.btn, input.button {
