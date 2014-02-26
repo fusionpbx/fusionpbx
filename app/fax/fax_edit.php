@@ -660,7 +660,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			echo "			<select name=\"user_uuid\" class='frm'>\n";
+			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 			echo "			<option value=\"\"></option>\n";
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $field) {

@@ -149,12 +149,12 @@ require_once "resources/paging.php";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_email']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
-				echo "	<td valign='top' align='right'>\n";
+				echo "	<td class='list_control_icons'>";
 				if (permission_exists('fax_extension_edit')) {
-					echo "		<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+					echo "<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('fax_extension_delete')) {
-					echo "		<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -170,9 +170,9 @@ require_once "resources/paging.php";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('fax_extension_add')) {
-		echo "			<a href='fax_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo 		"<a href='fax_edit.php' alt='add'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";

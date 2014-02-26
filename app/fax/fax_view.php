@@ -182,16 +182,16 @@ else {
 				mkdir($fax_dir.'/'.$fax_extension,0774,true);
 				chmod($fax_dir.'/'.$fax_extension,0774);
 			}
-			if (!is_dir($dir_fax_inbox)) { 
-				mkdir($dir_fax_inbox,0774,true); 
+			if (!is_dir($dir_fax_inbox)) {
+				mkdir($dir_fax_inbox,0774,true);
 				chmod($dir_fax_inbox,0774);
 			}
-			if (!is_dir($dir_fax_sent)) { 
-				mkdir($dir_fax_sent,0774,true); 
+			if (!is_dir($dir_fax_sent)) {
+				mkdir($dir_fax_sent,0774,true);
 				chmod($dir_fax_sent,0774);
 			}
-			if (!is_dir($dir_fax_temp)) { 
-				mkdir($dir_fax_temp,0774,true); 
+			if (!is_dir($dir_fax_temp)) {
+				mkdir($dir_fax_temp,0774,true);
 				chmod($dir_fax_temp,0774);
 			}
 	}
@@ -220,7 +220,7 @@ else {
 	}
 
 //clear file status cache
-	clearstatcache(); 
+	clearstatcache();
 
 //upload and send the fax
 	if (($_POST['type'] == "fax_send") && is_uploaded_file($_FILES['fax_file']['tmp_name'])) {
@@ -425,7 +425,7 @@ else {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input name=\"id\" type=\"hidden\" value=\"\$id\">\n";
 	echo "	<input name=\"type\" type=\"hidden\" value=\"fax_send\">\n";
-	echo "	<input name=\"fax_file\" type=\"file\" class=\"btn\" id=\"fax_file\" accept=\"image/tiff,application/pdf\">\n";
+	echo "	<input name=\"fax_file\" type=\"file\" class=\"formfld\" id=\"fax_file\" accept=\"image/tiff,application/pdf\">\n";
 	echo "	<br />\n";
 	echo "	".$text['description-upload']."\n";
 	echo "</td>\n";
