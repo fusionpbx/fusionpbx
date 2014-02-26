@@ -130,9 +130,9 @@ require_once "resources/paging.php";
 	//echo th_order_by('queue_abandoned_resume_allowed', $text['label-abandoned_resume_allowed'], $order_by, $order);
 	//echo th_order_by('queue_tier_rule_wait_multiply_level', $text['label-tier_rule_wait_multiply_level'], $order_by, $order);
 	echo th_order_by('queue_description', $text['label-description'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('call_center_queue_add')) {
-		echo "	<a href='call_center_queue_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='call_center_queue_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -155,12 +155,12 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_abandoned_resume_allowed]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_multiply_level]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_description]."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_center_queue_edit')) {
-				echo "		<a href='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_center_queue_delete')) {
-				echo "		<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -175,9 +175,9 @@ require_once "resources/paging.php";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('call_center_queue_add')) {
-		echo "			<a href='call_center_queue_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo 		"<a href='call_center_queue_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
