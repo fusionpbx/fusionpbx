@@ -116,9 +116,9 @@ else {
 	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order);
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('call_block_add')) {
-		echo "	<a href='call_block_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='call_block_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -137,13 +137,14 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_date_added."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_action']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_block_edit')) {
-				echo "		<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_block_delete')) {
-				echo "		<a href='call_block_delete.php?id=".$row['call_block_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='call_block_delete.php?id=".$row['call_block_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			};
+			echo "  </td>";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
@@ -156,11 +157,11 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-		echo "		<td width='33.3%' align='right'>\n";
-		if (permission_exists('call_block_add')) {
-			echo "			<a href='call_block_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
-		}
-		echo "		</td>\n";
+	echo "		<td class='list_control_icons'>";
+	if (permission_exists('call_block_add')) {
+		echo "<a href='call_block_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	}
+	echo "		</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
 	echo "</td>\n";
