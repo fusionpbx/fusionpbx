@@ -571,12 +571,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach($result as $field) {
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>".$field['username']."</td>\n";
-			echo "				<td style='width : 25px;' align='right'>\n";
+			echo "				<td style='width: 25px;' align='right'>\n";
 			if ($result_count > 1) {
 				echo "					<a href='conference_room_edit.php?meeting_user_uuid=".$field['meeting_user_uuid']."&conference_room_uuid=".$conference_room_uuid."&a=delete' alt='delete' onclick=\"return confirm(".$text['confirm-delete'].")\">$v_link_label_delete</a>\n";
-			}
-			else {
-				echo "					&nbsp;";
 			}
 			echo "				</td>\n";
 			echo "			</tr>\n";
@@ -590,7 +587,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$sql .= "order by username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	echo "			<select name=\"user_uuid\" class='frm'>\n";
+	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach($result as $field) {

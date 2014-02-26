@@ -257,8 +257,8 @@ else {
 				}
 
 				echo "<tr >\n";
-				echo "	<td valign='middle' class='".$row_style[$c]."'>".$moderator_pin."&nbsp;</td>\n";
-				echo "	<td valign='middle' class='".$row_style[$c]."'>".$participant_pin."&nbsp;</td>\n";
+				echo "	<td valign='middle' class='".$row_style[$c]."'>".$moderator_pin."</td>\n";
+				echo "	<td valign='middle' class='".$row_style[$c]."'>".$participant_pin."</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_uuid']."&nbsp;</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['meeting_uuid']."&nbsp;</td>\n";
 				//echo "	<td valign='middle' class='".$row_style[$c]."'>".$row['profile']."&nbsp;</td>\n";
@@ -339,13 +339,12 @@ else {
 				echo "		&nbsp;\n";
 				echo "	</td>\n";
 
-				echo "	<td valign='top' align='right' nowrap='nowrap'>\n";
-				echo "		&nbsp;\n";
+				echo "	<td class='list_control_icons'>";
 				if (permission_exists('conference_room_edit')) {
-					echo "		<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='".$text['label-edit']."'>$v_link_label_edit</a>\n";
+					echo "<a href='conference_room_edit.php?id=".$row['conference_room_uuid']."' alt='".$text['label-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('conference_room_delete')) {
-					echo "		<a href='conference_room_delete.php?id=".$row['conference_room_uuid']."' alt='".$text['label-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "<a href='conference_room_delete.php?id=".$row['conference_room_uuid']."' alt='".$text['label-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 
@@ -362,12 +361,9 @@ else {
 		echo "	<tr>\n";
 		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-		echo "		<td width='33.3%' align='right'>\n";
+		echo "		<td class='list_control_icons'>";
 		if (permission_exists('conference_room_add')) {
-			echo "			<a href='conference_room_edit.php' alt='add'>$v_link_label_add</a>\n";
-		}
-		else {
-			echo "			&nbsp;\n";
+			echo 		"<a href='conference_room_edit.php' alt='add'>$v_link_label_add</a>";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";
