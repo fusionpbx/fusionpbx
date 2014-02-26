@@ -247,7 +247,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
+	echo "</div><br><br>";
 
 //show the menu items
 	require_once "core/menu/menu_item_list.php";
