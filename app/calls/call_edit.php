@@ -43,7 +43,7 @@ else {
 //define the destination_select function
 	function destination_select($select_name, $select_value, $select_default) {
 		if (strlen($select_value) == 0) { $select_value = $select_default; }
-		echo "	<select class='formfld' style='width: 45px;' name='$select_name'>\n";
+		echo "	<select class='formfld' style='width: 55px;' name='$select_name'>\n";
 		echo "	<option value=''></option>\n";
 
 		$i = 0;
