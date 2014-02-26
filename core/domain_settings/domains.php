@@ -168,12 +168,9 @@ else {
 	echo "<tr>\n";
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	echo th_order_by('domain_description', $text['label-description'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('domain_add')) {
-		echo "	<a href='domain_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
-	}
-	else {
-		echo "	&nbsp;\n";
+		echo "<a href='domain_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -183,12 +180,12 @@ else {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_edit')) {
-				echo "		<a href='domain_edit.php?id=".$row['domain_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='domain_edit.php?id=".$row['domain_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('domain_delete')) {
-				echo "		<a href='domain_delete.php?id=".$row['domain_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='domain_delete.php?id=".$row['domain_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -203,12 +200,9 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('domain_add')) {
-		echo "			<a href='domain_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
-	}
-	else {
-		echo "			&nbsp;\n";
+		echo "<a href='domain_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
