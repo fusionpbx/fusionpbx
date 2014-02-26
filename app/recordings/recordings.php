@@ -158,39 +158,37 @@ require_once "resources/paging.php";
 	echo "	<td align=\"center\">\n";
 	echo "      <br>";
 
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
 	echo "			<span class=\"title\"><strong>".$text['title'].":</strong></span><br />\n";
-	echo "			".$text['description']."\n";
+	echo "			".stripslashes($text['description'])."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
 
 	echo "<br />\n";
 
-	echo "	<table border='0' width='100%'>\n";
+	echo "	<table border='0' width='100%' cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%'>\n";
 	if ($v_path_show) {
-		echo "<b>location:</b> \n";
+		echo "<b>Location:</b> \n";
 		echo $_SESSION['switch']['recordings']['dir'];
 	}
 	echo "		</td>\n";
 	if (permission_exists('recording_upload')) {
-		echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
-		echo "		<td valign=\"top\" class=\"label\">\n";
-		echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
-		echo "		</td>\n";
 		echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
+		echo "			<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
+		echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
 		echo "			".$text['label-upload']."\n";
-		echo "			<input name=\"ulfile\" type=\"file\" class=\"btn\" id=\"ulfile\">\n";
+		echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld\" style=\"width: 260px;\" id=\"ulfile\">\n";
 		echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
+		echo "			</form>";
 		echo "		</td>\n";
-		echo "</form>";
 	}
 	echo "	</tr>\n";
-	echo "	</table>\n";
+	echo "	</table><br><br>\n";
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -204,9 +202,9 @@ require_once "resources/paging.php";
 	$rows_per_page = 100;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -255,12 +253,12 @@ require_once "resources/paging.php";
 			echo "	".$tmp_filesize;
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='30%'>".$row['recording_description']."</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
-				echo "		<a href='recording_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "<a href='recording_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('recording_delete')) {
-				echo "		<a href='recording_delete.php?id=".$row['recording_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='recording_delete.php?id=".$row['recording_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -275,9 +273,9 @@ require_once "resources/paging.php";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('recording_add')) {
-		echo "			<a href='recording_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo 		"<a href='recording_edit.php' alt='add'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
