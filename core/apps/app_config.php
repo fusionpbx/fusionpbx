@@ -44,7 +44,7 @@
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 		$apps[$x]['menu'][1]['title']['en-us'] = "App Manager";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Administrador de Aplicaciones";
+		$apps[$x]['menu'][1]['title']['es-cl'] = "Administrador de Aplicaciones";
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";
 		$apps[$x]['menu'][1]['title']['de-at'] = "";
