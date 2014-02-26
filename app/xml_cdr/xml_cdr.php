@@ -327,8 +327,8 @@ else {
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order);
 	//echo th_order_by('end_stamp', 'End', $order_by, $order);
 	echo th_order_by('duration', $text['label-length'], $order_by, $order);
-	if (if_group("admin") || if_group("superadmin")) { 
-		echo th_order_by('pdd_ms', 'PDD', $order_by, $order); 
+	if (if_group("admin") || if_group("superadmin")) {
+		echo th_order_by('pdd_ms', 'PDD', $order_by, $order);
 	}
 	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order);
 	echo "</tr>\n";
@@ -437,6 +437,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td colspan='11' align='left'>\n";
+	echo "	<br><br>";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
