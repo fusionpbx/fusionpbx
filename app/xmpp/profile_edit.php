@@ -134,7 +134,7 @@ function hide_advanced_config() {
 				<tr>
 					<td width="30%" valign="top" class="vncell"><?php echo $text['label-advanced']?></td>
 					<td width="70%" class="vtable">
-						<input type="button" onClick="show_advanced_config()" value="<?php echo $text['button-advanced']?>"></input>
+						<input type="button" class="btn" onClick="show_advanced_config()" value="<?php echo $text['button-advanced']?>"></input>
 					</td>
 				</tr>
 			</table>
@@ -143,7 +143,7 @@ function hide_advanced_config() {
 			<table width="100%" border="0" cellpadding="6" cellspacing="0">
 				<tr>
 				<?php if (if_group("superadmin")) { ?>
-					<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>
+					<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>
 						<?php echo $text['label-context']?>:
 					</td>
 					<td class='vtable' align='left'>
