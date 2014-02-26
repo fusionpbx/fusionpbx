@@ -122,8 +122,8 @@ if (strlen($_GET["a"]) > 0) {
 	$tmp_module_header .= "<th>".$text['label-status']."</th>\n";
 	$tmp_module_header .= "<th>".$text['label-action']."</th>\n";
 	$tmp_module_header .= "<th>".$text['label-enabled']."</th>\n";
-	$tmp_module_header .= "<td align='right' width='42'>\n";
-	$tmp_module_header .= "	<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	$tmp_module_header .= "<td class='list_control_icons'>";
+	$tmp_module_header .= "<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	$tmp_module_header .= "</td>\n";
 	$tmp_module_header .= "<tr>\n";
 
@@ -180,14 +180,14 @@ if (strlen($_GET["a"]) > 0) {
 				echo $text['option-false'];
 			}
 			echo "</td>\n";
-			echo "   <td valign='top' align='right'>\n";
+			echo "   <td class='list_control_icons'>";
 			if (permission_exists('module_edit')) {
-				echo "		<a href='module_edit.php?id=".$row["module_uuid"]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='module_edit.php?id=".$row["module_uuid"]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('module_delete')) {
-				echo "		<a href='module_delete.php?id=".$row["module_uuid"]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='module_delete.php?id=".$row["module_uuid"]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
-			echo "   </td>\n";
+			echo "</td>\n";
 			echo "</tr>\n";
 
 			$prev_module_category = $row["module_category"];
@@ -202,11 +202,11 @@ if (strlen($_GET["a"]) > 0) {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('module_add')) {
-		echo "			<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
-	echo "		</td>\n";
+	echo "</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
 	echo "</td>\n";
