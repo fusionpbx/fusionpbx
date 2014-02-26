@@ -68,13 +68,9 @@ else {
 		echo "    </script>";
 
 	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
 
 	echo "<form method='post' target='frame' action='sql_query_result.php' >";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap><b>".$text['header-sql_query']."</b></td>\n";
@@ -91,14 +87,14 @@ else {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td colspan='2' class='vtable' align='left'>\n";
-	echo "	<textarea name='sql_cmd' id='sql_cmd' rows='7' class='txt' wrap='off'>$sql_cmd</textarea\n";
+	echo "<td colspan='2' style='padding: none;' align='left'><br>\n";
+	echo "	<textarea name='sql_cmd' id='sql_cmd' rows='20' class='formfld' style='width: 100%;' wrap='off'>$sql_cmd</textarea\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
+	echo "		<td colspan='2' align='right' style='padding-top: 10px;'>\n";
 
 	/*
 	echo "			DB: <select name='sql_db'>\n";
@@ -126,7 +122,7 @@ else {
 
 
 	echo "			".$text['label-table'].": \n";
-	echo "			<select name='table_name'>\n";
+	echo "			<select name='table_name' class='formfld' style='width: auto;'>\n";
 	echo "			<option value=''></option>\n";
 	if ($db_type == "sqlite") {
 		$sql = "SELECT name FROM sqlite_master ";
@@ -153,7 +149,7 @@ else {
 	echo "			</select>\n";
 	echo "			&nbsp;\n";
 	echo "			&nbsp;\n";
-	echo "			".$text['label-result_type'].": <select name='sql_type'>\n";
+	echo "			".$text['label-result_type'].": <select name='sql_type' class='formfld' style='width: auto;'>\n";
 	echo "			<option value='default'>".$text['option-result_type_view']."</option>\n";
 	echo "			<option value='csv'>".$text['option-result_type_csv']."</option>\n";
 	echo "			<option value='sql insert into'>".$text['option-result_type_insert']."</option>\n";
@@ -162,16 +158,12 @@ else {
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-execute']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
-
-	echo "</table>";
+	echo "</table><br>";
 	echo "</form>";
 
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
 	echo "</div>";
 
-	echo "<iframe id='frame' width='100%' height='400' FRAMEBORDER='0' name='frame' style='background-color : #FFFFFF;'></iframe>\n";
+	echo "<iframe id='frame' height='400' FRAMEBORDER='0' name='frame' style='width: 100%; background-color : #FFFFFF; border: 1px solid #c0c0c0;'></iframe>\n";
 
 //show the footer
 	require_once "resources/footer.php";

@@ -58,7 +58,8 @@ if (count($_POST)>0) {
 	$tmp_header .= "<style type='text/css'>\n";
 	$tmp_header .= "\n";
 	$tmp_header .= "body {\n";
-	$tmp_header .= "	font-size: 13px;\n";
+	$tmp_header .= "	font-family: arial;\n";
+	$tmp_header .= "	font-size: 12px;\n";
 	$tmp_header .= "	color: #444444;\n";
 	$tmp_header .= "}\n";
 	$tmp_header .= "\n";
@@ -81,6 +82,7 @@ if (count($_POST)>0) {
 	$tmp_header .= "	background-color: #EEEEEE;\n";
 	$tmp_header .= "	background-image: url(".PROJECT_PATH."'/themes/horizontal/background_cell.gif');\n";
 	$tmp_header .= "	border-bottom: 1px solid #999999;\n";
+	$tmp_header .= "	font-size: 12px;\n";
 	$tmp_header .= "	color: #444444;\n";
 	$tmp_header .= "	text-align: left;\n";
 	$tmp_header .= "	padding-top: 4px;\n";
@@ -97,6 +99,7 @@ if (count($_POST)>0) {
 	$tmp_header .= ".row_style1 {\n";
 	$tmp_header .= "	border-bottom: 1px solid #999999;\n";
 	$tmp_header .= "	background-color: #FFFFFF;\n";
+	$tmp_header .= "	font-size: 12px;\n";
 	$tmp_header .= "	color: #444444;\n";
 	$tmp_header .= "	text-align: left;\n";
 	$tmp_header .= "	padding-top: 4px;\n";
