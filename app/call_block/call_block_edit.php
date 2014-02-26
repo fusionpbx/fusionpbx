@@ -278,14 +278,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_block_enabled'>\n";
 	echo "	<option value=''></option>\n";
-	if ($call_block_enabled == "true") {
-		echo "	<option value='true' SELECTED >".$text['label-true']."</option>\n";
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	if ($call_block_enabled == "false") {
-		echo "	<option value='false' SELECTED >".$text['label-false']."</option>\n";
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
+	echo "		<option value='true' ".(($call_block_enabled == "true") ? "selected" : null).">".$text['label-true']."</option>\n";
+	echo "		<option value='false' ".(($call_block_enabled == "false") ? "selected" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['label-enable-message']."\n";
