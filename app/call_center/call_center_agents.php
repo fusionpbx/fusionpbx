@@ -127,9 +127,9 @@ require_once "resources/paging.php";
 	//echo th_order_by('agent_wrap_up_time', $text['label-wrap_up_time'], $order_by, $order);
 	//echo th_order_by('agent_reject_delay_time', $text['label-reject_delay_time'], $order_by, $order);
 	//echo th_order_by('agent_busy_delay_time', $text['label-busy_delay_time'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('call_center_agent_add')) {
-		echo "	<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -149,12 +149,12 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_wrap_up_time]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_reject_delay_time]."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_busy_delay_time]."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>\n";
 			if (permission_exists('call_center_agent_edit')) {
-				echo "		<a href='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('call_center_agent_delete')) {
-				echo "		<a href='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."'\" value='e'>\n";
 			//echo "		<input type='button' class='btn' name='' alt='delete' onclick=\"if (confirm('Are you sure you want to delete this?')) { window.location='call_center_agent_delete.php?id=".$row[call_center_agent_uuid]."' }\" value='x'>\n";
@@ -171,9 +171,9 @@ require_once "resources/paging.php";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('call_center_agent_add')) {
-		echo "			<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo 		"<a href='call_center_agent_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
