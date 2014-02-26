@@ -140,12 +140,12 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					//}
 					//echo "</td>";
 
-					echo "   <td valign='top' align='right' nowrap>\n";
+					echo "   <td class='list_control_icons'>\n";
 					if (permission_exists('menu_edit')) {
-						echo "		<a href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+						echo "<a href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 					}
 					if (permission_exists('menu_delete')) {
-						echo "		<a href='menu_item_delete.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+						echo "<a href='menu_item_delete.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
 					}
 					echo "   </td>\n";
 					echo "</tr>";
@@ -216,9 +216,9 @@ $order = $_GET["order"];
 		echo "<th align='left'nowrap>&nbsp; ".$text['label-category']." &nbsp; </th>";
 		echo "<th nowrap>&nbsp; ".$text['label-protected']." &nbsp; </th>";
 		echo "<th nowrap width='70'>&nbsp; ".$text['label-menu_order']." &nbsp; </th>";
-		echo "<td align='right' width='42'>\n";
+		echo "<td class='list_control_icons'>";
 		if (permission_exists('menu_add')) {
-			echo "	<a href='menu_item_edit.php?id=".$menu_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+			echo "<a href='menu_item_edit.php?id=".$menu_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 		}
 		echo "</td>\n";
 		echo "</tr>";
@@ -296,12 +296,12 @@ $order = $_GET["order"];
 				//}
 				//echo "</td>";
 
-				echo "   <td valign='top' align='right' nowrap>\n";
+				echo "   <td class='list_control_icons'>";
 				if (permission_exists('menu_edit')) {
-					echo "		<a href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row['menu_item_uuid']."&menu_uuid=".$menu_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+					echo "<a href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row['menu_item_uuid']."&menu_uuid=".$menu_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('menu_delete')) {
-					echo "		<a href='menu_item_delete.php?id=".$menu_uuid."&menu_item_uuid=".$row['menu_item_uuid']."&menu_uuid=".$menu_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+					echo "<a href='menu_item_delete.php?id=".$menu_uuid."&menu_item_uuid=".$row['menu_item_uuid']."&menu_uuid=".$menu_uuid."' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
 				}
 				echo "   </td>\n";
 				echo "</tr>";
