@@ -662,9 +662,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "					<td class='vtable'>\n";
 			echo "						".$field['ivr_menu_option_description']."&nbsp;\n";
 			echo "					</td>\n";
-			echo "					<td nowrap='nowrap'>\n";
-			echo "						<a href='ivr_menu_option_edit.php?id=".$field['ivr_menu_option_uuid']."&ivr_menu_uuid=".$field['ivr_menu_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "						<a href='ivr_menu_option_delete.php?id=".$field['ivr_menu_option_uuid']."&ivr_menu_uuid=".$field['ivr_menu_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "					<td class='list_control_icons'>";
+			echo 						"<a href='ivr_menu_option_edit.php?id=".$field['ivr_menu_option_uuid']."&ivr_menu_uuid=".$field['ivr_menu_uuid']."' alt='edit'>$v_link_label_edit</a>";
+			echo 						"<a href='ivr_menu_option_delete.php?id=".$field['ivr_menu_option_uuid']."&ivr_menu_uuid=".$field['ivr_menu_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			echo "					</td>\n";
 			echo "				</tr>\n";
 		}
@@ -825,11 +825,9 @@ for ($c = 0; $c < 1; $c++) {
 	echo $text['description-caller_id_name_prefix']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 
 	//--- begin: show_advanced -----------------------
-		echo "<tr>\n";
-		echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap>\n";
-
 		echo "	<div id=\"show_advanced_box\">\n";
 		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "		<tr>\n";
@@ -845,10 +843,10 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-invalid_sound'].":\n";
 		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
+		echo "<td width=\"70%\" class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_invalid_sound' maxlength='255' value=\"$ivr_menu_invalid_sound\">\n";
 		echo "<br />\n";
 		echo $text['description-invalid_sound']."\n";
@@ -968,15 +966,14 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	</table>\n";
 		echo "	</div>";
 
-		echo "</td>\n";
-		echo "</tr>\n";
 	//--- end: show_advanced -----------------------
 
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-enabled'].":\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width=\"70%\" class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ivr_menu_enabled'>\n";
 	echo "	<option value=''></option>\n";
 	if ($ivr_menu_enabled == "true") {

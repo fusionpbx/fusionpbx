@@ -116,9 +116,9 @@ else {
 		echo th_order_by('ivr_menu_direct_dial', $text['label-direct_dial'], $order_by[0]['name'], $order_by[0]['order']);
 		echo th_order_by('ivr_menu_enabled', $text['label-enabled'], $order_by[0]['name'], $order_by[0]['order']);
 		echo th_order_by('ivr_menu_description', $text['label-description'], $order_by[0]['name'], $order_by[0]['order']);
-		echo "<td align='right' width='42'>\n";
+		echo "<td class='list_control_icons'>";
 		if (permission_exists('ivr_menu_add')) {
-			echo "	<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+			echo "<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 		}
 		echo "</td>\n";
 		echo "<tr>\n";
@@ -132,12 +132,12 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_direct_dial']."</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ivr_menu_enabled']."</td>\n";
 				echo "	<td valign='top' class='row_stylebg'>".$row['ivr_menu_description']."&nbsp;</td>\n";
-				echo "	<td valign='top' align='right'>\n";
+				echo "	<td class='list_control_icons'>";
 				if (permission_exists('ivr_menu_edit')) {
-					echo "		<a href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+					echo "<a href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('ivr_menu_delete')) {
-					echo "		<a href='ivr_menu_delete.php?id=".$row['ivr_menu_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "<a href='ivr_menu_delete.php?id=".$row['ivr_menu_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";
@@ -152,9 +152,9 @@ else {
 		echo "	<tr>\n";
 		echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 		echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-		echo "		<td width='33.3%' align='right'>\n";
+		echo "		<td class='list_control_icons'>";
 		if (permission_exists('ivr_menu_add')) {
-			echo "			<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+			echo 		"<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 		}
 		echo "		</td>\n";
 		echo "	</tr>\n";
