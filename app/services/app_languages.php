@@ -26,6 +26,11 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
+	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
+	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
+	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
+	$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
+
 	$text['message-delete']['en-us'] = "Delete Complete";
 	$text['message-delete']['es-cl'] = "Eliminación Completada";
 	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
@@ -111,10 +116,10 @@
 	$text['description-start']['pt-pt'] = "Introduza o comando para arrancar o serviço.";
 	$text['description-start']['fr-fr'] = "Entrer la commande pour démarrer le service.";
 
-	$text['label-stop']['en-us'] = "Stop Comand";
-	$text['label-stop']['es-cl'] = "Comando para Detener";
-	$text['label-stop']['pt-pt'] = "Comando para Parar";
-	$text['label-stop']['fr-fr'] = "Comande d'arrêt";
+	$text['label-stop']['en-us'] = "Stop Command:";
+	$text['label-stop']['es-cl'] = "Comando para Detener:";
+	$text['label-stop']['pt-pt'] = "Comando para Parar:";
+	$text['label-stop']['fr-fr'] = "Comande d'arrêt:";
 
 	$text['description-stop']['en-us'] = "Enter the command to stop the service.";
 	$text['description-stop']['es-cl'] = "Ingrese el comando para detener el servicio.";
