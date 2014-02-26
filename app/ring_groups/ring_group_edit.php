@@ -561,10 +561,10 @@ else {
 		echo "					<td>\n";
 		//echo "						<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 		echo "					</td>\n";
-		echo "					<td nowrap='nowrap'>\n";
+		echo "					<td class='list_control_icons' style='width: 25px;'>";
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
-			//echo "						<a href='ring_group_destination_edit.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
-			echo "						<a href='ring_group_destination_delete.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			//echo 					"<a href='ring_group_destination_edit.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."' alt='edit'>$v_link_label_edit</a>";
+			echo					"<a href='ring_group_destination_delete.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 		}
 		echo "					</td>\n";
 		echo "				</tr>\n";
@@ -682,7 +682,7 @@ else {
 	$sql .= "order by username asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	echo "			<select name=\"user_uuid\" class='frm'>\n";
+	echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
 	echo "			<option value=\"\"></option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach($result as $field) {
