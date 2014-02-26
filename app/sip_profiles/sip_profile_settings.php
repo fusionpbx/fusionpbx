@@ -99,9 +99,9 @@ require_once "resources/paging.php";
 	echo th_order_by('sip_profile_setting_value', $text['label-setting_value'], $order_by, $order);
 	echo th_order_by('sip_profile_setting_enabled', $text['label-setting_enabled'], $order_by, $order);
 	echo th_order_by('sip_profile_setting_description', $text['label-setting_description'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('sip_profile_add')) {
-		echo "	<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -112,12 +112,12 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_setting_value']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['sip_profile_setting_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_setting_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('sip_profile_edit')) {
-				echo "		<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('sip_profile_delete')) {
-				echo "		<a href='sip_profile_setting_delete.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "<a href='sip_profile_setting_delete.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -132,9 +132,9 @@ require_once "resources/paging.php";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('sip_profile_add')) {
-		echo "			<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo 		"<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
