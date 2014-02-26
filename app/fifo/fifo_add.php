@@ -263,8 +263,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//redirect the user
-		$_SESSION["message"] = $text['message-update'];
-		header("Location: fifo.php");
+		$_SESSION["message"] = $text['message-add'];
+		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=16589224-c876-aeb3-f59f-523a1c0801f7");
 		return;
 
 } //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
