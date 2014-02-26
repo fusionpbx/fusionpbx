@@ -353,7 +353,7 @@ else {
 		//redirect user
 			if ($action == "add") {
 				$_SESSION["message"] = $text['message-add'];
-			]
+			}
 			else if ($action == "update") {
 				$_SESSION["message"] = $text['message-update'];
 			}
@@ -524,18 +524,16 @@ else {
 		echo "		&nbsp;&nbsp;&nbsp;";
 		echo "</td>\n";
 
-		echo "<form method='GET' name='frm_search' action='schema_data_edit.php'>\n";
 		echo "<td width='45%' align='right' valign='top' nowrap='nowrap'>\n";
+		echo "	<form method='GET' name='frm_search' action='schema_data_edit.php'>\n";
 		echo "	<input type='hidden' name='schema_uuid' value='$schema_uuid'>\n";
 		//echo "	<input type='hidden' name='id' value='$schema_uuid'>\n";
 		//echo "	<input type='hidden' name='data_parent_row_uuid' value='$data_parent_row_uuid'>\n";
 		//echo "	<input type='hidden' name='data_row_uuid' value='$first_data_row_uuid'>\n";
 		echo "	<input class='formfld' type='text' name='search_all' value='$search_all'>\n";
 		echo "	<input class='btn' type='submit' name='submit' value='".$text['button-search_all']."'>\n";
-		echo "</td>\n";
-		echo "</form>\n";
-		echo "<td width='5%' align='right' valign='top' nowrap='nowrap'>\n";
-		echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='schema_data_view.php?id=$schema_uuid'\" value='".$text['button-back']."'>\n";
+		echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='schema_data_view.php?id=$schema_uuid'\" value='".$text['button-back']."'>\n";
+		echo "	</form>\n";
 		echo "</td>\n";
 	}
 	else {

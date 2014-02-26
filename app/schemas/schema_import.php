@@ -331,7 +331,7 @@ if (count($_POST)>0) {
 	echo "    ".$text['label-import_data'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea name='data' id='data' rows='7' class='txt' wrap='off'>$data</textarea>\n";
+	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
 	echo "<br />\n";
 	echo $text['description-import_data']."\n";
 	echo "</td>\n";

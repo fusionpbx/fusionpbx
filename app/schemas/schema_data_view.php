@@ -302,9 +302,9 @@ if (strlen($_GET["id"]) > 0) {
 			echo "<th valign='top' nowrap>&nbsp; ".$row['field_label']." &nbsp;</th>\n";
 		}
 	}
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('schema_data_add')) {
-		echo "	<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -355,17 +355,17 @@ if (strlen($_GET["id"]) > 0) {
 			}
 		}
 
-		echo "<td valign='top' align='right' nowrap='nowrap'>\n";
+		echo "<td class='list_control_icons'>";
 		if (permission_exists('schema_data_edit')) {
 			if (strlen($data_parent_row_uuid) == 0) {
-				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."&search_all=$search_all' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."&search_all=$search_all' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			else {
-				echo "	<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+				echo "<a href='schema_data_edit.php?schema_uuid=".$row["schema_uuid"]."&data_parent_row_uuid=$data_parent_row_uuid&data_row_uuid=".$row['data_row_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 		}
 		if (permission_exists('schema_delete')) {
-			echo"	<a href='schema_delete.php?data_row_uuid=".$row['data_row_uuid']."&data_parent_row_uuid=$data_parent_row_uuid&schema_uuid=".$schema_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo"<a href='schema_delete.php?data_row_uuid=".$row['data_row_uuid']."&data_parent_row_uuid=$data_parent_row_uuid&schema_uuid=".$schema_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 		}
 		echo "</td>\n";
 
@@ -380,9 +380,9 @@ if (strlen($_GET["id"]) > 0) {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('schema_data_add')) {
-		echo "			<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+		echo "<a href='schema_data_edit.php?schema_uuid=".$schema_uuid."&data_parent_row_uuid=$data_parent_row_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
