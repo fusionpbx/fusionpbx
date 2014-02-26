@@ -79,6 +79,19 @@ td {
 	font-family: arial;
 }
 
+form {
+	margin: 0px;
+	}
+
+td.list_control_icons {
+	padding: none;
+	padding-left: 3px;
+	width: 50px;
+	text-align: right;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
 INPUT.btn {
 	font-family: verdana;
 	font-size: 11px;
