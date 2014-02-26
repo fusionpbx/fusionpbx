@@ -208,13 +208,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the content
 	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
 	echo "		<br>";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
 	switch ($action) {
@@ -246,10 +246,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<table border='0' cellpadding='3' cellspacing='3' width='100%'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='50%' valign='top' align='left' nowrap='nowrap'>\n";
 
 		echo "<form method='post' name='frm' action=''>\n";
-		echo "<table border='0' width='100%'>\n";
+		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_type'].":\n";
@@ -525,13 +525,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($action == "update") {
 			echo "				<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
 		}
-		echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+		echo "			<br>";
+		echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
 		echo "</table>";
 		echo "</form>";
 
 	echo "</td>\n";
+	echo "<td>&nbsp;&nbsp;</td>";
 	echo "<td width='50%' class='' valign='top' align='center'>\n";
 		//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
 		if ($action == "update") {
