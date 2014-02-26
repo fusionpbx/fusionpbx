@@ -141,9 +141,9 @@ if (strlen($_GET["a"]) > 0) {
 	echo th_order_by('service_description', 'Description', $order_by, $order);
 	echo "<th>Status</th>\n";
 	echo "<th>Action</th>\n";
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>";
 	if (permission_exists('service_add')) {
-		echo "	<a href='service_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo "<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
 	echo "<tr>\n";
@@ -173,12 +173,12 @@ if (strlen($_GET["a"]) > 0) {
 				echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
 			}
 			echo "</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('service_edit')) {
-				echo "		<a href='service_edit.php?id=".$row[service_uuid]."' alt='edit'>$v_link_label_edit</a>\n";
+				echo "<a href='service_edit.php?id=".$row[service_uuid]."' alt='edit'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('service_delete')) {
-				echo "		<a href='service_delete.php?id=".$row[service_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "<a href='service_delete.php?id=".$row[service_uuid]."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -193,9 +193,9 @@ if (strlen($_GET["a"]) > 0) {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>";
 	if (permission_exists('service_add')) {
-		echo "			<a href='service_edit.php' alt='add'>$v_link_label_add</a>\n";
+		echo 		"<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
