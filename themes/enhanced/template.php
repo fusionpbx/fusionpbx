@@ -114,7 +114,7 @@ td.list_control_icons {
 	padding-left: 3px;
 	width: 50px;
 	text-align: right;
-	vertical-align: middle;
+	vertical-align: top;
 	white-space: nowrap;
 }
 
@@ -125,6 +125,10 @@ img.list_control_icon {
 	border: none;
 	opacity: 0.9;
 	-moz-opacity: 0.9;
+	}
+
+form {
+	margin: 0px;
 	}
 
 input.btn, input.button {
@@ -156,41 +160,13 @@ input.btn:hover, input.button:hover, img.list_control_icon:hover {
 	-moz-opacity: 1.0;
 	}
 
-select.txt {
-	font-family: arial;
-	font-size: 12px;
-	width: 98.75%;
-	border: solid 1px #CCCCCC;
-	color: #666666;
-	background-color: #EFEFEF;
-	background-repeat:repeat-x;
-	height: 19px;
-}
-
-textarea.txt {
-	font-family: arial;
-	font-size: 12px;
-	width: 98.75%;
-	border: solid 1px #CCCCCC;
-	color: #666666;
-	background-color: #EFEFEF;
-	background-repeat:repeat-x;
-	overflow: auto;
-	padding: 4px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-}
-
-
-
-input.txt, .formfld {
+input.txt, textarea.txt, select.txt, .formfld {
 	font-family: arial;
 	font-size: 12px;
 	color: #000;
 	width: 50%;
 	text-align: left;
-	padding: 5px 5px;
+	padding: 5px;
 	border: 1px solid #c0c0c0;
 	background-color: #fff;
 	-webkit-box-shadow: 0px 0px 3px #cddaf0 inset;
@@ -205,6 +181,11 @@ input.txt:focus, .formfld:focus {
 	-webkit-box-shadow: 0px 0px 5px #cddaf0;
 	-moz-box-shadow: 0px 0px 5px #cddaf0;
 	box-shadow: 0px 0px 5px #cddaf0;
+	}
+
+select.formfld {
+	height: 27px;
+	padding: 4px;
 	}
 
 input.txt {
@@ -746,14 +727,21 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 	//logged in show the domains block
 	if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+
+		//add multi-lingual support
+		require_once "themes/enhanced/app_languages.php";
+		foreach($text as $key => $value) {
+			$text[$key] = $value[$_SESSION['domain']['language']['code']];
+		}
+
 		?>
 		<div id="domains_container">
 			<div id="domains_block">
 				<div id="domains_header">
-					<input id="domains_hide" type="button" class="btn" style="float: right" value="Close">
-					<b style="color: #000;">Domain Selector</b>
+					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?=$text['button-close']?>">
+					<b style="color: #000;"><?=$text['title-domains']?></b>
 					<br><br>
-					<input type="text" id="domain_filter" style="width: 100%;" value="Search..." onfocus="(this.value == 'Search...') ? this.value = '' : void(0);" onblur="(this.value == '') ? this.value = 'Search...' : void(0);" onkeyup="domain_search(this.value);">
+					<input type="text" id="domain_filter" style="width: 100%;" value="<?=$text['label-search']?>" onfocus="(this.value == '<?=$text['label-search']?>') ? this.value = '' : void(0);" onblur="(this.value == '') ? this.value = '<?=$text['label-search']?>' : void(0);" onkeyup="domain_search(this.value);">
 				</div>
 				<div id="domains_list">
 					<?
@@ -808,7 +796,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 							}
 							?>
 						</td>
-						<td width='50%' class='' align='right' valign='middle'>
+						<td width='50%' style='padding-right: 15px;' align='right' valign='middle'>
 							<?php
 							//logged in show the domains block
 							if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
