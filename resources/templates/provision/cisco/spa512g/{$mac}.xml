@@ -331,7 +331,7 @@
 <Set_Local_Time__HH_mm_ group="Regional/Miscellaneous" />
 
 <!-- Regional/Miscellaneous -->
-<Time_Zone group="Regional/Miscellaneous">GMT-05:00</Time_Zone>
+<Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
 <Ignore_DHCP_Time_Offset group="Regional/Miscellaneous">Yes</Ignore_DHCP_Time_Offset>
 <Daylight_Saving_Time_Rule group="Regional/Miscellaneous" />
@@ -582,7 +582,7 @@
 <User_ID_1_ group="Ext_1/Subscriber_Information">{$user_id_1}</User_ID_1_>
 <Password_1_ group="Ext_1/Subscriber_Information">{$user_password_1}</Password_1_>
 <Use_Auth_ID_1_ group="Ext_1/Subscriber_Information">No</Use_Auth_ID_1_>
-<Auth_ID_1_ group="Ext_1/Subscriber_Information" />
+<Auth_ID_1_ group="Ext_1/Subscriber_Information"></Auth_ID_1_>
 <Reversed_Auth_Realm_1_ group="Ext_1/Subscriber_Information" />
 <Mini_Certificate_1_ group="Ext_1/Subscriber_Information" />
 <SRTP_Private_Key_1_ group="Ext_1/Subscriber_Information" />
@@ -662,6 +662,7 @@
 <Handset_Version group="User/Audio">Auto</Handset_Version>
 <Deep_Bass group="User/Audio">Default</Deep_Bass>
 <EHS_Type group="User/Audio">None</EHS_Type>
+<Speakerphone_Enable group="User/Audio">Yes</Speakerphone_Enable>
 
 <!-- User/LCD -->
 <LCD_Contrast group="User/LCD">8</LCD_Contrast>

@@ -149,7 +149,7 @@
 <GPP_N group="Provisioning/General_Purpose_Parameters" />
 <GPP_O group="Provisioning/General_Purpose_Parameters" />
 <GPP_P group="Provisioning/General_Purpose_Parameters" />
-<Time_Zone group="Regional/Miscellaneous">GMT{$time_zone_offset}</Time_Zone>
+<Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
 <Daylight_Saving_Time_Rule group="Regional/Miscellaneous" />
 <Daylight_Saving_Time_Enable group="Regional/Miscellaneous">No</Daylight_Saving_Time_Enable>

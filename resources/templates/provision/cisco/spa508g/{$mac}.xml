@@ -330,7 +330,7 @@
 <!-- Regional/Miscellaneous -->
 <Set_Local_Date__mm_dd_ group="Regional/Miscellaneous" />
 <Set_Local_Time__HH_mm_ group="Regional/Miscellaneous" />
-<Time_Zone group="Regional/Miscellaneous">GMT-08:00</Time_Zone>
+<Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
 <Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
 <Ignore_DHCP_Time_Offset group="Regional/Miscellaneous">Yes</Ignore_DHCP_Time_Offset>
 <Daylight_Saving_Time_Rule group="Regional/Miscellaneous" />

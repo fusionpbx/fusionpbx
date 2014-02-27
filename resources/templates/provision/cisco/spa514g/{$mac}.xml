@@ -126,9 +126,28 @@
 <GPP_O group="Provisioning/General_Purpose_Parameters" />
 <GPP_P group="Provisioning/General_Purpose_Parameters" />
 
+
+<!-- Regional/Miscellaneous -->
+<Set_Local_Date__mm_dd_ group="Regional/Miscellaneous" />
+<Set_Local_Time__HH_mm_ group="Regional/Miscellaneous" />
+
+<!-- Regional/Miscellaneous -->
+<Time_Zone group="Regional/Miscellaneous">{$spa_time_zone}</Time_Zone>
+<Time_Offset__HH_mm_ group="Regional/Miscellaneous" />
+<Ignore_DHCP_Time_Offset group="Regional/Miscellaneous">Yes</Ignore_DHCP_Time_Offset>
+<Daylight_Saving_Time_Rule group="Regional/Miscellaneous" />
+<Daylight_Saving_Time_Enable group="Regional/Miscellaneous">Yes</Daylight_Saving_Time_Enable>
+<DTMF_Playback_Level group="Regional/Miscellaneous">-16</DTMF_Playback_Level>
+<DTMF_Playback_Length group="Regional/Miscellaneous">.1</DTMF_Playback_Length>
+<Inband_DTMF_Boost group="Regional/Miscellaneous">12dB</Inband_DTMF_Boost>
+<Dictionary_Server_Script group="Regional/Miscellaneous" />
+<Language_Selection group="Regional/Miscellaneous" />
+<Default_Character_Encoding group="Regional/Miscellaneous">ISO-8859-1</Default_Character_Encoding>
+<Locale group="Regional/Miscellaneous">en-US</Locale>
+
 <!-- Phone/General -->
 <Station_Name group="Phone/General">{$display_name_1}</Station_Name>
-<Station_Display_Name group="Phone/General" />
+<Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
 <Voice_Mail_Number group="Phone/General">*97</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
 <BMP_Picture_Download_URL group="Phone/General" />
