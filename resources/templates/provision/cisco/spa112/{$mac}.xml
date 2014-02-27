@@ -42,7 +42,7 @@
 <Auth_ID_2_></Auth_ID_2_>
 <Dial_Plan_2_>(*xxxxxx|*xxxxx|*xxxx|*xxx|*xx|*x|#x|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_2_>
 <!--<Dial_Plan_1_>(&lt;:31516&gt;xxxxxxx|&lt;:3&gt;xxxxxxxxxx|&lt;:3&gt;xxxxxxxxxxx|*xxxxx|*xxxx|*xxx|*xx|**xx|**xxx|**xxxx|**xxxxx|[3469]11|0|00|[2-9]xxxxxx|1xxx[2-9]xxxxxxS0|xxxxxxxxxxxx.)</Dial_Plan_1_>-->
-<Time_Zone>GMT-07:00</Time_Zone>
+<Time_Zone>{$spa_time_zone}</Time_Zone>
 <!--
 <Reset_Button_Enable>0</Reset_Button_Enable>
 <Web_Management>

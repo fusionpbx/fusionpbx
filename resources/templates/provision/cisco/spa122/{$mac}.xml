@@ -721,7 +721,7 @@
 <TRAP_SNMP_Version>v1</TRAP_SNMP_Version> <!-- options: v1/v2c/v3 -->
 </SNMP>
 <Time_Setup>
-<Time_Zone>-05 2 1</Time_Zone>
+<Time_Zone>{$spa_time_zone}</Time_Zone>
 <Auto_Adjust_Clock>1</Auto_Adjust_Clock>
 <Time_Server_Mode>manual</Time_Server_Mode> <!-- options: auto/manual -->
 <Time_Server>0.ciscosb.pool.ntp.org</Time_Server>
