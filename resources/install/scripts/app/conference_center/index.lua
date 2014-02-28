@@ -1,6 +1,6 @@
 --	conference_center/index.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2014 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -657,6 +657,23 @@
 							response = api:executeString(cmd);
 						end
 					end
+				end
+
+			--get the conference member count
+				cmd = "conference "..meeting_uuid.."-"..domain_name.." list count";
+				freeswitch.consoleLog("notice", "[conference center] cmd: ".. cmd .."\n");
+				member_count = api:executeString(cmd);
+				freeswitch.consoleLog("notice", "[conference center] member_count: ".. member_count .."\n");
+
+			--play member count
+				if (member_count == "1") then
+					--there is one other member in this conference
+						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-one_other_member_conference.wav");
+				else
+					--say the count
+						session:execute("say", default_language.." number pronounced "..member_count);
+					--members in this conference
+						session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-members_in_conference.wav");
 				end
 
 			--send the call to the conference
