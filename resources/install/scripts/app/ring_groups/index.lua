@@ -358,7 +358,7 @@
 
 				--set bind meta app
 					session:execute("bind_meta_app", "1 ab s execute_extension::dx XML features");
-					session:execute("bind_meta_app", "2 ab s record_session::"..recordings_dir.."}/archive/"..os.date("%Y").."/"..os.date("%m").."/"..os.date("%d").."}/"..uuid..".wav");
+					session:execute("bind_meta_app", "2 ab s record_session::"..recordings_dir.."/archive/"..os.date("%Y").."/"..os.date("%m").."/"..os.date("%d").."}/"..uuid..".wav");
 					session:execute("bind_meta_app", "3 ab s execute_extension::cf XML features");
 					session:execute("bind_meta_app", "4 ab s execute_extension::att_xfer XML features");
 
