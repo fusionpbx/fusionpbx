@@ -339,9 +339,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 	.menu_bar {
 		background-image: url('<!--{project_path}-->/themes/enhanced/images/background_black.png');
-		-webkit-border-radius: 7px 7px 7px 7px;
-		-moz-border-radius: 7px 7px 7px 7px;
-		border-radius: 7px 7px 7px 7px;
+		-webkit-border-radius: 3px 3px 3px 3px;
+		-moz-border-radius: 3px 3px 3px 3px;
+		border-radius: 3px 3px 3px 3px;
 		padding: 3px;
 	}
 
@@ -369,9 +369,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 		-khtml-opacity: 0.9;
 		opacity: 0.9;
 
-		-webkit-border-radius: 7px 7px 7px 7px;
-		-moz-border-radius: 7px 7px 7px 7px;
-		border-radius: 7px 7px 7px 7px;
+		-webkit-border-radius: 3px 3px 3px 3px;
+		-moz-border-radius: 3px 3px 3px 3px;
+		border-radius: 3px 3px 3px 3px;
 		text-align: left;
 		padding-top: 15px;
 		padding-bottom: 25px;
@@ -398,9 +398,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 		-moz-opacity:0.9;
 		-khtml-opacity: 0.9;
 		opacity: 0.9;
-		-webkit-border-radius: 7px 7px 7px 7px;
-		-moz-border-radius: 7px 7px 7px 7px;
-		border-radius: 7px 7px 7px 7px;
+		-webkit-border-radius: 3px 3px 3px 3px;
+		-moz-border-radius: 3px 3px 3px 3px;
+		border-radius: 3px 3px 3px 3px;
 		text-align: left;
 	}
 
@@ -451,18 +451,18 @@ table tr:nth-last-child(-5) td:first-of-type {
 		width:124px;
 		background:#333333;
 		background-color: rgba(20, 20, 20, 0.9);
-		-webkit-border-radius: 0px 0px 12px 12px;
-		-moz-border-radius: 0px 0px 12px 12px;
-		border-radius: 0px 0px 12px 12px;
+		-webkit-border-radius: 0px 0px 3px 3px;
+		-moz-border-radius: 0px 0px 3px 3px;
+		border-radius: 0px 0px 3px 3px;
 	}
 
 	#menu a:hover{
 		width:114px;
 		color:#fd9c03;
 		background:#1F1F1F;
-		-webkit-border-radius: 12px 12px 12px 12px;
-		-moz-border-radius: 12px 12px 12px 12px;
-		border-radius: 12px 12px 12px 12px;
+		-webkit-border-radius: 3px 3px 3px 3px;
+		-moz-border-radius: 3px 3px 3px 3px;
+		border-radius: 3px 3px 3px 3px;
 	}
 
 	#menu a:active{
@@ -500,9 +500,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 	file and this method */
 
 	div#menu h2:hover{
-		-webkit-border-radius: 12px 12px 12px 12px;
-		-moz-border-radius: 12px 12px 12px 12px;
-		border-radius: 12px 12px 12px 12px;
+		-webkit-border-radius: 3px 3px 3px 3px;
+		-moz-border-radius: 3px 3px 3px 3px;
+		border-radius: 3px 3px 3px 3px;
 		/*background:#1F1F1F url(<!--{project_path}-->/css/images/expand3.gif) no-repeat -999px -9999px;*/
 	}
 
@@ -563,9 +563,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 		background-image: url('<?=PROJECT_PATH?>/themes/enhanced/images/background_black.png');
 		background-position: top center;
 		padding: 10px;
-		-webkit-border-radius: 0px 0px 7px 7px;
-		-moz-border-radius: 0px 0px 7px 7px;
-		border-radius: 0px 0px 7px 7px;
+		-webkit-border-radius: 0px 0px 3px 3px;
+		-moz-border-radius: 0px 0px 3px 3px;
+		border-radius: 0px 0px 3px 3px;
 		text-align: center;
 	}
 
