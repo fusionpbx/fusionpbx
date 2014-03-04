@@ -1441,20 +1441,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-hold_music'].":\n";
-	echo "</td>\n";
-	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-	$moh= new switch_music_on_hold;
-	$moh->select_name = "hold_music";
-	$moh->select_value = $hold_music;
-	echo $moh->select();
-	echo "	<br />\n";
-	echo $text['description-hold_music']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
+		echo "<tr>\n";
+		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-hold_music'].":\n";
+		echo "</td>\n";
+		echo "<td width=\"70%\" class='vtable' align='left'>\n";
+		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+		$moh= new switch_music_on_hold;
+		$moh->select_name = "hold_music";
+		$moh->select_value = $hold_music;
+		echo $moh->select();
+		echo "	<br />\n";
+		echo $text['description-hold_music']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	if (if_group("superadmin")) {
 		if (strlen($user_context) == 0) {
