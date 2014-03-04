@@ -443,25 +443,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							$db->exec(check_sql($sql));
 							unset($sql);
 						}
-					//set the voicemail password
-						if (strlen($vm_password) == 0) {
-							$vm_password = generate_password(9, 1);
-						}
+
 					//add or update voicemail
-						require_once "app/extensions/resources/classes/extension.php";
-						$ext = new extension;
-						$ext->db = $db;
-						$ext->domain_uuid = $domain_uuid;
-						$ext->extension = $extension;
-						$ext->number_alias = $number_alias;
-						$ext->vm_password = $vm_password;
-						$ext->vm_mailto = $vm_mailto;
-						$ext->vm_attach_file = $vm_attach_file;
-						$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
-						$ext->vm_enabled = $vm_enabled;
-						$ext->description = $description;
-						$ext->voicemail();
-						unset($ext);
+						if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+							//set the voicemail password
+								if (strlen($vm_password) == 0) {
+									$vm_password = generate_password(9, 1);
+								}
+							//voicemail class
+								require_once "app/extensions/resources/classes/extension.php";
+								$ext = new extension;
+								$ext->db = $db;
+								$ext->domain_uuid = $domain_uuid;
+								$ext->extension = $extension;
+								$ext->number_alias = $number_alias;
+								$ext->vm_password = $vm_password;
+								$ext->vm_mailto = $vm_mailto;
+								$ext->vm_attach_file = $vm_attach_file;
+								$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
+								$ext->vm_enabled = $vm_enabled;
+								$ext->description = $description;
+								$ext->voicemail();
+								unset($ext);
+						}
 					//increment the extension number
 						$extension++;
 				}
@@ -545,20 +549,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					unset($sql);
 
 				//add or update voicemail
-					require_once "app/extensions/resources/classes/extension.php";
-					$ext = new extension;
-					$ext->db = $db;
-					$ext->domain_uuid = $domain_uuid;
-					$ext->extension = $extension;
-					$ext->number_alias = $number_alias;
-					$ext->vm_password = $vm_password;
-					$ext->vm_mailto = $vm_mailto;
-					$ext->vm_attach_file = $vm_attach_file;
-					$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
-					$ext->vm_enabled = $vm_enabled;
-					$ext->description = $description;
-					$ext->voicemail();
-					unset($ext);
+					if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+						require_once "app/extensions/resources/classes/extension.php";
+						$ext = new extension;
+						$ext->db = $db;
+						$ext->domain_uuid = $domain_uuid;
+						$ext->extension = $extension;
+						$ext->number_alias = $number_alias;
+						$ext->vm_password = $vm_password;
+						$ext->vm_mailto = $vm_mailto;
+						$ext->vm_attach_file = $vm_attach_file;
+						$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
+						$ext->vm_enabled = $vm_enabled;
+						$ext->description = $description;
+						$ext->voicemail();
+						unset($ext);
+					}
 			} //if ($action == "update")
 
 		//check the permissions
@@ -685,31 +691,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //get the voicemail data
-	$sql = "select * from v_voicemails ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	if (is_numeric($extension)) {
-		$sql .= "and voicemail_id = '$extension' ";
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+		//get the voicemails
+			$sql = "select * from v_voicemails ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			if (is_numeric($extension)) {
+				$sql .= "and voicemail_id = '$extension' ";
+			}
+			else {
+				$sql .= "and voicemail_id = '$number_alias' ";
+			}
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$vm_password = $row["voicemail_password"];
+				//$greeting_id = $row["greeting_id"];
+				$vm_mailto = $row["voicemail_mail_to"];
+				$vm_mailto = str_replace(" ", "", $vm_mailto);
+				$vm_attach_file = $row["voicemail_attach_file"];
+				$vm_keep_local_after_email = $row["voicemail_local_after_email"];
+				$vm_enabled = $row["voicemail_enabled"];
+			}
+			unset ($prep_statement);
+		//clean the variables
+			$vm_password = str_replace("#", "", $vm_password);
+			$vm_mailto = str_replace(" ", "", $vm_mailto);
 	}
-	else {
-		$sql .= "and voicemail_id = '$number_alias' ";
-	}
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$vm_password = $row["voicemail_password"];
-		//$greeting_id = $row["greeting_id"];
-		$vm_mailto = $row["voicemail_mail_to"];
-		$vm_mailto = str_replace(" ", "", $vm_mailto);
-		$vm_attach_file = $row["voicemail_attach_file"];
-		$vm_keep_local_after_email = $row["voicemail_local_after_email"];
-		$vm_enabled = $row["voicemail_enabled"];
-	}
-	unset ($prep_statement);
-
-//clean the variables
-	$vm_password = str_replace("#", "", $vm_password);
-	$vm_mailto = str_replace(" ", "", $vm_mailto);
 
 //set the defaults
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
@@ -900,16 +908,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	</tr>";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-vm_password'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='password' name='vm_password' id='vm_password' onfocus=\"document.getElementById('show_vm_password').innerHTML = '".$text['label-password'].": '+document.getElementById('vm_password').value;\" maxlength='255' value='$vm_password'>\n";
-	echo "<br />\n";
-	echo "<span onclick=\"document.getElementById('show_vm_password').innerHTML = ''\">".$text['description-vm_password']." </span><span id='show_vm_password'></span>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-vm_password'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='password' name='vm_password' id='vm_password' onfocus=\"document.getElementById('show_vm_password').innerHTML = '".$text['label-password'].": '+document.getElementById('vm_password').value;\" maxlength='255' value='$vm_password'>\n";
+		echo "<br />\n";
+		echo "<span onclick=\"document.getElementById('show_vm_password').innerHTML = ''\">".$text['description-vm_password']." </span><span id='show_vm_password'></span>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -1320,91 +1330,93 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-vm_enabled'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='vm_enabled'>\n";
-	echo "    <option value=''></option>\n";
-	if ($vm_enabled == "true" || $vm_enabled == "") {
-		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($vm_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-vm_enabled']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-vm_enabled'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='vm_enabled'>\n";
+		echo "    <option value=''></option>\n";
+		if ($vm_enabled == "true" || $vm_enabled == "") {
+			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($vm_enabled == "false") {
+			echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-vm_enabled']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-vm_mailto'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='vm_mailto' maxlength='255' value=\"$vm_mailto\">\n";
-	echo "<br />\n";
-	echo $text['description-vm_mailto']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-vm_mailto'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='vm_mailto' maxlength='255' value=\"$vm_mailto\">\n";
+		echo "<br />\n";
+		echo $text['description-vm_mailto']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-vm_attach_file'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='vm_attach_file'>\n";
-	echo "    <option value=''></option>\n";
-	if ($vm_attach_file == "true") {
-		echo "    <option value='true' selected >".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($vm_attach_file == "false") {
-		echo "    <option value='false' selected >".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-vm_attach_file']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-vm_attach_file'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='vm_attach_file'>\n";
+		echo "    <option value=''></option>\n";
+		if ($vm_attach_file == "true") {
+			echo "    <option value='true' selected >".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($vm_attach_file == "false") {
+			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-vm_attach_file']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-vm_keep_local_after_email'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='vm_keep_local_after_email'>\n";
-	echo "    <option value=''></option>\n";
-	if ($vm_keep_local_after_email == "true") {
-		echo "    <option value='true' selected >".$text['label-true']."</option>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-vm_keep_local_after_email'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='vm_keep_local_after_email'>\n";
+		echo "    <option value=''></option>\n";
+		if ($vm_keep_local_after_email == "true") {
+			echo "    <option value='true' selected >".$text['label-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($vm_keep_local_after_email == "false") {
+			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-vm_keep_local_after_email']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($vm_keep_local_after_email == "false") {
-		echo "    <option value='false' selected >".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "<br />\n";
-	echo $text['description-vm_keep_local_after_email']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	if (permission_exists('extension_toll')) {
 		echo "<tr>\n";
