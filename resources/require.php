@@ -51,7 +51,9 @@
 				$results = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "{/*/*,}/resources/classes/".$class_name.".php", GLOB_BRACE);
 			//include the class
 				foreach ($results as &$class_file) {
-					include $class_file;
+					if (!class_exists($class_name)) {
+						include $class_file;
+					}
 				}
 		}
 	}
