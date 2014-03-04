@@ -284,7 +284,7 @@
 <Auto_Ans_Page_On_Active_Call_1_ ua="na">Yes</Auto_Ans_Page_On_Active_Call_1_>
 
 <!-- Proxy and Registration -->
-<Proxy_1_ ua="na">{$domain_name}</Proxy_1_>
+<Proxy_1_ ua="na">{$server_address_1}</Proxy_1_>
 <Outbound_Proxy_1_ ua="na"></Outbound_Proxy_1_>
 <Use_Outbound_Proxy_1_ ua="na">No</Use_Outbound_Proxy_1_>
 <Use_OB_Proxy_In_Dialog_1_ ua="na">Yes</Use_OB_Proxy_In_Dialog_1_>
