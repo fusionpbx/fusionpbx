@@ -6,8 +6,8 @@
 <Enable_Web_Server ua="na">Yes</Enable_Web_Server>
 <Web_Server_Port ua="na">80</Web_Server_Port>
 <Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
-<Admin_Passwd ua="na"></Admin_Passwd>
-<User_Password ua="rw"></User_Password>
+<Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>
+<User_Password ua="rw">{$user_password}</User_Password>
 <Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
 <SPCP_Auto-detect ua="na">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly ua="na">No</Phone-UI-readonly>

@@ -801,10 +801,10 @@
 <MAIL>0</MAIL>
 </System>
 </Log_Configuration>
-<Web_Login_Admin_Name>admin</Web_Login_Admin_Name>
-<!-- <Web_Login_Admin_Password></Web_Login_Admin_Password> -->
-<Web_Login_Guest_Name>cisco</Web_Login_Guest_Name>
-<!-- <Web_Login_Guest_Password></Web_Login_Guest_Password> -->
+<Web_Login_Admin_Name>{$admin_name}</Web_Login_Admin_Name>
+<Web_Login_Admin_Password>{$admin_password}</Web_Login_Admin_Password>
+<Web_Login_Guest_Name>{$user_name}</Web_Login_Guest_Name>
+<Web_Login_Guest_Password>{$user_password}</Web_Login_Guest_Password>
 <Firmware_Version>1.2.1</Firmware_Version>
 <Firmware_Build_Version>004</Firmware_Build_Version>
 <System_Model_Number>SPA122</System_Model_Number>

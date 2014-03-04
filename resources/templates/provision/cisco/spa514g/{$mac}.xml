@@ -8,6 +8,8 @@
 <Enable_Web_Admin_Access group="System/System_Configuration">Yes</Enable_Web_Admin_Access>
 <Admin_Passwd group="System/System_Configuration" />
 <User_Password group="System/System_Configuration" />
+<Admin_Passwd group="System/System_Configuration">{$admin_password}</Admin_Passwd>
+<User_Password group="System/System_Configuration">{$user_password}</User_Password>
 <Signaling_Protocol group="System/System_Configuration">SIP</Signaling_Protocol>
 <SPCP_Auto-detect group="System/System_Configuration">Yes</SPCP_Auto-detect>
 <Phone-UI-readonly group="System/System_Configuration">No</Phone-UI-readonly>

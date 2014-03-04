@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <flat-profile>
+<!-- System Configuration -->
+<Restricted_Access_Domains ua="na"></Restricted_Access_Domains>
+<Enable_Web_Server ua="na">Yes</Enable_Web_Server>
+<Web_Server_Port ua="na">80</Web_Server_Port>
+<Enable_Web_Admin_Access ua="na">Yes</Enable_Web_Admin_Access>
+<Admin_Passwd ua="na">{$admin_password}</Admin_Passwd>
+<User_Password ua="rw">{$user_password}</User_Password>
+<Signaling_Protocol ua="na">SIP</Signaling_Protocol> <!-- options: SIP/SPCP -->
+<SPCP_Auto-detect ua="na">Yes</SPCP_Auto-detect>
+<Phone-UI-readonly ua="na">No</Phone-UI-readonly>
+<Phone-UI-user-mode ua="na">No</Phone-UI-user-mode>
+
+<!-- Optional Network Configuration -->
 <Syslog_Server group="System/Optional_Network_Configuration" />
 <Debug_Server group="System/Optional_Network_Configuration" />
 <Debug_Level group="System/Optional_Network_Configuration">0</Debug_Level>
