@@ -88,7 +88,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td colspan='2' style='padding: none;' align='left'><br>\n";
-	echo "	<textarea name='sql_cmd' id='sql_cmd' rows='20' class='formfld' style='width: 100%;' wrap='off'>$sql_cmd</textarea\n";
+	echo "	<textarea name='sql_cmd' id='sql_cmd' rows='10' class='formfld' style='width: 100%;' wrap='off'>$sql_cmd</textarea\n";
 	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
