@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -50,10 +50,11 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$conference_center_name = check_str($_POST["conference_center_name"]);
 		$conference_center_extension = check_str($_POST["conference_center_extension"]);
+		$conference_center_greeting = check_str($_POST["conference_center_greeting"]);
 		$conference_center_pin_length = check_str($_POST["conference_center_pin_length"]);
 		$conference_center_description = check_str($_POST["conference_center_description"]);
 		$conference_center_enabled = check_str($_POST["conference_center_enabled"]);
@@ -156,6 +157,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "conference_center_name, ";
 					$sql .= "conference_center_extension, ";
 					$sql .= "conference_center_pin_length, ";
+					$sql .= "conference_center_greeting, ";
 					$sql .= "conference_center_description, ";
 					$sql .= "conference_center_enabled ";
 					$sql .= ")";
@@ -167,6 +169,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$conference_center_name', ";
 					$sql .= "'$conference_center_extension', ";
 					$sql .= "'$conference_center_pin_length', ";
+					$sql .= "'$conference_center_greeting', ";
 					$sql .= "'$conference_center_description', ";
 					$sql .= "'$conference_center_enabled' ";
 					$sql .= ")";
@@ -212,7 +215,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "conference_center_name = '$conference_center_name', ";
 					$sql .= "conference_center_extension = '$conference_center_extension', ";
 					$sql .= "conference_center_pin_length = '$conference_center_pin_length', ";
-					//$sql .= "conference_center_order = '$conference_center_order', ";
+					$sql .= "conference_center_greeting = '$conference_center_greeting', ";
 					$sql .= "conference_center_description = '$conference_center_description', ";
 					$sql .= "conference_center_enabled = '$conference_center_enabled' ";
 					$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -273,6 +276,56 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
+//function to show the list of sound files
+	function recur_sounds_dir($dir) {
+		global $dir_array;
+		global $dir_path;
+		$dir_list = opendir($dir);
+		while ($file = readdir ($dir_list)) {
+			if ($file != '.' && $file != '..') {
+				$newpath = $dir.'/'.$file;
+				$level = explode('/',$newpath);
+				if (substr($newpath, -4) == ".svn") {
+					//ignore .svn dir and subdir
+				}
+				else {
+					if (is_dir($newpath)) { //directories
+						recur_sounds_dir($newpath);
+					}
+					else { //files
+						if (strlen($newpath) > 0) {
+							//make the path relative
+								$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
+							//remove the 8000-48000 khz from the path
+								$relative_path = str_replace("/8000/", "/", $relative_path);
+								$relative_path = str_replace("/16000/", "/", $relative_path);
+								$relative_path = str_replace("/32000/", "/", $relative_path);
+								$relative_path = str_replace("/48000/", "/", $relative_path);
+							//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
+								$file_array = explode( "/", $relative_path );
+								$x = 1;
+								$relative_path = '';
+								foreach( $file_array as $tmp) {
+									if ($x == 5) { $relative_path .= $tmp; }
+									if ($x > 5) { $relative_path .= '/'.$tmp; }
+									$x++;
+								}
+							//add the file if it does not exist in the array
+								if (isset($dir_array[$relative_path])) {
+									//already exists
+								}
+								else {
+									//add the new path
+										if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
+								}
+						}
+					}
+				}
+			}
+		}
+		closedir($dir_list);
+	}
+
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$conference_center_uuid = $_GET["id"];
@@ -285,6 +338,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$conference_center_name = $row["conference_center_name"];
+			$conference_center_greeting = $row["conference_center_greeting"];
 			$conference_center_extension = $row["conference_center_extension"];
 			$conference_center_pin_length = $row["conference_center_pin_length"];
 			$conference_center_order = $row["conference_center_order"];
@@ -347,6 +401,112 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='conference_center_extension' maxlength='255' value=\"$conference_center_extension\">\n";
 	echo "	<br />\n";
 	echo " ".$text['description-extension']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-greeting'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	if (if_group("superadmin")) {
+		echo "<script>\n";
+		echo "var Objs;\n";
+		echo "\n";
+		echo "function changeToInput(obj){\n";
+		echo "	tb=document.createElement('INPUT');\n";
+		echo "	tb.type='text';\n";
+		echo "	tb.name=obj.name;\n";
+		echo "	tb.setAttribute('class', 'formfld');\n";
+		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
+		echo "	tbb=document.createElement('INPUT');\n";
+		echo "	tbb.setAttribute('class', 'btn');\n";
+		echo "	tbb.type='button';\n";
+		echo "	tbb.value='<';\n";
+		echo "	tbb.objs=[obj,tb,tbb];\n";
+		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
+		echo "	obj.parentNode.insertBefore(tb,obj);\n";
+		echo "	obj.parentNode.insertBefore(tbb,obj);\n";
+		echo "	obj.parentNode.removeChild(obj);\n";
+		echo "}\n";
+		echo "\n";
+		echo "function Replace(obj){\n";
+		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
+		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "}\n";
+		echo "</script>\n";
+		echo "\n";
+	}
+	if (if_group("superadmin")) {
+		echo "		<select name='conference_center_greeting' class='formfld' onchange='changeToInput(this);'>\n";
+	}
+	else {
+		echo "		<select name='conference_center_greeting' class='formfld'>\n";
+	}
+	echo "		<option></option>\n";
+	//recordings
+		if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
+			$tmp_selected = false;
+			$files = Array();
+			echo "<optgroup label='recordings'>\n";
+			while($file = readdir($dh)) {
+				if($file != "." && $file != ".." && $file[0] != '.') {
+					if(is_dir($_SESSION['switch']['recordings']['dir'] . "/" . $file)) {
+						//this is a directory
+					}
+					else {
+						if ($conference_center_greeting == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($conference_center_greeting) > 0) {
+							$tmp_selected = true;
+							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected=\"selected\">".$file."</option>\n";
+						}
+						else {
+							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
+						}
+					}
+				}
+			}
+			closedir($dh);
+			echo "</optgroup>\n";
+		}
+	//sounds
+		$dir_path = $_SESSION['switch']['sounds']['dir'];
+		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
+		echo "<optgroup label='sounds'>\n";
+		foreach ($dir_array as $key => $value) {
+			if (strlen($value) > 0) {
+				if (substr($conference_center_greeting, 0, 71) == "\$\${sounds_dir}/\${default_language}/\${default_dialect}/\${default_voice}/") {
+					$conference_center_greeting = substr($conference_center_greeting, 71);
+				}
+				if ($conference_center_greeting == $key) {
+					$tmp_selected = true;
+					echo "		<option value='$key' selected='selected'>$key</option>\n";
+				} else {
+					echo "		<option value='$key'>$key</option>\n";
+				}
+			}
+		}
+		echo "</optgroup>\n";
+	//select
+		if (strlen($conference_center_greeting) > 0) {
+			if (if_group("superadmin")) {
+				if (!$tmp_selected) {
+					echo "<optgroup label='selected'>\n";
+					if (file_exists($_SESSION['switch']['recordings']['dir']."/".$conference_center_greeting)) {
+						echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$conference_center_greeting."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+					} elseif (substr($conference_center_greeting, -3) == "wav" || substr($conference_center_greeting, -3) == "mp3") {
+						echo "		<option value='".$conference_center_greeting."' selected='selected'>".$conference_center_greeting."</option>\n";
+					} else {
+						echo "		<option value='".$conference_center_greeting."' selected='selected'>".$conference_center_greeting."</option>\n";
+					}
+					echo "</optgroup>\n";
+				}
+				unset($tmp_selected);
+			}
+		}
+	echo "		</select>\n";
+	echo "<br />\n";
+	echo $text['description-greeting']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
