@@ -200,6 +200,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the pin length.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_greeting";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference greeting.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_center_description";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the center description.";

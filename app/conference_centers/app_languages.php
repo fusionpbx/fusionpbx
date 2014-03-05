@@ -198,6 +198,16 @@
 		$text['label-conference-name']['pt-pt'] = "Nome da Conferência";
 		$text['label-conference-name']['fr-fr'] = "Nom de la Conférence";
 
+		$text['label-greeting']['en-us'] = "Greeting";
+		$text['label-greeting']['es-cl'] = "Mensaje";
+		$text['label-greeting']['pt-pt'] = "Saudaçãoa";
+		$text['label-greeting']['fr-fr'] = "Message";
+
+		$text['description-greeting']['en-us'] = "Select the greeting that is played before joining the conference room.";
+		$text['description-greeting']['es-cl'] = "Seleccione el saludo que se juega antes de unirse a la sala de conferencias.";
+		$text['description-greeting']['pt-pt'] = "Selecione a saudação que é jogado antes de entrar para a sala de conferência.";
+		$text['description-greeting']['fr-fr'] = "Sélectionnez le message qui a joué avant de rejoindre la salle de conférence.";
+
 		$text['label-users']['en-us'] = "Users";
 		$text['label-users']['es-cl'] = "Usuarios";
 		$text['label-users']['pt-pt'] = "Utilizadores";
