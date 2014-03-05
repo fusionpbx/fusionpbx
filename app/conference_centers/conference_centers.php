@@ -126,7 +126,12 @@ else {
 			$sql .= "and c.domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
 		}
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) == 0) {
+			$sql .= "order by conference_center_name asc "; 
+		}
+		else {
+			$sql .= "order by $order_by $order "; 
+		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
