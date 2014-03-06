@@ -66,6 +66,50 @@ else {
 			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 	}
 
+//unassign the voicemail id copy from the voicemail id
+	if ($_GET["a"] == "delete" && strlen($voicemail_uuid) > 0 && strlen($_REQUEST["voicemail_destination_uuid"]) > 0) {
+		//set the variables
+			$voicemail_destination_uuid = check_str($_REQUEST["voicemail_destination_uuid"]);
+		//delete the voicemail from the destionations
+			$sqld = "
+				delete from
+					v_voicemail_destinations as d
+				where
+					d.voicemail_destination_uuid = '".$voicemail_destination_uuid."' and
+					d.voicemail_uuid = '".$voicemail_uuid."'";
+			$db->exec(check_sql($sqld));
+		//redirect the browser
+			$_SESSION["message"] = $text['message-delete'];
+			header("Location: voicemail_edit.php?id=".$voicemail_uuid);
+			return;
+	}
+
+//assign the voicemail id copy to the voicemail id
+	if (strlen($voicemail_uuid) > 0 && strlen($_REQUEST["voicemail_uuid_copy"]) > 0) {
+		//set the variables
+			$voicemail_uuid_copy = check_str($_REQUEST["voicemail_uuid_copy"]);
+		//assign the user to the extension
+			$sqli = "
+				insert into
+					v_voicemail_destinations
+				(
+					voicemail_destination_uuid,
+					voicemail_uuid,
+					voicemail_uuid_copy
+				)
+				values
+				(
+					'".uuid()."',
+					'".$voicemail_uuid."',
+					'".$voicemail_uuid_copy."'
+				)";
+			$db->exec(check_sql($sqli));
+		//redirect the browser
+//			$_SESSION["message"] = $text['message-add'];
+//			header("Location: voicemail_edit.php?id=".$voicemail_uuid);
+//			return;
+	}
+
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
@@ -163,7 +207,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					header("Location: voicemail_messages.php?".$referer_query);
 				}
 				else {
-					header("Location: voicemails.php");
+					header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 				}
 				return;
 			} //if ($action == "update")
@@ -314,6 +358,78 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-voicemail_local_after_email']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if ($action == "update") {
+		echo "	<tr>";
+		echo "		<td class='vncell' valign='top'>".$text['label-copy_destinations'].":</td>";
+		echo "		<td class='vtable'>";
+
+		echo "			<table width='52%'>\n";
+		$sqls = "
+			select
+				v.voicemail_id,
+				d.voicemail_destination_uuid,
+				d.voicemail_uuid_copy
+			from
+				v_voicemails as v,
+				v_voicemail_destinations as d
+			where
+				d.voicemail_uuid_copy = v.voicemail_uuid and
+				v.domain_uuid = '".$_SESSION['domain_uuid']."' and
+				v.voicemail_enabled = 'true' and
+				d.voicemail_uuid = '".$voicemail_uuid."'
+			order by
+				v.voicemail_id asc";
+		$prep_statement = $db->prepare(check_sql($sqls));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		foreach($result as $field) {
+			echo "			<tr>\n";
+			echo "				<td class='vtable'>".$field['voicemail_id']."</td>\n";
+			echo "				<td>\n";
+			echo "					<a href='voicemail_edit.php?id=".$voicemail_uuid."&voicemail_destination_uuid=".$field['voicemail_destination_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "				</td>\n";
+			echo "			</tr>\n";
+			$voicemail_uuid_copied[] = $field['voicemail_uuid_copy'];
+		}
+		echo "			</table>\n";
+
+		if (sizeof($voicemail_uuid_copied) > 0) {
+			// modify sql to remove already copied voicemail uuids from the list
+			$sqls_mod = " and v.voicemail_uuid not in ('".implode("','", $voicemail_uuid_copied)."') ";
+		}
+		echo "			<br />\n";
+		$sqls = "
+			select
+				v.voicemail_id,
+				v.voicemail_uuid
+			from
+				v_voicemails as v
+			where
+				v.domain_uuid = '".$_SESSION['domain_uuid']."' and
+				v.voicemail_enabled = 'true' and
+				v.voicemail_uuid <> '".$voicemail_uuid."'
+				".$sqls_mod."
+			order by
+				v.voicemail_id asc";
+		$prep_statement = $db->prepare(check_sql($sqls));
+		$prep_statement->execute();
+		echo "			<select name=\"voicemail_uuid_copy\" class='formfld' style='width: auto;'>\n";
+		echo "			<option value=\"\"></option>\n";
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach($result as $field) {
+			echo "			<option value='".$field['voicemail_uuid']."'>".$field['voicemail_id']."</option>\n";
+		}
+		echo "			</select>";
+		echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+		unset($sql, $result);
+		echo "			<br>\n";
+		echo "			".$text['description-copy_destinations']."\n";
+		echo "			<br />\n";
+		echo "		</td>";
+		echo "	</tr>";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

@@ -76,6 +76,16 @@
 		$text['description-voicemail_local_after_email']['pt-pt'] = "Escolha se pretende manter o ficheiro de correio de voz depois de enviar email.";
 		$text['description-voicemail_local_after_email']['fr-fr'] = "Garder le message vocal dans la boite vocale après l'envoi du courriel.";
 
+		$text['label-copy_destinations']['en-us'] = "Copy Destinations";
+		$text['label-copy_destinations']['es-cl'] = "Copiar Destinos";
+		$text['label-copy_destinations']['pt-pt'] = "Copiar Destinos";
+		$text['label-copy_destinations']['fr-fr'] = "Copier Destinations";
+
+		$text['description-copy_destinations']['en-us'] = "Set other Voicemail IDs to also receive a copy of incoming voice messages.";
+		$text['description-copy_destinations']['es-cl'] = "Establezca otras identificaciones de correo de voz para recibir también una copia de los mensajes de voz entrantes.";
+		$text['description-copy_destinations']['pt-pt'] = "Defina outras identificações Voicemail também para receber uma cópia das mensagens de voz recebidas.";
+		$text['description-copy_destinations']['fr-fr'] = "Définissez les autres identifications de messagerie vocale de recevoir également une copie des messages vocaux entrants.";
+
 		$text['label-voicemail_enabled']['en-us'] = "Enabled";
 		$text['label-voicemail_enabled']['es-cl'] = "Activado";
 		$text['label-voicemail_enabled']['pt-pt'] = "Habilitado";
@@ -243,7 +253,7 @@
 		$text['label-created_epoch']['fr-fr'] = "créé";
 
 		$text['description-created_epoch']['en-us'] = "Created";
-		$text['description-created_epoch']['es-cl'] = "Creación";	
+		$text['description-created_epoch']['es-cl'] = "Creación";
 		$text['description-created_epoch']['pt-pt'] = "Criada";
 		$text['description-created_epoch']['fr-fr'] = "Date de création";
 
