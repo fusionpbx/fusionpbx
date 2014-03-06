@@ -813,7 +813,7 @@ for ($c = 0; $c < 1; $c++) {
 	}
 	else {
 		echo "	<select class='formfld' name='ivr_menu_ringback'>\n";
-		echo "	<option value=''></option>\n";
+		//echo "	<option value=''></option>\n";
 		echo $select_options;
 		echo "	</select>\n";
 	}
