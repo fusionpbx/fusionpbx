@@ -650,12 +650,20 @@ else {
 	else {
 		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
 	}
-	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-	$moh = new switch_music_on_hold;
-	$moh->select_name = "ring_group_ringback";
-	$moh->select_value = $ring_group_ringback;
-	$moh->select_options = $select_options;
-	echo $moh->select();
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
+		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+		$moh = new switch_music_on_hold;
+		$moh->select_name = "ring_group_ringback";
+		$moh->select_value = $ring_group_ringback;
+		$moh->select_options = $select_options;
+		echo $moh->select();
+	}
+	else {
+		echo "	<select class='formfld' name='ring_group_ringback'>\n";
+		//echo "	<option value=''></option>\n";
+		echo $select_options;
+		echo "	</select>\n";
+	}
 
 	echo "<br />\n";
 	echo $text['description-ringback']."\n";
