@@ -351,6 +351,7 @@
 				conference_center_greeting = string.lower(row["conference_center_greeting"]);
 			end);
 			if (conference_center_greeting) then
+				session:sleep(1000);
 				session:execute("playback", conference_center_greeting);
 			end
 
