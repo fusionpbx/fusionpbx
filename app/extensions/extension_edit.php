@@ -814,9 +814,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-password'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='password' name='password' id='password' onfocus=\"document.getElementById('show_password').innerHTML = '".$text['label-password'].": '+document.getElementById('password').value;\" autocomplete='off' maxlength='50' value=\"$password\">\n";
-		echo "<br />\n";
-		echo "<span onclick=\"document.getElementById('show_password').innerHTML = ''\">".$text['description-password']." </span><span id='show_password'></span>\n";
+		echo "    <input class='formfld' type='password' name='password' id='password' onmouseover=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"$password\">\n";
+		echo "    <br />\n";
+		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -920,9 +920,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-vm_password'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='password' name='vm_password' id='vm_password' onfocus=\"document.getElementById('show_vm_password').innerHTML = '".$text['label-password'].": '+document.getElementById('vm_password').value;\" maxlength='255' value='$vm_password'>\n";
-		echo "<br />\n";
-		echo "<span onclick=\"document.getElementById('show_vm_password').innerHTML = ''\">".$text['description-vm_password']." </span><span id='show_vm_password'></span>\n";
+		echo "    <input class='formfld' type='password' name='vm_password' id='vm_password' onmouseover=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value='$vm_password'>\n";
+		echo "    <br />\n";
+		echo "    ".$text['description-vm_password']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
