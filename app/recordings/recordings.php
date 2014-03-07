@@ -161,7 +161,7 @@ require_once "resources/paging.php";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\"><strong>".$text['title'].":</strong></span><br />\n";
+	echo "			<span class=\"title\"><strong>".$text['title']."</strong></span><br />\n";
 	echo "			".stripslashes($text['description'])."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -172,10 +172,7 @@ require_once "resources/paging.php";
 	echo "	<table border='0' width='100%' cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%'>\n";
-	if ($v_path_show) {
-		echo "<b>Location:</b> \n";
-		echo $_SESSION['switch']['recordings']['dir'];
-	}
+	echo "			&nbsp;";
 	echo "		</td>\n";
 	if (permission_exists('recording_upload')) {
 		echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
