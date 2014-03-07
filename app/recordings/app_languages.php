@@ -116,10 +116,10 @@
 	$text['title-add']['pt-pt'] = "Adicionar Gravação";
 	$text['title-add']['fr-fr'] = "Ajouter un Guide";
 
-	$text['title-edit']['en-us'] = "Edit Recording";
-	$text['title-edit']['es-cl'] = "Editar Grabación";
-	$text['title-edit']['pt-pt'] = "Editar Gravação";
-	$text['title-edit']['fr-fr'] = "Editer le Guide";
+	$text['title-edit']['en-us'] = "Recording";
+	$text['title-edit']['es-cl'] = "Grabación";
+	$text['title-edit']['pt-pt'] = "Gravação";
+	$text['title-edit']['fr-fr'] = "Guide";
 
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['es-cl'] = "Volver";
