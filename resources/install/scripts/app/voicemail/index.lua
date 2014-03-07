@@ -86,6 +86,10 @@
 			skip_instructions = session:getVariable("skip_instructions");
 			skip_greeting = session:getVariable("skip_greeting");
 			vm_message_ext = session:getVariable("vm_message_ext");
+			vm_disk_quota = session:getVariable("vm-disk-quota");
+			if (not vm_disk_quota) then
+				vm_disk_quota = session:getVariable("vm_disk_quota");
+			end
 			voicemail_authorized = session:getVariable("voicemail_authorized");
 			if (not vm_message_ext) then vm_message_ext = 'wav'; end
 
@@ -106,7 +110,7 @@
 							sql = "SELECT domain_uuid FROM v_domains ";
 							sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
 							if (debug["sql"]) then
-								freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
+								freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 							end
 							status = dbh:query(sql, function(rows)
 								domain_uuid = rows["domain_uuid"];
@@ -235,6 +239,26 @@
 
 --leave a message
 	if (voicemail_action == "save") then
+
+		--check the voicemail quota
+			if (vm_disk_quota) then
+				--get voicemail message seconds
+					sql = [[SELECT sum(message_length) as message_sum FROM v_voicemail_messages
+						WHERE domain_uuid = ']] .. domain_uuid ..[['
+						AND voicemail_uuid = ']] .. voicemail_uuid ..[[']]
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+						end
+					status = dbh:query(sql, function(row)
+						message_sum = row["message_sum"];
+					end);
+					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
+						--play message mailbox full
+							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
+						--set the voicemail_uuid to nil to prevent saving the voicemail
+							voicemail_uuid = nil;
+					end
+			end
 
 		--valid voicemail
 			if (voicemail_uuid ~= nil) then
