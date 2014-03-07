@@ -261,9 +261,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-event-socket-pw']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='event_socket_password' id='event_socket_password' onfocus=\"document.getElementById('show_event_socket_password').innerHTML = 'Password: '+document.getElementById('event_socket_password').value;\" onblur=\"//document.getElementById('show_event_socket_password').innerHTML = ''\" maxlength='50' value=\"$event_socket_password\">\n";
+	echo "    <input class='formfld' type='password' name='event_socket_password' id='event_socket_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$event_socket_password\">\n";
 	echo "<br />\n";
-	echo $text['description-event-socket-pw']."<span id='show_event_socket_password'></span>\n";
+	echo $text['description-event-socket-pw']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -305,9 +305,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-xml-rpc-pw']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='xml_rpc_auth_pass' id='xml_rpc_auth_pass' onfocus=\"document.getElementById('show_xml_rpc_auth_pass').innerHTML = 'Password: '+document.getElementById('xml_rpc_auth_pass').value;\" onblur=\"//document.getElementById('show_xml_rpc_auth_pass').innerHTML = ''\" maxlength='50' value=\"$xml_rpc_auth_pass\">\n";
+	echo "    <input class='formfld' type='password' name='xml_rpc_auth_pass' id='xml_rpc_auth_pass' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$xml_rpc_auth_pass\">\n";
 	echo "<br />\n";
-	echo $text['description-xml-rpc-pw']." <span id='show_xml_rpc_auth_pass'></span>\n";
+	echo $text['description-xml-rpc-pw']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -395,9 +395,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    SMTP Password:\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='smtp_password' id='smtp_password' onfocus=\"document.getElementById('show_smtp_password').innerHTML = 'Password: '+document.getElementById('smtp_password').value;\" onblur=\"document.getElementById('show_smtp_password').innerHTML = ''\" maxlength='50' value=\"$smtp_password\">\n";
+	echo "    <input class='formfld' type='password' name='smtp_password' id='smtp_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"$smtp_password\">\n";
 	echo "<br />\n";
-	echo "Enter the SMTP authentication password. <span id='show_smtp_password'></span>\n";
+	echo "Enter the SMTP authentication password.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

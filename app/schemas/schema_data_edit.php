@@ -668,13 +668,13 @@ else {
 						case "password":
 							echo "<td valign='top' align='left' class='vtable'>\n";
 							echo "<input type='hidden' name='".$x."field_name' value='".$row['field_name']."'>\n";
-							echo "<input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='password' name='".$x."field_value' maxlength='50' value=\"".$data_row[$row['field_name']]."\">\n";
+							echo "<input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%' type='password' name='".$x."field_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".$data_row[$row['field_name']]."\">\n";
 							echo "</td>\n";
 							break;
 						case "pin_number":
 							echo "<td valign='top' align='left' class='vtable'>\n";
 							echo "<input type='hidden' name='".$x."field_name' value=\"".$row['field_name']."\">\n";
-							echo "<input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='password' name='".$x."field_value' maxlength='50' value=\"".$data_row[$row['field_name']]."\">\n";
+							echo "<input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%' type='password' name='".$x."field_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='50' value=\"".$data_row[$row['field_name']]."\">\n";
 							echo "</td>\n";
 							break;
 						case "hidden":

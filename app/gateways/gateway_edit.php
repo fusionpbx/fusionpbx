@@ -422,9 +422,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-password'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onfocus=\"document.getElementById('show_password').innerHTML = 'Password: '+document.getElementById('password').value;\" value=\"$password\">\n";
-	echo "<br />\n";
-	echo "<span onclick=\"document.getElementById('show_password').innerHTML = ''\">".$text['description-password']."</span><span id='show_password'></span>\n";
+	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"$password\">\n";
+	echo "    <br />\n";
+	echo "    ".$text['description-password']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

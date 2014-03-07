@@ -85,9 +85,9 @@ function hide_advanced_config() {
 			<?php echo $text['label-password']?>:
 		</td>
 		<td class='vtable' align='left'>
-			<input class='formfld' type='password' name='profile_password' autocomplete='off' id='profile_password' maxlength='50' onfocus="document.getElementById('show_profile_password').innerHTML = '<?php echo $text['label-password']?>: '+document.getElementById('profile_password').value;" value="<?php echo $profile['profile_password'];?>">
+			<input class='formfld' type='password' name='profile_password' autocomplete='off' id='profile_password' maxlength='50' onmouseover="this.type='text';" onfocus="this.type='text';" onmouseout="if (!$(this).is(':focus')) { this.type='password'; }" onblur="this.type='password';" value="<?php echo $profile['profile_password'];?>">
 			<br />
-			<span onclick="document.getElementById('show_profile_password').innerHTML = ''"><?php echo $text['description-password']?> </span><span id='show_profile_password'></span>
+			<?php echo $text['description-password']?>
 		</td>
 	</tr>
 
