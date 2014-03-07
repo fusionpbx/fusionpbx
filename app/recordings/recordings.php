@@ -224,9 +224,7 @@ require_once "resources/paging.php";
 	echo "<th width=\"10%\" class=\"listhdr\" nowrap>Size</th>\n";
 	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
 	echo "<td align='right' width='42'>\n";
-	if (permission_exists('recording_add')) {
-		echo "	<a href='recording_edit.php' alt='add'>$v_link_label_add</a>\n";
-	}
+	echo "	&nbsp;";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -271,9 +269,6 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
-	if (permission_exists('recording_add')) {
-		echo 		"<a href='recording_edit.php' alt='add'>$v_link_label_add</a>";
-	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
