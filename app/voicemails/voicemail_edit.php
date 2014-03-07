@@ -281,9 +281,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-voicemail_password'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='password' name='voicemail_password' id='password' onfocus=\"document.getElementById('show_password').innerHTML = '".$text['label-voicemail_password'].": '+document.getElementById('password').value;\" autocomplete='off' maxlength='50' value=\"$voicemail_password\">\n";
+	echo "	<input class='formfld' type='password' name='voicemail_password' id='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"$voicemail_password\">\n";
 	echo "<br />\n";
-	echo $text['description-voicemail_password']." <span id='show_password'></span>\n";
+	echo $text['description-voicemail_password']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
