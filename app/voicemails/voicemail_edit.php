@@ -361,11 +361,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if ($action == "update") {
 		echo "	<tr>";
-		echo "		<td class='vncell' valign='top'>".$text['label-copy_destinations'].":</td>";
+		echo "		<td class='vncell' valign='top'>".$text['label-forward_destinations'].":</td>";
 		echo "		<td class='vtable'>";
 
 		echo "			<table width='52%'>\n";
-		$sqls = "
+		$sql = "
 			select
 				v.voicemail_id,
 				d.voicemail_destination_uuid,
@@ -380,7 +380,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				d.voicemail_uuid = '".$voicemail_uuid."'
 			order by
 				v.voicemail_id asc";
-		$prep_statement = $db->prepare(check_sql($sqls));
+		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
@@ -397,10 +397,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if (sizeof($voicemail_uuid_copied) > 0) {
 			// modify sql to remove already copied voicemail uuids from the list
-			$sqls_mod = " and v.voicemail_uuid not in ('".implode("','", $voicemail_uuid_copied)."') ";
+			$sql_mod = " and v.voicemail_uuid not in ('".implode("','", $voicemail_uuid_copied)."') ";
 		}
 		echo "			<br />\n";
-		$sqls = "
+		$sql = "
 			select
 				v.voicemail_id,
 				v.voicemail_uuid
@@ -410,10 +410,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				v.domain_uuid = '".$_SESSION['domain_uuid']."' and
 				v.voicemail_enabled = 'true' and
 				v.voicemail_uuid <> '".$voicemail_uuid."'
-				".$sqls_mod."
+				".$sql_mod."
 			order by
 				v.voicemail_id asc";
-		$prep_statement = $db->prepare(check_sql($sqls));
+		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		echo "			<select name=\"voicemail_uuid_copy\" class='formfld' style='width: auto;'>\n";
 		echo "			<option value=\"\"></option>\n";
@@ -425,7 +425,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
 		unset($sql, $result);
 		echo "			<br>\n";
-		echo "			".$text['description-copy_destinations']."\n";
+		echo "			".$text['description-forward_destinations']."\n";
 		echo "			<br />\n";
 		echo "		</td>";
 		echo "	</tr>";
