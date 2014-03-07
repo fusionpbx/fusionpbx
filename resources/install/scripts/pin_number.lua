@@ -25,6 +25,20 @@
 max_tries = "3";
 digit_timeout = "5000";
 
+function trim (s)
+	return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+end
+
+function explode ( seperator, str ) 
+	local pos, arr = 0, {}
+	for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+		table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+		pos = sp + 1 -- jump past current divider
+	end
+	table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+	return arr
+end
+
 if ( session:ready() ) then
 	session:answer( );
 	pin_number = session:getVariable("pin_number");
@@ -53,15 +67,29 @@ if ( session:ready() ) then
 
 	--if the pin number is provided then require it
 		if (pin_number) then
-			min_digits = string.len(pin_number);
-			max_digits = string.len(pin_number)+1;
-			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-			if (digits == pin_number) then
-				--pin is correct
-			else
-				session:streamFile("phrase:voicemail_fail_auth:#");
-				session:hangup("NORMAL_CLEARING");
-				return;
-			end
+			--get the user pin number
+				min_digits = 2;
+				max_digits = 20;
+				digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+
+			--validate the user pin number
+				pin_number_table = explode(",",pin_number);
+				for index,pin_number in pairs(pin_number_table) do
+					if (digits == pin_number) then
+						--set the variable to true
+							auth = true;
+						--set the authorized pin number that was used
+							session:setVariable("pin_number", pin_number);
+						--end the loop
+							break;
+					end
+				end
+
+			--if not authorized play a message and then hangup
+				if (not auth) then
+					session:streamFile("phrase:voicemail_fail_auth:#");
+					session:hangup("NORMAL_CLEARING");
+					return;
+				end
 		end
 end
