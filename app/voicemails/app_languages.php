@@ -76,15 +76,15 @@
 		$text['description-voicemail_local_after_email']['pt-pt'] = "Escolha se pretende manter o ficheiro de correio de voz depois de enviar email.";
 		$text['description-voicemail_local_after_email']['fr-fr'] = "Garder le message vocal dans la boite vocale après l'envoi du courriel.";
 
-		$text['label-copy_destinations']['en-us'] = "Copy Destinations";
-		$text['label-copy_destinations']['es-cl'] = "Copiar Destinos";
-		$text['label-copy_destinations']['pt-pt'] = "Copiar Destinos";
-		$text['label-copy_destinations']['fr-fr'] = "Copier Destinations";
+		$text['label-forward_destinations']['en-us'] = "Forward Destinations";
+		$text['label-forward_destinations']['es-cl'] = "Destinos Adelante";
+		$text['label-forward_destinations']['pt-pt'] = "Destinos Atacante";
+		$text['label-forward_destinations']['fr-fr'] = "Destinations à terme";
 
-		$text['description-copy_destinations']['en-us'] = "Set other Voicemail IDs to also receive a copy of incoming voice messages.";
-		$text['description-copy_destinations']['es-cl'] = "Establezca otras identificaciones de correo de voz para recibir también una copia de los mensajes de voz entrantes.";
-		$text['description-copy_destinations']['pt-pt'] = "Defina outras identificações Voicemail também para receber uma cópia das mensagens de voz recebidas.";
-		$text['description-copy_destinations']['fr-fr'] = "Définissez les autres identifications de messagerie vocale de recevoir également une copie des messages vocaux entrants.";
+		$text['description-forward_destinations']['en-us'] = "Forward voicemail messages to additional destinations.";
+		$text['description-forward_destinations']['es-cl'] = "Reenviar mensajes de voz a destinos adicionales.";
+		$text['description-forward_destinations']['pt-pt'] = "Mensagens de voz para a frente para destinos adicionais.";
+		$text['description-forward_destinations']['fr-fr'] = "Messages vocaux à terme vers des destinations supplémentaires.";
 
 		$text['label-voicemail_enabled']['en-us'] = "Enabled";
 		$text['label-voicemail_enabled']['es-cl'] = "Activado";
