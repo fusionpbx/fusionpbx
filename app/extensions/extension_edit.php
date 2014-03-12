@@ -1553,7 +1553,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">Rewrite Contact IP and Port</option>\n";
 	echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">Rewrite Contact IP and Port 2.0</option>\n";
-	echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">Rewrite Contact Port</option>\n";
+	echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">Rewrite TLS Contact Port</option>\n";
 	unset($selected);
 	echo "    </select>\n";
 	echo "<br />\n";
