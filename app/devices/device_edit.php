@@ -532,7 +532,7 @@ require_once "resources/require.php";
 			echo "			</td>\n";
 
 			echo "			<td class='vtable' align='left'>\n";
-			echo "				<input class='formfld' style='width: 90px;' type='text' name='device_lines[".$x."][password]' maxlength='255' value=\"".$row['password']."\">\n";
+			echo "				<input class='formfld' style='width: 90px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['password']."\">\n";
 			echo "			</td>\n";
 
 			//echo "			<td class='vtable' align='left'>\n";
@@ -594,25 +594,25 @@ require_once "resources/require.php";
 				echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	<select class='formfld' style='width:auto;' name='device_keys[".$x."][device_key_category]'>\n";
 				echo "	<option value=''></option>\n";
-				if ($row['device_key_category'] == "line") { 
+				if ($row['device_key_category'] == "line") {
 					echo "	<option value='line' selected='selected'>".$text['label-line']."</option>\n";
 				}
 				else {
 					echo "	<option value='line'>".$text['label-line']."</option>\n";
 				}
-				if ($row['device_key_category'] == "memory") { 
+				if ($row['device_key_category'] == "memory") {
 					echo "	<option value='memory' selected='selected'>".$text['label-memory']."</option>\n";
 				}
 				else {
 					echo "	<option value='memory'>".$text['label-memory']."</option>\n";
 				}
-				if ($row['device_key_category'] == "programmable") { 
+				if ($row['device_key_category'] == "programmable") {
 					echo "	<option value='programmable' selected='selected'>".$text['label-programmable']."</option>\n";
 				}
 				else {
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
-				if ($row['device_key_category'] == "expansion") { 
+				if ($row['device_key_category'] == "expansion") {
 					echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
 				}
 				else {
@@ -936,13 +936,13 @@ require_once "resources/require.php";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='device_provision_enable'>\n";
 	echo "    <option value=''></option>\n";
-	if ($device_provision_enable == "true" || strlen($device_provision_enable) == 0) { 
+	if ($device_provision_enable == "true" || strlen($device_provision_enable) == 0) {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
-	if ($device_provision_enable == "false") { 
+	if ($device_provision_enable == "false") {
 		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
