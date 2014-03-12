@@ -615,9 +615,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 		font-size: 10pt;
 		overflow: hidden;
 		background-color: #fff;
-		-webkit-box-shadow: 0px 0px 20px #888;
-		-moz-box-shadow: 0px 0px 20px #888;
-		box-shadow: 0px 0px 20px #888;
+		-webkit-box-shadow: 0px 0px 5px #888;
+		-moz-box-shadow: 0px 0px 5px #888;
+		box-shadow: 0px 0px 5px #888;
 	}
 
 	#domains_header {
