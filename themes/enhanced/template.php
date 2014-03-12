@@ -123,8 +123,8 @@ img.list_control_icon {
 	width: 21px;
 	height: 21px;
 	border: none;
-	opacity: 0.9;
-	-moz-opacity: 0.9;
+	opacity: 0.4;
+	-moz-opacity: 0.4;
 	}
 
 form {
@@ -562,7 +562,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		background-repeat: repeat-x;
 		background-image: url('<?=PROJECT_PATH?>/themes/enhanced/images/background_black.png');
 		background-position: top center;
-		padding: 10px;
+		padding: 6px 0px 8px 0px;
 		-webkit-border-radius: 0px 0px 3px 3px;
 		-moz-border-radius: 0px 0px 3px 3px;
 		border-radius: 0px 0px 3px 3px;
