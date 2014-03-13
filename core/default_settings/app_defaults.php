@@ -94,7 +94,7 @@ if ($domains_processed == 1) {
 				$sql .= "'security', ";
 				$sql .= "'password_length', ";
 				$sql .= "'var', ";
-				$sql .= "'15', ";
+				$sql .= "'10', ";
 				$sql .= "'true', ";
 				$sql .= "'Sets the default length for system generated passwords.' ";
 				$sql .= "), ( ";
