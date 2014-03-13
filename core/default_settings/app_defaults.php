@@ -61,6 +61,56 @@ if ($domains_processed == 1) {
 				unset($sql);
 			}
 		}
+
+	//ensure that the default password length and strength are set
+		$sql = "select count(*) as num_rows from v_default_settings ";
+		$sql .= "where ( ";
+		$sql .= "default_setting_category = 'security' ";
+		$sql .= "and default_setting_subcategory = 'password_length' ";
+		$sql .= "and default_setting_name = 'var' ";
+		$sql .= ") or ( ";
+		$sql .= "default_setting_category = 'security' ";
+		$sql .= "and default_setting_subcategory = 'password_strength' ";
+		$sql .= "and default_setting_name = 'var' ";
+		$sql .= ") ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] == 0) {
+				$sql = "insert into v_default_settings ";
+				$sql .= "( ";
+				$sql .= "default_setting_uuid, ";
+				$sql .= "default_setting_category, ";
+				$sql .= "default_setting_subcategory, ";
+				$sql .= "default_setting_name, ";
+				$sql .= "default_setting_value, ";
+				$sql .= "default_setting_enabled, ";
+				$sql .= "default_setting_description ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "( ";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'security', ";
+				$sql .= "'password_length', ";
+				$sql .= "'var', ";
+				$sql .= "'15', ";
+				$sql .= "'true', ";
+				$sql .= "'Sets the default length for system generated passwords.' ";
+				$sql .= "), ( ";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'security', ";
+				$sql .= "'password_strength', ";
+				$sql .= "'var', ";
+				$sql .= "'4', ";
+				$sql .= "'true', ";
+				$sql .= "'Sets the default strength for system generated passwords.  Valid Options: 1 - Numeric Only, 2 - Include Lower Apha, 3 - Include Upper Alpha, 4 - Include Special Characters' ";
+				$sql .= ") ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
+		}
+
 }
 
 ?>
