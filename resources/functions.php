@@ -426,7 +426,7 @@
 				//echo 'No File Extension Present';
 				return '';
 			}
-	 
+
 			if(count($pattern) > 1) {
 				$filenamepart = $pattern[count($pattern)-1][0];
 				preg_match('/[^?]*/', $filenamepart, $matches);
@@ -518,7 +518,7 @@
 					//echo "file_name_base: ".$file_name_base."<br />\n";
 					//echo "dest_dir: ".$dest_dir."<br />\n";
 
-					//move the file to upload directory  
+					//move the file to upload directory
 					//bool move_uploaded_file  ( string $filename, string $destination  )
 
 						if (move_uploaded_file($tmp_name, $dest_dir.'/'.$file_name)){
@@ -529,7 +529,7 @@
 							return false;
 						}
 						exit;
-						
+
 			} //end function
 	}
 
@@ -676,7 +676,7 @@ function switch_module_is_running($fp, $mod) {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		//if the handle still does not exist show an error message
 			if (!$fp) {
-				$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>"; 
+				$msg = "<div align='center'>Connection to Event Socket failed.<br /></div>";
 			}
 	}
 	if ($fp) {
@@ -747,8 +747,8 @@ function format_string ($format, $data) {
 	}
 
 //browser detection without browscap.ini dependency
-	function http_user_agent() { 
-		$u_agent = $_SERVER['HTTP_USER_AGENT']; 
+	function http_user_agent() {
+		$u_agent = $_SERVER['HTTP_USER_AGENT'];
 		$bname = 'Unknown';
 		$platform = 'Unknown';
 		$version= "";
@@ -765,36 +765,36 @@ function format_string ($format, $data) {
 			}
 
 		//get the name of the useragent yes seperately and for good reason
-			if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) 
-			{ 
-				$bname = 'Internet Explorer'; 
-				$ub = "MSIE"; 
-			} 
-			elseif(preg_match('/Firefox/i',$u_agent)) 
-			{ 
-				$bname = 'Mozilla Firefox'; 
-				$ub = "Firefox"; 
-			} 
-			elseif(preg_match('/Chrome/i',$u_agent)) 
-			{ 
-				$bname = 'Google Chrome'; 
-				$ub = "Chrome"; 
-			} 
-			elseif(preg_match('/Safari/i',$u_agent)) 
-			{ 
-				$bname = 'Apple Safari'; 
-				$ub = "Safari"; 
-			} 
-			elseif(preg_match('/Opera/i',$u_agent)) 
-			{ 
-				$bname = 'Opera'; 
-				$ub = "Opera"; 
-			} 
-			elseif(preg_match('/Netscape/i',$u_agent)) 
-			{ 
-				$bname = 'Netscape'; 
-				$ub = "Netscape"; 
-			} 
+			if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
+			{
+				$bname = 'Internet Explorer';
+				$ub = "MSIE";
+			}
+			elseif(preg_match('/Firefox/i',$u_agent))
+			{
+				$bname = 'Mozilla Firefox';
+				$ub = "Firefox";
+			}
+			elseif(preg_match('/Chrome/i',$u_agent))
+			{
+				$bname = 'Google Chrome';
+				$ub = "Chrome";
+			}
+			elseif(preg_match('/Safari/i',$u_agent))
+			{
+				$bname = 'Apple Safari';
+				$ub = "Safari";
+			}
+			elseif(preg_match('/Opera/i',$u_agent))
+			{
+				$bname = 'Opera';
+				$ub = "Opera";
+			}
+			elseif(preg_match('/Netscape/i',$u_agent))
+			{
+				$bname = 'Netscape';
+				$ub = "Netscape";
+			}
 
 		//finally get the correct version number
 			$known = array('Version', $ub, 'other');
@@ -829,17 +829,17 @@ function format_string ($format, $data) {
 			'platform'  => $platform,
 			'pattern'    => $pattern
 		);
-	} 
+	}
 
 //tail php function for non posix systems
 	function tail($file, $num_to_get=10) {
 			$fp = fopen($file, 'r');
 			$position = filesize($file);
 			$chunklen = 4096;
-			if($position-$chunklen<=0) { 
-				fseek($fp,0); 
+			if($position-$chunklen<=0) {
+				fseek($fp,0);
 			}
-			else { 
+			else {
 				fseek($fp, $position-$chunklen);
 			}
 			$data="";$ret="";$lc=0;
@@ -866,16 +866,20 @@ function format_string ($format, $data) {
 	}
 
 //generate a random password with upper, lowercase and symbols
-	function generate_password($length = 10, $strength = 4) {
+	function generate_password($length = 0, $strength = 0) {
 		$password = '';
 		$charset = '';
+		if ($length === 0 && $strength === 0) { //set length and strenth if specified in default settings and strength isn't numeric-only
+			$length = (is_numeric($_SESSION["security"]["password_length"]["var"])) ? $_SESSION["security"]["password_length"]["var"] : 10;
+			$strength = (is_numeric($_SESSION["security"]["password_strength"]["var"])) ? $_SESSION["security"]["password_strength"]["var"] : 4;
+		}
 		if ($strength >= 1) { $charset .= "0123456789"; }
 		if ($strength >= 2) { $charset .= "abcdefghijkmnopqrstuvwxyz";	}
 		if ($strength >= 3) { $charset .= "ABCDEFGHIJKLMNPQRSTUVWXYZ";	}
 		if ($strength >= 4) { $charset .= "!!!!!^$%*?....."; }
 		srand((double)microtime() * rand(1000000, 9999999));
 		while ($length > 0) {
-				$password.= $charset[rand(0, strlen($charset)-1)];
+				$password .= $charset[rand(0, strlen($charset)-1)];
 				$length--;
 		}
 		return $password;

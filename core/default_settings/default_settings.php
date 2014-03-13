@@ -116,8 +116,10 @@ require_once "resources/paging.php";
 	if ($result_count > 0) {
 		$previous_category = '';
 		foreach($result as $row) {
+
 			if ($previous_category != $row['default_setting_category']) {
 				echo "<tr><td colspan='4' align='left'>\n";
+				if ($previous_category != '') { echo "<br /><br />"; }
 				echo "	<br />\n";
 				echo "	<b>".ucfirst($row['default_setting_category'])."</b>&nbsp;</td></tr>\n";
 				echo "<tr>\n";

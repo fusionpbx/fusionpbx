@@ -479,7 +479,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "update" && permission_exists('extension_edit')) {
 				//generate a password
 					if (strlen($password) == 0) {
-						$password = generate_password(12,4);
+						$password = generate_password();
 					}
 				//set the voicemail password
 					if (strlen($vm_password) == 0) {
