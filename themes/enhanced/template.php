@@ -776,7 +776,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 			</div>
 		</div>
-		<?
+		<?php
 	}
 	?>
 
@@ -803,7 +803,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 								?>
 								<a href="javascript:void(0);" id="domains_show_text"><?=$_SESSION['domain_name']?></a>
 								<img id="domains_show_icon" src="<?=PROJECT_PATH?>/themes/enhanced/images/icon_domains_show.png" style="width: 23px; height: 16px; border: none;" title="Open Domain Selector" align="absmiddle">
-								<?
+								<?php
 							}
 
 							//logged out show the login
