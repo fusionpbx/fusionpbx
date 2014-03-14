@@ -764,7 +764,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 					function domain_search(criteria) {
 						for (var x = 0; x < domain_names.length; x++) {
-							if (domain_names[x].match(criteria) || domain_descs[x].match(criteria)) {
+							if (domain_names[x].toLowerCase().match(criteria.toLowerCase()) || domain_descs[x].toLowerCase().match(criteria.toLowerCase())) {
 								document.getElementById(domain_names[x]).style.display = '';
 							}
 							else {
