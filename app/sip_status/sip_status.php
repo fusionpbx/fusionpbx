@@ -199,14 +199,14 @@ if ($_GET['a'] == "download") {
 					echo "  <b><a href='javascript:void(0);' onclick=\"$('#".$sip_profile_name."').slideToggle();\">".$text['title-sofia-status-profile']." ".$sip_profile_name."</a></b> \n";
 					echo "</td>\n";
 					echo "<td width='50%' align='right'>\n";
+					if ($sip_profile_name != "external") {
+						echo "  <input type='button' class='btn' value='flush_inbound_reg' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+flush_inbound_reg';\" />\n";
+					}
 					echo "  <input type='button' class='btn' value='registrations' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/status_registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
 					echo "  <input type='button' class='btn' value='start' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+start';\" />\n";
 					echo "  <input type='button' class='btn' value='stop' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+stop';\" />\n";
 					echo "  <input type='button' class='btn' value='restart' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+restart';\" />\n";
 					echo "  <input type='button' class='btn' value='rescan' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+rescan';\" />\n";
-					if ($sip_profile_name != "external") {
-						echo "  <input type='button' class='btn' value='flush_inbound_reg' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+flush_inbound_reg';\" />\n";
-					}
 					echo "</td>\n";
 					echo "</tr>\n";
 					echo "</table>\n";
