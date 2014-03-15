@@ -164,17 +164,23 @@ input.txt, textarea.txt, select.txt, .formfld {
 	font-family: arial;
 	font-size: 12px;
 	color: #000;
-	width: 50%;
 	text-align: left;
 	padding: 5px;
 	border: 1px solid #c0c0c0;
 	background-color: #fff;
-	-webkit-box-shadow: 0px 0px 3px #cddaf0 inset;
-	-moz-box-shadow: 0px 0px 3px #cddaf0 inset;
 	box-shadow: 0px 0px 3px #cddaf0 inset;
+	-moz-box-shadow: 0px 0px 3px #cddaf0 inset;
+	-webkit-box-shadow: 0px 0px 3px #cddaf0 inset;
+	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	border-radius: 3px;
+    }
+
+input.txt, .formfld {
+	transition: width 0.25s;
+	-moz-transition: width 0.25s;
+	-webkit-transition: width 0.25s;
+	max-width: 500px;
 }
 
 input.txt:focus, .formfld:focus {
@@ -190,8 +196,12 @@ select.formfld {
 
 input.txt {
 	width: 98.75%;
-}
+	}
 
+<!-- disables text input clear 'x' in IE 10+, slows down autosizeInput jquery script -->
+input[type=text]::-ms-clear {
+    display: none;
+}
 
 .vncell {
 	border-bottom: 1px solid #fff;
@@ -218,6 +228,31 @@ input.txt {
 	border-right: 3px solid #cbcfd5;
 }
 
+.vncellcol {
+	background-color: #e5e9f0;
+	padding: 8px;
+	padding-bottom: 6px;
+	text-align: left;
+	color: #000;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	border-bottom: 3px solid #e5e9f0;
+}
+
+.vncellcolreq {
+	background-color: #e5e9f0;
+	padding: 8px;
+	padding-bottom: 6px;
+	text-align: left;
+	font-weight: bold;
+	color: #000;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	border-bottom: 3px solid #cbcfd5;
+}
+
 .vtable {
 	border-bottom: 1px solid #e5e9f0;
 	color: #666;
@@ -225,8 +260,16 @@ input.txt {
 	text-align: left;
 	padding: 7px;
 	background-color: #fff;
+	vertical-align: middle;
 }
 
+.vtablerow {
+	color: #666;
+	text-align: left;
+	background-color: #fff;
+	vertical-align: middle;
+	height: 33px;
+}
 
 .listbg {
 	border-bottom: 1px solid #a4aebf;
@@ -634,13 +677,15 @@ table tr:nth-last-child(-5) td:first-of-type {
 		height: 100%;
 		padding: 1px;
 		background-color: #fff;
-		border: 1px solid #a4a4a4;
+		border: 1px solid #a4aebf;
 	}
 
 	DIV.domains_list_item {
+		border-bottom: 1px solid #c5d1e5;
 		padding: 5px 8px 8px 8px;
 		overflow: hidden;
 		white-space: nowrap;
+		cursor: pointer;
 		}
 
 	DIV.domains_list_item SPAN.domain_list_item_description {
@@ -675,6 +720,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 </SCRIPT>
 
 <script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
+<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery.autosize.js"></script>
+<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery.autosize.input.js"></script>
+
 
 <script language="JavaScript" type="text/javascript">
 	function display_message() {
@@ -687,13 +735,16 @@ table tr:nth-last-child(-5) td:first-of-type {
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
-		$("#domains_show_icon,#domains_show_text").click(function() {
+		$("#domains_show_icon, #domains_show_text").click(function() {
 			$("#domains_container").show();
 			$("#domains_block").animate({marginRight: '+=300'}, 400);
+			$("#domain_filter").focus();
 		});
 
 		$("#domains_hide").click(function() {
 			$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
+				$("#domain_filter").val('');
+				domain_search($("#domain_filter").val());
 				$("#domains_container").hide();
 			});
 
@@ -706,9 +757,15 @@ table tr:nth-last-child(-5) td:first-of-type {
 			$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
 				$("#domains_container").hide();
 			});
-
 		});
 	}
+</script>
+
+<script language="JavaScript" type="text/javascript">
+	// applies the auto-size jquery script to all text inputs
+	$(document).ready(function() {
+		$("input.txt, textarea.txt, .formfld").autosizeInput();
+	});
 </script>
 
 </head>
@@ -741,7 +798,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?=$text['button-close']?>">
 					<b style="color: #000;"><?=$text['title-domains']?></b>
 					<br><br>
-					<input type="text" id="domain_filter" style="width: 100%;" value="<?=$text['label-search']?>" onfocus="(this.value == '<?=$text['label-search']?>') ? this.value = '' : void(0);" onblur="(this.value == '') ? this.value = '<?=$text['label-search']?>' : void(0);" onkeyup="domain_search(this.value);">
+					<input type="text" id="domain_filter" class="formfld" style="min-width: 100%; width: 100%;" placeholder="<?=$text['label-search']?>" onkeyup="domain_search(this.value);">
 				</div>
 				<div id="domains_list">
 					<?
@@ -750,7 +807,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 					foreach($_SESSION['domains'] as $domain) {
 						if ($domain['domain_uuid'] != $_SESSION['domain_uuid']) {
 							$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
-							?><div id="<?=$domain['domain_name']?>" class="domains_list_item" style="background-color: <?=$bgcolor?>"><a href="<?=PROJECT_PATH?>/core/domain_settings/domains.php?domain_uuid=<?=$domain['domain_uuid']?>&domain_change=true"><?=$domain['domain_name']?></a><? if ($domain['domain_description'] != '') { ?><span class="domain_list_item_description"> - <?=$domain['domain_description']?></span><? } ?></div><?
+							?><div id="<?=$domain['domain_name']?>" class="domains_list_item" style="background-color: <?=$bgcolor?>" onclick="document.location.href='<?=PROJECT_PATH?>/core/domain_settings/domains.php?domain_uuid=<?=$domain['domain_uuid']?>&domain_change=true';"><a href="<?=PROJECT_PATH?>/core/domain_settings/domains.php?domain_uuid=<?=$domain['domain_uuid']?>&domain_change=true"><?=$domain['domain_name']?></a><? if ($domain['domain_description'] != '') { ?><span class="domain_list_item_description"> - <?=$domain['domain_description']?></span><? } ?></div><?
 							$ary_domain_names[] = $domain['domain_name'];
 							$ary_domain_descs[] = str_replace('"','\"',$domain['domain_description']);
 						}
@@ -827,7 +884,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 										//echo "	<strong>".$text['label-username'].":</strong>\n";
 										//echo "</td>\n";
 										echo "<td>\n";
-										echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
+										echo "  <input type=\"text\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
 										echo "</td>\n";
 										//echo "</tr>\n";
 
@@ -836,7 +893,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 										//echo "	<strong>".$text['label-password'].":</strong>\n";
 										//echo "</td>\n";
 										echo "<td align='left'>\n";
-										echo "	<input type=\"password\" style='width: 150px;' class='formfld' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
+										echo "	<input type=\"password\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
 										echo "</td>\n";
 										//echo "</tr>\n";
 
