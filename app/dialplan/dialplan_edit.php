@@ -337,57 +337,127 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "<br />\n";
 
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-	echo "    ".$text['label-name']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' width='100%' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\">\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "<td width='50%' style='vertical-align: top;'>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-number']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_number)."\">\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+		echo "    ".$text['label-name']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' width='70%' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\">\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-context']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dialplan_context' maxlength='255' placeholder='' value=\"$dialplan_context\">\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-number']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='dialplan_number' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_number)."\">\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+		echo "    ".$text['label-context']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left' width='70%'>\n";
+		echo "    <input class='formfld' type='text' name='dialplan_context' maxlength='255' placeholder='' value=\"$dialplan_context\">\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-continue']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='dialplan_continue'>\n";
-	echo "    <option value=''></option>\n";
-	if ($dialplan_continue == "true") {
-		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($dialplan_continue == "false") {
-		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-continue']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='dialplan_continue'>\n";
+		echo "    <option value=''></option>\n";
+		if ($dialplan_continue == "true") {
+			echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['option-true']."</option>\n";
+		}
+		if ($dialplan_continue == "false") {
+			echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['option-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+
+	echo "</td>";
+	echo "<td width='50%' style='vertical-align: top;'>\n";
+
+		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+		echo "    ".$text['label-order']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left' width='70%'>\n";
+		echo "	<select name='dialplan_order' class='formfld'>\n";
+		if (strlen(htmlspecialchars($dialplan_order))> 0) {
+			echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
+		}
+		$i=0;
+		while($i<=999) {
+			if (strlen($i) == 1) {
+				echo "		<option value='00$i'>00$i</option>\n";
+			}
+			if (strlen($i) == 2) {
+				echo "		<option value='0$i'>0$i</option>\n";
+			}
+			if (strlen($i) == 3) {
+				echo "		<option value='$i'>$i</option>\n";
+			}
+			$i++;
+		}
+		echo "	</select>\n";
+		echo "	<br />\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-enabled']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='dialplan_enabled'>\n";
+		echo "    <option value=''></option>\n";
+		if ($dialplan_enabled == "true") {
+			echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
+		}
+		else {
+			echo "    <option value='true'>".$text['option-true']."</option>\n";
+		}
+		if ($dialplan_enabled == "false") {
+			echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
+		}
+		else {
+			echo "    <option value='false'>".$text['option-false']."</option>\n";
+		}
+		echo "    </select>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+		echo "    ".$text['label-description']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left' width='70%'>\n";
+		echo "    <textarea class='formfld' style='width: 250px; height: 68px;' name='dialplan_description'>".htmlspecialchars($dialplan_description)."</textarea>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+
+	echo "</td>";
+	echo "</tr>";
+	echo "</table>";
 
 	//dialplan details
 	if ($action == "update") {
@@ -431,10 +501,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "<tr>\n";
 					echo "<td class='vncellcolreq'>".$text['label-tag']."</td>\n";
 					echo "<td class='vncellcolreq'>".$text['label-type']."</td>\n";
-					echo "<td class='vncellcolreq' width='70%'>".$text['label-data']."</td>\n";
+					echo "<td class='vncellcol' width='70%'>".$text['label-data']."</td>\n";
 					echo "<td class='vncellcol'>".$text['label-break']."</td>\n";
 					echo "<td class='vncellcol' style='text-align: center;'>".$text['label-inline']."</td>\n";
-					echo "<td class='vncellcol' style='text-align: center;'>".$text['label-group']."</td>\n";
+					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-group']."</td>\n";
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-order']."</td>\n";
 					echo "<td>&nbsp;</td>\n";
 					echo "<tr>\n";
@@ -668,75 +738,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	} //end if update
 
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
-	echo "    ".$text['label-order']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select name='dialplan_order' class='formfld'>\n";
-	if (strlen(htmlspecialchars($dialplan_order))> 0) {
-		echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
-	}
-	$i=0;
-	while($i<=999) {
-		if (strlen($i) == 1) {
-			echo "		<option value='00$i'>00$i</option>\n";
+		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "	<tr>\n";
+		echo "		<td colspan='2' align='right'>\n";
+		if ($action == "update") {
+			echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 		}
-		if (strlen($i) == 2) {
-			echo "		<option value='0$i'>0$i</option>\n";
-		}
-		if (strlen($i) == 3) {
-			echo "		<option value='$i'>$i</option>\n";
-		}
-		$i++;
-	}
-	echo "	</select>\n";
-	echo "	<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+		echo "		</td>\n";
+		echo "	</tr>";
+		echo "</table";
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-enabled']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='dialplan_enabled'>\n";
-	echo "    <option value=''></option>\n";
-	if ($dialplan_enabled == "true") {
-		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
-	if ($dialplan_enabled == "false") {
-		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
-	}
-	else {
-		echo "    <option value='false'>".$text['option-false']."</option>\n";
-	}
-	echo "    </select>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-description']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <textarea class='formfld' style='width: 300px;' name='dialplan_description' rows='4'>".htmlspecialchars($dialplan_description)."</textarea>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
-	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "</table>";
 	echo "</form>";
 
 	echo "	</td>";
