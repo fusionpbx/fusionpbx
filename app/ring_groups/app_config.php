@@ -60,7 +60,7 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_forward";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		//$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_prompt";
 		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
