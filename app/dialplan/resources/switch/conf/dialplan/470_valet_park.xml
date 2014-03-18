@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="valet_park" continue="true" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="true">
+	<extension name="valet_park" continue="true" number="park+*5901-*5999" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="true">
 		<condition field="destination_number" expression="^(park\+)?(\*59[0-9][0-9])$" break="never"/>
 		<condition field="${sip_h_Referred-By}" expression="sip:(.*)@.*" break="never">
 			<action application="set" data="referred_by_user=$1"/>

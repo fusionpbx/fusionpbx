@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010-2014
 	All Rights Reserved.
 
 	Contributor(s):
@@ -64,6 +64,7 @@ include "root.php";
 				$sql .= "app_uuid, ";
 				$sql .= "dialplan_uuid, ";
 				$sql .= "dialplan_name, ";
+				$sql .= "dialplan_number, ";
 				$sql .= "dialplan_continue, ";
 				$sql .= "dialplan_order, ";
 				$sql .= "dialplan_context, ";
@@ -76,6 +77,7 @@ include "root.php";
 				$sql .= "'".check_str($this->app_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_uuid)."', ";
 				$sql .= "'".check_str($this->dialplan_name)."', ";
+				$sql .= "'".check_str($this->dialplan_number)."', ";
 				$sql .= "'".check_str($this->dialplan_continue)."', ";
 				$sql .= "'".check_str($this->dialplan_order)."', ";
 				$sql .= "'".check_str($this->dialplan_context)."', ";
@@ -277,6 +279,7 @@ include "root.php";
 						//get the attributes
 							$this->dialplan_uuid = uuid();
 							$this->dialplan_name = $dialplan['extension']['@attributes']['name'];
+							$this->dialplan_number = $dialplan['extension']['@attributes']['number'];
 							$this->dialplan_context = $dialplan['@attributes']['name'];
 							if ($this->display_type == "text") {
 								echo "	".$this->dialplan_name.":		added\n";

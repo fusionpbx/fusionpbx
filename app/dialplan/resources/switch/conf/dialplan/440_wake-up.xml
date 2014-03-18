@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="wake-up" app_uuid="e27abe68-41c0-4188-bb0f-67d93de0c610">
+	<extension name="wake-up" number="*925" app_uuid="e27abe68-41c0-4188-bb0f-67d93de0c610">
 		<condition field="destination_number" expression="^\*(925)$">
 			<action application="answer"/>
 			<action application="set" data="pin_number={v_pin_number}"/>

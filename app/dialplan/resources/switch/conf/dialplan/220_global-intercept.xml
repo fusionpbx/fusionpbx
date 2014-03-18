@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="global-intercept" app_uuid="59aff1f2-719c-403e-9306-5eb3a0cbd16c" enabled="false">
+	<extension name="global-intercept" number="*886" app_uuid="59aff1f2-719c-403e-9306-5eb3a0cbd16c" enabled="false">
 		<condition field="destination_number" expression="^\*886$">
 			<action application="answer"/>
 			<action application="lua" data="intercept.lua"/>
