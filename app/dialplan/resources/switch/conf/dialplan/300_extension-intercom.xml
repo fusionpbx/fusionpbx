@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="extension-intercom" app_uuid="1b224444-de8b-448d-b2d1-19feaac3effa">
+	<extension name="extension-intercom" number="*8[ext]" app_uuid="1b224444-de8b-448d-b2d1-19feaac3effa">
 		<condition field="destination_number" expression="^\*8(\d{2,7})$">
 			<action application="set" data="extension_list=$1"/>
 			<action application="set" data="pin_number="/>

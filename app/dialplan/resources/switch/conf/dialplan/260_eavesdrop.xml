@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="eavesdrop" app_uuid="e944af7e-8fcc-429b-a32f-0dcdce1585d8">
+	<extension name="eavesdrop" number="*88[ext]" app_uuid="e944af7e-8fcc-429b-a32f-0dcdce1585d8">
 		<condition field="destination_number" expression="^\*88(\d{2,7})$">
 			<action application="answer"/>
 			<action application="set" data="pin_number={v_pin_number}"/>

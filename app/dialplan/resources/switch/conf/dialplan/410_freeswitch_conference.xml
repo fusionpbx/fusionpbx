@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="freeswitch_conference" app_uuid="8e3ad78e-4b48-4d36-af7e-4920a9757043" enabled="false">
+	<extension name="freeswitch_conference" number="*9888" app_uuid="8e3ad78e-4b48-4d36-af7e-4920a9757043" enabled="false">
 		<condition field="destination_number" expression="^\*9(888|8888|1616|3232)$">
 			<action application="export" data="hold_music=silence"/>
 			<!-- 
