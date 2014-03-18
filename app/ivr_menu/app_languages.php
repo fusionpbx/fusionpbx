@@ -259,7 +259,7 @@
 	$text['description-comfirm_macro']['fr-fr'] = "Entrer la Macro de Confirmation.";
 
 	$text['description-comfirm_key']['en-us'] = "Enter the confirm key.";
-	$text['description-comfirm_key']['en-us'] = "Ingrese la llave de confirmación.";
+	$text['description-comfirm_key']['es-cl'] = "Ingrese la llave de confirmación.";
 	$text['description-comfirm_key']['pt-pt'] = "Introduza a tecla de confirmação.";
 	$text['description-comfirm_key']['fr-fr'] = "Entrer la touche de confirmation.";
 
