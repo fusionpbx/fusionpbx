@@ -436,7 +436,20 @@ table tr:nth-last-child(-5) td:first-of-type {
 	#menu h2{
 		/*background:#222222 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
 		/*text-transform:uppercase*/
-		width:118px;
+		<?php
+		if ($_SESSION['domain']['language']['code'] == "en-us") {
+			echo "width:125px;\n";
+		}
+		if ($_SESSION['domain']['language']['code'] == "es-cl") {
+			echo "width:175px;\n";
+		}
+		if ($_SESSION['domain']['language']['code'] == "fr-fr") {
+			echo "width:140px;\n";
+		}
+		if ($_SESSION['domain']['language']['code'] == "pt-pt") {
+			echo "width:175px;\n";
+		}
+		?>
 	}
 
 	#menu h2 h2{
@@ -463,7 +476,20 @@ table tr:nth-last-child(-5) td:first-of-type {
 	#menu .menu_sub {
 		display:none;
 		padding-top:10px;
-		width:124px;
+		<?php
+		if ($_SESSION['domain']['language']['code'] == "en-us") {
+			echo "width:125px;\n";
+		}
+		if ($_SESSION['domain']['language']['code'] == "es-cl") {
+			echo "width:175px;\n";
+		}
+		if ($_SESSION['domain']['language']['code'] == "fr-fr") {
+			echo "width:140px;\n";
+		}
+		if ($_SESSION['domain']['language']['code'] == "pt-pt") {
+			echo "width:175px;\n";
+		}
+		?>
 		background:#333333;
 		background-color: rgba(20, 20, 20, 0.9);
 		-webkit-border-radius: 0px 0px 12px 12px;
