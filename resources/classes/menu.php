@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013
+	Copyright (C) 2010 - 2014
 	All Rights Reserved.
 
 	Contributor(s):
@@ -59,7 +59,7 @@
 					}
 
 				//begin the transaction
-					//$db->beginTransaction();
+					$db->beginTransaction();
 
 				//use the app array to restore the default menu
 					foreach ($apps as $row) {
@@ -186,7 +186,7 @@
 					}
 
 				//commit the transaction
-					//$db->commit();
+					$db->commit();
 			} //end function
 
 			//restore the menu and group permissions
@@ -195,7 +195,7 @@
 					$db = $this->db;
 
 				//begin the transaction
-					//$db->beginTransaction();
+					$db->beginTransaction();
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -374,7 +374,7 @@
 					}
 
 				//commit the transaction
-					//$db->commit();
+					$db->commit();
 			} //end function
 
 		//create the menu
