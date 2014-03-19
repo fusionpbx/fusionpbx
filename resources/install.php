@@ -1439,7 +1439,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	Username:\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -1449,7 +1449,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	Password:\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -1459,7 +1459,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		echo "</tr>\n";
 
 		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncellreq\" style='text-align: left;'>\n";
+		echo "	<td width='20%' class=\"vncellreq\" align='left' nowrap='nowrap'>\n";
 		echo "		Theme: \n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\" align='left'>\n";
