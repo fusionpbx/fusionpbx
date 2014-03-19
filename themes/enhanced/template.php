@@ -845,11 +845,13 @@ table tr:nth-last-child(-5) td:first-of-type {
 					<tr>
 						<td width='50%'>
 							<?php
-							if (strlen(PROJECT_PATH) > 0) {
-								echo "<a href='".PROJECT_PATH."'><img src='".PROJECT_PATH."/themes/enhanced/images/logo.png' /></a>";
-							}
-							else {
-								echo "<a href='/'><img src='/themes/enhanced/images/logo.png' /></a>";
+							if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
+								if (strlen(PROJECT_PATH) > 0) {
+									echo "<a href='".PROJECT_PATH."'><img src='".PROJECT_PATH."/themes/enhanced/images/logo.png' /></a>";
+								}
+								else {
+									echo "<a href='/'><img src='/themes/enhanced/images/logo.png' /></a>";
+								}
 							}
 							?>
 						</td>
@@ -864,70 +866,72 @@ table tr:nth-last-child(-5) td:first-of-type {
 							}
 
 							//logged out show the login
-								if (strlen($_SESSION["username"]) == 0) {
-									//add multi-lingual support
-										require_once "core/user_settings/app_languages.php";
-										foreach($text as $key => $value) {
-											$text[$key] = $value[$_SESSION['domain']['language']['code']];
-										}
-									//set a default login destination
-										if (strlen($_SESSION['login']['destination']['url']) == 0) {
-											$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
-										}
-									//login form
-										echo "<div align='right'>\n";
-										echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
-										echo "<input type='hidden' name='path' value='$path'>\n";
-										echo "<table width='200' border='0'>\n";
-										echo "<tr>\n";
-										//echo "<td align='left'>\n";
-										//echo "	<strong>".$text['label-username'].":</strong>\n";
-										//echo "</td>\n";
-										echo "<td>\n";
-										echo "  <input type=\"text\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
-										echo "</td>\n";
-										//echo "</tr>\n";
-
-										//echo "<tr>\n";
-										//echo "<td align='left'>\n";
-										//echo "	<strong>".$text['label-password'].":</strong>\n";
-										//echo "</td>\n";
-										echo "<td align='left'>\n";
-										echo "	<input type=\"password\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
-										echo "</td>\n";
-										//echo "</tr>\n";
-
-										if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
-											//echo "<tr>\n";
-											echo "<td align='left'>\n";
-											echo "	<strong>".$text['label-domain'].":</strong>\n";
-											echo "</td>\n";
+								if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
+									if (strlen($_SESSION["username"]) == 0) {
+										//add multi-lingual support
+											require_once "core/user_settings/app_languages.php";
+											foreach($text as $key => $value) {
+												$text[$key] = $value[$_SESSION['domain']['language']['code']];
+											}
+										//set a default login destination
+											if (strlen($_SESSION['login']['destination']['url']) == 0) {
+												$_SESSION['login']['destination']['url'] = PROJECT_PATH."/core/user_settings/user_dashboard.php";
+											}
+										//login form
+											echo "<div align='right'>\n";
+											echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
+											echo "<input type='hidden' name='path' value='$path'>\n";
+											echo "<table width='200' border='0'>\n";
+											echo "<tr>\n";
+											//echo "<td align='left'>\n";
+											//echo "	<strong>".$text['label-username'].":</strong>\n";
+											//echo "</td>\n";
 											echo "<td>\n";
-											if (count($_SESSION['login']['domain_name']) > 0) {
-												echo "    <select style='width: 150px;' class='formfld' name='domain_name'>\n";
-												echo "    <option value=''></option>\n";
-												foreach ($_SESSION['login']['domain_name'] as &$row) {
-													echo "    <option value='$row'>$row</option>\n";
-												}
-												echo "    </select>\n";
-											}
-											else {
-												echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
-											}
+											echo "  <input type=\"text\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
 											echo "</td>\n";
 											//echo "</tr>\n";
-										}
 
-										//echo "<tr>\n";
-										echo "<td>\n";
-										echo "</td>\n";
-										echo "<td align=\"right\">\n";
-										echo "  <input type=\"submit\" class='btn' value=\"".$text['button-login']."\">\n";
-										echo "</td>\n";
-										echo "</tr>\n";
-										echo "</table>\n";
-										echo "</form>";
-										echo "</div>";
+											//echo "<tr>\n";
+											//echo "<td align='left'>\n";
+											//echo "	<strong>".$text['label-password'].":</strong>\n";
+											//echo "</td>\n";
+											echo "<td align='left'>\n";
+											echo "	<input type=\"password\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
+											echo "</td>\n";
+											//echo "</tr>\n";
+
+											if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
+												//echo "<tr>\n";
+												echo "<td align='left'>\n";
+												echo "	<strong>".$text['label-domain'].":</strong>\n";
+												echo "</td>\n";
+												echo "<td>\n";
+												if (count($_SESSION['login']['domain_name']) > 0) {
+													echo "    <select style='width: 150px;' class='formfld' name='domain_name'>\n";
+													echo "    <option value=''></option>\n";
+													foreach ($_SESSION['login']['domain_name'] as &$row) {
+														echo "    <option value='$row'>$row</option>\n";
+													}
+													echo "    </select>\n";
+												}
+												else {
+													echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
+												}
+												echo "</td>\n";
+												//echo "</tr>\n";
+											}
+
+											//echo "<tr>\n";
+											echo "<td>\n";
+											echo "</td>\n";
+											echo "<td align=\"right\">\n";
+											echo "  <input type=\"submit\" class='btn' value=\"".$text['button-login']."\">\n";
+											echo "</td>\n";
+											echo "</tr>\n";
+											echo "</table>\n";
+											echo "</form>";
+											echo "</div>";
+									}
 								}
 							?>
 							&nbsp;
@@ -936,19 +940,23 @@ table tr:nth-last-child(-5) td:first-of-type {
 				</table>
 			</td>
 		</tr>
-		<?php if (strlen($_SESSION["username"]) > 0) { ?>
-		<tr>
-			<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
-		</tr>
-		<tr>
-			<td class='menu_bar' colspan='2' width='100%' height='30px'>
-				<!--{menu}-->
-			</td>
-		</tr>
-		<tr>
-			<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
-		</tr>
-		<?php } ?>
+		<?php
+		if (strlen($_SESSION["username"]) > 0) {
+			?>
+			<tr>
+				<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
+			</tr>
+			<tr>
+				<td class='menu_bar' colspan='2' width='100%' height='30px'>
+					<!--{menu}-->
+				</td>
+			</tr>
+			<tr>
+				<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
+			</tr>
+			<?php 
+		}
+		?>
 		<tr>
 			<td valign='top' align='center' width='100%'>
 				<table width='100%' cellpadding='0' cellspacing='0' border='0'>
