@@ -57,7 +57,15 @@
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
 					stream_seek = true;
-					session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+					if (vm_message_ext == "mp3") then
+						if (api:executeString("module_exists mod_vlc") == "true") then
+							session:streamFile("vlc://"..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+						else
+							session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+						end
+					else
+						session:streamFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+					end
 					stream_seek = false;
 					session:streamFile("silence_stream://1000");
 				end
