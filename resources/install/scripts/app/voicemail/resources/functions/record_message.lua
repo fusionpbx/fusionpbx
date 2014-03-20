@@ -76,7 +76,21 @@
 			silence_threshold = 30;
 			silence_seconds = 5;
 			mkdir(voicemail_dir.."/"..voicemail_id);
-			result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
+			if (vm_message_ext == "mp3") then
+				--make the recording
+					--session:execute("record", "vlc://#standard{access=file,mux=mp3,dst="..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."}");
+					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
+				--convert the wav to an mp3
+					--apt-get install lame
+					resample = "/usr/bin/lame -b 32 --resample 8 -m s "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3";
+					session:execute("system", resample);
+				--delete the wav file
+					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".mp3")) then
+						os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav");
+					end
+			else
+				result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext, max_len_seconds, silence_threshold, silence_seconds);
+			end
 			--session:execute("record", voicemail_dir.."/"..uuid.." 180 200");
 
 		--stop epoch
