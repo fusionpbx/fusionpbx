@@ -1480,6 +1480,15 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					if ($select_value == "menu-exec-app:transfer *411 XML ".$_SESSION["context"]) { $selected = "selected='selected'"; }
 					echo "		<option value='menu-exec-app:transfer *411 XML ".$_SESSION["context"]."' $selected>company directory</option>\n";
 				}
+			//record
+				if ($select_type == "dialplan") {
+					if ($select_value == "transfer:*732 XML ".$_SESSION["context"]) { $selected = "selected='selected'"; }
+					echo "		<option value='transfer:*732 XML ".$_SESSION["context"]."' $selected>record</option>\n";
+				}
+				if ($select_type == "ivr") {
+					if ($select_value == "menu-exec-app:transfer *732 XML ".$_SESSION["context"]) { $selected = "selected='selected'"; }
+					echo "		<option value='menu-exec-app:transfer *732 XML ".$_SESSION["context"]."' $selected>record</option>\n";
+				}
 			//advanced
 				if (if_group("superadmin")) {
 					//answer
