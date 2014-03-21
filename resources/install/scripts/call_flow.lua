@@ -160,6 +160,8 @@ if (session:ready()) then
 					freeswitch.consoleLog("notice", "Call Flow: label="..call_flow_anti_label..",status=false,uuid="..call_flow_uuid.."\n");
 			end
 			dbh:query("UPDATE v_call_flows SET call_flow_status = '"..toggle.."' WHERE call_flow_uuid = '"..call_flow_uuid.."'");
+		--hangup the call
+			session:hangup();
 	else 
 		--app_data
 			freeswitch.consoleLog("notice", "Call Flow: " .. app .. " " .. data .. "\n");
