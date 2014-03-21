@@ -18,11 +18,19 @@
 <message_led_other>off</message_led_other>
 <user_phone>off</user_phone>
 <intercom_enabled>on</intercom_enabled>
-<http_user>admin</http_user>
-<http_pass></http_pass>
+{if isset($admin_password) }
+<http_user perm="">{$admin_name}</http_user>
+<http_pass perm="">{$admin_password}</http_pass>
+{/if}
 <web_logout_timer>5</web_logout_timer>
+{if isset($admin_password) }
+<admin_mode_login perm="">{$admin_name}</admin_mode_login>
+<admin_mode_password perm="">{$admin_password}</admin_mode_password>
+<admin_mode_password_confirm perm="">{$admin_password}</admin_mode_password_confirm>
+{else}
 <admin_mode_password>0000</admin_mode_password>
 <admin_mode_password_confirm>0000</admin_mode_password_confirm>
+{/if}
 <admin_mode>on</admin_mode>
 <language>English</language>
 <utc_offset perm=""></utc_offset>
