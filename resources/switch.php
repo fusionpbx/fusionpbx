@@ -1780,7 +1780,7 @@ function save_gateway_xml() {
 		else {
 			$v_needle = 'v_';
 		}
-		$gateway_list = glob($_SESSION['switch']['gateways']['dir'] . "/*/".$v_needle."*.xml");
+		$gateway_list = glob($_SESSION['switch']['sip_profiles']['dir'] . "/*/".$v_needle."*.xml");
 		foreach ($gateway_list as $gateway_file) {
 			unlink($gateway_file);
 		}
@@ -1799,7 +1799,7 @@ function save_gateway_xml() {
 							$profile = "external";
 						}
 					//open the xml file
-						$fout = fopen($_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$row['gateway_uuid'].".xml","w");
+						$fout = fopen($_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$row['gateway_uuid'].".xml","w");
 					//build the xml
 						$xml .= "<include>\n";
 						$xml .= "    <gateway name=\"" . $row['gateway_uuid'] . "\">\n";
