@@ -2,8 +2,35 @@
 <settings>
 <phone-settings e="2">
 <language perm="">English</language>
+<display_method perm="">display_name_number</display_method>
+<keyboard_lock perm="">off</keyboard_lock>
+<enable_keyboard_lock perm="">off</enable_keyboard_lock>
+<transfer_on_hangup perm="">on</transfer_on_hangup>
+<transfer_on_hangup_with_starcode perm="">on</transfer_on_hangup_with_starcode>
 <update_policy perm="">auto_update</update_policy>
+<firmware_status>http://{$domain_name}{$project_path}/app/provision/?mac={$mac}&amp;filename_firmware-{$mac}.xml</firmware_status>
 <setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
+<date_us_format>off</date_us_format>
+<time_24_format>on</time_24_format>
+<challenge_response>off</challenge_response>
+<filter_registrar>off</filter_registrar>
+<logon_wizard>off</logon_wizard>
+<message_led_other>off</message_led_other>
+<user_phone>off</user_phone>
+<intercom_enabled>on</intercom_enabled>
+<http_user>admin</http_user>
+<http_pass></http_pass>
+<web_logout_timer>5</web_logout_timer>
+<admin_mode_password>0000</admin_mode_password>
+<admin_mode_password_confirm>0000</admin_mode_password_confirm>
+<admin_mode>on</admin_mode>
+<language>English</language>
+<utc_offset perm=""></utc_offset>
+<ntp_server perm="">192.53.103.104</ntp_server>
+<timezone>GBR-0</timezone>
+<tone_scheme>GBR</tone_scheme>
+<ring_sound>Ringer6</ring_sound>
+<no_dnd>off</no_dnd>
 <dns_domain perm="RW">local</dns_domain>
 <edit_alpha_mode perm="">abc</edit_alpha_mode>
 <headset_device perm="">headset_rj</headset_device>
@@ -14,17 +41,15 @@
 <away_timeout perm="">60</away_timeout>
 <attended_transfer_on_ringing perm="">off</attended_transfer_on_ringing>
 <was_never_registered perm="">off</was_never_registered>
-<user_active idx="2" perm="">off</user_active>
-<user_active idx="3" perm="">off</user_active>
-<user_active idx="4" perm="">off</user_active>
-<user_active idx="5" perm="">off</user_active>
-<user_active idx="7" perm="">off</user_active>
-<user_active idx="10" perm="">off</user_active>
+<call_waiting>on</call_waiting>
+<user_srtp idx="1" perm="">off</user_srtp>
+<user_active idx="1" perm="">on</user_active>
 <user_realname idx="1" perm="">{$display_name_1}</user_realname>
 <user_name idx="1" perm="">{$user_id_1}</user_name>
-<user_pass idx="1" perm="">{$user_password_1}</user_pass>
 <user_host idx="1" perm="">{$server_address_1}</user_host>
-<user_srtp idx="1" perm="">off</user_srtp>
+<user_outbound idx="1" perm="">{$server_address_1}</user_outbound>
+<user_pname idx="1" perm=""></user_pname>
+<user_pass idx="1" perm="">{$user_password_1}</user_pass>
 <user_mailbox idx="1" perm="">*97</user_mailbox>
 <user_realname idx="2" perm="">{$display_name_2}</user_realname>
 <user_name idx="2" perm="">{$user_id_2}</user_name>
