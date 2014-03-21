@@ -284,7 +284,7 @@
 <backlight_idle perm="">8</backlight_idle>
 <ip_frag_enable perm="">off</ip_frag_enable>
 <advertisement perm="">on</advertisement>
-<advertisement_url perm="">http://www.snom.com/{web_lng_iso_code}/AddOn</advertisement_url>
+{literal}<advertisement_url perm="">http://www.snom.com/{web_lng_iso_code}/AddOn</advertisement_url>{/literal}
 <enable_rport_rfc3581 perm="">on</enable_rport_rfc3581>
 <wifi_auth_mode perm="">off</wifi_auth_mode>
 <wifi_wpapsk perm=""></wifi_wpapsk>
@@ -480,7 +480,7 @@
 <recording_mechanism perm="">SIP</recording_mechanism>
 <rtp_early_media_ring_fallback perm="">1000</rtp_early_media_ring_fallback>
 <attended_transfer_on_ringing perm="">on</attended_transfer_on_ringing>
-<location_template perm="">{NAM}\n{LOC}\n{HNO}{HNS} {PRD} {RD} {STS} {POD}\n{A3}, {A1} {PC}\n{country}</location_template>
+{literal}<location_template perm="">{NAM}\n{LOC}\n{HNO}{HNS} {PRD} {RD} {STS} {POD}\n{A3}, {A1} {PC}\n{country}</location_template>{/literal}
 <status_msgs_that_show_directly perm="">PhoneProvisioningStarting PhoneProvisioningInProgress PhoneProvisioningFailed PhoneHasIncomingPublicAnnouncement PhoneIsLocked EthernetUnplugged PhoneHasFirmwareUpdate FirmwareUpdateFailed PhoneWantsToUpdate PhoneWantsReboot PhoneHasDisabledSipStack PhoneHasVpnError PhoneHasLowMemory PhoneRefusedHugeXcapSync CurrentIdentityIsNotRegistered PhoneIsWaitingForCallCompletion PhoneKnowsCallCanBeCompleted CurrentIdentityIsDnd CurrentIdentityForewardsWhenBusy CurrentIdentityForewardsAfterTimeout CurrentIdentityForewardsAlways PhoneWaitsOnNtpServer PhoneCannotReachNtpServer PhoneHasNoHttpPassword PhoneHasNoAdminPassword ServerMessageToBeShownDirectly CurrentIdentityHasVoiceMessages PhoneHasMissedCalls CurrentIdentityHasTextMessages</status_msgs_that_show_directly>
 <status_msgs_that_are_essential perm="">PhoneHasIncomingPublicAnnouncement PhoneIsLocked PhoneHasDisabledSipStack CurrentIdentityIsNotRegistered PhoneIsWaitingForCallCompletion PhoneKnowsCallCanBeCompleted CurrentIdentityIsDnd CurrentIdentityForewardsAlways ServerMessageToBeShownDirectly IPv4Conflict</status_msgs_that_are_essential>
 <status_msgs_that_are_important perm="">PhoneProvisioningFailed EthernetUnplugged PhoneHasFirmwareUpdate PhoneWantsToUpdate PhoneWantsReboot PhoneHasDisabledSipStack PhoneHasVpnError PhoneHasLowMemory PhoneRefusedHugeXcapSync FirmwareUpdateFailed CurrentIdentityIsNotRegistered Identity01IsNotRegistered Identity02IsNotRegistered Identity03IsNotRegistered Identity04IsNotRegistered Identity05IsNotRegistered Identity06IsNotRegistered Identity07IsNotRegistered Identity08IsNotRegistered Identity09IsNotRegistered Identity10IsNotRegistered Identity11IsNotRegistered Identity12IsNotRegistered PhoneCannotReachNtpServer PhoneHasNoHttpPassword PhoneHasNoAdminPassword Identity01ExtendedRegInfo Identity02ExtendedRegInfo Identity03ExtendedRegInfo Identity04ExtendedRegInfo Identity05ExtendedRegInfo Identity06ExtendedRegInfo Identity07ExtendedRegInfo Identity08ExtendedRegInfo Identity09ExtendedRegInfo Identity10ExtendedRegInfo Identity11ExtendedRegInfo Identity12ExtendedRegInfo</status_msgs_that_are_important>
