@@ -59,7 +59,9 @@
 					}
 
 				//begin the transaction
-					$db->beginTransaction();
+					if ($db_type == "sqlite") {
+						$db->beginTransaction();
+					}
 
 				//use the app array to restore the default menu
 					foreach ($apps as $row) {
@@ -186,7 +188,9 @@
 					}
 
 				//commit the transaction
-					$db->commit();
+					if ($db_type == "sqlite") {
+						$db->commit();
+					}
 			} //end function
 
 			//restore the menu and group permissions
