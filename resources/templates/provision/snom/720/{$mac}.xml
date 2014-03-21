@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <settings>
 <phone-settings e="2">
-<language perm="">English(UK)</language>
+<language perm="">English</language>
 <redirect_number perm=""></redirect_number>
 <redirect_busy_number perm=""></redirect_busy_number>
 <redirect_time_number perm=""></redirect_time_number>
@@ -19,7 +19,7 @@
 <setting_server perm="RW">http://{$domain_name}/app/provision/index.php?mac={$mac}</setting_server>
 <pnp_config perm="">on</pnp_config>
 <dst perm="">3600 03.05.07 02:00:00 10.05.07 03:00:00</dst>
-<timezone perm="">GBR-0</timezone>
+<timezone perm="">{$snom_time_zone}</timezone>
 <contrast perm="">8</contrast>
 <sip_retry_t1 perm="">500</sip_retry_t1>
 <timer_support perm="">on</timer_support>
