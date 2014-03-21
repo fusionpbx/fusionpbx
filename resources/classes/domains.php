@@ -65,6 +65,7 @@
 							$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
 						}
 						else {
+							$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
 							$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
 						}
 					}
