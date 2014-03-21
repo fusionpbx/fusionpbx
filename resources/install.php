@@ -123,7 +123,7 @@ require_once "resources/functions.php";
 		$switch_log_dir = $install_switch_base_dir.'/log';
 		$switch_mod_dir = $install_switch_base_dir.'/mod';
 		$switch_extensions_dir = $switch_conf_dir.'/directory';
-		$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
+		$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 		$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
 		$switch_scripts_dir = $install_switch_base_dir.'/scripts';
 		$switch_grammar_dir = $install_switch_base_dir.'/grammar';
@@ -151,7 +151,7 @@ require_once "resources/functions.php";
 				if (file_exists('/etc/freeswitch/dialplan')) {
 					$switch_conf_dir = '/etc/freeswitch';
 					$switch_extensions_dir = $switch_conf_dir.'/directory';
-					$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
+					$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
 				}
 				if (file_exists('/var/lib/freeswitch/db')) {
@@ -199,7 +199,7 @@ require_once "resources/functions.php";
 							$switch_log_dir = '/var/log/freeswitch';
 							$switch_mod_dir = '/usr/local/lib/freeswitch/mod';
 							$switch_extensions_dir = $switch_conf_dir.'/directory';
-							$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
+							$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 							$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
 							$switch_scripts_dir = '/usr/local/etc/freeswitch/scripts';
 							$switch_grammar_dir = '/usr/local/etc/freeswitch/grammar';
@@ -227,7 +227,7 @@ require_once "resources/functions.php";
 							}
 							$switch_mod_dir = '/usr/local/lib/freeswitch/mod';
 							$switch_extensions_dir = $switch_conf_dir.'/directory';
-							$switch_gateways_dir = $switch_conf_dir.'/sip_profiles';
+							$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 							$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
 							$switch_scripts_dir = '/usr/local/etc/freeswitch/scripts';
 							$switch_grammar_dir = '/usr/local/etc/freeswitch/grammar';
@@ -889,9 +889,9 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$tmp[$x]['enabled'] = 'true';
 		$x++;
 		$tmp[$x]['name'] = 'dir';
-		$tmp[$x]['value'] = $switch_gateways_dir;
+		$tmp[$x]['value'] = $switch_sip_profiles_dir;
 		$tmp[$x]['category'] = 'switch';
-		$tmp[$x]['subcategory'] = 'gateways';
+		$tmp[$x]['subcategory'] = 'sip_profiles';
 		$tmp[$x]['enabled'] = 'true';
 		$x++;
 		$tmp[$x]['name'] = 'dir';
