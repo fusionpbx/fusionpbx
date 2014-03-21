@@ -35,7 +35,7 @@
 <language>English</language>
 <utc_offset perm=""></utc_offset>
 <ntp_server perm="">192.53.103.104</ntp_server>
-<timezone>GBR-0</timezone>
+<timezone>{$snom_time_zone}</timezone>
 <tone_scheme>GBR</tone_scheme>
 <ring_sound>Ringer6</ring_sound>
 <no_dnd>off</no_dnd>
