@@ -60,10 +60,10 @@ if (strlen($_GET["id"])>0) {
 
 	//delete the xml file
 		if (count($_SESSION["domains"]) > 1) {
-			$gateway_xml_file = $_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$_SESSION['domain_name'].'-'.$gateway.".xml";
+			$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$_SESSION['domain_name'].'-'.$gateway.".xml";
 		}
 		else {
-			$gateway_xml_file = $_SESSION['switch']['gateways']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
+			$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
 		}
 		if (file_exists($gateway_xml_file)) {
 			unlink($gateway_xml_file);
