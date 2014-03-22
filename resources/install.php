@@ -46,7 +46,19 @@ require_once "resources/functions.php";
 	$domain_name = $domain_array[0];
 
 //if the config file exists then disable the install page
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/config.php")) {
+	$config_exists = false;
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+		$config_exists = true;
+	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
+		//original directory
+		$config_exists = true;
+	} elseif (file_exists("/etc/fusionpbx/config.php")){
+		//linux
+		$config_exists = true;
+	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+		$config_exists = true;
+	}
+	if ($config_exists) {
 		$msg .= "Already Installed";
 		header("Location: ".PROJECT_PATH."/index.php?msg=".urlencode($msg));
 		exit;
