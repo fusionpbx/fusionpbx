@@ -250,9 +250,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//syncrhonize configuration
 				save_gateway_xml();
 
-			//synchronize the xml config
-				//save_dialplan_xml();
-
 			//delete the sip profiles from memcache
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				if ($fp) {
@@ -288,7 +285,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$gateway_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_gateways ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -842,4 +839,5 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>

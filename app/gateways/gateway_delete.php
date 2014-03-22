@@ -89,9 +89,6 @@ if (strlen($_GET["id"])>0) {
 	//syncrhonize configuration
 		save_gateway_xml();
 
-	//synchronize the xml config
-		//save_dialplan_xml();
-
 	//delete the gateways from memcache
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
