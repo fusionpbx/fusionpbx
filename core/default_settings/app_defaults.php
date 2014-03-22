@@ -111,6 +111,19 @@ if ($domains_processed == 1) {
 			}
 		}
 
+//set the sip_profiles directory for older installs
+	if (isset($_SESSION['switch']['gateways']['dir'])) {
+		$orm = new orm;
+		$orm->name('default_settings');
+		$orm->uuid($_SESSION['switch']['gateways']['uuid']);
+		$array['default_setting_category'] = 'switch';
+		$array['default_setting_subcategory'] = 'sip_profiles';
+		$array['default_setting_name'] = 'dir';
+		//$array['default_setting_value'] = '';
+		//$array['default_setting_enabled'] = 'true';
+		$orm->save($array);
+		unset($array);
+	}
 }
 
 ?>

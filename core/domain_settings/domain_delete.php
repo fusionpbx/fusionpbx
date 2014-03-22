@@ -68,12 +68,20 @@ if (strlen($id) > 0) {
 			$category = $row['domain_setting_category'];
 			$subcategory = $row['domain_setting_subcategory'];
 			if (strlen($subcategory) == 0) {
-				//$$category[$name] = $row['domain_setting_value'];
-				$_SESSION[$category][$name] = $row['domain_setting_value'];
-			}
-			else {
-				//$$category[$subcategory][$name] = $row['domain_setting_value'];
-				$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+				if ($name == "array") {
+					$_SESSION[$category][] = $row['default_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$name] = $row['default_setting_value'];
+				}
+			} else {
+				if ($name == "array") {
+					$_SESSION[$category][$subcategory][] = $row['default_setting_value'];
+				}
+				else {
+					$_SESSION[$category][$subcategory]['uuid'] = $row['default_setting_uuid'];
+					$_SESSION[$category][$subcategory][$name] = $row['default_setting_value'];
+				}
 			}
 		}
 
@@ -133,7 +141,7 @@ if (strlen($id) > 0) {
 			}
 
 		//delete the gateways
-			if($dh = opendir($_SESSION['switch']['gateways']['dir'])) {
+			if($dh = opendir($_SESSION['switch']['sip_profiles']['dir'])) {
 				$files = Array();
 				while($file = readdir($dh)) {
 					if($file != "." && $file != ".." && $file[0] != '.') {
@@ -142,7 +150,7 @@ if (strlen($id) > 0) {
 						} else {
 							//check if file extension is xml
 							if (strpos($file, $v_needle) !== false && substr($file,-4) == '.xml') {
-								unlink($_SESSION['switch']['gateways']['dir']."/".$file);
+								unlink($_SESSION['switch']['sip_profiles']['dir']."/".$file);
 							}
 						}
 					}
