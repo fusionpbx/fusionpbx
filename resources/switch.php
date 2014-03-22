@@ -3020,6 +3020,11 @@ if (!function_exists('xml_cdr_conf_xml')) {
 if (!function_exists('save_sip_profile_xml')) {
 	function save_sip_profile_xml() {
 
+		//skip saving the sip profile xml if the directory is not set
+			if (strlen($_SESSION['switch']['sip_profiles']['dir']) == 0) {
+				return;
+			}
+
 		//get the global variables
 			global $db, $domain_uuid;
 
