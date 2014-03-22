@@ -1770,6 +1770,11 @@ function filename_safe($filename) {
 
 function save_gateway_xml() {
 
+	//skip saving the gateway xml if the directory is not set
+		if (strlen($_SESSION['switch']['sip_profiles']['dir']) == 0) {
+			return;
+		}
+
 	//declare the global variables
 		global $db, $domain_uuid, $config;
 
