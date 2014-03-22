@@ -232,14 +232,6 @@ else {
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='8' align='left'>\n";
-	echo "			<br />\n";
-	if ($v_path_show) {
-		echo "			".$_SESSION['switch']['gateways']['dir']."/sip_profiles\n";
-	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
 	echo "	</table>";
 	echo "</div>";
 	echo "</td>";
