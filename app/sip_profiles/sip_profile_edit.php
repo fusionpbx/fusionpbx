@@ -51,13 +51,13 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$sip_profile_name = check_str($_POST["sip_profile_name"]);
 		$sip_profile_description = check_str($_POST["sip_profile_description"]);
 		$sip_profile_hostname = check_str($_POST["sip_profile_hostname"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -138,7 +138,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$sip_profile_uuid = $_GET["id"];
 		$sql = "select * from v_sip_profiles ";
 		$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
