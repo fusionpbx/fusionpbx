@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2013
+ Portions created by the Initial Developer are Copyright (C) 2008-2014
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -150,7 +150,13 @@
 			if ($result_count > 0) {
 				foreach($result as &$row) {
 					//set the greeting directory
-					$row['file_path'] = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'].'/msg_'.$row['voicemail_message_uuid'].'.wav';
+					$path = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$row['voicemail_id'];
+					if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.wav')) {
+						$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.wav';
+					}
+					if (file_exists($path.'/msg_'.$row['voicemail_message_uuid'].'.mp3')) {
+						$row['file_path'] = $path.'/msg_'.$row['voicemail_message_uuid'].'.mp3';
+					}
 					$row['file_size'] = filesize($row['file_path']);
 					$row['file_size_label'] = byte_convert($row['file_size']);
 					$row['file_ext'] = substr($row['file_path'], -3);
@@ -261,7 +267,13 @@
 				session_cache_limiter('public');
 
 			//prepare and stream the file
-				$file_path = $_SESSION['switch']['storage']['dir']."/voicemail/default/".$_SESSION['domain_name']."/".$this->voicemail_id."/msg_".$this->voicemail_message_uuid.".wav";
+				$path = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domain_name'].'/'.$this->voicemail_id;
+				if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.wav')) {
+					$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.wav';
+				}
+				if (file_exists($path.'/msg_'.$this->voicemail_message_uuid.'.mp3')) {
+					$file_path = $path.'/msg_'.$this->voicemail_message_uuid.'.mp3';
+				}
 				if (file_exists($file_path)) {
 					$fd = fopen($file_path, "rb");
 					if ($_GET['t'] == "bin") {
