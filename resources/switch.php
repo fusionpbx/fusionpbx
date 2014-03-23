@@ -980,7 +980,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 
 	//list ivr menus
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/ivr_menus/app_config.php")) {
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/ivr_menu/app_config.php")) {
 			if ($select_type == "dialplan" || $select_type == "ivr") {
 				$sql = "select * from v_ivr_menus ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
