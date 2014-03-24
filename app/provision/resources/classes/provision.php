@@ -457,13 +457,13 @@ include "root.php";
 					unset ($prep_statement);
 
 				//set the mac address in the correct format
-					switch ($device_vendor) {
+					switch (strtolower($device_vendor)) {
 					case "aastra":
 						$mac = strtoupper($mac);
 						break;
 					case "snom":
-						$mac = strtoupper($mac);
-						$mac = str_replace("-", "", $mac);
+						$mac = strtolower($mac);
+						break;
 					default:
 						$mac = strtolower($mac);
 						$mac = substr($mac, 0,2).'-'.substr($mac, 2,2).'-'.substr($mac, 4,2).'-'.substr($mac, 6,2).'-'.substr($mac, 8,2).'-'.substr($mac, 10,2);
