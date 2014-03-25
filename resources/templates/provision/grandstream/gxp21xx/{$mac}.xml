@@ -357,7 +357,7 @@
     <!-- Allow Auto Answer by Call-Info. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P298>0</P298>
+    <P298>1</P298>
     <!-- Refer-To Use Target Contact. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
