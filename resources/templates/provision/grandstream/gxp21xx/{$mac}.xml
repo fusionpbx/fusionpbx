@@ -2714,7 +2714,7 @@
     <!-- When set to Yes(1), it will override the configured provision path and method -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
-    <P145>1</P145>
+    <P145>0</P145>
     <!-- Allow DHCP Option 120 to Override SIP Server -->
     <!-- 0 - No, 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
@@ -2943,7 +2943,19 @@ Outgoing calls. 0 - No, 1 - Yes. Default is 0 -->
     <!-- Public Mode. 0 - No. 1 - Yes. Default is 0 -->
     <!-- Number: 0, 1 -->
     <!-- Mandatory -->
+    {if isset($public_mode) }
+    {if $public_mode|strtolower == 'true'}
+    <P1345>1</P1345>
+    {elseif $public_mode|strtolower == 'yes'}
+    <P1345>1</P1345>
+    {elseif $public_mode == '1'}
+    <P1345>1</P1345>
+    {else}
     <P1345>0</P1345>
+    {/if}
+    {else}
+    <P1345>0</P1345>
+    {/if}
     <!-- Settings/Call Features -->
     <!-- Off-hook Auto Dial -->
     <!-- String -->
