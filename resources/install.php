@@ -1272,11 +1272,11 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				$install->copy();
 				clearstatcache();
 
-			//copy resources/templates/conf to the freeswitch/conf dir
+			//copy resources/templates/conf to the freeswitch conf dir
 				if (file_exists($switch_conf_dir)) {
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 					$dst_dir = $switch_conf_dir;
-					if (!file_exists("/etc/fusionpbx/conf/freeswitch.xml")) {
+					if (!file_exists("/etc/freeswitch/freeswitch.xml")) {
 						if (is_readable($dst_dir)) {
 							$install->recursive_copy($src_dir, $dst_dir);
 						}
