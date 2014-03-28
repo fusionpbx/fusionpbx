@@ -146,22 +146,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$dnd_enabled = check_str($_POST["dnd_enabled"]);
 
 			if (strlen($forward_all_destination) > 0) {
-				$forward_all_destination = preg_replace("~[^0-9]~", "",$forward_all_destination);
+			//	$forward_all_destination = preg_replace("~[^0-9]~", "",$forward_all_destination);
 			}
 			if (strlen($destination_data_1) > 0) {
-				$destination_data_1 = preg_replace("~[^0-9]~", "",$destination_data_1);
+			//	$destination_data_1 = preg_replace("~[^0-9]~", "",$destination_data_1);
 			}
 			if (strlen($destination_data_2) > 0) {
-				$destination_data_2 = preg_replace("~[^0-9]~", "",$destination_data_2);
+			//	$destination_data_2 = preg_replace("~[^0-9]~", "",$destination_data_2);
 			}
 			if (strlen($destination_data_3) > 0) {
-				$destination_data_3 = preg_replace("~[^0-9]~", "",$destination_data_3);
+			//	$destination_data_3 = preg_replace("~[^0-9]~", "",$destination_data_3);
 			}
 			if (strlen($destination_data_4) > 0) {
-				$destination_data_4 = preg_replace("~[^0-9]~", "",$destination_data_4);
+			//	$destination_data_4 = preg_replace("~[^0-9]~", "",$destination_data_4);
 			}
 			if (strlen($destination_data_5) > 0) {
-				$destination_data_5 = preg_replace("~[^0-9]~", "",$destination_data_5);
+			//	$destination_data_5 = preg_replace("~[^0-9]~", "",$destination_data_5);
 			}
 		}
 

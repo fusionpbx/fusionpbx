@@ -306,56 +306,55 @@ include "root.php";
 						if (strlen($this->cid_name_prefix) > 0) {
 							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#\${caller_id_name}";
 						}
-						else
+						else {
 							$dial_string .= ",origination_caller_id_name=\${caller_id_name}";
+						}
 
 						if (strlen($this->cid_number_prefix) > 0) {
 							//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
 							$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."#\${caller_id_number}";
 						}
-						else
+						else {
 							$dial_string .= ",origination_caller_id_number=\${caller_id_number}";
+						}
 
 						if (strlen($this->accountcode) > 0) {
 							$dial_string .= ",accountcode=".$this->accountcode;
 						}
 						$dial_string .= "}";
 						foreach ($result as &$row) {
-
 							$dial_string .= "[";
-
 							if (extension_exists($row["follow_me_destination"])) {
-							
 								$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
-
 								$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 								if ($this->call_prompt == "true") {
 									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
 								}
 								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
-							
 								$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
 								//$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 							}
 							else {
-
 								$dial_string .= "outbound_caller_id_number=\${outbound_caller_id_number},";
-
 								$dial_string .= "presence_id=".$this->extension."@".$_SESSION['domain_name'].",";
 								if ($this->call_prompt == "true") {
 									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
 								}
 								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
-							
-								$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
-								//if (strlen($bridge[0]) > 0) {
-								//	$dial_string .= "".$bridge[0].",";
-								//}
-								//else {
-									$dial_string .= "loopback/".$row["follow_me_destination"].",";
-								//}
+								if (is_numeric($row["follow_me_destination"])) {
+									$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
+									//if (strlen($bridge[0]) > 0) {
+									//	$dial_string .= "".$bridge[0].",";
+									//}
+									//else {
+										$dial_string .= "loopback/".$row["follow_me_destination"].",";
+									//}
+								}
+								else {
+									$dial_string .= $row["follow_me_destination"].",";
+								}
 							}
 						}
 						$this->dial_string = trim($dial_string, ",");
