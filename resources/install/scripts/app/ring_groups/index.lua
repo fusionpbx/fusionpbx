@@ -125,7 +125,6 @@
 					leg_domain_name = domain_name;
 				else
 					leg_domain_name = array[2];
-					row.destination_number = array[1]
 				end
 				cmd = "user_exists id ".. row.destination_number .." "..leg_domain_name;
 				user_exists = api:executeString(cmd);
