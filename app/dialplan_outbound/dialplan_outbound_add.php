@@ -75,6 +75,10 @@ else {
 			if (strtolower(substr($gateway, 0, 7)) == "freetdm") {
 				$gateway_type = 'freetdm';
 			}
+		//set the gateway type to transfer
+			if (strtolower(substr($gateway, 0, 8)) == "transfer") {
+				$gateway_type = 'transfer';
+			}
 		//set the gateway type to dingaling
 			if (strtolower(substr($gateway, 0, 4)) == "xmpp") {
 				$gateway_type = 'xmpp';
@@ -308,6 +312,19 @@ else {
 					if ($gateway_3_type == "enum") {
 						$bridge_3_data .= "\${enum_auto_route}";
 					}
+					if ($gateway_type == "transfer") {
+						$dialplan_name = "transfer.".$abbrv;
+						$gateway_array = explode(":",$gateway);
+						$action_data = $gateway_array[1];
+					}
+					if ($gateway_2_type == "transfer") {
+						$gateway_array = explode(":",$gateway_2);
+						$bridge_2_data = $gateway_array[1];
+					}
+					if ($gateway_3_type == "transfer") {
+						$gateway_array = explode(":",$gateway_3);
+						$bridge_3_data = $gateway_array[1];
+					}
 					if (strlen($dialplan_order) == 0) {
 						$dialplan_order ='333';
 					}
@@ -354,29 +371,31 @@ else {
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					if (strlen($accountcode) > 0) {
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'sip_h_X-accountcode='.$accountcode;
-						$dialplan_detail_order = '010';
-						$dialplan_detail_group = '';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-					}
-					else {
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'sip_h_X-accountcode=${accountcode}';
-						$dialplan_detail_order = '010';
-						$dialplan_detail_group = '';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-					}
+					if ($gateway_type != "transfer") {
+						if (strlen($accountcode) > 0) {
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'set';
+							$dialplan_detail_data = 'sip_h_X-accountcode='.$accountcode;
+							$dialplan_detail_order = '010';
+							$dialplan_detail_group = '';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+						}
+						else {
+							$dialplan_detail_tag = 'action'; //condition, action, antiaction
+							$dialplan_detail_type = 'set';
+							$dialplan_detail_data = 'sip_h_X-accountcode=${accountcode}';
+							$dialplan_detail_order = '010';
+							$dialplan_detail_group = '';
+							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+						}
 
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'sip_h_X-Tag=';
-					$dialplan_detail_order = '012';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'sip_h_X-Tag=';
+						$dialplan_detail_order = '012';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					}
 
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
@@ -385,45 +404,47 @@ else {
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'hangup_after_bridge=true';
-					$dialplan_detail_order = '020';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					if ($gateway_type != "transfer") {
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'hangup_after_bridge=true';
+						$dialplan_detail_order = '020';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'effective_caller_id_name=${outbound_caller_id_name}';
-					$dialplan_detail_order = '025';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'effective_caller_id_name=${outbound_caller_id_name}';
+						$dialplan_detail_order = '025';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					if ($dialplan_expression == '^(911)$') {
-						$dialplan_detail_data = 'effective_caller_id_number=${emergency_caller_id_number}';
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						if ($dialplan_expression == '^(911)$') {
+							$dialplan_detail_data = 'effective_caller_id_number=${emergency_caller_id_number}';
+						}
+						else {
+							$dialplan_detail_data = 'effective_caller_id_number=${outbound_caller_id_number}';
+						}
+						$dialplan_detail_order = '030';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'inherit_codec=true';
+						$dialplan_detail_order = '035';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'continue_on_fail=true';
+						$dialplan_detail_order = '040';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
-					else {
-						$dialplan_detail_data = 'effective_caller_id_number=${outbound_caller_id_number}';
-					}
-					$dialplan_detail_order = '030';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'inherit_codec=true';
-					$dialplan_detail_order = '035';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-
-					$dialplan_detail_tag = 'action'; //condition, action, antiaction
-					$dialplan_detail_type = 'set';
-					$dialplan_detail_data = 'continue_on_fail=true';
-					$dialplan_detail_order = '040';
-					$dialplan_detail_group = '';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 					if ($gateway_type == "enum" || $gateway_2_type == "enum") {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
@@ -641,6 +662,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
+	echo "	<option value=\"transfer:\$1 XML \${domain}\">transfer</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
@@ -700,6 +722,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
+	echo "	<option value=\"transfer:\$1 XML \${domain}\">transfer</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
@@ -759,6 +782,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
+	echo "	<option value=\"transfer:\$1 XML \${domain}\">transfer</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
