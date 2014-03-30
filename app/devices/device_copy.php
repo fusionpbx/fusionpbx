@@ -47,6 +47,31 @@ else {
 		$mac_address_new = preg_replace('#[^a-fA-F0-9./]#', '', $mac_address_new);
 	}
 
+//set the default
+	$save = true;
+
+//check to see if the mac address exists
+	if ($mac_address_new == "" || $mac_address_new == "000000000000") {
+		//allow duplicates to be used as templaes
+	}
+	else {
+		$sql = "SELECT count(*) AS num_rows FROM v_devices ";
+		$sql .= "WHERE device_mac_address = '".$mac_address_new."' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] == "0") {
+				$save = true;
+			}
+			else {
+				$save = false;
+				$_SESSION['message'] =  $text['message-duplicate'];
+			}
+		}
+		unset($prep_statement);
+	}
+
 //get the device
 	$sql = "SELECT * FROM v_devices ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -124,13 +149,15 @@ else {
 	$device["device_settings"] = $device_settings;
 
 //copy the device
-	$orm = new orm;
-	$orm->name('devices');
-	$orm->save($device);
-	$response = $orm->message;
+	if ($save) {
+		$orm = new orm;
+		$orm->name('devices');
+		$orm->save($device);
+		$response = $orm->message;
+		$_SESSION["message"] = $text['message-copy'];
+	}
 
 //redirect
-	$_SESSION["message"] = $text['message-copy'];
 	header("Location: devices.php");
 	return;
 
