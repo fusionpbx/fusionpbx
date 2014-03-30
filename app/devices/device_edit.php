@@ -102,7 +102,7 @@ require_once "resources/require.php";
 
 		//check for all required data
 			$msg = '';
-			if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
+			//if (strlen($device_mac_address) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 			//if (strlen($device_label) == 0) { $msg .= "Please provide: Label<br>\n"; }
 			//if (strlen($device_vendor) == 0) { $msg .= "Please provide: Vendor<br>\n"; }
 			//if (strlen($device_model) == 0) { $msg .= "Please provide: Model<br>\n"; }
@@ -189,21 +189,26 @@ require_once "resources/require.php";
 
 				//check to see if the mac address exists
 					if ($action == "add") {
-						$sql = "SELECT count(*) AS num_rows FROM v_devices ";
-						$sql .= "WHERE device_mac_address = '".$device_mac_address."' ";
-						$prep_statement = $db->prepare($sql);
-						if ($prep_statement) {
-							$prep_statement->execute();
-							$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-							if ($row['num_rows'] == "0") {
-								$save = true;
-							}
-							else {
-								$save = false;
-								$_SESSION['message'] =  $text['message-duplicate'];
-							}
+						if ($device_mac_address == "" || $device_mac_address == "000000000000") {
+							//allow duplicates to be used as templaes
 						}
-						unset($prep_statement);
+						else {
+							$sql = "SELECT count(*) AS num_rows FROM v_devices ";
+							$sql .= "WHERE device_mac_address = '".$device_mac_address."' ";
+							$prep_statement = $db->prepare($sql);
+							if ($prep_statement) {
+								$prep_statement->execute();
+								$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+								if ($row['num_rows'] == "0") {
+									$save = true;
+								}
+								else {
+									$save = false;
+									$_SESSION['message'] =  $text['message-duplicate'];
+								}
+							}
+							unset($prep_statement);
+						}
 					}
 					else {
 						$save = true;
