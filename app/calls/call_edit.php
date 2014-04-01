@@ -651,30 +651,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo $text['label-call-prompt'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "<select class='formfld' name='call_prompt'>\n";
-	//echo "<option value=''></option>\n";
-	if ($call_prompt == "true") {
-		echo "<option value='true' selected='selected'>true</option>\n";
+	if (permission_exists('follow_me_call_prompt')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo $text['label-call-prompt'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "<select class='formfld' name='call_prompt'>\n";
+		echo "<option value=''></option>\n";
+		if ($call_prompt == "true") {
+			echo "<option value='true' selected='selected'>true</option>\n";
+		}
+		else {
+			echo "<option value='true'>true</option>\n";
+		}
+		if ($call_prompt == "false") {
+			echo "<option value='false' selected='selected'>false</option>\n";
+		}
+		else {
+			echo "<option value='false'>false</option>\n";
+		}
+		echo "</select>\n";
+		echo "<br />\n";
+		echo $text['description-call-prompt']." \n";
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
-	else {
-		echo "<option value='true'>true</option>\n";
-	}
-	if ($call_prompt == "false") {
-		echo "<option value='false' selected='selected'>false</option>\n";
-	}
-	else {
-		echo "<option value='false'>false</option>\n";
-	}
-	echo "</select>\n";
-	echo "<br />\n";
-	echo $text['description-call-prompt']." \n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td colspan='2'>\n";
