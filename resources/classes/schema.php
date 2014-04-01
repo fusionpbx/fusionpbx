@@ -130,11 +130,11 @@ include "root.php";
 			}
 
 		//check if a column exists
-			public function column_exists ($db_type, $db_name, $table_name, $column_name) {
+			public function column_exists ($db_name, $table_name, $column_name) {
 				global $display_type;
 
-				if ($db_type == "sqlite") {
-					$table_info = $this->table_info($db_name, $db_type, $table_name);
+				if ($this->db_type == "sqlite") {
+					$table_info = $this->table_info($db_name, $table_name);
 					if ($this->sqlite_column_exists($table_info, $column_name)) {
 						return true;
 					}
@@ -142,15 +142,16 @@ include "root.php";
 						return false;
 					}
 				}
-				if ($db_type == "pgsql") {
+				if ($this->db_type == "pgsql") {
 					$sql = "SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = '$table_name') AND attname = '$column_name'; ";
 				}
-				if ($db_type == "mysql") {
+				if ($this->db_type == "mysql") {
 					//$sql .= "SELECT * FROM information_schema.COLUMNS where TABLE_SCHEMA = '$db_name' and TABLE_NAME = '$table_name' and COLUMN_NAME = '$column_name' ";
 					$sql = "show columns from $table_name where field = '$column_name' ";
 				}
+
 				if ($sql) {
-					$prep_statement = $this->db->prepare(check_sql($sql));
+					$prep_statement = $this->db->prepare($sql);
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					if (!$result) {
@@ -167,12 +168,12 @@ include "root.php";
 			}
 
 		//get the table information
-			public function table_info($db_name, $db_type, $table_name) {
+			public function table_info($db_name, $table_name) {
 				if (strlen($table_name) == 0) { return false; }
-				if ($db_type == "sqlite") {
+				if ($this->db_type == "sqlite") {
 					$sql = "PRAGMA table_info(".$table_name.");";
 				}
-				if ($db_type == "pgsql") {
+				if ($this->db_type == "pgsql") {
 					$sql = "SELECT ordinal_position, ";
 					$sql .= "column_name, ";
 					$sql .= "data_type, ";
@@ -185,7 +186,7 @@ include "root.php";
 					$sql .= "and table_catalog = '".$db_name."' ";
 					$sql .= "ORDER BY ordinal_position; ";
 				}
-				if ($db_type == "mysql") {
+				if ($this->db_type == "mysql") {
 					$sql = "describe ".$table_name.";";
 				}
 				$prep_statement = $this->db->prepare($sql);
