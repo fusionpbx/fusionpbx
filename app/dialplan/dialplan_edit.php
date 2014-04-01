@@ -114,7 +114,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//build the array
 		$array['domain_uuid'] = $_SESSION['domain_uuid'];
-		$array['dialplan_uuid'] = check_str($_POST["dialplan_uuid"]);
+		if (strlen($row["dialplan_uuid"]) > 0) {
+			$array['dialplan_uuid'] = check_str($_POST["dialplan_uuid"]);
+		}
 		$array['dialplan_name'] = $dialplan_name;
 		$array['dialplan_number'] = check_str($_POST["dialplan_number"]);
 		$array['dialplan_context'] = check_str($_POST["dialplan_context"]);
@@ -126,7 +128,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($_POST["dialplan_details"] as $row) {
 			if (strlen($row["dialplan_detail_tag"]) > 0) {
 				$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-				$array['dialplan_details'][$x]['dialplan_detail_uuid'] = check_str($row["dialplan_detail_uuid"]);
+				if (strlen($row["dialplan_detail_uuid"]) > 0) {
+					$array['dialplan_details'][$x]['dialplan_detail_uuid'] = check_str($row["dialplan_detail_uuid"]);
+				}
 				$array['dialplan_details'][$x]['dialplan_detail_tag'] = check_str($row["dialplan_detail_tag"]);
 				$array['dialplan_details'][$x]['dialplan_detail_type'] = check_str($row["dialplan_detail_type"]);
 				$array['dialplan_details'][$x]['dialplan_detail_data'] = check_str($row["dialplan_detail_data"]);
