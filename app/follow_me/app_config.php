@@ -79,9 +79,12 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_cid_name_prefix";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "follow_me_cid_number_prefix";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "follow_me_call_prompt";
 		$y++;
 
 	//schema details
