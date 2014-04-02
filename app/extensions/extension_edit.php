@@ -1461,6 +1461,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-record'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <select class='formfld' name='record'>\n";
+	echo "    <option value=''></option>\n";
+	if ($record == "all") {
+		echo "    <option value='all' selected='selected'>".$text['label-record_all']."</option>\n";
+	}
+	else {
+		echo "    <option value='all'>".$text['label-record_all']."</option>\n";
+	}
+	if ($record == "inbound") {
+		echo "    <option value='inbound' selected='selected'>".$text['label-record_inbound']."</option>\n";
+	}
+	else {
+		echo "    <option value='inbound'>".$text['label-record_inbound']."</option>\n";
+	}
+	if ($record == "outbound") {
+		echo "    <option value='outbound' selected='selected'>".$text['label-record_outbound']."</option>\n";
+	}
+	else {
+		echo "    <option value='outbound'>".$text['label-record_outbound']."</option>\n";
+	}
+	echo "    </select>\n";
+	echo "<br />\n";
+	echo $text['description-record']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
 		echo "<tr>\n";
 		echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

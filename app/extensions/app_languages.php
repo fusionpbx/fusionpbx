@@ -312,6 +312,31 @@
 	$text['description-call_group']['pt-pt'] = "Introduza o grupo a associar ao utilizador aqui. Grupos disponíveis por omissão: vendas, suporte, facturação.";
 	$text['description-call_group']['fr-fr'] = "Insérer le groupe d'appel de l'utilisateur. Les groupes disponibles par défaut sont: sales, support, billing.";
 
+	$text['label-record']['en-us'] = "Record";
+	$text['label-record']['es-cl'] = "Registro";
+	$text['label-record']['pt-pt'] = "Registro";
+	$text['label-record']['fr-fr'] = "Record";
+
+	$text['description-record']['en-us'] = "Select inbound, outbound or all to record calls.";
+	$text['description-record']['es-cl'] = "Seleccione entrantes, salientes o para grabar todas las llamadas.";
+	$text['description-record']['pt-pt'] = "Selecione inbound, outbound ou para gravar todas as chamadas.";
+	$text['description-record']['fr-fr'] = "Sélectionnez entrants, sortants ou à enregistrer tous les appels.";
+
+	$text['label-record_all']['en-us'] = "All";
+	$text['label-record_all']['es-cl'] = "Todo";
+	$text['label-record_all']['pt-pt'] = "Tudo";
+	$text['label-record_all']['fr-fr'] = "Tout";
+
+	$text['label-record_inbound']['en-us'] = "Inbound";
+	$text['label-record_inbound']['es-cl'] = "Entrante";
+	$text['label-record_inbound']['pt-pt'] = "Entrada";
+	$text['label-record_inbound']['fr-fr'] = "Entrante";
+
+	$text['label-record_outbound']['en-us'] = "Outbound";
+	$text['label-record_outbound']['es-cl'] = "Salida";
+	$text['label-record_outbound']['pt-pt'] = "Saída";
+	$text['label-record_outbound']['fr-fr'] = "Sortant";
+
 	$text['label-hold_music']['en-us'] = "Hold Music";
 	$text['label-hold_music']['es-cl'] = "Música en Espera";
 	$text['label-hold_music']['pt-pt'] = "Música em Espera";
