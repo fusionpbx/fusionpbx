@@ -372,6 +372,21 @@
 	$text['description-sip_force_contact']['pt-pt'] = "Escolha se pretende reescrever o porto do contacto ou reescrever o endereço IP e o porto.";
 	$text['description-sip_force_contact']['fr-fr'] = "Choisir de ré-écrire le contact ou non.";
 
+	$text['label-rewrite_contact_ip_and_port']['en-us'] = "Rewrite Contact IP and Port";
+	$text['label-rewrite_contact_ip_and_port']['es-cl'] = "Reescribir Contacto IP y el puerto";
+	$text['label-rewrite_contact_ip_and_port']['pt-pt'] = "Reescreva Contato IP e Porta";
+	$text['label-rewrite_contact_ip_and_port']['fr-fr'] = "Contactez-IP réécriture et Port";
+
+	$text['label-rewrite_contact_ip_and_port_2']['en-us'] = "Rewrite Contact IP and Port 2.0";
+	$text['label-rewrite_contact_ip_and_port_2']['es-cl'] = "Reescribir Contacto IP y el puerto 2.0";
+	$text['label-rewrite_contact_ip_and_port_2']['pt-pt'] = "Reescreva Contato IP e Porta 2.0";
+	$text['label-rewrite_contact_ip_and_port_2']['fr-fr'] = "Contactez-IP réécriture et Port 2.0";
+
+	$text['label-rewrite_tls_contact_port']['en-us'] = "Rewrite TLS Contact Port";
+	$text['label-rewrite_tls_contact_port']['es-cl'] = "Reescribir Contacto Puerto TLS";
+	$text['label-rewrite_tls_contact_port']['pt-pt'] = "Reescreva Contacto Porto TLS";
+	$text['label-rewrite_tls_contact_port']['fr-fr'] = "Réécrire Contactez TLS Port";
+
 	$text['label-sip_force_expires']['en-us'] = "SIP Force Expires";
 	$text['label-sip_force_expires']['es-cl'] = "Forzado SIP Expira";
 	$text['label-sip_force_expires']['pt-pt'] = "Forçar o tempo de expiração SIP";
@@ -406,6 +421,21 @@
 	$text['label-sip_bypass_media']['es-cl'] = "Bypass de Medios SIP";
 	$text['label-sip_bypass_media']['pt-pt'] = "Fazer Bypass à media SIP";
 	$text['label-sip_bypass_media']['fr-fr'] = "SIP Bypass Media";
+
+	$text['label-bypass_media']['en-us'] = "Bypass Media";
+	$text['label-bypass_media']['es-cl'] = "Bypass de Medios";
+	$text['label-bypass_media']['pt-pt'] = "Fazer Bypass à media";
+	$text['label-bypass_media']['fr-fr'] = "Bypass Media";
+
+	$text['label-bypass_media_after_bridge']['en-us'] = "Bypass Media After Bridge";
+	$text['label-bypass_media_after_bridge']['es-cl'] = "Después de la omisión de medios puente";
+	$text['label-bypass_media_after_bridge']['pt-pt'] = "Depois de Ponte de mídia Bypass";
+	$text['label-bypass_media_after_bridge']['fr-fr'] = "Après le contournement de média Pont";
+
+	$text['label-proxy_media']['en-us'] = "Proxy Media";
+	$text['label-proxy_media']['es-cl'] = "Proxy Medios";
+	$text['label-proxy_media']['pt-pt'] = "Proxy Mídia";
+	$text['label-proxy_media']['fr-fr'] = "Proxy Médias";
 
 	$text['description-sip_bypass_media']['en-us'] = "Choose whether to send the media stream point to point or in transparent proxy mode.";
 	$text['description-sip_bypass_media']['es-cl'] = "Seleccione si desea enviar el flujo de medios punto a punto o en modo proxy de transporte.";

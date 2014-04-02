@@ -1551,9 +1551,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		case "NDLB-connectile-dysfunction-2.0" : 	$selected[2] = "selected='selected'"; 	break;
 		case "NDLB-tls-connectile-dysfunction" : 	$selected[3] = "selected='selected'"; 	break;
 	}
-	echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">Rewrite Contact IP and Port</option>\n";
-	echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">Rewrite Contact IP and Port 2.0</option>\n";
-	echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">Rewrite TLS Contact Port</option>\n";
+	echo "    <option value='NDLB-connectile-dysfunction' ".$selected[1].">".$text['label-rewrite_contact_ip_and_port']."</option>\n";
+	echo "    <option value='NDLB-connectile-dysfunction-2.0' ".$selected[2].">".$text['label-rewrite_contact_ip_and_port_2']."</option>\n";
+	echo "    <option value='NDLB-tls-connectile-dysfunction' ".$selected[3].">".$text['label-rewrite_tls_contact_port']."</option>\n";
 	unset($selected);
 	echo "    </select>\n";
 	echo "<br />\n";
@@ -1606,9 +1606,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		case "bypass-media-after-bridge" : 	$selected[2] = "selected='selected'"; 	break;
 		case "proxy-media" : 				$selected[3] = "selected='selected'"; 	break;
 	}
-	echo "    <option value='bypass-media' ".$selected[1].">Bypass Media</option>\n";
-	echo "    <option value='bypass-media-after-bridge'".$selected[2].">Bypass Media After Bridge</option>\n";
-	echo "    <option value='proxy-media'".$selected[3].">Proxy Media</option>\n";
+	echo "    <option value='bypass-media' ".$selected[1].">".$text['label-bypass_media']."</option>\n";
+	echo "    <option value='bypass-media-after-bridge'".$selected[2].">".$text['label-bypass_media_after_bridge']."</option>\n";
+	echo "    <option value='proxy-media'".$selected[3].">".$text['label-proxy_media']."</option>\n";
 	unset($selected);
 	echo "    </select>\n";
 	echo "<br />\n";
