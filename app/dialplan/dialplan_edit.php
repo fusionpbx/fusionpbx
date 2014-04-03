@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -108,36 +108,36 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 
 	//remove the invalid characters from the dialplan name
-		$dialplan_name = check_str($_POST["dialplan_name"]);
+		$dialplan_name = $_POST["dialplan_name"];
 		$dialplan_name = str_replace(" ", "_", $dialplan_name);
 		$dialplan_name = str_replace("/", "", $dialplan_name);
 
 	//build the array
 		$array['domain_uuid'] = $_SESSION['domain_uuid'];
 		if (strlen($row["dialplan_uuid"]) > 0) {
-			$array['dialplan_uuid'] = check_str($_POST["dialplan_uuid"]);
+			$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
 		}
 		$array['dialplan_name'] = $dialplan_name;
-		$array['dialplan_number'] = check_str($_POST["dialplan_number"]);
-		$array['dialplan_context'] = check_str($_POST["dialplan_context"]);
-		$array['dialplan_continue'] = check_str($_POST["dialplan_continue"]);
-		$array['dialplan_order'] = check_str($_POST["dialplan_order"]);
-		$array['dialplan_enabled'] = check_str($_POST["dialplan_enabled"]);
-		$array['dialplan_description'] = check_str($_POST["dialplan_description"]);
+		$array['dialplan_number'] = $_POST["dialplan_number"];
+		$array['dialplan_context'] = $_POST["dialplan_context"];
+		$array['dialplan_continue'] = $_POST["dialplan_continue"];
+		$array['dialplan_order'] = $_POST["dialplan_order"];
+		$array['dialplan_enabled'] = $_POST["dialplan_enabled"];
+		$array['dialplan_description'] = $_POST["dialplan_description"];
 		$x = 0;
 		foreach ($_POST["dialplan_details"] as $row) {
 			if (strlen($row["dialplan_detail_tag"]) > 0) {
 				$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 				if (strlen($row["dialplan_detail_uuid"]) > 0) {
-					$array['dialplan_details'][$x]['dialplan_detail_uuid'] = check_str($row["dialplan_detail_uuid"]);
+					$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 				}
-				$array['dialplan_details'][$x]['dialplan_detail_tag'] = check_str($row["dialplan_detail_tag"]);
-				$array['dialplan_details'][$x]['dialplan_detail_type'] = check_str($row["dialplan_detail_type"]);
-				$array['dialplan_details'][$x]['dialplan_detail_data'] = check_str($row["dialplan_detail_data"]);
-				$array['dialplan_details'][$x]['dialplan_detail_break'] =  check_str($row["dialplan_detail_break"]);
-				$array['dialplan_details'][$x]['dialplan_detail_inline'] = check_str($row["dialplan_detail_inline"]);
-				$array['dialplan_details'][$x]['dialplan_detail_group'] = check_str($row["dialplan_detail_group"]);
-				$array['dialplan_details'][$x]['dialplan_detail_order'] = check_str($row["dialplan_detail_order"]);
+				$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
+				$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+				$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+				$array['dialplan_details'][$x]['dialplan_detail_break'] =  $row["dialplan_detail_break"];
+				$array['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
+				$array['dialplan_details'][$x]['dialplan_detail_group'] = $row["dialplan_detail_group"];
+				$array['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
 			}
 			$x++;
 		}
