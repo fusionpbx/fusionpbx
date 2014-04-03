@@ -80,6 +80,7 @@ else {
 			$toll_allow = check_str($_POST["toll_allow"]);
 			$call_timeout = check_str($_POST["call_timeout"]);
 			$call_group = check_str($_POST["call_group"]);
+			$user_record = check_str($_POST["user_record"]);
 			$hold_music = check_str($_POST["hold_music"]);
 			$auth_acl = check_str($_POST["auth_acl"]);
 			$cidr = check_str($_POST["cidr"]);
@@ -238,7 +239,7 @@ else {
 		}
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -364,6 +365,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "call_timeout, ";
 							}
 							$sql .= "call_group, ";
+							$sql .= "user_record, ";
 							$sql .= "hold_music, ";
 							$sql .= "auth_acl, ";
 							$sql .= "cidr, ";
@@ -413,6 +415,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "'$call_timeout', ";
 							}
 							$sql .= "'$call_group', ";
+							$sql .= "'$user_record', ";
 							$sql .= "'$hold_music', ";
 							$sql .= "'$auth_acl', ";
 							$sql .= "'$cidr', ";
@@ -514,6 +517,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "call_timeout = '$call_timeout', ";
 					}
 					$sql .= "call_group = '$call_group', ";
+					$sql .= "user_record = '$user_record', ";
 					$sql .= "hold_music = '$hold_music', ";
 					$sql .= "auth_acl = '$auth_acl', ";
 					$sql .= "cidr = '$cidr', ";
@@ -681,6 +685,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$toll_allow = $row["toll_allow"];
 			$call_timeout = $row["call_timeout"];
 			$call_group = $row["call_group"];
+			$user_record = $row["user_record"];
 			$hold_music = $row["hold_music"];
 			$auth_acl = $row["auth_acl"];
 			$cidr = $row["cidr"];
@@ -1463,32 +1468,38 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-record'].":\n";
+	echo "    ".$text['label-user_record'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='record'>\n";
+	echo "    <select class='formfld' name='user_record'>\n";
 	echo "    <option value=''></option>\n";
-	if ($record == "all") {
-		echo "    <option value='all' selected='selected'>".$text['label-record_all']."</option>\n";
+	if ($user_record == "all") {
+		echo "    <option value='all' selected='selected'>".$text['label-user_record_all']."</option>\n";
 	}
 	else {
-		echo "    <option value='all'>".$text['label-record_all']."</option>\n";
+		echo "    <option value='all'>".$text['label-user_record_all']."</option>\n";
 	}
-	if ($record == "inbound") {
-		echo "    <option value='inbound' selected='selected'>".$text['label-record_inbound']."</option>\n";
-	}
-	else {
-		echo "    <option value='inbound'>".$text['label-record_inbound']."</option>\n";
-	}
-	if ($record == "outbound") {
-		echo "    <option value='outbound' selected='selected'>".$text['label-record_outbound']."</option>\n";
+	if ($user_record == "local") {
+		echo "    <option value='local' selected='selected'>".$text['label-user_record_local']."</option>\n";
 	}
 	else {
-		echo "    <option value='outbound'>".$text['label-record_outbound']."</option>\n";
+		echo "    <option value='local'>".$text['label-user_record_local']."</option>\n";
+	}
+	if ($user_record == "inbound") {
+		echo "    <option value='inbound' selected='selected'>".$text['label-user_record_inbound']."</option>\n";
+	}
+	else {
+		echo "    <option value='inbound'>".$text['label-user_record_inbound']."</option>\n";
+	}
+	if ($user_record == "outbound") {
+		echo "    <option value='outbound' selected='selected'>".$text['label-user_record_outbound']."</option>\n";
+	}
+	else {
+		echo "    <option value='outbound'>".$text['label-user_record_outbound']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
-	echo $text['description-record']."\n";
+	echo $text['description-user_record']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
