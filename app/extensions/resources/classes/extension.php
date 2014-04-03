@@ -280,6 +280,9 @@
 							if (strlen($row['call_group']) > 0) {
 								$xml .= "      <variable name=\"call_group\" value=\"" . $row['call_group'] . "\"/>\n";
 							}
+							if (strlen($row['user_record']) > 0) {
+								$xml .= "      <variable name=\"user_record\" value=\"" . $row['user_record'] . "\"/>\n";
+							}
 							if (strlen($row['hold_music']) > 0) {
 								$xml .= "      <variable name=\"hold_music\" value=\"" . $row['hold_music'] . "\"/>\n";
 							}
