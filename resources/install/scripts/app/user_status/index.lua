@@ -115,13 +115,13 @@
 	end
 
 --use the voicemail_id to get the list of users assigned to an extension
-		sql = "SELECT extension_uuid FROM v_extensions ";
-		sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
-		sql = sql .. "AND (extension = '" .. user_id .."' ";
-		sql = sql .. "or number_alias = '" .. user_id .."') ";
-		dbh:query(sql, function(row)
-			extension_uuid = row.extension_uuid;
-		end);
+	sql = "SELECT extension_uuid FROM v_extensions ";
+	sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
+	sql = sql .. "AND (extension = '" .. user_id .."' ";
+	sql = sql .. "or number_alias = '" .. user_id .."') ";
+	dbh:query(sql, function(row)
+		extension_uuid = row.extension_uuid;
+	end);
 
 --set the status
 	if (action == "login") then
