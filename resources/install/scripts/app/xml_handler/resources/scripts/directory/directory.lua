@@ -223,6 +223,7 @@
 							--variables
 								sip_from_user = row.extension;
 								call_group = row.call_group;
+								user_record = row.user_record;
 								hold_music = row.hold_music;
 								toll_allow = row.toll_allow;
 								accountcode = row.accountcode;
@@ -288,6 +289,7 @@
 							domain_uuid = row.domain_uuid;
 							sip_from_user = row.extension;
 							call_group = row.call_group;
+							user_record = row.user_record;
 							hold_music = row.hold_music;
 							toll_allow = row.toll_allow;
 							accountcode = row.accountcode;
@@ -362,6 +364,7 @@
 							if (string.len(call_group) > 0) then
 								table.insert(xml, [[								<variable name="call_group" value="]] .. call_group .. [["/>]]);
 							end
+							table.insert(xml, [[								<variable name="user_record" value="]] .. user_record .. [["/>]]);
 							if (string.len(hold_music) > 0) then
 								table.insert(xml, [[								<variable name="hold_music" value="]] .. hold_music .. [["/>]]);
 							end
