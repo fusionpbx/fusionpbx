@@ -61,7 +61,7 @@
 	if (context == "public") then
 		dialplan_dir = "inbound";
 	else
-		if (context == "outbound@"..domain_name) then
+		if (string.sub(context, 0, 9) == "outbound@") then
 			dialplan_dir = "outbound";
 		else
 			if (string.len(destination_number) > 6) then
