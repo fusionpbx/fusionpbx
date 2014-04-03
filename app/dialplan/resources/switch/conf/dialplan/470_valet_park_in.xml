@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="valet_park_in" continue="true" number="park+*5900" app_uuid="3cc8363d-5ce3-48aa-8ac1-143cf297c4f7" enabled="false">
+		<condition field="destination_number" expression="^(park\+)?(\*5900)$">
+			<action application="valet_park" data="park@${domain_name} auto in 5901 5999"/>
+		</condition>
+ </extension>
+</context>
