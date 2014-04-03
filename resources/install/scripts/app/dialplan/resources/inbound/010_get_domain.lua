@@ -40,7 +40,6 @@
 		sql = sql .. "FROM v_destinations as n, v_domains as d "
 		sql = sql .. "WHERE n.destination_number like '%"..destination_number.."' "
 		sql = sql .. "AND n.destination_type = 'inbound' "
-		sql = sql .. "AND n.destination_enabled = 'true' "
 		sql = sql .. "AND n.domain_uuid = d.domain_uuid "
 		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 		assert(dbh:query(sql, function(row)
