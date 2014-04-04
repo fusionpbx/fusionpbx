@@ -31,10 +31,12 @@
 	-- dir /usr/local/freeswitch/scripts -1
 
 --set local variables
-	local context = session:getVariable("context");
-	local destination_number = session:getVariable("destination_number");
-	local call_direction = session:getVariable("call_direction");
-	local domain_name = session:getVariable("domain_name");
+	uuid = session:getVariable("uuid");
+	context = session:getVariable("context");
+	destination_number = session:getVariable("destination_number");
+	call_direction = session:getVariable("call_direction");
+	domain_name = session:getVariable("domain_name");
+	recordings_dir = session:getVariable("recordings_dir");
 
 --determine the call direction
 	if (call_direction == nil) then
@@ -72,6 +74,17 @@
 		end
 	end
 
+--include before
+	result = assert (io.popen ("dir " ..scripts_dir.."/app/dialplan/resources/before /b -1"));
+	for file in result:lines() do
+		if (string.sub(file, -4) == ".lua") then
+			if file_exists(scripts_dir.."/app/dialplan/resources/before/"..file) then
+				dofile(scripts_dir.."/app/dialplan/resources/before/"..file);
+			end
+			--freeswitch.consoleLog("notice", "[app:dialplan] lua: before/" .. file .. "\n");
+		end
+	end
+
 --include the dialplans
 	result = assert (io.popen ("dir " ..scripts_dir.."/app/dialplan/resources/"..dialplan_dir.." /b -1"));
 	for file in result:lines() do
@@ -79,6 +92,17 @@
 			if file_exists(scripts_dir.."/app/dialplan/resources/"..dialplan_dir.."/"..file) then
 				dofile(scripts_dir.."/app/dialplan/resources/"..dialplan_dir.."/"..file);
 			end
-			freeswitch.consoleLog("notice", "[app:dialplan] lua: "..dialplan_dir.."/" .. file .. "\n");
+			--freeswitch.consoleLog("notice", "[app:dialplan] lua: "..dialplan_dir.."/" .. file .. "\n");
+		end
+	end
+
+--include after
+	result = assert (io.popen ("dir " ..scripts_dir.."/app/dialplan/resources/after /b -1"));
+	for file in result:lines() do
+		if (string.sub(file, -4) == ".lua") then
+			if file_exists(scripts_dir.."/app/dialplan/resources/after/"..file) then
+				dofile(scripts_dir.."/app/dialplan/resources/after/"..file);
+			end
+			--freeswitch.consoleLog("notice", "[app:dialplan] lua: after/" .. file .. "\n");
 		end
 	end

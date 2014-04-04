@@ -16,7 +16,7 @@
 --
 --      The Initial Developer of the Original Code is
 --      Gerrit Visser <gerrit308@gmail.com>
---      Copyright (C) 2011
+--      Copyright (C) 2011-2014
 --      the Initial Developer. All Rights Reserved.
 --
 --      Contributor(s):
@@ -56,7 +56,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	local function logger(level, log, data)
 		-- output data to console 'log' if debug level is on
 		if string.find(params["loglevel"], level) then
-			freeswitch.consoleLog(log, "[Call Block]: " .. data .. "\n")
+			freeswitch.consoleLog(log, "[Call Block]: " .. data .. "\n");
 		end
 	end
 
@@ -66,7 +66,7 @@ This method causes the script to get its manadatory arguments directly from the 
 
 --log if not connect 
 	if dbh:connected() == false then
-		logger("W", "NOTICE", "db was not connected")
+		logger("W", "NOTICE", "db was not connected");
 	end
 
 -- We have a single command letter
@@ -75,7 +75,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	params["cmd"] = argv[1];
 
 -- ensure that we have a fresh status on exit
-	session:setVariable("call_block", "")
+	session:setVariable("call_block", "");
 
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"], 
@@ -102,7 +102,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				k = 0
 				for v in string.gmatch(found_action, "[%w%.]+") do
 					details[k] = v
-					--logger("W", "INFO", "Details: " .. details[k])
+					logger("W", "INFO", "Details: " .. details[k]);
 					k = k + 1
 				end
 				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
