@@ -40,84 +40,86 @@ This method causes the script to get its manadatory arguments directly from the 
 	21 Feb, 2014: move to app/diaplan/resources/call_block
 ]]
 
--- Command line parameters
-	local	params = {	cmd = "",
-						cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
-						cid_name = session:getVariable("caller_id_name"),
-						domain = session:getVariable("domain"),
-						userid = "", -- session:getVariable("id")
-						loglevel = "W" -- Warning, Debug, Info
-						}
+if (session:getVariable("domain") ~= nil) then
+	-- Command line parameters
+		local	params = {	cmd = "",
+							cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
+							cid_name = session:getVariable("caller_id_name"),
+							domain = session:getVariable("domain"),
+							userid = "", -- session:getVariable("id")
+							loglevel = "W" -- Warning, Debug, Info
+							}
 
--- local storage
-	local sql = nil
+	-- local storage
+		local sql = nil
 
---define the logger function
-	local function logger(level, log, data)
-		-- output data to console 'log' if debug level is on
-		if string.find(params["loglevel"], level) then
-			freeswitch.consoleLog(log, "[Call Block]: " .. data .. "\n");
-		end
-	end
-
---connect to the database
-	dofile(scripts_dir.."/resources/functions/database_handle.lua");
-	dbh = database_handle('system');
-
---log if not connect 
-	if dbh:connected() == false then
-		logger("W", "NOTICE", "db was not connected");
-	end
-
--- We have a single command letter
--- Use session variables
-	logger("D", "NOTICE", "params default from session, count " .. string.format("%d", #argv[1]) .. " \n");
-	params["cmd"] = argv[1];
-
--- ensure that we have a fresh status on exit
-	session:setVariable("call_block", "");
-
---send to the log
-	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"], 
-			params["cid_name"], params["userid"], params["domain"]));
-
---Check if number is in call_block list
-	--	If it is, then increment the counter and block the call
-	--if (params["cmd"] == "C") then
-		sql = "SELECT * FROM v_call_block as c "
-		sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-		sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
-		--logger("W", "INFO", "sql: " .. sql);
-		status = dbh:query(sql, function(rows)
-			found_cid_num = rows["call_block_number"]
-			found_uuid = rows["call_block_uuid"]
-			found_enabled = rows["call_block_enabled"]
-			found_action = rows["call_block_action"]
-			found_count = rows["call_block_count"]
-			end)
-		-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
-		if found_cid_num then	-- caller id exists
-			if (found_enabled == "true") then
-				details = {}
-				k = 0
-				for v in string.gmatch(found_action, "[%w%.]+") do
-					details[k] = v
-					logger("W", "INFO", "Details: " .. details[k]);
-					k = k + 1
-				end
-				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
-				session:setVariable("call_block", "block")
-				logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain: " .. params["domain"])
-				if (found_action == "Reject") then
-					session:hangup("CALL_REJECTED")
-				end
-				if (found_action == "Busy") then
-					session:hangup("USER_BUSY")
-				end
-				if (details[0] =="Voicemail") then
-					session:setAutoHangup(false)
-					session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
-				end
+	--define the logger function
+		local function logger(level, log, data)
+			-- output data to console 'log' if debug level is on
+			if string.find(params["loglevel"], level) then
+				freeswitch.consoleLog(log, "[Call Block]: " .. data .. "\n");
 			end
 		end
-	--end
+
+	--connect to the database
+		dofile(scripts_dir.."/resources/functions/database_handle.lua");
+		dbh = database_handle('system');
+
+	--log if not connect 
+		if dbh:connected() == false then
+			logger("W", "NOTICE", "db was not connected");
+		end
+
+	-- We have a single command letter
+	-- Use session variables
+		logger("D", "NOTICE", "params default from session, count " .. string.format("%d", #argv[1]) .. " \n");
+		params["cmd"] = argv[1];
+
+	-- ensure that we have a fresh status on exit
+		session:setVariable("call_block", "");
+
+	--send to the log
+		logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"], 
+				params["cid_name"], params["userid"], params["domain"]));
+
+	--Check if number is in call_block list
+		--	If it is, then increment the counter and block the call
+		--if (params["cmd"] == "C") then
+			sql = "SELECT * FROM v_call_block as c "
+			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
+			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
+			--logger("W", "INFO", "sql: " .. sql);
+			status = dbh:query(sql, function(rows)
+				found_cid_num = rows["call_block_number"]
+				found_uuid = rows["call_block_uuid"]
+				found_enabled = rows["call_block_enabled"]
+				found_action = rows["call_block_action"]
+				found_count = rows["call_block_count"]
+				end)
+			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
+			if found_cid_num then	-- caller id exists
+				if (found_enabled == "true") then
+					details = {}
+					k = 0
+					for v in string.gmatch(found_action, "[%w%.]+") do
+						details[k] = v
+						logger("W", "INFO", "Details: " .. details[k]);
+						k = k + 1
+					end
+					dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
+					session:setVariable("call_block", "block")
+					logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain: " .. params["domain"])
+					if (found_action == "Reject") then
+						session:hangup("CALL_REJECTED")
+					end
+					if (found_action == "Busy") then
+						session:hangup("USER_BUSY")
+					end
+					if (details[0] =="Voicemail") then
+						session:setAutoHangup(false)
+						session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
+					end
+				end
+			end
+		--end
+end
