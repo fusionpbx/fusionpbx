@@ -86,10 +86,11 @@
 			source = "memcache";
 	end
 
---set the call direction as a session variable
-	session:setVariable("domain_name", domain_name);
-	session:setVariable("domain", domain_name);
-	session:setVariable("domain_uuid", domain_uuid);
-
---send information to the console
-	freeswitch.consoleLog("notice", "[app:dialplan:inbound:get_domain] " .. cache .. " source: ".. source .."\n");
+	if (domain_name ~= nil) then
+		--set the call direction as a session variable
+			session:setVariable("domain_name", domain_name);
+			session:setVariable("domain", domain_name);
+			session:setVariable("domain_uuid", domain_uuid);
+		--send information to the console
+			freeswitch.consoleLog("notice", "[app:dialplan:inbound:get_domain] " .. cache .. " source: ".. source .."\n");
+	end
