@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -160,8 +160,8 @@ require_once "resources/functions.php";
 				if (file_exists('/usr/bin')) {
 					$switch_bin_dir = '/usr/bin'; //freeswitch bin directory
 				}
-				if (file_exists('/etc/freeswitch/dialplan')) {
-					$switch_conf_dir = '/etc/freeswitch';
+				if (file_exists('/etc/fusionpbx/conf')) {
+					$switch_conf_dir = '/etc/fusionpbx/conf';
 					$switch_extensions_dir = $switch_conf_dir.'/directory';
 					$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
@@ -1276,7 +1276,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				if (file_exists($switch_conf_dir)) {
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 					$dst_dir = $switch_conf_dir;
-					if (!file_exists("/etc/freeswitch/vars.xml")) {
+					if (!file_exists($dst_dir)) {
 						if (is_readable($dst_dir)) {
 							$install->recursive_copy($src_dir, $dst_dir);
 						}
