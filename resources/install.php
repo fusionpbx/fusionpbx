@@ -1273,16 +1273,14 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				clearstatcache();
 
 			//copy resources/templates/conf to the freeswitch conf dir
-				if (file_exists($switch_conf_dir)) {
-					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
-					$dst_dir = $switch_conf_dir;
-					if (!file_exists($dst_dir)) {
-						if (is_readable($dst_dir)) {
-							$install->recursive_copy($src_dir, $dst_dir);
-						}
+				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				$dst_dir = $switch_conf_dir;
+				if (!file_exists($dst_dir)) {
+					if (is_readable($dst_dir)) {
+						$install->recursive_copy($src_dir, $dst_dir);
 					}
-					//print_r($install->result);
 				}
+				//print_r($install->result);
 
 			//create the dialplan/default.xml for single tenant or dialplan/domain.xml
 				if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/dialplan")) {
