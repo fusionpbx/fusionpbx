@@ -799,7 +799,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 
 	//list fifo queues
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/dialplans/app_config.php")) {
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/fifo/app_config.php")) {
 			if ($select_type == "dialplan" || $select_type == "ivr") {
 				$sql = "select * from v_dialplan_details ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -1313,7 +1313,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 
 	//list time conditions
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/dialplans/app_config.php")) {
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/time_conditions/app_config.php")) {
 			if ($select_type == "dialplan" || $select_type == "ivr") {
 				$sql = "select * from v_dialplan_details ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
