@@ -1273,7 +1273,13 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				clearstatcache();
 
 			//copy resources/templates/conf to the freeswitch conf dir
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				if (file_exists('/usr/share/fusionpbx/resources/templates/conf')){
+					$src_dir = "/usr/share/fusionpbx/resources/templates/conf";
+				}
+				else {
+					
+					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				}
 				$dst_dir = $switch_conf_dir;
 				if (!file_exists($dst_dir)) {
 					if (is_readable($dst_dir)) {
