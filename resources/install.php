@@ -1281,10 +1281,8 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 				}
 				$dst_dir = $switch_conf_dir;
-				if (!file_exists($dst_dir)) {
-					if (is_readable($dst_dir)) {
-						$install->recursive_copy($src_dir, $dst_dir);
-					}
+				if (is_readable($dst_dir)) {
+					$install->recursive_copy($src_dir, $dst_dir);
 				}
 				//print_r($install->result);
 
