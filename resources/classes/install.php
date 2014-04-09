@@ -116,7 +116,12 @@ include "root.php";
 		function copy_scripts() {
 			clearstatcache();
 			if (file_exists($this->switch_scripts_dir)) {
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
+				if (file_exists('/usr/share/fusionpbx/resources/install/scripts')){
+					$src_dir = '/usr/share/fusionpbx/resources/install/scripts';
+				}
+				else {
+					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
+				}
 				$dst_dir = $this->switch_scripts_dir;
 				if (is_readable($this->switch_scripts_dir)) {
 					$this->recursive_copy($src_dir, $dst_dir);
