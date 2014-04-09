@@ -536,6 +536,9 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				}
 				unset ($file_contents, $sql);
 				$db_tmp->commit();
+				
+			//set the file permissions
+				chmod($db_path.'/'.$db_name, 0777);
 		}
 
 	//create the pgsql database
