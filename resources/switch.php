@@ -2942,7 +2942,13 @@ if (!function_exists('switch_conf_xml')) {
 			global $db, $domain_uuid;
 
 		//get the contents of the template
-			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/switch.conf.xml");
+			if (file_exists('/usr/share/fusionpbx/resources/templates/conf')) {
+				$path = "/usr/share/fusionpbx/resources/templates/conf";
+			}
+			else {
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+			}
+			$file_contents = file_get_contents($path."/autoload_configs/switch.conf.xml");
 
 		//prepare the php variables
 			if (stristr(PHP_OS, 'WIN')) {
