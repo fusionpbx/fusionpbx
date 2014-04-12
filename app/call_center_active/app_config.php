@@ -42,4 +42,9 @@
 		$apps[$x]['permissions'][0]['groups'][] = "admin";
 		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
 
+		$apps[$x]['permissions'][1]['name'] = "call_center_active_options";
+		$apps[$x]['permissions'][1]['menu']['uuid'] = "7fb0dd87-e984-9980-c512-2c76b887aeb2";
+		$apps[$x]['permissions'][1]['groups'][] = "admin";
+		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
+
 ?>
