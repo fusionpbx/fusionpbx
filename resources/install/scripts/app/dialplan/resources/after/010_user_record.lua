@@ -5,7 +5,10 @@
 			if (domain_count > 1) then
 				path = path.."/"..domain_name;
 			end
-			path = path.."/archive/"..(os.date("%Y")).."/"..(os.date("%b")).."/"..(os.date("%d")).."/"..uuid..".wav";
+			path = path.."/archive/"..(os.date("%Y")).."/"..(os.date("%b")).."/"..(os.date("%d"));
+
+		--make sure the path exists
+			api:executeString("system mkdir -p "..path);
 
 		--check whether to record the to user
 			if (user_exists == "true") then
@@ -66,7 +69,7 @@
 
 		--record the session
 			if (record_session) then
-				cmd = "uuid_record "..uuid.." start "..path;
+				cmd = "uuid_record "..uuid.." start "..path.."/"..uuid..".wav";
 				session:execute("set", "api_on_answer="..cmd);
 				--freeswitch.consoleLog("notice", "[app:dialplan] "..cmd.."\n");
 			end
