@@ -145,7 +145,9 @@ else {
 				echo "<th>".$text['label-tier_state']."</th>\n";
 				echo "<th>".$text['label-tier_level']."</th>\n";
 				echo "<th>".$text['label-tier_position']."</th>\n";
-				echo "<th>".$text['label-options']."</th>\n";
+				if (permission_exists('call_center_active_options')) {
+					echo "<th>".$text['label-options']."</th>\n";
+				}
 				echo "</tr>\n";
 				foreach ($tier_result as $tier_row) {
 					//$queue = $tier_row['queue'];
@@ -210,7 +212,7 @@ else {
 							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_level."</td>\n";
 							echo "<td valign='top' class='".$row_style[$c]."'>".$tier_position."</td>\n";
 
-							if (if_group("admin") || if_group("superadmin")) {
+							if (permission_exists('call_center_active_options')) {
 
 								echo "<td valign='top' class='".$row_style[$c]."'>";
 
@@ -218,9 +220,9 @@ else {
 								if ($tier_state == "Offering" || $tier_state == "Active Inbound") {
 									$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$a_exten."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$a_uuid.")";
 
-							//debug
-							//echo $orig_command;
-							//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
+									//debug
+									//echo $orig_command;
+									//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 									echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
 									$xfer_command = $a_uuid." -bleg ".$_SESSION['user']['extension'][0]['user']." XML ".$_SESSION['domain_name'];
