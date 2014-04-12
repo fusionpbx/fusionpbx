@@ -2989,7 +2989,13 @@ if (!function_exists('xml_cdr_conf_xml')) {
 			global $db, $domain_uuid;
 
 		//get the contents of the template
-			$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/xml_cdr.conf.xml");
+		 	if (file_exists('/usr/share/fusionpbx/resources/templates/conf')) {
+				$path = "/usr/share/fusionpbx/resources/templates/conf";
+			}
+			else {
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH;
+			}
+			$file_contents = file_get_contents($path."/resources/templates/conf/autoload_configs/xml_cdr.conf.xml");
 
 		//replace the values in the template
 			$file_contents = str_replace("{v_http_protocol}", "http", $file_contents);
