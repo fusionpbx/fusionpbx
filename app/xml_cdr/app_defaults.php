@@ -26,7 +26,13 @@
 
 //make sure that prefix-a-leg is set to true in the xml_cdr.conf.xml file
 	if ($domains_processed == 1) {
-		$file_contents = file_get_contents($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_cdr.conf.xml");
+		if (file_exists('/usr/share/fusionpbx/resources/templates/conf')) {
+			$path = "/usr/share/fusionpbx/resources/templates/conf";
+		}
+		else {
+			$path = $_SESSION['switch']['conf']['dir'];
+		}
+		$file_contents = file_get_contents($path."/autoload_configs/xml_cdr.conf.xml");
 		$file_contents_new = str_replace("param name=\"prefix-a-leg\" value=\"false\"/", "param name=\"prefix-a-leg\" value=\"true\"/", $file_contents);
 		if ($file_contents != $file_contents_new) {
 			$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/xml_cdr.conf.xml","w");
