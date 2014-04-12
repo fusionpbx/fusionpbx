@@ -141,15 +141,6 @@ foreach($settings_array as $name => $value) {
 }
 */
 
-//create the recordings/archive/year/month/day directory structure
-	$recording_archive_dir = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d");
-	if(!is_dir($recording_archive_dir)) {
-		mkdir($recording_archive_dir, 0764, true);
-		chmod($_SESSION['switch']['recordings']['dir']."/archive/".date("Y"), 0764);
-		chmod($_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M"), 0764);
-		chmod($recording_archive_dir, 0764);
-	}
-
 //get the event socket information
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/settings/app_config.php")) {
 		if (strlen($_SESSION['event_socket_ip_address']) == 0) {
