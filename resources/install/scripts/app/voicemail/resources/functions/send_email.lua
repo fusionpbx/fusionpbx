@@ -77,7 +77,7 @@
 					local message_date = os.date("%A, %d %b %Y %I:%M %p", created_epoch)
 
 				--prepare the files
-					file_subject = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."email_subject.tpl";
+					file_subject = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_subject.tpl";
 					file_body = scripts_dir.."/app/voicemail/resources/templates/"..default_language.."/"..default_dialect.."/email_body.tpl";
 					if (not file_exists(file_subject)) then
 						file_subject = scripts_dir.."/app/voicemail/resources/templates/en/us/email_subject.tpl";
