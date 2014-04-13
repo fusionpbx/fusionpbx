@@ -143,7 +143,6 @@
 			user_uuid = row.user_uuid;
 			username = row.username;
 			user_status = row.user_status;
-			freeswitch.consoleLog("NOTICE", "[call_center] user_status: ".. user_status .. "\n");
 			if (user_status == "Available") then
 				action = "logout";
 				status = 'Logged Out';
@@ -151,6 +150,7 @@
 				action = "login";
 				status = 'Available';
 			end
+			freeswitch.consoleLog("NOTICE", "[call_center] user_status: ".. status .. "\n");
 
 		--set the user_status in the users table
 			sql = "UPDATE v_users SET ";
@@ -199,7 +199,9 @@
 	end);
 
 --send the status to the display
-	reply = api:executeString("uuid_display "..uuid.." '"..status.."'");
+	if (status ~= nil) then
+		reply = api:executeString("uuid_display "..uuid.." '"..status.."'");
+	end
 
 --set the session sleep to give time to see the display
 	if (session:ready()) then
