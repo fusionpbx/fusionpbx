@@ -49,8 +49,16 @@
 //only run the following code if the directory exists
 	if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
 		//write the dialplan/default.xml if it does not exist
+			//set the path
+				if (file_exists('/usr/share/fusionpbx/resources/templates/conf')) {
+					$path = "/usr/share/fusionpbx/resources/templates/conf";
+				}
+				else {
+					$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH;
+				}
+
 			//get the contents of the dialplan/default.xml
-				$file_default_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/dialplan/default.xml';
+				$file_default_path = $path.'/resources/templates/conf/dialplan/default.xml';
 				$file_default_contents = file_get_contents($file_default_path);
 
 			//prepare the file contents and the path

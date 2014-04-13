@@ -2908,8 +2908,16 @@ if (!function_exists('save_call_center_xml')) {
 					$x++;
 				}
 
+			//set the path
+				if (file_exists('/usr/share/fusionpbx/resources/templates/conf')) {
+					$path = "/usr/share/fusionpbx/resources/templates/conf";
+				}
+				else {
+					$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+				}
+
 			//get the contents of the template
-				$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/callcenter.conf.xml");
+				$file_contents = file_get_contents($path."/autoload_configs/callcenter.conf.xml");
 
 			//add the Call Center Queues, Agents and Tiers to the XML config
 				$file_contents = str_replace("{v_queues}", $v_queues, $file_contents);
@@ -2993,9 +3001,9 @@ if (!function_exists('xml_cdr_conf_xml')) {
 				$path = "/usr/share/fusionpbx/resources/templates/conf";
 			}
 			else {
-				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH;
+				$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 			}
-			$file_contents = file_get_contents($path."/resources/templates/conf/autoload_configs/xml_cdr.conf.xml");
+			$file_contents = file_get_contents($path."/autoload_configs/xml_cdr.conf.xml");
 
 		//replace the values in the template
 			$file_contents = str_replace("{v_http_protocol}", "http", $file_contents);
