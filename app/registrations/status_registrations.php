@@ -54,7 +54,7 @@ require_once "resources/check_auth.php";
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>"; 
+		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
 	}
 
 //show the error message or show the content
@@ -129,11 +129,39 @@ require_once "resources/check_auth.php";
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
 			echo "<tr>\n";
 			echo "<td colspan='4'>\n";
-			echo "	<b>Registrations: ".count($registrations)."</b>\n";
+			echo "	<b>".$text['header-registrations'].": ".count($registrations)."</b>\n";
 			echo "</td>\n";
 			echo "<td colspan='1' align='right'>\n";
-			echo "  <input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"window.location='status_registrations.php?profile=".$sip_profile_name."'\" />\n";
-			echo "  <input type='button' class='btn' value='".$text['button-back']."' onclick=\"history.back();\" />\n";
+
+			$refresh = check_str($_GET["refresh"]);
+
+			echo "<script>\n";
+			echo "	function Refresh(refresh) {\n";
+			echo "		refresh = typeof refresh !== 'undefined' ? refresh : 0;\n";
+			echo "		document.location.href = 'status_registrations.php?profile=".$sip_profile_name."' + ((refresh != 0) ? '&refresh=' + refresh : '');\n";
+			echo "	}\n";
+			echo "</script>\n";
+
+			echo "<table cellpadding='0' cellspacing='3' border='0'>\n";
+			echo "	<tr>\n";
+			echo "		<td style='vertical-align: middle; padding-right: 20px;'>\n";
+			echo "			<input type='button' class='btn' value='".$text['button-back']."' onclick=\"history.back();\" />\n";
+			echo "		</td>\n";
+			echo "		<td style='vertical-align: middle;'>".$text['label-interval']."</td>\n";
+			echo "		<td style='vertical-align: middle;'>\n";
+			echo "			<input class='formfld' style='text-align: center;' onfocus='this.select();' type='text' id='Refresh' maxlength='2' value='".((is_numeric($refresh)) ? $refresh : 0)."'>\n";
+			echo "		</td>\n";
+			echo "		<td style='vertical-align: middle;'>\n";
+			echo "			<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"Refresh(document.getElementById('Refresh').value);\" />\n";
+			echo "			<script>\n";
+			echo "				if (document.getElementById('Refresh').value != '0') {\n";
+			echo "					setTimeout(\"Refresh(document.getElementById('Refresh').value)\" , (document.getElementById('Refresh').value * 1000));\n";
+			echo "				}\n";
+			echo "			</script>\n";
+			echo "		</td>\n";
+			echo "	</tr>\n";
+			echo "</table>\n";
+
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
