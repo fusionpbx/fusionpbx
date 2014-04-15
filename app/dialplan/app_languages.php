@@ -400,6 +400,11 @@
 		$text['option-anti-action']['pt-pt'] = "Anti-Acção";
 		$text['option-anti-action']['fr-fr'] = "Anti-Action";
 
+		$text['option-param']['en-us'] = "Parameter";
+		$text['option-param']['es-cl'] = "Parámetro";
+		$text['option-param']['pt-pt'] = "Parâmetro";
+		$text['option-param']['fr-fr'] = "Paramètre";
+
 		$text['option-regex']['en-us'] = "Regular Expression";
 		$text['option-regex']['pt-pt'] = "Expressão Regular";
 		$text['option-regex']['es-cl'] = "Expresión Regular";
