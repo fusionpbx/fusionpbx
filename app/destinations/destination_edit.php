@@ -240,7 +240,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_type'>\n";
-	echo "	<option value=''></option>\n";
 	switch ($destination_type) {
 		case "inbound" : 	$selected[1] = "selected='selected'";	break;
 		case "outbound" : 	$selected[2] = "selected='selected'";	break;
@@ -334,7 +333,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='destination_enabled'>\n";
-	echo "	<option value=''></option>\n";
 	switch ($destination_enabled) {
 		case "true" :	$selected[1] = "selected='selected'";	break;
 		case "false" :	$selected[2] = "selected='selected'";	break;

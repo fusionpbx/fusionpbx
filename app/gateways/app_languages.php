@@ -197,19 +197,19 @@
 	$text['description-channels']['es-cl'] = "Número máximo de canales simultaneos disponibles en la pasarela.";
 	$text['description-channels']['pt-pt'] = "Número máximo de canais simultâneos no gateway.";
 
-	$text['label-caller_id_in_from']['en-us'] = "Caller Id In From";
-	$text['label-caller_id_in_from']['es-cl'] = "Caller Id In From";
-	$text['label-caller_id_in_from']['pt-pt'] = "Caller Id In From";
-	$text['label-caller_id_in_from']['fr-fr'] = "Caller Id In From";
+	$text['label-caller_id_in_from']['en-us'] = "Caller ID In From";
+	$text['label-caller_id_in_from']['es-cl'] = "Caller ID In From";
+	$text['label-caller_id_in_from']['pt-pt'] = "Caller ID In From";
+	$text['label-caller_id_in_from']['fr-fr'] = "Caller ID In From";
 
 	$text['description-caller_id_in_from']['en-us'] = "Enter the caller-id-in-from.";
 	$text['description-caller_id_in_from']['es-cl'] = "Ingrese la parte caller-id-in-from de la cabecera SIP";
 	$text['description-caller_id_in_from']['pt-pt'] = "Introduza o caller-id-in-from";
 	$text['description-caller_id_in_from']['fr-fr'] = "Insérer ici la partie Caller-id à utiliser dans le header SIP From.";
 
-	$text['label-supress_cng']['en-us'] = "Supress Cng";
-	$text['label-supress_cng']['es-cl'] = "Suprimir Cng";
-	$text['label-supress_cng']['pt-pt'] = "Supress Cng";
+	$text['label-supress_cng']['en-us'] = "Supress CNG";
+	$text['label-supress_cng']['es-cl'] = "Suprimir CNG";
+	$text['label-supress_cng']['pt-pt'] = "Supress CNG";
 	$text['label-supress_cng']['fr-fr'] = "suppression du silence";
 
 	$text['description-supress_cng']['en-us'] = "Enter the supress-cng";
