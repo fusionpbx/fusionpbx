@@ -54,25 +54,23 @@
 					$path = "/usr/share/fusionpbx/resources/templates/conf";
 				}
 				else {
-					$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH;
+					$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf';
 				}
 
 			//get the contents of the dialplan/default.xml
-				$file_default_path = $path.'/resources/templates/conf/dialplan/default.xml';
+				$file_default_path = $path.'/dialplan/default.xml';
 				$file_default_contents = file_get_contents($file_default_path);
 
 			//prepare the file contents and the path
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-					$file_default_contents = str_replace("{v_domain}", $context, $file_default_contents);
+					$file_default_contents = str_replace("{v_domain}", $_SESSION['context'], $file_default_contents);
 				//set the file path
-					$file_path = $_SESSION['switch']['conf']['dir'].'/dialplan/'.$context.'.xml';
+					$file_path = $_SESSION['switch']['conf']['dir'].'/dialplan/'.$_SESSION['context'].'.xml';
 
 			//write the default dialplan
-				if (!file_exists($file_path)) {
-					$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissons are set correctly.');
-					fwrite($fh, $file_default_contents);
-					fclose($fh);
-				}
+				$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissions are set correctly.');
+				fwrite($fh, $file_default_contents);
+				fclose($fh);
 	}
 
 //get the $apps array from the installed apps from the core and mod directories
