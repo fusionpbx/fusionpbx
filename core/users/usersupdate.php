@@ -410,7 +410,7 @@ else {
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	echo "<select name=\"group_name\" class='frm'>\n";
+	echo "<select name=\"group_name\" class='formfld' style='width: auto; margin-right: 3px;'>\n";
 	echo "<option value=\"\"></option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach($result as $field) {
@@ -617,8 +617,7 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='user_enabled'>\n";
-	echo "    <option value=''></option>\n";
-	if ($user_enabled == "true" || $user_enabled == "") {
+	if ($user_enabled == "true") {
 		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
 	else {
