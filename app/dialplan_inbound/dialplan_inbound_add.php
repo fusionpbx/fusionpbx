@@ -623,7 +623,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
+	echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' value=\"$dialplan_name\">\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."<br />\n";
 	echo "</td>\n";
@@ -667,7 +667,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		</script>
 		<?php
-		echo "	<table style='width: 60%;' border='0'>\n";
+		echo "	<table border='0'>\n";
 		echo "	<tr>\n";
 		echo "	<td style='width: 62px;'>".$text['label-field'].":</td>\n";
 		echo "	<td style='width: 35%;' nowrap='nowrap'>\n";
@@ -710,7 +710,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 
-		echo "	<table style='width: 60%;' border='0'>\n";
+		echo "	<table border='0'>\n";
 		echo "	<tr>\n";
 		echo "	<td align='left' style='width: 62px;'>\n";
 		echo "		".$text['label-field'].":\n";
@@ -797,7 +797,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) > 0) {
-			echo "	<select name='destination_uuid' id='destination_uuid' class='formfld' style='width: 60%;' >\n";
+			echo "	<select name='destination_uuid' id='destination_uuid' class='formfld' >\n";
 			echo "	<option></option>\n";
 			foreach ($result as &$row) {
 				if (strlen($row["dialplan_uuid"]) == 0) {
@@ -832,7 +832,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 
 	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-	switch_select_destination("dialplan", "", "action_1", $action_1, "width: 60%;", "");
+	switch_select_destination("dialplan", "", "action_1", $action_1, "", "");
 
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -848,7 +848,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 
 		//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-		switch_select_destination("dialplan", "", "action_2", $action_2, "width: 60%;", "");
+		switch_select_destination("dialplan", "", "action_2", $action_2, "", "");
 
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -859,7 +859,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-limit'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' style='width: 60%;' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
+	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
@@ -870,7 +870,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select name='public_order' class='formfld' style='width: 60%;'>\n";
+	echo "	<select name='public_order' class='formfld'>\n";
 	if (strlen(htmlspecialchars($public_order))> 0) {
 		echo "		<option selected='yes' value='".htmlspecialchars($public_order)."'>".htmlspecialchars($public_order)."</option>\n";
 	}
@@ -892,7 +892,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
+	echo "    <select class='formfld' name='dialplan_enabled'>\n";
 	if ($dialplan_enabled == "true") {
 		echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
 	}
@@ -916,7 +916,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+	echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
