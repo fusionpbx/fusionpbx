@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010 - 2014
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -84,26 +84,28 @@ if ( session:ready() ) then
 		caller_pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
 
 	--get the dial_string, and extension_uuid
-		sql = "SELECT * FROM v_extensions as e, v_domains as d ";
-		sql = sql .. "WHERE e.domain_uuid = d.domain_uuid ";
-		if (extension == "true") then
-			sql = sql .. "AND e.extension = '" .. unique_id .."' ";
-			sql = sql .. "AND e.domain_uuid = '" .. domain_uuid .."' ";
-		else
-			sql = sql .. "AND e.unique_id = '" .. unique_id .."' ";
+		if (string.len(unique_id) > 0) then
+			sql = "SELECT * FROM v_extensions as e, v_domains as d ";
+			sql = sql .. "WHERE e.domain_uuid = d.domain_uuid ";
+			if (extension == "true") then
+				sql = sql .. "AND e.extension = '" .. unique_id .."' ";
+				sql = sql .. "AND e.domain_uuid = '" .. domain_uuid .."' ";
+			else
+				sql = sql .. "AND e.unique_id = '" .. unique_id .."' ";
+			end
+			if (debug["sql"]) then
+				freeswitch.consoleLog("NOTICE", "sql: ".. sql .. "\n");
+			end
+			dbh:query(sql, function(row)
+				db_domain_uuid = row.domain_uuid;
+				db_extension_uuid = row.extension_uuid;
+				db_extension = row.extension;
+				db_number_alias = row.number_alias;
+				db_dial_string = row.dial_string;
+				db_dial_user = row.dial_user;
+				db_dial_domain = row.dial_domain;
+			end);
 		end
-		if (debug["sql"]) then
-			freeswitch.consoleLog("NOTICE", "sql: ".. sql .. "\n");
-		end
-		dbh:query(sql, function(row)
-			db_domain_uuid = row.domain_uuid;
-			db_extension_uuid = row.extension_uuid;
-			db_extension = row.extension;
-			db_number_alias = row.number_alias;
-			db_dial_string = row.dial_string;
-			db_dial_user = row.dial_user;
-			db_dial_domain = row.dial_domain;
-		end);
 
 	--check to see if the pin number is correct
 		if (pin_number) then
@@ -112,19 +114,21 @@ if ( session:ready() ) then
 				db_extension_uuid = "";
 			end
 		else
-			sql = "SELECT * FROM v_voicemails ";
-			sql = sql .. "WHERE domain_uuid = '" .. db_domain_uuid .."' ";
-			if (tonumber(db_extension) == nil) then
-				sql = sql .. "AND voicemail_id = '" .. db_number_alias .."' ";
-			else
-				sql = sql .. "AND voicemail_id = '" .. db_extension .."' ";
-			end
-			dbh:query(sql, function(row)
-				voicemail_password = row.voicemail_password;
-			end);
-			if (voicemail_password ~= caller_pin_number) then
-				--access denied
-				db_extension_uuid = "";
+			if (db_domain_uuid ~= nil) then
+				sql = "SELECT * FROM v_voicemails ";
+				sql = sql .. "WHERE domain_uuid = '" .. db_domain_uuid .."' ";
+				if (tonumber(db_extension) == nil) then
+					sql = sql .. "AND voicemail_id = '" .. db_number_alias .."' ";
+				else
+					sql = sql .. "AND voicemail_id = '" .. db_extension .."' ";
+				end
+				dbh:query(sql, function(row)
+					voicemail_password = row.voicemail_password;
+				end);
+				if (voicemail_password ~= caller_pin_number) then
+					--access denied
+					db_extension_uuid = "";
+				end
 			end
 		end
 
@@ -192,7 +196,9 @@ if ( session:ready() ) then
 					end
 				end
 			--clear the cache
-				api:execute("memcache", "delete directory:"..db_extension.."@"..context);
+				if (db_extension ~= nil) then
+					api:execute("memcache", "delete directory:"..db_extension.."@"..context);
+				end
 		else
 			session:streamFile("phrase:voicemail_fail_auth:#");
 			session:hangup("NORMAL_CLEARING");
