@@ -980,7 +980,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) > 0) {
 			echo "	<select name='outbound_caller_id_name' id='outbound_caller_id_name' class='formfld'>\n";
-			echo "	<option></option>\n";
+			echo "	<option value=''></option>\n";
 			foreach ($result as &$row) {
 				if ($outbound_caller_id_name == $row["destination_caller_id_name"]) {
 					echo "		<option value='".$row["destination_caller_id_name"]."' selected='selected'>".$row["destination_caller_id_name"]."</option>\n";
@@ -1021,7 +1021,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result) > 0) {
 			echo "	<select name='outbound_caller_id_number' id='outbound_caller_id_number' class='formfld'>\n";
-			echo "	<option></option>\n";
+			echo "	<option value=''></option>\n";
 			foreach ($result as &$row) {
 				if ($outbound_caller_id_number == $row["destination_caller_id_number"]) {
 					echo "		<option value='".$row["destination_caller_id_number"]."' selected='selected'>".$row["destination_caller_id_number"]."</option>\n";
@@ -1075,8 +1075,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='directory_visible'>\n";
-	echo "    <option value=''></option>\n";
-	if ($directory_visible == "true" || $directory_visible == "") {
+	if ($directory_visible == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
@@ -1101,8 +1100,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='directory_exten_visible'>\n";
-	echo "    <option value=''></option>\n";
-	if ($directory_exten_visible == "true" || $directory_exten_visible == "") {
+	if ($directory_exten_visible == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
@@ -1350,8 +1348,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='vm_enabled'>\n";
-		echo "    <option value=''></option>\n";
-		if ($vm_enabled == "true" || $vm_enabled == "") {
+		if ($vm_enabled == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
@@ -1386,7 +1383,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='vm_attach_file'>\n";
-		echo "    <option value=''></option>\n";
 		if ($vm_attach_file == "true") {
 			echo "    <option value='true' selected >".$text['label-true']."</option>\n";
 		}
@@ -1411,7 +1407,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='vm_keep_local_after_email'>\n";
-		echo "    <option value=''></option>\n";
 		if ($vm_keep_local_after_email == "true") {
 			echo "    <option value='true' selected >".$text['label-true']."</option>\n";
 		}
@@ -1472,7 +1467,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='user_record'>\n";
-	echo "    <option value=''></option>\n";
+	echo "    <option value=''>".$text['label-user_record_none']."</option>\n";
 	if ($user_record == "all") {
 		echo "    <option value='all' selected='selected'>".$text['label-user_record_all']."</option>\n";
 	}
@@ -1683,8 +1678,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='enabled'>\n";
-		echo "    <option value=''></option>\n";
-		if ($enabled == "true" || strlen($enabled) == 0) {
+		if ($enabled == "true") {
 			echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 		}
 		else {
