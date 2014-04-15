@@ -322,6 +322,11 @@
 	$text['description-user_record']['pt-pt'] = "Selecione inbound, outbound ou para gravar todas as chamadas.";
 	$text['description-user_record']['fr-fr'] = "Sélectionnez entrants, sortants ou à enregistrer tous les appels.";
 
+	$text['label-user_record_none']['en-us'] = "Disabled";
+	$text['label-user_record_none']['es-cl'] = "Ninguno";
+	$text['label-user_record_none']['pt-pt'] = "Nenhum";
+	$text['label-user_record_none']['fr-fr'] = "Aucun";
+
 	$text['label-user_record_all']['en-us'] = "All";
 	$text['label-user_record_all']['es-cl'] = "Todo";
 	$text['label-user_record_all']['pt-pt'] = "Tudo";
@@ -502,14 +507,14 @@
 	$text['description-description']['pt-pt'] = "Descrição";
 	$text['description-description']['fr-fr'] = "";
 
-	$text['label-true']['en-us'] = "true";
-	$text['label-true']['es-cl'] = "verdadero";
-	$text['label-true']['pt-pt'] = "sim";
+	$text['label-true']['en-us'] = "True";
+	$text['label-true']['es-cl'] = "Verdadero";
+	$text['label-true']['pt-pt'] = "Sim";
 	$text['label-true']['fr-fr'] = "Oui";
 
-	$text['label-false']['en-us'] = "false";
-	$text['label-false']['es-cl'] = "falso";
-	$text['label-false']['pt-pt'] = "não";
+	$text['label-false']['en-us'] = "False";
+	$text['label-false']['es-cl'] = "Falso";
+	$text['label-false']['pt-pt'] = "Não";
 	$text['label-false']['fr-fr'] = "Non";
 
 	$text['button-add']['en-us'] = "Add";
