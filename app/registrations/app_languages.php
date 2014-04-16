@@ -36,6 +36,16 @@
 	$text['error-event-socket']['pt-pt'] = "A conexão ao Event Socket falhou.";
 	$text['error-event-socket']['fr-fr'] = "Connexion a l'Event Socket en echec.";
 
+	$text['label-event']['en-us'] = "Event:";
+	$text['label-event']['es-cl'] = "Evento:";
+	$text['label-event']['pt-pt'] = "Evento:";
+	$text['label-event']['fr-fr'] = "Evénement:";
+
+	$text['label-response']['en-us'] = "Response:";
+	$text['label-response']['es-cl'] = "Respuesta:";
+	$text['label-response']['pt-pt'] = "Resposta:";
+	$text['label-response']['fr-fr'] = "Réponse:";
+
 	$text['button-reboot']['en-us'] = "Reboot";
 	$text['button-reboot']['pt-pt'] = "Reinicialização";
 	$text['button-reboot']['fr-fr'] = "Redémarrage";
