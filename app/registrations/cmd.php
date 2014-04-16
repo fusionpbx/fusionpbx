@@ -34,6 +34,12 @@ else {
 	exit;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //set the variables
 	$cmd = check_str($_GET['cmd']);
 	$rdr = check_str($_GET['rdr']);
@@ -69,8 +75,10 @@ else {
 	if ($fp) {
 		//app.lua event_notify
 			if ($cmd == "reboot" || $cmd == "resync") {
-				$cmd = "api luarun app.lua event_notify ".$cmd." ".$user." ".$domain." ".$vendor;
-				$response = event_socket_request($fp, $cmd);
+				$cmd_complete = "api luarun app.lua event_notify ".$cmd." ".$user." ".$domain." ".$vendor;
+				$response = event_socket_request($fp, $cmd_complete);
+
+				$_SESSION['message'] = $text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].$response;
 				unset($cmd);
 			}
 
@@ -84,7 +92,7 @@ else {
 		echo $response;
 	}
 	else {
-		header("Location: status_registrations.php?profile=internal&savemsg=".urlencode($response));
+		header("Location: status_registrations.php?profile=internal");
 	}
 
 ?>
