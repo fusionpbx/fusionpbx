@@ -549,7 +549,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						//determine whether to hide the element
 							if (strlen($dialplan_detail_tag) == 0) {
 								$element['hidden'] = false;
-								$element['visibility'] = "display: inline;";
+								$element['visibility'] = "";
 							}
 							else {
 								$element['hidden'] = true;
@@ -571,8 +571,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							echo "	<option value='regex' ".($dialplan_detail_tag == "regex" ? $selected : null).">".$text['option-regex']."</option>\n";
 							echo "	<option value='action' ".($dialplan_detail_tag == "action" ? $selected : null).">".$text['option-action']."</option>\n";
 							echo "	<option value='anti-action' ".($dialplan_detail_tag == "anti-action" ? $selected : null).">".$text['option-anti-action']."</option>\n";
-							echo "	<option value='param' ".($dialplan_detail_tag == "param" ? $selected : null).">".$text['option-param']."</option>\n";
-							//echo "	<option value='condition' ".($dialplan_detail_tag == "condition" ? $selected : null).">".$text['option-condition']."</option>\n";
 							echo "	</select>\n";
 							echo "</td>\n";
 						//type
