@@ -611,7 +611,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (count($generated_users) == 0) {
 						//action add
 							$_SESSION["message"] = $text['message-add'];
-							header("Location: extensions.php");
+							header("Location: extension_edit.php?id=".$extension_uuid);
 					}
 					else {
 						//auto-generate user with extension as login name
@@ -646,7 +646,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				else {
 					$_SESSION["message"] = $text['message-add'];
 				}
-				header("Location: extensions.php");
+				header("Location: extension_edit.php?id=".$extension_uuid);
 				return;
 			}
 	} //if ($_POST["persistformvar"] != "true")
