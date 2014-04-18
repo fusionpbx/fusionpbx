@@ -187,7 +187,7 @@ require_once "resources/require.php";
 					if ($_SESSION["user"]["unique"]["text"] == "global") {
 						//globally unique users
 						$sql = "select * from v_users ";
-						if (strlen($key) > 0) {
+						if (isset($_REQUEST["key"])) {
 							$sql .= "where api_key=:key ";
 							//$sql .= "where api_key='".$key."' ";
 						}
@@ -201,7 +201,7 @@ require_once "resources/require.php";
 					else {
 						//unique per domain
 						$sql = "select * from v_users ";
-						if (strlen($key) > 0) {
+						if (isset($_REQUEST["key"])) {
 							$sql .= "where api_key=:key ";
 							//$sql .= "and api_key='".$key."' ";
 						}
@@ -215,7 +215,7 @@ require_once "resources/require.php";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 					}
-					if (strlen($key) > 0) {
+					if (isset($_REQUEST["key"])) {
 						$prep_statement->bindParam(':key', $key);
 					}
 					else {
@@ -227,7 +227,7 @@ require_once "resources/require.php";
 						$auth_failed = true;
 					}
 					else {
-						if (strlen($key) > 0) {
+						if (isset($_REQUEST["key"])) {
 							$auth_failed = false;
 						}
 						else {
