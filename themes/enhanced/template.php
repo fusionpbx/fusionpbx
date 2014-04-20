@@ -382,10 +382,10 @@ table tr:nth-last-child(-5) td:first-of-type {
 
 	.menu_bar {
 		background-image: url('<!--{project_path}-->/themes/enhanced/images/background_black.png');
-		-webkit-border-radius: 3px 3px 3px 3px;
-		-moz-border-radius: 3px 3px 3px 3px;
-		border-radius: 3px 3px 3px 3px;
-		padding: 3px;
+		-webkit-border-radius: 4px 4px 4px 4px;
+		-moz-border-radius: 4px 4px 4px 4px;
+		border-radius: 4px 4px 4px 4px;
+		padding: 4px;
 	}
 
 	.menu_bg {
