@@ -47,19 +47,19 @@ else {
 
 //if no id then exit
 	if (isset($id)) {
-		echo "ID is required."
+		echo "ID is required.";
 		exit;
 	}
 
 //get the dialplan_uuid
-		$orm = new orm;
-		$orm->name('destinations');
-		$orm->uuid($id);
-		$result = $orm->find()->get();
-		foreach ($result as &$row) {
-			$dialplan_uuid = $row["dialplan_uuid"];
-		}
-		unset ($prep_statement);
+	$orm = new orm;
+	$orm->name('destinations');
+	$orm->uuid($id);
+	$result = $orm->find()->get();
+	foreach ($result as &$row) {
+		$dialplan_uuid = $row["dialplan_uuid"];
+	}
+	unset ($prep_statement);
 
 //delete the dialplan
 	if (isset($dialplan_uuid)) {
