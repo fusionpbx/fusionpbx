@@ -45,8 +45,8 @@ else {
 		$id = check_str($_GET["id"]);
 	}
 
-//if no id then exit
-	if (isset($id)) {
+//if the ID is not set then exit
+	if (!isset($id)) {
 		echo "ID is required.";
 		exit;
 	}
