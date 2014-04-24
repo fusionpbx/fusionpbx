@@ -151,6 +151,7 @@ else {
 			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
+
 		//redirect the browser
 			$_SESSION["message"] = $text['message-add'];
 			header("Location: extension_edit.php?id=".$extension_uuid);
@@ -160,6 +161,7 @@ else {
 //assign the line to the device
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
 		if (strlen($_REQUEST["device_mac_address"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
+
 			//set the variables
 				$extension_uuid = check_str($_REQUEST["id"]);
 				$device_uuid= uuid();
@@ -180,29 +182,39 @@ else {
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 					if (strlen($row['device_uuid']) > 0) {
-						//device found
-						$device_uuid = $row['device_uuid'];
+						//device found get the device_uuid
+							$device_uuid = $row['device_uuid'];
+
+						//update device template
+							if (strlen($device_template) > 0) {
+								$sql = "update v_devices set ";
+								$sql .= "device_template = '$device_template' ";
+								$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+								$sql .= "and device_uuid = '$device_uuid'";
+								$db->exec(check_sql($sql));
+								unset($sql);
+							}
 					}
 					else {
 						//device not found
-						$sql_insert = "insert into v_devices ";
-						$sql_insert .= "(";
-						$sql_insert .= "device_uuid, ";
-						$sql_insert .= "domain_uuid, ";
-						$sql_insert .= "device_mac_address, ";
-						$sql_insert .= "device_template, ";
-						$sql_insert .= "device_provision_enable ";
-						$sql_insert .= ") ";
-						$sql_insert .= "values ";
-						$sql_insert .= "(";
-						$sql_insert .= "'".$device_uuid."', ";
-						$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
-						$sql_insert .= "'".$device_mac_address."', ";
-						$sql_insert .= "'".$device_template."', ";
-						$sql_insert .= "'true' ";
-						$sql_insert .= ")";
-						//echo $sql_insert."<br />\n";
-						$db->exec($sql_insert);
+							$sql_insert = "insert into v_devices ";
+							$sql_insert .= "(";
+							$sql_insert .= "device_uuid, ";
+							$sql_insert .= "domain_uuid, ";
+							$sql_insert .= "device_mac_address, ";
+							$sql_insert .= "device_template, ";
+							$sql_insert .= "device_provision_enable ";
+							$sql_insert .= ") ";
+							$sql_insert .= "values ";
+							$sql_insert .= "(";
+							$sql_insert .= "'".$device_uuid."', ";
+							$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
+							$sql_insert .= "'".$device_mac_address."', ";
+							$sql_insert .= "'".$device_template."', ";
+							$sql_insert .= "'true' ";
+							$sql_insert .= ")";
+							//echo $sql_insert."<br />\n";
+							$db->exec($sql_insert);
 					}
 				}
 
