@@ -40,22 +40,52 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-}
+//get the ID
+	if (count($_GET) > 0) {
+		$id = check_str($_GET["id"]);
+	}
 
-//delete the destination
-	if (strlen($id) > 0) {
-		$sql = "delete from v_destinations ";
+//if no id then exit
+	if (isset($id)) {
+		echo "ID is required."
+		exit;
+	}
+
+//get the dialplan_uuid
+		$orm = new orm;
+		$orm->name('destinations');
+		$orm->uuid($id);
+		$result = $orm->find()->get();
+		foreach ($result as &$row) {
+			$dialplan_uuid = $row["dialplan_uuid"];
+		}
+		unset ($prep_statement);
+
+//delete the dialplan
+	if (isset($dialplan_uuid)) {
+		$sql = "delete from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and destination_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
+		$sql .= "and dialplan_uuid = '$id' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		$sql = "delete from v_dialplan ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and dialplan_uuid = '$id' ";
+		$db->exec(check_sql($sql));
 		unset($sql);
 	}
 
-$_SESSION["message"] = $text['message-delete'];
-header("Location: destinations.php");
-return;
+//delete the destination
+	$sql = "delete from v_destinations ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and destination_uuid = '$id' ";
+	$db->exec(check_sql($sql));
+	unset($sql);
+
+//redirect the user
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: destinations.php");
+	return;
 
 ?>
