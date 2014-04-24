@@ -117,6 +117,9 @@ else {
 //prepare the devices array
 	unset($devices[0]["device_uuid"]);
 
+//add copy to the device description
+	$devices[0]["device_description"] = $text['button-copy']." ".$devices[0]["device_description"];
+
 //prepare the device_lines array
 	$x = 0;
 	foreach ($device_lines as $row) {
