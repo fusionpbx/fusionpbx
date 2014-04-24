@@ -1,6 +1,6 @@
 <?php
 	// Theme
-	$text['title-domains']['en-us'] = "Domain Selector";
+	$text['title-domains']['en-us'] = "Domains";
 	$text['title-domains']['es-cl'] = "Dominios";
 	$text['title-domains']['pt-pt'] = "Domínios";
 	$text['title-domains']['fr-fr'] = "Domaines";
