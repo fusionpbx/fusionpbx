@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2013-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -93,6 +93,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
+			/*
 			if ($action == "add") {
 				$sql = "insert into v_destinations ";
 				$sql .= "(";
@@ -168,18 +169,65 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				header("Location: destinations.php");
 				return;
 			} //if ($action == "update")
+			*/
+
+			//get the array
+				$dialplan_details = $_POST["dialplan_details"];
+
+			//remove the array from the HTTP POST
+				unset($_POST["dialplan_details"]);
+
+			//array cleanup
+				$x = 0;
+				foreach ($dialplan_details as $row) {
+					//unset the empty row
+						if (strlen($row["dialplan_detail_data"]) == 0) {
+							unset($dialplan_details[$x]);
+						}
+					//increment the row
+						$x++;
+				}
+
+			//save the destination
+				$orm = new orm;
+				$orm->name('destinations');
+				if (strlen($destination_uuid) > 0) {
+					$orm->uuid($destination_uuid);
+				}
+				$orm->save($_POST);
+				$response = $orm->message;
+		//print_r($_POST);
+		//print_r($response);
+		//unset($orm);
+				foreach ($dialplan_details as $row) {
+					$orm = new orm;
+					$orm->name('dialplan_details');
+					if (strlen($row["dialplan_detail_uuid"]) > 0) {
+						$orm->uuid($row["dialplan_detail_uuid"]);
+					}
+					$orm->save($row);
+					$response = $orm->message;
+					print_r($dialplan_details);
+					print_r($response);
+				}
+
+				if (strlen($response['uuid']) > 0) {
+					$destination_uuid = $response['uuid'];
+				}
+
+				$_SESSION["message"] = $text['message-update'];
+				header("Location: destination_edit.php?id=".$destination_uuid);
+				return;
 		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$destination_uuid = $_GET["id"];
-		$sql = "select * from v_destinations ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and destination_uuid = '$destination_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
+		$orm = new orm;
+		$orm->name('destinations');
+		$orm->uuid($destination_uuid);
+		$result = $orm->find()->get();
 		foreach ($result as &$row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$destination_type = $row["destination_type"];
@@ -195,6 +243,35 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 	}
 
+//get the dialplan details in an array
+	$sql = "select * from v_dialplan_details ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+	$sql .= "and dialplan_detail_tag = 'action' ";
+	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$dialplan_details = $prep_statement->fetchAll(PDO::FETCH_NAMED);;
+	unset ($prep_statement, $sql);
+
+//add an empty row to the array
+	$x = count($dialplan_details);
+	$limit = $x + 1;
+	while($x < $limit) {
+		$dialplan_details[$x]['domain_uuid'] = $_SESSION['domain_uuid'];
+		$dialplan_details[$x]['dialplan_uuid'] = $dialplan_uuid;
+		//$dialplan_details[$x]['dialplan_detail_uuid'] = '';
+		//$dialplan_details[$x]['dialplan_detail_tag'] = '';
+		$dialplan_details[$x]['dialplan_detail_type'] = '';
+		$dialplan_details[$x]['dialplan_detail_data'] = '';
+		//$dialplan_details[$x]['dialplan_detail_break'] = '';
+		//$dialplan_details[$x]['dialplan_detail_inline'] = '';
+		//$dialplan_details[$x]['dialplan_detail_group'] = '';
+		$dialplan_details[$x]['dialplan_detail_order'] = '';
+		$x++;
+	}
+	unset($limit);
+
 //set the defaults
 	if (strlen($destination_type) == 0) { $destination_type = 'inbound'; }
 	if (strlen($destination_context) == 0) { $destination_context = 'public'; }
@@ -207,7 +284,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else if ($action == "add") {
 		$page["title"] = $text['title-destination-add'];
 	}
-
 
 //show the content
 	echo "<div align='center'>";
@@ -300,6 +376,58 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-actions'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+
+	echo "			<table width='52%' border='0' cellpadding='2' cellspacing='0'>\n";
+	//echo "				<tr>\n";
+	//echo "					<td class='vtable'>".$text['label-dialplan_detail_type']."</td>\n";
+	//echo "					<td class='vtable'>".$text['label-dialplan_detail_data']."</td>\n";
+	//echo "					<td class='vtable'>".$text['label-dialplan_detail_order']."</td>\n";
+	//echo "					<td></td>\n";
+	//echo "				</tr>\n";
+	$x = 0;
+	foreach($dialplan_details as $row) {
+
+		if (strlen($row['dialplan_detail_uuid']) > 0) {
+			echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$row['dialplan_detail_uuid']."\">\n";
+		}
+		$order = $row['dialplan_detail_order'] + 10;
+		echo "	<input name='dialplan_details[".$x."][dialplan_detail_order]' type='hidden' value=\"".$order."\">\n";
+
+		echo "				<tr>\n";
+		echo "					<td>\n";
+		//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
+		$data = $row['dialplan_detail_data'];
+		$label = explode("XML", $data);
+		switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][dialplan_detail_data]", $row['dialplan_detail_data'], "width: 60%;", $row['dialplan_detail_type']);
+
+		echo "					</td>\n";
+		//echo "					<td>\n";
+		//echo "						<input type=\"text\" name=\"dialplan_details[".$x."][dialplan_detail_order]\" class=\"formfld\" style=\"width: 90%;\"value=\"".$row['dialplan_detail_order']."\">\n";
+		//echo "					</td>\n";
+		//echo "					<td>\n";
+		//echo "						<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+		//echo "					</td>\n";
+		echo "					<td class='list_control_icons' style='width: 25px;'>";
+		if (strlen($row['destination_uuid']) > 0) {
+			//echo 					"<a href='estination_edit.php?id=".$row['destination_uuid']."&destination_uuid=".$row['destination_uuid']."' alt='edit'>$v_link_label_edit</a>";
+			echo					"<a href='destination_delete.php?id=".$row['destination_uuid']."&destination_uuid=".$row['destination_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+		}
+		echo "					</td>\n";
+		echo "				</tr>\n";
+
+		echo "		</td>";
+		echo "	</tr>";
+		$x++;
+	}
+	echo "			</table>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-fax_uuid'].":\n";
 	echo "</td>\n";
@@ -362,7 +490,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 		echo "				<input type='hidden' name='destination_uuid' value='$destination_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
