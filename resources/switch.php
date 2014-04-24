@@ -530,6 +530,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 			if ($select_type == "dialplan" || $select_type == "ivr") {
 				$sql = "select distinct(call_group) from v_extensions ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
+				$sql .= "and call_group <> '' ";
 				$sql .= "order by call_group asc ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
