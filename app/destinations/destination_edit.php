@@ -96,13 +96,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//get the array
 				$dialplan_details = $_POST["dialplan_details"];
-	
+
 			//remove the array from the HTTP POST
 				unset($_POST["dialplan_details"]);
-	
+
 			//add the domain_uuid
 				$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
-	
+
 			//array cleanup
 				$x = 0;
 				foreach ($dialplan_details as $row) {
@@ -400,7 +400,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-actions'].":\n";
+	echo "	".$text['label-detail_action'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
