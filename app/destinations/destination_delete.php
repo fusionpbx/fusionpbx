@@ -63,22 +63,22 @@ else {
 	unset ($prep_statement);
 
 //start the atomic transaction
-	//$db->beginTransaction();
+	$db->beginTransaction();
 
 //delete the dialplan
 	if (isset($dialplan_uuid)) {
 		$sql = "delete from v_dialplan_details ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$id' ";
+		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-		$sql = "delete from v_dialplan ";
+		$sql = "delete from v_dialplans ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$id' ";
+		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
-	}
+	 }
 
 //delete the destination
 	$sql = "delete from v_destinations ";
@@ -88,7 +88,7 @@ else {
 	unset($sql);
 
 //commit the atomic transaction
-	//$db->commit();
+	$db->commit();
 
 //synchronize the xml config
 	save_dialplan_xml();
