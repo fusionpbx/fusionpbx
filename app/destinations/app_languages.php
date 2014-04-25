@@ -92,6 +92,11 @@
 		$text['label-destination_context']['pt-pt'] = "Contexto";
 		$text['label-destination_context']['fr-fr'] = "Contexte";
 
+		$text['label-detail_action']['en-us'] = "Actions";
+		$text['label-detail_action']['es-cl'] = "Accións";
+		$text['label-detail_action']['pt-pt'] = "Ações";
+		$text['label-detail_action']['fr-fr'] = "Actions";
+
 		$text['description-destination_context']['en-us'] = "Enter the context.";
 		$text['description-destination_context']['es-cl'] = "Ingrese el contexto";
 		$text['description-destination_context']['pt-pt'] = "Introduza o contexto.";
