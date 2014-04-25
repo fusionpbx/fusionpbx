@@ -27,12 +27,12 @@
 		$text['description-destinations']['pt-pt'] = "Destinos de entrada são os DID/DDI, DNIS ou Alias para as chamadas de entrada.";
 		$text['description-destinations']['fr-fr'] = "Les destinations entrantes sont des SDA/DDI, DNIS ou des Aliases.";
 
-		$text['header-destination-edit']['en-us'] = "Destination Edit";
+		$text['header-destination-edit']['en-us'] = "Destination";
 		$text['header-destination-edit']['es-cl'] = "Editar Destino";
 		$text['header-destination-edit']['pt-pt'] = "Editar Desvio";
 		$text['header-destination-edit']['fr-fr'] = "Editer la Destination";
 
-		$text['header-destination-add']['en-us'] = "Destination Add";
+		$text['header-destination-add']['en-us'] = "Destination";
 		$text['header-destination-add']['es-cl'] = "Agregar Destino";
 		$text['header-destination-add']['pt-pt'] = "Adicionar Desvio";
 		$text['header-destination-add']['fr-fr'] = "Ajouter une Destination";
