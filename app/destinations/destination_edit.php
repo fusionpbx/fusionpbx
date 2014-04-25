@@ -114,8 +114,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//increment the row
 						$x++;
 				}
-	
-	
+
+			//check to see if the dialplan exists 
+				if (strlen($dialplan_uuid) > 0) {
+					$sql = "select dialplan_uuid from v_dialplans ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+					$prep_statement = $db->prepare($sql);
+					if ($prep_statement) {
+						$prep_statement->execute();
+						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+						if (strlen($row['dialplan_uuid']) > 0) {
+							$dialplan_uuid = $row['dialplan_uuid'];
+						}
+						else {
+							$dialplan_uuid = "";
+						}
+					}
+					else {
+						$dialplan_uuid = "";
+					}
+				}
+
 			//build the dialplan array
 				$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
 				if (strlen($dialplan_uuid) > 0) {
