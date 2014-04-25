@@ -62,6 +62,9 @@ else {
 	}
 	unset ($prep_statement);
 
+//start the atomic transaction
+	$db->beginTransaction();
+
 //delete the dialplan
 	if (isset($dialplan_uuid)) {
 		$sql = "delete from v_dialplan_details ";
@@ -83,6 +86,9 @@ else {
 	$sql .= "and destination_uuid = '$id' ";
 	$db->exec(check_sql($sql));
 	unset($sql);
+
+//commit the atomic transaction
+	$db->commit();
 
 //synchronize the xml config
 	save_dialplan_xml();
