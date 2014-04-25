@@ -94,7 +94,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 
-
 			//get the array
 				$dialplan_details = $_POST["dialplan_details"];
 	
@@ -221,7 +220,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if (strlen($destination_response['uuid']) > 0) {
 					$destination_uuid = $destination_response['uuid'];
 				}
-	
+
+			//synchronize the xml config
+				save_dialplan_xml();
+
+			//clear memcache
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd = "memcache delete dialplan:".$destination_context;
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
+
 			//redirect the user
 				if ($action == "add") {
 					$_SESSION["message"] = $text['message-add'];
