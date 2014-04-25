@@ -7,12 +7,12 @@
 		$text['title-destinations']['pt-pt'] = "Destinos";
 		$text['title-destinations']['fr-fr'] = "Destinations";
 
-		$text['title-destination-edit']['en-us'] = "Destination Edit";
+		$text['title-destination-edit']['en-us'] = "Destination";
 		$text['title-destination-edit']['es-cl'] = "Editar Destino";
 		$text['title-destination-edit']['pt-pt'] = "Editar Desvio";
 		$text['title-destination-edit']['fr-fr'] = "Editer la Destination";
 
-		$text['title-destination-add']['en-us'] = "Destination Add";
+		$text['title-destination-add']['en-us'] = "Destination";
 		$text['title-destination-add']['es-cl'] = "Agregar Destino";
 		$text['title-destination-add']['pt-pt'] = "Adicionar Desvio";
 		$text['title-destination-add']['fr-fr'] = "Ajouter une Destination";
