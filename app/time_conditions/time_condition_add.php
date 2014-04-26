@@ -738,6 +738,7 @@ echo "			<span class=\"title\">".$text['title-time-condition-add']."</span><br /
 echo "		</td>\n";
 echo "		<td align='right'>\n";
 echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
+echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 echo "		</td>\n";
 echo "	</tr>\n";
 echo "	<tr>\n";

@@ -503,11 +503,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
 	if (strlen($meeting_uuid) > 0) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".$meeting_uuid."'\" value='".$text['button-sessions']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".$meeting_uuid."'\" value='".$text['button-view']."'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "<br />\n";
 	echo "<br />\n";
 	echo "</td>\n";

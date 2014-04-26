@@ -125,6 +125,7 @@ require_once "resources/check_auth.php";
 	echo "</td>\n";
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ring_group_forward.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

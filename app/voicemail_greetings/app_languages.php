@@ -11,11 +11,6 @@
 	$text['description']['pt-pt'] = "Escolha e active uma mensagem de saudação a aplicar na extensão:";
 	$text['description']['fr-fr'] = "Choisir le message de salutation à jouer pour l'extension:";
 
-	$text['label-upload']['en-us'] = "File to Upload";
-	$text['label-upload']['es-cl'] = "Archivo a subir";
-	$text['label-upload']['pt-pt'] = "Ficheiro a Carregar";
-	$text['label-upload']['fr-fr'] = "Fichier à télécharger";
-
 	$text['table-choose']['en-us'] = "Choose";
 	$text['table-choose']['es-cl'] = "Escoger";
 	$text['table-choose']['pt-pt'] = "Escolher";
@@ -46,7 +41,7 @@
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
-	$text['button-save']['en-us'] = "Save";
+	$text['button-save']['en-us'] = "Upload";
 	$text['button-save']['es-cl'] = "Guardar";
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";

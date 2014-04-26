@@ -386,10 +386,10 @@ else {
 	echo "			<span class=\"title\">".$text['title']."</span>\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('fax_extension_add') || permission_exists('fax_extension_edit')) {
 		echo "			<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='fax_edit.php?id=$fax_uuid'\" value='".$text['button-settings']."'>\n";
 	}
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";

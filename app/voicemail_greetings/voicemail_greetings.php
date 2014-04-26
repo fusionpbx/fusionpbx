@@ -228,16 +228,14 @@ else {
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' width=\"50%\">\n";
+	echo "		<td align='left' nowrap>\n";
 	echo "			<span class='title'>".$text['title']."</span><br>\n";
 	echo "		</td>";
-	echo "		<td width='50%' align='right'>\n";
-	echo "			<label for=\"file\">".$text['label-upload'].":</label>\n";
-	echo "			<input name=\"file\" type=\"file\" class=\"btn\" id=\"file\">\n";
+	echo "		<td align='right' nowrap>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+	echo "			<input name=\"file\" type=\"file\" class=\"formfld\" id=\"file\">\n";
 	echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
 	echo "			<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-save']."\">\n";
-	echo "			&nbsp;&nbsp;&nbsp;\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "	<tr>";

@@ -532,8 +532,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' width='30%' nowrap><b>".$text['confirm-fax-edit']."</b></td>\n";
 	}
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='".$text['button-copy']."'>\n";
 	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='".$text['button-copy']."'>\n";
 	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";

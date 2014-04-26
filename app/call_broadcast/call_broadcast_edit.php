@@ -224,6 +224,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='30%' align='left' nowrap='nowrap'><b>".$text['label-call-broadcast']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='back' alt='back' onclick=\"window.location='call_broadcast.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
