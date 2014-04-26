@@ -44,8 +44,8 @@ function hide_advanced_config() {
 						?>
 						</span><br>
 					</td>		<td width='50%' align='right'>
-						<input type='submit' name='submit' class='btn' value='<?php echo $text['button-save']?>'>
 						<input type='button' class='btn' name='' alt='back' onclick="window.location='xmpp.php'" value='<?php echo $text['button-back']?>'>
+						<input type='submit' name='submit' class='btn' value='<?php echo $text['button-save']?>'>
 					</td>
 				</tr>
 				<tr>

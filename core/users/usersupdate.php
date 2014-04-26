@@ -345,8 +345,8 @@ else {
 	echo "<table $table_width cellpadding='3' cellspacing='0' border='0'>";
 	echo "<td align='left' width='90%' nowrap><b>".$text['header-user_edit']."</b></td>\n";
 	echo "<td nowrap='nowrap'>\n";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "	<input type='button' class='btn' onclick=\"window.location='index.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

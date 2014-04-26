@@ -325,7 +325,11 @@ else {
 		echo $text['header-menu_item-add'];
 	}
 	echo "</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='".$text['button-back']."'><br /><br /></td>\n";
+	echo "<td width='70%' align='right' valign='top'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='menu_edit.php?id=".$menu_uuid."'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
+	echo "	<br><br>";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>";
@@ -405,7 +409,7 @@ else {
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	echo "<select name=\"group_name\" class='frm'>\n";
+	echo "<select name=\"group_name\" class='formfld' style='width: auto; margin-right: 3px;'>\n";
 	echo "<option value=\"\"></option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach($result as $field) {
