@@ -256,12 +256,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$action = $pieces[0];
 	$extension = $pieces[2];
 	if ($action == "Reject") {
-		echo "	<option value='Reject' SELECTED >".$text['label-reject']."</option>\n";
-		echo "   <option value='Busy' >".$text['label-busy']."</option>\n";
+		echo "	<option value='Reject' selected='selected'>".$text['label-reject']."</option>\n";
+	}
+	else {
+		echo "   <option value='Reject' >".$text['label-reject']."</option>\n";
 	}
 	if ($action == "Busy") {
-		echo "	<option value='Busy' SELECTED >".$text['label-busy']."</option>\n";
-		echo "   <option value='Reject' >".$text['label-reject']."</option>\n";
+		echo "	<option value='Busy' selected='selected'>".$text['label-busy']."</option>\n";
+	}
+	else {
+		echo "	<option value='Busy'>".$text['label-busy']."</option>\n";
 	}
 	call_block_get_extensions($extension);
 	echo "	</select>\n";
