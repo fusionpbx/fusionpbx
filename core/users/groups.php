@@ -114,7 +114,7 @@ else {
 			$strlist .= "<tr>";
 			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_name &nbsp; </td>\n";
 			//$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_protected &nbsp; </td>\n";
-			$strlist .= "	<td class='".$row_style[$c]."' align=\"left\" nowrap='nowrap' nowrap>\n";
+			$strlist .= "	<td class='".$row_style[$c]."' style=\"padding: 0px;\" align=\"left\" nowrap='nowrap' nowrap>\n";
 			if ($group_protected == "true") {
 				$strlist .= "		<input type='checkbox' name='group_protected' checked='checked' value='true' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=false&group_name=".$group_name."';\">\n";
 			}

@@ -75,14 +75,14 @@ else {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap><b>".$text['header-sql_query']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onClick=\"history.back()\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-select_database']."' onclick=\"window.location='sql_query_db.php'\" value='".$text['button-select_database']."'>\n";
 	if (strlen($_REQUEST['id']) > 0) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-backup']."' onclick=\"window.location='sql_backup.php?id=".$_REQUEST['id']."'\" value='".$text['button-backup']."'>\n";
 	}
 	else {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-backup']."' onclick=\"window.location='sql_backup.php'\" value='".$text['button-backup']."'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-select_database']."' onclick=\"window.location='sql_query_db.php'\" value='".$text['button-select_database']."'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onClick=\"history.back()\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
