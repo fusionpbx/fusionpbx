@@ -226,12 +226,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	if ($action == "add") {
-	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-add']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-add']."</b><br><br></td>\n";
 	}
 	if ($action == "update") {
-	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-update']."</b></td>\n";
+	echo "<td align='left' width='30%' nowrap><b>".$text['title-settings-update']."</b><br><br></td>\n";
 	}
-	//echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='javascript:history.go(-1)'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'>";
+	if (permission_exists('setting_edit')) {
+		echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	}
+	echo "<br><br></td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";

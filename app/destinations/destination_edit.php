@@ -114,7 +114,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$x++;
 				}
 
-			//check to see if the dialplan exists 
+			//check to see if the dialplan exists
 				if (strlen($dialplan_uuid) > 0) {
 					$sql = "select dialplan_uuid from v_dialplans ";
 					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -174,7 +174,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$actions = explode(":", $row["dialplan_detail_data"]);
 					$dialplan_detail_type = array_shift($actions);
 					$dialplan_detail_data = join(':', $actions);
-					if (strlen($dialplan_detail_type) > 1) {	
+					if (strlen($dialplan_detail_type) > 1) {
 						if (isset($row["dialplan_detail_uuid"])) {
 							$dialplan["dialplan_details"][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
 						}
@@ -192,7 +192,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$y++;
 					}
 				}
-	
+
 			//save the dialplan
 				$orm = new orm;
 				$orm->name('dialplans');
@@ -201,12 +201,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				$orm->save($dialplan);
 				$dialplan_response = $orm->message;
-	
+
 			//get the destination_uuid
 				if (strlen($dialplan_response['uuid']) > 0) {
 					$_POST["dialplan_uuid"] = $dialplan_response['uuid'];
 				}
-	
+
 			//save the destination
 				$orm = new orm;
 				$orm->name('destinations');
@@ -215,7 +215,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				$orm->save($_POST);
 				$destination_response = $orm->message;
-	
+
 			//get the destination_uuid
 				if (strlen($destination_response['uuid']) > 0) {
 					$destination_uuid = $destination_response['uuid'];
@@ -325,7 +325,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-destination-edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='destinations.php'\" value='".$text['button-back']."'></td>\n";
+	echo "<td width='70%' align='right'>";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='destinations.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
