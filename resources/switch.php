@@ -868,11 +868,9 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact" || $select_type == "bridge") {
 					echo "<optgroup label='Gateways'>\n";
 				}
-				$sql = "select v_gateways.gateway, v_domains.domain_name from v_gateways ";
+				$sql = "select v_gateways.gateway_uuid, v_gateways.gateway, v_domains.domain_name from v_gateways ";
 				$sql .= "inner join v_domains on v_gateways.domain_uuid=v_domains.domain_uuid ";
-				//$sql = "select * from v_gateways ";
 				$sql .= "where enabled = 'true' ";
-				//$sql .= "and domain_uuid = '$domain_uuid' ";
 				$sql .= "order by gateway asc ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				$prep_statement->execute();
