@@ -300,7 +300,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$dialplan_uuid', ";
 			$sql .= "'$dialplan_detail_uuid', ";
 			$sql .= "'action', ";
-			$sql .= "'limit', ";
+			$sql .= "'limit_execute', ";
 			$sql .= "'db \${domain} inbound ".$limit." !USER_BUSY', ";
 			$sql .= "'70' ";
 			$sql .= ")";
