@@ -629,28 +629,27 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 					if (strlen($db_host) == 0 && strlen($db_port) == 0) {
 						//if both host and port are empty use the unix socket
 						if (strlen($db_create_username) == 0) {
-							$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_username, $db_password);
+							$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 						}
 						else {
-							$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_create_username, $db_create_password);
+							$db_tmp = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;", $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 						}
 					}
 					else {
 						if (strlen($db_port) == 0) {
 							//leave out port if it is empty
 							if (strlen($db_create_username) == 0) {
-								$db_tmp = new PDO("mysql:host=$db_host;", $db_username, $db_password);
+								$db_tmp = new PDO("mysql:host=$db_host;", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 							}
 							else {
-								$db_tmp = new PDO("mysql:host=$db_host;", $db_create_username, $db_create_password);
-							}
+								$db_tmp = new PDO("mysql:host=$db_host;", $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));							}
 						}
 						else {
 							if (strlen($db_create_username) == 0) {
-								$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_username, $db_password);
+								$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 							}
 							else {
-								$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_create_username, $db_create_password);
+								$db_tmp = new PDO("mysql:host=$db_host;port=$db_port;", $db_create_username, $db_create_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 							}
 						}
 					}
