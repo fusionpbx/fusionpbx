@@ -223,6 +223,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	echo "</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"window.location='contacts_vcard.php?id=$contact_uuid&type=image'\" value='".$text['button-qr_code']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=$contact_uuid&type=download'\" value='".$text['button-vcard']."'>\n";
@@ -230,7 +231,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-invoices']."' onclick=\"window.location='".PROJECT_PATH."/app/invoices/invoices.php?id=$contact_uuid'\" value='".$text['button-invoices']."'>\n";
 	}
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -251,7 +252,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<form method='post' name='frm' action=''>\n";
 		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_type'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -533,16 +534,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</form>";
 
 	echo "</td>\n";
-	echo "<td>&nbsp;&nbsp;</td>";
-	echo "<td width='50%' class='' valign='top' align='center'>\n";
-		//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
-		if ($action == "update") {
+
+	if ($action == "update") {
+		echo "<td>&nbsp;&nbsp;</td>";
+		echo "<td width='50%' class='' valign='top' align='center'>\n";
+			//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
 			require "contact_phones.php";
 			require "contact_addresses.php";
 			require "contact_notes.php";
-		}
+		echo "</td>\n";
+	}
 
-	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 

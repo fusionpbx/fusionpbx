@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012 
+	Copyright (C) 2008-2012
 	All Rights Reserved.
 
 	Contributor(s):
@@ -68,7 +68,11 @@ else {
 
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap valign='top'><b>Advanced Search</b></td>\n";
-	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='Back'><br /><br /></td>\n";
+	echo "<td width='70%' align='right' valign='top'>";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='Back'>";
+	echo "	<input type='submit' name='submit' class='btn' value='Search'>";
+	echo "	<br /><br />";
+	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>";
