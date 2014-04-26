@@ -317,11 +317,11 @@ require_once "resources/paging.php";
 	echo "<tr>\n";
 	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-group_permissions'].$group_name."</b></td>\n";
 	echo "<td width='50%' align=\"right\">\n";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
 	echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick=\"var new_ext = prompt('".$text['message_extension']."'); if (new_ext != null) { window.location='permissions_copy.php?id=".$group_name."&ext=' + new_ext; }\" value='".$text['button-copy']."'>";
 	if (permission_exists('group_edit')) {
 		echo "	<input type='button' class='btn' alt='".$text['button-restore']."' onclick=\"window.location='permissions_default.php'\" value='".$text['button-restore']."'>";
 	}
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";

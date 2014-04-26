@@ -92,6 +92,7 @@ if (strlen($group_name) > 0) {
 	echo "		</td>\n";
 	echo "		<td align='right'>\n";
 	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
+	echo "  		<input type=\"submit\" class='btn' value=\"".$text['button-save']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
