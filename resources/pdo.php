@@ -188,18 +188,20 @@ if ($db_type == "mysql") {
 		//mysql pdo connection
 			if (strlen($db_host) == 0 && strlen($db_port) == 0) {
 				//if both host and port are empty use the unix socket
-				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name", $db_username, $db_password);
+				$db = new PDO("mysql:host=$db_host;unix_socket=/var/run/mysqld/mysqld.sock;dbname=$db_name", $db_username, $db_password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 			}
 			else {
 				if (strlen($db_port) == 0) {
 					//leave out port if it is empty
 					$db = new PDO("mysql:host=$db_host;dbname=$db_name;", $db_username, $db_password, array(
+					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
 					PDO::ATTR_ERRMODE,
 					PDO::ERRMODE_EXCEPTION
 					));
 				}
 				else {
 					$db = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;", $db_username, $db_password, array(
+					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
 					PDO::ATTR_ERRMODE,
 					PDO::ERRMODE_EXCEPTION
 					));
