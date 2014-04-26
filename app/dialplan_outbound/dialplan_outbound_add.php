@@ -457,7 +457,7 @@ else {
 
 					if (strlen($limit) > 0) {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'limit';
+						$dialplan_detail_type = 'limit_execute';
 						$dialplan_detail_data = "db \${domain} outbound ".$limit." !USER_BUSY";
 						$dialplan_detail_order = '050';
 						$dialplan_detail_group = '';
