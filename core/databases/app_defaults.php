@@ -160,9 +160,9 @@ if ($domains_processed == 1) {
 				$tmp .= "--include local.lua\n";
 				$tmp .= "	dofile(scripts_dir..\"/resources/functions/file_exists.lua\");\n";
 				$tmp .= "	if (file_exists(\"/etc/fusionpbx/local.lua\")) then\n";
-				$tmp .= "		dofile(scripts_dir..\"/etc/fusionpbx/local.lua\");\n";
+				$tmp .= "		dofile(\"/etc/fusionpbx/local.lua\");\n";
 				$tmp .= "	elseif (file_exists(\"/usr/local/etc/fusionpbx/local.lua\")) then\n";
-				$tmp .= "		dofile(scripts_dir..\"/usr/local/etc/fusionpbx/local.lua\");\n";
+				$tmp .= "		dofile(\"/usr/local/etc/fusionpbx/local.lua\");\n";
 				$tmp .= "	elseif (file_exists(scripts_dir..\"/resources/local.lua\")) then\n";
 				$tmp .= "		dofile(scripts_dir..\"/resources/local.lua\");\n";
 				$tmp .= "	end\n";
