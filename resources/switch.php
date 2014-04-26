@@ -885,36 +885,16 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 						$tmp_selected = "selected='selected'";
 					}
 					if ($select_type == "dialplan") {
-						if (count($_SESSION['domains']) == 1) {
-							echo "		<option value='bridge:sofia/gateway/".$row['gateway']."/xxxxx' $tmp_selected>".$row['gateway']."</option>\n";
-						}
-						else {
-							echo "		<option value='bridge:sofia/gateway/".$_SESSION['domain_name']."-".$row['gateway']."/xxxxx' $tmp_selected>".$row['gateway']."</option>\n";
-						}
+						echo "		<option value='bridge:sofia/gateway/".$row['gateway_uuid']."/xxxxx' $tmp_selected>".$row['gateway']."@".$row['domain_name']."</option>\n";
 					}
 					if ($select_type == "bridge") {
-						if (count($_SESSION['domains']) == 1) {
-							echo "		<option value='sofia/gateway/".$row['gateway']."/' $tmp_selected>".$row['gateway']."</option>\n";
-						}
-						else {
-							echo "		<option value='sofia/gateway/".$_row['domain_name']."-".$row['gateway']."/' $tmp_selected>".$_row['domain_name']."-".$row['gateway']."</option>\n";
-						}
+						echo "		<option value='sofia/gateway/".$row['gateway_uuid']."/' $tmp_selected>".$row['gateway']."@".$row['domain_name']."</option>\n";
 					}
 					if ($select_type == "ivr") {
-						if (count($_SESSION['domains']) == 1) {
-							echo "		<option value='menu-exec-app:bridge sofia/gateway/".$row['gateway']."/xxxxx' $tmp_selected>".$row['gateway']."</option>\n";
-						}
-						else {
-							echo "		<option value='menu-exec-app:bridge sofia/gateway/".$_SESSION['domain_name']."-".$row['gateway']."/xxxxx' $tmp_selected>".$row['gateway']."</option>\n";
-						}
+						echo "		<option value='menu-exec-app:bridge sofia/gateway/".$row['gateway_uuid']."/xxxxx' $tmp_selected>".$row['gateway']."@".$row['domain_name']."</option>\n";
 					}
 					if ($select_type == "call_center_contact") {
-						if (count($_SESSION['domains']) == 1) {
-							echo "		<option value='sofia/gateway/".$row['gateway']."/xxxxx' $tmp_selected>".$row['gateway']."</option>\n";
-						}
-						else {
-							echo "		<option value='sofia/gateway/".$_SESSION['domain_name']."-".$row['gateway']."/xxxxx' $tmp_selected>".$row['gateway']."</option>\n";
-						}
+						echo "		<option value='sofia/gateway/".$row['gateway_uuid']."/xxxxx' $tmp_selected>".$row['gateway']."@".$row['domain_name']."</option>\n";
 					}
 					$tmp_selected = '';
 				}
