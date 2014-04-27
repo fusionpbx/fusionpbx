@@ -477,6 +477,9 @@ require_once "resources/require.php";
 	echo "				<td class='vtable'>".$text['label-user_id']."</td>\n";
 	echo "				<td class='vtable'>".$text['label-auth_id']."</td>\n";
 	echo "				<td class='vtable'>".$text['label-password']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-sip_port']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-sip_transport']."</td>\n";
+	echo "				<td class='vtable'>".$text['label-register_expires']."</td>\n";
 	echo "				<td>&nbsp;</td>\n";
 	echo "			</tr>\n";
 
@@ -540,14 +543,27 @@ require_once "resources/require.php";
 			echo "				<input class='formfld' style='width: 90px;' type='password' name='device_lines[".$x."][password]' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['password']."\">\n";
 			echo "			</td>\n";
 
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".$row['sip_port']."\">\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<select class='formfld' style='width: 60px;' name='device_lines[".$x."][sip_transport]'>\n";
+			echo "					<option value='tcp' ".(($row['sip_transport'] == 'tcp') ? "selected" : null).">TCP</option>\n";
+			echo "					<option value='udp' ".(($row['sip_transport'] == 'udp') ? "selected" : null).">UDP</option>\n";
+			echo "					<option value='tls' ".(($row['sip_transport'] == 'tls') ? "selected" : null).">TLS</option>\n";
+			echo "				</select>\n";
+			echo "			</td>\n";
+
+			echo "			<td class='vtable' align='left'>\n";
+			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".$row['register_expires']."\">\n";
+			echo "			</td>\n";
+
 			//echo "			<td class='vtable' align='left'>\n";
 			//echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 			//echo "			</td>\n";
 		echo "				<td>\n";
 		if (strlen($row['device_line_uuid']) > 0) {
-			if (permission_exists('device_edit')) {
-				echo "					<a href='device_line_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			}
 			if (permission_exists('device_delete')) {
 				echo "					<a href='device_line_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_line_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 			}
@@ -768,9 +784,6 @@ require_once "resources/require.php";
 				//echo "			</td>\n";
 				echo "				<td nowrap='nowrap'>\n";
 				if (strlen($row['device_key_uuid']) > 0) {
-					if (permission_exists('device_key_edit')) {
-						echo "					<a href='device_key_edit.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-					}
 					if (permission_exists('device_key_delete')) {
 						echo "					<a href='device_key_delete.php?device_uuid=".$row['device_uuid']."&id=".$row['device_key_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 					}
@@ -940,7 +953,6 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='device_provision_enable'>\n";
-	echo "    <option value=''></option>\n";
 	if ($device_provision_enable == "true" || strlen($device_provision_enable) == 0) {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
