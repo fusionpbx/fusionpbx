@@ -462,7 +462,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		echo "		<select name='ivr_menu_greet_long' class='formfld'>\n";
 	}
-	echo "		<option></option>\n";
+	//select
+		if (if_group("superadmin")) {
+			if (!$tmp_selected) {
+				echo "<optgroup label='selected'>\n";
+				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long)) {
+					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+				} elseif (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
+					echo "		<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+				}
+				echo "</optgroup>\n";
+			}
+			unset($tmp_selected);
+		}
 	//misc optgroup
 		if (if_group("superadmin")) {
 			echo "<optgroup label='misc'>\n";
@@ -513,24 +525,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		}
 		echo "</optgroup>\n";
-	//select
-		if (if_group("superadmin")) {
-			if (!$tmp_selected) {
-				echo "<optgroup label='selected'>\n";
-				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long)) {
-					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
-				} elseif (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
-					echo "		<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
-				} else {
-					echo "		<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
-				}
-
-				echo "</optgroup>\n";
-			}
-			unset($tmp_selected);
-		}
-	echo "		</select>\n";
-	echo "<br />\n";
+	echo "	</select>\n";
+	echo "	<br />\n";
 	echo $text['description-greet_long']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -747,7 +743,6 @@ for ($c = 0; $c < 1; $c++) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ivr_menu_direct_dial'>\n";
-	echo "	<option value=''></option>\n";
 	if ($ivr_menu_direct_dial == "true") {
 		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
@@ -983,7 +978,6 @@ for ($c = 0; $c < 1; $c++) {
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ivr_menu_enabled'>\n";
-	echo "	<option value=''></option>\n";
 	if ($ivr_menu_enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
