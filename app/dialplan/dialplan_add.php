@@ -544,7 +544,7 @@ echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 
 //switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-switch_select_destination("dialplan", "", "action_1", $action_1, "width: 60%;", "");
+switch_select_destination("dialplan", "", "action_1", $action_1, "", "");
 
 echo "</td>\n";
 echo "</tr>\n";
@@ -559,7 +559,7 @@ echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 
 //switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
-switch_select_destination("dialplan", "", "action_2", $action_2, "width: 60%;", "");
+switch_select_destination("dialplan", "", "action_2", $action_2, "", "");
 
 echo "</td>\n";
 echo "</tr>\n";
@@ -579,7 +579,7 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-order'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
+echo "	<select name='dialplan_order' class='formfld'>\n";
 //echo "		<option></option>\n";
 if (strlen(htmlspecialchars($dialplan_order)) > 0) {
 	echo "		 <option selected='selected' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
@@ -599,7 +599,7 @@ echo "	<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "		".$text['label-enabled'].":\n";
 echo "	</td>\n";
 echo "	<td class='vtable' align='left'>\n";
-echo "		<select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
+echo "		<select class='formfld' name='dialplan_enabled'>\n";
 if ($dialplan_enabled == "true") {
 	echo "			<option value='true' selected='selected' >".$text['option-true']."</option>\n";
 }
@@ -622,7 +622,7 @@ echo "	<td class='vncell' valign='top' align='left' nowrap>\n";
 echo " 		".$text['label-description'].":\n";
 echo "	</td>\n";
 echo "	<td colspan='4' class='vtable' align='left'>\n";
-echo "		<input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+echo "		<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
 echo "		<br />\n";
 echo "	</td>\n";
 echo "</tr>\n";
