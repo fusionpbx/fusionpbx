@@ -51,7 +51,7 @@ else {
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
 		//get the values from the HTTP POST and save them as PHP variables
-			$extension = check_str($_POST["extension"]);
+			$extension = str_replace(' ','-',check_str($_POST["extension"]));
 			$number_alias = check_str($_POST["number_alias"]);
 			$password = check_str($_POST["password"]);
 
