@@ -379,9 +379,9 @@
 		$text['label-eventlist_blf']['fr-fr'] = "Eventlist BLF";
 
 		$text['label-speed_dial_active']['en-us'] = "Speed Dial Active";
-		$text['label-speed_dial_active']['es-cl'] = "Speed ​​Dial activo";
+		$text['label-speed_dial_active']['es-cl'] = "Speed ??Dial activo";
 		$text['label-speed_dial_active']['pt-pt'] = "Discagem Rápida Ativa";
-		$text['label-speed_dial_active']['fr-fr'] = "Speed ​​Dial active";
+		$text['label-speed_dial_active']['fr-fr'] = "Speed ??Dial active";
 
 		$text['label-voicemail']['en-us'] = "Voicemail";
 		$text['label-voicemail']['es-cl'] = "Correo de voz";
@@ -609,14 +609,14 @@
 		$text['label-keypad_lock']['fr-fr'] = "Verrouiller le clavier";
 
 	//general translations
-		$text['label-true']['en-us'] = "true";
-		$text['label-true']['es-cl'] = "verdadero";
-		$text['label-true']['pt-pt'] = "sim";
+		$text['label-true']['en-us'] = "True";
+		$text['label-true']['es-cl'] = "Verdadero";
+		$text['label-true']['pt-pt'] = "Sim";
 		$text['label-true']['fr-fr'] = "Oui";
 
-		$text['label-false']['en-us'] = "false";
-		$text['label-false']['es-cl'] = "falso";
-		$text['label-false']['pt-pt'] = "não";
+		$text['label-false']['en-us'] = "False";
+		$text['label-false']['es-cl'] = "Falso";
+		$text['label-false']['pt-pt'] = "Não";
 		$text['label-false']['fr-fr'] = "Non";
 
 		$text['button-add']['en-us'] = "Add";
