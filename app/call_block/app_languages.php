@@ -147,14 +147,14 @@
 	$text['label-action-message']['pt-pt'] = "Escolha uma acção para chamadas com origem neste número.";
 	$text['label-action-message']['fr-fr'] = "Choisir une action pour les appels venant de ce numéro.";
 
-	$text['label-true']['en-us'] = "true";
-	$text['label-true']['es-cl'] = "verdadero";
-	$text['label-true']['pt-pt'] = "sim";
+	$text['label-true']['en-us'] = "True";
+	$text['label-true']['es-cl'] = "Verdadero";
+	$text['label-true']['pt-pt'] = "Sim";
 	$text['label-true']['fr-fr'] = "Oui";
 
-	$text['label-false']['en-us'] = "false";
+	$text['label-false']['en-us'] = "False";
 	$text['label-false']['es-cl'] = "falso";
-	$text['label-false']['pt-pt'] = "não";
+	$text['label-false']['pt-pt'] = "Não";
 	$text['label-false']['fr-fr'] = "Non";
 
 	$text['label-enable-message']['en-us'] = "Set to true to enable call blocking for this number.";

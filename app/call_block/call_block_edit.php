@@ -284,7 +284,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_block_enabled'>\n";
-	echo "	<option value=''></option>\n";
 	echo "		<option value='true' ".(($call_block_enabled == "true") ? "selected" : null).">".$text['label-true']."</option>\n";
 	echo "		<option value='false' ".(($call_block_enabled == "false") ? "selected" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
