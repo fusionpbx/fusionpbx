@@ -259,7 +259,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if (is_array($_SESSION["contact"]["role"])) {
 			sort($_SESSION["contact"]["role"]);
-			echo "	<select class='formfld' style='width:85%;' name='contact_type'>\n";
+			echo "	<select class='formfld' name='contact_type'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["type"] as $row) {
 				if ($row == $contact_type) {
@@ -272,7 +272,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	</select>\n";
 		}
 		else {
-			echo "	<select class='formfld' style='width:85%;' name='contact_type'>\n";
+			echo "	<select class='formfld' name='contact_type'>\n";
 			echo "	<option value=''></option>\n";
 
 			if ($contact_type == "customer") {
