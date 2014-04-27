@@ -232,7 +232,7 @@ else {
 	echo "			<span class='title'>".$text['title']."</span><br>\n";
 	echo "		</td>";
 
-	if (permission_exists('recording_upload')) {
+	if (permission_exists('voicemail_greeting_upload')) {
 		echo "	<td align='right' nowrap>\n";
 		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 		echo "		<input name=\"file\" type=\"file\" class=\"formfld\" id=\"file\">\n";
@@ -322,7 +322,7 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_name']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 
-			if (permission_exists('recording_download')) {
+			if (permission_exists('voicemail_greeting_download')) {
 				echo "	<a href=\"voicemail_greetings.php?id=$voicemail_id&a=download&type=rec&t=bin&filename=".base64_encode($row['greeting_name'])."\">".$text['table-download']."</a>";
 			}
 				//echo "&nbsp;\n";
