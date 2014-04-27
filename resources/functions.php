@@ -220,11 +220,11 @@
 			//html select other : build a select box from distinct items in db with option for other
 			global $domain_uuid;
 
-			$html  = "<table width='50%' border='0' cellpadding='1' cellspacing='0'>\n";
+			$html  = "<table border='0' cellpadding='1' cellspacing='0'>\n";
 			$html .= "<tr>\n";
-			$html .= "<td id=\"cell".$field_name."1\" width='100%'>\n";
+			$html .= "<td id=\"cell".$field_name."1\">\n";
 			$html .= "\n";
-			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' style='width: 100%;' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.width='95%'; document.getElementById('cell".$field_name."2').width='70%'; document.getElementById('cell".$field_name."1').width='30%'; document.getElementById('".$field_name."_other').disabled = false; document.getElementById('".$field_name."_other').className='txt'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('cell".$field_name."1').width='95%'; document.getElementById('cell".$field_name."2').width='5%'; document.getElementById('".$field_name."_other').disabled = true; document.getElementById('".$field_name."_other').className='frmdisabled' } \">\n";
+			$html .= "<select id=\"".$field_name."\" name=\"".$field_name."\" class='formfld' onchange=\"if (document.getElementById('".$field_name."').value == 'Other') { /*enabled*/ document.getElementById('".$field_name."_other').style.display=''; document.getElementById('".$field_name."_other').className='formfld'; document.getElementById('".$field_name."_other').focus(); } else { /*disabled*/ document.getElementById('".$field_name."_other').value = ''; document.getElementById('".$field_name."_other').style.display='none'; } \">\n";
 			$html .= "<option value=''></option>\n";
 
 			$sql = "SELECT distinct($field_name) as $field_name FROM $table_name $sql_where_optional ";
@@ -251,7 +251,7 @@
 			$html .= "</select>\n";
 			$html .= "</td>\n";
 			$html .= "<td id=\"cell".$field_name."2\" width='5'>\n";
-			$html .= "<input id=\"".$field_name."_other\" name=\"".$field_name."_other\" value='' style='width: 5%;' disabled onload='document.getElementById('".$field_name."_other').disabled = true;' type='text' class='frmdisabled'>\n";
+			$html .= "<input id=\"".$field_name."_other\" name=\"".$field_name."_other\" value='' type='text' class='formfld' style='display: none;'>\n";
 			$html .= "</td>\n";
 			$html .= "</tr>\n";
 			$html .= "</table>";
