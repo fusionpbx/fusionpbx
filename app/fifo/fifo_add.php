@@ -325,20 +325,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-order'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "              <select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
-	if (strlen(htmlspecialchars($dialplan_order))> 0) {
-		echo "              <option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
-	}
+	echo "	<select name='dialplan_order' class='formfld'>\n";
 	$i=300;
 	while($i<=999) {
-		if (strlen($i) == 1) { echo "              <option value='00$i'>00$i</option>\n"; }
-		if (strlen($i) == 2) { echo "              <option value='0$i'>0$i</option>\n"; }
-		if (strlen($i) == 3) { echo "              <option value='$i'>$i</option>\n"; }
+		$selected = ($dialplan_order == $i) ? "selected" : null;
+		if (strlen($i) == 1) { echo "<option value='00$i' ".$selected.">00$i</option>\n"; }
+		if (strlen($i) == 2) { echo "<option value='0$i' ".$selected.">0$i</option>\n"; }
+		if (strlen($i) == 3) { echo "<option value='$i' ".$selected.">$i</option>\n"; }
 		$i++;
 	}
-	echo "              </select>\n";
-	echo "<br />\n";
-	echo "\n";
+	echo "	</select>\n";
+	echo "	<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -347,7 +344,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
+	echo "    <select class='formfld' name='dialplan_enabled'>\n";
 	if ($dialplan_enabled == "true") {
 		echo "    <option value='true' selected='selected' >".$text['option-true']."</option>\n";
 	}
