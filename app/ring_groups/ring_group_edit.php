@@ -457,17 +457,13 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ring_group_strategy'>\n";
-	echo "	<option value=''></option>\n";
-	if (strlen($ring_group_strategy) == 0) {
-		$ring_group_strategy = "simultaneous";
-	}
 	if ($ring_group_strategy == "sequence") {
 		echo "	<option value='sequence' selected='selected'>".$text['option-sequence']."</option>\n";
 	}
 	else {
 		echo "	<option value='sequence'>".$text['option-sequence']."</option>\n";
 	}
-	if ($ring_group_strategy == "simultaneous") {
+	if ($ring_group_strategy == "simultaneous" || $ring_group_strategy == '') {
 		echo "	<option value='simultaneous' selected='selected'>".$text['option-simultaneous']."</option>\n";
 	}
 	else {
@@ -711,7 +707,6 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ring_group_enabled'>\n";
-	echo "	<option value=''></option>\n";
 	if ($ring_group_enabled == "true") {
 		echo "	<option value='true' selected='selected'>".$text['option-true']."</option>\n";
 	}
