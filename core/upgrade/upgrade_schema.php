@@ -75,7 +75,10 @@
 	unset($apps);
 
 //upgrade the domains
+	$_SESSION['domain_language_code'] = $_SESSION['domain']['language']['code'];
 	require_once "core/upgrade/upgrade_domains.php";
+	$_SESSION['domain']['language']['code'] = $_SESSION['domain_language_code'];
+	unset($_SESSION['domain_language_code']);
 
 if ($display_results && $display_type == "html") {
 	echo "<br />\n";
