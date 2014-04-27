@@ -160,6 +160,8 @@ foreach($settings_array as $name => $value) {
 	}
 
 //get the extensions that are assigned to this user
+function load_extensions() {
+	global $db;
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/extensions/app_config.php")) {
 		if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0 && count($_SESSION['user']['extension']) == 0) {
 			//get the user extension list
@@ -193,6 +195,8 @@ foreach($settings_array as $name => $value) {
 				}
 		}
 	}
+}
+load_extensions();
 
 function build_menu() {
 	global $v_menu_tab_show;

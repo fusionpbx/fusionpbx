@@ -42,8 +42,8 @@
 	}
 
 //additional includes
-	require_once "resources/require.php";
 	require_once "resources/check_auth.php";
+	load_extensions();
 	require_once "resources/header.php";
 
 //add multi-lingual support
