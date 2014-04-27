@@ -409,19 +409,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left' width='70%'>\n";
 		echo "	<select name='dialplan_order' class='formfld'>\n";
-		if (strlen(htmlspecialchars($dialplan_order))> 0) {
-			echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
-		}
 		$i=0;
 		while($i<=999) {
+			$selected = ($i == $dialplan_order) ? "selected" : null;
 			if (strlen($i) == 1) {
-				echo "		<option value='00$i'>00$i</option>\n";
+				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
 			}
 			if (strlen($i) == 2) {
-				echo "		<option value='0$i'>0$i</option>\n";
+				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
 			}
 			if (strlen($i) == 3) {
-				echo "		<option value='$i'>$i</option>\n";
+				echo "		<option value='$i' ".$selected.">$i</option>\n";
 			}
 			$i++;
 		}
