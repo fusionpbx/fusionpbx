@@ -78,7 +78,7 @@ else {
 	$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 //upload the recording
-	if (($_POST['submit'] == "Save") && is_uploaded_file($_FILES['file']['tmp_name']) && permission_exists('recording_upload')) {
+	if (($_POST['submit'] == $text['button-save']) && is_uploaded_file($_FILES['file']['tmp_name']) && permission_exists('recording_upload')) {
 		if ($_POST['type'] == 'rec') {
 			for($i = 1; $i < 10; $i++){
 				$tmp_greeting = 'greeting_'.$i.'.wav';
@@ -97,7 +97,7 @@ else {
 	}
 
 //save the selected greeting
-	if ($_REQUEST['submit'] == "Save") {
+	if ($_REQUEST['submit'] == $text['button-save']) {
 		//save the greeting_id to a variable
 			$greeting_id = check_str($_REQUEST['greeting_id']);
 
@@ -307,7 +307,7 @@ else {
 			$tmp_filesize = filesize($v_greeting_dir.'/'.$row['greeting_name']);
 			$tmp_filesize = byte_convert($tmp_filesize);
 			echo "<tr >\n";
-			echo "	<td class='".$row_style[$c]."' ondblclick=\"\" width='30px;' valign='top'>\n";
+			echo "	<td class='".$row_style[$c]."' width='30px;' valign='top'>\n";
 			if (preg_replace('{\D}', '', $row['greeting_name']) == $greeting_id) {
 				echo "		<input type=\"radio\" name=\"greeting_id\" value=\"".preg_replace('{\D}', '', $row['greeting_name'])."\" checked=\"checked\">\n";
 			}
@@ -315,27 +315,16 @@ else {
 				echo "		<input type=\"radio\" name=\"greeting_id\" value=\"".preg_replace('{\D}', '', $row['greeting_name'])."\">\n";
 			}
 			echo "	</td>\n";
-
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_name']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo $row['greeting_name'];
-			echo 	"</td>\n";
-
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "		<a href=\"voicemail_greetings.php?id=$voicemail_id&a=download&type=rec&t=bin&filename=".base64_encode($row['greeting_name'])."\">\n";
-			echo "		download";
-			echo "		</a>";
+			echo "		<a href=\"voicemail_greetings.php?id=$voicemail_id&a=download&type=rec&t=bin&filename=".base64_encode($row['greeting_name'])."\">".$text['table-download']."</a>";
 			//echo "		&nbsp;\n";
 			//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_greeting_play.php?id=$voicemail_id&a=download&type=rec&filename=".base64_encode($row['greeting_name'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			//echo "		play";
 			//echo "		</a>";
 			echo 	"</td>\n";
-
-			echo "	<td class='".$row_style[$c]."' ondblclick=\"\">\n";
-			echo "	".$tmp_filesize;
-			echo "	</td>\n";
-
+			echo "	<td class='".$row_style[$c]."' nowrap>".$tmp_filesize."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['greeting_description']."&nbsp;</td>\n";
-
 			echo "	<td valign='top' align='right'>\n";
 			//if (permission_exists('voicemail_greeting_edit')) {
 			//	echo "		<a href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='edit'>$v_link_label_edit</a>\n";
@@ -364,7 +353,7 @@ else {
 	echo "</tr>\n";
 	echo "</table>";
 	echo "</div>";
-	echo "				<input type='hidden' name='id' value='$voicemail_id'>\n";
+	echo "<input type='hidden' name='id' value='$voicemail_id'>\n";
 	echo "</form>";
 
 	echo "<br>\n";
