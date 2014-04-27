@@ -128,7 +128,7 @@
 		<!--<param name="send-message-query-on-register" value="true"/>-->
 
 		<!-- 'true' means every time 'first-only' means on the first register -->
-		<!--<param name="send-presence-on-register" value="first-only"/> -->
+		<param name="send-presence-on-register" value="true"/>
 
 		<!-- Caller-ID type (choose one, can be overridden by inbound call type and/or sip_cid_type channel variable -->
 		<!-- Remote-Party-ID header -->
