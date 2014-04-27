@@ -39,6 +39,7 @@ else {
 	$order = check_str($_GET["order"]);
 
 //add multi-lingual support
+	unset($text);
 	require_once "app/calls/app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
