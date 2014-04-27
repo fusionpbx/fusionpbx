@@ -47,9 +47,7 @@
 	require_once "resources/header.php";
 
 //add multi-lingual support
-	echo "<!--\n";
 	require_once "app_languages.php";
-	echo "-->\n";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
