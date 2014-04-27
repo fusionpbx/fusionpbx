@@ -57,7 +57,6 @@
 		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
 
 		$apps[$x]['permissions'][4]['name'] = "recording_upload";
-		$apps[$x]['permissions'][4]['groups'][] = "user";
 		$apps[$x]['permissions'][4]['groups'][] = "admin";
 		$apps[$x]['permissions'][4]['groups'][] = "superadmin";
 
