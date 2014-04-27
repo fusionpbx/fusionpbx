@@ -44,8 +44,6 @@ else {
 	function destination_select($select_name, $select_value, $select_default) {
 		if (strlen($select_value) == 0) { $select_value = $select_default; }
 		echo "	<select class='formfld' style='width: 55px;' name='$select_name'>\n";
-		echo "	<option value=''></option>\n";
-
 		$i = 0;
 		while($i <= 100) {
 			if ($select_value == $i) {
@@ -659,18 +657,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "<select class='formfld' name='call_prompt'>\n";
-		echo "<option value=''></option>\n";
-		if ($call_prompt == "true") {
-			echo "<option value='true' selected='selected'>true</option>\n";
-		}
-		else {
-			echo "<option value='true'>true</option>\n";
-		}
 		if ($call_prompt == "false") {
-			echo "<option value='false' selected='selected'>false</option>\n";
+			echo "<option value='false' selected='selected'>".$text['check-false']."</option>\n";
 		}
 		else {
-			echo "<option value='false'>false</option>\n";
+			echo "<option value='false'>".$text['check-false']."</option>\n";
+		}
+		if ($call_prompt == "true") {
+			echo "<option value='true' selected='selected'>".$text['check-true']."</option>\n";
+		}
+		else {
+			echo "<option value='true'>".$text['check-true']."</option>\n";
 		}
 		echo "</select>\n";
 		echo "<br />\n";

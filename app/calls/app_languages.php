@@ -138,13 +138,13 @@
 	$text['label-prompt']['pt-pt'] = "Perguntar para aceitar a chamada";
 	$text['label-prompt']['fr-fr'] = "Annonce pour accepter l'appel";
 
-	$text['check-true']['en-us'] = "true";
-	$text['ckeck-true']['es-cl'] = "verdadero";
+	$text['check-true']['en-us'] = "True";
+	$text['ckeck-true']['es-cl'] = "Verdadero";
 	$text['ckeck-true']['pt-pt'] = "Sim";
 	$text['ckeck-true']['fr-fr'] = "Oui";
 
-	$text['check-false']['en-us'] = "false";
-	$text['ckeck-false']['es-cl'] = "falso";
+	$text['check-false']['en-us'] = "False";
+	$text['ckeck-false']['es-cl'] = "Falso";
 	$text['ckeck-false']['pt-pt'] = "Não";
 	$text['ckeck-false']['fr-fr'] = "Non";
 
@@ -166,7 +166,7 @@
 	$text['confirm-update']['en-us'] = "Update Complete";
 	$text['confirm-update']['es-cl'] = "Actualización Completa";
 	$text['confirm-update']['pt-pt'] = "Actualização Efectuada";
-	$text['confirm-update']['fr-fr'] = "Mis à jour"; 
+	$text['confirm-update']['fr-fr'] = "Mis à jour";
 
 	$text['table-extension']['en-us'] = "Extension";
 	$text['table-extension']['es-cl'] = "Extensión";
