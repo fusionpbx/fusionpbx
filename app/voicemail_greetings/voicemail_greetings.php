@@ -78,7 +78,7 @@ else {
 	$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 //upload the recording
-	if (($_POST['submit'] == $text['button-save']) && is_uploaded_file($_FILES['file']['tmp_name']) && permission_exists('recording_upload')) {
+	if (($_POST['submit'] == $text['button-save']) && is_uploaded_file($_FILES['file']['tmp_name']) && permission_exists('voicemail_greeting_upload')) {
 		if ($_POST['type'] == 'rec') {
 			for($i = 1; $i < 10; $i++){
 				$tmp_greeting = 'greeting_'.$i.'.wav';
