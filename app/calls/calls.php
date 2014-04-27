@@ -36,13 +36,10 @@ else {
 
 //get the https values and set as variables
 	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]); 
+	$order = check_str($_GET["order"]);
 
 //add multi-lingual support
-	unset($text);
-	echo "<!--\n";
 	require_once "app/calls/app_languages.php";
-	echo "-->\n";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
@@ -102,9 +99,9 @@ else {
 	$rows_per_page = 150;
 	$param = "";
 	$page = $_GET['page'];
-	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
-	$offset = $rows_per_page * $page; 
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_extensions ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
