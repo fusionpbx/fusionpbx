@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	$text['title-time-condition-add']['en-us'] = "Time Conditions";
 	$text['title-time-condition-add']['es-cl'] = "Condiciones Temporales";
@@ -230,14 +230,14 @@
 	$text['description-year']['fr-fr'] = "Choisir l'année.";
 
 //end: show_advanced
-	$text['label-true']['en-us'] = "true";
-	$text['label-true']['es-cl'] = "verdadero";
-	$text['label-true']['pt-pt'] = "sim";
+	$text['label-true']['en-us'] = "True";
+	$text['label-true']['es-cl'] = "Verdadero";
+	$text['label-true']['pt-pt'] = "Sim";
 	$text['label-true']['fr-fr'] = "Oui";
 
-	$text['label-false']['en-us'] = "false";
-	$text['label-false']['es-cl'] = "falso";
-	$text['label-false']['pt-pt'] = "não";
+	$text['label-false']['en-us'] = "False";
+	$text['label-false']['es-cl'] = "Falso";
+	$text['label-false']['pt-pt'] = "Não";
 	$text['label-false']['fr-fr'] = "Non";
 
 	$text['label-action-when-true']['en-us'] = "Action when True";
