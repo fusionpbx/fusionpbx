@@ -809,7 +809,7 @@ echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-template'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<select class='formfld' name='template2' id='template' onchange='template_onchange(this);' style='width: 60%;'>\n";
+echo "	<select class='formfld' name='template2' id='template' onchange='template_onchange(this);'>\n";
 echo "		<option value=''></option>\n";
 echo "	<optgroup label='".$text['label-optgroup-office']."'>\n";
 echo "		<option value='Office Hours Mon-Fri 8am-5pm'>".$text['label-option-office-8am-5pm']."</option>\n";
@@ -987,7 +987,7 @@ echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 
 //switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
-switch_select_destination("dialplan", $action_1, "action_1", $action_1, "width: 60%;", "");
+switch_select_destination("dialplan", $action_1, "action_1", $action_1, "", "");
 
 echo "</td>\n";
 echo "</tr>\n";
@@ -999,7 +999,7 @@ echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 
 //switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
-switch_select_destination("dialplan", $anti_action_1, "anti_action_1", $anti_action_1, "width: 60%;", "");
+switch_select_destination("dialplan", $anti_action_1, "anti_action_1", $anti_action_1, "", "");
 
 echo "	<div id='desc_anti_action_data_1'></div>\n";
 echo "</td>\n";
@@ -1010,21 +1010,17 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-order'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
-if (strlen(htmlspecialchars($dialplan_order))> 0) {
-	echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
-}
-
+echo "	<select name='dialplan_order' class='formfld'>\n";
 $i = 300;
 while($i <= 999) {
-	if (strlen($i) == 1) { echo "		<option value='00$i'>00$i</option>\n"; }
-	if (strlen($i) == 2) { echo "		<option value='0$i'>0$i</option>\n"; }
-	if (strlen($i) == 3) { echo "		<option value='$i'>$i</option>\n"; }
+	$selected = ($dialplan_order == $i) ? "selected" : null;
+	if (strlen($i) == 1) { echo "<option value='00$i' ".$selected.">00$i</option>\n"; }
+	if (strlen($i) == 2) { echo "<option value='0$i' ".$selected.">0$i</option>\n"; }
+	if (strlen($i) == 3) { echo "<option value='$i' ".$selected.">$i</option>\n"; }
 	$i = $i + 10;
 }
 echo "	</select>\n";
-echo "<br />\n";
-echo "\n";
+echo "	<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
@@ -1033,7 +1029,7 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-enabled'].":\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
+echo "    <select class='formfld' name='dialplan_enabled'>\n";
 if ($dialplan_enabled == "true") {
 	echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
 }
@@ -1057,7 +1053,7 @@ echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-description'].":\n";
 echo "</td>\n";
 echo "<td colspan='4' class='vtable' align='left'>\n";
-echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
 echo "<br />\n";
 echo "\n";
 echo "</td>\n";
