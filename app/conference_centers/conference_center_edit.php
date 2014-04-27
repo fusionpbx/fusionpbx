@@ -528,18 +528,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_enabled'>\n";
-	echo "	<option value=''></option>\n";
 	if ($conference_center_enabled == "true") {
-		echo "	<option value='true' selected='selected'>true</option>\n";
+		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
-		echo "	<option value='true'>true</option>\n";
+		echo "	<option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($conference_center_enabled == "false") {
-		echo "	<option value='false' selected='selected'>false</option>\n";
+		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
-		echo "	<option value='false'>false</option>\n";
+		echo "	<option value='false'>".$text['label-false']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "	<br />\n";
