@@ -166,6 +166,12 @@ require_once "resources/functions.php";
 					$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
 				}
+				if (file_exists('/etc/freeswitch')) {
+					$switch_conf_dir = '/etc/freeswitch';
+					$switch_extensions_dir = $switch_conf_dir.'/directory';
+					$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
+					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
+				}
 				if (file_exists('/var/lib/freeswitch/db')) {
 					$switch_db_dir = '/var/lib/freeswitch/db';
 				}
