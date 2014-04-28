@@ -106,10 +106,8 @@ require_once "resources/check_auth.php";
 
 					//remove unrelated domains
 						if (count($_SESSION["domains"]) > 1) {
-							if (count($_SESSION["domains"]) > 1 && !permission_exists('registration_all')) {
-								if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
-									unset($registrations[$x]);
-								}
+							if (permission_exists('registration_all')) {
+								//show all registrations
 							}
 							else {
 								if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
