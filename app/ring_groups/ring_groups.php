@@ -70,7 +70,7 @@ require_once "resources/paging.php";
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_ring_groups ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by) > 0) {
+		if (strlen($order_by) == 0) {
 			$sql .= "order by ring_group_name, ring_group_extension asc ";
 		}
 		else {
@@ -99,7 +99,7 @@ require_once "resources/paging.php";
 	//get the  list
 		$sql = "select * from v_ring_groups ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by) > 0) {
+		if (strlen($order_by) == 0) {
 			$sql .= "order by ring_group_name, ring_group_extension asc ";
 		}
 		else {
