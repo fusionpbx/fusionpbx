@@ -64,7 +64,7 @@ else {
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_devices ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 		//if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -88,7 +88,7 @@ else {
 
 	//get the list
 		$sql = "select * from v_devices ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 		if (strlen($order_by) == 0) {
 			$sql .= "order by device_mac_address asc ";
 		}
