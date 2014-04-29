@@ -153,7 +153,7 @@ else {
 
 	//get the number of rows in the dialplan
 	$sql = "select count(*) as num_rows from v_dialplans ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 	if (strlen($app_uuid) == 0) {
 		//hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
@@ -185,7 +185,7 @@ else {
 	$offset = $rows_per_page * $page;
 
 	$sql = "select * from v_dialplans ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 	if (strlen($app_uuid) == 0) {
 		//hide inbound routes
 			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
