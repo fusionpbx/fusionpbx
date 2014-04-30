@@ -325,15 +325,21 @@ include "root.php";
 						foreach ($result as &$row) {
 							$dial_string .= "[";
 							if (extension_exists($row["follow_me_destination"])) {
-								$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
-								$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
-								if ($this->call_prompt == "true") {
-									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
+								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
+									$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
+									$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
+									if ($this->call_prompt == "true") {
+										$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
+									}
+									$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
+									$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
+									$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
+									//$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 								}
-								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
-								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
-								$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
-								//$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
+								else {
+									$dial_string = $_SESSION['domain']['dial_string']['text'];
+									$dial_string = str_replace("\${dialed_user}", $row["follow_me_destination"], $dial_string);
+								}
 							}
 							else {
 								$dial_string .= "outbound_caller_id_number=\${outbound_caller_id_number},";
