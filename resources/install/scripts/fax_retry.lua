@@ -88,7 +88,9 @@
 	email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
 
 -- send the selected variables to the console
-	freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
+	if (fax_success == null) then
+		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
+	end
 	freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
 	freeswitch.consoleLog("INFO","fax_file: '" .. fax_file .. "'\n");
 	freeswitch.consoleLog("INFO","fax_file: \"" .. fax_file .. "\"\n");
