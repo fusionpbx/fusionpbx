@@ -210,7 +210,12 @@
 							$extension = preg_replace("/[\*\:\\/\<\>\|\'\"\?]/", "", $extension);
 							$dial_string = $row['dial_string'];
 							if (strlen($dial_string) == 0) {
-								$dial_string = "{sip_invite_domain=\${domain_name},leg_timeout=".$call_timeout.",presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}";
+								if (strlen($_SESSION['domain']['dial_string']['text']) > 0) {
+									$dial_string = $_SESSION['domain']['dial_string']['text'];
+								}
+								else {
+									$dial_string = "{sip_invite_domain=\${domain_name},leg_timeout=".$call_timeout.",presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}";
+								}	
 							}
 
 							$xml .= "<include>\n";
