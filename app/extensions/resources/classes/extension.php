@@ -215,7 +215,7 @@
 								}
 								else {
 									$dial_string = "{sip_invite_domain=\${domain_name},leg_timeout=".$call_timeout.",presence_id=\${dialed_user}@\${dialed_domain}}\${sofia_contact(\${dialed_user}@\${dialed_domain})}";
-								}	
+								}
 							}
 
 							$xml .= "<include>\n";
