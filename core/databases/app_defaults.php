@@ -156,6 +156,9 @@ if ($domains_processed == 1) {
 				$tmp .= "--additional info\n";
 				$tmp .= "	domain_count = ".count($_SESSION["domains"]).";\n";
 				$tmp .= "	temp_dir = \"".$_SESSION['server']['temp']['dir']."\";\n";
+				if (isset($_SESSION['domain']['dial_string']['text'])) {
+					$tmp .= "	dial_string = \"".$_SESSION['domain']['dial_string']['text']."\";\n";
+				}
 				$tmp .= "\n";
 				$tmp .= "--include local.lua\n";
 				$tmp .= "	dofile(scripts_dir..\"/resources/functions/file_exists.lua\");\n";
