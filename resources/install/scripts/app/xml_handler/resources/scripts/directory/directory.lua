@@ -249,7 +249,9 @@
 									dial_string = row.dial_string;
 								else
 									--set a default dial string
-										dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+										if (dial_string == null) then
+											dial_string = "{sip_invite_domain=" .. domain_name .. ",leg_timeout=" .. call_timeout .. ",presence_id=" .. user .. "@" .. domain_name .. "}${sofia_contact(" .. user .. "@" .. domain_name .. ")}";
+										end
 									--set the an alternative dial string if the hostnames don't match
 										if (load_balancing) then
 											if (local_hostname == database_hostname) then
