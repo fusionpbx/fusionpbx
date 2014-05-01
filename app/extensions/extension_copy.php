@@ -45,6 +45,9 @@ else {
 	if (isset($_REQUEST["id"]) && isset($_REQUEST["ext"])) {
 		$extension_uuid = check_str($_REQUEST["id"]);
 		$extension_new = check_str($_REQUEST["ext"]);
+		if (!is_numeric($extension_new)) {
+			$number_alias_new = check_str($_REQUEST["alias"]);
+		}
 	}
 
 //get the v_extensions data
@@ -55,28 +58,33 @@ else {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
-		$domain_uuid = $row["domain_uuid"];
 		$extension = $row["extension"];
-		$password = $row["password"];
-		//$vm_password = $row["vm_password"];
-		//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
+		$number_alias = $row["number_alias"];
 		$accountcode = $row["accountcode"];
 		$effective_caller_id_name = $row["effective_caller_id_name"];
 		$effective_caller_id_number = $row["effective_caller_id_number"];
 		$outbound_caller_id_name = $row["outbound_caller_id_name"];
 		$outbound_caller_id_number = $row["outbound_caller_id_number"];
-		//$vm_enabled = $row["vm_enabled"];
-		//$vm_mailto = $row["vm_mailto"];
-		//$vm_attach_file = $row["vm_attach_file"];
-		//$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
+		$emergency_caller_id_number = $row["emergency_caller_id_number"];
+		$directory_visible = $row["directory_visible"];
+		$directory_exten_visible = $row["directory_exten_visible"];
+		$limit_max = $row["limit_max"];
+		$limit_destination = $row["limit_destination"];
 		$user_context = $row["user_context"];
 		$toll_allow = $row["toll_allow"];
+		$call_timeout = $row["call_timeout"];
 		$call_group = $row["call_group"];
+		$hold_music = $row["hold_music"];
 		$auth_acl = $row["auth_acl"];
 		$cidr = $row["cidr"];
 		$sip_force_contact = $row["sip_force_contact"];
+		$nibble_account = $row["nibble_account"];
+		$sip_force_expires = $row["sip_force_expires"];
+		$mwi_account = $row["mwi_account"];
+		$sip_bypass_media = $row["sip_bypass_media"];
+		$dial_string = $row["dial_string"];
 		$enabled = $row["enabled"];
-		$description = 'copy: '.$row["description"];
+		$description = $text['button-copy'].': '.$row["description"];
 	}
 	unset ($prep_statement);
 
@@ -88,23 +96,31 @@ else {
 	$sql .= "domain_uuid, ";
 	$sql .= "extension_uuid, ";
 	$sql .= "extension, ";
+	$sql .= "number_alias, ";
 	$sql .= "password, ";
-	//$sql .= "vm_password, ";
 	$sql .= "accountcode, ";
 	$sql .= "effective_caller_id_name, ";
 	$sql .= "effective_caller_id_number, ";
 	$sql .= "outbound_caller_id_name, ";
 	$sql .= "outbound_caller_id_number, ";
-	//$sql .= "vm_enabled, ";
-	//$sql .= "vm_mailto, ";
-	//$sql .= "vm_attach_file, ";
-	//$sql .= "vm_keep_local_after_email, ";
+	$sql .= "emergency_caller_id_number, ";
+	$sql .= "directory_visible, ";
+	$sql .= "directory_exten_visible, ";
+	$sql .= "limit_max, ";
+	$sql .= "limit_destination, ";
 	$sql .= "user_context, ";
 	$sql .= "toll_allow, ";
+	$sql .= "call_timeout, ";
 	$sql .= "call_group, ";
+	$sql .= "hold_music, ";
 	$sql .= "auth_acl, ";
 	$sql .= "cidr, ";
 	$sql .= "sip_force_contact, ";
+	$sql .= "nibble_account, ";
+	$sql .= "sip_force_expires, ";
+	$sql .= "mwi_account, ";
+	$sql .= "sip_bypass_media, ";
+	$sql .= "dial_string, ";
 	$sql .= "enabled, ";
 	$sql .= "description ";
 	$sql .= ")";
@@ -113,28 +129,82 @@ else {
 	$sql .= "'$domain_uuid', ";
 	$sql .= "'$extension_uuid', ";
 	$sql .= "'$extension_new', ";
+	$sql .= "'$number_alias_new', ";
 	$sql .= "'$password', ";
-	//$sql .= "'".generate_password(4, 1)."', ";
-	$sql .= "'', ";
+	$sql .= "'$accountcode', ";
 	$sql .= "'$effective_caller_id_name', ";
 	$sql .= "'$effective_caller_id_number', ";
 	$sql .= "'$outbound_caller_id_name', ";
 	$sql .= "'$outbound_caller_id_number', ";
-	//$sql .= "'$vm_enabled', ";
-	//$sql .= "'$vm_mailto', ";
-	//$sql .= "'$vm_attach_file', ";
-	//$sql .= "'$vm_keep_local_after_email', ";
+	$sql .= "'$emergency_caller_id_number', ";
+	$sql .= "'$directory_visible', ";
+	$sql .= "'$directory_exten_visible', ";
+	$sql .= "'$limit_max', ";
+	$sql .= "'$limit_destination', ";
 	$sql .= "'$user_context', ";
 	$sql .= "'$toll_allow', ";
+	$sql .= "'$call_timeout', ";
 	$sql .= "'$call_group', ";
+	$sql .= "'$hold_music', ";
 	$sql .= "'$auth_acl', ";
 	$sql .= "'$cidr', ";
 	$sql .= "'$sip_force_contact', ";
+	$sql .= "'$nibble_account', ";
+	$sql .= "'$sip_force_expires', ";
+	$sql .= "'$mwi_account', ";
+	$sql .= "'$sip_bypass_media', ";
+	$sql .= "'$dial_string', ";
 	$sql .= "'$enabled', ";
 	$sql .= "'$description' ";
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);
+
+//get the source extension voicemail data
+	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+
+		//get the voicemails
+			$sql = "select * from v_voicemails ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			if (is_numeric($extension)) {
+				$sql .= "and voicemail_id = '$extension' ";
+			}
+			else {
+				$sql .= "and voicemail_id = '$number_alias' ";
+			}
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$vm_mailto = $row["voicemail_mail_to"];
+				$vm_attach_file = $row["voicemail_attach_file"];
+				$vm_keep_local_after_email = $row["voicemail_local_after_email"];
+				$vm_enabled = $row["voicemail_enabled"];
+			}
+			unset ($prep_statement);
+
+		//set the new voicemail password
+			if (strlen($vm_password) == 0) {
+				$vm_password = generate_password(9, 1);
+			}
+
+		//add voicemail via class
+			require_once "app/extensions/resources/classes/extension.php";
+			$ext = new extension;
+			$ext->db = $db;
+			$ext->domain_uuid = $domain_uuid;
+			$ext->extension = $extension_new;
+			$ext->number_alias = $number_alias_new;
+			$ext->vm_password = $vm_password;
+			$ext->vm_mailto = $vm_mailto;
+			$ext->vm_attach_file = $vm_attach_file;
+			$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
+			$ext->vm_enabled = $vm_enabled;
+			$ext->description = $description;
+			$ext->voicemail();
+			unset($ext);
+
+	}
 
 //synchronize configuration
 	if (is_writable($_SESSION['switch']['extensions']['dir'])) {
@@ -143,7 +213,6 @@ else {
 		$ext->xml();
 		unset($ext);
 	}
-
 
 $_SESSION["message"] = $text['message-copy'];
 header("Location: extensions.php");
