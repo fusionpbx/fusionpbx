@@ -65,6 +65,7 @@ else {
 		$effective_caller_id_number = $row["effective_caller_id_number"];
 		$outbound_caller_id_name = $row["outbound_caller_id_name"];
 		$outbound_caller_id_number = $row["outbound_caller_id_number"];
+		$emergency_caller_id_name = $row["emergency_caller_id_name"];
 		$emergency_caller_id_number = $row["emergency_caller_id_number"];
 		$directory_visible = $row["directory_visible"];
 		$directory_exten_visible = $row["directory_exten_visible"];
@@ -103,6 +104,7 @@ else {
 	$sql .= "effective_caller_id_number, ";
 	$sql .= "outbound_caller_id_name, ";
 	$sql .= "outbound_caller_id_number, ";
+	$sql .= "emergency_caller_id_name, ";
 	$sql .= "emergency_caller_id_number, ";
 	$sql .= "directory_visible, ";
 	$sql .= "directory_exten_visible, ";
@@ -136,6 +138,7 @@ else {
 	$sql .= "'$effective_caller_id_number', ";
 	$sql .= "'$outbound_caller_id_name', ";
 	$sql .= "'$outbound_caller_id_number', ";
+	$sql .= "'$emergency_caller_id_name', ";
 	$sql .= "'$emergency_caller_id_number', ";
 	$sql .= "'$directory_visible', ";
 	$sql .= "'$directory_exten_visible', ";
@@ -214,8 +217,9 @@ else {
 		unset($ext);
 	}
 
-$_SESSION["message"] = $text['message-copy'];
-header("Location: extensions.php");
-return;
+//redirect the user
+	$_SESSION["message"] = $text['message-copy'];
+	header("Location: extensions.php");
+	return;
 
 ?>
