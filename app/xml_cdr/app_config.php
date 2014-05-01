@@ -40,7 +40,7 @@
 		$apps[$x]['menu'][$y]['groups'][] = "admin";
 		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['menu'][$y]['title']['en-us'] = "CDR Statistics;
+		$apps[$x]['menu'][$y]['title']['en-us'] = "CDR Statistics";
 		$apps[$x]['menu'][$y]['title']['es-cl'] = "Statistics CDR";
 		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
