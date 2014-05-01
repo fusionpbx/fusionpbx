@@ -42,6 +42,7 @@
 		public $effective_caller_id_number;
 		public $outbound_caller_id_name;
 		public $outbound_caller_id_number;
+		public $emergency_caller_id_name;
 		public $emergency_caller_id_number;
 		public $directory_full_name;
 		public $directory_visible;
@@ -310,6 +311,9 @@
 							}
 							if (strlen($row['outbound_caller_id_number']) > 0) {
 								$xml .= "      <variable name=\"outbound_caller_id_number\" value=\"" . $row['outbound_caller_id_number'] . "\"/>\n";
+							}
+							if (strlen($row['emergency_caller_id_name']) > 0) {
+								$xml .= "      <variable name=\"emergency_caller_id_name\" value=\"" . $row['emergency_caller_id_name'] . "\"/>\n";
 							}
 							if (strlen($row['emergency_caller_id_number']) > 0) {
 								$xml .= "      <variable name=\"emergency_caller_id_number\" value=\"" . $row['emergency_caller_id_number'] . "\"/>\n";

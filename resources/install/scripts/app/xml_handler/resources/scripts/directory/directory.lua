@@ -232,6 +232,7 @@
 								effective_caller_id_number = row.effective_caller_id_number;
 								outbound_caller_id_name = row.outbound_caller_id_name;
 								outbound_caller_id_number = row.outbound_caller_id_number;
+								emergency_caller_id_name = row.emergency_caller_id_name;
 								emergency_caller_id_number = row.emergency_caller_id_number;
 								directory_full_name = row.directory_full_name;
 								directory_visible = row.directory_visible;
@@ -300,6 +301,7 @@
 							effective_caller_id_number = row.effective_caller_id_number;
 							outbound_caller_id_name = row.outbound_caller_id_name;
 							outbound_caller_id_number = row.outbound_caller_id_number;
+							emergency_caller_id_name = row.emergency_caller_id_name;
 							emergency_caller_id_number = row.emergency_caller_id_number;
 							directory_full_name = row.directory_full_name;
 							directory_visible = row.directory_visible;
@@ -388,6 +390,9 @@
 							end
 							if (string.len(outbound_caller_id_number) > 0) then
 								table.insert(xml, [[								<variable name="outbound_caller_id_number" value="]] .. outbound_caller_id_number .. [["/>]]);
+							end
+							if (string.len(emergency_caller_id_name) > 0) then
+								table.insert(xml, [[								<variable name="emergency_caller_id_name" value="]] .. emergency_caller_id_name .. [["/>]]);
 							end
 							if (string.len(emergency_caller_id_number) > 0) then
 								table.insert(xml, [[								<variable name="emergency_caller_id_number" value="]] .. emergency_caller_id_number .. [["/>]]);
