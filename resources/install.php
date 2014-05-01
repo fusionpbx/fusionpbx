@@ -41,6 +41,9 @@ require_once "resources/functions.php";
 	error_reporting (E_ALL ^ E_NOTICE); // Report everything
 	//error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ); //hide notices and warnings
 
+//set the default time zone
+	date_default_timezone_set('UTC');
+
 //get the domain
 	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 	$domain_name = $domain_array[0];
