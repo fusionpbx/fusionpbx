@@ -687,6 +687,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$effective_caller_id_number = $row["effective_caller_id_number"];
 			$outbound_caller_id_name = $row["outbound_caller_id_name"];
 			$outbound_caller_id_number = $row["outbound_caller_id_number"];
+			$emergency_caller_id_name = $row["emergency_caller_id_name"];
 			$emergency_caller_id_number = $row["emergency_caller_id_number"];
 			$directory_full_name = $row["directory_full_name"];
 			$directory_visible = $row["directory_visible"];
