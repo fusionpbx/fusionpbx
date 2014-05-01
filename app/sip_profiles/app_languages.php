@@ -161,10 +161,10 @@
 	$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
 	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
-	$text['confirm-copy']['en-us'] = "Do you really want to copy this?";
-	$text['confirm-copy']['es-cl'] = "¿Realmente desea copiar esto?";
-	$text['confirm-copy']['pt-pt'] = "Tem a certeza que pretende copiar isto?";
-	$text['confirm-copy']['fr-fr'] = "Voulez-vous vraiment copier cela?";
+	$text['confirm-copy']['en-us'] = "Enter the SIP Profile name.";
+	$text['confirm-copy']['es-cl'] = "Ingrese el nombre de perfil SIP.";
+	$text['confirm-copy']['pt-pt'] = "Introduza o nome do perfil SIP.";
+	$text['confirm-copy']['fr-fr'] = "Entrer le nom du Profile SIP.";
 
 	$text['message-add']['en-us'] = "Add Completed";
 	$text['message-add']['es-cl'] = "Agregar Completado";
