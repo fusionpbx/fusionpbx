@@ -160,6 +160,16 @@
 	$text['description-outbound_caller_id_number-custom']['pt-pt'] = "Introduza o número externo (público) do chamador aqui.";
 	$text['description-outbound_caller_id_number-custom']['fr-fr'] = "Numéro d'appelant affiché pour les appels externes (public).";
 
+	$text['label-emergency_caller_id_name']['en-us'] = "Emergency Caller ID Name";
+	$text['label-emergency_caller_id_name']['es-cl'] = "Nombre de Caller ID de emergencia";
+	$text['label-emergency_caller_id_name']['pt-pt'] = "Nome de Emergência do Chamador";
+	$text['label-emergency_caller_id_name']['fr-fr'] = "Nom d'appelant pour les Urgences";
+
+	$text['description-emergency_caller_id_number']['en-us'] = "Enter the emergency caller ID name here.";
+	$text['description-emergency_caller_id_number']['es-cl'] = "Ingrese el nombre de Caller ID de emergencia aquí.";
+	$text['description-emergency_caller_id_number']['pt-pt'] = "Introduza o nome de emergência do chamador aqui.";
+	$text['description-emergency_caller_id_number']['fr-fr'] = "Entrez le nom d'identification de l'appelant d'urgence ici.";
+
 	$text['label-emergency_caller_id_number']['en-us'] = "Emergency Caller ID Number";
 	$text['label-emergency_caller_id_number']['es-cl'] = "Número de Caller ID de emergencia";
 	$text['label-emergency_caller_id_number']['pt-pt'] = "Número de Emergência do Chamador";
@@ -168,7 +178,7 @@
 	$text['description-emergency_caller_id_number']['en-us'] = "Enter the emergency caller ID number here.";
 	$text['description-emergency_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID de emergencia aquí.";
 	$text['description-emergency_caller_id_number']['pt-pt'] = "Introduza o número de emergência do chamador aqui.";
-	$text['description-emergency_caller_id_number']['fr-fr'] = "";
+	$text['description-emergency_caller_id_number']['fr-fr'] = "Entrez le numéro d'identification de l'appelant d'urgence ici.";
 
 	$text['label-directory_full_name']['en-us'] = "Directory Full Name";
 	$text['label-directory_full_name']['es-cl'] = "Nombre Completo de Directorio";

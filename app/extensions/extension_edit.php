@@ -61,6 +61,7 @@ else {
 			$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
 			$outbound_caller_id_name = check_str($_POST["outbound_caller_id_name"]);
 			$outbound_caller_id_number = check_str($_POST["outbound_caller_id_number"]);
+			$emergency_caller_id_name = check_str($_POST["emergency_caller_id_name"]);
 			$emergency_caller_id_number = check_str($_POST["emergency_caller_id_number"]);
 			$directory_full_name = check_str($_POST["directory_full_name"]);
 			$directory_visible = check_str($_POST["directory_visible"]);
@@ -267,6 +268,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($effective_caller_id_name) == 0) { $msg .= $text['message-required']."Effective Caller ID Name<br>\n"; }
 		//if (strlen($effective_caller_id_number) == 0) { $msg .= $text['message-required']."Effective Caller ID Number<br>\n"; }
 		//if (strlen($outbound_caller_id_name) == 0) { $msg .= $text['message-required']."Outbound Caller ID Name<br>\n"; }
+		//if (strlen($emergency_caller_id_name) == 0) { $msg .= $text['message-required']."Emergency Caller ID Name<br>\n"; }
 		//if (strlen($outbound_caller_id_number) == 0) { $msg .= $text['message-required']."Outbound Caller ID Number<br>\n"; }
 		//if (strlen($emergency_caller_id_number) == 0) { $msg .= $text['message-required']."Emergency Caller ID Number<br>\n"; }
 		//if (strlen($directory_full_name) == 0) { $msg .= $text['message-required']."Directory Full Name<br>\n"; }
@@ -359,6 +361,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "effective_caller_id_number, ";
 							$sql .= "outbound_caller_id_name, ";
 							$sql .= "outbound_caller_id_number, ";
+							$sql .= "emergency_caller_id_name, ";
 							$sql .= "emergency_caller_id_number, ";
 							$sql .= "directory_full_name, ";
 							$sql .= "directory_visible, ";
@@ -409,6 +412,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$effective_caller_id_number', ";
 							$sql .= "'$outbound_caller_id_name', ";
 							$sql .= "'$outbound_caller_id_number', ";
+							$sql .= "'$emergency_caller_id_name', ";
 							$sql .= "'$emergency_caller_id_number', ";
 							$sql .= "'$directory_full_name', ";
 							$sql .= "'$directory_visible', ";
@@ -511,6 +515,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
 					$sql .= "outbound_caller_id_name = '$outbound_caller_id_name', ";
 					$sql .= "outbound_caller_id_number = '$outbound_caller_id_number', ";
+					$sql .= "emergency_caller_id_name = '$emergency_caller_id_name', ";
 					$sql .= "emergency_caller_id_number = '$emergency_caller_id_number', ";
 					$sql .= "directory_full_name = '$directory_full_name', ";
 					$sql .= "directory_visible = '$directory_visible', ";
@@ -1073,6 +1078,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_number-custom']."\n";
 	}
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "    ".$text['label-emergency_caller_id_name'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='emergency_caller_id_name' maxlength='255' value=\"$emergency_caller_id_name\">\n";
+	echo "<br />\n";
+	echo $text['description-emergency_caller_id_name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
