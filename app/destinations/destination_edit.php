@@ -194,13 +194,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			//save the dialplan
-				$orm = new orm;
-				$orm->name('dialplans');
-				if (isset($dialplan["dialplan_uuid"])) {
-					$orm->uuid($dialplan["dialplan_uuid"]);
+				if (count($dialplan["dialplan_details"]) > 0) {
+					$orm = new orm;
+					$orm->name('dialplans');
+					if (isset($dialplan["dialplan_uuid"])) {
+						$orm->uuid($dialplan["dialplan_uuid"]);
+					}
+					$orm->save($dialplan);
+					$dialplan_response = $orm->message;
 				}
-				$orm->save($dialplan);
-				$dialplan_response = $orm->message;
 
 			//get the destination_uuid
 				if (strlen($dialplan_response['uuid']) > 0) {
