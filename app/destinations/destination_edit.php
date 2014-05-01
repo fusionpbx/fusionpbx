@@ -194,7 +194,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 
 			//save the dialplan
-				if (count($dialplan["dialplan_details"]) > 0) {
+				if (strlen($dialplan_details[0][dialplan_detail_data]) > 2) {
 					$orm = new orm;
 					$orm->name('dialplans');
 					if (isset($dialplan["dialplan_uuid"])) {
