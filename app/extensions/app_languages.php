@@ -165,10 +165,10 @@
 	$text['label-emergency_caller_id_name']['pt-pt'] = "Nome de Emergência do Chamador";
 	$text['label-emergency_caller_id_name']['fr-fr'] = "Nom d'appelant pour les Urgences";
 
-	$text['description-emergency_caller_id_number']['en-us'] = "Enter the emergency caller ID name here.";
-	$text['description-emergency_caller_id_number']['es-cl'] = "Ingrese el nombre de Caller ID de emergencia aquí.";
-	$text['description-emergency_caller_id_number']['pt-pt'] = "Introduza o nome de emergência do chamador aqui.";
-	$text['description-emergency_caller_id_number']['fr-fr'] = "Entrez le nom d'identification de l'appelant d'urgence ici.";
+	$text['description-emergency_caller_id_name']['en-us'] = "Enter the emergency caller ID name here.";
+	$text['description-emergency_caller_id_name']['es-cl'] = "Ingrese el nombre de Caller ID de emergencia aquí.";
+	$text['description-emergency_caller_id_name']['pt-pt'] = "Introduza o nome de emergência do chamador aqui.";
+	$text['description-emergency_caller_id_name']['fr-fr'] = "Entrez le nom d'identification de l'appelant d'urgence ici.";
 
 	$text['label-emergency_caller_id_number']['en-us'] = "Emergency Caller ID Number";
 	$text['label-emergency_caller_id_number']['es-cl'] = "Número de Caller ID de emergencia";
