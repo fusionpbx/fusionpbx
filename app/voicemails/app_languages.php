@@ -191,6 +191,11 @@
 		$text['button-back']['pt-pt'] = "Voltar";
 		$text['button-back']['fr-fr'] = "Retour";
 
+		$text['button-search']['en-us'] = "Search";
+		$text['button-search']['es-cl'] = "Buscar";
+		$text['button-search']['pt-pt'] = "Pesquisar";
+		$text['button-search']['fr-fr'] = "Chercher";
+
 		$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 		$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 		$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
