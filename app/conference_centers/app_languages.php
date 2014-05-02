@@ -291,7 +291,7 @@
 		$text['button-search']['en-us'] = "Search";
 		$text['button-search']['es-cl'] = "Buscar";
 		$text['button-search']['pt-pt'] = "Pesquisar";
-		$text['button-save']['fr-fr'] = "Chercher";
+		$text['button-search']['fr-fr'] = "Chercher";
 
 	//Conference Sessions
 		$text['title-conference-sessions']['en-us'] = "Conference Sessions";
