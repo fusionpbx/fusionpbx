@@ -39,9 +39,12 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+//get the http values and set them as variables
+	$search = check_str($_GET["search"]);
+	if (isset($_GET["order_by"])) {
+		$order_by = check_str($_GET["order_by"]);
+		$order = check_str($_GET["order"]);
+	}
 
 //additional includes
 	require_once "resources/header.php";
@@ -53,7 +56,12 @@ else {
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-devices']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='30%' align='right'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</td>\n";
+	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -65,6 +73,16 @@ else {
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_devices ";
 		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+		if (strlen($search) > 0) {
+			$sql .= "and (";
+			$sql .= "	device_mac_address like '%".$search."%' ";
+			$sql .= " 	or device_label like '%".$search."%' ";
+			$sql .= " 	or device_vendor like '%".$search."%' ";
+			$sql .= " 	or device_provision_enable like '%".$search."%' ";
+			$sql .= " 	or device_template like '%".$search."%' ";
+			$sql .= " 	or device_description like '%".$search."%' ";
+			$sql .= ") ";
+		}
 		//if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -89,6 +107,16 @@ else {
 	//get the list
 		$sql = "select * from v_devices ";
 		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+		if (strlen($search) > 0) {
+			$sql .= "and (";
+			$sql .= "	device_mac_address like '%".$search."%' ";
+			$sql .= " 	or device_label like '%".$search."%' ";
+			$sql .= " 	or device_vendor like '%".$search."%' ";
+			$sql .= " 	or device_provision_enable like '%".$search."%' ";
+			$sql .= " 	or device_template like '%".$search."%' ";
+			$sql .= " 	or device_description like '%".$search."%' ";
+			$sql .= ") ";
+		}
 		if (strlen($order_by) == 0) {
 			$sql .= "order by device_mac_address asc ";
 		}
