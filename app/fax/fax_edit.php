@@ -639,7 +639,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<td class='vncell' valign='top'>".$text['label-user-list'].":</td>";
 			echo "		<td class='vtable'>";
 
-			echo "			<table width='52%'>\n";
 			$sql = "SELECT * FROM v_fax_users as e, v_users as u ";
 			$sql .= "where e.user_uuid = u.user_uuid  ";
 			$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -648,18 +647,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 			$result_count = count($result);
-			foreach($result as $field) {
-				echo "			<tr>\n";
-				echo "				<td class='vtable'>".$field['username']."</td>\n";
-				echo "				<td>\n";
-				echo "					<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
-				echo "				</td>\n";
-				echo "			</tr>\n";
-				$assigned_user_uuids[] = $field['user_uuid'];
+			if ($result_count > 0) {
+				echo "		<table width='52%'>\n";
+				foreach($result as $field) {
+					echo "		<tr>\n";
+					echo "			<td class='vtable'>".$field['username']."</td>\n";
+					echo "			<td>\n";
+					echo "				<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
+					echo "			</td>\n";
+					echo "		</tr>\n";
+					$assigned_user_uuids[] = $field['user_uuid'];
+				}
+				echo "		</table>\n";
+				echo "			<br />\n";
 			}
-			echo "			</table>\n";
-
-			echo "			<br />\n";
 			$sql = "SELECT * FROM v_users ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			foreach($assigned_user_uuids as $assigned_user_uuid) {
