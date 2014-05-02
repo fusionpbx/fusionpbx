@@ -910,7 +910,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<td class='vncell' valign='top'>".$text['label-user_list'].":</td>";
 		echo "		<td class='vtable'>";
 
-		echo "			<table width='52%'>\n";
 		$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
 		$sql .= "where e.user_uuid = u.user_uuid  ";
 		$sql .= "and u.user_enabled = 'true' ";
@@ -921,19 +920,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
-		foreach($result as $field) {
-			echo "			<tr>\n";
-			echo "				<td class='vtable'>".$field['username']."</td>\n";
-			echo "				<td>\n";
-			echo "					<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
-			echo "				</td>\n";
-			echo "			</tr>\n";
+		if ($result_count > 0) {
+			echo "		<table width='52%'>\n";
+			foreach($result as $field) {
+				echo "		<tr>\n";
+				echo "			<td class='vtable'>".$field['username']."</td>\n";
+				echo "			<td>\n";
+				echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "			</td>\n";
+				echo "		</tr>\n";
+				$assigned_user_uuids[] = $field['user_uuid'];
+			}
+			echo "		</table>\n";
+			echo "		<br />\n";
 		}
-		echo "			</table>\n";
-
-		echo "			<br />\n";
 		$sql = "SELECT * FROM v_users ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		foreach($assigned_user_uuids as $assigned_user_uuid) {
+			$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
+		}
+		unset($assigned_user_uuids);
 		$sql .= "and user_enabled = 'true' ";
 		$sql .= "order by username asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
