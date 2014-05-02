@@ -46,6 +46,7 @@ $page["title"] = $text['title-extensions'];
 require_once "resources/paging.php";
 
 //get the http values and set them as variables
+	$search = check_str($_GET["search"]);
 	if (isset($_GET["order_by"])) {
 		$order_by = check_str($_GET["order_by"]);
 		$order = check_str($_GET["order"]);
@@ -74,9 +75,15 @@ require_once "resources/paging.php";
 		echo "</table>\n";
 		echo "<br />";
 
-	//get the number of rows in v_extensions
+	//get the number of extensions
 		$sql = "select count(*) as num_rows from v_extensions ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and (";
+		$sql .= "	extension = '".$search."' ";
+		$sql .= " 	or call_group = '".$search."' ";
+		$sql .= " 	or enabled = '".$search."' ";
+		$sql .= " 	or description = '".$search."' ";
+		$sql .= ") ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
 			$prep_statement->execute();
@@ -98,9 +105,16 @@ require_once "resources/paging.php";
 		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $_GET['page'];
 
-	//get the extension list
+	//get the extensions
 		$sql = "select * from v_extensions ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and (";
+		$sql .= "	extension = '".$search."' ";
+		$sql .= " 	or call_group = '".$search."' ";
+		$sql .= " 	or enabled = '".$search."' ";
+		$sql .= " 	or description = '".$search."' ";
+		$sql .= ") ";
+		$sql .= "and (moderator_pin = '".$search."' or participant_pin = '".$search."') ";
 		if (isset($order_by)) {
 			$sql .= "order by $order_by $order ";
 		}
