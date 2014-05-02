@@ -79,13 +79,15 @@ require_once "resources/paging.php";
 	//prepare to page the results
 		$sql = " select count(*) as num_rows from v_destinations ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and (";
-		$sql .= "	destination_type = '".$search."' ";
-		$sql .= " 	or destination_number = '".$search."' ";
-		$sql .= " 	or destination_context = '".$search."' ";
-		$sql .= " 	or destination_enabled = '".$search."' ";
-		$sql .= " 	or destination_description = '".$search."' ";
-		$sql .= ") ";
+		if (strlen($search) > 0) {
+			$sql .= "and (";
+			$sql .= "	destination_type = '".$search."' ";
+			$sql .= " 	or destination_number = '".$search."' ";
+			$sql .= " 	or destination_context = '".$search."' ";
+			$sql .= " 	or destination_enabled = '".$search."' ";
+			$sql .= " 	or destination_description = '".$search."' ";
+			$sql .= ") ";
+		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -110,14 +112,16 @@ require_once "resources/paging.php";
 	//get the  list
 		$sql = "select * from v_destinations ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and (";
-		$sql .= "	destination_type = '".$search."' ";
-		$sql .= " 	or destination_number = '".$search."' ";
-		$sql .= " 	or destination_context = '".$search."' ";
-		$sql .= " 	or destination_enabled = '".$search."' ";
-		$sql .= " 	or destination_description = '".$search."' ";
-		$sql .= ") ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($search) > 0) {
+			$sql .= "and (";
+			$sql .= "	destination_type = '".$search."' ";
+			$sql .= " 	or destination_number = '".$search."' ";
+			$sql .= " 	or destination_context = '".$search."' ";
+			$sql .= " 	or destination_enabled = '".$search."' ";
+			$sql .= " 	or destination_description = '".$search."' ";
+			$sql .= ") ";
+		}
+		if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
