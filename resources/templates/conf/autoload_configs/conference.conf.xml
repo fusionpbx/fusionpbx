@@ -36,6 +36,8 @@
 			<control action="vol listen zero" digits="5"/>
 			<control action="vol listen dn" digits="4"/>
 			<control action="hangup" digits=""/>
+			<control action="execute_application" digits="0" data="lua app/conference_center/resources/scripts/mute.lua non_moderator"/>
+			<control action="execute_application" digits="*" data="lua app/conference_center/resources/scripts/unmute.lua non_moderator"/>
 		</group>
 	</caller-controls>
 
