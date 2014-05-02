@@ -394,7 +394,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 							dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 				}
 				if ($dialplan_type == "update") {
-					//udpate the fax dialplan entry
+					//update the fax dialplan entry
 						$sql = "update v_dialplans set ";
 						$sql .= "dialplan_name = '$fax_name', ";
 						if (strlen($dialplan_order) > 0) {
@@ -524,183 +524,212 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>";
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-	echo "<tr>\n";
+	echo "	<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['confirm-fax-add']."</b></td>\n";
+		echo "	<td align='left' width='30%' nowrap><b>".$text['confirm-fax-add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap><b>".$text['confirm-fax-edit']."</b></td>\n";
+		echo "	<td align='left' width='30%' nowrap><b>".$text['confirm-fax-edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
-	if ($action == "update") {
-		echo "<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='".$text['button-copy']."'>\n";
+	echo "		<td width='70%' align='right'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
+	if ((if_group("admin") || if_group("superadmin")) && $action == "update") {
+		echo "		<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='".$text['button-copy']."'>\n";
 	}
-	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-name'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_name' maxlength='255' value=\"$fax_name\">\n";
-	echo "<br />\n";
-	echo "".$text['description-name']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (if_group("user")) {
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-extension'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_extension' maxlength='255' value=\"$fax_extension\">\n";
-	echo "<br />\n";
-	echo "".$text['description-extension']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
+		echo "<br />\n";
+		echo "	".$text['description-email']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-destination-number'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' value=\"$fax_destination_number\">\n";
-	echo "<br />\n";
-	echo " ".$text['description-destination-number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-email'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
-	echo "<br />\n";
-	echo "	".$text['description-email']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-pin'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_pin_number' maxlength='255' value=\"$fax_pin_number\">\n";
-	echo "<br />\n";
-	echo "".$text['description-pin']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-caller-id-name'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value=\"$fax_caller_id_name\">\n";
-	echo "<br />\n";
-	echo "".$text['description-caller-id-name']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-caller-id-number'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' value=\"$fax_caller_id_number\">\n";
-	echo "<br />\n";
-	echo "".$text['description-caller-id-number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-forward'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	if (is_numeric($fax_forward_number)) {
-		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".format_phone($fax_forward_number)."\">\n";
 	}
-	else {
-		echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".$fax_forward_number."\">\n";
-	}
-	echo "<br />\n";
-	echo "".$text['description-forward-number']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	else { //admin,superadmin,etc
 
-	if (if_group("admin") || if_group("superadmin")) {
-		if ($action == "update") {
-			echo "	<tr>";
-			echo "		<td class='vncell' valign='top'>".$text['label-user-list'].":</td>";
-			echo "		<td class='vtable'>";
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-name'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_name' maxlength='255' value=\"$fax_name\">\n";
+		echo "<br />\n";
+		echo "".$text['description-name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
 
-			$sql = "SELECT * FROM v_fax_users as e, v_users as u ";
-			$sql .= "where e.user_uuid = u.user_uuid  ";
-			$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and e.fax_uuid = '".$fax_uuid."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-			$result_count = count($result);
-			if ($result_count > 0) {
-				echo "		<table width='52%'>\n";
-				foreach($result as $field) {
-					echo "		<tr>\n";
-					echo "			<td class='vtable'>".$field['username']."</td>\n";
-					echo "			<td>\n";
-					echo "				<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
-					echo "			</td>\n";
-					echo "		</tr>\n";
-					$assigned_user_uuids[] = $field['user_uuid'];
-				}
-				echo "		</table>\n";
-				echo "			<br />\n";
-			}
-			$sql = "SELECT * FROM v_users ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			foreach($assigned_user_uuids as $assigned_user_uuid) {
-				$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
-			}
-			unset($assigned_user_uuids);
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-			echo "			<option value=\"\"></option>\n";
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach($result as $field) {
-				echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
-			}
-			echo "			</select>";
-			echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-			unset($sql, $result);
-			echo "			<br>\n";
-			echo "			".$text['description-user-add']."\n";
-			echo "			<br />\n";
-			echo "		</td>";
-			echo "	</tr>";
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-extension'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_extension' maxlength='255' value=\"$fax_extension\">\n";
+		echo "<br />\n";
+		echo "".$text['description-extension']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-destination-number'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' value=\"$fax_destination_number\">\n";
+		echo "<br />\n";
+		echo " ".$text['description-destination-number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
+		echo "<br />\n";
+		echo "	".$text['description-email']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-pin'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_pin_number' maxlength='255' value=\"$fax_pin_number\">\n";
+		echo "<br />\n";
+		echo "".$text['description-pin']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-caller-id-name'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value=\"$fax_caller_id_name\">\n";
+		echo "<br />\n";
+		echo "".$text['description-caller-id-name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-caller-id-number'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_caller_id_number' maxlength='255' value=\"$fax_caller_id_number\">\n";
+		echo "<br />\n";
+		echo "".$text['description-caller-id-number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-forward'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if (is_numeric($fax_forward_number)) {
+			echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".format_phone($fax_forward_number)."\">\n";
 		}
+		else {
+			echo "	<input class='formfld' type='text' name='fax_forward_number' maxlength='255' value=\"".$fax_forward_number."\">\n";
+		}
+		echo "<br />\n";
+		echo "".$text['description-forward-number']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		if (if_group("admin") || if_group("superadmin")) {
+			if ($action == "update") {
+				echo "	<tr>";
+				echo "		<td class='vncell' valign='top'>".$text['label-user-list'].":</td>";
+				echo "		<td class='vtable'>";
+
+				$sql = "SELECT * FROM v_fax_users as e, v_users as u ";
+				$sql .= "where e.user_uuid = u.user_uuid  ";
+				$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "and e.fax_uuid = '".$fax_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+				$result_count = count($result);
+				if ($result_count > 0) {
+					echo "		<table width='52%'>\n";
+					foreach($result as $field) {
+						echo "		<tr>\n";
+						echo "			<td class='vtable'>".$field['username']."</td>\n";
+						echo "			<td>\n";
+						echo "				<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
+						echo "			</td>\n";
+						echo "		</tr>\n";
+						$assigned_user_uuids[] = $field['user_uuid'];
+					}
+					echo "		</table>\n";
+					echo "			<br />\n";
+				}
+				$sql = "SELECT * FROM v_users ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				foreach($assigned_user_uuids as $assigned_user_uuid) {
+					$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
+				}
+				unset($assigned_user_uuids);
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
+				echo "			<option value=\"\"></option>\n";
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach($result as $field) {
+					echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+				}
+				echo "			</select>";
+				echo "			<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
+				unset($sql, $result);
+				echo "			<br>\n";
+				echo "			".$text['description-user-add']."\n";
+				echo "			<br />\n";
+				echo "		</td>";
+				echo "	</tr>";
+			}
+		}
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-description'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_description' maxlength='255' value=\"$fax_description\">\n";
+		echo "<br />\n";
+		echo "".$text['description-info']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-description'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='fax_description' maxlength='255' value=\"$fax_description\">\n";
-	echo "<br />\n";
-	echo "".$text['description-info']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "			<input type='hidden' name='fax_uuid' value='$fax_uuid'>\n";
-		echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		if (if_group("user")) {
+			echo "	<input type='hidden' name='fax_name' value=\"$fax_name\">\n";
+			echo "	<input type='hidden' name='fax_extension' value=\"$fax_extension\">\n";
+			echo "	<input type='hidden' name='fax_destination_number' value=\"$fax_destination_number\">\n";
+			echo "	<input type='hidden' name='fax_pin_number' value=\"$fax_pin_number\">\n";
+			echo "	<input type='hidden' name='fax_caller_id_name' value=\"$fax_caller_id_name\">\n";
+			echo "	<input type='hidden' name='fax_caller_id_number' value=\"$fax_caller_id_number\">\n";
+			echo "	<input type='hidden' name='fax_forward_number' value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : $fax_forward_number)."\">\n";
+			echo "	<input type='hidden' name='fax_description' value=\"$fax_description\">\n";
+		}
+		echo "		<input type='hidden' name='fax_uuid' value='$fax_uuid'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
