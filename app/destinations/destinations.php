@@ -81,11 +81,11 @@ require_once "resources/paging.php";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($search) > 0) {
 			$sql .= "and (";
-			$sql .= "	destination_type = '".$search."' ";
-			$sql .= " 	or destination_number = '".$search."' ";
-			$sql .= " 	or destination_context = '".$search."' ";
-			$sql .= " 	or destination_enabled = '".$search."' ";
-			$sql .= " 	or destination_description = '".$search."' ";
+			$sql .= "	destination_type like '%".$search."%' ";
+			$sql .= " 	or destination_number like '%".$search."%' ";
+			$sql .= " 	or destination_context like '%".$search."%' ";
+			$sql .= " 	or destination_enabled like '%".$search."%' ";
+			$sql .= " 	or destination_description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
@@ -114,11 +114,11 @@ require_once "resources/paging.php";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($search) > 0) {
 			$sql .= "and (";
-			$sql .= "	destination_type = '".$search."' ";
-			$sql .= " 	or destination_number = '".$search."' ";
-			$sql .= " 	or destination_context = '".$search."' ";
-			$sql .= " 	or destination_enabled = '".$search."' ";
-			$sql .= " 	or destination_description = '".$search."' ";
+			$sql .= "	destination_type like '%".$search."%' ";
+			$sql .= " 	or destination_number like '%".$search."%' ";
+			$sql .= " 	or destination_context like '%".$search."%' ";
+			$sql .= " 	or destination_enabled like '%".$search."%' ";
+			$sql .= " 	or destination_description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }

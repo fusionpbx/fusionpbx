@@ -80,10 +80,10 @@ require_once "resources/paging.php";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		if (strlen($search) > 0) {
 			$sql .= "and (";
-			$sql .= "	extension = '".$search."' ";
-			$sql .= " 	or call_group = '".$search."' ";
-			$sql .= " 	or enabled = '".$search."' ";
-			$sql .= " 	or description = '".$search."' ";
+			$sql .= "	extension like '%".$search."%' ";
+			$sql .= " 	or call_group like '%".$search."%' ";
+			$sql .= " 	or enabled like '%".$search."%' ";
+			$sql .= " 	or description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -112,10 +112,10 @@ require_once "resources/paging.php";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($search) > 0) {
 			$sql .= "and (";
-			$sql .= "	extension = '".$search."' ";
-			$sql .= " 	or call_group = '".$search."' ";
-			$sql .= " 	or enabled = '".$search."' ";
-			$sql .= " 	or description = '".$search."' ";
+			$sql .= "	extension like '%".$search."%' ";
+			$sql .= " 	or call_group like '%".$search."%' ";
+			$sql .= " 	or enabled like '%".$search."%' ";
+			$sql .= " 	or description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		if (isset($order_by)) {
