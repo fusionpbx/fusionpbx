@@ -44,9 +44,12 @@ else {
 		$voicemail_ids[]['voicemail_id'] = $value['user'];
 	}
 
-//get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+//get the http values and set them as variables
+	$search = check_str($_GET["search"]);
+	if (isset($_GET["order_by"])) {
+		$order_by = check_str($_GET["order_by"]);
+		$order = check_str($_GET["order"]);
+	}
 
 //additional includes
 	require_once "resources/header.php";
@@ -62,7 +65,12 @@ else {
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-voicemails']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "			<td width='30%' align='right'>\n";
+	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</td>\n";
+	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -74,6 +82,16 @@ else {
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_voicemails ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (strlen($search) > 0) {
+			$sql .= "and (";
+			$sql .= "	voicemail_id like '%".$search."%' ";
+			$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
+			$sql .= " 	or voicemail_attach_file like '%".$search."%' ";
+			$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
+			$sql .= " 	or voicemail_enabled like '%".$search."%' ";
+			$sql .= " 	or voicemail_description like '%".$search."%' ";
+			$sql .= ") ";
+		}
 		if (!permission_exists('voicemail_delete')) {
 			$x = 0;
 			if (count($voicemail_ids) > 0) {
@@ -114,6 +132,16 @@ else {
 	//get the list
 		$sql = "select * from v_voicemails ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if (strlen($search) > 0) {
+			$sql .= "and (";
+			$sql .= "	voicemail_id like '%".$search."%' ";
+			$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
+			$sql .= " 	or voicemail_attach_file like '%".$search."%' ";
+			$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
+			$sql .= " 	or voicemail_enabled like '%".$search."%' ";
+			$sql .= " 	or voicemail_description like '%".$search."%' ";
+			$sql .= ") ";
+		}
 		if (!permission_exists('voicemail_delete')) {
 			$x = 0;
 			if (count($voicemail_ids) > 0) {
