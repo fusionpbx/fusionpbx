@@ -567,6 +567,11 @@
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
+	$text['button-search']['en-us'] = "Search";
+	$text['button-search']['es-cl'] = "Buscar";
+	$text['button-search']['pt-pt'] = "Pesquisar";
+	$text['button-search']['fr-fr'] = "Chercher";
+
 	$text['message-message']['en-us'] = "Message";
 	$text['message-message']['es-cl'] = "Mensaje";
 	$text['message-message']['pt-pt'] = "Mensagem";
