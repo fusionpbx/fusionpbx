@@ -655,12 +655,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "					<a href='fax_edit.php?id=".$fax_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "				</td>\n";
 				echo "			</tr>\n";
+				$assigned_user_uuids[] = $field['user_uuid'];
 			}
 			echo "			</table>\n";
 
 			echo "			<br />\n";
 			$sql = "SELECT * FROM v_users ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			foreach($assigned_user_uuids as $assigned_user_uuid) {
+				$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
+			}
+			unset($assigned_user_uuids);
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
