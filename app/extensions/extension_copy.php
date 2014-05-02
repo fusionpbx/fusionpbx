@@ -75,6 +75,7 @@ else {
 		$toll_allow = $row["toll_allow"];
 		$call_timeout = $row["call_timeout"];
 		$call_group = $row["call_group"];
+		$user_record = $row["user_record"];
 		$hold_music = $row["hold_music"];
 		$auth_acl = $row["auth_acl"];
 		$cidr = $row["cidr"];
@@ -114,6 +115,7 @@ else {
 	$sql .= "toll_allow, ";
 	$sql .= "call_timeout, ";
 	$sql .= "call_group, ";
+	$sql .= "user_record, ";
 	$sql .= "hold_music, ";
 	$sql .= "auth_acl, ";
 	$sql .= "cidr, ";
@@ -148,6 +150,7 @@ else {
 	$sql .= "'$toll_allow', ";
 	$sql .= "'$call_timeout', ";
 	$sql .= "'$call_group', ";
+	$sql .= "'$user_record', ";
 	$sql .= "'$hold_music', ";
 	$sql .= "'$auth_acl', ";
 	$sql .= "'$cidr', ";
