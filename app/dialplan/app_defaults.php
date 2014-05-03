@@ -63,12 +63,12 @@
 
 			//prepare the file contents and the path
 				//replace the variables in the template in the future loop through all the line numbers to do a replace for each possible line number
-					$file_default_contents = str_replace("{v_domain}", $_SESSION['context'], $file_default_contents);
+					$file_default_contents = str_replace("{v_domain}", $context, $file_default_contents);
 				//set the file path
-					$file_path = $_SESSION['switch']['conf']['dir'].'/dialplan/'.$_SESSION['context'].'.xml';
+					$file_path = $_SESSION['switch']['conf']['dir'].'/dialplan/'.$context.'.xml';
 
 			//write the default dialplan
-				if (strlen($_SESSION['context']) > 0) {
+				if (!file_exists($file_path)) {
 					$fh = fopen($file_path,'w') or die('Unable to write to '.$file_path.'. Make sure the path exists and permissions are set correctly.');
 					fwrite($fh, $file_default_contents);
 					fclose($fh);

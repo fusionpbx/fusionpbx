@@ -44,7 +44,7 @@ include "root.php";
 			}
 			if (!is_dir($dst)) {
 				if (!mkdir($dst, 0755, true)) {
-					//throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
+					throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
 				}
 			}
 			while(false !== ($file = readdir($dir))) {
