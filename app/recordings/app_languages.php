@@ -51,9 +51,9 @@
 	$text['button-upload']['pt-pt'] = "Carregar";
 	$text['button-upload']['fr-fr'] = "déposer";
 
-	$text['label-file']['en-us'] = "Filename (download)";
-	$text['label-file']['es-cl'] = "Nombre de archivo (descargar)";
-	$text['label-file']['pt-pt'] = "Nome do Ficheiro (descarregar)";
+	$text['label-file']['en-us'] = "Filename (Download)";
+	$text['label-file']['es-cl'] = "Nombre de archivo (Descargar)";
+	$text['label-file']['pt-pt'] = "Nome do Ficheiro (Descarregar)";
 	$text['label-file']['fr-fr'] = "Nom du fichier (Télécharger)";
 
 	$text['description-file']['en-us'] = "Name of the file. example.wav";
@@ -61,10 +61,10 @@
 	$text['description-file']['pt-pt'] = "Nome do ficheiro. exemplo.wav";
 	$text['description-file']['fr-fr'] = "Nom du fichier. exemple.wav";
 
-	$text['label-recording']['en-us'] = "Recording Name (play)";
-	$text['label-recording']['es-cl'] = "Nombre de la grabación (reproducir)";
-	$text['label-recording']['pt-pt'] = "Nome da gravação (tocar)";
-	$text['label-recording']['fr-fr'] = "Nom de l'enregistrement (jouer)";
+	$text['label-recording']['en-us'] = "Recording Name (Play)";
+	$text['label-recording']['es-cl'] = "Nombre de la grabación (Reproducir)";
+	$text['label-recording']['pt-pt'] = "Nome da gravação (Tocar)";
+	$text['label-recording']['fr-fr'] = "Nom de l'enregistrement (Jouer)";
 
 	$text['description-recording']['en-us'] = "Recording Name. example: recording_x";
 	$text['description-recording']['es-cl'] = "Nombre de la grabación. ejemplo: grabacion_x";

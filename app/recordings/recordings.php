@@ -240,14 +240,14 @@ require_once "resources/paging.php";
 			echo "	  </a>";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('recording_play.php?a=download&type=moh&filename=".base64_encode($row['recording_filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
+			echo "	  <a href=\"javascript:void(0);\" onclick=\"window.open('recording_play.php?a=download&type=rec&filename=".base64_encode($row['recording_filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
 			echo $row['recording_name'];
 			echo "	  </a>";
 			echo 	"</td>\n";
-			echo "	<td class='".$row_style[$c]."' ondblclick=\"\">\n";
+			echo "	<td class='".$row_style[$c]."'>\n";
 			echo "	".$tmp_filesize;
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' width='30%'>".$row['recording_description']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
 				echo "<a href='recording_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>";
