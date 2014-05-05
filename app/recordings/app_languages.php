@@ -81,10 +81,10 @@
 	$text['description-description']['pt-pt'] = "Deverá introduzir uma descrição para sua referência.";
 	$text['description-description']['fr-fr'] = "";
 
-	$text['message-delete']['en-us'] = "Do you really want to delete this?";
-	$text['message-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
-	$text['message-delete']['pt-pt'] = "Deseja realmente remover isto?";
-	$text['message-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
+	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
+	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
+	$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
+	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
 	$text['label-edit-file']['en-us'] = "Please provide: Filename (download)";
 	$text['label-edit-file']['es-cl'] = "Por favor indique: Nombre de archivo (descargar)";
