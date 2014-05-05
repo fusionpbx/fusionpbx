@@ -130,7 +130,7 @@ require_once "resources/paging.php";
 						$sql .= "'$recording_uuid', ";
 						$sql .= "'$file', ";
 						$sql .= "'".$a_file[0]."', ";
-						$sql .= "'auto' ";
+						$sql .= "'' ";
 						$sql .= ")";
 						$db->exec(check_sql($sql));
 						unset($sql);
