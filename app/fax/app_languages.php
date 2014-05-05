@@ -243,9 +243,9 @@
 	$text['label-location']['pt-pt'] = "localização";
 	$text['label-location']['fr-fr'] = "Localisation";
 
-	$text['table-file']['en-us'] = "File Name (download)";
-	$text['table-file']['es-cl'] = "Nombre de Archivo (descargar)";
-	$text['table-file']['pt-pt'] = "Nome do Ficheiro (descarregar)";
+	$text['table-file']['en-us'] = "File Name (Download)";
+	$text['table-file']['es-cl'] = "Nombre de Archivo (Descargar)";
+	$text['table-file']['pt-pt'] = "Nome do Ficheiro (Descarregar)";
 	$text['table-file']['fr-fr'] = "Nom du fichier (télécharger";
 
 	$text['table-view']['en-us'] = "View";

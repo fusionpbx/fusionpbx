@@ -448,7 +448,7 @@ else {
 	if (permission_exists('fax_inbox_view')) {
 		echo "\n";
 		echo "\n";
-		echo "	<br />\n";
+		echo "	<br /><br />\n";
 		echo "\n";
 		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
@@ -475,7 +475,7 @@ else {
 		echo "		<th width=\"60%\" class=\"listhdrr\">".$text['table-file']."</td>\n";
 		echo "		<th width=\"10%\" class=\"listhdrr\">".$text['table-view']."</td>\n";
 		echo "		<th width=\"20%\" class=\"listhdr\">".$text['table-modified']."</td>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>Size".$text['table-size']."</td>\n";
+		echo "		<th width=\"10%\" class=\"listhdr\" nowrap>".$text['table-size']."</td>\n";
 		echo "	</tr>";
 
 		if ($handle = opendir($dir_fax_inbox)) {
@@ -585,8 +585,7 @@ else {
 		echo "	</tr>\n";
 		echo "	</table>\n";
 		echo "\n";
-		echo "	<br />\n";
-		echo "	<br />\n";
+		echo "	<br /><br /><br />\n";
 		echo "\n";
 	}
 
