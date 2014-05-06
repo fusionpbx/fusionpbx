@@ -834,7 +834,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 						if ($domain['domain_uuid'] != $_SESSION['domain_uuid']) {
 							$bgcolor = ($bgcolor == $bgcolor1) ? $bgcolor2 : $bgcolor1;
 							echo "<div id=\"".$domain['domain_name']."\" class=\"domains_list_item\" style=\"background-color: ".$bgcolor."\" onclick=\"document.location.href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain['domain_uuid']."&domain_change=true';\">";
-							echo "<a href=\"".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=\"".$domain['domain_uuid']."\"&domain_change=true\">".$domain['domain_name']."</a>\n";
+							echo "<a href=\"".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain['domain_uuid']."&domain_change=true\">".$domain['domain_name']."</a>\n";
 							if ($domain['domain_description'] != '') {
 								echo "<span class=\"domain_list_item_description\"> - ".$domain['domain_description']."</span>\n";
 							}
