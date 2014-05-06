@@ -41,10 +41,16 @@
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
-	$text['button-save']['en-us'] = "Upload";
+	$text['button-upload']['en-us'] = "Upload";
+	$text['button-upload']['es-cl'] = "Subir";
+	$text['button-upload']['pt-pt'] = "Carregar";
+	$text['button-upload']['fr-fr'] = "Télécharger";
+
+	$text['button-save']['en-us'] = "Save";
 	$text['button-save']['es-cl'] = "Guardar";
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
+
 
 	//voicemail_greeting_edit
 	$text['confirm-name']['en-us'] = "Please provide: Greeting Name (play)";

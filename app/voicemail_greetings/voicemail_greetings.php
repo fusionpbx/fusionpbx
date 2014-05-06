@@ -78,7 +78,7 @@ else {
 	$v_greeting_dir = $_SESSION['switch']['storage']['dir'].'/voicemail/default/'.$_SESSION['domains'][$domain_uuid]['domain_name'].'/'.$voicemail_id;
 
 //upload the recording
-	if (($_POST['submit'] == $text['button-save']) && is_uploaded_file($_FILES['file']['tmp_name']) && permission_exists('voicemail_greeting_upload')) {
+	if (($_POST['submit'] == $text['button-upload']) && is_uploaded_file($_FILES['file']['tmp_name']) && permission_exists('voicemail_greeting_upload')) {
 		if ($_POST['type'] == 'rec') {
 			for($i = 1; $i < 10; $i++){
 				$tmp_greeting = 'greeting_'.$i.'.wav';
@@ -97,7 +97,7 @@ else {
 	}
 
 //save the selected greeting
-	if ($_REQUEST['submit'] == $text['button-save']) {
+	if ($_REQUEST['submit'] == $text['button-upload']) {
 		//save the greeting_id to a variable
 			$greeting_id = check_str($_REQUEST['greeting_id']);
 
@@ -237,7 +237,7 @@ else {
 		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 		echo "		<input name=\"file\" type=\"file\" class=\"formfld\" id=\"file\">\n";
 		echo "		<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
-		echo "		<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-save']."\">\n";
+		echo "		<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
 		echo "	</td>\n";
 	}
 
@@ -333,12 +333,12 @@ else {
 			echo "	</td>\n";
 			echo "	<td class='".$row_style[$c]."' nowrap>".$tmp_filesize."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['greeting_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
-			//if (permission_exists('voicemail_greeting_edit')) {
-			//	echo "		<a href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='edit'>$v_link_label_edit</a>\n";
-			//}
+			echo "	<td valign='top' align='right' nowrap>\n";
+			if (permission_exists('voicemail_greeting_edit')) {
+				echo "<a href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='edit'>$v_link_label_edit</a>";
+			}
 			if (permission_exists('voicemail_greeting_delete')) {
-				echo "		<a href='voicemail_greeting_delete.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo "<a href='voicemail_greeting_delete.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
