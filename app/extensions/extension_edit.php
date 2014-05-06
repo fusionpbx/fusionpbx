@@ -96,43 +96,35 @@ else {
 	}
 
 //delete the user from the v_extension_users
-	if ($_GET["a"] == "delete" && strlen($_REQUEST["user_uuid"]) > 0 && permission_exists("extension_delete")) {
+	if ($_REQUEST["delete_type"] == "user" && strlen($_REQUEST["delete_uuid"]) > 0 && permission_exists("extension_delete")) {
 		//set the variables
-			$user_uuid = check_str($_REQUEST["user_uuid"]);
 			$extension_uuid = check_str($_REQUEST["id"]);
+			$user_uuid = check_str($_REQUEST["delete_uuid"]);
 		//delete the group from the users
 			$sql = "delete from v_extension_users ";
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and extension_uuid = '".$extension_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
-		//redirect the browser
-			$_SESSION["message"] = $text['message-delete'];
-			header("Location: extension_edit.php?id=".$extension_uuid);
-			return;
 	}
 
 //delete the line from the v_device_lines
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
-		if ($_GET["a"] == "delete" && strlen($_REQUEST["device_line_uuid"]) > 0 && permission_exists("extension_delete")) {
+		if ($_REQUEST["delete_type"] == "device_line" && strlen($_REQUEST["delete_uuid"]) > 0 && permission_exists("extension_delete")) {
 			//set the variables
 				$extension_uuid = check_str($_REQUEST["id"]);
-				$device_line_uuid = check_str($_REQUEST["device_line_uuid"]);
+				$device_line_uuid = check_str($_REQUEST["delete_uuid"]);
 			//delete device_line
 				$sql = "delete from v_device_lines ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and device_line_uuid = '$device_line_uuid' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
-			//redirect the browser
-				$_SESSION["message"] = $text['message-delete'];
-				header("Location: extension_edit.php?id=".$extension_uuid);
-				return;
 		}
 	}
 
 //assign the extension to the user
-	if (strlen($_REQUEST["user_uuid"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
+	if (strlen($_REQUEST["user_uuid"]) > 0 && strlen($_REQUEST["id"]) > 0) {
 		//set the variables
 			$user_uuid = check_str($_REQUEST["user_uuid"]);
 			$extension_uuid = check_str($_REQUEST["id"]);
@@ -152,16 +144,11 @@ else {
 			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
 			$db->exec($sql_insert);
-
-		//redirect the browser
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: extension_edit.php?id=".$extension_uuid);
-			return;
 	}
 
 //assign the line to the device
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/devices')) {
-		if (strlen($_REQUEST["device_mac_address"]) > 0 && strlen($_REQUEST["id"]) > 0 && $_GET["a"] != "delete") {
+		if (strlen($_REQUEST["device_mac_address"]) > 0 && strlen($_REQUEST["id"]) > 0) {
 
 			//set the variables
 				$extension_uuid = check_str($_REQUEST["id"]);
@@ -244,11 +231,6 @@ else {
 				$sql_insert .= ")";
 				//echo $sql_insert."<br />\n";
 				$db->exec($sql_insert);
-
-			//redirect the browser
-				$_SESSION["message"] = $text['message-add'];
-				header("Location: extension_edit.php?id=".$extension_uuid);
-				return;
 		}
 	}
 
@@ -355,7 +337,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "extension, ";
 							$sql .= "number_alias, ";
 							$sql .= "password, ";
-							//$sql .= "vm_password, ";
 							$sql .= "accountcode, ";
 							$sql .= "effective_caller_id_name, ";
 							$sql .= "effective_caller_id_number, ";
@@ -368,10 +349,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "directory_exten_visible, ";
 							$sql .= "limit_max, ";
 							$sql .= "limit_destination, ";
-							//$sql .= "vm_enabled, ";
-							//$sql .= "vm_mailto, ";
-							//$sql .= "vm_attach_file, ";
-							//$sql .= "vm_keep_local_after_email, ";
 							$sql .= "user_context, ";
 							if (permission_exists('extension_toll')) {
 								$sql .= "toll_allow, ";
@@ -406,7 +383,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$extension', ";
 							$sql .= "'$number_alias', ";
 							$sql .= "'$password', ";
-							//$sql .= "'user-choose', ";
 							$sql .= "'$accountcode', ";
 							$sql .= "'$effective_caller_id_name', ";
 							$sql .= "'$effective_caller_id_number', ";
@@ -419,10 +395,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= "'$directory_exten_visible', ";
 							$sql .= "'$limit_max', ";
 							$sql .= "'$limit_destination', ";
-							//$sql .= "'$vm_enabled', ";
-							//$sql .= "'$vm_mailto', ";
-							//$sql .= "'$vm_attach_file', ";
-							//$sql .= "'$vm_keep_local_after_email', ";
 							$sql .= "'$user_context', ";
 							if (permission_exists('extension_toll')) {
 								$sql .= "'$toll_allow', ";
@@ -509,7 +481,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
-					//$sql .= "vm_password = '$vm_password', ";
 					$sql .= "accountcode = '$accountcode', ";
 					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
 					$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
@@ -522,10 +493,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "directory_exten_visible = '$directory_exten_visible', ";
 					$sql .= "limit_max = '$limit_max', ";
 					$sql .= "limit_destination = '$limit_destination', ";
-					//$sql .= "vm_enabled = '$vm_enabled', ";
-					//$sql .= "vm_mailto = '$vm_mailto', ";
-					//$sql .= "vm_attach_file = '$vm_attach_file', ";
-					//$sql .= "vm_keep_local_after_email = '$vm_keep_local_after_email', ";
 					$sql .= "user_context = '$user_context', ";
 					if (permission_exists('extension_toll')) {
 						$sql .= "toll_allow = '$toll_allow', ";
@@ -694,11 +661,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$directory_exten_visible = $row["directory_exten_visible"];
 			$limit_max = $row["limit_max"];
 			$limit_destination = $row["limit_destination"];
-			//$vm_password = $row["vm_password"];
-			//$vm_enabled = $row["vm_enabled"];
-			//$vm_mailto = $row["vm_mailto"];
-			//$vm_attach_file = $row["vm_attach_file"];
-			//$vm_keep_local_after_email = $row["vm_keep_local_after_email"];
 			$user_context = $row["user_context"];
 			$toll_allow = $row["toll_allow"];
 			$call_timeout = $row["call_timeout"];
@@ -821,7 +783,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action != "add") {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"copy_extension();\" value='".$text['button-copy']."'>\n";
 	}
-	echo "	<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -921,12 +883,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$result_count = count($result);
 		if ($result_count > 0) {
-			echo "		<table width='52%'>\n";
+			echo "		<table width='30%'>\n";
 			foreach($result as $field) {
 				echo "		<tr>\n";
 				echo "			<td class='vtable'>".$field['username']."</td>\n";
 				echo "			<td>\n";
-				echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'user'; document.getElementById('delete_uuid').value = '".$field['user_uuid']."'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+//				echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 				$assigned_user_uuids[] = $field['user_uuid'];
@@ -944,8 +907,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "order by username asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
-		echo "			<select name=\"user_uuid\" class='formfld' style='width: auto;'>\n";
-		echo "			<option value=\"\"></option>\n";
+		echo "			<select name='user_uuid' id='user_uuid' class='formfld' style='width: auto;'>\n";
+		echo "			<option value=''></option>\n";
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach($result as $field) {
 			echo "			<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
@@ -1200,8 +1163,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	".$text['label-provisioning'].":\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
-
-			echo "		<table width='52%'>\n";
+			echo "		<input type='hidden' name='device_line_uuid' id='device_line_uuid' value=''>";
+			echo "		<table>\n";
 			echo "			<tr>\n";
 			echo "				<td class='vtable'>\n";
 			echo "					".$text['label-line']."&nbsp;\n";
@@ -1242,14 +1205,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<td class='vtable'>".$row['device_template']."&nbsp;</td>\n";
 				//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 				echo "			<td>\n";
-				echo "				<a href='extension_edit.php?id=".$extension_uuid."&device_line_uuid=".$row['device_line_uuid']."&domain_uuid=".$_SESSION['domain_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".$row['device_line_uuid']."'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
+//				echo "				<a href='extension_edit.php?id=".$extension_uuid."&device_line_uuid=".$row['device_line_uuid']."&domain_uuid=".$_SESSION['domain_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 			}
 
 			echo "		<tr>\n";
 			echo "		<td class='vtable'>";
-			echo "			<select id='line_number' name='line_number' class='formfld' style='width: 50px;' onchange=\"$onchange\">\n";
+			echo "			<select id='line_number' name='line_number' class='formfld' style='width: auto;' onchange=\"$onchange\">\n";
 			echo "			<option value=''></option>\n";
 			echo "			<option value='1'>1</option>\n";
 			echo "			<option value='2'>2</option>\n";
@@ -1285,9 +1249,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		</td>\n";
 
 			echo "		<td class='vtable'>";
-			echo "			<table width='90%' border='0' cellpadding='1' cellspacing='0'>\n";
+			echo "			<table border='0' cellpadding='1' cellspacing='0'>\n";
 			echo "			<tr>\n";
-			echo "			<td id=\"cell_device_mac_address_1\" width='80%' nowrap='nowrap'>\n";
+			echo "			<td id=\"cell_device_mac_address_1\" nowrap='nowrap'>\n";
 			?>
 			<script>
 			var Objs;
@@ -1326,7 +1290,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' style='width: 80;' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
+			echo "				<select id=\"device_mac_address\" name=\"device_mac_address\" class='formfld' onchange='changeToInput_device_mac_address(this);this.style.visibility = \"hidden\";'>\n";
 			echo "					<option value=''></option>\n";
 			if (count($result) > 0) {
 				foreach($result as $field) {
@@ -1351,7 +1315,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<td class='vtable'>";
 			$device = new device;
 			$template_dir = $device->get_template_dir();
-			echo "<select id='device_template' name='device_template' style='width: 90%' class='formfld'>\n";
+			echo "<select id='device_template' name='device_template' class='formfld'>\n";
 			echo "<option value=''></option>\n";
 			if($dh = opendir($template_dir)) {
 				while($dir = readdir($dh)) {
@@ -1762,9 +1726,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='extension_uuid' value='$extension_uuid'>\n";
+		echo "		<input type='hidden' name='extension_uuid' value='".$extension_uuid."'>\n";
+		echo "		<input type='hidden' name='id' id='id' value='".$extension_uuid."'>";
+		echo "		<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
+		echo "		<input type='hidden' name='delete_type' id='delete_type' value=''>";
+		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
