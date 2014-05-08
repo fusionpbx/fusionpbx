@@ -35,7 +35,9 @@ include "root.php";
 		var $switch_scripts_dir;
 		var $switch_sounds_dir;
 
-		function recursive_copy($src, $dst) {
+		//$option '-n' --no-clobber
+		function recursive_copy($src, $dst, $option = '') {
+
 			$dir = opendir($src);
 			if (!$dir) {
 				if (!mkdir($src, 0755, true)) {
@@ -53,10 +55,15 @@ include "root.php";
 						$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
 					}
 					else {
-						//copy only missing files
-							if (!file_exists($dst.'/'.$file)) {
+						//copy only missing files -n --no-clobber
+							if ($option == '-n') {
+								if (!file_exists($dst.'/'.$file)) {
+									copy($src.'/'.$file, $dst.'/'.$file);
+									//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
+								}
+							}
+							else {
 								copy($src.'/'.$file, $dst.'/'.$file);
-								//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
 							}
 					}
 				}
@@ -124,7 +131,7 @@ include "root.php";
 				}
 				$dst_dir = $this->switch_scripts_dir;
 				if (is_readable($this->switch_scripts_dir)) {
-					$this->recursive_copy($src_dir, $dst_dir);
+					$this->recursive_copy($src_dir, $dst_dir, "-n");
 					unset($src_dir, $dst_dir);
 				}
 			}
