@@ -54,8 +54,6 @@ else {
 			$extension = str_replace(' ','-',check_str($_POST["extension"]));
 			$number_alias = check_str($_POST["number_alias"]);
 			$password = check_str($_POST["password"]);
-
-		//get the values from the HTTP POST and save them as PHP variables
 			$accountcode = check_str($_POST["accountcode"]);
 			$effective_caller_id_name = check_str($_POST["effective_caller_id_name"]);
 			$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
@@ -557,6 +555,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$ext->voicemail();
 						unset($ext);
 					}
+
+				//update devices having extension assigned to line(s) with new password
+					$sql = "update v_device_lines set ";
+					$sql .= "password = '".$password."' ";
+					$sql .= "where ";
+					$sql .= "domain_uuid = '".$domain_uuid."' and ";
+					$sql .= "server_address = '".$_SESSION['domain_name']."' and ";
+					$sql .= "user_id = '".$extension."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+
 			} //if ($action == "update")
 
 		//check the permissions
