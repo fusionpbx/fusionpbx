@@ -260,6 +260,8 @@ require_once "resources/require.php";
 		//$message = $orm->message;
 		foreach ($result as &$row) {
 			$device_mac_address = $row["device_mac_address"];
+			$domain_uuid = $row["domain_uuid"];
+			$device_label = $row["device_label"];
 			//$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 			$device_label = $row["device_label"];
 			$device_vendor = $row["device_vendor"];
@@ -283,8 +285,7 @@ require_once "resources/require.php";
 
 //get device lines
 	$sql = "SELECT * FROM v_device_lines ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and device_uuid = '".$device_uuid."' ";
+	$sql .= "where device_uuid = '".$device_uuid."' ";
 	$sql .= "order by line_number asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -299,8 +300,7 @@ require_once "resources/require.php";
 
 //get device keys
 	$sql = "SELECT * FROM v_device_keys ";
-	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 	$sql .= "ORDER by ";
 	$sql .= "CASE device_key_category ";
 	$sql .= "WHEN 'line' THEN 1 ";
@@ -322,8 +322,7 @@ require_once "resources/require.php";
 
 //get device settings
 	$sql = "SELECT * FROM v_device_settings ";
-	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 	$sql .= "ORDER by device_setting_subcategory asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -947,6 +946,34 @@ require_once "resources/require.php";
 	echo "</tr>\n";
 	*/
 
+	if (permission_exists('device_domain')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		if (strlen($domain_uuid) == 0) {
+			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
+		}
+		else {
+			echo "    <option value=''>".$text['select-global']."</option>\n";
+		}
+		foreach ($_SESSION['domains'] as $row) {
+			if ($row['domain_uuid'] == $domain_uuid) {
+				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+			}
+			else {
+				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			}
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-device_provision_enable'].":\n";
@@ -968,8 +995,6 @@ require_once "resources/require.php";
 	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-device_provision_enable']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
