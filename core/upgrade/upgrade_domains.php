@@ -52,10 +52,11 @@
 	$install = new install;
 	$install->domain_uuid = $domain_uuid;
 	$install->domain_name = $domain;
-	$install->switch_conf_dir = $_SESSION['switch']['conf']['dir'];
+	//$install->switch_conf_dir = $_SESSION['switch']['conf']['dir'];
 	$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
-	$install->switch_sounds_dir = $_SESSION['switch']['sounds']['dir'];
-	$install->copy();
+	//$install->switch_sounds_dir = $_SESSION['switch']['sounds']['dir'];
+	$install->copy_scripts();
+	//$install->copy_sounds();
 	//print_r($install->result);
 
 //get the list of installed apps from the core and mod directories
