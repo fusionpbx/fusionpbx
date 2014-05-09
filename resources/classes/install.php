@@ -199,16 +199,16 @@ include "root.php";
 			}
 		}
 
-		function copy_phrases() {
-			clearstatcache();
-			if (file_exists($this->switch_conf_dir."/lang")) {
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/lang";
-				$dst_dir = $this->switch_conf_dir."/lang";
-				if (is_readable($this->switch_conf_dir)) {
-					$this->recursive_copy($src_dir, $dst_dir);
-				}
-			}
-		}
+		#function copy_phrases() {
+		#	clearstatcache();
+		#	if (file_exists($this->switch_conf_dir."/lang")) {
+		#		$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/lang";
+		#		$dst_dir = $this->switch_conf_dir."/lang";
+		#		if (is_readable($this->switch_conf_dir)) {
+		#
+		#		}
+		#	}
+		#}
 
 	}
 
