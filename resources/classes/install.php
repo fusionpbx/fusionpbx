@@ -91,7 +91,7 @@ include "root.php";
 			$this->copy_scripts();
 			$this->copy_sounds();
 			$this->copy_swf();
-			$this->copy_phrases();
+			#$this->copy_phrases();
 		}
 
 		function copy_conf() {
