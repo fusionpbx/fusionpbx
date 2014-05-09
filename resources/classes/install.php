@@ -91,19 +91,15 @@ include "root.php";
 			$this->copy_scripts();
 			$this->copy_sounds();
 			$this->copy_swf();
-			//$this->copy_phrases();
 		}
 
 		function copy_conf() {
 			clearstatcache();
 			if (file_exists($this->switch_conf_dir)) {
-				$src_dir = $this->switch_conf_dir;
-				$dst_dir = $this->switch_conf_dir.'.orig';
-				if ($src_dir != "/conf") {
-					mkdir($src_dir, 0755, true);
-				}
-				if (is_readable($src_dir)) {
-					//make a backup copy of the conf directory
+				//make a backup copy of the conf directory
+					$src_dir = $this->switch_conf_dir;
+					$dst_dir = $this->switch_conf_dir.'.orig';
+					if (is_readable($src_dir)) {
 						if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
 							$this->recursive_copy($src_dir, $dst_dir);
 							$this->recursive_delete($this->switch_conf_dir);
@@ -112,11 +108,29 @@ include "root.php";
 							exec ('mv '.$src_dir.' '.$dst_dir);
 							//exec ('cp -RLp '.$src_dir.' '.$dst_dir);
 						}
-					//make sure the conf directory exists
-						if (!mkdir($this->switch_conf_dir, 0755, true)) {
-							//throw new Exception("Failed to create the switch conf directory '".$this->switch_conf_dir."'. ");
+					} 
+					else {
+						if ($src_dir != "/conf") {
+							mkdir($src_dir, 0755, true);
 						}
-				}
+					}
+				//make sure the conf directory exists
+					if (!mkdir($this->switch_conf_dir, 0755, true)) {
+						//throw new Exception("Failed to create the switch conf directory '".$this->switch_conf_dir."'. ");
+					}
+				//copy resources/templates/conf to the freeswitch conf dir
+					if (file_exists('/usr/share/fusionpbx/resources/templates/conf')){
+						$src_dir = "/usr/share/fusionpbx/resources/templates/conf";
+					}
+					else {
+						
+						$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+					}
+					$dst_dir = $this->switch_conf_dir;
+					if (is_readable($dst_dir)) {
+						$this->recursive_copy($src_dir, $dst_dir);
+					}
+					//print_r($install->result);
 			}
 		}
 
@@ -180,7 +194,8 @@ include "root.php";
 							}
 						}
 					}
-			//
+				}
+			}
 		}
 
 		function copy_swf() {
@@ -198,21 +213,9 @@ include "root.php";
 			}
 		}
 
-		//function copy_phrases() {
-		//	clearstatcache();
-		//	if (file_exists($this->switch_conf_dir."/lang")) {
-		//		$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/lang";
-		//		$dst_dir = $this->switch_conf_dir."/lang";
-		//		if (is_readable($this->switch_conf_dir)) {
-		//
-		//		}
-		//	}
-		//}
-
 	}
 
 //how to use the class
-	//include "resources/classes/install.php";
 	//$install = new install;
 	//$install->domain_uuid = $domain_uuid;
 	//$install->switch_conf_dir = $switch_conf_dir;
