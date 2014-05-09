@@ -69,6 +69,9 @@ else {
 	if (permission_exists('user_view')) {
 		echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='".$text['header-user_manager']."'>";
 	}
+	if (permission_exists('group_edit')) {
+		echo "	<input type='button' class='btn' alt='".$text['button-restore']."' onclick=\"window.location='permissions_default.php'\" value='".$text['button-restore']."'>";
+	}
 	echo "</td>\n";
 	echo "</tr></table>";
 
