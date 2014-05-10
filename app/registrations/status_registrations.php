@@ -166,9 +166,9 @@ require_once "resources/check_auth.php";
 
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
 			echo "<tr>\n";
-			if (count($_SESSION["domains"]) > 1) {
-				echo "	<th>".$text['label-domain']."</th>\n";
-			}
+			//if (count($_SESSION["domains"]) > 1) {
+			//	echo "	<th>".$text['label-domain']."</th>\n";
+			//}
 			//echo "	<th>User</th>\n";
 			//echo "	<th class='vncell'>Caller ID</th>\n";
 			echo "	<th>".$text['label-user']."</th>\n";
@@ -196,13 +196,13 @@ require_once "resources/check_auth.php";
 
 					//show the registrations
 						echo "<tr>\n";
-						if (count($_SESSION["domains"]) > 1) {
-							echo "<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-realm']."&nbsp;</td>\n";
-						}
+						//if (count($_SESSION["domains"]) > 1) {
+						//	echo "<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-realm']."&nbsp;</td>\n";
+						//}
 						//<td class='".$row_style[$c]."'>&nbsp;".$row['call-id']."&nbsp;</td>\n";
-						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['user']."&nbsp;</td>\n";
+						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['user']."&nbsp;</td>\n";
 						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['contact']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-user']."&nbsp;</td>\n";
+						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-user']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>&nbsp;".htmlentities($row['agent'])."&nbsp;</td>\n";
 						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['host']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>&nbsp;<a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
