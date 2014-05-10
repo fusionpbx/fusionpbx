@@ -189,7 +189,7 @@ include "root.php";
 							$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
 						}
 					//get the contents of the dialplan/default.xml
-						$file_default_path = $src_dir."/dialplan/default.xml';
+						$file_default_path = $src_dir.'/dialplan/default.xml';
 						$file_default_contents = file_get_contents($file_default_path);
 					//prepare the file contents and the path
 						if (count($_SESSION['domains']) < 2) {
