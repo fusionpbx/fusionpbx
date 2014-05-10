@@ -111,11 +111,11 @@ include "root.php";
 					} 
 					else {
 						if ($src_dir != "/conf") {
-							mkdir($src_dir, 0755, true);
+							mkdir($src_dir, 0774, true);
 						}
 					}
 				//make sure the conf directory exists
-					if (!mkdir($this->switch_conf_dir, 0755, true)) {
+					if (!mkdir($this->switch_conf_dir, 0774, true)) {
 						//throw new Exception("Failed to create the switch conf directory '".$this->switch_conf_dir."'. ");
 					}
 				//copy resources/templates/conf to the freeswitch conf dir
@@ -148,6 +148,7 @@ include "root.php";
 					$this->recursive_copy($src_dir, $dst_dir, "-n");
 					unset($src_dir, $dst_dir);
 				}
+				chmod($dst_dir, 0774);
 			}
 		}
 
@@ -194,6 +195,7 @@ include "root.php";
 							}
 						}
 					}
+					chmod($dst_dir, 0664);
 				}
 			}
 		}
