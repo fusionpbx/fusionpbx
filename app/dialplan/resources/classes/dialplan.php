@@ -181,8 +181,15 @@ include "root.php";
 			public function restore_advanced_xml() {
 				$switch_dialplan_dir = $this->switch_dialplan_dir;
 				if (is_dir($switch_dialplan_dir)) {
+					//copy resources/templates/conf to the freeswitch conf dir
+						if (file_exists('/usr/share/fusionpbx/resources/templates/conf')){
+							$src_dir = "/usr/share/fusionpbx/resources/templates/conf";
+						}
+						else {
+							$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+						}
 					//get the contents of the dialplan/default.xml
-						$file_default_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/dialplan/default.xml';
+						$file_default_path = $src_dir."/dialplan/default.xml';
 						$file_default_contents = file_get_contents($file_default_path);
 					//prepare the file contents and the path
 						if (count($_SESSION['domains']) < 2) {
