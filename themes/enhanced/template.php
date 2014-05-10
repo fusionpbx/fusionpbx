@@ -629,7 +629,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		height: auto;
 		background-color: #000;
 		background-repeat: repeat-x;
-		background-image: url('<?=PROJECT_PATH?>/themes/enhanced/images/background_black.png');
+		background-image: url('<?php echo PROJECT_PATH; ?>/themes/enhanced/images/background_black.png');
 		background-position: top center;
 		padding: 6px 0px 8px 0px;
 		-webkit-border-radius: 0px 0px 3px 3px;
@@ -745,9 +745,9 @@ table tr:nth-last-child(-5) td:first-of-type {
 	//-->
 </SCRIPT>
 
-<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
-<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery.autosize.js"></script>
-<script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery.autosize.input.js"></script>
+<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
+<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.js"></script>
+<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
 
 
 <script language="JavaScript" type="text/javascript">
@@ -821,10 +821,10 @@ table tr:nth-last-child(-5) td:first-of-type {
 		<div id="domains_container">
 			<div id="domains_block">
 				<div id="domains_header">
-					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?=$text['button-close']?>">
-					<b style="color: #000;"><?=$text['title-domains']?></b>
+					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?php echo $text['button-close']; ?>">
+					<b style="color: #000;"><?php echo $text['title-domains']; ?></b>
 					<br><br>
-					<input type="text" id="domain_filter" class="formfld" style="min-width: 100%; width: 100%;" placeholder="<?=$text['label-search']?>" onkeyup="domain_search(this.value);">
+					<input type="text" id="domain_filter" class="formfld" style="min-width: 100%; width: 100%;" placeholder="<?php echo $text['label-search']; ?>" onkeyup="domain_search(this.value);">
 				</div>
 				<div id="domains_list">
 					<?php
@@ -891,8 +891,8 @@ table tr:nth-last-child(-5) td:first-of-type {
 							//logged in show the domains block
 							if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
 								?>
-								<a href="javascript:void(0);" id="domains_show_text"><?=$_SESSION['domain_name']?></a>
-								<img id="domains_show_icon" src="<?=PROJECT_PATH?>/themes/enhanced/images/icon_domains_show.png" style="width: 23px; height: 16px; border: none;" title="Open Domain Selector" align="absmiddle">
+								<a href="javascript:void(0);" id="domains_show_text"><?php echo $_SESSION['domain_name']; ?></a>
+								<img id="domains_show_icon" src="<?php echo PROJECT_PATH; ?>/themes/enhanced/images/icon_domains_show.png" style="width: 23px; height: 16px; border: none;" title="Open Domain Selector" align="absmiddle">
 								<?php
 							}
 

@@ -648,7 +648,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		height: auto;
 		background-color: #000;
 		background-repeat: repeat-x;
-		background-image: url('<?=PROJECT_PATH?>/themes/nature/images/background_black.png');
+		background-image: url('<?php echo PROJECT_PATH; ?>/themes/nature/images/background_black.png');
 		background-position: top center;
 		padding: 10px;
 		-webkit-border-radius: 0px 0px 7px 7px;
