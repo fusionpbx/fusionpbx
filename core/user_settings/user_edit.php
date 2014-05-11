@@ -429,7 +429,7 @@ else {
 	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
 	echo "		<option value=''></option>\n";
 	foreach ($languages as $key => $value) {
-		if ($row['user_language'] == $key) {
+		if ($key == $user_settings['domain']['language']['code']) {
 			echo "		<option value='$key' selected='selected'>$key</option>\n";
 		}
 		else {
