@@ -88,7 +88,12 @@ require_once "resources/paging.php";
 	//get the list
 		$sql = "select * from v_domain_settings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) == 0) {
+			$sql .= "order by domain_setting_category, domain_setting_subcategory asc ";
+		}
+		else {
+			$sql .= "order by $order_by $order ";
+		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
