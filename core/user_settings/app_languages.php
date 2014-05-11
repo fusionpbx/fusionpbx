@@ -25,6 +25,16 @@
 	$text['table-title']['pt-pt'] = "Informações de Utilizador";
 	$text['table-title']['fr-fr'] = "Informations de l'usager";
 
+	$text['label-user_language']['en-us'] = "Language";
+	$text['label-user_language']['es-cl'] = "Lengua";
+	$text['label-user_language']['pt-pt'] = "Língua";
+	$text['label-user_language']['fr-fr'] = "Langue";
+
+	$text['description-user_language']['en-us'] = "Select the language.";
+	$text['description-user_language']['es-cl'] = "Seleccione el idioma.";
+	$text['description-user_language']['pt-pt'] = "Selecione o idioma.";
+	$text['description-user_language']['fr-fr'] = "Sélectionnez la langue.";
+
 	$text['label-username']['en-us'] = "Username";
 	$text['label-username']['es-cl'] = "Nombre de Usuario";
 	$text['label-username']['pt-pt'] = "Nome de Utilizador";
@@ -65,7 +75,7 @@
 	$text['label-status']['pt-pt'] = "Estado";
 	$text['label-status']['fr-fr'] = "Etat";
 
-	$text['description-status']['en-us'] = "Select a the user status.";
+	$text['description-status']['en-us'] = "Select a user status.";
 	$text['description-status']['es-cl'] = "Seleccione el estado del usuario.";
 	$text['description-status']['pt-pt'] = "Escolha um estado para o utilizador.";
 	$text['description-status']['fr-fr'] = "Sélection de l'état de l'usager.";
