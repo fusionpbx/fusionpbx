@@ -279,6 +279,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			closedir($handle);
 		}
 		echo "		</select>\n";
+	} elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
+		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value=''></option>\n";
+		foreach ($text['label-domain'] as $key => $value) {
+			if ($row['default_setting_value'] == $key) {
+				echo "		<option value='$key' selected='selected'>$key</option>\n";
+			}
+			else {
+				echo "		<option value='$key'>$key</option>\n";
+			}
+		}
+		echo "		</select>\n";
 	} elseif ($category == "email" && $subcategory == "smtp_auth" && $name == "var" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    <option value=''></option>\n";
