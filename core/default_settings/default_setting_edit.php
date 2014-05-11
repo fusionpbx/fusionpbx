@@ -36,6 +36,9 @@ else {
 
 //add multi-lingual support
 	require_once "app_languages.php";
+	foreach($text['button-save'] as $key => $value) {
+		$languages[$key] = '';
+	}
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
@@ -282,7 +285,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	} elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
-		foreach ($text['button-save'] as $key => $value) {
+		foreach ($languages as $key => $value) {
 			if ($row['default_setting_value'] == $key) {
 				echo "		<option value='$key' selected='selected'>$key</option>\n";
 			}
