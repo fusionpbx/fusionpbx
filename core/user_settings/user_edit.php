@@ -201,7 +201,7 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 				$db->exec(check_sql($sql));
 			}
 			else {
-				if (strlen($user_time_zone) == 0) {
+				if (strlen($user_language) == 0) {
 					$sql = "delete from v_user_settings ";
 					$sql .= "where user_setting_category = 'domain' ";
 					$sql .= "and user_setting_subcategory = 'language' ";
