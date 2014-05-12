@@ -321,6 +321,39 @@ require_once "resources/require.php";
 			$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
 			unset($sql, $prep_statement_sub);
 
+		//get the user settings
+			$sql = "select * from v_user_settings ";
+			$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
+			$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
+			$sql .= "and user_setting_enabled = 'true' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as $row) {
+					$name = $row['user_setting_name'];
+					$category = $row['user_setting_category'];
+					$subcategory = $row['user_setting_subcategory'];
+					if (strlen($subcategory) == 0) {
+						//$$category[$name] = $row['domain_setting_value'];
+						if ($name == "array") {
+							$_SESSION[$category][] = $row['user_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$name] = $row['user_setting_value'];
+						}
+					} else {
+						//$$category[$subcategory][$name] = $row['domain_setting_value'];
+						if ($name == "array") {
+							$_SESSION[$category][$subcategory][] = $row['user_setting_value'];
+						}
+						else {
+							$_SESSION[$category][$subcategory][$name] = $row['user_setting_value'];
+						}
+					}
+				}
+			}
+
 		//redirect the user
 			if (check_str($_REQUEST["rdr"]) !== 'n'){
 				$path = check_str($_POST["path"]);
