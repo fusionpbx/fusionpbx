@@ -50,6 +50,16 @@
 	$text['button-reboot']['pt-pt'] = "Reinicialização";
 	$text['button-reboot']['fr-fr'] = "Redémarrage";
 
+	$text['button-reboot']['en-us'] = "Reboot";
+	$text['button-reboot']['es-cl'] = "Reiniciar";
+	$text['button-reboot']['pt-pt'] = "Reinicialização";
+	$text['button-reboot']['fr-fr'] = "Redémarrage";
+
+	$text['button-check_sync']['en-us'] = "Check Sync";
+	$text['button-check_sync']['es-cl'] = "Compruebe Sync";
+	$text['button-check_sync']['pt-pt'] = "Sincronização";
+	$text['button-check_sync']['fr-fr'] = "Contrôle Sync";
+
 	$text['label-message']['en-us'] = "Message";
 	$text['label-message']['es-cl'] = "Mensaje";
 	$text['label-message']['pt-pt'] = "Mensagem";
