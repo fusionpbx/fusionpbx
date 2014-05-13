@@ -162,6 +162,16 @@
 	$text['label-status']['pt-pt'] = "Estado";
 	$text['label-status']['fr-fr'] = "Etat";
 
+	$text['label-user_language']['en-us'] = "Language";
+	$text['label-user_language']['es-cl'] = "Lengua";
+	$text['label-user_language']['pt-pt'] = "Língua";
+	$text['label-user_language']['fr-fr'] = "Langue";
+
+	$text['description-user_language']['en-us'] = "Select the language.";
+	$text['description-user_language']['es-cl'] = "Seleccione el idioma.";
+	$text['description-user_language']['pt-pt'] = "Selecione o idioma.";
+	$text['description-user_language']['fr-fr'] = "Sélectionnez la langue.";
+
 	$text['label-time_zone']['en-us'] = "Time Zone";
 	$text['label-time_zone']['es-cl'] = "Zona Horaria";
 	$text['label-time_zone']['pt-pt'] = "Fuso Horário";

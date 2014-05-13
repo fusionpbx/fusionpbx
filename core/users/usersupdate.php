@@ -113,35 +113,94 @@ else {
 	}
 
 if (count($_POST) > 0 && $_POST["persistform"] != "1") {
-	$user_uuid = $_REQUEST["id"];
-	$password = check_str($_POST["password"]);
-	$confirm_password = check_str($_POST["confirm_password"]);
-	$user_status = check_str($_POST["user_status"]);
-	//$user_template_name = check_str($_POST["user_template_name"]);
-	$user_time_zone = check_str($_POST["user_time_zone"]);
-	$contact_uuid = check_str($_POST["contact_uuid"]);
-	$group_member = check_str($_POST["group_member"]);
-	$user_enabled = check_str($_POST["user_enabled"]);
-	$api_key = check_str($_POST["api_key"]);
 
-	if ($password != $confirm_password) { $msg_error .= $text['message-password_mismatch']."<br>\n"; }
-	//if (strlen($contact_uuid) == 0) { $msg_error .= $text['message-required'].$text['label-email']."<br>\n"; }
-	//if (strlen($user_time_zone) == 0) { $msg_error .= $text['message-required'].$text['label-time_zone']."<br>\n"; }
-	if (strlen($user_enabled) == 0) { $msg_error .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+	//get the HTTP values and set as variables
+		$user_uuid = $_REQUEST["id"];
+		$password = check_str($_POST["password"]);
+		$confirm_password = check_str($_POST["confirm_password"]);
+		$user_status = check_str($_POST["user_status"]);
+		//$user_template_name = check_str($_POST["user_template_name"]);
+		$user_language = check_str($_POST["user_language"]);
+		$user_time_zone = check_str($_POST["user_time_zone"]);
+		$contact_uuid = check_str($_POST["contact_uuid"]);
+		$group_member = check_str($_POST["group_member"]);
+		$user_enabled = check_str($_POST["user_enabled"]);
+		$api_key = check_str($_POST["api_key"]);
 
-	if ($msg_error) {
-		require_once "resources/header.php";
-		echo "<div align='center'>";
-		echo "<table><tr><td>";
-		echo $msg_error;
-		echo "</td></tr></table>";
-		echo "<br />\n";
-		require_once "resources/persist_form.php";
-		echo persistform($_POST);
-		echo "</div>";
-		require_once "resources/footer.php";
-		return;
-	}
+	//set the required values
+		if ($password != $confirm_password) { $msg_error .= $text['message-password_mismatch']."<br>\n"; }
+		//if (strlen($contact_uuid) == 0) { $msg_error .= $text['message-required'].$text['label-email']."<br>\n"; }
+		//if (strlen($user_time_zone) == 0) { $msg_error .= $text['message-required'].$text['label-time_zone']."<br>\n"; }
+		if (strlen($user_enabled) == 0) { $msg_error .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+		if ($msg_error) {
+			require_once "resources/header.php";
+			echo "<div align='center'>";
+			echo "<table><tr><td>";
+			echo $msg_error;
+			echo "</td></tr></table>";
+			echo "<br />\n";
+			require_once "resources/persist_form.php";
+			echo persistform($_POST);
+			echo "</div>";
+			require_once "resources/footer.php";
+			return;
+		}
+
+	//check to see if user language is set
+		$sql = "select count(*) as num_rows from v_user_settings ";
+		$sql .= "where user_setting_category = 'domain' ";
+		$sql .= "and user_setting_subcategory = 'language' ";
+		$sql .= "and user_uuid = '".$user_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] == 0) {
+				$user_setting_uuid = uuid();
+				$sql = "insert into v_user_settings ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "user_setting_uuid, ";
+				$sql .= "user_setting_category, ";
+				$sql .= "user_setting_subcategory, ";
+				$sql .= "user_setting_name, ";
+				$sql .= "user_setting_value, ";
+				$sql .= "user_setting_enabled, ";
+				$sql .= "user_uuid ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".$_SESSION["domain_uuid"]."', ";
+				$sql .= "'".$user_setting_uuid."', ";
+				$sql .= "'domain', ";
+				$sql .= "'language', ";
+				$sql .= "'code', ";
+				$sql .= "'".$user_language."', ";
+				$sql .= "'true', ";
+				$sql .= "'".$user_uuid."' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+			}
+			else {
+				if (strlen($user_language) == 0) {
+					$sql = "delete from v_user_settings ";
+					$sql .= "where user_setting_category = 'domain' ";
+					$sql .= "and user_setting_subcategory = 'language' ";
+					$sql .= "and user_uuid = '".$user_uuid."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+				else {
+					$sql  = "update v_user_settings set ";
+					$sql .= "user_setting_value = '".$user_language."', ";
+					$sql .= "user_setting_enabled = 'true' ";
+					$sql .= "where user_setting_category = 'domain' ";
+					$sql .= "and user_setting_subcategory = 'language' ";
+					$sql .= "and user_uuid = '".$user_uuid."' ";
+					$db->exec(check_sql($sql));
+				}
+			}
+		}
 
 	//get the number of rows in v_user_settings
 		$sql = "select count(*) as num_rows from v_user_settings ";
@@ -563,6 +622,29 @@ else {
 			echo "	</tr>\n";
 		}
 		*/
+
+	echo "	<tr>\n";
+	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+	echo "		".$text['label-user_language'].": \n";
+	echo "	</td>\n";
+	echo "	<td class=\"vtable\" align='left'>\n";
+	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
+	echo "		<option value=''></option>\n";
+	foreach ($languages as $key => $value) {
+		if ($key == $user_settings['domain']['language']['code']) {
+			echo "		<option value='$key' selected='selected'>$key</option>\n";
+		}
+		else {
+			echo "		<option value='$key'>$key</option>\n";
+		}
+	}
+	echo "		</select>\n";
+	echo "		<br />\n";
+	echo "		".$text['description-user_language']."<br />\n";
+	echo "	</td>\n";
+	echo "	</tr>\n";
+	echo "	</table>";
+	echo "<br>";
 
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\">\n";
