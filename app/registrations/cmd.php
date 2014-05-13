@@ -73,15 +73,20 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
-		//app.lua event_notify
-			if ($cmd == "reboot" || $cmd == "resync") {
-				$cmd_complete = "api luarun app.lua event_notify ".$cmd." ".$user." ".$domain." ".$vendor;
-				$response = event_socket_request($fp, $cmd_complete);
-
-				$_SESSION['message'] = $text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].$response;
-				unset($cmd);
+		//lua
+			//$command = "api luarun app.lua event_notify ".$cmd." ".$user." ".$domain." ".$vendor;
+		//reboot
+			if ($cmd == "reboot") {
+				$command = "api sofia profile internal flush_inbound_reg ".$user." reboot";
 			}
-
+		//check_sync	
+			if ($cmd == "check_sync") {
+				$command = "api sofia profile internal check_sync ".$user;
+			}
+		//send the command
+			$response = event_socket_request($fp, $command);
+		//show the response
+			$_SESSION['message'] = $text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].$response;
 		//close the connection
 			fclose($fp);
 	}
