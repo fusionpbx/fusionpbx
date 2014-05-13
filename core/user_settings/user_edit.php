@@ -82,87 +82,32 @@ else {
 
 if (count($_POST)>0 && $_POST["persistform"] != "1") {
 
-	$password = check_str($_POST["password"]);
-	$confirm_password = check_str($_POST["confirm_password"]);
-	$user_status = check_str($_POST["user_status"]);
-	$user_template_name = check_str($_POST["user_template_name"]);
-	$user_time_zone = check_str($_POST["user_time_zone"]);
-	$user_language = check_str($_POST["user_language"]);
-	$group_member = check_str($_POST["group_member"]);
+	//get the HTTP values and set as variables
+		$password = check_str($_POST["password"]);
+		$confirm_password = check_str($_POST["confirm_password"]);
+		$user_status = check_str($_POST["user_status"]);
+		$user_template_name = check_str($_POST["user_template_name"]);
+		$user_language = check_str($_POST["user_language"]);
+		$user_time_zone = check_str($_POST["user_time_zone"]);
+		$group_member = check_str($_POST["group_member"]);
 
-	$msg = '';
-	//if (strlen($password) == 0) { $msg .= "Password cannot be blank.<br>\n"; }
-	if ($password != $confirm_password) { $msg .= "".$text['confirm-password']."<br>\n"; }
-	//if (strlen($user_time_zone) == 0) { $msg .= "Please provide an time zone.<br>\n"; }
-
-	if (strlen($msg) > 0) {
-		require_once "resources/header.php";
-		echo "<div align='center'>";
-		echo "<table><tr><td>";
-		echo $msg;
-		echo "</td></tr></table>";
-		echo "<br />\n";
-		require_once "resources/persist_form.php";
-		echo persistform($_POST);
-		echo "</div>";
-		require_once "resources/footer.php";
-		return;
-	}
-
-	//check to see if user time_zone is set
-		$sql = "select count(*) as num_rows from v_user_settings ";
-		$sql .= "where user_setting_category = 'domain' ";
-		$sql .= "and user_setting_subcategory = 'time_zone' ";
-		$sql .= "and user_uuid = '".$user_uuid."' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$user_setting_uuid = uuid();
-				$sql = "insert into v_user_settings ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "user_setting_uuid, ";
-				$sql .= "user_setting_category, ";
-				$sql .= "user_setting_subcategory, ";
-				$sql .= "user_setting_name, ";
-				$sql .= "user_setting_value, ";
-				$sql .= "user_setting_enabled, ";
-				$sql .= "user_uuid ";
-				$sql .= ") ";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$_SESSION["domain_uuid"]."', ";
-				$sql .= "'".$user_setting_uuid."', ";
-				$sql .= "'domain', ";
-				$sql .= "'time_zone', ";
-				$sql .= "'name', ";
-				$sql .= "'".$user_time_zone."', ";
-				$sql .= "'true', ";
-				$sql .= "'".$user_uuid."' ";
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-			}
-			else {
-				if (strlen($user_time_zone) == 0) {
-					$sql = "delete from v_user_settings ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'time_zone' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-				else {
-					$sql  = "update v_user_settings set ";
-					$sql .= "user_setting_value = '".$user_time_zone."', ";
-					$sql .= "user_setting_enabled = 'true' ";
-					$sql .= "where user_setting_category = 'domain' ";
-					$sql .= "and user_setting_subcategory = 'time_zone' ";
-					$sql .= "and user_uuid = '".$user_uuid."' ";
-					$db->exec(check_sql($sql));
-				}
-			}
+	//set the required values
+		$msg = '';
+		//if (strlen($password) == 0) { $msg .= "Password cannot be blank.<br>\n"; }
+		if ($password != $confirm_password) { $msg .= "".$text['confirm-password']."<br>\n"; }
+		//if (strlen($user_time_zone) == 0) { $msg .= "Please provide an time zone.<br>\n"; }
+		if (strlen($msg) > 0) {
+			require_once "resources/header.php";
+			echo "<div align='center'>";
+			echo "<table><tr><td>";
+			echo $msg;
+			echo "</td></tr></table>";
+			echo "<br />\n";
+			require_once "resources/persist_form.php";
+			echo persistform($_POST);
+			echo "</div>";
+			require_once "resources/footer.php";
+			return;
 		}
 
 	//check to see if user language is set
@@ -215,6 +160,62 @@ if (count($_POST)>0 && $_POST["persistform"] != "1") {
 					$sql .= "user_setting_enabled = 'true' ";
 					$sql .= "where user_setting_category = 'domain' ";
 					$sql .= "and user_setting_subcategory = 'language' ";
+					$sql .= "and user_uuid = '".$user_uuid."' ";
+					$db->exec(check_sql($sql));
+				}
+			}
+		}
+
+	//check to see if user time_zone is set
+		$sql = "select count(*) as num_rows from v_user_settings ";
+		$sql .= "where user_setting_category = 'domain' ";
+		$sql .= "and user_setting_subcategory = 'time_zone' ";
+		$sql .= "and user_uuid = '".$user_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] == 0) {
+				$user_setting_uuid = uuid();
+				$sql = "insert into v_user_settings ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "user_setting_uuid, ";
+				$sql .= "user_setting_category, ";
+				$sql .= "user_setting_subcategory, ";
+				$sql .= "user_setting_name, ";
+				$sql .= "user_setting_value, ";
+				$sql .= "user_setting_enabled, ";
+				$sql .= "user_uuid ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".$_SESSION["domain_uuid"]."', ";
+				$sql .= "'".$user_setting_uuid."', ";
+				$sql .= "'domain', ";
+				$sql .= "'time_zone', ";
+				$sql .= "'name', ";
+				$sql .= "'".$user_time_zone."', ";
+				$sql .= "'true', ";
+				$sql .= "'".$user_uuid."' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+			}
+			else {
+				if (strlen($user_time_zone) == 0) {
+					$sql = "delete from v_user_settings ";
+					$sql .= "where user_setting_category = 'domain' ";
+					$sql .= "and user_setting_subcategory = 'time_zone' ";
+					$sql .= "and user_uuid = '".$user_uuid."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+				else {
+					$sql  = "update v_user_settings set ";
+					$sql .= "user_setting_value = '".$user_time_zone."', ";
+					$sql .= "user_setting_enabled = 'true' ";
+					$sql .= "where user_setting_category = 'domain' ";
+					$sql .= "and user_setting_subcategory = 'time_zone' ";
 					$sql .= "and user_uuid = '".$user_uuid."' ";
 					$db->exec(check_sql($sql));
 				}

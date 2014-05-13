@@ -25,16 +25,6 @@
 	$text['table-title']['pt-pt'] = "Informações de Utilizador";
 	$text['table-title']['fr-fr'] = "Informations de l'usager";
 
-	$text['label-user_language']['en-us'] = "Language";
-	$text['label-user_language']['es-cl'] = "Lengua";
-	$text['label-user_language']['pt-pt'] = "Língua";
-	$text['label-user_language']['fr-fr'] = "Langue";
-
-	$text['description-user_language']['en-us'] = "Select the language.";
-	$text['description-user_language']['es-cl'] = "Seleccione el idioma.";
-	$text['description-user_language']['pt-pt'] = "Selecione o idioma.";
-	$text['description-user_language']['fr-fr'] = "Sélectionnez la langue.";
-
 	$text['label-username']['en-us'] = "Username";
 	$text['label-username']['es-cl'] = "Nombre de Usuario";
 	$text['label-username']['pt-pt'] = "Nome de Utilizador";
@@ -104,6 +94,16 @@
 	$text['check-do-not-disturb-status']['es-cl'] = "No molestar";
 	$text['check-do-not-disturb-status']['pt-pt'] = "Não Perturbar";
 	$text['check-do-not-disturb-status']['fr-fr'] = "Ne pas déranger";
+
+	$text['label-user_language']['en-us'] = "Language";
+	$text['label-user_language']['es-cl'] = "Lengua";
+	$text['label-user_language']['pt-pt'] = "Língua";
+	$text['label-user_language']['fr-fr'] = "Langue";
+
+	$text['description-user_language']['en-us'] = "Select the language.";
+	$text['description-user_language']['es-cl'] = "Seleccione el idioma.";
+	$text['description-user_language']['pt-pt'] = "Selecione o idioma.";
+	$text['description-user_language']['fr-fr'] = "Sélectionnez la langue.";
 
 	$text['label-time']['en-us'] = "Time Zone";
 	$text['label-time']['es-cl'] = "Zona Horaria";
