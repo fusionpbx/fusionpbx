@@ -486,7 +486,7 @@ else {
 	}
 	else {
 		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+		echo "	<td width='20%' class=\"vncell\">\n";
 		echo "		".$text['label-status'].":\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
@@ -534,7 +534,7 @@ else {
 		/*
 		if (strlen($_SESSION['domain']['template']['name']) == 0) {
 			echo "	<tr>\n";
-			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+			echo "	<td width='20%' class=\"vncell\">\n";
 			echo "		Template: \n";
 			echo "	</td>\n";
 			echo "	<td class=\"vtable\">\n";
@@ -565,7 +565,7 @@ else {
 		*/
 
 	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+	echo "	<td width='20%' class=\"vncell\">\n";
 	echo "		".$text['label-time_zone'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
