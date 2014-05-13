@@ -643,8 +643,6 @@ else {
 	echo "		".$text['description-user_language']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
-	echo "	</table>";
-	echo "<br>";
 
 	echo "	<tr>\n";
 	echo "	<td width='20%' class=\"vncell\">\n";
