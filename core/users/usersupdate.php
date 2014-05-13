@@ -624,7 +624,7 @@ else {
 		*/
 
 	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
+	echo "	<td width='20%' class=\"vncell\">\n";
 	echo "		".$text['label-user_language'].": \n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
