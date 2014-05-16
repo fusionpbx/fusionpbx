@@ -38,7 +38,7 @@ include "root.php";
 		//$option '-n' --no-clobber
 		function recursive_copy($src, $dst, $option = '') {
 			if (file_exists('/bin/cp')) {
-				exec ('cp -R $option '.$src_dir.' '.$dst_dir);
+				 exec ('cp -R '.$option.' '.$src.'/* '.$dst);
 			}
 			else {
 				$dir = opendir($src);
