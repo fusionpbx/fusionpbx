@@ -37,38 +37,42 @@ include "root.php";
 
 		//$option '-n' --no-clobber
 		function recursive_copy($src, $dst, $option = '') {
-
-			$dir = opendir($src);
-			if (!$dir) {
-				if (!mkdir($src, 0755, true)) {
-					throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
-				}
+			if (file_exists('/bin/cp')) {
+				exec ('cp -R $option '.$src_dir.' '.$dst_dir);
 			}
-			if (!is_dir($dst)) {
-				if (!mkdir($dst, 0755, true)) {
-					throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
-				}
-			}
-			while(false !== ($file = readdir($dir))) {
-				if (($file != '.') && ($file != '..')) {
-					if (is_dir($src.'/'.$file)) {
-						$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
+			else {
+				$dir = opendir($src);
+				if (!$dir) {
+					if (!mkdir($src, 0755, true)) {
+						throw new Exception("recursive_copy() source directory '".$src."' does not exist.");
 					}
-					else {
-						//copy only missing files -n --no-clobber
-							if ($option == '-n') {
-								if (!file_exists($dst.'/'.$file)) {
-									copy($src.'/'.$file, $dst.'/'.$file);
-									//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
+				}
+				if (!is_dir($dst)) {
+					if (!mkdir($dst, 0755, true)) {
+						throw new Exception("recursive_copy() failed to create destination directory '".$dst."'");
+					}
+				}
+				while(false !== ($file = readdir($dir))) {
+					if (($file != '.') && ($file != '..')) {
+						if (is_dir($src.'/'.$file)) {
+							$this->recursive_copy($src.'/'.$file, $dst.'/'.$file);
+						}
+						else {
+							//copy only missing files -n --no-clobber
+								if ($option == '-n') {
+									if (!file_exists($dst.'/'.$file)) {
+										copy($src.'/'.$file, $dst.'/'.$file);
+										//echo "copy(".$src."/".$file.", ".$dst."/".$file.");<br />\n";
+									}
 								}
-							}
-							else {
-								copy($src.'/'.$file, $dst.'/'.$file);
-							}
+								else {
+									copy($src.'/'.$file, $dst.'/'.$file);
+								}
+						}
 					}
 				}
+				closedir($dir);
 			}
-			closedir($dir);
 		}
 
 		function recursive_delete($dir) {
