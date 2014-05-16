@@ -61,7 +61,6 @@ require_once "resources/paging.php";
 	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_center_queues']."</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-agents']."' onclick=\"window.location='call_center_agents.php'\" value='".$text['button-agents']."'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-tiers']."' onclick=\"window.location='call_center_tiers.php'\" value='".$text['button-tiers']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
