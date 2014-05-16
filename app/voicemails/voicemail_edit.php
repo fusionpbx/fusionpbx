@@ -358,6 +358,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	/*
+	//still in development
+
 	if ($action == "update") {
 		echo "	<tr>";
 		echo "		<td class='vncell' valign='top'>".$text['label-forward_destinations'].":</td>";
@@ -429,6 +432,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		</td>";
 		echo "	</tr>";
 	}
+	*/
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
