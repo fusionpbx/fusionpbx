@@ -66,8 +66,18 @@ if (count($_GET)>0) {
 			$response = event_socket_request($fp, $cmd);
 		}
 
-//delete the agent from the db
+
+
+//delete the agent from db
 	if (strlen($id)>0) {
+		//tiers table
+		$sql = "delete from v_call_center_tiers ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and agent_name = '$agent_name' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($sql);
+		//agents table
 		$sql = "delete from v_call_center_agents ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_center_agent_uuid = '$id' ";
