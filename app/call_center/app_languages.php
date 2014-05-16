@@ -5,12 +5,12 @@
 	$text['title-call_center_queues']['pt-pt'] = "Filas de Call Center";
 	$text['title-call_center_queues']['fr-fr'] = "Queues du Centre d'appels";
 
-	$text['title-call_center_queue_add']['en-us'] = "Call Center Queue Add";
+	$text['title-call_center_queue_add']['en-us'] = "Call Center Queue";
 	$text['title-call_center_queues_add']['es-cl'] = "Agregar Cola de Centro de Llamados";
 	$text['title-call_center_queues_add']['pt-pt'] = "Adicionar Fila de Call Center";
 	$text['title-call_center_queue_add']['fr-fr'] = "Ajouter un Queue";
 
-	$text['title-call_center_queue_edit']['en-us'] = "Call Center Queue Edit";
+	$text['title-call_center_queue_edit']['en-us'] = "Call Center Queue";
 	$text['title-call_center_queues_edit']['es-cl'] = "Editar Cola de Centro de Llamados";
 	$text['title-call_center_queues_edit']['pt-pt'] = "Editar Fila de Call Center";
 	$text['title-call_center_queue_edit']['fr-fr'] = "Editer une queue";
@@ -20,12 +20,12 @@
 	$text['title-call_center_agents']['pt-pt'] = "Agentes do Call Center";
 	$text['title-call_center_agents']['fr-fr'] = "Agents du Centre d'appels";
 
-	$text['title-call_center_agent_add']['en-us'] = "Call Center Agent Add";
+	$text['title-call_center_agent_add']['en-us'] = "Call Center Agent";
 	$text['title-call_center_agent_add']['es-cl'] = "Agregar Agente de Centro de Llamados";
 	$text['title-call_center_agent_add']['pt-pt'] = "Adicionar Agente ao Call Center";
 	$text['title-call_center_agent_add']['fr-fr'] = "Ajouter un agent";
 
-	$text['title-call_center_agent_edit']['en-us'] = "Call Center Agent Edit";
+	$text['title-call_center_agent_edit']['en-us'] = "Call Center Agent";
 	$text['title-call_center_agent_edit']['es-cl'] = "Editar Agente de Centro de Llamados";
 	$text['title-call_center_agent_edit']['pt-pt'] = "Editar Agente do Call Center";
 	$text['title-call_center_agent_edit']['fr-fr'] = "Editer un agent";
@@ -35,7 +35,7 @@
 	$text['title-call_center_agent_status']['pt-pt'] = "Estado do Agente do Call Center";
 	$text['title-call_center_agent_status']['fr-fr'] = "Etat de l'agent";
 
-	$text['title-call_center_tier_edit']['en-us'] = "Call Center Tier Edit";
+	$text['title-call_center_tier_edit']['en-us'] = "Call Center Tier";
 	$text['title-call_center_tier_edit']['es-cl'] = "Editar Nivel de Centro de Llamados";
 	$text['title-call_center_tier_edit']['pt-pt'] = "Editar Nível do Call Center";
 	$text['title-call_center_tier_edit']['fr-fr'] = "Editer un Tier";
@@ -45,12 +45,12 @@
 	$text['header-call_center_queues']['pt-pt'] = "Filas do Call Center";
 	$text['header-call_center_queues']['fr-fr'] = "Queues du Centre d'appels";
 
-	$text['header-call_center_queue_add']['en-us'] = "Call Center Queue Add";
+	$text['header-call_center_queue_add']['en-us'] = "Call Center Queue";
 	$text['header-call_center_queue_add']['es-cl'] = "Agregar Cola de Centro de Llamados";
 	$text['header-call_center_queue_add']['pt-pt'] = "Adicionar Fila ao Call Center";
 	$text['header-call_center_queue_add']['fr-fr'] = "Ajouter un Queue";
 
-	$text['header-call_center_queue_edit']['en-us'] = "Call Center Queue Edit";
+	$text['header-call_center_queue_edit']['en-us'] = "Call Center Queue";
 	$text['header-call_center_queue_edit']['es-cl'] = "Editar Cola de Centro de Llamados";
 	$text['header-call_center_queue_edit']['pt-pt'] = "Editar Fila do Call Center";
 	$text['header-call_center_queue_edit']['fr-fr'] = "Editer une queue";
@@ -60,12 +60,12 @@
 	$text['header-call_center_agents']['pt-pt'] = "Agentes do Call Center";
 	$text['header-call_center_agents']['fr-fr'] = "Agents du Centre d'appels";
 
-	$text['header-call_center_agent_add']['en-us'] = "Call Center Agent Add";
+	$text['header-call_center_agent_add']['en-us'] = "Call Center Agents";
 	$text['header-call_center_agent_add']['es-cl'] = "Agregar Agente de Centro de Llamados";
 	$text['header-call_center_agent_add']['pt-pt'] = "Adicionar Agente ao Call Center";
 	$text['header-call_center_agent_add']['fr-fr'] = "Ajouter un agent";
 
-	$text['header-call_center_agent_edit']['en-us'] = "Call Center Agent Edit";
+	$text['header-call_center_agent_edit']['en-us'] = "Call Center Agent";
 	$text['header-call_center_agent_edit']['es-cl'] = "Editar Agente de Centro de Llamados";
 	$text['header-call_center_agent_edit']['pt-pt'] = "Editar Agente do Call Center";
 	$text['header-call_center_agent_edit']['fr-fr'] = "Editer un agent";
@@ -75,7 +75,7 @@
 	$text['header-call_center_agent_status']['pt-pt'] = "Estado do Agente do Call Center";
 	$text['header-call_center_agent_status']['fr-fr'] = "Etat de l'agent";
 
-	$text['header-call_center_tier_edit']['en-us'] = "Call Center Tier Edit";
+	$text['header-call_center_tier_edit']['en-us'] = "Call Center Tier";
 	$text['header-call_center_tier_edit']['es-cl'] = "Editar Nivel de Centro de Llamados";
 	$text['header-call_center_tier_edit']['pt-pt'] = "Editar Nível do Call Center";
 	$text['header-call_center_tier_edit']['fr-fr'] = "Editer un Tier";
