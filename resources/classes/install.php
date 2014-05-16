@@ -98,7 +98,6 @@ include "root.php";
 		}
 
 		function copy_conf() {
-			clearstatcache();
 			if (file_exists($this->switch_conf_dir)) {
 				//make a backup copy of the conf directory
 					$src_dir = $this->switch_conf_dir;
@@ -119,8 +118,10 @@ include "root.php";
 						}
 					}
 				//make sure the conf directory exists
-					if (!mkdir($this->switch_conf_dir, 0774, true)) {
-						//throw new Exception("Failed to create the switch conf directory '".$this->switch_conf_dir."'. ");
+					if (!is_dir($this->switch_conf_dir)) {
+						if (!mkdir($this->switch_conf_dir, 0774, true)) {
+							throw new Exception("Failed to create the switch conf directory '".$this->switch_conf_dir."'. ");
+						}
 					}
 				//copy resources/templates/conf to the freeswitch conf dir
 					if (file_exists('/usr/share/fusionpbx/resources/templates/conf')){
@@ -139,7 +140,6 @@ include "root.php";
 		}
 
 		function copy_scripts() {
-			clearstatcache();
 			if (file_exists($this->switch_scripts_dir)) {
 				if (file_exists('/usr/share/fusionpbx/resources/install/scripts')){
 					$src_dir = '/usr/share/fusionpbx/resources/install/scripts';
@@ -157,48 +157,12 @@ include "root.php";
 		}
 
 		function copy_sounds() {
-			clearstatcache();
 			if (file_exists($this->switch_sounds_dir)) {
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/8000';
-				$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/8000';
+				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/';
+				$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/';
+				$this->recursive_copy($src_dir, $dst_dir, "-n");
 				if (is_readable($this->switch_sounds_dir)) {
-					if ($handle = opendir($src_dir)) {
-						$i = 0;
-						$files = array();
-						while (false !== ($file = readdir($handle))) {
-							if ($file != "." && $file != ".." && is_file($src_dir.'/'.$file)) {
-								if (!file_exists($dst_dir.'/'.$file) ) {
-									//copy the file if it does not exist in the destination directory
-									if (copy($src_dir.'/'.$file, $dst_dir.'/'.$file)) {
-										$this->result['copy']['sounds']['8000'][] = "copied from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-									}
-									else {
-										$this->result['copy']['sounds']['8000'][] = "copy failed from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-									}
-								}
-							}
-						}
-					}
-
-					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/16000';
-					$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/16000';
-					if ($handle = opendir($src_dir)) {
-						$i = 0;
-						$files = array();
-						while (false !== ($file = readdir($handle))) {
-							if ($file != "." && $file != ".." && is_file($src_dir.'/'.$file)) {
-								if (!file_exists($dst_dir.'/'.$file) ) {
-									//copy the file if it does not exist in the destination directory
-									if (copy($src_dir.'/'.$file, $dst_dir.'/'.$file)) {
-										$this->result['copy']['sounds']['16000'][] = "copied from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-									}
-									else {
-										$this->result['copy']['sounds']['16000'][] = "copy failed from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-									}
-								}
-							}
-						}
-					}
+					$this->recursive_copy($src_dir, $dst_dir);
 					chmod($dst_dir, 0664);
 				}
 			}
