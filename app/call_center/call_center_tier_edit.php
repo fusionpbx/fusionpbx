@@ -40,14 +40,8 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//action add or update
-	if (isset($_REQUEST["id"])) {
-		$action = "update";
-		$call_center_tier_uuid = check_str($_REQUEST["id"]);
-	}
-	else {
-		$action = "add";
-	}
+//set tier uuid
+	$call_center_tier_uuid = check_str($_REQUEST["id"]);
 
 //get http post variables and set them to php variables
 	if (count($_POST)>0) {
@@ -60,9 +54,7 @@ else {
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
-	if ($action == "update") {
-		$call_center_tier_uuid = check_str($_POST["call_center_tier_uuid"]);
-	}
+	$call_center_tier_uuid = check_str($_POST["call_center_tier_uuid"]);
 
 	//check for all required data
 		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
@@ -109,63 +101,39 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					usleep(200);
 			}
 
-	//add or update the database
-	if ($_POST["persistformvar"] != "true") {
-		if ($action == "add") {
-			$call_center_tier_uuid = uuid();
-			$sql = "insert into v_call_center_tiers ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "call_center_tier_uuid, ";
-			$sql .= "agent_name, ";
-			$sql .= "queue_name, ";
-			$sql .= "tier_level, ";
-			$sql .= "tier_position ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$call_center_tier_uuid', ";
-			$sql .= "'$agent_name', ";
-			$sql .= "'$queue_name', ";
-			$sql .= "'$tier_level', ";
-			$sql .= "'$tier_position' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+	//update the database
+		$sql = "update v_call_center_tiers set ";
+		$sql .= "domain_uuid = '$domain_uuid', ";
+		$sql .= "agent_name = '$agent_name', ";
+		$sql .= "queue_name = '$queue_name', ";
+		$sql .= "tier_level = '$tier_level', ";
+		$sql .= "tier_position = '$tier_position' ";
+		$sql .= "where call_center_tier_uuid = '$call_center_tier_uuid'";
+		$db->exec(check_sql($sql));
+		unset($sql);
 
-			//syncrhonize configuration
-			save_call_center_xml();
+		//syncrhonize configuration
+		save_call_center_xml();
 
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: call_center_tiers.php");
-			return;
-		} //if ($action == "add")
+		//look up queue uuid by queue name (ugh)
+		$sql = "select call_center_queue_uuid from v_call_center_queues where queue_name = '".$queue_name."'";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$queue_uuid = $row["call_center_queue_uuid"];
+			break;
+		}
+		unset($prep_statement);
 
-		if ($action == "update") {
-			$sql = "update v_call_center_tiers set ";
-			$sql .= "domain_uuid = '$domain_uuid', ";
-			$sql .= "agent_name = '$agent_name', ";
-			$sql .= "queue_name = '$queue_name', ";
-			$sql .= "tier_level = '$tier_level', ";
-			$sql .= "tier_position = '$tier_position' ";
-			$sql .= "where call_center_tier_uuid = '$call_center_tier_uuid'";
-			$db->exec(check_sql($sql));
-			unset($sql);
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: call_center_queue_edit.php?id=".$queue_uuid);
+		return;
 
-			//syncrhonize configuration
-			save_call_center_xml();
-
-			$_SESSION["message"] = $text['message-update'];
-			header("Location: call_center_tiers.php");
-			return;
-		} //if ($action == "update")
-	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
-		$call_center_tier_uuid = $_GET["id"];
 		$sql = "select * from v_call_center_tiers ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and call_center_tier_uuid = '$call_center_tier_uuid' ";
@@ -185,12 +153,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "resources/header.php";
-	if ($action == "add") {
-		$page["title"] = $text['title-call_center_tier_add'];
-	}
-	if ($action == "update") {
-		$page["title"] = $text['title-call_center_tier_edit'];
-	}
+	$page["title"] = $text['title-call_center_tier_edit'];
 
 //show the content
 	echo "<div align='center'>";
@@ -204,14 +167,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_tier_add']."</b></td>\n";
-	}
-	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_tier_edit']."</b></td>\n";
-	}
+	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_tier_edit']."</b></td>\n";
 	echo "<td width='70%' align='right'>";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_tiers.php'\" value='".$text['button-back']."'>";
+	echo "	<input type='button' class='btn' alt='".$text['button-back']."' onclick='history.back();' value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -423,14 +381,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-tier_position']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	if ($action == "update") {
-		echo "				<input type='hidden' name='call_center_tier_uuid' value='$call_center_tier_uuid'>\n";
-	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+	echo "<tr>\n";
+	echo "	<td colspan='2' align='right'>\n";
+	echo "		<input type='hidden' name='call_center_tier_uuid' value='$call_center_tier_uuid'>\n";
+	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	</td>\n";
+	echo "</tr>";
 	echo "</table>";
 	echo "</form>";
 

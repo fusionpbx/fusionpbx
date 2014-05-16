@@ -35,16 +35,6 @@
 	$text['title-call_center_agent_status']['pt-pt'] = "Estado do Agente do Call Center";
 	$text['title-call_center_agent_status']['fr-fr'] = "Etat de l'agent";
 
-	$text['title-call_center_tiers']['en-us'] = "Call Center Tiers";
-	$text['title-call_center_tiers']['es-cl'] = "Niveles de Centro de Llamados";
-	$text['title-call_center_tiers']['pt-pt'] = "Níveis do Call Center";
-	$text['title-call_center_tiers']['fr-fr'] = "Tiers";
-
-	$text['title-call_center_tier_add']['en-us'] = "Call Center Tier Add";
-	$text['title-call_center_tier_add']['es-cl'] = "Agregar Nivel de Centro de Llamados";
-	$text['title-call_center_tier_add']['pt-pt'] = "Adicionar Nível ao Call Center";
-	$text['title-call_center_tier_add']['fr-fr'] = "Ajouter un Tier";
-
 	$text['title-call_center_tier_edit']['en-us'] = "Call Center Tier Edit";
 	$text['title-call_center_tier_edit']['es-cl'] = "Editar Nivel de Centro de Llamados";
 	$text['title-call_center_tier_edit']['pt-pt'] = "Editar Nível do Call Center";
@@ -85,16 +75,6 @@
 	$text['header-call_center_agent_status']['pt-pt'] = "Estado do Agente do Call Center";
 	$text['header-call_center_agent_status']['fr-fr'] = "Etat de l'agent";
 
-	$text['header-call_center_tiers']['en-us'] = "Call Center Tiers";
-	$text['header-call_center_tiers']['es-cl'] = "Niveles de Centro de Llamados";
-	$text['header-call_center_tiers']['pt-pt'] = "Níveis do Call Center";
-	$text['header-call_center_tiers']['fr-fr'] = "Tiers";
-
-	$text['header-call_center_tier_add']['en-us'] = "Call Center Tier Add";
-	$text['header-call_center_tier_add']['es-cl'] = "Agregar Nivel de Centro de Llamados";
-	$text['header-call_center_tier_add']['pt-pt'] = "Adicionar Nível ao Call Center";
-	$text['header-call_center_tier_add']['fr-fr'] = "Ajouter un Tier";
-
 	$text['header-call_center_tier_edit']['en-us'] = "Call Center Tier Edit";
 	$text['header-call_center_tier_edit']['es-cl'] = "Editar Nivel de Centro de Llamados";
 	$text['header-call_center_tier_edit']['pt-pt'] = "Editar Nível do Call Center";
@@ -114,11 +94,6 @@
 	$text['description-call_center_agent_status']['es-cl'] = "Lista todos los agentes del Centro de Llamados con la opción de modificar el estado de uno o más agentes.";
 	$text['description-call_center_agent_status']['pt-pt'] = "Lista todas as chamadas do Call Center com a opção de alterar o estado de um ou mais agentes.";
 	$text['description-call_center_agent_status']['fr-fr'] = "Liste tous les agents du centre d'appel avec la possibilité de modifier l'état d'un ou plusieur agent.";
-
-	$text['description-call_center_tiers']['en-us'] = "List all tiers. Tiers assign agents to queues.";
-	$text['description-call_center_tiers']['es-cl'] = "Lista todos los niveles. Los niveles asignan agentes a las colas.";
-	$text['description-call_center_tiers']['pt-pt'] = "Lista todos os níveis. Os níveis atribuem agentes às filas.";
-	$text['description-call_center_tiers']['fr-fr'] = "Liste tous les Tiers. Les Tiers permettent d'affecter les agents aux queues.";
 
 	$text['label-queue_name']['en-us'] = "Queue Name";
 	$text['label-queue_name']['es-cl'] = "Nombre de Cola";
@@ -168,6 +143,11 @@
 	$text['label-record_template']['es-cl'] = "Guardar Plantilla";
 	$text['label-record_template']['pt-pt'] = "Gravar Template";
 	$text['label-record_template']['fr-fr'] = "Modèle d'enregistrement";
+
+	$text['label-tiers']['en-us'] = "Tiers";
+	$text['label-tiers']['es-cl'] = "Niveles de Centro de Llamados";
+	$text['label-tiers']['pt-pt'] = "Níveis do Call Center";
+	$text['label-tiers']['fr-fr'] = "Tiers";
 
 	$text['label-time_base_score']['en-us'] = "Time Base Score";
 	$text['label-time_base_score']['es-cl'] = "Puntuación basada en tiempo";
@@ -335,6 +315,11 @@
 	$text['description-record_template']['pt-pt'] = "Introduza um template de gravação. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
 	$text['description-record_template']['fr-fr'] = "Entrer un modèle d\'enregistrement. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
 
+	$text['description-tiers']['en-us'] = "Tiers assign agents to queues.";
+	$text['description-tiers']['es-cl'] = "Lista todos los niveles. Los niveles asignan agentes a las colas.";
+	$text['description-tiers']['pt-pt'] = "Lista todos os níveis. Os níveis atribuem agentes às filas.";
+	$text['description-tiers']['fr-fr'] = "Liste tous les Tiers. Les Tiers permettent d'affecter les agents aux queues.";
+
 	$text['description-time_base_score']['en-us'] = "Select the time base score.";
 	$text['description-time_base_score']['es-cl'] = "Seleccione el tiempo base";
 	$text['description-time_base_score']['pt-pt'] = "Seleccione o tempo base ";
@@ -400,7 +385,7 @@
 	$text['description-description']['pt-pt'] = "Introduza uma descrição, se desejar.";
 	$text['description-description']['fr-fr'] = "";
 
-	$text['description-agent_name']['en-us'] = "Select the agents name.";
+	$text['description-agent_name']['en-us'] = "Select the agent name.";
 	$text['description-agent_name']['es-cl'] = "Seleccione el nombre del agente.";
 	$text['description-agent_name']['pt-pt'] = "Seleccione o nome dos agentes.";
 	$text['description-agent_name']['fr-fr'] = "";
