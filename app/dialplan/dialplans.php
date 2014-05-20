@@ -367,15 +367,6 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($v_path_show) {
-		echo "<tr>\n";
-		echo "	<td colspan='7' align='left'>\n";
-		echo "		<br />\n";
-		echo "		".$_SESSION['switch']['dialplan']['dir'];
-		echo "	</td>\n";
-		echo "</tr>\n";
-	}
-
 	echo "</table>";
 	echo "</div>";
 	echo "<br><br>";
