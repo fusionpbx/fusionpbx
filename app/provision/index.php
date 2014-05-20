@@ -115,7 +115,7 @@ require_once "resources/require.php";
 
 //http authentication
 	//http://www.php.net/manual/en/features.http-auth.php
-	if (strlen($provision["http_username"]) > 0 && strlen($provision["http_password"]) > 0) {
+	if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0) {
 		if (!isset($_SERVER['PHP_AUTH_USER'])) {
 			header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
 			header('HTTP/1.0 401 Unauthorized');
@@ -123,7 +123,7 @@ require_once "resources/require.php";
 			echo 'Authorization Required';
 			exit;
 		} else {
-			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_password"]) {
+			if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
 				//authorized
 			}
 			else {
