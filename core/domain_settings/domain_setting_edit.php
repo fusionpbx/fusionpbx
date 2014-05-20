@@ -57,16 +57,16 @@ if (strlen($_GET["domain_uuid"]) > 0) {
 }
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
-		$domain_setting_category = check_str($_POST["domain_setting_category"]);
-		$domain_setting_subcategory = check_str($_POST["domain_setting_subcategory"]);
-		$domain_setting_name = check_str($_POST["domain_setting_name"]);
+	if (count($_POST) > 0) {
+		$domain_setting_category = strtolower(check_str($_POST["domain_setting_category"]));
+		$domain_setting_subcategory = strtolower(check_str($_POST["domain_setting_subcategory"]));
+		$domain_setting_name = strtolower(check_str($_POST["domain_setting_name"]));
 		$domain_setting_value = check_str($_POST["domain_setting_value"]);
-		$domain_setting_enabled = check_str($_POST["domain_setting_enabled"]);
+		$domain_setting_enabled = strtolower(check_str($_POST["domain_setting_enabled"]));
 		$domain_setting_description = check_str($_POST["domain_setting_description"]);
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
