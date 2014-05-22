@@ -178,7 +178,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$dialplan_uuid = $_GET["id"];
 		$orm = new orm;
 		$orm->name('dialplans');
@@ -186,6 +186,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $orm->find()->get();
 		//$message = $orm->message;
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$app_uuid = $row["app_uuid"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
