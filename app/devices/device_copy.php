@@ -74,16 +74,14 @@ else {
 
 //get the device
 	$sql = "SELECT * FROM v_devices ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and device_uuid = '".$device_uuid."' ";
+	$sql .= "where device_uuid = '".$device_uuid."' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$devices = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 
 //get device lines
 	$sql = "SELECT * FROM v_device_lines ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and device_uuid = '".$device_uuid."' ";
+	$sql .= "where device_uuid = '".$device_uuid."' ";
 	$sql .= "order by line_number asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -91,8 +89,7 @@ else {
 
 //get device keys
 	$sql = "SELECT * FROM v_device_keys ";
-	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 	$sql .= "ORDER by ";
 	$sql .= "CASE device_key_category ";
 	$sql .= "WHEN 'line' THEN 1 ";
@@ -107,8 +104,7 @@ else {
 
 //get device settings
 	$sql = "SELECT * FROM v_device_settings ";
-	$sql .= "WHERE domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "AND device_uuid = '".$device_uuid."' ";
+	$sql .= "WHERE device_uuid = '".$device_uuid."' ";
 	$sql .= "ORDER by device_setting_subcategory asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
