@@ -113,9 +113,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$dialplan_name = str_replace("/", "", $dialplan_name);
 
 	//build the array
-		$array['domain_uuid'] = $_SESSION['domain_uuid'];
 		if (strlen($row["dialplan_uuid"]) > 0) {
 			$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
+		}
+		else {
+			$array['domain_uuid'] = $_SESSION['domain_uuid'];
 		}
 		$array['dialplan_name'] = $dialplan_name;
 		$array['dialplan_number'] = $_POST["dialplan_number"];
@@ -127,9 +129,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$x = 0;
 		foreach ($_POST["dialplan_details"] as $row) {
 			if (strlen($row["dialplan_detail_tag"]) > 0) {
-				$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 				if (strlen($row["dialplan_detail_uuid"]) > 0) {
 					$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
+				}
+				else {
+					$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
 				}
 				$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
 				$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
@@ -427,6 +431,34 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<br />\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		if (permission_exists('dialplan_domain')) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "	".$text['label-domain'].":\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			echo "    <select class='formfld' name='domain_uuid'>\n";
+			if (strlen($domain_uuid) == 0) {
+				echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
+			}
+			else {
+				echo "    <option value=''>".$text['select-global']."</option>\n";
+			}
+			foreach ($_SESSION['domains'] as $row) {
+				if ($row['domain_uuid'] == $domain_uuid) {
+					echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+				}
+				else {
+					echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+				}
+			}
+			echo "    </select>\n";
+			echo "<br />\n";
+			echo $text['description-domain_name']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
