@@ -538,7 +538,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		if ($call_center_queue_uuid != '') {
 
-			$sql = "select * from v_call_center_tiers where queue_name = '".$queue_name."' and domain_uuid = '".$domain_uuid."' order by tier_level asc, tier_position asc, agent_name asc";
+			//replace the space in the queue name with a dash
+			$db_queue_name = str_replace(" ", "-", $queue_name);
+
+			$sql = "select * from v_call_center_tiers ";
+			$sql .= "where queue_name = '".$db_queue_name."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			$sql .= "order by tier_level asc, tier_position asc, agent_name asc";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
