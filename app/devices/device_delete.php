@@ -40,24 +40,48 @@ else {
 	}
 
 //get the id
-	if (count($_GET)>0) {
+	if (count($_GET) > 0) {
 		$id = check_str($_GET["id"]);
 	}
 
-//delete the data
-	if (strlen($id)>0) {
-		$sql = "delete from v_devices ";
-		$sql .= "where device_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+//delete the data and subdata
+	if (strlen($id) > 0) {
+
+		//delete device_lines
+			$sql = "delete from v_device_lines ";
+			$sql .= "where device_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
+
+		//delete device_keys
+			$sql = "delete from v_device_keys ";
+			$sql .= "where device_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
+
+		//delete device_settings
+			$sql = "delete from v_device_settings ";
+			$sql .= "where device_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
+
+		//delete the device
+			$sql = "delete from v_devices ";
+			$sql .= "where device_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
 	}
 
 //write the provision files
 	require_once "app/provision/provision_write.php";
 
-$_SESSION["message"] = $text['message-delete'];
-header("Location: devices.php");
-return;
+//set the message and redirect the user
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: devices.php");
+	return;
 
 ?>
