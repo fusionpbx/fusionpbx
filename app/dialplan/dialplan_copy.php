@@ -59,14 +59,14 @@ else {
 //get the dialplan data
 	$dialplan_uuid = $_GET["id"];
 	$sql = "select * from v_dialplans ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+	$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
 	$log->log("debug", check_sql($sql));
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$log->log("debug", $result);
 	foreach ($result as &$row) {
+		$domain_uuid = $row["domain_uuid"];
 		$database_dialplan_uuid = $row["dialplan_uuid"];
 		$app_uuid = $row["app_uuid"];
 		$dialplan_name = $row["dialplan_name"];
@@ -95,7 +95,7 @@ else {
 		$sql .= ")";
 		$sql .= "values ";
 		$sql .= "(";
-		$sql .= "'".$_SESSION['domain_uuid']."', ";
+		$sql .= "'".$domain_uuid."', ";
 		$sql .= "'$dialplan_uuid', ";
 		$sql .= "'$app_uuid', ";
 		$sql .= "'".$dialplan_name."-copy', ";
@@ -110,12 +110,12 @@ else {
 
 	//get the the dialplan details
 		$sql = "select * from v_dialplan_details ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and dialplan_uuid = '$database_dialplan_uuid' ";
+		$sql .= "where dialplan_uuid = '$database_dialplan_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$dialplan_detail_tag = $row["dialplan_detail_tag"];
 			$dialplan_detail_order = $row["dialplan_detail_order"];
 			$dialplan_detail_type = $row["dialplan_detail_type"];
@@ -135,9 +135,9 @@ else {
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'".$_SESSION['domain_uuid']."', ";
-				$sql .= "'".check_str($dialplan_uuid)."', ";
-				$sql .= "'".check_str($dialplan_detail_uuid)."', ";
+				$sql .= "'".$domain_uuid."', ";
+				$sql .= "'".$dialplan_uuid."', ";
+				$sql .= "'".$dialplan_detail_uuid."', ";
 				$sql .= "'".check_str($dialplan_detail_tag)."', ";
 				$sql .= "'".check_str($dialplan_detail_order)."', ";
 				$sql .= "'".check_str($dialplan_detail_type)."', ";
