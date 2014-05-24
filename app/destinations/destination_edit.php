@@ -64,10 +64,19 @@ else {
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$destination_uuid = check_str($_POST["destination_uuid"]);
-	}
+	//get the uuid
+		if ($action == "update") {
+			$destination_uuid = check_str($_POST["destination_uuid"]);
+		}
+
+	//check for all required data
+		$msg = '';
+		if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
+		if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
+		//if (strlen($destination_caller_id_name) == 0) { $msg .= $text['message-required']." ".$text['label-destination_caller_id_name']."<br>\n"; }
+		//if (strlen($destination_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_caller_id_number']."<br>\n"; }
+		if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
+		if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
 	//check for duplicates
 		$sql = "select count(*) as num_rows from v_destinations ";
@@ -81,15 +90,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		}
 
-	//check for all required data
-		//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
-		//if (strlen($destination_type) == 0) { $msg .= "Please provide: Name<br>\n"; }
-		//if (strlen($destination_number) == 0) { $msg .= "Please provide: Extension<br>\n"; }
-		//if (strlen($destination_caller_id_name) == 0) { $msg .= "Please provide: Caller ID Name<br>\n"; }
-		//if (strlen($destination_caller_id_number) == 0) { $msg .= "Please provide: Caller ID Number<br>\n"; }
-		//if (strlen($destination_context) == 0) { $msg .= "Please provide: Context<br>\n"; }
-		//if (strlen($destination_enabled) == 0) { $msg .= "Please provide: Enabled<br>\n"; }
-		//if (strlen($destination_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
+	//show the message
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
