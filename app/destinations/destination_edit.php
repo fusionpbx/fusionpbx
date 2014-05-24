@@ -69,6 +69,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$destination_uuid = check_str($_POST["destination_uuid"]);
 	}
 
+	//check for duplicates
+		$sql = "select count(*) as num_rows from v_destinations ";
+		$sql .= "where destination_number = '".$destination_number."' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+		$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($row['num_rows'] > 0) {
+				$msg .= "Duplicate detected.<br>\n";
+			}
+		}
+
 	//check for all required data
 		//if (strlen($dialplan_uuid) == 0) { $msg .= "Please provide: Dialplan UUID<br>\n"; }
 		//if (strlen($destination_type) == 0) { $msg .= "Please provide: Name<br>\n"; }

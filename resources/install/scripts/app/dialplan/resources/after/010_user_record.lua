@@ -1,5 +1,13 @@
 --set the user_exists to true or false
 	if (context ~= "public") then
+		--set the default
+			record_ext = "wav";
+
+		--get record_ext
+			if (session:getVariable("record_ext")) then
+				record_ext = session:getVariable("record_ext");
+			end
+
 		--set the recording path
 			path = recordings_dir
 			if (domain_count > 1) then
@@ -69,7 +77,7 @@
 
 		--record the session
 			if (record_session) then
-				cmd = "uuid_record "..uuid.." start "..path.."/"..uuid..".wav";
+				cmd = "uuid_record "..uuid.." start "..path.."/"..uuid.."."..record_ext;
 				session:execute("set", "api_on_answer="..cmd);
 				--freeswitch.consoleLog("notice", "[app:dialplan] "..cmd.."\n");
 			end
