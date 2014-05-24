@@ -50,7 +50,7 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//set the variables from the http values
 			$call_flow_name = check_str($_POST["call_flow_name"]);
 			$call_flow_extension = check_str($_POST["call_flow_extension"]);
@@ -87,7 +87,7 @@ else {
 
 	}
 
-if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	$msg = '';
 	if ($action == "update") {
@@ -222,9 +222,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$app_uuid = 'b1b70f85-6b42-429b-8c5a-60c8b02b7d14';
 					dialplan_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
-				//dialplan group 1
-					require_once "app/dialplan/resources/classes/dialplan.php";
-
 					//<condition destination_number="300" break="on-true"/>
 					$dialplan = new dialplan;
 					$dialplan->domain_uuid = $domain_uuid;
@@ -345,27 +342,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				//apply settings reminder
 					$_SESSION["reload_xml"] = true;
 
-				//delete the dialplan context from memcache
+				//delete the cache
 					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 					if ($fp) {
-						$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
+						$switch_cmd = "memcache delete dialplan:".$call_flow_context;
 						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 					}
 
-				if ($action == "add") {
-					$_SESSION["message"] = $text['message-add'];
-				}
-				if ($action == "update") {
-					$_SESSION["message"] = $text['message-update'];
-				}
-				header("Location: call_flows.php");
-				return;
+				//set the message
+					if ($action == "add") {
+						$_SESSION["message"] = $text['message-add'];
+					}
+					if ($action == "update") {
+						$_SESSION["message"] = $text['message-update'];
+					}
+
+				//redirect the browser
+					header("Location: call_flows.php");
+					return;
 			}
 		} //if ($_POST["persistformvar"] != "true")
-} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+} //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$call_flow_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_call_flows ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
