@@ -116,6 +116,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($row["dialplan_uuid"]) > 0) {
 			$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
 		}
+		if (isset($_POST["domain_uuid"])) {
+			$array['domain_uuid'] = $_POST['domain_uuid'];
+		}
 		else {
 			$array['domain_uuid'] = $_SESSION['domain_uuid'];
 		}
@@ -201,7 +204,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //get the dialplan details in an array
 	$sql = "select * from v_dialplan_details ";
-//	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 	$prep_statement = $db->prepare(check_sql($sql));
