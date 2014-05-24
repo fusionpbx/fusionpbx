@@ -197,4 +197,9 @@
 		$text['message-required']['pt-pt'] = "Por favor forneça: ";
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
+		$text['message-duplicate']['en-us'] = "Duplicate detected";
+		$text['message-duplicate']['es-cl'] = "Duplicar detectado";
+		$text['message-duplicate']['pt-pt'] = "Duplicar detectado";
+		$text['message-duplicate']['fr-fr'] = "Dupliquer détecté";
+
 ?>

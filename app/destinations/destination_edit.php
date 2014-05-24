@@ -86,7 +86,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] > 0) {
-				$msg .= "Duplicate detected.<br>\n";
+				$msg .= $text['message-duplicate']."<br>\n";
 			}
 		}
 
