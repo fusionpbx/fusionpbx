@@ -1561,6 +1561,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//--- begin: show_advanced -----------------------
+
 	echo "<tr>\n";
 	echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap='nowrap'>\n";
 
@@ -1569,14 +1570,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<tr>\n";
 	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">".$text['label-show_advanced']."</td>\n";
 	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo "			<input type=\"button\" class='btn' onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input></a>\n";
+	echo "			<input type=\"button\" class=\"btn\" onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input>\n";
 	echo "		</td>\n";
 	echo "		</tr>\n";
 	echo "		</table>\n";
 	echo "	</div>\n";
 
-	echo "	<div id=\"show_advanced\" style=\"display:none\">\n";
-	echo "	<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+	echo "<div id=\"show_advanced\" style=\"display:none\">\n";
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 
 	echo "<tr>\n";
 	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
