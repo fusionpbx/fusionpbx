@@ -450,7 +450,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$ext->extension = $extension;
 								$ext->number_alias = $number_alias;
 								$ext->voicemail_password = $voicemail_password;
-								$ext->voicemail_mail_to = $voicemail_mailto;
+								$ext->voicemail_mail_to = $voicemail_mail_to;
 								$ext->voicemail_attach_file = $voicemail_attach_file;
 								$ext->voicemail_local_after_email = $voicemail_local_after_email;
 								$ext->voicemail_enabled = $voicemail_enabled;
@@ -546,7 +546,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$ext->extension = $extension;
 						$ext->number_alias = $number_alias;
 						$ext->voicemail_password = $voicemail_password;
-						$ext->voicemail_mailto = $voicemail_mailto;
+						$ext->voicemail_mail_to = $voicemail_mail_to;
 						$ext->voicemail_attach_file = $voicemail_attach_file;
 						$ext->voicemail_local_after_email = $voicemail_local_after_email;
 						$ext->voicemail_enabled = $voicemail_enabled;
