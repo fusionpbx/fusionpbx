@@ -182,30 +182,29 @@ else {
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
-				$vm_mailto = $row["voicemail_mail_to"];
-				$vm_attach_file = $row["voicemail_attach_file"];
-				$vm_keep_local_after_email = $row["voicemail_local_after_email"];
-				$vm_enabled = $row["voicemail_enabled"];
+				$voicemail_mailto = $row["voicemail_mail_to"];
+				$voicemail_attach_file = $row["voicemail_attach_file"];
+				$voicemail_local_after_email = $row["voicemail_local_after_email"];
+				$voicemail_enabled = $row["voicemail_enabled"];
 			}
 			unset ($prep_statement);
 
 		//set the new voicemail password
-			if (strlen($vm_password) == 0) {
-				$vm_password = generate_password(9, 1);
+			if (strlen($voicemail_password) == 0) {
+				$voicemail_password = generate_password(9, 1);
 			}
 
 		//add voicemail via class
-			require_once "app/extensions/resources/classes/extension.php";
 			$ext = new extension;
 			$ext->db = $db;
 			$ext->domain_uuid = $domain_uuid;
 			$ext->extension = $extension_new;
 			$ext->number_alias = $number_alias_new;
-			$ext->vm_password = $vm_password;
-			$ext->vm_mailto = $vm_mailto;
-			$ext->vm_attach_file = $vm_attach_file;
-			$ext->vm_keep_local_after_email = $vm_keep_local_after_email;
-			$ext->vm_enabled = $vm_enabled;
+			$ext->voicemail_password = $voicemail_password;
+			$ext->voicemail_mail_to = $voicemail_mailto;
+			$ext->voicemail_attach_file = $voicemail_attach_file;
+			$ext->voicemail_local_after_email = $voicemail_local_after_email;
+			$ext->voicemail_enabled = $voicemail_enabled;
 			$ext->description = $description;
 			$ext->voicemail();
 			unset($ext);
