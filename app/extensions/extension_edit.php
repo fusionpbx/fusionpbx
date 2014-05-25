@@ -742,14 +742,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "\n";
 	echo "function show_advanced_config() {\n";
 	echo "	document.getElementById(\"show_advanced_box\").innerHTML='';\n";
-	echo "	aodiv = document.getElementById('show_advanced');\n";
-	echo "	aodiv.style.display = \"block\";\n";
+	echo "	document.getElementById('auth_acl').style.display = \"table-row\";\n";
+	echo "	document.getElementById('cidr').style.display = \"table-row\";\n";
+	echo "	document.getElementById('sip_force_contact').style.display = \"table-row\";\n";
+	echo "	document.getElementById('sip_force_expires').style.display = \"table-row\";\n";
+	echo "	document.getElementById('nibble_account').style.display = \"table-row\";\n";
+	echo "	document.getElementById('mwi_account').style.display = \"table-row\";\n";
+	echo "	document.getElementById('sip_bypass_media').style.display = \"table-row\";\n";
+	echo "	document.getElementById('dial_string').style.display = \"table-row\";\n";
 	echo "}\n";
 	echo "\n";
 	echo "function hide_advanced_config() {\n";
 	echo "	document.getElementById(\"show_advanced_box\").innerHTML='';\n";
-	echo "	aodiv = document.getElementById('show_advanced');\n";
-	echo "	aodiv.style.display = \"none\";\n";
+	echo "	document.getElementById('show_advanced').style.display = \"none\";\n";
 	echo "}\n";
 	echo "\n";
 	echo "function copy_extension() {\n";
@@ -778,7 +783,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpdding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
 		echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-extension-add']."</b></td>\n";
@@ -1562,35 +1567,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//--- begin: show_advanced -----------------------
 
-	echo "<tr>\n";
-	echo "<td style='padding: 0px;' colspan='2' class='' valign='top' align='left' nowrap='nowrap'>\n";
 
-	echo "	<div id=\"show_advanced_box\">\n";
-	echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
-	echo "		<tr>\n";
-	echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">".$text['label-show_advanced']."</td>\n";
-	echo "		<td width=\"70%\" class=\"vtable\">\n";
-	echo "			<input type=\"button\" class=\"btn\" onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input>\n";
-	echo "		</td>\n";
-	echo "		</tr>\n";
-	echo "		</table>\n";
-	echo "	</div>\n";
+	echo "<tr id=\"show_advanced_box\">\n";
+	echo "	<td valign=\"top\" class=\"vncell\">".$text['label-show_advanced']."</td>\n";
+	echo "	<td class=\"vtable\">\n";
+	echo "		<input type=\"button\" class=\"btn\" onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input>\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
 
-	echo "<div id=\"show_advanced\" style=\"display:none\">\n";
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
-
-	echo "<tr>\n";
-	echo "<td width=\"30%\" class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<tr id=\"auth_acl\" style=\"display:none\">\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-auth_acl'].":\n";
 	echo "</td>\n";
-	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"$auth_acl\">\n";
-	echo "<br />\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "   <input class='formfld' type='text' name='auth_acl' maxlength='255' value=\"$auth_acl\">\n";
+	echo "   <br />\n";
 	echo $text['description-auth_acl']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id=\"cidr\" style=\"display:none\">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-cidr'].":\n";
 	echo "</td>\n";
@@ -1601,7 +1597,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id=\"sip_force_contact\" style=\"display:none\">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-sip_force_contact'].":\n";
 	echo "</td>\n";
@@ -1623,7 +1619,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id=\"sip_force_expires\" style=\"display:none\">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-sip_force_expires'].":\n";
 	echo "</td>\n";
@@ -1634,7 +1630,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id=\"nibble_account\" style=\"display:none\">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-nibble_account'].":\n";
 	echo "</td>\n";
@@ -1645,7 +1641,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id=\"mwi_account\" style=\"display:none\">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-mwi_account'].":\n";
 	echo "</td>\n";
@@ -1656,7 +1652,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id=\"sip_bypass_media\" style=\"display:none\">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-sip_bypass_media'].":\n";
 	echo "</td>\n";
@@ -1678,7 +1674,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
+	echo "<tr id=\"dial_string\" style=\"display:none\">\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-dial_string'].":\n";
 	echo "</td>\n";
@@ -1689,11 +1685,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	</table>\n";
-	echo "	</div>";
-
-	echo "</td>\n";
-	echo "</tr>\n";
 	//--- end: show_advanced -----------------------
 
 	if (permission_exists('extension_enabled')) {
