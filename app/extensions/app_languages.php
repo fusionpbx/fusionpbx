@@ -90,15 +90,15 @@
 	$text['description-user_list']['pt-pt'] = "Atribuir os utilizadores que estão associados a esta extensão.";
 	$text['description-user_list']['fr-fr'] = "Assigner cette extension aux utilisateur.";
 
-	$text['label-vm_password']['en-us'] = "Voicemail Password";
-	$text['label-vm_password']['es-cl'] = "Contraseña de correo de voz";
-	$text['label-vm_password']['pt-pt'] = "Password do Correio de Voz";
-	$text['label-vm_password']['fr-fr'] = "Mot de passe de la messagerie vocale";
+	$text['label-voicemail_password']['en-us'] = "Voicemail Password";
+	$text['label-voicemail_password']['es-cl'] = "Contraseña de correo de voz";
+	$text['label-voicemail_password']['pt-pt'] = "Password do Correio de Voz";
+	$text['label-voicemail_password']['fr-fr'] = "Mot de passe de la messagerie vocale";
 
-	$text['description-vm_password']['en-us'] = "Enter the numeric voicemail  password here.";
-	$text['description-vm_password']['es-cl'] = "Ingrese la contraseña numérica para el correo de voz aquí.";
-	$text['description-vm_password']['pt-pt'] = "Introduza uma password numérica para o correio de voz aqui.";
-	$text['description-vm_password']['fr-fr'] = "Insérer un mot de passe numérique pour la messagerie vocale.";
+	$text['description-voicemail_password']['en-us'] = "Enter the numeric voicemail  password here.";
+	$text['description-voicemail_password']['es-cl'] = "Ingrese la contraseña numérica para el correo de voz aquí.";
+	$text['description-voicemail_password']['pt-pt'] = "Introduza uma password numérica para o correio de voz aqui.";
+	$text['description-voicemail_password']['fr-fr'] = "Insérer un mot de passe numérique pour la messagerie vocale.";
 
 	$text['label-accountcode']['en-us'] = "Account Code";
 	$text['label-accountcode']['es-cl'] = "Código de Cuenta";
@@ -252,45 +252,45 @@
 	$text['label-device_template']['pt-pt'] = "Template";
 	$text['label-device_template']['fr-fr'] = "Template";
 
-	$text['label-vm_enabled']['en-us'] = "Voicemail Enabled";
-	$text['label-vm_enabled']['es-cl'] = "Correo de Voz Activado";
-	$text['label-vm_enabled']['pt-pt'] = "Correio de Voz Habilitado";
-	$text['label-vm_enabled']['fr-fr'] = "Messagerie Vocale Active";
+	$text['label-voicemail_enabled']['en-us'] = "Voicemail Enabled";
+	$text['label-voicemail_enabled']['es-cl'] = "Correo de Voz Activado";
+	$text['label-voicemail_enabled']['pt-pt'] = "Correio de Voz Habilitado";
+	$text['label-voicemail_enabled']['fr-fr'] = "Messagerie Vocale Active";
 
-	$text['description-vm_enabled']['en-us'] = "Enable/disable voicemail for this extension.";
-	$text['description-vm_enabled']['es-cl'] = "Activar/desactivar el correo de voz para esta extensión.";
-	$text['description-vm_enabled']['pt-pt'] = "Habilitar/Desabilitar o correio de voz para esta extensão.";
-	$text['description-vm_enabled']['fr-fr'] = "Messagerie Vocale disponible ou non pour cette extension.";
+	$text['description-voicemail_enabled']['en-us'] = "Enable/disable voicemail for this extension.";
+	$text['description-voicemail_enabled']['es-cl'] = "Activar/desactivar el correo de voz para esta extensión.";
+	$text['description-voicemail_enabled']['pt-pt'] = "Habilitar/Desabilitar o correio de voz para esta extensão.";
+	$text['description-voicemail_enabled']['fr-fr'] = "Messagerie Vocale disponible ou non pour cette extension.";
 
-	$text['label-vm_mailto']['en-us'] = "Voicemail Mail To";
-	$text['label-vm_mailto']['es-cl'] = "Enviar correo de voz a";
-	$text['label-vm_mailto']['pt-pt'] = "Enviar correio de voz para";
-	$text['label-vm_mailto']['fr-fr'] = "Courriel destination";
+	$text['label-voicemail_mail_to']['en-us'] = "Voicemail Mail To";
+	$text['label-voicemail_mail_to']['es-cl'] = "Enviar correo de voz a";
+	$text['label-voicemail_mail_to']['pt-pt'] = "Enviar correio de voz para";
+	$text['label-voicemail_mail_to']['fr-fr'] = "Courriel destination";
 
-	$text['description-vm_mailto']['en-us'] = "Enter the email address to send voicemail to (optional).";
-	$text['description-vm_mailto']['es-cl'] = "Ingrese una dirección de correo electrónico para enviar el correo de voz (opcional).";
-	$text['description-vm_mailto']['pt-pt'] = "Introduza o endereço de email para enviar o correio de voz (opcional).";
-	$text['description-vm_mailto']['fr-fr'] = "Insérer le courriel où sera envoyé le message de notification (optionnel).";
+	$text['description-voicemail_mail_to']['en-us'] = "Enter the email address to send voicemail to (optional).";
+	$text['description-voicemail_mail_to']['es-cl'] = "Ingrese una dirección de correo electrónico para enviar el correo de voz (opcional).";
+	$text['description-voicemail_mail_to']['pt-pt'] = "Introduza o endereço de email para enviar o correio de voz (opcional).";
+	$text['description-voicemail_mail_to']['fr-fr'] = "Insérer le courriel où sera envoyé le message de notification (optionnel).";
 
-	$text['label-vm_attach_file']['en-us'] = "Voicemail Attach File";
-	$text['label-vm_attach_file']['es-cl'] = "Adjuntar Archivo de Correo de Voz";
-	$text['label-vm_attach_file']['pt-pt'] = "Anexar Ficheiro Áudio";
-	$text['label-vm_attach_file']['fr-fr'] = "Fichier Audio";
+	$text['label-voicemail_attach_file']['en-us'] = "Voicemail Attach File";
+	$text['label-voicemail_attach_file']['es-cl'] = "Adjuntar Archivo de Correo de Voz";
+	$text['label-voicemail_attach_file']['pt-pt'] = "Anexar Ficheiro Áudio";
+	$text['label-voicemail_attach_file']['fr-fr'] = "Fichier Audio";
 
-	$text['description-vm_attach_file']['en-us'] = "Choose whether to attach the voicemail to the email as an audio file.";
-	$text['description-vm_attach_file']['es-cl'] = "Seleccione si desea adjuntar el correo de voz al correo electrónico como un archivo de audio.";
-	$text['description-vm_attach_file']['pt-pt'] = "Escolha se deseja anexar o correio de voz ao email como um ficheiro de áudio.";
-	$text['description-vm_attach_file']['fr-fr'] = "Choisir si l'enregistrement audio est attaché au courriel.";
+	$text['description-voicemail_attach_file']['en-us'] = "Choose whether to attach the voicemail to the email as an audio file.";
+	$text['description-voicemail_attach_file']['es-cl'] = "Seleccione si desea adjuntar el correo de voz al correo electrónico como un archivo de audio.";
+	$text['description-voicemail_attach_file']['pt-pt'] = "Escolha se deseja anexar o correio de voz ao email como um ficheiro de áudio.";
+	$text['description-voicemail_attach_file']['fr-fr'] = "Choisir si l'enregistrement audio est attaché au courriel.";
 
-	$text['label-vm_keep_local_after_email']['en-us'] = "VM Keep Local After Email";
-	$text['label-vm_keep_local_after_email']['es-cl'] = "Mantener Mensaje de Voz despues de enviar por Email";
-	$text['label-vm_keep_local_after_email']['pt-pt'] = "Manter mensagem de correio de voz depois de enviado o email";
-	$text['label-vm_keep_local_after_email']['fr-fr'] = "Message gardé en local après courriel";
+	$text['label-voicemail_local_after_email']['en-us'] = "VM Keep Local After Email";
+	$text['label-voicemail_local_after_email']['es-cl'] = "Mantener Mensaje de Voz despues de enviar por Email";
+	$text['label-voicemail_local_after_email']['pt-pt'] = "Manter mensagem de correio de voz depois de enviado o email";
+	$text['label-voicemail_local_after_email']['fr-fr'] = "Message gardé en local après courriel";
 
-	$text['description-vm_keep_local_after_email']['en-us'] = "Keep local file after sending the email.";
-	$text['description-vm_keep_local_after_email']['es-cl'] = "Mantener el archivo de forma local despues de enviar por correo electrónico.";
-	$text['description-vm_keep_local_after_email']['pt-pt'] = "Manter o ficheiro local depois de enviar o email.";
-	$text['description-vm_keep_local_after_email']['fr-fr'] = "Conserver ou non le message sur la messagerie vocale après l'envoi du courriel.";
+	$text['description-voicemail_local_after_email']['en-us'] = "Keep local file after sending the email.";
+	$text['description-voicemail_local_after_email']['es-cl'] = "Mantener el archivo de forma local despues de enviar por correo electrónico.";
+	$text['description-voicemail_local_after_email']['pt-pt'] = "Manter o ficheiro local depois de enviar o email.";
+	$text['description-voicemail_local_after_email']['fr-fr'] = "Conserver ou non le message sur la messagerie vocale après l'envoi du courriel.";
 
 	$text['label-toll_allow']['en-us'] = "Toll Allow";
 	$text['label-toll_allow']['es-cl'] = "Permitir Tarifas Especiales";

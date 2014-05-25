@@ -36,7 +36,7 @@
 		public $number_alias;
 		public $password;
 		public $provisioning_list;
-		public $vm_password;
+		public $voicemail_password;
 		public $accountcode;
 		public $effective_caller_id_name;
 		public $effective_caller_id_number;
@@ -49,10 +49,10 @@
 		public $directory_exten_visible;
 		public $limit_max;
 		public $limit_destination;
-		public $vm_enabled;
-		public $vm_mailto;
-		public $vm_attach_file;
-		public $vm_keep_local_after_email;
+		public $voicemail_enabled;
+		public $voicemail_mail_to;
+		public $voicemail_attach_file;
+		public $voicemail_local_after_email;
 		public $user_context;
 		public $toll_allow;
 		public $call_timeout;
@@ -127,11 +127,11 @@
 						$sql .= "'".$this->domain_uuid."', ";
 						$sql .= "'".uuid()."', ";
 						$sql .= "'".$this->voicemail_id."', ";
-						$sql .= "'".$this->vm_password."', ";
-						$sql .= "'".$this->vm_mailto."', ";
-						$sql .= "'".$this->vm_attach_file."', ";
-						$sql .= "'".$this->vm_keep_local_after_email."', ";
-						$sql .= "'".$this->vm_enabled."', ";
+						$sql .= "'".$this->voicemail_password."', ";
+						$sql .= "'".$this->voicemail_mail_to."', ";
+						$sql .= "'".$this->voicemail_attach_file."', ";
+						$sql .= "'".$this->voicemail_local_after_email."', ";
+						$sql .= "'".$this->voicemail_enabled."', ";
 						$sql .= "'".$this->description."' ";
 						$sql .= ")";
 						$this->db->exec(check_sql($sql));
@@ -140,11 +140,11 @@
 				else {
 					//update the voicemail box
 						$sql = "update v_voicemails set ";
-						$sql .= "voicemail_password = '".$this->vm_password."', ";
-						$sql .= "voicemail_mail_to = '".$this->vm_mailto."', ";
-						$sql .= "voicemail_attach_file = '".$this->vm_attach_file."', ";
-						$sql .= "voicemail_local_after_email = '".$this->vm_keep_local_after_email."', ";
-						$sql .= "voicemail_enabled = '".$this->vm_enabled."', ";
+						$sql .= "voicemail_password = '".$this->voicemail_password."', ";
+						$sql .= "voicemail_mail_to = '".$this->voicemail_mail_to."', ";
+						$sql .= "voicemail_attach_file = '".$this->voicemail_attach_file."', ";
+						$sql .= "voicemail_local_after_email = '".$this->voicemail_local_after_email."', ";
+						$sql .= "voicemail_enabled = '".$this->voicemail_enabled."', ";
 						$sql .= "voicemail_description = '".$this->description."' ";
 						$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
 						$sql .= "and voicemail_id = '".$this->voicemail_id."' ";
@@ -174,9 +174,10 @@
 					}
 
 				//write the xml files
-					$sql = "select * from v_extensions ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
-					$sql .= "order by call_group asc ";
+					$sql = "SELECT * FROM v_extensions AS e, v_voicemails AS v ";
+					$sql .= "WHERE e.domain_uuid = '$domain_uuid' ";
+					$sql .= "AND e.number_alias = v.voicemail_id ";
+					$sql .= "ORDER BY e.call_group ASC ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$i = 0;
@@ -199,8 +200,8 @@
 						}
 						$call_timeout = $row['call_timeout'];
 						$user_context = $row['user_context'];
-						//$vm_password = $row['vm_password'];
-						//$vm_password = str_replace("#", "", $vm_password); //preserves leading zeros
+						$voicemail_password = $row['voicemail_password'];
+						//$voicemail_password = str_replace("#", "", $voicemail_password); //preserves leading zeros
 
 						//echo "enabled: ".$row['enabled'];
 						if ($row['enabled'] != "false") {
@@ -231,9 +232,10 @@
 							$xml .= "  <user id=\"".$row['extension']."\"".$cidr."".$number_alias.">\n";
 							$xml .= "    <params>\n";
 							$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
-							/*
-							$xml .= "      <param name=\"vm-password\" value=\"" . $vm_password . "\"/>\n";
-							switch ($row['vm_enabled']) {
+
+							//voicemail settings
+							$xml .= "      <param name=\"vm-password\" value=\"" . $voicemail_password . "\"/>\n";
+							switch ($row['voicemail_enabled']) {
 							case "true":
 								$xml .= "      <param name=\"vm-enabled\" value=\"true\"/>\n";
 								break;
@@ -243,10 +245,10 @@
 							default:
 								$xml .= "      <param name=\"vm-enabled\" value=\"true\"/>\n";
 							}
-							if (strlen($row['vm_mailto']) > 0) {
+							if (strlen($row['voicemail_mail_to']) > 0) {
 								$xml .= "      <param name=\"vm-email-all-messages\" value=\"true\"/>\n";
 
-								switch ($row['vm_attach_file']) {
+								switch ($row['voicemail_attach_file']) {
 								case "true":
 										$xml .= "      <param name=\"vm-attach-file\" value=\"true\"/>\n";
 										break;
@@ -256,7 +258,7 @@
 								default:
 										$xml .= "      <param name=\"vm-attach-file\" value=\"true\"/>\n";
 								}
-								switch ($row['vm_keep_local_after_email']) {
+								switch ($row['voicemail_local_after_email']) {
 								case "true":
 										$xml .= "      <param name=\"vm-keep-local-after-email\" value=\"true\"/>\n";
 										break;
@@ -266,9 +268,9 @@
 								default:
 										$xml .= "      <param name=\"vm-keep-local-after-email\" value=\"true\"/>\n";
 								}
-								$xml .= "      <param name=\"vm-mailto\" value=\"" . $row['vm_mailto'] . "\"/>\n";
+								$xml .= "      <param name=\"vm-mailto\" value=\"" . $row['voicemail_mail_to'] . "\"/>\n";
 							}
-							*/
+
 							if (strlen($row['mwi_account']) > 0) {
 								$xml .= "      <param name=\"MWI-Account\" value=\"" . $row['mwi_account'] . "\"/>\n";
 							}
