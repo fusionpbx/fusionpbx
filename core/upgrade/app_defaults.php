@@ -25,11 +25,24 @@
 */
 
 if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
+	if ($domains_processed == 1) {
+		//if the resource scripts resource directory does not exist then create it
+			if (!is_dir($_SESSION['switch']['scripts']['dir']."/resources")) {
+					mkdir($_SESSION['switch']['scripts']['dir']."/resources",0755,true);
+			}
 
-	//if the resource scripts resource directory does not exist then create it
-		if ($domains_processed == 1) {
-			if (!is_dir($_SESSION['switch']['scripts']['dir']."/resources")) { mkdir($_SESSION['switch']['scripts']['dir']."/resources",0755,true); }
-		}
-
+		//copy the files and directories from resources/install
+			//require_once "resources/classes/install.php";
+			$install = new install;
+			$install->domain_uuid = $domain_uuid;
+			$install->domain_name = $domain;
+			//$install->switch_conf_dir = $_SESSION['switch']['conf']['dir'];
+			$install->switch_scripts_dir = $_SESSION['switch']['scripts']['dir'];
+			//$install->switch_sounds_dir = $_SESSION['switch']['sounds']['dir'];
+			$install->copy_scripts();
+			//$install->copy_sounds();
+			//print_r($install->result);
+	}
 }
+
 ?>
