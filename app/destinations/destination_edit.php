@@ -78,15 +78,27 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 		if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
+	//get the current destination_number
+			$sql = "select count(*) as num_rows from v_destinations ";
+			$sql .= "where destination_number = '".$destination_number."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				$db_destination_number = $row['destination_number'];
+			}
+
 	//check for duplicates
-		$sql = "select count(*) as num_rows from v_destinations ";
-		$sql .= "where destination_number = '".$destination_number."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$msg .= $text['message-duplicate']."<br>\n";
+		if ($action == "add" || $destination_number != $db_destination_number) {
+			$sql = "select count(*) as num_rows from v_destinations ";
+			$sql .= "where destination_number = '".$destination_number."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+			$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] > 0) {
+					$msg .= $text['message-duplicate']."<br>\n";
+				}
 			}
 		}
 
