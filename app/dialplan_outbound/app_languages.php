@@ -102,12 +102,12 @@
 	$text['label-north-america']['fr-fr'] = "Amérique du Nord";
 
 	$text['label-north-america-intl']['en-us'] = "North America International";
-	$text['label-north-america-intl']['es-cl'] = "America del Norte, Internacional";
+	$text['label-north-america-intl']['es-cl'] = "America del Norte Internacional";
 	$text['label-north-america-intl']['pt-pt'] = "América do Norte Internacional";
 	$text['label-north-america-intl']['fr-fr'] = "Amérique du Nord International";
 
 	$text['label-europe-intl']['en-us'] = "Europe International";
-	$text['label-europe-intl']['es-cl'] = "Europa, Internacional";
+	$text['label-europe-intl']['es-cl'] = "Europa Internacional";
 	$text['label-europe-intl']['pt-pt'] = "Europa Internacional";
 	$text['label-europe-intl']['fr-fr'] = "Europe International";
 
