@@ -176,7 +176,7 @@
 				//write the xml files
 					$sql = "SELECT * FROM v_extensions AS e, v_voicemails AS v ";
 					$sql .= "WHERE e.domain_uuid = '$domain_uuid' ";
-					$sql .= "AND e.number_alias = v.voicemail_id ";
+					$sql .= "AND (e.extension = v.voicemail_id or e.number_alias = v.voicemail_id) ";
 					$sql .= "ORDER BY e.call_group ASC ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
