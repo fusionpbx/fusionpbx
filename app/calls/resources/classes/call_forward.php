@@ -59,7 +59,12 @@ include "root.php";
 
 			//set the dial string
 				if ($this->forward_all_enabled == "true") {
-					$dial_string = "{presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name'].",instant_ringback=true";
+					$dial_string = "{presence_id=".$this->forward_all_destination."@".$_SESSION['domain_name'];
+					$dial_string .= ",instant_ringback=true";
+					$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
+					$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
+					$dial_string .= ",domain_name=".$_SESSION['domain_name'];
+					$dial_string .= ",domain=".$_SESSION['domain_name'];
 					if (strlen($this->accountcode) > 0) {
 						$dial_string .= ",accountcode=".$this->accountcode;
 					}

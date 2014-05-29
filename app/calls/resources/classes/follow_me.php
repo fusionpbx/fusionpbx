@@ -302,7 +302,12 @@ include "root.php";
 						$prep_statement_2 = $db->prepare(check_sql($sql));
 						$prep_statement_2->execute();
 						$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-						$dial_string = "{instant_ringback=true,ignore_early_media=true,sip_invite_domain=".$_SESSION['domain_name'];
+						$dial_string = "{instant_ringback=true";
+						$dial_string .= ",ignore_early_media=true,";
+						$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
+						$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
+						$dial_string .= ",domain_name=".$_SESSION['domain_name'];
+						$dial_string .= ",domain=".$_SESSION['domain_name'];
 						if (strlen($this->cid_name_prefix) > 0) {
 							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#\${caller_id_name}";
 						}
