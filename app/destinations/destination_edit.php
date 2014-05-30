@@ -176,7 +176,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
 					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = "10";
+					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = "20";
 					$y++;
 					//$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
 					//$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -185,7 +185,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					//$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = "20";
 					//$y++;
 				}
-				$dialplan_detail_order = 20;
+				$dialplan_detail_order = 30;
 				foreach ($dialplan_details as $row) {
 					$actions = explode(":", $row["dialplan_detail_data"]);
 					$dialplan_detail_type = array_shift($actions);
@@ -198,7 +198,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $dialplan_detail_type;
 						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $dialplan_detail_data;
-						if (isset($row["dialplan_detail_order"])) {
+						if (strlen($row["dialplan_detail_order"]) > 0) {
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $row["dialplan_detail_order"];
 						}
 						else {
