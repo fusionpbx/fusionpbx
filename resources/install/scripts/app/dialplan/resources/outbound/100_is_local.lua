@@ -42,6 +42,18 @@
 		sql = sql .. "AND destination_enabled = 'true' "
 		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 		assert(dbh:query(sql, function(row)
+			--get the outbound caller id
+				outbound_caller_id_name = session:getVariable("outbound_caller_id_name");
+				outbound_caller_id_number = session:getVariable("outbound_caller_id_number");
+
+			--set the outbound caller id
+				if (outbound_caller_id_name ~= nil) then
+					session:execute("set", "effective_caller_id_name="..outbound_caller_id_name);
+				end
+				if (outbound_caller_id_number ~= nil) then
+					session:execute("set", "effective_caller_id_number="..outbound_caller_id_number);
+				end
+
 			--set the local variables
 				destination_context = row.destination_context;
 
