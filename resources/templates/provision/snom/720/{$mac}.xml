@@ -877,8 +877,8 @@
 <user_custom idx="10" perm=""></user_custom>
 <user_custom idx="11" perm=""></user_custom>
 <user_custom idx="12" perm=""></user_custom>
-<user_outbound idx="1" perm="">{$server_address_1}</user_outbound>
-<user_outbound idx="2" perm="">{$server_address_2}</user_outbound>
+<user_outbound idx="1">{$outbound_proxy_1}</user_outbound>
+<user_outbound idx="2" perm="">{$outbound_proxy_2}</user_outbound>
 <user_outbound idx="3" perm=""></user_outbound>
 <user_outbound idx="4" perm=""></user_outbound>
 <user_outbound idx="5" perm=""></user_outbound>
