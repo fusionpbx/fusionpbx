@@ -54,6 +54,7 @@ else {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$destination_type = check_str($_POST["destination_type"]);
 		$destination_number = check_str($_POST["destination_number"]);
+		$db_destination_number = check_str($_POST["destination_number"]);
 		$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
 		$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
 		$destination_context = check_str($_POST["destination_context"]);
@@ -77,17 +78,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($destination_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_caller_id_number']."<br>\n"; }
 		if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 		if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
-
-	//get the current destination_number
-		$db_destination_number = '';
-		$sql = "select destination_number from v_destinations ";
-		$sql .= "where destination_uuid = '".$destination_uuid."' ";
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			$db_destination_number = $row['destination_number'];
-		}
 
 	//check for duplicates
 		if ($action == "add" || $destination_number != $db_destination_number) {
@@ -542,6 +532,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
+		echo "				<input type='hidden' name='db_destination_number' value='$destination_number'>\n";
 		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 		echo "				<input type='hidden' name='destination_uuid' value='$destination_uuid'>\n";
 	}
