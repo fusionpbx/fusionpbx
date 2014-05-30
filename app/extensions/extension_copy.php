@@ -144,11 +144,11 @@ else {
 	$sql .= "'$emergency_caller_id_number', ";
 	$sql .= "'$directory_visible', ";
 	$sql .= "'$directory_exten_visible', ";
-	$sql .= "'$limit_max', ";
+	if (strlen($limit_max) > 0) { $sql .= "'$limit_max', "; } else { $sql .= "null, "; }
 	$sql .= "'$limit_destination', ";
 	$sql .= "'$user_context', ";
 	$sql .= "'$toll_allow', ";
-	$sql .= "'$call_timeout', ";
+	if (strlen($call_timeout) > 0) { $sql .= "'$call_timeout', "; } else { $sql .= "null, "; }
 	$sql .= "'$call_group', ";
 	$sql .= "'$user_record', ";
 	$sql .= "'$hold_music', ";
@@ -156,7 +156,9 @@ else {
 	$sql .= "'$cidr', ";
 	$sql .= "'$sip_force_contact', ";
 	$sql .= "'$nibble_account', ";
+	if (strlen($nibble_account) > 0) { $sql .= "'$nibble_account', "; } else { $sql .= "null, "; }
 	$sql .= "'$sip_force_expires', ";
+	if (strlen($sip_force_expires) > 0) { $sql .= "'$sip_force_expires', "; } else { $sql .= "null, "; }
 	$sql .= "'$mwi_account', ";
 	$sql .= "'$sip_bypass_media', ";
 	$sql .= "'$dial_string', ";
