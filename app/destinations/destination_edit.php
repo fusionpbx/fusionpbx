@@ -289,6 +289,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 	$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 	$sql .= "and dialplan_detail_tag = 'action' ";
+	$sql .= "and (dialplan_detail_type = 'transfer' or dialplan_detail_type = 'bridge') ";
 	$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
