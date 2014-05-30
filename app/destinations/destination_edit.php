@@ -85,12 +85,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "where destination_number = '".$destination_number."' ";
 			$prep_statement = $db->prepare($sql);
 			if ($prep_statement) {
-			$prep_statement->execute();
+				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] > 0) {
 					$msg .= $text['message-duplicate']."<br>\n";
 				}
 			}
+			unset($prep_statement);
 		}
 
 	//show the message
