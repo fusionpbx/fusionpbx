@@ -155,9 +155,7 @@ else {
 	$sql .= "'$auth_acl', ";
 	$sql .= "'$cidr', ";
 	$sql .= "'$sip_force_contact', ";
-	$sql .= "'$nibble_account', ";
 	if (strlen($nibble_account) > 0) { $sql .= "'$nibble_account', "; } else { $sql .= "null, "; }
-	$sql .= "'$sip_force_expires', ";
 	if (strlen($sip_force_expires) > 0) { $sql .= "'$sip_force_expires', "; } else { $sql .= "null, "; }
 	$sql .= "'$mwi_account', ";
 	$sql .= "'$sip_bypass_media', ";
