@@ -246,8 +246,8 @@ if ($_SESSION["app"]["edit"]["dir"] == "provision") {
 	
 	switch (PHP_OS) {
 	case "Linux":
-		if (file_exists('/etc/fusionpbx/templates/provision')) {
-			echo recur_dir('/etc/fusionpbx/templates/provision');
+		if (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+			echo recur_dir('/etc/fusionpbx/resources/templates/provision');
 		}
 		else {
 			echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
@@ -255,7 +255,7 @@ if ($_SESSION["app"]["edit"]["dir"] == "provision") {
 		break;
 	case "FreeBSD":
 		//if the FreeBSD port is installed use the following paths by default.
-			if (file_exists('/usr/local/etc/fusionpbx/templates/provision')) {
+			if (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
 				echo recur_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/provision/");
 			}
 			else {
