@@ -26,6 +26,11 @@
 --get the variables
 	local destination_number = session:getVariable("destination_number");
 
+--remove the plus if it exists
+	if (string.sub(destination_number, 0, 1) == "+") then
+		destination_number = string.sub(destination_number, 2, (string.len(destination_number)));
+	end
+
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
