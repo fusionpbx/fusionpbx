@@ -158,8 +158,15 @@ function cmd_async($cmd) {
 						//echo "bridges: ".$bridges."\n";
 
 					//prepare the string
-						$channel_variables = $dialplan_variables."ignore_early_media=true,origination_number=$phone_1,origination_caller_id_name='$broadcast_caller_id_name',origination_caller_id_number=$broadcast_caller_id_number,domain_uuid=".$_SESSION['domain_uuid'].",domain=".$_SESSION['domain_name'].",domain_name=".$_SESSION['domain_name'];
-						$origination_url = "{".$channel_variables."}".$bridge_array[0]."";
+						$channel_variables = $dialplan_variables."ignore_early_media=true";
+						$channel_variables .= ",origination_number=$phone_1";
+						$channel_variables .= ",origination_caller_id_name='$broadcast_caller_id_name'";
+						$channel_variables .= ",origination_caller_id_number=$broadcast_caller_id_number";
+						$channel_variables .= ",domain_uuid=".$_SESSION['domain_uuid'];
+						$channel_variables .= ",domain=".$_SESSION['domain_name'];
+						$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
+						$channel_variables .= ",execute_on_answer='avmd start'";
+						$origination_url = "{".$channel_variables."}".$bridge_array[0];
 
 					//get the context
 						if (count($_SESSION["domains"]) > 1) {
