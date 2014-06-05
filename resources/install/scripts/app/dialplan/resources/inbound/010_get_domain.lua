@@ -43,7 +43,7 @@
 	if (cache == "-ERR NOT FOUND") then
 		sql = "SELECT d.domain_uuid, d.domain_name, n.destination_number, n.destination_context "
 		sql = sql .. "FROM v_destinations as n, v_domains as d "
-		sql = sql .. "WHERE n.destination_number like '%"..destination_number.."' "
+		sql = sql .. "WHERE n.destination_number = '"..destination_number.."' "
 		sql = sql .. "AND n.destination_type = 'inbound' "
 		sql = sql .. "AND n.domain_uuid = d.domain_uuid "
 		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
