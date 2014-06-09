@@ -243,7 +243,7 @@
 		--check the voicemail quota
 			if (vm_disk_quota) then
 				--get voicemail message seconds
-					sql = [[SELECT sum(message_length) as message_sum FROM v_voicemail_messages
+					sql = [[SELECT coalesce(sum(message_length), 0) as message_sum FROM v_voicemail_messages
 						WHERE domain_uuid = ']] .. domain_uuid ..[['
 						AND voicemail_uuid = ']] .. voicemail_uuid ..[[']]
 						if (debug["sql"]) then
