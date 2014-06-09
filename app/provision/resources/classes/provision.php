@@ -139,6 +139,10 @@ include "root.php";
 				$mac = $this->mac;
 				$file = $this->file;
 
+			//remove ../ and slashes in the file name
+				$search = array('..', '/', '\\');
+				$file = str_replace($search, "", $file);
+
 			//get the domain_name
 				if (strlen($domain_name) == 0) {
 					$sql = "SELECT domain_name FROM v_domains ";
