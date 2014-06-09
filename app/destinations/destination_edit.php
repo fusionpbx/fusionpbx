@@ -54,7 +54,7 @@ else {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
 		$destination_type = check_str($_POST["destination_type"]);
 		$destination_number = check_str($_POST["destination_number"]);
-		$db_destination_number = check_str($_POST["destination_number"]);
+		$db_destination_number = check_str($_POST["db_destination_number"]);
 		$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
 		$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
 		$destination_context = check_str($_POST["destination_context"]);
@@ -62,6 +62,9 @@ else {
 		$destination_enabled = check_str($_POST["destination_enabled"]);
 		$destination_description = check_str($_POST["destination_description"]);
 	}
+
+//unset the db_destination_number
+	unset($_POST["db_destination_number"]);
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
