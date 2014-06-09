@@ -164,7 +164,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$dialplan["dialplan_name"] = format_phone($destination_number);
 				$dialplan["dialplan_number"] = $destination_number;
 				$dialplan["dialplan_context"] = $destination_context;
-				$dialplan["dialplan_continue"] = "true";
+				$dialplan["dialplan_continue"] = "false";
 				$dialplan["dialplan_order"] = "100";
 				$dialplan["dialplan_enabled"] = $destination_enabled;
 				$dialplan["dialplan_description"] = $destination_description;

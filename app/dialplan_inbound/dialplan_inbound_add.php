@@ -158,6 +158,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "dialplan_uuid, ";
 		$sql .= "app_uuid, ";
 		$sql .= "dialplan_name, ";
+		$sql .= "dialplan_continue, ";
 		$sql .= "dialplan_order, ";
 		$sql .= "dialplan_context, ";
 		$sql .= "dialplan_enabled, ";
@@ -169,6 +170,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'$dialplan_uuid', ";
 		$sql .= "'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', ";
 		$sql .= "'$dialplan_name', ";
+		$sql .= "'false', ";
 		$sql .= "'$public_order', ";
 		$sql .= "'public', ";
 		$sql .= "'$dialplan_enabled', ";
