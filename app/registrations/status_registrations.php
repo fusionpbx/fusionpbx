@@ -147,7 +147,7 @@ require_once "resources/check_auth.php";
 
 			echo "<table cellpadding='0' cellspacing='3' border='0'>\n";
 			echo "	<tr>\n";
-			echo "		<td style='vertical-align: middle; padding-right: 20px;'>\n";
+			echo "		<td style='vertical-align: middle; padding-right: 0px;'>\n";
 			echo "			<input type='button' class='btn' value='".$text['button-back']."' onclick=\"history.back();\" />\n";
 			echo "		</td>\n";
 			echo "		<td style='vertical-align: middle;'>\n";
