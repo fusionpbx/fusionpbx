@@ -71,24 +71,24 @@ else {
 				$_SESSION['domain_uuid'] = $domain_uuid;
 				$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
 				$_SESSION['domain']['template']['name'] = $_SESSION['domains'][$domain_uuid]['template_name'];
-			//clear the menu session so that it is regenerated for the selected domain
-				$_SESSION["menu"] = '';
+
 			//clear the extension array so that it is regenerated for the selected domain
 				unset($_SESSION['extension_array']);
+
 			//set the setting arrays
 				$domain = new domains();
 				$domain->db = $db;
 				$domain->set();
 
 			// on domain change, redirect user
-			if ($_SESSION["login"]["destination"] != '') {
-				// to default, or domain specific, login destination
-				header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
-			}
-			else {
-				header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
-			}
-			return;
+				if ($_SESSION["login"]["destination"] != '') {
+					// to default, or domain specific, login destination
+					header("Location: ".PROJECT_PATH.$_SESSION["login"]["destination"]["url"]);
+				}
+				else {
+					header("Location: ".PROJECT_PATH."/core/user_settings/user_dashboard.php");
+				}
+				return;
 		}
 	}
 
