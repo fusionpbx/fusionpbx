@@ -43,6 +43,7 @@ else {
 //set the variables
 	$cmd = check_str($_GET['cmd']);
 	$rdr = check_str($_GET['rdr']);
+	$profile = check_str($_GET['profile']);
 	$domain = check_str($_GET['domain']);
 	$user = check_str($_GET['user']);
 	$agent = check_str($_GET['agent']);
@@ -73,18 +74,21 @@ else {
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
-		//lua
-			//$command = "api luarun app.lua event_notify ".$cmd." ".$user." ".$domain." ".$vendor;
-		//reboot
-			if ($cmd == "reboot") {
-				$command = "api sofia profile internal flush_inbound_reg ".$user." reboot";
+		//prepare the command
+			if ($vendor == "grandstream") {
+				$command = "lua app.lua event_notify ".$cmd." ".$profile." ".$user." ".$vendor;
 			}
-		//check_sync	
-			if ($cmd == "check_sync") {
-				$command = "api sofia profile internal check_sync ".$user;
+			else {
+				if ($cmd == "reboot") {
+					$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
+				}
+				if ($cmd == "check_sync") {
+					$command = "sofia profile ".$profile." check_sync ".$user;
+				}
 			}
 		//send the command
-			$response = event_socket_request($fp, $command);
+			$response = event_socket_request($fp, "api ".$command);
+			$response = event_socket_request($fp, "api log notice ".$command);
 		//show the response
 			$_SESSION['message'] = $text['label-event']." ".ucwords($cmd)."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$text['label-response'].$response;
 		//close the connection

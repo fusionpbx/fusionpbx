@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -210,8 +210,8 @@ require_once "resources/check_auth.php";
 						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['mwi-account']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['status']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."' align='right'>\n";
-						echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
-						echo "		<input type='button' class='btn' value='".$text['button-check_sync']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
+						echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
+						echo "		<input type='button' class='btn' value='".$text['button-check_sync']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
 						echo "	</td>\n";
 						echo "</tr>\n";
 						if ($c==0) { $c=1; } else { $c=0; }
