@@ -135,7 +135,7 @@ require_once "resources/check_auth.php";
 				$refresh = $_SESSION['registrations']['refresh']['numeric'];
 			}
 			else {
-				$_SESSION['registrations']['refresh']['numeric'] = 15;
+				$_SESSION['registrations']['refresh']['numeric'] = 0;
 			}
 
 			echo "<script>\n";
@@ -150,8 +150,8 @@ require_once "resources/check_auth.php";
 			echo "		<td style='vertical-align: middle; padding-right: 20px;'>\n";
 			echo "			<input type='button' class='btn' value='".$text['button-back']."' onclick=\"history.back();\" />\n";
 			echo "		</td>\n";
-			echo "		<td style='vertical-align: middle;'>".$text['label-interval']."</td>\n";
 			echo "		<td style='vertical-align: middle;'>\n";
+			echo "			<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"Refresh(document.getElementById('Refresh').value);\" />\n";
 			echo "			<script>\n";
 			echo "				if (document.getElementById('Refresh').value != '0') {\n";
 			echo "					setTimeout(\"Refresh(".$refresh.")\" , (".$refresh." * 1000));\n";
