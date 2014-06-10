@@ -303,23 +303,25 @@ require_once "resources/require.php";
 			unset($sql, $row_count, $prep_statement);
 
 		//get the permissions assigned to the groups that the user is a member of set the permissions in $_SESSION['permissions']
-			$x = 0;
-			$sql = "select distinct(permission_name) from v_group_permissions ";
-			foreach($_SESSION["groups"] as $field) {
-				if (strlen($field['group_name']) > 0) {
-					if ($x == 0) {
-						$sql .= "where (domain_uuid = '".$domain_uuid."' and group_name = '".$field['group_name']."') ";
+			if (count($_SESSION["groups"]) > 0) {
+				$x = 0;
+				$sql = "select distinct(permission_name) from v_group_permissions ";
+				foreach($_SESSION["groups"] as $field) {
+					if (strlen($field['group_name']) > 0) {
+						if ($x == 0) {
+							$sql .= "where (domain_uuid = '".$domain_uuid."' and group_name = '".$field['group_name']."') ";
+						}
+						else {
+							$sql .= "or (domain_uuid = '".$domain_uuid."' and group_name = '".$field['group_name']."') ";
+						}
+						$x++;
 					}
-					else {
-						$sql .= "or (domain_uuid = '".$domain_uuid."' and group_name = '".$field['group_name']."') ";
-					}
-					$x++;
 				}
+				$prep_statement_sub = $db->prepare($sql);
+				$prep_statement_sub->execute();
+				$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
+				unset($sql, $prep_statement_sub);
 			}
-			$prep_statement_sub = $db->prepare($sql);
-			$prep_statement_sub->execute();
-			$_SESSION['permissions'] = $prep_statement_sub->fetchAll(PDO::FETCH_NAMED);
-			unset($sql, $prep_statement_sub);
 
 		//get the user settings
 			$sql = "select * from v_user_settings ";
