@@ -131,7 +131,12 @@ require_once "resources/check_auth.php";
 			echo "</td>\n";
 			echo "<td colspan='1' align='right'>\n";
 
-			$refresh = check_str($_GET["refresh"]);
+			if (isset($_SESSION['registrations']['refresh']['numeric'])) {
+				$refresh = $_SESSION['registrations']['refresh']['numeric'];
+			}
+			else {
+				$_SESSION['registrations']['refresh']['numeric'] = 15;
+			}
 
 			echo "<script>\n";
 			echo "	function Refresh(refresh) {\n";
@@ -147,13 +152,9 @@ require_once "resources/check_auth.php";
 			echo "		</td>\n";
 			echo "		<td style='vertical-align: middle;'>".$text['label-interval']."</td>\n";
 			echo "		<td style='vertical-align: middle;'>\n";
-			echo "			<input class='formfld' style='text-align: center;' onfocus='this.select();' type='text' id='Refresh' maxlength='2' value='".((is_numeric($refresh)) ? $refresh : 0)."'>\n";
-			echo "		</td>\n";
-			echo "		<td style='vertical-align: middle;'>\n";
-			echo "			<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"Refresh(document.getElementById('Refresh').value);\" />\n";
 			echo "			<script>\n";
 			echo "				if (document.getElementById('Refresh').value != '0') {\n";
-			echo "					setTimeout(\"Refresh(document.getElementById('Refresh').value)\" , (document.getElementById('Refresh').value * 1000));\n";
+			echo "					setTimeout(\"Refresh(".$refresh.")\" , (".$refresh." * 1000));\n";
 			echo "				}\n";
 			echo "			</script>\n";
 			echo "		</td>\n";
