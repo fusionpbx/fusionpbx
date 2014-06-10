@@ -82,21 +82,23 @@
 					$name = $row['domain_setting_name'];
 					$category = $row['domain_setting_category'];
 					$subcategory = $row['domain_setting_subcategory'];
-					if (strlen($subcategory) == 0) {
-						//$$category[$name] = $row['domain_setting_value'];
-						if ($name == "array") {
-							$_SESSION[$category][] = $row['domain_setting_value'];
-						}
-						else {
-							$_SESSION[$category][$name] = $row['domain_setting_value'];
-						}
-					} else {
-						//$$category[$subcategory][$name] = $row['domain_setting_value'];
-						if ($name == "array") {
-							$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
-						}
-						else {
-							$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+					if (strlen($row['domain_setting_value']) > 0) {
+						if (strlen($subcategory) == 0) {
+							//$$category[$name] = $row['domain_setting_value'];
+							if ($name == "array") {
+								$_SESSION[$category][] = $row['domain_setting_value'];
+							}
+							else {
+								$_SESSION[$category][$name] = $row['domain_setting_value'];
+							}
+						} else {
+							//$$category[$subcategory][$name] = $row['domain_setting_value'];
+							if ($name == "array") {
+								$_SESSION[$category][$subcategory][] = $row['domain_setting_value'];
+							}
+							else {
+								$_SESSION[$category][$subcategory][$name] = $row['domain_setting_value'];
+							}
 						}
 					}
 				}
@@ -115,21 +117,23 @@
 							$name = $row['user_setting_name'];
 							$category = $row['user_setting_category'];
 							$subcategory = $row['user_setting_subcategory'];
-							if (strlen($subcategory) == 0) {
-								//$$category[$name] = $row['domain_setting_value'];
-								if ($name == "array") {
-									$_SESSION[$category][] = $row['user_setting_value'];
-								}
-								else {
-									$_SESSION[$category][$name] = $row['user_setting_value'];
-								}
-							} else {
-								//$$category[$subcategory][$name] = $row['domain_setting_value'];
-								if ($name == "array") {
-									$_SESSION[$category][$subcategory][] = $row['user_setting_value'];
-								}
-								else {
-									$_SESSION[$category][$subcategory][$name] = $row['user_setting_value'];
+							if (strlen($row['user_setting_value']) > 0) {
+								if (strlen($subcategory) == 0) {
+									//$$category[$name] = $row['domain_setting_value'];
+									if ($name == "array") {
+										$_SESSION[$category][] = $row['user_setting_value'];
+									}
+									else {
+										$_SESSION[$category][$name] = $row['user_setting_value'];
+									}
+								} else {
+									//$$category[$subcategory][$name] = $row['domain_setting_value'];
+									if ($name == "array") {
+										$_SESSION[$category][$subcategory][] = $row['user_setting_value'];
+									}
+									else {
+										$_SESSION[$category][$subcategory][$name] = $row['user_setting_value'];
+									}
 								}
 							}
 						}
