@@ -1597,9 +1597,9 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					if (strlen($select_label) > 0) {
 						echo "		<option value='".$select_value."' selected='selected'>".$select_label."</option>\n";
 					}
-					//else {
-					//	echo "		<option value='".$select_value."' selected='selected'>".$select_value."</option>\n";
-					//}
+					else {
+						echo "		<option value='".$select_value."' selected='selected'>".trim($select_value,":")."</option>\n";
+					}
 				}
 				if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
 					echo "</optgroup>\n";
