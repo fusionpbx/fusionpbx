@@ -135,7 +135,7 @@ require_once "resources/check_auth.php";
 				$refresh = $_SESSION['registrations']['refresh']['numeric'];
 			}
 			else {
-				$refresh = 0;
+				$refresh = 20;
 			}
 
 			echo "<script>\n";
