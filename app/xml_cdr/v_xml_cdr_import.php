@@ -115,6 +115,11 @@
 				$database->fields['conference_name'] = check_str(urldecode($xml->variables->conference_name));
 				$database->fields['conference_uuid'] = check_str(urldecode($xml->variables->conference_uuid));
 				$database->fields['conference_member_id'] = check_str(urldecode($xml->variables->conference_member_id));
+			//call quality
+				$rtp_audio_in_mos = check_str(urldecode($xml->variables->rtp_audio_in_mos));
+				if (strlen($rtp_audio_in_mos) > 0) {
+					$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
+				}
 
 		//get the values from the callflow.
 			$x = 0;
@@ -148,7 +153,7 @@
 
 		//get the domain values from the xml
 			$domain_name = check_str(urldecode($xml->variables->domain_name));
-			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
+			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));			
 
 		//get the domain_uuid with the domain_name
 			if (strlen($domain_uuid) == 0) {
