@@ -80,4 +80,19 @@
 	$text['label-drive-percent']['es-cl'] = "Porcentaje Libre:";
 	$text['label-drive-percent']['pt-pt'] = "Percentagem Livre:";
 	$text['label-drive-percent']['fr-fr'] = "Pourcent Libre:";
+
+	$text['title-memcache']['en-us'] = "Memcache Information";
+	$text['title-memcache']['es-cl'] = "Información de Memcache";
+	$text['title-memcache']['pt-pt'] = "Informação da Memcache";
+	$text['title-memcache']['fr-fr'] = "Information Memcache";
+
+	$text['label-memcache_status']['en-us'] = "Memcache Status:";
+	$text['label-memcache_status']['es-cl'] = "Estado de Memcache:";
+	$text['label-memcache_status']['pt-pt'] = "Estado da Memcache:";
+	$text['label-memcache_status']['fr-fr'] = "Statut Memcache:";
+
+	$text['message-unavailable']['en-us'] = "Unavailable";
+	$text['message-unavailable']['es-cl'] = "Indisponible";
+	$text['message-unavailable']['pt-pt'] = "Indisponível";
+	$text['message-unavailable']['fr-fr'] = "Indisponible";
 ?>
