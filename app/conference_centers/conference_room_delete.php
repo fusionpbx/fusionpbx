@@ -60,6 +60,12 @@ if (strlen($id)>0) {
 			unset ($prep_statement);
 		}
 
+		$sql = "delete from v_meeting_pins ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and meeting_uuid = '$meeting_uuid' ";
+		echo $sql;
+		exit;
+
 	//delete the conference session
 		$sql = "delete from v_conference_rooms ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -70,14 +76,6 @@ if (strlen($id)>0) {
 
 	//delete the meeting users
 		$sql = "delete from v_meeting_users ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and meeting_uuid = '$meeting_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-
-	//delete the meeting pins
-		$sql = "delete from v_meeting_pins ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and meeting_uuid = '$meeting_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
