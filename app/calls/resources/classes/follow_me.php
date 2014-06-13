@@ -37,7 +37,7 @@ include "root.php";
 		public $call_prompt;
 		public $follow_me_enabled;
 		private $extension;
-		
+
 		public $destination_data_1;
 		public $destination_type_1;
 		public $destination_delay_1;
@@ -108,9 +108,7 @@ include "root.php";
 				$sql = "update v_follow_me set ";
 				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
 				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
-				if (strlen($this->cid_number_prefix) > 0) {
-					$sql .= "cid_number_prefix = '$this->cid_number_prefix', ";
-				}
+				$sql .= "cid_number_prefix = '$this->cid_number_prefix', ";
 				$sql .= "call_prompt = '$this->call_prompt' ";
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
