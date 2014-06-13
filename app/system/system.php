@@ -27,10 +27,10 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('system_view_info') 
-	|| permission_exists('system_view_cpu') 
-	|| permission_exists('system_view_hdd') 
-	|| permission_exists('system_view_ram') 
+if (permission_exists('system_view_info')
+	|| permission_exists('system_view_cpu')
+	|| permission_exists('system_view_hdd')
+	|| permission_exists('system_view_ram')
 	|| permission_exists('system_view_backup')) {
 	//access granted
 }
@@ -283,7 +283,7 @@ echo "<br />";
 		} else if (stristr(PHP_OS, 'WIN')) {
 			//disk_free_space returns the number of bytes available on the drive;
 			//1 kilobyte = 1024 byte
-			//1 megabyte = 1024 kilobyte		
+			//1 megabyte = 1024 kilobyte
 			$driveletter = substr($_SERVER["DOCUMENT_ROOT"], 0, 2);
 			$disksize = round(disk_total_space($driveletter)/1024/1024, 2);
 			$disksizefree = round(disk_free_space($driveletter)/1024/1024, 2);
@@ -325,6 +325,61 @@ echo "<br />";
 		echo "<br />";
 		echo "<br />";
 		echo "<br />";
+	}
+
+//memcache information
+	if (permission_exists('system_view_memcache')) {
+
+		echo "<table width='100%' border='0' cellpadding='7' cellspacing='0'>\n";
+		echo "	<tr>\n";
+		echo "		<th class='th' colspan='2' align='left'>".$text['title-memcache']."</th>\n";
+		echo "	</tr>\n";
+
+		$mc_fail = false;
+
+		require_once "resources/classes/modules.php";
+		$mod = new switch_modules;
+
+		if ($mod -> active("mod_memcache")) {
+
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
+			if ($fp) {
+				$switch_cmd = "memcache status verbose";
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				$mc_lines = preg_split('/\n/', $switch_result);
+				foreach($mc_lines as $mc_line) {
+					if (strlen(trim($mc_line)) > 0 && substr_count($mc_line, ': ') > 0) {
+						$mc_temp = explode(': ', $mc_line);
+						$mc_status[$mc_temp[0]] = $mc_temp[1];
+					}
+				}
+
+				if (is_array($mc_status) && sizeof($mc_status) > 0) {
+					foreach($mc_status as $mc_field => $mc_value) {
+						echo "<tr>\n";
+						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$mc_field.": </td>\n";
+						echo "	<td class='row_style1'>".$mc_value."</td>\n";
+						echo "</tr>\n";
+					}
+				}
+				else { $mc_fail = true; }
+			}
+			else { $mc_fail = true; }
+
+		}
+		else { $mc_fail = true; }
+
+		if ($mc_fail) {
+			echo "<tr>\n";
+			echo "	<td width='20%' class='vncell' style='text-align: left;'>".$text['label-memcache_status']."</td>\n";
+			echo "	<td class='row_style1'>".$text['message-unavailable']."</td>\n";
+			echo "</tr>\n";
+		}
+
+		echo "</table>\n";
+		echo "<br /><br /><br />\n";
+
 	}
 
 //backup
