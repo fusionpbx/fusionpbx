@@ -53,14 +53,20 @@ $type = $_GET['type']; //moh //rec
 	<tr>
 		<td align='center'>
 		<?php
+		// detect browser
+		$user_agent = http_user_agent();
+		$browser_name = $user_agent['name'];
+
 		$file_ext = substr($filename, -3);
 		if ($file_ext == "wav") {
 			//HTML5 method
-			echo "<audio src=\"http://localhost:8000/mod/recordings/recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"autoplay\">"; 
-			echo "</audio>";
-
-			echo "<embed src=\"recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
-
+			if ($browser_name == "Google Chrome" || $browser_name == "Mozilla Firefox") {
+				echo "<audio src=\"recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"true\" ></audio>";
+			}
+			else {
+				echo "<audio src=\"http://localhost:8000/mod/recordings/recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autoplay=\"autoplay\"></audio>";
+				echo "<embed src=\"recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\" autostart=\"true\" width=\"300\" height=\"90\" name=\"sound_".$filename."\" enablejavascript=\"true\">\n";
+			}
 		}
 		if ($file_ext == "mp3") {
 			echo "<object type=\"application/x-shockwave-flash\" width=\"400\" height=\"17\" data=\"slim.swf?autoplay=true&song_title=".urlencode($filename)."&song_url=recordings.php?a=download&type=".$type."&filename=".base64_encode($filename)."\">\n";
