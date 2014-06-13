@@ -677,7 +677,7 @@
 <P402>{$server_address_2}</P402>
 
 <!-- SIP User ID -->
-<P404>{$user_id_2}></P404>
+<P404>{$user_id_2}</P404>
 
 <!-- SIP Authenticate ID -->
 <P405>{$user_id_2}</P405>
