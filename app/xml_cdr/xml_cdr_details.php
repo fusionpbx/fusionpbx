@@ -141,7 +141,11 @@ else {
 		$remote_media_ip = check_str(urldecode($array["variables"]["remote_media_ip"]));
 		$hangup_cause = check_str(urldecode($array["variables"]["hangup_cause"]));
 		$hangup_cause_q850 = check_str(urldecode($array["variables"]["hangup_cause_q850"]));
-		/*
+		if (!isset($array["callflow"][0])) {
+			$tmp = $array["callflow"];
+			unset($array["callflow"]);
+			$array["callflow"][0] = $tmp;
+		}
 		$x = 0;
 		foreach ($array["callflow"] as $row) {
 			if ($x == 0) {
@@ -154,7 +158,7 @@ else {
 			$x++;
 		}
 		unset($x);
-		*/
+
 
 	$tmp_year = date("Y", strtotime($start_stamp));
 	$tmp_month = date("M", strtotime($start_stamp));
@@ -358,11 +362,6 @@ else {
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	if (!isset($array["callflow"][0])) {
-		$tmp = $array["callflow"];
-		unset($array["callflow"]);
-		$array["callflow"][0] = $tmp;
-	}
 	foreach ($array["callflow"] as $row) {
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
