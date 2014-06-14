@@ -97,10 +97,6 @@ else {
 //get the header
 	require_once "resources/header.php";
 
-print_r($array);
-
-exit;
-
 //page title and description
 	echo "<br>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -152,7 +148,7 @@ exit;
 				$context = check_str(urldecode($row["caller_profile"]["context"]));
 				$network_addr = check_str(urldecode($row["caller_profile"]["network_addr"]));
 			}
-			$caller_id_name = check_str(urldecode($row["caller_profile"]["caller_id_name"]);
+			$caller_id_name = check_str(urldecode($row["caller_profile"]["caller_id_name"]));
 			$caller_id_number = check_str(urldecode($row["caller_profile"]["caller_id_number"]));
 			$x++;
 		}
@@ -339,9 +335,9 @@ exit;
 	echo "</tr>\n";
 
 	//foreach($array["variables"] as $key => $value) {
-	foreach ($xml->app_log->application as $row) {
-		$app_name = $row->attributes()->app_name;
-		$app_data = $row->attributes()->app_data;
+	foreach ($row["app_log"]["application"] as $row) {
+		$app_name = $row["@attributes"]["app_name"];
+		$app_data = $row["@attributes"]["app_data"];
 		echo "<tr >\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$app_name."&nbsp;</td>\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($app_data,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -390,7 +386,7 @@ exit;
 			echo "		</tr>\n";
 			echo "</table>\n";
 
-		//extension->attributes
+		//extension attributes
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
 			echo "			<td><b>".$text['label-call-flow-2']."</b>&nbsp;</td>\n";
@@ -415,7 +411,7 @@ exit;
 			echo "		</tr>\n";
 			echo "</table>\n";
 
-		//extension->application
+		//extension application
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
 			echo "			<td><b>".$text['label-call-flow-3']."</b>&nbsp;</td>\n";
