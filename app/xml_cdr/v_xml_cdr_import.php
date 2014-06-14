@@ -192,34 +192,6 @@
 				$database->fields['recording_file'] = $recording_file;
 			}
 
-		//determine where the xml cdr will be archived
-			/*
-			$sql = "select * from v_vars ";
-			$sql .= "where var_name = 'xml_cdr_archive' ";
-			$row = $db->query($sql)->fetch();
-			$var_value = trim($row["var_value"]);
-			switch ($var_value) {
-			case "dir":
-				$xml_cdr_archive = 'dir';
-				break;
-			case "db":
-				$xml_cdr_archive = 'db';
-				break;
-			case "xml":
-				$xml_cdr_archive = 'xml';
-				break;
-			case "json":
-				$xml_cdr_archive = 'json';
-				break;
-			case "none":
-				$xml_cdr_archive = 'none';
-				break;
-			default:
-				$xml_cdr_archive = 'dir';
-				break;
-			}
-			*/
-
 		//save to the database in xml format
 			if ($_SESSION['cdr']['format']['text'] == "xml" && $_SESSION['cdr']['storage']['text'] == "db") {
 				$database->fields['xml'] = check_str($xml_string);
@@ -276,7 +248,6 @@
 				}
 
 				if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
-				if ($xml_cdr_archive == "dir" && $error != "true") {
 					if (strlen($uuid) > 0) {
 						$tmp_time = strtotime($start_stamp);
 						$tmp_year = date("Y", $tmp_time);
@@ -303,7 +274,7 @@
 
 				if ($debug) {
 					GLOBAL $insert_time,$insert_count;
-					$insert_time+=microtime(true)-$time5_insert;//add this current query.
+					$insert_time+=microtime(true)-$time5_insert; //add this current query.
 					$insert_count++;
 				}
 			}
