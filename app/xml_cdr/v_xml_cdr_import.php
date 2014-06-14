@@ -71,55 +71,56 @@
 			$database = new database;
 			$database->table = "v_xml_cdr";
 
-			//misc
-				$uuid = check_str(urldecode($xml->variables->uuid));
-				$database->fields['uuid'] = $uuid;
-				$database->fields['accountcode'] = check_str(urldecode($xml->variables->accountcode));
-				$database->fields['default_language'] = check_str(urldecode($xml->variables->default_language));
-				$database->fields['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
-				//$database->fields['digits_dialed'] = check_str(urldecode($xml->variables->digits_dialed));
-				$database->fields['sip_hangup_disposition'] = check_str(urldecode($xml->variables->sip_hangup_disposition));
-			//time
-				$database->fields['start_epoch'] = check_str(urldecode($xml->variables->start_epoch));
-				$start_stamp = check_str(urldecode($xml->variables->start_stamp));
-				$database->fields['start_stamp'] = $start_stamp;
-				$database->fields['answer_stamp'] = check_str(urldecode($xml->variables->answer_stamp));
-				$database->fields['answer_epoch'] = check_str(urldecode($xml->variables->answer_epoch));
-				$database->fields['end_epoch'] = check_str(urldecode($xml->variables->end_epoch));
-				$database->fields['end_stamp'] = check_str(urldecode($xml->variables->end_stamp));
-				$database->fields['duration'] = check_str(urldecode($xml->variables->duration));
-				$database->fields['mduration'] = check_str(urldecode($xml->variables->mduration));
-				$database->fields['billsec'] = check_str(urldecode($xml->variables->billsec));
-				$database->fields['billmsec'] = check_str(urldecode($xml->variables->billmsec));
-			//codecs
-				$database->fields['read_codec'] = check_str(urldecode($xml->variables->read_codec));
-				$database->fields['read_rate'] = check_str(urldecode($xml->variables->read_rate));
-				$database->fields['write_codec'] = check_str(urldecode($xml->variables->write_codec));
-				$database->fields['write_rate'] = check_str(urldecode($xml->variables->write_rate));
-				$database->fields['remote_media_ip'] = check_str(urldecode($xml->variables->remote_media_ip));
-				$database->fields['hangup_cause'] = check_str(urldecode($xml->variables->hangup_cause));
-				$database->fields['hangup_cause_q850'] = check_str(urldecode($xml->variables->hangup_cause_q850));
-			//call center
-				$database->fields['cc_side'] = check_str(urldecode($xml->variables->cc_side));
-				$database->fields['cc_member_uuid'] = check_str(urldecode($xml->variables->cc_member_uuid));
-				$database->fields['cc_queue_joined_epoch'] = check_str(urldecode($xml->variables->cc_queue_joined_epoch));
-				$database->fields['cc_queue'] = check_str(urldecode($xml->variables->cc_queue));
-				$database->fields['cc_member_session_uuid'] = check_str(urldecode($xml->variables->cc_member_session_uuid));
-				$database->fields['cc_agent'] = check_str(urldecode($xml->variables->cc_agent));
-				$database->fields['cc_agent_type'] = check_str(urldecode($xml->variables->cc_agent_type));
-				$database->fields['waitsec'] = check_str(urldecode($xml->variables->waitsec));
-			//app info
-				$database->fields['last_app'] = check_str(urldecode($xml->variables->last_app));
-				$database->fields['last_arg'] = check_str(urldecode($xml->variables->last_arg));
-			//conference
-				$database->fields['conference_name'] = check_str(urldecode($xml->variables->conference_name));
-				$database->fields['conference_uuid'] = check_str(urldecode($xml->variables->conference_uuid));
-				$database->fields['conference_member_id'] = check_str(urldecode($xml->variables->conference_member_id));
-			//call quality
-				$rtp_audio_in_mos = check_str(urldecode($xml->variables->rtp_audio_in_mos));
-				if (strlen($rtp_audio_in_mos) > 0) {
-					$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
-				}
+		//misc
+			$uuid = check_str(urldecode($xml->variables->uuid));
+			$database->fields['uuid'] = $uuid;
+			$database->fields['accountcode'] = check_str(urldecode($xml->variables->accountcode));
+			$database->fields['default_language'] = check_str(urldecode($xml->variables->default_language));
+			$database->fields['bridge_uuid'] = check_str(urldecode($xml->variables->bridge_uuid));
+			//$database->fields['digits_dialed'] = check_str(urldecode($xml->variables->digits_dialed));
+			$database->fields['sip_hangup_disposition'] = check_str(urldecode($xml->variables->sip_hangup_disposition));
+			$database->fields['pin_number'] = check_str(urldecode($xml->variables->pin_number));
+		//time
+			$database->fields['start_epoch'] = check_str(urldecode($xml->variables->start_epoch));
+			$start_stamp = check_str(urldecode($xml->variables->start_stamp));
+			$database->fields['start_stamp'] = $start_stamp;
+			$database->fields['answer_stamp'] = check_str(urldecode($xml->variables->answer_stamp));
+			$database->fields['answer_epoch'] = check_str(urldecode($xml->variables->answer_epoch));
+			$database->fields['end_epoch'] = check_str(urldecode($xml->variables->end_epoch));
+			$database->fields['end_stamp'] = check_str(urldecode($xml->variables->end_stamp));
+			$database->fields['duration'] = check_str(urldecode($xml->variables->duration));
+			$database->fields['mduration'] = check_str(urldecode($xml->variables->mduration));
+			$database->fields['billsec'] = check_str(urldecode($xml->variables->billsec));
+			$database->fields['billmsec'] = check_str(urldecode($xml->variables->billmsec));
+		//codecs
+			$database->fields['read_codec'] = check_str(urldecode($xml->variables->read_codec));
+			$database->fields['read_rate'] = check_str(urldecode($xml->variables->read_rate));
+			$database->fields['write_codec'] = check_str(urldecode($xml->variables->write_codec));
+			$database->fields['write_rate'] = check_str(urldecode($xml->variables->write_rate));
+			$database->fields['remote_media_ip'] = check_str(urldecode($xml->variables->remote_media_ip));
+			$database->fields['hangup_cause'] = check_str(urldecode($xml->variables->hangup_cause));
+			$database->fields['hangup_cause_q850'] = check_str(urldecode($xml->variables->hangup_cause_q850));
+		//call center
+			$database->fields['cc_side'] = check_str(urldecode($xml->variables->cc_side));
+			$database->fields['cc_member_uuid'] = check_str(urldecode($xml->variables->cc_member_uuid));
+			$database->fields['cc_queue_joined_epoch'] = check_str(urldecode($xml->variables->cc_queue_joined_epoch));
+			$database->fields['cc_queue'] = check_str(urldecode($xml->variables->cc_queue));
+			$database->fields['cc_member_session_uuid'] = check_str(urldecode($xml->variables->cc_member_session_uuid));
+			$database->fields['cc_agent'] = check_str(urldecode($xml->variables->cc_agent));
+			$database->fields['cc_agent_type'] = check_str(urldecode($xml->variables->cc_agent_type));
+			$database->fields['waitsec'] = check_str(urldecode($xml->variables->waitsec));
+		//app info
+			$database->fields['last_app'] = check_str(urldecode($xml->variables->last_app));
+			$database->fields['last_arg'] = check_str(urldecode($xml->variables->last_arg));
+		//conference
+			$database->fields['conference_name'] = check_str(urldecode($xml->variables->conference_name));
+			$database->fields['conference_uuid'] = check_str(urldecode($xml->variables->conference_uuid));
+			$database->fields['conference_member_id'] = check_str(urldecode($xml->variables->conference_member_id));
+		//call quality
+			$rtp_audio_in_mos = check_str(urldecode($xml->variables->rtp_audio_in_mos));
+			if (strlen($rtp_audio_in_mos) > 0) {
+				$database->fields['rtp_audio_in_mos'] = $rtp_audio_in_mos;
+			}
 
 		//get the values from the callflow.
 			$x = 0;
@@ -203,6 +204,12 @@
 			case "db":
 				$xml_cdr_archive = 'db';
 				break;
+			case "xml":
+				$xml_cdr_archive = 'xml';
+				break;
+			case "json":
+				$xml_cdr_archive = 'json';
+				break;
 			case "none":
 				$xml_cdr_archive = 'none';
 				break;
@@ -212,8 +219,13 @@
 			}
 
 		//if xml_cdr_archive is set to db then insert it.
-			if ($xml_cdr_archive == "db") {
-				$database->fields['xml_cdr'] = check_str($xml_string);
+			if ($xml_cdr_archive == "xml" || $xml_cdr_archive == "db") {
+				$database->fields['xml'] = check_str($xml_string);
+			}
+
+		//if xml_cdr_archive is set to db then insert it.
+			if ($xml_cdr_archive == "json") {
+				$database->fields['json'] = check_str($xml_string);
 			}
 
 		//insert the check_str($extension_uuid)
