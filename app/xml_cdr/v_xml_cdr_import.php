@@ -193,6 +193,7 @@
 			}
 
 		//determine where the xml cdr will be archived
+			/*
 			$sql = "select * from v_vars ";
 			$sql .= "where var_name = 'xml_cdr_archive' ";
 			$row = $db->query($sql)->fetch();
@@ -217,14 +218,15 @@
 				$xml_cdr_archive = 'dir';
 				break;
 			}
+			*/
 
-		//if xml_cdr_archive is set to db then insert it.
-			if ($xml_cdr_archive == "xml" || $xml_cdr_archive == "db") {
+		//save to the database in xml format
+			if ($_SESSION['cdr']['format']['text'] == "xml" && $_SESSION['cdr']['storage']['text'] == "db") {
 				$database->fields['xml'] = check_str($xml_string);
 			}
 
-		//if xml_cdr_archive is set to db then insert it.
-			if ($xml_cdr_archive == "json") {
+		//save to the database in json format
+			if ($_SESSION['cdr']['format']['text'] == "json" && $_SESSION['cdr']['storage']['text'] == "db") {
 				$database->fields['json'] = json_encode($xml);
 			}
 
@@ -256,16 +258,24 @@
 					if(!file_exists($tmp_dir)) {
 						mkdir($tmp_dir, 0777, true);
 					}
-					$tmp_file = $uuid.'.xml';
-					$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-					fwrite($fh, $xml_string);
+					if ($_SESSION['cdr']['format']['text'] == "xml") {
+						$tmp_file = $uuid.'.xml';
+						$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+						fwrite($fh, $xml_string);
+					}
+					else {
+						$tmp_file = $uuid.'.json';
+						$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+						fwrite($fh, json_encode($xml));
+					}
 					fclose($fh);
 					if ($debug) {
 						echo $e->getMessage();
 					}
 					$error = "true";
 				}
-				//if xml_cdr_archive is set to dir, then store it.
+
+				if ($_SESSION['cdr']['storage']['text'] == "dir" && $error != "true") {
 				if ($xml_cdr_archive == "dir" && $error != "true") {
 					if (strlen($uuid) > 0) {
 						$tmp_time = strtotime($start_stamp);
@@ -276,9 +286,16 @@
 						if(!file_exists($tmp_dir)) {
 							mkdir($tmp_dir, 0777, true);
 						}
-						$tmp_file = $uuid.'.xml';
-						$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
-						fwrite($fh, $xml_string);
+						if ($_SESSION['cdr']['format']['text'] == "xml") {
+							$tmp_file = $uuid.'.xml';
+							$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+							fwrite($fh, $xml_string);
+						}
+						else {
+							$tmp_file = $uuid.'.json';
+							$fh = fopen($tmp_dir.'/'.$tmp_file, 'w');
+							fwrite($fh, json_encode($xml));
+						}
 						fclose($fh);
 					}
 				}
