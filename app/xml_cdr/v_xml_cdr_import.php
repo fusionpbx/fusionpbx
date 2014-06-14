@@ -225,7 +225,7 @@
 
 		//if xml_cdr_archive is set to db then insert it.
 			if ($xml_cdr_archive == "json") {
-				$database->fields['json'] = check_str($xml_string);
+				$database->fields['json'] = json_encode($xml);
 			}
 
 		//insert the check_str($extension_uuid)
