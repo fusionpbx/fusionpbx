@@ -122,39 +122,38 @@ exit;
 	echo "<br />\n";
 
 //detail summary
-	//get the variables from the xml
-		$uuid = check_str(urldecode($xml->variables->uuid));
-		$direction = check_str(urldecode($xml->channel_data->direction));
-		$language = check_str(urldecode($xml->variables->language));
-		$xml_string = check_str($xml_string);
-		$start_epoch = check_str(urldecode($xml->variables->start_epoch));
-		$start_stamp = check_str(urldecode($xml->variables->start_stamp));
-		$start_uepoch = check_str(urldecode($xml->variables->start_uepoch));
-		$answer_stamp = check_str(urldecode($xml->variables->answer_stamp));
-		$answer_epoch = check_str(urldecode($xml->variables->answer_epoch));
-		$answer_uepoch = check_str(urldecode($xml->variables->answer_uepoch));
-		$end_epoch = check_str(urldecode($xml->variables->end_epoch));
-		$end_uepoch = check_str(urldecode($xml->variables->end_uepoch));
-		$end_stamp = check_str(urldecode($xml->variables->end_stamp));
-		$duration = check_str(urldecode($xml->variables->duration));
-		$mduration = check_str(urldecode($xml->variables->mduration));
-		$billsec = check_str(urldecode($xml->variables->billsec));
-		$billmsec = check_str(urldecode($xml->variables->billmsec));
-		$bridge_uuid = check_str(urldecode($xml->variables->bridge_uuid));
-		$read_codec = check_str(urldecode($xml->variables->read_codec));
-		$write_codec = check_str(urldecode($xml->variables->write_codec));
-		$remote_media_ip = check_str(urldecode($xml->variables->remote_media_ip));
-		$hangup_cause = check_str(urldecode($xml->variables->hangup_cause));
-		$hangup_cause_q850 = check_str(urldecode($xml->variables->hangup_cause_q850));
+	//get the variables
+		$uuid = check_str(urldecode($array["variables"]["uuid"]));
+		$direction = check_str(urldecode($array["channel_data"]["direction"]));
+		$language = check_str(urldecode($array["variables"]["language"]));
+		$start_epoch = check_str(urldecode($array["variables"]["start_epoch"]));
+		$start_stamp = check_str(urldecode($array["variables"]["start_stamp"]));
+		$start_uepoch = check_str(urldecode($array["variables"]["start_uepoch"]));
+		$answer_stamp = check_str(urldecode($array["variables"]["answer_stamp"]));
+		$answer_epoch = check_str(urldecode($array["variables"]["answer_epoch"]));
+		$answer_uepoch = check_str(urldecode($array["variables"]["answer_uepoch"]));
+		$end_epoch = check_str(urldecode($array["variables"]["end_epoch"]));
+		$end_uepoch = check_str(urldecode($array["variables"]["end_uepoch"]));
+		$end_stamp = check_str(urldecode($array["variables"]["end_stamp"]));
+		$duration = check_str(urldecode($array["variables"]["duration"]));
+		$mduration = check_str(urldecode($array["variables"]["mduration"]));
+		$billsec = check_str(urldecode($array["variables"]["billsec"]));
+		$billmsec = check_str(urldecode($array["variables"]["billmsec"]));
+		$bridge_uuid = check_str(urldecode($array["variables"]["bridge_uuid"]));
+		$read_codec = check_str(urldecode($array["variables"]["read_codec"]));
+		$write_codec = check_str(urldecode($array["variables"]["write_codec"]));
+		$remote_media_ip = check_str(urldecode($array["variables"]["remote_media_ip"]));
+		$hangup_cause = check_str(urldecode($array["variables"]["hangup_cause"]));
+		$hangup_cause_q850 = check_str(urldecode($array["variables"]["hangup_cause_q850"]));
 		$x = 0;
-		foreach ($xml->callflow as $row) {
+		foreach ($array["callflow"] as $row) {
 			if ($x == 0) {
-				$destination_number = check_str(urldecode($row->caller_profile->destination_number));
-				$context = check_str(urldecode($row->caller_profile->context));
-				$network_addr = check_str(urldecode($row->caller_profile->network_addr));
+				$destination_number = check_str(urldecode($row["caller_profile"]["destination_number"]));
+				$context = check_str(urldecode($row["caller_profile"]["context"]));
+				$network_addr = check_str(urldecode($row["caller_profile"]["network_addr"]));
 			}
-			$caller_id_name = check_str(urldecode($row->caller_profile->caller_id_name));
-			$caller_id_number = check_str(urldecode($row->caller_profile->caller_id_number));
+			$caller_id_name = check_str(urldecode($row["caller_profile"]["caller_id_name"]);
+			$caller_id_number = check_str(urldecode($row["caller_profile"]["caller_id_number"]));
 			$x++;
 		}
 		unset($x);
@@ -245,9 +244,7 @@ exit;
 	echo "<th>Name</th>\n";
 	echo "<th>Value</th>\n";
 	echo "</tr>\n";
-	foreach($xml->channel_data->children() as $child) {
-		$key = $child->getName();
-		$value = urldecode($child);
+	foreach($array["channel_data"] as $key => $value) {
 		echo "<tr >\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -277,9 +274,7 @@ exit;
 	echo "<th>".$text['label-name']."</th>\n";
 	echo "<th>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
-	foreach($xml->variables->children() as $child) {
-		$key = $child->getName();
-		$value = urldecode($child);
+	foreach($array["variables"] as $key => $value) {
 		if ($key != "digits_dialed" && $key != "dsn") {
 			echo "<tr >\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
@@ -343,6 +338,7 @@ exit;
 	echo "<th>".$text['label-data']."</th>\n";
 	echo "</tr>\n";
 
+	//foreach($array["variables"] as $key => $value) {
 	foreach ($xml->app_log->application as $row) {
 		$app_name = $row->attributes()->app_name;
 		$app_data = $row->attributes()->app_data;
@@ -363,7 +359,7 @@ exit;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	foreach ($xml->callflow as $row) {
+	foreach ($array["callflow"] as $row) {
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -382,7 +378,7 @@ exit;
 			echo "			<th>".$text['label-name']."</th>\n";
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
-			foreach($row->attributes() as $key => $value) {
+			foreach($row["@attributes"] as $key => $value) {
 				echo "		<tr>\n";
 				echo "				<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 				echo "				<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -407,7 +403,7 @@ exit;
 			echo "			<th>".$text['label-name']."</th>\n";
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
-			foreach($row->extension->attributes() as $key => $value) {
+			foreach($row["extension"]["@attributes"] as $key => $value) {
 				echo "		<tr >\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -432,9 +428,9 @@ exit;
 			echo "			<th>".$text['label-name']."</th>\n";
 			echo "			<th>".$text['label-data']."</th>\n";
 			echo "		</tr>\n";
-			foreach ($row->extension->application as $tmp_row) {
-				$app_name = $tmp_row->attributes()->app_name;
-				$app_data = $tmp_row->attributes()->app_data;
+			foreach ($row["extension"]["application"] as $tmp_row) {
+				$app_name = $tmp_row["@attributes"]["app_name"];
+				$app_data = $tmp_row["@attributes"]["app_data"];
 				echo "		<tr >\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$app_name."&nbsp;</td>\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($app_data,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -459,11 +455,10 @@ exit;
 			echo "			<th>".$text['label-name']."</th>\n";
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
-			foreach($row->caller_profile->children() as $child) {
-				$key = $child->getName();
+			foreach($row["caller_profile"] as $key => $value) {
 				echo "		<tr >\n";
 				if ($key != "originatee") {
-					$value = urldecode($child);
+					$value = urldecode($value);
 					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
 				}
@@ -471,10 +466,8 @@ exit;
 					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
 					echo "			<td>\n";
 					echo "				<table width='100%'>\n";
-					foreach($child->originatee_caller_profile->children() as $tmp_child) {
+					foreach($child["originatee_caller_profile"] as $key => $value) {
 						//print_r($tmp_child);
-						$key = $tmp_child->getName();
-						$value = urldecode($tmp_child);
 						echo "				<tr >\n";
 						echo "					<td valign='top' align='left' width='20%' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 						if ($key != "uuid") {
@@ -507,9 +500,7 @@ exit;
 			echo "			<th>".$text['label-name']."</th>\n";
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
-			foreach($row->times->children() as $child) {
-				$key = $child->getName();
-				$value = urldecode($child);
+			foreach($row["times"] as $key => $value) {
 				echo "		<tr >\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
