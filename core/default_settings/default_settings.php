@@ -118,10 +118,23 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 
 			if ($previous_category != $row['default_setting_category']) {
-				echo "<tr><td colspan='4' align='left'>\n";
-				if ($previous_category != '') { echo "<br /><br />"; }
-				echo "	<br />\n";
-				echo "	<b>".ucfirst($row['default_setting_category'])."</b>&nbsp;</td></tr>\n";
+				echo "<tr>\n";
+				echo "	<td colspan='4' align='left'>\n";
+				if ($previous_category != '') { echo "		<br /><br />"; }
+				echo "		<br />\n";
+				echo "		<b>\n";
+				if (strtolower($row['default_setting_category']) == "cdr") {
+					echo "		CDR";
+				}
+				elseif (strtolower($row['default_setting_category']) == "ldap") {
+					echo "		LDAP";
+				}
+				else {
+					echo "		".ucfirst($row['default_setting_category']);
+				}
+				echo "		</b>\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
 				echo "<tr>\n";
 				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order);
 				echo th_order_by('default_setting_name', $text['label-type'], $order_by, $order);
