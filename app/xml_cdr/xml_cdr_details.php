@@ -141,6 +141,7 @@ else {
 		$remote_media_ip = check_str(urldecode($array["variables"]["remote_media_ip"]));
 		$hangup_cause = check_str(urldecode($array["variables"]["hangup_cause"]));
 		$hangup_cause_q850 = check_str(urldecode($array["variables"]["hangup_cause_q850"]));
+		/*
 		$x = 0;
 		foreach ($array["callflow"] as $row) {
 			if ($x == 0) {
@@ -153,6 +154,7 @@ else {
 			$x++;
 		}
 		unset($x);
+		*/
 
 	$tmp_year = date("Y", strtotime($start_stamp));
 	$tmp_month = date("M", strtotime($start_stamp));
@@ -241,6 +243,7 @@ else {
 	echo "<th>Value</th>\n";
 	echo "</tr>\n";
 	foreach($array["channel_data"] as $key => $value) {
+		$value = urldecode($value);
 		echo "<tr >\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -271,6 +274,7 @@ else {
 	echo "<th>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
 	foreach($array["variables"] as $key => $value) {
+		$value = urldecode($value);
 		if ($key != "digits_dialed" && $key != "dsn") {
 			echo "<tr >\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
@@ -335,9 +339,9 @@ else {
 	echo "</tr>\n";
 
 	//foreach($array["variables"] as $key => $value) {
-	foreach ($row["app_log"]["application"] as $row) {
+	foreach ($array["app_log"]["application"] as $row) {
 		$app_name = $row["@attributes"]["app_name"];
-		$app_data = $row["@attributes"]["app_data"];
+		$app_data = urldecode($row["@attributes"]["app_data"]);
 		echo "<tr >\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$app_name."&nbsp;</td>\n";
 		echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($app_data,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -350,11 +354,15 @@ else {
 //breaking space
 	echo "<br /><br />\n";
 
-//callflow
+//call flow
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-
+	if (!isset($array["callflow"][0])) {
+		$tmp = $array["callflow"];
+		unset($array["callflow"]);
+		$array["callflow"][0] = $tmp;
+	}
 	foreach ($array["callflow"] as $row) {
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -375,6 +383,7 @@ else {
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["@attributes"] as $key => $value) {
+				$value = urldecode($value);
 				echo "		<tr>\n";
 				echo "				<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 				echo "				<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -400,6 +409,7 @@ else {
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["extension"]["@attributes"] as $key => $value) {
+				$value = urldecode($value);
 				echo "		<tr >\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -426,7 +436,7 @@ else {
 			echo "		</tr>\n";
 			foreach ($row["extension"]["application"] as $tmp_row) {
 				$app_name = $tmp_row["@attributes"]["app_name"];
-				$app_data = $tmp_row["@attributes"]["app_data"];
+				$app_data = urldecode($tmp_row["@attributes"]["app_data"]);
 				echo "		<tr >\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$app_name."&nbsp;</td>\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($app_data,75,"<br />\n", TRUE)."&nbsp;</td>\n";
@@ -438,7 +448,7 @@ else {
 			echo "		</tr>\n";
 			echo "</table>\n";
 
-		//caller_profile
+		//caller profile
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
 			echo "			<td><b>".$text['label-call-flow-4']."</b>&nbsp;</td>\n";
@@ -452,6 +462,7 @@ else {
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["caller_profile"] as $key => $value) {
+				$value = urldecode($value);
 				echo "		<tr >\n";
 				if ($key != "originatee") {
 					$value = urldecode($value);
@@ -497,6 +508,7 @@ else {
 			echo "			<th>".$text['label-value']."</th>\n";
 			echo "		</tr>\n";
 			foreach($row["times"] as $key => $value) {
+				$value = urldecode($value);
 				echo "		<tr >\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
 				echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
