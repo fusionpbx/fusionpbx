@@ -46,29 +46,49 @@ else {
 		$uuid = trim($_REQUEST["uuid"]);
 	}
 
-//get the xml cdr string from the database
+//get the cdr string from the database
 	$sql = "select * from v_xml_cdr ";
 	$sql .= "where domain_uuid  = '$domain_uuid' ";
 	$sql .= "and uuid  = '$uuid' ";
 	$row = $db->query($sql)->fetch();
 	$start_stamp = trim($row["start_stamp"]);
-	$xml_string = trim($row["xml_cdr"]);
+	$xml_string = trim($row["xml"]);
+	$json_string = trim($row["json"]);
 	//print_r($row);
 
+//get the format
+	if (strlen($xml_string) > 0) {
+		$format = "xml";
+	}
+	if (strlen($json_string) > 0) {
+		$format = "json";
+	}
+
 //get cdr from the file system
-	if (strlen($xml_string) == 0) {
+	if ($format != "xml" || $format != "json") {
 		$tmp_time = strtotime($start_stamp);
 		$tmp_year = date("Y", $tmp_time);
 		$tmp_month = date("M", $tmp_time);
 		$tmp_day = date("d", $tmp_time);
 		$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
-		$tmp_file = $uuid.'.xml';
-		$xml_string = file_get_contents($tmp_dir.'/'.$tmp_file);
+		if (file_exists($tmp_dir.'/'.$uuid.'.json')) {
+			$format = "json";
+			$xml_string = file_get_contents($tmp_dir.'/'.$uuid.'.json');
+		}
+		if (file_exists($tmp_dir.'/'.$uuid.'.xml')) {
+			$format = "xml";
+			$xml_string = file_get_contents($tmp_dir.'/'.$uuid.'.xml');
+		}
 	}
 
 //parse the xml to get the call detail record info
 	try {
-		$xml = simplexml_load_string($xml_string);
+		if ($format == 'json') {
+			$xml = json_decode($json_string);
+		}
+		if ($format == 'json') {
+			$xml = simplexml_load_string($xml_string);
+		}
 	}
 	catch(Exception $e) {
 		echo $e->getMessage();
