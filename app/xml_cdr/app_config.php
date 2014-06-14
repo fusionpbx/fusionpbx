@@ -145,8 +145,15 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "xml_cdr";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "xml";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "xml_cdr";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "json";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "json";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "caller_id_name";
@@ -320,6 +327,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "digits_dialed";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "digits dialed";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "pin_number";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "pin number";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "hangup_cause";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
