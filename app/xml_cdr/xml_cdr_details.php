@@ -84,10 +84,10 @@ else {
 //parse the xml to get the call detail record info
 	try {
 		if ($format == 'json') {
-			$xml = json_decode($json_string);
+			$array = json_decode($json_string,true);
 		}
-		if ($format == 'json') {
-			$xml = simplexml_load_string($xml_string);
+		if ($format == 'xml') {
+			$array = json_decode(json_encode((array)simplexml_load_string($xml_string)),true);
 		}
 	}
 	catch(Exception $e) {
@@ -96,6 +96,10 @@ else {
 
 //get the header
 	require_once "resources/header.php";
+
+print_r($array);
+
+exit;
 
 //page title and description
 	echo "<br>";
