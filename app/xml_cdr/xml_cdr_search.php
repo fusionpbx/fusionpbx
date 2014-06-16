@@ -26,7 +26,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('xml_cdr_view')) {
+if (permission_exists('xml_cdr_search_advanced')) {
 	//access granted
 }
 else {
