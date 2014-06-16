@@ -76,7 +76,7 @@ else {
 	echo "<table>\n";
 	echo "<tr>\n";
 	echo "<td>\n";
-	if (if_group("admin") || if_group("superadmin") || permission_exists('xml_cdr_domain')) {
+	if (permission_exists('xml_cdr_search_advanced')) {
 		echo "	<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php';\">\n";
 	}
 	echo "	<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?missed=true';\">\n";
@@ -125,8 +125,8 @@ else {
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	//search the call detail records
-		if (if_group("admin") || if_group("superadmin") || permission_exists('xml_cdr_domain')) {
+	//basic search of call detail records
+		if (permission_exists('xml_cdr_search')) {
 
 			echo "<fieldset>";
 			echo "<legend>Basic Search</legend>";
@@ -173,10 +173,8 @@ else {
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left'>\n";
 				echo "			<select name=\"hangup_cause\" class='formfld'>\n";
-				echo "				<option value='".$hangup_cause."' selected='selected'>".$hangup_cause."</option>\n";
-				if (strlen($hangup_cause) > 0) {
-					echo "			<option value=''></option>\n";
-				}
+				echo "				<option value=''></option>\n";
+
 				$cdr_status_options = array(
 					'NORMAL_CLEARING',
 					'ORIGINATOR_CANCEL',
@@ -210,8 +208,9 @@ else {
 					);
 				sort($cdr_status_options);
 				foreach ($cdr_status_options as $cdr_status) {
+					$selected = ($hangup_cause == $cdr_status) ? "selected='selected'" : null;
 					$cdr_status_label = ucwords(strtolower(str_replace("_", " ", $cdr_status)));
-					echo "			<option value='".$cdr_status."'>".$cdr_status_label."</option>";
+					echo "			<option value='".$cdr_status."' ".$selected.">".$cdr_status_label."</option>";
 				}
 				echo "			</select>\n";
 				echo "		</td>\n";

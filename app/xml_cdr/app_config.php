@@ -67,6 +67,15 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_search_advanced";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_domain";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -79,9 +88,6 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "xml_cdr_delete";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		//$y++;
-		//$apps[$x]['permissions'][$y]['name'] = "xml_cdr_all";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
 		$y = 0; //table array index
