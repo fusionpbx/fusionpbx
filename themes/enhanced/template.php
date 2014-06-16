@@ -86,7 +86,6 @@ b {
 }
 
 th {
-	/*border-top: 1px solid #444444;*/
 	border-bottom: 1px solid #a4aebf;
 	text-align: left;
 	color: #3164AD;
@@ -377,6 +376,24 @@ table tr:nth-last-child(-5) td:first-of-type {
 	border-bottom-top-radius:7px;
 }
 
+fieldset {
+	padding: 8px;
+	text-align: left;
+	border: 1px solid #aeb7c6;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin: 0px;
+}
+
+legend {
+	font-size: 13px;
+	font-family: arial;
+	font-weight: bold;
+	color: #3164ad;
+	padding-bottom: 8px;
+	padding-right: 2px;
+}
 
 /* begin the menu css*/
 
@@ -984,7 +1001,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 			<tr>
 				<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
 			</tr>
-			<?php 
+			<?php
 		}
 		?>
 		<tr>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 	$text['title']['en-us'] = "Call Detail Records";
 	$text['title']['es-cl'] = "Registro de Detalle de Llamadas";
@@ -25,30 +25,30 @@
 	$text['description-4']['pt-pt'] = "Veja as chamadas na lista ou descarregue-as como arquivo, separadas por vírgulas, usando o botão 'csv'.";
 	$text['description-4']['fr-fr'] = "Ensuite visualisez les informations dans la liste ci-dessous, ou téléchargez les sous forme d'un fichier CSV.";
 
-	$text['label-description']['en-us'] = "Description";
-	$text['label-description']['es-cl'] = "Descripción";
-	$text['label-description']['pt-pt'] = "Descrição";
-	$text['label-description']['fr-fr'] = "Description";
+	$text['label-direction']['en-us'] = "Direction";
+	$text['label-direction']['es-cl'] = "Dirección";
+	$text['label-direction']['pt-pt'] = "Direção";
+	$text['label-direction']['fr-fr'] = "Direction";
 
 	$text['label-cid-name']['en-us'] = "CID Name";
 	$text['label-cid-name']['es-cl'] = "Nombre CID";
 	$text['label-cid-name']['pt-pt'] = "Nome CID";
 	$text['label-cid-name']['fr-fr'] = "Nom de l'Appelant";
 
-	$text['label-inbound']['en-us'] = "inbound";
-	$text['label-inbound']['es-cl'] = "entrada";
-	$text['label-inbound']['pt-pt'] = "entrada";
-	$text['label-inbound']['fr-fr'] = "entrant";
+	$text['label-inbound']['en-us'] = "Inbound";
+	$text['label-inbound']['es-cl'] = "Entrada";
+	$text['label-inbound']['pt-pt'] = "Entrada";
+	$text['label-inbound']['fr-fr'] = "Entrant";
 
-	$text['label-outbound']['en-us'] = "outbound";
-	$text['label-outbound']['es-cl'] = "salida";
-	$text['label-outbound']['pt-pt'] = "saída";
-	$text['label-outbound']['fr-fr'] = "sortant";
+	$text['label-outbound']['en-us'] = "Outbound";
+	$text['label-outbound']['es-cl'] = "Salida";
+	$text['label-outbound']['pt-pt'] = "Saída";
+	$text['label-outbound']['fr-fr'] = "Sortant";
 
-	$text['label-local']['en-us'] = "local";
-	$text['label-local']['es-cl'] = "local";
-	$text['label-local']['pt-pt'] = "local";
-	$text['label-local']['fr-fr'] = "local";
+	$text['label-local']['en-us'] = "Local";
+	$text['label-local']['es-cl'] = "Local";
+	$text['label-local']['pt-pt'] = "Local";
+	$text['label-local']['fr-fr'] = "Local";
 
 	$text['label-source']['en-us'] = "Source";
 	$text['label-source']['es-cl'] = "Origen";
@@ -80,10 +80,10 @@
 	$text['label-number']['pt-pt'] = "Número";
 	$text['label-number']['fr-fr'] = "Numéro";
 
-	$text['label-length']['en-us'] = "Length";
-	$text['label-length']['es-cl'] = "Duración";
-	$text['label-length']['pt-pt'] = "Duração";
-	$text['label-length']['fr-fr'] = "Durée";
+	$text['label-duration']['en-us'] = "Duration";
+	$text['label-duration']['es-cl'] = "Duración";
+	$text['label-duration']['pt-pt'] = "Duração";
+	$text['label-duration']['fr-fr'] = "Durée";
 
 	$text['label-tools']['en-us'] = "Tools";
 	$text['label-tools']['es-cl'] = "Herramientas";
@@ -113,6 +113,21 @@
 	$text['button-missed']['es-cl'] = "Llamadas Perdidas";
 	$text['button-missed']['pt-pt'] = "Chamadas Perdidas";
 	$text['button-missed']['fr-fr'] = "Appels Perdus";
+
+	$text['button-reset']['en-us'] = "Reset";
+	$text['button-reset']['es-cl'] = "Reajustar";
+	$text['button-reset']['pt-pt'] = "Restabelecer";
+	$text['button-reset']['fr-fr'] = "Remettre";
+
+	$text['button-search']['en-us'] = "Search";
+	$text['button-search']['es-cl'] = "Búsqueda";
+	$text['button-search']['pt-pt'] = "Pesquisa";
+	$text['button-search']['fr-fr'] = "Recherche";
+
+	$text['button-advanced_search']['en-us'] = "Advanced Search";
+	$text['button-advanced_search']['es-cl'] = "Búsqueda Avanzada";
+	$text['button-advanced_search']['pt-pt'] = "Pesquisa Avançada";
+	$text['button-advanced_search']['fr-fr'] = "Recherche Avancée";
 
 	//xml_cdr_details
 	$text['title2']['en-us'] = "Call Details";
