@@ -903,10 +903,11 @@ legend {
 							?>
 						</td>
 						<td width='50%' style='padding-right: 15px;' align='right' valign='middle'>
+							<a href="/core/user_settings/user_dashboard.php"><?php echo $_SESSION['username']; ?></a>
 							<?php
 							//logged in show the domains block
 							if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								?>
+								?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="javascript:void(0);" id="domains_show_text"><?php echo $_SESSION['domain_name']; ?></a>
 								<img id="domains_show_icon" src="<?php echo PROJECT_PATH; ?>/themes/enhanced/images/icon_domains_show.png" style="width: 23px; height: 16px; border: none;" title="Open Domain Selector" align="absmiddle">
 								<?php
@@ -934,7 +935,7 @@ legend {
 											//echo "	<strong>".$text['label-username'].":</strong>\n";
 											//echo "</td>\n";
 											echo "<td>\n";
-											echo "  <input type=\"text\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
+											echo "  <input type=\"text\" class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
 											echo "</td>\n";
 											//echo "</tr>\n";
 
@@ -943,7 +944,7 @@ legend {
 											//echo "	<strong>".$text['label-password'].":</strong>\n";
 											//echo "</td>\n";
 											echo "<td align='left'>\n";
-											echo "	<input type=\"password\" class='formfld' style='min-width: 100px; width: 100px; text-align: center;' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
+											echo "	<input type=\"password\" class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
 											echo "</td>\n";
 											//echo "</tr>\n";
 
