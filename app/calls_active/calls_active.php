@@ -43,7 +43,10 @@ else {
 $conference_name = trim($_REQUEST["c"]);
 $tmp_conference_name = str_replace("_", " ", $conference_name);
 
+
 require_once "resources/header.php";
+$page["title"] = $text['title'];
+
 ?><script type="text/javascript">
 function loadXmlHttp(url, id) {
 	var f = this;
