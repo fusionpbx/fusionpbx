@@ -122,6 +122,7 @@ require_once "resources/check_auth.php";
 
 		//show the header
 			require_once "resources/header.php";
+			$page["title"] = $text['header-registrations'];
 
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
