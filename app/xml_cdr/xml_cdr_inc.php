@@ -75,22 +75,14 @@ else {
 	if ($missed == true) {
 		$sql_where .= "and billsec = '0' ";
 	}
-	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) { 
+	if (strlen($start_epoch) > 0 && strlen($stop_epoch) > 0) {
 		$sql_where .= "and start_epoch BETWEEN ".$start_epoch." AND ".$stop_epoch." ";
 	}
 	if (strlen($cdr_id) > 0) { $sql_where .= "and cdr_id like '%$cdr_id%' "; }
 	if (strlen($direction) > 0) { $sql_where .= "and direction = '$direction' "; }
-	if (strlen($caller_id_name) > 0) { $sql_where .= "and caller_id_name like '$caller_id_name' "; }
-	if (strlen($caller_id_number) > 0 && strlen($destination_number) > 0) {
-			$sql_where .= "and (";
-			$sql_where .= "caller_id_number = '$caller_id_number' ";
-			$sql_where .= "or destination_number = '$destination_number'";
-			$sql_where .= ") ";
-	}
-	else {
-		if (strlen($caller_id_number) > 0) { $sql_where .= "and caller_id_number like '$caller_id_number' "; }
-		if (strlen($destination_number) > 0) { $sql_where .= "and destination_number like '$destination_number' "; }
-	}
+	if (strlen($caller_id_name) > 0) { $sql_where .= "and caller_id_name like '%".$caller_id_name."%' "; }
+	if (strlen($caller_id_number) > 0) { $sql_where .= "and caller_id_number like '%".$caller_id_number."%' "; }
+	if (strlen($destination_number) > 0) { $sql_where .= "and destination_number like '%".$destination_number."%' "; }
 	if (strlen($context) > 0) { $sql_where .= "and context like '%$context%' "; }
 	if ($db_type == "sqlite") {
 		if (strlen($start_stamp) > 0) { $sql_where .= "and start_stamp like '%$start_stamp%' "; }
@@ -113,7 +105,7 @@ else {
 	if (strlen($network_addr) > 0) { $sql_where .= "and network_addr like '%$network_addr%' "; }
 
 	//example sql
-		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = '' 
+		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = ''
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
 	if (!if_group("admin") && !if_group("superadmin") && !permission_exists('xml_cdr_domain')) {
 		$sql_where = "where domain_uuid = '$domain_uuid' ";
@@ -182,7 +174,7 @@ else {
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
-		//get the number of rows in the v_xml_cdr 
+		//get the number of rows in the v_xml_cdr
 			$sql = "select count(*) as num_rows from v_xml_cdr ";
 			$sql .= $sql_where;
 			$prep_statement = $db->prepare(check_sql($sql));
@@ -201,8 +193,8 @@ else {
 		//prepare to page the results
 			//$rows_per_page = 150; //set on the page that includes this page
 			$page = $_GET['page'];
-			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-			list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page); 
+			if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+			list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 			$offset = $rows_per_page * $page;
 	}
 

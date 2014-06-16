@@ -46,25 +46,6 @@ else {
 	$dialplan_context = check_str($_GET["dialplan_context"]);
 	$app_uuid = check_str($_GET["app_uuid"]);
 
-//custom table header order by to accomodate the app_uuid
-	function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid) {
-		if (strlen($app_uuid) > 0) { $app_uuid = "app_uuid=".$app_uuid; }
-		$html = "<th nowrap>&nbsp; &nbsp; ";
-		if (strlen($order_by)==0) {
-			$html .= "<a href='?order_by=$field_name&order=desc&$app_uuid' title='ascending'>$columntitle</a>";
-		}
-		else {
-			if ($order=="asc") {
-				$html .= "<a href='?order_by=$field_name&order=desc&$app_uuid' title='ascending'>$columntitle</a>";
-			}
-			else {
-				$html .= "<a href='?order_by=$field_name&order=asc&$app_uuid' title='descending'>$columntitle</a>";
-			}
-		}
-		$html .= "&nbsp; &nbsp; </th>";
-		return $html;
-	}
-
 //includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
@@ -274,11 +255,11 @@ else {
 				unset ($prep_statement);
 			}
 			echo "<tr >\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_name']."</td>\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_number']."</td>\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_context']."</td>\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_order']."</td>\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>&nbsp;&nbsp;".$row['dialplan_enabled']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_name']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_number']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_context']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_order']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_enabled']."</td>\n";
 			echo "   <td valign='top' class='row_stylebg' width='30%'>".$row['dialplan_description']."&nbsp;</td>\n";
 			echo "   <td class='list_control_icons'>\n";
 			if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {

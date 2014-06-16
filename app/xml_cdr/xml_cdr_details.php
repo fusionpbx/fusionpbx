@@ -186,7 +186,7 @@ else {
 	echo "<th>".$text['label-destination']."</th>\n";
 	echo "<th>".$text['label-start']."</th>\n";
 	echo "<th>".$text['table-end']."</th>\n";
-	echo "<th>".$text['label-length']."</th>\n";
+	echo "<th>".$text['label-duration']."</th>\n";
 	echo "<th>".$text['label-status']."</th>\n";
 	echo "</tr>\n";
 

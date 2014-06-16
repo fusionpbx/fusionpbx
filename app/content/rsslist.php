@@ -42,28 +42,6 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (!function_exists('th_order_by')) {
-	//html table header order by
-	function th_order_by($field_name, $columntitle, $order_by, $order) {
-
-		$html .= "<th nowrap>&nbsp; &nbsp; ";
-		if (strlen($order_by)==0) {
-			$html .= "<a href='?order_by=$field_name&order=desc' title='ascending'>$columntitle</a>";
-		}
-		else {
-			if ($order=="asc") {
-				$html .= "<a href='?order_by=$field_name&order=desc' title='ascending'>$columntitle</a>";
-			}
-			else {
-				$html .= "<a href='?order_by=$field_name&order=asc' title='descending'>$columntitle</a>";
-			}
-		}
-		$html .= "&nbsp; &nbsp; </th>";
-
-		return $html;
-	}
-}
-
 require_once "resources/header.php";
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"\" href=\"rss.php\" />\n";
 
