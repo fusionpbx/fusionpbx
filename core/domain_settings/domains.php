@@ -184,8 +184,13 @@ else {
 			if (permission_exists('domain_edit')) {
 				echo "<a href='domain_edit.php?id=".$row['domain_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			if (permission_exists('domain_delete')) {
-				echo "<a href='domain_delete.php?id=".$row['domain_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			if (permission_exists('domain_delete') && $result_count > 1) {
+				if ($_SESSION["groups"][0]["domain_uuid"] != $row['domain_uuid']) {
+					echo "<a href='domain_delete.php?id=".$row['domain_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				}
+				else {
+					echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
+				}
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
