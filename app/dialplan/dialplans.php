@@ -256,11 +256,11 @@ else {
 			}
 			echo "<tr >\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_name']."</td>\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_number']."</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>".((strlen($row['dialplan_number']) > 0) ? $row['dialplan_number'] : "&nbsp;")."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_context']."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_order']."</td>\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>".$row['dialplan_enabled']."</td>\n";
-			echo "   <td valign='top' class='row_stylebg' width='30%'>".$row['dialplan_description']."&nbsp;</td>\n";
+			echo "   <td valign='top' class='row_stylebg' width='30%'>".((strlen($row['dialplan_description']) > 0) ? $row['dialplan_description'] : "&nbsp;")."</td>\n";
 			echo "   <td class='list_control_icons'>\n";
 			if ($app_uuid == "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4") {
 				if (permission_exists('inbound_route_edit')) {
