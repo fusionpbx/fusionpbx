@@ -163,12 +163,12 @@ echo "	<td align=\"center\">\n";
 				if (permission_exists('user_edit')) {
 					echo "<a href='usersupdate.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
-				if (permission_exists('user_delete')) {
+				if (permission_exists('user_delete') && $result_count > 1) {
 					if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
 						echo "<a href='userdelete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
 					else {
-						echo $v_link_label_delete; // no you can't delete your own account, duh
+						echo "<span onclick=\"alert('You cannot delete your own user account.\\n\\nPlease login as a different user, then try again.');\">".$v_link_label_delete."</span>";
 					}
 				}
 				echo "	</td>\n";
