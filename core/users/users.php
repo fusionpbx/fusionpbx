@@ -163,8 +163,8 @@ echo "	<td align=\"center\">\n";
 				if (permission_exists('user_edit')) {
 					echo "<a href='usersupdate.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
-				if (permission_exists('user_delete') && $result_count > 1) {
-					if ($_SESSION["user"]["user_uuid"] != $row['user_uuid']) {
+				if (permission_exists('user_delete')) {
+					if ($_SESSION["user"]["user_uuid"] != $row['user_uuid'] && $result_count > 1) {
 						echo "<a href='userdelete.php?id=".$row['user_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 					}
 					else {

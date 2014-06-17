@@ -184,8 +184,8 @@ else {
 			if (permission_exists('domain_edit')) {
 				echo "<a href='domain_edit.php?id=".$row['domain_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			if (permission_exists('domain_delete') && $result_count > 1) {
-				if ($_SESSION["groups"][0]["domain_uuid"] != $row['domain_uuid']) {
+			if (permission_exists('domain_delete')) {
+				if ($_SESSION["groups"][0]["domain_uuid"] != $row['domain_uuid'] && $result_count > 1) {
 					echo "<a href='domain_delete.php?id=".$row['domain_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				else {
