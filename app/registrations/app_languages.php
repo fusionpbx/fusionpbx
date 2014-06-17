@@ -75,11 +75,6 @@
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
-	$text['button-refresh']['en-us'] = "Refresh";
-	$text['button-refresh']['es-cl'] = "Actualizar";
-	$text['button-refresh']['pt-pt'] = "Actualizar";
-	$text['button-refresh']['fr-fr'] = "Rafraîchir";
-
 	$text['label-interval']['en-us'] = "Interval (Sec)";
 	$text['label-interval']['es-cl'] = "Intervalo";
 	$text['label-interval']['pt-pt'] = "Intervalo";

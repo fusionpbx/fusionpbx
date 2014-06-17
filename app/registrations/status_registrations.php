@@ -46,188 +46,78 @@ require_once "resources/check_auth.php";
 //request form values and set them as variables
 	$sip_profile_name = trim($_REQUEST["profile"]);
 
-//define variables
-	$c = 0;
-	$row_style["0"] = "row_style0";
-	$row_style["1"] = "row_style1";
+//show the header
+	require_once "resources/header.php";
+	$page["title"] = $text['header-registrations'];
 
-//create the event socket connection
-	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-	if (!$fp) {
-		$msg = "<div align='center'>".$text['error-event-socket']."<br /></div>";
+//ajax for refresh
+	?>
+	<script type="text/javascript">
+	function loadXmlHttp(url, id) {
+		var f = this;
+		f.xmlHttp = null;
+		/*@cc_on @*/ // used here and below, limits try/catch to those IE browsers that both benefit from and support it
+		/*@if(@_jscript_version >= 5) // prevents errors in old browsers that barf on try/catch & problems in IE if Active X disabled
+		try {f.ie = window.ActiveXObject}catch(e){f.ie = false;}
+		@end @*/
+		if (window.XMLHttpRequest&&!f.ie||/^http/.test(window.location.href))
+			f.xmlHttp = new XMLHttpRequest(); // Firefox, Opera 8.0+, Safari, others, IE 7+ when live - this is the standard method
+		else if (/(object)|(function)/.test(typeof createRequest))
+			f.xmlHttp = createRequest(); // ICEBrowser, perhaps others
+		else {
+			f.xmlHttp = null;
+			 // Internet Explorer 5 to 6, includes IE 7+ when local //
+			/*@cc_on @*/
+			/*@if(@_jscript_version >= 5)
+			try{f.xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");}
+			catch (e){try{f.xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");}catch(e){f.xmlHttp=null;}}
+			@end @*/
+		}
+		if(f.xmlHttp != null){
+			f.el = document.getElementById(id);
+			f.xmlHttp.open("GET",url,true);
+			f.xmlHttp.onreadystatechange = function(){f.stateChanged();};
+			f.xmlHttp.send(null);
+		}
 	}
 
-//show the error message or show the content
-	if (strlen($msg) > 0) {
-		echo "<div align='center'>\n";
-		echo "<table width='40%'>\n";
-		echo "<tr>\n";
-		echo "<th align='left'>".$text['label-message']."</th>\n";
-		echo "</tr>\n";
-		echo "<tr>\n";
-		echo "<td class='row_style1'><strong>$msg</strong></td>\n";
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "</div>\n";
-	}
-	else {
-		//get sofia status profile information including registrations
-			$cmd = "api sofia xmlstatus profile ".$sip_profile_name." reg";
-			$xml_response = trim(event_socket_request($fp, $cmd));
-			if ($xml_response == "Invalid Profile!") { $xml_response = "<error_msg>".$text['label-message']."</error_msg>"; }
-			$xml_response = str_replace("<profile-info>", "<profile_info>", $xml_response);
-			$xml_response = str_replace("</profile-info>", "</profile_info>", $xml_response);
-			try {
-				$xml = new SimpleXMLElement($xml_response);
-			}
-			catch(Exception $e) {
-				echo $e->getMessage();
-				exit;
-			}
-
-		//build the registration array
-			if (count($xml->registrations->registration) > 0) {
-				$registrations = '';
-				$x = 0;
-				foreach ($xml->registrations->registration as $row) {
-					//get the values from xml and set them to the channel array
-						$registrations[$x]['user'] = $row->{'user'};
-						$user_array = explode('@', $row->{'user'});
-						$registrations[$x]['call-id'] = $row->{'call-id'};
-						$registrations[$x]['contact'] = $row->{'contact'};
-						$registrations[$x]['sip-auth-user'] = $row->{'sip-auth-user'};
-						$registrations[$x]['agent'] = $row->{'agent'};
-						$registrations[$x]['host'] = $row->{'host'};
-						$registrations[$x]['network-ip'] = $row->{'network-ip'};
-						$registrations[$x]['network-port'] = $row->{'network-port'};
-						$registrations[$x]['sip-auth-realm'] = $row->{'sip-auth-realm'};
-						$registrations[$x]['mwi-account'] = $row->{'mwi-account'};
-						$registrations[$x]['status'] = $row->{'status'};
-
-					//remove unrelated domains
-						if (count($_SESSION["domains"]) > 1) {
-							if (permission_exists('registration_all')) {
-								//show all registrations
-							}
-							else {
-								if ($registrations[$x]['sip-auth-realm'] != $_SESSION['domain_name']) {
-									unset($registrations[$x]);
-								}
-							}
-						}
-					//increment the array id
-						$x++;
-				}
-			}
-
-		//show the header
-			require_once "resources/header.php";
-			$page["title"] = $text['header-registrations'];
-
-		//show the registrations
-			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
-			echo "<tr>\n";
-			echo "<td colspan='4'>\n";
-			echo "	<b>".$text['header-registrations'].": ".count($registrations)."</b>\n";
-			echo "</td>\n";
-			echo "<td colspan='1' align='right'>\n";
-
-			if (isset($_SESSION['registrations']['refresh']['numeric'])) {
-				$refresh = $_SESSION['registrations']['refresh']['numeric'];
-			}
-			else {
-				$refresh = 20;
-			}
-
-			echo "<script>\n";
-			echo "	function Refresh(refresh) {\n";
-			echo "		refresh = typeof refresh !== 'undefined' ? refresh : 0;\n";
-			echo "		document.location.href = 'status_registrations.php?profile=".$sip_profile_name."' + ((refresh != 0) ? '&refresh=' + refresh : '');\n";
-			echo "	}\n";
-			echo "</script>\n";
-
-			echo "<table cellpadding='0' cellspacing='3' border='0'>\n";
-			echo "	<tr>\n";
-			echo "		<td style='vertical-align: middle; padding-right: 0px;'>\n";
-			echo "			<input type='button' class='btn' value='".$text['button-back']."' onclick=\"history.back();\" />\n";
-			echo "		</td>\n";
-			echo "		<td style='vertical-align: middle;'>\n";
-			echo "			<input type='button' class='btn' value='".$text['button-refresh']."' onclick=\"Refresh(".$refresh.");\" />\n";
-			echo "			<script>\n";
-			echo "					setTimeout(\"Refresh(".$refresh.")\" , (".$refresh." * 1000));\n";
-			echo "			</script>\n";
-			echo "		</td>\n";
-			echo "	</tr>\n";
-			echo "</table>\n";
-
-			echo "</td>\n";
-			echo "</tr>\n";
-			echo "</table>\n";
-
-			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
-			echo "<tr>\n";
-			//if (count($_SESSION["domains"]) > 1) {
-			//	echo "	<th>".$text['label-domain']."</th>\n";
-			//}
-			//echo "	<th>User</th>\n";
-			//echo "	<th class='vncell'>Caller ID</th>\n";
-			echo "	<th>".$text['label-user']."</th>\n";
-			//echo "	<th class='vncell'>Contact</th>\n";
-			//echo "	<th class='vncell'>sip-auth-user</th>\n";
-			echo "	<th>".$text['label-agent']."</th>\n";
-			//echo "	<th class='vncell'>Host</th>\n";
-			echo "	<th>".$text['label-ip']."</th>\n";
-			echo "	<th>".$text['label-port']."</th>\n";
-			//echo "	<th class='vncell'>mwi-account</th>\n";
-			echo "	<th>".$text['label-status']."</th>\n";
-			echo "	<th>".$text['label-tools']."&nbsp;</th>\n";
-			echo "</tr>\n";
-
-		//order the array
-			require_once "resources/classes/array_order.php";
-			$order = new array_order();
-			$registrations = $order->sort($registrations, 'domain', 'user');
-
-		//display the array
-			if (count($registrations) > 0) {
-				foreach ($registrations as $row) {
-					//set the user agent
-						$agent = $row['agent'];
-
-					//show the registrations
-						echo "<tr>\n";
-						//if (count($_SESSION["domains"]) > 1) {
-						//	echo "<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-realm']."&nbsp;</td>\n";
-						//}
-						//<td class='".$row_style[$c]."'>&nbsp;".$row['call-id']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['user']."&nbsp;</td>\n";
-						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['contact']."&nbsp;</td>\n";
-						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['sip-auth-user']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>&nbsp;".htmlentities($row['agent'])."&nbsp;</td>\n";
-						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['host']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>&nbsp;<a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['network-port']."&nbsp;</td>\n";
-						//echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['mwi-account']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."'>&nbsp;".$row['status']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."' align='right'>\n";
-						echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
-						echo "		<input type='button' class='btn' value='".$text['button-check_sync']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
-						echo "	</td>\n";
-						echo "</tr>\n";
-						if ($c==0) { $c=1; } else { $c=0; }
-				}
-			}
-			echo "</table>\n";
-
-		//close the connection and unset the variable
-			fclose($fp);
-			unset($xml);
+	loadXmlHttp.prototype.stateChanged=function () {
+	if (this.xmlHttp.readyState == 4 && (this.xmlHttp.status == 200 || !/^http/.test(window.location.href)))
+		//this.el.innerHTML = this.xmlHttp.responseText;
+		document.getElementById('ajax_reponse').innerHTML = this.xmlHttp.responseText;
 	}
 
-//add some space at the bottom of the page
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "<br />\n";
+	var requestTime = function() {
+		var url = 'status_registrations_inc.php?profile=internal';
+		new loadXmlHttp(url, 'ajax_reponse');
+		setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, 1500);
+	}
+
+	if (window.addEventListener) {
+		window.addEventListener('load', requestTime, false);
+	}
+	else if (window.attachEvent) {
+		window.attachEvent('onload', requestTime);
+	}
+
+	var record_count = 0;
+	var destination;
+	</script>
+
+	<?php
+
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+	echo "	<tr class='border'>\n";
+	echo "	<td align=\"left\">\n";
+	echo "		<div id=\"ajax_reponse\">\n";
+	include_once "status_registrations_inc.php";
+	echo "		</div>\n";
+	echo "		<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
+	echo "	</td>";
+	echo "	</tr>";
+	echo "</table>";
+
+
 
 //get the footer
 	require_once "resources/footer.php";
