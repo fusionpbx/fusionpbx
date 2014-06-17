@@ -45,7 +45,7 @@ require_once "resources/check_auth.php";
 		}
 	}
 
-//request form values and set them as variables
+//request profile
 	$sip_profile_name = trim($_REQUEST["profile"]);
 
 //define variables
