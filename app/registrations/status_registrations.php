@@ -43,9 +43,6 @@ require_once "resources/check_auth.php";
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//request form values and set them as variables
-	$sip_profile_name = trim($_REQUEST["profile"]);
-
 //show the header
 	require_once "resources/header.php";
 	$page["title"] = $text['header-registrations'];
@@ -105,21 +102,15 @@ require_once "resources/check_auth.php";
 	</script>
 
 	<?php
-
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "	<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
-	echo "		<div id=\"ajax_reponse\">\n";
-	include_once "status_registrations_inc.php";
-	echo "		</div>\n";
+	echo "		<div id=\"ajax_reponse\"></div>\n";
 	echo "		<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
 
-
-
 //get the footer
 	require_once "resources/footer.php";
-
 ?>
