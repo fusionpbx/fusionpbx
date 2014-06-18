@@ -283,7 +283,9 @@
 
 //get cdr details from the http post
 	if (strlen($_POST["cdr"]) > 0) {
-
+			if ($debug){
+				print_r ($_POST["cdr"]);
+			}
 		//authentication for xml cdr http post
 			if (strlen($_SESSION["xml_cdr"]["http_enabled"]) == 0) {
 				//get the contents of xml_cdr.conf.xml
