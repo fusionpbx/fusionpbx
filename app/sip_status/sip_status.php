@@ -203,10 +203,10 @@ if ($_GET['a'] == "download") {
 				}
 				echo "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 10px;'>\n";
 				echo "<tr>\n";
-				echo "<td width='50%'>\n";
+				echo "<td width='100%'>\n";
 				echo "  <b><a href='javascript:void(0);' onclick=\"$('#".$sip_profile_name."').slideToggle();\">".$text['title-sofia-status-profile']." ".$sip_profile_name."</a></b> \n";
 				echo "</td>\n";
-				echo "<td width='50%' align='right'>\n";
+				echo "<td align='right' nowrap>\n";
 				if ($sip_profile_name != "external") {
 					echo "  <input type='button' class='btn' value='flush_inbound_reg' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+flush_inbound_reg';\" />\n";
 				}
