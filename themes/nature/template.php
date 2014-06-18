@@ -796,7 +796,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 									//login form
 										echo "<div align='right'>\n";
 										echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
-										echo "<input type='hidden' name='path' value='$path'>\n";
+										echo "<input type='hidden' name='path' value='".$_GET['path']."'>\n";
 										echo "<table width='200' border='0'>\n";
 										echo "<tr>\n";
 										//echo "<td align='left'>\n";
