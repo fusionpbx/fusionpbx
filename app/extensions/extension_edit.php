@@ -957,6 +957,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-accountcode'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
+		if ($action == "add"){ $accountcode=$_SESSION['domain_name']; }
 		echo "    <input class='formfld' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
