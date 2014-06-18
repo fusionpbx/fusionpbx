@@ -329,11 +329,11 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom: 3px;\">\n";
 		echo "	<tr>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-download']."</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-play']."</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdr\">".$text['label-uploaded']."</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
+		echo "		<th class=\"listhdrr\">".$text['label-download']."</th>\n";
+		echo "		<th class=\"listhdrr\">".$text['label-play']."</th>\n";
+		echo "		<th class=\"listhdr\">".$text['label-uploaded']."</th>\n";
+		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
+		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
 		echo "		<td width='22px' align=\"center\"></td>\n";
 		echo "	</tr>";
 
@@ -383,11 +383,11 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom: 3px;\">\n";
 		echo "	<tr>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-download']."</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdrr\">".$text['label-play']."</th>\n";
-		echo "		<th width=\"30%\" class=\"listhdr\">".$text['label-uploaded']."</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
-		echo "		<th width=\"10%\" class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
+		echo "		<th class=\"listhdrr\">".$text['label-download']."</th>\n";
+		echo "		<th class=\"listhdrr\">".$text['label-play']."</th>\n";
+		echo "		<th class=\"listhdr\">".$text['label-uploaded']."</th>\n";
+		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
+		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
 		echo "		<td width='22px' align=\"center\" style=\"padding: 2px;\"><span id='category_".$category_number."_delete_icon'></span></td>\n";
 		echo "	</tr>";
 
