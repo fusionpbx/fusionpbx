@@ -45,9 +45,9 @@ require_once "resources/require.php";
 
 		//if the username is not provided then send to login.php
 			if (strlen(check_str($_REQUEST["username"])) == 0 && strlen(check_str($_REQUEST["key"])) == 0) {
-				$php_self = $_SERVER["PHP_SELF"];
-				$msg = "username required";
-				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($php_self)."&msg=".urlencode($msg));
+				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
+				$_SESSION["message"] = "Invalid Username and/or Password";
+				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 				exit;
 			}
 
@@ -263,9 +263,9 @@ require_once "resources/require.php";
 					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".check_str($_REQUEST["username"]));
 					closelog();
 				//redirect the user to the login page
-					$php_self = $_SERVER["PHP_SELF"];
-					$msg = "incorrect account information";
-					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($php_self)."&msg=".urlencode($msg));
+					$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
+					$_SESSION["message"] = "Invalid Username and/or Password";
+					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 					exit;
 			}
 			foreach ($result as &$row) {
