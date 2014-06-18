@@ -478,7 +478,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
-					$sql .= "accountcode = '$accountcode', ";
+					 if (if_group("superadmin")) {
+						$sql .= "accountcode = '$accountcode', ";
+					}
 					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
 					$sql .= "effective_caller_id_number = '$effective_caller_id_number', ";
 					$sql .= "outbound_caller_id_name = '$outbound_caller_id_name', ";
