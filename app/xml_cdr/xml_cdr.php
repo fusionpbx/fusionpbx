@@ -129,7 +129,7 @@ else {
 		if (permission_exists('xml_cdr_search')) {
 
 			echo "<fieldset>";
-			echo "<legend>$text['button-search']</legend>";
+			echo "<legend>".$text['button-search']."</legend>";
 
 			echo "<form method='post' action=''>\n";
 
