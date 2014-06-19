@@ -87,11 +87,10 @@ else {
 
 	$strlist = "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$strlist .= "<tr class='border'>\n";
-	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_name']." &nbsp; </th>\n";
-	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_check']." &nbsp; </th>\n";
-	$strlist .= "	<th align=\"left\" nowrap> &nbsp; ".$text['label-group_description']." &nbsp; </th>\n";
-	$strlist .= "	<th align=\"center\" nowrap>&nbsp;</th>\n";
-
+	$strlist .= "	<th nowrap>".$text['label-group_name']."</th>\n";
+	$strlist .= "	<th nowrap>".$text['label-group_description']."</th>\n";
+	$strlist .= "	<th style='text-align: center;' nowrap>&nbsp;</th>\n";
+	$strlist .= "	<th style='text-align: center;' nowrap>".$text['label-group_protected']."</th>\n";
 	$strlist .= "	<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
 		$strlist .= "<a href='groupadd.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -115,30 +114,26 @@ else {
 		}
 		else {
 			$strlist .= "<tr>";
-			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_name &nbsp; </td>\n";
-			//$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_protected &nbsp; </td>\n";
-			$strlist .= "	<td class='".$row_style[$c]."' style=\"padding: 0px;\" align=\"left\" nowrap='nowrap' nowrap>\n";
+			$strlist .= "<td class='".$row_style[$c]."' nowrap>".$group_name."</td>\n";
+			$strlist .= "<td class='".$row_style[$c]."' nowrap>".$group_description."</td>\n";
+			$strlist .= "<td class='".$row_style[$c]."' style='text-align: center;' nowrap>\n";
+			if (permission_exists('group_add') || if_group("superadmin")) {
+				$strlist .= "<a class='' href='group_permissions.php?group_name=".$group_name."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;";
+			}
+			if (permission_exists('group_member_view') || if_group("superadmin")) {
+				$strlist .= "<a class='' href='groupmembers.php?group_name=".$group_name."' title='".$text['label-group_members']."'>".$text['label-group_members']."</a>";
+			}
+			$strlist .= "</td>\n";
+			$strlist .= "<td class='".$row_style[$c]."' style=\"padding: 0px; text-align: center;\" align=\"center\" nowrap>\n";
 			if ($group_protected == "true") {
 				$strlist .= "		<input type='checkbox' name='group_protected' checked='checked' value='true' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=false&group_name=".$group_name."';\">\n";
 			}
 			else {
 				$strlist .= "		<input type='checkbox' name='group_protected' value='false' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=true&group_name=".$group_name."';\">\n";
 			}
-			$strlist .= "	</td>\n";
-			$strlist .= "<td class='".$row_style[$c]."' align=\"left\" class='' nowrap> &nbsp; $group_description &nbsp; </td>\n";
-
-			$strlist .= "<td class='".$row_style[$c]."' align=\"center\" nowrap>\n";
-			if (permission_exists('group_add') || if_group("superadmin")) {
-				$strlist .= "&nbsp;<a class='' href='group_permissions.php?group_name=$group_name' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;";
-			}
-			if (permission_exists('group_member_view') || if_group("superadmin")) {
-				$strlist .= "&nbsp;<a class='' href='groupmembers.php?group_name=$group_name' title='".$text['label-group_members']."'>".$text['label-group_members']."</a>&nbsp;";
-			}
 			$strlist .= "</td>\n";
-
 			$strlist .= "<td class='list_control_icons' style='width: 25px;'>";
 			$strlist .= "<a href='groupdelete.php?id=$group_uuid' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
-
 			$strlist .= "</td>\n";
 			$strlist .= "</tr>\n";
 		}
