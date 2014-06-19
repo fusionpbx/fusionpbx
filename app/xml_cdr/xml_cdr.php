@@ -397,7 +397,7 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
 			}
 			if (permission_exists("xml_cdr_mos")) {
-				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "alt='".($row['rtp_audio_in_mos'] / 5)."%'" : null)."'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5)."%'" : null)."'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
 			}
 			if (if_group("admin") || if_group("superadmin")) {
 				echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
