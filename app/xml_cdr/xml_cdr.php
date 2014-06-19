@@ -295,8 +295,11 @@ else {
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order);
 	//echo th_order_by('end_stamp', 'End', $order_by, $order);
 	echo th_order_by('duration', $text['label-duration'], $order_by, $order);
-	if (if_group("admin") || if_group("superadmin")) {
+	if (permission_exists('xml_cdr_pdd')) {
 		echo th_order_by('pdd_ms', 'PDD', $order_by, $order);
+	}
+	if (permission_exists('xml_cdr_mos')) {
+		echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order);
 	}
 	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order);
 	echo "</tr>\n";
@@ -390,8 +393,13 @@ else {
 			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
-			if (if_group("admin") || if_group("superadmin")) {
+			if (permission_exists("xml_cdr_pdd")) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
+			}
+			if (permission_exists("xml_cdr_mos")) {
+				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "alt='".($row['rtp_audio_in_mos'] / 5)."%'" : null)."'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
+			}
+			if (if_group("admin") || if_group("superadmin")) {
 				echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
 			}
 			else {
