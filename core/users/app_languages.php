@@ -202,6 +202,11 @@
 	$text['label-group_members']['pt-pt'] = "Membros";
 	$text['label-group_members']['fr-fr'] = "Membres";
 
+	$text['label-group_protected']['en-us'] = "Protected";
+	$text['label-group_protected']['es-cl'] = "Protegido";
+	$text['label-group_protected']['pt-pt'] = "Protegido";
+	$text['label-group_protected']['fr-fr'] = "Protégé";
+
 	$text['label-permission_permissions']['en-us'] = "Permissions";
 	$text['label-permission_permissions']['es-cl'] = "Permisos";
 	$text['label-permission_permissions']['pt-pt'] = "Permissões";
