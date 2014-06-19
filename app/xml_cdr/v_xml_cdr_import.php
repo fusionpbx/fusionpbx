@@ -25,6 +25,13 @@
 */
 
 //check the permission
+	$is_billing = 0;	// by default billing is not used
+
+	if (file_exists("app/billings/root.php")){
+		$is_billing = 1;
+		require_once "app/billings/functions.php";
+	}
+
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
 		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
@@ -205,6 +212,11 @@
 		//insert the check_str($extension_uuid)
 			if (strlen($xml->variables->extension_uuid) > 0) {
 				$database->fields['extension_uuid'] = check_str(urldecode($xml->variables->extension_uuid));
+			}
+
+		//billing information
+			if ($is_billing){
+				//
 			}
 
 		//insert xml_cdr into the db
