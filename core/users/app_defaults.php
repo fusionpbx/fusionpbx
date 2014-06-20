@@ -36,18 +36,23 @@
 			$x = 0;
 			$tmp[$x]['group_name'] = 'superadmin';
 			$tmp[$x]['group_description'] = 'Super Administrator Group';
+			$tmp[$x]['group_protected'] = 'false';
 			$x++;
 			$tmp[$x]['group_name'] = 'admin';
 			$tmp[$x]['group_description'] = 'Administrator Group';
+			$tmp[$x]['group_protected'] = 'false';
 			$x++;
 			$tmp[$x]['group_name'] = 'user';
 			$tmp[$x]['group_description'] = 'User Group';
+			$tmp[$x]['group_protected'] = 'false';
 			$x++;
 			$tmp[$x]['group_name'] = 'public';
 			$tmp[$x]['group_description'] = 'Public Group';
+			$tmp[$x]['group_protected'] = 'false';
 			$x++;
 			$tmp[$x]['group_name'] = 'agent';
 			$tmp[$x]['group_description'] = 'Call Center Agent Group';
+			$tmp[$x]['group_protected'] = 'false';
 			foreach($tmp as $row) {
 				if (strlen($row['group_name']) > 0) {
 					$sql = "insert into v_groups ";
@@ -55,14 +60,16 @@
 					$sql .= "domain_uuid, ";
 					$sql .= "group_uuid, ";
 					$sql .= "group_name, ";
-					$sql .= "group_description ";
+					$sql .= "group_description, ";
+					$sql .= "group_protected ";
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'$domain_uuid', ";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'".$row['group_name']."', ";
-					$sql .= "'".$row['group_description']."' ";
+					$sql .= "'".$row['group_description']."', ";
+					$sql .= "'".$row['group_protected']."' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
