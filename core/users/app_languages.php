@@ -242,7 +242,7 @@
 	$text['description-contact_view']['pt-pt'] = "Ver";
 	$text['description-contact_view']['fr-fr'] = "Voir";
 
-	$text['description-status']['en-us'] = "Set the user\'s presence.";
+	$text['description-status']['en-us'] = "Set the user's presence.";
 	$text['description-status']['es-cl'] = "Configure la presencia del usuario.";
 	$text['description-status']['pt-pt'] = "Escolher o estado de presença do utilizador.";
 	$text['description-status']['fr-fr'] = "Choisir l'état de présence de l'utilisateur.";
@@ -382,12 +382,17 @@
 	$text['message-required']['pt-pt'] = "Por favor indique: ";
 	$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
-	$text['message-password_blank']['en-us'] = "Password cannot be blank.";
-	$text['message-password_blank']['es-cl'] = "La contraseña no puede estar en blanco";
-	$text['message-password_blank']['pt-pt'] = "O campo password não pode ser vazio.";
-	$text['message-password_blank']['fr-fr'] = "Le mot de passe ne peut pas être vide.";
+	$text['message-username_exists']['en-us'] = "Username Already Exists";
+	$text['message-username_exists']['es-cl'] = "Ya existe Nombre de usuario";
+	$text['message-username_exists']['pt-pt'] = "Nome de usuário já existe";
+	$text['message-username_exists']['fr-fr'] = "Nom d'utilisateur existe déjà";
 
-	$text['message-password_mismatch']['en-us'] = "Passwords did not match.";
+	$text['message-password_blank']['en-us'] = "Invalid Password";
+	$text['message-password_blank']['es-cl'] = "Contraseña No Válida";
+	$text['message-password_blank']['pt-pt'] = "Senha Inválida";
+	$text['message-password_blank']['fr-fr'] = "Mot de Passe Incorrect";
+
+	$text['message-password_mismatch']['en-us'] = "Password Mismatch";
 	$text['message-password_mismatch']['es-cl'] = "Contraseñas no coinciden";
 	$text['message-password_mismatch']['pt-pt'] = "As passwords não correspondem.";
 	$text['message-password_mismatch']['fr-fr'] = "les mots de passe ne correspondent pas";
