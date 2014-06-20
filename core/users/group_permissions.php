@@ -304,6 +304,10 @@ require_once "resources/paging.php";
 					}
 				}
 			}
+
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: groups.php");
+		return;
 	}
 
 //show the content
