@@ -89,7 +89,7 @@ else {
 	$strlist .= "<tr class='border'>\n";
 	$strlist .= "	<th nowrap>".$text['label-group_name']."</th>\n";
 	$strlist .= "	<th nowrap>".$text['label-group_description']."</th>\n";
-	$strlist .= "	<th style='text-align: center;' nowrap>&nbsp;</th>\n";
+	$strlist .= "	<th nowrap>".$text['label-group_tools']."</th>\n";
 	$strlist .= "	<th style='text-align: center;' nowrap>".$text['label-group_protected']."</th>\n";
 	$strlist .= "	<td class='list_control_icons' style='width: 25px;'>";
 	if (permission_exists('group_add')) {
@@ -116,7 +116,7 @@ else {
 			$strlist .= "<tr>";
 			$strlist .= "<td class='".$row_style[$c]."' nowrap>".$group_name."</td>\n";
 			$strlist .= "<td class='".$row_style[$c]."' nowrap>".$group_description."</td>\n";
-			$strlist .= "<td class='".$row_style[$c]."' style='text-align: center;' nowrap>\n";
+			$strlist .= "<td class='".$row_style[$c]."' nowrap>\n";
 			if (permission_exists('group_add') || if_group("superadmin")) {
 				$strlist .= "<a class='' href='group_permissions.php?group_name=".$group_name."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;";
 			}
