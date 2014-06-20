@@ -118,6 +118,8 @@ else {
 		$strlist .= "</tr>\n";
 
 		if ($c==0) { $c=1; } else { $c=0; }
+
+		$group_users[] = $row["user_uuid"];
 		$count++;
 	}
 
@@ -143,7 +145,7 @@ else {
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach($result as $field) {
 		$username = $field['username'];
-		if (if_group_members($db, $group_name, $field['user_uuid'])) {
+		if (if_group_members($db, $group_name, $field['user_uuid']) && !in_array($field['user_uuid'], $group_users)) {
 			echo "<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
 		}
 	}
