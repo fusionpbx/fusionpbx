@@ -42,81 +42,83 @@ else {
 	}
 
 //set the http get/post variable(s) to a php variable
-	if (isset($_REQUEST["id"]) && isset($_REQUEST["ext"])) {
-		$group_name = check_str($_REQUEST["id"]);
-		$group_new = check_str($_REQUEST["ext"]);
-	}
+if (isset($_REQUEST["group_name"]) && isset($_REQUEST["new_group_name"])) {
 
-//get the groups data
-	$sql = "select * from v_groups ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and group_name = '$group_name' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$domain_uuid = $row["domain_uuid"];
-		$group_description = $row["group_description"];
-		$group_name = $row["group_name"];
-	}
-	unset ($prep_statement);
+	$group_name = check_str($_REQUEST["group_name"]);
+	$new_group_name = check_str($_REQUEST["new_group_name"]);
+	$new_group_desc = check_str($_REQUEST["new_group_desc"]);
 
-	//copy the groups
-	$group_uuid = uuid();
-	$sql = "insert into v_groups ";
-	$sql .= "(";
-	$sql .= "group_uuid, ";
-	$sql .= "domain_uuid, ";
-	$sql .= "group_name, ";
-	$sql .= "group_description ";
-	$sql .= ")";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'$group_uuid', ";
-	$sql .= "'$domain_uuid', ";
-	$sql .= "'$group_new', ";
-	$sql .= "'copy_$group_description' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
+	//get the groups data
+		$sql = "select * from v_groups ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and group_name = '".$group_name."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
+			$group_name = $row["group_name"];
+		}
+		unset ($prep_statement);
 
-
-//get the group permissions data
-	$sql = "select * from v_group_permissions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and group_name = '$group_name' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$domain_uuid = $row["domain_uuid"];
-		$permission_name = $row["permission_name"];
-		$group_name = $row["group_name"];
-
-		//copy the group permissions
-		$group_permission_uuid = uuid();
-		$sql = "insert into v_group_permissions ";
-		$sql .= "(";
-		$sql .= "group_permission_uuid, ";
+	//create new group
+		$group_uuid = uuid();
+		$sql = "insert into v_groups ";
+		$sql .= "( ";
+		$sql .= "group_uuid, ";
 		$sql .= "domain_uuid, ";
-		$sql .= "permission_name, ";
-		$sql .= "group_name ";
-		$sql .= ")";
+		$sql .= "group_name, ";
+		$sql .= "group_description ";
+		$sql .= ") ";
 		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'$group_permission_uuid', ";
-		$sql .= "'$domain_uuid', ";
-		$sql .= "'$permission_name', ";
-		$sql .= "'$group_new' ";
-		$sql .= ")";
+		$sql .= "( ";
+		$sql .= "'".$group_uuid."', ";
+		$sql .= "'".$domain_uuid."', ";
+		$sql .= "'".$new_group_name."', ";
+		$sql .= "'".$new_group_desc."' ";
+		$sql .= ") ";
 		$db->exec(check_sql($sql));
 		unset($sql);
-	}
-	unset ($prep_statement);
 
-//redirect the user
-	$_SESSION["message"] = $text['message-copy'];
-	header("Location: groups.php");
-	return;
+	//get the group permissions data
+		$sql = "select * from v_group_permissions ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and group_name = '".$group_name."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
+			$permission_name = $row["permission_name"];
+			$group_name = $row["group_name"];
+
+		//copy the group permissions
+			$group_permission_uuid = uuid();
+			$sql = "insert into v_group_permissions ";
+			$sql .= "( ";
+			$sql .= "group_permission_uuid, ";
+			$sql .= "domain_uuid, ";
+			$sql .= "permission_name, ";
+			$sql .= "group_name ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "( ";
+			$sql .= "'".$group_permission_uuid."', ";
+			$sql .= "'".$domain_uuid."', ";
+			$sql .= "'".$permission_name."', ";
+			$sql .= "'".$new_group_name."' ";
+			$sql .= ") ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+		unset ($prep_statement);
+
+	//redirect the user
+		$_SESSION["message"] = $text['message-copy'];
+
+}
+
+header("Location: groups.php");
+return;
 
 ?>

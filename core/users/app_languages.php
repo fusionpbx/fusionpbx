@@ -357,6 +357,16 @@
 	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
 	$text['message-delete']['fr-fr'] = "Supprimé";
 
+	$text['message-delete']['en-us'] = "Delete Completed";
+	$text['message-delete']['es-cl'] = "Eliminación Completada";
+	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
+	$text['message-delete']['fr-fr'] = "Supprimé";
+
+	$text['message-copy']['en-us'] = "Copy Completed";
+	$text['message-copy']['es-cl'] = "Copia Completada";
+	$text['message-copy']['pt-pt'] = "Cópia Efectuada";
+	$text['message-copy']['fr-fr'] = "Copié";
+
 	$text['message-restore']['en-us'] = "Restore Completed";
 	$text['message-restore']['es-cl'] = "Restauración Completada";
 	$text['message-restore']['pt-pt'] = "Restauração Efectuada";
@@ -376,5 +386,15 @@
 	$text['message-password_mismatch']['es-cl'] = "Contraseñas no coinciden";
 	$text['message-password_mismatch']['pt-pt'] = "As passwords não correspondem.";
 	$text['message-password_mismatch']['fr-fr'] = "les mots de passe ne correspondent pas";
+
+	$text['message-new_group_name']['en-us'] = "Enter a Name for the new Group...";
+	$text['message-new_group_name']['es-cl'] = "Introduzca un Nombre para el nuevo Grupo...";
+	$text['message-new_group_name']['pt-pt'] = "Digite um Nome para o novo Grupo...";
+	$text['message-new_group_name']['fr-fr'] = "Entrez un Nom pour le nouveau Groupe...";
+
+	$text['message-new_group_description']['en-us'] = "Enter a Description for the new Group...";
+	$text['message-new_group_description']['es-cl'] = "Introduzca una Descripción para el nuevo Grupo...";
+	$text['message-new_group_description']['pt-pt'] = "Digite uma Descrição para o novo grupo...";
+	$text['message-new_group_description']['fr-fr'] = "Entrez une Description pour le nouveau groupe...";
 
 ?>

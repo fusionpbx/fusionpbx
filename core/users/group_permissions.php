@@ -310,6 +310,22 @@ require_once "resources/paging.php";
 		return;
 	}
 
+// copy group javascript
+
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	function copy_group() {\n";
+	echo "		var new_group_name;\n";
+	echo "		var new_group_desc;\n";
+	echo "		new_group_name = prompt('".$text['message-new_group_name']."');\n";
+	echo "		if (new_group_name != null) {\n";
+	echo "			new_group_desc = prompt('".$text['message-new_group_description']."');\n";
+	echo "			if (new_group_desc != null) {\n";
+	echo "				window.location = 'permissions_copy.php?group_name=".$group_name."&new_group_name=' + new_group_name + '&new_group_desc=' + new_group_desc;\n";
+	echo "			}\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>\n";
+
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<div align='center'>";
@@ -322,7 +338,7 @@ require_once "resources/paging.php";
 	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-group_permissions'].$group_name."</b></td>\n";
 	echo "<td width='50%' align=\"right\">\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
-	echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick=\"var new_ext = prompt('".$text['message_extension']."'); if (new_ext != null) { window.location='permissions_copy.php?id=".$group_name."&ext=' + new_ext; }\" value='".$text['button-copy']."'>";
+	echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick='copy_group();' value='".$text['button-copy']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
