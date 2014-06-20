@@ -62,8 +62,16 @@
 
 	if (!function_exists('check_sql')) {
 		function check_sql($string) {
-			$string = str_replace("''", "null", $string);
-			return trim($string); //remove white space
+			// if insert statement
+			if (strpos(strtolower(trim($string)), "insert") == 0) {
+				$string = str_replace(" ''", " null", $string);
+				$string = str_replace(",''", ",null", $string);
+				$string = str_replace("'',", "null,", $string);
+				$string = str_replace("(''", "(null", $string);
+				$string = str_replace("'')", "null)", $string);
+				$string = str_replace("'' )", "null )", $string);
+			}
+			return trim($string); //remove white space  ADD TRIM BACK IN!
 		}
 	}
 
