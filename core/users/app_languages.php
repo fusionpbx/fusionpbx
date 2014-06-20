@@ -192,6 +192,11 @@
 	$text['label-group_description']['pt-pt'] = "Descrição";
 	$text['label-group_description']['fr-fr'] = "Description";
 
+	$text['label-group_tools']['en-us'] = "Tools";
+	$text['label-group_tools']['es-cl'] = "Instrumentos";
+	$text['label-group_tools']['pt-pt'] = "Ferramentas";
+	$text['label-group_tools']['fr-fr'] = "Outils";
+
 	$text['label-group_permissions']['en-us'] = "Permissions";
 	$text['label-group_permissions']['es-cl'] = "Permisos";
 	$text['label-group_permissions']['pt-pt'] = "Permissões";
