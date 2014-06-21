@@ -132,7 +132,7 @@ echo "	<td align=\"center\">\n";
 
 //show the data
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
@@ -149,7 +149,8 @@ echo "	<td align=\"center\">\n";
 			if (if_superadmin($superadmins, $row['user_uuid']) && !if_group("superadmin")) {
 				//hide
 			} else {
-				echo "<tr >\n";
+				$tr_link = (permission_exists('user_edit')) ? " onclick=\"document.location.href='usersupdate.php?id=".$row['user_uuid']."';\"" : null;
+				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('user_edit')) {
 					echo "<a href='usersupdate.php?id=".$row['user_uuid']."'>".$row['username']."</a>";

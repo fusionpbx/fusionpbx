@@ -9,7 +9,7 @@
 </table>
 <br />
 
-<table width='100%' border='0' cellpadding='0' cellspacing='0'>
+<table class="tr_hover" width='100%' border='0' cellpadding='0' cellspacing='0'>
 <tr>
 	<th><?php echo $text['label-profile_name']?></th>
 	<th><?php echo $text['label-context']?></th>
@@ -29,12 +29,22 @@ $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
 foreach($profiles_array as $profile){
-?>
-<tr>
-	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['profile_name']; ?>&nbsp;</td>
+	$tr_link = (permission_exists('xmpp_edit')) ? " onclick=\"document.location.href='xmpp_profile_edit.php?id=".$profile['xmpp_profile_uuid']."';\"" : null;
+	?>
+	<tr <?php echo $tr_link; ?>>
+	<td class='<?php echo $row_style[$c]; ?>'>
+		<?php
+		if (permission_exists('xmpp_edit')) {
+			?><a href='xmpp_profile_edit.php?id=<?php echo $profile['xmpp_profile_uuid']; ?>'><?php echo $profile['profile_name']; ?></a><?php
+		}
+		else {
+			echo $profile['profile_name'];
+		}
+		?>
+	</td>
 	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['context']; ?>&nbsp;</td>
 	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['status']; ?>&nbsp;</td>
-	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['enabled']; ?>&nbsp;</td>
+	<td class='<?php echo $row_style[$c]; ?>'><?php echo ucwords($profile['enabled']); ?>&nbsp;</td>
 	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['description']; ?>&nbsp;</td>
 	<td class='list_control_icons'>
 		<?php

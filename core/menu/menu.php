@@ -105,7 +105,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('menu_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('menu_language', $text['label-language'], $order_by, $order);
@@ -117,7 +117,8 @@ require_once "resources/paging.php";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = " onclick=\"document.location.href='menu_edit.php?id=".$row['menu_uuid']."';\"";
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='menu_edit.php?id=".$row['menu_uuid']."'>".$row['menu_name']."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_language']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_description']."</td>\n";

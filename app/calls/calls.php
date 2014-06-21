@@ -140,7 +140,7 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th>".$text['table-extension']."</th>\n";
 	echo "<th>".$text['table-tools']."</th>\n";
@@ -149,20 +149,14 @@ else {
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid'];
+			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? " onclick=\"document.location.href='".$tr_url."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			if (permission_exists('call_forward')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&a=call_forward' alt='Call Forward'>".$text['label-call-forward']."</a> \n";
-				echo "		&nbsp;&nbsp;\n";
-			}
-			if (permission_exists('follow_me')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&a=follow_me' alt='Follow Me'>".$text['label-follow-me']."</a> \n";
-				echo "		&nbsp;&nbsp;\n";
-			}
-			if (permission_exists('do_not_disturb')) {
-				echo "		<a href='".PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid']."&a=do_not_disturb' alt='Do Not Disturb'>".$text['label-dnd']."</a> \n";
-			}
+			if (permission_exists('call_forward')) { 	echo "<a href='".$tr_url."'>".$text['label-call-forward']."</a>&nbsp;&nbsp;&nbsp;"; }
+			if (permission_exists('follow_me')) {		echo "<a href='".$tr_url."'>".$text['label-follow-me']."</a>&nbsp;&nbsp;&nbsp;"; }
+			if (permission_exists('do_not_disturb')) {	echo "<a href='".$tr_url."'>".$text['label-dnd']."</a>"; }
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='40%'>".$row['description']."&nbsp;</td>\n";
 			echo "</tr>\n";

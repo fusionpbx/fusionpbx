@@ -135,7 +135,7 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	//echo th_order_by('device_uuid', $text['label-device_uuid'], $order_by, $order);
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
@@ -164,7 +164,8 @@ else {
 			$device_mac_address = $row[device_mac_address];
 			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 
-			echo "<tr >\n";
+			$tr_link = (permission_exists('device_edit')) ? " onclick=\"document.location.href='device_edit.php?id=".$row['device_uuid']."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_uuid']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('device_edit')) {

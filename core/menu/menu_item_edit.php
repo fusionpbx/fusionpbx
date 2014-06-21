@@ -399,6 +399,7 @@ else {
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
+			$assigned_groups[] = $field['group_name'];
 		}
 	}
 	echo "</table>\n";
@@ -412,14 +413,13 @@ else {
 	echo "<option value=\"\"></option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach($result as $field) {
-		if ($field['group_name'] == "superadmin") {
-			//only show the superadmin group to other users in the superadmin group
-			if (if_group("superadmin")) {
+		if (!in_array($field['group_name'], $assigned_groups)) {
+			if ($field['group_name'] == "superadmin" && if_group("superadmin")) {
+				echo "<option value='".$field['group_name']."'>".$field['group_name']."</option>\n"; //only show the superadmin group to other users in the superadmin group
+			}
+			else {
 				echo "<option value='".$field['group_name']."'>".$field['group_name']."</option>\n";
 			}
-		}
-		else {
-			echo "<option value='".$field['group_name']."'>".$field['group_name']."</option>\n";
 		}
 	}
 	echo "</select>";
@@ -434,18 +434,17 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='menu_item_protected'>\n";
-	echo "    <option value=''></option>\n";
-	if ($menu_item_protected == "true") {
-		echo "    <option value='true' selected='selected' >".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['label-true']."</option>\n";
-	}
 	if ($menu_item_protected == "false") {
 		echo "    <option value='false' selected='selected' >".$text['label-false']."</option>\n";
 	}
 	else {
 		echo "    <option value='false'>".$text['label-false']."</option>\n";
+	}
+	if ($menu_item_protected == "true") {
+		echo "    <option value='true' selected='selected' >".$text['label-true']."</option>\n";
+	}
+	else {
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
 	echo "    </select><br />\n";
 	echo $text['description-protected']."<br />\n";

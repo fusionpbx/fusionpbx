@@ -114,7 +114,7 @@ if (strlen($_GET["a"]) > 0) {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$tmp_module_header = "\n";
 	$tmp_module_header .= "<tr>\n";
 	$tmp_module_header .= "<th>".$text['label-label']."</th>\n";
@@ -156,7 +156,8 @@ if (strlen($_GET["a"]) > 0) {
 				echo $tmp_module_header;
 			}
 
-			echo "<tr >\n";
+			$tr_link = (permission_exists('module_edit')) ? " onclick=\"document.location.href='module_edit.php?id=".$row["module_uuid"]."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('module_edit')) {
 				echo "<a href='module_edit.php?id=".$row["module_uuid"]."'>".$row["module_label"]."</a>";
