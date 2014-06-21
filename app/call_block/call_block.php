@@ -112,7 +112,7 @@ else {
 	echo "<tr>\n";
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
-	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order);
+	echo th_order_by('call_block_count', $text['label-count'], $order_by, $order, '', "style='text-align: center;'");
 	echo th_order_by('date_added', $text['label-date-added'], $order_by, $order);
 	echo th_order_by('call_block_action', $text['label-action'], $order_by, $order);
 	echo th_order_by('call_block_enabled', $text['label-enabled'], $order_by, $order);
@@ -125,18 +125,25 @@ else {
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_number']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_count']."&nbsp;</td>\n";
+			echo "<tr>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('call_block_edit')) {
+				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."'>".$row['call_block_number']."</a>";
+			}
+			else {
+				echo $row['call_block_number'];
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$row['call_block_count']."</td>\n";
 			if (defined('TIME_24HR') && TIME_24HR == 1) {
 				$tmp_date_added = date("j M Y H:i:s", $row['date_added']);
 			} else {
 				$tmp_date_added = date("j M Y h:i:sa", $row['date_added']);
 			}
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_date_added."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_action']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_date_added."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_block_action']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['call_block_enabled'])."</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

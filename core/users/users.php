@@ -150,7 +150,14 @@ echo "	<td align=\"center\">\n";
 				//hide
 			} else {
 				echo "<tr >\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['username']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				if (permission_exists('user_edit')) {
+					echo "<a href='usersupdate.php?id=".$row['user_uuid']."'>".$row['username']."</a>";
+				}
+				else {
+					echo $row['username'];
+				}
+				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
 					echo $text['option-true'];

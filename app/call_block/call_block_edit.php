@@ -147,7 +147,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($action == "update") {
 				$sql = "update v_call_block set ";
 				$sql .= "call_block_name = '$call_block_name', ";
-				//$sql .= "call_block_number = '$call_block_number', ";
+				$sql .= "call_block_number = '$call_block_number', ";
 				$sql .= "call_block_action = '$call_block_action', ";
 				$sql .= "call_block_enabled = '$call_block_enabled' ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -221,40 +221,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Number:\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	if ($action == "add") {
-		echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"$call_block_number\">\n";
-		echo "<br />\n";
-		echo $text['label-exact-number']."\n";
-	}
-	else {
-		echo $call_block_number;
-	}
+	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"$call_block_number\">\n";
+	echo "<br />\n";
+	echo $text['description-number']."\n";
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Name:\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"$call_block_name\">\n";
 	echo "<br />\n";
-	echo "Enter the name.\n";
+	echo $text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Action:\n";
+	echo "	".$text['label-action'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_block_action'>\n";
-	echo "	<option value=''></option>\n";
 	$pieces = explode(" ", $call_block_action);
 	$action = $pieces[0];
 	$extension = $pieces[2];
@@ -273,14 +267,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	call_block_get_extensions($extension);
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['label-action-message']."\n";
+	echo $text['description-action']."\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Enabled:\n";
+	echo "	".$text['label-enabled'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='call_block_enabled'>\n";
@@ -288,7 +282,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<option value='false' ".(($call_block_enabled == "false") ? "selected" : null).">".$text['label-false']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
-	echo $text['label-enable-message']."\n";
+	echo $text['description-enable']."\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";

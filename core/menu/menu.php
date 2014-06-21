@@ -118,9 +118,9 @@ require_once "resources/paging.php";
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_language']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='menu_edit.php?id=".$row['menu_uuid']."'>".$row['menu_name']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_language']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_description']."</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='menu_edit.php?id=".$row['menu_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			echo 		"<a href='menu_delete.php?id=".$row['menu_uuid']."&menu_uuid=".$row['menu_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
