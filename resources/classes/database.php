@@ -344,6 +344,7 @@ include "root.php";
 
 			// Use this function to execute complex queries
 			public function execute(){
+					$sql = $this->sql;
 					//echo $sql;
 					$prep_statement = $this->db->prepare($sql);
 					if ($prep_statement) {
