@@ -101,8 +101,19 @@
 	$text['label-download']['fr-fr'] = "Télécharger";
 
 	$text['label-phoneip']['en-us'] = "Phone IP";
+	$text['label-phoneip']['es-cl'] = "Teléfono IP";
 	$text['label-phoneip']['pt-pt'] = "IP do Telefone";
 	$text['label-phoneip']['fr-fr'] = "Phone IP";
+
+	$text['label-missed']['en-us'] = "Missed";
+	$text['label-missed']['es-cl'] = "Perdidas";
+	$text['label-missed']['pt-pt'] = "Perdidas";
+	$text['label-missed']['fr-fr'] = "Perdus";
+
+	$text['label-failed']['en-us'] = "Failed";
+	$text['label-failed']['es-cl'] = "Fracasado";
+	$text['label-failed']['pt-pt'] = "Fracassado";
+	$text['label-failed']['fr-fr'] = "manqué";
 
 	$text['button-statistics']['en-us'] = "Statistics";
 	$text['button-statistics']['es-cl'] = "Estadísticas";

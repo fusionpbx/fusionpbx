@@ -284,6 +284,7 @@ else {
 //show the results
 	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	echo "<th>&nbsp;</th>\n";
 	//echo th_order_by('direction', 'Direction', $order_by, $order);
 	//echo th_order_by('default_language', 'Language', $order_by, $order);
 	//echo th_order_by('context', 'Context', $order_by, $order);
@@ -338,9 +339,41 @@ else {
 			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
 				$tmp_name = $row['uuid']."_1.mp3";
 			}
-
 			echo "<tr >\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['direction']."</td>\n";
+			if (
+				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png") &&
+				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png") &&
+				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png") &&
+				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png") &&
+				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png") &&
+				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png")
+				) {
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>";
+				switch ($row['direction']) {
+					case "inbound" :
+						if ($row['billsec'] == 0)
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' style='border: none;' alt='".$text['label-inbound']." ".$text['label-missed']."'>\n";
+						else
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' style='border: none;' alt='".$text['label-inbound']."'>\n";
+						break;
+					case "outbound" :
+						if ($row['billsec'] == 0)
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png' style='border: none;' alt='".$text['label-outbound']." ".$text['label-failed']."'>\n";
+						else
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png' style='border: none;' alt='".$text['label-outbound']."'>\n";
+						break;
+					case "local" :
+						if ($row['billsec'] == 0)
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' style='border: none;' alt='".$text['label-local']." ".$text['label-failed']."'>\n";
+						else
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' alt='".$text['label-local']."'>\n";
+						break;
+				}
+				echo "	</td>\n";
+			}
+			else {
+				echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
+			}
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_language']."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['context']."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['leg']."</td>\n";
@@ -397,7 +430,7 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
 			}
 			if (permission_exists("xml_cdr_mos")) {
-				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null)."'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null).">".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
 			}
 			if (if_group("admin") || if_group("superadmin")) {
 				echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
