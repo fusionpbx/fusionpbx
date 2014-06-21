@@ -150,7 +150,7 @@ echo "	<td align=\"center\">\n";
 
 	echo "<tr>\n";
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
-	echo "<th>".$text['label-groups']."</th>\n";
+	echo "<th>".$text['label-group']."</th>\n";
 	echo "<th>".$text['label-enabled']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
