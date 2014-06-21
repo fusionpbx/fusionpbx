@@ -541,6 +541,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
 			require "contact_phones.php";
 			require "contact_addresses.php";
+			require "contact_extensions.php";
 			require "contact_notes.php";
 		echo "</td>\n";
 	}
