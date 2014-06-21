@@ -81,6 +81,20 @@ echo "	<td align=\"center\">\n";
 //get the list of superadmins
 	$superadmins = superadmin_list($db);
 
+//get the users' group(s) from the database
+	$sql = "select * from v_group_users ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "order by group_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	if (count($result) > 0) {
+		foreach($result as $row) {
+			$user_groups[$row['user_uuid']][] = $row['group_name'];
+		}
+	}
+	unset ($sql, $prep_statement);
+
 //get the users from the database
 	$sql = "select count(*) as num_rows from v_users ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -136,6 +150,7 @@ echo "	<td align=\"center\">\n";
 
 	echo "<tr>\n";
 	echo th_order_by('username', $text['label-username'], $order_by, $order);
+	echo "<th>".$text['label-groups']."</th>\n";
 	echo "<th>".$text['label-enabled']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('user_add')) {
@@ -159,6 +174,11 @@ echo "	<td align=\"center\">\n";
 					echo $row['username'];
 				}
 				echo "	</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				if (sizeof($user_groups[$row['user_uuid']]) > 0) {
+					echo implode(', ', $user_groups[$row['user_uuid']]);
+				}
+				echo "&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if ($row['user_enabled'] == 'true') {
 					echo $text['option-true'];
