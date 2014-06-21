@@ -153,7 +153,7 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_app']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_data']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['ring_group_enabled'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('ring_group_edit')) {
 				echo "<a href='ring_group_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
