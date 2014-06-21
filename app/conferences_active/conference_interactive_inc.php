@@ -53,7 +53,7 @@ else {
 //connect to event socket, send the command and process the results
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if (!$fp) {
-		$msg = "<div align='center'>".$text['message-connection']."<br /></div>"; 
+		$msg = "<div align='center'>".$text['message-connection']."<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -147,6 +147,7 @@ else {
 
 		echo "</td>\n";
 		echo "</tr>\n";
+		echo "<tr><td colspan='30'>&nbsp;</td></tr>\n";
 
 		echo "<tr>\n";
 		echo "<th>".$text['label-id']."</th>\n";
@@ -180,7 +181,7 @@ else {
 			$is_moderator = $row->flags->is_moderator;
 			$uuid = $row->uuid;
 			$caller_id_name = $row->caller_id_name;
-			$caller_id_name = str_replace("%20", " ", $caller_id_name);
+			$caller_id_name = urldecode($caller_id_name);
 			$caller_id_number = $row->caller_id_number;
 
 			//format the seconds
