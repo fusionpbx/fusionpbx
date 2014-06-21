@@ -73,7 +73,7 @@ else {
 		$tmp_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 		if (file_exists($tmp_dir.'/'.$uuid.'.json')) {
 			$format = "json";
-			$xml_string = file_get_contents($tmp_dir.'/'.$uuid.'.json');
+			$json_string = file_get_contents($tmp_dir.'/'.$uuid.'.json');
 		}
 		if (file_exists($tmp_dir.'/'.$uuid.'.xml')) {
 			$format = "xml";
