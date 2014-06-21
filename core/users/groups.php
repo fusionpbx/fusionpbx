@@ -114,7 +114,7 @@ else {
 		}
 		else {
 			/*
-			$tr_link = (permission_exists('group_edit')) ? " onclick=\"document.location.href='groupedit.php?id=".$group_uuid."';\"" : null;
+			$tr_link = (permission_exists('group_edit')) ? "href='groupedit.php?id=".$group_uuid."'" : null;
 			*/
 			$strlist .= "<tr ".$tr_link.">\n";
 			$strlist .= "<td class='".$row_style[$c]."' nowrap>";

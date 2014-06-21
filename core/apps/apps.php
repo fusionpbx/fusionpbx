@@ -100,7 +100,7 @@ require_once "resources/paging.php";
 	foreach($apps as $row) {
 		if ($row['uuid'] != "d8704214-75a0-e52f-1336-f0780e29fef8") {
 			/*
-			$tr_link = (permission_exists('app_edit')) ? " onclick=\"document.location.href='apps_edit.php?id=".$row['uuid']."';\"" : null;
+			$tr_link = (permission_exists('app_edit')) ? "href='apps_edit.php?id=".$row['uuid']."'" : null;
 			*/
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>";

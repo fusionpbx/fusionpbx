@@ -164,7 +164,7 @@ else {
 			$device_mac_address = $row[device_mac_address];
 			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 
-			$tr_link = (permission_exists('device_edit')) ? " onclick=\"document.location.href='device_edit.php?id=".$row['device_uuid']."';\"" : null;
+			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_uuid']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";

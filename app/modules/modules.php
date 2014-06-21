@@ -156,7 +156,7 @@ if (strlen($_GET["a"]) > 0) {
 				echo $tmp_module_header;
 			}
 
-			$tr_link = (permission_exists('module_edit')) ? " onclick=\"document.location.href='module_edit.php?id=".$row["module_uuid"]."';\"" : null;
+			$tr_link = (permission_exists('module_edit')) ? "href='module_edit.php?id=".$row["module_uuid"]."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "   <td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('module_edit')) {

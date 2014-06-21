@@ -774,7 +774,6 @@ legend {
 <script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 <script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
 
-
 <script language="JavaScript" type="text/javascript">
 	function display_message() {
 		$(document).ready(function() {
@@ -799,6 +798,16 @@ legend {
 				$("#domains_container").hide();
 			});
 
+		});
+
+		// linkify rows (except the last - the list_control_icons cell)
+		// on a table with a class of 'tr_hover', according to the href
+		// attribute of the <tr> tag
+		$('.tr_hover tr').each(function(i,e) {
+		  $(e).children('td:not(:last)').click(function() {
+			 var href = $(this).closest("tr").attr("href");
+			 if (href) { window.location = href; }
+		  });
 		});
 
 	});

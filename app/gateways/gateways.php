@@ -164,7 +164,7 @@ else {
 
 	if ($num_rows > 0) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('gateway_edit')) ? " onclick=\"document.location.href='gateway_edit.php?id=".$row['gateway_uuid']."';\"" : null;
+			$tr_link = (permission_exists('gateway_edit')) ? "href='gateway_edit.php?id=".$row['gateway_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('gateway_edit')) {

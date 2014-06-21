@@ -127,7 +127,7 @@ else {
 				echo $tmp_var_header;
 			}
 
-			$tr_link = (permission_exists('var_edit')) ? " onclick=\"document.location.href='var_edit.php?id=".$row['var_uuid']."';\"" : null;
+			$tr_link = (permission_exists('var_edit')) ? "href='var_edit.php?id=".$row['var_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			if (permission_exists('var_edit')) {

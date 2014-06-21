@@ -101,7 +101,7 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					}
 
 				//display the content of the list
-					$tr_link = (permission_exists('menu_edit')) ? " onclick=\"document.location.href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."';\"" : null;
+					$tr_link = (permission_exists('menu_edit')) ? "href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."'" : null;
 					echo "<tr ".$tr_link.">\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>";
 					echo "  <table cellpadding='0' cellspacing='0' border='0'>";
@@ -269,7 +269,7 @@ $order = $_GET["order"];
 				}
 
 			//display the content of the list
-				$tr_link = (permission_exists('menu_edit')) ? " onclick=\"document.location.href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row['menu_item_uuid']."&menu_uuid=".$menu_uuid."';\"" : null;
+				$tr_link = (permission_exists('menu_edit')) ? "href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row['menu_item_uuid']."&menu_uuid=".$menu_uuid."'" : null;
 				echo "<tr style='".$row_style[$c]."' ".$tr_link.">\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$menu_item_title."&nbsp;</td>";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>";

@@ -117,7 +117,7 @@ require_once "resources/paging.php";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_link = " onclick=\"document.location.href='menu_edit.php?id=".$row['menu_uuid']."';\"";
+			$tr_link = "href='menu_edit.php?id=".$row['menu_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='menu_edit.php?id=".$row['menu_uuid']."'>".$row['menu_name']."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['menu_language']."</td>\n";

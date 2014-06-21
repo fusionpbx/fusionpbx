@@ -106,7 +106,7 @@ require_once "resources/paging.php";
 	echo "</td>\n";
 	if ($num_rows > 0) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('sip_profile_setting_edit')) ? " onclick=\"document.location.href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."';\"" : null;
+			$tr_link = (permission_exists('sip_profile_setting_edit')) ? "href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('sip_profile_setting_edit')) {

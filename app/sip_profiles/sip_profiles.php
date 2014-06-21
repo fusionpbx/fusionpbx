@@ -123,7 +123,7 @@ require_once "resources/paging.php";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('sip_profile_edit')) ? " onclick=\"document.location.href='sip_profile_edit.php?id=".$row['sip_profile_uuid']."';\"" : null;
+			$tr_link = (permission_exists('sip_profile_edit')) ? "href='sip_profile_edit.php?id=".$row['sip_profile_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('sip_profile_edit')) {

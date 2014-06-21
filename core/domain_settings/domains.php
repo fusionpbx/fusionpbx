@@ -177,7 +177,7 @@ else {
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_link = (permission_exists('domain_edit')) ? " onclick=\"document.location.href='domain_edit.php?id=".$row['domain_uuid']."';\"" : null;
+			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$row['domain_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('domain_edit')) {

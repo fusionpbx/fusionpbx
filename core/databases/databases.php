@@ -124,7 +124,7 @@ require_once "resources/paging.php";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$tr_link = " onclick=\"document.location.href='database_edit.php?id=".$row['database_uuid']."';\"";
+			$tr_link = "href='database_edit.php?id=".$row['database_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_driver']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_type']."&nbsp;</td>\n";

@@ -150,7 +150,7 @@ else {
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$tr_url = PROJECT_PATH."/app/calls/call_edit.php?id=".$row['extension_uuid'];
-			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? " onclick=\"document.location.href='".$tr_url."';\"" : null;
+			$tr_link = (permission_exists('call_forward') || permission_exists('follow_me') || permission_exists('do_not_disturb')) ? "href='".$tr_url."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
