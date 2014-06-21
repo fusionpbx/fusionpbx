@@ -262,7 +262,7 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".((strlen($row['dialplan_number']) > 0) ? $row['dialplan_number'] : "&nbsp;")."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['dialplan_context']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['dialplan_order']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['dialplan_enabled']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['dialplan_enabled'])."</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".((strlen($row['dialplan_description']) > 0) ? $row['dialplan_description'] : "&nbsp;")."</td>\n";
 			echo "	<td class='list_control_icons'>\n";
 			if (

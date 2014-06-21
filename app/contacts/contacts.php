@@ -205,9 +205,9 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['contact_type'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_organization']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_name_given']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_name_family']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_organization']."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_given']."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_family']."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_nickname']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_title']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_category']."&nbsp;</td>\n";

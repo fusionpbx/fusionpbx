@@ -60,6 +60,16 @@
 	$text['description-upload']['pt-pt'] = "Selecione o ficheiro a carregar para enviar por fax.";
 	$text['description-upload']['fr-fr'] = "Choisir un fichier à télécharger pour être émis en tant que Fax.";
 
+	$text['button-edit']['en-us'] = "Edit";
+	$text['button-edit']['es-cl'] = "Editar";
+	$text['button-edit']['pt-pt'] = "Editar";
+	$text['button-edit']['fr-fr'] = "Editer";
+
+	$text['button-delete']['en-us'] = "Delete";
+	$text['button-delete']['es-cl'] = "Eliminar";
+	$text['button-delete']['pt-pt'] = "Remover";
+	$text['button-delete']['fr-fr'] = "Supprimer";
+
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['es-cl'] = "Volver";
 	$text['button-back']['pt-pt'] = "Voltar";

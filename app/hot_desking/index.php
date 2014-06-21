@@ -131,7 +131,14 @@ require_once "resources/paging.php";
 		if ($result_count > 0) {
 			foreach($result as $row) {
 				echo "<tr >\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				if (permission_exists('extension_edit')) {
+					echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
+				}
+				else {
+					echo $row['extension'];
+				}
+				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['unique_id']."&nbsp;</td>\n";
 				if (strlen($row['dial_user']) > 0) {
 					echo "	<td valign='top' class='".$row_style[$c]."'>".$row['dial_user']."@".$row['dial_domain']."&nbsp;</td>\n";

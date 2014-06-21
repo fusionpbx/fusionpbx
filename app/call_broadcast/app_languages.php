@@ -26,6 +26,16 @@
 	$text['confirm-delete-info']['pt-pt'] = "Deseja realmente remover isto?";
 	$text['confirm-delete-info']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
 
+	$text['button-edit']['en-us'] = "Edit";
+	$text['button-edit']['es-cl'] = "Editar";
+	$text['button-edit']['pt-pt'] = "Editar";
+	$text['button-edit']['fr-fr'] = "Editer";
+
+	$text['button-delete']['en-us'] = "Delete";
+	$text['button-delete']['es-cl'] = "Eliminar";
+	$text['button-delete']['pt-pt'] = "Remover";
+	$text['button-delete']['fr-fr'] = "Supprimer";
+
 	//v_call_broadcast_delete
 	$text['confirm-delete']['en-us'] = "Delete Complete";
 	$text['confirm-delete']['es-cl'] = "Eliminación Completa";

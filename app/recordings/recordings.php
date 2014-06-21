@@ -247,7 +247,7 @@ require_once "resources/paging.php";
 			echo "	<td class='".$row_style[$c]."'>\n";
 			echo "	".$tmp_filesize;
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
 				echo "<a href='recording_edit.php?id=".$row['recording_uuid']."' alt='edit'>$v_link_label_edit</a>";

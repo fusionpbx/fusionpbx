@@ -120,7 +120,14 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['schema_label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['schema_name']."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('schema_edit')) {
+				echo "<a href='schema_edit.php?id=".$row['schema_uuid']."'>".$row['schema_name']."</a>";
+			}
+			else {
+				echo $row['schema_name'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if ($row['schema_auth'] == 'yes') {
 				echo $text['option-true'];

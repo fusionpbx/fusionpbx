@@ -145,16 +145,23 @@ require_once "resources/paging.php";
 				$row['fax_email'] = str_replace("\\", "", $row['fax_email']);
 			//show the fax extensions
 				echo "<tr >\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_name']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				if (permission_exists('fax_extension_edit')) {
+					echo "<a href='fax_view.php?id=".$row['fax_uuid']."'>".$row['fax_name']."</a>";
+				}
+				else {
+					echo $row['fax_name'];
+				}
+				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_extension']."</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_email']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
 				if (permission_exists('fax_extension_edit')) {
-					echo "<a href='fax_view.php?id=".$row['fax_uuid']."' alt='edit'>$v_link_label_edit</a>";
+					echo "<a href='fax_view.php?id=".$row['fax_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
 				if (permission_exists('fax_extension_delete')) {
-					echo "<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>";
+					echo "<a href='fax_delete.php?id=".$row['fax_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a>";
 				}
 				echo "	</td>\n";
 				echo "</tr>\n";

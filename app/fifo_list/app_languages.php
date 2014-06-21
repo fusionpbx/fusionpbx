@@ -60,6 +60,11 @@
 	$text['label-view']['pt-pt'] = "Vista";
 	$text['label-view']['fr-fr'] = "Voir";
 
+	$text['button-view']['en-us'] = "View";
+	$text['button-view']['es-cl'] = "Ver";
+	$text['button-view']['pt-pt'] = "Vista";
+	$text['button-view']['fr-fr'] = "Voir";
+
 	$text['label-username']['en-us'] = "Username";
 	$text['label-username']['es-cl'] = "Nombre de Usuario";
 	$text['label-username']['pt-pt'] = "Nome de Utilizador";
