@@ -172,6 +172,7 @@ if (count($_POST)>0) {
 	//---- Begin Select List --------------------
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "order by group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 

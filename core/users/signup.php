@@ -44,10 +44,12 @@ else {
 $username = check_str($_POST["username"]);
 $password = check_str($_POST["password"]);
 $confirmpassword = check_str($_POST["confirmpassword"]);
+$group_name = check_str($_POST["group_name"]);
+$user_email = check_str($_POST["user_email"]);
 $contact_organization = check_str($_POST["contact_organization"]);
 $contact_name_given = check_str($_POST["contact_name_given"]);
 $contact_name_family = check_str($_POST["contact_name_family"]);
-$user_email = check_str($_POST["user_email"]);
+
 
 if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
@@ -106,6 +108,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	//prepare the uuids
 	$user_uuid = uuid();
+	$group_user_uuid = uuid();
 	$contact_uuid = uuid();
 
 	//add the user
@@ -135,6 +138,28 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);
+
+	//add the user to the group
+	if (strlen($group_name) > 0) {
+		if ( ($group_name == "superadmin" && if_group("superadmin")) || $group_name != "superadmin") {
+			$sql = "insert into v_group_users ";
+			$sql .= "( ";
+			$sql .= "group_user_uuid, ";
+			$sql .= "domain_uuid, ";
+			$sql .= "group_name, ";
+			$sql .= "user_uuid ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'".$group_user_uuid."', ";
+			$sql .= "'".$domain_uuid."', ";
+			$sql .= "'".$group_name."', ";
+			$sql .= "'".$user_uuid."' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+	}
 
 	//add to contacts
 	$sql = "insert into v_contacts ";
@@ -212,6 +237,27 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-email'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='$user_email'></td>";
+	echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-group'].":</td>";
+	echo "		<td class='vtable'>";
+	$sql = "SELECT * FROM v_groups ";
+	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "order by group_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	echo "			<select name=\"group_name\" class='formfld' style='width: auto; margin-right: 3px;'>\n";
+	echo "				<option value=\"\"></option>\n";
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach($result as $field) {
+		if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other users in the superadmin group
+		if (!in_array($field["group_name"], $assigned_groups)) {
+			echo "		<option value='".$field['group_name']."'>".$field['group_name']."</option>\n";
+		}
+	}
+	echo "			</select>";
+	unset($sql, $result);
+	echo "		</td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-first_name'].":</td>";

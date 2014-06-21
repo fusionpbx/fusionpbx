@@ -142,6 +142,11 @@
 	$text['label-user_info']['pt-pt'] = "Informação do Utilizador";
 	$text['label-user_info']['fr-fr'] = "Informations sur l'utilisateur";
 
+	$text['label-group']['en-us'] = "Group";
+	$text['label-group']['es-cl'] = "Grupo";
+	$text['label-group']['pt-pt'] = "Grupo";
+	$text['label-group']['fr-fr'] = "Group";
+
 	$text['label-groups']['en-us'] = "Groups";
 	$text['label-groups']['es-cl'] = "Grupos";
 	$text['label-groups']['pt-pt'] = "Grupos";
