@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 
@@ -330,6 +331,19 @@ include "root.php";
 					if ($this->limit) {
 						$sql .= " limit ".$this->limit." offset ".$this->offset." ";
 					}
+					//echo $sql;
+					$prep_statement = $this->db->prepare($sql);
+					if ($prep_statement) {
+						$prep_statement->execute();
+						return $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					}
+					else {
+						return false;
+					}
+			}
+
+			// Use this function to execute complex queries
+			public function execute(){
 					//echo $sql;
 					$prep_statement = $this->db->prepare($sql);
 					if ($prep_statement) {
