@@ -85,7 +85,7 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	$strlist = "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	$strlist = "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$strlist .= "<tr class='border'>\n";
 	$strlist .= "	<th nowrap>".$text['label-group_name']."</th>\n";
 	$strlist .= "	<th nowrap>".$text['label-group_description']."</th>\n";
@@ -113,8 +113,22 @@ else {
 			//hide the superadmin group from non superadmin's
 		}
 		else {
-			$strlist .= "<tr>";
-			$strlist .= "<td class='".$row_style[$c]."' nowrap>".$group_name."</td>\n";
+			/*
+			$tr_link = (permission_exists('group_edit')) ? " onclick=\"document.location.href='groupedit.php?id=".$group_uuid."';\"" : null;
+			*/
+			$strlist .= "<tr ".$tr_link.">\n";
+			$strlist .= "<td class='".$row_style[$c]."' nowrap>";
+			/*
+			if (permission_exists('group_edit')) {
+				$strlist .= "<a href='groupedit.php?id=".$group_uuid."'>".$group_name."</a>";
+			}
+			else {
+			*/
+				$strlist .= $group_name;
+			/*
+			}
+			*/
+			$strlist .= "</td>\n";
 			$strlist .= "<td class='".$row_style[$c]."' nowrap>".$group_description."</td>\n";
 			$strlist .= "<td class='".$row_style[$c]."' nowrap>\n";
 			if (permission_exists('group_add') || if_group("superadmin")) {
@@ -133,7 +147,14 @@ else {
 			}
 			$strlist .= "</td>\n";
 			$strlist .= "<td class='list_control_icons' style='width: 25px;'>";
-			$strlist .= "<a href='groupdelete.php?id=$group_uuid' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
+			/*
+			if (permission_exists('group_edit')) {
+				$strlist .= "<a href='groupedit.php?id=$group_uuid' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+			}
+			*/
+			if (permission_exists('group_delete')) {
+				$strlist .= "<a href='groupdelete.php?id=$group_uuid' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
+			}
 			$strlist .= "</td>\n";
 			$strlist .= "</tr>\n";
 		}

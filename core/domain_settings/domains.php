@@ -164,7 +164,7 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
 	echo th_order_by('domain_description', $text['label-description'], $order_by, $order);
@@ -177,8 +177,16 @@ else {
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."&nbsp;</td>\n";
+			$tr_link = (permission_exists('domain_edit')) ? " onclick=\"document.location.href='domain_edit.php?id=".$row['domain_uuid']."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('domain_edit')) {
+				echo "<a href='domain_edit.php?id=".$row['domain_uuid']."'>".$row['domain_name']."</a>";
+			}
+			else {
+				echo $row['domain_name'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_edit')) {

@@ -106,7 +106,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo th_order_by('database_driver', $text['label-driver'], $order_by, $order);
@@ -124,12 +124,13 @@ require_once "resources/paging.php";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = " onclick=\"document.location.href='database_edit.php?id=".$row['database_uuid']."';\"";
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_driver']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_type']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_host']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_port']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='database_edit.php?id=".$row['database_uuid']."'>".$row['database_name']."</a>&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_username']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['database_path']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['database_description']."&nbsp;</td>\n";
