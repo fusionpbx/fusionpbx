@@ -29,7 +29,7 @@ $row_style["0"] = "row_style0";
 $row_style["1"] = "row_style1";
 
 foreach($profiles_array as $profile){
-	$tr_link = (permission_exists('xmpp_edit')) ? " onclick=\"document.location.href='xmpp_profile_edit.php?id=".$profile['xmpp_profile_uuid']."';\"" : null;
+	$tr_link = (permission_exists('xmpp_edit')) ? "href='xmpp_profile_edit.php?id=".$profile['xmpp_profile_uuid']."'" : null;
 	?>
 	<tr <?php echo $tr_link; ?>>
 	<td class='<?php echo $row_style[$c]; ?>'>

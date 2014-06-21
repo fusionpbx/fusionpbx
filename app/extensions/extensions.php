@@ -152,7 +152,7 @@ require_once "resources/paging.php";
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
-				$tr_link = (permission_exists('extension_edit')) ? " onclick=\"document.location.href='extension_edit.php?id=".$row['extension_uuid']."';\"" : null;
+				$tr_link = (permission_exists('extension_edit')) ? " href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
 				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('extension_edit')) {

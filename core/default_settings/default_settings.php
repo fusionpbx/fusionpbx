@@ -148,7 +148,7 @@ require_once "resources/paging.php";
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			$tr_link = (permission_exists('default_setting_edit')) ? " onclick=\"document.location.href='default_setting_edit.php?id=".$row['default_setting_uuid']."';\"" : null;
+			$tr_link = (permission_exists('default_setting_edit')) ? "href='default_setting_edit.php?id=".$row['default_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('default_setting_edit')) {

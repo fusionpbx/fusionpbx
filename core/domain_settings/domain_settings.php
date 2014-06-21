@@ -132,7 +132,7 @@ require_once "resources/paging.php";
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			$tr_link = (permission_exists('domain_setting_edit')) ? " onclick=\"document.location.href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."';\"" : null;
+			$tr_link = (permission_exists('domain_setting_edit')) ? " href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('domain_setting_edit')) {
