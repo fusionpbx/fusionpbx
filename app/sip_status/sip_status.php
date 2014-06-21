@@ -126,9 +126,9 @@ if ($_GET['a'] == "download") {
 		echo "  <b><a href='javascript:void(0);' onclick=\"$('#sofia_status').slideToggle();\">".$text['title-sofia-status']."</a></b> \n";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
-		echo "  <input type='button' class='btn' value='memcache flush' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
-		echo "  <input type='button' class='btn' value='reloadacl' onclick=\"document.location.href='cmd.php?cmd=api+reloadacl';\" />\n";
-		echo "  <input type='button' class='btn' value='reloadxml' onclick=\"document.location.href='cmd.php?cmd=api+reloadxml';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-flush_memcache']."' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-reload_acl']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadacl';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-reload_xml']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadxml';\" />\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
@@ -208,13 +208,13 @@ if ($_GET['a'] == "download") {
 				echo "</td>\n";
 				echo "<td align='right' nowrap>\n";
 				if ($sip_profile_name != "external") {
-					echo "  <input type='button' class='btn' value='flush_inbound_reg' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+flush_inbound_reg';\" />\n";
+					echo "  <input type='button' class='btn' value='".$text['button-flush_registrations']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+flush_inbound_reg';\" />\n";
 				}
-				echo "  <input type='button' class='btn' value='registrations' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/status_registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
-				echo "  <input type='button' class='btn' value='start' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+start';\" />\n";
-				echo "  <input type='button' class='btn' value='stop' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+stop';\" />\n";
-				echo "  <input type='button' class='btn' value='restart' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+restart';\" />\n";
-				echo "  <input type='button' class='btn' value='rescan' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+rescan';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-registrations']."' onclick=\"document.location.href='".PROJECT_PATH."/app/registrations/status_registrations.php?show_reg=1&profile=".$sip_profile_name."';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+start';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+stop';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+restart';\" />\n";
+				echo "  <input type='button' class='btn' value='".$text['button-rescan']."' onclick=\"document.location.href='cmd.php?cmd=api+sofia+profile+".$sip_profile_name."+rescan';\" />\n";
 				echo "</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
