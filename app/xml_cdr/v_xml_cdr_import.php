@@ -22,15 +22,11 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-//check the permission
-	$is_billing = 0;	// by default billing is not used
 
-	if (file_exists("app/billings/root.php")){
-		$is_billing = 1;
-		require_once "app/billings/functions.php";
-	}
+//check the permission
 
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
@@ -47,7 +43,7 @@
 	}
 
 //set debug
-	$debug = false; //true //false
+	$debug = true; //true //false
 	if($debug){
 		$time5 = microtime(true);
 		$insert_time=$insert_count=0;
@@ -56,9 +52,26 @@
 //increase limits
 	set_time_limit(3600);
 	ini_set('memory_limit', '256M');
+	ini_set("precision", 6);
 
 //set pdo attribute that enables exception handling
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+// some maths for costs
+function call_cost($rate, $i1, $i2, $t){
+        $c = (double)0.0;
+	if ($t > 0){
+	        $c = (double)$i1 * (double)$rate / (double)60.0;
+
+	        if ($t > $i1){
+	                $t -= $i1;
+        	        $times = intval($t/$i2) + (($t % $i2)?1:0);
+                	$c += (double)$times * (double)$i2 * (double)$rate / (double)60.0;
+		}
+        }
+
+        return $c;
+}
 
 //define the process_xml_cdr function
 	function process_xml_cdr($db, $leg, $xml_string) {
@@ -215,8 +228,45 @@
 			}
 
 		//billing information
-			if ($is_billing){
-				//
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+
+
+				if ($debug) {
+					$sql_rate ="SELECT connect_increment, talk_increment FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
+					echo "sql_rate: $sql_rate\n";
+					$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid='' AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") ORDER BY digits DESC, rate ASC limit 1";
+					echo "sql_user_rate: $sql_user_rate\n";
+				}
+
+				$db2 = new database;
+				$db2->sql = $sql_rate;
+				$db2->result = $db2->execute();
+//				print_r($db2->result);
+				$lcr_rate = (strlen($xml->variables->lcr_rate)?$xml->variables->lcr_rate:0);
+				$lcr_first_increment = (strlen($db2->result[0]['connect_increment'])?check_str($db2->result[0]['connect_increment']):60);
+				$lcr_second_increment = (strlen($db2->result[0]['talk_increment'])?check_str($db2->result[0]['talk_increment']):60);
+				unset($db2->sql);
+				unset($db2->result);
+
+				$db2->sql = $sql_user_rate;
+				$db2->result = $db2->execute();
+				$lcr_user_rate = (strlen($xml->variables->lcr_user_rate)?$xml->variables->lcr_user_rate:0.01);
+				$lcr_user_first_increment = (strlen($db2->result[0]['connect_increment'])?check_str($db2->result[0]['connect_increment']):60);
+				$lcr_user_second_increment = (strlen($db2->result[0]['talk_increment'])?check_str($db2->result[0]['talk_increment']):60);
+
+				unset($db2->sql);
+				unset($db2->result);
+				$time = check_str(urldecode($xml->variables->billsec));
+				$call_buy = call_cost($lcr_rate, $lcr_first_increment, $lcr_second_increment, $time);
+				$call_sell = call_cost($lcr_user_rate, $lcr_user_first_increment, $lcr_user_second_increment, check_str(urldecode($xml->variables->billsec)));
+				$database->fields['call_buy']  = check_str($call_buy);
+				$database->fields['call_sell'] = check_str($call_sell);
+
+				if ($debug) {
+					echo "t $time\n";
+					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
+					echo "s r:$lcr_user_rate - $lcr_user_first_increment - $lcr_user_second_increment = $call_sell\n";
+				}
 			}
 
 		//insert xml_cdr into the db
