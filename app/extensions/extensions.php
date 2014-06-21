@@ -152,8 +152,16 @@ require_once "resources/paging.php";
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
-				echo "<tr >\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
+				$tr_link = (permission_exists('extension_edit')) ? "style='cursor: pointer;' onclick=\"document.location.href='extension_edit.php?id=".$row['extension_uuid']."';\"" : null;
+				echo "<tr ".$tr_link.">\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				if (permission_exists('extension_edit')) {
+					echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";
+				}
+				else {
+					echo $row['extension'];
+				}
+				echo "</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_group']."&nbsp;</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['enabled']."</td>\n";

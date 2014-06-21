@@ -127,10 +127,15 @@
 	$text['label-edit-note']['pt-pt'] = "Bloquear chamadas a partir de um número. Edite o nome e active/desactive.";
 	$text['label-edit-note']['fr-fr'] = "Bloquer les appels à partir d'un numéro. Editer le nom et activer/désactiver ci-dessous.";
 
-	$text['label-exact-number']['en-us'] = "Enter the exact number.";
-	$text['label-exact-number']['es-cl'] = "Ingrese el nú exacto.";
-	$text['label-exact-number']['pt-pt'] = "Introduza o número exacto.";
-	$text['label-exact-number']['fr-fr'] = "Entrer le numéro exact.";
+	$text['description-number']['en-us'] = "Enter the exact number.";
+	$text['description-number']['es-cl'] = "Ingrese el nú exacto.";
+	$text['description-number']['pt-pt'] = "Introduza o número exacto.";
+	$text['description-number']['fr-fr'] = "Entrer le numéro exact.";
+
+	$text['description-name']['en-us'] = "Enter the name.";
+	$text['description-name']['es-cl'] = "Introduzca el nombre.";
+	$text['description-name']['pt-pt'] = "Digite o nome.";
+	$text['description-name']['fr-fr'] = "Entrez le nom.";
 
 	$text['label-reject']['en-us'] = "Reject";
 	$text['label-reject']['es-cl'] = "Rechazar";
@@ -142,10 +147,10 @@
 	$text['label-busy']['pt-pt'] = "Ocupado";
 	$text['label-busy']['fr-fr'] = "Occupé";
 
-	$text['label-action-message']['en-us'] = "Set an action for calls from this number.";
-	$text['label-action-message']['es-cl'] = "Configurar una acción para llamadas desde este número.";
-	$text['label-action-message']['pt-pt'] = "Escolha uma acção para chamadas com origem neste número.";
-	$text['label-action-message']['fr-fr'] = "Choisir une action pour les appels venant de ce numéro.";
+	$text['description-action']['en-us'] = "Set an action for calls from this number.";
+	$text['description-action']['es-cl'] = "Configurar una acción para llamadas desde este número.";
+	$text['description-action']['pt-pt'] = "Escolha uma acção para chamadas com origem neste número.";
+	$text['description-action']['fr-fr'] = "Choisir une action pour les appels venant de ce numéro.";
 
 	$text['label-true']['en-us'] = "True";
 	$text['label-true']['es-cl'] = "Verdadero";
@@ -157,10 +162,10 @@
 	$text['label-false']['pt-pt'] = "Não";
 	$text['label-false']['fr-fr'] = "Non";
 
-	$text['label-enable-message']['en-us'] = "Set to true to enable call blocking for this number.";
-	$text['label-enable-message']['es-cl'] = "Seleccione verdadero para activar el bloqueo de llamadas desde este número.";
-	$text['label-enable-message']['pt-pt'] = "Escolha 'sim' para activar o bloqueio de chamadas para este número.";
-	$text['label-enable-message']['fr-fr'] = "Choisir Oui pour activer le bloquage d'appel. ";
+	$text['description-enable']['en-us'] = "Set to true to enable call blocking for this number.";
+	$text['description-enable']['es-cl'] = "Seleccione verdadero para activar el bloqueo de llamadas desde este número.";
+	$text['description-enable']['pt-pt'] = "Escolha 'sim' para activar o bloqueio de chamadas para este número.";
+	$text['description-enable']['fr-fr'] = "Choisir Oui pour activer le bloquage d'appel. ";
 
 	$text['button-save']['en-us'] = "Save";
 	$text['button-save']['es-cl'] = "Guardar";

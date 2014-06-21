@@ -165,7 +165,14 @@ else {
 	if ($num_rows > 0) {
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["gateway"]."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('gateway_edit')) {
+				echo "<a href='gateway_edit.php?id=".$row['gateway_uuid']."'>".$row["gateway"]."</a>";
+			}
+			else {
+				echo $row["gateway"];
+			}
+			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["context"]."</td>\n";
 			if ($fp) {
 				if ($row["enabled"] == "true") {

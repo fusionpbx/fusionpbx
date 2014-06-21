@@ -157,8 +157,15 @@ if (strlen($_GET["a"]) > 0) {
 			}
 
 			echo "<tr >\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_label"]."</td>\n";
-			echo "   <td valign='top' class='".$row_style[$c]."'>".$row["module_description"]."&nbsp;</td>\n";
+			echo "   <td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('module_edit')) {
+				echo "<a href='module_edit.php?id=".$row["module_uuid"]."'>".$row["module_label"]."</a>";
+			}
+			else {
+				echo $row["module_label"];
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["module_description"]."&nbsp;</td>\n";
 			if ($mod->active($row["module_name"])) {
 				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
 				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";

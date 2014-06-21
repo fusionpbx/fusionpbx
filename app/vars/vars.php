@@ -128,8 +128,15 @@ else {
 			}
 
 			echo "<tr >\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($row['var_name'],0,32)."&nbsp;</td>\n";
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."&nbsp;</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
+			if (permission_exists('var_edit')) {
+				echo "<a href='var_edit.php?id=".$row['var_uuid']."'>".substr($row['var_name'],0,32)."</a>";
+			}
+			else {
+				echo substr($row['var_name'],0,32);
+			}
+			echo "	</td>\n";
+			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			if ($row['var_enabled'] == "true") {
 				echo $text['option-true'];

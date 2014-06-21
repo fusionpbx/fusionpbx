@@ -166,7 +166,14 @@ else {
 
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_uuid']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_mac_address']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('device_edit')) {
+				echo "<a href='device_edit.php?id=".$row['device_uuid']."'>".$row['device_mac_address']."</a>";
+			}
+			else {
+				echo $row['device_mac_address'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_model']."&nbsp;</td>\n";

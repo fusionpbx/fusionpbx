@@ -114,8 +114,8 @@ $order = $_GET["order"];
 				//echo "<td valign='top'><a href='rssupdate.php?rss_uuid=".$row[rss_uuid]."'>".$row[rss_uuid]."</a></td>";
 				//echo "<td valign='top'>".$row[rss_category]."</td>";
 
-				echo "<td valign='top' nowrap class='".$row_style[$c]."'>&nbsp;".$row[rss_title]."&nbsp;</td>";
-				echo "<td valign='top' nowrap class='".$row_style[$c]."'>&nbsp;<a href='/index.php?c=".$row[rss_link]."'>".$row[rss_link]."</a>&nbsp;</td>";
+				echo "<td valign='top' nowrap class='".$row_style[$c]."'><a href='rssupdate.php?rss_uuid=".$row[rss_uuid]."'>".$row[rss_title]."</a></td>";
+				echo "<td valign='top' nowrap class='".$row_style[$c]."'><a href='/index.php?c=".$row[rss_link]."'>".$row[rss_link]."</a></td>";
 				//echo "<td valign='top' class='".$row_style[$c]."'>".$row[rss_sub_category]."&nbsp;</td>";
 				if (strlen($row[rss_group]) > 0) {
 					echo "<td valign='top' class='".$row_style[$c]."'>".$row[rss_group]."</td>";
@@ -140,7 +140,7 @@ $order = $_GET["order"];
 				//echo "<td valign='top'>".$row[rss_optional_3]."</td>";
 				//echo "<td valign='top'>".$row[rss_optional_4]."</td>";
 				//echo "<td valign='top'>".$row[rss_optional_5]."</td>";
-				echo "<td valign='top' class='".$row_style[$c]."'>".$row[rss_order]."&nbsp;</td>";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$row[rss_order]."</td>";
 
 				//echo "<td valign='top' align='center'>";
 				//echo "  <input type='button' class='btn' name='' onclick=\"window.location='rssmoveup.php?menuparentid=".$row[menuparentid]."&rss_uuid=".$row[rss_uuid]."&rss_order=".$row[rss_order]."'\" value='<' title='".$row[rss_order].". Move Up'>";
