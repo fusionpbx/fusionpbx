@@ -454,6 +454,7 @@ else {
 	echo "<br />\n";
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "order by group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	echo "<select name=\"group_name\" class='formfld' style='width: auto; margin-right: 3px;'>\n";
