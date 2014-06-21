@@ -346,6 +346,11 @@ include "root.php";
 			public function execute(){
 					$sql = $this->sql;
 					//echo $sql;
+				//connect to the database if needed
+					if (!$this->db) {
+						$this->connect();
+					}
+				//get data from the database
 					$prep_statement = $this->db->prepare($sql);
 					if ($prep_statement) {
 						$prep_statement->execute();
