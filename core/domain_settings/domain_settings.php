@@ -106,16 +106,19 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count > 0) {
 		$previous_category = '';
 		foreach($result as $row) {
 			if ($previous_category != $row['domain_setting_category']) {
-				echo "<tr><td colspan='4' align='left'>\n";
-				echo "	<br />\n";
-				echo "	<br />\n";
-				echo "	<b>".ucfirst($row['domain_setting_category'])."</b>&nbsp;</td></tr>\n";
+				echo "<tr>";
+				echo "	<td colspan='4' align='left'>\n";
+				echo "		<br />\n";
+				echo "		<br />\n";
+				echo "		<b>".ucfirst($row['domain_setting_category'])."</b>&nbsp;\n";
+				echo "	</td>\n";
+				echo "</tr>\n";
 				echo "<tr>\n";
 				echo th_order_by('domain_setting_subcategory', $text['label-category'], $order_by, $order);
 				echo th_order_by('domain_setting_name', $text['label-type'], $order_by, $order);
@@ -129,8 +132,16 @@ require_once "resources/paging.php";
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_subcategory']."&nbsp;</td>\n";
+			$tr_link = (permission_exists('domain_setting_edit')) ? " onclick=\"document.location.href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('domain_setting_edit')) {
+				echo 	"<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."'>".$row['domain_setting_subcategory']."</a>";
+			}
+			else {
+				echo $row['domain_setting_subcategory'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 
@@ -158,14 +169,14 @@ require_once "resources/paging.php";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['domain_setting_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_setting_edit')) {
-			echo 		"<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo 	"<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('domain_setting_delete')) {
-			echo 		"<a href='domain_setting_delete.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo 	"<a href='domain_setting_delete.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";

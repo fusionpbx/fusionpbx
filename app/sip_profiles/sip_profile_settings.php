@@ -93,30 +93,37 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('sip_profile_setting_name', $text['label-setting_name'], $order_by, $order);
 	echo th_order_by('sip_profile_setting_value', $text['label-setting_value'], $order_by, $order);
 	echo th_order_by('sip_profile_setting_enabled', $text['label-setting_enabled'], $order_by, $order);
 	echo th_order_by('sip_profile_setting_description', $text['label-setting_description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
-	if (permission_exists('sip_profile_add')) {
+	if (permission_exists('sip_profile_setting_add')) {
 		echo "<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
 	if ($num_rows > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_setting_name']."&nbsp;</td>\n";
+			$tr_link = (permission_exists('sip_profile_setting_edit')) ? " onclick=\"document.location.href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('sip_profile_setting_edit')) {
+				echo "<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."'>".$row['sip_profile_setting_name']."</a>";
+			}
+			else {
+				echo $row['sip_profile_setting_name'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_setting_value']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['sip_profile_setting_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_setting_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['sip_profile_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
-			if (permission_exists('sip_profile_edit')) {
+			if (permission_exists('sip_profile_setting_edit')) {
 				echo "<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
-			if (permission_exists('sip_profile_delete')) {
+			if (permission_exists('sip_profile_setting_delete')) {
 				echo "<a href='sip_profile_setting_delete.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
@@ -133,7 +140,7 @@ require_once "resources/paging.php";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
-	if (permission_exists('sip_profile_add')) {
+	if (permission_exists('sip_profile_setting_add')) {
 		echo 		"<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "		</td>\n";

@@ -81,30 +81,52 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<th>".$text['label-name']."</th>\n";
 	echo "	<th>".$text['label-category']."</th>\n";
 	echo "	<th>".$text['label-subcategory']."</th>\n";
 	echo "	<th>".$text['label-version']."</th>\n";
 	echo "	<th>".$text['label-description']."</th>\n";
-	//echo "<td align='right' width='42'>\n";
-	//echo "	<a href='apps_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
-	//echo "</td>\n";
+	/*
+	echo "<td class='list_control_icons'>\n";
+	if (permission_exists('app_add')) {
+		echo "	<a href='apps_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	}
+	echo "</td>\n";
+	*/
 	echo "<tr>\n";
 
 	foreach($apps as $row) {
 		if ($row['uuid'] != "d8704214-75a0-e52f-1336-f0780e29fef8") {
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>".$row['name']."&nbsp;</td>\n";
+			/*
+			$tr_link = (permission_exists('app_edit')) ? " onclick=\"document.location.href='apps_edit.php?id=".$row['uuid']."';\"" : null;
+			*/
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>";
+			/*
+			if (permission_exists('app_edit')) {
+				echo "	<a href='apps_edit.php?id=".$row['uuid']."'>".$row['name']."</a>";
+			}
+			else {
+			*/
+				echo $row['name'];
+			/*
+			}
+			*/
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['category']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' width='35%'>".$row['description']['en-us']."&nbsp;</td>\n";
 			/*  // temporarily disabled
-			echo "	<td valign='top' align='left' nowrap='nowrap' width='42'>\n";
-			echo "		&nbsp;<a href='apps_edit.php?id=".$row['uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-			echo "		<a href='apps_delete.php?id=".$row['uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			echo "	<td class='list_control_icons'>";
+			if (permission_exists('app_edit')) {
+				echo "	<a href='apps_edit.php?id=".$row['uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
+			}
+			if (permission_exists('app_delete')) {
+				echo "	<a href='apps_delete.php?id=".$row['uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+			}
 			echo "	</td>\n";
 			*/
 			echo "</tr>\n";
@@ -113,6 +135,16 @@ require_once "resources/paging.php";
 	} //end foreach
 	unset($sql, $result, $row_count);
 
+	echo "<tr>\n";
+	echo "	<td colspan='5'>&nbsp;</td>\n";
+	/*
+	echo "<td class='list_control_icons'>\n";
+	if (permission_exists('app_add')) {
+		echo "	<a href='apps_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
+	}
+	echo "</td>\n";
+	*/
+	echo "</tr>";
 	echo "</table>";
 	echo "</div>";
 	echo "<br /><br />";

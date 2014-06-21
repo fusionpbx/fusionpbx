@@ -111,7 +111,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count > 0) {
 		$previous_category = '';
@@ -148,9 +148,16 @@ require_once "resources/paging.php";
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_subcategory']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_name']."&nbsp;</td>\n";
+			$tr_link = (permission_exists('default_setting_edit')) ? " onclick=\"document.location.href='default_setting_edit.php?id=".$row['default_setting_uuid']."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('default_setting_edit')) {
+				echo "<a href='default_setting_edit.php?id=".$row['default_setting_uuid']."'>".$row['default_setting_subcategory']."</a>";
+			}
+			else {
+				echo $row['default_setting_subcategory'];
+			}
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_name']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 
 			$category = $row['default_setting_category'];
@@ -176,7 +183,7 @@ require_once "resources/paging.php";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['default_setting_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('default_setting_edit')) {
