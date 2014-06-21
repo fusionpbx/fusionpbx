@@ -246,18 +246,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='module_enabled'>\n";
-	echo "    <option value=''></option>\n";
-	if ($module_enabled == "true") {
-		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
 	if ($module_enabled == "false") {
 		echo "    <option value='false' SELECTED >".$text['option-false']."</option>\n";
 	}
 	else {
 		echo "    <option value='false'>".$text['option-false']."</option>\n";
+	}
+	if ($module_enabled == "true") {
+		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";
@@ -271,18 +270,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='module_default_enabled'>\n";
-	echo "    <option value=''></option>\n";
-	if ($module_default_enabled == "true") {
-		echo "    <option value='true' SELECTED >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "    <option value='true'>".$text['option-true']."</option>\n";
-	}
 	if ($module_default_enabled == "false") {
-		echo "    <option value='false' SELECTED >".$text['option-false']."</option>\n";
+		echo "    <option value='false' selected='selected'>".$text['option-false']."</option>\n";
 	}
 	else {
 		echo "    <option value='false'>".$text['option-false']."</option>\n";
+	}
+	if ($module_default_enabled == "true") {
+		echo "    <option value='true' selected='selected'>".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "    <option value='true'>".$text['option-true']."</option>\n";
 	}
 	echo "    </select>\n";
 	echo "<br />\n";

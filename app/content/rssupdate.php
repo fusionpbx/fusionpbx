@@ -163,7 +163,7 @@ else {
 	}
 
 	echo "<div align='center'>";
-	echo "<table border='0' width='90%' cellpadding='0' cellspacing='0'>\n";
+	echo "<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\" width='100%'>\n";

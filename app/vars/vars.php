@@ -81,7 +81,7 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	$tmp_var_header = '';
 	$tmp_var_header .= "<tr>\n";
@@ -127,7 +127,8 @@ else {
 				echo $tmp_var_header;
 			}
 
-			echo "<tr >\n";
+			$tr_link = (permission_exists('var_edit')) ? " onclick=\"document.location.href='var_edit.php?id=".$row['var_uuid']."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
 			if (permission_exists('var_edit')) {
 				echo "<a href='var_edit.php?id=".$row['var_uuid']."'>".substr($row['var_name'],0,32)."</a>";

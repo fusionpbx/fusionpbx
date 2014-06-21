@@ -278,6 +278,16 @@ input[type=text]::-ms-clear {
 	padding: 4px 16px 4px 6px;
 }
 
+table.tr_hover tr {
+	background-color: transparent;
+	cursor: default;
+	}
+
+table.tr_hover tr:hover td,
+table.tr_hover tr:hover td a {
+	color: #5082ca;
+	}
+
 .row_style0 {
 	border-bottom: 1px solid #c5d1e5;
 	background-color: #e5e9f0;
@@ -285,7 +295,6 @@ input[type=text]::-ms-clear {
 	text-align: left;
 	padding: 5px 7px;
 }
-
 
 .row_style1 {
 	border-bottom: 1px solid #c5d1e5;

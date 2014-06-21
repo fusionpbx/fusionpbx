@@ -101,7 +101,8 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					}
 
 				//display the content of the list
-					echo "<tr'>\n";
+					$tr_link = (permission_exists('menu_edit')) ? " onclick=\"document.location.href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row2['menu_item_uuid']."&menu_item_parent_uuid=".$row2['menu_item_parent_uuid']."';\"" : null;
+					echo "<tr ".$tr_link.">\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>";
 					echo "  <table cellpadding='0' cellspacing='0' border='0'>";
 					echo "  <tr>";
@@ -117,16 +118,16 @@ function build_db_child_menu_list ($db, $menu_item_level, $menu_item_uuid, $c) {
 					echo "  </tr>";
 					echo "  </table>";
 					echo "</td>";
-					//echo "<td valign='top'>&nbsp;".$menu_item_link."&nbsp;</td>";
-					echo "<td valign='top' class='".$row_style[$c]."'>&nbsp;".$group_list."&nbsp;</td>";
-					echo "<td valign='top' class='".$row_style[$c]."'>&nbsp;".$menu_item_category."&nbsp;</td>";
+					//echo "<td valign='top'>".$menu_item_link."&nbsp;</td>";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>";
+					echo "<td valign='top' class='".$row_style[$c]."'>".$menu_item_category."&nbsp;</td>";
 					//echo "<td valign='top'>".$row[menu_item_description]."</td>";
-					//echo "<td valign='top'>&nbsp;".$row[menu_item_order]."&nbsp;</td>";
+					//echo "<td valign='top'>".$row[menu_item_order]."&nbsp;</td>";
 					if ($menu_item_protected == "true") {
-						echo "<td valign='top' class='".$row_style[$c]."'>&nbsp; <strong>".$text['label-true']."</strong> &nbsp;</td>";
+						echo "<td valign='top' class='".$row_style[$c]."' style='text-align: center;'><strong>".$text['label-true']."</strong> &nbsp;</td>";
 					}
 					else {
-						echo "<td valign='top' class='".$row_style[$c]."'>&nbsp; ".$text['label-false']." &nbsp;</td>";
+						echo "<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$text['label-false']." &nbsp;</td>";
 					}
 					echo "<td valign='top' align='center' nowrap class='".$row_style[$c]."'>";
 					echo "	&nbsp;";
@@ -203,7 +204,7 @@ $order = $_GET["order"];
 	$row_style["1"] = "row_style0";
 
 	echo "<div align='left'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count == 0) {
 		//no results
@@ -211,11 +212,11 @@ $order = $_GET["order"];
 	}
 	else {
 		echo "<tr>";
-		echo "<th align='left' nowrap>&nbsp; ".$text['label-title']." &nbsp; </th>";
-		echo "<th align='left' nowrap>&nbsp; ".$text['label-groups']." &nbsp; </th>";
-		echo "<th align='left'nowrap>&nbsp; ".$text['label-category']." &nbsp; </th>";
-		echo "<th nowrap>&nbsp; ".$text['label-protected']." &nbsp; </th>";
-		echo "<th nowrap width='70'>&nbsp; ".$text['label-menu_order']." &nbsp; </th>";
+		echo "<th align='left' nowrap>".$text['label-title']."</th>";
+		echo "<th align='left' nowrap>".$text['label-groups']."</th>";
+		echo "<th align='left'nowrap>".$text['label-category']."</th>";
+		echo "<th nowrap style='text-align: center;'>".$text['label-protected']."</th>";
+		echo "<th nowrap width='70' style='text-align: center;'>".$text['label-menu_order']."</th>";
 		echo "<td class='list_control_icons'>";
 		if (permission_exists('menu_add')) {
 			echo "<a href='menu_item_edit.php?id=".$menu_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -232,8 +233,7 @@ $order = $_GET["order"];
 				$menu_item_protected = $row['menu_item_protected'];
 
 			//get the groups that have been assigned to the menu
-				$sql = "";
-				$sql .= "select group_name from v_menu_item_groups ";
+				$sql = "select group_name from v_menu_item_groups ";
 				$sql .= "where menu_uuid = '$menu_uuid' ";
 				$sql .= "and menu_item_uuid = '$menu_item_uuid' ";
 				$sub_prep_statement = $db->prepare(check_sql($sql));
@@ -269,23 +269,24 @@ $order = $_GET["order"];
 				}
 
 			//display the content of the list
-				echo "<tr style='".$row_style[$c]."'>\n";
-				echo "<td valign='top' class='".$row_style[$c]."'>&nbsp; ".$menu_item_title."&nbsp;</td>";
-				echo "<td valign='top' class='".$row_style[$c]."'>&nbsp; ".$group_list."&nbsp;</td>";
-				//echo "<td valign='top' class='".$row_style[$c]."'>&nbsp;".$menu_item_link."&nbsp;</td>";
-				echo "<td valign='top' class='".$row_style[$c]."'>&nbsp;".$menu_item_category."&nbsp;</td>";
+				$tr_link = (permission_exists('menu_edit')) ? " onclick=\"document.location.href='menu_item_edit.php?id=".$menu_uuid."&menu_item_uuid=".$row['menu_item_uuid']."&menu_uuid=".$menu_uuid."';\"" : null;
+				echo "<tr style='".$row_style[$c]."' ".$tr_link.">\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$menu_item_title."&nbsp;</td>";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$group_list."&nbsp;</td>";
+				//echo "<td valign='top' class='".$row_style[$c]."'>".$menu_item_link."&nbsp;</td>";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$menu_item_category."&nbsp;</td>";
 				//echo "<td valign='top' class='".$row_style[$c]."'>".$row[menu_item_description]."</td>";
-				//echo "<td valign='top' class='".$row_style[$c]."'>&nbsp;".$row['menu_item_parent_uuid']."&nbsp;</td>";
-				//echo "<td valign='top' class='".$row_style[$c]."'>&nbsp;".$row['menu_item_order']."&nbsp;</td>";
+				//echo "<td valign='top' class='".$row_style[$c]."'>".$row['menu_item_parent_uuid']."&nbsp;</td>";
+				//echo "<td valign='top' class='".$row_style[$c]."'>".$row['menu_item_order']."&nbsp;</td>";
 
 				if ($menu_item_protected == "true") {
-					echo "<td valign='top' class='".$row_style[$c]."'>&nbsp; <strong>".$text['label-true']."</strong> &nbsp;</td>";
+					echo "<td valign='top' class='".$row_style[$c]."' style='text-align: center;'><strong>".$text['label-true']."</strong> &nbsp;</td>";
 				}
 				else {
-					echo "<td valign='top' class='".$row_style[$c]."'>&nbsp; ".$text['label-false']." &nbsp;</td>";
+					echo "<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$text['label-false']." &nbsp;</td>";
 				}
 
-				echo "<td valign='top' align='center' nowrap class='".$row_style[$c]."'>";
+				echo "<td valign='top' nowrap class='".$row_style[$c]."' style='text-align: center;'>";
 				echo "  ".$row[menu_item_order]."&nbsp;";
 				echo "</td>";
 

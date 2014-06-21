@@ -144,7 +144,7 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order);
 	echo th_order_by('context', $text['label-context'], $order_by, $order);
@@ -164,7 +164,8 @@ else {
 
 	if ($num_rows > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = (permission_exists('gateway_edit')) ? " onclick=\"document.location.href='gateway_edit.php?id=".$row['gateway_uuid']."';\"" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('gateway_edit')) {
 				echo "<a href='gateway_edit.php?id=".$row['gateway_uuid']."'>".$row["gateway"]."</a>";

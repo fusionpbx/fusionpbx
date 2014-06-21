@@ -90,7 +90,7 @@ $order = $_GET["order"];
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='left'>\n";
-	echo "<table width='100%' border='0' cellpadding='2' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='2' cellspacing='0'>\n";
 	echo "<tr>";
 	echo th_order_by('rss_title', $text['label-title'], $order_by, $order);
 	echo th_order_by('rss_link', $text['label-link'], $order_by, $order);
@@ -110,7 +110,8 @@ $order = $_GET["order"];
 	if ($result_count > 0) {
 		foreach($result as $row) {
 		//print_r( $row );
-			echo "<tr style='".$row_style[$c]."'>\n";
+			$tr_link = " onclick=\"document.location.href='rssupdate.php?rss_uuid=".$row[rss_uuid]."';\"";
+			echo "<tr style='".$row_style[$c]."' ".$tr_link.">\n";
 				//echo "<td valign='top'><a href='rssupdate.php?rss_uuid=".$row[rss_uuid]."'>".$row[rss_uuid]."</a></td>";
 				//echo "<td valign='top'>".$row[rss_category]."</td>";
 
