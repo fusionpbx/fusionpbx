@@ -345,10 +345,10 @@ else {
 	}
 	else {
 		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncell\">\n";
+		echo "	<td width='30%' class=\"vncell\">\n";
 		echo "		".$text['label-status'].":\n";
 		echo "	</td>\n";
-		echo "	<td class=\"vtable\" align='left'>\n";
+		echo "	<td width='70%' class=\"vtable\" align='left'>\n";
 		echo "		<select id='user_status' name='user_status' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		if ($user_status == "Available") {
