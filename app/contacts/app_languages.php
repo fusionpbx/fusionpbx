@@ -415,6 +415,27 @@
 		$text['label-address_tools']['pt-pt'] = "Ferramentas";
 		$text['label-address_tools']['fr-fr'] = "Outils";
 
+	// contact extensions
+		$text['label-contact_extensions']['en-us'] = "Extensions";
+		$text['label-contact_extensions']['es-cl'] = "Extensións";
+		$text['label-contact_extensions']['pt-pt'] = "Extensões";
+		$text['label-contact_extensions']['fr-fr'] = "Extensions";
+
+		$text['label-extension']['en-us'] = "Extension";
+		$text['label-extension']['es-cl'] = "Extensión";
+		$text['label-extension']['pt-pt'] = "Extensão";
+		$text['label-extension']['fr-fr'] = "Extension";
+
+		$text['label-enabled']['en-us'] = "Enabled";
+		$text['label-enabled']['es-cl'] = "Activado";
+		$text['label-enabled']['pt-pt'] = "Habilitada";
+		$text['label-enabled']['fr-fr'] = "Actif";
+
+		$text['label-description']['en-us'] = "Description";
+		$text['label-description']['es-cl'] = "Descripción";
+		$text['label-description']['pt-pt'] = "Descrição";
+		$text['label-description']['fr-fr'] = "Description";
+
 	// contact notes
 		$text['title-contact_notes-add']['en-us'] = "Contact Note Add";
 		$text['title-contact_notes-add']['es-cl'] = "Agregar Nota de Contacto";
