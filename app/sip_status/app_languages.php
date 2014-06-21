@@ -46,8 +46,54 @@
 	$text['title-sofia-status-profile']['pt-pt'] = "perfil associado ao estado do módulo sofia";
 	$text['title-sofia-status-profile']['fr-fr'] = "profile statut sofia";
 
-	$text['title-status']['en-us'] = "status";
-	$text['title-status']['es-cl'] = "estado";
-	$text['title-status']['pt-pt'] = "estado";
-	$text['title-status']['fr-fr'] = "statut";
+	$text['title-status']['en-us'] = "Status";
+	$text['title-status']['es-cl'] = "Estado";
+	$text['title-status']['pt-pt'] = "Estado";
+	$text['title-status']['fr-fr'] = "Statut";
+
+	$text['button-flush_memcache']['en-us'] = "Flush Memcache";
+	$text['button-flush_memcache']['es-cl'] = "Memcache Flush";
+	$text['button-flush_memcache']['pt-pt'] = "Memcache Lavar";
+	$text['button-flush_memcache']['fr-fr'] = "Memcache Rincer";
+
+	$text['button-reload_acl']['en-us'] = "Reload ACL";
+	$text['button-reload_acl']['es-cl'] = "Actualizar ACL";
+	$text['button-reload_acl']['pt-pt'] = "Recarregar ACL";
+	$text['button-reload_acl']['fr-fr'] = "Reload ACL";
+
+	$text['button-reload_xml']['en-us'] = "Reload XML";
+	$text['button-reload_xml']['es-cl'] = "Actualizar XML";
+	$text['button-reload_xml']['pt-pt'] = "Recarregar XML";
+	$text['button-reload_xml']['fr-fr'] = "Reload XML";
+
+	$text['button-flush_registrations']['en-us'] = "Flush Registrations";
+	$text['button-flush_registrations']['es-cl'] = "Inscripciones Flush";
+	$text['button-flush_registrations']['pt-pt'] = "Inscrições Lavar";
+	$text['button-flush_registrations']['fr-fr'] = "Inscriptions Rincer";
+
+	$text['button-registrations']['en-us'] = "Registrations";
+	$text['button-registrations']['es-cl'] = "Inscripciones";
+	$text['button-registrations']['pt-pt'] = "Inscrições";
+	$text['button-registrations']['fr-fr'] = "Inscriptions";
+
+	$text['button-start']['en-us'] = "Start";
+	$text['button-start']['es-cl'] = "Iniciar";
+	$text['button-start']['pt-pt'] = "Iniciar";
+	$text['button-start']['fr-fr'] = "Démarrer";
+
+	$text['button-stop']['en-us'] = "Stop";
+	$text['button-stop']['es-cl'] = "Detener";
+	$text['button-stop']['pt-pt'] = "Parar";
+	$text['button-stop']['fr-fr'] = "Stop";
+
+	$text['button-restart']['en-us'] = "Restart";
+	$text['button-restart']['es-cl'] = "Reanudar";
+	$text['button-restart']['pt-pt'] = "Restart";
+	$text['button-restart']['fr-fr'] = "Redémarrer";
+
+	$text['button-rescan']['en-us'] = "Rescan";
+	$text['button-rescan']['es-cl'] = "Vuelva a Explorar";
+	$text['button-rescan']['pt-pt'] = "Redigitalize";
+	$text['button-rescan']['fr-fr'] = "Rescan";
+
 ?>
