@@ -127,10 +127,10 @@ else {
 			$sql .= "and u.user_uuid = '".$_SESSION['user_uuid']."' ";
 		}
 		if (strlen($order_by) == 0) {
-			$sql .= "order by conference_center_name asc "; 
+			$sql .= "order by conference_center_name asc ";
 		}
 		else {
-			$sql .= "order by $order_by $order "; 
+			$sql .= "order by $order_by $order ";
 		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -166,10 +166,17 @@ else {
 			$conference_center_name = $row['conference_center_name'];
 			$conference_center_name = str_replace("-", " ", $conference_center_name);
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$conference_center_name."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('conference_center_edit')) {
+				echo "<a href='conference_center_edit.php?id=".$row['conference_center_uuid']."'>".$conference_center_name."</a>";
+			}
+			else {
+				echo $conference_center_name;
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_extension']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_order']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['conference_center_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['conference_center_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_center_edit')) {

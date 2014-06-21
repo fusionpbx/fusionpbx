@@ -140,7 +140,14 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 			echo "<tr >\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[domain_uuid]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_name]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('call_center_agent_edit')) {
+				echo "<a href='call_center_agent_edit.php?id=".$row[call_center_agent_uuid]."'>".$row[agent_name]."</a>";
+			}
+			else {
+				echo $row[agent_name];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_type]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_call_timeout]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[agent_contact]."&nbsp;</td>\n";

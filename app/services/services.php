@@ -138,9 +138,9 @@ if (strlen($_GET["a"]) > 0) {
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('service_name', 'Name', $order_by, $order);
-	echo th_order_by('service_description', 'Description', $order_by, $order);
 	echo "<th>Status</th>\n";
 	echo "<th>Action</th>\n";
+	echo th_order_by('service_description', 'Description', $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('service_add')) {
 		echo "<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
@@ -154,8 +154,14 @@ if (strlen($_GET["a"]) > 0) {
 	else { //received results
 		foreach($result as $row) {
 			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[service_name]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[service_description]."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('service_edit')) {
+				echo "<a href='service_edit.php?id=".$row[service_uuid]."'>".$row[service_name]."</a>";
+			}
+			else {
+				echo $row[service_name];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			$pid = file_get_contents($row[service_data]);
 			if (is_process_running($pid)) {
@@ -173,6 +179,7 @@ if (strlen($_GET["a"]) > 0) {
 				echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
 			}
 			echo "</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row[service_description]."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('service_edit')) {
 				echo "<a href='service_edit.php?id=".$row[service_uuid]."' alt='edit'>$v_link_label_edit</a>";

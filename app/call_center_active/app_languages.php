@@ -4,6 +4,11 @@
 	$text['button-edit']['fr-fr'] = "Editer";
 	$text['button-edit']['pt-pt'] = "Editar";
 
+	$text['button-view']['en-us'] = "View";
+	$text['button-view']['es-cl'] = "Ver";
+	$text['button-view']['pt-pt'] = "Vista";
+	$text['button-view']['fr-fr'] = "Voir";
+
 	$text['description-active_call_center']['en-us'] = "Select a Call Center Queue from the list below to view its activity.";
 	$text['description-active_call_center']['es-cl'] = "Seleccione la Cola del Centro de Llamados desde el siguiente listado para ver su actividad.";
 	$text['description-active_call_center']['fr-fr'] = "Choisir une file d'attente dans la liste pour voir son activité.";

@@ -102,7 +102,14 @@ $order = $_GET["order"];
 		foreach($result as $row) {
 			echo "<tr >\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_name']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('schema_edit')) {
+				echo "<a href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."'>".$row['field_name']."</a>";
+			}
+			else {
+				echo $row['field_name'];
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			switch ($row['field_type']) {
 				case "text" : echo $text['option-text']; break;

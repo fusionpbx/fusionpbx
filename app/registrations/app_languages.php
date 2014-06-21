@@ -46,19 +46,20 @@
 	$text['label-response']['pt-pt'] = "Resposta:";
 	$text['label-response']['fr-fr'] = "Réponse:";
 
-	$text['button-reboot']['en-us'] = "Reboot";
-	$text['button-reboot']['pt-pt'] = "Reinicialização";
-	$text['button-reboot']['fr-fr'] = "Redémarrage";
+	$text['button-unregister']['en-us'] = "Unregister";
+	$text['button-unregister']['es-cl'] = "";
+	$text['button-unregister']['pt-pt'] = "";
+	$text['button-unregister']['fr-fr'] = "";
 
 	$text['button-reboot']['en-us'] = "Reboot";
 	$text['button-reboot']['es-cl'] = "Reiniciar";
 	$text['button-reboot']['pt-pt'] = "Reinicialização";
 	$text['button-reboot']['fr-fr'] = "Redémarrage";
 
-	$text['button-check_sync']['en-us'] = "Check Sync";
-	$text['button-check_sync']['es-cl'] = "Compruebe Sync";
-	$text['button-check_sync']['pt-pt'] = "Sincronização";
-	$text['button-check_sync']['fr-fr'] = "Contrôle Sync";
+	$text['button-provision']['en-us'] = "Provision";
+	$text['button-provision']['es-cl'] = "";
+	$text['button-provision']['pt-pt'] = "";
+	$text['button-provision']['fr-fr'] = "";
 
 	$text['label-message']['en-us'] = "Message";
 	$text['label-message']['es-cl'] = "Mensaje";

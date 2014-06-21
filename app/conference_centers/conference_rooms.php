@@ -293,12 +293,11 @@ else {
 
 				echo "	<td valign='middle' class='".$row_style[$c]."'>";
 				if ($row['mute'] == "true") {
-					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=false\">".$text['label-true']."</a>";
+					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=false\">".$text['label-true']."</a>&nbsp;";
 				}
 				else {
-					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=true\">".$text['label-false']."</a>";
+					echo "		<a href=\"?conference_room_uuid=".$row['conference_room_uuid']."&mute=true\">".$text['label-false']."</a>&nbsp;";
 				}
-				echo "		&nbsp;\n";
 				echo "	</td>\n";
 
 				echo "	<td valign='middle' class='".$row_style[$c]."'>";

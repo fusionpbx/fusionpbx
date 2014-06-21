@@ -160,9 +160,10 @@ require_once "resources/check_auth.php";
 						echo "	<td class='".$row_style[$c]."'><a href='http://".$row['network-ip']."' target='_blank'>".$row['network-ip']."</a>&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".$row['network-port']."&nbsp;</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
-						echo "	<td class='".$row_style[$c]."' style='text-align: right;'>\n";
-						echo "		<input type='button' class='btn' value='".$text['button-reboot']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
-						echo "		<input type='button' class='btn' value='".$text['button-check_sync']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
+						echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap='nowrap'>\n";
+						echo "		<input type='button' class='btn' value='".$text['button-unregister']."' onclick=\"document.location.href='cmd.php?cmd=reboot&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
+						echo "		<input type='button' class='btn' value='".$text['button-provision']."' onclick=\"document.location.href='cmd.php?cmd=check_sync&profile=".$sip_profile_name."&user=".$row['user']."&domain=".$row['sip-auth-realm']."&agent=".urlencode($row['agent'])."';\" />\n";
+						echo "		<input type='button' class='btn' value='".$text['button-reboot']."' disabled='disabled' onclick=\"\" />\n";
 						echo "	</td>\n";
 						echo "</tr>\n";
 						if ($c==0) { $c=1; } else { $c=0; }
