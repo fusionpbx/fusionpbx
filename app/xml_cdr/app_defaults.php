@@ -40,7 +40,7 @@
 		}
 		*/
 
-		//ensure that the language code is set
+		//add cdr -> format and cdr -> storage to default settings
 			$sql = "select count(*) as num_rows from v_default_settings ";
 			$sql .= "where default_setting_category = 'cdr' ";
 			$sql .= "and default_setting_subcategory = 'format' ";
@@ -50,6 +50,26 @@
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] == 0) {
+					$x = 0;
+					$array[$x]['default_setting_category'] = 'cdr';
+					$array[$x]['default_setting_subcategory'] = 'format';
+					$array[$x]['default_setting_name'] = 'text';
+					$array[$x]['default_setting_value'] = 'json';
+					$array[$x]['default_setting_enabled'] = 'true';
+					$array[$x]['default_setting_description'] = '';
+					$x++;
+					$array[$x]['default_setting_category'] = 'cdr';
+					$array[$x]['default_setting_subcategory'] = 'storage';
+					$array[$x]['default_setting_name'] = 'text';
+					$array[$x]['default_setting_value'] = 'db';
+					$array[$x]['default_setting_enabled'] = 'true';
+					$array[$x]['default_setting_description'] = '';
+					$orm = new orm;
+					$orm->name('default_settings');
+					$orm->save($array);
+					$message = $orm->message;
+
+					/*
 					$sql = "insert into v_default_settings ";
 					$sql .= "(";
 					$sql .= "default_setting_uuid, ";
@@ -95,6 +115,7 @@
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
+					*/
 				}
 			}
 	}
