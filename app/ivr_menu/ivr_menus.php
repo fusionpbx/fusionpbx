@@ -109,7 +109,7 @@ else {
 		$row_style["1"] = "row_style1";
 
 		echo "<div align='center'>\n";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo th_order_by('ivr_menu_name', $text['label-name'], $order_by[0]['name'], $order_by[0]['order']);
 		echo th_order_by('ivr_menu_extension', $text['label-extension'], $order_by[0]['name'], $order_by[0]['order']);
@@ -121,12 +121,13 @@ else {
 			echo "<a href='ivr_menu_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 		}
 		echo "</td>\n";
-		echo "<tr>\n";
+		echo "</tr>\n";
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
 				$ivr_menu_name = str_replace("-", " ", $row['ivr_menu_name']);
-				echo "<tr >\n";
+				$tr_link = (permission_exists('ivr_menu_edit')) ? "href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."'" : null;
+				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('ivr_menu_edit')) {
 					echo "<a href='ivr_menu_edit.php?id=".$row['ivr_menu_uuid']."'>".$ivr_menu_name."</a>";

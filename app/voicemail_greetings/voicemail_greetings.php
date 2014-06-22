@@ -292,11 +292,11 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th>".$text['table-choose']."</th>\n";
 	echo th_order_by('greeting_name', $text['table-name'], $order_by, $order);
-	echo "<th align='right'>".$text['table-download']."</th>\n";
+	echo "<th align='right'>".$text['label-tools']."</th>\n";
 	echo "<th width=\"50px\" class=\"listhdr\" nowrap=\"nowrap\">".$text['table-size']."</th>\n";
 	echo th_order_by('greeting_description', $text['table-description'], $order_by, $order);
 	echo "<td align='right' width='21'>\n";
@@ -310,8 +310,9 @@ else {
 		foreach($result as $row) {
 			$tmp_filesize = filesize($v_greeting_dir.'/'.$row['greeting_name']);
 			$tmp_filesize = byte_convert($tmp_filesize);
-			echo "<tr >\n";
-			echo "	<td class='".$row_style[$c]."' width='30px;' valign='top'>\n";
+			$tr_link = (permission_exists('voicemail_greeting_edit')) ? "href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."'" : null;
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td class='".$row_style[$c]." tr_link_void' width='30px;' valign='top'>\n";
 			if (preg_replace('{\D}', '', $row['greeting_name']) == $greeting_id) {
 				echo "		<input type=\"radio\" name=\"greeting_id\" value=\"".preg_replace('{\D}', '', $row['greeting_name'])."\" checked=\"checked\">\n";
 			}
@@ -333,7 +334,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td class='".$row_style[$c]."' nowrap>".$tmp_filesize."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['greeting_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right' nowrap>\n";
+			echo "	<td class='list_control_icons'>\n";
 			if (permission_exists('voicemail_greeting_edit')) {
 				echo "<a href='voicemail_greeting_edit.php?id=".$row['voicemail_greeting_uuid']."&voicemail_id=".$voicemail_id."' alt='edit'>$v_link_label_edit</a>";
 			}

@@ -87,6 +87,16 @@
 	$text['message-available-to-all']['pt-pt'] = "Disponível para todos os domínios";
 	$text['message-available-to-all']['fr-fr'] = "Disponible pour tous Domaines";
 
+	$text['label-file_name']['en-us'] = "File Name";
+	$text['label-file_name']['es-cl'] = "Nombre del Archivo";
+	$text['label-file_name']['pt-pt'] = "Nome do Arquivo";
+	$text['label-file_name']['fr-fr'] = "Nom du Fichier";
+
+	$text['label-tools']['en-us'] = "Tools";
+	$text['label-tools']['es-cl'] = "Instrumentos";
+	$text['label-tools']['pt-pt'] = "Ferramentas";
+	$text['label-tools']['fr-fr'] = "Outils";
+
 	$text['label-download']['en-us'] = "Download";
 	$text['label-download']['es-cl'] = "Descargar";
 	$text['label-download']['pt-pt'] = "Descarregar";
@@ -94,7 +104,7 @@
 
 	$text['label-play']['en-us'] = "Play";
 	$text['label-play']['es-cl'] = "Reproducir";
-	$text['label-play']['pt-pt'] = "Ouvir";
+	$text['label-play']['pt-pt'] = "Tocar";
 	$text['label-play']['fr-fr'] = "Jouer";
 
 	$text['label-uploaded']['en-us'] = "Uploaded";
@@ -113,7 +123,7 @@
 	$text['label-sampling']['fr-fr'] = "Echantillonage";
 
 	$text['message-delete']['en-us'] = "Do you really want to delete this file?";
-	$text['message-delete']['es-cl'] = "¿Realmente desea eliminar este archivo?";	
+	$text['message-delete']['es-cl'] = "¿Realmente desea eliminar este archivo?";
 	$text['message-delete']['pt-pt'] = "Deseja realmente remover este ficheiro?";
 	$text['message-delete']['fr-fr'] = "Voulez-vous vraiment supprimer ce fichier?";
 

@@ -61,10 +61,40 @@
 	$text['description-file']['pt-pt'] = "Nome do ficheiro. exemplo.wav";
 	$text['description-file']['fr-fr'] = "Nom du fichier. exemple.wav";
 
-	$text['label-recording']['en-us'] = "Recording Name (Play)";
-	$text['label-recording']['es-cl'] = "Nombre de la grabación (Reproducir)";
-	$text['label-recording']['pt-pt'] = "Nome da gravação (Tocar)";
-	$text['label-recording']['fr-fr'] = "Nom de l'enregistrement (Jouer)";
+	$text['label-recording_name']['en-us'] = "Recording Name";
+	$text['label-recording_name']['es-cl'] = "Nombre de la grabación";
+	$text['label-recording_name']['pt-pt'] = "Nome da gravação";
+	$text['label-recording_name']['fr-fr'] = "Nom de l'enregistrement";
+
+	$text['label-file_name']['en-us'] = "File Name";
+	$text['label-file_name']['es-cl'] = "Nombre del Archivo";
+	$text['label-file_name']['pt-pt'] = "Nome do Arquivo";
+	$text['label-file_name']['fr-fr'] = "Nom du Fichier";
+
+	$text['label-file-size']['en-us'] = "File Size";
+	$text['label-file-size']['es-cl'] = "Tamaño del archivo";
+	$text['label-file-size']['pt-pt'] = "Tamanho do Ficheiro";
+	$text['label-file-size']['fr-fr'] = "Taille de Fichier";
+
+	$text['label-tools']['en-us'] = "Tools";
+	$text['label-tools']['es-cl'] = "Instrumentos";
+	$text['label-tools']['pt-pt'] = "Ferramentas";
+	$text['label-tools']['fr-fr'] = "Outils";
+
+	$text['label-download']['en-us'] = "Download";
+	$text['label-download']['es-cl'] = "Descargar";
+	$text['label-download']['pt-pt'] = "Descarregar";
+	$text['label-download']['fr-fr'] = "Télécharger";
+
+	$text['label-play']['en-us'] = "Play";
+	$text['label-play']['es-cl'] = "Reproducir";
+	$text['label-play']['pt-pt'] = "Tocar";
+	$text['label-play']['fr-fr'] = "Jouer";
+
+	$text['label-description']['en-us'] = "Size";
+	$text['label-description']['es-cl'] = "Descripción";
+	$text['label-description']['pt-pt'] = "Descrição";
+	$text['label-description']['fr-fr'] = "Description";
 
 	$text['description-recording']['en-us'] = "Recording Name. example: recording_x";
 	$text['description-recording']['es-cl'] = "Nombre de la grabación. ejemplo: grabacion_x";

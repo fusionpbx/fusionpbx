@@ -115,7 +115,7 @@ require_once "resources/paging.php";
 		$row_style["1"] = "row_style1";
 
 		echo "<div align='center'>\n";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo th_order_by('extension', $text['label-extension'], $order_by, $order);
 		echo th_order_by('unique_id', $text['label-unique_id'], $order_by, $order);
@@ -126,11 +126,12 @@ require_once "resources/paging.php";
 			echo "<a href='extension_edit.php' alt='".$text['message-add']."'>$v_link_label_add</a>";
 		}
 		echo "</td>\n";
-		echo "<tr>\n";
+		echo "</tr>\n";
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
-				echo "<tr >\n";
+				$tr_link = (permission_exists('extension_edit')) ? "href='extension_edit.php?id=".$row['extension_uuid']."'" : null;
+				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('extension_edit')) {
 					echo "<a href='extension_edit.php?id=".$row['extension_uuid']."'>".$row['extension']."</a>";

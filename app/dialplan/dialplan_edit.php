@@ -746,7 +746,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							*/
 							echo "</td>\n";
 						//tools
-							echo "	<td style='width:55px;' nowrap='nowrap'>\n";
+							echo "	<td class='list_control_icon'>\n";
 							if ($element['hidden']) {
 								//echo "		<a href='dialplan_detail_edit.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
 								echo "		<a href='dialplan_detail_delete.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
