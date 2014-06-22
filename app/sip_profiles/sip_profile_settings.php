@@ -104,6 +104,8 @@ require_once "resources/paging.php";
 		echo "<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
+	echo "</tr>\n";
+
 	if ($num_rows > 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('sip_profile_setting_edit')) ? "href='sip_profile_setting_edit.php?sip_profile_uuid=".$row['sip_profile_uuid']."&id=".$row['sip_profile_setting_uuid']."'" : null;

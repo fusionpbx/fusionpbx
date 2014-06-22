@@ -120,6 +120,7 @@ require_once "resources/paging.php";
 		echo "<a href='sip_profile_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {

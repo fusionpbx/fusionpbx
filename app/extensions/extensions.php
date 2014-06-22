@@ -148,7 +148,7 @@ require_once "resources/paging.php";
 			echo "	<a href='extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 		}
 		echo "</td>\n";
-		echo "<tr>\n";
+		echo "</tr>\n";
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
