@@ -211,7 +211,7 @@ else {
 
 	//table header
 		echo "<div align='center'>\n";
-		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
 		//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
@@ -241,7 +241,7 @@ else {
 			echo "	&nbsp;\n";
 		}
 		echo "</td>\n";
-		echo "<tr>\n";
+		echo "</tr>\n";
 
 	//table data
 		if ($result_count > 0) {
@@ -256,7 +256,8 @@ else {
 					$participant_pin = substr($participant_pin, 0, 3) ."-".  substr($participant_pin, 3, 3) ."-". substr($participant_pin, -3)."\n";
 				}
 
-				echo "<tr >\n";
+				$tr_link = (permission_exists('conference_room_edit')) ? "href='conference_room_edit.php?id=".$row['conference_room_uuid']."'" : null;
+				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>".$moderator_pin."</td>\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>".$participant_pin."</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_uuid']."&nbsp;</td>\n";

@@ -49,7 +49,7 @@ else {
 	$order = check_str($_GET["order"]);
 
 //add meeting_uuid to a session variable
-	if (strlen($meeting_uuid) > 0) { 
+	if (strlen($meeting_uuid) > 0) {
 		$_SESSION['meeting']['uuid'] = $meeting_uuid;
 	}
 
@@ -92,9 +92,9 @@ else {
 		$rows_per_page = 150;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the list
 		$sql = "select * from v_conference_sessions ";
@@ -104,7 +104,7 @@ else {
 			$sql .= "order by start_epoch desc ";
 		}
 		else {
-			$sql .= "order by $order_by $order "; 
+			$sql .= "order by $order_by $order ";
 		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -118,7 +118,7 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th>".$text['label-time']."</th>\n";
 	echo th_order_by('start_epoch', $text['label-start'], $order_by, $order);
@@ -126,7 +126,8 @@ else {
 	echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 	//echo th_order_by('recording', $text['label-recording'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>\n";
-	echo "<tr>\n";
+	echo "<td class='list_control_icon'>&nbsp;</td>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
@@ -148,7 +149,8 @@ else {
 			}
 
 			if (strlen( $row['start_epoch']) > 0) {
-				echo "<tr >\n";
+				$tr_link = "href='conference_session_details.php?uuid=".$row['conference_session_uuid']."'";
+				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$time_difference."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
@@ -162,7 +164,6 @@ else {
 					$tmp_name = $row['conference_session_uuid'].".wav";
 				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-				echo "		<a href='conference_session_details.php?uuid=".$row['conference_session_uuid']."'>".$text['label-details']."</a>&nbsp;\n";
 				if (strlen($tmp_name) > 0 && file_exists($tmp_dir.'/'.$tmp_name)) {
 					if (permission_exists('conference_session_play')) {
 						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('".PROJECT_PATH."/app/recordings/recording_play.php?a=download&type=moh&filename=".base64_encode('archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)."', 'play',' width=420,height=150,menubar=no,status=no,toolbar=no')\">\n";
@@ -175,6 +176,12 @@ else {
 					echo "		</a>\n";
 					echo "		&nbsp;\n";
 				}
+				else {
+					echo "&nbsp;";
+				}
+				echo "	</td>\n";
+				echo "	<td class='list_control_icon'>";
+				echo "		<a href='conference_session_details.php?uuid=".$row['conference_session_uuid']."' alt='".$text['button-view']."'>$v_link_label_view</a>";
 				echo "	</td>\n";
 				echo "</tr>\n";
 			}

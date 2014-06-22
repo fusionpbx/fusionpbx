@@ -264,16 +264,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<select class='formfld' name='address_type'>\n";
 		echo "	<option value=''></option>\n";
 		if (strtolower($address_type) == "home") {
-			echo "	<option value='home' selected='selected'>home</option>\n";
+			echo "	<option value='home' selected='selected'>".$text['option-home']."</option>\n";
 		}
 		else {
-			echo "	<option value='home'>home</option>\n";
+			echo "	<option value='home'>".$text['option-home']."</option>\n";
 		}
 		if (strtolower($address_type) == "work") {
-			echo "	<option value='work' selected='selected'>work</option>\n";
+			echo "	<option value='work' selected='selected'>".$text['option-work']."</option>\n";
 		}
 		else {
-			echo "	<option value='work'>work</option>\n";
+			echo "	<option value='work'>".$text['option-work']."</option>\n";
 		}
 		echo "	</select>\n";
 	}

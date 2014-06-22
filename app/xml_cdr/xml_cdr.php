@@ -445,7 +445,7 @@ else {
 			}
 			echo "	</td>\n";
 			if (if_group("admin") || if_group("superadmin")) {
-				echo "	<td class='list_control_icon' width='25px;'>";
+				echo "	<td class='list_control_icon'>";
 				echo "		<a href='xml_cdr_details.php?uuid=".$row['uuid']."' alt='".$text['button-view']."'>$v_link_label_view</a>";
 				echo "	</td>\n";
 			}
