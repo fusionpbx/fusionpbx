@@ -128,9 +128,6 @@ else {
 	//basic search of call detail records
 		if (permission_exists('xml_cdr_search')) {
 
-			echo "<fieldset>";
-			echo "<legend>".$text['button-search']."</legend>";
-
 			echo "<form method='post' action=''>\n";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -275,8 +272,6 @@ else {
 			echo "</table>";
 
 			echo "</form>";
-
-			echo "</fieldset>";
 			echo "<br /><br />";
 
 		}
