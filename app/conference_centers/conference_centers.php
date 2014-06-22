@@ -144,7 +144,7 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('conference_center_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('conference_center_extension', $text['label-extension'], $order_by, $order);
@@ -159,13 +159,14 @@ else {
 		echo "	&nbsp;\n";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$conference_center_name = $row['conference_center_name'];
 			$conference_center_name = str_replace("-", " ", $conference_center_name);
-			echo "<tr >\n";
+			$tr_link = (permission_exists('conference_center_edit')) ? "href='conference_center_edit.php?id=".$row['conference_center_uuid']."'" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('conference_center_edit')) {
 				echo "<a href='conference_center_edit.php?id=".$row['conference_center_uuid']."'>".$conference_center_name."</a>";

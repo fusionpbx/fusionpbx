@@ -247,7 +247,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<table border='0' cellpadding='3' cellspacing='3' width='100%'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td width='40%' valign='top' align='left' nowrap='nowrap'>\n";
 
 		echo "<form method='post' name='frm' action=''>\n";
 		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
@@ -537,7 +537,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if ($action == "update") {
 		echo "<td>&nbsp;&nbsp;</td>";
-		echo "<td width='50%' class='' valign='top' align='center'>\n";
+		echo "<td width='60%' class='' valign='top' align='center'>\n";
 			//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
 			require "contact_phones.php";
 			require "contact_addresses.php";

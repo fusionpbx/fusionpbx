@@ -49,7 +49,7 @@ else {
 	$conference_session_uuid = check_str($_GET["uuid"]);
 
 //add meeting_uuid to a session variable
-	if (strlen($conference_session_uuid) > 0) { 
+	if (strlen($conference_session_uuid) > 0) {
 		$_SESSION['meeting']['session_uuid'] = $conference_session_uuid;
 	}
 
@@ -138,9 +138,9 @@ else {
 		$rows_per_page = 500;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the list
 		$sql = "select * from v_conference_session_details ";
@@ -150,7 +150,7 @@ else {
 			$sql .= "order by start_epoch asc ";
 		}
 		else {
-			$sql .= "order by $order_by $order "; 
+			$sql .= "order by $order_by $order ";
 		}
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -164,7 +164,7 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
 	//echo th_order_by('conference_uuid', 'Conference UUID', $order_by, $order);
@@ -178,9 +178,9 @@ else {
 	echo th_order_by('start_epoch', $text['label-start'], $order_by, $order);
 	echo th_order_by('end_epoch', $text['label-end'], $order_by, $order);
 	if (permission_exists('conference_session_details')) {
-		echo "<th>".$text['label-details']."</th>\n";
+		echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	}
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
@@ -196,18 +196,21 @@ else {
 				$time_difference = $row['end_epoch'] - $row['start_epoch'];
 				$time_difference = gmdate("G:i:s", $time_difference);
 			}
-			echo "<tr >\n";
+			$tr_link = (permission_exists('conference_session_details')) ? "href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
+			echo "<tr ".$tr_link.">\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['meeting_uuid']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_session_uuid']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_name']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['caller_id_number']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['moderator']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['moderator'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['network_addr']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$time_difference."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$start_date."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$end_date."&nbsp;</td>\n";
 			if (permission_exists('conference_session_details')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."'>".$text['label-cdr']."</a>&nbsp;</td>\n";
+				echo "	<td class='list_control_icon'>";
+				echo "		<a href='/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."' alt='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "	</td>\n";
 			}
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }

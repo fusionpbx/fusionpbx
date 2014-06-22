@@ -107,7 +107,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('phone_type', $text['label-phone_type'], $order_by, $order);
 	echo th_order_by('phone_number', $text['label-phone_number'], $order_by, $order);
@@ -116,22 +116,23 @@ require_once "resources/paging.php";
 	echo "<td class='list_control_icons'>";
 	echo 	"<a href='contact_phone_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phone_type']."&nbsp;</td>\n";
+			$tr_link = "href='contact_phone_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."'";
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['phone_type'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 			echo "		".format_phone($row['phone_number'])."</a>&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
 			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">".$text['label-phone_call']."</a>\n";
 			echo "		&nbsp;\n";
 			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".$row['phone_number']."&destination_number=".$row['phone_number']."\">CDR</a>\n";
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['phone_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['phone_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='contact_phone_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			echo 		"<a href='contact_phone_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

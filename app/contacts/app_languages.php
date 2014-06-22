@@ -415,6 +415,16 @@
 		$text['label-address_tools']['pt-pt'] = "Ferramentas";
 		$text['label-address_tools']['fr-fr'] = "Outils";
 
+		$text['option-home']['en-us'] = "Home";
+		$text['option-home']['es-cl'] = "Casa";
+		$text['option-home']['pt-pt'] = "Casa";
+		$text['option-home']['fr-fr'] = "Maison";
+
+		$text['option-work']['en-us'] = "Work";
+		$text['option-work']['es-cl'] = "Lugar de Trabajo";
+		$text['option-work']['pt-pt'] = "Local de Trabalho";
+		$text['option-work']['fr-fr'] = "En Milieu de Travail";
+
 	// contact extensions
 		$text['label-contact_extensions']['en-us'] = "Extensions";
 		$text['label-contact_extensions']['es-cl'] = "Extensións";

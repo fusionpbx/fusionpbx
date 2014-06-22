@@ -92,7 +92,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo th_order_by('address_type', $text['label-address_type'], $order_by, $order);
@@ -109,14 +109,15 @@ require_once "resources/paging.php";
 	echo "<td class='list_control_icons'>";
 	echo 	"<a href='contact_address_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$map_query = $row['address_street']." ".$row['address_extended'].", ".$row['address_locality'].", ".$row['address_region'].", ".$row['address_region'].", ".$row['address_postal_code'];
-			echo "<tr >\n";
+			$tr_link = "href='contact_address_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_address_uuid']."'";
+			echo "<tr ".$tr_link.">\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_name']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_type']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['address_type'])."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_street']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_extended']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_locality']."&nbsp;</td>\n";
@@ -125,10 +126,10 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_country']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_latitude']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_longitude']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>\n";
 			echo "		<a href=\"http://maps.google.com/maps?q=".urlencode($map_query)."&hl=en\" target=\"_blank\">Map</a>&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['address_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['address_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='contact_address_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_address_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			echo 		"<a href='contact_address_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_address_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

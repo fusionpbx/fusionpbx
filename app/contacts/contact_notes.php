@@ -100,14 +100,12 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count == 0) {
 		echo "<tr>\n";
-		echo "<th>\n";
-		echo "	&nbsp; \n";
-		echo "</th>\n";
-		echo "<td class='list_control_icons'>";
+		echo "<th>&nbsp;</th>\n";
+		echo "<td class='list_control_icon'>";
 		echo 	"<a href='contact_note_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 		echo "</td>\n";
 		echo "</tr>\n";
@@ -117,7 +115,7 @@ require_once "resources/paging.php";
 			$contact_note = $row['contact_note'];
 			$contact_note = str_replace("\n","<br />",$contact_note);
 
-			echo "<tr>\n";
+			echo "<tr >\n";
 			echo "<th>\n";
 			echo "	".$row['last_mod_date']."&nbsp; &nbsp; \n";
 			echo "	".$row['last_mod_user']." &nbsp; &nbsp; \n";
@@ -127,9 +125,9 @@ require_once "resources/paging.php";
 			echo "<td align='right' width='42'>\n";
 			echo "	<a href='contact_note_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>\n";
 			echo "</td>\n";
-			echo "<tr>\n";
-
-			echo "<tr >\n";
+			echo "</tr>\n";
+			$tr_link = "href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."'";
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$contact_note."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_date']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['last_mod_user']."&nbsp;</td>\n";
@@ -137,10 +135,6 @@ require_once "resources/paging.php";
 			echo 		"<a href='contact_note_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			echo 		"<a href='contact_note_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_note_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			echo "	</td>\n";
-			echo "</tr>\n";
-
-			echo "<tr>\n";
-			echo "	<td>&nbsp;</td>\n";
 			echo "</tr>\n";
 
 			if ($c==0) { $c=1; } else { $c=0; }
