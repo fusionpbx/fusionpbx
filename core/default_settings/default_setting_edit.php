@@ -242,7 +242,39 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$category = $row['default_setting_category'];
 	$subcategory = $row['default_setting_subcategory'];
 	$name = $row['default_setting_name'];
-	if ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
+	if ($category == "cdr" && $subcategory == "format" && $name == "text" ) {
+		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value=''></option>\n";
+		if ($row['default_setting_value'] == "json") {
+			echo "		<option value='json' selected='selected'>json</option>\n";
+		}
+		else {
+			echo "		<option value='json'>json</option>\n";
+		}
+		if ($row['default_setting_value'] == "xml") {
+			echo "		<option value='xml' selected='selected'>xml</option>\n";
+		}
+		else {
+			echo "		<option value='xml'>xml</option>\n";
+		}
+		echo "		</select>\n";
+	} elseif ($category == "cdr" && $subcategory == "storage" && $name == "text" ) {
+		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value=''></option>\n";
+		if ($row['default_setting_value'] == "json") {
+			echo "		<option value='db' selected='selected'>db</option>\n";
+		}
+		else {
+			echo "		<option value='db'>db</option>\n";
+		}
+		if ($row['default_setting_value'] == "dir") {
+			echo "		<option value='dir' selected='selected'>dir</option>\n";
+		}
+		else {
+			echo "		<option value='dir'>dir</option>\n";
+		}
+		echo "		</select>\n";
+	} elseif ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
 		$sql = "";
