@@ -205,10 +205,10 @@
 	$text['message-description']['pt-pt'] = "Por favor indique uma descrição.";
 	$text['message-description']['fr-fr'] = "Merci d'écrire une description.";
 
-	$text['label-content-edit']['en-us'] = "Content Edit";
-	$text['label-content-edit']['es-cl'] = "Editar Contenido";
-	$text['label-content-edit']['pt-pt'] = "Editar conteúdo";
-	$text['label-content-edit']['fr-fr'] = "Edition du contenu";
+	$text['label-content-edit']['en-us'] = "Content";
+	$text['label-content-edit']['es-cl'] = "Contenido";
+	$text['label-content-edit']['pt-pt'] = "Conteúdo";
+	$text['label-content-edit']['fr-fr'] = "Contenu";
 
 	$text['label-type']['en-us'] = "Type";
 	$text['label-type']['es-cl'] = "Tipo";
