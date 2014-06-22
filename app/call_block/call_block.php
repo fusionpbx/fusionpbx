@@ -108,7 +108,7 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('call_block_number', $text['label-number'], $order_by, $order);
 	echo th_order_by('call_block_name', $text['label-name'], $order_by, $order);
@@ -121,11 +121,12 @@ else {
 		echo "<a href='call_block_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr>\n";
+			$tr_link = (permission_exists('call_block_edit')) ? "href='call_block_edit.php?id=".$row['call_block_uuid']."'" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('call_block_edit')) {
 				echo "<a href='call_block_edit.php?id=".$row['call_block_uuid']."'>".$row['call_block_number']."</a>";
