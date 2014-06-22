@@ -43,15 +43,15 @@
 		$text['description-contact-add']['pt-pt'] = "O contacto é uma lista de indivíduos e organizações.";
 		$text['description-contact-add']['fr-fr'] = "Fourni une liste d'individus et d'organisations.";
 
-		$text['title-contact-edit']['en-us'] = "Contact Edit";
-		$text['title-contact-edit']['es-cl'] = "Editar Contacto";
-		$text['title-contact-edit']['pt-pt'] = "Editar Contacto";
-		$text['title-contact-edit']['fr-fr'] = "Editer Contact";
+		$text['title-contact-edit']['en-us'] = "Contact";
+		$text['title-contact-edit']['es-cl'] = "Contacto";
+		$text['title-contact-edit']['pt-pt'] = "Contacto";
+		$text['title-contact-edit']['fr-fr'] = "Contact";
 
-		$text['header-contact-edit']['en-us'] = "Contact Edit";
-		$text['header-contact-edit']['es-cl'] = "Editar Contacto";
-		$text['header-contact-edit']['pt-pt'] = "Editar Contacto";
-		$text['header-contact-edit']['fr-fr'] = "Editer Contact";
+		$text['header-contact-edit']['en-us'] = "Contact";
+		$text['header-contact-edit']['es-cl'] = "Contacto";
+		$text['header-contact-edit']['pt-pt'] = "Contacto";
+		$text['header-contact-edit']['fr-fr'] = "Contact";
 
 		$text['description-contact-edit']['en-us'] = "The contact is a list of individuals and organizations.";
 		$text['description-contact-edit']['es-cl'] = "El contacto es una lista de personas y organizaciones";

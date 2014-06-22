@@ -133,10 +133,10 @@
 	$text['confirm-fax-add']['pt-pt'] = "Adição de Fax";
 	$text['confirm-fax-add']['fr-fr'] = "Ajout de Fax";
 
-	$text['confirm-fax-edit']['en-us'] = "Fax Edit";
-	$text['confirm-fax-edit']['es-cl'] = "Editar Fax";
-	$text['confirm-fax-edit']['pt-pt'] = "Edição de Fax";
-	$text['confirm-fax-edit']['fr-fr'] = "Editer le Fax";
+	$text['confirm-fax-edit']['en-us'] = "Fax";
+	$text['confirm-fax-edit']['es-cl'] = "Fax";
+	$text['confirm-fax-edit']['pt-pt'] = "Fax";
+	$text['confirm-fax-edit']['fr-fr'] = "Fax";
 
 	$text['confirm-copy-info']['en-us'] = "Do you really want to copy this?";
 	$text['confirm-copy-info']['es-cl'] = "&iquest;Desea realmente copiar esto?";

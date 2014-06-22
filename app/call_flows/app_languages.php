@@ -15,14 +15,14 @@
 	$text['description-call_flows']['pt-pt'] = "Chamadas directas entre dois destinos recorrendo a um código de função.";
 	$text['description-call_flows']['fr-fr'] = "Appels directs entre deux destionation en appelant une fonction via un code. ";
 
-	$text['title-call_flow-edit']['en-us'] = "Call Flow Edit";
-	$text['title-call_flow-edit']['es-cl'] = "Editar Flujo de Llamada";
-	$text['title-call_flow-edit']['pt-pt'] = "Editar Fluxo de Chamada";
+	$text['title-call_flow-edit']['en-us'] = "Call Flow";
+	$text['title-call_flow-edit']['es-cl'] = "Flujo de Llamada";
+	$text['title-call_flow-edit']['pt-pt'] = "Fluxo de Chamada";
 	$text['title-call_flow-edit']['fr-fr'] = "Editer le flux";
 
-	$text['header-call_flow-edit']['en-us'] = "Call Flow Edit";
-	$text['header-call_flow-edit']['es-cl'] = "Editar Flujo de Llamada";
-	$text['header-call_flow-edit']['pt-pt'] = "Editar Fluxo de Chamada";
+	$text['header-call_flow-edit']['en-us'] = "Call Flow";
+	$text['header-call_flow-edit']['es-cl'] = "Flujo de Llamada";
+	$text['header-call_flow-edit']['pt-pt'] = "Fluxo de Chamada";
 	$text['header-call_flow-edit']['fr-fr'] = "Editer le flux";
 
 	$text['title-call_flow-add']['en-us'] = "Call Flow Add";

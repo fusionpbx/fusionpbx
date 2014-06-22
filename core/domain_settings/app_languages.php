@@ -19,15 +19,15 @@
 
 		//------
 
-		$text['title-domain-edit']['en-us'] = "Domain Edit";
-		$text['title-domain-edit']['es-cl'] = "Editar Dominio";
-		$text['title-domain-edit']['pt-pt'] = "Editar Domínio";
-		$text['title-domain-edit']['fr-fr'] = "Editer le Domaines";
+		$text['title-domain-edit']['en-us'] = "Domain";
+		$text['title-domain-edit']['es-cl'] = "Dominio";
+		$text['title-domain-edit']['pt-pt'] = "Domínio";
+		$text['title-domain-edit']['fr-fr'] = "Domaines";
 
-		$text['header-domain-edit']['en-us'] = "Domain Edit";
-		$text['header-domain-edit']['es-cl'] = "Editar Dominio";
-		$text['header-domain-edit']['pt-pt'] = "Editar Domínio";
-		$text['header-domain-edit']['fr-fr'] = "Editer le Domaine";
+		$text['header-domain-edit']['en-us'] = "Domain";
+		$text['header-domain-edit']['es-cl'] = "Dominio";
+		$text['header-domain-edit']['pt-pt'] = "Domínio";
+		$text['header-domain-edit']['fr-fr'] = "Domaine";
 
 		$text['description-domain-edit']['en-us'] = "Edit the details of this domain.";
 		$text['description-domain-edit']['es-cl'] = "Editar detalles de este dominio.";

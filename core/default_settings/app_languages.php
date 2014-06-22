@@ -19,15 +19,15 @@
 
 		//------
 
-		$text['title-default_setting-edit']['en-us'] = "Default Setting Edit";
-		$text['title-default_setting-edit']['es-cl'] = "Editar Configuraciones Predeterminadas";
-		$text['title-default_setting-edit']['pt-pt'] = "Editar Predefinições";
-		$text['title-default_setting-edit']['fr-fr'] = "Editer les Configurations par Défaut";
+		$text['title-default_setting-edit']['en-us'] = "Default Setting";
+		$text['title-default_setting-edit']['es-cl'] = "Configuraciones Predeterminadas";
+		$text['title-default_setting-edit']['pt-pt'] = "Predefinições";
+		$text['title-default_setting-edit']['fr-fr'] = "Configurations par Défaut";
 
-		$text['header-default_setting-edit']['en-us'] = "Default Setting Edit";
-		$text['header-default_setting-edit']['es-cl'] = "Editar Configuraciones Predeterminadas";
-		$text['header-default_setting-edit']['pt-pt'] = "Editar Predefinições";
-		$text['header-default_setting-edit']['fr-fr'] = "Editer les Configurations par Défaut";
+		$text['header-default_setting-edit']['en-us'] = "Default Setting";
+		$text['header-default_setting-edit']['es-cl'] = "Configuraciones Predeterminadas";
+		$text['header-default_setting-edit']['pt-pt'] = "Predefinições";
+		$text['header-default_setting-edit']['fr-fr'] = "Configurations par Défaut";
 
 		$text['description-default_setting-edit']['en-us'] = "Settings used for all domains.";
 		$text['description-default_setting-edit']['es-cl'] = "Configuraciones usadas para todos los dominios.";
