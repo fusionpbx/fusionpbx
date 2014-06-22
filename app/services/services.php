@@ -135,7 +135,7 @@ if (strlen($_GET["a"]) > 0) {
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('service_name', 'Name', $order_by, $order);
 	echo "<th>Status</th>\n";
@@ -146,14 +146,15 @@ if (strlen($_GET["a"]) > 0) {
 		echo "<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count == 0) {
 		//no results
 	}
 	else { //received results
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = (permission_exists('service_edit')) ? "href='service_edit.php?id=".$row[service_uuid]."'" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('service_edit')) {
 				echo "<a href='service_edit.php?id=".$row[service_uuid]."'>".$row[service_name]."</a>";
