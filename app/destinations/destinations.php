@@ -144,6 +144,8 @@ require_once "resources/paging.php";
 	echo "<td class='list_control_icons'>";
 	echo "<a href='destination_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	echo "</td>\n";
+	echo "</tr>\n";
+
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
