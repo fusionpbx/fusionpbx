@@ -103,9 +103,20 @@ form {
 	}
 
 td.list_control_icons {
+	/* multiple icons exist (horizontally) */
 	padding: none;
 	padding-left: 3px;
 	width: 50px;
+	text-align: right;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+td.list_control_icon {
+	/* a single icon exists */
+	padding: none;
+	padding-left: 3px;
+	width: 25px;
 	text-align: right;
 	vertical-align: top;
 	white-space: nowrap;

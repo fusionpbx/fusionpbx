@@ -109,9 +109,20 @@ td {
 }
 
 td.list_control_icons {
+	/* multiple icons exist (horizontally) */
 	padding: none;
 	padding-left: 3px;
 	width: 50px;
+	text-align: right;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+td.list_control_icon {
+	/* a single icon exists */
+	padding: none;
+	padding-left: 3px;
+	width: 25px;
 	text-align: right;
 	vertical-align: top;
 	white-space: nowrap;
@@ -804,7 +815,7 @@ legend {
 		// on a table with a class of 'tr_hover', according to the href
 		// attribute of the <tr> tag
 		$('.tr_hover tr').each(function(i,e) {
-		  $(e).children('td:not(:last)').click(function() {
+		  $(e).children('td:not(.list_control_icon,.list_control_icons,.tr_link_void)').click(function() {
 			 var href = $(this).closest("tr").attr("href");
 			 if (href) { window.location = href; }
 		  });

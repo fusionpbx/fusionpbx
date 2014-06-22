@@ -135,6 +135,11 @@
 	$text['button-search']['pt-pt'] = "Pesquisa";
 	$text['button-search']['fr-fr'] = "Recherche";
 
+	$text['button-view']['en-us'] = "View";
+	$text['button-view']['es-cl'] = "Ver";
+	$text['button-view']['pt-pt'] = "Vista";
+	$text['button-view']['fr-fr'] = "Voir";
+
 	$text['button-advanced_search']['en-us'] = "Advanced Search";
 	$text['button-advanced_search']['es-cl'] = "Búsqueda Avanzada";
 	$text['button-advanced_search']['pt-pt'] = "Pesquisa Avançada";
