@@ -184,7 +184,7 @@ require_once "resources/paging.php";
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['default_setting_enabled'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_setting_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('default_setting_edit')) {
 				echo "<a href='default_setting_edit.php?id=".$row['default_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
