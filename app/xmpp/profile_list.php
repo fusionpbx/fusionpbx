@@ -45,7 +45,7 @@ foreach($profiles_array as $profile){
 	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['context']; ?>&nbsp;</td>
 	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['status']; ?>&nbsp;</td>
 	<td class='<?php echo $row_style[$c]; ?>'><?php echo ucwords($profile['enabled']); ?>&nbsp;</td>
-	<td class='<?php echo $row_style[$c]; ?>'><?php echo $profile['description']; ?>&nbsp;</td>
+	<td class='row_stylebg'><?php echo $profile['description']; ?>&nbsp;</td>
 	<td class='list_control_icons'>
 		<?php
 		if (permission_exists('xmpp_edit')) {

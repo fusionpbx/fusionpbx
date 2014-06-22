@@ -148,7 +148,7 @@ else {
 			echo "</td>\n";
 			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
 			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
-			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".$var_description."&nbsp;</td>\n";
+			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_description."&nbsp;</td>\n";
 			echo "	<td valign='top' align='right'>";
 			if (permission_exists('var_edit')) {
 				echo "<a href='var_edit.php?id=".$row['var_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

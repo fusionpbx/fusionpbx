@@ -170,7 +170,7 @@ require_once "resources/paging.php";
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['domain_setting_enabled'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_setting_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_setting_edit')) {
 				echo 	"<a href='domain_setting_edit.php?domain_uuid=".$row['domain_uuid']."&id=".$row['domain_setting_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

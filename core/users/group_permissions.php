@@ -391,7 +391,7 @@ require_once "resources/paging.php";
 				}
 				echo "		&nbsp; ".$row['name']."\n";
 				echo "	</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+				echo "	<td valign='top' class='row_stylebg'>\n";
 				echo "		&nbsp; ".$row['description']."\n";
 				echo "	</td>\n";
 				echo "</tr>\n";

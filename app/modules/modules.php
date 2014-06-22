@@ -118,10 +118,10 @@ if (strlen($_GET["a"]) > 0) {
 	$tmp_module_header = "\n";
 	$tmp_module_header .= "<tr>\n";
 	$tmp_module_header .= "<th>".$text['label-label']."</th>\n";
-	$tmp_module_header .= "<th>".$text['label-description']."</th>\n";
 	$tmp_module_header .= "<th>".$text['label-status']."</th>\n";
 	$tmp_module_header .= "<th>".$text['label-action']."</th>\n";
 	$tmp_module_header .= "<th>".$text['label-enabled']."</th>\n";
+	$tmp_module_header .= "<th>".$text['label-description']."</th>\n";
 	$tmp_module_header .= "<td class='list_control_icons'>";
 	$tmp_module_header .= "<a href='module_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	$tmp_module_header .= "</td>\n";
@@ -166,7 +166,6 @@ if (strlen($_GET["a"]) > 0) {
 				echo $row["module_label"];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row["module_description"]."&nbsp;</td>\n";
 			if ($mod->active($row["module_name"])) {
 				echo "   <td valign='top' class='".$row_style[$c]."'>".$text['label-running']."</td>\n";
 				echo "   <td valign='top' class='".$row_style[$c]."'><a href='modules.php?a=stop&m=".$row["module_name"]."' alt='".$text['label-stop']."'>".$text['label-stop']."</a></td>\n";
@@ -188,6 +187,7 @@ if (strlen($_GET["a"]) > 0) {
 				echo $text['option-false'];
 			}
 			echo "</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row["module_description"]."&nbsp;</td>\n";
 			echo "   <td class='list_control_icons'>";
 			if (permission_exists('module_edit')) {
 				echo "<a href='module_edit.php?id=".$row["module_uuid"]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
