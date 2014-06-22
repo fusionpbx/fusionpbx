@@ -230,6 +230,7 @@ function call_cost($rate, $i1, $i2, $t){
 		//billing information
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
 
+				$database->fields['carrier_name'] = check_str(urldecode($xml->variables->lcr_carrier));
 
 				if ($debug) {
 					$sql_rate ="SELECT connect_increment, talk_increment FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
@@ -263,6 +264,7 @@ function call_cost($rate, $i1, $i2, $t){
 				$database->fields['call_sell'] = check_str($call_sell);
 
 				if ($debug) {
+					echo "c ".$database->fields['carrier_name']."\n";
 					echo "t $time\n";
 					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
 					echo "s r:$lcr_user_rate - $lcr_user_first_increment - $lcr_user_second_increment = $call_sell\n";
