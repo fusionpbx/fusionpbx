@@ -26,7 +26,7 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Luis Daniel Lucio Qurioz <daniel.lucio@astraqom.com>
+--	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
 
 
 --connect to the database
