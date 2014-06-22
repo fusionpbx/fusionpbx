@@ -85,21 +85,20 @@
 
 		//------ settings
 
-		$text['title-domain_setting-edit']['en-us'] = "Domain Setting Edit";
-		$text['title-domain_setting-edit']['es-cl'] = "Editar configuraciones de dominio.";
-		$text['title-domain_setting-edit']['pt-pt'] = "Editar Definições do Domínio";
-		$text['title-domain_setting-edit']['fr-fr'] = "Editer les paramètres du domaine";
+		$text['title-domain_setting-edit']['en-us'] = "Domain Setting";
+		$text['title-domain_setting-edit']['es-cl'] = "Configuraciones de dominio.";
+		$text['title-domain_setting-edit']['pt-pt'] = "Definições do Domínio";
+		$text['title-domain_setting-edit']['fr-fr'] = "Paramètres du domaine";
 
-		$text['header-domain_setting-edit']['en-us'] = "Domain Setting Edit";
-		$text['header-domain_setting-edit']['es-cl'] = "Editar configuraciones de dominio";
-		$text['header-domain_setting-edit']['pt-pt'] = "Editar Definições do Domínio";
-		$text['header-domain_setting-edit']['fr-fr'] = "Editer les paramètres du domaine";
+		$text['header-domain_setting-edit']['en-us'] = "Domain Setting";
+		$text['header-domain_setting-edit']['es-cl'] = "Configuraciones de dominio";
+		$text['header-domain_setting-edit']['pt-pt'] = "Definições do Domínio";
+		$text['header-domain_setting-edit']['fr-fr'] = "Paramètres du domaine";
 
 		$text['description-domain_setting-edit']['en-us'] = "Edit a setting for this domain.";
 		$text['description-domain_setting-edit']['es-cl'] = "Edita una configuración para este dominio.";
 		$text['description-domain_setting-edit']['pt-pt'] = "Editar uma definição deste domínio.";
 		$text['description-domain_setting-edit']['fr-fr'] = "Editer un paramètre du domaine.";
-
 
 		//------
 
