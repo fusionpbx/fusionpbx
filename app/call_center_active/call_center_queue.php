@@ -98,7 +98,7 @@ $order = $_GET["order"];
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo th_order_by('queue_name', $text['label-queue_name'], $order_by, $order);
@@ -116,16 +116,17 @@ $order = $_GET["order"];
 	//echo th_order_by('queue_abandoned_resume_allowed', $text['label-abandoned_resume_allowed'], $order_by, $order);
 	//echo th_order_by('queue_tier_rule_wait_multiply_level', $text['label-tier_rule_wait_multiply_level'], $order_by, $order);
 	echo th_order_by('queue_description', $text['label-description'], $order_by, $order);
-	echo "<td class='list_control_icons'>\n";
+	echo "<td class='list_control_icon'>\n";
 	//echo "	<a href='call_center_queue_edit.php' alt='add'>$v_link_label_add</a>\n";
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count == 0) { //no results
 	}
 	else { //received results
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = "href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."'";
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."'>".$row[queue_name]."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_extension]."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_strategy]."</td>\n";
@@ -141,7 +142,7 @@ $order = $_GET["order"];
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_abandoned_resume_allowed]."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row[queue_tier_rule_wait_multiply_level]."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row[queue_description]."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>\n";
+			echo "	<td class='list_control_icon'>\n";
 			echo "		<a href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$row[queue_name]."' alt='".$text['button-view']."'>$v_link_label_view</a>\n";
 			//echo "		<a href='call_center_queue_delete.php?id=".$row[call_center_queue_uuid]."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
 			//echo "		<input type='button' class='btn' name='' alt='edit' onclick=\"window.location='call_center_queue_edit.php?id=".$row[call_center_queue_uuid]."'\" value='e'>\n";
