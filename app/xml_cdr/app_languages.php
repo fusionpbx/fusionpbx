@@ -156,6 +156,11 @@
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 
+	$text['button-download_csv']['en-us'] = "Download CSV";
+	$text['button-download_csv']['es-cl'] = "Descarga CSV";
+	$text['button-download_csv']['pt-pt'] = "Baixar CSV";
+	$text['button-download_csv']['fr-fr'] = "Télécharger CSV";
+
 	$text['description-5']['en-us'] = "A detailed view of the call and all information regarding it.";
 	$text['description-5']['es-cl'] = "Una vista detallada de la información de la llamada.";
 	$text['description-5']['pt-pt'] = "Uma visão detalhada da chamada e de todas as informações sobre ela.";

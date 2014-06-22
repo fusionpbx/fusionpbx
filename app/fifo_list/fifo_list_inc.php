@@ -83,7 +83,7 @@ if ($fp) {
 	echo "<th>".$text['label-caller_count']."</th>\n";
 	echo "<th>".$text['label-waiting_count']."</th>\n";
 	echo "<th>".$text['label-importance']."</th>\n";
-	echo "<td class='list_control_icons'></td>\n";
+	echo "<td class='list_control_icon'></td>\n";
 	echo "</tr>\n";
 
 	foreach ($xml->fifo as $row) {
@@ -100,25 +100,25 @@ if ($fp) {
 
 		if (if_group("superadmin")) {
 			//show all fifo queues
-				echo "<tr>\n";
+				echo "<tr >\n";
 				echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>".$tmp_name."</a></td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$consumer_count."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$caller_count."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$waiting_count."</td>\n";
 				echo "<td valign='top' class='".$row_style[$c]."'>".$importance."</td>\n";
-				echo "<td valign='top' class='list_control_icons'><a href='fifo_interactive.php?c=".$name."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
+				echo "<td class='list_control_icon'><a href='fifo_interactive.php?c=".$name."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
 				echo "</tr>\n";
 		}
 		else {
 			//show only the fifo queues that match the domain_name
 				if (stripos($name, $_SESSION['domain_name']) !== false) {
-					echo "<tr>\n";
+					echo "<tr >\n";
 					echo "<td valign='top' class='".$row_style[$c]."'><a href='fifo_interactive.php?c=".$name."'>".$tmp_name."</a></td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$consumer_count."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$caller_count."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$waiting_count."</td>\n";
 					echo "<td valign='top' class='".$row_style[$c]."'>".$importance."</td>\n";
-					echo "<td valign='top' class='list_control_icons'><a href='fifo_interactive.php?c=".$name."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
+					echo "<td class='list_control_icon'><a href='fifo_interactive.php?c=".$name."' alt='".$text['button-view']."'>$v_link_label_view</a></td>\n";
 					echo "</tr>\n";
 				}
 		}
