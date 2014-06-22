@@ -79,7 +79,7 @@ $order = $_GET["order"];
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('field_label', $text['label-field_label'], $order_by, $order);
 	echo th_order_by('field_name', $text['label-field_name'], $order_by, $order);
@@ -96,11 +96,12 @@ $order = $_GET["order"];
 		echo "<a href='schema_field_edit.php?schema_uuid=".$schema_uuid."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = (permission_exists('schema_edit')) ? "href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."'" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('schema_edit')) {
@@ -160,7 +161,7 @@ $order = $_GET["order"];
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_order_tab']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['field_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['field_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('schema_edit')) {
 				echo "<a href='schema_field_edit.php?schema_uuid=".$row['schema_uuid']."&id=".$row['schema_field_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

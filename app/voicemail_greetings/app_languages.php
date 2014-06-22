@@ -51,6 +51,10 @@
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
+	$text['label-tools']['en-us'] = "Tools";
+	$text['label-tools']['es-cl'] = "Instrumentos";
+	$text['label-tools']['pt-pt'] = "Ferramentas";
+	$text['label-tools']['fr-fr'] = "Outils";
 
 	//voicemail_greeting_edit
 	$text['confirm-name']['en-us'] = "Please provide: Greeting Name (play)";

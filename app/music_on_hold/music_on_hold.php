@@ -329,8 +329,8 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom: 3px;\">\n";
 		echo "	<tr>\n";
-		echo "		<th class=\"listhdrr\">".$text['label-download']."</th>\n";
-		echo "		<th class=\"listhdrr\">".$text['label-play']."</th>\n";
+		echo "		<th class=\"listhdr\">".$text['label-file_name']."</th>\n";
+		echo "		<th class=\"listhdr\">".$text['label-tools']."</th>\n";
 		echo "		<th class=\"listhdr\">".$text['label-uploaded']."</th>\n";
 		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
 		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
@@ -345,17 +345,15 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 						$file_size = byte_convert($file_size);
 
 						echo "<tr>\n";
-						echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($file)."\">".$file."</a></td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						echo "	<td class='".$row_style[$c]."'>\n";
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
-						$tmp_file_array = explode("\.",$file);
-						echo "		".$tmp_file_array[0];
-						echo "		</a>";
+						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">".$text['label-play']."</a>&nbsp;&nbsp;&nbsp;";
+						echo "		<a href=\"music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($file)."\">".$text['label-download']."</a>";
 						echo "	</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".date ("F d Y H:i:s", filemtime($music_on_hold_dir."/".$sampling_rate_dir."/".$file))."</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file_size."</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".($sampling_rate_dir / 1000)." kHz</td>\n";
-						echo "	<td class='list_control_icons'>\n";
+						echo "	<td class='list_control_icon'>\n";
 						if (permission_exists('music_on_hold_default_delete')) {
 							echo "<a href=\"music_on_hold.php?type=moh&act=del&sampling_rate=".$sampling_rate_dir."&file_name=".base64_encode($file)."\" onclick=\"return confirm('Do you really want to delete this file?')\">$v_link_label_delete</a>";
 						}
@@ -383,8 +381,8 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-bottom: 3px;\">\n";
 		echo "	<tr>\n";
-		echo "		<th class=\"listhdrr\">".$text['label-download']."</th>\n";
-		echo "		<th class=\"listhdrr\">".$text['label-play']."</th>\n";
+		echo "		<th class=\"listhdr\">".$text['label-file_name']."</th>\n";
+		echo "		<th class=\"listhdr\">".$text['label-tools']."</th>\n";
 		echo "		<th class=\"listhdr\">".$text['label-uploaded']."</th>\n";
 		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-file-size']."</th>\n";
 		echo "		<th class=\"listhdr\" nowrap=\"nowrap\">".$text['label-sampling']."</th>\n";
@@ -402,17 +400,15 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 						$file_size = byte_convert($file_size);
 
 						echo "<tr>\n";
-						echo "	<td class='".$row_style[$c]."'><a href=\"music_on_hold.php?a=download&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($file)."\">".$file."</a></td>\n";
+						echo "	<td class='".$row_style[$c]."'>".$file."</td>\n";
 						echo "	<td class='".$row_style[$c]."'>\n";
-						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
-						$tmp_file_array = explode("\.",$file);
-						echo "		".$tmp_file_array[0];
-						echo "		</a>";
+						echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('music_on_hold_play.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($file)."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">".$text['label-play']."</a>&nbsp;&nbsp;&nbsp;";
+						echo "		<a href=\"music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($file)."\">".$text['label-download']."</a>";
 						echo "	</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".date ("F d Y H:i:s", filemtime($music_on_hold_category_parent_dir."/".$category_dir."/".$sampling_rate_dir."/".$file))."</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".$file_size."</td>\n";
 						echo "	<td class='".$row_style[$c]."'>".($sampling_rate_dir / 1000)." kHz</td>\n";
-						echo "	<td class='list_control_icons'>";
+						echo "	<td class='list_control_icon'>";
 						if (permission_exists('music_on_hold_delete')) {
 							echo "<a href=\"music_on_hold.php?type=moh&act=del&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&file_name=".base64_encode($file)."\" onclick=\"return confirm('".$text['message-delete']."')\">$v_link_label_delete</a>";
 						}

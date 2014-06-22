@@ -126,7 +126,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('fax_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('fax_extension', $text['label-extension'], $order_by, $order);
@@ -137,14 +137,15 @@ require_once "resources/paging.php";
 		echo "	<a href='fax_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			//remove the backslash
 				$row['fax_email'] = str_replace("\\", "", $row['fax_email']);
 			//show the fax extensions
-				echo "<tr >\n";
+				$tr_link = (permission_exists('fax_extension_edit')) ? "href='fax_view.php?id=".$row['fax_uuid']."'" : null;
+				echo "<tr ".$tr_link.">\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>";
 				if (permission_exists('fax_extension_edit')) {
 					echo "<a href='fax_view.php?id=".$row['fax_uuid']."'>".$row['fax_name']."</a>";

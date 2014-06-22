@@ -117,7 +117,7 @@ else {
 	$table_header .= "<td align='right' width='21'>\n";
 	$table_header .= "	&nbsp;\n";
 	$table_header .= "</td>\n";
-	$table_header .= "<tr>\n";
+	$table_header .= "</tr>\n";
 
 //loop through the voicemail messages
 	if (count($voicemails) > 0) {
@@ -126,8 +126,8 @@ else {
 			if ($previous_voicemail_id != $field['voicemail_id']) {
 				echo "<tr>\n";
 				echo "	<td colspan='3' align='left'>\n";
-				echo "		<br /><br />\n";
-				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b>&nbsp;\n";
+				echo "		<br /><br /><br /><br />\n";
+				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b><br />&nbsp;\n";
 				echo "	</td>\n";
 				echo "	<td colspan='3' valign='bottom' align='right'>\n";
 				if (permission_exists('voicemail_greeting_view')) {
@@ -136,7 +136,7 @@ else {
 				if (permission_exists('voicemail_view')) {
 					echo "		<input type='button' class='btn' name='' alt='settings' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemail_edit.php?id=".$field['voicemail_uuid']."'\" value='".$text['button-settings']."'>\n";
 				}
-				echo "	</td>\n";
+				echo "	<br /><br /></td>\n";
 				echo "	<td>&nbsp;</td>\n";
 				echo "</tr>\n";
 				echo $table_header;
@@ -163,7 +163,7 @@ else {
 				echo "		</a>\n";
 				echo "	</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
-				echo "	<td valign='top' align='right'>\n";
+				echo "	<td class='list_control_icon'>\n";
 				if (permission_exists('voicemail_message_delete')) {
 					echo "		<a href='voicemail_message_delete.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				}

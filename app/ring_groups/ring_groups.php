@@ -117,7 +117,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('ring_group_name', $text['label-name'], $order_by, $order);
 	echo th_order_by('ring_group_extension', $text['label-extension'], $order_by, $order);
@@ -133,11 +133,12 @@ require_once "resources/paging.php";
 		echo "<a href='ring_group_edit.php' alt='add'>$v_link_label_add</a>";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			echo "<tr >\n";
+			$tr_link = (permission_exists('ring_group_edit')) ? "href='ring_group_edit.php?id=".$row['ring_group_uuid']."'" : null;
+			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('ring_group_edit')) {
 				echo "<a href='ring_group_edit.php?id=".$row['ring_group_uuid']."'>".$row['ring_group_name']."</a>";
