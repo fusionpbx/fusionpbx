@@ -66,8 +66,9 @@
 					$array[$x]['default_setting_description'] = '';
 					$orm = new orm;
 					$orm->name('default_settings');
-					$orm->save($array);
-					$message = $orm->message;
+					$orm->save($array[0]);
+					$orm->save($array[1]);
+					//$message = $orm->message;
 
 					/*
 					$sql = "insert into v_default_settings ";
