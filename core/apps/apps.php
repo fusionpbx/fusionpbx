@@ -118,7 +118,7 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['category']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['subcategory']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['version']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' width='35%'>".$row['description']['en-us']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['description']['en-us']."&nbsp;</td>\n";
 			/*  // temporarily disabled
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('app_edit')) {

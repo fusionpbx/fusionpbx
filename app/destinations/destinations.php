@@ -154,7 +154,7 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".$row['destination_number']."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_enabled'])."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_description']."</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['destination_description']."</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='destination_edit.php?id=".$row['destination_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			echo 		"<a href='destination_delete.php?id=".$row['destination_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

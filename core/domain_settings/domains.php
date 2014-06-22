@@ -187,7 +187,7 @@ else {
 				echo $row['domain_name'];
 			}
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['domain_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_edit')) {
 				echo "<a href='domain_edit.php?id=".$row['domain_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

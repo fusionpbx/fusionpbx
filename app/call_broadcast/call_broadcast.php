@@ -120,7 +120,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['broadcast_concurrent_limit']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['recordingid']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['broadcast_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['broadcast_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('call_broadcast_edit')) {
 				echo "<a href='call_broadcast_edit.php?id=".$row['call_broadcast_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
