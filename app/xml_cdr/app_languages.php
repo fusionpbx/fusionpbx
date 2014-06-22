@@ -113,7 +113,12 @@
 	$text['label-failed']['en-us'] = "Failed";
 	$text['label-failed']['es-cl'] = "Fracasado";
 	$text['label-failed']['pt-pt'] = "Fracassado";
-	$text['label-failed']['fr-fr'] = "manqué";
+	$text['label-failed']['fr-fr'] = "Manqué";
+
+	$text['label-price']['en-us'] = "Price";
+	$text['label-price']['es-cl'] = "Precio";
+	$text['label-price']['pt-pt'] = "Preço";
+	$text['label-price']['fr-fr'] = "Prix";
 
 	$text['button-statistics']['en-us'] = "Statistics";
 	$text['button-statistics']['es-cl'] = "Estadísticas";

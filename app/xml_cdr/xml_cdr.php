@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -291,6 +292,10 @@ else {
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order);
 	//echo th_order_by('end_stamp', 'End', $order_by, $order);
 	echo th_order_by('duration', $text['label-duration'], $order_by, $order);
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+		// billing collumns
+		echo "<th>".$text['label-price']."</th>\n";
+	}
 	if (permission_exists('xml_cdr_pdd')) {
 		echo th_order_by('pdd_ms', 'PDD', $order_by, $order);
 	}
@@ -425,6 +430,10 @@ else {
 			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
+
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_sell']."</td>\n";
+			}
 			if (permission_exists("xml_cdr_pdd")) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
 			}
