@@ -261,7 +261,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	} elseif ($category == "cdr" && $subcategory == "storage" && $name == "text" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		echo "		<option value=''></option>\n";
-		if ($row['default_setting_value'] == "json") {
+		if ($row['default_setting_value'] == "db") {
 			echo "		<option value='db' selected='selected'>db</option>\n";
 		}
 		else {
