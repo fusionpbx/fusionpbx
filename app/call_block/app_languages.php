@@ -102,7 +102,7 @@
 	$text['label-called-on']['pt-pt'] = "Chamado em";
 	$text['label-called-on']['fr-fr'] = "Appelé sur";
 
-	$text['label-edit-add']['en-us'] = "Call Block Add";
+	$text['label-edit-add']['en-us'] = "Call Block";
 	$text['label-edit-add']['es-cl'] = "Agregar bloqueo de llamada";
 	$text['label-edit-add']['pt-pt'] = "Adicionar Bloqueio de Chamadas";
 	$text['label-edit-add']['fr-fr'] = "Ajouter bloquage d'appel";
@@ -112,10 +112,10 @@
 	$text['label-edit-add-recent']['pt-pt'] = "Chamadas Recentes";
 	$text['label-edit-add-recent']['fr-fr'] = "Appels Récents";
 
-	$text['label-edit-edit']['en-us'] = "Call Block Edit";
-	$text['label-edit-edit']['es-cl'] = "Editar bloqueo de llamada";
-	$text['label-edit-edit']['pt-pt'] = "Editar Bloqueio de Chamadas";
-	$text['label-edit-edit']['fr-fr'] = "Editer le bloquage d'appel";
+	$text['label-edit-edit']['en-us'] = "Call Block";
+	$text['label-edit-edit']['es-cl'] = "Bloqueo de llamada";
+	$text['label-edit-edit']['pt-pt'] = "Bloqueio de Chamadas";
+	$text['label-edit-edit']['fr-fr'] = "Bloquage d'appel";
 
 	$text['label-add-note']['en-us'] = "Block calls from a number. Either select a number from the list above or enter the number, name and enable below.";
 	$text['label-add-note']['es-cl'] = "Bloquea llamadas desde un número. Puede elegir un número de la lista de arriba o ingresar el n&uacute, nombre y activarlo abajo.";
