@@ -282,7 +282,7 @@ else {
 		}
 
 //show the results
-	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th>&nbsp;</th>\n";
 	//echo th_order_by('direction', 'Direction', $order_by, $order);
@@ -303,6 +303,9 @@ else {
 		echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order);
 	}
 	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order);
+	if (if_group("admin") || if_group("superadmin")) {
+		echo "<td class='list_control_icon'>&nbsp;</td>\n";
+	}
 	echo "</tr>\n";
 
 	if ($result_count > 0) {
@@ -339,7 +342,8 @@ else {
 			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
 				$tmp_name = $row['uuid']."_1.mp3";
 			}
-			echo "<tr >\n";
+			$tr_link = (if_group("admin") || if_group("superadmin")) ? "href='xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
+			echo "<tr ".$tr_link.">\n";
 			if (
 				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png") &&
 				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png") &&
@@ -382,7 +386,7 @@ else {
 			echo 	$row['caller_id_name'].' ';
 			echo "	</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
 			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['caller_id_name'])."&src_cid_number=".urlencode($row['caller_id_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['caller_id_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 			if (is_numeric($row['caller_id_number'])) {
 				echo "		".format_phone($row['caller_id_number']).' ';
@@ -393,7 +397,7 @@ else {
 			echo "		</a>";
 			echo "	</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
 			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 			if (is_numeric($row['destination_number'])) {
 				echo format_phone($row['destination_number'])."\n";
@@ -432,11 +436,18 @@ else {
 			if (permission_exists("xml_cdr_mos")) {
 				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null).">".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
 			}
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (if_group("admin") || if_group("superadmin")) {
-				echo "	<td valign='top' class='".$row_style[$c]."'><a href='xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a></td>\n";
+				echo "<a href='xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a>";
 			}
 			else {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$hangup_cause."</td>\n";
+				echo $hangup_cause;
+			}
+			echo "	</td>\n";
+			if (if_group("admin") || if_group("superadmin")) {
+				echo "	<td class='list_control_icon' width='25px;'>";
+				echo "		<a href='xml_cdr_details.php?uuid=".$row['uuid']."' alt='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "	</td>\n";
 			}
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
