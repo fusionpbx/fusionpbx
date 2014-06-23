@@ -154,14 +154,14 @@ if ($_GET['a'] == "download") {
 			$gateway_name = '';
 			$gateway_domain_name = '';
 			foreach($gateways as $field) {
-				if ($field["gateway_uuid"] == $row->name) {
+				if ($field["gateway_uuid"] == strtolower($row->name)) {
 					$gateway_name = $field["gateway"];
 					$gateway_domain_name = $field["domain_name"];
 					break;
 				}
 			}
 			echo "<tr>\n";
-			echo "	<td class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".$row->name."'>".$gateway_name."@".$gateway_domain_name."</a></td>\n";
+			echo "	<td class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower($row->name)."'>".$gateway_name."@".$gateway_domain_name."</a></td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
