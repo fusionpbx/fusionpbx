@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -32,6 +33,10 @@ if (permission_exists('destination_add') || permission_exists('destination_edit'
 else {
 	echo "access denied";
 	exit;
+}
+
+if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+	require_once "app/billings/functions.php";
 }
 
 //add multi-lingual support
@@ -61,6 +66,8 @@ else {
 		$fax_uuid = check_str($_POST["fax_uuid"]);
 		$destination_enabled = check_str($_POST["destination_enabled"]);
 		$destination_description = check_str($_POST["destination_description"]);
+		$destination_sell = check_str($_POST["destination_sell"]);
+		$currency = check_str($_POST["currency"]);
 	}
 
 //unset the db_destination_number
@@ -283,6 +290,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_uuid = $row["fax_uuid"];
 			$destination_enabled = $row["destination_enabled"];
 			$destination_description = $row["destination_description"];
+			$currency = $row["currency"];
+			$destination_sell = $row["destination_sell"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
@@ -524,6 +533,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	// billing
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "  ".$text['label-monthly_price'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='text' name='destination_sell' maxlength='255' value=\"$destination_sell\">\n";
+		currency_select($currency);
+		echo "<br />\n";
+		echo $text['description-monthly_price']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_description'].":\n";
