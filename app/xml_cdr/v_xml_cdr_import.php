@@ -231,11 +231,10 @@ function call_cost($rate, $i1, $i2, $t){
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
 
 				$database->fields['carrier_name'] = check_str(urldecode($xml->variables->lcr_carrier));
-
+				$sql_rate ="SELECT connect_increment, talk_increment FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
+				$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid='' AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") ORDER BY digits DESC, rate ASC limit 1";
 				if ($debug) {
-					$sql_rate ="SELECT connect_increment, talk_increment FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
 					echo "sql_rate: $sql_rate\n";
-					$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid='' AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") ORDER BY digits DESC, rate ASC limit 1";
 					echo "sql_user_rate: $sql_user_rate\n";
 				}
 
