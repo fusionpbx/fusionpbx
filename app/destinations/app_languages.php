@@ -130,7 +130,7 @@
 		$text['description-destination_description']['en-us'] = "Enter a description for this destination (optional).";
 		$text['description-destination_description']['es-cl'] = "Ingrese una descripción para este destino (opcional)";
 		$text['description-destination_description']['pt-pt'] = "Introduza uma descrição para este destino (opcional).";
-		$text['description-destination_description']['fr-fr'] = "";
+		$text['description-destination_description']['fr-fr'] = "Entrez une description pour cette destination (facultative).";
 
 		$text['label-true']['en-us'] = "True";
 		$text['label-true']['es-cl'] = "Verdadero";
@@ -141,6 +141,16 @@
 		$text['label-false']['es-cl'] = "Falso";
 		$text['label-false']['pt-pt'] = "Não";
 		$text['label-false']['fr-fr'] = "Non";
+
+		$text['label-monthly_price']['en-us'] = "Monthly price";
+		$text['label-monthly_price']['es-cl'] = "Precio mensual";
+		$text['label-monthly_price']['pt-pt'] = "Preço mensal";
+		$text['label-monthly_price']['fr-fr'] = "Prix mensuel";
+
+		$text['description-monthly_price']['en-us'] = "Enter monthly price to bill for this destination (only when inbound)";
+		$text['description-monthly_price']['es-cl'] = "Ingrese el precio mensual a cobrar por este destino (sólo entrante)";
+		$text['description-monthly_price']['pt-pt'] = "Digite o preço mensal de conta para este destino (somente quando entrada)";
+		$text['description-monthly_price']['fr-fr'] = "Entrez prix mensuel de projet de loi pour cette destination (uniquement lorsque entrant)";
 
 		$text['button-add']['en-us'] = "Add";
 		$text['button-add']['es-cl'] = "Agregar";
