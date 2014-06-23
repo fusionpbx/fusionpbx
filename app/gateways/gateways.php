@@ -74,7 +74,12 @@ else {
 			function switch_gateway_status($gateway_uuid, $result_type = 'xml') {
 				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 				$cmd = 'api sofia xmlstatus gateway '.$gateway_uuid;
-				return trim(event_socket_request($fp, $cmd));
+				$response = trim(event_socket_request($fp, $cmd));
+				if ($response == "Invalid Gateway!") {
+					$cmd = 'api sofia xmlstatus gateway '.strtoupper($gateway_uuid);
+					$response = trim(event_socket_request($fp, $cmd));
+				}
+				return $response;
 			}
 		}
 	}
