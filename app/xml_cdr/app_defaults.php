@@ -49,6 +49,7 @@
 			if ($prep_statement) {
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				unset($prep_statement);
 				if ($row['num_rows'] == 0) {
 					$x = 0;
 					$array[$x]['default_setting_category'] = 'cdr';
