@@ -250,7 +250,7 @@ function call_cost($rate, $i1, $i2, $t){
 
 				$db2->sql = $sql_user_rate;
 				$db2->result = $db2->execute();
-				$lcr_user_rate = (strlen($xml->variables->lcr_user_rate)?$xml->variables->lcr_user_rate: (check_str(urldecode($xml->variables->call_direction)) == "local"?0.0:0.01));
+				$lcr_user_rate = (strlen($xml->variables->lcr_user_rate)?$xml->variables->lcr_user_rate:(check_str(urldecode($xml->variables->call_direction)) == "outbound"?0.01:0.0));
 				$lcr_user_first_increment = (strlen($db2->result[0]['connect_increment'])?check_str($db2->result[0]['connect_increment']):60);
 				$lcr_user_second_increment = (strlen($db2->result[0]['talk_increment'])?check_str($db2->result[0]['talk_increment']):60);
 
