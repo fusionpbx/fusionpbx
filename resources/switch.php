@@ -1778,10 +1778,10 @@ function save_gateway_xml() {
 							$profile = "external";
 						}
 					//open the xml file
-						$fout = fopen($_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$row['gateway_uuid'].".xml","w");
+						$fout = fopen($_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".strtolower($row['gateway_uuid']).".xml","w");
 					//build the xml
 						$xml .= "<include>\n";
-						$xml .= "    <gateway name=\"" . $row['gateway_uuid'] . "\">\n";
+						$xml .= "    <gateway name=\"" . strtolower($row['gateway_uuid']) . "\">\n";
 						if (strlen($row['username']) > 0) {
 							$xml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
 						}
