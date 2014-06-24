@@ -268,6 +268,32 @@ function call_cost($rate, $i1, $i2, $t){
 					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
 					echo "s r:$lcr_user_rate - $lcr_user_first_increment - $lcr_user_second_increment = $call_sell\n";
 				}
+
+				$sql_balance = "SELECT balance,old_balance FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
+				$db2->sql = $sql_balance;
+				$db2->result = $db2->execute();
+				$balance = $db2->result[0]['balance'];
+				$old_balance = $db2->result[0]['old_balance'];
+
+				if ($debug) {
+					echo "sql_balance: $sql_balance\n";
+					echo "bal: $balance\n";
+					echo "old bal: $old_balance\n";
+				}
+
+				$updated_balance = (double)$old_balance - (double)$call_sell;
+				unset($db2->sql);
+				unset($db2->result);
+
+				$sql_update_balance = "UPDATE v_billings SET balance=$updated_balance, old_balance=$updated_balance WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
+				if ($debug) {
+					echo "sql_update_balance: $sql_update_balance\n";
+				}
+				$db2->sql = $sql_update_balance;
+				$db2->result = $db2->execute();
+				unset($db2->sql);
+				unset($db2->result);
+
 			}
 
 		//insert xml_cdr into the db
