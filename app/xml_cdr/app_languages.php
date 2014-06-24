@@ -25,6 +25,11 @@
 	$text['description-4']['pt-pt'] = "Veja as chamadas na lista ou descarregue-as como arquivo, separadas por vírgulas, usando o botão 'csv'.";
 	$text['description-4']['fr-fr'] = "Ensuite visualisez les informations dans la liste ci-dessous, ou téléchargez les sous forme d'un fichier CSV.";
 
+	$text['description_search']['en-us'] = "<u>Note</u>: Source, Destination and Caller ID (CID) Name fields support the use of an <i>asterisk</i> (\"*\") as a wildcard character.";
+	$text['description_search']['es-cl'] = "<u>Atención</u>: Origen, Destino y el identificador de llamadas (CID) campos Nombre apoyan el uso de un <i>asterisco</i> (\"*\") como carácter comodín.";
+	$text['description_search']['pt-pt'] = "<u>Atenção</u>: origem, destino e identificação do chamador (CID) campos Nome apoiar o uso de um <i>asterisco</i> (\"*\") como um caractere curinga.";
+	$text['description_search']['fr-fr'] = "<u>Attention</u>: Source, Destination et identification de l'appelant (CID) champs Nom appuient l'utilisation de <i>l'astérisque</i> (\"*\") comme un caractère générique.";
+
 	$text['label-direction']['en-us'] = "Direction";
 	$text['label-direction']['es-cl'] = "Dirección";
 	$text['label-direction']['pt-pt'] = "Direção";

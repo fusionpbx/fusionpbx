@@ -80,9 +80,18 @@ else {
 	}
 	if (strlen($cdr_id) > 0) { $sql_where_ands[] = "cdr_id like '%".$cdr_id."%'"; }
 	if (strlen($direction) > 0) { $sql_where_ands[] = "direction = '".$direction."'"; }
-	if (strlen($caller_id_name) > 0) { $sql_where_ands[] = "caller_id_name like '".$caller_id_name."'"; }
-	if (strlen($caller_id_number) > 0) { $sql_where_ands[] = "caller_id_number like '".$caller_id_number."'"; }
-	if (strlen($destination_number) > 0) { $sql_where_ands[] = "destination_number like '".$destination_number."'"; }
+	if (strlen($caller_id_name) > 0) {
+		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
+		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
+	}
+	if (strlen($caller_id_number) > 0) {
+		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
+		$sql_where_ands[] = "caller_id_number like '".$mod_caller_id_number."'";
+	}
+	if (strlen($destination_number) > 0) {
+		$mod_destination_number = str_replace("*", "%", $destination_number);
+		$sql_where_ands[] = "destination_number like '".$mod_destination_number."'";
+	}
 	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
 	if ($db_type == "sqlite") {
 		if (strlen($start_stamp) > 0) { $sql_where_ands[] = "start_stamp like '%".$start_stamp."%'"; }
