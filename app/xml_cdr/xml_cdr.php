@@ -263,7 +263,10 @@ else {
 			echo "</td>";
 			echo "</tr>";
 			echo "<tr>";
-			echo "<td colspan='3' style='padding-top: 8px;' align='right'>";
+			echo "<td colspan='2' style='padding-top: 8px;' align='left'>";
+			echo 	$text['description_search'];
+			echo "</td>";
+			echo "<td style='padding-top: 8px;' align='right'>";
 
 				echo "<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr.php';\">\n";
 				echo "<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>\n";
