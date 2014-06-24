@@ -123,7 +123,7 @@
 							end
 							x = 0;
 							dbh:query(sql, function(field)
-								table.insert(xml, [[						<gateway name="]] .. field.gateway_uuid .. [[">]]);
+								table.insert(xml, [[						<gateway name="]] .. string.lower(field.gateway_uuid) .. [[">]]);
 
 								if (string.len(field.username) > 0) then
 									table.insert(xml, [[							<param name="username" value="]] .. field.username .. [["/>]]);
