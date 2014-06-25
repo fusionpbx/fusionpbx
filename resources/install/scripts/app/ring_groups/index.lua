@@ -324,6 +324,9 @@
 							end
 						--originate each destination
 							if (dial_string ~= nil) then
+								if (origination_caller_id_number == nil) then
+									origination_caller_id_number = caller_id_number;
+								end
 								dial_string = "{ignore_early_media=true,origination_caller_id_number="..origination_caller_id_number.."}"..dial_string;
 								cmd = "";
 								if (tonumber(destination_delay) > 0) then
