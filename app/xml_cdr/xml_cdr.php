@@ -310,7 +310,19 @@ else {
 		echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+		require_once "app/billings/functions.php";
+		require_once "resources/classes/database.php";
+		$database = new database;
+		$database->table = "v_billings";
+		$tv = (strlen($_GET["accountcode"])?$_GET["accountcode"]:$_SESSION[domain_name]);
+		$database->sql = "SELECT currency from v_billings WHERE type_value='$tv'";
+		$database->result = $database->execute();
+		$currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
+		unset($database->sql);
+		unset($database->result);
 
+	}
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
@@ -435,7 +447,25 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
 
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_sell']."</td>\n";
+
+				$price = $row['call_sell'];
+				$lcr_direction = (strlen($row['direction'])?$row['direction']:"outbound");
+
+				$n = $row['destination_number'];
+				
+				if ($lcr_direction == "inbound"){
+					$n = $row['caller_id_number'];
+				}
+				$database->table = "v_lcr";
+				$database->sql = "SELECT currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.lcr_direction='$lcr_direction' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+				$database->result = $database->execute();
+				//print "<pre>"; print_r($database->result); print "[".$database->result[0]['currency']."]"; print "</pre>";
+
+				$billed_currency = ((is_string($database->result[0]['currency']) && strlen($database->result[0]['currency']))?$database->result[0]['currency']:'USD');	//billed currency
+				unset($database->sql);
+				unset($database->result);
+				$price = currency_convert($price, $currency, $billed_currency);
+				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($price,6)." $billed_currency</td>\n";
 			}
 			if (permission_exists("xml_cdr_pdd")) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
