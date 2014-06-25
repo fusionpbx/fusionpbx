@@ -357,7 +357,7 @@ else {
 		$ring_group_destinations[$x]['destination_number'] = '';
 		$ring_group_destinations[$x]['destination_delay'] = '';
 		$ring_group_destinations[$x]['destination_timeout'] = '';
-		$ring_group_destinations[$x]['destination_prompt_confirm'] = '';
+		$ring_group_destinations[$x]['destination_prompt'] = '';
 		$x++;
 	}
 	unset($limit);
@@ -491,13 +491,13 @@ else {
 	echo "		<td class='vncellreq' valign='top'>".$text['label-destinations'].":</td>";
 	echo "		<td class='vtable' align='left'>";
 
-	echo "			<table width='52%' border='0' cellpadding='2' cellspacing='0'>\n";
+	echo "			<table border='0' cellpadding='2' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination_delay']."</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination_timeout']."</td>\n";
 	if (permission_exists('ring_group_prompt')) {
-		echo "					<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
+		echo "				<td class='vtable'>".$text['label-destination_prompt']."</td>\n";
 	}
 	echo "					<td></td>\n";
 	echo "				</tr>\n";
@@ -507,66 +507,59 @@ else {
 		if (strlen($row['destination_timeout']) == 0) { $row['destination_timeout'] = "30"; }
 
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
-			echo "	<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".$row['ring_group_destination_uuid']."\">\n";
+			echo "		<input name='ring_group_destinations[".$x."][ring_group_destination_uuid]' type='hidden' value=\"".$row['ring_group_destination_uuid']."\">\n";
 		}
 
-		echo "				<tr>\n";
-		echo "					<td>\n";
-		echo "						<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" style=\"width: 90%;\"value=\"".$row['destination_number']."\">\n";
-		echo "					</td>\n";
-		echo "					<td>\n";
-		echo "	<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
+		echo "			<tr>\n";
+		echo "				<td>\n";
+		echo "					<input type=\"text\" name=\"ring_group_destinations[".$x."][destination_number]\" class=\"formfld\" style=\"width: 90%;\"value=\"".$row['destination_number']."\">\n";
+		echo "				</td>\n";
+		echo "				<td>\n";
+		echo "					<select name='ring_group_destinations[".$x."][destination_delay]' class='formfld' style='width:55px'>\n";
 		$i=0;
 		while($i<=300) {
 			if ($i == $row['destination_delay']) {
-				echo "	<option value='$i' selected='selected'>$i</option>\n";
+				echo "				<option value='$i' selected='selected'>$i</option>\n";
 			}
 			else {
-				echo "	<option value='$i'>$i</option>\n";
+				echo "				<option value='$i'>$i</option>\n";
 			}
 			$i = $i + 5;
 		}
-		echo "	</select>\n";
-
-		echo "					</td>\n";
-		echo "					<td>\n";
-
-		echo "	<select name='ring_group_destinations[".$x."][destination_timeout]' class='formfld' style='width:55px'>\n";
+		echo "					</select>\n";
+		echo "				</td>\n";
+		echo "				<td>\n";
+		echo "					<select name='ring_group_destinations[".$x."][destination_timeout]' class='formfld' style='width:55px'>\n";
 		$i=5;
 		while($i<=300) {
 			if ($i == $row['destination_timeout']) {
-				echo "	<option value='$i' selected='selected'>$i</option>\n";
+				echo "				<option value='$i' selected='selected'>$i</option>\n";
 			}
 			else {
-				echo "	<option value='$i'>$i</option>\n";
+				echo "				<option value='$i'>$i</option>\n";
 			}
 			$i = $i + 5;
 		}
-		echo "	</select>\n";
-		echo "					</td>\n";
+		echo "					</select>\n";
+		echo "				</td>\n";
 
 		if (permission_exists('ring_group_prompt')) {
-			echo "					<td>\n";
-			echo "						<select class='formfld' style='width: 90px;' name='ring_group_destinations[".$x."][destination_prompt]'>\n";
-			echo "							<option value=''></option>\n";
-			echo "							<option value='1'>".$text['label-destination_prompt_confirm']."</option>\n";
-			//echo "						<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
-			echo "						</select>\n";
-			echo "					</td>\n";
+			echo "			<td>\n";
+			echo "				<select class='formfld' style='width: 90px;' name='ring_group_destinations[".$x."][destination_prompt]'>\n";
+			echo "					<option value=''></option>\n";
+			echo "					<option value='1'".(($row['destination_prompt'])?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
+			//echo "				<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
+			echo "				</select>\n";
+			echo "			</td>\n";
 		}
-		echo "					<td>\n";
-		//echo "						<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-		echo "					</td>\n";
-		echo "					<td class='list_control_icons' style='width: 25px;'>";
+		echo "				<td>&nbsp;</td>\n";
+		echo "				<td class='list_control_icons' style='width: 25px;'>";
 		if (strlen($row['ring_group_destination_uuid']) > 0) {
-			//echo 					"<a href='ring_group_destination_edit.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."' alt='edit'>$v_link_label_edit</a>";
-			echo					"<a href='ring_group_destination_delete.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+			echo				"<a href='ring_group_destination_delete.php?id=".$row['ring_group_destination_uuid']."&ring_group_uuid=".$row['ring_group_uuid']."&a=delete' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 		}
-		echo "					</td>\n";
-		echo "				</tr>\n";
+		echo "				</td>\n";
+		echo "			</tr>\n";
 
-		echo "		</td>";
-		echo "	</tr>";
 		$x++;
 	}
 	echo "			</table>\n";
