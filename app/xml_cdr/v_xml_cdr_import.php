@@ -57,22 +57,10 @@
 //set pdo attribute that enables exception handling
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// some maths for costs
-function call_cost($rate, $i1, $i2, $t){
-        $c = (double)0.0;
-	if ($t > 0){
-	        $c = (double)$i1 * (double)$rate / (double)60.0;
 
-	        if ($t > $i1){
-	                $t -= $i1;
-        	        $times = intval($t/$i2) + (($t % $i2)?1:0);
-                	$c += (double)$times * (double)$i2 * (double)$rate / (double)60.0;
-		}
-        }
-
-        return $c;
-}
-
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+		require_once "app/billings/functions.php";
+	}
 //define the process_xml_cdr function
 	function process_xml_cdr($db, $leg, $xml_string) {
 		//set global variable
