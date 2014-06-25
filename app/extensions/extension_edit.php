@@ -21,6 +21,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -31,6 +32,10 @@ if (permission_exists('extension_add') || permission_exists('extension_edit')) {
 else {
 	echo "access denied";
 	exit;
+}
+
+if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+	require_once "app/billings/functions.php";
 }
 
 //add multi-lingual support
@@ -320,6 +325,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 				}
 
+				$j = 0;
 				for ($i=1; $i<=$range; $i++) {
 					if (extension_exists($extension)) {
 						//extension exists
@@ -435,6 +441,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= ")";
 							$db->exec(check_sql($sql));
 							unset($sql);
+							$j++;
 						}
 
 					//add or update voicemail
@@ -460,6 +467,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 					//increment the extension number
 						$extension++;
+				}
+
+				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+					// Let's bill $j has the number of extensions to bill
 				}
 			} //if ($action == "add")
 
@@ -803,6 +814,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	// Billing
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+		if ($action == "add" && permission_exists('extension_add')) {		// only when adding
+			echo "<tr>\n";
+			echo "<td colspan='2' width='30%' nowrap='nowrap' align='left' valign='top'>\n";
+			echo "    <center>".$text['label-billing_warning']."</center>\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
+	}
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-extension'].":\n";
