@@ -612,4 +612,9 @@
 	$text['message-required']['pt-pt'] = "Por favor forneça: ";
 	$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
+	$text['label-billing_warning']['en-us'] = "Billing is installed, please take note you need to have enough balance to create extensions.";
+	$text['label-billing_warning']['es-cl'] = "La cobranza está instalada, por favor note que necesita suficiente balance para crear extensiones.";
+	$text['label-billing_warning']['pt-pt'] = "A coleção é instalado, por favor, note que você precisa saldo suficiente para criar extensões.";
+	$text['label-billing_warning']['fr-fr'] = "La collection est installée, s'il vous plaît noter que vous devez assez d'équilibre pour créer des extensions.";
+
 ?>
