@@ -728,7 +728,7 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		if (strlen($_SESSION["format_phone_array"]) == 0) {
+		if ((is_string($_SESSION["format_phone_array"])) && (strlen($_SESSION["format_phone_array"]) == 0)) {
 			$_SESSION["format_phone_array"] = ""; //clear the menu
 			global $domain_uuid, $db;
 			$sql = "select * from v_vars ";
