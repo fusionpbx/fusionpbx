@@ -217,6 +217,7 @@
 
 		//billing information
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+				$db2 = new database;
 
 				switch(check_str(urldecode($xml->variables->call_direction))){
 					case "outbound":
@@ -228,7 +229,6 @@
 								echo "sql_user_rate: $sql_user_rate\n";
 							}
 
-							$db2 = new database;
 							$db2->sql = $sql_rate;
 							$db2->result = $db2->execute();
 //							print_r($db2->result);
@@ -271,6 +271,9 @@
 					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
 					echo "s r:$lcr_user_rate - $lcr_user_first_increment - $lcr_user_second_increment = $call_sell\n";
 				}
+
+				unset($db2->sql);
+				unset($db2->result);
 
 				$sql_balance = "SELECT balance,old_balance FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
 				$db2->sql = $sql_balance;
