@@ -51,6 +51,11 @@
 					domain_uuid = rows["domain_uuid"];
 				end);
 			end
+		--if the domain_uuid is null then set an empty string
+			if (domain_uuid == nil) then
+				domain_uuid = " ";
+			end
+			
 	end
 
 --get the extension information
