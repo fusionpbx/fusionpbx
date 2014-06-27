@@ -75,16 +75,15 @@ else {
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 	if ($fp) {
 		//prepare the command
-			if ($vendor == "grandstream") {
-				$command = "lua app.lua event_notify ".$cmd." ".$profile." ".$user." ".$vendor;
+			if ($cmd == "unregister") {
+				$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
 			}
 			else {
-				if ($cmd == "reboot") {
-					$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
-				}
-				if ($cmd == "check_sync") {
-					$command = "sofia profile ".$profile." check_sync ".$user;
-				}
+				$command = "lua app.lua event_notify ".$cmd." ".$profile." ".$user." ".$vendor;
+
+				//if ($cmd == "check_sync") {
+				//	$command = "sofia profile ".$profile." check_sync ".$user;
+				//}
 			}
 		//send the command
 			$response = event_socket_request($fp, "api ".$command);
