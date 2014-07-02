@@ -177,7 +177,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$dialplan["dialplan_enabled"] = $destination_enabled;
 				$dialplan["dialplan_description"] = $destination_description;
 
-				$dialplan_detail_order = 0;
+				$dialplan_detail_order = 10;
 				if (strlen($dialplan_uuid) == 0) {
 					//add the public condition
 						$y = 0;
