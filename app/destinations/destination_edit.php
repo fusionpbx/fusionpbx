@@ -127,6 +127,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//remove the array from the HTTP POST
 				unset($_POST["dialplan_details"]);
 
+
 			//add the domain_uuid
 				$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
 
@@ -218,6 +219,70 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan_detail_order = $dialplan_detail_order + 10;
 						$y++;
 					}
+				}
+
+			//add fax detection
+				if (strlen($fax_uuid) > 0) {
+					//get the fax information
+						$sql = "select * from v_fax ";
+						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and fax_uuid = '".$fax_uuid."' ";
+						$prep_statement = $db->prepare(check_sql($sql));
+						$prep_statement->execute();
+						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						foreach ($result as &$row) {
+							$fax_extension = $row["fax_extension"];
+							$fax_destination_number = $row["fax_destination_number"];
+							$fax_name = $row["fax_name"];
+							$fax_email = $row["fax_email"];
+							$fax_pin_number = $row["fax_pin_number"];
+							$fax_caller_id_name = $row["fax_caller_id_name"];
+							$fax_caller_id_number = $row["fax_caller_id_number"];
+							$fax_forward_number = $row["fax_forward_number"];
+							$fax_description = $row["fax_description"];
+						}
+						unset ($prep_statement);
+
+					//add set tone detect_hits=1
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "tone_detect_hits=1";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+						$y++;
+
+					//increment the dialplan detail order
+						$dialplan_detail_order = $dialplan_detail_order + 10;
+
+					// execute on tone detect
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+						$y++;
+
+					//increment the dialplan detail order
+						$dialplan_detail_order = $dialplan_detail_order + 10;
+
+					//add tone_detect fax 1100 r +5000
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "tone_detect";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "fax 1100 r +5000";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+						$y++;
+
+					//increment the dialplan detail order
+						$dialplan_detail_order = $dialplan_detail_order + 10;
+
+					// execute on tone detect
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "3000"];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+						$y++;
 				}
 
 			//save the dialplan

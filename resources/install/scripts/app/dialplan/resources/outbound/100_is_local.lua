@@ -45,12 +45,15 @@
 		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 		assert(dbh:query(sql, function(row)
 
+
 			--set the outbound caller id
 				if (outbound_caller_id_name ~= nil) then
 					session:execute("export", "caller_id_name="..outbound_caller_id_name);
+					session:execute("export", "effective_caller_id_name="..outbound_caller_id_name);
 				end
 				if (outbound_caller_id_number ~= nil) then
 					session:execute("export", "caller_id_number="..outbound_caller_id_number);
+					session:execute("export", "effective_caller_id_number="..outbound_caller_id_number);
 				end
 
 			--set the local variables
@@ -86,6 +89,16 @@
 				key = f[1];
 				value = f[2];
 				var[key] = value;
+			end
+
+		--set the outbound caller id
+			if (outbound_caller_id_name ~= nil) then
+				session:execute("export", "caller_id_name="..outbound_caller_id_name);
+				session:execute("export", "effective_caller_id_name="..outbound_caller_id_name);
+			end
+			if (outbound_caller_id_number ~= nil) then
+				session:execute("export", "caller_id_number="..outbound_caller_id_number);
+				session:execute("export", "effective_caller_id_number="..outbound_caller_id_number);
 			end
 
 		--send to the console
