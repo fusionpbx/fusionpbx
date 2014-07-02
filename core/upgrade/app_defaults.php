@@ -42,6 +42,39 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 			$install->copy_scripts();
 			//$install->copy_sounds();
 			//print_r($install->result);
+
+		//update the software table
+			$sql = "select count(*) as num_rows from v_software ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$sql = "insert into v_software ";
+					$sql .= "(";
+					$sql .= "software_uuid, ";
+					$sql .= "software_name, ";
+					$sql .= "software_url, ";
+					$sql .= "software_version ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'FusionPBX', ";
+					$sql .= "'www.fusionpbx.com', ";
+					$sql .= "'".software_version()."' ";
+					$sql .= "'' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+				else {
+					$sql = "update v_software ";
+					$sql .= "set software_version = '".software_version()."' ";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+			}
 	}
 }
 
