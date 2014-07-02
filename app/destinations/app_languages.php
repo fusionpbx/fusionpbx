@@ -102,10 +102,10 @@
 		$text['description-destination_context']['pt-pt'] = "Introduza o contexto.";
 		$text['description-destination_context']['fr-fr'] = "Entrer le context.";
 
-		$text['label-fax_uuid']['en-us'] = "Fax Destination";
-		$text['label-fax_uuid']['es-cl'] = "Destino de Fax";
-		$text['label-fax_uuid']['pt-pt'] = "Destino de fax";
-		$text['label-fax_uuid']['fr-fr'] = "Destination Fax";
+		$text['label-fax_uuid']['en-us'] = "Fax Detection";
+		$text['label-fax_uuid']['es-cl'] = "Detección de Fax";
+		$text['label-fax_uuid']['pt-pt'] = "Detecção de fax";
+		$text['label-fax_uuid']['fr-fr'] = "Détection Fax";
 
 		$text['description-fax_uuid']['en-us'] = "Select the fax destination to enable fax detection. ";
 		$text['description-fax_uuid']['es-cl'] = "Seleccione el destino de fax para activar su detección";
