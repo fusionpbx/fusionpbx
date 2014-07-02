@@ -63,7 +63,6 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 					$sql .= "'FusionPBX', ";
 					$sql .= "'www.fusionpbx.com', ";
 					$sql .= "'".software_version()."' ";
-					$sql .= "'' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
 					unset($sql);
