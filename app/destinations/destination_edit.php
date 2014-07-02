@@ -176,56 +176,49 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$dialplan["dialplan_order"] = "100";
 				$dialplan["dialplan_enabled"] = $destination_enabled;
 				$dialplan["dialplan_description"] = $destination_description;
+
+				$dialplan_detail_order = 0;
 				if (strlen($dialplan_uuid) == 0) {
-					$y = 0;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "context";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "public";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = "10";
-					$y++;
-					$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-					$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
-					$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number;
-					$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = "20";
-					$y++;
-					//$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-					//$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-					//$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-					//$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "call_direction=inbound";
-					//$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = "20";
-					//$y++;
-				}
-				$dialplan_detail_order = 30;
-				foreach ($dialplan_details as $row) {
-					$actions = explode(":", $row["dialplan_detail_data"]);
-					$dialplan_detail_type = array_shift($actions);
-					$dialplan_detail_data = join(':', $actions);
-					if (strlen($dialplan_detail_type) > 1) {
-						if (isset($row["dialplan_detail_uuid"])) {
-							$dialplan["dialplan_details"][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
-						}
+					//add the public condition
+						$y = 0;
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "context";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "public";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+						$y++;
+
+					//increment the dialplan detail order
+						$dialplan_detail_order = $dialplan_detail_order + 10;
+
+					//check the destination number
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $destination_number;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+						$y++;
+
+					//increment the dialplan detail order
+						$dialplan_detail_order = $dialplan_detail_order + 10;
+
+					//set the call direction
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $dialplan_detail_type;
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $dialplan_detail_data;
-						if (strlen($row["dialplan_detail_order"]) > 0) {
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $row["dialplan_detail_order"];
-						}
-						else {
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						}
-						$dialplan_detail_order = $dialplan_detail_order + 10;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "call_direction=inbound";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 						$y++;
-					}
+
+					//increment the dialplan detail order
+						$dialplan_detail_order = $dialplan_detail_order + 10;
 				}
 
 			//add fax detection
 				if (strlen($fax_uuid) > 0) {
 					//get the fax information
 						$sql = "select * from v_fax ";
-						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 						$sql .= "and fax_uuid = '".$fax_uuid."' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
@@ -280,9 +273,35 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
 						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "3000"];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "3000";
 						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 						$y++;
+				}
+
+			//add the actions
+				foreach ($dialplan_details as $row) {
+					$actions = explode(":", $row["dialplan_detail_data"]);
+					$dialplan_detail_type = array_shift($actions);
+					$dialplan_detail_data = join(':', $actions);
+					if (strlen($dialplan_detail_type) > 1) {
+						if (isset($row["dialplan_detail_uuid"])) {
+							$dialplan["dialplan_details"][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
+						}
+						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $dialplan_detail_type;
+						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $dialplan_detail_data;
+						if (strlen($row["dialplan_detail_order"]) > 0) {
+							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $row["dialplan_detail_order"];
+						}
+						else {
+							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+						}
+						$y++;
+
+					//increment the dialplan detail order
+						$dialplan_detail_order = $dialplan_detail_order + 10;
+					}
 				}
 
 			//save the dialplan
