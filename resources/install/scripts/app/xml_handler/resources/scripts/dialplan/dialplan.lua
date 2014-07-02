@@ -74,7 +74,14 @@
 
 		--get the dialplan and related details
 			sql = "select * from v_dialplans as d, v_dialplan_details as s ";
-			sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
+			if (call_context == domain_name) then
+				sql = sql .. "where (d.dialplan_context = '" .. call_context .. "' or d.dialplan_context = '${domain_name}') ";
+			else
+				sql = sql .. "where d.dialplan_context = '" .. call_context .. "' ";
+			end
+			if (call_context ~= "public") then
+				sql = sql .. "and (d.domain_uuid = '" .. domain_uuid .. "' or d.domain_uuid is null )";
+			end
 			sql = sql .. "and d.dialplan_enabled = 'true' ";
 			sql = sql .. "and d.dialplan_uuid = s.dialplan_uuid ";
 			sql = sql .. "order by ";
