@@ -32,7 +32,6 @@ if (permission_exists('fax_extension_add') || permission_exists('fax_extension_e
 else {
 	echo "access denied";
 	exit;
-}
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -99,7 +98,7 @@ else {
 		$fax_extension = check_str($_POST["fax_extension"]);
 		$fax_destination_number = check_str($_POST["fax_destination_number"]);
 		$fax_email = check_str($_POST["fax_email"]);
-		$fax_pin_number = check_str($_POST["fax_pin_number"]);
+		//$fax_pin_number = check_str($_POST["fax_pin_number"]);
 		$fax_caller_id_name = check_str($_POST["fax_caller_id_name"]);
 		$fax_caller_id_number = check_str($_POST["fax_caller_id_number"]);
 		$fax_forward_number = check_str($_POST["fax_forward_number"]);
@@ -228,7 +227,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number, ";
 					$sql .= "fax_name, ";
 					$sql .= "fax_email, ";
-					$sql .= "fax_pin_number, ";
+					//$sql .= "fax_pin_number, ";
 					$sql .= "fax_caller_id_name, ";
 					$sql .= "fax_caller_id_number, ";
 					if (strlen($fax_forward_number) > 0) {
@@ -245,7 +244,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_destination_number', ";
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
-					$sql .= "'$fax_pin_number', ";
+					//$sql .= "'$fax_pin_number', ";
 					$sql .= "'$fax_caller_id_name', ";
 					$sql .= "'$fax_caller_id_number', ";
 					if (strlen($fax_forward_number) > 0) {
@@ -271,7 +270,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
-					$sql .= "fax_pin_number = '$fax_pin_number', ";
+					//$sql .= "fax_pin_number = '$fax_pin_number', ";
 					$sql .= "fax_caller_id_name = '$fax_caller_id_name', ";
 					$sql .= "fax_caller_id_number = '$fax_caller_id_number', ";
 					if (strlen($fax_forward_number) > 0) {
@@ -500,7 +499,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_destination_number = $row["fax_destination_number"];
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
-			$fax_pin_number = $row["fax_pin_number"];
+			//$fax_pin_number = $row["fax_pin_number"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_forward_number = $row["fax_forward_number"];
@@ -600,16 +599,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-pin'].":\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='fax_pin_number' maxlength='255' value=\"$fax_pin_number\">\n";
-		echo "<br />\n";
-		echo "".$text['description-pin']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
+		//echo "<tr>\n";
+		//echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		//echo "	".$text['label-pin'].":\n";
+		//echo "</td>\n";
+		//echo "<td class='vtable' align='left'>\n";
+		//echo "	<input class='formfld' type='text' name='fax_pin_number' maxlength='255' value=\"$fax_pin_number\">\n";
+		//echo "<br />\n";
+		//echo "".$text['description-pin']."\n";
+		//echo "</td>\n";
+		//echo "</tr>\n";
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -722,7 +721,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<input type='hidden' name='fax_name' value=\"$fax_name\">\n";
 			echo "	<input type='hidden' name='fax_extension' value=\"$fax_extension\">\n";
 			echo "	<input type='hidden' name='fax_destination_number' value=\"$fax_destination_number\">\n";
-			echo "	<input type='hidden' name='fax_pin_number' value=\"$fax_pin_number\">\n";
+			//echo "	<input type='hidden' name='fax_pin_number' value=\"$fax_pin_number\">\n";
 			echo "	<input type='hidden' name='fax_caller_id_name' value=\"$fax_caller_id_name\">\n";
 			echo "	<input type='hidden' name='fax_caller_id_number' value=\"$fax_caller_id_number\">\n";
 			echo "	<input type='hidden' name='fax_forward_number' value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : $fax_forward_number)."\">\n";
