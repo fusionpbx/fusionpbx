@@ -73,14 +73,14 @@ else {
 		$participant_pin = preg_replace('{\D}', '', $participant_pin);
 	}
 
-//get the conference centers
+//get the conference centers array and set a default conference center
+	$sql = "select * from v_conference_centers ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "order by conference_center_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 	if (strlen($conference_center_uuid) == 0) {
-		$sql = "select * from v_conference_centers ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "order by conference_center_name asc ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$conference_centers = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
 		$conference_center_uuid = $conference_centers[0]["conference_center_uuid"];
 	}
 
