@@ -170,7 +170,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//make sure the moderator pin number is unique
 				$sql = "select count(*) as num_rows from v_meetings ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				if (strlen($meeting_uuid) > 0) {
+					$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				}
 				$sql .= "and (moderator_pin = '".$moderator_pin."' or participant_pin = '".$moderator_pin."') ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
@@ -184,7 +186,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//make sure the participant pin number is unique
 				$sql = "select count(*) as num_rows from v_meetings ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-				$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				if (strlen($meeting_uuid) > 0) {
+					$sql .= "and meeting_uuid <> '".$meeting_uuid."' ";
+				}
 				$sql .= "and (moderator_pin = '".$participant_pin."' or participant_pin = '".$participant_pin."') ";
 				$prep_statement = $db->prepare(check_sql($sql));
 				if ($prep_statement) {
