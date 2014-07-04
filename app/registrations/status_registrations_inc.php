@@ -47,6 +47,7 @@ require_once "resources/check_auth.php";
 
 //request profile
 	$sip_profile_name = trim($_REQUEST["profile"]);
+	$show = trim($_REQUEST["show"]);
 
 //define variables
 	$c = 0;
@@ -108,7 +109,7 @@ require_once "resources/check_auth.php";
 
 					//remove unrelated domains
 						if (count($_SESSION["domains"]) > 1) {
-							if (permission_exists('registration_all')) {
+							if (permission_exists('registration_all') && $show == "all") {
 								//show all registrations
 							}
 							else {
@@ -117,6 +118,7 @@ require_once "resources/check_auth.php";
 								}
 							}
 						}
+
 					//increment the array id
 						$x++;
 				}
@@ -125,8 +127,18 @@ require_once "resources/check_auth.php";
 		//show the registrations
 			echo "<table width='100%' border='0' cellspacing='0' cellpadding='5'>\n";
 			echo "<tr>\n";
-			echo "<td colspan='4'>\n";
+			echo "<td colspan='5'>\n";
 			echo "	<b>".$text['header-registrations'].": ".count($registrations)."</b>\n";
+			echo "</td>\n";
+			echo "<td align='right'>\n";
+			if (permission_exists('registration_all')) {
+				if ($show == "all") {
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='status_registrations.php?show_reg=1&profile=$sip_profile_name'\" value='".$text['button-back']."'>\n";
+				}
+				else {
+					echo "	<input type='button' class='btn' name='' alt='".$text['button-show_all']."' onclick=\"window.location='status_registrations.php?show_reg=1&profile=$sip_profile_name&show=all'\" value='".$text['button-show_all']."'>\n";
+				}
+			}
 			echo "</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
