@@ -23,7 +23,7 @@
 --      Mark J Crane <markjcrane@fusionpbx.com>
 
 --define explode
-	function explode ( seperator, str ) 
+	function explode ( seperator, str )
 		local pos, arr = 0, {}
 		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
 			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
@@ -34,13 +34,19 @@
 	end
 
 --usage
-	--luarun app.lua event_notify reboot 1003@domain.fusionpbx.com yealink
+	--luarun app.lua event_notify internal reboot 1003@domain.fusionpbx.com yealink
 
 --set the args as variables
-	command = argv[2];
-	profile = argv[3];
+	profile = argv[2];
+	command = argv[3];
 	user = argv[4];
 	vendor = argv[5];
+
+--log the args
+	--freeswitch.consoleLog("notice", "[event_notify] profile "..profile.."\n");
+	--freeswitch.consoleLog("notice", "[event_notify] command "..command.."\n");
+	--freeswitch.consoleLog("notice", "[event_notify] user "..user.."\n");
+	--freeswitch.consoleLog("notice", "[event_notify] vendor "..vendor.."\n");
 
 --get the user and domain name from the user argv user@domain
 	user_table = explode("@",user);
@@ -62,14 +68,14 @@
 			event:addHeader('event-string', 'reboot=true');
 		end
 		if (command == "check_sync") then
-			event:addHeader('event-string', 'check-sync;reboot=false');
+			event:addHeader('event-string', 'reboot=true');
 		end
 	end
 
 --grandstream
 	if (vendor == "grandstream") then
 		if (command == "reboot") then
-			event:addHeader('event-string', 'reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
 			event:addHeader('event-string', 'check-sync;reboot=false');
@@ -79,7 +85,7 @@
 --polycom
 	if (vendor == "polycom") then
 		if (command == "reboot") then
-			event:addHeader('event-string', 'reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
 			event:addHeader('event-string', 'check-sync;reboot=false');
@@ -89,7 +95,7 @@
 --yealink
 	if (vendor == "yealink") then
 		if (command == "reboot") then
-			event:addHeader('event-string', 'reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
 			event:addHeader('event-string', 'check-sync;reboot=false');
@@ -98,7 +104,7 @@
 --snom
 	if (vendor == "snom") then
 		if (command == "reboot") then
-			event:addHeader('event-string', 'reboot=true');
+			event:addHeader('event-string', 'check-sync;reboot=true');
 		end
 		if (command == "check_sync") then
 			event:addHeader('event-string', 'check-sync;reboot=false');
