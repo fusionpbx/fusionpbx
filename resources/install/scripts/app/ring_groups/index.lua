@@ -105,7 +105,7 @@
 	else
 		--get the ring group destinations
 			sql = 
-			[[ SELECT r.ring_group_strategy, r.ring_group_timeout_sec, r.ring_group_timeout_app, d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_ringback
+			[[ SELECT r.ring_group_strategy, r.ring_group_timeout_app, d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_ringback
 			FROM v_ring_groups as r, v_ring_group_destinations as d
 			where d.ring_group_uuid = r.ring_group_uuid 
 			and d.ring_group_uuid = ']]..ring_group_uuid..[[' 
@@ -174,7 +174,6 @@
 				--set the values from the database as variables
 					user_exists = row.user_exists;
 					ring_group_strategy = row.ring_group_strategy;
-					ring_group_timeout_sec = row.ring_group_timeout_sec;
 					ring_group_timeout_app = row.ring_group_timeout_app;
 					ring_group_timeout_data = row.ring_group_timeout_data;
 					ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
@@ -367,6 +366,7 @@
 				--prompt to accept call if true schedule the call timeout
 					if (prompt == "true") then
 						--schedule the timeout and route to the timeout destination
+							ring_group_timeout_sec = "80";
 							if (ring_group_timeout_app == "transfer") then
 								cmd = "sched_api +"..ring_group_timeout_sec.." ring_group:"..uuid.." bgapi uuid_transfer "..uuid.." "..ring_group_timeout_data;
 							elseif (ring_group_timeout_app == "bridge") then
