@@ -146,10 +146,6 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the strategy.";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_timeout_sec";
-		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the timeout in seconds.";
-		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_timeout_app";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the timeout destination.";
