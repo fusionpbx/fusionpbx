@@ -75,7 +75,6 @@ else {
 			$ring_group_extension = check_str($_POST["ring_group_extension"]);
 			$ring_group_context = check_str($_POST["ring_group_context"]);
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
-			$ring_group_timeout_sec = check_str($_POST["ring_group_timeout_sec"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
 			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
 			$ring_group_ringback = check_str($_POST["ring_group_ringback"]);
@@ -143,7 +142,6 @@ else {
 			if (strlen($ring_group_name) == 0) { $msg .= $text['message-name']."<br>\n"; }
 			if (strlen($ring_group_extension) == 0) { $msg .= $text['message-extension']."<br>\n"; }
 			if (strlen($ring_group_strategy) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
-			if (strlen($ring_group_timeout_sec) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
 			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout-action']."<br>\n"; }
 			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Prefix<br>\n"; }
 			//if (strlen($ring_group_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
@@ -324,7 +322,6 @@ else {
 			$ring_group_extension = $row["ring_group_extension"];
 			$ring_group_context = $row["ring_group_context"];
 			$ring_group_strategy = $row["ring_group_strategy"];
-			$ring_group_timeout_sec = $row["ring_group_timeout_sec"];
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
 			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
@@ -377,7 +374,6 @@ else {
 	}
 
 //set defaults
-	if (strlen($ring_group_timeout_sec) == 0) { $ring_group_timeout_sec = '30'; }
 	if (strlen($ring_group_enabled) == 0) { $ring_group_enabled = 'true'; }
 
 //set the context for users that are not in the superadmin group
@@ -567,17 +563,6 @@ else {
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
-
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-call-timeout'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_timeout_sec' maxlength='255' value='$ring_group_timeout_sec'>\n";
-	echo "	<br />\n";
-	echo $text['description-timeout']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";

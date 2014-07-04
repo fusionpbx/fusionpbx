@@ -136,11 +136,6 @@
 	$text['label-call-forward']['fr-fr'] = "Renvoi d'Appel:";
 	$text['label-call-forward']['pt-pt'] = "Encaminhar Chamada:";
 
-	$text['label-call-timeout']['en-us'] = "Call Timeout";
-	$text['label-call-timeout']['es-cl'] = "Timout de llamada";
-	$text['label-call-timeout']['fr-fr'] = "Timeout d'Appel";
-	$text['label-call-timeout']['pt-pt'] = "Timeout da Chamada";
-
 	$text['label-cid-prefix']['en-us'] = "CID Prefix";
 	$text['label-cid-prefix']['es-cl'] = "Prefijo CID";
 	$text['label-cid-prefix']['fr-fr'] = "CID Préfixe";
