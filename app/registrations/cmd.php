@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,7 @@ else {
 	$rdr = check_str($_GET['rdr']);
 	$profile = check_str($_GET['profile']);
 	$domain = check_str($_GET['domain']);
+	$show = check_str($_GET['show']);
 	$user = check_str($_GET['user']);
 	$agent = check_str($_GET['agent']);
 
@@ -79,7 +80,7 @@ else {
 				$command = "sofia profile ".$profile." flush_inbound_reg ".$user." reboot";
 			}
 			else {
-				$command = "lua app.lua event_notify ".$cmd." ".$profile." ".$user." ".$vendor;
+				$command = "lua app.lua event_notify ".$profile." ".$cmd." ".$user." ".$vendor;
 
 				//if ($cmd == "check_sync") {
 				//	$command = "sofia profile ".$profile." check_sync ".$user;
@@ -100,7 +101,7 @@ else {
 		echo $response;
 	}
 	else {
-		header("Location: status_registrations.php?profile=internal");
+		header("Location: status_registrations.php?profile=".$profile."&show=".$show);
 	}
 
 ?>
