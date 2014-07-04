@@ -341,20 +341,20 @@
 								end
 							end
 							table.insert(xml, [[							<params>]]);
-							table.insert(xml, [[									<param name="password" value="]] .. password .. [["/>]]);
-							--table.insert(xml, [[									<param name="vm-enabled" value="]] .. vm_enabled .. [["/>]]);
+							table.insert(xml, [[								<param name="password" value="]] .. password .. [["/>]]);
+							--table.insert(xml, [[								<param name="vm-enabled" value="]] .. vm_enabled .. [["/>]]);
 							--if (string.len(vm_mailto) > 0) then
-							--	table.insert(xml, [[								<param name="vm-password" value="]] .. vm_password  .. [["/>]]);
-							--	table.insert(xml, [[								<param name="vm-email-all-messages" value="]] .. vm_enabled  ..[["/>]]);
-							--	table.insert(xml, [[								<param name="vm-attach-file" value="]] .. vm_attach_file .. [["/>]]);
-							--	table.insert(xml, [[								<param name="vm-keep-local-after-email" value="]] .. vm_keep_local_after_email .. [["/>]]);
-							--	table.insert(xml, [[								<param name="vm-mailto" value="]] .. vm_mailto .. [["/>]]);
+							--	table.insert(xml, [[							<param name="vm-password" value="]] .. vm_password  .. [["/>]]);
+							--	table.insert(xml, [[							<param name="vm-email-all-messages" value="]] .. vm_enabled  ..[["/>]]);
+							--	table.insert(xml, [[							<param name="vm-attach-file" value="]] .. vm_attach_file .. [["/>]]);
+							--	table.insert(xml, [[							<param name="vm-keep-local-after-email" value="]] .. vm_keep_local_after_email .. [["/>]]);
+							--	table.insert(xml, [[							<param name="vm-mailto" value="]] .. vm_mailto .. [["/>]]);
 							--end
 							if (string.len(mwi_account) > 0) then
-								table.insert(xml, [[								<param name="MWI-Account" value="]] .. mwi_account .. [["/>]]);
+								table.insert(xml, [[							<param name="MWI-Account" value="]] .. mwi_account .. [["/>]]);
 							end
 							if (string.len(auth_acl) > 0) then
-								table.insert(xml, [[								<param name="auth-acl" value="]] .. auth_acl .. [["/>]]);
+								table.insert(xml, [[							<param name="auth-acl" value="]] .. auth_acl .. [["/>]]);
 							end
 							table.insert(xml, [[								<param name="dial-string" value="]] .. dial_string .. [["/>]]);
 							table.insert(xml, [[							</params>]]);
