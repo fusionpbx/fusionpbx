@@ -41,9 +41,9 @@
 	debug["sql"] = false;
 
 --get the argv values
-	script_name = argv[0];
-	voicemail_action = argv[1];
-
+	script_name = argv[1];
+	voicemail_action = argv[2];
+	
 --starting values
 	dtmf_digits = '';
 	timeouts = 0;
@@ -193,7 +193,7 @@
 --send a message waiting event
 	if (voicemail_action == "mwi") then
 		--get the mailbox info
-			account = argv[2];
+			account = argv[3];
 			array = explode("@", account);
 			voicemail_id = array[1];
 			domain_name = array[2];
