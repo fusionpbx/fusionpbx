@@ -47,8 +47,9 @@ require_once "resources/check_auth.php";
 	require_once "resources/header.php";
 	$page["title"] = $text['header-registrations'];
 
-//retrieve profile, if set
+//set the variables
 	$profile = (isset($_REQUEST['profile']) && $_REQUEST['profile'] != '') ? $_REQUEST['profile'] : "internal";
+	$show = trim($_REQUEST["show"]);
 
 //ajax for refresh
 	?>
@@ -88,7 +89,7 @@ require_once "resources/check_auth.php";
 	}
 
 	var requestTime = function() {
-		var url = 'status_registrations_inc.php?profile=<?php echo $profile; ?>';
+		var url = 'status_registrations_inc.php?profile=<?php echo $profile; ?>&show=<?php echo $show; ?>';
 		new loadXmlHttp(url, 'ajax_reponse');
 		setInterval(function(){new loadXmlHttp(url, 'ajax_reponse');}, 1500);
 	}

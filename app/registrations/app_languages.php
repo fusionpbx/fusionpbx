@@ -46,6 +46,11 @@
 	$text['label-response']['pt-pt'] = "Resposta:";
 	$text['label-response']['fr-fr'] = "Réponse:";
 
+	$text['button-show_all']['en-us'] = "Show All";
+	$text['button-show_all']['es-cl'] = "Mostrar Todos";
+	$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+	$text['button-show_all']['fr-fr'] = "Montrer Tout";
+
 	$text['button-unregister']['en-us'] = "Unregister";
 	$text['button-unregister']['es-cl'] = "";
 	$text['button-unregister']['pt-pt'] = "";
