@@ -35,9 +35,11 @@
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "notifications_edit";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "f8d65f91-0f4a-405a-b5ac-24cb3c4f10ba";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = "notification_edit";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f8d65f91-0f4a-405a-b5ac-24cb3c4f10ba";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
