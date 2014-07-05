@@ -237,6 +237,7 @@ else {
 					if ($row['num_rows'] == 0) {
 						$sql_insert = "insert into v_menu_languages ";
 						$sql_insert .= "(";
+						$sql_insert .= "menu_language_uuid, ";
 						$sql_insert .= "menu_uuid, ";
 						$sql_insert .= "menu_item_uuid, ";
 						$sql_insert .= "menu_language, ";
@@ -244,6 +245,7 @@ else {
 						$sql_insert .= ")";
 						$sql_insert .= "values ";
 						$sql_insert .= "(";
+						$sql_insert .= "'".uuid()."', ";
 						$sql_insert .= "'".$menu_uuid."', ";
 						$sql_insert .= "'".$menu_item_uuid."', ";
 						$sql_insert .= "'".$menu_language."', ";
