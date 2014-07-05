@@ -230,6 +230,7 @@ else {
 				if ($_REQUEST["a"] != "delete" && strlen($menu_item_title) > 0 && permission_exists('menu_add')) {
 					$sql = "select count(*) as num_rows from v_menu_languages ";
 					$sql .= "where menu_item_uuid = '".$menu_item_uuid."' ";
+					$sql .= "and menu_language = '$menu_language' ";
 					$prep_statement = $db->prepare($sql);
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
