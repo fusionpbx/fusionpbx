@@ -27,7 +27,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists("notifications_edit")) {
+if (permission_exists("notification_edit")) {
 	//access granted
 }
 else {
@@ -103,7 +103,7 @@ else {
 				$_SESSION["message"] = $text['message-update'];
 			}
 
-			header("Location: notifications_edit.php");
+			header("Location: notification_edit.php");
 			return;
 		}
 
@@ -115,7 +115,7 @@ else {
 			($project_notification_method == 'text' && $project_notification_recipient == '')
 			)) {
 			$_SESSION["message"] = $text['message-invalid_recipient'];
-			header("Location: notifications_edit.php");
+			header("Location: notification_edit.php");
 			return;
 		}
 
@@ -210,7 +210,7 @@ else {
 
 			// redirect
 			$_SESSION["message"] = $text['message-update'];
-			header("Location: notifications_edit.php");
+			header("Location: notification_edit.php");
 			return;
 		}
 
@@ -268,7 +268,7 @@ $page["title"] = $text['title-notifications'];
 	echo "	<tr>\n";
 	echo "		<td align='left' nowrap='nowrap'><b>".$text['header-notifications']."</b><br><br></td>\n";
 	echo "		<td align='right'>";
-	if (permission_exists('notifications_edit')) {
+	if (permission_exists('notification_edit')) {
 		echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	}
 	echo "			<br><br>";
@@ -378,7 +378,7 @@ $page["title"] = $text['title-notifications'];
 	echo "		</td>\n";
 	echo "	</tr>\n";
 
-	if (permission_exists('notifications_edit')) {
+	if (permission_exists('notification_edit')) {
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align='right'>\n";
 		echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
