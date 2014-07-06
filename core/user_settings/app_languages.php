@@ -169,4 +169,14 @@
 	$text['label-dnd']['es-cl'] = "No Molestar";
 	$text['label-dnd']['pt-pt'] = "Não Perturbar";
 	$text['label-dnd']['fr-fr'] = "Ne Pas Déranger";
+
+	$text['login-message_attention']['en-us'] = "Attention!";
+	$text['login-message_attention']['es-cl'] = "¡Atención!";
+	$text['login-message_attention']['pt-pt'] = "Atenção!";
+	$text['login-message_attention']['fr-fr'] = "Attention!";
+
+	$text['login-message_dismiss']['en-us'] = "Dismiss";
+	$text['login-message_dismiss']['es-cl'] = "Despedir";
+	$text['login-message_dismiss']['pt-pt'] = "Demitir";
+	$text['login-message_dismiss']['fr-fr'] = "Rejeter";
 ?>

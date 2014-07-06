@@ -52,15 +52,25 @@
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//information
-	//echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
-	//echo "  <tr>\n";
-	//echo "	<td align='left'><b>Information</b><br>\n";
-	//echo "		The following links are for convenience access to the user account settings, and voicemail.<br />\n";
-	//echo "	</td>\n";
-	//echo "  </tr>\n";
-	//echo "</table>\n";
-	//echo "<br />\n";
+//disable login message
+	if ($_GET['msg'] == 'dismiss') {
+		unset($_SESSION['login']['message']['text']);
+
+		$sql = "update v_default_settings ";
+		$sql .= "set default_setting_enabled = 'false' ";
+		$sql .= "where ";
+		$sql .= "default_setting_category = 'login' ";
+		$sql .= "and default_setting_subcategory = 'message'";
+		$db->exec(check_sql($sql));
+		unset($sql);
+	}
+
+//display login message
+	if (if_group("superadmin") && $_SESSION['login']['message']['text'] != '') {
+		echo "<br />";
+		echo "<br />";
+		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
+	}
 
 //start the user table
 	echo "<br />";

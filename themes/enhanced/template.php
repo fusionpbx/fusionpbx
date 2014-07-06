@@ -757,6 +757,15 @@ legend {
 		}
 
 
+	DIV.login_message {
+		border: 1px solid #bae0ba;
+		background-color: #eeffee;
+		-webkit-border-radius: 3px 3px 3px 3px;
+		-moz-border-radius: 3px 3px 3px 3px;
+		border-radius: 3px 3px 3px 3px;
+		padding: 20px;
+		}
+
 </style>
 
 <script type="text/javascript">
