@@ -438,7 +438,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 										$db_field_type = db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name);
 										$field_type_array = explode("(", $field_type);
 										$field_type = $field_type_array[0];
-										if (trim($db_field_type) != trim($field_type)) {
+										if (trim($db_field_type) != trim($field_type) && strlen($db_field_type) > 0) {
 											if ($db_type == "pgsql") {
 												if (strtolower($field_type) == "uuid") {
 													$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE uuid USING\n";
