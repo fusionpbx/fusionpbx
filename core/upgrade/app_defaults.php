@@ -74,6 +74,48 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 					unset($sql);
 				}
 			}
+
+		//ensure the login message is set
+			$sql = "delete from v_default_settings ";
+			$sql .= "where default_setting_category = 'login' ";
+			$sql .= "and default_setting_subcategory = 'message' ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
+			$sql = "select count(*) as num_rows from v_default_settings ";
+			$sql .= "where default_setting_category = 'login' ";
+			$sql .= "and default_setting_subcategory = 'message' ";
+			$sql .= "and default_setting_name = 'text' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$sql = "insert into v_default_settings ";
+					$sql .= "(";
+					$sql .= "default_setting_uuid, ";
+					$sql .= "default_setting_category, ";
+					$sql .= "default_setting_subcategory, ";
+					$sql .= "default_setting_name, ";
+					$sql .= "default_setting_value, ";
+					$sql .= "default_setting_enabled, ";
+					$sql .= "default_setting_description ";
+					$sql .= ")";
+					$sql .= "values ";
+					$sql .= "(";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'login', ";
+					$sql .= "'message', ";
+					$sql .= "'text', ";
+					$sql .= "'".$text['login-message_text']."', ";
+					$sql .= "'true', ";
+					$sql .= "'' ";
+					$sql .= ")";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
+			}
+
 	}
 }
 
