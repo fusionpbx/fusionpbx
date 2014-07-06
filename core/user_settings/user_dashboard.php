@@ -60,7 +60,8 @@
 		$sql .= "set default_setting_enabled = 'false' ";
 		$sql .= "where ";
 		$sql .= "default_setting_category = 'login' ";
-		$sql .= "and default_setting_subcategory = 'message'";
+		$sql .= "and default_setting_subcategory = 'message' ";
+		$sql .= "and default_setting_name = 'text' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 	}
