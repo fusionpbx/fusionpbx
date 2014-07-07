@@ -204,11 +204,18 @@ select.formfld {
 	padding: 4px;
 	}
 
-.formfld_highlight {
+.formfld_highlight_bad {
 	border-color: #aa2525;
 	-webkit-box-shadow: 0px 0px 3px #aa2525 inset;
 	-moz-box-shadow: 0px 0px 3px #aa2525 inset;
 	box-shadow: 0px 0px 3px #aa2525 inset;
+	}
+
+.formfld_highlight_good {
+	border-color: #2fb22f;
+	-webkit-box-shadow: 0px 0px 3px #2fb22f inset;
+	-moz-box-shadow: 0px 0px 3px #2fb22f inset;
+	box-shadow: 0px 0px 3px #2fb22f inset;
 	}
 
 input.txt {
