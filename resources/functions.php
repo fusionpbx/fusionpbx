@@ -66,6 +66,20 @@
 		}
 	}
 
+	if (!function_exists('fix_postback')) {
+		function fix_postback($post_array) {
+			foreach ($post_array as $index => $value) {
+				if (is_array($value)) { fix_postback($value); }
+				else {
+					$value = str_replace('"', "&#34;", $value);
+					$value = str_replace("'", "&#39;", $value);
+					$post_array[$index] = $value;
+				}
+			}
+			return $post_array;
+		}
+	}
+
 	if (!function_exists('uuid')) {
 		function uuid() {
 			//uuid version 4

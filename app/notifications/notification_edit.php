@@ -114,6 +114,7 @@ else {
 			($project_notification_method == 'email' && $project_notification_recipient == '') ||
 			($project_notification_method == 'text' && $project_notification_recipient == '')
 			)) {
+			$_SESSION["form"] = $_POST;
 			$_SESSION["message"] = $text['message-invalid_recipient'];
 			header("Location: notification_edit.php");
 			return;
@@ -217,40 +218,50 @@ else {
 
 	}
 
-// check local project notification participation flag
-	$sql = "select project_notifications from v_notifications";
-	$prep_statement = $db->prepare($sql);
-	if ($prep_statement) {
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			$project_notifications = $row["project_notifications"];
-			break; // limit to 1 row
+// check post back session
+	if (!isset($_SESSION["form"])) {
+
+	// check local project notification participation flag
+		$sql = "select project_notifications from v_notifications";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$setting["project_notifications"] = $row["project_notifications"];
+				break; // limit to 1 row
+			}
 		}
+		unset($sql, $prep_statement);
+
+		// if participation enabled
+		if ($setting["project_notifications"] == 'true') {
+
+			// get current project notification preferences
+			$url = "https://".$software_url."/app/notifications/notifications_manage.php?id=".$software_uuid;
+			if (function_exists('curl_version')) {
+				$curl = curl_init();
+				curl_setopt($curl, CURLOPT_URL, $url);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+				$response = curl_exec($curl);
+				curl_close($curl);
+			}
+			else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
+				$response = file_get_contents($url);
+			}
+
+			// parse response
+			$setting = json_decode($response, true);
+			$setting["project_notifications"] = 'true';
+		}
+
 	}
-	unset($sql, $prep_statement);
+	else {
 
-	// if participation enabled
-	if ($project_notifications == 'true') {
-
-		// get current project notification preferences
-		$url = "https://".$software_url."/app/notifications/notifications_manage.php?id=".$software_uuid;
-		if (function_exists('curl_version')) {
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			$response = curl_exec($curl);
-			curl_close($curl);
-		}
-		else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
-			$response = file_get_contents($url);
-		}
-
-		// parse response
-		$setting = json_decode($response, true);
+		$setting = fix_postback($_SESSION["form"]);
+		unset($_SESSION["form"]);
 
 	}
-
 
 require_once "resources/header.php";
 $page["title"] = $text['title-notifications'];
@@ -286,10 +297,9 @@ $page["title"] = $text['title-notifications'];
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			<select name='project_notifications' class='formfld' style='width: auto;'>\n";
-	echo "				<option value='false' ".(($project_notifications == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
-	echo "				<option value='true' ".(($project_notifications == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select>\n";
-	echo "			<br />\n";
+	echo "				<option value='false' ".(($setting["project_notifications"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
+	echo "				<option value='true' ".(($setting["project_notifications"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
+	echo "			</select><br />\n";
 	echo 			$text['description-project_notifications']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -302,8 +312,7 @@ $page["title"] = $text['title-notifications'];
 	echo "			<select name='project_security' class='formfld' style='width: auto;'>\n";
 	echo "				<option value='false' ".(($setting["project_security"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
 	echo "				<option value='true' ".(($setting["project_security"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select>\n";
-	echo "			<br />\n";
+	echo "			</select><br />\n";
 	echo 			$text['description-project_security']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -316,8 +325,7 @@ $page["title"] = $text['title-notifications'];
 	echo "			<select name='project_releases' class='formfld' style='width: auto;'>\n";
 	echo "				<option value='false' ".(($setting["project_releases"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
 	echo "				<option value='true' ".(($setting["project_releases"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select>\n";
-	echo "			<br />\n";
+	echo "			</select><br />\n";
 	echo 			$text['description-project_releases']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -330,8 +338,7 @@ $page["title"] = $text['title-notifications'];
 	echo "			<select name='project_events' class='formfld' style='width: auto;'>\n";
 	echo "				<option value='false' ".(($setting["project_events"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
 	echo "				<option value='true' ".(($setting["project_events"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select>\n";
-	echo "			<br />\n";
+	echo "			</select><br />\n";
 	echo 			$text['description-project_events']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -344,8 +351,7 @@ $page["title"] = $text['title-notifications'];
 	echo "			<select name='project_news' class='formfld' style='width: auto;'>\n";
 	echo "				<option value='false' ".(($setting["project_news"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
 	echo "				<option value='true' ".(($setting["project_news"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select>\n";
-	echo "			<br />\n";
+	echo "			</select><br />\n";
 	echo 			$text['description-project_news']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -360,8 +366,7 @@ $page["title"] = $text['title-notifications'];
 	//echo "				<option value='ticker' ".(($setting["project_notification_method"] == 'ticker') ? "selected='selected'" : null).">".$text['option-ticker']."</option>\n";
 	echo "				<option value='email' ".(($setting["project_notification_method"] == 'email') ? "selected='selected'" : null).">".$text['option-email']."</option>\n";
 	//echo "				<option value='text' ".(($setting["project_notification_method"] == 'text') ? "selected='selected'" : null).">".$text['option-text']."</option>\n";
-	echo "			</select>\n";
-	echo "			<br />\n";
+	echo "			</select><br />\n";
 	echo 			$text['description-project_notification_method']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -372,8 +377,7 @@ $page["title"] = $text['title-notifications'];
 	echo 			$text['label-project_notification_recipient']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
-	echo "			<input class='formfld' type='text' name='project_notification_recipient' maxlength='50' value='".$setting["project_notification_recipient"]."'>\n";
-	echo "			<br />\n";
+	echo "			<input class='formfld' type='text' name='project_notification_recipient' maxlength='50' value='".$setting["project_notification_recipient"]."'><br />\n";
 	echo 			$text['description-project_notification_recipient']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
