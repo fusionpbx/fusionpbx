@@ -235,8 +235,8 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq' width='40%'>".$text['label-username'].":</td>";
-	echo "		<td class='vtable' width='60%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
+	echo "		<td class='vncellreq' width='30%'>".$text['label-username'].":</td>";
+	echo "		<td class='vtable' width='70%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
