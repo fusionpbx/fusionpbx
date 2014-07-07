@@ -120,6 +120,11 @@
 	$text['message-failed']['pt-pt'] = "Falha na atualização - Contato com o suporte";
 	$text['message-failed']['fr-fr'] = "Mise à jour a échoué - Contacter le support technique";
 
+	$text['message-no_channels']['en-us'] = "No Channels Enabled";
+	$text['message-no_channels']['es-cl'] = "No hay canales habilitados";
+	$text['message-no_channels']['pt-pt'] = "Não há canais habilitados";
+	$text['message-no_channels']['fr-fr'] = "Pas de canaux activés";
+
 	$text['message-invalid_recipient']['en-us'] = "Invalid Notification Recipient";
 	$text['message-invalid_recipient']['es-cl'] = "Inválido destinatario de la notificación";
 	$text['message-invalid_recipient']['pt-pt'] = "Inválido Notificação Destinatário";
