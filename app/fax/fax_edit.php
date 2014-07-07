@@ -32,6 +32,7 @@ if (permission_exists('fax_extension_add') || permission_exists('fax_extension_e
 else {
 	echo "access denied";
 	exit;
+}
 
 //add multi-lingual support
 	require_once "app_languages.php";
