@@ -134,9 +134,9 @@
 	$text['description-phone']['fr-fr'] = "Optionnel, Insérer une liste de numéros de téléphone, un par ligne, dans le format suivant ; 0123456789 | Nom, Prénom";
 
 	$text['label-avmd']['en-us'] = "Voicemail Detection";
-	$text['label-avmd']['es-cl'] = "";
-	$text['label-avmd']['pt-pt'] = "";
-	$text['label-avmd']['fr-fr'] = "";
+	$text['label-avmd']['es-cl'] = "Detección de correo de voz";
+	$text['label-avmd']['pt-pt'] = "Voicemail Detecção";
+	$text['label-avmd']['fr-fr'] = "Détection de la messagerie vocale";
 
 	$text['option-true']['en-us'] = "True";
 	$text['option-true']['es-cl'] = "Verdadero";
@@ -149,9 +149,9 @@
 	$text['option-false']['fr-fr'] = "Non";
 
 	$text['description-avmd']['en-us'] = "Select whether to enable or disable the detection of voicemail messaging and answering machine systems.";
-	$text['description-avmd']['es-cl'] = "";
-	$text['description-avmd']['pt-pt'] = "";
-	$text['description-avmd']['fr-fr'] = "";
+	$text['description-avmd']['es-cl'] = "Seleccione si desea activar o desactivar la detección de sistemas de contestador automático de mensajes de correo de voz y.";
+	$text['description-avmd']['pt-pt'] = "Selecione se deseja ativar ou desativar a detecção de mensagens de correio de voz e sistemas de secretária eletrônica.";
+	$text['description-avmd']['fr-fr'] = "Indiquez si vous souhaitez activer ou désactiver la détection de la messagerie vocale et les systèmes de machines de répondeur.";
 
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";
