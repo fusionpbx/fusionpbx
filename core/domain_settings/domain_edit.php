@@ -107,10 +107,53 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 
 			if ($action == "update" && permission_exists('domain_edit')) {
+				// get current domain name
+				$sql = "select domain_name from v_domains ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$current_domain_name = $row["domain_name"];
+					break;
+				}
+				unset($sql, $prep_statement);
+
+				// update domain name, description
 				$sql = "update v_domains set ";
-				$sql .= "domain_name = '$domain_name', ";
-				$sql .= "domain_description = '$domain_description' ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
+				$sql .= "domain_name = '".$domain_name."', ";
+				$sql .= "domain_description = '".$domain_description."' ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				// update dialplans
+				$sql = "update v_dialplans set ";
+				$sql .= "dialplan_context = '".$domain_name."' ";
+				$sql .= "where dialplan_context = '".$current_domain_name."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				// update extensions (accountcode, user_context, dial_domain)
+				$sql = "update v_extensions set ";
+				$sql .= "accountcode = '".$domain_name."' ";
+				$sql .= "where accountcode = '".$current_domain_name."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				$sql = "update v_extensions set ";
+				$sql .= "user_context = '".$domain_name."' ";
+				$sql .= "where user_context = '".$current_domain_name."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				$sql = "update v_extensions set ";
+				$sql .= "dial_domain = '".$domain_name."' ";
+				$sql .= "where dial_domain = '".$current_domain_name."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
