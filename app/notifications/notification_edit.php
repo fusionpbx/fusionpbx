@@ -56,7 +56,6 @@ else {
 	}
 	unset($sql, $prep_statement);
 
-// process submitted values
 	if (count($_POST) > 0) {
 
 		// retrieve submitted values
@@ -68,56 +67,63 @@ else {
 		$project_notification_method = check_str($_POST["project_notification_method"]);
 		$project_notification_recipient = check_str($_POST["project_notification_recipient"]);
 
+		// get local project notification participation flag
+		$sql = "select project_notifications from v_notifications";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$current_project_notifications = $row["project_notifications"];
+				break; // limit to 1 row
+			}
+		}
+		unset($sql, $prep_statement);
+
 		// check if remote record should be removed
-		if ( $project_notifications == 'false' || (
-				$project_security == 'false' &&
-				$project_releases == 'false' &&
-				$project_events == 'false' &&
-				$project_news == 'false'
-				)
-			) {
+		if ($project_notifications == 'false') {
 
-			// remove remote server record
-			$url = "https://".$software_url."/app/notifications/notifications_manage.php?id=".$software_uuid."&action=delete";
-			if (function_exists('curl_version')) {
-				$curl = curl_init();
-				curl_setopt($curl, CURLOPT_URL, $url);
-				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-				$response = curl_exec($curl);
-				curl_close($curl);
+			if ($current_project_notifications == 'true') {
+				// remove remote server record
+				$url = "https://".$software_url."/app/notifications/notifications_manage.php?id=".$software_uuid."&action=delete";
+				if (function_exists('curl_version')) {
+					$curl = curl_init();
+					curl_setopt($curl, CURLOPT_URL, $url);
+					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+					$response = curl_exec($curl);
+					curl_close($curl);
+				}
+				else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
+					$response = file_get_contents($url);
+				}
+
+				// parse response
+				$response = json_decode($response, true);
+
+				if ($response['result'] == 'deleted') {
+					// set local project notification participation flag to false
+					$sql = "update v_notifications set project_notifications = 'false'";
+					$db->exec(check_sql($sql));
+					unset($sql);
+				}
 			}
-			else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
-				$response = file_get_contents($url);
-			}
-
-			// parse response
-			$response = json_decode($response, true);
-
-			if ($response['result'] == 'deleted') {
-				// set local project notification participation flag to false
-				$sql = "update v_notifications set project_notifications = 'false'";
-				$db->exec(check_sql($sql));
-				unset($sql);
-
-				// redirect
-				$_SESSION["message"] = $text['message-update'];
-			}
-
+			// redirect
+			$_SESSION["message"] = $text['message-update'];
 			header("Location: notification_edit.php");
-			return;
+			exit;
 		}
 
-		// check for invalid recipient
-		if (
-			$project_notifications == 'true' &&
-			(($project_notification_method == 'email' && !valid_email($project_notification_recipient)) ||
-			($project_notification_method == 'email' && $project_notification_recipient == '') ||
-			($project_notification_method == 'text' && $project_notification_recipient == '')
-			)) {
-			$_SESSION["form"] = $_POST;
-			$_SESSION["message"] = $text['message-invalid_recipient'];
-			header("Location: notification_edit.php");
-			return;
+		// check for invalid values
+		if ($project_notifications == 'true') {
+			if (
+				($project_notification_method == 'email' && !valid_email($project_notification_recipient)) ||
+				($project_notification_method == 'email' && $project_notification_recipient == '')
+				) {
+					$_SESSION["postback"] = $_POST;
+					$_SESSION["message"] = $text['message-invalid_recipient'];
+					header("Location: notification_edit.php");
+					exit;
+			}
 		}
 
 		// collect demographic information **********************************************
@@ -187,8 +193,7 @@ else {
 		$url .= "&os_platform=".urlencode($os_platform);
 		$url .= "&os_info_1=".urlencode($os_info_1);
 		$url .= "&os_info_2=".urlencode($os_info_2);
-//		echo $url."<br><br>";
-//		exit;
+
 		if (function_exists('curl_version')) {
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_URL, $url);
@@ -208,20 +213,27 @@ else {
 			$sql = "update v_notifications set project_notifications = 'true'";
 			$db->exec(check_sql($sql));
 			unset($sql);
-
-			// redirect
+			// set message
 			$_SESSION["message"] = $text['message-update'];
+			if (
+				$project_security == 'false' &&
+				$project_releases == 'false' &&
+				$project_events == 'false' &&
+				$project_news == 'false'
+				) {
+				$_SESSION["message"] = $_SESSION["message"]." - ".$text['message-no_channels'];
+			}
+			// redirect
 			header("Location: notification_edit.php");
-			return;
+			exit;
 		}
-
 
 	}
 
-// check post back session
-	if (!isset($_SESSION["form"])) {
+// check postback session
+	if (!isset($_SESSION["postback"])) {
 
-	// check local project notification participation flag
+		// check local project notification participation flag
 		$sql = "select project_notifications from v_notifications";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -258,8 +270,9 @@ else {
 	}
 	else {
 
-		$setting = fix_postback($_SESSION["form"]);
-		unset($_SESSION["form"]);
+		// load postback variables
+		$setting = fix_postback($_SESSION["postback"]);
+		unset($_SESSION["postback"]);
 
 	}
 
@@ -292,11 +305,11 @@ $page["title"] = $text['title-notifications'];
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "		<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo 			$text['label-project_notifications']."\n";
 	echo "		</td>\n";
-	echo "		<td class='vtable' align='left'>\n";
-	echo "			<select name='project_notifications' class='formfld' style='width: auto;'>\n";
+	echo "		<td width='70%' class='vtable' align='left'>\n";
+	echo "			<select name='project_notifications' class='formfld' style='width: auto;' onchange=\"$('#notification_channels').slideToggle();\">\n";
 	echo "				<option value='false' ".(($setting["project_notifications"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
 	echo "				<option value='true' ".(($setting["project_notifications"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
 	echo "			</select><br />\n";
@@ -304,74 +317,79 @@ $page["title"] = $text['title-notifications'];
 	echo "		</td>\n";
 	echo "	</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo 			$text['label-project_security']."\n";
-	echo "		</td>\n";
-	echo "		<td class='vtable' align='left'>\n";
-	echo "			<select name='project_security' class='formfld' style='width: auto;'>\n";
-	echo "				<option value='false' ".(($setting["project_security"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
-	echo "				<option value='true' ".(($setting["project_security"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select><br />\n";
-	echo 			$text['description-project_security']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
+	echo "</table>\n";
 
-	echo "	<tr>\n";
-	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo 			$text['label-project_releases']."\n";
-	echo "		</td>\n";
-	echo "		<td class='vtable' align='left'>\n";
-	echo "			<select name='project_releases' class='formfld' style='width: auto;'>\n";
-	echo "				<option value='false' ".(($setting["project_releases"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
-	echo "				<option value='true' ".(($setting["project_releases"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select><br />\n";
-	echo 			$text['description-project_releases']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
+	echo "<div id='notification_channels' ".(($setting["project_notifications"] != 'true') ? "style='display: none;'" : null).">\n";
+		echo "<table cellpadding='6' cellspacing='0' width='100%' border='0'>\n";
 
+		echo "	<tr>\n";
+		echo "		<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+		echo 			$text['label-project_security']."\n";
+		echo "		</td>\n";
+		echo "		<td width='70%' class='vtable' align='left'>\n";
+		echo "			<select name='project_security' class='formfld' style='width: auto;'>\n";
+		echo "				<option value='false' ".(($setting["project_security"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
+		echo "				<option value='true' ".(($setting["project_security"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
+		echo "			</select><br />\n";
+		echo 			$text['description-project_security']."\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+
+		echo "	<tr>\n";
+		echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo 			$text['label-project_releases']."\n";
+		echo "		</td>\n";
+		echo "		<td class='vtable' align='left'>\n";
+		echo "			<select name='project_releases' class='formfld' style='width: auto;'>\n";
+		echo "				<option value='false' ".(($setting["project_releases"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
+		echo "				<option value='true' ".(($setting["project_releases"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
+		echo "			</select><br />\n";
+		echo 			$text['description-project_releases']."\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+
+		echo "	<tr>\n";
+		echo "		<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+		echo 			$text['label-project_events']."\n";
+		echo "		</td>\n";
+		echo "		<td width='70%' class='vtable' align='left'>\n";
+		echo "			<select name='project_events' class='formfld' style='width: auto;'>\n";
+		echo "				<option value='false' ".(($setting["project_events"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
+		echo "				<option value='true' ".(($setting["project_events"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
+		echo "			</select><br />\n";
+		echo 			$text['description-project_events']."\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+
+		echo "	<tr>\n";
+		echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo 			$text['label-project_news']."\n";
+		echo "		</td>\n";
+		echo "		<td class='vtable' align='left'>\n";
+		echo "			<select name='project_news' class='formfld' style='width: auto;'>\n";
+		echo "				<option value='false' ".(($setting["project_news"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
+		echo "				<option value='true' ".(($setting["project_news"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
+		echo "			</select><br />\n";
+		echo 			$text['description-project_news']."\n";
+		echo "		</td>\n";
+		echo "	</tr>\n";
+
+		echo "</table>\n";
+	echo "</div>\n";
+
+	echo "<table cellpadding='6' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
-	echo 			$text['label-project_events']."\n";
-	echo "		</td>\n";
-	echo "		<td width='70%' class='vtable' align='left'>\n";
-	echo "			<select name='project_events' class='formfld' style='width: auto;'>\n";
-	echo "				<option value='false' ".(($setting["project_events"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
-	echo "				<option value='true' ".(($setting["project_events"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select><br />\n";
-	echo 			$text['description-project_events']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-
-	echo "	<tr>\n";
-	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo 			$text['label-project_news']."\n";
-	echo "		</td>\n";
-	echo "		<td class='vtable' align='left'>\n";
-	echo "			<select name='project_news' class='formfld' style='width: auto;'>\n";
-	echo "				<option value='false' ".(($setting["project_news"] == 'false') ? "selected='selected'" : null).">".$text['option-disabled']."</option>\n";
-	echo "				<option value='true' ".(($setting["project_news"] == 'true') ? "selected='selected'" : null).">".$text['option-enabled']."</option>\n";
-	echo "			</select><br />\n";
-	echo 			$text['description-project_news']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-
-	echo "	<tr>\n";
-	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo 			$text['label-project_notification_method']."\n";
 	echo "		</td>\n";
-	echo "		<td class='vtable' align='left'>\n";
-	//echo "			<select name='project_notification_method' class='formfld' style='width: auto;' onchange=\"(this.selectedIndex != 0) ? document.getElementById('tr_project_notification_recipient').style.display='' : document.getElementById('tr_project_notification_recipient').style.display='none';\">\n";
+	echo "		<td width='70%' class='vtable' align='left'>\n";
 	echo "			<select name='project_notification_method' class='formfld' style='width: auto;'>\n";
-	//echo "				<option value='ticker' ".(($setting["project_notification_method"] == 'ticker') ? "selected='selected'" : null).">".$text['option-ticker']."</option>\n";
 	echo "				<option value='email' ".(($setting["project_notification_method"] == 'email') ? "selected='selected'" : null).">".$text['option-email']."</option>\n";
-	//echo "				<option value='text' ".(($setting["project_notification_method"] == 'text') ? "selected='selected'" : null).">".$text['option-text']."</option>\n";
 	echo "			</select><br />\n";
 	echo 			$text['description-project_notification_method']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 
-	//echo "	<tr id='tr_project_notification_recipient' ".(($project_notification_method != 'ticker') ? "style='display: none;'" : null).">\n";
 	echo "	<tr>\n";
 	echo "		<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo 			$text['label-project_notification_recipient']."\n";
