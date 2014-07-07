@@ -376,13 +376,29 @@ else {
 
 	echo "<script>";
 	echo "	function compare_passwords() {";
-	echo "		if (document.getElementById('password').value != document.getElementById('confirmpassword').value) {";
-	echo "			$('#password').addClass('formfld_highlight');";
-	echo "			$('#confirmpassword').addClass('formfld_highlight');";
+	echo "		if (document.getElementById('password') === document.activeElement || document.getElementById('confirmpassword') === document.activeElement) {";
+	echo "			if (document.getElementById('password').value != '' || document.getElementById('confirmpassword').value != '') {";
+	echo "				if (document.getElementById('password').value != document.getElementById('confirmpassword').value) {";
+	echo "					$('#password').removeClass('formfld_highlight_good');";
+	echo "					$('#confirmpassword').removeClass('formfld_highlight_good');";
+	echo "					$('#password').addClass('formfld_highlight_bad');";
+	echo "					$('#confirmpassword').addClass('formfld_highlight_bad');";
+	echo "				}";
+	echo "				else {";
+	echo "					$('#password').removeClass('formfld_highlight_bad');";
+	echo "					$('#confirmpassword').removeClass('formfld_highlight_bad');";
+	echo "					$('#password').addClass('formfld_highlight_good');";
+	echo "					$('#confirmpassword').addClass('formfld_highlight_good');";
+	echo "				}";
+	echo "			}";
 	echo "		}";
 	echo "		else {";
-	echo "			$('#password').removeClass('formfld_highlight');";
-	echo "			$('#confirmpassword').removeClass('formfld_highlight');";
+	echo "			if (document.getElementById('password').value == document.getElementById('confirmpassword').value) {";
+	echo "				$('#password').removeClass('formfld_highlight_bad');";
+	echo "				$('#confirmpassword').removeClass('formfld_highlight_bad');";
+	echo "				$('#password').removeClass('formfld_highlight_good');";
+	echo "				$('#confirmpassword').removeClass('formfld_highlight_good');";
+	echo "			}";
 	echo "		}";
 	echo "	}";
 	echo "</script>";
@@ -429,11 +445,11 @@ else {
 
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-password'].":</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-confirm_password'].":</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' id='confirmpassword' value='' onblur='compare_passwords();'></td>";
+	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' id='confirmpassword' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
