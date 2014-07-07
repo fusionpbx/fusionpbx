@@ -133,6 +133,26 @@
 	$text['description-phone']['pt-pt'] = "Opcional, definir uma lista de números de telefone, um por linha, no seguinte formato: 210000000 | Apelido, Primeiro Nome";
 	$text['description-phone']['fr-fr'] = "Optionnel, Insérer une liste de numéros de téléphone, un par ligne, dans le format suivant ; 0123456789 | Nom, Prénom";
 
+	$text['label-avmd']['en-us'] = "Voicemail Detection";
+	$text['label-avmd']['es-cl'] = "";
+	$text['label-avmd']['pt-pt'] = "";
+	$text['label-avmd']['fr-fr'] = "";
+
+	$text['option-true']['en-us'] = "True";
+	$text['option-true']['es-cl'] = "Verdadero";
+	$text['option-true']['pt-pt'] = "Sim";
+	$text['option-true']['fr-fr'] = "Oui";
+
+	$text['option-false']['en-us'] = "False";
+	$text['option-false']['es-cl'] = "Falso";
+	$text['option-false']['pt-pt'] = "Não";
+	$text['option-false']['fr-fr'] = "Non";
+
+	$text['description-avmd']['en-us'] = "Select whether to enable or disable the detection of voicemail messaging and answering machine systems.";
+	$text['description-avmd']['es-cl'] = "";
+	$text['description-avmd']['pt-pt'] = "";
+	$text['description-avmd']['fr-fr'] = "";
+
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";
 	$text['label-description']['pt-pt'] = "Descrição";

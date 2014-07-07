@@ -35,7 +35,7 @@
 		$apps[$x]['menu'][0]['groups'][] = "admin";
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 		$apps[$x]['menu'][0]['path'] = "/app/call_broadcast/call_broadcast.php";
-	
+
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "call_broadcast_view";
 		$apps[$x]['permissions'][0]['menu']['uuid'] = "50153bbf-78c5-b49e-7bd9-4b3e4b1134e6";
@@ -133,6 +133,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_phone_numbers";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_avmd";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
