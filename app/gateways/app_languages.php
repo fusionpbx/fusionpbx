@@ -377,11 +377,6 @@
 	$text['button-advanced']['pt-pt'] = "Avançadas";
 	$text['button-advanced']['fr-fr'] = "Afficher les Paramètres Avancés";
 
-	$text['button-advanced-show']['en-us'] = "Show Advanced";
-	$text['button-advanced-show']['es-cl'] = "Mostrar Avanzado";
-	$text['button-advanced-show']['pt-pt'] = "Mostrar Avançadas";
-	$text['button-advanced-show']['fr-fr'] = "Paramètres Avancés";
-
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";

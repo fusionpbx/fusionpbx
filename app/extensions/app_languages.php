@@ -377,11 +377,6 @@
 	$text['description-user_context']['pt-pt'] = "Introduza o contexto do utilizador aqui.";
 	$text['description-user_context']['fr-fr'] = "Insérer le contexte utilisateur. Surpasse le contexte du domaine. ";
 
-	$text['label-show_advanced']['en-us'] = "Show Advanced";
-	$text['label-show_advanced']['es-cl'] = "Mostrar Avanzados";
-	$text['label-show_advanced']['pt-pt'] = "Mostrar Opções Avançadas";
-	$text['label-show_advanced']['fr-fr'] = "Paramètres Avancés";
-
 	$text['button-advanced']['en-us'] = "Advanced";
 	$text['button-advanced']['es-cl'] = "Avanzado";
 	$text['button-advanced']['pt-pt'] = "Avançadas";

@@ -366,15 +366,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "}\n";
 	echo "\n";
 	echo "function show_advanced_config() {\n";
-	echo "	document.getElementById(\"show_advanced_box\").innerHTML='';\n";
-	echo "	aodiv = document.getElementById('show_advanced');\n";
-	echo "	aodiv.style.display = \"block\";\n";
-	echo "}\n";
-	echo "\n";
-	echo "function hide_advanced_config() {\n";
-	echo "	document.getElementById(\"show_advanced_box\").innerHTML='';\n";
-	echo "	aodiv = document.getElementById('show_advanced');\n";
-	echo "	aodiv.style.display = \"block\";\n";
+	echo "	$('#show_advanced_box').slideToggle();\n";
+	echo "	$('#show_advanced').slideToggle();\n";
 	echo "}\n";
 	echo "</script>";
 
@@ -834,7 +827,7 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	<div id=\"show_advanced_box\">\n";
 		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
 		echo "		<tr>\n";
-		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">".$text['label-advanced']."</td>\n";
+		echo "		<td width=\"30%\" valign=\"top\" class=\"vncell\">&nbsp;</td>\n";
 		echo "		<td width=\"70%\" class=\"vtable\">\n";
 		echo "			<input type=\"button\" class='btn' onClick=\"show_advanced_config()\" value=\"".$text['button-advanced']."\"></input></a>\n";
 		echo "		</td>\n";
