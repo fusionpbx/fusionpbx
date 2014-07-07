@@ -204,6 +204,13 @@ select.formfld {
 	padding: 4px;
 	}
 
+.formfld_highlight {
+	border-color: #aa2525;
+	-webkit-box-shadow: 0px 0px 3px #aa2525 inset;
+	-moz-box-shadow: 0px 0px 3px #aa2525 inset;
+	box-shadow: 0px 0px 3px #aa2525 inset;
+	}
+
 input.txt {
 	width: 98.75%;
 	}

@@ -373,6 +373,20 @@ else {
 
 //show the content
 	$table_width ='width="100%"';
+
+	echo "<script>";
+	echo "	function compare_passwords() {";
+	echo "		if (document.getElementById('password').value != document.getElementById('confirmpassword').value) {";
+	echo "			$('#password').addClass('formfld_highlight');";
+	echo "			$('#confirmpassword').addClass('formfld_highlight');";
+	echo "		}";
+	echo "		else {";
+	echo "			$('#password').removeClass('formfld_highlight');";
+	echo "			$('#confirmpassword').removeClass('formfld_highlight');";
+	echo "		}";
+	echo "	}";
+	echo "</script>";
+
 	echo "<form method='post' action=''>";
 
 	echo "<div align='center'>";
@@ -415,11 +429,11 @@ else {
 
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-password'].":</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
+	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncell'>".$text['label-confirm_password'].":</td>";
-	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' value=\"\"></td>";
+	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' id='confirmpassword' value='' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
