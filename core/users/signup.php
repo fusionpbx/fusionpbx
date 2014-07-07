@@ -201,6 +201,19 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	$page["title"] = $text['title-user_add'];
 
 //show the content
+	echo "<script>";
+	echo "	function compare_passwords() {";
+	echo "		if (document.getElementById('password').value != document.getElementById('confirmpassword').value) {";
+	echo "			$('#password').addClass('formfld_highlight');";
+	echo "			$('#confirmpassword').addClass('formfld_highlight');";
+	echo "		}";
+	echo "		else {";
+	echo "			$('#password').removeClass('formfld_highlight');";
+	echo "			$('#confirmpassword').removeClass('formfld_highlight');";
+	echo "		}";
+	echo "	}";
+	echo "</script>";
+
 	echo "<div align='center'>";
 
 	$tablewidth ='width="100%"';
@@ -228,11 +241,11 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-password'].":</td>";
-	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='password' value='$password'></td>";
+	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='password' id='password' value='$password' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-confirm_password'].":</td>";
-	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='confirmpassword' value='$confirmpassword'></td>";
+	echo "		<td class='vtable'><input type='password' class='formfld' autocomplete='off' name='confirmpassword' id='confirmpassword' value='$confirmpassword' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq'>".$text['label-email'].":</td>";
