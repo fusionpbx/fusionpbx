@@ -169,10 +169,6 @@
 	$text['description-week-of-month']['fr-fr'] = "Choisir le numéro de la semaine dans le mois";
 
 //begin: show_advanced
-	$text['label-show-advanced']['en-us'] = "Show Advanced";
-	$text['label-show-advanced']['es-cl'] = "Ver Avanzadas";
-	$text['label-show-advanced']['pt-pt'] = "Opções Avançadas";
-	$text['label-show-advanced']['fr-fr'] = "Paramètres avancés";
 
 	$text['button-advanced']['en-us'] = "Advanced";
 	$text['button-advanced']['es-cl'] = "Avanzadas";

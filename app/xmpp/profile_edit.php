@@ -7,15 +7,8 @@ function enable_change(enable_over) {
 }
 
 function show_advanced_config() {
-  document.getElementById("show_advanced_box").innerHTML='';
-  aodiv = document.getElementById('show_advanced');
-  aodiv.style.display = "block";
-}
-
-function hide_advanced_config() {
-  document.getElementById("show_advanced_box").innerHTML='';
-  aodiv = document.getElementById('show_advanced');
-  aodiv.style.display = "block";
+	$('#show_advanced_box').slideToggle();
+	$('#show_advanced').slideToggle();
 }
 </script>
 
@@ -132,7 +125,7 @@ function hide_advanced_config() {
 		<div id="show_advanced_box">
 			<table width="100%" border="0" cellpadding="6" cellspacing="0">
 				<tr>
-					<td width="30%" valign="top" class="vncell"><?php echo $text['label-advanced']?></td>
+					<td width="30%" valign="top" class="vncell">&nbsp;</td>
 					<td width="70%" class="vtable">
 						<input type="button" class="btn" onClick="show_advanced_config()" value="<?php echo $text['button-advanced']?>"></input>
 					</td>
@@ -146,7 +139,7 @@ function hide_advanced_config() {
 					<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>
 						<?php echo $text['label-context']?>:
 					</td>
-					<td class='vtable' align='left'>
+					<td width='70%' class='vtable' align='left'>
 						<input class='formfld' type='text' name='context' maxlength='255' value="<?php echo $profile['context'];?>">
 						<br />
 						<?php echo $text['description-context']?>

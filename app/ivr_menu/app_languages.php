@@ -173,11 +173,6 @@
 	$text['label-description']['pt-pt'] = "Descrição";
 	$text['label-description']['fr-fr'] = "Description";
 
-	$text['label-advanced']['en-us'] = "Show Advanced";
-	$text['label-advanced']['es-cl'] = "Mostrar Avanzados";
-	$text['label-advanced']['pt-pt'] = "Opções Avançadas";
-	$text['label-advanced']['fr-fr'] = "Paramètres Avancés";
-
 	$text['label-option']['en-us'] = "Option";
 	$text['label-option']['es-cl'] = "Opción";
 	$text['label-option']['pt-pt'] = "Opção";
