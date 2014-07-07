@@ -337,19 +337,29 @@ else {
 		//copy the .tif to the sent directory
 			exec("cp ".$dir_fax_temp.'/'.$fax_name.".tif ".$dir_fax_sent.'/'.$fax_name.".tif");
 
+
+		//copy the .pdf to the sent directory
+			if (file_exists($dir_fax_temp.'/'.$fax_name.".pdf")) {
+				exec("cp ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_sent.'/'.$fax_name.".pdf");	
+			}
+
 		//convert the tif to pdf
-			chdir($dir_fax_sent);
-			exec("gs -q -sDEVICE=tiffg3 -g1728x1078 -dNOPAUSE -sOutputFile=".$fax_name.".pdf -- ".$fax_name.".tif -c quit");
+			if (!file_exists($dir_fax_sent.'/'.$fax_name.".pdf")) {
+				if (is_file("/usr/local/bin/gs")) {
+					chdir($dir_fax_sent);
+					exec("gs -q -sDEVICE=tiffg3 -g1728x1078 -dNOPAUSE -sOutputFile=".$fax_name.".pdf -- ".$fax_name.".tif -c quit");
+				}
+			}
 
 		//delete the .tif from the temp directory
 			//exec("rm ".$dir_fax_temp.'/'.$fax_name.".tif");
 
 		//convert the tif to pdf and png
-			chdir($dir_fax_sent);
-			//which tiff2pdf
-			if (is_file("/usr/local/bin/tiff2png")) {
-				exec($_SESSION['switch']['bin']['dir']."/tiff2png ".$dir_fax_sent.$fax_name.".tif");
-				exec($_SESSION['switch']['bin']['dir']."/tiff2pdf -f -o ".$fax_name.".pdf ".$dir_fax_sent.$fax_name.".tif");
+			if (!file_exists($dir_fax_sent.'/'.$fax_name.".pdf")) {
+				if (is_file("/usr/local/bin/tiff2png")) {
+					chdir($dir_fax_sent);
+					exec($_SESSION['switch']['bin']['dir']."/tiff2pdf -f -o ".$fax_name.".pdf ".$dir_fax_sent.$fax_name.".tif");
+				}
 			}
 
 		//redirect the browser
