@@ -114,7 +114,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach ($result as &$row) {
-					$current_domain_name = $row["domain_name"];
+					$original_domain_name = $row["domain_name"];
 					break;
 				}
 				unset($sql, $prep_statement);
@@ -130,7 +130,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				// update dialplans
 				$sql = "update v_dialplans set ";
 				$sql .= "dialplan_context = '".$domain_name."' ";
-				$sql .= "where dialplan_context = '".$current_domain_name."' ";
+				$sql .= "where dialplan_context = '".$original_domain_name."' ";
 				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -138,21 +138,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				// update extensions (accountcode, user_context, dial_domain)
 				$sql = "update v_extensions set ";
 				$sql .= "accountcode = '".$domain_name."' ";
-				$sql .= "where accountcode = '".$current_domain_name."' ";
+				$sql .= "where accountcode = '".$original_domain_name."' ";
 				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
 				$sql = "update v_extensions set ";
 				$sql .= "user_context = '".$domain_name."' ";
-				$sql .= "where user_context = '".$current_domain_name."' ";
+				$sql .= "where user_context = '".$original_domain_name."' ";
 				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
 				$sql = "update v_extensions set ";
 				$sql .= "dial_domain = '".$domain_name."' ";
-				$sql .= "where dial_domain = '".$current_domain_name."' ";
+				$sql .= "where dial_domain = '".$original_domain_name."' ";
 				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -160,17 +160,65 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				// update cdr records (domain_name, context)
 				$sql = "update v_xml_cdr set ";
 				$sql .= "domain_name = '".$domain_name."' ";
-				$sql .= "where domain_name = '".$current_domain_name."' ";
+				$sql .= "where domain_name = '".$original_domain_name."' ";
 				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
 
 				$sql = "update v_xml_cdr set ";
 				$sql .= "context = '".$domain_name."' ";
-				$sql .= "where context = '".$current_domain_name."' ";
+				$sql .= "where context = '".$original_domain_name."' ";
 				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
+
+				// rename switch/storage/voicemail/default/[domain] (folder)
+				if ( isset($_SESSION['switch']['voicemail']['dir']) && file_exists($_SESSION['switch']['voicemail']['dir']."/default/".$original_domain_name) ) {
+					@rename($_SESSION['switch']['voicemail']['dir']."/default/".$original_domain_name, $_SESSION['switch']['voicemail']['dir']."/default/".$domain_name); // folder
+				}
+
+				// rename switch/storage/fax/[domain] (folder)
+				if ( isset($_SESSION['switch']['storage']['dir']) && file_exists($_SESSION['switch']['storage']['dir']."/fax/".$original_domain_name) ) {
+					@rename($_SESSION['switch']['storage']['dir']."/fax/".$original_domain_name, $_SESSION['switch']['storage']['dir']."/fax/".$domain_name); // folder
+				}
+
+				// rename switch/conf/dialplan/[domain] (folder/file)
+				if ( isset($_SESSION['switch']['dialplan']['dir']) ) {
+					if ( file_exists($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name) ) {
+						@rename($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name, $_SESSION['switch']['dialplan']['dir']."/".$domain_name); // folder
+					}
+					if ( file_exists($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name.".xml") ) {
+						@rename($_SESSION['switch']['dialplan']['dir']."/".$original_domain_name.".xml", $_SESSION['switch']['dialplan']['dir']."/".$domain_name.".xml"); // file
+					}
+				}
+
+				// rename switch/conf/dialplan/public/[domain] (folder/file)
+				if ( isset($_SESSION['switch']['dialplan']['dir']) ) {
+					if ( file_exists($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name) ) {
+						@rename($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name, $_SESSION['switch']['dialplan']['dir']."/public/".$domain_name); // folder
+					}
+					if ( file_exists($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name.".xml") ) {
+						@rename($_SESSION['switch']['dialplan']['dir']."/public/".$original_domain_name.".xml", $_SESSION['switch']['dialplan']['dir']."/public/".$domain_name.".xml"); // file
+					}
+				}
+
+				// rename switch/conf/directory/[domain] (folder/file)
+				if ( isset($_SESSION['switch']['extensions']['dir']) ) {
+					if ( file_exists($_SESSION['switch']['extensions']['dir']."/".$original_domain_name) ) {
+						@rename($_SESSION['switch']['extensions']['dir']."/".$original_domain_name, $_SESSION['switch']['extensions']['dir']."/".$domain_name); // folder
+					}
+					if ( file_exists($_SESSION['switch']['extensions']['dir']."/".$original_domain_name.".xml") ) {
+						@rename($_SESSION['switch']['extensions']['dir']."/".$original_domain_name.".xml", $_SESSION['switch']['extensions']['dir']."/".$domain_name.".xml"); // file
+					}
+				}
+
+				// rename switch/recordings/[domain] (folder)
+				if ( isset($_SESSION['switch']['recordings']['dir']) ) {
+					$switch_recordings_dir = str_replace("/".$_SESSION["domain_name"], "", $_SESSION['switch']['recordings']['dir']);
+					if ( file_exists($switch_recordings_dir."/".$original_domain_name) ) {
+						@rename($switch_recordings_dir."/".$original_domain_name, $switch_recordings_dir."/".$domain_name); // folder
+					}
+				}
 			}
 
 		//upgrade the domains
