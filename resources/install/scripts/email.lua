@@ -36,7 +36,7 @@
 		--convert_ext (optional) to replace the file's extension
 
 --Example
-	--luarun email.lua to@domain.com from@domain.com 'subject' 'body'
+	--luarun email.lua to@domain.com from@domain.com 'headers' 'subject' 'body'
 
 --get the argv values
 	script_name = argv[0];
