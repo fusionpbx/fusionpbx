@@ -95,21 +95,18 @@
 
 		//get the body
 			$body = '';
-			foreach($decoded[0]["Parts"] as $row) {
-				$content_type = $row['Headers']['content-type:'];
-				if (substr($content_type, 0, 21) == "multipart/alternative") {
-					$content_type = $row["Parts"][0]["Headers"]["content-type:"];
-					if (substr($content_type, 0, 9) == "text/html") { $body = $row["Parts"][0]["Body"]; }
-					if (substr($content_type, 0, 10) == "text/plain") { $body_plain = $row["Parts"][0]["Body"]; }
-					$content_type = $row["Parts"][1]["Headers"]["content-type:"];
-					if (substr($content_type, 0, 9) == "text/html") { $body = $row["Parts"][1]["Body"]; }
-					if (substr($content_type, 0, 10) == "text/plain") { $body_plain = $row["Parts"][1]["Body"]; }
+			$content_type = $decoded[0]['Headers']['content-type:'];
+			if (substr($content_type, 0, 15) == "multipart/mixed" || substr($content_type, 0, 21) == "multipart/alternative") {
+				foreach($decoded[0]["Parts"] as $row) {
+					$body_content_type = $row["Headers"]["content-type:"];
+					if (substr($body_content_type, 0, 9) == "text/html") { $body = $row["Body"]; }
+					if (substr($body_content_type, 0, 10) == "text/plain") { $body_plain = $row["Body"]; }
 				}
-				else {
-					$content_type_array = explode(";", $content_type);
-					if ($content_type_array[0] == "text/plain") {
-						$body = $row["Body"];
-					}
+			}
+			else {
+				$content_type_array = explode(";", $content_type);
+				if ($content_type_array[0] == "text/html" || $content_type_array[0] == "text/plain") {
+					$body = $row["Body"];
 				}
 			}
 	}
@@ -256,12 +253,44 @@
 	}
 
 //add the body to the email
-	$mail->AltBody    = $body_plain;   // optional, comment out and test
-	$mail->MsgHTML($body);
+	if (substr($body, 0, 5) == "<html") {
+		$mail->ContentType = "text/html";
+		$mail->Body = $body;
+	}
+	else {
+		$mail->Body = ($body != '') ? $body : $body_plain;
+		$mail->AltBody = $body_plain;
+	}
 
 //send the email
 	if(!$mail->Send()) {
-		echo "Mailer Error: " . $mail->ErrorInfo;
+		$mailer_error = $mail->ErrorInfo;
+		echo "Mailer Error: ".$mailer_error."\n\n";
+
+		// log/store message in database for review
+		$email_uuid = uuid();
+		$sql = "insert into v_emails ( ";
+		$sql .= "email_uuid, ";
+		$sql .= "call_uuid, ";
+		$sql .= "domain_uuid, ";
+		$sql .= "sent_date, ";
+		$sql .= "type, ";
+		$sql .= "status, ";
+		$sql .= "email ";
+		$sql .= ") values ( ";
+		$sql .= "'".$email_uuid."', ";
+		$sql .= "'".$headers["X-FusionPBX-Call-UUID"]."', ";
+		$sql .= "'".$headers["X-FusionPBX-Domain-UUID"]."', ";
+		$sql .= "now(),";
+		$sql .= "'".$headers["X-FusionPBX-Email-Type"]."', ";
+		$sql .= "'failed', ";
+		$sql .= "'".str_replace("'", "''", $msg)."' ";
+		$sql .= ") ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		echo "Retained in v_emails as email_uuid = ".$email_uuid."\n";
+
 	}
 	else {
 		echo "Message sent!";
@@ -276,4 +305,35 @@
 	fwrite($fp, $content);
 	fclose($fp);
 
+
+/********************************************************************************************
+
+// save in /tmp as eml file
+
+$fp = fopen(sys_get_temp_dir()."/email.eml", "w");
+
+ob_end_clean();
+ob_start();
+
+$sql = "select email from v_emails where email_uuid = '".$email_uuid."'";
+$prep_statement = $db->prepare($sql);
+if ($prep_statement) {
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		echo $row["email"];
+		break;
+	}
+}
+unset($sql, $prep_statement, $result);
+
+$content = ob_get_contents(); //get the output from the buffer
+$content = str_replace("<br />", "", $content);
+
+ob_end_clean(); //clean the buffer
+
+fwrite($fp, $content);
+fclose($fp);
+
+*/
 ?>
