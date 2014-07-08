@@ -47,7 +47,7 @@
 	$msg = file_get_contents ("php://stdin");
 	fclose($fd);
 
-//save output to 
+//save output to
 	$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "w");
 
 //prepare the output buffers
@@ -65,15 +65,15 @@
 	$mime=new mime_parser_class;
 	$mime->decode_bodies = 1;
 	$parameters=array(
-		//'File'=>$message_file,                         
+		//'File'=>$message_file,
 
-		// Read a message from a string instead of a file 
+		// Read a message from a string instead of a file
 		'Data'=>$msg,
 
-		// Save the message body parts to a directory     
-		// 'SaveBody'=>'/tmp',                            
+		// Save the message body parts to a directory
+		// 'SaveBody'=>'/tmp',
 
-		// Do not retrieve or save message body parts     
+		// Do not retrieve or save message body parts
 		//   'SkipBody'=>1,
 	);
 	$success=$mime->Decode($parameters, $decoded);
@@ -83,6 +83,7 @@
 	}
 	else {
 		//get the headers
+			$headers = json_decode($decoded[0]["Headers"]["x-headers:"], true);
 			$subject = $decoded[0]["Headers"]["subject:"];
 			$from = $decoded[0]["Headers"]["from:"];
 			$reply_to = $decoded[0]["Headers"]["reply-to:"];
@@ -113,29 +114,65 @@
 			}
 	}
 
+//prepare smtp server settings
+	// load default smtp settings
+	$smtp['host'] 		= $_SESSION['email']['smtp_host']['var'];
+	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
+	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
+	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
+	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
+	$smtp['from'] 		= $_SESSION['email']['smtp_from']['var'];
+	$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['var'];
+
+	// overwrite with domain-specific smtp server settings, if any
+	if ($headers["X-FusionPBX-Domain-UUID"] != '') {
+		$sql = "select domain_setting_subcategory, domain_setting_value ";
+		$sql .= "from v_domain_settings ";
+		$sql .= "where domain_uuid = '".$headers["X-FusionPBX-Domain-UUID"]."' ";
+		$sql .= "and domain_setting_category = 'email' ";
+		$sql .= "and domain_setting_name = 'var' ";
+		$sql .= "and domain_setting_enabled = 'true' ";
+		$prep_statement = $db->prepare($sql);
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as $row) {
+				if ($row['domain_setting_value'] != '') {
+					$smtp[str_replace('smtp_','',$row["domain_setting_subcategory"])] = $row['domain_setting_value'];
+				}
+			}
+		}
+		unset($sql, $prep_statement);
+	}
+
+	// value adjustments
+	$smtp['auth'] 		= ($smtp['auth'] == "true") ? $smtp['auth'] : "false";
+	$smtp['password'] 	= ($smtp['password'] != '') ? $smtp['password'] : null;
+	$smtp['secure'] 	= ($smtp['secure'] != "none") ? $smtp['secure'] : null;
+	$smtp['username'] 	= ($smtp['username'] != '') ? $smtp['username'] : null;
+
 //send the email
 	include "resources/phpmailer/class.phpmailer.php";
-	include "resources/phpmailer/class.smtp.php"; // optional, gets called from within class.phpmailer.php if not already loaded
+	include "resources/phpmailer/class.smtp.php";
 	$mail = new PHPMailer();
-
-	$mail->IsSMTP(); // set mailer to use SMTP
-	if ($_SESSION['email']['smtp_auth']['var'] == "true") {
-		$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var']; // turn on/off SMTP authentication
+	$mail->IsSMTP();
+	$mail->SMTPAuth = $smtp['auth'];
+	$mail->Host = $smtp['host'];
+	if ($smtp['secure'] != '') {
+		$mail->SMTPSecure = $smtp['secure'];
 	}
-	$mail->Host   = $_SESSION['email']['smtp_host']['var'];
-	if ($_SESSION['email']['smtp_secure']['var'] == "none") {
-		$_SESSION['email']['smtp_secure']['var'] = '';
-	}
-	if (strlen($_SESSION['email']['smtp_secure']['var']) > 0) {
-		$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
-	}
-	if ($_SESSION['email']['smtp_username']['var']) {
-		$mail->Username = $_SESSION['email']['smtp_username']['var'];
-		$mail->Password = $_SESSION['email']['smtp_password']['var'];
+	if ($smtp['auth'] == 'true') {
+		$mail->Username = $smtp['username'];
+		$mail->Password = $smtp['password'];
 	}
 	$mail->SMTPDebug  = 2;
 
 //send context to the temp log
+	if (sizeof($headers)>0) {
+		foreach ($headers as $header => $value) {
+			echo $header.": ".$value."\n";
+		}
+	}
 	echo "Subject: ".$subject."\n";
 	echo "From: ".$from."\n";
 	echo "Reply-to: ".$reply_to."\n";
@@ -143,10 +180,15 @@
 	echo "Date: ".$date."\n";
 	//echo "Body: ".$body."\n";
 
-//add to, from, fromname, and subject to the email
-	$mail->From       = $_SESSION['email']['smtp_from']['var'] ;
-	$mail->FromName   = $_SESSION['email']['smtp_from_name']['var'];
-	$mail->Subject    = $subject;
+//add to, from, fromname, custom headers and subject to the email
+	$mail->From = $smtp['from'] ;
+	$mail->FromName = $smtp['from_name'];
+	if (sizeof($headers)>0) {
+		foreach ($headers as $header => $value) {
+			$mail->addCustomHeader($header.": ".$value);
+		}
+	}
+	$mail->Subject = $subject;
 
 	$to = trim($to, "<> ");
 	$to = str_replace(";", ",", $to);
@@ -167,16 +209,16 @@
 	if($success) {
 		foreach ($decoded[0][Parts] as &$parts_array) {
 			$content_type = $parts_array["Parts"][0]["Headers"]["content-type:"];
-				//image/tiff;name="testfax.tif" 
+				//image/tiff;name="testfax.tif"
 				//text/plain; charset=ISO-8859-1; format=flowed
-			$content_transfer_encoding = $parts_array["Parts"][0]["Headers"]["content-transfer-encoding:"]; 
+			$content_transfer_encoding = $parts_array["Parts"][0]["Headers"]["content-transfer-encoding:"];
 				//base64
 				//7bit
-			$content_disposition = $parts_array["Parts"][0]["Headers"]["content-disposition"]; 
+			$content_disposition = $parts_array["Parts"][0]["Headers"]["content-disposition"];
 				//inline;filename="testfax.tif"
-			$file = $parts_array["FileName"]; 
+			$file = $parts_array["FileName"];
 				//testfax.tif
-			$filedisposition = $parts_array["FileDisposition"]; 
+			$filedisposition = $parts_array["FileDisposition"];
 				//inline
 			$bodypart = $parts_array["BodyPart"];
 			$bodylength = $parts_array["BodyLength"];

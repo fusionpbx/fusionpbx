@@ -87,6 +87,12 @@
 					moderator_pin = string.lower(row["moderator_pin"]);
 					end);
 
+				--prepare the headers
+					headers = '{"X-FusionPBX-Domain-UUID":"'..domain_uuid..'",';
+					headers = headers..'"X-FusionPBX-Domain-Name":"'..domain_name..'",';
+					headers = headers..'"X-FusionPBX-Call-UUID":"na",';
+					headers = headers..'"X-FusionPBX-Email-Type":"conference"}';
+
 				--prepare the subject
 					local f = io.open(file_subject, "r");
 					local subject = f:read("*all");
@@ -118,9 +124,9 @@
 
 				--send the email
 					if (string.len(attachment) > 4) then
-						cmd = "luarun email.lua "..email.." "..email.." '"..subject.."' '"..body.."' '"..attachment.."'";
+						cmd = "luarun email.lua "..email.." "..email.." '"..headers.."' '"..subject.."' '"..body.."' '"..attachment.."'";
 					else
-						cmd = "luarun email.lua "..email.." "..email.." '"..subject.."' '"..body.."'";
+						cmd = "luarun email.lua "..email.." "..email.." '"..headers.."' '"..subject.."' '"..body.."'";
 					end
 					if (debug["info"]) then
 						freeswitch.consoleLog("notice", "[voicemail] cmd: " .. cmd .. "\n");
