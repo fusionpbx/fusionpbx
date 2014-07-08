@@ -156,6 +156,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "and domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
+
+				// update cdr records (domain_name, context)
+				$sql = "update v_xml_cdr set ";
+				$sql .= "domain_name = '".$domain_name."' ";
+				$sql .= "where domain_name = '".$current_domain_name."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				$sql = "update v_xml_cdr set ";
+				$sql .= "context = '".$domain_name."' ";
+				$sql .= "where context = '".$current_domain_name."' ";
+				$sql .= "and domain_uuid = '".$domain_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
 			}
 
 		//upgrade the domains
