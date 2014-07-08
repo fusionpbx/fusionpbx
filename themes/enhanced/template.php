@@ -889,10 +889,10 @@ legend {
 		<div id="domains_container">
 			<div id="domains_block">
 				<div id="domains_header">
-					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?php echo $text['button-close']; ?>">
-					<b style="color: #000;"><?php echo $text['title-domains']; ?></b>
+					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?php echo $text['theme-button-close']; ?>">
+					<b style="color: #000;"><?php echo $text['theme-title-domains']; ?></b>
 					<br><br>
-					<input type="text" id="domain_filter" class="formfld" style="min-width: 100%; width: 100%;" placeholder="<?php echo $text['label-search']; ?>" onkeyup="domain_search(this.value);">
+					<input type="text" id="domain_filter" class="formfld" style="min-width: 100%; width: 100%;" placeholder="<?php echo $text['theme-label-search']; ?>" onkeyup="domain_search(this.value);">
 				</div>
 				<div id="domains_list">
 					<?php
