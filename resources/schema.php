@@ -435,6 +435,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 										}
 									//change the data type if it has been changed
 										//if the data type in the app db array is different than the type in the database then change the data type
+/*
 										$db_field_type = db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name);
 										$field_type_array = explode("(", $field_type);
 										$field_type = $field_type_array[0];
@@ -481,6 +482,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 												$apps[$x]['db'][$y]['rebuild'] = 'true';
 											}
 										}
+*/
 								}
 							}
 							unset($column_array);
