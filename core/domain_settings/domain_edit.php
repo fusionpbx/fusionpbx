@@ -225,6 +225,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// update conference session recording paths
 						$sql = "select conference_session_uuid, recording from v_conference_sessions ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and recording like '%".$original_domain_name."%' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -247,6 +248,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// update conference center greetings
 						$sql = "select conference_center_uuid, conference_center_greeting from v_conference_centers ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and conference_center_greeting like '%".$original_domain_name."%' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -269,6 +271,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// update ivr menu greetings
 						$sql = "select ivr_menu_uuid, ivr_menu_greet_long, ivr_menu_greet_short from v_ivr_menus ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and ( ";
+						$sql .= "ivr_menu_greet_long like '%".$original_domain_name."%' or ";
+						$sql .= "ivr_menu_greet_short like '%".$original_domain_name."%' ";
+						$sql .= ") ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -291,9 +297,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 						unset($sql, $prep_statement, $result);
 
-					// update v_ivr_menu_options ivr_menu_option_param
+					// update ivr menu option parameters
 						$sql = "select ivr_menu_option_uuid, ivr_menu_option_param from v_ivr_menu_options ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and ivr_menu_option_param like '%".$original_domain_name."%' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -316,6 +323,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// update call center queue record templates
 						$sql = "select call_center_queue_uuid, queue_record_template from v_call_center_queues ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and queue_record_template like '%".$original_domain_name."%' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -338,6 +346,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// update call center agent contacts
 						$sql = "select call_center_agent_uuid, agent_contact from v_call_center_agents ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and agent_contact like '%".$original_domain_name."%' ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -360,6 +369,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// update call flows data, anti-data and contexts
 						$sql = "select call_flow_uuid, call_flow_data, call_flow_anti_data, call_flow_context from v_call_flows ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and ( ";
+						$sql .= "call_flow_data like '%".$original_domain_name."%' or ";
+						$sql .= "call_flow_anti_data like '%".$original_domain_name."%' or ";
+						$sql .= "call_flow_context like '%".$original_domain_name."%' ";
+						$sql .= ") ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -385,9 +399,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 						unset($sql, $prep_statement, $result);
 
-					// update ring group context, forward_destination, timeout_data
+					// update ring group context, forward destination, timeout data
 						$sql = "select ring_group_uuid, ring_group_context, ring_group_forward_destination, ring_group_timeout_data from v_ring_groups ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and ( ";
+						$sql .= "ring_group_context like '%".$original_domain_name."%' or ";
+						$sql .= "ring_group_forward_destination like '%".$original_domain_name."%' or ";
+						$sql .= "ring_group_timeout_data like '%".$original_domain_name."%' ";
+						$sql .= ") ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -416,6 +435,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// update device lines server address, outbound proxy
 						$sql = "select device_line_uuid, server_address, outbound_proxy from v_device_lines ";
 						$sql .= "where domain_uuid = '".$domain_uuid."' ";
+						$sql .= "and ( ";
+						$sql .= "server_address like '%".$original_domain_name."%' or ";
+						$sql .= "outbound_proxy like '%".$original_domain_name."%' ";
+						$sql .= ") ";
 						$prep_statement = $db->prepare(check_sql($sql));
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
