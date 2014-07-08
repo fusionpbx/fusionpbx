@@ -50,7 +50,7 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//get the post variables a run a security chack on them
 			//$domain_uuid = check_str($_POST["domain_uuid"]);
 			$queue_name = check_str($_POST["queue_name"]);
@@ -308,35 +308,35 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 			//add tier to database
-			$call_center_tier_uuid = uuid();
-			$sql = "insert into v_call_center_tiers ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "call_center_tier_uuid, ";
-			$sql .= "agent_name, ";
-			$sql .= "queue_name, ";
-			$sql .= "tier_level, ";
-			$sql .= "tier_position ";
-			$sql .= ")";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'$domain_uuid', ";
-			$sql .= "'$call_center_tier_uuid', ";
-			$sql .= "'$agent_name', ";
-			$sql .= "'$queue_name', ";
-			$sql .= "'$tier_level', ";
-			$sql .= "'$tier_position' ";
-			$sql .= ")";
-			$db->exec(check_sql($sql));
-			unset($sql);
+				$call_center_tier_uuid = uuid();
+				$sql = "insert into v_call_center_tiers ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "call_center_tier_uuid, ";
+				$sql .= "agent_name, ";
+				$sql .= "queue_name, ";
+				$sql .= "tier_level, ";
+				$sql .= "tier_position ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'$call_center_tier_uuid', ";
+				$sql .= "'$agent_name', ";
+				$sql .= "'$queue_name', ";
+				$sql .= "'$tier_level', ";
+				$sql .= "'$tier_position' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
 			//syncrhonize configuration
-			save_call_center_xml();
+				save_call_center_xml();
 		}
 
 		//redirect
-		header("Location: call_center_queue_edit.php?id=".$call_center_queue_uuid);
-		return;
+			header("Location: call_center_queue_edit.php?id=".$call_center_queue_uuid);
+			return;
 
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -352,6 +352,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$queue_name = $row["queue_name"];
+			$database_queue_name = $row["queue_name"];
 			$queue_extension = $row["queue_extension"];
 			$queue_strategy = $row["queue_strategy"];
 			$queue_moh_sound = $row["queue_moh_sound"];
@@ -419,10 +420,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_queues.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=$queue_name';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-load']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+$queue_name@".$_SESSION['domain_name']."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-unload']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+$queue_name@".$_SESSION['domain_name']."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-reload']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+$queue_name@".$_SESSION['domain_name']."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=$database_queue_name';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-load']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-unload']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-reload']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
