@@ -34,13 +34,6 @@
 		$apps[$x]['menu'][0]['path'] = "/app/notifications/notification_edit.php";
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
-	//permission details
-		$y = 0;
-		$apps[$x]['permissions'][$y]['name'] = "notification_edit";
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = "f8d65f91-0f4a-405a-b5ac-24cb3c4f10ba";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
-
 	//schema details
 		$y = 0; //table array index
 		$z = 0; //field array index
