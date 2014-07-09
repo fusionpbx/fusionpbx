@@ -56,6 +56,27 @@
 					end
 			end
 
+		--get the domains
+			x = 1;
+			domains = {}
+			sql = "SELECT * FROM v_domains;";
+			dbh:query(sql, function(row)
+				--add the entire row to the directory table array
+					domains[x] = row;
+				--increment x
+					x = x + 1;
+			end);
+	
+		--get the domain name
+			function get_domain_name(domains, domain_uuid)
+				for key,value in ipairs(domains) do
+					if (value.domain_uuid == domain_uuid) then
+						return value.domain_name;
+					end
+				end
+			  	return nil;
+			end	
+
 		--set the xml array and then concatenate the array to a string
 			local xml = {}
 			table.insert(xml, [[<?xml version="1.0" encoding="UTF-8" standalone="no"?>]]);
@@ -101,7 +122,7 @@
 			x = 0;
 			dbh:query(sql, function(row)
 				--get the dialplan
-					--domain_uuid = row.domain_uuid;
+					domain_uuid = row.domain_uuid;
 					dialplan_uuid = row.dialplan_uuid;
 					--app_uuid = row.app_uuid;
 					--dialplan_context = row.dialplan_context;
@@ -151,6 +172,7 @@
 					if (dialplan_tag_status == "closed") then
 						table.insert(xml, [[			<extension name="]] .. dialplan_name .. [[" continue="]] .. dialplan_continue .. [[" uuid="]] .. dialplan_uuid .. [[">]]);
 						dialplan_tag_status = "open";
+						first_action = true;
 					end
 					if (dialplan_detail_tag == "condition") then
 						--determine the type of condition
@@ -233,6 +255,21 @@
 							end
 							table.insert(xml, condition .. [[>]]);
 							condition = ""; --prevents duplicate time conditions
+						end
+					end
+					
+					if (call_context == "public") then
+						if (dialplan_detail_tag == "action") then
+							if (first_action) then
+								if (domain_uuid ~= nil) then
+									domain_name = get_domain_name(domains, domain_uuid);
+									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
+									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
+									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);			
+									table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);			
+									first_action = false;
+								end
+							end
 						end
 					end
 					if (dialplan_detail_tag == "action") then
