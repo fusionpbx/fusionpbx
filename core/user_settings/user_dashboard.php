@@ -45,17 +45,6 @@
 	require_once "resources/check_auth.php";
 	load_extensions();
 
-//add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
-
-// load header
-	require_once "resources/header.php";
-	$page["title"] = $text['title-user_dashboard'];
-
-
 //disable login message
 	if ($_GET['msg'] == 'dismiss') {
 		unset($_SESSION['login']['message']['text']);
@@ -70,14 +59,23 @@
 		unset($sql);
 	}
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
+// load header
+	require_once "resources/header.php";
+	$page["title"] = $text['title-user_dashboard'];
+
 	echo "<br><b>".$text['header-user_dashboard']."</b><br>";
 	echo $text['description-user_dashboard'];
 
 
 //display login message
 	if (if_group("superadmin") && $_SESSION['login']['message']['text'] != '') {
-		echo "<br />";
-		echo "<br />";
+		echo "<br /><br /><br />";
 		echo "<div class='login_message' width='100%'><b>".$text['login-message_attention']."</b>&nbsp;&nbsp;".$_SESSION['login']['message']['text']."&nbsp;&nbsp;(<a href='?msg=dismiss'>".$text['login-message_dismiss']."</a>)</div>";
 	}
 
