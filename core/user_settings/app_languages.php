@@ -1,5 +1,20 @@
 <?php
 
+	$text['title-user_dashboard']['en-us'] = "User Dashboard";
+	$text['title-user_dashboard']['es-cl'] = "Dashboard Usuario";
+	$text['title-user_dashboard']['pt-pt'] = "Painel de Controle do Usuário";
+	$text['title-user_dashboard']['fr-fr'] = "Tableau de bord de l'utilisateur";
+
+	$text['header-user_dashboard']['en-us'] = "User Dashboard";
+	$text['header-user_dashboard']['es-cl'] = "Dashboard Usuario";
+	$text['header-user_dashboard']['pt-pt'] = "Painel de Controle do Usuário";
+	$text['header-user_dashboard']['fr-fr'] = "Tableau de bord de l'utilisateur";
+
+	$text['description-user_dashboard']['en-us'] = "Quickly access information and tools related to your account.";
+	$text['description-user_dashboard']['es-cl'] = "Acceso rápido a la información y herramientas relacionadas con su cuenta.";
+	$text['description-user_dashboard']['pt-pt'] = "Acessar rapidamente as informações e ferramentas relacionadas à sua conta.";
+	$text['description-user_dashboard']['fr-fr'] = "Accéder rapidement aux informations et outils liés à votre compte.";
+
 	$text['title']['en-us'] = "Account Settings";
 	$text['title']['es-cl'] = "Configuración de Cuenta";
 	$text['title']['pt-pt'] = "Configurações de Conta";
