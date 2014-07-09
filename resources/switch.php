@@ -2423,11 +2423,16 @@ function save_dialplan_xml() {
 									}
 								//anti-actions
 									if ($ent['dialplan_detail_tag'] == "anti-action") {
+										//get the action inline attribute
+										$anti_action_inline = '';
+										if (strlen($ent['dialplan_detail_inline']) > 0) {
+											$anti_action_inline = "inline=\"".$ent['dialplan_detail_inline']."\"";
+										}
 										if (strlen($ent['dialplan_detail_data']) > 0) {
-											$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\" data=\"".$ent['dialplan_detail_data']."\"/>\n";
+											$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\" data=\"".$ent['dialplan_detail_data']."\" $anti_action_inline/>\n";
 										}
 										else {
-											$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\"/>\n";
+											$tmp .= "       <anti-action application=\"".$ent['dialplan_detail_type']."\" $anti_action_inline/>\n";
 										}
 									}
 								//set the previous dialplan_detail_tag
