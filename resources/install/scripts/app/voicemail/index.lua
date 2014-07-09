@@ -249,6 +249,7 @@
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 						end
+					message_sum = 0;
 					status = dbh:query(sql, function(row)
 						message_sum = row["message_sum"];
 					end);
