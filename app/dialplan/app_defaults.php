@@ -139,7 +139,7 @@
 			if ($row['num_rows'] == 0) {
 				$sql = "INSERT INTO v_dialplans ";
 				$sql .= "(dialplan_uuid, app_uuid, dialplan_context, dialplan_name, dialplan_continue, dialplan_order, dialplan_enabled) ";
-				$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'not-found', 'true', '999', 'true');";
+				$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'not-found', 'false', '999', 'true');";
 				$db->query($sql);
 
 				$sql = "INSERT INTO v_dialplan_details ";
