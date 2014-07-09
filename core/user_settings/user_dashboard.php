@@ -44,13 +44,17 @@
 //additional includes
 	require_once "resources/check_auth.php";
 	load_extensions();
-	require_once "resources/header.php";
 
 //add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
+
+// load header
+	require_once "resources/header.php";
+	$page["title"] = $text['title-user_dashboard'];
+
 
 //disable login message
 	if ($_GET['msg'] == 'dismiss') {
@@ -65,6 +69,10 @@
 		$db->exec(check_sql($sql));
 		unset($sql);
 	}
+
+	echo "<br><b>".$text['header-user_dashboard']."</b><br>";
+	echo $text['description-user_dashboard'];
+
 
 //display login message
 	if (if_group("superadmin") && $_SESSION['login']['message']['text'] != '') {
