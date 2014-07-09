@@ -2409,6 +2409,13 @@ function save_dialplan_xml() {
 								}
 								//actions
 									if ($ent['dialplan_detail_tag'] == "action") {
+										//set the domain info for the public context
+										if ($row['dialplan_context'] == "public") {
+													$tmp .= "       <action application=\"set\" data=\"call_direction=inbound\"/>\n";
+													$tmp .= "       <action application=\"set\" data=\"domain_uuid=".$row['domain_uuid']."\"/>\n";
+													$tmp .= "       <action application=\"set\" data=\"domain_name=".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."\"/>\n";
+													$tmp .= "       <action application=\"set\" data=\"domain=".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."\"/>\n";
+										}
 										//get the action inline attribute
 										$action_inline = '';
 										if (strlen($ent['dialplan_detail_inline']) > 0) {
