@@ -942,7 +942,7 @@ legend {
 			<td align='left' valign='top' class='headermain' colspan='2' width='100%' height='70px;'>
 				<table border='0' cellpadding='0' cellspacing='0' width='100%'>
 					<tr>
-						<td width='50%'>
+						<td>
 							<?php
 							if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
 								if (strlen(PROJECT_PATH) > 0) {
@@ -954,15 +954,27 @@ legend {
 							}
 							?>
 						</td>
-						<td width='50%' style='padding-right: 15px;' align='right' valign='middle'>
-							<a href="/core/user_settings/user_dashboard.php"><?php echo $_SESSION['username']; ?></a>
+						<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
 							<?php
+							if ($_SESSION['username'] != '') {
+								echo "<span style='white-space: nowrap;'>";
+								echo "	<span style='color: black; font-size: 10px; font-weight: bold;'>".$text['theme-label-user']."</span>&nbsp;";
+								echo "	<a href='/core/user_settings/user_dashboard.php'>";
+								echo $_SESSION['username'];
+								if (count($_SESSION['domains']) > 1) {
+									echo "@".$_SESSION["user_context"];
+								}
+								echo 	"</a>";
+								echo "</span>\n";
+							}
+
 							//logged in show the domains block
 							if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="javascript:void(0);" id="domains_show_text"><?php echo $_SESSION['domain_name']; ?></a>
-								<img id="domains_show_icon" src="<?php echo PROJECT_PATH; ?>/themes/enhanced/images/icon_domains_show.png" style="width: 23px; height: 16px; border: none;" title="Open Domain Selector" align="absmiddle">
-								<?php
+								echo "<span style='white-space: nowrap; line-height: 45px;'>";
+								echo "	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color: black; font-size: 10px; font-weight: bold;'>".$text['theme-label-domain']."</span>&nbsp;";
+								echo "	<a href='javascript:void(0);' id='domains_show_text'>".$_SESSION['domain_name']."</a>";
+								echo "	<img id='domains_show_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domains_show.png' style='width: 23px; height: 16px; border: none;' title='".$text['theme-label-open_selector']."' align='absmiddle'>";
+								echo "</span>";
 							}
 
 							//logged out show the login
@@ -979,62 +991,46 @@ legend {
 											}
 										//login form
 											echo "<div align='right'>\n";
-											echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
-											echo "<input type='hidden' name='path' value='".$_GET['path']."'>\n";
-											echo "<table width='200' border='0'>\n";
-											echo "<tr>\n";
-											//echo "<td align='left'>\n";
-											//echo "	<strong>".$text['label-username'].":</strong>\n";
-											//echo "</td>\n";
-											echo "<td>\n";
-											echo "  <input type=\"text\" class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name=\"username\" placeholder=\"".$text['label-username']."\">\n";
-											echo "</td>\n";
-											//echo "</tr>\n";
-
-											//echo "<tr>\n";
-											//echo "<td align='left'>\n";
-											//echo "	<strong>".$text['label-password'].":</strong>\n";
-											//echo "</td>\n";
-											echo "<td align='left'>\n";
-											echo "	<input type=\"password\" class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name=\"password\" placeholder=\"".$text['label-password']."\">\n";
-											echo "</td>\n";
-											//echo "</tr>\n";
+											echo "	<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
+											echo "		<input type='hidden' name='path' value='".$_GET['path']."'>\n";
+											echo "		<table width='200' border='0'>\n";
+											echo "			<tr>\n";
+											echo "				<td>\n";
+											echo "		  			<input type='text' class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
+											echo "				</td>\n";
+											echo "				<td align='left'>\n";
+											echo "					<input type='password' class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
+											echo "				</td>\n";
 
 											if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
-												//echo "<tr>\n";
-												echo "<td align='left'>\n";
-												echo "	<strong>".$text['label-domain'].":</strong>\n";
-												echo "</td>\n";
-												echo "<td>\n";
+												echo "			<td align='left'>\n";
+												echo "				<strong>".$text['label-domain'].":</strong>\n";
+												echo "			</td>\n";
+												echo "			<td>\n";
 												if (count($_SESSION['login']['domain_name']) > 0) {
-													echo "    <select style='width: 150px;' class='formfld' name='domain_name'>\n";
-													echo "    <option value=''></option>\n";
+													echo "    		<select style='width: 150px;' class='formfld' name='domain_name'>\n";
+													echo "    			<option value=''></option>\n";
 													foreach ($_SESSION['login']['domain_name'] as &$row) {
-														echo "    <option value='$row'>$row</option>\n";
+														echo "    		<option value='$row'>$row</option>\n";
 													}
-													echo "    </select>\n";
+													echo "    		</select>\n";
 												}
 												else {
-													echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
+													echo "  		<input type='text' style='width: 150px;' class='formfld' name='domain_name'>\n";
 												}
-												echo "</td>\n";
-												//echo "</tr>\n";
+												echo "			</td>\n";
 											}
 
-											//echo "<tr>\n";
-											echo "<td>\n";
-											echo "</td>\n";
-											echo "<td align=\"right\">\n";
-											echo "  <input type=\"submit\" class='btn' value=\"".$text['button-login']."\">\n";
-											echo "</td>\n";
-											echo "</tr>\n";
-											echo "</table>\n";
-											echo "</form>";
+											echo "				<td align='right'>\n";
+											echo "  				<input type='submit' class='btn' style='margin-left: 5px;' value=\"".$text['button-login']."\">\n";
+											echo "				</td>\n";
+											echo "			</tr>\n";
+											echo "		</table>\n";
+											echo "	</form>";
 											echo "</div>";
 									}
 								}
 							?>
-							&nbsp;
 						</td>
 					</tr>
 				</table>
