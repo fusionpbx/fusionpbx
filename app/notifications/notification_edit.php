@@ -27,7 +27,7 @@ Mark J Crane <markjcrane@fusionpbx.com>
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists("notification_edit")) {
+if (if_group('superadmin')) {
 	//access granted
 }
 else {
@@ -292,9 +292,7 @@ $page["title"] = $text['title-notifications'];
 	echo "	<tr>\n";
 	echo "		<td align='left' nowrap='nowrap'><b>".$text['header-notifications']."</b><br><br></td>\n";
 	echo "		<td align='right'>";
-	if (permission_exists('notification_edit')) {
-		echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	}
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "			<br><br>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -399,14 +397,11 @@ $page["title"] = $text['title-notifications'];
 	echo 			$text['description-project_notification_recipient']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
-
-	if (permission_exists('notification_edit')) {
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-		echo "		</td>\n";
-		echo "	</tr>";
-	}
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
 
 	echo "</table>\n";
 
