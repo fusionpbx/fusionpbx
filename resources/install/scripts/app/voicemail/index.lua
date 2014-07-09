@@ -239,7 +239,6 @@
 
 --leave a message
 	if (voicemail_action == "save") then
-
 		--check the voicemail quota
 			if (vm_disk_quota) then
 				--get voicemail message seconds
@@ -249,15 +248,16 @@
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 						end
-					message_sum = 0;
 					status = dbh:query(sql, function(row)
 						message_sum = row["message_sum"];
 					end);
-					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
-						--play message mailbox full
-							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
-						--set the voicemail_uuid to nil to prevent saving the voicemail
-							voicemail_uuid = nil;
+					if (message_sum ~= '') then
+						if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
+							--play message mailbox full
+								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
+							--set the voicemail_uuid to nil to prevent saving the voicemail
+								voicemail_uuid = nil;
+						end
 					end
 			end
 
