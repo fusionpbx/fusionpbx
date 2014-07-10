@@ -37,6 +37,13 @@
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$response_format = 'text'; //html, text
+
+		//add multi-lingual support
+		require_once "app_languages.php";
+		foreach($text as $key => $value) {
+			$text[$key] = $value[$_SESSION['domain']['language']['code']];
+		}
+
 	}
 	else if (!$included) {
 		include "root.php";
@@ -50,17 +57,16 @@
 			exit;
 		}
 
+		//add multi-lingual support
+		require_once "app_languages.php";
+		foreach($text as $key => $value) {
+			$text[$key] = $value[$_SESSION['domain']['language']['code']];
+		}
+
 		require_once "resources/header.php";
 		$document['title'] = $text['title-upgrade_schema'];
 
 		$response_format = 'html'; //html, text
-	}
-
-
-//add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
 

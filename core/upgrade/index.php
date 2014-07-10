@@ -34,13 +34,21 @@ require_once "resources/check_auth.php";
 if (
 	!permission_exists('upgrade_svn') &&
 	!permission_exists('upgrade_schema') &&
-	!permission_exists('upgrade_domains') &&
+	!permission_exists('upgrade_apps') &&
 	!permission_exists('menu_restore') &&
 	!permission_exists('group_edit')
 	) {
 	echo "access denied";
 	exit;
 }
+
+
+//add multi-lingual support
+require_once "app_languages.php";
+foreach($text as $key => $value) {
+	$text[$key] = $value[$_SESSION['domain']['language']['code']];
+}
+
 
 if (sizeof($_POST) > 0) {
 
@@ -53,7 +61,7 @@ if (sizeof($_POST) > 0) {
 		if (sizeof($response_svn_update) > 0) {
 			$_SESSION["response_svn_update"] = $response_svn_update;
 		}
-		$response_message = "SVN Updated";
+		$response_message = $text['message-upgrade_svn'];
 	}
 
 	// load the default database into memory and compare it with the active database
@@ -61,23 +69,23 @@ if (sizeof($_POST) > 0) {
 		$included = true;
 		$response_output = "return";
 		$response_format = "html";
-		$upgrade_data_types = (is_bool($_POST["do_datatypes"])) ? check_str($_POST["do_datatypes"]) : false;
+		$upgrade_data_types = check_str($do["data_types"]);
 		require_once "core/upgrade/upgrade_schema.php";
 		if ($response_upgrade_schema != '') {
 			$_SESSION["response_upgrade_schema"] = $response_upgrade_schema;
 		}
 		unset($apps);
-		$response_message = "Schema Upgraded";
+		$response_message = $text['message-upgrade_schema'];
 	}
 
-	// upgrade the domains
-	if ($do["domains"] && permission_exists("upgrade_domains")) {
+	// process the apps defaults
+	if ($do["apps"] && permission_exists("upgrade_apps")) {
 		$included = true;
 		$domain_language_code = $_SESSION['domain']['language']['code'];
 		require_once "core/upgrade/upgrade_domains.php";
 		$_SESSION['domain']['language']['code'] = $domain_language_code;
 		unset($domain_language_code);
-		$response_message = "Domain(s) Upgraded";
+		$response_message = $text['message-upgrade_apps'];
 	}
 
 	// restore defaults of the selected menu
@@ -88,18 +96,18 @@ if (sizeof($_POST) > 0) {
 		$included = true;
 		require_once("core/menu/menu_restore_default.php");
 		unset($sel_menu);
-		$response_message = "Menu Defaults Restored";
+		$response_message = $text['message-upgrade_menu'];
 	}
 
 	// restore default permissions
 	if ($do["permissions"] && permission_exists("group_edit")) {
 		$included = true;
 		require_once("core/users/permissions_default.php");
-		$response_message = "Permission Defauls Restored";
+		$response_message = "Permission Defaults Restored";
 	}
 
 	if (sizeof($_POST['do']) > 1) {
-		$response_message = "Upgrades Complete";
+		$response_message = $text['message-upgrade'];
 	}
 
 	$_SESSION["message"] = $response_message;
@@ -109,18 +117,12 @@ if (sizeof($_POST) > 0) {
 } // if
 
 
-//add multi-lingual support
-require_once "app_languages.php";
-foreach($text as $key => $value) {
-	$text[$key] = $value[$_SESSION['domain']['language']['code']];
-}
-
 require_once "resources/header.php";
 $document['title'] = $text['title-upgrade'];
 
 echo "<br />";
 echo "<b>".$text['header-upgrade']."</b><br>";
-echo "Select the upgrade/update/restore actions below you wish to perform.";
+echo $text['description-upgrade'];
 echo "<br><br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
@@ -129,11 +131,13 @@ if (permission_exists("upgrade_svn")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		SVN Update";
+	echo "		".$text['label-upgrade_svn'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<input type='checkbox' class='formfld' name='do[svn]' id='do_svn' value='1'>";
-	echo "		<br />\n";
+	echo "		<label for='do_svn'>";
+	echo "			<input type='checkbox' class='formfld' name='do[svn]' id='do_svn' value='1'>";
+	echo "			".$text['description-upgrade_svn'];
+	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -143,11 +147,13 @@ if (permission_exists("upgrade_schema")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		Upgrade Schema";
+	echo "		".$text['label-upgrade_schema'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<input type='checkbox' class='formfld' name='do[schema]' id='do_schema' value='1' onchange=\"$('#do_datatypes').prop('checked', false); $('#tr_data_types').slideToggle('fast');\">";
-	echo "		<br />\n";
+	echo "		<label for='do_schema'>";
+	echo "			<input type='checkbox' class='formfld' name='do[schema]' id='do_schema' value='1' onchange=\"$('#do_data_types').prop('checked', false); $('#tr_data_types').slideToggle('fast');\">";
+	echo "			".$text['description-upgrade_schema'];
+	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -156,26 +162,30 @@ if (permission_exists("upgrade_schema")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		Upgrade Data Types";
+	echo "		".$text['label-upgrade_data_types'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<input type='checkbox' class='formfld' name='do[datatypes]' id='do_datatypes' value='true'>";
-	echo "		<br />\n";
+	echo "		<label for='do_data_types'>";
+	echo "			<input type='checkbox' class='formfld' name='do[data_types]' id='do_data_types' value='true'>";
+	echo "			".$text['description-upgrade_data_types'];
+	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
 	echo "</div>\n";
 }
 
-if (permission_exists("upgrade_domains")) {
+if (permission_exists("upgrade_apps")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		Upgrade Domain(s)";
+	echo "		".$text['label-upgrade_apps'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<input type='checkbox' class='formfld' name='do[domains]' id='do_domains' value='1'>";
-	echo "		<br />\n";
+	echo "		<label for='do_apps'>";
+	echo "			<input type='checkbox' class='formfld' name='do[apps]' id='do_apps' value='1'>";
+	echo "			".$text['description-upgrade_apps'];
+	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -185,14 +195,14 @@ if (permission_exists("menu_restore")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		Restore Menu Defaults";
+	echo "		".$text['label-upgrade_menu'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
 	echo "		<table cellpadding='0' cellspacing='0' border='0'>";
 	echo "			<tr><td>";
-	echo "				<input type='checkbox' class='formfld' name='do[menu]' id='do_menu' value='1' onchange=\"$('#sel_menu').fadeToggle('fast');\">";
-	echo "			</td><td>";
-	echo "				<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; margin-left: 15px;'>\n";
+	echo "				<input type='checkbox' class='formfld' name='do[menu]' id='do_menu' value='1' onchange=\"$('#td_sel_menu').fadeToggle('fast');\">";
+	echo "			</td><td id='td_sel_menu' style='display: none; padding: 0px 3px 0px 8px;'>";
+	echo "				<select name='sel_menu' id='sel_menu' class='formfld'>\n";
 		$sql = "select * from v_menus ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -202,7 +212,7 @@ if (permission_exists("menu_restore")) {
 		}
 		unset ($sql, $result, $prep_statement);
 	echo "				</select>\n";
-	echo "			</td></tr>";
+	echo "			</td><td class='vtable' style='border: none; padding: 3px;'><label for='do_menu'>".$text['description-upgrade_menu']."</label></td></tr>";
 	echo "		</table>";
 	echo "	</td>\n";
 	echo "</tr>\n";
@@ -213,11 +223,13 @@ if (permission_exists("group_edit")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
-	echo "		Restore Permission Defaults";
+	echo "		".$text['label-upgrade_permissions'];
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<input type='checkbox' class='formfld' name='do[permissions]' id='do_permissions' value='1'>";
-	echo "		<br />\n";
+	echo "		<label for='do_permissions'>";
+	echo "			<input type='checkbox' class='formfld' name='do[permissions]' id='do_permissions' value='1'>";
+	echo "			".$text['description-upgrade_permissions'];
+	echo "		</label>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -226,7 +238,7 @@ if (permission_exists("group_edit")) {
 echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 echo "<tr>\n";
 echo "	<td colspan='2' style='text-align: right;'>\n";
-echo "		<input type='submit' class='btn' value='Execute'>\n";
+echo "		<input type='submit' class='btn' value='".$text['button-upgrade_execute']."'>\n";
 echo "	</td>\n";
 echo "</tr>\n";
 echo "</table>\n";

@@ -276,9 +276,6 @@ function db_upgrade_schema ($db, $db_type, $db_name, $response_output) {
 	global $response_format;
 	global $upgrade_data_types;
 
-	// set default
-	if (!isset($upgrade_data_types)) { $upgrade_data_types = false; }
-
 	//PHP PDO check if table or column exists
 		//check if table exists
 			// SELECT * FROM sqlite_master WHERE type='table' AND name='v_cdr'
@@ -437,7 +434,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $response_output) {
 												}
 											}
 										}
-//									//change the data type if it has been changed
+									//change the data type if it has been changed
 										//if the data type in the app db array is different than the type in the database then change the data type
 										if ($upgrade_data_types) {
 											$db_field_type = db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name);
@@ -487,7 +484,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $response_output) {
 												}
 											}
 										}
-//
+
 								}
 							}
 							unset($column_array);

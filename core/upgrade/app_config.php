@@ -44,7 +44,7 @@
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "8c826e92-be3c-0944-669a-24e5b915d562";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "upgrade_domains";
+		$apps[$x]['permissions'][$y]['name'] = "upgrade_apps";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "e7bb1296-3141-48c9-a95a-82d2768d0ae4";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
