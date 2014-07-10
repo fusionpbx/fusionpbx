@@ -145,14 +145,14 @@
 	$text['message-disclaimer']['pt-pt'] = "<u>Divulgação</u>: A habilitação do projeto Notificações é o consentimento para a coleta de <i>anônimo</i> e <i>geral</i> informações demográficas sobre o seu ambiente de instalação. As informações solicitadas consiste no seguinte: 1) versão FusionPBX, 2) versão PHP, 3) servidor web e versão, 4) versão interruptor de voz, 5) Tipo de banco de dados e versão, 6) plataforma de sistema operacional e versão, e 7) IP público endereço. Se você não deseja que esta informação ser submetida, basta deixar Projeto Notificações desativada, e nenhuma informação será apresentada sobre o sistema.";
 	$text['message-disclaimer']['fr-fr'] = "<u>Divulgation</u>: Activation des notifications projet est consentement à la collecte de <i>anonyme</i> et <i>générale</i> des informations démographiques sur l'environnement d'installation. Les informations demandées se compose de ce qui suit: 1) FusionPBX version 2) version de PHP, 3) le serveur web et la version 4) Version commutateur vocal, 5) type de base de données et la version 6) plate-forme de système d'exploitation et sa version, et 7) IP publique adresse. Si vous ne souhaitez pas que cette information soit présentée, laissez simplement Notifications projet désactivé, et aucune information ne sera soumis à votre système.";
 
-	$text['message-demographics']['en-us'] = "<u>Note</u>: If you wish to help the project by submitting the demographic information described above <i>without</i> subscribing to Project Notifications, simply ";
-	$text['message-demographics']['es-cl'] = "";
-	$text['message-demographics']['pt-pt'] = "";
-	$text['message-demographics']['fr-fr'] = "";
+	$text['message-demographics']['en-us'] = "<u>Note</u>: To help the FusionPBX project by submitting the demographic information described above <i>without</i> subscribing to Project Notifications, simply ";
+	$text['message-demographics']['es-cl'] = "<u>Nota</u>: Para ayudar al proyecto FusionPBX presentando la información demográfica descrita anteriormente sin necesidad de suscribirse a Project Notificaciones, haga ";
+	$text['message-demographics']['pt-pt'] = "<u>Nota</u>: Para ajudar o projeto FusionPBX, apresentando as informações demográficas descrito acima sem a assinatura do Projeto Notificações, basta ";
+	$text['message-demographics']['fr-fr'] = "<u>Remarque</u>: Pour aider le projet FusionPBX en soumettant l'information démographique décrit ci-dessus, sans souscrire au Projet Notifications, ";
 
 	$text['message-demographics_click_here']['en-us'] = "click here";
-	$text['message-demographics_click_here']['es-cl'] = "haga clic aquí";
-	$text['message-demographics_click_here']['pt-pt'] = "clique aqui";
+	$text['message-demographics_click_here']['es-cl'] = "clic aquí";
+	$text['message-demographics_click_here']['pt-pt'] = "clicar aqui";
 	$text['message-demographics_click_here']['fr-fr'] = "cliquez ici";
 
 ?>
