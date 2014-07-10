@@ -5,10 +5,25 @@
 	$text['title-upgrade_schema']['pt-pt'] = "Actualizar Esquema de Base de Dados";
 	$text['title-upgrade_schema']['fr-fr'] = "Mise à jour du Schéma";
 
+	$text['title-upgrade']['en-us'] = "Upgrade";
+	$text['title-upgrade']['es-cl'] = "Actualizar";
+	$text['title-upgrade']['pt-pt'] = "Actualizar";
+	$text['title-upgrade']['fr-fr'] = "Mise à jour";
+
+	$text['header-upgrade_schema_results']['en-us'] = "Upgrade Schema Results";
+	$text['header-upgrade_schema_results']['es-cl'] = "Actualiza Esquema Resultados";
+	$text['header-upgrade_schema_results']['pt-pt'] = "Resultados Atualização do Esquema";
+	$text['header-upgrade_schema_results']['fr-fr'] = "Résultats Mise à Jour du Schéma";
+
 	$text['header-database_type']['en-us'] = "Database Type";
 	$text['header-database_type']['es-cl'] = "Tipo de base de datos";
 	$text['header-database_type']['pt-pt'] = "Tipo de Base de Dados";
 	$text['header-database_type']['fr-fr'] = "Type de base de données";
+
+	$text['header-upgrade']['en-us'] = "Upgrade";
+	$text['header-upgrade']['es-cl'] = "Actualizar";
+	$text['header-upgrade']['pt-pt'] = "Actualizar";
+	$text['header-upgrade']['fr-fr'] = "Mise à jour";
 
 	$text['header-message']['en-us'] = "Message";
 	$text['header-message']['es-cl'] = "Mensaje";

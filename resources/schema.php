@@ -271,9 +271,9 @@ function db_insert_into ($apps, $db_type, $table) {
 	}
 }
 
-function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
+function db_upgrade_schema ($db, $db_type, $db_name, $response_output) {
 	global $text; // pulls in language variable array
-	global $display_type;
+	global $response_format;
 
 	//PHP PDO check if table or column exists
 		//check if table exists
@@ -289,7 +289,7 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 			//check if table exists
 				// SELECT * FROM pg_tables WHERE schemaname='public' AND table_name = 'v_groups'
 			//check if column exists
-				// SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'v_cdr') AND attname = 'caller_id_name'; 
+				// SELECT attname FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'v_cdr') AND attname = 'caller_id_name';
 		//mysql
 			//list all tables in the database
 				// SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = 'fusionpbx'
@@ -523,31 +523,35 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 				}
 			}
 		}
+
+	// initialize response variable
+		$response = '';
+
 	//display results as html
-		if ($display_results && $display_type == "html") {
+		if ($response_output != '' && $response_format == "html") {
 			//show the database type
-				echo "<strong>".$text['header-database_type'].": ".$db_type. "</strong><br /><br />";
+				$response .= "<strong>".$text['header-database_type'].": ".$db_type. "</strong><br /><br />";
 			//start the table
-				echo "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
+				$response .= "<table width='100%' border='0' cellpadding='20' cellspacing='0'>\n";
 			//show the changes
 				if (strlen($sql_update) > 0) {
-					echo "<tr>\n";
-					echo "<td class='row_style1' colspan='3'>\n";
-					echo "<br />\n";
-					echo "<strong>".$text['label-sql_changes'].":</strong><br />\n";
-					echo "<pre>\n";
-					echo $sql_update;
-					echo "</pre>\n";
-					echo "<br />\n";
-					echo "</td>\n";
-					echo "</tr>\n";
+					$response .= "<tr>\n";
+					$response .= "<td class='row_style1' colspan='3'>\n";
+					$response .= "<br />\n";
+					$response .= "<strong>".$text['label-sql_changes'].":</strong><br />\n";
+					$response .= "<pre>\n";
+					$response .= $sql_update;
+					$response .= "</pre>\n";
+					$response .= "<br />\n";
+					$response .= "</td>\n";
+					$response .= "</tr>\n";
 				}
 			//list all tables
-				echo "<tr>\n";
-				echo "<th>".$text['label-table']."</th>\n";
-				echo "<th>".$text['label-exists']."</th>\n";
-				echo "<th>".$text['label-details']."</th>\n";
-				echo "<tr>\n";
+				$response .= "<tr>\n";
+				$response .= "<th>".$text['label-table']."</th>\n";
+				$response .= "<th>".$text['label-exists']."</th>\n";
+				$response .= "<th>".$text['label-details']."</th>\n";
+				$response .= "<tr>\n";
 			//build the html while looping through the app db array
 				$sql = '';
 				foreach ($apps as &$app) {
@@ -558,22 +562,22 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 						else {
 							$table_name = $row['table'];
 						}
-						echo "<tr>\n";
+						$response .= "<tr>\n";
 
 						//check if the table exists
 							if ($row['exists'] == "true") {
-								echo "<td valign='top' class='row_style1'>".$table_name."</td>\n";
-								echo "<td valign='top' class='vncell' style='padding-top: 3px;'>".$text['option-true']."</td>\n";
+								$response .= "<td valign='top' class='row_style1'>".$table_name."</td>\n";
+								$response .= "<td valign='top' class='vncell' style='padding-top: 3px;'>".$text['option-true']."</td>\n";
 
 								if (count($row['fields']) > 0) {
-									echo "<td class='row_style1'>\n";
+									$response .= "<td class='row_style1'>\n";
 									//show the list of columns
-										echo "<table border='0' cellpadding='10' cellspacing='0'>\n";
-										echo "<tr>\n";
-										echo "<th>".$text['label-name']."</th>\n";
-										echo "<th>".$text['label-type']."</th>\n";
-										echo "<th>".$text['label-exists']."</th>\n";
-										echo "</tr>\n";
+										$response .= "<table border='0' cellpadding='10' cellspacing='0'>\n";
+										$response .= "<tr>\n";
+										$response .= "<th>".$text['label-name']."</th>\n";
+										$response .= "<th>".$text['label-type']."</th>\n";
+										$response .= "<th>".$text['label-exists']."</th>\n";
+										$response .= "</tr>\n";
 										foreach ($row['fields'] as $field) {
 											if ($field['deprecated'] == "true") {
 												//skip this field
@@ -591,47 +595,48 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 												else {
 													$field_type = $field['type'];
 												}
-												echo "<tr>\n";
-												echo "<td class='row_style1' width='200'>".$field_name."</td>\n";
-												echo "<td class='row_style1'>".$field_type."</td>\n";
+												$response .= "<tr>\n";
+												$response .= "<td class='row_style1' width='200'>".$field_name."</td>\n";
+												$response .= "<td class='row_style1'>".$field_type."</td>\n";
 												if ($field['exists'] == "true") {
-													echo "<td class='row_style0' style=''>".$text['option-true']."</td>\n";
-													echo "<td>&nbsp;</td>\n";
+													$response .= "<td class='row_style0' style=''>".$text['option-true']."</td>\n";
+													$response .= "<td>&nbsp;</td>\n";
 												}
 												else {
-													echo "<td class='row_style1' style='background-color:#444444;color:#CCCCCC;'>".$text['option-false']."</td>\n";
-													echo "<td>&nbsp;</td>\n";
+													$response .= "<td class='row_style1' style='background-color:#444444;color:#CCCCCC;'>".$text['option-false']."</td>\n";
+													$response .= "<td>&nbsp;</td>\n";
 												}
-												echo "</tr>\n";
+												$response .= "</tr>\n";
 											}
 										}
 										unset($column_array);
-										echo "	</table>\n";
-										echo "</td>\n";
+										$response .= "	</table>\n";
+										$response .= "</td>\n";
 								}
 							}
 							else {
-								echo "<td valign='top' class='row_style1'>$table_name</td>\n";
-								echo "<td valign='top' class='row_style1' style='background-color:#444444;color:#CCCCCC;'><strong>".$text['label-exists']."</strong><br />".$text['option-false']."</td>\n";
-								echo "<td valign='top' class='row_style1'>&nbsp;</td>\n";
+								$response .= "<td valign='top' class='row_style1'>$table_name</td>\n";
+								$response .= "<td valign='top' class='row_style1' style='background-color:#444444;color:#CCCCCC;'><strong>".$text['label-exists']."</strong><br />".$text['option-false']."</td>\n";
+								$response .= "<td valign='top' class='row_style1'>&nbsp;</td>\n";
 							}
-							echo "</tr>\n";
+							$response .= "</tr>\n";
 					}
 				}
 				unset ($prep_statement);
 			//end the list of tables
-				echo "</table>\n";
-				echo "<br />\n";
+				$response .= "</table>\n";
+				$response .= "<br />\n";
+
 		}
 
 		//loop line by line through all the lines of sql code
 			$x = 0;
-			if (strlen($sql_update) == 0 && $display_type == "text") {
-				echo "	".$text['label-schema'].":			".$text['label-no_change']."\n";
+			if (strlen($sql_update) == 0 && $response_format == "text") {
+				$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
 			}
 			else {
-				if ($display_type == "text") {
-					echo "	".$text['label-schema'].":\n";
+				if ($response_format == "text") {
+					$response .= "	".$text['label-schema'].":\n";
 				}
 				//$db->beginTransaction();
 				$update_array = explode(";", $sql_update);
@@ -639,21 +644,30 @@ function db_upgrade_schema ($db, $db_type, $db_name, $display_results) {
 					if (strlen(trim($sql))) {
 						try {
 							$db->query(trim($sql));
-							if ($display_type == "text") {
-								echo "	$sql\n";
+							if ($response_format == "text") {
+								$response .= "	$sql\n";
 							}
 						}
 						catch (PDOException $error) {
-							if ($display_results) {
-								echo "	error: " . $error->getMessage() . "	sql: $sql<br/>";
+							if ($response_output != '') {
+								$response .= "	error: " . $error->getMessage() . "	sql: $sql<br/>";
 							}
 						}
 					}
 				}
 				//$db->commit();
-				echo "\n";
+				$response .= "\n";
 				unset ($file_contents, $sql_update, $sql);
 			}
+
+
+	//handle response
+		if ($response_output == "echo") {
+			echo $response;
+		}
+		else if ($response_output == "return") {
+			return $response;
+		}
 
 } //end function
 
