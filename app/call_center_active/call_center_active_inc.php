@@ -286,69 +286,66 @@ else {
 			$q_answered=0;
 
 			foreach ($result as $row) {
-				$switch_cmd = 'uuid_exists '.$row['session_uuid'];
-				if (trim(event_socket_request($fp, 'api '.$switch_cmd)) == "true") {
-					$queue = $row['queue'];
-					$system = $row['system'];
-					$uuid = $row['uuid'];
-					$session_uuid = $row['session_uuid'];
-					$caller_number = $row['cid_number'];
-					$caller_name = $row['cid_name'];
-					$system_epoch = $row['system_epoch'];
-					$joined_epoch = $row['joined_epoch'];
-					$rejoined_epoch = $row['rejoined_epoch'];
-					$bridge_epoch = $row['bridge_epoch'];
-					$abandoned_epoch = $row['abandoned_epoch'];
-					$base_score = $row['base_score'];
-					$skill_score = $row['skill_score'];
-					$serving_agent = $row['serving_agent'];
-					$serving_system = $row['serving_system'];
-					$state = $row['state'];
-					if ($state=="Trying") {$q_trying = $q_trying + 1;}
-					if ($state=="Waiting") {$q_waiting = $q_waiting + 1;}
-					if ($state=="Answered") {$q_answered = $q_answered + 1;}
+				$queue = $row['queue'];
+				$system = $row['system'];
+				$uuid = $row['uuid'];
+				$session_uuid = $row['session_uuid'];
+				$caller_number = $row['cid_number'];
+				$caller_name = $row['cid_name'];
+				$system_epoch = $row['system_epoch'];
+				$joined_epoch = $row['joined_epoch'];
+				$rejoined_epoch = $row['rejoined_epoch'];
+				$bridge_epoch = $row['bridge_epoch'];
+				$abandoned_epoch = $row['abandoned_epoch'];
+				$base_score = $row['base_score'];
+				$skill_score = $row['skill_score'];
+				$serving_agent = $row['serving_agent'];
+				$serving_system = $row['serving_system'];
+				$state = $row['state'];
+				if ($state=="Trying") {$q_trying = $q_trying + 1;}
+				if ($state=="Waiting") {$q_waiting = $q_waiting + 1;}
+				if ($state=="Answered") {$q_answered = $q_answered + 1;}
 
-					$joined_seconds = time() - $joined_epoch;
-					$joined_length_hour = floor($joined_seconds/3600);
-					$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
-					$joined_length_sec = $joined_seconds - (($joined_length_hour * 3600) + ($joined_length_min * 60));
-					$joined_length_min = sprintf("%02d", $joined_length_min);
-					$joined_length_sec = sprintf("%02d", $joined_length_sec);
-					$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
+				$joined_seconds = time() - $joined_epoch;
+				$joined_length_hour = floor($joined_seconds/3600);
+				$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
+				$joined_length_sec = $joined_seconds - (($joined_length_hour * 3600) + ($joined_length_min * 60));
+				$joined_length_min = sprintf("%02d", $joined_length_min);
+				$joined_length_sec = sprintf("%02d", $joined_length_sec);
+				$joined_length = $joined_length_hour.':'.$joined_length_min.':'.$joined_length_sec;
 
-					//$system_seconds = time() - $system_epoch;
-					//$system_length_hour = floor($system_seconds/3600);
-					//$system_length_min = floor($system_seconds/60 - ($system_length_hour * 60));
-					//$system_length_sec = $system_seconds - (($system_length_hour * 3600) + ($system_length_min * 60));
-					//$system_length_min = sprintf("%02d", $system_length_min);
-					//$system_length_sec = sprintf("%02d", $system_length_sec);
-					//$system_length = $system_length_hour.':'.$system_length_min.':'.$system_length_sec;
+				//$system_seconds = time() - $system_epoch;
+				//$system_length_hour = floor($system_seconds/3600);
+				//$system_length_min = floor($system_seconds/60 - ($system_length_hour * 60));
+				//$system_length_sec = $system_seconds - (($system_length_hour * 3600) + ($system_length_min * 60));
+				//$system_length_min = sprintf("%02d", $system_length_min);
+				//$system_length_sec = sprintf("%02d", $system_length_sec);
+				//$system_length = $system_length_hour.':'.$system_length_min.':'.$system_length_sec;
 
-					echo "<tr>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".$joined_length."</td>\n";
-					//echo "<td valign='top' class='".$row_style[$c]."'>".$system_length."</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".$caller_name."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".$caller_number."&nbsp;</td>\n";
-					echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
-					if (if_group("admin") || if_group("superadmin")) {
-						echo "<td valign='top' class='".$row_style[$c]."'>";
+				echo "<tr>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$joined_length."</td>\n";
+				//echo "<td valign='top' class='".$row_style[$c]."'>".$system_length."</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$caller_name."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$caller_number."&nbsp;</td>\n";
+				echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
+				if (if_group("admin") || if_group("superadmin")) {
+					echo "<td valign='top' class='".$row_style[$c]."'>";
 
-						$q_caller_number = urlencode($caller_number);
-						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")";
+					$q_caller_number = urlencode($caller_number);
+					$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")";
 
-						//debug
-						//echo $orig_command;
-						//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
+					//debug
+					//echo $orig_command;
+					//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 
-						echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
+					echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
 
 
-						echo "</td>";
-					}
-					echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent."&nbsp;</td>\n";
-					echo "</tr>\n";
-					if ($c==0) { $c=1; } else { $c=0; }
-				} //end if uuid_exists
+					echo "</td>";
+				}
+				echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent."&nbsp;</td>\n";
+				echo "</tr>\n";
+				if ($c==0) { $c=1; } else { $c=0; }
 			}
 			echo "</table>\n";
 			echo "</br>";
