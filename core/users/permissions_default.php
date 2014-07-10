@@ -23,22 +23,24 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('group_edit')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	return;
-}
+if (!$included) {
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+	if (permission_exists('group_edit')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
-//add multi-lingual support
+	//add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
+}
 
 //permission restore default
 	require_once "core/users/resources/classes/permission.php";
@@ -46,9 +48,11 @@ else {
 	$permission->db = $db;
 	$permission->restore();
 
-//show a message to the user
+if (!$included) {
+	//show a message to the user
 	$_SESSION["message"] = $text['message-restore'];
 	header("Location: groups.php");
 	return;
+}
 
 ?>
