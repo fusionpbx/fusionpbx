@@ -94,7 +94,7 @@ else {
 
 //includes
 	require_once "resources/header.php";
-	$page["title"] = $text['title-domains'];
+	$document['title'] = $text['title-domains'];
 
 	require_once "resources/paging.php";
 

@@ -283,7 +283,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-dialplan_edit'];
+	$document['title'] = $text['title-dialplan_edit'];
 
 //javascript to change select to input and back again
 	?><script language="javascript">

@@ -41,7 +41,7 @@ foreach($text as $key => $value) {
 }
 
 require_once "resources/header.php";
-$page["title"] = $text['title-dialplan-inbound-add'];
+$document['title'] = $text['title-dialplan-inbound-add'];
 
 require_once "resources/paging.php";
 

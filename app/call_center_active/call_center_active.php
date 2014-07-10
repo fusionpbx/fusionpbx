@@ -45,7 +45,7 @@ else {
 
 //get the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-call_center_queue_activity'];
+	$document['title'] = $text['title-call_center_queue_activity'];
 
 ?><script type="text/javascript">
 function loadXmlHttp(url, id) {

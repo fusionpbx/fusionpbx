@@ -162,10 +162,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the header
 	require_once "resources/header.php";
 	if ($action == "update") {
-		$page["title"] = $text['title-device_setting-edit'];
+		$document['title'] = $text['title-device_setting-edit'];
 	}
 	elseif ($action == "add") {
-		$page["title"] = $text['title-device_setting-add'];
+		$document['title'] = $text['title-device_setting-add'];
 	}
 
 //show the content

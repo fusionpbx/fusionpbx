@@ -27,7 +27,7 @@ include "root.php";
 require_once "resources/require.php";
 
 //get the output from the buffer
-	$body = $content_from_db.ob_get_contents(); 
+	$body = $content_from_db.ob_get_contents();
 	ob_end_clean(); //clean the buffer
 
 //set a default template
@@ -71,7 +71,7 @@ require_once "resources/require.php";
 
 //prepare the template to display the output
 	$custom_head = '';
-	$output = str_replace ("<!--{title}-->", $page["title"], $template); //<!--{title}--> defined in each individual page
+	$output = str_replace ("<!--{title}-->", $document["title"], $template); //<!--{title}--> defined in each individual page
 	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
 	if (strlen($v_menu) > 0) {
 		$output = str_replace ("<!--{menu}-->", $v_menu, $output); //defined in /resources/menu.php

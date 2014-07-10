@@ -305,10 +305,10 @@ else {
 //include the header
 	require_once "resources/header.php";
 	if ($action == "update") {
-		$page["title"] = $text['title-menu_item-edit'];
+		$document['title'] = $text['title-menu_item-edit'];
 	}
 	if ($action == "add") {
-		$page["title"] = $text['title-menu_item-add'];
+		$document['title'] = $text['title-menu_item-add'];
 	}
 
 	echo "<div align='center'>";

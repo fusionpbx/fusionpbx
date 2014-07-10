@@ -44,7 +44,7 @@ require_once "resources/check_auth.php";
 
 //show the header
 	require_once "resources/header.php";
-	//$page["title"] = $text['title-ring_group_forward'];
+	//$document['title'] = $text['title-ring_group_forward'];
 
 //get the hunt_group_uuid
 	$ring_group_uuid = check_str($_REQUEST["id"]);

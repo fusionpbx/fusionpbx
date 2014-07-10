@@ -41,7 +41,7 @@ else {
 	}
 
 require_once "resources/header.php";
-	$page["title"] = $text['title-call_flows'];
+	$document['title'] = $text['title-call_flows'];
 
 require_once "resources/paging.php";
 

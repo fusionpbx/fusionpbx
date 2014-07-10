@@ -53,10 +53,10 @@ if (isset($_REQUEST["id"])) {
 }
 
 if ($action == "update") {
-	$page["title"] = $text['title-xmpp-edit'];
+	$document['title'] = $text['title-xmpp-edit'];
 }
 else if ($action == "add") {
-	$page["title"] = $text['title-xmpp-add'];
+	$document['title'] = $text['title-xmpp-add'];
 }
 
 $domain_name = $_SESSION['domains'][$_SESSION['domain_uuid']]['domain_name'];

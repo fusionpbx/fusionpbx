@@ -64,7 +64,7 @@ else {
 
 //include the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-group_members'];
+	$document['title'] = $text['title-group_members'];
 
 //show the content
 	$c = 0;

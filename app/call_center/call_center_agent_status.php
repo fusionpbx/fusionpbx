@@ -41,7 +41,7 @@ else {
 	}
 
 require_once "resources/header.php";
-$page["title"] = $text['title-call_center_agent_status'];
+$document['title'] = $text['title-call_center_agent_status'];
 
 require_once "resources/paging.php";
 

@@ -354,7 +354,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //content
 	require_once "resources/header.php";
-	$page["title"] = $text['title-ivr_menu'];
+	$document['title'] = $text['title-ivr_menu'];
 
 	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
 	echo "\n";

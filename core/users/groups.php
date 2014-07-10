@@ -44,7 +44,7 @@ else {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-group_manager'];
+	$document['title'] = $text['title-group_manager'];
 	if (isset($_REQUEST["change"])) {
 		//get the values from the HTTP POST and save them as PHP variables
 		$change = check_str($_REQUEST["change"]);

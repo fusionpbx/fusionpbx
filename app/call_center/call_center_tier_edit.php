@@ -153,7 +153,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-call_center_tier_edit'];
+	$document['title'] = $text['title-call_center_tier_edit'];
 
 //show the content
 	echo "<div align='center'>";

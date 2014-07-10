@@ -42,7 +42,7 @@ else {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-sql_query'];
+	$document['title'] = $text['title-sql_query'];
 
 //pdo voicemail database connection
 	require_once "sql_query_pdo.php";

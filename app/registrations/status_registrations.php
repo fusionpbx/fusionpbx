@@ -45,7 +45,7 @@ require_once "resources/check_auth.php";
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['header-registrations'];
+	$document['title'] = $text['header-registrations'];
 
 //set the variables
 	$profile = (isset($_REQUEST['profile']) && $_REQUEST['profile'] != '') ? $_REQUEST['profile'] : "internal";

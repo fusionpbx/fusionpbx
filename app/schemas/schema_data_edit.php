@@ -369,7 +369,7 @@ else {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-data'];
+	$document['title'] = $text['title-data'];
 
 //pre-populate the form
 	if ($action == "update") {

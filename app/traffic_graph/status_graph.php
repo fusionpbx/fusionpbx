@@ -70,7 +70,7 @@ else {
 }
 
 require_once "resources/header.php";
-$page["title"] = $text['title-traffic_graph'];
+$document['title'] = $text['title-traffic_graph'];
 ?>
 <table width='100%'>
 <tr>
