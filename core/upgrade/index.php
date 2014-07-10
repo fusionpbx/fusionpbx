@@ -35,7 +35,6 @@ if (
 	!permission_exists('upgrade_svn') &&
 	!permission_exists('upgrade_schema') &&
 	!permission_exists('upgrade_domains') &&
-	!permission_exists('upgrade_datatypes') &&
 	!permission_exists('menu_restore') &&
 	!permission_exists('group_edit')
 	) {
@@ -49,7 +48,11 @@ if (sizeof($_POST) > 0) {
 
 	// run svn update
 	if ($do["svn"] && permission_exists("upgrade_svn")) {
-
+		$cmd = "svn up /var/www/fusionpbx";
+		exec($cmd, $response_svn_update);
+		if (sizeof($response_svn_update) > 0) {
+			$_SESSION["response_svn_update"] = $response_svn_update;
+		}
 		$response_message = "SVN Updated";
 	}
 
@@ -58,6 +61,7 @@ if (sizeof($_POST) > 0) {
 		$included = true;
 		$response_output = "return";
 		$response_format = "html";
+		$upgrade_data_types = (is_bool($_POST["do_datatypes"])) ? check_str($_POST["do_datatypes"]) : false;
 		require_once "core/upgrade/upgrade_schema.php";
 		if ($response_upgrade_schema != '') {
 			$_SESSION["response_upgrade_schema"] = $response_upgrade_schema;
@@ -76,15 +80,9 @@ if (sizeof($_POST) > 0) {
 		$response_message = "Domain(s) Upgraded";
 	}
 
-	// syncronize data types
-	if ($do["datatypes"] && permission_exists("upgrade_datatypes")) {
-
-		$response_message = "Data Types Syncronized";
-	}
-
 	// restore defaults of the selected menu
 	if ($do["menu"] && permission_exists("menu_restore")) {
-		$sel_menu = explode('|', $_POST["sel_menu"]);
+		$sel_menu = explode('|', check_str($_POST["sel_menu"]));
 		$menu_uuid = $sel_menu[0];
 		$menu_language = $sel_menu[1];
 		$included = true;
@@ -126,9 +124,9 @@ echo "Select the upgrade/update/restore actions below you wish to perform.";
 echo "<br><br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
-echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 
 if (permission_exists("upgrade_svn")) {
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		SVN Update";
@@ -138,21 +136,39 @@ if (permission_exists("upgrade_svn")) {
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 }
 
 if (permission_exists("upgrade_schema")) {
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		Upgrade Schema";
 	echo "	</td>\n";
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<input type='checkbox' class='formfld' name='do[schema]' id='do_schema' value='1'>";
+	echo "		<input type='checkbox' class='formfld' name='do[schema]' id='do_schema' value='1' onchange=\"$('#do_datatypes').prop('checked', false); $('#tr_data_types').slideToggle('fast');\">";
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
+
+	echo "<div id='tr_data_types' style='display: none;'>\n";
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<tr>\n";
+	echo "	<td width='30%' class='vncell'>\n";
+	echo "		Upgrade Data Types";
+	echo "	</td>\n";
+	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
+	echo "		<input type='checkbox' class='formfld' name='do[datatypes]' id='do_datatypes' value='true'>";
+	echo "		<br />\n";
+	echo "	</td>\n";
+	echo "</tr>\n";
+	echo "</table>\n";
+	echo "</div>\n";
 }
 
 if (permission_exists("upgrade_domains")) {
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		Upgrade Domain(s)";
@@ -162,21 +178,11 @@ if (permission_exists("upgrade_domains")) {
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
-}
-
-if (permission_exists("upgrade_datatypes")) {
-	echo "<tr>\n";
-	echo "	<td width='30%' class='vncell'>\n";
-	echo "		Syncronize Data Types";
-	echo "	</td>\n";
-	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
-	echo "		<input type='checkbox' class='formfld' name='do[datatypes]' id='do_datatypes' value='1'>";
-	echo "		<br />\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
+	echo "</table>\n";
 }
 
 if (permission_exists("menu_restore")) {
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		Restore Menu Defaults";
@@ -184,7 +190,7 @@ if (permission_exists("menu_restore")) {
 	echo "	<td width='70%' class='vtable' style='height: 50px;'>\n";
 	echo "		<table cellpadding='0' cellspacing='0' border='0'>";
 	echo "			<tr><td>";
-	echo "				<input type='checkbox' class='formfld' name='do[menu]' id='do_menu' value='1' onclick=\"$('#sel_menu').fadeToggle('fast');\">";
+	echo "				<input type='checkbox' class='formfld' name='do[menu]' id='do_menu' value='1' onchange=\"$('#sel_menu').fadeToggle('fast');\">";
 	echo "			</td><td>";
 	echo "				<select name='sel_menu' id='sel_menu' class='formfld' style='display: none; margin-left: 15px;'>\n";
 		$sql = "select * from v_menus ";
@@ -200,9 +206,11 @@ if (permission_exists("menu_restore")) {
 	echo "		</table>";
 	echo "	</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 }
 
 if (permission_exists("group_edit")) {
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		Restore Permission Defaults";
@@ -212,17 +220,31 @@ if (permission_exists("group_edit")) {
 	echo "		<br />\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
+	echo "</table>\n";
 }
 
+echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 echo "<tr>\n";
 echo "	<td colspan='2' style='text-align: right;'>\n";
 echo "		<input type='submit' class='btn' value='Execute'>\n";
 echo "	</td>\n";
 echo "</tr>\n";
-
-
 echo "</table>\n";
+
 echo "</form>\n";
+
+
+// output result of svn update
+if ($_SESSION["response_svn_update"] != '') {
+	echo "<br /><br /><br />";
+	echo "<b>".$text['header-svn_update_results']."</b>";
+	echo "<br /><br />";
+	echo "<pre>";
+	echo implode("\n", $_SESSION["response_svn_update"]);
+	echo "</pre>";
+	echo "<br /><br />";
+	unset($_SESSION["response_svn_update"]);
+}
 
 
 // output result of upgrade schema
