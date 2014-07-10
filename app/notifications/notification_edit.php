@@ -56,7 +56,97 @@ else {
 	}
 	unset($sql, $prep_statement);
 
-	if (count($_POST) > 0) {
+	if (count($_REQUEST) > 0) {
+
+		// prepare demographic information **********************************************
+
+			// fusionpbx version
+			$software_ver = $software_version;
+
+			// php version
+			$php_ver = phpversion();
+
+			// webserver name & version
+			$web_server = $_SERVER['SERVER_SOFTWARE'];
+
+			// switch version
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_result = event_socket_request($fp, 'api version');
+			}
+			$switch_ver = trim($switch_result);
+
+			// database name & version
+			switch ($db_type) {
+				case "pgsql" :	$db_ver_query = "select version() as db_ver;";			break;
+				case "mysql" :	$db_ver_query = "select version() as db_ver;";			break;
+				case "sqlite" :	$db_ver_query = "select sqlite_version() as db_ver;";	break;
+			}
+			$prep_statement = $db->prepare($db_ver_query);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$database_version = $row["db_ver"];
+					break; // limit to 1 row
+				}
+			}
+			unset($db_ver_query, $prep_statement);
+			$db_ver = $database_version;
+
+			// operating system name & version
+			$os_platform = PHP_OS;
+			$os_info_1 = php_uname("a");
+			if ($os_platform == "Linux") {
+				$os_info_2 = shell_exec("cat /etc/*{release,version}");
+				$os_info_2 .= shell_exec("lsb_release -d -s");
+			}
+			else if (substr(strtoupper($os_platform), 0, 3) == "WIN") {
+				$os_info_2 = trim(shell_exec("ver"));
+			}
+
+		// **************************************************************************
+
+		// check for demographic only submit
+		if (isset($_GET["demo"])) {
+
+			// update remote server record with new values
+			$url = "https://".$software_url."/app/notifications/notifications_manage.php";
+			$url .= "?demo";
+			$url .= "&id=".$software_uuid;
+			$url .= "&software_ver=".urlencode($software_ver);
+			$url .= "&php_ver=".urlencode($php_ver);
+			$url .= "&web_server=".urlencode($web_server);
+			$url .= "&switch_ver=".urlencode($switch_ver);
+			$url .= "&db_type=".urlencode($db_type);
+			$url .= "&db_ver=".urlencode($db_ver);
+			$url .= "&os_platform=".urlencode($os_platform);
+			$url .= "&os_info_1=".urlencode($os_info_1);
+			$url .= "&os_info_2=".urlencode($os_info_2);
+
+			if (function_exists('curl_version')) {
+				$curl = curl_init();
+				curl_setopt($curl, CURLOPT_URL, $url);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+				$response = curl_exec($curl);
+				curl_close($curl);
+			}
+			else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
+				$response = file_get_contents($url);
+			}
+
+			// parse response
+			$response = json_decode($response, true);
+
+			if ($response['result'] == 'submitted') {
+				// set message
+				$_SESSION["message"] = $text['message-demographics_submitted'];
+			}
+
+			header("Location: notification_edit.php");
+			exit;
+
+		}
 
 		// retrieve submitted values
 		$project_notifications = check_str($_POST["project_notifications"]);
@@ -125,55 +215,6 @@ else {
 					exit;
 			}
 		}
-
-		// collect demographic information **********************************************
-
-			// fusionpbx version
-			$software_ver = $software_version;
-
-			// php version
-			$php_ver = phpversion();
-
-			// webserver name & version
-			$web_server = $_SERVER['SERVER_SOFTWARE'];
-
-			// switch version
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_result = event_socket_request($fp, 'api version');
-			}
-			$switch_ver = trim($switch_result);
-
-			// database name & version
-			switch ($db_type) {
-				case "pgsql" :	$db_ver_query = "select version() as db_ver;";			break;
-				case "mysql" :	$db_ver_query = "select version() as db_ver;";			break;
-				case "sqlite" :	$db_ver_query = "select sqlite_version() as db_ver;";	break;
-			}
-			$prep_statement = $db->prepare($db_ver_query);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$database_version = $row["db_ver"];
-					break; // limit to 1 row
-				}
-			}
-			unset($db_ver_query, $prep_statement);
-			$db_ver = $database_version;
-
-			// operating system name & version
-			$os_platform = PHP_OS;
-			$os_info_1 = php_uname("a");
-			if ($os_platform == "Linux") {
-				$os_info_2 = shell_exec("cat /etc/*{release,version}");
-				$os_info_2 .= shell_exec("lsb_release -d -s");
-			}
-			else if (substr(strtoupper($os_platform), 0, 3) == "WIN") {
-				$os_info_2 = trim(shell_exec("ver"));
-			}
-
-		// **************************************************************************
 
 		// update remote server record with new values
 		$url = "https://".$software_url."/app/notifications/notifications_manage.php";
@@ -397,8 +438,19 @@ $page["title"] = $text['title-notifications'];
 	echo 			$text['description-project_notification_recipient']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
+
 	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
+	echo "		<td colspan='2' class='vtable' style='padding: 15px;' align='right'>\n";
+	echo "			".$text['message-disclaimer']."\n";
+	echo "			<br /><br />\n";
+	echo "			".$text['message-demographics']." <a href='?demo'>".$text['message-demographics_click_here']."</a>.\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
+
+	echo "<table cellpadding='6' cellspacing='0' width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td align='right'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
@@ -406,9 +458,6 @@ $page["title"] = $text['title-notifications'];
 	echo "</table>\n";
 
 	echo "</form>\n";
-
-	echo "<br><br>";
-	echo "<div align='left'>".$text['message-disclaimer']."</div>";
 
 	echo "</td>";
 	echo "</tr>";
