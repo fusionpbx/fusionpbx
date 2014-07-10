@@ -67,7 +67,7 @@
 
 // load header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-user_dashboard'];
+	$document['title'] = $text['title-user_dashboard'];
 
 	echo "<br><b>".$text['header-user_dashboard']."</b><br>";
 	echo $text['description-user_dashboard'];

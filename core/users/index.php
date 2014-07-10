@@ -42,7 +42,7 @@ else {
 
 //include the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-user_manager'];
+	$document['title'] = $text['title-user_manager'];
 
 //show the user list
 	echo "<div align='center'>";

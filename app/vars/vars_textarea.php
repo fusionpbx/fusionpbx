@@ -42,7 +42,7 @@ else {
 
 //include the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-variables_advanced'];
+	$document['title'] = $text['title-variables_advanced'];
 
 //restore the default vars.xml
 if ($_GET['a'] == "default" && permission_exists('var_edit')) {

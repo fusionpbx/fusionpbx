@@ -198,7 +198,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-user_add'];
+	$document['title'] = $text['title-user_add'];
 
 //show the content
 	echo "<script>";

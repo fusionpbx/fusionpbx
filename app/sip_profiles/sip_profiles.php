@@ -41,7 +41,7 @@ else {
 	}
 
 require_once "resources/header.php";
-$page["title"] = $text['title-sip_profiles'];
+$document['title'] = $text['title-sip_profiles'];
 
 require_once "resources/paging.php";
 

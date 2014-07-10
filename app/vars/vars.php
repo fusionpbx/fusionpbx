@@ -42,7 +42,7 @@ else {
 
 //include the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-variables'];
+	$document['title'] = $text['title-variables'];
 
 //set http values as php variables
 	$order_by = $_GET["order_by"];

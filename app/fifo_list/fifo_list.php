@@ -41,7 +41,7 @@ else {
 	}
 
 require_once "resources/header.php";
-$page["title"] = $text['title-active_queues'];
+$document['title'] = $text['title-active_queues'];
 
 ?><script type="text/javascript">
 function loadXmlHttp(url, id) {

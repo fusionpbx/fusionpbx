@@ -42,7 +42,7 @@ else {
 
 //additional includes
 	require_once "resources/header.php";
-	$page["title"] = $text['title-dialplan_add'];
+	$document['title'] = $text['title-dialplan_add'];
 	require_once "resources/paging.php";
 
 //set the variables

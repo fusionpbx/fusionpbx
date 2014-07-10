@@ -155,10 +155,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the header
 	require_once "resources/header.php";
 	if ($action == "update") {
-		$page["title"] = $text['title-contact_notes-edit'];
+		$document['title'] = $text['title-contact_notes-edit'];
 	}
 	else if ($action == "add") {
-		$page["title"] = $text['title-contact_notes-add'];
+		$document['title'] = $text['title-contact_notes-add'];
 	}
 
 //show the content

@@ -209,7 +209,7 @@ if (count($_POST)>0) {
 
 			//show the header
 				require_once "resources/header.php";
-				$page["title"] = $text['title-import_results'];
+				$document['title'] = $text['title-import_results'];
 
 			echo "<div align='center'>\n";
 			echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
@@ -304,7 +304,7 @@ if (count($_POST)>0) {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-import'];
+	$document['title'] = $text['title-import'];
 
 //show the content
 	echo "<div align='center'>";

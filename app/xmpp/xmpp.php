@@ -44,7 +44,7 @@ else {
 
 
 require_once "resources/header.php";
-$page["title"] = $text['title-xmpp'];
+$document['title'] = $text['title-xmpp'];
 
 require_once "resources/paging.php";
 

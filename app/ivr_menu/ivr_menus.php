@@ -42,7 +42,7 @@ else {
 
 //additional includes
 	require_once "resources/header.php";
-	$page["title"] = $text['title-ivr_menus'];
+	$document['title'] = $text['title-ivr_menus'];
 
 	require_once "resources/paging.php";
 

@@ -59,7 +59,7 @@ if (strlen($_GET["id"]) > 0) {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-data_view'];
+	$document['title'] = $text['title-data_view'];
 
 //get the information about the schema by using the id
 	$sql = "select * from v_schemas ";

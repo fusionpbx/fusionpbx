@@ -41,7 +41,7 @@ else {
 	}
 
 require_once "resources/header.php";
-$page["title"] = $text['title-default_dialplan'];
+$document['title'] = $text['title-default_dialplan'];
 
 if ($_GET['a'] == "default" && permission_exists('dialplan_advanced_edit')) {
 	//create the dialplan/default.xml for single tenant or dialplan/domain.xml

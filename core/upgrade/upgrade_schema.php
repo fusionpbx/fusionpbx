@@ -59,7 +59,7 @@
 			}
 
 		require_once "resources/header.php";
-		$page["title"] = $text['title-upgrade_schema'];
+		$document['title'] = $text['title-upgrade_schema'];
 
 		$display_type = 'html'; //html, text
 	}

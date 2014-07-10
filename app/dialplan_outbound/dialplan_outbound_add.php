@@ -43,7 +43,7 @@ else {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-dialplan-outbound-add'];
+	$document['title'] = $text['title-dialplan-outbound-add'];
 
 	require_once "resources/paging.php";
 

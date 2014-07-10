@@ -58,7 +58,7 @@ else {
 
 //show the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-queue'];
+	$document['title'] = $text['title-queue'];
 
 ?>
 <script type="text/javascript">

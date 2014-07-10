@@ -369,7 +369,7 @@ else {
 
 //include the header
 	require_once "resources/header.php";
-	$page["title"] = $text['title-user_edit'];
+	$document['title'] = $text['title-user_edit'];
 
 //show the content
 	$table_width ='width="100%"';

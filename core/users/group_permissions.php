@@ -42,7 +42,7 @@ else {
 	}
 
 require_once "resources/header.php";
-$page["title"] = $text['title-group_permissions'];
+$document['title'] = $text['title-group_permissions'];
 
 require_once "resources/paging.php";
 

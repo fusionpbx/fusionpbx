@@ -318,7 +318,7 @@ else {
 	}
 
 require_once "resources/header.php";
-$page["title"] = $text['title-notifications'];
+$document['title'] = $text['title-notifications'];
 
 // show the content
 	echo "<div align='center'>";

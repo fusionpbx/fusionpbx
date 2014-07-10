@@ -41,7 +41,7 @@ else {
 	}
 
 require_once "resources/header.php";
-$page["title"] = $text['title-contacts'];
+$document['title'] = $text['title-contacts'];
 
 require_once "resources/paging.php";
 

@@ -394,10 +394,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the header
 	require_once "resources/header.php";
 	if ($action == "add") {
-		$page["title"] = $text['title-call_center_queue_add'];
+		$document['title'] = $text['title-call_center_queue_add'];
 	}
 	if ($action == "update") {
-		$page["title"] = $text['title-call_center_queue_edit'];
+		$document['title'] = $text['title-call_center_queue_edit'];
 	}
 
 //show the content

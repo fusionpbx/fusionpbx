@@ -78,7 +78,7 @@ if (strlen($group_name) > 0) {
 
 //include the header
 	include "resources/header.php";
-	$page["title"] = $text['title-group_add'];
+	$document['title'] = $text['title-group_add'];
 
 //show the content
 	echo "<div align='center'>";
