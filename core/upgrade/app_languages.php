@@ -10,6 +10,11 @@
 	$text['title-upgrade']['pt-pt'] = "Actualizar";
 	$text['title-upgrade']['fr-fr'] = "Mise à jour";
 
+	$text['header-svn_update_results']['en-us'] = "SVN Update Results";
+	$text['header-svn_update_results']['es-cl'] = "";
+	$text['header-svn_update_results']['pt-pt'] = "";
+	$text['header-svn_update_results']['fr-fr'] = "";
+
 	$text['header-upgrade_schema_results']['en-us'] = "Upgrade Schema Results";
 	$text['header-upgrade_schema_results']['es-cl'] = "Actualiza Esquema Resultados";
 	$text['header-upgrade_schema_results']['pt-pt'] = "Resultados Atualização do Esquema";

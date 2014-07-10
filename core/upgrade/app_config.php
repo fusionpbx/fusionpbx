@@ -48,10 +48,6 @@
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "e7bb1296-3141-48c9-a95a-82d2768d0ae4";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
-		$apps[$x]['permissions'][$y]['name'] = "upgrade_datatypes";
-		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9c82d494-c248-4f74-a82b-2af15064d6fc";
-		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		$y++;
 
 	//schema details
 		$y = 0; //table array index
