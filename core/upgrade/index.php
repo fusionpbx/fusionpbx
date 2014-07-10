@@ -116,9 +116,7 @@ foreach($text as $key => $value) {
 require_once "resources/header.php";
 $document['title'] = $text['title-upgrade'];
 
-//set defaults
-$display_type = 'html';
-
+echo "<br />";
 echo "<b>".$text['header-upgrade']."</b><br>";
 echo "Select the upgrade/update/restore actions below you wish to perform.";
 echo "<br><br><br>";
