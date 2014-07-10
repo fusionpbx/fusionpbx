@@ -130,14 +130,29 @@
 	$text['message-invalid_recipient']['pt-pt'] = "Inválido Notificação Destinatário";
 	$text['message-invalid_recipient']['fr-fr'] = "Notification invalide bénéficiaire";
 
+	$text['message-demographics_submitted']['en-us'] = "Demographics Submitted";
+	$text['message-demographics_submitted']['es-cl'] = "Demografía Enviado";
+	$text['message-demographics_submitted']['pt-pt'] = "Demografia Submetido";
+	$text['message-demographics_submitted']['fr-fr'] = "Démographie Soumis";
+
 	$text['button-save']['en-us'] = "Save";
 	$text['button-save']['es-cl'] = "Guardar";
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
-	$text['message-disclaimer']['en-us'] = "<u>Disclosure:</u> Enabling Project Notifications is consent to the collection of <i>anonymous</i> and <i>general</i> demographic information about your installation environment.  Information requested consists of the following: 1) FusionPBX version, 2) PHP version, 3) web server and version, 4) voice switch version, 5) database type and version, 6) operating system platform and version, and 7) public IP address. If you do not wish for this information to be submitted, simply leave Project Notifications disabled, and no information will be submitted about your system.";
-	$text['message-disclaimer']['es-cl'] = "<u>Divulgación:</u> Habilitación del proyecto Notificaciones es el consentimiento a la recopilación de <i> anónimo </ i> y generales <i> </ i> la información demográfica sobre su entorno de instalación. La información solicitada se compone de los siguientes: 1) FusionPBX versión, 2) la versión de PHP, 3) del servidor web y la versión 4) Versión conmutador de voz, 5) el tipo de base de datos y la versión 6) plataforma de sistema operativo y versión, y 7) IP pública dirección. Si usted no desea que esta información sea presentada, simplemente deje de Proyecto Notificaciones deshabilitado, y ninguna información se presentará sobre su sistema.";
-	$text['message-disclaimer']['pt-pt'] = "<u>Divulgação:</u> A habilitação do projeto Notificações é o consentimento para a coleta de <i> anônimo </ i> e geral <i> </ i> informações demográficas sobre o seu ambiente de instalação. As informações solicitadas consiste no seguinte: 1) versão FusionPBX, 2) versão PHP, 3) servidor web e versão, 4) versão interruptor de voz, 5) Tipo de banco de dados e versão, 6) plataforma de sistema operacional e versão, e 7) IP público endereço. Se você não deseja que esta informação ser submetida, basta deixar Projeto Notificações desativada, e nenhuma informação será apresentada sobre o sistema.";
-	$text['message-disclaimer']['fr-fr'] = "<u>Divulgation:</u> Activation des notifications projet est consentement à la collecte de <i> anonyme </ i> et générale <i> </ i> des informations démographiques sur l'environnement d'installation. Les informations demandées se compose de ce qui suit: 1) FusionPBX version 2) version de PHP, 3) le serveur web et la version 4) Version commutateur vocal, 5) type de base de données et la version 6) plate-forme de système d'exploitation et sa version, et 7) IP publique adresse. Si vous ne souhaitez pas que cette information soit présentée, laissez simplement Notifications projet désactivé, et aucune information ne sera soumis à votre système.";
+	$text['message-disclaimer']['en-us'] = "<u>Disclosure</u>: Enabling Project Notifications is consent to the collection of <i>anonymous</i> and <i>general</i> demographic information about your installation environment.  Information requested consists of the following: 1) FusionPBX version, 2) PHP version, 3) web server and version, 4) voice switch version, 5) database type and version, 6) operating system platform and version, and 7) public IP address. If you do not wish for this information to be submitted, simply leave Project Notifications disabled, and no information will be submitted about your system.";
+	$text['message-disclaimer']['es-cl'] = "<u>Divulgación</u>: Habilitación del proyecto Notificaciones es el consentimiento a la recopilación de <i>anónimo</i> y <i>generales</i> la información demográfica sobre su entorno de instalación. La información solicitada se compone de los siguientes: 1) FusionPBX versión, 2) la versión de PHP, 3) del servidor web y la versión 4) Versión conmutador de voz, 5) el tipo de base de datos y la versión 6) plataforma de sistema operativo y versión, y 7) IP pública dirección. Si usted no desea que esta información sea presentada, simplemente deje de Proyecto Notificaciones deshabilitado, y ninguna información se presentará sobre su sistema.";
+	$text['message-disclaimer']['pt-pt'] = "<u>Divulgação</u>: A habilitação do projeto Notificações é o consentimento para a coleta de <i>anônimo</i> e <i>geral</i> informações demográficas sobre o seu ambiente de instalação. As informações solicitadas consiste no seguinte: 1) versão FusionPBX, 2) versão PHP, 3) servidor web e versão, 4) versão interruptor de voz, 5) Tipo de banco de dados e versão, 6) plataforma de sistema operacional e versão, e 7) IP público endereço. Se você não deseja que esta informação ser submetida, basta deixar Projeto Notificações desativada, e nenhuma informação será apresentada sobre o sistema.";
+	$text['message-disclaimer']['fr-fr'] = "<u>Divulgation</u>: Activation des notifications projet est consentement à la collecte de <i>anonyme</i> et <i>générale</i> des informations démographiques sur l'environnement d'installation. Les informations demandées se compose de ce qui suit: 1) FusionPBX version 2) version de PHP, 3) le serveur web et la version 4) Version commutateur vocal, 5) type de base de données et la version 6) plate-forme de système d'exploitation et sa version, et 7) IP publique adresse. Si vous ne souhaitez pas que cette information soit présentée, laissez simplement Notifications projet désactivé, et aucune information ne sera soumis à votre système.";
+
+	$text['message-demographics']['en-us'] = "<u>Note</u>: If you wish to help the project by submitting the demographic information described above <i>without</i> subscribing to Project Notifications, simply ";
+	$text['message-demographics']['es-cl'] = "";
+	$text['message-demographics']['pt-pt'] = "";
+	$text['message-demographics']['fr-fr'] = "";
+
+	$text['message-demographics_click_here']['en-us'] = "click here";
+	$text['message-demographics_click_here']['es-cl'] = "haga clic aquí";
+	$text['message-demographics_click_here']['pt-pt'] = "clique aqui";
+	$text['message-demographics_click_here']['fr-fr'] = "cliquez ici";
 
 ?>
