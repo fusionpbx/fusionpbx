@@ -24,6 +24,9 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
+// set included, if not
+	if (!isset($included)) { $included = false; }
+
 //check the permission
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
@@ -34,7 +37,7 @@
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
 		$display_type = 'text'; //html, text
 	}
-	else {
+	else if (!$included) {
 		include "root.php";
 		require_once "resources/require.php";
 		require_once "resources/check_auth.php";

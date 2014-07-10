@@ -32,7 +32,7 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$display_type = 'text'; //html, text
+		$response_format = 'text'; //html, text
 
 		//add multi-lingual support
 			require_once "app_languages.php";
@@ -61,16 +61,16 @@
 	}
 
 //set the default
-	if (!isset($display_results)) {
-		$display_results = false;
+	if (!isset($response_output)) {
+		$response_output = "echo";
 	}
 
 //include the header
-	if ($display_results) {
+	if ($response_output == "echo") {
 		require_once "resources/header.php";
 	}
 
-if ($display_type == 'text') {
+if ($response_format == 'text') {
 	echo "\n";
 	echo $text['label-upgrade']."\n";
 	echo "-----------------------------------------\n";
@@ -82,7 +82,7 @@ if ($display_type == 'text') {
 	require_once "core/upgrade/upgrade_schema.php";
 
 //show the content
-	if ($display_type == 'html') {
+	if ($response_format == 'html') {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -102,12 +102,12 @@ if ($display_type == 'text') {
 		echo "<br />\n";
 		echo "<br />\n";
 	}
-	elseif ($display_type == 'text') {
+	elseif ($response_format == 'text') {
 		echo "\n";
 	}
 
 //include the footer
-	if ($display_results) {
+	if ($response_output == "echo") {
 		require_once "resources/footer.php";
 	}
 ?>

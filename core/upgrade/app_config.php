@@ -1,12 +1,12 @@
 <?php
 	//application details
-		$apps[$x]['name'] = "Upgrade Schema";
+		$apps[$x]['name'] = "Upgrade";
 		$apps[$x]['uuid'] = "8b1d7eb5-1009-052c-e1a8-d1f4887a3f5c";
 		$apps[$x]['category'] = "Core";
 		$apps[$x]['subcategory'] = "";
 		$apps[$x]['version'] = "";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
-		$apps[$x]['description']['en-us'] = "Upgrade the database schema.";
+		$apps[$x]['description']['en-us'] = "Update or restore various system settings.";
 		$apps[$x]['description']['es-cl'] = "Actualiza el esquema de la base de datos";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
@@ -18,12 +18,12 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Upgrade Schema";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Actualizar Esquema";
+		$apps[$x]['menu'][0]['title']['en-us'] = "Upgrade";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Actualizar";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "MàJ BDD";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Mise à jour";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Actualizar BD";
@@ -31,15 +31,27 @@
 		$apps[$x]['menu'][0]['uuid'] = "8c826e92-be3c-0944-669a-24e5b915d562";
 		$apps[$x]['menu'][0]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/core/upgrade/upgrade_schema.php";
+		$apps[$x]['menu'][0]['path'] = "/core/upgrade/index.php";
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "upgrade_schema";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "8c826e92-be3c-0944-669a-24e5b915d562";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "upgrade_svn";
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = "upgrade_svn";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "71051909-81ff-4301-9997-52b11206b3a6";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "upgrade_schema";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "8c826e92-be3c-0944-669a-24e5b915d562";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "upgrade_domains";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "e7bb1296-3141-48c9-a95a-82d2768d0ae4";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "upgrade_datatypes";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9c82d494-c248-4f74-a82b-2af15064d6fc";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
