@@ -41,31 +41,26 @@
 		--exits the script if we didn't connect properly
 			assert(dbh:connected());
 
-		--get the domain_uuid
-			if (domain_uuid == nil) then
-				--get the domain_uuid
-					if (domain_name ~= nil) then
-						sql = "SELECT domain_uuid FROM v_domains ";
-						sql = sql .. "WHERE domain_name = '" .. domain_name .."' ";
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
-						end
-						status = dbh:query(sql, function(rows)
-							domain_uuid = rows["domain_uuid"];
-						end);
-					end
-			end
-
 		--get the domains
 			x = 1;
 			domains = {}
 			sql = "SELECT * FROM v_domains;";
 			dbh:query(sql, function(row)
-				--add the entire row to the directory table array
-					domains[x] = row;
+				--add items to the domains array
+					domains[row["domain_name"]] = row["domain_uuid"];
+					domains[row["domain_uuid"]] = row["domain_name"];
 				--increment x
 					x = x + 1;
 			end);
+
+		--get the domain_uuid
+			if (domain_uuid == nil) then
+				--get the domain_uuid
+					if (domain_name ~= nil) then
+						domain_uuid = domains[domain_name];
+					end
+			end
+
 	
 		--get the domain name
 			function get_domain_name(domains, domain_uuid)
@@ -261,8 +256,9 @@
 					if (call_context == "public") then
 						if (dialplan_detail_tag == "action") then
 							if (first_action) then
-								if (domain_uuid ~= nil) then
-									domain_name = get_domain_name(domains, domain_uuid);
+								if (domain_uuid ~= nil and domain_uuid ~= '') then
+									--domain_name = get_domain_name(domains, domain_uuid);
+									domain_name = domains[domain_uuid];
 									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
 									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);			
