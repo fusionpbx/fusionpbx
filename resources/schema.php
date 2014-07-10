@@ -274,6 +274,10 @@ function db_insert_into ($apps, $db_type, $table) {
 function db_upgrade_schema ($db, $db_type, $db_name, $response_output) {
 	global $text; // pulls in language variable array
 	global $response_format;
+	global $upgrade_data_types;
+
+	// set default
+	if (!isset($upgrade_data_types)) { $upgrade_data_types = false; }
 
 	//PHP PDO check if table or column exists
 		//check if table exists
@@ -433,56 +437,57 @@ function db_upgrade_schema ($db, $db_type, $db_name, $response_output) {
 												}
 											}
 										}
-									//change the data type if it has been changed
+//									//change the data type if it has been changed
 										//if the data type in the app db array is different than the type in the database then change the data type
-/*
-										$db_field_type = db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name);
-										$field_type_array = explode("(", $field_type);
-										$field_type = $field_type_array[0];
-										if (trim($db_field_type) != trim($field_type) && strlen($db_field_type) > 0) {
-											if ($db_type == "pgsql") {
-												if (strtolower($field_type) == "uuid") {
-													$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE uuid USING\n";
-													$sql_update .= "CAST(regexp_replace(".$field_name.", '([A-Z0-9]{4})([A-Z0-9]{12})', E'\\1-\\2')\n";
-													$sql_update .= "AS uuid);\n";
-												}
-												else {
-													if ($db_field_type = "integer" && strtolower($field_type) == "serial") {
-														//field type has not changed
-													} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "timestamp") {
-														//field type has not changed
-													} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "datetime") {
-														//field type has not changed
-													} elseif ($db_field_type = "integer" && strtolower($field_type) == "numeric") {
-														//field type has not changed
-													} elseif ($db_field_type = "character" && strtolower($field_type) == "char") {
-														//field type has not changed
+										if ($upgrade_data_types) {
+											$db_field_type = db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name);
+											$field_type_array = explode("(", $field_type);
+											$field_type = $field_type_array[0];
+											if (trim($db_field_type) != trim($field_type) && strlen($db_field_type) > 0) {
+												if ($db_type == "pgsql") {
+													if (strtolower($field_type) == "uuid") {
+														$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE uuid USING\n";
+														$sql_update .= "CAST(regexp_replace(".$field_name.", '([A-Z0-9]{4})([A-Z0-9]{12})', E'\\1-\\2')\n";
+														$sql_update .= "AS uuid);\n";
 													}
 													else {
-														//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name)."<br>";
-														$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
+														if ($db_field_type = "integer" && strtolower($field_type) == "serial") {
+															//field type has not changed
+														} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "timestamp") {
+															//field type has not changed
+														} elseif ($db_field_type = "timestamp without time zone" && strtolower($field_type) == "datetime") {
+															//field type has not changed
+														} elseif ($db_field_type = "integer" && strtolower($field_type) == "numeric") {
+															//field type has not changed
+														} elseif ($db_field_type = "character" && strtolower($field_type) == "char") {
+															//field type has not changed
+														}
+														else {
+															//$sql_update .= "-- $db_type, $db_name, $table_name, $field_name ".db_column_data_type ($db, $db_type, $db_name, $table_name, $field_name)."<br>";
+															$sql_update .= "ALTER TABLE ".$table_name." ALTER COLUMN ".$field_name." TYPE ".$field_type.";\n";
+														}
 													}
 												}
-											}
-											if ($db_type == "mysql") {
-												$type = explode("(", $db_field_type);
-												if ($type[0] == $field_type) {
-													//do nothing
+												if ($db_type == "mysql") {
+													$type = explode("(", $db_field_type);
+													if ($type[0] == $field_type) {
+														//do nothing
+													}
+													elseif ($field_type == "numeric" && $type[0] == "decimal") {
+														//do nothing
+													}
+													else {
+														$sql_update .= "ALTER TABLE ".$table_name." modify ".$field_name." ".$field_type.";\n";
+													}
+													unset($type);
 												}
-												elseif ($field_type == "numeric" && $type[0] == "decimal") {
-													//do nothing
+												if ($db_type == "sqlite") {
+													//a change has been made to the field type
+													$apps[$x]['db'][$y]['rebuild'] = 'true';
 												}
-												else {
-													$sql_update .= "ALTER TABLE ".$table_name." modify ".$field_name." ".$field_type.";\n";
-												}
-												unset($type);
-											}
-											if ($db_type == "sqlite") {
-												//a change has been made to the field type
-												$apps[$x]['db'][$y]['rebuild'] = 'true';
 											}
 										}
-*/
+//
 								}
 							}
 							unset($column_array);
