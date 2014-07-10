@@ -23,9 +23,13 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-include "root.php";
-require_once "resources/require.php";
-require_once "resources/check_auth.php";
+
+if (!$included) {
+	include "root.php";
+	require_once "resources/require.php";
+	require_once "resources/check_auth.php";
+}
+
 if (permission_exists('menu_restore')) {
 	//access granted
 }
@@ -34,15 +38,17 @@ else {
 	return;
 }
 
-//add multi-lingual support
+if (!$included) {
+	//add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//get the http value and set as a php variable
+	//get the http value and set as a php variable
 	$menu_uuid = check_str($_REQUEST["menu_uuid"]);
 	$menu_language = check_str($_REQUEST["menu_language"]);
+}
 
 //menu restore default
 	require_once "resources/classes/menu.php";
@@ -59,9 +65,11 @@ else {
 //unset the default template
 	$_SESSION["template_content"] = '';
 
-//show a message to the user
+
+if (!$included) {
+	//show a message to the user
 	$_SESSION["message"] = $text['message-restore'];
 	header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".$menu_uuid);
 	return;
-
+}
 ?>
