@@ -50,7 +50,7 @@ if (sizeof($_POST) > 0) {
 	// run svn update
 	if ($do["svn"] && permission_exists("upgrade_svn")) {
 
-		$response_message[] = "SVN Updated";
+		$response_message = "SVN Updated";
 	}
 
 	// load the default database into memory and compare it with the active database
@@ -63,7 +63,7 @@ if (sizeof($_POST) > 0) {
 			$_SESSION["response_upgrade_schema"] = $response_upgrade_schema;
 		}
 		unset($apps);
-		$response_message[] = "Schema Upgraded";
+		$response_message = "Schema Upgraded";
 	}
 
 	// upgrade the domains
@@ -73,13 +73,13 @@ if (sizeof($_POST) > 0) {
 		require_once "core/upgrade/upgrade_domains.php";
 		$_SESSION['domain']['language']['code'] = $domain_language_code;
 		unset($domain_language_code);
-		$response_message[] = "Domain(s) Upgraded";
+		$response_message = "Domain(s) Upgraded";
 	}
 
 	// syncronize data types
 	if ($do["datatypes"] && permission_exists("upgrade_datatypes")) {
 
-		$response_message[] = "Data Types Syncronized";
+		$response_message = "Data Types Syncronized";
 	}
 
 	// restore defaults of the selected menu
@@ -90,17 +90,21 @@ if (sizeof($_POST) > 0) {
 		$included = true;
 		require_once("core/menu/menu_restore_default.php");
 		unset($sel_menu);
-		$response_message[] = "Menu Restored";
+		$response_message = "Menu Defaults Restored";
 	}
 
 	// restore default permissions
 	if ($do["permissions"] && permission_exists("group_edit")) {
 		$included = true;
 		require_once("core/users/permissions_default.php");
-		$response_message[] = "Permissions Restored";
+		$response_message = "Permission Defauls Restored";
 	}
 
-	$_SESSION["message"] = implode("<br />", $response_message);
+	if (sizeof($_POST['do']) > 1) {
+		$response_message = "Upgrades Complete";
+	}
+
+	$_SESSION["message"] = $response_message;
 	header("Location: ".PROJECT_PATH."/core/upgrade/index.php");
 	exit;
 
