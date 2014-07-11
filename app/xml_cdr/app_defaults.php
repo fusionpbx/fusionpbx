@@ -65,66 +65,21 @@
 					$array[$x]['default_setting_value'] = 'db';
 					$array[$x]['default_setting_enabled'] = 'true';
 					$array[$x]['default_setting_description'] = '';
-                                        $x++;
-                                        $array[$x]['default_setting_category'] = 'cdr';
-                                        $array[$x]['default_setting_subcategory'] = 'limit';
-                                        $array[$x]['default_setting_name'] = 'numeric';
-                                        $array[$x]['default_setting_value'] = '800';
-                                        $array[$x]['default_setting_enabled'] = 'true';
-                                        $array[$x]['default_setting_description'] = '';
+					$x++;
+					$array[$x]['default_setting_category'] = 'cdr';
+					$array[$x]['default_setting_subcategory'] = 'limit';
+					$array[$x]['default_setting_name'] = 'numeric';
+					$array[$x]['default_setting_value'] = '800';
+					$array[$x]['default_setting_enabled'] = 'true';
+					$array[$x]['default_setting_description'] = '';
+					$x++;
 					$orm = new orm;
 					$orm->name('default_settings');
 					$orm->save($array[0]);
 					$orm->save($array[1]);
-					//$message = $orm->message;
-
-					/*
-					$sql = "insert into v_default_settings ";
-					$sql .= "(";
-					$sql .= "default_setting_uuid, ";
-					$sql .= "default_setting_category, ";
-					$sql .= "default_setting_subcategory, ";
-					$sql .= "default_setting_name, ";
-					$sql .= "default_setting_value, ";
-					$sql .= "default_setting_enabled, ";
-					$sql .= "default_setting_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'cdr', ";
-					$sql .= "'format', ";
-					$sql .= "'text', ";
-					$sql .= "'json', ";
-					$sql .= "'true', ";
-					$sql .= "'' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-					$sql = "insert into v_default_settings ";
-					$sql .= "(";
-					$sql .= "default_setting_uuid, ";
-					$sql .= "default_setting_category, ";
-					$sql .= "default_setting_subcategory, ";
-					$sql .= "default_setting_name, ";
-					$sql .= "default_setting_value, ";
-					$sql .= "default_setting_enabled, ";
-					$sql .= "default_setting_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'cdr', ";
-					$sql .= "'storage', ";
-					$sql .= "'text', ";
-					$sql .= "'db', ";
-					$sql .= "'true', ";
-					$sql .= "'' ";
-					$sql .= ")";
-					$db->exec(check_sql($sql));
-					unset($sql);
-					*/
+					$orm->save($array[2]);
+					$message = $orm->message;
+					//print_r($message);
 				}
 			}
 	}
