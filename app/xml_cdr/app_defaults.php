@@ -65,6 +65,13 @@
 					$array[$x]['default_setting_value'] = 'db';
 					$array[$x]['default_setting_enabled'] = 'true';
 					$array[$x]['default_setting_description'] = '';
+                                        $x++;
+                                        $array[$x]['default_setting_category'] = 'cdr';
+                                        $array[$x]['default_setting_subcategory'] = 'limit';
+                                        $array[$x]['default_setting_name'] = 'numeric';
+                                        $array[$x]['default_setting_value'] = '800';
+                                        $array[$x]['default_setting_enabled'] = 'true';
+                                        $array[$x]['default_setting_description'] = '';
 					$orm = new orm;
 					$orm->name('default_settings');
 					$orm->save($array[0]);
