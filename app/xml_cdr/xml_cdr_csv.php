@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,7 +45,7 @@ else {
 //set the csv headers
 	$z = 0;
 	foreach($result[0] as $key => $val) {
-		if ($key != "xml_cdr") {
+		if ($key != "xml" && $key != "json") {
 			if ($z == 0) {
 				echo '"'.$key.'"';
 			}
@@ -62,7 +62,7 @@ else {
 	while(true) {
 		$z = 0;
 		foreach($result[0] as $key => $val) {
-			if ($key != "xml_cdr") {
+			if ($key != "xml" && $key != "json") {
 				if ($z == 0) {
 					echo '"'.$result[$x][$key].'"';
 				}
@@ -79,5 +79,6 @@ else {
 		}
 		//$row++;
 	}
+
 
 ?>

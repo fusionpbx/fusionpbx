@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -191,8 +191,13 @@ else {
 	if (strlen($order_by) == 0)  { $order_by  = "start_epoch"; }
 	if (strlen($order) == 0)  { $order  = "desc"; }
 
-//set the default
+//set a default number of rows to show
 	$num_rows = '0';
+
+//set a default CDR limit
+	if (!isset($_SESSION['cdr']['limit']['numeric'])) {
+		$_SESSION['cdr']['limit']['numeric'] = 800;
+	}
 
 //page results if rows_per_page is greater than zero
 	if ($rows_per_page > 0) {
@@ -210,6 +215,14 @@ else {
 				}
 			}
 			unset($prep_statement, $result);
+			
+		//limit the number of results
+			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
+				$num_rows = $_SESSION['cdr']['limit']['numeric'];
+			}
+			if ($rows_per_page > $_SESSION['cdr']['limit']['numeric']) {
+				$rows_per_page = $_SESSION['cdr']['limit']['numeric'];
+			}
 
 		//prepare to page the results
 			//$rows_per_page = 150; //set on the page that includes this page
@@ -222,7 +235,10 @@ else {
 //get the results from the db
 	$sql = "select * from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
-	if ($rows_per_page > 0) {
+	if ($rows_per_page == 0) {
+		$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
+	}
+	else {
 		$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	}
 	$prep_statement = $db->prepare(check_sql($sql));
