@@ -192,9 +192,9 @@
 
 /******************/
 
-	$text['login-message_text']['en-us'] = "Keep up with the FusionPBX project by configuring your preferences in the newly added <a href=''/app/notifications/notification_edit.php''>Notifications</a> section, under the System menu!";
-	$text['login-message_text']['es-cl'] = "Manténgase al día con el proyecto FusionPBX configurando sus preferencias en la sección <a href=''/app/notifications/notification_edit.php''>Notificaciones</a> acaba de agregar, en el menú del sistema!";
-	$text['login-message_text']['pt-pt'] = "Mantenha-se com o projeto FusionPBX configurando suas preferências na seção <a href=''/app/notifications/notification_edit.php''>Notificações</a> recém-adicionado, no menu Sistema!";
-	$text['login-message_text']['fr-fr'] = "Tenez-vous au projet FusionPBX en configurant vos préférences dans la section <a href=''/app/notifications/notification_edit.php''>Notifications</a> nouvellement ajouté, dans le menu du système!";
+	$text['login-message_text']['en-us'] = "Keep up with the FusionPBX project by configuring your preferences in the newly added <a href=''/core/notifications/notification_edit.php''>Notifications</a> section, under the System menu!";
+	$text['login-message_text']['es-cl'] = "Manténgase al día con el proyecto FusionPBX configurando sus preferencias en la sección <a href=''/core/notifications/notification_edit.php''>Notificaciones</a> acaba de agregar, en el menú del sistema!";
+	$text['login-message_text']['pt-pt'] = "Mantenha-se com o projeto FusionPBX configurando suas preferências na seção <a href=''/core/notifications/notification_edit.php''>Notificações</a> recém-adicionado, no menu Sistema!";
+	$text['login-message_text']['fr-fr'] = "Tenez-vous au projet FusionPBX en configurant vos préférences dans la section <a href=''/core/notifications/notification_edit.php''>Notifications</a> nouvellement ajouté, dans le menu du système!";
 
 ?>
