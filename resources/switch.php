@@ -2627,7 +2627,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = 'never';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '1';
-							$dialplan->dialplan_detail_order = '000';
+							$dialplan->dialplan_detail_order = '010';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
@@ -2640,7 +2640,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '1';
-							$dialplan->dialplan_detail_order = '001';
+							$dialplan->dialplan_detail_order = '020';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
@@ -2654,7 +2654,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '000';
+							$dialplan->dialplan_detail_order = '010';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
@@ -2667,7 +2667,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '001';
+							$dialplan->dialplan_detail_order = '020';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
@@ -2680,7 +2680,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '002';
+							$dialplan->dialplan_detail_order = '030';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
@@ -2693,7 +2693,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '003';
+							$dialplan->dialplan_detail_order = '040';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
@@ -2706,7 +2706,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '005';
+							$dialplan->dialplan_detail_order = '050';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
@@ -2721,7 +2721,7 @@ if (!function_exists('save_call_center_xml')) {
 								$dialplan->dialplan_detail_break = '';
 								$dialplan->dialplan_detail_inline = '';
 								$dialplan->dialplan_detail_group = '2';
-								$dialplan->dialplan_detail_order = '006';
+								$dialplan->dialplan_detail_order = '060';
 								$dialplan->dialplan_detail_add();
 								unset($dialplan);
 							}
@@ -2735,7 +2735,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '007';
+							$dialplan->dialplan_detail_order = '070';
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
