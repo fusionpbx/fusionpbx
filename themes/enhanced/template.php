@@ -719,7 +719,7 @@ legend {
 		right: 0px;
 		top: 0px;
 		bottom: 0px;
-		width: 400px;
+		width: 350px;
 		overflow: hidden;
 		display: none;
 	}
@@ -846,6 +846,11 @@ legend {
 			 var href = $(this).closest("tr").attr("href");
 			 if (href) { window.location = href; }
 		  });
+		});
+
+		// hides the domain selector when clicking off
+		$('#domain_filter').blur(function() {
+			hide_domains();
 		});
 
 	});
