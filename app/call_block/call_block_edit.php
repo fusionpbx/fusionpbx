@@ -113,6 +113,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if (($_POST["persistformvar"] != "true")>0) {
+
+			if ($action == "add" || $action == "update") {
+				//ensure call block is enabled in the dialplan
+				$sql = "update v_dialplans set ";
+				$sql .= "dialplan_enabled = 'true' ";
+				$sql .= "where ";
+				$sql .= "app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' and ";
+				$sql .= "domain_uuid = '".$domain_uuid."' and ";
+				$sql .= "dialplan_enabled <> 'true' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
+
 			if ($action == "add") {
 				$sql = "insert into v_call_block ";
 				$sql .= "(";
@@ -186,6 +199,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
+	echo "<script type=\"text/javascript\" language=\"JavaScript\">\n";
+	echo "	function call_block_recent(cdr_uuid, cur_name) {\n";
+	echo "		var new_name = prompt('".$text['prompt-block_recent_name']."', cur_name);\n";
+	echo "		if (new_name != null) {\n";
+	echo "			block_name = (new_name != '') ? new_name : cur_name;\n";
+	echo "			document.location.href='call_block_cdr_add.php?cdr_id=' + cdr_uuid + '&name=' + escape(block_name)\n";
+	echo "		}\n";
+	echo "	}\n";
+	echo "</script>";
+
 	echo "<div align='center'>";
 	// Show last 5-10 calls first, with add button
 
@@ -351,7 +374,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "	</td>\n";
 					echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_start_epoch."</td>\n";
 					echo "	<td class='list_control_icons' style='width: 25px;'>";
-					echo 		"<a href='call_block_cdr_add.php?cdr_id=".$row['uuid']."' alt='add'>$v_link_label_add</a>";
+					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".$row['uuid']."','".urlencode($row['caller_id_name'])."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 					echo "  </td>";
 					echo "</tr>\n";
 					if ($c==0) { $c=1; } else { $c=0; }
