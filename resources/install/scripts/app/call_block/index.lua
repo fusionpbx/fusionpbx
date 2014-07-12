@@ -45,13 +45,13 @@ This method causes the script to get its manadatory arguments directly from the 
 	source = "";
 
 -- Command line parameters
-	local	params = {
-				cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
-				cid_name = session:getVariable("caller_id_name"),
-				domain = session:getVariable("domain"),
-				userid = "", -- session:getVariable("id")
-				loglevel = "W" -- Warning, Debug, Info
-				}
+	local params = {
+			cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
+			cid_name = session:getVariable("caller_id_name"),
+			domain = session:getVariable("domain"),
+			userid = "", -- session:getVariable("id")
+			loglevel = "W" -- Warning, Debug, Info
+			}
 
 -- local storage
 	local sql = nil
@@ -85,7 +85,73 @@ This method causes the script to get its manadatory arguments directly from the 
 	end
 
 --check if number is in call_block list then increment the counter and block the call
-	--if not cached then get the information from the database.
+	--if not cached then get the information from the database
+	if (cache == "-ERR NOT FOUND") then
+		--connect to the database
+			dofile(scripts_dir.."/resources/functions/database_handle.lua");
+			dbh = database_handle('system');
+
+		--log if not connect 
+			if dbh:connected() == false then
+				logger("W", "NOTICE", "db was not connected")
+			end
+
+		--check if the the call block is blocked
+			sql = "SELECT * FROM v_call_block as c "
+			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
+			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
+			status = dbh:query(sql, function(rows)
+				found_cid_num = rows["call_block_number"];
+				found_uuid = rows["call_block_uuid"];
+				found_enabled = rows["call_block_enabled"];
+				found_action = rows["call_block_action"];
+				found_count = rows["call_block_count"];
+				end)
+			-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
+		
+		--set the cache
+			if (found_cid_num) then	-- caller id exists
+				if (found_enabled == "true") then
+					cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
+					result = trim(api:execute("memcache", "set app:call_block:" .. params["domain"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
+
+					--set the source
+					source = "database";
+				end
+			end
+
+	else
+		--get from memcache
+			--add the function
+				dofile(scripts_dir.."/resources/functions/explode.lua");
+
+			--parse the cache
+				array = explode("&", cache);
+
+			--define the array/table and variables
+				local var = {}
+				local key = "";
+				local value = "";
+
+			--parse the cache
+				key_pairs = explode("&", cache);
+				for k,v in pairs(key_pairs) do
+					f = explode("=", v);
+					key = f[1];
+					value = f[2];
+					var[key] = value;
+				end
+
+			--set the variables
+				found_cid_num = var["found_cid_num"];
+				found_uuid = var["found_uuid"];
+				found_enabled = var["found_enabled"];
+				found_action = var["found_action"];
+				found_count = var["found_count"];
+
+			--set the source
+				source = "memcache";
+	end
 
 --debug information
 	--freeswitch.consoleLog("error", "[call_block] " .. cache .. "\n");
@@ -120,3 +186,4 @@ This method causes the script to get its manadatory arguments directly from the 
 			end
 		end
 	end
+
