@@ -45,7 +45,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	source = "";
 
 -- Command line parameters
-	local	params = {	cmd = "",
+	local	params = {
 				cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
 				cid_name = session:getVariable("caller_id_name"),
 				domain = session:getVariable("domain"),
@@ -70,11 +70,6 @@ This method causes the script to get its manadatory arguments directly from the 
 --set the api object
 	api = freeswitch.API();
 
--- We have a single command letter
--- Use session variables
-	--logger("D", "NOTICE", "params default from session, count " .. string.format("%d", #argv[2]) .. " \n")
-	--params["cmd"] = argv[3]
-
 -- ensure that we have a fresh status on exit
 	session:setVariable("call_block", "")
 
@@ -90,107 +85,38 @@ This method causes the script to get its manadatory arguments directly from the 
 	end
 
 --check if number is in call_block list then increment the counter and block the call
-	--if (params["cmd"] == "C") then
-		--if not cached then get the information from the database
-			if (cache == "-ERR NOT FOUND") then
-				--connect to the database
-					dofile(scripts_dir.."/resources/functions/database_handle.lua");
-					dbh = database_handle('system');
-	
-				--log if not connect 
-					if dbh:connected() == false then
-						logger("W", "NOTICE", "db was not connected")
-					end
+	--if not cached then get the information from the database.
 
-				--check if the the call block is blocked
-					sql = "SELECT * FROM v_call_block as c "
-					sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-					sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
-					status = dbh:query(sql, function(rows)
-						found_cid_num = rows["call_block_number"];
-						found_uuid = rows["call_block_uuid"];
-						found_enabled = rows["call_block_enabled"];
-						found_action = rows["call_block_action"];
-						found_count = rows["call_block_count"];
-						end)
-					-- dbh:affected_rows() doesn't do anything if using core:db so this is the workaround:
-				
-				--set the cache
-					if (found_cid_num) then	-- caller id exists
-						if (found_enabled == "true") then
-							cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
-							result = trim(api:execute("memcache", "set app:call_block:" .. params["domain"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
-	
-							--set the source
-							source = "database";
-						end
-					end
+--debug information
+	--freeswitch.consoleLog("error", "[call_block] " .. cache .. "\n");
+	--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
+	--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
+	--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
 
-			else
-				--get from memcache
-					--add the function
-						dofile(scripts_dir.."/resources/functions/explode.lua");
-
-					--parse the cache
-						array = explode("&", cache);
-
-					--define the array/table and variables
-						local var = {}
-						local key = "";
-						local value = "";
-
-					--parse the cache
-						key_pairs = explode("&", cache);
-						for k,v in pairs(key_pairs) do
-							f = explode("=", v);
-							key = f[1];
-							value = f[2];
-							var[key] = value;
-						end
-
-					--set the variables
-						found_cid_num = var["found_cid_num"];
-						found_uuid = var["found_uuid"];
-						found_enabled = var["found_enabled"];
-						found_action = var["found_action"];
-						found_count = var["found_count"];
-			
-					--set the source
-						source = "memcache";
+--block the call
+	if found_cid_num then	-- caller id exists
+		if (found_enabled == "true") then
+			details = {}
+			k = 0
+			for v in string.gmatch(found_action, "[%w%.]+") do
+				details[k] = v
+				--logger("W", "INFO", "Details: " .. details[k])
+				k = k + 1
 			end
-
-		--debug information
-			--freeswitch.consoleLog("error", "[call_block] " .. cache .. "\n");
-			--freeswitch.consoleLog("error", "[call_block] found_cid_num = " .. found_cid_num  .. "\n");
-			--freeswitch.consoleLog("error", "[call_block] found_enabled = " .. found_enabled  .. "\n");
-			--freeswitch.consoleLog("error", "[call_block] source = " .. source  .. "\n");
-
-		--block the call
-			if found_cid_num then	-- caller id exists
-				if (found_enabled == "true") then
-					details = {}
-					k = 0
-					for v in string.gmatch(found_action, "[%w%.]+") do
-						details[k] = v
-						--logger("W", "INFO", "Details: " .. details[k])
-						k = k + 1
-					end
-					if (source == "database") then
-						dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
-					end
-					session:setVariable("call_block", "block")
-					logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain: " .. params["domain"])
-					if (found_action == "Reject") then
-						session:hangup("CALL_REJECTED")
-					end
-					if (found_action == "Busy") then
-						session:hangup("USER_BUSY")
-					end
-					if (details[0] =="Voicemail") then
-						session:setAutoHangup(false)
-						session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
-					end
-				end
+			if (source == "database") then
+				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
 			end
-	--end
-
+			session:setVariable("call_block", "block")
+			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain: " .. params["domain"])
+			if (found_action == "Reject") then
+				session:hangup("CALL_REJECTED")
+			end
+			if (found_action == "Busy") then
+				session:hangup("USER_BUSY")
+			end
+			if (details[0] =="Voicemail") then
+				session:setAutoHangup(false)
+				session:execute("transfer", "*99" .. details[2] .. " XML  " .. details[1])
+			end
+		end
+	end
