@@ -259,9 +259,9 @@
 							$db2->result = $db2->execute();
 
 							// If selling rate is found, then we fill with data, otherwise rate will be 0
-							$lcr_user_rate = (strlen($$db2->result[0]['rate'])?strlen($$db2->result[0]['rate']:0;
-							$lcr_user_first_increment = (strlen($$db2->result[0]['connect_increment'])?strlen($$db2->result[0]['connect_increment']:60;
-							$lcr_user_second_increment = (strlen($$db2->result[0]['talk_increment'])?strlen($$db2->result[0]['talk_increment']:60;
+							$lcr_user_rate = (strlen($$db2->result[0]['rate']))?strlen($$db2->result[0]['rate']):0;
+							$lcr_user_first_increment = (strlen($$db2->result[0]['connect_increment']))?strlen($$db2->result[0]['connect_increment']):60;
+							$lcr_user_second_increment = (strlen($$db2->result[0]['talk_increment']))?strlen($$db2->result[0]['talk_increment']):60;
 
 							// Actually, there is no way to detect what carrier is the calling comming from using current information
 							$lcr_rate = 0; $lcr_first_increment = 0; $lcr_second_increment = 0;
@@ -278,9 +278,9 @@
 							$db2->result = $db2->execute();
 
 							// If selling rate is found, then we fill with data, otherwise rate will be 0
-							$lcr_user_rate = (strlen($$db2->result[0]['rate'])?strlen($$db2->result[0]['rate']:0;
-							$lcr_user_first_increment = (strlen($$db2->result[0]['connect_increment'])?strlen($$db2->result[0]['connect_increment']:60;
-							$lcr_user_second_increment = (strlen($$db2->result[0]['talk_increment'])?strlen($$db2->result[0]['talk_increment']:60;
+							$lcr_user_rate = (strlen($$db2->result[0]['rate']))?strlen($$db2->result[0]['rate']):0;
+							$lcr_user_first_increment = (strlen($$db2->result[0]['connect_increment']))?strlen($$db2->result[0]['connect_increment']):60;
+							$lcr_user_second_increment = (strlen($$db2->result[0]['talk_increment']))?strlen($$db2->result[0]['talk_increment']):60;
 
 							// Actually, internal calls have 0 cost
 							$lcr_rate = 0; $lcr_first_increment = 0; $lcr_second_increment = 0;
