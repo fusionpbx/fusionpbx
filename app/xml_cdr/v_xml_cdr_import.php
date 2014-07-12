@@ -218,11 +218,12 @@
 		//billing information
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
 				$db2 = new database;
+				$lcr_currency = 'USD';
 
 				switch(check_str(urldecode($xml->variables->call_direction))){
 					case "outbound":
 							$database->fields['carrier_name'] = check_str(urldecode($xml->variables->lcr_carrier));
-							$sql_rate ="SELECT connect_increment, talk_increment FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
+							$sql_rate ="SELECT connect_increment, talk_increment, currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
 							$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid='' AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") ORDER BY digits DESC, rate ASC limit 1";
 							if ($debug) {
 								echo "sql_rate: $sql_rate\n";
@@ -232,6 +233,7 @@
 							$db2->sql = $sql_rate;
 							$db2->result = $db2->execute();
 //							print_r($db2->result);
+							$lcr_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):'USD');
 							$lcr_rate = (strlen($xml->variables->lcr_rate)?$xml->variables->lcr_rate:0);
 							$lcr_first_increment = (strlen($db2->result[0]['connect_increment'])?check_str($db2->result[0]['connect_increment']):60);
 							$lcr_second_increment = (strlen($db2->result[0]['talk_increment'])?check_str($db2->result[0]['talk_increment']):60);
@@ -248,20 +250,51 @@
 							unset($db2->result);
 							break;
 					case "inbound":
-							// Need to add code for tollfree number, unique case when we bill inbound
-							$lcr_rate = 0; $lcr_first_increment = 0; $lcr_second_increment = 0;
-							$lcr_user_rate = 0; $lcr_user_first_increment = 0; $lcr_user_second_increment = 0;
+							$sql_user_rate = "SELECT rate, connect_increment, talk_increment, currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='inbound' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							if ($debug) {
+								echo "sql_user_rate: $sql_user_rate\n";
+							}
 
+							$db2->sql = $sql_user_rate;
+							$db2->result = $db2->execute();
+
+							// If selling rate is found, then we fill with data, otherwise rate will be 0
+							$lcr_user_rate = (strlen($$db2->result[0]['rate'])?strlen($$db2->result[0]['rate']:0;
+							$lcr_user_first_increment = (strlen($$db2->result[0]['connect_increment'])?strlen($$db2->result[0]['connect_increment']:60;
+							$lcr_user_second_increment = (strlen($$db2->result[0]['talk_increment'])?strlen($$db2->result[0]['talk_increment']:60;
+
+							// Actually, there is no way to detect what carrier is the calling comming from using current information
+							$lcr_rate = 0; $lcr_first_increment = 0; $lcr_second_increment = 0;
+							unset($db2->sql);
+							unset($db2->result);
 							break;
 					case "local":
+							$sql_user_rate = "SELECT rate, connect_increment, talk_increment, currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='local' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							if ($debug) {
+								echo "sql_user_rate: $sql_user_rate\n";
+							}
+
+							$db2->sql = $sql_user_rate;
+							$db2->result = $db2->execute();
+
+							// If selling rate is found, then we fill with data, otherwise rate will be 0
+							$lcr_user_rate = (strlen($$db2->result[0]['rate'])?strlen($$db2->result[0]['rate']:0;
+							$lcr_user_first_increment = (strlen($$db2->result[0]['connect_increment'])?strlen($$db2->result[0]['connect_increment']:60;
+							$lcr_user_second_increment = (strlen($$db2->result[0]['talk_increment'])?strlen($$db2->result[0]['talk_increment']:60;
+
+							// Actually, internal calls have 0 cost
 							$lcr_rate = 0; $lcr_first_increment = 0; $lcr_second_increment = 0;
-							$lcr_user_rate = 0; $lcr_user_first_increment = 0; $lcr_user_second_increment = 0;
+							unset($db2->sql);
+							unset($db2->result);
 							break;
 				}
 
+				// Please note that we save values using LCR currency, but we discount balance in billing currency
+
 				$time = check_str(urldecode($xml->variables->billsec));
 				$call_buy = call_cost($lcr_rate, $lcr_first_increment, $lcr_second_increment, $time);
-				$call_sell = call_cost($lcr_user_rate, $lcr_user_first_increment, $lcr_user_second_increment, check_str(urldecode($xml->variables->billsec)));
+				$call_sell = call_cost($lcr_user_rate, $lcr_user_first_increment, $lcr_user_second_increment, $time);
+
 				$database->fields['call_buy']  = check_str($call_buy);
 				$database->fields['call_sell'] = check_str($call_sell);
 
@@ -270,12 +303,21 @@
 					echo "t $time\n";
 					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
 					echo "s r:$lcr_user_rate - $lcr_user_first_increment - $lcr_user_second_increment = $call_sell\n";
+					echo "lc $lcr_currency\n";
 				}
 
 				unset($db2->sql);
 				unset($db2->result);
 
-				$sql_balance = "SELECT balance,old_balance FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
+				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
+				$db2->result = $database->execute();
+				$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
+
+				if ($debug) {
+					echo "bc $billing_currency\n";
+				}
+				
+				$sql_balance = "SELECT balance, old_balance FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
 				$db2->sql = $sql_balance;
 				$db2->result = $db2->execute();
 				$balance = $db2->result[0]['balance'];
@@ -287,7 +329,11 @@
 					echo "old bal: $old_balance\n";
 				}
 
-				$updated_balance = (double)$old_balance - (double)$call_sell;
+				// Lets convert rate from lcr_currency to billing_currency
+				$billing_call_sell = currency_convert($call_sell, $billing_currency, $lcr_currency);
+
+				// Remember that old_balance is using billing_currency
+				$updated_balance = (double)$old_balance - (double)$billing_call_sell;
 				unset($db2->sql);
 				unset($db2->result);
 
