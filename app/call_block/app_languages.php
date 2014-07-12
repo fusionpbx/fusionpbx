@@ -40,6 +40,16 @@
 	$text['label-enabled']['pt-pt'] = "Activado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
+	$text['label-inbound']['en-us'] = "Inbound";
+	$text['label-inbound']['es-cl'] = "Entrada";
+	$text['label-inbound']['pt-pt'] = "Entrada";
+	$text['label-inbound']['fr-fr'] = "Entrant";
+
+	$text['label-local']['en-us'] = "Local";
+	$text['label-local']['es-cl'] = "Local";
+	$text['label-local']['pt-pt'] = "Local";
+	$text['label-local']['fr-fr'] = "Local";
+
 	$text['button-edit']['en-us'] = "Edit";
 	$text['button-edit']['es-cl'] = "Editar";
 	$text['button-edit']['pt-pt'] = "Editar";
@@ -53,6 +63,11 @@
 	$text['button-add']['en-us'] = "Add";
 	$text['button-add']['pt-pt'] = "Adicionar";
 	$text['button-add']['fr-fr'] = "Ajouter";
+
+	$text['button-view']['en-us'] = "View";
+	$text['button-view']['es-cl'] = "Ver";
+	$text['button-view']['pt-pt'] = "Vista";
+	$text['button-view']['fr-fr'] = "Voir";
 
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar el número?";
@@ -101,6 +116,11 @@
 	$text['label-called-on']['es-cl'] = "Llamó en";
 	$text['label-called-on']['pt-pt'] = "Chamado em";
 	$text['label-called-on']['fr-fr'] = "Appelé sur";
+
+	$text['label-duration']['en-us'] = "Duration";
+	$text['label-duration']['es-cl'] = "Duración";
+	$text['label-duration']['pt-pt'] = "Duração";
+	$text['label-duration']['fr-fr'] = "Durée";
 
 	$text['label-edit-add']['en-us'] = "Call Block";
 	$text['label-edit-add']['es-cl'] = "Agregar bloqueo de llamada";

@@ -329,7 +329,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //get recent calls from the db (if not editing an existing call block record)
 	if (!isset($_REQUEST["id"])) {
-		$sql = "select caller_id_number, caller_id_name, start_epoch, uuid from v_xml_cdr ";
+		$sql = "select caller_id_number, caller_id_name, start_epoch, direction, hangup_cause, duration, billsec, uuid from v_xml_cdr ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and direction != 'outbound' ";
 		$sql .= "order by start_stamp DESC ";
@@ -342,29 +342,57 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<b>".$text['label-edit-add-recent']."</b>";
 		echo "<br><br>";
-		echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
-		echo "<tr>\n";
+		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
+		echo "<th style='width: 25px;'>&nbsp;</th>\n";
 		echo th_order_by('caller_id_name', $text['label-name'], $order_by, $order);
 		echo th_order_by('caller_id_number', $text['label-number'], $order_by, $order);
 		echo th_order_by('start_stamp', $text['label-called-on'], $order_by, $order);
-
+		echo th_order_by('duration', $text['label-duration'], $order_by, $order);
+		echo "<td>&nbsp;</td>\n";
 		$c = 0;
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
 		if ($result_count > 0) {
 			foreach($result as $row) {
+				$tr_onclick = " onclick=\"call_block_recent('".$row['uuid']."','".urlencode($row['caller_id_name'])."');\" ";
 				if (strlen($row['caller_id_number']) >= 7) {
 					if (defined('TIME_24HR') && TIME_24HR == 1) {
 						$tmp_start_epoch = date("j M Y H:i:s", $row['start_epoch']);
 					} else {
 						$tmp_start_epoch = date("j M Y h:i:sa", $row['start_epoch']);
 					}
-					echo "<tr >\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'>";
+					echo "<tr>\n";
+					if (
+						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png") &&
+						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png") &&
+						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png") &&
+						file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png")
+						) {
+						echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>";
+						switch ($row['direction']) {
+							case "inbound" :
+								if ($row['billsec'] == 0)
+									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' style='border: none;' alt='".$text['label-inbound']." ".$text['label-missed']."'>\n";
+								else
+									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' style='border: none;' alt='".$text['label-inbound']."'>\n";
+								break;
+							case "local" :
+								if ($row['billsec'] == 0)
+									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' style='border: none;' alt='".$text['label-local']." ".$text['label-failed']."'>\n";
+								else
+									echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' alt='".$text['label-local']."'>\n";
+								break;
+						}
+						echo "	</td>\n";
+					}
+					else {
+						echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
+					}
+					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">";
 					echo 	$row['caller_id_name'].' ';
 					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'>";
+					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">";
 					if (is_numeric($row['caller_id_number'])) {
 						echo 	format_phone($row['caller_id_number']).' ';
 					}
@@ -372,8 +400,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo 	$row['caller_id_number'].' ';
 					}
 					echo "	</td>\n";
-					echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_start_epoch."</td>\n";
-					echo "	<td class='list_control_icons' style='width: 25px;'>";
+					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".$tmp_start_epoch."</td>\n";
+					$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];  //If they cancelled, show the ring time, not the bill time.
+					echo "	<td valign='top' class='".$row_style[$c]."' ".$tr_onclick.">".gmdate("G:i:s", $seconds)."</td>\n";
+					echo "	<td class='list_control_icons' ".((!(if_group("admin") || if_group("superadmin"))) ? "style='width: 25px;'" : null).">";
+					if (if_group("admin") || if_group("superadmin")) {
+						echo "	<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?uuid=".$row['uuid']."' alt='".$text['button-view']."'>".$v_link_label_view."</a>";
+					}
 					echo 		"<a href='javascript:void(0);' onclick=\"call_block_recent('".$row['uuid']."','".urlencode($row['caller_id_name'])."');\" alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 					echo "  </td>";
 					echo "</tr>\n";
