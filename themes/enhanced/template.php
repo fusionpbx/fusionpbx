@@ -770,6 +770,10 @@ legend {
 		font-size: 11px;
 		}
 
+	DIV.domains_list_item:hover A,
+	DIV.domains_list_item:hover SPAN {
+		color: #5082ca;
+		}
 
 	DIV.login_message {
 		border: 1px solid #bae0ba;
@@ -853,6 +857,7 @@ legend {
 			});
 		});
 	}
+
 </script>
 
 <script language="JavaScript" type="text/javascript">
