@@ -45,49 +45,68 @@ else {
 
 //action add from cdr
 	if (isset($_REQUEST["cdr_id"])) {
+
 		$action = "cdr_add";
 		$cdr_uuid = check_str($_REQUEST["cdr_id"]);
+		$call_block_name = check_str($_REQUEST["name"]);
+
+		// get the caller id info from cdr that user chose
+		$sql = "select ";
+		if ($call_block_name == '') {
+			$sql .= "caller_id_name, ";
+		}
+		$sql .= "caller_id_number ";
+		$sql .= "from v_xml_cdr ";
+		$sql .= "where uuid = '".$cdr_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetch();
+		unset ($prep_statement);
+
+		$call_block_name = ($call_block_name == '') ? $result["caller_id_name"] : $call_block_name;
+		$call_block_number = $result["caller_id_number"];
+		$call_block_enabled = "true";
+		$block_call_action = "Reject";
+
+		//ensure call block is enabled in the dialplan
+		$sql = "update v_dialplans set ";
+		$sql .= "dialplan_enabled = 'true' ";
+		$sql .= "where ";
+		$sql .= "app_uuid = 'b1b31930-d0ee-4395-a891-04df94599f1f' and ";
+		$sql .= "domain_uuid = '".$domain_uuid."' and ";
+		$sql .= "dialplan_enabled <> 'true' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		// insert call block record
+		$sql = "insert into v_call_block ";
+		$sql .= "(";
+		$sql .= "domain_uuid, ";
+		$sql .= "call_block_uuid, ";
+		$sql .= "call_block_name, ";
+		$sql .= "call_block_number, ";
+		$sql .= "call_block_count, ";
+		$sql .= "call_block_action, ";
+		$sql .= "call_block_enabled, ";
+		$sql .= "date_added ";
+		$sql .= ") ";
+		$sql .= "values ";
+		$sql .= "(";
+		$sql .= "'".$_SESSION['domain_uuid']."', ";
+		$sql .= "'".uuid()."', ";
+		$sql .= "'".$call_block_name."', ";
+		$sql .= "'".$call_block_number."', ";
+		$sql .= "0, ";
+		$sql .= "'".$block_call_action."', ";
+		$sql .= "'".$call_block_enabled."', ";
+		$sql .= "'".time()."' ";
+		$sql .= ")";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		$_SESSION["message"] = $text['label-add-complete'];
+
 	}
 
-	// get the caller id info from cdr that user chose
-	$sql = "select caller_id_name, caller_id_number from v_xml_cdr ";
-	$sql .= "where uuid = '$cdr_uuid' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetch();
-	unset ($prep_statement);
-
-	$call_block_name = $result["caller_id_name"];
-	$call_block_number = $result["caller_id_number"];
-	$call_block_enabled = "true";
-	$block_call_action = "Reject";
-
-	$sql = "insert into v_call_block ";
-	$sql .= "(";
-	$sql .= "domain_uuid, ";
-	$sql .= "call_block_uuid, ";
-	$sql .= "call_block_name, ";
-	$sql .= "call_block_number, ";
-	$sql .= "call_block_count, ";
-	$sql .= "call_block_action, ";
-	$sql .= "call_block_enabled, ";
-	$sql .= "date_added ";
-	$sql .= ") ";
-	$sql .= "values ";
-	$sql .= "(";
-	$sql .= "'".$_SESSION['domain_uuid']."', ";
-	$sql .= "'".uuid()."', ";
-	$sql .= "'$call_block_name', ";
-	$sql .= "'$call_block_number', ";
-	$sql .= "0, ";
-	$sql .= "'$block_call_action', ";
-	$sql .= "'$call_block_enabled', ";
-	$sql .= "'".time()."' ";
-	$sql .= ")";
-	$db->exec(check_sql($sql));
-	unset($sql);
-
-
-$_SESSION["message"] = $text['label-add-complete'];
 header("Location: call_block.php");
 ?>

@@ -176,4 +176,9 @@
 	$text['button-back']['es-cl'] = "Volver";
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
+
+	$text['prompt-block_recent_name']['en-us'] = "Block Recent Call\\n\\nEdit the Name, if desired...";
+	$text['prompt-block_recent_name']['es-cl'] = "Bloqueo de llamadas recientes\\n\\nEdite el nombre, si lo desea...";
+	$text['prompt-block_recent_name']['pt-pt'] = "Bloquear Chamadas Recentes\\n\\nEdite o nome, se desejar...";
+	$text['prompt-block_recent_name']['fr-fr'] = "Bloquer appels récents\\n\\nModifiez le nom, si vous le souhaitez...";
 ?>
