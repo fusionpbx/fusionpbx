@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="call_block" number="" continue="true" app_uuid="b1b31930-d0ee-4395-a891-04df94599f1f" enabled="false">
+		<condition>
+			<action application="lua" data="app.lua call_block C"/>
+		</condition>
+	</extension>
+</context>
