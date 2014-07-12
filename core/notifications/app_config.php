@@ -31,7 +31,7 @@
 		$apps[$x]['menu'][0]['uuid'] = "f8d65f91-0f4a-405a-b5ac-24cb3c4f10ba";
 		$apps[$x]['menu'][0]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/notifications/notification_edit.php";
+		$apps[$x]['menu'][0]['path'] = "/core/notifications/notification_edit.php";
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 	//schema details
