@@ -68,6 +68,8 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config
 		$destination_description = check_str($_POST["destination_description"]);
 		$destination_sell = check_str($_POST["destination_sell"]);
 		$currency = check_str($_POST["currency"]);
+		$destination_accountcode = check_str($_POST["destination_accountcode"]);
+		$destination_carrier = check_str($_POST["destination_carrier"]);
 	}
 
 //unset the db_destination_number
@@ -376,6 +378,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$destination_description = $row["destination_description"];
 			$currency = $row["currency"];
 			$destination_sell = $row["destination_sell"];
+			$destination_accountcode = $row["destination_accountcode"];
+			$destination_carrier = $row["destination_carrier"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
@@ -630,7 +634,29 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['description-monthly_price']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-carrier'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='destination_carrier' maxlength='255' value=\"$destination_carrier\">\n";
+		echo "<br />\n";
+		echo $text['description-carrier']."\n";
+		echo "</td>\n";
+
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-accountcode'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"$destination_accountcode\">\n";
+	echo "<br />\n";
+	echo $text['description-accountcode']."\n";
+	echo "</td>\n";
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-destination_description'].":\n";
