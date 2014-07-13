@@ -1,17 +1,17 @@
---	ring_groups.lua
+ --	ring_groups.lua
 --	Part of FusionPBX
---	Copyright (C) 2010-2014 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2013 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
 --	modification, are permitted provided that the following conditions are met:
 --
 --	1. Redistributions of source code must retain the above copyright notice,
---		this list of conditions and the following disclaimer.
+--	   this list of conditions and the following disclaimer.
 --
 --	2. Redistributions in binary form must reproduce the above copyright
---		notice, this list of conditions and the following disclaimer in the
---		documentation and/or other materials provided with the distribution.
+--	   notice, this list of conditions and the following disclaimer in the
+--	   documentation and/or other materials provided with the distribution.
 --
 --	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -27,6 +27,7 @@
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
+
 
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
@@ -91,9 +92,9 @@
 
 --set the caller id
 	if (session:ready()) then
-		if (string.len(ring_group_cid_name_prefix) > 0) then
-			session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
-		end
+			if (string.len(ring_group_cid_name_prefix) > 0) then
+				session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
+			end
 	end
 
 --process the ring group
@@ -274,7 +275,7 @@
 										dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 									--if the session is set then process the actions
 										if (y == 0) then
-											square = "[sip_invite_domain="..domain_name..",leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",";
+											square = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",ignore_early_media=true";
 										end
 										if (r.dialplan_detail_type == "set") then
 											--session:execute("eval", dialplan_detail_data);
@@ -351,14 +352,14 @@
 									if (reply == "0 total.") then
 										--not found: user is available
 											if (user_exists == "true") then
-												dial_string = "[sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
 												session:execute("bridge", dial_string);
 											elseif (tonumber(destination_number) == nil) then
 												--sip uri
-												dial_string = "[sip_invite_domain="..domain_name.."]" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]" .. destination_number;
 												session:execute("bridge", dial_string);
 											else
-												dial_string = "[sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
 												session:execute("bridge", dial_string);
 											end
 									else
@@ -368,14 +369,14 @@
 										else
 											--not found: user is available
 											if (user_exists == "true") then
-												dial_string = "[sip_invite_domain="..domain_name.."dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
 												session:execute("bridge", dial_string);
 											elseif (tonumber(destination_number) == nil) then
 												--sip uri
-												dial_string = "[sip_invite_domain="..domain_name.."]" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]" .. destination_number;
 												session:execute("bridge", dial_string);
 											else
-												dial_string = "[sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."]loopback/" .. destination_number;
 												session:execute("bridge", dial_string);
 											end
 										end
@@ -411,6 +412,7 @@
 						end
 				end
 		end
+
 
 --actions
 	--ACTIONS = {}
