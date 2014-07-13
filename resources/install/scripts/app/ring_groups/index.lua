@@ -7,11 +7,11 @@
 --	modification, are permitted provided that the following conditions are met:
 --
 --	1. Redistributions of source code must retain the above copyright notice,
---	   this list of conditions and the following disclaimer.
+--		this list of conditions and the following disclaimer.
 --
 --	2. Redistributions in binary form must reproduce the above copyright
---	   notice, this list of conditions and the following disclaimer in the
---	   documentation and/or other materials provided with the distribution.
+--		notice, this list of conditions and the following disclaimer in the
+--		documentation and/or other materials provided with the distribution.
 --
 --	THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
 --	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -27,7 +27,6 @@
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
-
 
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
@@ -92,9 +91,9 @@
 
 --set the caller id
 	if (session:ready()) then
-			if (string.len(ring_group_cid_name_prefix) > 0) then
-				session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
-			end
+		if (string.len(ring_group_cid_name_prefix) > 0) then
+			session:execute("set", "effective_caller_id_name="..ring_group_cid_name_prefix.."#"..caller_id_name);
+		end
 	end
 
 --process the ring group
@@ -110,7 +109,7 @@
 			and d.ring_group_uuid = ']]..ring_group_uuid..[[' 
 			and r.ring_group_enabled = 'true' 
 			order by d.destination_delay, d.destination_number asc ]]
-freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+			freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 			destinations = {};
 			x = 1;
 			assert(dbh:query(sql, function(row)
@@ -142,7 +141,7 @@ freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 		--get the dialplan data and save it to a table
 			if (external) then
 				sql = [[select * from v_dialplans as d, v_dialplan_details as s 
-				where d.domain_uuid = ']] .. domain_uuid .. [[' 
+				where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
 				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' 
 				and d.dialplan_enabled = 'true' 
 				and d.dialplan_uuid = s.dialplan_uuid 
@@ -412,7 +411,6 @@ freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 						end
 				end
 		end
-
 
 --actions
 	--ACTIONS = {}
