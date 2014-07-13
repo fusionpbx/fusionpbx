@@ -214,6 +214,32 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 					//increment the dialplan detail order
 						$dialplan_detail_order = $dialplan_detail_order + 10;
+
+					//set the call accountcode
+						if (strlen($destination_accountcode) > 0) {
+							$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=$destination_accountcode";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+							$y++;
+
+					//increment the dialplan detail order
+							$dialplan_detail_order = $dialplan_detail_order + 10;
+						}
+
+					//set the call carrier
+						if (strlen($destination_carrier) > 0) {
+							$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "carrier=$destination_carrier";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+							$y++;
+
+					//increment the dialplan detail order
+							$dialplan_detail_order = $dialplan_detail_order + 10;
+						}
 				}
 
 			//add fax detection

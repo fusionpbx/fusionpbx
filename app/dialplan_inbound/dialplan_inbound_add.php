@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -79,6 +80,9 @@ require_once "resources/paging.php";
 		//$action_application_2 = check_str($_POST["action_application_2"]);
 		//$action_data_2 = check_str($_POST["action_data_2"]);
 
+		$destination_carrier = '';
+		$destination_accountcode = '';
+
 		//use the destination_uuid to set the condition_expression_1
 		if (strlen($destination_uuid) > 0) {
 			$sql = "select * from v_destinations ";
@@ -91,13 +95,15 @@ require_once "resources/paging.php";
 				foreach ($result as &$row) {
 					$condition_expression_1 = $row["destination_number"];
 					$fax_uuid = $row["fax_uuid"];
+					$destination_carrier = $row["destination_carrier"];
+					$destination_accountcode = $row["destination_accountcode"];
 				}
 			}
 			unset ($prep_statement);
 		}
 
 		if (permission_exists("inbound_route_advanced") && $action == "advanced") {
-			//allow users in the superadmin group advanced control
+			//Allow users with group advanced control, not always superadmin. You may change this in group permitions
 		}
 		else {
 			if (strlen($condition_field_1) == 0) { $condition_field_1 = "destination_number"; }
@@ -278,6 +284,60 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'set', ";
 			$sql .= "'call_direction=inbound', ";
 			$sql .= "'60' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+
+	//set accountcode
+		if (strlen($destination_accountcode) > 0) {
+			$dialplan_detail_uuid = uuid();
+			$sql = "insert into v_dialplan_details ";
+			$sql .= "(";
+			$sql .= "domain_uuid, ";
+			$sql .= "dialplan_uuid, ";
+			$sql .= "dialplan_detail_uuid, ";
+			$sql .= "dialplan_detail_tag, ";
+			$sql .= "dialplan_detail_type, ";
+			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_order ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'$domain_uuid', ";
+			$sql .= "'$dialplan_uuid', ";
+			$sql .= "'$dialplan_detail_uuid', ";
+			$sql .= "'action', ";
+			$sql .= "'set', ";
+			$sql .= "'accountcode=$destination_accountcode', ";
+			$sql .= "'62' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+
+	//set carrier
+		if (strlen($destination_carrier) > 0) {
+			$dialplan_detail_uuid = uuid();
+			$sql = "insert into v_dialplan_details ";
+			$sql .= "(";
+			$sql .= "domain_uuid, ";
+			$sql .= "dialplan_uuid, ";
+			$sql .= "dialplan_detail_uuid, ";
+			$sql .= "dialplan_detail_tag, ";
+			$sql .= "dialplan_detail_type, ";
+			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_order ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'$domain_uuid', ";
+			$sql .= "'$dialplan_uuid', ";
+			$sql .= "'$dialplan_detail_uuid', ";
+			$sql .= "'action', ";
+			$sql .= "'set', ";
+			$sql .= "'carrier=$destination_carrier', ";
+			$sql .= "'64' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
