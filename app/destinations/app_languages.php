@@ -170,9 +170,9 @@
 		$text['label-carrier']['fr-fr'] = "Nom du carrier";
 
 		$text['description-carrier']['en-us'] = "Enter the carrier name. This is use to keep track incase billing";
-		$text['description-carrier']['es-cl'] = "Ingrese el nombre del carrier.  Es utilizado en caso de usar la cobranza";
-		$text['description-carrier']['pt-pt'] = "";
-		$text['description-carrier']['fr-fr'] = "Entrez nom du carrier.  Il est utilisé en casu ou vous utilisez le billing";
+		$text['description-carrier']['es-cl'] = "Introduzca el nombre del carrier. Esto se utiliza para realizar un seguimiento en caso de facturación";
+		$text['description-carrier']['pt-pt'] = "Digite o nome da operadora. Isto é usado para manter o controle meter faturamento";
+		$text['description-carrier']['fr-fr'] = "Entrez le nom du transporteur. Ceci est utilise pour garder une trace encas facturation";
 
 		$text['button-add']['en-us'] = "Add";
 		$text['button-add']['es-cl'] = "Agregar";
@@ -233,5 +233,10 @@
 		$text['message-duplicate']['es-cl'] = "Duplicar detectado";
 		$text['message-duplicate']['pt-pt'] = "Duplicar detectado";
 		$text['message-duplicate']['fr-fr'] = "Dupliquer détecté";
+
+		$text['billing-warning']['en-us'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
+		$text['billing-warning']['es-cl'] = "Si está utilizando la aplicación de facturación fusionpbx, asegúrese de agregar lasvariables accountcode y carrier";
+		$text['billing-warning']['pt-pt'] = "Se você estiver usando o aplicativo de faturamento fusionpbx, certifique-se de adicionar variáveis accountcode e carrier";
+		$text['billing-warning']['fr-fr'] = "Si vous utilisez l'application de facturation fusionpbx, assurez-vous d'ajouter des variables de accountcode et carrier";
 
 ?>

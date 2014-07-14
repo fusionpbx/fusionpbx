@@ -520,4 +520,9 @@
 		$text['message-required']['pt-pt'] = "Por favor indique: ";
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
+		$text['billing-warning']['en-us'] = "If you are using fusionpbx billing application, make sure to add accountcode and carrier variables.";
+		$text['billing-warning']['es-cl'] = "Si está utilizando la aplicación de facturación fusionpbx, asegúrese de agregar lasvariables accountcode y carrier";
+		$text['billing-warning']['pt-pt'] = "Se você estiver usando o aplicativo de faturamento fusionpbx, certifique-se de adicionar variáveis ​​accountcode e carrier";
+		$text['billing-warning']['fr-fr'] = "Si vous utilisez l'application de facturation fusionpbx, assurez-vous d'ajouter des variables de accountcode et carrier";
+
 ?>
