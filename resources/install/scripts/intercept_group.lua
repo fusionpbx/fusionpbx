@@ -160,14 +160,15 @@
 			if (domain_count > 1) then
 				sql = sql .. "and context = '"..context.."' ";
 			end
+			sql = sql .. "limit 1 ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
 			end
-			dbh:query(sql, function(result)
-				--for key, val in pairs(result) do
-				--	freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
+			dbh:query(sql, function(row)
+				--for key, val in pairs(row) do
+				--	freeswitch.consoleLog("NOTICE", "row "..key.." "..val.."\n");
 				--end
-				uuid = result.uuid;
+				uuid = row.uuid;
 			end);
 	end
 
