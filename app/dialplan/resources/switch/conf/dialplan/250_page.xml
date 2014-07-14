@@ -10,14 +10,14 @@
 			<anti-action application="log" data="INFO referred_by_user is [${referred_by_user}]"/>
 			<anti-action application="log" data="INFO sip_h_Referred-By is [${sip_h_Referred-By}]"/>
 		</condition>
-		<condition field="destination_number" expression="^\*725$" />
+		<condition field="destination_number" expression="^\*724$" />
 		<condition field="${referred_by_user}" expression="false" break="never">
 			<action application="set" data="was_transfered_to_page=false" inline="true"/>
 			<action application="log" data="INFO was_transfered_to_page is [${was_transfered_to_page}]"/>
 			<anti-action application="set" data="was_transfered_to_page=true" inline="true"/>
 			<anti-action application="log" data="INFO was_transfered_to_page is [${was_transfered_to_page}]"/>
 		</condition>
-		<condition field="destination_number" expression="^\*725$" break="never" >
+		<condition field="destination_number" expression="^\*724$" break="never" >
 			<action application="log" data="INFO was_transfered_to_page is [${was_transfered_to_page}]"/>
 		</condition>
 		<condition field="${was_transfered_to_page}" expression="true" break="never">
