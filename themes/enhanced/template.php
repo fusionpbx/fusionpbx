@@ -969,7 +969,7 @@ legend {
 							if ($_SESSION['username'] != '') {
 								echo "<span style='white-space: nowrap;'>";
 								echo "	<span style='color: black; font-size: 10px; font-weight: bold;'>".$text['theme-label-user']."</span>&nbsp;";
-								echo "	<a href='/core/user_settings/user_dashboard.php'>";
+								echo "	<a href='".PROJECT_PATH."/core/user_settings/user_dashboard.php'>";
 								echo $_SESSION['username'];
 								if (count($_SESSION['domains']) > 1) {
 									echo "@".$_SESSION["user_context"];
