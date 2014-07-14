@@ -807,7 +807,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
+	echo "<p>".$text['billing-warning']."</p>" ;
 //show the footer
 	require_once "resources/footer.php";
 ?>

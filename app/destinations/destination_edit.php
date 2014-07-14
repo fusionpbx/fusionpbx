@@ -672,7 +672,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 
 	}
-
+	if ($action == "add"){ $destination_accountcode=$_SESSION['domain_name'];}
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-accountcode'].":\n";
@@ -710,7 +710,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-
+	echo "<p>".$text['billing-warning']."</p>";
 //include the footer
 	require_once "resources/footer.php";
 ?>
