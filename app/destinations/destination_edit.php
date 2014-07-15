@@ -628,25 +628,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_enabled'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='destination_enabled'>\n";
-	switch ($destination_enabled) {
-		case "true" :	$selected[1] = "selected='selected'";	break;
-		case "false" :	$selected[2] = "selected='selected'";	break;
-	}
-	echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
-	echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
-	unset($selected);
-	echo "	</select>\n";
-	echo "<br />\n";
-	echo $text['description-destination_enabled']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	// billing
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
 		echo "<tr>\n";
@@ -671,8 +652,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['description-carrier']."\n";
 		echo "</td>\n";
 
+		if ($action == "add"){ $destination_accountcode=$_SESSION['domain_name'];}
 	}
-	if ($action == "add"){ $destination_accountcode=$_SESSION['domain_name'];}
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-accountcode'].":\n";
@@ -682,6 +664,25 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 	echo $text['description-accountcode']."\n";
 	echo "</td>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-destination_enabled'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='destination_enabled'>\n";
+	switch ($destination_enabled) {
+		case "true" :	$selected[1] = "selected='selected'";	break;
+		case "false" :	$selected[2] = "selected='selected'";	break;
+	}
+	echo "	<option value='true' ".$selected[1].">".$text['label-true']."</option>\n";
+	echo "	<option value='false' ".$selected[2].">".$text['label-false']."</option>\n";
+	unset($selected);
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-destination_enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
