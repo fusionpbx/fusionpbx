@@ -29,8 +29,8 @@
 
 		public function set() {
 
-			//set the variable
-				$db = $this->db;
+			//set the global variable
+				global $db;
 
 			//clear the sessions
 				unset($_SESSION['contact']);
@@ -185,8 +185,8 @@
 
 		public function upgrade() {
 
-			//set the variable
-				$db = $this->db;
+			//set the global variable
+				global $db;
 
 			//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
