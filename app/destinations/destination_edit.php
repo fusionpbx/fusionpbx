@@ -224,7 +224,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
-					//increment the dialplan detail order
+							//increment the dialplan detail order
 							$dialplan_detail_order = $dialplan_detail_order + 10;
 						}
 
@@ -652,7 +652,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['description-carrier']."\n";
 		echo "</td>\n";
 
-		if ($action == "add"){ $destination_accountcode=$_SESSION['domain_name'];}
+		//set the default account code
+		if ($action == "add") { $destination_accountcode=$_SESSION['domain_name']; }
 	}
 
 	echo "<tr>\n";
