@@ -78,8 +78,17 @@ if ($response_format == 'text') {
 	echo $text['label-database']."\n";
 }
 
-//upgrade the database schema
-	require_once "core/upgrade/upgrade_schema.php";
+//make sure the database schema and installation have performed all necessary tasks
+	$display_results = false;
+	$display_type = 'none';
+	require_once "resources/classes/schema.php";
+	$obj = new schema;
+	$obj->schema($db, $db_type, $db_name, $display_type);
+
+//run all app_defaults.php files
+	require_once "resources/classes/domains.php";
+	$domain = new domains;
+	$domain->upgrade();
 
 //show the content
 	if ($response_format == 'html') {
