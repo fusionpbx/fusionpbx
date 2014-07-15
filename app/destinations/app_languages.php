@@ -152,7 +152,6 @@
 		$text['description-monthly_price']['pt-pt'] = "Digite o preço mensal de conta para este destino (somente quando entrada)";
 		$text['description-monthly_price']['fr-fr'] = "Entrez prix mensuel de projet de loi pour cette destination (uniquement lorsque entrant)";
 
-
 		$text['label-accountcode']['en-us'] = "Account code";
 		$text['label-accountcode']['es-cl'] = "Código de cuenta";
 		$text['label-accountcode']['pt-pt'] = "Codigo de cuenta";
@@ -162,7 +161,6 @@
 		$text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta.  Es utilizado en caso de usar la cobranza";
 		$text['description-accountcode']['pt-pt'] = "";
 		$text['description-accountcode']['fr-fr'] = "Entrez nom de client.  Il est utilisé en casu ou vous utilisez le billing";
-
 
 		$text['label-carrier']['en-us'] = "Carrier name";
 		$text['label-carrier']['es-cl'] = "Nombre del carrier";
