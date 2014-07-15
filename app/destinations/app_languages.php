@@ -157,10 +157,10 @@
 		$text['label-accountcode']['pt-pt'] = "Codigo de cuenta";
 		$text['label-accountcode']['fr-fr'] = "Nom de client";
 
-		$text['description-accountcode']['en-us'] = "Enter account code. This is use to keep track incase billing";
-		$text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta.  Es utilizado en caso de usar la cobranza";
+		$text['description-accountcode']['en-us'] = "Enter account code.";
+		$text['description-accountcode']['es-cl'] = "Ingrese el código de cuenta.";
 		$text['description-accountcode']['pt-pt'] = "";
-		$text['description-accountcode']['fr-fr'] = "Entrez nom de client.  Il est utilisé en casu ou vous utilisez le billing";
+		$text['description-accountcode']['fr-fr'] = "Entrez nom de client.";
 
 		$text['label-carrier']['en-us'] = "Carrier name";
 		$text['label-carrier']['es-cl'] = "Nombre del carrier";
