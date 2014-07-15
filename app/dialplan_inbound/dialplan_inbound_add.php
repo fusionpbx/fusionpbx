@@ -103,7 +103,7 @@ require_once "resources/paging.php";
 		}
 
 		if (permission_exists("inbound_route_advanced") && $action == "advanced") {
-			//Allow users with group advanced control, not always superadmin. You may change this in group permitions
+			//allow users with group advanced control, not always superadmin. You may change this in group permissions
 		}
 		else {
 			if (strlen($condition_field_1) == 0) { $condition_field_1 = "destination_number"; }
