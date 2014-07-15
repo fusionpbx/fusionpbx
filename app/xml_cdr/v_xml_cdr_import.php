@@ -43,7 +43,7 @@
 	}
 
 //set debug
-	$debug = true; //true //false
+	$debug = false; //true //false
 	if($debug){
 		$time5 = microtime(true);
 		$insert_time=$insert_count=0;
