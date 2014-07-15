@@ -446,10 +446,14 @@ include "root.php";
 
 		//datatase schema
 			public function schema ($db, $db_type, $db_name, $response_output) {
-				global $db;
-				global $text; // pulls in language variable array
-				global $response_format;
-				global $upgrade_data_types;
+				//set the global variables
+					global $db;
+					global $text; // pulls in language variable array
+					global $response_format;
+					global $upgrade_data_types;
+				
+				//get the PROJECT PATH
+					include "root.php";
 
 				//PHP PDO check if table or column exists
 					//check if table exists
@@ -850,8 +854,8 @@ include "root.php";
 
 //example use
 	//require_once "resources/classes/schema.php";
-	//$schema = new schema;
-	//$schema->db_type = $db_type;
-	//$schema->sql();
-	//$result_array = $schema->result['sql'];
+	//$obj = new schema;
+	//$obj->db_type = $db_type;
+	//$obj->schema();
+	//$result_array = $schema->obj['sql'];
 	//print_r($result_array);

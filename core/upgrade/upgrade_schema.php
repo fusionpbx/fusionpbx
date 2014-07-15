@@ -69,16 +69,15 @@
 		$response_format = 'html'; //html, text
 	}
 
-
 //set the default
 	if (!isset($response_output)) {
 		$response_output = "echo";
 	}
 
-
 //load the default database into memory and compare it with the active database
-	require_once "resources/schema.php";
-	$response_upgrade_schema = db_upgrade_schema($db, $db_type, $db_name, $response_output);
+	require_once "resources/classes/schema.php";
+	$obj = new schema;
+	$obj->schema($db, $db_type, $db_name, $response_output);
 	unset($apps);
 
 

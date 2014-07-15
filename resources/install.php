@@ -1355,7 +1355,14 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 	//make sure the database schema and installation have performed all necessary tasks
 		$display_results = false;
 		$display_type = 'none';
-		require_once "core/upgrade/upgrade_schema.php";
+		require_once "resources/classes/schema.php";
+		$obj = new schema;
+		$obj->schema($db, $db_type, $db_name, $display_type);
+
+	//run all app_defaults.php files
+		require_once "resources/classes/domains.php";
+		$domain = new domains;
+		$domain->upgrade();
 
 	//synchronize the config with the saved settings
 		save_switch_xml();
