@@ -186,7 +186,10 @@
 		public function upgrade() {
 
 			//set the global variable
-				global $db;
+				global $db, $db_type, $db_name, $db_username, $db_password, $db_host, $db_path, $db_port;
+
+			//get the PROJECT PATH
+				include "root.php";
 
 			//get the list of installed apps from the core and mod directories
 				$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
