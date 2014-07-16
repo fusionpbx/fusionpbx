@@ -35,7 +35,7 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$display_type = 'text'; //html, text
+		$format = 'text'; //html, text
 	}
 	else if (!$included) {
 		include "root.php";
@@ -48,6 +48,7 @@
 			echo "access denied";
 			exit;
 		}
+		$format = 'html'; //html, text
 	}
 
 //run all app_defaults.php files

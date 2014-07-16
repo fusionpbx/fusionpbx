@@ -64,28 +64,23 @@ if (sizeof($_POST) > 0) {
 		$response_message = $text['message-upgrade_svn'];
 	}
 
-	// load the default database into memory and compare it with the active database
+	// load an array of the database schema and compare it with the active database
 	if ($do["schema"] && permission_exists("upgrade_schema")) {
-		$included = true;
-		$response_output = "return";
-		$response_format = "html";
-		$upgrade_data_types = check_str($do["data_types"]);
-		require_once "core/upgrade/upgrade_schema.php";
-		if ($response_upgrade_schema != '') {
-			$_SESSION["response_upgrade_schema"] = $response_upgrade_schema;
-		}
-		unset($apps);
 		$response_message = $text['message-upgrade_schema'];
+
+		$upgrade_data_types = check_str($do["data_types"]);
+		require_once "resources/classes/schema.php";
+		$obj = new schema();
+		$_SESSION["schema"]["response"] = $obj->schema("html");
 	}
 
 	// process the apps defaults
 	if ($do["apps"] && permission_exists("upgrade_apps")) {
-		$included = true;
-		$domain_language_code = $_SESSION['domain']['language']['code'];
-		require_once "core/upgrade/upgrade_domains.php";
-		$_SESSION['domain']['language']['code'] = $domain_language_code;
-		unset($domain_language_code);
 		$response_message = $text['message-upgrade_apps'];
+
+		require_once "resources/classes/domains.php";
+		$domain = new domains;
+		$domain->upgrade();
 	}
 
 	// restore defaults of the selected menu
@@ -260,12 +255,12 @@ if ($_SESSION["response_svn_update"] != '') {
 
 
 // output result of upgrade schema
-if ($_SESSION["response_upgrade_schema"] != '') {
+if ($_SESSION["schema"]["response"] != '') {
 	echo "<br /><br /><br />";
 	echo "<b>".$text['header-upgrade_schema_results']."</b>";
 	echo "<br /><br />";
-	echo $_SESSION["response_upgrade_schema"];
-	unset($_SESSION["response_upgrade_schema"]);
+	echo $_SESSION["schema"]["response"];
+	unset($_SESSION["schema"]["response"]);
 }
 
 require_once "resources/footer.php";

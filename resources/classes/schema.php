@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2013
+	Copyright (C) 2013 - 2014
 	All Rights Reserved.
 
 	Contributor(s):
@@ -445,15 +445,22 @@ include "root.php";
 			}
 
 		//datatase schema
-			public function schema ($db, $db_type, $db_name, $response_output) {
-				//set the global variables
-					global $db;
-					global $text; // pulls in language variable array
-					global $response_format;
-					global $upgrade_data_types;
+			public function schema ($format) {
+			
+				//set the global variable
+					global $db, $db_type, $db_name, $db_username, $db_password;
+					global $db_host, $db_path, $db_port, $upgrade_data_types, $text;
 				
 				//get the PROJECT PATH
 					include "root.php";
+
+				//add multi-lingual support
+					if (!isset($text)) {
+						require "core/upgrade/app_languages.php";
+						foreach($text as $key => $value) {
+							$text[$key] = $value[$_SESSION['domain']['language']['code']];
+						}
+					}
 
 				//PHP PDO check if table or column exists
 					//check if table exists
@@ -709,7 +716,7 @@ include "root.php";
 					$response = '';
 
 				//display results as html
-					if ($response_output != '' && $response_format == "html") {
+					if ($format == "html") {
 						//show the database type
 							$response .= "<strong>".$text['header-database_type'].": ".$db_type. "</strong><br /><br />";
 						//start the table
@@ -812,11 +819,11 @@ include "root.php";
 
 					//loop line by line through all the lines of sql code
 						$x = 0;
-						if (strlen($sql_update) == 0 && $response_format == "text") {
+						if (strlen($sql_update) == 0 && $format == "text") {
 							$response .= "	".$text['label-schema'].":			".$text['label-no_change']."\n";
 						}
 						else {
-							if ($response_format == "text") {
+							if ($format == "text") {
 								$response .= "	".$text['label-schema'].":\n";
 							}
 							//$db->beginTransaction();
@@ -825,14 +832,12 @@ include "root.php";
 								if (strlen(trim($sql))) {
 									try {
 										$db->query(trim($sql));
-										if ($response_format == "text") {
+										if ($format == "text") {
 											$response .= "	$sql\n";
 										}
 									}
 									catch (PDOException $error) {
-										if ($response_output != '') {
-											$response .= "	error: " . $error->getMessage() . "	sql: $sql<br/>";
-										}
+										$response .= "	error: " . $error->getMessage() . "	sql: $sql<br/>";
 									}
 								}
 							}
@@ -842,12 +847,12 @@ include "root.php";
 						}
 
 				//handle response
-					if ($response_output == "echo") {
-						echo $response;
-					}
-					else if ($response_output == "return") {
+					//if ($output == "echo") {
+					//	echo $response;
+					//}
+					//else if ($output == "return") {
 						return $response;
-					}
+					//}
 
 			} //end function
 }

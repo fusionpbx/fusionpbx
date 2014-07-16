@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -32,13 +32,7 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$response_format = 'text'; //html, text
-
-		//add multi-lingual support
-			require_once "app_languages.php";
-			foreach($text as $key => $value) {
-				$text[$key] = $value[$_SESSION['domain']['language']['code']];
-			}
+		$format = 'text'; //html, text
 	}
 	else {
 		include "root.php";
@@ -51,39 +45,28 @@
 			echo "access denied";
 			exit;
 		}
-
-		//add multi-lingual support
-			require_once "app_languages.php";
-			foreach($text as $key => $value) {
-				$text[$key] = $value[$_SESSION['domain']['language']['code']];
-			}
-
+		$format = 'html';
 	}
 
-//set the default
-	if (!isset($response_output)) {
-		$response_output = "echo";
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-//include the header
-	if ($response_output == "echo") {
-		require_once "resources/header.php";
+//show the title
+	if ($format == 'text') {
+		echo "\n";
+		echo $text['label-upgrade']."\n";
+		echo "-----------------------------------------\n";
+		echo "\n";
+		echo $text['label-database']."\n";
 	}
-
-if ($response_format == 'text') {
-	echo "\n";
-	echo $text['label-upgrade']."\n";
-	echo "-----------------------------------------\n";
-	echo "\n";
-	echo $text['label-database']."\n";
-}
 
 //make sure the database schema and installation have performed all necessary tasks
-	$display_results = false;
-	$display_type = 'none';
 	require_once "resources/classes/schema.php";
 	$obj = new schema;
-	$obj->schema($db, $db_type, $db_name, $display_type);
+	echo $obj->schema("text");
 
 //run all app_defaults.php files
 	require_once "resources/classes/domains.php";
@@ -91,7 +74,7 @@ if ($response_format == 'text') {
 	$domain->upgrade();
 
 //show the content
-	if ($response_format == 'html') {
+	if ($format == 'html') {
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -111,12 +94,13 @@ if ($response_format == 'text') {
 		echo "<br />\n";
 		echo "<br />\n";
 	}
-	elseif ($response_format == 'text') {
+	elseif ($format == 'text') {
 		echo "\n";
 	}
 
 //include the footer
-	if ($response_output == "echo") {
+	if ($format == "html") {
 		require_once "resources/footer.php";
 	}
+
 ?>

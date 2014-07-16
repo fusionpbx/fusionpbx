@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,7 +27,6 @@
 // set included, if not
 	if (!isset($included)) { $included = false; }
 
-
 //check the permission
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
@@ -36,7 +35,7 @@
 		set_include_path($document_root);
 		require_once "resources/require.php";
 		$_SERVER["DOCUMENT_ROOT"] = $document_root;
-		$response_format = 'text'; //html, text
+		$format = 'text'; //html, text
 
 		//add multi-lingual support
 		require_once "app_languages.php";
@@ -57,31 +56,18 @@
 			exit;
 		}
 
-		//add multi-lingual support
-		require_once "app_languages.php";
-		foreach($text as $key => $value) {
-			$text[$key] = $value[$_SESSION['domain']['language']['code']];
-		}
-
 		require_once "resources/header.php";
 		$document['title'] = $text['title-upgrade_schema'];
 
-		$response_format = 'html'; //html, text
+		$format = 'html'; //html, text
 	}
 
-//set the default
-	if (!isset($response_output)) {
-		$response_output = "echo";
-	}
-
-//load the default database into memory and compare it with the active database
+//get the database schema put it into an array then compare and update the database as needed.
 	require_once "resources/classes/schema.php";
 	$obj = new schema;
-	$obj->schema($db, $db_type, $db_name, $response_output);
-	unset($apps);
+	echo $obj->schema($format);
 
-
-if (!$included && $response_output == 'echo' && $response_format == 'html') {
+if (!$included && $format == 'html') {
 	echo "<br />\n";
 	echo "<br />\n";
 	require_once "resources/footer.php";
