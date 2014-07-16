@@ -1454,9 +1454,9 @@
 <Unit_1_Enable group="Attendant_Console/General">Yes</Unit_1_Enable>
 <Subscribe_Delay group="Attendant_Console/General">1</Subscribe_Delay>
 <Unit_2_Enable group="Attendant_Console/General">Yes</Unit_2_Enable>
-<Server_Type group="Attendant_Console/General">Broadsoft</Server_Type>
+<Server_Type group="Attendant_Console/General">Asterisk</Server_Type>
 <Test_Mode_Enable group="Attendant_Console/General">No</Test_Mode_Enable>
-<Attendant_Console_Call_Pickup_Code group="Attendant_Console/General">*98</Attendant_Console_Call_Pickup_Code>
+<Attendant_Console_Call_Pickup_Code group="Attendant_Console/General">**#</Attendant_Console_Call_Pickup_Code>
 <Attendant_Console_Call_Park_Code group="Attendant_Console/General">*68</Attendant_Console_Call_Park_Code>
 <Attendant_Console_Call_unPark_Code group="Attendant_Console/General">*88</Attendant_Console_Call_unPark_Code>
 <BLF_List_URI group="Attendant_Console/General" />
