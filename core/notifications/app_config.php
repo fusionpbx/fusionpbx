@@ -7,24 +7,24 @@
 		$apps[$x]['version'] = "";
 		$apps[$x]['url'] = "http://www.fusionpbx.com";
 		$apps[$x]['description']['en-us'] = "Configure notification preferences.";
-		$apps[$x]['description']['es-cl'] = "";
+		$apps[$x]['description']['es-cl'] = "Configure las preferencias de notificaciones.";
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "";
-		$apps[$x]['description']['fr-ca'] = "";
+		$apps[$x]['description']['fr-fr'] = "Configurez les notifications.";
+		$apps[$x]['description']['fr-ca'] = "Configurez les notifications.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "";
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details
 		$apps[$x]['menu'][0]['title']['en-us'] = "Notifications";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "";
+		$apps[$x]['menu'][0]['title']['es-cl'] = "Notificaciones";
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Notifications";
+		$apps[$x]['menu'][0]['title']['fr-ca'] = "Notifications";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
