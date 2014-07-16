@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Upgrade";
 		$apps[$x]['uuid'] = "8b1d7eb5-1009-052c-e1a8-d1f4887a3f5c";
@@ -11,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Mise à jour du Schéma de la base de données";
+		$apps[$x]['description']['fr-fr'] = "Mise %uFFFD jour du Sch%uFFFDma de la base de donn%uFFFDes";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Atualizar o esquema da base de dados.";
@@ -174,4 +175,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		*/
+
 ?>
