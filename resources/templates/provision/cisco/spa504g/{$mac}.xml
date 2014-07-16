@@ -632,9 +632,9 @@
 <!-- <Group_Paging_Script group="Phone/Multiple_Paging_Group_Parameters">pggrp=224.168.168.168:34560;name=All;num=800;listen=yes;</Group_Paging_Script> -->
 <Group_Paging_Script group="Phone/Multiple_Paging_Group_Parameters"></Group_Paging_Script>
 
-<Server_Type group="Attendant_Console/General">Broadsoft</Server_Type>
+<Server_Type group="Attendant_Console/General">Asterisk</Server_Type>
 <Test_Mode_Enable group="Attendant_Console/General">No</Test_Mode_Enable>
-<Attendant_Console_Call_Pickup_Code group="Attendant_Console/General">*98</Attendant_Console_Call_Pickup_Code>
+<Attendant_Console_Call_Pickup_Code group="Attendant_Console/General">**#</Attendant_Console_Call_Pickup_Code>
 <Unit_1_Key_1 group="Attendant_Console/Unit_1" />
 <Unit_1_Key_2 group="Attendant_Console/Unit_1" />
 <Unit_1_Key_3 group="Attendant_Console/Unit_1" />
