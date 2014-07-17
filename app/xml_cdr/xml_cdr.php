@@ -295,7 +295,7 @@ else {
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order);
 	//echo th_order_by('end_stamp', 'End', $order_by, $order);
 	echo th_order_by('duration', $text['label-duration'], $order_by, $order);
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		// billing collumns
 		echo "<th>".$text['label-price']."</th>\n";
 	}
@@ -310,8 +310,8 @@ else {
 		echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
-		require_once "app/billings/functions.php";
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		require_once "app/billing/functions.php";
 		require_once "resources/classes/database.php";
 		$database = new database;
 	}
@@ -438,7 +438,7 @@ else {
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
 
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 
 				$database->table = "v_xml_cdr";
 				$accountcode = (strlen($row["accountcode"])?$row["accountcode"]:$_SESSION[domain_name]);

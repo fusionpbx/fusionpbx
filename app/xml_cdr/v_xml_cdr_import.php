@@ -58,8 +58,8 @@
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
-		require_once "app/billings/functions.php";
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		require_once "app/billing/functions.php";
 	}
 //define the process_xml_cdr function
 	function process_xml_cdr($db, $leg, $xml_string) {
@@ -216,7 +216,7 @@
 			}
 
 		//billing information
-			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 				$db2 = new database;
 				$lcr_currency = 'USD';
 
