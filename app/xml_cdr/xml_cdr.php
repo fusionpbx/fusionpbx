@@ -311,7 +311,7 @@ else {
 	}
 	echo "</tr>\n";
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
-		require_once "app/billing/functions.php";
+		require_once "app/billing/resources/functions/rating.php";
 		require_once "resources/classes/database.php";
 		$database = new database;
 	}
