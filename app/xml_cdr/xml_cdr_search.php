@@ -34,7 +34,8 @@ else {
 	exit;
 }
 
-if (count($_POST)>0) {
+if (count($_POST) > 0) {
+	$direction = $_POST["direction"];
 	$cdr_id = $_POST["cdr_id"];
 	$caller_id_name = $_POST["caller_id_name"];
 	$caller_id_number = $_POST["caller_id_number"];
@@ -75,6 +76,34 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "	<tr>\n";
+	echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+	echo "			".$text['label-direction']."\n";
+	echo "		</td>\n";
+	echo "		<td class='vtable' width='70%' align='left'>\n";
+	echo "			<select name='direction' class='formfld'>\n";
+	echo "				<option value=''></option>\n";
+	if ($direction == "inbound") {
+		echo "			<option value='inbound' selected='selected'>".$text['label-inbound']."</option>\n";
+	}
+	else {
+		echo "			<option value='inbound'>".$text['label-inbound']."</option>\n";
+	}
+	if ($direction == "outbound") {
+		echo "			<option value='outbound' selected='selected'>".$text['label-outbound']."</option>\n";
+	}
+	else {
+		echo "			<option value='outbound'>".$text['label-outbound']."</option>\n";
+	}
+	if ($direction == "local") {
+		echo "			<option value='local' selected='selected'>".$text['label-local']."</option>\n";
+	}
+	else {
+		echo "			<option value='local'>".$text['label-local']."</option>\n";
+	}
+	echo "			</select>\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
 	echo "	<tr>";
 	echo "		<td class='vncell'>Source Name:</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_name' value='$caller_id_name'></td>";
