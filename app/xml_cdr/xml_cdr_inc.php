@@ -44,7 +44,7 @@ else {
 	define('TIME_24HR', 1);
 
 //get post or get variables from http
-	if (count($_REQUEST)>0) {
+	if (count($_REQUEST) > 0) {
 		$order_by = check_str($_REQUEST["order_by"]);
 		$order = check_str($_REQUEST["order"]);
 		$cdr_id = check_str($_REQUEST["cdr_id"]);
@@ -79,7 +79,7 @@ else {
 		$sql_where_ands[] = "start_epoch BETWEEN ".$start_epoch." AND ".$stop_epoch." ";
 	}
 	if (strlen($cdr_id) > 0) { $sql_where_ands[] = "cdr_id like '%".$cdr_id."%'"; }
-	if (strlen($direction) > 0) { $sql_where_ands[] = "direction = '".$direction."'"; }
+	if (strlen($direction) > 0) { $sql_where_ands[] = "call_direction = '".$direction."'"; }
 	if (strlen($caller_id_name) > 0) {
 		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
 		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
