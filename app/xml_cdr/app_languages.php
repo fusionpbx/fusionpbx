@@ -40,6 +40,11 @@
 	$text['label-cid-name']['pt-pt'] = "Nome CID";
 	$text['label-cid-name']['fr-fr'] = "Nom de l'Appelant";
 
+	$text['label-cid-number']['en-us'] = "CID Number";
+	$text['label-cid-number']['es-cl'] = "Número CID";
+	$text['label-cid-number']['pt-pt'] = "Número CID";
+	$text['label-cid-number']['fr-fr'] = "Nombre de l'Appelant";
+
 	$text['label-inbound']['en-us'] = "Inbound";
 	$text['label-inbound']['es-cl'] = "Entrada";
 	$text['label-inbound']['pt-pt'] = "Entrada";
@@ -267,6 +272,92 @@
 	$text['label-call-flow-5']['es-cl'] = "Flujos de llamada: Tiempos";
 	$text['label-call-flow-5']['pt-pt'] = "Fluxo de chamada: Tempos";
 	$text['label-call-flow-5']['fr-fr'] = "Flux d'appel: temporisations ";
+
+	//xml_cdr_search
+	$text['label-caller_id_name']['en-us'] = "CID Name";
+	$text['label-caller_id_name']['es-cl'] = "Nombre CID";
+	$text['label-caller_id_name']['pt-pt'] = "Nome CID";
+	$text['label-caller_id_name']['fr-fr'] = "Nom de l'Appelant";
+
+	$text['label-caller_id_number']['en-us'] = "CID Number";
+	$text['label-caller_id_number']['es-cl'] = "Número CID";
+	$text['label-caller_id_number']['pt-pt'] = "Número CID";
+	$text['label-caller_id_number']['fr-fr'] = "Nombre de l'Appelant";
+
+	$text['label-destination']['en-us'] = "Destination Number";
+	$text['label-destination']['es-cl'] = "Número de destino";
+	$text['label-destination']['pt-pt'] = "Número Destino";
+	$text['label-destination']['fr-fr'] = "Nombre de Destinations";
+
+	$text['label-context']['en-us'] = "Context";
+	$text['label-context']['es-cl'] = "Contexto";
+	$text['label-context']['pt-pt'] = "Contexto";
+	$text['label-context']['fr-fr'] = "Contexte";
+
+	$text['label-start']['en-us'] = "Start";
+	$text['label-start']['es-cl'] = "Comienzo";
+	$text['label-start']['pt-pt'] = "Começo";
+	$text['label-start']['fr-fr'] = "Démarrer";
+
+	$text['label-answer']['en-us'] = "Answer";
+	$text['label-answer']['es-cl'] = "Respuesta";
+	$text['label-answer']['pt-pt'] = "Resposta";
+	$text['label-answer']['fr-fr'] = "Réponse";
+
+	$text['label-end_stamp']['en-us'] = "End";
+	$text['label-end_stamp']['es-cl'] = "Fin";
+	$text['label-end_stamp']['pt-pt'] = "Fim";
+	$text['label-end_stamp']['fr-fr'] = "Fin";
+
+	$text['label-duration']['en-us'] = "Duration";
+	$text['label-duration']['es-cl'] = "Duración";
+	$text['label-duration']['pt-pt'] = "Duração";
+	$text['label-duration']['fr-fr'] = "Durée";
+
+	$text['label-billsec']['en-us'] = "Bill Seconds";
+	$text['label-billsec']['es-cl'] = "Segundos Bill";
+	$text['label-billsec']['pt-pt'] = "Segundos Bill";
+	$text['label-billsec']['fr-fr'] = "Secondes de Factures";
+
+	$text['label-hangup_cause']['en-us'] = "Status";
+	$text['label-hangup_cause']['es-cl'] = "Estado";
+	$text['label-hangup_cause']['pt-pt'] = "Estado";
+	$text['label-hangup_cause']['fr-fr'] = "Statut";
+
+	$text['label-uuid']['en-us'] = "UUID";
+	$text['label-uuid']['es-cl'] = "UUID";
+	$text['label-uuid']['pt-pt'] = "UUID";
+	$text['label-uuid']['fr-fr'] = "UUID";
+
+	$text['label-bridge_uuid']['en-us'] = "Bridge UUID";
+	$text['label-bridge_uuid']['es-cl'] = "UUID Puente";
+	$text['label-bridge_uuid']['pt-pt'] = "Ponte UUID";
+	$text['label-bridge_uuid']['fr-fr'] = "Pont UUID";
+
+	$text['label-accountcode']['en-us'] = "Account Code";
+	$text['label-accountcode']['es-cl'] = "Código de Cuenta";
+	$text['label-accountcode']['pt-pt'] = "Código de Conta";
+	$text['label-accountcode']['fr-fr'] = "Centre de frais";
+
+	$text['label-read_codec']['en-us'] = "Read Codec";
+	$text['label-read_codec']['es-cl'] = "Leer Códec";
+	$text['label-read_codec']['pt-pt'] = "Leia Codec";
+	$text['label-read_codec']['fr-fr'] = "lire Codec";
+
+	$text['label-write_codec']['en-us'] = "Write Codec";
+	$text['label-write_codec']['es-cl'] = "Escribe Códec";
+	$text['label-write_codec']['pt-pt'] = "Escrever Codec";
+	$text['label-write_codec']['fr-fr'] = "Ecrire Codec";
+
+	$text['label-remote_media_ip']['en-us'] = "Remote Media IP";
+	$text['label-remote_media_ip']['es-cl'] = "Remoto IP Media";
+	$text['label-remote_media_ip']['pt-pt'] = "IP Media Remote";
+	$text['label-remote_media_ip']['fr-fr'] = "IP Media Remote";
+
+	$text['label-network_addr']['en-us'] = "Network Address";
+	$text['label-network_addr']['es-cl'] = "Dirección de red";
+	$text['label-network_addr']['pt-pt'] = "Network Address";
+	$text['label-network_addr']['fr-fr'] = "Adresse réseau";
 
 	//xml_cdr_statistics
 	$text['label-call-statistics']['en-us'] = "Call Detail Record Statistics";
