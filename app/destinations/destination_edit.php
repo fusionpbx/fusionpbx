@@ -36,7 +36,7 @@ else {
 }
 
 if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
-	require_once "app/billing/functions.php";
+	require_once "app/billing/resources/functions/currency.php";
 }
 
 //add multi-lingual support
