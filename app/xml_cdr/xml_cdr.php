@@ -449,7 +449,7 @@ else {
 				unset($database->result);
 
 				$sell_price = $row['call_sell'];
-				$lcr_direction = (strlen($row['call_direction'])?$row['call_direction']:"outbound");
+				$lcr_direction = (strlen($row['direction'])?$row['direction']:"outbound");
 				$n = (($lcr_direction == "inbound")?$row['caller_id_number']:$row['destination_number']);
 				
 				$database->table = "v_lcr";
