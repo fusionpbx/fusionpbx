@@ -234,15 +234,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "add_user";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "user_add_user";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "useradduser";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "add_user";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "add_date";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "user_add_date";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "useradddate";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "add_date";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
