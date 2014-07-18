@@ -60,6 +60,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 		$destination_type = check_str($_POST["destination_type"]);
 		$destination_number = check_str($_POST["destination_number"]);
 		$db_destination_number = check_str($_POST["db_destination_number"]);
+		$regex_destination_number = str_replace("+", "\\+", $destination_number);
 		$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
 		$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
 		$destination_context = check_str($_POST["destination_context"]);
