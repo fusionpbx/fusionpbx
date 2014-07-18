@@ -43,7 +43,7 @@
 	}
 
 //set debug
-	$debug = true; //true //false
+	$debug = false; //true //false
 	if($debug){
 		$time5 = microtime(true);
 		$insert_time=$insert_count=0;
@@ -304,12 +304,11 @@
 				$db2->table = "v_xml_cdr";
 				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;
 				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode'";
-				$db2->result = $database->execute();
-				$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
-				unset($database->sql);
-				unset($database->result);
+				$db2->result = $db2->execute();
+				$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:'USD');
 
 				if ($debug) {
+					echo "sql: " . $db2->sql . "\n"; 
 					echo "c ".$database->fields['carrier_name']."\n";
 					echo "t $time\n";
 					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
@@ -317,6 +316,9 @@
 					echo "lc $lcr_currency\n";
 					echo "bc $billing_currency\n";
 				}
+
+				unset($database->sql);
+				unset($database->result);
 
 				$sql_balance = "SELECT balance, old_balance FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
 				$db2->sql = $sql_balance;
