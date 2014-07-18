@@ -118,7 +118,7 @@ else {
 			$sql .= ") ";
 		}
 		if (strlen($order_by) == 0) {
-			$sql .= "order by device_mac_address asc ";
+			$sql .= "order by device_label, device_description asc ";
 		}
 		else {
 			$sql .= "order by $order_by $order ";
