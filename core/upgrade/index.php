@@ -55,7 +55,7 @@ if (sizeof($_POST) > 0) {
 	$do = $_POST['do'];
 
 	// run svn update
-	if ($do["svn"] && permission_exists("upgrade_svn")) {
+	if ($do["svn"] && permission_exists("upgrade_svn") && !is_dir("/usr/share/fusionpbx")) {
 		$cmd = "svn up /var/www/fusionpbx";
 		exec($cmd, $response_svn_update);
 		if (sizeof($response_svn_update) > 0) {
@@ -122,7 +122,7 @@ echo "<br><br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
 
-if (permission_exists("upgrade_svn")) {
+if (permission_exists("upgrade_svn") && !is_dir("/usr/share/fusionpbx")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
