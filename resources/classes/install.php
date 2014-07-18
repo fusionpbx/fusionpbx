@@ -38,7 +38,7 @@ include "root.php";
 		//$option '-n' --no-clobber
 		function recursive_copy($src, $dst, $option = '') {
 			if (file_exists('/bin/cp')) {
-				 exec ('cp -R '.$option.' '.$src.'/* '.$dst);
+				 exec ('cp -RLp '.$option.' '.$src.'/* '.$dst);
 			}
 			else {
 				$dir = opendir($src);
@@ -76,7 +76,10 @@ include "root.php";
 		}
 
 		function recursive_delete($dir) {
-			if (strlen($dir) > 0) {
+			if (file_exists('/bin/rm')) {
+				 exec ('rm -Rf '.$dir.'/*');
+			}
+			else {
 				foreach (glob($dir) as $file) {
 					if (is_dir($file)) {
 						$this->recursive_delete("$file/*");
@@ -103,15 +106,9 @@ include "root.php";
 					$src_dir = $this->switch_conf_dir;
 					$dst_dir = $this->switch_conf_dir.'.orig';
 					if (is_readable($src_dir)) {
-						if (substr(strtoupper(PHP_OS), 0, 3) == "WIN") {
-							$this->recursive_copy($src_dir, $dst_dir);
-							$this->recursive_delete($this->switch_conf_dir);
-						}
-						else {
-							exec ('mv '.$src_dir.' '.$dst_dir);
-							//exec ('cp -RLp '.$src_dir.' '.$dst_dir);
-						}
-					} 
+						$this->recursive_copy($src_dir, $dst_dir);
+						$this->recursive_delete($src_dir);
+					}
 					else {
 						if ($src_dir != "/conf") {
 							mkdir($src_dir, 0774, true);
