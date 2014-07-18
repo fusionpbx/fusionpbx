@@ -735,6 +735,7 @@ include "root.php";
 		}
 
 		function get_xml(){
+			/*
 			//set the global variables
 				global $db;
 
@@ -804,7 +805,7 @@ include "root.php";
 								$tmp .= "	<!-- $ivr_menu_description -->\n";
 							}
 							if (count($_SESSION["domains"]) > 1) {
-								$tmp .= "	<menu name=\"".$_SESSION['domains'][$_SESSION['domain_uuid']['domain_name']."-".$ivr_menu_name."\"\n";
+								$tmp .= "	<menu name=\"".$_SESSION['domains'][$_SESSION['domain_uuid']['domain_name']."-".$ivr_menu_name."\n";
 							}
 							else {
 								$tmp .= "	<menu name=\"$ivr_menu_name\"\n";
@@ -886,7 +887,7 @@ include "root.php";
 							fclose($fout);
 					}
 				}
-
+				*/
 			return $xml;
 		}
 
