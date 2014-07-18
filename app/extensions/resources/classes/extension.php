@@ -167,6 +167,9 @@
 						$user_context = $_SESSION['domains'][$domain_uuid]['domain_name'];
 					}
 
+				//get the domain_name
+					$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
+
 				//delete all old extensions to prepare for new ones
 					$dialplan_list = glob($_SESSION['switch']['extensions']['dir']."/".$user_context."/v_*.xml");
 					foreach($dialplan_list as $name => $value) {
@@ -200,6 +203,7 @@
 						}
 						$call_timeout = $row['call_timeout'];
 						$user_context = $row['user_context'];
+						$password = $row['password'];
 						$voicemail_password = $row['voicemail_password'];
 						//$voicemail_password = str_replace("#", "", $voicemail_password); //preserves leading zeros
 
@@ -220,6 +224,10 @@
 								}
 							}
 
+							//set the password hashes
+							$a1_hash = md5($extension.":".$domain_name.":".$password);
+							$vm_a1_hash = md5($extension.":".$domain_name.":".$voicemail_password);
+
 							$xml .= "<include>\n";
 							$cidr = '';
 							if (strlen($row['cidr']) > 0) {
@@ -231,10 +239,12 @@
 							}
 							$xml .= "  <user id=\"".$row['extension']."\"".$cidr."".$number_alias.">\n";
 							$xml .= "    <params>\n";
-							$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+							$xml .= "      <param name=\"a1-hash\" value=\"" . $a1_hash . "\"/>\n";
+							//$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
 
 							//voicemail settings
-							$xml .= "      <param name=\"vm-password\" value=\"" . $voicemail_password . "\"/>\n";
+							$xml .= "      <param name=\"vm-a1-hash\" value=\"" . $vm_a1_hash. "\"/>\n";
+							//$xml .= "      <param name=\"vm-password\" value=\"" . $voicemail_password . "\"/>\n";
 							switch ($row['voicemail_enabled']) {
 							case "true":
 								$xml .= "      <param name=\"vm-enabled\" value=\"true\"/>\n";
