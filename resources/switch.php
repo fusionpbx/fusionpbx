@@ -2781,10 +2781,10 @@ if (!function_exists('save_call_center_xml')) {
 						$v_queues .= "			<param name=\"moh-sound\" value=\"local_stream://default\"/>\n";
 					}
 					else {
-						if (substr($queue_moh_sound, 0, 15) == "local_stream://") {
+						if (substr($queue_moh_sound, 0, 15) == 'local_stream://') {
 							$v_queues .= "			<param name=\"moh-sound\" value=\"local_stream://".$queue_moh_sound."\"/>\n";
 						}
-						elseif (substr($queue_moh_sound, 0, 2) == "${" && substr($queue_moh_sound, -5) == "ring}") {
+						elseif (substr($queue_moh_sound, 0, 2) == '${' && substr($queue_moh_sound, -5) == 'ring}') {
 							$v_queues .= "			<param name=\"moh-sound\" value=\"tone_stream://".$queue_moh_sound.";loops=-1\"/>\n";
 						}
 						else {
