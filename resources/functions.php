@@ -30,6 +30,13 @@
 		}
 	}
 
+	if (!function_exists('check_float')) {
+		function check_float($string) {
+			$string = str_replace(",",".",$string);
+			return trim($string);
+		}
+	}
+
 	if (!function_exists('check_str')) {
 		function check_str($string) {
 			global $db_type;
