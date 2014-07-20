@@ -387,18 +387,19 @@
 
 	if (!function_exists('th_order_by')) {
 		//html table header order by
-		function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid = '', $css = '') {
+		function th_order_by($field_name, $columntitle, $order_by, $order, $app_uuid = '', $css = '', $additional_get_params='') {
 			if (strlen($app_uuid) > 0) { $app_uuid = "&app_uuid=".$app_uuid; }	// accomodate need to pass app_uuid where necessary (inbound/outbound routes lists)
+			if (strlen($additional_get_params) > 0) {$additional_get_params = '&'.$additional_get_params; } // you may need to pass other parameters
 			$html = "<th ".$css." nowrap>";
 			if (strlen($order_by)==0) {
-				$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."' title='ascending'>$columntitle</a>";
+				$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."$additional_get_params' title='ascending'>$columntitle</a>";
 			}
 			else {
 				if ($order=="asc") {
-					$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."' title='ascending'>$columntitle</a>";
+					$html .= "<a href='?order_by=$field_name&order=desc".$app_uuid."$additional_get_params' title='ascending'>$columntitle</a>";
 				}
 				else {
-					$html .= "<a href='?order_by=$field_name&order=asc".$app_uuid."' title='descending'>$columntitle</a>";
+					$html .= "<a href='?order_by=$field_name&order=asc".$app_uuid."$additional_get_params' title='descending'>$columntitle</a>";
 				}
 			}
 			$html .= "</th>";
