@@ -246,7 +246,7 @@
 <Jitter_Buffer_Adjustment_1_ ua="na">up and down</Jitter_Buffer_Adjustment_1_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_1_ ua="na">{$sip_transport_1}</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_1_ ua="na">{$sip_transport_1|upper}</SIP_Transport_1_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_1_ ua="na">{$sip_port_1}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ ua="na">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ ua="na"></EXT_SIP_Port_1_>
@@ -358,7 +358,7 @@
 <Jitter_Buffer_Adjustment_2_ ua="na">up and down</Jitter_Buffer_Adjustment_2_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_2_ ua="na">{$sip_transport_2}</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_2_ ua="na">{$sip_transport_2|upper}</SIP_Transport_2_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_2_ ua="na">{$sip_port_2}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ ua="na">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ ua="na"></EXT_SIP_Port_2_>
@@ -470,7 +470,7 @@
 <Jitter_Buffer_Adjustment_3_ ua="na">up and down</Jitter_Buffer_Adjustment_3_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_3_ ua="na">{$sip_transport_3}</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_3_ ua="na">{$sip_transport_3|upper}</SIP_Transport_3_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_3_ ua="na">{$sip_port_3}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ ua="na">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ ua="na"></EXT_SIP_Port_3_>
@@ -582,7 +582,7 @@
 <Jitter_Buffer_Adjustment_4_ ua="na">up and down</Jitter_Buffer_Adjustment_4_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_4_ ua="na">{$sip_transport_4}</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_4_ ua="na">{$sip_transport_4|upper}</SIP_Transport_4_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_4_ ua="na">{$sip_port_4}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ ua="na">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ ua="na"></EXT_SIP_Port_4_>
@@ -694,7 +694,7 @@
 <Jitter_Buffer_Adjustment_5_ ua="na">up and down</Jitter_Buffer_Adjustment_5_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_5_ ua="na">{$sip_transport_5}</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_5_ ua="na">{$sip_transport_5|upper}</SIP_Transport_5_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_5_ ua="na">{$sip_port_5}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ ua="na">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ ua="na"></EXT_SIP_Port_5_>
@@ -806,7 +806,7 @@
 <Jitter_Buffer_Adjustment_6_ ua="na">up and down</Jitter_Buffer_Adjustment_6_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_6_ ua="na">{$sip_transport_6}</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_6_ ua="na">{$sip_transport_6|upper}</SIP_Transport_6_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_6_ ua="na">{$sip_port_6}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ ua="na">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ ua="na"></EXT_SIP_Port_6_>
@@ -918,7 +918,7 @@
 <Jitter_Buffer_Adjustment_7_ ua="na">up and down</Jitter_Buffer_Adjustment_7_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_7_ ua="na">{$sip_transport_7}</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_7_ ua="na">{$sip_transport_7|upper}</SIP_Transport_7_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_7_ ua="na">{$sip_port_7}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ ua="na">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ ua="na"></EXT_SIP_Port_7_>
@@ -1030,7 +1030,7 @@
 <Jitter_Buffer_Adjustment_8_ ua="na">up and down</Jitter_Buffer_Adjustment_8_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_8_ ua="na">{$sip_transport_8}</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_8_ ua="na">{$sip_transport_8|upper}</SIP_Transport_8_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_8_ ua="na">{$sip_port_8}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ ua="na">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ ua="na"></EXT_SIP_Port_8_>
@@ -1142,7 +1142,7 @@
 <Jitter_Buffer_Adjustment_9_ ua="na">up and down</Jitter_Buffer_Adjustment_9_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_9_ ua="na">{$sip_transport_9}</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_9_ ua="na">{$sip_transport_9|upper}</SIP_Transport_9_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_9_ ua="na">{$sip_port_9}</SIP_Port_9_>
 <SIP_100REL_Enable_9_ ua="na">No</SIP_100REL_Enable_9_>
 <EXT_SIP_Port_9_ ua="na"></EXT_SIP_Port_9_>
@@ -1254,7 +1254,7 @@
 <Jitter_Buffer_Adjustment_10_ ua="na">up and down</Jitter_Buffer_Adjustment_10_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_10_ ua="na">{$sip_transport_10}</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_10_ ua="na">{$sip_transport_10|upper}</SIP_Transport_10_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_10_ ua="na">{$sip_port_10}</SIP_Port_10_>
 <SIP_100REL_Enable_10_ ua="na">No</SIP_100REL_Enable_10_>
 <EXT_SIP_Port_10_ ua="na"></EXT_SIP_Port_10_>
@@ -1366,7 +1366,7 @@
 <Jitter_Buffer_Adjustment_11_ ua="na">up and down</Jitter_Buffer_Adjustment_11_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_11_ ua="na">{$sip_transport_11}</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_11_ ua="na">{$sip_transport_11|upper}</SIP_Transport_11_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_11_ ua="na">{$sip_port_11}</SIP_Port_11_>
 <SIP_100REL_Enable_11_ ua="na">No</SIP_100REL_Enable_11_>
 <EXT_SIP_Port_11_ ua="na"></EXT_SIP_Port_11_>
@@ -1478,7 +1478,7 @@
 <Jitter_Buffer_Adjustment_12_ ua="na">up and down</Jitter_Buffer_Adjustment_12_> <!-- options: up and down/up only/down only/disable -->
 
 <!-- SIP Settings -->
-<SIP_Transport_12_ ua="na">{$sip_transport_12}</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
+<SIP_Transport_12_ ua="na">{$sip_transport_12|upper}</SIP_Transport_12_> <!-- options: UDP/TCP/TLS -->
 <SIP_Port_12_ ua="na">{$sip_port_12}</SIP_Port_12_>
 <SIP_100REL_Enable_12_ ua="na">No</SIP_100REL_Enable_12_>
 <EXT_SIP_Port_12_ ua="na"></EXT_SIP_Port_12_>
@@ -1640,6 +1640,7 @@
 
 {foreach $keys as $row}
 {if $row.device_key_category == "line"}
+{if $row.device_key_type == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
@@ -1650,6 +1651,7 @@
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
 <Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
+{/if}
 {/if}
 
 {/foreach}
@@ -1933,73 +1935,20 @@
 <BLF_Busy_LED ua="na"></BLF_Busy_LED>
 <BLF_Held_LED ua="na"></BLF_Held_LED>
 
-<!-- Unit 1 -->
-<Unit_1_Key_1 ua="na"></Unit_1_Key_1>
-<Unit_1_Key_2 ua="na"></Unit_1_Key_2>
-<Unit_1_Key_3 ua="na"></Unit_1_Key_3>
-<Unit_1_Key_4 ua="na"></Unit_1_Key_4>
-<Unit_1_Key_5 ua="na"></Unit_1_Key_5>
-<Unit_1_Key_6 ua="na"></Unit_1_Key_6>
-<Unit_1_Key_7 ua="na"></Unit_1_Key_7>
-<Unit_1_Key_8 ua="na"></Unit_1_Key_8>
-<Unit_1_Key_9 ua="na"></Unit_1_Key_9>
-<Unit_1_Key_10 ua="na"></Unit_1_Key_10>
-<Unit_1_Key_11 ua="na"></Unit_1_Key_11>
-<Unit_1_Key_12 ua="na"></Unit_1_Key_12>
-<Unit_1_Key_13 ua="na"></Unit_1_Key_13>
-<Unit_1_Key_14 ua="na"></Unit_1_Key_14>
-<Unit_1_Key_15 ua="na"></Unit_1_Key_15>
-<Unit_1_Key_16 ua="na"></Unit_1_Key_16>
-<Unit_1_Key_17 ua="na"></Unit_1_Key_17>
-<Unit_1_Key_18 ua="na"></Unit_1_Key_18>
-<Unit_1_Key_19 ua="na"></Unit_1_Key_19>
-<Unit_1_Key_20 ua="na"></Unit_1_Key_20>
-<Unit_1_Key_21 ua="na"></Unit_1_Key_21>
-<Unit_1_Key_22 ua="na"></Unit_1_Key_22>
-<Unit_1_Key_23 ua="na"></Unit_1_Key_23>
-<Unit_1_Key_24 ua="na"></Unit_1_Key_24>
-<Unit_1_Key_25 ua="na"></Unit_1_Key_25>
-<Unit_1_Key_26 ua="na"></Unit_1_Key_26>
-<Unit_1_Key_27 ua="na"></Unit_1_Key_27>
-<Unit_1_Key_28 ua="na"></Unit_1_Key_28>
-<Unit_1_Key_29 ua="na"></Unit_1_Key_29>
-<Unit_1_Key_30 ua="na"></Unit_1_Key_30>
-<Unit_1_Key_31 ua="na"></Unit_1_Key_31>
-<Unit_1_Key_32 ua="na"></Unit_1_Key_32>
 
-<!-- Unit 2 -->
-<Unit_2_Key_1 ua="na"></Unit_2_Key_1>
-<Unit_2_Key_2 ua="na"></Unit_2_Key_2>
-<Unit_2_Key_3 ua="na"></Unit_2_Key_3>
-<Unit_2_Key_4 ua="na"></Unit_2_Key_4>
-<Unit_2_Key_5 ua="na"></Unit_2_Key_5>
-<Unit_2_Key_6 ua="na"></Unit_2_Key_6>
-<Unit_2_Key_7 ua="na"></Unit_2_Key_7>
-<Unit_2_Key_8 ua="na"></Unit_2_Key_8>
-<Unit_2_Key_9 ua="na"></Unit_2_Key_9>
-<Unit_2_Key_10 ua="na"></Unit_2_Key_10>
-<Unit_2_Key_11 ua="na"></Unit_2_Key_11>
-<Unit_2_Key_12 ua="na"></Unit_2_Key_12>
-<Unit_2_Key_13 ua="na"></Unit_2_Key_13>
-<Unit_2_Key_14 ua="na"></Unit_2_Key_14>
-<Unit_2_Key_15 ua="na"></Unit_2_Key_15>
-<Unit_2_Key_16 ua="na"></Unit_2_Key_16>
-<Unit_2_Key_17 ua="na"></Unit_2_Key_17>
-<Unit_2_Key_18 ua="na"></Unit_2_Key_18>
-<Unit_2_Key_19 ua="na"></Unit_2_Key_19>
-<Unit_2_Key_20 ua="na"></Unit_2_Key_20>
-<Unit_2_Key_21 ua="na"></Unit_2_Key_21>
-<Unit_2_Key_22 ua="na"></Unit_2_Key_22>
-<Unit_2_Key_23 ua="na"></Unit_2_Key_23>
-<Unit_2_Key_24 ua="na"></Unit_2_Key_24>
-<Unit_2_Key_25 ua="na"></Unit_2_Key_25>
-<Unit_2_Key_26 ua="na"></Unit_2_Key_26>
-<Unit_2_Key_27 ua="na"></Unit_2_Key_27>
-<Unit_2_Key_28 ua="na"></Unit_2_Key_28>
-<Unit_2_Key_29 ua="na"></Unit_2_Key_29>
-<Unit_2_Key_30 ua="na"></Unit_2_Key_30>
-<Unit_2_Key_31 ua="na"></Unit_2_Key_31>
-<Unit_2_Key_32 ua="na"></Unit_2_Key_32>
+<!-- Attendant_Console/Unit_x -->
+{foreach $keys as $row}
+{if $row.device_key_category == "expansion"}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/if}
+{if $row.device_key_category == "expansion-1"}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/if}
+{if $row.device_key_category == "expansion-2"}
+<Unit_2_Key_{$row.device_key_id} group="Attendant_Console/Unit_2">{$row.device_key_value}</Unit_2_Key_{$row.device_key_id}>
+{/if}
+{/foreach}
+
 <Protect_IVR_FactoryReset ua="na">No</Protect_IVR_FactoryReset>
 
 </flat-profile>

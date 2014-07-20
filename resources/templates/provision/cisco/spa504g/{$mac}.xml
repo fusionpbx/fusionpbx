@@ -191,6 +191,7 @@
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
 {/if}
 {/if}
+
 {/foreach}
 
 <SCA_Line_ID_Mapping group="Phone/Miscellaneous_Line_Key_Settings">Vertical First</SCA_Line_ID_Mapping>
