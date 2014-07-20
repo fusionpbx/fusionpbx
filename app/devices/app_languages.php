@@ -608,6 +608,16 @@
 		$text['label-keypad_lock']['pt-pt'] = "Bloqueio do teclado";
 		$text['label-keypad_lock']['fr-fr'] = "Verrouiller le clavier";
 
+		$text['label-automata']['en-us'] = "automata";
+		$text['label-automata']['es-cl'] = "automata";
+		$text['label-automata']['pt-pt'] = "automata";
+		$text['label-automata']['fr-fr'] = "automata";
+
+		$text['label-normal']['en-us'] = "normal";
+		$text['label-normal']['es-cl'] = "normal";
+		$text['label-normal']['pt-pt'] = "normal";
+		$text['label-normal']['fr-fr'] = "normal";
+
 	//general translations
 		$text['label-true']['en-us'] = "True";
 		$text['label-true']['es-cl'] = "Verdadero";

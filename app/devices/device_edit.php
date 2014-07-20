@@ -688,7 +688,8 @@ require_once "resources/require.php";
 				<?php $found = false; ?>
 				<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]'>
 				<option value=''></option>
-				<?php if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0) {
+				<?php
+				if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0) {
 					if (strlen($device_vendor) == 0) { echo "<optgroup label='Cisco'>"; }
 					?>
 					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
@@ -713,6 +714,15 @@ require_once "resources/require.php";
 					<option value='call park' <?php if ($row['device_key_type'] == "call park") { echo $selected;$found=true; } ?>><?php echo $text['label-call_park'] ?></option>
 					<option value='intercom' <?php if ($row['device_key_type'] == "intercom") { echo $selected;$found=true; } ?>><?php echo $text['label-intercom'] ?></option>
 					<option value='ldap search' <?php if ($row['device_key_type'] == "ldap search") { echo $selected;$found=true; } ?>><?php echo $text['label-ldap_search'] ?></option>
+					<?php
+					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
+				}
+				if (strtolower($device_vendor) == "polycom" || strlen($device_vendor) == 0) {
+					if (strlen($device_vendor) == 0) { echo "<optgroup label='Polycom'>"; }
+					?>
+					<option value='line' <?php if ($row['device_key_type'] == "line") { echo $selected;$found=true; } ?>><?php echo $text['label-line'] ?></option>
+					<option value='automata' <?php if ($row['device_key_type'] == "automata") { echo $selected;$found=true; } ?>><?php echo $text['label-automata'] ?></option>
+					<option value='normal' <?php if ($row['device_key_type'] == "normal") { echo $selected;$found=true; } ?>><?php echo $text['label-normal'] ?></option>
 					<?php
 					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
 				}
