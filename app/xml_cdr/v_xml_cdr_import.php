@@ -162,7 +162,7 @@
 
 		//get the domain values from the xml
 			$domain_name = check_str(urldecode($xml->variables->domain_name));
-			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));			
+			$domain_uuid = check_str(urldecode($xml->variables->domain_uuid));
 
 		//get the domain_uuid with the domain_name
 			if (strlen($domain_uuid) == 0) {
@@ -196,7 +196,7 @@
 			elseif (file_exists($_SESSION['switch']['recordings']['dir'].$recording_relative_path.'/'.$uuid.'.mp3')) {
 				$recording_file = $recording_relative_path.'/'.$uuid.'.mp3';
 			}
-			if(isset($recording_file) && !empty($recording_file)) { 
+			if(isset($recording_file) && !empty($recording_file)) {
 				$database->fields['recording_file'] = $recording_file;
 			}
 
@@ -239,7 +239,7 @@
 							$lcr_second_increment = (strlen($db2->result[0]['talk_increment'])?check_str($db2->result[0]['talk_increment']):60);
 							unset($db2->sql);
 							unset($db2->result);
-	
+
 							$db2->sql = $sql_user_rate;
 							$db2->result = $db2->execute();
 							$lcr_user_rate = (strlen($xml->variables->lcr_user_rate)?$xml->variables->lcr_user_rate:0.01);
@@ -308,7 +308,7 @@
 				$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:'USD');
 
 				if ($debug) {
-					echo "sql: " . $db2->sql . "\n"; 
+					echo "sql: " . $db2->sql . "\n";
 					echo "c ".$database->fields['carrier_name']."\n";
 					echo "t $time\n";
 					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
@@ -319,6 +319,14 @@
 
 				unset($database->sql);
 				unset($database->result);
+
+				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
+				$db2->result = $database->execute();
+				$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
+
+				if ($debug) {
+					echo "bc $billing_currency\n";
+				}
 
 				$sql_balance = "SELECT balance, old_balance FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
 				$db2->sql = $sql_balance;
@@ -352,6 +360,7 @@
 				$db2->result = $db2->execute();
 				unset($db2->sql);
 				unset($db2->result);
+
 			}
 
 		//insert xml_cdr into the db
