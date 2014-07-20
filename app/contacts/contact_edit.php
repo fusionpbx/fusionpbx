@@ -208,6 +208,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the content
 	echo "<div align='center'>";
+	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
@@ -249,7 +250,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td width='40%' valign='top' align='left' nowrap='nowrap'>\n";
 
-		echo "<form method='post' name='frm' action=''>\n";
 		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -531,7 +531,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		</td>\n";
 		echo "	</tr>";
 		echo "</table>";
-		echo "</form>";
 
 	echo "</td>\n";
 
@@ -557,6 +556,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</form>";
 	echo "</div>";
 
 //include the footer
