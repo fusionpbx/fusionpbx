@@ -357,6 +357,7 @@
 
 {foreach $keys as $row}
 {if $row.device_key_category == "line"}
+{if $row.device_key_type == "line"}
 <!-- Phone/Line_Key_{$row.device_key_id} -->
 <Extension_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extension_{$row.device_key_id}_> <!-- options: 1/2/3/4/5/6/7/8/9/10/11/12/Disabled -->
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
@@ -367,6 +368,7 @@
 <Short_Name_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_label}</Short_Name_{$row.device_key_id}_>
 <Share_Call_Appearance_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">private</Share_Call_Appearance_{$row.device_key_id}_> <!-- options: private/shared -->
 <Extended_Function_{$row.device_key_id}_ group="Phone/Line_Key_{$row.device_key_id}">{$row.device_key_value}</Extended_Function_{$row.device_key_id}_>
+{/if}
 {/if}
 
 {/foreach}
@@ -543,7 +545,7 @@
 <Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
 
 <!-- Ext_1/SIP_Settings -->
-<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1}</SIP_Transport_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
 <SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ group="Ext_1/SIP_Settings" />
@@ -664,7 +666,7 @@
 <Jitter_Buffer_Adjustment_2_ group="Ext_2/Network_Settings">up and down</Jitter_Buffer_Adjustment_2_>
 
 <!-- Ext_2/SIP_Settings -->
-<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2}</SIP_Transport_2_>
+<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2|upper}</SIP_Transport_2_>
 <SIP_Port_2_ group="Ext_2/SIP_Settings">{$sip_port_2}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ group="Ext_2/SIP_Settings">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ group="Ext_2/SIP_Settings" />
@@ -785,7 +787,7 @@
 <Jitter_Buffer_Adjustment_3_ group="Ext_3/Network_Settings">up and down</Jitter_Buffer_Adjustment_3_>
 
 <!-- Ext_3/SIP_Settings -->
-<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3}</SIP_Transport_3_>
+<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3|upper}</SIP_Transport_3_>
 <SIP_Port_3_ group="Ext_3/SIP_Settings">{$sip_port_3}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ group="Ext_3/SIP_Settings">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ group="Ext_3/SIP_Settings" />
@@ -905,7 +907,7 @@
 <Jitter_Buffer_Adjustment_4_ group="Ext_4/Network_Settings">up and down</Jitter_Buffer_Adjustment_4_>
 
 <!-- Ext_4/SIP_Settings -->
-<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_4}</SIP_Transport_4_>
+<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_4|upper}</SIP_Transport_4_>
 <SIP_Port_4_ group="Ext_4/SIP_Settings">{$sip_port_4}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ group="Ext_4/SIP_Settings">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ group="Ext_4/SIP_Settings" />
@@ -1026,7 +1028,7 @@
 <Jitter_Buffer_Adjustment_5_ group="Ext_5/Network_Settings">up and down</Jitter_Buffer_Adjustment_5_>
 
 <!-- Ext_5/SIP_Settings -->
-<SIP_Transport_5_ group="Ext_5/SIP_Settings">{$sip_transport_5}</SIP_Transport_5_>
+<SIP_Transport_5_ group="Ext_5/SIP_Settings">{$sip_transport_5|upper}</SIP_Transport_5_>
 <SIP_Port_5_ group="Ext_5/SIP_Settings">{$sip_port_5}</SIP_Port_5_>
 <SIP_100REL_Enable_5_ group="Ext_5/SIP_Settings">No</SIP_100REL_Enable_5_>
 <EXT_SIP_Port_5_ group="Ext_5/SIP_Settings" />
@@ -1147,7 +1149,7 @@
 <Jitter_Buffer_Adjustment_6_ group="Ext_6/Network_Settings">up and down</Jitter_Buffer_Adjustment_6_>
 
 <!-- Ext_6/SIP_Settings -->
-<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$sip_transport_6}</SIP_Transport_6_>
+<SIP_Transport_6_ group="Ext_6/SIP_Settings">{$sip_transport_6|upper}</SIP_Transport_6_>
 <SIP_Port_6_ group="Ext_6/SIP_Settings">{$sip_port_6}</SIP_Port_6_>
 <SIP_100REL_Enable_6_ group="Ext_6/SIP_Settings">No</SIP_100REL_Enable_6_>
 <EXT_SIP_Port_6_ group="Ext_6/SIP_Settings" />
@@ -1268,7 +1270,7 @@
 <Jitter_Buffer_Adjustment_7_ group="Ext_7/Network_Settings">up and down</Jitter_Buffer_Adjustment_7_>
 
 <!-- Ext_7/SIP_Settings -->
-<SIP_Transport_7_ group="Ext_7/SIP_Settings">{$sip_transport_7}</SIP_Transport_7_>
+<SIP_Transport_7_ group="Ext_7/SIP_Settings">{$sip_transport_7|upper}</SIP_Transport_7_>
 <SIP_Port_7_ group="Ext_7/SIP_Settings">{$sip_port_7}</SIP_Port_7_>
 <SIP_100REL_Enable_7_ group="Ext_7/SIP_Settings">No</SIP_100REL_Enable_7_>
 <EXT_SIP_Port_7_ group="Ext_7/SIP_Settings" />
@@ -1389,7 +1391,7 @@
 <Jitter_Buffer_Adjustment_8_ group="Ext_8/Network_Settings">up and down</Jitter_Buffer_Adjustment_8_>
 
 <!-- Ext_8/SIP_Settings -->
-<SIP_Transport_8_ group="Ext_8/SIP_Settings">{$sip_transport_8}</SIP_Transport_8_>
+<SIP_Transport_8_ group="Ext_8/SIP_Settings">{$sip_transport_8|upper}</SIP_Transport_8_>
 <SIP_Port_8_ group="Ext_8/SIP_Settings">{$sip_port_8}</SIP_Port_8_>
 <SIP_100REL_Enable_8_ group="Ext_8/SIP_Settings">No</SIP_100REL_Enable_8_>
 <EXT_SIP_Port_8_ group="Ext_8/SIP_Settings" />
@@ -1574,71 +1576,17 @@
 <BLF_Busy_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
 <BLF_Held_LED group="Attendant_Console/Attendant_Key_LED_Pattern" />
 
-<!-- Attendant_Console/Unit_1 -->
-<Unit_1_Key_1 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_2 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_3 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_4 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_5 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_6 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_7 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_8 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_9 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_10 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_11 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_12 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_13 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_14 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_15 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_16 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_17 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_18 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_19 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_20 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_21 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_22 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_23 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_24 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_25 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_26 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_27 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_28 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_29 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_30 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_31 group="Attendant_Console/Unit_1" />
-<Unit_1_Key_32 group="Attendant_Console/Unit_1" />
+<!-- Attendant_Console/Unit_x -->
+{foreach $keys as $row}
+{if $row.device_key_category == "expansion"}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/if}
+{if $row.device_key_category == "expansion-1"}
+<Unit_1_Key_{$row.device_key_id} group="Attendant_Console/Unit_1">{$row.device_key_value}</Unit_1_Key_{$row.device_key_id}>
+{/if}
+{if $row.device_key_category == "expansion-2"}
+<Unit_2_Key_{$row.device_key_id} group="Attendant_Console/Unit_2">{$row.device_key_value}</Unit_2_Key_{$row.device_key_id}>
+{/if}
+{/foreach}
 
-<!-- Attendant_Console/Unit_2 -->
-<Unit_2_Key_1 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_2 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_3 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_4 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_5 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_6 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_7 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_8 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_9 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_10 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_11 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_12 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_13 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_14 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_15 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_16 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_17 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_18 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_19 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_20 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_21 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_22 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_23 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_24 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_25 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_26 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_27 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_28 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_29 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_30 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_31 group="Attendant_Console/Unit_2" />
-<Unit_2_Key_32 group="Attendant_Console/Unit_2" />
 </flat-profile>
