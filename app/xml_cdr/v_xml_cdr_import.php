@@ -207,7 +207,7 @@
 
 		//save to the database in json format
 			if ($_SESSION['cdr']['format']['text'] == "json" && $_SESSION['cdr']['storage']['text'] == "db") {
-				$database->fields['json'] = json_encode($xml);
+				$database->fields['json'] = check_str(json_encode($xml));
 			}
 
 		//insert the check_str($extension_uuid)
