@@ -349,6 +349,9 @@ include "root.php";
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					$result_count = count($result);
+				//assign the keys array
+					$view->assign("lines", $result);
+				//set the variables
 					foreach($result as $row) {
 						//set the variables
 							$line_number = $row['line_number'];
