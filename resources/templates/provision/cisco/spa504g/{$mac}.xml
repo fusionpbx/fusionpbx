@@ -276,7 +276,7 @@
 <RTP_CoS_Value_1_ group="Ext_1/Network_Settings">6</RTP_CoS_Value_1_>
 <Network_Jitter_Level_1_ group="Ext_1/Network_Settings">high</Network_Jitter_Level_1_>
 <Jitter_Buffer_Adjustment_1_ group="Ext_1/Network_Settings">up and down</Jitter_Buffer_Adjustment_1_>
-<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1}</SIP_Transport_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
 <SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
 <SIP_100REL_Enable_1_ group="Ext_1/SIP_Settings">No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_ group="Ext_1/SIP_Settings" />
@@ -356,7 +356,7 @@
 <RTP_CoS_Value_2_ group="Ext_2/Network_Settings">6</RTP_CoS_Value_2_>
 <Network_Jitter_Level_2_ group="Ext_2/Network_Settings">high</Network_Jitter_Level_2_>
 <Jitter_Buffer_Adjustment_2_ group="Ext_2/Network_Settings">up and down</Jitter_Buffer_Adjustment_2_>
-<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2}</SIP_Transport_2_>
+<SIP_Transport_2_ group="Ext_2/SIP_Settings">{$sip_transport_2|upper}</SIP_Transport_2_>
 <SIP_Port_2_ group="Ext_2/SIP_Settings">{$sip_port_2}</SIP_Port_2_>
 <SIP_100REL_Enable_2_ group="Ext_2/SIP_Settings">No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_ group="Ext_2/SIP_Settings" />
@@ -436,7 +436,7 @@
 <RTP_CoS_Value_3_ group="Ext_3/Network_Settings">6</RTP_CoS_Value_3_>
 <Network_Jitter_Level_3_ group="Ext_3/Network_Settings">high</Network_Jitter_Level_3_>
 <Jitter_Buffer_Adjustment_3_ group="Ext_3/Network_Settings">up and down</Jitter_Buffer_Adjustment_3_>
-<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3}</SIP_Transport_3_>
+<SIP_Transport_3_ group="Ext_3/SIP_Settings">{$sip_transport_3|upper}</SIP_Transport_3_>
 <SIP_Port_3_ group="Ext_3/SIP_Settings">{$sip_port_3}</SIP_Port_3_>
 <SIP_100REL_Enable_3_ group="Ext_3/SIP_Settings">No</SIP_100REL_Enable_3_>
 <EXT_SIP_Port_3_ group="Ext_3/SIP_Settings" />
@@ -516,7 +516,7 @@
 <RTP_CoS_Value_4_ group="Ext_4/Network_Settings">6</RTP_CoS_Value_4_>
 <Network_Jitter_Level_4_ group="Ext_4/Network_Settings">high</Network_Jitter_Level_4_>
 <Jitter_Buffer_Adjustment_4_ group="Ext_4/Network_Settings">up and down</Jitter_Buffer_Adjustment_4_>
-<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_4}</SIP_Transport_4_>
+<SIP_Transport_4_ group="Ext_4/SIP_Settings">{$sip_transport_4|upper}</SIP_Transport_4_>
 <SIP_Port_4_ group="Ext_4/SIP_Settings">{$sip_port_4}</SIP_Port_4_>
 <SIP_100REL_Enable_4_ group="Ext_4/SIP_Settings">No</SIP_100REL_Enable_4_>
 <EXT_SIP_Port_4_ group="Ext_4/SIP_Settings" />
