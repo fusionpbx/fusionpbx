@@ -632,11 +632,38 @@ require_once "resources/require.php";
 				else {
 					echo "	<option value='programmable'>".$text['label-programmable']."</option>\n";
 				}
-				if ($row['device_key_category'] == "expansion") {
-					echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+				if (strlen($device_vendor) == 0) {
+					if ($row['device_key_category'] == "expansion") {
+						echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+					}
+					else {
+						echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+					}
 				}
 				else {
-					echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+					if (strtolower($device_vendor) == "cisco") {
+						if ($row['device_key_category'] == "expansion-1" || $row['device_key_category'] == "expansion") {
+							echo "	<option value='expansion-1' selected='selected'>".$text['label-expansion']." 1</option>\n";
+						}
+						else {
+							echo "	<option value='expansion-1'>".$text['label-expansion']." 1</option>\n";
+						}
+						if ($row['device_key_category'] == "expansion-2") {
+							echo "	<option value='expansion-2' selected='selected'>".$text['label-expansion']." 2</option>\n";
+						}
+						else {
+							echo "	<option value='expansion-2'>".$text['label-expansion']." 2</option>\n";
+						}
+					}
+					else {
+						if ($row['device_key_category'] == "expansion") {
+							echo "	<option value='expansion' selected='selected'>".$text['label-expansion']."</option>\n";
+						}
+						else {
+							echo "	<option value='expansion'>".$text['label-expansion']."</option>\n";
+						}
+					}
+
 				}
 				echo "	</select>\n";
 				echo "</td>\n";
