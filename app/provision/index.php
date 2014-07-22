@@ -33,6 +33,9 @@ require_once "resources/require.php";
 	$tmp_array = '';
 	$device_template = '';
 
+echo "domain_name: $domain_name <br />\n";
+echo "domain_uuid: $domain_uuid <br />\n";
+exit;
 //get the domain_name
 	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
 	$domain_name = $domain_array[0];
@@ -53,6 +56,7 @@ require_once "resources/require.php";
 		if (strlen($val['var']) > 0) { $value = $val['var']; }
 		if (strlen($val['text']) > 0) { $value = $val['text']; }
 		$provision[$key] = $value;
+		unset($value);
 	}
 
 //check if provisioning has been enabled
