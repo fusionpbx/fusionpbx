@@ -139,6 +139,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "provisioning_list";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "mailbox";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
