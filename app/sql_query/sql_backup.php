@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,43 @@ else {
 		require_once "sql_query_pdo.php";
 	}
 
+//get the $apps array from the installed apps from the core and mod directories
+	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+	$x = 0;
+	foreach ($config_list as &$config_path) {
+		include($config_path);
+		$x++;
+	}
+
+//define a function that checks if the field exists
+	function field_exists($apps, $table_name, $field_name) {
+		$result = false;
+		foreach ($apps as &$row) {
+			$tables = $row["db"];
+			foreach ($tables as &$table) {
+				if ($table['table'] == $table_name) {
+					foreach ($table["fields"] as &$field) {
+						if ($field['deprecated'] != "true") {
+							if (is_array($field["name"])) {
+								if ($field["name"]["text"] == $field_name) {
+									$result = true;
+									break;
+								}
+							}
+							else {
+								if ($field["name"] == $field_name) {
+									$result = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return $result;
+	}
+			
 //set the headers
 	header('Content-type: application/octet-binary');
 	header('Content-Disposition: attachment; filename=database_backup.sql');
@@ -90,7 +127,9 @@ else {
 				$x = 0;
 				foreach ($result2[0] as $key => $value) {
 					if ($row[$column] != "db") {
-						$column_array[$x] = $key;
+						if (field_exists($apps, $table_name, $key)) {
+							$column_array[$x] = $key;
+						}
 						$x++;
 					}
 				}
