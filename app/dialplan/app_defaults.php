@@ -131,30 +131,32 @@
 
 //add not found dialplan to inbound routes
 	if ($domains_processed == 1) {
-		$sql = "select count(*) as num_rows from v_dialplans ";
-		$sql .= "where dialplan_uuid = 'ea5339de-1982-46ca-9695-c35176165314' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$sql = "INSERT INTO v_dialplans ";
-				$sql .= "(dialplan_uuid, app_uuid, dialplan_context, dialplan_name, dialplan_continue, dialplan_order, dialplan_enabled) ";
-				$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'not-found', 'false', '999', 'false');";
-				$db->query($sql);
+		if (is_readable($_SESSION['switch']['dialplan']['dir'])) {
+			$sql = "select count(*) as num_rows from v_dialplans ";
+			$sql .= "where dialplan_uuid = 'ea5339de-1982-46ca-9695-c35176165314' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row['num_rows'] == 0) {
+					$sql = "INSERT INTO v_dialplans ";
+					$sql .= "(dialplan_uuid, app_uuid, dialplan_context, dialplan_name, dialplan_continue, dialplan_order, dialplan_enabled) ";
+					$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'not-found', 'false', '999', 'false');";
+					$db->query($sql);
 
-				$sql = "INSERT INTO v_dialplan_details ";
-				$sql .= "(dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, dialplan_detail_order) ";
-				$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', '8a21744d-b381-4cb0-9930-55b776e4e461', 'condition', 'context', 'public', '10');";
-				$db->query($sql);
+					$sql = "INSERT INTO v_dialplan_details ";
+					$sql .= "(dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, dialplan_detail_order) ";
+					$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', '8a21744d-b381-4cb0-9930-55b776e4e461', 'condition', 'context', 'public', '10');";
+					$db->query($sql);
 
-				$sql = "INSERT INTO v_dialplan_details ";
-				$sql .= "(dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, dialplan_detail_order) ";
-				$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'e391530c-4078-4b49-bc11-bda4a23ad566', 'action', 'log', '[inbound routes] 404 not found \${sip_network_ip}', '20');";
-				$db->query($sql);
-				unset($sql);
+					$sql = "INSERT INTO v_dialplan_details ";
+					$sql .= "(dialplan_uuid, dialplan_detail_uuid, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data, dialplan_detail_order) ";
+					$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'e391530c-4078-4b49-bc11-bda4a23ad566', 'action', 'log', '[inbound routes] 404 not found \${sip_network_ip}', '20');";
+					$db->query($sql);
+					unset($sql);
+				}
+				unset($prep_statement);
 			}
-			unset($prep_statement);
 		}
 	}
 
