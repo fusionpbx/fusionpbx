@@ -81,7 +81,7 @@
 	if (from_address == null) then
 		from_address = email_address;
 	end
-	--needs to be fixed on lesser operating systems that do not have GNU utils.
+	--needs to be fixed on operating systems that do not have sed or echo utilities.
 	number_dialed = api:execute("system", "/bin/echo -n "..fax_uri.." | sed -e s,.*/,,g");
 	--do not use apostrophies in message, they are not excaped and the mail will fail.
 	email_message_fail = "We are sorry the fax failed to go through.  It has been attached. Please check the number "..number_dialed..", and if it was correct you might consider emailing it instead."
