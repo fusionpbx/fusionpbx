@@ -132,6 +132,12 @@ else {
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_domains ";
+	if (strlen($search) > 0) {
+		$sql .= "where (";
+		$sql .= " 	domain_name like '%".$search."%' ";
+		$sql .= " 	or domain_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
