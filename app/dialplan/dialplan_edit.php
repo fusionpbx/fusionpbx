@@ -807,7 +807,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-	echo "<p>".$text['billing-warning']."</p>" ;
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		echo "<p>".$text['billing-warning']."</p>";
+	}
+
 //show the footer
 	require_once "resources/footer.php";
 ?>
