@@ -850,7 +850,7 @@ legend {
 
 		// hides the domain selector when clicking off
 		$('#domain_filter').blur(function() {
-			hide_domains();
+			//hide_domains();
 		});
 
 	});
