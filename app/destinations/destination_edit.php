@@ -103,8 +103,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($row['num_rows'] > 0) {
 					$msg .= $text['message-duplicate']."<br>\n";
 				}
+				unset($prep_statement);
 			}
-			unset($prep_statement);
 		}
 
 	//show the message
@@ -160,6 +160,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						else {
 							$dialplan_uuid = "";
 						}
+						unset($prep_statement);
 					}
 					else {
 						$dialplan_uuid = "";
@@ -409,7 +410,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$destination_carrier = $row["destination_carrier"];
 			break; //limit to 1 row
 		}
-		unset ($prep_statement);
 	}
 
 //get the dialplan details in an array
