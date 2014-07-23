@@ -81,6 +81,7 @@
 					$message = $orm->message;
 					//print_r($message);
 				}
+				unset($row);
 			}
 	}
 

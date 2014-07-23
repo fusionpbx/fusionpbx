@@ -112,6 +112,7 @@
 					}
 				}
 			}
+			unset($prep_statement);
 		}
 	}
 

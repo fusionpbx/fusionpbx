@@ -73,6 +73,7 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
+				unset($prep_statement, $row);
 			}
 
 		//ensure the login message is set, if new message exists
@@ -84,6 +85,7 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 			if ($prep_statement) {
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				unset($prep_statement);
 				if ($row['num_rows'] == 0) {
 
 					// insert message
@@ -141,8 +143,8 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 								unset($sql);
 							}
 						}
+						unset($prep_statement, $result);
 					}
-					unset($sql, $result);
 				}
 			}
 

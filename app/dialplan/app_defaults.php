@@ -125,6 +125,7 @@
 				$db->query($sql);
 				unset($sql);
 			}
+			unset($prep_statement);
 		}
 	}
 
@@ -153,6 +154,7 @@
 				$db->query($sql);
 				unset($sql);
 			}
+			unset($prep_statement);
 		}
 	}
 
