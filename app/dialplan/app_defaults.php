@@ -111,7 +111,7 @@
 			if ($row['num_rows'] == 0) {
 				$sql = "INSERT INTO v_dialplans ";
 				$sql .= "(dialplan_uuid, app_uuid, dialplan_context, dialplan_name, dialplan_continue, dialplan_order, dialplan_enabled) ";
-				$sql .= "VALUES ('d4e06654-e394-444a-b3af-4c3d54aebbec', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'global', 'true', '0', 'true');";
+				$sql .= "VALUES ('d4e06654-e394-444a-b3af-4c3d54aebbec', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'global', 'true', '0', 'false');";
 				$db->query($sql);
 
 				$sql = "INSERT INTO v_dialplan_details ";
@@ -139,7 +139,7 @@
 			if ($row['num_rows'] == 0) {
 				$sql = "INSERT INTO v_dialplans ";
 				$sql .= "(dialplan_uuid, app_uuid, dialplan_context, dialplan_name, dialplan_continue, dialplan_order, dialplan_enabled) ";
-				$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'not-found', 'false', '999', 'true');";
+				$sql .= "VALUES ('ea5339de-1982-46ca-9695-c35176165314', 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4', 'public', 'not-found', 'false', '999', 'false');";
 				$db->query($sql);
 
 				$sql = "INSERT INTO v_dialplan_details ";
