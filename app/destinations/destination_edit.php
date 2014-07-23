@@ -636,7 +636,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "  ".$text['label-monthly_price'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='destination_sell' maxlength='255' value=\"$destination_sell\">\n";
+		echo "  <input class='formfld' type='number' min='0' step='0.01' name='destination_sell' maxlength='255' value=\"$destination_sell\">\n";
 		currency_select($currency);
 		echo "<br />\n";
 		echo $text['description-monthly_price']."\n";
