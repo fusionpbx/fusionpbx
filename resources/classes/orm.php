@@ -136,6 +136,7 @@
 						}
 						$this->message = $message;
 						$this->result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+						unset($prep_statement);
 						$m++;
 						return $this;
 					}
