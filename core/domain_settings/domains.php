@@ -98,9 +98,12 @@ else {
 
 	require_once "resources/paging.php";
 
-//get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+//get the http values and set them as variables
+	$search = check_str($_GET["search"]);
+	if (isset($_GET["order_by"])) {
+		$order_by = check_str($_GET["order_by"]);
+		$order = check_str($_GET["order"]);
+	}
 
 //show the content
 	echo "<div align='center'>";
@@ -109,10 +112,16 @@ else {
 	echo "	<td align=\"center\">\n";
 	echo "		<br />";
 
+//show the header and the search
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<form method='get' action=''>\n";
+	echo "		<td width='50%' align='right'>\n";
+	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "		</td>\n";
+	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -121,43 +130,49 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_domains ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-
-	//prepare to page the results
-		$rows_per_page = 100;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the  list
-		$sql = "select * from v_domains ";
-		if (strlen($order_by) == 0) {
-			$sql .= "order by domain_name asc ";
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_domains ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
 		}
 		else {
-			$sql .= "order by $order_by $order ";
+			$num_rows = '0';
 		}
-		$sql .= " limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+	}
+
+//prepare to page the results
+	$rows_per_page = 100;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the  list
+	$sql = "select * from v_domains ";
+	if (strlen($search) > 0) {
+		$sql .= "where (";
+		$sql .= " 	domain_name like '%".$search."%' ";
+		$sql .= " 	or domain_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
+	if (strlen($order_by) == 0) {
+		$sql .= "order by domain_name asc ";
+	}
+	else {
+		$sql .= "order by $order_by $order ";
+	}
+	$sql .= " limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
