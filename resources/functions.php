@@ -26,7 +26,7 @@
 
 	if (!function_exists('software_version')) {
 		function software_version() {
-			return '3.5 rc 3';
+			return '3.5 rc 4';
 		}
 	}
 
