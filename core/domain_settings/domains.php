@@ -181,7 +181,7 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('domain_edit')) {
-				echo "<a href='domain_edit.php?id=".$row['domain_uuid']."'>".$row['domain_name']."</a>";
+				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$row['domain_uuid']."&domain_change=true'>".$row['domain_name']."</a>";
 			}
 			else {
 				echo $row['domain_name'];
