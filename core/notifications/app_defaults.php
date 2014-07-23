@@ -47,6 +47,7 @@ if (strlen($_SESSION['switch']['scripts']['dir']) > 0) {
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
+				unset($prep_statement, $row);
 			}
 	}
 }

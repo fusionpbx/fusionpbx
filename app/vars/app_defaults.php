@@ -108,8 +108,8 @@ EOD;
 					$x++;
 				}
 			}
+			unset($prep_statement, $result);
 		}
-		unset($prep_statement, $result);
 	}
 
 //adjust the variables required variables
@@ -145,6 +145,7 @@ EOD;
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
+				unset($prep_statement, $row);
 			}
 
 		//set the transfer_ringback
@@ -178,6 +179,7 @@ EOD;
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
+				unset($prep_statement, $row);
 			}
 
 		//set variables that depend on the number of domains
@@ -221,6 +223,7 @@ EOD;
 							$db->exec(check_sql($sql));
 							unset($sql);
 						}
+						unset($prep_statement, $row);
 					}
 			}
 

@@ -60,6 +60,7 @@ if ($domains_processed == 1) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
+			unset($prep_statement, $row);
 		}
 
 	//ensure that the default password length and strength are set
@@ -109,6 +110,7 @@ if ($domains_processed == 1) {
 				$db->exec(check_sql($sql));
 				unset($sql);
 			}
+			unset($prep_statement, $row);
 		}
 
 //set the sip_profiles directory for older installs

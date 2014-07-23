@@ -31,6 +31,7 @@ if (count($_SESSION['email']) == 0 && $domains_processed == 1) {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_NAMED);
+		unset($prep_statement);
 	//set the variable
 		$smtp[]['smtp_host'] = check_str($row['smtp_host']);
 		$smtp[]['smtp_secure'] = check_str($row['smtp_secure']);

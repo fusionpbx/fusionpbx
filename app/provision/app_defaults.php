@@ -45,8 +45,8 @@
 			$db->exec(check_sql($sql));
 			unset($sql);
 		}
+		unset($prep_statement, $result);
 	}
-	unset($prep_statement, $result);
 
 //move the dynamic provision variables that from v_vars table to v_default_settings
 	if (count($_SESSION['provision']) == 0 && $domains_processed == 1) {
@@ -86,6 +86,7 @@
 				$db->exec(check_sql($sql));
 				unset($sql);
 		}
+		unset($prep_statement);
 		//delete the provision variables from system -> variables
 		//$sql = "delete from v_vars ";
 		//$sql .= "where var_cat = 'Provision' ";

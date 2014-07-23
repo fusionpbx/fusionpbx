@@ -116,6 +116,7 @@
 						}
 				}
 		}
+		unset($prep_statement);
 	}
 
 ?>
