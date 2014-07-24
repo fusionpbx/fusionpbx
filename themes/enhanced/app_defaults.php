@@ -29,8 +29,6 @@ if ($domains_processed == 1) {
 	//add theme settings default settings
 		$sql = "select count(*) as num_rows from v_default_settings ";
 		$sql .= "where default_setting_category = 'theme' ";
-		$sql .= "and default_setting_subcategory = 'background_images' ";
-		$sql .= "and default_setting_name = 'var' ";
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 			$prep_statement->execute();
@@ -39,15 +37,31 @@ if ($domains_processed == 1) {
 			if ($row['num_rows'] == 0) {
 				$x = 0;
 				$array[$x]['default_setting_category'] = 'theme';
-				$array[$x]['default_setting_subcategory'] = 'background_images';
-				$array[$x]['default_setting_name'] = 'var';
-				$array[$x]['default_setting_value'] = 'true';
+				$array[$x]['default_setting_subcategory'] = 'background_image';
+				$array[$x]['default_setting_name'] = 'text';
+				$array[$x]['default_setting_value'] = '';
 				$array[$x]['default_setting_enabled'] = 'false';
-				$array[$x]['default_setting_description'] = 'Enable background images in the selected template (where available).';
+				$array[$x]['default_setting_description'] = 'Specify a folder path or file path/url to enable background image(s) within a selected compatible template.';
+				$x++;
+				$array[$x]['default_setting_category'] = 'theme';
+				$array[$x]['default_setting_subcategory'] = 'background_color_1';
+				$array[$x]['default_setting_name'] = 'text';
+				$array[$x]['default_setting_value'] = '#ffffff';
+				$array[$x]['default_setting_enabled'] = 'false';
+				$array[$x]['default_setting_description'] = 'Enter a background (HTML compatible) color.';
+				$x++;
+				$array[$x]['default_setting_category'] = 'theme';
+				$array[$x]['default_setting_subcategory'] = 'background_color_2';
+				$array[$x]['default_setting_name'] = 'text';
+				$array[$x]['default_setting_value'] = '#f0f2f6';
+				$array[$x]['default_setting_enabled'] = 'false';
+				$array[$x]['default_setting_description'] = 'Enter a secondary background (HTML compatible) color, for a gradient effect.';
 				$x++;
 				$orm = new orm;
 				$orm->name('default_settings');
 				$orm->save($array[0]);
+				$orm->save($array[1]);
+				$orm->save($array[2]);
 				$message = $orm->message;
 				//print_r($message);
 			}
