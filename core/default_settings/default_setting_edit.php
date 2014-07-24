@@ -403,7 +403,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 		echo "	<input class='formfld' type='password' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['default_setting_value']."\">\n";
-	} else {
+	}
+	elseif (
+		($category == "theme" && $subcategory == "background_color_1" && $name == "text") ||
+		($category == "theme" && $subcategory == "background_color_2" && $name == "text")
+		) {
+		// source: http://rightjs.org
+		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
+		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right-colorpicker-src.js' type='text/javascript'></script>";
+		echo "	<style>";
+		echo "		DIV.rui-colorpicker  { width: 253px; }";
+		echo "		DIV.rui-colorpicker DIV.controls { width: 61px; }";
+		echo "		DIV.rui-colorpicker DIV.controls DIV.preview { width: 55px; }";
+		echo "		DIV.rui-colorpicker DIV.controls INPUT.display { width: 61px; text-align: center; font-family: courier; }";
+		echo "		DIV.rui-colorpicker DIV.controls DIV.rgb-display { width: 50px; }";
+		echo "		DIV.rui-colorpicker DIV.controls DIV.rgb-display DIV INPUT { width: 30px; }";
+		echo "	</style>";
+		echo "	<input class='formfld' id='default_setting_value' name='default_setting_value' data-colorpcker=\"{format: 'hex'}\" value=\"".$row['default_setting_value']."\">\n";
+		echo "	<script type='text/javascript'>new Colorpicker().assignTo('default_setting_value');</script>";
+	}
+	else {
 		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}
 	echo "<br />\n";
