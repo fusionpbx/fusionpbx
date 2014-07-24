@@ -823,19 +823,40 @@ legend {
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
-		$("#domains_show_icon, #domains_show_text").click(function() {
+		function show_domains() {
 			$("#domains_container").show();
 			$("#domains_block").animate({marginRight: '+=300'}, 400);
 			$("#domain_filter").focus();
+			document.getElementById('domains_visible').value = 1;
+		}
+
+		function hide_domains() {
+			$(document).ready(function() {
+				$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
+					$("#domain_filter").val('');
+					domain_search($("#domain_filter").val());
+					$("#domains_container").hide();
+				});
+			});
+			document.getElementById('domains_visible').value = 0;
+		}
+
+		$("#domains_show_icon, #domains_show_text").click(function() {
+			show_domains();
 		});
 
 		$("#domains_hide").click(function() {
-			$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
-				$("#domain_filter").val('');
-				domain_search($("#domain_filter").val());
-				$("#domains_container").hide();
-			});
+			hide_domains();
+		});
 
+		// hit escape to toggle visibility of domain selector
+		$(document).keyup(function(e) {
+			if (e.keyCode == 27 && document.getElementById('domains_visible').value == 0) {
+				show_domains();
+			}
+			else if (e.keyCode == 27 && document.getElementById('domains_visible').value == 1) {
+				hide_domains();
+			}
 		});
 
 		// linkify rows (except the last - the list_control_icons cell)
@@ -848,20 +869,7 @@ legend {
 		  });
 		});
 
-		// hides the domain selector when clicking off
-		$('#domain_filter').blur(function() {
-			//hide_domains();
-		});
-
 	});
-
-	function hide_domains() {
-		$(document).ready(function() {
-			$("#domains_block").animate({marginRight: '-=300'}, 400, function() {
-				$("#domains_container").hide();
-			});
-		});
-	}
 
 </script>
 
@@ -897,6 +905,7 @@ legend {
 
 		?>
 		<div id="domains_container">
+			<input type="hidden" id="domains_visible" value="0">
 			<div id="domains_block">
 				<div id="domains_header">
 					<input id="domains_hide" type="button" class="btn" style="float: right" value="<?php echo $text['theme-button-close']; ?>">
