@@ -305,7 +305,8 @@
 				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;
 				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode'";
 				$db2->result = $db2->execute();
-				$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:'USD');
+				$default_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
+				$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:$default_currency);
 
 				if ($debug) {
 					echo "sql: " . $db2->sql . "\n";
