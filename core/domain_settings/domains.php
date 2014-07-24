@@ -188,7 +188,7 @@ else {
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
-	echo "<th>&nbsp;</th>";
+	echo "<th>".$text['label-tools']."</th>";
 	echo th_order_by('domain_description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('domain_add')) {
@@ -206,7 +206,7 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('domain_edit')) {
-				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$row['domain_uuid']."&domain_change=true'>Manage</a>";
+				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$row['domain_uuid']."&domain_change=true'>".$text['label-manage']."</a>";
 			}
 			echo "	</td>";
 			echo "	<td valign='top' class='row_stylebg'>".$row['domain_description']."&nbsp;</td>\n";
