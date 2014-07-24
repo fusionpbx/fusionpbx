@@ -389,6 +389,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:$default_currency);
 						$destination_sell_current_currency = currency_convert($destination_sell,$billing_currency,$currency);
 						unset($db2->sql, $db2->result);
+
+						$db2->sql = "UPDATE v_billings SET balance = balance - $destination_sell_current_currency, old_balance = old_balance - $destination_sell_current_currency WHERE type_value='$destination_accountcode'";
+						$db2->result = $db2->execute();
+						unset($db2->sql, $db2->result);
 					}
 				}
 				if ($action == "update") {
