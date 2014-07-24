@@ -142,15 +142,25 @@
 		$text['label-false']['pt-pt'] = "Não";
 		$text['label-false']['fr-fr'] = "Non";
 
-		$text['label-monthly_price']['en-us'] = "Monthly price";
-		$text['label-monthly_price']['es-cl'] = "Precio mensual";
-		$text['label-monthly_price']['pt-pt'] = "Preço mensal";
-		$text['label-monthly_price']['fr-fr'] = "Prix mensuel";
+		$text['label-monthly_price']['en-us'] = "Monthly selling price";
+		$text['label-monthly_price']['es-cl'] = "Precio mensual de venta";
+		$text['label-monthly_price']['pt-pt'] = "Preço mensal de venta";
+		$text['label-monthly_price']['fr-fr'] = "Prix mensuel à vendre";
+
+		$text['label-monthly_price_buy']['en-us'] = "Monthly buy price";
+		$text['label-monthly_price_buy']['es-cl'] = "Precio mensual de compra";
+		$text['label-monthly_price_buy']['pt-pt'] = "Preço mensal compra";
+		$text['label-monthly_price_buy']['fr-fr'] = "Prix mensuel d'achat";
 
 		$text['description-monthly_price']['en-us'] = "Enter monthly price to bill for this destination (only when inbound)";
 		$text['description-monthly_price']['es-cl'] = "Ingrese el precio mensual a cobrar por este destino (sólo entrante)";
 		$text['description-monthly_price']['pt-pt'] = "Digite o preço mensal de conta para este destino (somente quando entrada)";
 		$text['description-monthly_price']['fr-fr'] = "Entrez prix mensuel de projet de loi pour cette destination (uniquement lorsque entrant)";
+
+		$text['description-monthly_price_buy']['en-us'] = "Enter monthly price you pay for this destination (only when inbound)";
+		$text['description-monthly_price_buy']['es-cl'] = "Ingrese el precio mensual que usted paga por este destino (sólo entrante)";
+		$text['description-monthly_price_buy']['pt-pt'] = "Digite o preço mensal de paga para este destino (somente quando entrada)";
+		$text['description-monthly_price_buy']['fr-fr'] = "Entrez prix mensuel de projet de achat pour cette destination (uniquement lorsque entrant)";
 
 		$text['label-accountcode']['en-us'] = "Account code";
 		$text['label-accountcode']['es-cl'] = "Código de cuenta";

@@ -37,6 +37,7 @@ else {
 
 if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 	require_once "app/billing/resources/functions/currency.php";
+	require_once "app/billing/resources/functions/rating.php";
 }
 
 //add multi-lingual support
@@ -67,8 +68,10 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 		$fax_uuid = check_str($_POST["fax_uuid"]);
 		$destination_enabled = check_str($_POST["destination_enabled"]);
 		$destination_description = check_str($_POST["destination_description"]);
-		$destination_sell = check_str($_POST["destination_sell"]);
+		$destination_sell = check_float($_POST["destination_sell"]);
 		$currency = check_str($_POST["currency"]);
+		$destination_buy = check_float($_POST["destination_buy"]);
+		$currency_buy = check_str($_POST["currency_buy"]);
 		$destination_accountcode = check_str($_POST["destination_accountcode"]);
 		$destination_carrier = check_str($_POST["destination_carrier"]);
 	}
@@ -377,6 +380,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//redirect the user
 				if ($action == "add") {
 					$_SESSION["message"] = $text['message-add'];
+					// billing
+					if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+						$db2 = new database;
+						$db2->sql = "SELECT currency FROM v_billings WHERE type_value='$destination_accountcode'";
+						$db2->result = $db2->execute();
+						$default_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
+						$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:$default_currency);
+						$destination_sell_current_currency = currency_convert($destination_sell,$billing_currency,$currency);
+						unset($db2->sql, $db2->result);
+					}
 				}
 				if ($action == "update") {
 					$_SESSION["message"] = $text['message-update'];
@@ -406,6 +419,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$destination_description = $row["destination_description"];
 			$currency = $row["currency"];
 			$destination_sell = $row["destination_sell"];
+			$destination_buy = $row["destination_buy"];
+			$currency_buy = $row["currency_buy"];
 			$destination_accountcode = $row["destination_accountcode"];
 			$destination_carrier = $row["destination_carrier"];
 			break; //limit to 1 row
@@ -640,6 +655,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		currency_select($currency);
 		echo "<br />\n";
 		echo $text['description-monthly_price']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "  ".$text['label-monthly_price_buy'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <input class='formfld' type='number' min='0' step='0.01' name='destination_buy' maxlength='255' value=\"$destination_buy\">\n";
+		currency_select($currency_buy,0,'currency_buy');
+		echo "<br />\n";
+		echo $text['description-monthly_price_buy']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
