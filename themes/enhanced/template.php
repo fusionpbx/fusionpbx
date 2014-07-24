@@ -971,7 +971,7 @@ legend {
 	<?php
 	if ($_SESSION['theme']['background_images']['var'] == 'true') {
 		//get a random background image
-		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/nature/images/backgrounds';
+		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/enhanced/images/backgrounds';
 		$dir_list = opendir($dir);
 		$v_background_array = array();
 		$x = 0;
