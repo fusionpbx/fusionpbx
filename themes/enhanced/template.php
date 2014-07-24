@@ -59,6 +59,18 @@ DIV#page {
 	overflow: auto;
 }
 
+<?php if ($_SESSION['theme']['background_images']['var'] == 'true') { ?>
+	/* Set the position and dimensions of the background image. */
+	DIV#page-background {
+		z-index: 0;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+<?php } ?>
+
 img {
 	border: none;
 }
@@ -433,10 +445,13 @@ legend {
 
 	.menu_bar {
 		background-image: url('<!--{project_path}-->/themes/enhanced/images/background_black.png');
-		-webkit-border-radius: 4px 4px 4px 4px;
-		-moz-border-radius: 4px 4px 4px 4px;
-		border-radius: 4px 4px 4px 4px;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
 		padding: 4px;
+		-webkit-box-shadow: 0px 1px 4px #aaa;
+		-moz-box-shadow: 0px 1px 4px #aaa;
+		box-shadow: 0px 1px 4px #aaa;
 	}
 
 	.menu_bg {
@@ -461,11 +476,10 @@ legend {
 		filter:alpha(opacity=90);
 		-moz-opacity:0.9;
 		-khtml-opacity: 0.9;
-		opacity: 0.9;
 
-		-webkit-border-radius: 3px 3px 3px 3px;
-		-moz-border-radius: 3px 3px 3px 3px;
-		border-radius: 3px 3px 3px 3px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 		text-align: left;
 		padding-top: 15px;
 		padding-bottom: 25px;
@@ -474,27 +488,23 @@ legend {
 	}
 
 	.main_content {
-		<?php
-			if ($browser_name == "Internet Explorer" && $browser_version_array[0] < '10' ) {
-				echo "background-color: #FFFFFF;";
-			}
-			else {
-				if (strlen($_SESSION["username"]) > 0) {
-					echo "background-image: url('<!--{project_path}-->/themes/enhanced/images/content_background.png');";
-				}
-			}
-		?>
-		background-repeat: repeat-x;
-		background-attachment: fixed;
-		padding: 20px;
-		opacity: 0.9;
-		filter:alpha(opacity=90);
-		-moz-opacity:0.9;
-		-khtml-opacity: 0.9;
-		opacity: 0.9;
-		-webkit-border-radius: 3px 3px 3px 3px;
-		-moz-border-radius: 3px 3px 3px 3px;
-		border-radius: 3px 3px 3px 3px;
+		<?php if (strlen($_SESSION["username"]) > 0 && $_SESSION['theme']['background_images']['var'] == 'true') { ?>
+			background-color: #FFFFFF;
+			background-attachment: fixed;
+			opacity: 0.93;
+			filter:alpha(opacity=93);
+			-moz-opacity:0.93;
+			-khtml-opacity: 0.93;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;
+			-webkit-box-shadow: 0px 1px 4px #aaa;
+			-moz-box-shadow: 0px 1px 4px #aaa;
+			box-shadow: 0px 1px 4px #aaa;
+			padding: 20px;
+		<?php } else { ?>
+			padding: 10px;
+		<?php } ?>
 		text-align: left;
 	}
 
@@ -509,7 +519,7 @@ legend {
 		/*border-color:#ccc #888 #555 #bbb;*/
 		white-space:nowrap;
 		margin:0;
-		padding:3px 3px 3px 3px;
+		padding: 3px;
 	}
 
 	#menu h2{
@@ -534,7 +544,7 @@ legend {
 	#menu h2 h2{
 		/*background:#4e4b56 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
 		/*text-transform:uppercase*/
-		padding:3px 3px 3px 3px;
+		padding: 3px;
 	}
 
 	#menu a{
@@ -574,15 +584,18 @@ legend {
 		-webkit-border-radius: 0px 0px 3px 3px;
 		-moz-border-radius: 0px 0px 3px 3px;
 		border-radius: 0px 0px 3px 3px;
+		-webkit-box-shadow: 0px 2px 3px #aaa;
+		-moz-box-shadow: 0px 2px 3px #aaa;
+		box-shadow: 0px 2px 3px #aaa;
 	}
 
 	#menu a:hover{
 		width:114px;
 		color:#fd9c03;
 		background:#1F1F1F;
-		-webkit-border-radius: 3px 3px 3px 3px;
-		-moz-border-radius: 3px 3px 3px 3px;
-		border-radius: 3px 3px 3px 3px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 	}
 
 	#menu a:active{
@@ -620,9 +633,9 @@ legend {
 	file and this method */
 
 	div#menu h2:hover{
-		-webkit-border-radius: 3px 3px 3px 3px;
-		-moz-border-radius: 3px 3px 3px 3px;
-		border-radius: 3px 3px 3px 3px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 		/*background:#1F1F1F url(<!--{project_path}-->/css/images/expand3.gif) no-repeat -999px -9999px;*/
 	}
 
@@ -778,9 +791,9 @@ legend {
 	DIV.login_message {
 		border: 1px solid #bae0ba;
 		background-color: #eeffee;
-		-webkit-border-radius: 3px 3px 3px 3px;
-		-moz-border-radius: 3px 3px 3px 3px;
-		border-radius: 3px 3px 3px 3px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
 		padding: 20px;
 		}
 
@@ -955,10 +968,44 @@ legend {
 	}
 	?>
 
+	<?php
+	if ($_SESSION['theme']['background_images']['var'] == 'true') {
+		//get a random background image
+		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/nature/images/backgrounds';
+		$dir_list = opendir($dir);
+		$v_background_array = array();
+		$x = 0;
+		while (false !== ($file = readdir($dir_list))) {
+			if ($file != "." AND $file != ".."){
+				$new_path = $dir.'/'.$file;
+				$level = explode('/',$new_path);
+				if (substr($new_path, -4) == ".svn") {
+					//ignore .svn dir and subdir
+				}
+				elseif (substr($new_path, -3) == ".db") {
+					//ignore .db files
+				}
+				else {
+					$new_path = str_replace($_SERVER["DOCUMENT_ROOT"], "", $new_path);
+					$v_background_array[] = $new_path;
+				}
+				if ($x > 1000) { break; };
+				$x++;
+			}
+		}
+		if (strlen($_SESSION['background_image'])== 0) {
+			$_SESSION['background_image'] = $v_background_array[array_rand($v_background_array, 1)];
+		}
+
+		//show the background
+		echo "<div id=\"page-background\"><img src=\"".$_SESSION['background_image']."\" width='100%' height='100%' alt=''></div>\n";
+	}
+	?>
+
 	<div id="page" align='center'>
 	<table width='90%' class='border.disabled' border='0' cellpadding='0' cellspacing='0'>
 		<tr>
-			<td align='left' valign='top' class='headermain' colspan='2' width='100%' height='70px;'>
+			<td align='left' valign='top' class='headermain' height='70px;'>
 				<table border='0' cellpadding='0' cellspacing='0' width='100%'>
 					<tr>
 						<td>
@@ -1059,24 +1106,24 @@ legend {
 		if (strlen($_SESSION["username"]) > 0) {
 			?>
 			<tr>
-				<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
+				<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
 			</tr>
 			<tr>
-				<td class='menu_bar' colspan='2' width='100%' height='30px'>
+				<td class='menu_bar' height='30px'>
 					<!--{menu}-->
 				</td>
 			</tr>
 			<tr>
-				<td class='' colspan='2' width='100%' height='7px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
+				<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
 			</tr>
 			<?php
 		}
 		?>
 		<tr>
 			<td valign='top' align='center' width='100%'>
-				<table width='100%' cellpadding='0' cellspacing='0' border='0'>
+				<table cellpadding='0' cellspacing='1' border='0' width='100%'>
 					<tr>
-						<td class='main_content' align='left' valign='top' width='85%'>
+						<td class='main_content' valign='top' align='center'>
 							<!--{body}-->
 
 							<br /><br />
@@ -1087,7 +1134,6 @@ legend {
 							<br /><br />
 							<br /><br />
 							<br /><br />
-
 						</td>
 					</tr>
 				</table>
@@ -1097,7 +1143,8 @@ legend {
 	<?php
 	if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
 		echo "<span class='smalltext'>\n";
-		echo "	<a class='smalltext' target='_blank' href='http://www.fusionpbx.com'>fusionpbx.com</a>. Copyright 2008 - ".date("Y").". All rights reserved.\n";
+		echo "<br />\n";
+		echo "&copy; Copyright 2008 - ".date("Y")." <a class='smalltext' target='_blank' href='http://www.fusionpbx.com'>fusionpbx.com</a>. All rights reserved.\n";
 		echo "</span><br><br>\n";
 	}
 	else {

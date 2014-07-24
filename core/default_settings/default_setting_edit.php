@@ -403,6 +403,23 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 		echo "	<input class='formfld' type='password' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['default_setting_value']."\">\n";
+	}
+	elseif ($category == "theme" && $subcategory == "background_images" && $name == "var") {
+		echo "    <select class='formfld' name='default_setting_value'>\n";
+		echo "    <option value=''></option>\n";
+		if ($row['default_setting_value'] == "true") {
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
+		}
+		else {
+		echo "    <option value='true'>".$text['label-true']."</option>\n";
+		}
+		if ($row['default_setting_value'] == "false") {
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
+		}
+		else {
+		echo "    <option value='false'>".$text['label-false']."</option>\n";
+		}
+		echo "    </select>\n";
 	} else {
 		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}

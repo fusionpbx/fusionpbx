@@ -11,7 +11,7 @@
 	$text['theme-label-domain']['pt-pt'] = "Domínio:";
 	$text['theme-label-domain']['fr-fr'] = "Domaine:";
 
-	$text['theme-label-open_selector']['en-us'] = "Open Domain Selector";
+	$text['theme-label-open_selector']['en-us'] = "Open Domain Selector [ESC]";
 	$text['theme-label-open_selector']['es-cl'] = "Selector de Dominio Abierto";
 	$text['theme-label-open_selector']['pt-pt'] = "Seletor de Domínio Aberto";
 	$text['theme-label-open_selector']['fr-fr'] = "Sélecteur Domaine Ouvert";
