@@ -188,6 +188,7 @@ else {
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
+	echo "<th>&nbsp;</th>";
 	echo th_order_by('domain_description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('domain_add')) {
@@ -201,13 +202,13 @@ else {
 			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$row['domain_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('domain_edit')) {
-				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$row['domain_uuid']."&domain_change=true'>".$row['domain_name']."</a>";
-			}
-			else {
-				echo $row['domain_name'];
-			}
+			echo "		<a href='domain_edit.php?id=".$row['domain_uuid']."'>".$row['domain_name']."</a>";
 			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			if (permission_exists('domain_edit')) {
+				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$row['domain_uuid']."&domain_change=true'>Manage</a>";
+			}
+			echo "	</td>";
 			echo "	<td valign='top' class='row_stylebg'>".$row['domain_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_edit')) {
@@ -229,7 +230,7 @@ else {
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='3' align='left'>\n";
+	echo "<td colspan='4' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
