@@ -1125,15 +1125,6 @@ legend {
 					<tr>
 						<td class='main_content' valign='top' align='center'>
 							<!--{body}-->
-
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
-							<br /><br />
 						</td>
 					</tr>
 				</table>
