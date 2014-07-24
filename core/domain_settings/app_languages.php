@@ -63,6 +63,17 @@
 		$text['label-domain']['pt-pt'] = "Domínio";
 		$text['label-domain']['fr-fr'] = "Domaine";
 
+		$text['label-tools']['en-us'] = "Tools";
+		$text['label-tools']['es-cl'] = "Herramientas";
+		$text['label-tools']['pt-pt'] = "Ferramentas";
+		$text['label-tools']['fr-fr'] = "Outils";
+
+
+		$text['label-manage']['en-us'] = "Manage";
+		$text['label-manage']['es-cl'] = "Gestionar";
+		$text['label-manage']['pt-pt'] = "Gerir";
+		$text['label-manage']['fr-fr'] = "Gérer";
+
 		$text['label-name']['en-us'] = "Name";
 		$text['label-name']['es-cl'] = "Nombre";
 		$text['label-name']['pt-pt'] = "Nome";
