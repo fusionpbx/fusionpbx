@@ -383,16 +383,29 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					// billing
 					if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 						$db2 = new database;
-						$db2->sql = "SELECT currency FROM v_billings WHERE type_value='$destination_accountcode'";
+						$db2->sql = "SELECT currency, billing_uuid, balance FROM v_billings WHERE type_value='$destination_accountcode'";
 						$db2->result = $db2->execute();
 						$default_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
 						$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:$default_currency);
 						$destination_sell_current_currency = currency_convert($destination_sell,$billing_currency,$currency);
+						$billing_uuid = $db2->result[0]['billing_uuid'];
+						$balance = $db2->result[0]['balance'];
 						unset($db2->sql, $db2->result);
 
-						$db2->sql = "UPDATE v_billings SET balance = balance - $destination_sell_current_currency, old_balance = old_balance - $destination_sell_current_currency WHERE type_value='$destination_accountcode'";
+						$balance -= $destination_sell_current_currency;
+						$db2->sql = "UPDATE v_billings SET balance = $balance, old_balance = $balance WHERE type_value='$destination_accountcode'";
 						$db2->result = $db2->execute();
 						unset($db2->sql, $db2->result);
+
+						$billing_invoice_uuid = uuid();
+						$user_uuid = check_str($_SESSION['user_uuid']);
+						$settled=1;
+						$mc_gross = $destination_sell_current_currency;
+						$post_payload = serialize($_POST);
+						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment' )";
+						$db2->result = $db2->execute();
+						unset($db2->sql, $db2->result);
+
 					}
 				}
 				if ($action == "update") {
