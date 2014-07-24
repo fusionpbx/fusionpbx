@@ -59,7 +59,12 @@ DIV#page {
 	overflow: auto;
 }
 
-<?php if ($_SESSION['theme']['background_images']['var'] == 'true') { ?>
+<?php
+if (
+	isset($_SESSION['theme']['background_image']['text']) ||
+	isset($_SESSION['theme']['background_color_1']['text']) ||
+	isset($_SESSION['theme']['background_color_2']['text'])
+	) { ?>
 	/* Set the position and dimensions of the background image. */
 	DIV#page-background {
 		z-index: 0;
@@ -69,6 +74,25 @@ DIV#page {
 		width: 100%;
 		height: 100%;
 	}
+
+	<?php
+	if (
+		isset($_SESSION['theme']['background_color_1']['text']) &&
+		isset($_SESSION['theme']['background_color_2']['text'])
+		) {
+		?>
+		.page-background-gradient {
+			background-color: <?php echo $_SESSION['theme']['background_color_1']['text']?>;
+			background-image: -ms-linear-gradient(top, <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
+			background-image: -moz-linear-gradient(top , <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
+			background-image: -o-linear-gradient(top , <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
+			background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, <?php echo $_SESSION['theme']['background_color_1']['text']?>), color-stop(1, <?php echo $_SESSION['theme']['background_color_2']['text']?>));
+			background-image: -webkit-linear-gradient(top , <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
+			background-image: linear-gradient(to bottom, <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
+		}
+		<?php
+	}
+	?>
 <?php } ?>
 
 img {
@@ -488,7 +512,14 @@ legend {
 	}
 
 	.main_content {
-		<?php if (strlen($_SESSION["username"]) > 0 && $_SESSION['theme']['background_images']['var'] == 'true') { ?>
+		<?php
+		if (
+			strlen($_SESSION["username"]) > 0 &&
+			(
+				isset($_SESSION['theme']['background_image']['text']) ||
+				isset($_SESSION['theme']['background_color_1']['text']) ||
+				isset($_SESSION['theme']['background_color_2']['text'])
+			)) { ?>
 			background-color: #FFFFFF;
 			background-attachment: fixed;
 			opacity: 0.93;
@@ -969,36 +1000,101 @@ legend {
 	?>
 
 	<?php
-	if ($_SESSION['theme']['background_images']['var'] == 'true') {
-		//get a random background image
-		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/enhanced/images/backgrounds';
-		$dir_list = opendir($dir);
-		$v_background_array = array();
-		$x = 0;
-		while (false !== ($file = readdir($dir_list))) {
-			if ($file != "." AND $file != ".."){
-				$new_path = $dir.'/'.$file;
-				$level = explode('/',$new_path);
-				if (substr($new_path, -4) == ".svn") {
-					//ignore .svn dir and subdir
-				}
-				elseif (substr($new_path, -3) == ".db") {
-					//ignore .db files
-				}
-				else {
-					$new_path = str_replace($_SERVER["DOCUMENT_ROOT"], "", $new_path);
-					$v_background_array[] = $new_path;
-				}
-				if ($x > 1000) { break; };
-				$x++;
+	// check for background image
+	if (isset($_SESSION['theme']['background_image']['text'])) {
+		// background image is enabled
+		$image_extensions = array('jpg','jpeg','png','gif');
+
+		if ($_SESSION['theme']['background_image']['text'] != '') {
+
+			// background image(s) specified, check if source is file or folder
+			if (in_array(strtolower(pathinfo($_SESSION['theme']['background_image']['text'], PATHINFO_EXTENSION)), $image_extensions)) {
+				$image_source = 'file';
 			}
+			else {
+				$image_source = 'folder';
+			}
+
+			// is source (file/folder) local or remote
+			if (
+				substr($_SESSION['theme']['background_image']['text'], 0, 4) == 'http'
+				) {
+				$source_path = $_SESSION['theme']['background_image']['text'];
+			}
+			else if (substr($_SESSION['theme']['background_image']['text'], 0, 1) == '/') { //
+				// use project path as root
+				$source_path = PROJECT_PATH.$_SESSION['theme']['background_image']['text'];
+			}
+			else {
+				// use theme images/backgrounds folder as root
+				$source_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds/'.$_SESSION['theme']['background_image']['text'];
+			}
+
 		}
-		if (strlen($_SESSION['background_image'])== 0) {
-			$_SESSION['background_image'] = $v_background_array[array_rand($v_background_array, 1)];
+		else {
+			// not set, so use default backgrounds folder and images
+			$image_source = 'folder';
+			$source_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds';
+		}
+
+		if ($image_source == 'folder') {
+			if (file_exists($_SERVER["DOCUMENT_ROOT"].$source_path)) {
+				// retrieve a random background image
+				$dir_list = opendir($_SERVER["DOCUMENT_ROOT"].$source_path);
+				$v_background_array = array();
+				$x = 0;
+				while (false !== ($file = readdir($dir_list))) {
+					if ($file != "." AND $file != ".."){
+						$new_path = $dir.'/'.$file;
+						$level = explode('/',$new_path);
+						if (in_array(strtolower(pathinfo($new_path, PATHINFO_EXTENSION)), $image_extensions)) {
+							$v_background_array[] = $new_path;
+						}
+						if ($x > 100) { break; };
+						$x++;
+					}
+				}
+				if ($_SESSION['background_image'] == '' && sizeof($v_background_array) > 0) {
+					$_SESSION['background_image'] = PROJECT_PATH.$source_path.$v_background_array[array_rand($v_background_array, 1)];
+				}
+			}
+			else {
+				$_SESSION['background_image'] = '';
+			}
+
+		}
+		else if ($image_source == 'file') {
+			$_SESSION['background_image'] = $source_path;
 		}
 
 		//show the background
-		echo "<div id=\"page-background\"><img src=\"".$_SESSION['background_image']."\" width='100%' height='100%' alt=''></div>\n";
+		if ($_SESSION['background_image'] != '') {
+			echo "<div id='page-background'><img src=\"".$_SESSION['background_image']."\" width='100%' height='100%'></div>\n";
+		}
+
+	}
+
+	// check for background color
+	else if (
+		isset($_SESSION['theme']['background_color_1']['text']) ||
+		isset($_SESSION['theme']['background_color_2']['text'])
+		) { // background color 1 or 2 is enabled
+
+		echo "bg1 = ".$_SESSION['theme']['background_color_1']['text']."<br><br>";
+		echo "bg2 = ".$_SESSION['theme']['background_color_2']['text']."<br><br>";
+
+		if ($_SESSION['theme']['background_color_1']['text'] != '' && $_SESSION['theme']['background_color_2']['text'] == '') { // use color 1
+			echo "<div id='page-background' style='background-color: ".$_SESSION['theme']['background_color_1']['text'].";'>&nbsp;</div>\n";
+		}
+		else if ($_SESSION['theme']['background_color_1']['text'] == '' && $_SESSION['theme']['background_color_2']['text'] != '') { // use color 2
+			echo "<div id='page-background' style='background-color: ".$_SESSION['theme']['background_color_2']['text'].";'>&nbsp;</div>\n";
+		}
+		else if ($_SESSION['theme']['background_color_1']['text'] != '' && $_SESSION['theme']['background_color_2']['text'] != '') { // vertical gradient
+			echo "<div id='page-background' class='page-background-gradient'>&nbsp;</div>\n";
+		}
+		else { // default: white
+			echo "<div id='page-background' style='background-color: #ffffff;'>&nbsp;</div>\n";
+		}
 	}
 	?>
 
