@@ -40,6 +40,16 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//get posted values, if any
+if (sizeof($_POST) > 0) {
+
+	echo "<pre>";
+	print_r($_POST);
+	echo "</pre>";
+	exit;
+
+}
+
 require_once "resources/header.php";
 $document['title'] = $text['title-default_settings'];
 
@@ -49,7 +59,31 @@ require_once "resources/paging.php";
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+// copy settings javascript
+?>
+<script language='javascript' type='text/javascript'>
+	function show_domains() {
+		$('#button_copy').fadeOut('slow', function() {
+			$('#button_back').fadeIn('slow');
+			$('#target_domain_uuid').fadeIn('slow');
+			$('#button_paste').fadeIn('slow');
+		});
+	}
+
+	function hide_domains() {
+		$('#button_back').fadeOut('slow');
+		$('#target_domain_uuid').fadeOut('slow');
+		$('#button_paste').fadeOut('slow', function() {
+			$('#button_copy').fadeIn('slow');
+			document.getElementById('target_domain_uuid').selectedIndex = 0;
+		});
+	}
+</script>
+<?php
+
 //show the content
+	echo "<form name='form_copy' id='form_copy' method='post' action=''>";
+
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
@@ -59,7 +93,22 @@ require_once "resources/paging.php";
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-default_settings']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<td width='50%' align='right'>";
+	if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+		echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
+		echo "		<input type='button' class='btn' style='display: none;' id='button_back' alt='".$text['button-back']."' onclick='hide_domains();' value='".$text['button-back']."'> ";
+		echo "		<select class='formfld' style='display: none; width: auto;' name='target_domain_uuid' id='target_domain_uuid'>\n";
+		echo "			<option value=''>Select Domain...</option>\n";
+		foreach ($_SESSION['domains'] as $domain) {
+			echo "		<option value='".$domain["domain_uuid"]."'>".$domain["domain_name"]."</option>\n";
+		}
+		echo "		</select>\n";
+		echo "		<input type='submit' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."'>";
+	}
+	else {
+		echo "		&nbsp;";
+	}
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
@@ -136,11 +185,14 @@ require_once "resources/paging.php";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				echo th_order_by('default_setting_subcategory', $text['label-subcategory'], $order_by, $order);
-				echo th_order_by('default_setting_name', $text['label-type'], $order_by, $order);
-				echo th_order_by('default_setting_value', $text['label-value'], $order_by, $order);
-				echo th_order_by('default_setting_enabled', $text['label-enabled'], $order_by, $order);
-				echo th_order_by('default_setting_description', $text['label-description'], $order_by, $order);
+				if (permission_exists('domain_setting_add')) {
+					echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' id='check_all_".strtolower($row['default_setting_category'])."' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
+				}
+				echo "<th>".$text['label-subcategory']."</th>";
+				echo "<th>".$text['label-type']."</th>";
+				echo "<th>".$text['label-value']."</th>";
+				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
+				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
 				if (permission_exists('default_setting_add')) {
 					echo "<a href='default_setting_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -148,8 +200,14 @@ require_once "resources/paging.php";
 				echo "</td>\n";
 				echo "</tr>\n";
 			}
+
+
 			$tr_link = (permission_exists('default_setting_edit')) ? "href='default_setting_edit.php?id=".$row['default_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
+			if (permission_exists('domain_setting_add')) {
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='default_setting_uuid[]' id='checkbox_".strtolower($row['default_setting_subcategory'])."' value='".$row['default_setting_uuid']."'></td>\n";
+				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.strtolower($row['default_setting_subcategory']);
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('default_setting_edit')) {
 				echo "<a href='default_setting_edit.php?id=".$row['default_setting_uuid']."'>".$row['default_setting_subcategory']."</a>";
@@ -183,7 +241,7 @@ require_once "resources/paging.php";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['default_setting_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".ucwords($row['default_setting_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('default_setting_edit')) {
@@ -201,7 +259,7 @@ require_once "resources/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='6' align='left'>\n";
+	echo "<td colspan='".((permission_exists('domain_setting_add')) ? 7 : 6)."' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
@@ -225,7 +283,26 @@ require_once "resources/paging.php";
 	echo "</tr>";
 	echo "</table>";
 	echo "</div>";
+
+	echo "</form>";
+
 	echo "<br /><br />";
+
+	if (sizeof($subcat_ids) > 0) {
+
+		echo "<script>\n";
+		echo "	function check(what, category) {\n";
+		foreach ($subcat_ids as $default_setting_category => $checkbox_ids) {
+			echo "if (category == '".$default_setting_category."') {\n";
+			foreach ($checkbox_ids as $index => $checkbox_id) {
+				echo "document.getElementById('".$checkbox_id."').checked = (what == 'all') ? true : false;\n";
+			}
+			echo "}\n";
+		}
+		echo "	}\n";
+		echo "</script>\n";
+
+	}
 
 //include the footer
 	require_once "resources/footer.php";
