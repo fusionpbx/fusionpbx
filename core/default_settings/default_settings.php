@@ -151,12 +151,12 @@ if (sizeof($_POST) > 0) {
 		} // foreach
 
 		// set message
-		$_SESSION["message"] = "Settings Copied: ".$settings_copied;
+		$_SESSION["message"] = $text['message-copy'].": ".$settings_copied;
 
 	}
 	else {
 		// set message
-		$_SESSION["message"] = "No Settings Checked or Invalid Domain";
+		$_SESSION["message"] = $text['message-copy_failed'];
 	}
 
 	header("Location: default_settings.php");
