@@ -113,6 +113,11 @@
 		$text['description-enabled']['pt-pt'] = "Escolha o estado desta predefinição.";
 		$text['description-enabled']['fr-fr'] = "Choisir l'état de ce paraètre";
 
+		$text['label-select']['en-us'] = "Select";
+		$text['label-select']['es-cl'] = "Seleccionar";
+		$text['label-select']['pt-pt'] = "Selecionar";
+		$text['label-select']['fr-fr'] = "Sélectionner";
+
 		$text['label-description']['en-us'] = "Description";
 		$text['label-description']['es-cl'] = "Descripción";
 		$text['label-description']['pt-pt'] = "Descrição";
@@ -167,6 +172,16 @@
 		$text['button-back']['es-cl'] = "Volver";
 		$text['button-back']['pt-pt'] = "Voltar";
 		$text['button-back']['fr-fr'] = "Retour";
+
+		$text['button-copy']['en-us'] = "Copy";
+		$text['button-copy']['es-cl'] = "Copiar";
+		$text['button-copy']['pt-pt'] = "Copiar";
+		$text['button-copy']['fr-fr'] = "Copier";
+
+		$text['button-paste']['en-us'] = "Paste";
+		$text['button-paste']['es-cl'] = "Propagar";
+		$text['button-paste']['pt-pt'] = "Propagar";
+		$text['button-paste']['fr-fr'] = "Propager";
 
 		$text['message-message']['en-us'] = "Message";
 		$text['message-message']['es-cl'] = "Mensaje";
