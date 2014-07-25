@@ -369,8 +369,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (strlen($sip_force_expires) > 0) {
 								$sql .= "sip_force_expires, ";
 							}
-							if (strlen($nibble_account) > 0) {
-								$sql .= "nibble_account, ";
+							if (if_group("superadmin")) {
+								if (strlen($nibble_account) > 0) {
+									$sql .= "nibble_account, ";
+								}
 							}
 							if (strlen($mwi_account) > 0) {
 								$sql .= "mwi_account, ";
@@ -415,8 +417,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if (strlen($sip_force_expires) > 0) {
 								$sql .= "'$sip_force_expires', ";
 							}
-							if (strlen($nibble_account) > 0) {
-								$sql .= "'$nibble_account', ";
+							if (if_group("superadmin")) {
+								if (strlen($nibble_account) > 0) {
+									$sql .= "'$nibble_account', ";
+								}
 							}
 							if (strlen($mwi_account) > 0) {
 								if (strpos($mwi_account, '@') === false) {
@@ -489,7 +493,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
-					 if (if_group("superadmin")) {
+					if (if_group("superadmin")) {
 						$sql .= "accountcode = '$accountcode', ";
 					}
 					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
@@ -522,11 +526,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					else {
 						$sql .= "sip_force_expires = '$sip_force_expires', ";
 					}
-					if (strlen($nibble_account) == 0) {
-						$sql .= "nibble_account = null, ";
-					}
-					else {
-						$sql .= "nibble_account = '$nibble_account', ";
+					if (if_group("superadmin")) {
+						if (strlen($nibble_account) == 0) {
+							$sql .= "nibble_account = null, ";
+						}
+						else {
+							$sql .= "nibble_account = '$nibble_account', ";
+						}
 					}
 					if (strlen($mwi_account) > 0) {
 						if (strpos($mwi_account, '@') === false) {
@@ -1653,16 +1659,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-nibble_account'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"$nibble_account\">\n";
-	echo "<br />\n";
-	echo $text['description-nibble_account']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (if_group("superadmin")) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-nibble_account'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='nibble_account' maxlength='255' value=\"$nibble_account\">\n";
+		echo "<br />\n";
+		echo $text['description-nibble_account']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
