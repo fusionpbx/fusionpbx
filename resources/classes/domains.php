@@ -43,12 +43,21 @@
 				unset($_SESSION['server']);
 				unset($_SESSION['switch']);
 
+			//set the PDO error mode
+				$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
-				$sql .= "order by default_setting_order asc ";
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->execute();
+				try {
+					$sql .= "order by default_setting_order asc ";
+					$prep_statement = $db->prepare($sql);
+					$prep_statement->execute();
+				}
+				catch(PDOException $e) {
+					$prep_statement = $db->prepare($sql);
+					$prep_statement->execute();
+				}
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach ($result as $row) {
 					$name = $row['default_setting_name'];
@@ -76,9 +85,15 @@
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 				$sql .= "and domain_setting_enabled = 'true' ";
-				$sql .= "order by domain_setting_order asc ";
-				$prep_statement = $db->prepare($sql);
-				$prep_statement->execute();
+				try {
+					$sql .= "order by domain_setting_order asc ";
+					$prep_statement = $db->prepare($sql);
+					$prep_statement->execute();
+				}
+				catch(PDOException $e) {
+					$prep_statement = $db->prepare($sql);
+					$prep_statement->execute();
+				}
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 				foreach ($result as $row) {
 					$name = $row['domain_setting_name'];
@@ -109,10 +124,16 @@
 					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
 					$sql .= "and user_setting_enabled = 'true' ";
-					$sql .= "order by user_setting_order asc ";
-					$prep_statement = $db->prepare($sql);
-					if ($prep_statement) {
+					try {
+						$sql .= "order by user_setting_order asc ";
+						$prep_statement = $db->prepare($sql);
 						$prep_statement->execute();
+					}
+					catch(PDOException $e) {
+						$prep_statement = $db->prepare($sql);
+						$prep_statement->execute();
+					}
+					if ($prep_statement) {
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 						foreach ($result as $row) {
 							$name = $row['user_setting_name'];
@@ -140,6 +161,9 @@
 						}
 					}
 				}
+
+			//set the PDO error mode
+				$db->setAttribute(PDO::ATTR_ERRMODE, '');
 
 			//set the values from the session variables
 				if (strlen($_SESSION['domain']['time_zone']['name']) > 0) {
