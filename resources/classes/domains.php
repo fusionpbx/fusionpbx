@@ -50,8 +50,7 @@
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
 				try {
-					$sql .= "order by default_setting_order asc ";
-					$prep_statement = $db->prepare($sql);
+					$prep_statement = $db->prepare($sql . " order by default_setting_order asc ");
 					$prep_statement->execute();
 				}
 				catch(PDOException $e) {
@@ -86,8 +85,7 @@
 				$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 				$sql .= "and domain_setting_enabled = 'true' ";
 				try {
-					$sql .= "order by domain_setting_order asc ";
-					$prep_statement = $db->prepare($sql);
+					$prep_statement = $db->prepare($sql . " order by domain_setting_order asc ");
 					$prep_statement->execute();
 				}
 				catch(PDOException $e) {
@@ -125,8 +123,7 @@
 					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
 					$sql .= "and user_setting_enabled = 'true' ";
 					try {
-						$sql .= "order by user_setting_order asc ";
-						$prep_statement = $db->prepare($sql);
+						$prep_statement = $db->prepare($sql . " order by user_setting_order asc ");
 						$prep_statement->execute();
 					}
 					catch(PDOException $e) {
