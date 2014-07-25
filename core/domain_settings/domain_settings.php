@@ -89,7 +89,7 @@ require_once "resources/paging.php";
 		$sql = "select * from v_domain_settings ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		if (strlen($order_by) == 0) {
-			$sql .= "order by domain_setting_category, domain_setting_subcategory asc ";
+			$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc ";
 		}
 		else {
 			$sql .= "order by $order_by $order ";

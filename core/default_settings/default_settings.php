@@ -70,7 +70,7 @@ require_once "resources/paging.php";
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_default_settings ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -94,7 +94,7 @@ require_once "resources/paging.php";
 	//get the list
 		$sql = "select * from v_default_settings ";
 		if (strlen($order_by) == 0) {
-			$sql .= "order by default_setting_category, default_setting_subcategory asc ";
+			$sql .= "order by default_setting_category, default_setting_subcategory, default_setting_order asc ";
 		}
 		else {
 			$sql .= "order by $order_by $order ";
