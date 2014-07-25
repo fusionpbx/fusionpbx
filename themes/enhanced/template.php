@@ -62,8 +62,8 @@ DIV#page {
 <?php
 if (
 	isset($_SESSION['theme']['background_image']['text']) ||
-	isset($_SESSION['theme']['background_color_1']['text']) ||
-	isset($_SESSION['theme']['background_color_2']['text'])
+	$_SESSION['theme']['background_color'][0] != '' ||
+	$_SESSION['theme']['background_color'][1] != ''
 	) { ?>
 	/* Set the position and dimensions of the background image. */
 	DIV#page-background {
@@ -77,18 +77,18 @@ if (
 
 	<?php
 	if (
-		isset($_SESSION['theme']['background_color_1']['text']) &&
-		isset($_SESSION['theme']['background_color_2']['text'])
+		$_SESSION['theme']['background_color'][0] != '' &&
+		$_SESSION['theme']['background_color'][1] != ''
 		) {
 		?>
 		.page-background-gradient {
-			background-color: <?php echo $_SESSION['theme']['background_color_1']['text']?>;
-			background-image: -ms-linear-gradient(top, <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
-			background-image: -moz-linear-gradient(top , <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
-			background-image: -o-linear-gradient(top , <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
-			background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, <?php echo $_SESSION['theme']['background_color_1']['text']?>), color-stop(1, <?php echo $_SESSION['theme']['background_color_2']['text']?>));
-			background-image: -webkit-linear-gradient(top , <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
-			background-image: linear-gradient(to bottom, <?php echo $_SESSION['theme']['background_color_1']['text']?> 0%, <?php echo $_SESSION['theme']['background_color_2']['text']?> 100%);
+			background-color: <?php echo $_SESSION['theme']['background_color'][0]?>;
+			background-image: -ms-linear-gradient(top, <?php echo $_SESSION['theme']['background_color'][0]?> 0%, <?php echo $_SESSION['theme']['background_color'][1]?> 100%);
+			background-image: -moz-linear-gradient(top , <?php echo $_SESSION['theme']['background_color'][0]?> 0%, <?php echo $_SESSION['theme']['background_color'][1]?> 100%);
+			background-image: -o-linear-gradient(top , <?php echo $_SESSION['theme']['background_color'][0]?> 0%, <?php echo $_SESSION['theme']['background_color'][1]?> 100%);
+			background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, <?php echo $_SESSION['theme']['background_color'][0]?>), color-stop(1, <?php echo $_SESSION['theme']['background_color'][1]?>));
+			background-image: -webkit-linear-gradient(top , <?php echo $_SESSION['theme']['background_color'][0]?> 0%, <?php echo $_SESSION['theme']['background_color'][1]?> 100%);
+			background-image: linear-gradient(to bottom, <?php echo $_SESSION['theme']['background_color'][0]?> 0%, <?php echo $_SESSION['theme']['background_color'][1]?> 100%);
 		}
 		<?php
 	}
@@ -517,8 +517,8 @@ legend {
 			strlen($_SESSION["username"]) > 0 &&
 			(
 				isset($_SESSION['theme']['background_image']['text']) ||
-				isset($_SESSION['theme']['background_color_1']['text']) ||
-				isset($_SESSION['theme']['background_color_2']['text'])
+				$_SESSION['theme']['background_color'][0] != '' ||
+				$_SESSION['theme']['background_color'][1] != ''
 			)) { ?>
 			background-color: #FFFFFF;
 			background-attachment: fixed;
@@ -1076,24 +1076,24 @@ legend {
 
 	// check for background color
 	else if (
-		isset($_SESSION['theme']['background_color_1']['text']) ||
-		isset($_SESSION['theme']['background_color_2']['text'])
+		$_SESSION['theme']['background_color'][0] != '' ||
+		$_SESSION['theme']['background_color'][1] != ''
 		) { // background color 1 or 2 is enabled
 
-		echo "bg1 = ".$_SESSION['theme']['background_color_1']['text']."<br><br>";
-		echo "bg2 = ".$_SESSION['theme']['background_color_2']['text']."<br><br>";
+		echo "bg1 = ".$_SESSION['theme']['background_color'][0]."<br><br>";
+		echo "bg2 = ".$_SESSION['theme']['background_color'][1]."<br><br>";
 
-		if ($_SESSION['theme']['background_color_1']['text'] != '' && $_SESSION['theme']['background_color_2']['text'] == '') { // use color 1
-			echo "<div id='page-background' style='background-color: ".$_SESSION['theme']['background_color_1']['text'].";'>&nbsp;</div>\n";
+		if ($_SESSION['theme']['background_color'][0] != '' && $_SESSION['theme']['background_color'][1] == '') { // use color 1
+			echo "<div id='page-background' style='background-color: ".$_SESSION['theme']['background_color'][0].";'>&nbsp;</div>\n";
 		}
-		else if ($_SESSION['theme']['background_color_1']['text'] == '' && $_SESSION['theme']['background_color_2']['text'] != '') { // use color 2
-			echo "<div id='page-background' style='background-color: ".$_SESSION['theme']['background_color_2']['text'].";'>&nbsp;</div>\n";
+		else if ($_SESSION['theme']['background_color'][0] == '' && $_SESSION['theme']['background_color'][1] != '') { // use color 2
+			echo "<div id='page-background' style='background-color: ".$_SESSION['theme']['background_color'][1].";'>&nbsp;</div>\n";
 		}
-		else if ($_SESSION['theme']['background_color_1']['text'] != '' && $_SESSION['theme']['background_color_2']['text'] != '') { // vertical gradient
+		else if ($_SESSION['theme']['background_color'][0] != '' && $_SESSION['theme']['background_color'][1] != '') { // vertical gradient
 			echo "<div id='page-background' class='page-background-gradient'>&nbsp;</div>\n";
 		}
 		else { // default: white
-			echo "<div id='page-background' style='background-color: #ffffff;'>&nbsp;</div>\n";
+			echo "<div id='page-background' style='background-color: #fff;'>&nbsp;</div>\n";
 		}
 	}
 	?>
