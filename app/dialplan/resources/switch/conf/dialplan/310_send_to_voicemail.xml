@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="send_to_voicemail" number="*99[ext]" app_uuid="001d5dab-e0c6-4352-8f06-e9986ee7b0d8">
+	<extension name="send_to_voicemail" number="*99[ext]" continue="false" app_uuid="001d5dab-e0c6-4352-8f06-e9986ee7b0d8">
 		<condition field="destination_number" expression="^\*99(\d{2,7})$">
 			<action application="answer"/>
 			<action application="sleep" data="1000"/>

@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="local_extension" number="[ext]" app_uuid="71cf1310-b6e3-415b-8745-3cbdc8e15212">
+	<extension name="local_extension" number="[ext]" continue="false" app_uuid="71cf1310-b6e3-415b-8745-3cbdc8e15212">
 		<condition field="destination_number" expression="(^\d{2,7}|\D+$)">
 			<!--<action application="pre_answer"/>-->
 			<action application="set" data="dialed_extension=$1"/>

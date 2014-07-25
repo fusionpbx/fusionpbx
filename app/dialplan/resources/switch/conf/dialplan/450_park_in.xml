@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="park_in" number="*5900" app_uuid="ffb30da6-30e4-43b8-9847-2ed40e232f89" enabled="false">
+	<extension name="park_in" number="*5900" continue="false" app_uuid="ffb30da6-30e4-43b8-9847-2ed40e232f89" enabled="false">
 		<condition field="destination_number" expression="^\*5900$" >
 			<action application="set" data="park_direction=in" />
 			<action application="set" data="park_extension=\*5901" />

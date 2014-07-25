@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="hold_music" number="*9664" app_uuid="b824b88a-e6da-486e-9f17-7b93cbaa318e">
+	<extension name="hold_music" number="*9664" continue="false" app_uuid="b824b88a-e6da-486e-9f17-7b93cbaa318e">
 		<condition field="destination_number" expression="^\*9664$"/>
 		<condition field="${sip_has_crypto}" expression="^(AES_CM_128_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_80)$">
 			<action application="answer"/>
