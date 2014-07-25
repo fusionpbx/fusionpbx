@@ -1,6 +1,6 @@
 <context name="{v_context}">
 	<extension name="call-forward" number="*72,*73" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" enabled="true">
-		<condition field="destination_number" expression="^\*72$">
+		<condition field="destination_number" expression="^\*72$" break="on-true">
 			<action application="set" data="pin_number={v_pin_number}"/>
 			<action application="set" data="enabled=true"/>
 			<action application="lua" data="call_forward.lua"/>
