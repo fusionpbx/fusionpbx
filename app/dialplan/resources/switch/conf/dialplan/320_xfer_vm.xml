@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="xfer_vm" number="xfer_vm" app_uuid="44a4b26d-9e13-41dc-8405-7ff2e4a215e0">
+	<extension name="xfer_vm" number="xfer_vm" continue="false" app_uuid="44a4b26d-9e13-41dc-8405-7ff2e4a215e0">
 		<condition field="destination_number" expression="^xfer_vm$">
 			<action application="read" data="2 6 'tone_stream://%(10000,0,350,440)' digits 30000 #"/>
 			<action application="set" data="origination_cancel_key=#"/>

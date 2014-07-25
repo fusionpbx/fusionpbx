@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="page" number="*724" app_uuid="2011c518-696d-4878-a9b2-b217b6311311" enabled="false">
+	<extension name="page" number="*724" continue="false" app_uuid="2011c518-696d-4878-a9b2-b217b6311311" enabled="false">
 		<condition field="destination_number" expression="^\*724$" break="never" />
 		<condition field="${sip_h_Referred-By}" expression="sip:(.*)@.*" break="never">
 			<action application="set" data="referred_by_user=$1" inline="true"/>

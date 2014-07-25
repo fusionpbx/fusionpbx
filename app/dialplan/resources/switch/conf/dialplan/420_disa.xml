@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="disa" number="*3472" app_uuid="3ade2d9a-f55d-4240-bb60-b4a3ab36951c" enabled="false">
+	<extension name="disa" number="*3472" continue="false" app_uuid="3ade2d9a-f55d-4240-bb60-b4a3ab36951c" enabled="false">
 		<condition field="destination_number" expression="^\*(3472)$">
 			<action application="answer"/>
 			<action application="set" data="pin_number={v_pin_number}"/>

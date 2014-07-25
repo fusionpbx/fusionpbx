@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="recordings" number="*732" app_uuid="430737df-5385-42d1-b933-22600d3fb79e">
+	<extension name="recordings" number="*732" continue="false" app_uuid="430737df-5385-42d1-b933-22600d3fb79e">
 		<condition field="destination_number" expression="^\*(732)$">
 			<action application="answer"/>
 			<action application="set" data="pin_number={v_pin_number}"/>

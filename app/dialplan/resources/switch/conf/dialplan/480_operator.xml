@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="operator" number="0" app_uuid="0e1cd2d7-9d84-4959-8b6c-0cb23de4de59" continue="false">
+	<extension name="operator" number="0" continue="false" app_uuid="0e1cd2d7-9d84-4959-8b6c-0cb23de4de59" continue="false">
 		<condition field="destination_number" expression="^0$|^operator$">
 			<action application="export" data="transfer_context={v_context}" />
 			<action application="bind_meta_app" data="4 ab s execute_extension::att_xfer XML features" />
