@@ -46,6 +46,7 @@
 			//get the default settings
 				$sql = "select * from v_default_settings ";
 				$sql .= "where default_setting_enabled = 'true' ";
+				$sql .= "order by default_setting_order asc ";
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -75,6 +76,7 @@
 				$sql = "select * from v_domain_settings ";
 				$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 				$sql .= "and domain_setting_enabled = 'true' ";
+				$sql .= "order by domain_setting_order asc ";
 				$prep_statement = $db->prepare($sql);
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -107,6 +109,7 @@
 					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
 					$sql .= "and user_setting_enabled = 'true' ";
+					$sql .= "order by user_setting_order asc ";
 					$prep_statement = $db->prepare($sql);
 					if ($prep_statement) {
 						$prep_statement->execute();
