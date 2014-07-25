@@ -93,6 +93,16 @@
 		$text['description-value']['pt-pt'] = "Introduza o valor desta definição.";
 		$text['description-value']['fr-fr'] = "Entrer la valeur de ce paramètre.";
 
+		$text['label-order']['en-us'] = "Order";
+		$text['label-order']['es-cl'] = "Orden";
+		$text['label-order']['pt-pt'] = "Ordem";
+		$text['label-order']['fr-fr'] = "Ordre";
+
+		$text['description-order']['en-us'] = "Set the order (index) for this array element.";
+		$text['description-order']['es-cl'] = "Establecer el orden (índice) para este elemento de la matriz.";
+		$text['description-order']['pt-pt'] = "Defina a ordem (índice) para este elemento da matriz.";
+		$text['description-order']['fr-fr'] = "Définir l'ordre (index) pour cet élément de tableau.";
+
 		$text['label-enabled']['en-us'] = "Enabled";
 		$text['label-enabled']['es-cl'] = "Activado";
 		$text['label-enabled']['pt-pt'] = "Habilitado";
@@ -111,7 +121,7 @@
 		$text['description-description']['en-us'] = "Enter a description, if desired.";
 		$text['description-description']['es-cl'] = "Ingrese una descripción, opcional.";
 		$text['description-description']['pt-pt'] = "Insira a descrição. (opcional) ";
-		$text['description-description']['fr-fr'] = "";
+		$text['description-description']['fr-fr'] = "Entrez une description, si vous le souhaitez.";
 
 		$text['label-true']['en-us'] = "True";
 		$text['label-true']['es-cl'] = "Verdadero";

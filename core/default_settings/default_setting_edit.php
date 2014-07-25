@@ -58,6 +58,7 @@ else {
 		$default_setting_subcategory = strtolower(check_str($_POST["default_setting_subcategory"]));
 		$default_setting_name = strtolower(check_str($_POST["default_setting_name"]));
 		$default_setting_value = check_str($_POST["default_setting_value"]);
+		$default_setting_order = check_str($_POST["default_setting_order"]);
 		$default_setting_enabled = check_str($_POST["default_setting_enabled"]);
 		$default_setting_description = check_str($_POST["default_setting_description"]);
 	}
@@ -74,6 +75,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($default_setting_subcategory) == 0) { $msg .= $text['message-required'].$text['label-subcategory']."<br>\n"; }
 		//if (strlen($default_setting_name) == 0) { $msg .= $text['message-required'].$text['label-type']."<br>\n"; }
 		//if (strlen($default_setting_value) == 0) { $msg .= $text['message-required'].$text['label-value']."<br>\n"; }
+		//if (strlen($default_setting_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
 		//if (strlen($default_setting_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
 		//if (strlen($default_setting_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -99,6 +101,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "default_setting_subcategory, ";
 				$sql .= "default_setting_name, ";
 				$sql .= "default_setting_value, ";
+				$sql .= "default_setting_order, ";
 				$sql .= "default_setting_enabled, ";
 				$sql .= "default_setting_description ";
 				$sql .= ")";
@@ -109,6 +112,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$default_setting_subcategory', ";
 				$sql .= "'$default_setting_name', ";
 				$sql .= "'$default_setting_value', ";
+				$sql .= "'$default_setting_order', ";
 				$sql .= "'$default_setting_enabled', ";
 				$sql .= "'$default_setting_description' ";
 				$sql .= ")";
@@ -126,6 +130,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "default_setting_subcategory = '$default_setting_subcategory', ";
 				$sql .= "default_setting_name = '$default_setting_name', ";
 				$sql .= "default_setting_value = '$default_setting_value', ";
+				$sql .= "default_setting_order = '$default_setting_order', ";
 				$sql .= "default_setting_enabled = '$default_setting_enabled', ";
 				$sql .= "default_setting_description = '$default_setting_description' ";
 				$sql .= "where default_setting_uuid = '$default_setting_uuid'";
@@ -152,6 +157,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$default_setting_subcategory = $row["default_setting_subcategory"];
 			$default_setting_name = $row["default_setting_name"];
 			$default_setting_value = $row["default_setting_value"];
+			$default_setting_order = $row["default_setting_order"];
 			$default_setting_enabled = $row["default_setting_enabled"];
 			$default_setting_description = $row["default_setting_description"];
 			break; //limit to 1 row
@@ -404,10 +410,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 		echo "	<input class='formfld' type='password' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}
-	elseif (
-		($category == "theme" && $subcategory == "background_color_1" && $name == "text") ||
-		($category == "theme" && $subcategory == "background_color_2" && $name == "text")
-		) {
+	elseif ($category == "theme" && $subcategory == "background_color" && $name == "array") {
 		// source: http://rightjs.org
 		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
 		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right-colorpicker-src.js' type='text/javascript'></script>";
@@ -429,6 +432,34 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-value']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if ($name == "array") {
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
+		echo "    ".$text['label-order']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name='default_setting_order' class='formfld'>\n";
+		$i=0;
+		while($i<=999) {
+			$selected = ($i == $default_setting_order) ? "selected" : null;
+			if (strlen($i) == 1) {
+				echo "		<option value='00$i' ".$selected.">00$i</option>\n";
+			}
+			if (strlen($i) == 2) {
+				echo "		<option value='0$i' ".$selected.">0$i</option>\n";
+			}
+			if (strlen($i) == 3) {
+				echo "		<option value='$i' ".$selected.">$i</option>\n";
+			}
+			$i++;
+		}
+		echo "	</select>\n";
+		echo "	<br />\n";
+		echo $text['description-order']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
