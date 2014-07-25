@@ -170,6 +170,16 @@
 		$text['description-value']['pt-pt'] = "Introduza o valor desta definiÃ§Ã£o.";
 		$text['description-value']['fr-fr'] = "";
 
+		$text['label-order']['en-us'] = "Order";
+		$text['label-order']['es-cl'] = "Orden";
+		$text['label-order']['pt-pt'] = "Ordem";
+		$text['label-order']['fr-fr'] = "Ordre";
+
+		$text['description-order']['en-us'] = "Set the order (index) for this array element.";
+		$text['description-order']['es-cl'] = "Establecer el orden (índice) para este elemento de la matriz.";
+		$text['description-order']['pt-pt'] = "Defina a ordem (índice) para este elemento da matriz.";
+		$text['description-order']['fr-fr'] = "Définir l'ordre (index) pour cet élément de tableau.";
+
 		$text['label-enabled']['en-us'] = "Enabled";
 		$text['label-enabled']['es-cl'] = "Activado";
 		$text['label-enabled']['pt-pt'] = "Habilitado";

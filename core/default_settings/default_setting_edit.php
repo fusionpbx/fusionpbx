@@ -93,6 +93,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
+			// fix null
+			$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
+
 			if ($action == "add" && permission_exists('default_setting_add')) {
 				$sql = "insert into v_default_settings ";
 				$sql .= "(";
@@ -112,7 +115,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$default_setting_subcategory', ";
 				$sql .= "'$default_setting_name', ";
 				$sql .= "'$default_setting_value', ";
-				$sql .= "'$default_setting_order', ";
+				$sql .= "$default_setting_order, ";
 				$sql .= "'$default_setting_enabled', ";
 				$sql .= "'$default_setting_description' ";
 				$sql .= ")";
@@ -130,7 +133,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "default_setting_subcategory = '$default_setting_subcategory', ";
 				$sql .= "default_setting_name = '$default_setting_name', ";
 				$sql .= "default_setting_value = '$default_setting_value', ";
-				$sql .= "default_setting_order = '$default_setting_order', ";
+				$sql .= "default_setting_order = $default_setting_order, ";
 				$sql .= "default_setting_enabled = '$default_setting_enabled', ";
 				$sql .= "default_setting_description = '$default_setting_description' ";
 				$sql .= "where default_setting_uuid = '$default_setting_uuid'";
