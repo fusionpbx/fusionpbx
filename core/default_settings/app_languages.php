@@ -203,6 +203,16 @@
 		$text['message-delete']['pt-pt'] = "Remoção Efectuada";
 		$text['message-delete']['fr-fr'] = "Supprimé";
 
+		$text['message-copy']['en-us'] = "Copy Completed";
+		$text['message-copy']['es-cl'] = "Copia Completado";
+		$text['message-copy']['pt-pt'] = "Cópia Preenchida";
+		$text['message-copy']['fr-fr'] = "Copier Terminé";
+
+		$text['message-copy_failed']['en-us'] = "No Settings Checked or Invalid Domain";
+		$text['message-copy_failed']['es-cl'] = "No hay ajustes facturado o de dominio no válido";
+		$text['message-copy_failed']['pt-pt'] = "Nenhuma configuração marcada ou domínio inválido";
+		$text['message-copy_failed']['fr-fr'] = "Pas de paramètres enregistrés ou domaine non valide";
+
 		$text['message-required']['en-us'] = "Please provide: ";
 		$text['message-required']['es-cl'] = "Por favor indique: ";
 		$text['message-required']['pt-pt'] = "Por favor indique: ";
