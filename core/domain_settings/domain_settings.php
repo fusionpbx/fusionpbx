@@ -116,15 +116,25 @@ require_once "resources/paging.php";
 				echo "	<td colspan='4' align='left'>\n";
 				echo "		<br />\n";
 				echo "		<br />\n";
-				echo "		<b>".ucfirst($row['domain_setting_category'])."</b>&nbsp;\n";
+				echo "		<b>";
+				if (strtolower($row['domain_setting_category']) == "cdr") {
+					echo "		CDR";
+				}
+				elseif (strtolower($row['domain_setting_category']) == "ldap") {
+					echo "		LDAP";
+				}
+				else {
+					echo "		".ucfirst($row['domain_setting_category']);
+				}
+				echo "		</b>\n";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				echo th_order_by('domain_setting_subcategory', $text['label-category'], $order_by, $order);
-				echo th_order_by('domain_setting_name', $text['label-type'], $order_by, $order);
-				echo th_order_by('domain_setting_value', $text['label-value'], $order_by, $order);
-				echo th_order_by('domain_setting_enabled', $text['label-enabled'], $order_by, $order);
-				echo th_order_by('domain_setting_description', $text['label-description'], $order_by, $order);
+				echo "<th>".$text['label-subcategory']."</th>";
+				echo "<th>".$text['label-type']."</th>";
+				echo "<th>".$text['label-value']."</th>";
+				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
+				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
 				if (permission_exists('domain_setting_add')) {
 					echo "<a href='domain_setting_edit.php?domain_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -169,7 +179,7 @@ require_once "resources/paging.php";
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['domain_setting_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".ucwords($row['domain_setting_enabled'])."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_setting_edit')) {

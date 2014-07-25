@@ -43,12 +43,128 @@ else {
 //get posted values, if any
 if (sizeof($_POST) > 0) {
 
-	echo "<pre>";
-	print_r($_POST);
-	echo "</pre>";
+	$target_domain_uuid = check_str($_POST["target_domain_uuid"]);
+	$default_setting_uuids = $_POST["default_setting_uuids"];
+
+	if ($target_domain_uuid != '' && sizeof($default_setting_uuids) > 0) {
+
+		$settings_copied = 0;
+
+		foreach ($default_setting_uuids as $default_setting_uuid) {
+
+			// get default setting from db
+			$sql = "select * from v_default_settings ";
+			$sql .= "where default_setting_uuid = '".$default_setting_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$default_setting_category = $row["default_setting_category"];
+				$default_setting_subcategory = $row["default_setting_subcategory"];
+				$default_setting_name = $row["default_setting_name"];
+				$default_setting_value = $row["default_setting_value"];
+				$default_setting_order = $row["default_setting_order"];
+				$default_setting_enabled = $row["default_setting_enabled"];
+				$default_setting_description = $row["default_setting_description"];
+				break; //limit to 1 row
+			}
+			unset ($prep_statement);
+
+			// check if exists
+			$sql = "select domain_setting_uuid from v_domain_settings ";
+			$sql .= "where domain_uuid = '".$target_domain_uuid."' ";
+			$sql .= "and domain_setting_category = '".$default_setting_category."' ";
+			$sql .= "and domain_setting_subcategory = '".$default_setting_subcategory."' ";
+			$sql .= "and domain_setting_name = '".$default_setting_name."' ";
+			$sql .= "and domain_setting_name <> 'array' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			if (sizeof($result) > 0) {
+				foreach ($result as &$row) {
+					$target_domain_setting_uuid = $row["domain_setting_uuid"];
+					break;
+				}
+				$action = "update";
+			}
+			else {
+				$action = "add";
+			}
+			unset ($prep_statement);
+
+			// fix null
+			$default_setting_order = ($default_setting_order != '') ? $default_setting_order : 'null';
+
+			if ($action == "add" && permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+
+				// insert for target domain
+				$sql = "insert into v_domain_settings ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "domain_setting_uuid, ";
+				$sql .= "domain_setting_category, ";
+				$sql .= "domain_setting_subcategory, ";
+				$sql .= "domain_setting_name, ";
+				$sql .= "domain_setting_value, ";
+				$sql .= "domain_setting_order, ";
+				$sql .= "domain_setting_enabled, ";
+				$sql .= "domain_setting_description ";
+				$sql .= ")";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'".$target_domain_uuid."', ";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'".$default_setting_category."', ";
+				$sql .= "'".$default_setting_subcategory."', ";
+				$sql .= "'".$default_setting_name."', ";
+				$sql .= "'".$default_setting_value."', ";
+				$sql .= " ".$default_setting_order." , ";
+				$sql .= "'".$default_setting_enabled."', ";
+				$sql .= "'".$default_setting_description."' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				$settings_copied++;
+
+			} // add
+
+			if ($action == "update" && permission_exists('domain_setting_edit')) {
+
+				$sql = "update v_domain_settings set ";
+				$sql .= "domain_setting_category = '".$default_setting_category."', ";
+				$sql .= "domain_setting_subcategory = '".$default_setting_subcategory."', ";
+				$sql .= "domain_setting_name = '".$default_setting_name."', ";
+				$sql .= "domain_setting_value = '".$default_setting_value."', ";
+				$sql .= "domain_setting_order = ".$default_setting_order.", ";
+				$sql .= "domain_setting_enabled = '".$default_setting_enabled."', ";
+				$sql .= "domain_setting_description = '".$default_setting_description."' ";
+				$sql .= "where domain_uuid = '".$target_domain_uuid."' ";
+				$sql .= "and domain_setting_uuid = '".$target_domain_setting_uuid."' ";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+				$settings_copied++;
+
+			} // update
+
+		} // foreach
+
+		// set message
+		$_SESSION["message"] = "Settings Copied: ".$settings_copied;
+
+	}
+	else {
+		// set message
+		$_SESSION["message"] = "No Settings Checked or Invalid Domain";
+	}
+
+	header("Location: default_settings.php");
 	exit;
 
-}
+} // post
+
+
 
 require_once "resources/header.php";
 $document['title'] = $text['title-default_settings'];
@@ -60,26 +176,26 @@ require_once "resources/paging.php";
 	$order = $_GET["order"];
 
 // copy settings javascript
-?>
-<script language='javascript' type='text/javascript'>
-	function show_domains() {
-		$('#button_copy').fadeOut('slow', function() {
-			$('#button_back').fadeIn('slow');
-			$('#target_domain_uuid').fadeIn('slow');
-			$('#button_paste').fadeIn('slow');
-		});
-	}
-
-	function hide_domains() {
-		$('#button_back').fadeOut('slow');
-		$('#target_domain_uuid').fadeOut('slow');
-		$('#button_paste').fadeOut('slow', function() {
-			$('#button_copy').fadeIn('slow');
-			document.getElementById('target_domain_uuid').selectedIndex = 0;
-		});
-	}
-</script>
-<?php
+if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+	echo "<script language='javascript' type='text/javascript'>";
+	echo "	var fade_speed = 400;";
+	echo "	function show_domains() {";
+	echo "		$('#button_copy').fadeOut(fade_speed, function() {";
+	echo "			$('#button_back').fadeIn(fade_speed);";
+	echo "			$('#target_domain_uuid').fadeIn(fade_speed);";
+	echo "			$('#button_paste').fadeIn(fade_speed);";
+	echo "		});";
+	echo "	}";
+	echo "	function hide_domains() {";
+	echo "		$('#button_back').fadeOut(fade_speed);";
+	echo "		$('#target_domain_uuid').fadeOut(fade_speed);";
+	echo "		$('#button_paste').fadeOut(fade_speed, function() {";
+	echo "			$('#button_copy').fadeIn(fade_speed);";
+	echo "			document.getElementById('target_domain_uuid').selectedIndex = 0;";
+	echo "		});";
+	echo "	}";
+	echo "</script>";
+}
 
 //show the content
 	echo "<form name='form_copy' id='form_copy' method='post' action=''>";
@@ -94,7 +210,7 @@ require_once "resources/paging.php";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-default_settings']."</b></td>\n";
 	echo "		<td width='50%' align='right'>";
-	if (permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
 		echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
 		echo "		<input type='button' class='btn' style='display: none;' id='button_back' alt='".$text['button-back']."' onclick='hide_domains();' value='".$text['button-back']."'> ";
 		echo "		<select class='formfld' style='display: none; width: auto;' name='target_domain_uuid' id='target_domain_uuid'>\n";
@@ -103,7 +219,7 @@ require_once "resources/paging.php";
 			echo "		<option value='".$domain["domain_uuid"]."'>".$domain["domain_name"]."</option>\n";
 		}
 		echo "		</select>\n";
-		echo "		<input type='submit' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."'>";
+		echo "		<input type='button' class='btn' id='button_paste' style='display: none;' alt='".$text['button-paste']."' value='".$text['button-paste']."' onclick='document.forms.form_copy.submit();'>";
 	}
 	else {
 		echo "		&nbsp;";
@@ -185,8 +301,8 @@ require_once "resources/paging.php";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				if (permission_exists('domain_setting_add')) {
-					echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' id='check_all_".strtolower($row['default_setting_category'])."' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
+				if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+					echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
 				}
 				echo "<th>".$text['label-subcategory']."</th>";
 				echo "<th>".$text['label-type']."</th>";
@@ -204,9 +320,9 @@ require_once "resources/paging.php";
 
 			$tr_link = (permission_exists('default_setting_edit')) ? "href='default_setting_edit.php?id=".$row['default_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			if (permission_exists('domain_setting_add')) {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='default_setting_uuid[]' id='checkbox_".strtolower($row['default_setting_subcategory'])."' value='".$row['default_setting_uuid']."'></td>\n";
-				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.strtolower($row['default_setting_subcategory']);
+			if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='default_setting_uuids[]' id='checkbox_".$row['default_setting_uuid']."' value='".$row['default_setting_uuid']."'></td>\n";
+				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.$row['default_setting_uuid'];
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (permission_exists('default_setting_edit')) {
@@ -259,7 +375,7 @@ require_once "resources/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='".((permission_exists('domain_setting_add')) ? 7 : 6)."' align='left'>\n";
+	echo "<td colspan='".((permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ? 7 : 6)."' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
