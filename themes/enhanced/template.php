@@ -763,7 +763,7 @@ legend {
 		right: 0px;
 		top: 0px;
 		bottom: 0px;
-		width: 350px;
+		width: 360px;
 		overflow: hidden;
 		display: none;
 	}
@@ -779,9 +779,9 @@ legend {
 		font-size: 10pt;
 		overflow: hidden;
 		background-color: #fff;
-		-webkit-box-shadow: 0px 0px 5px #888;
-		-moz-box-shadow: 0px 0px 5px #888;
-		box-shadow: 0px 0px 5px #888;
+		-webkit-box-shadow: 0px 0px 10px #888;
+		-moz-box-shadow: 0px 0px 10px #888;
+		box-shadow: 0px 0px 10px #888;
 	}
 
 	#domains_header {
