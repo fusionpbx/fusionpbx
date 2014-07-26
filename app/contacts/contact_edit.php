@@ -205,6 +205,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$document['title'] = $text['title-contact-add'];
 	}
 
+// qr code generation
 	$_GET['type'] = "text";
 	$qr_vcard = true;
 	include "contacts_vcard.php";
