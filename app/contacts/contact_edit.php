@@ -205,6 +205,57 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$document['title'] = $text['title-contact-add'];
 	}
 
+	$_GET['type'] = "text";
+	$qr_vcard = true;
+	include "contacts_vcard.php";
+	echo "<input type='hidden' id='qr_vcard' value=\"".$qr_vcard."\">";
+	echo "<style>";
+	echo "	#qr_code_container {";
+	echo "		z-index: 999999; ";
+	echo "		position: absolute; ";
+	echo "		left: 0px; ";
+	echo "		top: 0px; ";
+	echo "		right: 0px; ";
+	echo "		bottom: 0px; ";
+	echo "		text-align: center; ";
+	echo "		vertical-align: middle;";
+	echo "	}";
+	echo "	#qr_code {";
+	echo "		display: block; ";
+	echo "		width: 650px; ";
+	echo "		height: 650px; ";
+	echo "		-webkit-box-shadow: 0px 1px 20px #888; ";
+	echo "		-moz-box-shadow: 0px 1px 20px #888; ";
+	echo "		box-shadow: 0px 1px 20px #888;";
+	echo "	}";
+	echo "</style>";
+	echo "<script src='".PROJECT_PATH."/resources/jquery/jquery.qrcode-0.8.0.min.js'></script>";
+	echo "<script language='JavaScript' type='text/javascript'>";
+	echo "	$(document).ready(function() {";
+	echo "		$(window).load(function() {";
+	echo "			$('#qr_code').qrcode({ ";
+	echo "				render: 'canvas', ";
+	echo "				minVersion: 6, ";
+	echo "				maxVersion: 40, ";
+	echo "				ecLevel: 'H', ";
+	echo "				size: 650, ";
+	echo "				radius: 0.2, ";
+	echo "				quiet: 6, ";
+	echo "				background: '#fff', ";
+	echo "				label: 'FusionPBX', ";
+	echo "				fontname: 'san-serif', ";
+	echo "				fontcolor: '#000', ";
+	echo "				mode: 4, ";
+	echo "				mSize: 0.2, ";
+	echo "				mPosX: 0.5, ";
+	echo "				mPosY: 0.5, ";
+	echo "				image: $('#img-buffer')[0], ";
+	echo "				text: document.getElementById('qr_vcard').value ";
+	echo "			});";
+	echo "		});";
+	echo "	});";
+	echo "</script>";
+	echo "<img id='img-buffer' src='qr_code_logo.png' style='display: none;'>";
 
 //show the content
 	echo "<div align='center'>";
@@ -226,7 +277,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"window.location='contacts_vcard.php?id=$contact_uuid&type=image'\" value='".$text['button-qr_code']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=$contact_uuid&type=download'\" value='".$text['button-vcard']."'>\n";
 	}
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {

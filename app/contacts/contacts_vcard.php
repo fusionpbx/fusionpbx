@@ -69,8 +69,8 @@ if (count($_GET)>0) {
 		$vcard->data['company'] = $contact_organization;
 		$vcard->data['first_name'] = $contact_name_given;
 		$vcard->data['last_name'] = $contact_name_family;
-		$vcard->data['contact_email1'] = $contact_email;
-		$vcard->data['contact_url'] = $contact_url;
+		$vcard->data['email1'] = $contact_email;
+		$vcard->data['url'] = $contact_url;
 
 		if ($_GET['type'] == "image" || $_GET['type'] == "html") {
 			//don't add this to the QR code at this time
@@ -142,13 +142,25 @@ if (count($_GET)>0) {
 		if ($_GET['type'] == "text") {
 			$vcard->build();
 			$content = $vcard->card;
-			echo $content;
+			if ($qr_vcard) {
+				$qr_vcard = $content;
+			}
+			else {
+				echo $content;
+			}
 		}
 
 	//show the vcard in an image qr code
 		if ($_GET['type'] == "image" || $_GET['type'] == "html") {
 			$vcard->build();
 			$content = $vcard->card;
+
+			if (isset($_GET['debug'])) {
+				echo "<pre>";
+				print_r($vcard->data);
+				echo "</pre>";
+				exit;
+			}
 
 			//include
 				require_once PROJECT_PATH."resources/qr/qrcode.php";

@@ -736,39 +736,46 @@ function confirmdelete(url) {
 		}
 	?>
 
-<?php
-
-//get a random background image
-	$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/default/images/backgrounds';
-	$dir_list = opendir($dir);
-	$v_background_array = array();
-	$x = 0;
-	while (false !== ($file = readdir($dir_list))) {
-		if ($file != "." AND $file != ".."){
-			$new_path = $dir.'/'.$file;
-			$level = explode('/',$new_path);
-			if (substr($new_path, -4) == ".svn") {
-				//ignore .svn dir and subdir
+	<?php
+	//get a random background image
+		$dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes/default/images/backgrounds';
+		$dir_list = opendir($dir);
+		$v_background_array = array();
+		$x = 0;
+		while (false !== ($file = readdir($dir_list))) {
+			if ($file != "." AND $file != ".."){
+				$new_path = $dir.'/'.$file;
+				$level = explode('/',$new_path);
+				if (substr($new_path, -4) == ".svn") {
+					//ignore .svn dir and subdir
+				}
+				elseif (substr($new_path, -3) == ".db") {
+					//ignore .db files
+				}
+				else {
+					$new_path = str_replace($_SERVER["DOCUMENT_ROOT"], "", $new_path);
+					$v_background_array[] = $new_path;
+				}
+				if ($x > 1000) { break; };
+				$x++;
 			}
-			elseif (substr($new_path, -3) == ".db") {
-				//ignore .db files
-			}
-			else {
-				$new_path = str_replace($_SERVER["DOCUMENT_ROOT"], "", $new_path);
-				$v_background_array[] = $new_path;
-			}
-			if ($x > 1000) { break; };
-			$x++;
 		}
-	}
-	if (strlen($_SESSION['background_image'])== 0) {
-		$_SESSION['background_image'] = $v_background_array[array_rand($v_background_array, 1)];
-	}
+		if (strlen($_SESSION['background_image'])== 0) {
+			$_SESSION['background_image'] = $v_background_array[array_rand($v_background_array, 1)];
+		}
 
-	//show the background
-	echo "<div id=\"page-background\"><img src=\"".$_SESSION['background_image']."\" width='100%' height='100%' alt=''></div>\n";
-?>
+		//show the background
+		echo "<div id=\"page-background\"><img src=\"".$_SESSION['background_image']."\" width='100%' height='100%' alt=''></div>\n";
+	?>
 
+	<?php
+		// qr code container for contacts
+		echo "<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>";
+		echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>";
+		echo "		<span id='qr_code' onclick=\"$('#qr_code_container').fadeOut(400);\"></span>";
+		echo "	</td></tr></table>";
+		echo "</div>";
+	?>
 
 <div id="page" align='center'>
 <table width='90%' class='border.disabled' border='0' cellpadding='0' cellspacing='7'>

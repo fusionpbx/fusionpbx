@@ -44,7 +44,8 @@ class vcard {
 		,"home_state"=>null
 		,"home_postal_code"=>null
 		,"home_country"=>null
-		,"office_tel"=>null
+		,"voice_tel"=>null
+		,"work_tel"=>null
 		,"home_tel"=>null
 		,"cell_tel"=>null
 		,"fax_tel"=>null
@@ -64,7 +65,7 @@ class vcard {
 	/*
 	build() method checks all the values, builds appropriate defaults for
 	missing values, generates the vcard data string.
-	*/  
+	*/
 	function build() {
 		$this->log .= "vcard build() called<br />";
 		/*
@@ -84,20 +85,21 @@ class vcard {
 		$this->card .= "VERSION:3.0\r\n";
 		//$this->card .= "CLASS:".$this->class."\r\n";
 		//$this->card .= "PRODID:-//class_vcard from TroyWolf.com//NONSGML Version 1//EN\r\n";
-		$this->card .= "REV:".$this->revision_date."\r\n";
+//		$this->card .= "REV:".$this->revision_date."\r\n";
 		$this->card .= "FN:".$this->data['display_name']."\r\n";
 		$this->card .= "N:";
 		$this->card .= $this->data['last_name'].";";
-		$this->card .= $this->data['first_name'].";";
+		$this->card .= $this->data['first_name'];
 		if (strlen($this->data['additional_name']) > 0) {
-			$this->card .= $this->data['additional_name'].";";
+			$this->card .= ";".$this->data['additional_name'];
 		}
 		if (strlen($this->data['name_prefix']) > 0) {
-			$this->card .= $this->data['name_prefix'].";";
+			$this->card .= ";".$this->data['name_prefix'];
 		}
 		if (strlen($this->data['name_suffix']) > 0) {
-			$this->card .= $this->data['name_suffix']."\r\n";
+			$this->card .= ";".$this->data['name_suffix'];
 		}
+		$this->card .= "\r\n";
 		if ($this->data['nickname']) { $this->card .= "NICKNAME:".$this->data['contact_nickname']."\r\n"; }
 		if ($this->data['title']) { $this->card .= "TITLE:".$this->data['title']."\r\n"; }
 		if ($this->data['company']) { $this->card .= "ORG:".$this->data['company']; }
@@ -156,7 +158,7 @@ class vcard {
 				$this->card .= $this->data['home_city'].";";
 			}
 			if (strlen($this->data['home_state']) > 0) {
-				$this->card .= $this->data['home_state']."";
+				$this->card .= $this->data['home_state'].";";
 			}
 			if (strlen($this->data['home_postal_code']) > 0) {
 				$this->card .= $this->data['home_postal_code'].";";
@@ -166,19 +168,20 @@ class vcard {
 			}
 			$this->card .= "\r\n";
 		}
-		if ($this->data['email1']) { $this->card .= "EMAIL;TYPE=internet,pref:".$this->data['email1']."\r\n"; }
-		if ($this->data['email2']) { $this->card .= "EMAIL;TYPE=internet:".$this->data['email2']."\r\n"; }
-		if ($this->data['office_tel']) { $this->card .= "TEL;TYPE=work,voice:".$this->data['office_tel']."\r\n"; }
-		if ($this->data['home_tel']) { $this->card .= "TEL;TYPE=home,voice:".$this->data['home_tel']."\r\n"; }
-		if ($this->data['cell_tel']) { $this->card .= "TEL;TYPE=cell,voice:".$this->data['cell_tel']."\r\n"; }
-		if ($this->data['fax_tel']) { $this->card .= "TEL;TYPE=work,fax:".$this->data['fax_tel']."\r\n"; }
-		if ($this->data['pager_tel']) { $this->card .= "TEL;TYPE=work,pager:".$this->data['pager_tel']."\r\n"; }
-		if ($this->data['url']) { $this->card .= "URL;TYPE=work:".$this->data['url']."\r\n"; }
+		if ($this->data['email1']) { $this->card .= "EMAIL;PREF=1:".$this->data['email1']."\r\n"; }
+		if ($this->data['email2']) { $this->card .= "EMAIL;PREF=2:".$this->data['email2']."\r\n"; }
+		if ($this->data['voice_tel']) { $this->card .= "TEL;TYPE=voice:".$this->data['voice_tel']."\r\n"; }
+		if ($this->data['work_tel']) { $this->card .= "TEL;TYPE=work:".$this->data['work_tel']."\r\n"; }
+		if ($this->data['home_tel']) { $this->card .= "TEL;TYPE=home:".$this->data['home_tel']."\r\n"; }
+		if ($this->data['cell_tel']) { $this->card .= "TEL;TYPE=cell:".$this->data['cell_tel']."\r\n"; }
+		if ($this->data['fax_tel']) { $this->card .= "TEL;TYPE=fax:".$this->data['fax_tel']."\r\n"; }
+		if ($this->data['pager_tel']) { $this->card .= "TEL;TYPE=pager:".$this->data['pager_tel']."\r\n"; }
+		if ($this->data['url']) { $this->card .= "URL:".$this->data['url']."\r\n"; }
 		if ($this->data['birthday']) { $this->card .= "BDAY:".$this->data['birthday']."\r\n"; }
 		if ($this->data['role']) { $this->card .= "ROLE:".$this->data['role']."\r\n"; }
 		if ($this->data['note']) { $this->card .= "NOTE:".$this->data['note']."\r\n"; }
 		$this->card .= "TZ:".$this->data['timezone']."\r\n";
-		$this->card .= "END:VCARD\r\n";
+		$this->card .= "END:VCARD";
 	}
 
 	/*
