@@ -336,7 +336,7 @@ include "root.php";
 			}
 
 		//database create table
-			private function db_create_table ($apps, $db_type, $table) {
+			public function db_create_table ($apps, $db_type, $table) {
 				foreach ($apps as $x => &$app) {
 					foreach ($app['db'] as $y => $row) {
 						if ($row['table'] == $table) {
