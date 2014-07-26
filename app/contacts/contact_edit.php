@@ -450,7 +450,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION["contact"]["title"])) {
 			sort($_SESSION["contact"]["title"]);
-			echo "	<select class='formfld' style='width:85%;' name='contact_title'>\n";
+			echo "	<select class='formfld' name='contact_title'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["title"] as $row) {
 				if ($row == $contact_title) {
@@ -477,7 +477,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION["contact"]["category"])) {
 			sort($_SESSION["contact"]["category"]);
-			echo "	<select class='formfld' style='width:85%;' name='contact_category'>\n";
+			echo "	<select class='formfld' name='contact_category'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["category"] as $row) {
 				if ($row == $contact_category) {
@@ -504,7 +504,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION["contact"]["role"])) {
 			sort($_SESSION["contact"]["role"]);
-			echo "	<select class='formfld' style='width:85%;' name='contact_role'>\n";
+			echo "	<select class='formfld' name='contact_role'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["role"] as $row) {
 				if ($row == $contact_role) {
