@@ -242,9 +242,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "				radius: 0.2, ";
 	echo "				quiet: 6, ";
 	echo "				background: '#fff', ";
-	echo "				label: 'FusionPBX', ";
-	echo "				fontname: 'san-serif', ";
-	echo "				fontcolor: '#000', ";
 	echo "				mode: 4, ";
 	echo "				mSize: 0.2, ";
 	echo "				mPosX: 0.5, ";
@@ -255,7 +252,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		});";
 	echo "	});";
 	echo "</script>";
-	echo "<img id='img-buffer' src='qr_code_logo.png' style='display: none;'>";
+	echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
 
 //show the content
 	echo "<div align='center'>";
