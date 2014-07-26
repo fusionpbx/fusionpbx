@@ -25,6 +25,11 @@
 */
 include "root.php";
 
+//clear the session variables
+	session_start();
+	session_unset();
+	session_destroy();
+
 //if config.php file does not exist then redirect to the install page
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 		//do nothing
