@@ -1098,6 +1098,15 @@ legend {
 	}
 	?>
 
+	<?php
+	// qr code container for contacts
+	echo "<div id='qr_code_container' style='display: none;' onclick='$(this).fadeOut(400);'>";
+	echo "	<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'><tr><td align='center' valign='middle'>";
+	echo "		<span id='qr_code' onclick=\"$('#qr_code_container').fadeOut(400);\"></span>";
+	echo "	</td></tr></table>";
+	echo "</div>";
+	?>
+
 	<div id="page" align='center'>
 	<table width='90%' class='border.disabled' border='0' cellpadding='0' cellspacing='0'>
 		<tr>
