@@ -41,11 +41,11 @@ else {
 	}
 
 //set the http values as php variables
-	$search = check_str($_GET["search"]);
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
-	$dialplan_context = check_str($_GET["dialplan_context"]);
-	$app_uuid = check_str($_GET["app_uuid"]);
+	$search = check_str($_REQUEST["search"]);
+	$order_by = check_str($_REQUEST["order_by"]);
+	$order = check_str($_REQUEST["order"]);
+	$dialplan_context = check_str($_REQUEST["dialplan_context"]);
+	$app_uuid = check_str($_REQUEST["app_uuid"]);
 
 //includes
 	require_once "resources/header.php";
