@@ -98,10 +98,10 @@ else {
 	echo "	<form method='get' action=''>\n";
 	echo "	<td width='50%' align='right'>\n";
 	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
-	if (strlen($app_uuid) == 0) {
+	if (strlen($app_uuid) > 0) {
 		echo "		<input type='hidden' class='txt' name='app_uuid' value='$app_uuid'>";
 	}
-	if (strlen($order_by) == 0) {
+	if (strlen($order_by) > 0) {
 		echo "		<input type='hidden' class='txt' name='order' value='$order_by'>";
 		echo "		<input type='hidden' class='txt' name='order' value='$order'>";
 	}
