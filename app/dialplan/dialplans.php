@@ -157,7 +157,7 @@ else {
 		$sql .= "and (";
 		$sql .= "	dialplan_uuid = '".$search."' ";
 		$sql .= " 	or dialplan_context like '%".$search."%' ";
-		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_name like '%".$search."%' ";
 		$sql .= " 	or dialplan_number like '%".$search."%' ";
 		$sql .= " 	or dialplan_continue like '%".$search."%' ";
 		$sql .= " 	or dialplan_order like '%".$search."%' ";
@@ -201,7 +201,7 @@ else {
 		$sql .= "and (";
 		$sql .= "	dialplan_uuid = '".$search."' ";
 		$sql .= " 	or dialplan_context like '%".$search."%' ";
-		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_name like '%".$search."%' ";
 		$sql .= " 	or dialplan_number like '%".$search."%' ";
 		$sql .= " 	or dialplan_continue like '%".$search."%' ";
 		$sql .= " 	or dialplan_order like '%".$search."%' ";
