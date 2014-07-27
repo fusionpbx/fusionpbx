@@ -261,7 +261,7 @@ if ($db_type == "pgsql") {
 	}
 
 //get the software name
-	if (strlen($_SESSION["domain_uuid"]) == 0) {
+	if (!isset($_SESSION["software_name"])) {
 		$sql = "select * from v_software ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
