@@ -102,13 +102,25 @@ require_once "resources/require.php";
 //use the mac address to get the vendor
 	$device_vendor = device::get_vendor($mac);
 
-//check to see if the IP address is in the CIDR range
+//keep backwards compatibility
 	if (strlen($provision["cidr"]) > 0) {
+		$_SESSION['provision']["cidr"][] = $provision["cidr"];
+	}
+
+//check the cidr range
+	if (is_array($_SESSION['provision']["cidr"])) {
 		function check_cidr ($cidr,$ip_address) {
 			list ($subnet, $mask) = explode ('/', $cidr);
 			return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
 		}
-		if (!check_cidr($provision["cidr"], $_SERVER['REMOTE_ADDR'])) {
+		$found = false;
+		foreach($_SESSION['provision']["cidr"] as $cidr) {
+			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
+				$found = true;
+				break;
+			}
+		}
+		if (!$found) {
 			echo "access denied";
 			exit;
 		}
