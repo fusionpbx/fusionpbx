@@ -213,6 +213,11 @@
 		$text['message-copy_failed']['pt-pt'] = "Nenhuma configuração marcada ou domínio inválido";
 		$text['message-copy_failed']['fr-fr'] = "Pas de paramètres enregistrés ou domaine non valide";
 
+		$text['message-delete_failed']['en-us'] = "No Settings Checked";
+		$text['message-delete_failed']['es-cl'] = "No hay ajustes facturado";
+		$text['message-delete_failed']['pt-pt'] = "Nenhuma configuração marcada";
+		$text['message-delete_failed']['fr-fr'] = "Pas de paramètres enregistrés";
+
 		$text['message-required']['en-us'] = "Please provide: ";
 		$text['message-required']['es-cl'] = "Por favor indique: ";
 		$text['message-required']['pt-pt'] = "Por favor indique: ";
