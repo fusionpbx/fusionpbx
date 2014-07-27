@@ -260,6 +260,18 @@ if ($db_type == "pgsql") {
 			unset($result, $prep_statement);
 	}
 
+//get the software name
+	if (strlen($_SESSION["domain_uuid"]) == 0) {
+		$sql = "select * from v_software ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		if ($prep_statement) {
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$_SESSION["software_name"] = $row['software_name'];
+		}
+		unset($prep_statement, $result);
+	}
+
 //set the setting arrays
 	if (!isset($_SESSION['domain']['menu'])){
 		require "resources/classes/domains.php";
