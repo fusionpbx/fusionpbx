@@ -123,18 +123,34 @@
 				end
 			end
 	
-		--set call forward
+		--set follow me
 			if (enabled == "true") then
 				--set follow_me_enabled
 					follow_me_enabled = "true";
+				--answer and play a tone
+					session:answer();
+					if (string.len(call_flow_anti_label) > 0) then
+						api = freeswitch.API();
+						reply = api:executeString("uuid_display "..session:get_uuid().." Follow Me Activated ");
+					end
+					session:execute("sleep", "2000");
+					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 			end
 		
-		--unset call forward
+		--unset follow me
 			if (enabled == "false") then
 				--set follow_me_enabled
 					follow_me_enabled = "false";
+				--answer and play a tone
+					session:answer();
+					if (string.len(call_flow_anti_label) > 0) then
+						api = freeswitch.API();
+						reply = api:executeString("uuid_display "..session:get_uuid().." Follow Me Cancelled ");
+					end
+					session:execute("sleep", "2000");
+					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 			end
