@@ -155,12 +155,13 @@ else {
 	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	dialplan_uuid = '".$search."' ";
-		$sql .= " 	or dialplan_context like '%".$search."%' ";
+		$sql .= " 	dialplan_context like '%".$search."%' ";
 		$sql .= " 	or dialplan_name like '%".$search."%' ";
 		$sql .= " 	or dialplan_number like '%".$search."%' ";
 		$sql .= " 	or dialplan_continue like '%".$search."%' ";
-		$sql .= " 	or dialplan_order like '%".$search."%' ";
+		if (is_numeric($search)) {
+			$sql .= " 	or dialplan_order = '".$search."' ";
+		}
 		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
 		$sql .= " 	or dialplan_description like '%".$search."%' ";
 		$sql .= ") ";
@@ -199,12 +200,13 @@ else {
 	}
 	if (strlen($search) > 0) {
 		$sql .= "and (";
-		$sql .= "	dialplan_uuid = '".$search."' ";
-		$sql .= " 	or dialplan_context like '%".$search."%' ";
+		$sql .= " 	dialplan_context like '%".$search."%' ";
 		$sql .= " 	or dialplan_name like '%".$search."%' ";
 		$sql .= " 	or dialplan_number like '%".$search."%' ";
 		$sql .= " 	or dialplan_continue like '%".$search."%' ";
-		$sql .= " 	or dialplan_order like '%".$search."%' ";
+		if (is_numeric($search)) {
+			$sql .= " 	or dialplan_order = '".$search."' ";
+		}
 		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
 		$sql .= " 	or dialplan_description like '%".$search."%' ";
 		$sql .= ") ";
@@ -380,4 +382,5 @@ else {
 	unset ($key);
 	unset ($val);
 	unset ($c);
+
 ?>
