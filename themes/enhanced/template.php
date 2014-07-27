@@ -109,7 +109,7 @@ DIV#default_login {
 #default_login_container {
 	display: block;
 	width: 300px;
-	height: 267px;
+	height: <?php echo ($_SESSION['login']['domain_name.visible']['boolean']) ? '300px' : '267px'; ?>;
 	<?php
 	if (
 		isset($_SESSION['theme']['background_image']['text']) ||
