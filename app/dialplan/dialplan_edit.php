@@ -799,7 +799,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";
-		echo "</table";
+		echo "</table>";
 
 	echo "</form>";
 

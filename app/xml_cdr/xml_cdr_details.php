@@ -521,11 +521,11 @@ else {
 
 			echo "	</table>";
 			echo "	<br /><br />\n";
-	}
 
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "</table>";
+	}
 
 //testing
 	//echo "<pre>\n";

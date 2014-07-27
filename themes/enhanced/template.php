@@ -1337,17 +1337,8 @@ legend {
 		<?php
 	}
 
-	//if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
-		//$copyright .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='copyright' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
-		//echo "<div id='copyright' style='position: absolute; z-index; 10000;'><span class='copyright'>".$copyright."</span></div>";
-	//}		
-	//else { 		
-		echo "<!--\n"; 		
-		echo " http://www.fusionpbx.com \n"; 		
-		echo " Copyright 2008 - ".date("Y")." \n"; 		
-		echo " All rights reserved.\n"; 		
-		echo "-->\n"; 		
-	//}
+	$copyright .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='copyright' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
+	echo "<div id='copyright' style='position: absolute; z-index; 10000;'><span class='copyright'>".$copyright."</span></div>";
 	?>
 
 </body>
