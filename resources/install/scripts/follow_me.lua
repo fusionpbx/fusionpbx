@@ -61,7 +61,6 @@
 			session:answer();
 	
 		--get the variables
-			enabled = session:getVariable("enabled");
 			pin_number = session:getVariable("pin_number");
 			sounds_dir = session:getVariable("sounds_dir");
 			domain_uuid = session:getVariable("domain_uuid");
@@ -100,7 +99,19 @@
 				--freeswitch.consoleLog("NOTICE", "[call forward] extension "..row.extension.."\n");
 				--freeswitch.consoleLog("NOTICE", "[call forward] accountcode "..row.accountcode.."\n");
 			end);
-	
+
+		--determine whether to update the dial string
+			enabled = "false";
+			sql = "select * from v_follow_me ";
+			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+			sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
+			if (debug["sql"]) then
+				freeswitch.consoleLog("notice", "[follow_me] "..sql.."\n");
+			end
+			status = dbh:query(sql, function(row)
+				enabled = row.follow_me_enabled;
+			end);
+
 		--set the dial string
 			if (enabled == "true") then
 				dial_string = "{presence_id="..forward_all_destination.."@"..domain_name;
@@ -154,7 +165,7 @@
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 			end
-	
+
 		--enable or disable follow me
 			if (follow_me_uuid ~= nil) then
 				sql = "update v_follow_me set ";
