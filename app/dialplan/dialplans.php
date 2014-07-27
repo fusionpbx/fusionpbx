@@ -41,6 +41,7 @@ else {
 	}
 
 //set the http values as php variables
+	$search = check_str($_GET["search"]);
 	$order_by = check_str($_GET["order_by"]);
 	$order = check_str($_GET["order"]);
 	$dialplan_context = check_str($_GET["dialplan_context"]);
@@ -93,6 +94,14 @@ else {
 	}
 	echo "		</span>\n";
 	echo "	</td>\n";
+
+	echo "	<form method='get' action=''>\n";
+	echo "	<td width='50%' align='right'>\n";
+	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
+	echo "		<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "	</td>\n";
+	echo "	</form>\n";
+
 	//echo "	<td align='right'>\n";
 	//if (permission_exists('dialplan_advanced_view') && strlen($app_uuid) == 0) {
 	//	echo "		<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"document.location.href='dialplan_advanced.php';\">\n";
@@ -144,6 +153,18 @@ else {
 	else {
 		$sql .= "and app_uuid = '".$app_uuid."' ";
 	}
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "	dialplan_uuid = '".$search."' ";
+		$sql .= " 	or dialplan_context like '%".$search."%' ";
+		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_continue like '%".$search."%' ";
+		$sql .= " 	or dialplan_order like '%".$search."%' ";
+		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
+		$sql .= " 	or dialplan_description like '%".$search."%' ";
+		$sql .= ") ";
+	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
@@ -175,6 +196,18 @@ else {
 	}
 	else {
 		$sql .= "and app_uuid = '".$app_uuid."' ";
+	}
+	if (strlen($search) > 0) {
+		$sql .= "and (";
+		$sql .= "	dialplan_uuid = '".$search."' ";
+		$sql .= " 	or dialplan_context like '%".$search."%' ";
+		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_number like '%".$search."%' ";
+		$sql .= " 	or dialplan_continue like '%".$search."%' ";
+		$sql .= " 	or dialplan_order like '%".$search."%' ";
+		$sql .= " 	or dialplan_enabled like '%".$search."%' ";
+		$sql .= " 	or dialplan_description like '%".$search."%' ";
+		$sql .= ") ";
 	}
 	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; } else { $sql .= "order by dialplan_order asc, dialplan_name asc "; }
 	$sql .= " limit $rows_per_page offset $offset ";
