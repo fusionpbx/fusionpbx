@@ -25,7 +25,7 @@
 */
 include "root.php";
 
-//clear the session variables
+// start the session
 	session_start();
 
 //if config.php file does not exist then redirect to the install page
@@ -44,6 +44,12 @@ include "root.php";
 		header("Location: ".PROJECT_PATH."/resources/install.php");
 		exit;
 	}
+
+// if not logged in, clear the session variables
+if (strlen($_SESSION["username"]) == 0) {
+	session_unset();
+	session_destroy();
+}
 
 //adds multiple includes
 	require_once "resources/require.php";
