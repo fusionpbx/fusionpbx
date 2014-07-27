@@ -465,6 +465,11 @@
 		$text['button-back']['pt-pt'] = "Voltar";
 		$text['button-back']['fr-fr'] = "Retour";
 
+		$text['button-search']['en-us'] = "Search";
+		$text['button-search']['es-cl'] = "Buscar";
+		$text['button-search']['pt-pt'] = "Pesquisar";
+		$text['button-search']['fr-fr'] = "Chercher";
+
 		$text['button-copy']['en-us'] = "Copy";
 		$text['button-copy']['es-cl'] = "Copiar";
 		$text['button-copy']['pt-pt'] = "Copiar";
