@@ -95,21 +95,32 @@ if (
 	?>
 <?php } ?>
 
-#default_login {
-	background-color: #fff;
+DIV#default_login {
+	z-index: 1000;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+#default_login_container {
 	display: block;
 	width: 300px;
-	padding: 30px;
+	height: 267px;
 	<?php
 	if (
 		isset($_SESSION['theme']['background_image']['text']) ||
 		$_SESSION['theme']['background_color'][0] != '' ||
 		$_SESSION['theme']['background_color'][1] != ''
 		) { ?>
-		opacity: 0.93;
-		filter:alpha(opacity=93);
-		-moz-opacity:0.93;
-		-khtml-opacity: 0.93;
+		background-color: <?php echo $_SESSION['theme']['login_color']['text']; ?>;
+		opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
+		filter: alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['login_opacity']['text']); ?>);
+		-moz-opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
+		-khtml-opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
@@ -1297,11 +1308,7 @@ legend {
 				<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 					<tr>
 						<td align='center' valign='middle'>
-							<span id='default_login'>
-								<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo PROJECT_PATH; ?>/themes/enhanced/images/logo.png'></a>
-								<br />
-								<!--{body}-->
-							</span>
+							<span id='default_login_container'></span>
 							<br /><br /><br />
 						</td>
 					</tr>
@@ -1313,6 +1320,23 @@ legend {
 	</div>
 
 	<?php
+	if ($default_login) {
+		?>
+		<div id="default_login">
+			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
+				<tr>
+					<td align='center' valign='middle'>
+						<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo PROJECT_PATH; ?>/themes/enhanced/images/logo.png'></a>
+						<br />
+						<!--{body}-->
+						<br /><br /><br />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<?php
+	}
+
 	$copyright .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='copyright' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
 	echo "<div id='copyright' style='position: absolute; z-index; 10000;'><span class='copyright'>".$copyright."</span></div>";
 	?>

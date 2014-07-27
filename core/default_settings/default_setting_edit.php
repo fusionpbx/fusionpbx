@@ -413,7 +413,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 		echo "	<input class='formfld' type='password' name='default_setting_value' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}
-	elseif ($category == "theme" && $subcategory == "background_color" && $name == "array") {
+	elseif (
+		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
+		$category == "theme" && $subcategory == "login_color" && $name == "text"
+		) {
 		// source: http://rightjs.org
 		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
 		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right-colorpicker-src.js' type='text/javascript'></script>";
@@ -436,7 +439,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($name == "array") {
+	if ($name == "array" || $name == '') {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 		echo "    ".$text['label-order']."\n";
