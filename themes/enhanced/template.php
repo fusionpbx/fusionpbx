@@ -95,6 +95,32 @@ if (
 	?>
 <?php } ?>
 
+#default_login {
+	background-color: #fff;
+	display: block;
+	width: 300px;
+	padding: 30px;
+	<?php
+	if (
+		isset($_SESSION['theme']['background_image']['text']) ||
+		$_SESSION['theme']['background_color'][0] != '' ||
+		$_SESSION['theme']['background_color'][1] != ''
+		) { ?>
+		opacity: 0.93;
+		filter:alpha(opacity=93);
+		-moz-opacity:0.93;
+		-khtml-opacity: 0.93;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		-webkit-box-shadow: 0px 1px 20px #888;
+		-moz-box-shadow: 0px 1px 20px #888;
+		box-shadow: 0px 1px 20px #888;
+		<?php
+	}
+	?>
+}
+
 DIV#copyright {
 	background-color: #000;
 	bottom: 0px;
@@ -1271,34 +1297,12 @@ legend {
 				<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 					<tr>
 						<td align='center' valign='middle'>
-
-							<style>
-								#default_login {
-									background-color: #fff;
-									display: block;
-									width: 300px;
-									padding: 30px;
-									opacity: 0.93;
-									filter:alpha(opacity=93);
-									-moz-opacity:0.93;
-									-khtml-opacity: 0.93;
-									-webkit-border-radius: 4px;
-									-moz-border-radius: 4px;
-									border-radius: 4px;
-									-webkit-box-shadow: 0px 1px 20px #888;
-									-moz-box-shadow: 0px 1px 20px #888;
-									box-shadow: 0px 1px 20px #888;
-									padding: 30px;
-								}
-							</style>
-
 							<span id='default_login'>
 								<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo PROJECT_PATH; ?>/themes/enhanced/images/logo.png'></a>
 								<br />
 								<!--{body}-->
 							</span>
 							<br /><br /><br />
-
 						</td>
 					</tr>
 				</table>
