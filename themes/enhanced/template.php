@@ -41,21 +41,17 @@
 html, body {
 	margin: 0;
 	padding: 0;
-	margin-top: 0;
-	margin-bottom: 0;
-	margin-right: 0;
-	margin-left: 0;
 	overflow: hidden;
 }
 
 DIV#page {
 	z-index: 1;
 	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
-	padding: 0px;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 0;
 	overflow: auto;
 }
 
@@ -98,10 +94,10 @@ if (
 DIV#default_login {
 	z-index: 1000;
 	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	width: 100%;
 	height: 100%;
 }
@@ -124,9 +120,9 @@ DIV#default_login {
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		-webkit-box-shadow: 0px 1px 20px #888;
-		-moz-box-shadow: 0px 1px 20px #888;
-		box-shadow: 0px 1px 20px #888;
+		-webkit-box-shadow: 0 1px 20px #888;
+		-moz-box-shadow: 0 1px 20px #888;
+		box-shadow: 0 1px 20px #888;
 		<?php
 	}
 	?>
@@ -134,9 +130,9 @@ DIV#default_login {
 
 DIV#copyright {
 	background-color: #000;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	height: 20px;
 	-khtml-opacity: 0.2;
 	-moz-opacity: 0.2;
@@ -146,7 +142,7 @@ DIV#copyright {
 	opacity: 0.2;
 	text-align: center;
 	vertical-align: middle;
-	padding-bottom: 0px;
+	padding-bottom: 0;
 	padding-top: 8px;
 }
 
@@ -191,7 +187,7 @@ th {
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-right: 7px;
-	padding-left: 0px;
+	padding-left: 0;
 }
 
 th a:link{ color:#3164AD; text-decoration: none; }
@@ -235,7 +231,7 @@ img.list_control_icon {
 	}
 
 form {
-	margin: 0px;
+	margin: 0;
 	}
 
 input.btn, input.button {
@@ -260,9 +256,9 @@ input.btn, input.button {
 	}
 
 input.btn:hover, input.button:hover, img.list_control_icon:hover {
-	box-shadow: 0px 0px 5px #cddaf0;
-	-webkit-box-shadow: 0px 0px 5px #cddaf0;
-	-moz-box-shadow: 0px 0px 5px #cddaf0;
+	box-shadow: 0 0 5px #cddaf0;
+	-webkit-box-shadow: 0 0 5px #cddaf0;
+	-moz-box-shadow: 0 0 5px #cddaf0;
 	opacity: 1.0;
 	-moz-opacity: 1.0;
 	}
@@ -275,9 +271,9 @@ input.txt, textarea.txt, select.txt, .formfld {
 	padding: 5px;
 	border: 1px solid #c0c0c0;
 	background-color: #fff;
-	box-shadow: 0px 0px 3px #cddaf0 inset;
-	-moz-box-shadow: 0px 0px 3px #cddaf0 inset;
-	-webkit-box-shadow: 0px 0px 3px #cddaf0 inset;
+	box-shadow: 0 0 3px #cddaf0 inset;
+	-moz-box-shadow: 0 0 3px #cddaf0 inset;
+	-webkit-box-shadow: 0 0 3px #cddaf0 inset;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -291,9 +287,9 @@ input.txt, .formfld {
 }
 
 input.txt:focus, .formfld:focus {
-	-webkit-box-shadow: 0px 0px 5px #cddaf0;
-	-moz-box-shadow: 0px 0px 5px #cddaf0;
-	box-shadow: 0px 0px 5px #cddaf0;
+	-webkit-box-shadow: 0 0 5px #cddaf0;
+	-moz-box-shadow: 0 0 5px #cddaf0;
+	box-shadow: 0 0 5px #cddaf0;
 	}
 
 select.formfld {
@@ -303,16 +299,16 @@ select.formfld {
 
 .formfld_highlight_bad {
 	border-color: #aa2525;
-	-webkit-box-shadow: 0px 0px 3px #aa2525 inset;
-	-moz-box-shadow: 0px 0px 3px #aa2525 inset;
-	box-shadow: 0px 0px 3px #aa2525 inset;
+	-webkit-box-shadow: 0 0 3px #aa2525 inset;
+	-moz-box-shadow: 0 0 3px #aa2525 inset;
+	box-shadow: 0 0 3px #aa2525 inset;
 	}
 
 .formfld_highlight_good {
 	border-color: #2fb22f;
-	-webkit-box-shadow: 0px 0px 3px #2fb22f inset;
-	-moz-box-shadow: 0px 0px 3px #2fb22f inset;
-	box-shadow: 0px 0px 3px #2fb22f inset;
+	-webkit-box-shadow: 0 0 3px #2fb22f inset;
+	-moz-box-shadow: 0 0 3px #2fb22f inset;
+	box-shadow: 0 0 3px #2fb22f inset;
 	}
 
 input.txt {
@@ -511,7 +507,7 @@ fieldset {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
-	margin: 0px;
+	margin: 0;
 }
 
 legend {
@@ -531,9 +527,9 @@ legend {
 		-moz-border-radius: 4px;
 		border-radius: 4px;
 		padding: 4px;
-		-webkit-box-shadow: 0px 1px 4px #aaa;
-		-moz-box-shadow: 0px 1px 4px #aaa;
-		box-shadow: 0px 1px 4px #aaa;
+		-webkit-box-shadow: 0 1px 4px #aaa;
+		-moz-box-shadow: 0 1px 4px #aaa;
+		box-shadow: 0 1px 4px #aaa;
 	}
 
 	.menu_bg {
@@ -587,9 +583,9 @@ legend {
 			-webkit-border-radius: 4px;
 			-moz-border-radius: 4px;
 			border-radius: 4px;
-			-webkit-box-shadow: 0px 1px 4px #aaa;
-			-moz-box-shadow: 0px 1px 4px #aaa;
-			box-shadow: 0px 1px 4px #aaa;
+			-webkit-box-shadow: 0 1px 4px #aaa;
+			-moz-box-shadow: 0 1px 4px #aaa;
+			box-shadow: 0 1px 4px #aaa;
 			padding: 20px;
 		<?php } else { ?>
 			padding: 10px;
@@ -670,12 +666,12 @@ legend {
 		?>
 		background:#333333;
 		background-color: rgba(20, 20, 20, 0.9);
-		-webkit-border-radius: 0px 0px 3px 3px;
-		-moz-border-radius: 0px 0px 3px 3px;
-		border-radius: 0px 0px 3px 3px;
-		-webkit-box-shadow: 0px 2px 3px #aaa;
-		-moz-box-shadow: 0px 2px 3px #aaa;
-		box-shadow: 0px 2px 3px #aaa;
+		-webkit-border-radius: 0 0 3px 3px;
+		-moz-border-radius: 0 0 3px 3px;
+		border-radius: 0 0 3px 3px;
+		-webkit-box-shadow: 0 2px 3px #aaa;
+		-moz-box-shadow: 0 2px 3px #aaa;
+		box-shadow: 0 2px 3px #aaa;
 	}
 
 	#menu a:hover{
@@ -767,9 +763,9 @@ legend {
 	#message_container {
 		z-index: 99999;
 		position: absolute;
-		left: 0px;
-		top: 0px;
-		right: 0px;
+		left: 0;
+		top: 0;
+		right: 0;
 		filter: alpha(opacity=0);
 		opacity: 0;
 		-moz-opacity:0;
@@ -777,17 +773,17 @@ legend {
 	}
 
 	#message_block {
-		margin: 0px auto;
+		margin: 0 auto;
 		width: 300px;
 		height: auto;
 		background-color: #000;
 		background-repeat: repeat-x;
 		background-image: url('<?php echo PROJECT_PATH; ?>/themes/enhanced/images/background_black.png');
 		background-position: top center;
-		padding: 6px 0px 8px 0px;
-		-webkit-border-radius: 0px 0px 3px 3px;
-		-moz-border-radius: 0px 0px 3px 3px;
-		border-radius: 0px 0px 3px 3px;
+		padding: 6px 0 8px 0;
+		-webkit-border-radius: 0 0 3px 3px;
+		-moz-border-radius: 0 0 3px 3px;
+		border-radius: 0 0 3px 3px;
 		text-align: center;
 	}
 
@@ -818,9 +814,9 @@ legend {
 	#domains_container {
 		z-index: 99998;
 		position: absolute;
-		right: 0px;
-		top: 0px;
-		bottom: 0px;
+		right: 0;
+		top: 0;
+		bottom: 0;
 		width: 360px;
 		overflow: hidden;
 		display: none;
@@ -829,17 +825,17 @@ legend {
 	#domains_block {
 		position: absolute;
 		right: -300px;
-		top: 0px;
-		bottom: 0px;
+		top: 0;
+		bottom: 0;
 		width: 300px;
 		padding: 20px 20px 100px 20px;
 		font-family: arial, san-serif;
 		font-size: 10pt;
 		overflow: hidden;
 		background-color: #fff;
-		-webkit-box-shadow: 0px 0px 10px #888;
-		-moz-box-shadow: 0px 0px 10px #888;
-		box-shadow: 0px 0px 10px #888;
+		-webkit-box-shadow: 0 0 10px #888;
+		-moz-box-shadow: 0 0 10px #888;
+		box-shadow: 0 0 10px #888;
 	}
 
 	#domains_header {
@@ -1304,7 +1300,7 @@ legend {
 		// default login being used
 		else {
 			?>
-			<div class='main_content' style='position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; padding: 0px;'>
+			<div class='main_content' style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;'>
 				<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 					<tr>
 						<td align='center' valign='middle'>
