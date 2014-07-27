@@ -46,10 +46,10 @@ include "root.php";
 	}
 
 // if not logged in, clear the session variables
-	if (strlen($_SESSION["username"]) == 0) {
-		session_unset();
-		session_destroy();
-	}
+	//if (strlen($_SESSION["username"]) == 0) {
+	//	session_unset();
+	//	session_destroy();
+	//}
 
 //adds multiple includes
 	require_once "resources/require.php";
