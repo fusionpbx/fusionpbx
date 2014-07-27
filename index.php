@@ -46,28 +46,35 @@ include "root.php";
 	}
 
 // if not logged in, clear the session variables
-if (strlen($_SESSION["username"]) == 0) {
-	session_unset();
-	session_destroy();
-}
+	if (strlen($_SESSION["username"]) == 0) {
+		session_unset();
+		session_destroy();
+	}
 
 //adds multiple includes
 	require_once "resources/require.php";
 
 // if logged in, redirect to login destination
-if (strlen($_SESSION["username"]) > 0) {
-	header("Location: ".$_SESSION['login']['destination']['url']);
-}
-else {
-	//use custom index, if present, otherwise use custom login, if present, otherwise use default login
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
-		require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
-	}
-	else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/login.php")) {
-		require_once "themes/".$_SESSION['domain']['template']['name']."/login.php";
+	if (strlen($_SESSION["username"]) > 0) {
+		if (strlen($_SESSION['login']['destination']['url']) > 0) {
+			header("Location: ".$_SESSION['login']['destination']['url']);
+		}
+		else {
+			require_once "resources/header.php";
+			require_once "resources/header.php";
+		}
 	}
 	else {
-		require_once "resources/login.php";
+		//use custom index, if present, otherwise use custom login, if present, otherwise use default login
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/index.php")) {
+			require_once "themes/".$_SESSION['domain']['template']['name']."/index.php";
+		}
+		else if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/themes/".$_SESSION['domain']['template']['name']."/login.php")) {
+			require_once "themes/".$_SESSION['domain']['template']['name']."/login.php";
+		}
+		else {
+			require_once "resources/login.php";
+		}
 	}
-}
+
 ?>
