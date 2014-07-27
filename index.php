@@ -61,7 +61,7 @@ include "root.php";
 		}
 		else {
 			require_once "resources/header.php";
-			require_once "resources/header.php";
+			require_once "resources/footer.php";
 		}
 	}
 	else {
