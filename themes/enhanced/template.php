@@ -55,7 +55,7 @@ DIV#page {
 	left: 0px;
 	right: 0px;
 	bottom: 0px;
-	padding: 10px;
+	padding: 0px;
 	overflow: auto;
 }
 
@@ -94,6 +94,30 @@ if (
 	}
 	?>
 <?php } ?>
+
+DIV#copyright {
+	background-color: #000;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	height: 20px;
+	-khtml-opacity: 0.2;
+	-moz-opacity: 0.2;
+	-ms-filter: "alpha(opacity=20)";
+	filter: alpha(opacity=20);
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.2);
+	opacity: 0.2;
+	text-align: center;
+	vertical-align: middle;
+	padding-bottom: 0px;
+	padding-top: 8px;
+}
+
+.copyright {
+	font-size: 11px;
+	font-family: arial;
+	color: #fff;
+}
 
 img {
 	border: none;
@@ -378,9 +402,6 @@ table.tr_hover tr:hover td a {
 	/*background-color: #FFFFFF;*/
 }
 
-.headermain {
-	/*background-color: #7FAEDE;*/
-}
 
 .frm {
 	border: solid 1px #CCCCCC;
@@ -1108,49 +1129,52 @@ legend {
 	?>
 
 	<div id="page" align='center'>
-	<table width='90%' class='border.disabled' border='0' cellpadding='0' cellspacing='0'>
-		<tr>
-			<td align='left' valign='top' class='headermain' height='70px;'>
-				<table border='0' cellpadding='0' cellspacing='0' width='100%'>
-					<tr>
-						<td>
-							<?php
-							if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
-								if (strlen(PROJECT_PATH) > 0) {
-									echo "<a href='".PROJECT_PATH."'><img src='".PROJECT_PATH."/themes/enhanced/images/logo.png' /></a>";
-								}
-								else {
-									echo "<a href='/'><img src='/themes/enhanced/images/logo.png' /></a>";
-								}
-							}
-							?>
-						</td>
-						<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
-							<?php
-							if ($_SESSION['username'] != '') {
-								echo "<span style='white-space: nowrap;'>";
-								echo "	<span style='color: black; font-size: 10px; font-weight: bold;'>".$text['theme-label-user']."</span>&nbsp;";
-								echo "	<a href='".PROJECT_PATH."/core/user_settings/user_dashboard.php'>";
-								echo $_SESSION['username'];
-								if (count($_SESSION['domains']) > 1) {
-									echo "@".$_SESSION["user_context"];
-								}
-								echo 	"</a>";
-								echo "</span>\n";
-							}
+		<?php if (!$default_login) { ?>
+			<table width='90%' border='0' cellpadding='0' cellspacing='0'>
+				<tr>
+					<td align='left' valign='top'>
+						<table border='0' cellpadding='0' cellspacing='0' width='100%' style='margin-top: 10px;'>
+							<tr>
+								<td>
+									<?php
+									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
+										if (strlen(PROJECT_PATH) > 0) {
+											echo "<a href='".PROJECT_PATH."'><img src='".PROJECT_PATH."/themes/enhanced/images/logo.png' /></a>";
+										}
+										else {
+											if (!$default_login) {
+												echo "<a href='/'><img src='/themes/enhanced/images/logo.png' /></a>";
+											}
+										}
+									}
+									?>
+								</td>
+								<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
+									<?php
+									if ($_SESSION['username'] != '') {
+										echo "<span style='white-space: nowrap;'>";
+										echo "	<span style='color: black; font-size: 10px; font-weight: bold;'>".$text['theme-label-user']."</span>&nbsp;";
+										echo "	<a href='".PROJECT_PATH."/core/user_settings/user_dashboard.php'>";
+										echo $_SESSION['username'];
+										if (count($_SESSION['domains']) > 1) {
+											echo "@".$_SESSION["user_context"];
+										}
+										echo 	"</a>";
+										echo "</span>\n";
+									}
 
-							//logged in show the domains block
-							if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-								echo "<span style='white-space: nowrap; line-height: 45px;'>";
-								echo "	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color: black; font-size: 10px; font-weight: bold;'>".$text['theme-label-domain']."</span>&nbsp;";
-								echo "	<a href='javascript:void(0);' id='domains_show_text'>".$_SESSION['domain_name']."</a>";
-								echo "	<img id='domains_show_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domains_show.png' style='width: 23px; height: 16px; border: none;' title='".$text['theme-label-open_selector']."' align='absmiddle'>";
-								echo "</span>";
-							}
+								//logged in show the domains block
+									if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+										echo "<span style='white-space: nowrap; line-height: 45px;'>";
+										echo "	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color: black; font-size: 10px; font-weight: bold;'>".$text['theme-label-domain']."</span>&nbsp;";
+										echo "	<a href='javascript:void(0);' id='domains_show_text'>".$_SESSION['domain_name']."</a>";
+										echo "	<img id='domains_show_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domains_show.png' style='width: 23px; height: 16px; border: none;' title='".$text['theme-label-open_selector']."' align='absmiddle'>";
+										echo "</span>";
+									}
 
-							//logged out show the login
-								if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
-									if (strlen($_SESSION["username"]) == 0) {
+								// login form
+									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php" && !$default_login) {
+										if (strlen($_SESSION["username"]) == 0) {
 										//add multi-lingual support
 											require_once "core/user_settings/app_languages.php";
 											foreach($text as $key => $value) {
@@ -1167,10 +1191,10 @@ legend {
 											echo "		<table width='200' border='0'>\n";
 											echo "			<tr>\n";
 											echo "				<td>\n";
-											echo "		  			<input type='text' class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
+											echo "		  			<input type='text' class='formfld' style='min-width: 150px; width: 105px; text-align: center;' name='username' placeholder=\"".$text['label-username']."\">\n";
 											echo "				</td>\n";
 											echo "				<td align='left'>\n";
-											echo "					<input type='password' class='formfld' style='min-width: 105px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
+											echo "					<input type='password' class='formfld' style='min-width: 150px; width: 105px; text-align: center;' name='password' placeholder=\"".$text['label-password']."\">\n";
 											echo "				</td>\n";
 
 											if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
@@ -1187,7 +1211,7 @@ legend {
 													echo "    		</select>\n";
 												}
 												else {
-													echo "  		<input type='text' style='width: 150px;' class='formfld' name='domain_name'>\n";
+													echo "  		<input type='text' style='min-width: 150px; width: 150px;' class='formfld' name='domain_name'>\n";
 												}
 												echo "			</td>\n";
 											}
@@ -1199,60 +1223,95 @@ legend {
 											echo "		</table>\n";
 											echo "	</form>";
 											echo "</div>";
+										}
 									}
+									?>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<?php
+				if (strlen($_SESSION["username"]) > 0) {
+					?>
+					<tr>
+						<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
+					</tr>
+					<tr>
+						<td class='menu_bar' height='30px'>
+							<!--{menu}-->
+						</td>
+					</tr>
+					<tr>
+						<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
+					</tr>
+					<?php
+				}
+				?>
+				<tr>
+					<td valign='top' align='center' width='100%'>
+						<table cellpadding='0' cellspacing='1' border='0' width='100%' style='margin-bottom: 60px;'>
+							<tr>
+								<td class='main_content' valign='top' align='center'>
+									<!--{body}-->
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			<?php
+		}
+
+		// default login being used
+		else {
+			?>
+			<div class='main_content' style='position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; padding: 0px;'>
+				<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
+					<tr>
+						<td align='center' valign='middle'>
+
+							<style>
+								#default_login {
+									background-color: #fff;
+									display: block;
+									width: 300px;
+									padding: 30px;
+									opacity: 0.93;
+									filter:alpha(opacity=93);
+									-moz-opacity:0.93;
+									-khtml-opacity: 0.93;
+									-webkit-border-radius: 4px;
+									-moz-border-radius: 4px;
+									border-radius: 4px;
+									-webkit-box-shadow: 0px 1px 20px #888;
+									-moz-box-shadow: 0px 1px 20px #888;
+									box-shadow: 0px 1px 20px #888;
+									padding: 30px;
 								}
-							?>
+							</style>
+
+							<span id='default_login'>
+								<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo PROJECT_PATH; ?>/themes/enhanced/images/logo.png'></a>
+								<br />
+								<!--{body}-->
+							</span>
+							<br /><br /><br />
+
 						</td>
 					</tr>
 				</table>
-			</td>
-		</tr>
-		<?php
-		if (strlen($_SESSION["username"]) > 0) {
-			?>
-			<tr>
-				<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
-			</tr>
-			<tr>
-				<td class='menu_bar' height='30px'>
-					<!--{menu}-->
-				</td>
-			</tr>
-			<tr>
-				<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
-			</tr>
+			</div>
 			<?php
 		}
 		?>
-		<tr>
-			<td valign='top' align='center' width='100%'>
-				<table cellpadding='0' cellspacing='1' border='0' width='100%'>
-					<tr>
-						<td class='main_content' valign='top' align='center'>
-							<!--{body}-->
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<?php
-	if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
-		echo "<span class='smalltext'>\n";
-		echo "<br />\n";
-		echo "&copy; Copyright 2008 - ".date("Y")." <a class='smalltext' target='_blank' href='http://www.fusionpbx.com'>fusionpbx.com</a>. All rights reserved.\n";
-		echo "</span><br><br>\n";
-	}
-	else {
-		echo "<!--\n";
-		echo "	http://www.fusionpbx.com \n";
-		echo "	Copyright 2008 - ".date("Y")." \n";
-		echo "	All rights reserved.\n";
-		echo "-->\n";
-	}
-	?>
 	</div>
 
-<br />
+	<?php
+	$copyright .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='copyright' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
+	echo "<div id='copyright' style='position: absolute; z-index; 10000;'><span class='copyright'>".$copyright."</span></div>";
+	?>
+
 </body>
 </html>

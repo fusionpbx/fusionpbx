@@ -85,62 +85,32 @@
 	}
 
 //show the content
-	echo "<br><br>";
-	echo "<div align='center'>\n";
-	echo "<form name='login' METHOD=\"POST\" action=\"".$_SESSION['login']['destination']['url']."\">\n";
-	echo "<input type='hidden' name='path' value='$path'>\n";
-	echo "<table width='200' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td align='left'>\n";
-	echo "	<strong>".$text['label-username'].":</strong>\n";
-	echo "</td>\n";
-	echo "<td>\n";
-	echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"username\">\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td align='left'>\n";
-	echo "	<strong>".$text['label-password'].":</strong>\n";
-	echo "</td>\n";
-	echo "<td align='left'>\n";
-	echo "	<input type=\"password\" style='width: 150px;' class='formfld' name=\"password\">\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
+	echo "<br />\n";
+	echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['url']."'>\n";
+	echo "<input type='hidden' name='path' value='".$path."'>\n";
+	echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
+	echo "<input type='password' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='password' placeholder=\"".$text['label-password']."\"><br />\n";
 	if ($_SESSION['login']['domain_name.visible']['boolean'] == "true") {
-		echo "<tr>\n";
-		echo "<td align='left'>\n";
-		echo "	<strong>".$text['label-domain'].":</strong>\n";
-		echo "</td>\n";
-		echo "<td>\n";
 		if (count($_SESSION['login']['domain_name']) > 0) {
-			echo "    <select style='width: 150px;' class='formfld' name='domain_name'>\n";
-			echo "    <option value=''></option>\n";
+			echo "<select style='width: 200px; margin-bottom: 8px;' class='formfld' name='domain_name'>\n";
+			echo "	<option value=''></option>\n";
 			foreach ($_SESSION['login']['domain_name'] as &$row) {
-				echo "    <option value='$row'>$row</option>\n";
+				echo "	<option value='$row'>$row</option>\n";
 			}
-			echo "    </select>\n";
+			echo "</select>\n";
+			echo "<br />";
 		}
 		else {
-			echo "  <input type=\"text\" style='width: 150px;' class='formfld' name=\"domain_name\">\n";
+			echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='domain_name' placeholder=\"".$text['label-domain']."\"><br />\n";
 		}
-		echo "</td>\n";
-		echo "</tr>\n";
 	}
-
-	echo "<tr>\n";
-	echo "<td>\n";
-	echo "</td>\n";
-	echo "<td align=\"right\">\n";
-	echo "  <input type=\"submit\" class='btn' value=\"".$text['button-login']."\">\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+	echo "<br />";
+	echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-login']."'>\n";
 	echo "</form>";
-	echo "</div>";
+	echo "<script>document.getElementById('username').focus();</script>";
 
 //add the footer
+	$default_login = true;
 	include "resources/footer.php";
 
 ?>

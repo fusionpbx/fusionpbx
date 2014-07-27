@@ -194,4 +194,19 @@
 	$text['login-message_dismiss']['es-cl'] = "Despedir";
 	$text['login-message_dismiss']['pt-pt'] = "Demitir";
 	$text['login-message_dismiss']['fr-fr'] = "Rejeter";
+
+	$text['label-username']['en-us'] = "Username";
+	$text['label-username']['es-cl'] = "Nombre de Usuario";
+	$text['label-username']['pt-pt'] = "Nome de Utilizador";
+	$text['label-username']['fr-fr'] = "Nom d'Utilisateur";
+
+	$text['label-password']['en-us'] = "Password";
+	$text['label-password']['es-cl'] = "Contraseña";
+	$text['label-password']['pt-pt'] = "Password";
+	$text['label-password']['fr-fr'] = "Mot de Passe";
+
+	$text['label-domain']['en-us'] = "Domain";
+	$text['label-domain']['es-cl'] = "Dominio";
+	$text['label-domain']['pt-pt'] = "Domínio";
+	$text['label-domain']['fr-fr'] = "Domaine";
 ?>
