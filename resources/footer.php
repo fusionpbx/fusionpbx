@@ -71,7 +71,7 @@ require_once "resources/require.php";
 
 //prepare the template to display the output
 	$custom_head = '';
-	$document_title = (($document["title"] != '') ? $document["title"]." - " : null)."FusionPBX";
+	$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["software_name"];
 	$output = str_replace ("<!--{title}-->", $document_title, $template); //<!--{title}--> defined in each individual page
 	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
 	if (strlen($v_menu) > 0) {
