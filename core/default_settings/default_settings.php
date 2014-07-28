@@ -269,7 +269,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_default_settings ";
-		if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
+//		if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
