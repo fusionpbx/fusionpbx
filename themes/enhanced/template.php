@@ -1171,12 +1171,18 @@ legend {
 								<td>
 									<?php
 									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
+										if (isset($_SESSION['theme']['logo']['text'])){
+											$logo = $_SESSION['theme']['logo']['text'];
+										}
+										else {
+											$logo = PROJECT_PATH."/themes/enhanced/images/logo.png";
+										}
 										if (strlen(PROJECT_PATH) > 0) {
-											echo "<a href='".PROJECT_PATH."'><img src='".PROJECT_PATH."/themes/enhanced/images/logo.png' /></a>";
+											echo "<a href='".PROJECT_PATH."'><img src='$logo' /></a>";
 										}
 										else {
 											if (!$default_login) {
-												echo "<a href='/'><img src='/themes/enhanced/images/logo.png' /></a>";
+												echo "<a href='/'><img src='$logo' /></a>";
 											}
 										}
 									}
@@ -1316,13 +1322,20 @@ legend {
 	</div>
 
 	<?php
+	if (isset($_SESSION['theme']['logo']['text'])){
+		$logo = $_SESSION['theme']['logo']['text'];
+	}
+	else {
+		$logo = PROJECT_PATH."/themes/enhanced/images/logo.png";
+	}
+
 	if ($default_login) {
 		?>
 		<div id="default_login">
 			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 				<tr>
 					<td align='center' valign='middle'>
-						<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo PROJECT_PATH; ?>/themes/enhanced/images/logo.png'></a>
+						<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>'></a>
 						<br />
 						<!--{body}-->
 						<br /><br /><br />
