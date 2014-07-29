@@ -34,14 +34,13 @@ else {
 	exit;
 }
 
-require_once "resources/header.php";
+//require_once "resources/header.php";
 require_once "resources/paging.php";
 
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];
 
 //show the content
-	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"center\">\n";
@@ -57,7 +56,7 @@ $order = $_GET["order"];
 	echo $text['description-fields']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "</tr></table>\n";
+	echo "</table>\n";
 
 	if (strlen($order_by) == 0) {
 		$order_by = 'field_order';
@@ -78,7 +77,6 @@ $order = $_GET["order"];
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('field_label', $text['label-field_label'], $order_by, $order);
@@ -191,19 +189,14 @@ $order = $_GET["order"];
  	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
-	echo "<br><br>";
 
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
-	echo "</div>";
 	echo "<br><br>";
 
 //include the footer
-	require_once "resources/footer.php";
+//	require_once "resources/footer.php";
 
 ?>
