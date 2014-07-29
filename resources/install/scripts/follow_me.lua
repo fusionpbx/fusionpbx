@@ -146,7 +146,7 @@
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
 				--notify the caller
-					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
+					--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 			end
 		
 		--unset follow me
@@ -161,7 +161,7 @@
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
 				--notify the caller
-					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
+					--session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 			end
 
 		--enable or disable follow me
@@ -188,7 +188,7 @@
 			else
 				sql = sql .. "dial_string = null, ";
 			end
-			sql = sql .. "follow_me_enabled = '"..follow_me_enabled.."' ";
+			sql = sql .. "forward_all_enabled= 'false' ";
 			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
 			sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
 			if (debug["sql"]) then
