@@ -73,6 +73,13 @@
 		}
 	}
 
+	if (!function_exists('check_cidr')) {
+		function check_cidr ($cidr,$ip_address) {
+			list ($subnet, $mask) = explode ('/', $cidr);
+			return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
+		}
+	}
+
 	if (!function_exists('fix_postback')) {
 		function fix_postback($post_array) {
 			foreach ($post_array as $index => $value) {

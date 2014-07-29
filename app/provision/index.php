@@ -109,10 +109,6 @@ require_once "resources/require.php";
 
 //check the cidr range
 	if (is_array($_SESSION['provision']["cidr"])) {
-		function check_cidr ($cidr,$ip_address) {
-			list ($subnet, $mask) = explode ('/', $cidr);
-			return ( ip2long ($ip_address) & ~((1 << (32 - $mask)) - 1) ) == ip2long ($subnet);
-		}
 		$found = false;
 		foreach($_SESSION['provision']["cidr"] as $cidr) {
 			if (check_cidr($cidr, $_SERVER['REMOTE_ADDR'])) {
