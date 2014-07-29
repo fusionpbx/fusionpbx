@@ -141,7 +141,7 @@
 				--answer and play a tone
 					session:answer();
 					api = freeswitch.API();
-					reply = api:executeString("uuid_display "..session:get_uuid().." Activated ");
+					reply = api:executeString("uuid_display "..session:get_uuid().."Follow Me Activated ");
 
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
@@ -156,7 +156,7 @@
 				--answer and play a tone
 					session:answer();
 					api = freeswitch.API();
-					reply = api:executeString("uuid_display "..session:get_uuid().." Cancelled ");
+					reply = api:executeString("uuid_display "..session:get_uuid().." Follow Me Cancelled ");
 
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
