@@ -117,7 +117,7 @@
 			end);
 	
 		--set follow me
-			if (enabled == "true") then
+			if (enabled == "false") then
 				--answer and play a tone
 					session:answer();
 					api = freeswitch.API();
@@ -130,7 +130,7 @@
 			end
 		
 		--unset follow me
-			if (enabled == "false") then
+			if (enabled == "true") then
 				--answer and play a tone
 					session:answer();
 					api = freeswitch.API();
@@ -161,9 +161,9 @@
 		--update the extension
 			sql = "update v_extensions set ";
 			if (enabled == "true") then
-				sql = sql .. "dial_string = '"..dial_string.."', ";
-			else
 				sql = sql .. "dial_string = null, ";
+			else
+				sql = sql .. "dial_string = '"..dial_string.."', ";
 			end
 			sql = sql .. "do_not_disturb = 'false', ";
 			sql = sql .. "forward_all_enabled= 'false' ";
