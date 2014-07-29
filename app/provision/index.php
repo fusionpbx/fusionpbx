@@ -103,8 +103,8 @@ require_once "resources/require.php";
 	$device_vendor = device::get_vendor($mac);
 
 //keep backwards compatibility
-	if (strlen($provision["cidr"]) > 0) {
-		$_SESSION['provision']["cidr"][] = $provision["cidr"];
+	if (strlen($_SESSION['provision']["cidr"]["text"]) > 0) {
+		$_SESSION['provision']["cidr"][] = $_SESSION['provision']["cidr"]["text"];
 	}
 
 //check the cidr range
