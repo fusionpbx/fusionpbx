@@ -185,7 +185,7 @@ require_once "resources/require.php";
 			else {
 				//check the username and password if they don't match then redirect to the login
 					$sql = "select * from v_users ";
-					if (isset($_REQUEST["key"])) {
+					if (strlen($_REQUEST["key"]) > 30) {
 						$sql .= "where api_key=:key ";
 						//$sql .= "and api_key='".$key."' ";
 					}
@@ -206,7 +206,7 @@ require_once "resources/require.php";
 					if ($_SESSION["user"]["unique"]["text"] != "global") {
 						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 					}
-					if (isset($_REQUEST["key"])) {
+					if (strlen($_REQUEST["key"]) > 30) {
 						$prep_statement->bindParam(':key', $key);
 					}
 					else {
