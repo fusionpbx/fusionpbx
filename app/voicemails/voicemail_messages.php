@@ -49,11 +49,13 @@ else {
 	if (check_str($_REQUEST["action"]) == "download") {
 		$voicemail_message_uuid = check_str($_REQUEST["uuid"]);
 		$voicemail_id = check_str($_REQUEST["id"]);
+		$voicemail_uuid = check_str($_REQUEST["voicemail_uuid"]);
 		//require_once "resources/classes/voicemail.php";
 		$voicemail = new voicemail;
 		$voicemail->db = $db;
 		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
 		$voicemail->voicemail_id = $voicemail_id;
+		$voicemail->voicemail_uuid = $voicemail_uuid;
 		$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
 		$result = $voicemail->message_download();
 		unset($voicemail);
@@ -158,7 +160,7 @@ else {
 				//echo "			".$text['label-play']."\n";
 				//echo "		</a>\n";
 				echo "		&nbsp;&nbsp;\n";
-				echo "		<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&uuid=".$row['voicemail_message_uuid']."\">\n";
+				echo "		<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\">\n";
 				echo "			".$text['label-download']."\n";
 				echo "		</a>\n";
 				echo "	</td>\n";
