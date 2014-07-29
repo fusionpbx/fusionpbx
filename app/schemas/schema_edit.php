@@ -178,7 +178,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$document['title'] = $text['title-schema'];
 
 //show the content
-	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
 	echo "<tr class='border'>\n";
 	echo "	<td align=\"left\">\n";
@@ -264,31 +263,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	//echo "<tr>\n";
-	//echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	//echo "	Captcha:\n";
-	//echo "</td>\n";
-	//echo "<td class='vtable' align='left'>\n";
-	//echo "	<select class='formfld' name='schema_captcha'>\n";
-	//echo "	<option value=''></option>\n";
-	//if ($schema_captcha == "yes") {
-	//	echo "	<option value='yes' SELECTED >yes</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='yes'>yes</option>\n";
-	//}
-	//if ($schema_captcha == "no") {
-	//	echo "	<option value='no' SELECTED >no</option>\n";
-	//}
-	//else {
-	//	echo "	<option value='no'>no</option>\n";
-	//}
-	//echo "	</select>\n";
-	//echo "<br />\n";
-	//echo "Choose whether to require captcha.\n";
-	//echo "</td>\n";
-	//echo "</tr>\n";
-
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-parent_schema'].":\n";
@@ -338,6 +312,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "</div>";
 	echo "</form>";
 
 	if ($action == "update") {
@@ -347,7 +322,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
+
 
 //show the footer
 	require_once "resources/footer.php";
