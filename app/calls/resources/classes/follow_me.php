@@ -372,6 +372,14 @@ include "root.php";
 					$this->dial_string = '';
 				}
 
+				$sql  = "update v_follow_me set ";
+				$sql .= "dial_string = '".$this->dial_string."', ";
+				$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+				$sql .= "and follow_me_uuid = '".$this->follow_me_uuid."' ";
+				if ($this->debug) {
+					echo $sql."<br />";
+				}
+
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_string = '".$this->dial_string."', ";
 				$sql .= "dial_domain = '".$_SESSION['domain_name']."' ";
