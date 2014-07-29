@@ -96,17 +96,16 @@ echo "		</td>\n";
 echo "	</tr>\n";
 echo "	<tr><td colspan='2'>&nbsp;</td></tr>";
 echo "	<tr>\n";
-echo "		<td colspan='2' style='background-color: #000; padding: 8px; text-align: left;'>";
+echo "		<td colspan='2' style='background-color: #1c1c1c; padding: 8px; text-align: left;'>";
 
 if (permission_exists('log_view')) {
 
 	$MAXEL = 3; //pattern2, pattern3|color2, color3 etc...
 
 	$user_filesize = '0';
-	$default_color = 'white';
+	$default_color = '#fff';
 	$default_type = 'normal';
 	$default_font = 'monospace';
-	$background_color = 'black';
 	$default_fsize = '512000';
 	$log_file = $_SESSION['switch']['log']['dir']."/freeswitch.log";
 
@@ -154,8 +153,8 @@ if (permission_exists('log_view')) {
 	}
 	*/
 
-	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
-	echo "	<tr>";
+	echo "		<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
+	echo "			<tr>";
 	$user_filesize = '32768';
 	if (isset($_POST['submit'])) {
 		if (!is_numeric($_POST['fs'])){
@@ -167,15 +166,15 @@ if (permission_exists('log_view')) {
 		}
 		if (strlen($_REQUEST['filter']) > 0){
 			$uuid_filter = $_REQUEST['filter'];
-			echo "<td style=\"text-align: left; color: #FFFFFF;\">".$text['description-filter']." ".$uuid_filter."</td>";
+			echo "		<td style=\"text-align: left; color: #FFFFFF;\">".$text['description-filter']." ".$uuid_filter."</td>";
 		}
 	}
 
 	//echo "Log File Size: " . $file_size . " bytes. <br />";
-	echo "		<td style=\"text-align: right;color: #FFFFFF;\">".$text['label-displaying']." ".number_format($user_filesize,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].". </td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "<hr size='1' style='color: #fff;'>";
+	echo "				<td style=\"text-align: right;color: #FFFFFF;\">".$text['label-displaying']." ".number_format($user_filesize,0,'.',',')." of ".number_format($file_size,0,'.',',')." ".$text['label-bytes'].". </td>";
+	echo "			</tr>";
+	echo "		</table>";
+	echo "		<hr size='1' style='color: #fff;'>";
 
 	$file = fopen($log_file, "r") or exit($text['error-open-file']);
 
@@ -278,6 +277,8 @@ if (permission_exists('log_view')) {
 	}
 
 	fclose($file);
+
+	echo "		</div>";
 }
 echo "		</td>";
 echo "	</tr>\n";
