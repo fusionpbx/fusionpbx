@@ -32,7 +32,8 @@
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			if ($row['num_rows'] == 0) {
-				$xml_list = glob($_SESSION['switch']['conf']['dir']."/sip_profiles/*.xml");
+				//$xml_list = glob($_SESSION['switch']['conf']['dir']."/sip_profiles/*.xml");
+				$xml_list = glob($_SERVER["DOCUMENT_ROOT"]."/".PROJECT_PATH."resources/templates/conf/sip_profiles/*.xml");
 				foreach ($xml_list as &$xml_file) {
 					//load the sip profile xml and save it into an array
 					$sip_profile_xml = file_get_contents($xml_file);
