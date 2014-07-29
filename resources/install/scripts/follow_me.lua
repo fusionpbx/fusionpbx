@@ -29,7 +29,7 @@
 	digit_timeout = "3000";
 
 --debug
-	debug["sql"] = false;
+	debug["sql"] = true;
 
 --define the trim function
 	function trim (s)
@@ -110,38 +110,18 @@
 			end
 			status = dbh:query(sql, function(row)
 				enabled = row.follow_me_enabled;
+				call_prompt = row.call_prompt;
+				cid_name_prefix = row.cid_name_prefix;
+				cid_number_prefix = row.cid_number_prefix;
+				dial_string = row.dial_string;
 			end);
-
-		--set the dial string
-			if (enabled == "true") then
-				dial_string = "{presence_id="..forward_all_destination.."@"..domain_name;
-				dial_string = dial_string .. ",instant_ringback=true";
-				dial_string = dial_string .. ",domain_uuid="..domain_uuid;
-				dial_string = dial_string .. ",sip_invite_domain="..domain_name;
-				dial_string = dial_string .. ",domain_name="..domain_name;
-				dial_string = dial_string .. ",domain="..domain_name;
-				if (accountcode ~= nil) then
-					dial_string = dial_string .. ",accountcode="..accountcode;
-				end
-				dial_string = dial_string .. "}";
-	
-				cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
-				user_exists = trim(api:executeString(cmd));
-				if (user_exists) then
-					dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
-				else
-					dial_string = dial_string .. "loopback/"..forward_all_destination;
-				end
-			end
 	
 		--set follow me
 			if (enabled == "true") then
-				--set follow_me_enabled
-					follow_me_enabled = "true";
 				--answer and play a tone
 					session:answer();
 					api = freeswitch.API();
-					reply = api:executeString("uuid_display "..session:get_uuid().."Follow Me Activated ");
+					reply = api:executeString("uuid_display "..session:get_uuid().." Activated ");
 
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
@@ -151,12 +131,10 @@
 		
 		--unset follow me
 			if (enabled == "false") then
-				--set follow_me_enabled
-					follow_me_enabled = "false";
 				--answer and play a tone
 					session:answer();
 					api = freeswitch.API();
-					reply = api:executeString("uuid_display "..session:get_uuid().." Follow Me Cancelled ");
+					reply = api:executeString("uuid_display "..session:get_uuid().." Cancelled ");
 
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
@@ -168,9 +146,9 @@
 			if (follow_me_uuid ~= nil) then
 				sql = "update v_follow_me set ";
 				if (enabled == "true") then
-					sql = sql .. "follow_me_enabled = 'true' ";
-				else
 					sql = sql .. "follow_me_enabled = 'false' ";
+				else
+					sql = sql .. "follow_me_enabled = 'true' ";
 				end
 				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
 				sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
