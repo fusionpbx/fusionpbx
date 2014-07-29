@@ -41,12 +41,6 @@ require_once "resources/paging.php";
 	$order = $_GET["order"];
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%' nowrap='nowrap'><b>".$text['header_settings']."</b></td>\n";
