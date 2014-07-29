@@ -65,7 +65,7 @@
 					$array[$x]['default_setting_category'] = 'provision';
 					$array[$x]['default_setting_subcategory'] = 'enabled';
 					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = 'false';
+					$array[$x]['default_setting_value'] = '';
 					$array[$x]['default_setting_enabled'] = 'false';
 					$array[$x]['default_setting_description'] = '';
 					$x++;
