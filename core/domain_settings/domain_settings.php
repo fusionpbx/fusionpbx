@@ -34,78 +34,61 @@ else {
 	exit;
 }
 
-require_once "resources/header.php";
+//require_once "resources/header.php";
 require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
-//show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
 
-	//echo "<table width='100%' border='0'>\n";
-	//echo "	<tr>\n";
-	//echo "		<td width='50%' align='left' nowrap='nowrap'><b>Domain Settings</b></td>\n";
-	//echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	//echo "	</tr>\n";
-	//echo "	<tr>\n";
-	//echo "		<td align='left' colspan='2'>\n";
-	//echo "			Settings used for each domain.<br /><br />\n";
-	//echo "		</td>\n";
-	//echo "	</tr>\n";
-	//echo "</table>\n";
-
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_domain_settings ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
-
-	//prepare to page the results
-		$rows_per_page = 100;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
-
-	//get the list
-		$sql = "select * from v_domain_settings ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by) == 0) {
-			$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc ";
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_domain_settings ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "and domain_uuid = '$domain_uuid' ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
 		}
 		else {
-			$sql .= "order by $order_by $order ";
+			$num_rows = '0';
 		}
-		$sql .= "limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+	}
+
+//prepare to page the results
+	$rows_per_page = 100;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
+
+//get the list
+	$sql = "select * from v_domain_settings ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	if (strlen($order_by) == 0) {
+		$sql .= "order by domain_setting_category, domain_setting_subcategory, domain_setting_order asc ";
+	}
+	else {
+		$sql .= "order by $order_by $order ";
+	}
+	$sql .= "limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
+//show the content
+	echo "<br /><br />";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count > 0) {
@@ -113,7 +96,7 @@ require_once "resources/paging.php";
 		foreach($result as $row) {
 			if ($previous_category != $row['domain_setting_category']) {
 				echo "<tr>";
-				echo "	<td colspan='4' align='left'>\n";
+				echo "	<td colspan='6' align='left'>\n";
 				echo "		<br />\n";
 				echo "		<br />\n";
 				echo "		<b>";
@@ -211,15 +194,9 @@ require_once "resources/paging.php";
  	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 	echo "</table>";
-	echo "</div>";
 
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
-	require_once "resources/footer.php";
+	//require_once "resources/footer.php";
 ?>
