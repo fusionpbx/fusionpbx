@@ -184,35 +184,26 @@ require_once "resources/require.php";
 		//database authentication
 			else {
 				//check the username and password if they don't match then redirect to the login
-					if ($_SESSION["user"]["unique"]["text"] == "global") {
-						//globally unique users
-						$sql = "select * from v_users ";
-						if (isset($_REQUEST["key"])) {
-							$sql .= "where api_key=:key ";
-							//$sql .= "where api_key='".$key."' ";
-						}
-						else {
-							$sql .= "where username=:username ";
-							//$sql .= "where username='".$username."' ";
-						}
-						$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
-						$prep_statement = $db->prepare(check_sql($sql));
+					$sql = "select * from v_users ";
+					if (isset($_REQUEST["key"])) {
+						$sql .= "where api_key=:key ";
+						//$sql .= "and api_key='".$key."' ";
 					}
 					else {
-						//unique per domain
-						$sql = "select * from v_users ";
-						if (isset($_REQUEST["key"])) {
-							$sql .= "where api_key=:key ";
-							//$sql .= "and api_key='".$key."' ";
-						}
-						else {
-							$sql .= "where username=:username ";
-							//$sql .= "and username='".$username."' ";
-						}
-						//$sql .= "and domain_uuid='".$domain_uuid."' ";
+						$sql .= "where username=:username ";
+						//$sql .= "and username='".$username."' ";
+					}
+					//$sql .= "and domain_uuid='".$domain_uuid."' ";
+					if ($_SESSION["user"]["unique"]["text"] == "global") {
+						//unique username - global (example: email address)
+					}
+					else {
+						//unique username - per domain
 						$sql .= "and domain_uuid=:domain_uuid ";
-						$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
-						$prep_statement = $db->prepare(check_sql($sql));
+					}
+					$sql .= "and (user_enabled = 'true' or user_enabled is null) ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					if ($_SESSION["user"]["unique"]["text"] != "global") {
 						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 					}
 					if (isset($_REQUEST["key"])) {
