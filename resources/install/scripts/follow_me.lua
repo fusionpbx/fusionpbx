@@ -140,10 +140,9 @@
 					follow_me_enabled = "true";
 				--answer and play a tone
 					session:answer();
-					if (string.len(call_flow_anti_label) > 0) then
-						api = freeswitch.API();
-						reply = api:executeString("uuid_display "..session:get_uuid().." Follow Me Activated ");
-					end
+					api = freeswitch.API();
+					reply = api:executeString("uuid_display "..session:get_uuid().." Activated ");
+
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(200,0,500,600,700)");
 				--notify the caller
@@ -156,10 +155,9 @@
 					follow_me_enabled = "false";
 				--answer and play a tone
 					session:answer();
-					if (string.len(call_flow_anti_label) > 0) then
-						api = freeswitch.API();
-						reply = api:executeString("uuid_display "..session:get_uuid().." Follow Me Cancelled ");
-					end
+					api = freeswitch.API();
+					reply = api:executeString("uuid_display "..session:get_uuid().." Cancelled ");
+
 					session:execute("sleep", "2000");
 					session:execute("playback", "tone_stream://%(500,0,300,200,100,50,25)");
 				--notify the caller
