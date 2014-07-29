@@ -379,6 +379,8 @@ include "root.php";
 				if ($this->debug) {
 					echo $sql."<br />";
 				}
+				$db->exec($sql);
+				unset($sql);
 
 				$sql  = "update v_extensions set ";
 				$sql .= "dial_string = '".$this->dial_string."', ";
