@@ -59,6 +59,7 @@ else {
 		$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
 		$result = $voicemail->message_download();
 		unset($voicemail);
+		header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 		exit;
 	}
 
