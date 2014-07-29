@@ -1,0 +1,8 @@
+<context name="{v_context}">
+	<extension name="follow-me" number="*21" continue="false" app_uuid="b8c28c75-1a03-4dad-9a53-980ca5f487f0" enabled="true">
+		<condition field="destination_number" expression="^\*21$">
+			<action application="answer"/>
+			<action application="lua" data="follow_me.lua"/>
+		</condition>
+	</extension>
+</context>
