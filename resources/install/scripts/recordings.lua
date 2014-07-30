@@ -63,7 +63,7 @@
 			if (recording_slots) then
 				min_digits = 1;
 				max_digits = 20;
-				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/please_enter_the_recording_number.wav", "", "\\d+");
+				recording_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-id_number.wav", "", "\\d+");
 				recording_name = recording_prefix..recording_number..".wav";
 			end
 
@@ -76,7 +76,7 @@
 			end
 
 		--prompt for the recording
-			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/begin_recording.wav");
+			session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-recording_started.wav");
 			session:execute("set", "playback_terminators=#");
 
 		--begin recording
