@@ -200,7 +200,7 @@
 <Upgrade_Enable group="Provisioning/Firmware_Upgrade">Yes</Upgrade_Enable>
 <Upgrade_Error_Retry_Delay group="Provisioning/Firmware_Upgrade">3600</Upgrade_Error_Retry_Delay>
 <Downgrade_Rev_Limit group="Provisioning/Firmware_Upgrade" />
-<Upgrade_Rule group="Provisioning/Firmware_Upgrade" />
+<Upgrade_Rule group="Provisioning/Firmware_Upgrade">{$cisco_spa50x_firmware_rule}</Upgrade_Rule>
 <Log_Upgrade_Request_Msg group="Provisioning/Firmware_Upgrade">$PN $MAC -- Requesting upgrade $SCHEME://$SERVIP:$PORT$PATH</Log_Upgrade_Request_Msg>
 <Log_Upgrade_Success_Msg group="Provisioning/Firmware_Upgrade">$PN $MAC -- Successful upgrade $SCHEME://$SERVIP:$PORT$PATH -- $ERR</Log_Upgrade_Success_Msg>
 <Log_Upgrade_Failure_Msg group="Provisioning/Firmware_Upgrade">$PN $MAC -- Upgrade failed: $ERR</Log_Upgrade_Failure_Msg>
