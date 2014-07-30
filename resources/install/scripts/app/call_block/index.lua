@@ -48,7 +48,7 @@ This method causes the script to get its manadatory arguments directly from the 
 	local params = {
 			cid_num = string.gsub(tostring(session:getVariable("caller_id_number")), "+", ""),
 			cid_name = session:getVariable("caller_id_name"),
-			domain = session:getVariable("domain"),
+			domain_name = session:getVariable("domain_name"),
 			userid = "", -- session:getVariable("id")
 			loglevel = "W" -- Warning, Debug, Info
 			}
@@ -75,11 +75,11 @@ This method causes the script to get its manadatory arguments directly from the 
 
 --send to the log
 	logger("D", "NOTICE", "params are: " .. string.format("'%s', '%s', '%s', '%s'", params["cid_num"], 
-			params["cid_name"], params["userid"], params["domain"]));
+			params["cid_name"], params["userid"], params["domain_name"]));
 
 --get the cache
 	if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-		cache = trim(api:execute("memcache", "get app:call_block:" .. params["domain"] .. ":" .. params["cid_num"]));
+		cache = trim(api:execute("memcache", "get app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"]));
 	else
 		cache = "-ERR NOT FOUND";
 	end
@@ -99,7 +99,7 @@ This method causes the script to get its manadatory arguments directly from the 
 		--check if the the call block is blocked
 			sql = "SELECT * FROM v_call_block as c "
 			sql = sql .. "JOIN v_domains as d ON c.domain_uuid=d.domain_uuid "
-			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain"] .."'"
+			sql = sql .. "WHERE c.call_block_number = '" .. params["cid_num"] .. "' AND d.domain_name = '" .. params["domain_name"] .."'"
 			status = dbh:query(sql, function(rows)
 				found_cid_num = rows["call_block_number"];
 				found_uuid = rows["call_block_uuid"];
@@ -113,7 +113,7 @@ This method causes the script to get its manadatory arguments directly from the 
 			if (found_cid_num) then	-- caller id exists
 				if (found_enabled == "true") then
 					cache = "found_cid_num=" .. found_cid_num .. "&found_uuid=" .. found_uuid .. "&found_enabled=" .. found_enabled .. "&found_action=" .. found_action .. "&found_count=" .. found_count;
-					result = trim(api:execute("memcache", "set app:call_block:" .. params["domain"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
+					result = trim(api:execute("memcache", "set app:call_block:" .. params["domain_name"] .. ":" .. params["cid_num"] .. " '"..cache.."' "..expire["call_block"]));
 
 					--set the source
 					source = "database";
@@ -173,7 +173,7 @@ This method causes the script to get its manadatory arguments directly from the 
 				dbh:query("UPDATE v_call_block SET call_block_count = " .. found_count + 1 .. " WHERE call_block_uuid = '" .. found_uuid .. "'")
 			end
 			session:setVariable("call_block", "block")
-			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain: " .. params["domain"])
+			logger("W", "NOTICE", "number " .. params["cid_num"] .. " blocked with " .. found_count .. " previous hits, domain_name: " .. params["domain_name"])
 			if (found_action == "Reject") then
 				session:hangup("CALL_REJECTED")
 			end
