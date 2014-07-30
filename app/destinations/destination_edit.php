@@ -35,7 +35,7 @@ else {
 	exit;
 }
 
-if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")) {
 	require_once "app/billing/resources/functions/currency.php";
 	require_once "app/billing/resources/functions/rating.php";
 }
@@ -709,6 +709,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"$destination_accountcode\">\n";
 	echo "<br />\n";
 	echo $text['description-accountcode']."\n";
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		echo " ".$text['billing-warning'];
+	}
 	echo "</td>\n";
 
 	echo "<tr>\n";
@@ -757,7 +760,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
-	echo "<p>".$text['billing-warning']."</p>";
+
 //include the footer
 	require_once "resources/footer.php";
 ?>
