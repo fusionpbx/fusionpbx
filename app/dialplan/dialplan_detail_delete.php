@@ -47,8 +47,8 @@ else {
 //set the variables
 	if (count($_GET) > 0) {
 		$dialplan_detail_uuid = check_str($_GET["id"]);
-		$app_uuid = check_str($_REQUEST["app_uuid"]);
 		$dialplan_uuid = check_str($_REQUEST["dialplan_uuid"]);
+		$app_uuid = check_str($_REQUEST["app_uuid"]);
 	}
 
 //delete the dialplan detail
@@ -75,7 +75,7 @@ else {
 	$_SESSION['message'] = $text['message-delete'];
 
 //redirect the browser
-	header("Location: dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
+	header("Location: dialplan_edit.php?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));
 	exit;
 
 ?>

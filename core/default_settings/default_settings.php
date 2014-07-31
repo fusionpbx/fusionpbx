@@ -318,7 +318,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 
 			if ($previous_category != $row['default_setting_category']) {
 				echo "<tr>\n";
-				echo "	<td colspan='4' align='left'>\n";
+				echo "	<td colspan='7' align='left'>\n";
 				if ($previous_category != '') { echo "		<br /><br />"; }
 				echo "		<br />\n";
 				echo "		<b>\n";
@@ -335,7 +335,10 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+				if (
+					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
+					permission_exists('default_setting_delete')
+					) {
 					echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
 				}
 				echo "<th>".$text['label-subcategory']."</th>";
@@ -345,7 +348,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
 				if (permission_exists('default_setting_add')) {
-					echo "<a href='default_setting_edit.php' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
+					echo "<a href='default_setting_edit.php?default_setting_category=".urlencode($row['default_setting_category'])."' alt='".$text['button-add']."'>".$v_link_label_add."</a>";
 				}
 				if (permission_exists('default_setting_delete')) {
 					echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
@@ -357,7 +360,10 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 
 			$tr_link = (permission_exists('default_setting_edit')) ? "href='default_setting_edit.php?id=".$row['default_setting_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
-			if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
+			if (
+				(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
+				permission_exists("default_setting_delete")
+				) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' name='id[]' id='checkbox_".$row['default_setting_uuid']."' value='".$row['default_setting_uuid']."'></td>\n";
 				$subcat_ids[strtolower($row['default_setting_category'])][] = 'checkbox_'.$row['default_setting_uuid'];
 			}
@@ -412,14 +418,26 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='".((permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ? 7 : 6)."' align='left'>\n";
+	if (
+		(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
+		permission_exists("domain_delete")
+		) {
+		$colspan = 7;
+	}
+	else {
+		$colspan = 6;
+	}
+	echo "<td colspan='".$colspan."' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('default_setting_add')) {
-		echo 		"<a href='default_setting_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='default_setting_edit.php?' alt='".$text['button-add']."'>$v_link_label_add</a>";
+	}
+	if (permission_exists('default_setting_delete')) {
+		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -441,8 +459,8 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 
 	echo "<br /><br />";
 
+	// check or uncheck all category checkboxes
 	if (sizeof($subcat_ids) > 0) {
-
 		echo "<script>\n";
 		echo "	function check(what, category) {\n";
 		foreach ($subcat_ids as $default_setting_category => $checkbox_ids) {
@@ -454,7 +472,6 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 		}
 		echo "	}\n";
 		echo "</script>\n";
-
 	}
 
 //include the footer

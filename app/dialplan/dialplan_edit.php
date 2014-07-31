@@ -175,7 +175,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		else if ($action == "update") {
 			$_SESSION['message'] = $text['message-update'];
 		}
-		header("Location: ?id=".$dialplan_uuid."&app_uuid=".$app_uuid);
+		header("Location: ?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));
 		exit;
 
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
@@ -190,7 +190,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//$message = $orm->message;
 		foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
-			$app_uuid = $row["app_uuid"];
+			//$app_uuid = $row["app_uuid"];
 			$dialplan_name = $row["dialplan_name"];
 			$dialplan_number = $row["dialplan_number"];
 			$dialplan_order = $row["dialplan_order"];
@@ -325,6 +325,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		<br>";
 
 	echo "<form method='post' name='frm' action=''>\n";
+	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
 	echo "<div align='center'>\n";
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">\n";
@@ -333,12 +334,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
 	echo "		</td>\n";
 	echo "		<td width='70%' align='right'>\n";
-	if (strlen($app_uuid) > 0) {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php?app_uuid=$app_uuid'\" value='".$text['button-back']."'>\n";
-	}
-	else {
-		echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php'\" value='".$text['button-back']."'>\n";
-	}
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplans.php".((strlen($app_uuid) > 0) ? "?app_uuid=".$app_uuid : null)."';\" value='".$text['button-back']."'>\n";
 	echo "			<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='dialplan_copy.php?id=".$dialplan_uuid."';}\" value='".$text['button-copy']."'>\n";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -764,7 +760,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							echo "	<td class='list_control_icon'>\n";
 							if ($element['hidden']) {
 								//echo "		<a href='dialplan_detail_edit.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-edit']."'>$v_link_label_edit</a>\n";
-								echo "		<a href='dialplan_detail_delete.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid."&app_uuid=".$app_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+								echo "		<a href='dialplan_detail_delete.php?id=".$dialplan_detail_uuid."&dialplan_uuid=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 							}
 							echo "	</td>\n";
 						//end the row
