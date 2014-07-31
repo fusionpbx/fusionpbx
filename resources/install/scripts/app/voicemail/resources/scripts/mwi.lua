@@ -36,6 +36,8 @@
 	debug["sql"] = false;
 	debug["info"] = false;
 
+--only run the script a single time 
+	runonce = true
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
@@ -116,9 +118,12 @@
 					end
 			end);
 
-		--slow the loop down
+		if (runonce) then
+			freeswitch.consoleLog("notice", "mwi.lua has ended\n");
+			break;
+		else
+			--slow the loop down
 			os.execute("sleep "..sleep);
-
-		--testing exit immediately
-			--break;
+		end
+		
 	end
