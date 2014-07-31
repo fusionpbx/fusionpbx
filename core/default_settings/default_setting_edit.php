@@ -53,8 +53,8 @@ else {
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST) > 0) {
-		$default_setting_category = strtolower(check_str($_POST["default_setting_category"]));
+	if (count($_REQUEST) > 0) {
+		$default_setting_category = strtolower(check_str($_REQUEST["default_setting_category"]));
 		$default_setting_subcategory = strtolower(check_str($_POST["default_setting_subcategory"]));
 		$default_setting_name = strtolower(check_str($_POST["default_setting_name"]));
 		$default_setting_value = check_str($_POST["default_setting_value"]);
@@ -226,7 +226,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-subcategory'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='default_setting_subcategory' maxlength='255' value=\"$default_setting_subcategory\">\n";
+	echo "	<input class='formfld' type='text' name='default_setting_subcategory' id='default_setting_subcategory' maxlength='255' value=\"$default_setting_subcategory\">\n";
 	echo "<br />\n";
 	echo $text['description-subcategory']."\n";
 	echo "</td>\n";
@@ -496,7 +496,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='default_setting_description' maxlength='255' value=\"$default_setting_description\">\n";
+	echo "	<input class='formfld' type='text' name='default_setting_description' maxlength='255' value=\"".$default_setting_description."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
@@ -505,7 +505,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='default_setting_uuid' value='$default_setting_uuid'>\n";
+		echo "			<input type='hidden' name='default_setting_uuid' value='".$default_setting_uuid."'>\n";
 	}
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -517,6 +517,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</div>";
+
+	if ($_REQUEST["id"] == '' && $_REQUEST["default_setting_category"] != '') {
+		echo "<script>document.getElementById('default_setting_subcategory').focus();</script>";
+	}
 
 //include the footer
 	require_once "resources/footer.php";
