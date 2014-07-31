@@ -67,11 +67,12 @@ if ( session:ready() ) then
 
 	--if the pin number is provided then require it
 		if (pin_number) then
+			--sleep
+				session:sleep(500);
 			--get the user pin number
 				min_digits = 2;
 				max_digits = 20;
 				digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
-
 			--validate the user pin number
 				pin_number_table = explode(",",pin_number);
 				for index,pin_number in pairs(pin_number_table) do
@@ -84,7 +85,6 @@ if ( session:ready() ) then
 							break;
 					end
 				end
-
 			--if not authorized play a message and then hangup
 				if (not auth) then
 					session:streamFile("phrase:voicemail_fail_auth:#");

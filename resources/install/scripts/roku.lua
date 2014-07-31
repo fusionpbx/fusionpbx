@@ -45,27 +45,42 @@ if ( session:ready() ) then
 	timeoutpin = 7500;
 	timeouttransfer = 7500;
 
+--sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."
+
 	--if the pin number is provided then require it
-		if (pin_number) then
-			min_digits = string.len(pin_number);
-			max_digits = string.len(pin_number)+1;
-			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/please_enter_the_pin_number.wav", "", "\\d+");
-			if (digits == pin_number) then
-				--pin is correct
-				digits = "";
-			else
-				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/your_pin_number_is_incorect_goodbye.wav");
+	if (pin_number) then
+		--get the user pin number
+			min_digits = 2;
+			max_digits = 20;
+			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+
+		--validate the user pin number
+			pin_number_table = explode(",",pin_number);
+			for index,pin_number in pairs(pin_number_table) do
+				if (digits == pin_number) then
+					--set the variable to true
+						auth = true;
+					--set the authorized pin number that was used
+						session:setVariable("pin_number", pin_number);
+					--end the loop
+						break;
+				end
+			end
+
+		--if not authorized play a message and then hangup
+			if (not auth) then
+				session:streamFile("phrase:voicemail_fail_auth:#");
 				session:hangup("NORMAL_CLEARING");
 				return;
 			end
-		end
+	end
 
 	if (session:ready()) then
 		session:answer();
 		min_digits = 1;
 		max_digits = 1;
 		digitmaxlength = 1;
-		digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/custom/please_enter_the_phone_number.wav", "", "\\d+");
+		digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
 
 		x = 0;
 		while (session:ready() == true) do
