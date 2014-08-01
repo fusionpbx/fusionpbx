@@ -154,7 +154,7 @@
 <RTP_CoS_Value_1_>6</RTP_CoS_Value_1_>
 <Network_Jitter_Level_1_>high</Network_Jitter_Level_1_>
 <Jitter_Buffer_Adjustment_1_>Yes</Jitter_Buffer_Adjustment_1_>
-<SIP_Transport_1_>{$sip_transport_1}</SIP_Transport_1_>
+<SIP_Transport_1_>{$sip_transport_1|upper}</SIP_Transport_1_>
 <SIP_Port_1_>{$sip_port_1}</SIP_Port_1_>
 <SIP_100REL_Enable_1_>No</SIP_100REL_Enable_1_>
 <EXT_SIP_Port_1_></EXT_SIP_Port_1_>
@@ -280,7 +280,7 @@
 <RTP_CoS_Value_2_>6</RTP_CoS_Value_2_>
 <Network_Jitter_Level_2_>high</Network_Jitter_Level_2_>
 <Jitter_Buffer_Adjustment_2_>Yes</Jitter_Buffer_Adjustment_2_>
-<SIP_Transport_2_>{$sip_transport_2}</SIP_Transport_2_>
+<SIP_Transport_2_>{$sip_transport_2|upper}</SIP_Transport_2_>
 <SIP_Port_2_>{$sip_port_2}</SIP_Port_2_>
 <SIP_100REL_Enable_2_>No</SIP_100REL_Enable_2_>
 <EXT_SIP_Port_2_></EXT_SIP_Port_2_>
