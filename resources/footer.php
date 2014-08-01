@@ -71,11 +71,22 @@ require_once "resources/require.php";
 
 //prepare the template to display the output
 	$custom_head = '';
-	if (isset($_SESSION["software_name"])) {
-		$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["software_name"];
+	
+	if (isset($_SESSION["theme"]["title"]["text"])) {
+		if (strlen($_SESSION["theme"]["title"]["text"]) == 0) {
+			$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["theme"]["title"]["text"];
+		}
+		else {
+			$document_title = (($document["title"] != '') ? $document["title"]." " : null);
+		}
 	}
 	else {
-		$document_title = (($document["title"] != '') ? $document["title"]." " : null);
+		if (isset($_SESSION["software_name"])) {
+			$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["software_name"];
+		}
+		else {
+			$document_title = (($document["title"] != '') ? $document["title"]." " : null);
+		}
 	}
 	$output = str_replace ("<!--{title}-->", $document_title, $template); //<!--{title}--> defined in each individual page
 	$output = str_replace ("<!--{head}-->", $custom_head, $output); //<!--{head}--> defined in each individual page
