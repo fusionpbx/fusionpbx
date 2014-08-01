@@ -73,7 +73,7 @@ require_once "resources/require.php";
 	$custom_head = '';
 	
 	if (isset($_SESSION["theme"]["title"]["text"])) {
-		if (strlen($_SESSION["theme"]["title"]["text"]) == 0) {
+		if (strlen($_SESSION["theme"]["title"]["text"]) > 0) {
 			$document_title = (($document["title"] != '') ? $document["title"]." - " : null).$_SESSION["theme"]["title"]["text"];
 		}
 		else {
