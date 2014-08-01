@@ -1335,7 +1335,7 @@ legend {
 			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 				<tr>
 					<td align='center' valign='middle'>
-						<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>'></a>
+						<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' width='250'></a>
 						<br />
 						<!--{body}-->
 						<br /><br /><br />
