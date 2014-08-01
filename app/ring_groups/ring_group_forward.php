@@ -156,7 +156,7 @@ require_once "resources/paging.php";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_app']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_timeout_data']."&nbsp;</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['ring_group_enabled']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/ring_groups/ring_group_forward_edit.php?id=".$row['ring_group_uuid']."' alt='".$text['link-call-forward']."'>".$text['link-call-forward']."</a></td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['ring_group_description']."&nbsp;</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
