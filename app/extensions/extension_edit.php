@@ -54,8 +54,6 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config
 		$action = "add";
 	}
 
-$domain_uuid = $_SESSION['domain_uuid'];
-
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
 		//get the values from the HTTP POST and save them as PHP variables
@@ -108,7 +106,7 @@ $domain_uuid = $_SESSION['domain_uuid'];
 			$user_uuid = check_str($_REQUEST["delete_uuid"]);
 		//delete the group from the users
 			$sql = "delete from v_extension_users ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and extension_uuid = '".$extension_uuid."' ";
 			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
@@ -122,7 +120,7 @@ $domain_uuid = $_SESSION['domain_uuid'];
 				$device_line_uuid = check_str($_REQUEST["delete_uuid"]);
 			//delete device_line
 				$sql = "delete from v_device_lines ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and device_line_uuid = '$device_line_uuid' ";
 				$db->exec(check_sql($sql));
 				unset($sql);
@@ -145,7 +143,7 @@ $domain_uuid = $_SESSION['domain_uuid'];
 			$sql_insert .= "values ";
 			$sql_insert .= "(";
 			$sql_insert .= "'".uuid()."', ";
-			$sql_insert .= "'$domain_uuid', ";
+			$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
 			$sql_insert .= "'".$extension_uuid."', ";
 			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
@@ -168,7 +166,7 @@ $domain_uuid = $_SESSION['domain_uuid'];
 
 			//add the device if it doesn't exist, if it does exist get the device_uuid
 				$sql = "select device_uuid from v_devices ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "and device_mac_address = '$device_mac_address' ";
 				if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 				$prep_statement = $db->prepare($sql);
@@ -248,7 +246,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']."domain_uuid<br>\n"; }
 		if (strlen($extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 		//if (strlen($number_alias) == 0) { $msg .= $text['message-required']."Number Alias<br>\n"; }
 		//if (strlen($voicemail_password) == 0) { $msg .= $text['message-required']."Voicemail Password<br>\n"; }
@@ -387,7 +384,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= ")";
 							$sql .= "values ";
 							$sql .= "(";
-							$sql .= "'$domain_uuid', ";
+							$sql .= "'".$_SESSION['domain_uuid']."', ";
 							$sql .= "'$extension_uuid', ";
 							$sql .= "'$extension', ";
 							$sql .= "'$number_alias', ";
@@ -460,7 +457,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							//voicemail class
 								$ext = new extension;
 								$ext->db = $db;
-								$ext->domain_uuid = $domain_uuid;
+								$ext->domain_uuid = $_SESSION['domain_uuid'];
 								$ext->extension = $extension;
 								$ext->number_alias = $number_alias;
 								$ext->voicemail_password = $voicemail_password;
@@ -500,7 +497,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$settled=1;
 					$mc_gross = $total_price;
 					$post_payload = serialize($_POST);
-					$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', '$j extension(s) created', '$domain_uuid' )";
+					$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', '$j extension(s) created', '".$_SESSION['domain_uuid']."' )";
 					$db2->result = $db2->execute();
 					unset($db2->sql, $db2->result);
 				}
@@ -579,7 +576,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "enabled = '$enabled', ";
 					}
 					$sql .= "description = '$description' ";
-					$sql .= "where domain_uuid = '$domain_uuid' ";
+					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 					$sql .= "and extension_uuid = '$extension_uuid'";
 					$db->exec(check_sql($sql));
 					unset($sql);
@@ -589,7 +586,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						require_once "app/extensions/resources/classes/extension.php";
 						$ext = new extension;
 						$ext->db = $db;
-						$ext->domain_uuid = $domain_uuid;
+						$ext->domain_uuid = $_SESSION['domain_uuid'];
 						$ext->extension = $extension;
 						$ext->number_alias = $number_alias;
 						$ext->voicemail_password = $voicemail_password;
@@ -606,9 +603,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_device_lines set ";
 					$sql .= "password = '".$password."' ";
 					$sql .= "where ";
-					$sql .= "domain_uuid = '".$domain_uuid."' and ";
-					$sql .= "server_address = '".$_SESSION['domain_name']."' and ";
-					$sql .= "user_id = '".$extension."' ";
+					$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
+					$sql .= "and user_id = '".$extension."' ";
 					$db->exec(check_sql($sql));
 					unset($sql);
 
@@ -695,7 +692,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and extension_uuid = '$extension_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -740,7 +737,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 		//get the voicemails
 			$sql = "select * from v_voicemails ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			if (is_numeric($extension)) {
 				$sql .= "and voicemail_id = '$extension' ";
 			}
@@ -1037,7 +1034,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('outbound_caller_id_select')) {
 		$sql = "select * from v_destinations ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and destination_type = 'inbound' ";
 		$sql .= "order by destination_number asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -1078,7 +1075,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('outbound_caller_id_select')) {
 		$sql = "select * from v_destinations ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and destination_type = 'inbound' ";
 		$sql .= "order by destination_number asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
