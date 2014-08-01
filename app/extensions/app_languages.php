@@ -367,10 +367,10 @@
 	$text['description-hold_music']['pt-pt'] = "Escolha a categoria MOH da música aqui.";
 	$text['description-hold_music']['fr-fr'] = "Choisir la catégorie de musique de garde.";
 
-	$text['label-user_context']['en-us'] = "User Context";
-	$text['label-user_context']['es-cl'] = "Contexto de Usuario";
-	$text['label-user_context']['pt-pt'] = "Contexto do Utilizador";
-	$text['label-user_context']['fr-fr'] = "Contexte Utilisateur";
+	$text['label-user_context']['en-us'] = "Context";
+	$text['label-user_context']['es-cl'] = "Contexto";
+	$text['label-user_context']['pt-pt'] = "Contexto";
+	$text['label-user_context']['fr-fr'] = "Contexte";
 
 	$text['description-user_context']['en-us'] = "Enter the user context here.";
 	$text['description-user_context']['es-cl'] = "Ingrese el contexto de usuario aquí.";
