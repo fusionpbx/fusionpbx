@@ -17,7 +17,7 @@
 <Line_Enable_1_>Yes</Line_Enable_1_>
 <Mailbox_ID_1_>*97</Mailbox_ID_1_>
 <Proxy_1_>{$server_address_1}</Proxy_1_>
-<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1}</SIP_Transport_1_>
+<SIP_Transport_1_ group="Ext_1/SIP_Settings">{$sip_transport_1|upper}</SIP_Transport_1_>
 <SIP_Port_1_ group="Ext_1/SIP_Settings">{$sip_port_1}</SIP_Port_1_>
 <Register_Expires_1_ group="Ext_1/Proxy_and_Registration">{$register_expires_1}</Register_Expires_1_>
 <Register_1_>Yes</Register_1_>
@@ -32,7 +32,7 @@
 <Mailbox_ID_2_>*97</Mailbox_ID_2_>
 <Proxy_2_>{$server_address_2}</Proxy_2_>
 <Register_2_>Yes</Register_2_>
-<SIP_Transport_2_ group="Ext_1/SIP_Settings">{$sip_transport_2}</SIP_Transport_2_>
+<SIP_Transport_2_ group="Ext_1/SIP_Settings">{$sip_transport_2|upper}</SIP_Transport_2_>
 <SIP_Port_2_ group="Ext_1/SIP_Settings">{$sip_port_2}</SIP_Port_2_>
 <Register_Expires_2_ group="Ext_2/Proxy_and_Registration">{$register_expires_2}</Register_Expires_2_>
 <Display_Name_2_>{$display_name_2}</Display_Name_2_>
