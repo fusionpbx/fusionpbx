@@ -55,6 +55,8 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 		$action = "add";
 	}
 
+$domain_uuid = $_SESSION['domain_uuid'];
+
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -402,7 +404,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$settled=1;
 						$mc_gross = $destination_sell_current_currency;
 						$post_payload = serialize($_POST);
-						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment' )";
+						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '$domain_uuid' )";
 						$db2->result = $db2->execute();
 						unset($db2->sql, $db2->result);
 

@@ -35,7 +35,8 @@ else {
 }
 
 if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
-	require_once "app/billings/functions.php";
+	require_once "app/billing/resources/functions/currency.php";
+	require_once "app/billing/resources/functions/rating.php";
 }
 
 //add multi-lingual support
@@ -52,6 +53,8 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config
 	else {
 		$action = "add";
 	}
+
+$domain_uuid = $_SESSION['domain_uuid'];
 
 //get the http values and set them as php variables
 	if (count($_POST) > 0) {
@@ -475,6 +478,31 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
 					// Let's bill $j has the number of extensions to bill
+					$db2 = new database;
+					$db2->sql = "SELECT currency, billing_uuid, balance FROM v_billings WHERE type_value='$destination_accountcode'";
+					$db2->result = $db2->execute();
+					$default_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
+					$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:$default_currency);
+					$destination_sell_current_currency = currency_convert($destination_sell,$billing_currency,$currency);
+					$billing_uuid = $db2->result[0]['billing_uuid'];
+					$balance = $db2->result[0]['balance'];
+					unset($db2->sql, $db2->result);
+
+					$default_extension_pricing = (strlen($_SESSION['billing']['extension.pricing']['numeric'])?$_SESSION['billing']['extension.pricing']['numeric']:'0');
+					$total_price = $default_extension_pricing * $j;
+					$balance -= $total_price;
+					$db2->sql = "UPDATE v_billings SET balance = $balance, old_balance = $balance WHERE type_value='$destination_accountcode'";
+					$db2->result = $db2->execute();
+					unset($db2->sql, $db2->result);
+
+					$billing_invoice_uuid = uuid();
+					$user_uuid = check_str($_SESSION['user_uuid']);
+					$settled=1;
+					$mc_gross = $total_price;
+					$post_payload = serialize($_POST);
+					$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', '$j extension(s) created', '$domain_uuid' )";
+					$db2->result = $db2->execute();
+					unset($db2->sql, $db2->result);
 				}
 			} //if ($action == "add")
 
