@@ -167,7 +167,7 @@ require_once "resources/paging.php";
 				echo "</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['call_group']."&nbsp;</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['user_context'])."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['user_context']."</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['enabled'])."</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['description']."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
