@@ -759,41 +759,55 @@ legend {
 
 /* end the menu css*/
 
-
 	#message_container {
+		z-index: 99998;
+		position: absolute;
+		top: -200px;
+		left: 0;
+		right: 0;
+		height: 30px;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		-moz-opacity:0;
+		-khtml-opacity: 0;
+		padding: 8px 0;
+	}
+
+	#message_text {
 		z-index: 99999;
 		position: absolute;
+		top: -200px;
 		left: 0;
-		top: 0;
 		right: 0;
 		filter: alpha(opacity=0);
 		opacity: 0;
 		-moz-opacity:0;
 		-khtml-opacity: 0;
-	}
-
-	#message_block {
 		margin: 0 auto;
-		width: 300px;
-		height: auto;
-		background-color: #000;
-		background-repeat: repeat-x;
-		background-image: url('<?php echo PROJECT_PATH; ?>/themes/enhanced/images/background_black.png');
-		background-position: top center;
-		padding: 6px 0 8px 0;
-		-webkit-border-radius: 0 0 3px 3px;
-		-moz-border-radius: 0 0 3px 3px;
-		border-radius: 0 0 3px 3px;
+		vertical-align: middle;
+		padding: 8px 0;
 		text-align: center;
-	}
-
-	#message_block .text {
 		font-family: arial, san-serif;
-		font-size: 10pt;
 		font-weight: bold;
-		color: #fff;
+		font-size: 10pt;
+		color: #000;
 	}
 
+	.message_container_mood_default {
+		background-color: #ccc;
+	}
+
+	.message_container_mood_negative {
+		background-color: #ffcdcd;
+	}
+
+	.message_container_mood_alert {
+		background-color: #feff9d;
+	}
+
+	.message_container_mood_positive {
+		background-color: #ccffcc;
+	}
 
 	#domains_show_icon {
 		filter: alpha(opacity=50);
@@ -812,7 +826,7 @@ legend {
 	}
 
 	#domains_container {
-		z-index: 99998;
+		z-index: 99990;
 		position: absolute;
 		right: 0;
 		top: 0;
@@ -909,15 +923,6 @@ legend {
 
 <script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 <script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
-
-<script language="JavaScript" type="text/javascript">
-	function display_message() {
-		$(document).ready(function() {
-			$("#message_container").animate({ opacity: 0.9 }, "fast").delay(1750).animate({marginTop: '-=200'}, 1000);
-		});
-	}
-</script>
-
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
@@ -978,20 +983,52 @@ legend {
 	});
 </script>
 
+<script language="JavaScript" type="text/javascript">
+	function display_message(msg, mood = 'default') {
+		if (msg != '') {
+			// insert temp div to get width w/o scroll bar
+			var helper_div = $('<div />');
+			$('#page').append(helper_div);
+			inner_width = helper_div.width();
+			helper_div.remove();
+			// add class by mood
+			$("#message_container").addClass('message_container_mood_'+mood);
+			// output message
+			$("#message_text").html(msg);
+			$("#message_container").css({height: $("#message_text").css("height")});
+			$("#message_container").css({width: inner_width});
+			$("#message_text").animate({top: '+=200'}, 0).animate({opacity: 1}, "fast").delay(1750).animate({top: '-=200'}, 1000).animate({opacity: 0});
+			$("#message_container").animate({top: '+=200'}, 0).animate({opacity: 0.7}, "fast").delay(1750).animate({top: '-=200'}, 1000).animate({opacity: 0}, function() {
+				$("#message_container").removeClass('message_container_mood_'+mood);
+			});
+
+		}
+	}
+</script>
+
 </head>
-<body onload="display_message();">
+
+<?php
+// set message_onload
+if (strlen($_SESSION['message']) > 0) {
+	$message_text = addslashes($_SESSION['message']);
+	$message_mood = $_SESSION['message_mood'];
+
+	$onload .= "display_message('".$message_text."'";
+	if ($message_mood != '') {
+		$onload .= ", '".$message_mood."'";
+	}
+	$onload .= "); ";
+	unset($_SESSION['message'], $_SESSION['message_mood']);
+}
+?>
+
+<body onload="<?php echo $onload;?>">
+
+	<div id='message_container' class='message_container_mood_default'></div>
+	<div id='message_text' class='message_container_text_default'></div>
 
 	<?php
-	// message block
-	if (strlen($_SESSION['message']) > 0) {
-		echo "<div id='message_container'>";
-		echo "	<div id='message_block'>";
-		echo "		<span class='text'>".$_SESSION['message']."</span>";
-		echo "	</div>";
-		echo "</div>";
-		unset($_SESSION['message']);
-	}
-
 	//logged in show the domains block
 	if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
 
@@ -1306,7 +1343,7 @@ legend {
 		// default login being used
 		else {
 			?>
-			<div class='main_content' style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;'>
+			<div id="main_content" class='main_content' style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;'>
 				<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 					<tr>
 						<td align='center' valign='middle'>
