@@ -186,6 +186,7 @@ if (sizeof($_REQUEST) > 0) {
 		else {
 			// set message
 			$_SESSION["message"] = $text['message-delete_failed'];
+			$_SESSION["message_mood"] = "negative";
 		}
 
 		header("Location: default_settings.php");

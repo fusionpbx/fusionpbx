@@ -132,6 +132,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 		if ($msg_error) {
 			$_SESSION["message"] = $msg_error;
+			$_SESSION["message_mood"] = 'negative';
 			header("Location: usersupdate.php?id=".$user_uuid);
 			exit;
 		}

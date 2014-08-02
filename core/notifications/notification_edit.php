@@ -263,6 +263,7 @@ else {
 				$project_news == 'false'
 				) {
 				$_SESSION["message"] = $_SESSION["message"]." - ".$text['message-no_channels'];
+				$_SESSION["message_mood"] = 'alert';
 			}
 			// redirect
 			header("Location: notification_edit.php");
