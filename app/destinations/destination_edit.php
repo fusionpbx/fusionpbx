@@ -226,7 +226,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
 							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
 							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 							$y++;
 
