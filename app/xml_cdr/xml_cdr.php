@@ -87,12 +87,15 @@ else {
 	echo "<td>\n";
 	echo "	<input type='hidden' name='direction' value='$direction'>\n";
 	echo "	<input type='hidden' name='caller_id_name' value='$caller_id_name'>\n";
-	echo "	<input type='hidden' name='start_stamp' value='$start_stamp'>\n";
+	echo "	<input type='hidden' name='start_stamp_begin' value='$start_stamp_begin'>\n";
+	echo "	<input type='hidden' name='start_stamp_end' value='$start_stamp_end'>\n";
 	echo "	<input type='hidden' name='hangup_cause' value='$hangup_cause'>\n";
 	echo "	<input type='hidden' name='caller_id_number' value='$caller_id_number'>\n";
 	echo "	<input type='hidden' name='destination_number' value='$destination_number'>\n";
-	echo "	<input type='hidden' name='answer_stamp' value='$answer_stamp'>\n";
-	echo "	<input type='hidden' name='end_stamp' value='$end_stamp'>\n";
+	echo "	<input type='hidden' name='answer_stamp_begin' value='$answer_stamp_begin'>\n";
+	echo "	<input type='hidden' name='answer_stamp_end' value='$answer_stamp_end'>\n";
+	echo "	<input type='hidden' name='end_stamp_begin' value='$end_stamp_begin'>\n";
+	echo "	<input type='hidden' name='end_stamp_end' value='$end_stamp_end'>\n";
 	echo "	<input type='hidden' name='duration' value='$duration'>\n";
 	echo "	<input type='hidden' name='billsec' value='$billsec'>\n";
 	echo "	<input type='hidden' name='uuid' value='$uuid'>\n";
@@ -129,11 +132,15 @@ else {
 	//basic search of call detail records
 		if (permission_exists('xml_cdr_search')) {
 
+			// javascript calendar (source: http://rightjs.org)
+			echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
+			echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/rightjs/right-calendar-src.js'></script>";
+
 			echo "<form method='post' action=''>\n";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<td width='44%' style='vertical-align: top;'>\n";
+			echo "<td width='25%' style='vertical-align: top;'>\n";
 
 				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 				echo "	<tr>\n";
@@ -216,7 +223,7 @@ else {
 				echo "</table>\n";
 
 			echo "</td>";
-			echo "<td width='28%' style='vertical-align: top;'>\n";
+			echo "<td width='25%' style='vertical-align: top;'>\n";
 
 				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 				echo "	<tr>\n";
@@ -224,7 +231,7 @@ else {
 				echo "			".$text['label-source']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='caller_id_number' style='width:100%' value='$caller_id_number'>\n";
+				echo "			<input type='text' class='formfld' name='caller_id_number' value='$caller_id_number'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 
@@ -233,29 +240,31 @@ else {
 				echo "			".$text['label-destination']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='destination_number' style='width:100%' value='$destination_number'>\n";
+				echo "			<input type='text' class='formfld' name='destination_number' value='$destination_number'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "</table>\n";
 
 			echo "</td>";
-			echo "<td width='28%' style='vertical-align: top;'>\n";
+			echo "<td width='25%' style='vertical-align: top;'>\n";
 
 				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+				echo "	<tr>\n";
+				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+				echo "			".$text['label-start_range']."\n";
+				echo "		</td>\n";
+				echo "		<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
+				echo "			<input type='text' class='formfld' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>\n";
+				echo "			> ";
+				echo "			<input type='text' class='formfld' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>\n";
+				echo "		</td>\n";
+				echo "	</tr>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 				echo "			".$text['label-cid-name']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='caller_id_name' style='width:100%' value='$caller_id_name'>\n";
-				echo "		</td>\n";
-				echo "	</tr>\n";
-				echo "	<tr>\n";
-				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
-				echo "			".$text['label-start']."\n";
-				echo "		</td>\n";
-				echo "		<td class='vtable' width='70%' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='start_stamp' style='width:100%' value='$start_stamp'>\n";
+				echo "			<input type='text' class='formfld' name='caller_id_name' value='$caller_id_name'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "</table>\n";
@@ -451,7 +460,7 @@ else {
 				$sell_price = $row['call_sell'];
 				$lcr_direction = (strlen($row['direction'])?$row['direction']:"outbound");
 				$n = (($lcr_direction == "inbound")?$row['caller_id_number']:$row['destination_number']);
-				
+
 				$database->table = "v_lcr";
 				$database->sql = "SELECT currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='$lcr_direction' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 				$database->result = $database->execute();

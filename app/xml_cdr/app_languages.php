@@ -70,10 +70,20 @@
 	$text['label-destination']['pt-pt'] = "Destino";
 	$text['label-destination']['fr-fr'] = "Destination";
 
-	$text['label-start']['en-us'] = "Start";
-	$text['label-start']['es-cl'] = "Inicio";
-	$text['label-start']['pt-pt'] = "Início";
-	$text['label-start']['fr-fr'] = "Début";
+	$text['label-start_range']['en-us'] = "Start Range";
+	$text['label-start_range']['es-cl'] = "Comienzo Lapso";
+	$text['label-start_range']['pt-pt'] = "Começo Palmo";
+	$text['label-start_range']['fr-fr'] = "Démarrer Envergure";
+
+	$text['label-answer_range']['en-us'] = "Answer Range";
+	$text['label-answer_range']['es-cl'] = "Respuesta Lapso";
+	$text['label-answer_range']['pt-pt'] = "Resposta Palmo";
+	$text['label-answer_range']['fr-fr'] = "Réponse Envergure";
+
+	$text['label-end_range']['en-us'] = "End Range";
+	$text['label-end_range']['es-cl'] = "Fin Lapso";
+	$text['label-end_range']['pt-pt'] = "Fim Palmo";
+	$text['label-end_range']['fr-fr'] = "Fin Envergure";
 
 	$text['label-status']['en-us'] = "Status";
 	$text['label-status']['es-cl'] = "Estado";
