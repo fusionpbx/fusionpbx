@@ -788,13 +788,11 @@ legend {
 		padding: 8px 0;
 		text-align: center;
 		font-family: arial, san-serif;
-		font-weight: bold;
 		font-size: 10pt;
-		color: #000;
 	}
 
 	.message_container_mood_default {
-		background-color: #ccc;
+		background-color: #ccffcc;
 	}
 
 	.message_container_mood_negative {
@@ -802,11 +800,19 @@ legend {
 	}
 
 	.message_container_mood_alert {
-		background-color: #feff9d;
+		background-color: #ffe585;
 	}
 
-	.message_container_mood_positive {
-		background-color: #ccffcc;
+	.message_text_mood_default {
+		color: #004200;
+	}
+
+	.message_text_mood_negative {
+		color: #670000;
+	}
+
+	.message_text_mood_alert {
+		color: #d66721;
 	}
 
 	#domains_show_icon {
@@ -993,6 +999,7 @@ legend {
 			helper_div.remove();
 			// add class by mood
 			$("#message_container").addClass('message_container_mood_'+mood);
+			$("#message_text").addClass('message_text_mood_'+mood);
 			// output message
 			$("#message_text").html(msg);
 			$("#message_container").css({height: $("#message_text").css("height")});

@@ -248,7 +248,6 @@ require_once "resources/require.php";
 							if ($action == "add") {
 								//save the message to a session variable
 									$_SESSION['message'] = $text['message-add'];
-									$_SESSION['message_mood'] = 'positive';
 								//redirect the browser
 									header("Location: device_edit.php?id=$device_uuid");
 									exit;
@@ -256,7 +255,6 @@ require_once "resources/require.php";
 							if ($action == "update") {
 								//save the message to a session variable
 									$_SESSION['message'] = $text['message-update'];
-									$_SESSION['message_mood'] = 'positive';
 							}
 						}
 					}
@@ -383,33 +381,24 @@ require_once "resources/require.php";
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 
-
 		function check_mac_duplicate(mac_addr, device_uuid_to_ignore) {
 			if (mac_addr != '') {
-				var response;
 				check_url = "device_edit.php?mac="+mac_addr+"&id="+device_uuid_to_ignore;
 				$("#duplicate_mac_response").load(check_url, function() {
-					var duplicate_mac_response = $("#duplicate_mac_response").html();
-					if (duplicate_mac_response != '') {
+					if ($("#duplicate_mac_response").html() != '') {
 						$('#device_mac_address').addClass('formfld_highlight_bad');
-						display_message(duplicate_mac_response, 'negative');
-						$('#duplicate_mac_found').val(true);
+						display_message($("#duplicate_mac_response").html(), 'negative');
 					}
 					else {
 						$('#device_mac_address').removeClass('formfld_highlight_bad');
-						$('#duplicate_mac_found').val(false);
+						$('#frm').submit();
 					}
 				});
-				return ($('#duplicate_mac_found').val() == "true") ? false : true;
 			}
 			else {
-				return true;
+				$('#frm').submit();
 			}
 		}
-
-
-
-
 	</script>
 <?php
 //show the content
@@ -444,9 +433,9 @@ require_once "resources/require.php";
 	echo "	".$text['label-device_mac_address'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\" onblur=\"check_mac_duplicate(this.value, '".$device_uuid."');\">\n";
+	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\">\n";
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
-	echo "	<input type='hidden' id='duplicate_mac_found' value=''>\n";
+	echo "	<div style='display: none;' id='duplicate_mac_found'></div>\n";
 	echo "<br />\n";
 	echo $text['description-device_mac_address']."\n";
 	echo "</td>\n";
@@ -1092,7 +1081,7 @@ require_once "resources/require.php";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='device_uuid' value='$device_uuid'>\n";
 	}
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"if (check_mac_duplicate(document.getElementById('device_mac_address').value, '".$device_uuid."')) { document.forms.frm.submit(); }\">\n";
+	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"check_mac_duplicate(document.getElementById('device_mac_address').value, '".$device_uuid."');\">\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
