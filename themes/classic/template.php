@@ -503,7 +503,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 		z-index: 99999;
 		position: absolute;
 		left: 0px;
-		top: 0px;
+		top: -200px;
 		right: 0px;
 		filter: alpha(opacity=0);
 		opacity: 0;
@@ -570,26 +570,30 @@ function confirmdelete(url) {
 <script language="javascript" type="text/javascript" src="<?=PROJECT_PATH?>/resources/jquery/jquery-1.8.3.js"></script>
 
 <script language="JavaScript" type="text/javascript">
-	function display_message() {
-		$(document).ready(function() {
-			$("#message_container").animate({ opacity: 0.9 }, "fast").delay(1750).animate({marginTop: '-=200'}, 1000);
-		});
+	function display_message(msg) {
+		$("#message_text").html(msg);
+		$("#message_container").animate({top: '+=200'}, 0).animate({ opacity: 0.9 }, "fast").delay(1750).animate({top: '-=200'}, 1000).animate({opacity: 0});
 	}
 </script>
 
 </head>
-<body onload="display_message();">
 
-	<?php
-		if (strlen($_SESSION['message']) > 0) {
-			echo "<div id='message_container'>";
-			echo "	<div id='message_block'>";
-			echo "		<span class='text'>".$_SESSION['message']."</span>";
-			echo "	</div>";
-			echo "</div>";
-			unset($_SESSION['message']);
-		}
-	?>
+<?php
+// set message_onload
+if (strlen($_SESSION['message']) > 0) {
+	$message_text = addslashes($_SESSION['message']);
+	$onload .= "display_message('".$message_text."');";
+	unset($_SESSION['message']);
+}
+?>
+
+<body onload="<?php echo $onload;?>">
+
+	<div id='message_container'>
+		<div id='message_block'>
+			<span id='message_text' class='text'></span>
+		</div>
+	</div>
 
 	<?php
 		// qr code container for contacts
