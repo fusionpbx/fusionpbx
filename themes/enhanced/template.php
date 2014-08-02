@@ -990,7 +990,8 @@ legend {
 </script>
 
 <script language="JavaScript" type="text/javascript">
-	function display_message(msg, mood = 'default') {
+	function display_message(msg, mood) {
+		mood = typeof mood !== 'undefined' ? mood : 'default';
 		if (msg != '') {
 			// insert temp div to get width w/o scroll bar
 			var helper_div = $('<div />');
