@@ -278,21 +278,14 @@ else {
 			if ($fax_file_extension == ".pdf") {
 				chdir($dir_fax_temp);
 				exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1728x2156 -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
-			} elseif($fax_file_extension != ".tif") {
+			} else {
 				exec("export HOME=/tmp && libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.$fax_file_extension);
-
-				if(file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')){
-					chdir($dir_fax_temp);
-					exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1728x2156 -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
-				}
 			}
 
-		//if the pdf does not exist then convert the tif to a pdf
-			if (!file_exists($dir_fax_sent.'/'.$fax_name.".pdf")) {
-				if (is_file("/usr/local/bin/gs")) {
-					chdir($dir_fax_sent);
-					exec("gs -q -sDEVICE=tiffg3 -g1728x1078 -dNOPAUSE -sOutputFile=".$fax_name.".pdf -- ".$fax_name.".tif -c quit");
-				}
+		//if the tif does not exist then convert the pdf to a tif
+			if(file_exists($dir_fax_temp.'/'.$fax_name.'.pdf') && !file_exists($dir_fax_temp.'/'.$fax_name.'.tif')){
+				chdir($dir_fax_temp);
+				exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1728x2156 -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
 			}
 
 		//get some more info to send the fax
@@ -329,7 +322,7 @@ else {
 				$mailto_address = "'".$mailto_address_fax."\,".$mailto_address_user."'";
 			}
 			else {
-			$mailto_address = $mailto_address_user;
+				$mailto_address = $mailto_address_user;
 			}
 
 		//send the fax
@@ -365,6 +358,15 @@ else {
 		//copy the .pdf to the sent directory
 			if (file_exists($dir_fax_temp.'/'.$fax_name.".pdf")) {
 				exec("cp ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_sent.'/'.$fax_name.".pdf");
+			}
+
+		//copy the original file to the sent box
+			foreach ($_SESSION['fax']['save'] as $row) {
+				if ($row == "all" || $row == "original") {
+					if ($fax_file_extension != ".pdf" || $fax_file_extension != ".tif") {
+						exec("cp ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_sent.'/'.$fax_name.$fax_file_extension);
+					}
+				}
 			}
 
 		//convert the tif to pdf and png
