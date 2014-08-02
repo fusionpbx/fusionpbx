@@ -112,6 +112,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller id number.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_cid_name_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller id name prefix.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "destination_context";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the context.";

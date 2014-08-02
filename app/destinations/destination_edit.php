@@ -55,8 +55,6 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 		$action = "add";
 	}
 
-$domain_uuid = $_SESSION['domain_uuid'];
-
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
@@ -66,6 +64,7 @@ $domain_uuid = $_SESSION['domain_uuid'];
 		$regex_destination_number = str_replace("+", "\\+", $destination_number);
 		$destination_caller_id_name = check_str($_POST["destination_caller_id_name"]);
 		$destination_caller_id_number = check_str($_POST["destination_caller_id_number"]);
+		$destination_cid_name_prefix = check_str($_POST["destination_cid_name_prefix"]);
 		$destination_context = check_str($_POST["destination_context"]);
 		$fax_uuid = check_str($_POST["fax_uuid"]);
 		$destination_enabled = check_str($_POST["destination_enabled"]);
@@ -221,6 +220,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 					//increment the dialplan detail order
 						$dialplan_detail_order = $dialplan_detail_order + 10;
+
+					//set the call accountcode
+						if (strlen($destination_cid_name_prefix) > 0) {
+							$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "caller_id_name=".$destination_cid_name_prefix".# \${caller_id_name}";
+							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+							$y++;
+
+							//increment the dialplan detail order
+							$dialplan_detail_order = $dialplan_detail_order + 10;
+						}
 
 					//set the call accountcode
 						if (strlen($destination_accountcode) > 0) {
@@ -404,7 +416,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$settled=1;
 						$mc_gross = $destination_sell_current_currency;
 						$post_payload = serialize($_POST);
-						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '$domain_uuid' )";
+						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '".$_SESSION['domain_uuid']."' )";
 						$db2->result = $db2->execute();
 						unset($db2->sql, $db2->result);
 
@@ -432,6 +444,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$destination_number = $row["destination_number"];
 			$destination_caller_id_name = $row["destination_caller_id_name"];
 			$destination_caller_id_number = $row["destination_caller_id_number"];
+			$destination_cid_name_prefix = $row["destination_cid_name_prefix"];
 			$destination_context = $row["destination_context"];
 			$fax_uuid = $row["fax_uuid"];
 			$destination_enabled = $row["destination_enabled"];
@@ -570,6 +583,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-destination_cid_name_prefix'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='destination_cid_name_prefix' maxlength='255' value=\"$destination_cid_name_prefix\">\n";
+	echo "<br />\n";
+	echo $text['description-destination_cid_name_prefix']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
