@@ -408,7 +408,7 @@ require_once "resources/require.php";
 	echo "	<td align=\"left\">\n";
 	echo "		<br>";
 
-	echo "<form method='post' name='frm' id='frm' action=''>\n";
+	echo "<form method='post' name='frm' id='frm' action='' onsubmit=\"check_mac_duplicate(document.getElementById('device_mac_address').value, '".$device_uuid."'); return false;\">\n";
 	echo "<div align='center'>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -1081,7 +1081,7 @@ require_once "resources/require.php";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='device_uuid' value='$device_uuid'>\n";
 	}
-	echo "			<input type='button' class='btn' value='".$text['button-save']."' onclick=\"check_mac_duplicate(document.getElementById('device_mac_address').value, '".$device_uuid."');\">\n";
+	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
