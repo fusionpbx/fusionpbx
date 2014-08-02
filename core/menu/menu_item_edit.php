@@ -131,7 +131,7 @@ else {
 				if (strlen($menu_item_parent_uuid) == 0) {
 					$sql = "SELECT menu_item_order FROM v_menu_items ";
 					$sql .= "where menu_uuid = '$menu_uuid' ";
-					$sql .= "and menu_item_parent_uuid = '$menu_item_parent_uuid' ";
+					$sql .= "and menu_item_parent_uuid is null ";
 					$sql .= "order by menu_item_order desc ";
 					$sql .= "limit 1 ";
 					$prep_statement = $db->prepare(check_sql($sql));
@@ -199,7 +199,7 @@ else {
 							$sql .= "menu_item_order = '$menu_item_order', ";
 						}
 						else {
-							$sql .= "menu_item_order = '$highest_menu_item_order', ";
+							$sql .= "menu_item_order = '".($highest_menu_item_order+1)."', ";
 						}
 					}
 					else {
