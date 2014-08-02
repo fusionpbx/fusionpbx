@@ -87,6 +87,16 @@
 		$text['description-destination_caller_id_number']['pt-pt'] = "Introduza o número do chamador";
 		$text['description-destination_caller_id_number']['fr-fr'] = "Insérer le numéro d'appelant.";
 
+		$text['label-destination_cid_name_prefix']['en-us'] = "Caller ID Name Prefix";
+		$text['label-destination_cid_name_prefix']['es-cl'] = "Prefijo de Nombre de Caller ID";
+		$text['label-destination_cid_name_prefix']['pt-pt'] = "Nome do Chamador";
+		$text['label-destination_cid_name_prefix']['fr-fr'] = "Préfixe ajouté au nom de l'appelant";
+
+		$text['description-destination_cid_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
+		$text['description-destination_cid_name_prefix']['es-cl'] = "Configurar el prefijo del nombre de Caller ID.";
+		$text['description-destination_cid_name_prefix']['pt-pt'] = "Escolha um prefixo a adicionar ao nome do chamador.";
+		$text['description-destination_cid_name_prefix']['fr-fr'] = "Choisie un préfixe à ajouter au nom de l'appelant.";
+
 		$text['label-destination_context']['en-us'] = "Context";
 		$text['label-destination_context']['es-cl'] = "Contexto";
 		$text['label-destination_context']['pt-pt'] = "Contexto";
