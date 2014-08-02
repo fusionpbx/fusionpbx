@@ -132,15 +132,11 @@ else {
 	//basic search of call detail records
 		if (permission_exists('xml_cdr_search')) {
 
-			// javascript calendar (source: http://rightjs.org)
-			echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
-			echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/rightjs/right-calendar-src.js'></script>";
-
 			echo "<form method='post' action=''>\n";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
-			echo "<td width='25%' style='vertical-align: top;'>\n";
+			echo "<td width='33%' style='vertical-align: top;'>\n";
 
 				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 				echo "	<tr>\n";
@@ -223,7 +219,7 @@ else {
 				echo "</table>\n";
 
 			echo "</td>";
-			echo "<td width='25%' style='vertical-align: top;'>\n";
+			echo "<td width='33%' style='vertical-align: top;'>\n";
 
 				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 				echo "	<tr>\n";
@@ -246,7 +242,7 @@ else {
 				echo "</table>\n";
 
 			echo "</td>";
-			echo "<td width='25%' style='vertical-align: top;'>\n";
+			echo "<td width='34%' style='vertical-align: top;'>\n";
 
 				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 				echo "	<tr>\n";
@@ -254,9 +250,9 @@ else {
 				echo "			".$text['label-start_range']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-				echo "			<input type='text' class='formfld' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>\n";
+				echo "			<input type='text' class='formfld' style='min-width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>\n";
 				echo "			> ";
-				echo "			<input type='text' class='formfld' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>\n";
+				echo "			<input type='text' class='formfld' style='min-width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
