@@ -682,7 +682,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<select class='formfld' name='queue_record_template'>\n";
 	echo "	<option value=''></option>\n";
 	if (strlen($queue_record_template) > 0) {
-		echo "	<option value='$rec_template' selected='selected' >".$text['option-true']."</option>\n";
+		echo "	<option value='$record_template' selected='selected' >".$text['option-true']."</option>\n";
 	}
 	else {
 		echo "	<option value='$record_template'>".$text['option-true']."</option>\n";
