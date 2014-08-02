@@ -199,7 +199,7 @@ else {
 							$sql .= "menu_item_order = '$menu_item_order', ";
 						}
 						else {
-							$sql .= "menu_item_order = '$highest_menu_item_order', "
+							$sql .= "menu_item_order = '$highest_menu_item_order', ";
 						}
 					}
 					else {
