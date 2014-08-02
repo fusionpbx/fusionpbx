@@ -381,7 +381,7 @@ require_once "resources/require.php";
 			obj[0].parentNode.removeChild(obj[2]);
 		}
 
-	// checks for duplicate devices (mac addresses) in db
+
 		function check_mac_duplicate(mac_addr, device_uuid_to_ignore) {
 			if (mac_addr != '') {
 				check_url = "device_edit.php?mac="+mac_addr+"&id="+device_uuid_to_ignore;
@@ -392,7 +392,7 @@ require_once "resources/require.php";
 					}
 					else {
 						$('#device_mac_address').removeClass('formfld_highlight_bad');
-						$('#frm').submit();
+						document.getElementById('frm').submit();
 					}
 				});
 			}
