@@ -502,7 +502,7 @@ else {
 		//delete the dialplan context from memcache
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
-				$switch_cmd = "memcache delete dialplan:".$dialplan_context."@".$_SESSION['domain_name'];
+				$switch_cmd = "memcache delete dialplan:".$dialplan_context;
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 			}
 
