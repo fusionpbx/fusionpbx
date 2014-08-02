@@ -927,10 +927,18 @@ legend {
 	//-->
 </SCRIPT>
 
-<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
-<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
+<!-- // javascript calendar (source: http://rightjs.org) - keep before jquery load -->
+<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right.js'></script>
+<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right-calendar-src.js'></script>
+
+<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
+
+		$("#domains_show_icon").click(function() { show_domains(); });
+		$("#domains_show_text").click(function() { show_domains(); });
+		$("#domains_hide").click(function() { hide_domains(); });
 
 		function show_domains() {
 			$("#domains_container").show();
@@ -949,14 +957,6 @@ legend {
 			});
 			document.getElementById('domains_visible').value = 0;
 		}
-
-		$("#domains_show_icon, #domains_show_text").click(function() {
-			show_domains();
-		});
-
-		$("#domains_hide").click(function() {
-			hide_domains();
-		});
 
 		// hit escape to toggle visibility of domain selector
 		$(document).keyup(function(e) {
