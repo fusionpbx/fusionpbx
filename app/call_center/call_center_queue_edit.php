@@ -679,6 +679,24 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='queue_record_template' maxlength='255' value=\"$queue_record_template\">\n";
+
+	$record_template = $_SESSION['switch']['recordings']['dir']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
+
+	echo "	<select class='formfld' name='queue_record_template'>\n";
+	echo "	<option value=''></option>\n";
+	if (strlen($queue_record_template) > 0) {
+		echo "	<option value='$rec_template' selected='selected' >".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "	<option value='$record_template'>".$text['option-true']."</option>\n";
+	}
+	if (strlen($queue_record_template) == 0) {
+		echo "	<option value='' selected='selected' >".$text['option-false']."</option>\n";
+	}
+	else {
+		echo "	<option value=''>".$text['option-false']."</option>\n";
+	}
+	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-record_template']."\n";
 	echo "</td>\n";

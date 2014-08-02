@@ -139,10 +139,10 @@
 	$text['option-rsring']['pt-pt'] = "rs-ring";
 	$text['option-rsring']['fr-fr'] = "rs-ring";
 
-	$text['label-record_template']['en-us'] = "Record Template";
-	$text['label-record_template']['es-cl'] = "Guardar Plantilla";
-	$text['label-record_template']['pt-pt'] = "Gravar Template";
-	$text['label-record_template']['fr-fr'] = "Modèle d'enregistrement";
+	$text['label-record_template']['en-us'] = "Record";
+	$text['label-record_template']['es-cl'] = "Guardar";
+	$text['label-record_template']['pt-pt'] = "Gravar";
+	$text['label-record_template']['fr-fr'] = "Modèle";
 
 	$text['label-tiers']['en-us'] = "Tiers";
 	$text['label-tiers']['es-cl'] = "Niveles de Centro de Llamados";
@@ -310,10 +310,10 @@
 	$text['description-music_on_hold']['pt-pt'] = "Seleccione uma música de espera.";
 	$text['description-music_on_hold']['fr-fr'] = "";
 
-	$text['description-record_template']['en-us'] = "Enter a record template. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
-	$text['description-record_template']['es-cl'] = "Introduzca una plantilla de grabación. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
-	$text['description-record_template']['pt-pt'] = "Introduza um template de gravação. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
-	$text['description-record_template']['fr-fr'] = "Entrer un modèle d\'enregistrement. \$\${base_dir}/recordings/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.wav";
+	$text['description-record_template']['en-us'] = "Save the recording.";
+	$text['description-record_template']['es-cl'] = "Guardar la grabación.";
+	$text['description-record_template']['pt-pt'] = "Salve a gravação.";
+	$text['description-record_template']['fr-fr'] = "Sauvegarder l'enregistrement.";
 
 	$text['description-tiers']['en-us'] = "Tiers assign agents to queues.";
 	$text['description-tiers']['es-cl'] = "Lista todos los niveles. Los niveles asignan agentes a las colas.";

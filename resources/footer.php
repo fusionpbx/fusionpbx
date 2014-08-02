@@ -33,8 +33,13 @@ require_once "resources/require.php";
 //set a default template
 	if (strlen($_SESSION['domain']['template']['name']) == 0) { $_SESSION['domain']['template']['name'] = 'default'; }
 
+//clear the template
+	if ($_SESSION['theme']['cache']['boolean'] == "false") {
+			$_SESSION["template_content"] = '';
+	}
+
 //set a default template
-	if (strlen($_SESSION["template_content"])==0) { //build template if session template has no length
+	if (strlen($_SESSION["template_content"]) == 0) { //build template if session template has no length
 		$v_template_path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
 		if (strlen($template_rss_sub_category) > 0) {
 			//this template was assigned by the content manager
