@@ -127,23 +127,24 @@ else {
 					$menu_language = $row['menu_language'];
 				}
 
+			//get the highest menu item order
+				if (strlen($menu_item_parent_uuid) == 0) {
+					$sql = "SELECT menu_item_order FROM v_menu_items ";
+					$sql .= "where menu_uuid = '$menu_uuid' ";
+					$sql .= "and menu_item_parent_uuid = '$menu_item_parent_uuid' ";
+					$sql .= "order by menu_item_order desc ";
+					$sql .= "limit 1 ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					foreach ($result as &$row) {
+						$highest_menu_item_order = $row['menu_item_order'];
+					}
+					unset($prep_statement);
+				}
+
 			//add a menu item
 				if ($action == "add" && permission_exists('menu_add')) {
-					if (strlen($menu_item_parent_uuid) == 0) {
-						$sql = "SELECT menu_item_order FROM v_menu_items ";
-						$sql .= "where menu_uuid = '$menu_uuid' ";
-						$sql .= "and menu_item_parent_uuid = '$menu_item_parent_uuid' ";
-						$sql .= "order by menu_item_order desc ";
-						$sql .= "limit 1 ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						foreach ($result as &$row) {
-							$highest_menu_item_order = $row['menu_item_order'];
-						}
-						unset($prep_statement);
-					}
-
 					$menu_item_uuid = uuid();
 					$sql = "insert into v_menu_items ";
 					$sql .= "(";
@@ -194,7 +195,12 @@ else {
 					$sql .= "menu_item_protected = '$menu_item_protected', ";
 					if (strlen($menu_item_parent_uuid) == 0) {
 						$sql .= "menu_item_parent_uuid = null, ";
-						$sql .= "menu_item_order = '$menu_item_order', ";
+						if (strlen($menu_item_order) > 0) {
+							$sql .= "menu_item_order = '$menu_item_order', ";
+						}
+						else {
+							$sql .= "menu_item_order = '$highest_menu_item_order', "
+						}
 					}
 					else {
 						$sql .= "menu_item_parent_uuid = '$menu_item_parent_uuid', ";
