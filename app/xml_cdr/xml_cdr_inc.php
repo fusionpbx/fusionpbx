@@ -54,9 +54,12 @@ else {
 		$caller_id_number = check_str($_REQUEST["caller_id_number"]);
 		$destination_number = check_str($_REQUEST["destination_number"]);
 		$context = check_str($_REQUEST["context"]);
-		$start_stamp = check_str($_REQUEST["start_stamp"]);
-		$answer_stamp = check_str($_REQUEST["answer_stamp"]);
-		$end_stamp = check_str($_REQUEST["end_stamp"]);
+		$start_stamp_begin = check_str($_REQUEST["start_stamp_begin"]);
+		$start_stamp_end = check_str($_REQUEST["start_stamp_end"]);
+		$answer_stamp_begin = check_str($_REQUEST["answer_stamp_begin"]);
+		$answer_stamp_end = check_str($_REQUEST["answer_stamp_end"]);
+		$end_stamp_begin = check_str($_REQUEST["end_stamp_begin"]);
+		$end_stamp_end = check_str($_REQUEST["end_stamp_end"]);
 		$start_epoch = check_str($_REQUEST["start_epoch"]);
 		$stop_epoch = check_str($_REQUEST["stop_epoch"]);
 		$duration = check_str($_REQUEST["duration"]);
@@ -93,15 +96,21 @@ else {
 		$sql_where_ands[] = "destination_number like '".$mod_destination_number."'";
 	}
 	if (strlen($context) > 0) { $sql_where_ands[] = "context like '%".$context."%'"; }
-	if ($db_type == "sqlite") {
-		if (strlen($start_stamp) > 0) { $sql_where_ands[] = "start_stamp like '%".$start_stamp."%'"; }
-		if (strlen($end_stamp) > 0) { $sql_where_ands[] = "end_stamp like '%".$end_stamp."%'"; }
+	if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
+	else {
+		if (strlen($start_stamp_begin) > 0) { $sql_where_ands[] = "start_stamp >= '".$start_stamp_begin.":00.000'"; }
+		if (strlen($start_stamp_end) > 0) { $sql_where_ands[] = "start_stamp <= '".$start_stamp_end.":59.999'"; }
 	}
-	if ($db_type == "pgsql" || $db_type == "mysql") {
-		if (strlen($start_stamp) > 0 && strlen($end_stamp) == 0) { $sql_where_ands[] = "start_stamp between '".$start_stamp." 00:00:00' and '".$start_stamp." 23:59:59'"; }
-		if (strlen($start_stamp) > 0 && strlen($end_stamp) > 0) { $sql_where_ands[] = "start_stamp between '".$start_stamp." 00:00:00' and '".$end_stamp." 23:59:59'"; }
+	if (strlen($answer_stamp_begin) > 0 && strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp BETWEEN '".$answer_stamp_begin.":00.000' AND '".$answer_stamp_end.":59.999'"; }
+	else {
+		if (strlen($answer_stamp_begin) > 0) { $sql_where_ands[] = "answer_stamp >= '".$answer_stamp_begin.":00.000'"; }
+		if (strlen($answer_stamp_end) > 0) { $sql_where_ands[] = "answer_stamp <= '".$answer_stamp_end.":59.999'"; }
 	}
-	if (strlen($answer_stamp) > 0) { $sql_where_ands[] = "answer_stamp like '%".$answer_stamp."%'"; }
+	if (strlen($end_stamp_begin) > 0 && strlen($end_stamp_end) > 0) { $sql_where_ands[] = "end_stamp BETWEEN '".$end_stamp_begin.":00.000' AND '".$end_stamp_end.":59.999'"; }
+	else {
+		if (strlen($end_stamp_begin) > 0) { $sql_where_ands[] = "end_stamp >= '".$end_stamp_begin.":00.000'"; }
+		if (strlen($end_stamp_end) > 0) { $sql_where_ands[] = "end_stamp <= '".$end_stamp_end.":59.999'"; }
+	}
 	if (strlen($duration) > 0) { $sql_where_ands[] = "duration like '%".$duration."%'"; }
 	if (strlen($billsec) > 0) { $sql_where_ands[] = "billsec like '%".$billsec."%'"; }
 	if (strlen($hangup_cause) > 0) { $sql_where_ands[] = "hangup_cause like '%".$hangup_cause."%'"; }
@@ -167,8 +176,12 @@ else {
 	$param .= "&caller_id_number=".$caller_id_number;
 	$param .= "&destination_number=".$destination_number;
 	$param .= "&context=".$context;
-	$param .= "&answer_stamp=".$answer_stamp;
-	$param .= "&end_stamp=".$end_stamp;
+	$param .= "&start_stamp_begin=".$start_stamp_begin;
+	$param .= "&start_stamp_end=".$start_stamp_end;
+	$param .= "&answer_stamp_begin=".$answer_stamp_begin;
+	$param .= "&answer_stamp_end=".$answer_stamp_end;
+	$param .= "&end_stamp_begin=".$end_stamp_begin;
+	$param .= "&end_stamp_end=".$end_stamp_end;
 	$param .= "&start_epoch=".$start_epoch;
 	$param .= "&stop_epoch=".$stop_epoch;
 	$param .= "&duration=".$duration;
@@ -215,7 +228,7 @@ else {
 				}
 			}
 			unset($prep_statement, $result);
-			
+
 		//limit the number of results
 			if ($num_rows > $_SESSION['cdr']['limit']['numeric']) {
 				$num_rows = $_SESSION['cdr']['limit']['numeric'];

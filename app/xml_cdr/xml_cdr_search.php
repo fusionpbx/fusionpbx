@@ -48,6 +48,10 @@ echo "<tr class='border'>\n";
 echo "	<td align=\"left\">\n";
 echo "		<br>";
 
+// javascript calendar (source: http://rightjs.org)
+echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
+echo "<script type='text/javascript' src='".PROJECT_PATH."/resources/rightjs/right-calendar-src.js'></script>";
+
 echo "<form method='post' action='xml_cdr.php'>\n";
 echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
 
@@ -105,16 +109,28 @@ echo "		<td class='vncell'>".$text['label-context']."</td>";
 echo "		<td class='vtable'><input type='text' class='formfld' name='context' value='$context'></td>";
 echo "	</tr>";
 echo "	<tr>";
-echo "		<td class='vncell'>".$text['label-start']."</td>";
-echo "		<td class='vtable'><input type='text' class='formfld' name='start_stamp' value='$start_stamp'></td>";
+echo "		<td class='vncell'>".$text['label-start_range']."</td>";
+echo "		<td class='vtable'>";
+echo "			<input type='text' class='formfld' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>";
+echo "			> ";
+echo "			<input type='text' class='formfld' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>";
+echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
-echo "		<td class='vncell'>".$text['label-answer']."</td>";
-echo "		<td class='vtable'><input type='text' class='formfld' name='answer_stamp' value='$answer_stamp'></td>";
+echo "		<td class='vncell'>".$text['label-answer_range']."</td>";
+echo "		<td class='vtable'>";
+echo "			<input type='text' class='formfld' name='answer_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$answer_stamp_begin'>";
+echo "			> ";
+echo "			<input type='text' class='formfld' name='answer_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$answer_stamp_end'>";
+echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
-echo "		<td class='vncell'>".$text['label-end_stamp']."</td>";
-echo "		<td class='vtable'><input type='text' class='formfld' name='end_stamp' value='$end_stamp'></td>";
+echo "		<td class='vncell'>".$text['label-end_range']."</td>";
+echo "		<td class='vtable'>";
+echo "			<input type='text' class='formfld' name='end_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$end_stamp_begin'>";
+echo "			> ";
+echo "			<input type='text' class='formfld' name='end_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$end_stamp_end'>";
+echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-duration']."</td>";
