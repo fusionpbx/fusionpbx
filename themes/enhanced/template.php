@@ -33,8 +33,14 @@
 	if (strlen(PROJECT_PATH) > 0) {
 		$php_self_dir = substr($php_self_dir, strlen(PROJECT_PATH), strlen($php_self_dir));
 	}
+	if (isset($_SESSION['theme']['favicon']['text'])){
+		$favicon = $_SESSION['theme']['favicon']['text'];
+	}
+	else {
+		$favicon = '<!--{project_path}-->/themes/enhanced/favicon.ico';
+        }
 ?>
-<link rel="icon" href="<!--{project_path}-->/themes/enhanced/favicon.ico">
+<link rel="icon" href="<?php echo $favicon; ?>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type='text/css'>
 
