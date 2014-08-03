@@ -715,7 +715,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			tbb.setAttribute('class', 'btn');
 			tbb.setAttribute('style', 'margin-left: 4px;');
 			tbb.type='button';
-			tbb.value=$("<div />").html('&#10782;').text();
+			tbb.value=$("<div />").html('&#9665;').text();
 			tbb.objs=[obj,tb,tbb];
 			tbb.onclick=function(){ Replace_condition_field_1(this.objs); }
 			obj.parentNode.insertBefore(tb,obj);
@@ -756,7 +756,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='chan_name'>".$text['option-chan_name']."</option>\n";
 		echo "    <option value='network_addr'>".$text['option-network_addr']."</option>\n";
 		echo "    </select>\n";
-		echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
+		echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 		echo "    <br />\n";
 		echo "	</td>\n";
 		echo "	<td style='width: 73px;'>&nbsp; ".$text['label-expression'].":</td>\n";
@@ -797,7 +797,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			tbb.setAttribute('class', 'btn');
 			tbb.setAttribute('style', 'margin-left: 4px;');
 			tbb.type='button';
-			tbb.value=$("<div />").html('&#10782;').text();
+			tbb.value=$("<div />").html('&#9665;').text();
 			tbb.objs=[obj,tb,tbb];
 			tbb.onclick=function(){ Replace_condition_field_2(this.objs); }
 			obj.parentNode.insertBefore(tb,obj);
@@ -833,7 +833,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='chan_name'>".$text['option-chan_name']."</option>\n";
 		echo "    <option value='network_addr'>".$text['option-network_addr']."</option>\n";
 		echo "	</select>\n";
-		echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
+		echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 		echo "	<br />\n";
 		echo "	</td>\n";
 		echo "	<td style='width: 73px;' align='left'>\n";
