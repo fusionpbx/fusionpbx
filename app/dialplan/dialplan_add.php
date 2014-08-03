@@ -524,7 +524,7 @@ echo "		<option value='wday'>".$text['option-day_of_week']."</option>\n";
 echo "		<option value='week'>".$text['option-week']."</option>\n";
 echo "	</optgroup>\n";
 echo "	</select>\n";
-echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='<'>\n";
+echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
 echo "	<br />\n";
 echo "	</td>\n";
 echo "	<td style='width: 73px;' align='left'>\n";
