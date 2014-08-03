@@ -60,27 +60,27 @@ function paging($num_rows, $param, $rows_per_page) {
 	if ($pagenum > 0) {
         //echo "currently middepage<br>";
         $page = $pagenum - 1;
-		$prev = "<input class='btn' type='button' name='next' value='Prev' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$first = "<input class='btn' type='button' name='last' value='First' onClick=\"window.location = '".$self."?page=1".$param."';\">\n";
+		$prev = "<input class='btn' type='button' name='next' value='&#9664;' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
+		$first = "<input class='btn' type='button' name='last' value='&#9650;' onClick=\"window.location = '".$self."?page=1".$param."';\">\n";
 
 	}
 	else {
 		//echo "currently on the first page<br>";
-		$prev = "<input class='btn' type='button' disabled name='Prev' value='Prev'>\n";
+		$prev = "<input class='btn' type='button' disabled name='Prev' value='&#9664;'>\n";
 		//$first = "<input class='btn' type='button' name='First' value='First'>\n";
 	}
 
 	if (($pagenum + 1) < $maxpage) {
         //echo "middle page<br>";
         $page = $pagenum + 1;
-		$next = "<input class='btn' type='button' name='next' value='Next' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
-		$last = "<input class='btn' type='button' name='last' value='Last' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
+		$next = "<input class='btn' type='button' name='next' value='&#9654;' onClick=\"window.location = '".$self."?page=$page".$param."';\">\n";
+		$last = "<input class='btn' type='button' name='last' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
 
 	}
 	else {
         //echo "last page<br>";
-		$last = "<input class='btn' type='button' name='last' value='Last' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
-		$next = "<input class='btn' type='button' disabled name='Next' value='Next'>\n";
+		$last = "<input class='btn' type='button' name='last' value='&#9660;' onClick=\"window.location = '".$self."?page=$maxpage".$param."';\">\n";
+		$next = "<input class='btn' type='button' disabled name='Next' value='&#9654;'>\n";
 		//$last = "<input class='btn' type='button' name='Last' value='Last'>\n";
 
 	}
