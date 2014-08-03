@@ -2836,7 +2836,9 @@ if (!function_exists('save_call_center_xml')) {
 						}
 
 					//get and then set the complete agent_contact with the call_timeout and when necessary confirm
-						$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
+						//$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
+						//if you change this variable also change app/call_center/call_center_agent_edit.php
+						$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
 						if(strstr($agent_contact, '}') === FALSE) {
 							//not found
 							if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
