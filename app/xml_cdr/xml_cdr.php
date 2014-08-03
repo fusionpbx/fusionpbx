@@ -226,7 +226,7 @@ else {
 				foreach ($cdr_status_options as $cdr_status) {
 					$selected = ($hangup_cause == $cdr_status) ? "selected='selected'" : null;
 					$cdr_status_label = ucwords(strtolower(str_replace("_", " ", $cdr_status)));
-					echo "			<option value='".$cdr_status."' ".$selected.">".$cdr_status_label."</option>";
+					echo "			<option value='".$cdr_status."' ".$selected.">".$cdr_status_label."</option>\n";
 				}
 				echo "			</select>\n";
 				echo "		</td>\n";
@@ -251,7 +251,7 @@ else {
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
 				echo "			<select class='formfld' style='".$style['caller_extension_uuid']."' name='caller_extension_uuid' id='caller_extension_uuid'>\n";
-				echo "				<option value=''></option>";
+				echo "				<option value=''></option>\n";
 				$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 				$sql .= "order by ";
@@ -262,7 +262,7 @@ else {
 				$result_e = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
 				foreach ($result_e as &$row) {
 					$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
-					echo "			<option value='".$row['extension_uuid']."' ".$selected.">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".$row['extension'].")")."</option>";
+					echo "			<option value='".$row['extension_uuid']."' ".$selected.">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".$row['extension'].")")."</option>\n";
 				}
 				unset ($prep_statement);
 				echo "			</select>\n";
@@ -552,4 +552,5 @@ else {
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
