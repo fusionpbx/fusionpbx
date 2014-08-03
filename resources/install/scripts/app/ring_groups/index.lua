@@ -1,4 +1,4 @@
- --	ring_groups.lua
+--	ring_groups.lua
 --	Part of FusionPBX
 --	Copyright (C) 2010-2013 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
@@ -97,6 +97,10 @@
 			end
 	end
 
+--set confirm
+	session:execute("set", "group_confirm_key=exec");
+	session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
+	
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
@@ -242,7 +246,7 @@
 				--process according to user_exists, sip_uri, external number
 					if (user_exists == "true") then
 						--send to user
-						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. "]user/" .. row.destination_number .. "@" .. domain_name;
+						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]" .. row.destination_number;
@@ -343,16 +347,22 @@
 									destination_number = row.destination_number;
 									domain_name = row.domain_name;
 
+								--get the extension_uuid
+									if (user_exists == "true") then
+										cmd = "extension_uuid ".. destination_number .."@"..domain_name.." var extension_uuid";
+										extension_uuid = trim(api:executeString(cmd));
+									end
+
 								--set the timeout
 									session:execute("set", "call_timeout="..row.destination_timeout);
 
 								--check if the user is busy
-									extension_status = "show channels like "..destination_number.."@";
+									extension_status = "show channels like "..destination_number.."@"..domain_name;
 									reply = trim(api:executeString(extension_status));
 									if (reply == "0 total.") then
 										--not found: user is available
 											if (user_exists == "true") then
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
 												session:execute("bridge", dial_string);
 											elseif (tonumber(destination_number) == nil) then
 												--sip uri
@@ -369,7 +379,7 @@
 										else
 											--not found: user is available
 											if (user_exists == "true") then
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."dialed_extension=" .. destination_number .. "]user/" .. destination_number .. "@" .. domain_name;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
 												session:execute("bridge", dial_string);
 											elseif (tonumber(destination_number) == nil) then
 												--sip uri
