@@ -42,29 +42,47 @@ else {
 	}
 
 require_once "resources/header.php";
+
+//javascript to toggle input/select boxes
+echo "<script type='text/javascript'>";
+echo "	function toggle(field) {";
+echo "		if (field == 'source') {";
+echo "			document.getElementById('caller_extension_uuid').selectedIndex = 0;";
+echo "			document.getElementById('caller_id_number').value = '';";
+echo "			$('#caller_extension_uuid').toggle();";
+echo "			$('#caller_id_number').toggle();";
+echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').focus(); } else { $('#caller_extension_uuid').focus(); }";
+echo "		}";
+echo "	}";
+echo "</script>";
+
 echo "<div align='center'>";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\">\n";
-echo "		<br>";
-
 echo "<form method='post' action='xml_cdr.php'>\n";
+echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+echo "	<tr class='border'>\n";
+echo "		<td align=\"left\">\n";
+
 echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
-
-echo "<tr>\n";
-echo "<td width='30%' nowrap valign='top'><b>Advanced Search</b></td>\n";
-echo "<td width='70%' align='right' valign='top'>";
-echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='Back'>";
-echo "	<input type='submit' name='submit' class='btn' value='Search'>";
-echo "	<br /><br />";
-echo "</td>\n";
-echo "</tr>\n";
-
 echo "	<tr>\n";
-echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+echo "		<td width='30%' nowrap valign='top'><b>Advanced Search</b></td>\n";
+echo "		<td width='70%' align='right' valign='top'>";
+echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='Back'>";
+echo "			<input type='submit' name='submit' class='btn' value='Search'>";
+echo "			<br /><br />";
+echo "		</td>\n";
+echo "	</tr>\n";
+echo "</table>\n";
+
+echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+echo "	<tr>\n";
+echo "		<td width='50%' style='vertical-align: top;'>\n";
+
+echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
+echo "	<tr>\n";
+echo "		<td width='30%' class='vncell' valign='top' nowrap='nowrap'>\n";
 echo "			".$text['label-direction']."\n";
 echo "		</td>\n";
-echo "		<td class='vtable' width='70%' align='left'>\n";
+echo "		<td width='70%' class='vtable' align='left'>\n";
 echo "			<select name='direction' class='formfld'>\n";
 echo "				<option value=''></option>\n";
 if ($direction == "inbound") {
@@ -94,7 +112,26 @@ echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_na
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-caller_id_number']."</td>"; //source number
-echo "		<td class='vtable'><input type='text' class='formfld' name='caller_id_number' value='$caller_id_number'></td>";
+echo "		<td class='vtable'>";
+echo "			<select class='formfld' name='caller_extension_uuid' id='caller_extension_uuid'>\n";
+echo "				<option value=''></option>";
+$sql = "select extension_uuid, extension, number_alias from v_extensions ";
+$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+$sql .= "order by ";
+$sql .= "extension asc ";
+$sql .= ", number_alias asc ";
+$prep_statement = $db->prepare(check_sql($sql));
+$prep_statement -> execute();
+$result_e = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
+foreach ($result_e as &$row) {
+	$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
+	echo "			<option value='".$row['extension_uuid']."' ".$selected.">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".$row['extension'].")")."</option>";
+}
+unset ($prep_statement);
+echo "			</select>\n";
+echo "			<input type='text' class='formfld' style='display: none;'  name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
+echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='<' onclick=\"toggle('source');\">\n";
+echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-destination']."</td>";
@@ -107,34 +144,40 @@ echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-start_range']."</td>";
 echo "		<td class='vtable'>";
-echo "			<input type='text' class='formfld' style='min-width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>";
+echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>";
 echo "			> ";
-echo "			<input type='text' class='formfld' style='min-width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>";
+echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>";
 echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-answer_range']."</td>";
 echo "		<td class='vtable'>";
-echo "			<input type='text' class='formfld' style='min-width: 115px;' name='answer_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$answer_stamp_begin'>";
+echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='answer_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$answer_stamp_begin'>";
 echo "			> ";
-echo "			<input type='text' class='formfld' style='min-width: 115px;' name='answer_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$answer_stamp_end'>";
+echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='answer_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$answer_stamp_end'>";
 echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-end_range']."</td>";
 echo "		<td class='vtable'>";
-echo "			<input type='text' class='formfld' style='min-width: 115px;' name='end_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$end_stamp_begin'>";
+echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='end_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$end_stamp_begin'>";
 echo "			> ";
-echo "			<input type='text' class='formfld' style='min-width: 115px;' name='end_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$end_stamp_end'>";
+echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='end_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$end_stamp_end'>";
 echo "		</td>";
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-duration']."</td>";
 echo "		<td class='vtable'><input type='text' class='formfld' name='duration' value='$duration'></td>";
 echo "	</tr>";
+echo "</table>";
+
+echo "		</td>";
+echo "		<td width='50%' style='vertical-align: top;'>\n";
+
+echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
 echo "	<tr>";
-echo "		<td class='vncell'>".$text['label-billsec']."</td>";
-echo "		<td class='vtable'><input type='text' class='formfld' name='billsec' value='$billsec'></td>";
+echo "		<td width='30%' class='vncell'>".$text['label-billsec']."</td>";
+echo "		<td width='70%' class='vtable'><input type='text' class='formfld' name='billsec' value='$billsec'></td>";
 echo "	</tr>";
 echo "	<tr>";
 echo "		<td class='vncell'>".$text['label-hangup_cause']."</td>";
@@ -172,11 +215,15 @@ echo "	<tr>";
 echo "		<td colspan='2' align='right'><input type='submit' name='submit' class='btn' value='".$text['button-search']."'></td>";
 echo "	</tr>";
 echo "</table>";
-echo "</form>";
 
-echo "	</td>";
+echo "		</td>";
 echo "	</tr>";
 echo "</table>";
+
+echo "		</td>";
+echo "	</tr>";
+echo "</table>";
+echo "</form>";
 echo "</div>";
 
 require_once "resources/footer.php";

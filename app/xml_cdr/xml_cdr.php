@@ -68,6 +68,19 @@ else {
 	echo "}\n";
 	echo "</script>\n";
 
+//javascript to toggle input/select boxes
+	echo "<script type='text/javascript'>";
+	echo "	function toggle(field) {";
+	echo "		if (field == 'source') {";
+	echo "			document.getElementById('caller_extension_uuid').selectedIndex = 0;";
+	echo "			document.getElementById('caller_id_number').value = '';";
+	echo "			$('#caller_extension_uuid').toggle();";
+	echo "			$('#caller_id_number').toggle();";
+	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').focus(); } else { $('#caller_extension_uuid').focus(); }";
+	echo "		}";
+	echo "	}";
+	echo "</script>";
+
 //page title and description
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -90,7 +103,9 @@ else {
 	echo "	<input type='hidden' name='start_stamp_begin' value='$start_stamp_begin'>\n";
 	echo "	<input type='hidden' name='start_stamp_end' value='$start_stamp_end'>\n";
 	echo "	<input type='hidden' name='hangup_cause' value='$hangup_cause'>\n";
+	echo "	<input type='hidden' name='caller_extension_uuid' value='$caller_extension_uuid'>\n";
 	echo "	<input type='hidden' name='caller_id_number' value='$caller_id_number'>\n";
+	echo "	<input type='hidden' name='destination_extension_uuid' value='$destination_extension_uuid'>\n";
 	echo "	<input type='hidden' name='destination_number' value='$destination_number'>\n";
 	echo "	<input type='hidden' name='answer_stamp_begin' value='$answer_stamp_begin'>\n";
 	echo "	<input type='hidden' name='answer_stamp_end' value='$answer_stamp_end'>\n";
@@ -221,22 +236,46 @@ else {
 			echo "</td>";
 			echo "<td width='33%' style='vertical-align: top;'>\n";
 
+				// set visibility of Source field(s)
+				if ($caller_extension_uuid == '' && $caller_id_number != '') {
+					$style['caller_extension_uuid'] = 'display: none;';
+				}
+				else {
+					$style['caller_id_number'] = 'display: none;';
+				}
+
 				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 				echo "			".$text['label-source']."\n";
 				echo "		</td>\n";
-				echo "		<td class='vtable' width='70%' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='caller_id_number' value='$caller_id_number'>\n";
+				echo "		<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
+				echo "			<select class='formfld' style='".$style['caller_extension_uuid']."' name='caller_extension_uuid' id='caller_extension_uuid'>\n";
+				echo "				<option value=''></option>";
+				$sql = "select extension_uuid, extension, number_alias from v_extensions ";
+				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "order by ";
+				$sql .= "extension asc ";
+				$sql .= ", number_alias asc ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement -> execute();
+				$result_e = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
+				foreach ($result_e as &$row) {
+					$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
+					echo "			<option value='".$row['extension_uuid']."' ".$selected.">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".$row['extension'].")")."</option>";
+				}
+				unset ($prep_statement);
+				echo "			</select>\n";
+				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
+				echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='<' onclick=\"toggle('source');\">\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
-
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 				echo "			".$text['label-destination']."\n";
 				echo "		</td>\n";
-				echo "		<td class='vtable' width='70%' align='left'>\n";
-				echo "			<input type='text' class='formfld' name='destination_number' value='$destination_number'>\n";
+				echo "		<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
+				echo "			<input type='text' class='formfld' name='destination_number' id='destination_number' value='".$destination_number."'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "</table>\n";
@@ -250,9 +289,9 @@ else {
 				echo "			".$text['label-start_range']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-				echo "			<input type='text' class='formfld' style='min-width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>\n";
+				echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_begin' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_begin'>\n";
 				echo "			> ";
-				echo "			<input type='text' class='formfld' style='min-width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>\n";
+				echo "			<input type='text' class='formfld' style='min-width: 115px; width: 115px;' name='start_stamp_end' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" value='$start_stamp_end'>\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
