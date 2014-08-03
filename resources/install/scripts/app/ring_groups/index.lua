@@ -245,6 +245,11 @@
 
 				--process according to user_exists, sip_uri, external number
 					if (user_exists == "true") then
+						--get the extension_uuid
+							if (user_exists == "true") then
+								cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
+								extension_uuid = trim(api:executeString(cmd));
+							end
 						--send to user
 						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 					elseif (tonumber(destination_number) == nil) then
@@ -349,7 +354,7 @@
 
 								--get the extension_uuid
 									if (user_exists == "true") then
-										cmd = "extension_uuid ".. destination_number .."@"..domain_name.." var extension_uuid";
+										cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
 										extension_uuid = trim(api:executeString(cmd));
 									end
 
