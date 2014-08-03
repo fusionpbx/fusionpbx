@@ -328,20 +328,36 @@ include "root.php";
 						foreach ($result as &$row) {
 							$dial_string .= "[";
 							if (extension_exists($row["follow_me_destination"])) {
+								//get the extension uuid
+								$sql = "select * from v_extensions ";
+								$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
+								$sql .= "and (extension = '".$row["follow_me_destination"]."' or number_alias = '".$row["follow_me_destination"]."') ";
+								$prep_statement = $db->prepare(check_sql($sql));
+								$prep_statement->execute();
+								$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+								$extension_uuid = '';
+								if (count($result) > 0) {
+									foreach ($result as &$row) {
+										$extension_uuid = $row["extension_uuid"];
+									}
+								}
+								//set the dial string
 								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
 									$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
 									$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 									if ($this->call_prompt == "true") {
 										$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
 									}
+									$dial_string .= "extension_uuid=".$extension_uuid.",";
 									$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 									$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
 									$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
 									//$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 								}
 								else {
+									$replace_value = $row["follow_me_destination"].",extension_uuid=".$extension_uuid;
 									$dial_string = $_SESSION['domain']['dial_string']['text'];
-									$dial_string = str_replace("\${dialed_user}", $row["follow_me_destination"], $dial_string);
+									$dial_string = str_replace("\${dialed_user}", $replace_value, $dial_string);
 								}
 							}
 							else {

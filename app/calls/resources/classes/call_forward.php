@@ -65,6 +65,7 @@ include "root.php";
 					$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
 					$dial_string .= ",domain_name=".$_SESSION['domain_name'];
 					$dial_string .= ",domain=".$_SESSION['domain_name'];
+					$dial_string .= ",extension_uuid=".$this->extension_uuid;
 					if (strlen($this->accountcode) > 0) {
 						$dial_string .= ",accountcode=".$this->accountcode;
 					}
