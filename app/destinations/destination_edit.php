@@ -588,19 +588,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$order = 10;
 	foreach($dialplan_details as $row) {
 		if ($row["dialplan_detail_type"] == "transfer" || $row["dialplan_detail_type"] == "bridge" || $row["dialplan_detail_type"] == "") {
+			echo "				<tr>\n";
+			echo "					<td>\n";
 			if (strlen($row['dialplan_detail_uuid']) > 0) {
 				echo "	<input name='dialplan_details[".$x."][dialplan_detail_uuid]' type='hidden' value=\"".$row['dialplan_detail_uuid']."\">\n";
 			}
 			echo "	<input name='dialplan_details[".$x."][dialplan_detail_type]' type='hidden' value=\"".$row['dialplan_detail_type']."\">\n";
 			echo "	<input name='dialplan_details[".$x."][dialplan_detail_order]' type='hidden' value=\"".$order."\">\n";
 
-			echo "				<tr>\n";
-			echo "					<td>\n";
 			//echo $order."<br />\n";
 			//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
 			$data = $row['dialplan_detail_data'];
 			$label = explode("XML", $data);
-			$detail_action = $row['dialplan_detail_type'].":".$row['dialplan_detail_data'];
+			$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
+			$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
 			switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][dialplan_detail_data]", $detail_action, "width: 60%;", $row['dialplan_detail_type']);
 
 			echo "					</td>\n";
