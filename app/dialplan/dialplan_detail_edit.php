@@ -295,8 +295,9 @@ function change_to_input(obj){
 	document.getElementById('btn_select_to_input_dialplan_detail_type').style.visibility = 'hidden';
 	tbb=document.createElement('INPUT');
 	tbb.setAttribute('class', 'btn');
+	tbb.setAttribute('style', 'margin-left: 4px;');
 	tbb.type='button';
-	tbb.value='&#10782;';
+	tbb.value=$("<div />").html('&#10782;').text();
 	tbb.objs=[obj,tb,tbb];
 	tbb.onclick=function(){ replace_param(this.objs); }
 	obj.parentNode.insertBefore(tb,obj);

@@ -407,8 +407,9 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		echo "	document.getElementById('btn_select_to_input_".$select_id."').style.visibility = 'hidden';\n";
 		echo "	tbb=document.createElement('INPUT');\n";
 		echo "	tbb.setAttribute('class', 'btn');\n";
+		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
 		echo "	tbb.type='button';\n";
-		echo "	tbb.value='&#10782;';\n";
+		echo "	tbb.value=$('<div />').html('&#10782;').text();\n";
 		echo "	tbb.objs=[obj,tb,tbb];\n";
 		echo "	tbb.onclick=function(){ Replace".$select_id."(this.objs); }\n";
 		echo "	obj.parentNode.insertBefore(tb,obj);\n";
