@@ -1,9 +1,9 @@
 <context name="{v_context}">
 	<extension name="user_exists" number="" continue="true" app_uuid="897845b0-1f13-444c-84fe-432fd47338ca">
-		<condition field="" expression="" break="never">
+		<condition field="" expression="" break="">
 			<action application="set" data="user_exists=${user_exists id ${destination_number} ${domain_name}}"/>
 		</condition>
-		<condition field="${user_exists}" expression="^true$" break="never">
+		<condition field="${user_exists}" expression="^true$" break="">
 			<action application="set" data="extension_uuid=${user_data ${destination_number}@${domain_name} var extension_uuid}"/>
 		</condition>
 	</extension>
