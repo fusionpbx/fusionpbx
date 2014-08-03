@@ -1325,7 +1325,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				tbb=document.createElement('INPUT');
 				tbb.setAttribute('class', 'btn');
 				tbb.type='button';
-				tbb.value='<';
+				tbb.value='&#10782;';
 				tbb.objs=[obj,tb,tbb];
 				tbb.onclick=function(){ replace_device_mac_address(this.objs); }
 				obj.parentNode.insertBefore(tb,obj);
@@ -1364,7 +1364,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			unset($sql, $result, $result_count);
 			echo "				</select>\n";
-			echo "				<input type='button' id='btn_select_to_input_device_mac_address' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_device_mac_address(document.getElementById(\"device_mac_address\"));this.style.visibility = \"hidden\";' value='<'>\n";
+			echo "				<input type='button' id='btn_select_to_input_device_mac_address' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_device_mac_address(document.getElementById(\"device_mac_address\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
 			echo "	</td>\n";
 			echo "	</tr>\n";
 			echo "	</table>\n";
