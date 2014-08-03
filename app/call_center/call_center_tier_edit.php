@@ -255,6 +255,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='tier_level'>\n";
 	//echo "	<option value=''></option>\n";
+
+        if ($tier_level == "0") {
+                echo "  <option value='0' selected='selected' >0</option>\n";
+        }
+        else {
+                echo "  <option value='0'>0</option>\n";
+        }
+
 	if ($tier_level == "1") {
 		echo "	<option value='1' selected='selected' >1</option>\n";
 	}

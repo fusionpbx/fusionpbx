@@ -595,7 +595,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			</td>\n";
 				echo "			<td class='vtable' style='text-align: center;'>\n";
 				echo "				<select class='formfld' name='tier_level'>\n";
-				for ($t = 1; $t <= 9; $t++) {
+				for ($t = 0; $t <= 9; $t++) {
 					echo "				<option value='".$t."'>".$t."</option>\n";
 				}
 				echo "				</select>\n";
