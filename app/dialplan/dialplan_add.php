@@ -379,7 +379,7 @@ function changeToInput_condition_field_1(obj){
 	tbb.setAttribute('class', 'btn');
 	tbb.setAttribute('style', 'margin-left: 4px;');
 	tbb.type='button';
-	tbb.value=$("<div />").html('&#10782;').text();
+	tbb.value=$("<div />").html('&#9665;').text();
 	tbb.objs=[obj,tb,tbb];
 	tbb.onclick=function(){ Replace_condition_field_1(this.objs); }
 	obj.parentNode.insertBefore(tb,obj);
@@ -433,7 +433,7 @@ echo "		<option value='wday'>".$text['option-day_of_week']."</option>\n";
 echo "		<option value='week'>".$text['option-week']."</option>\n";
 echo "	</optgroup>\n";
 echo "    </select>\n";
-echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
+echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 echo "    <br />\n";
 echo "	</td>\n";
 echo "	<td style='width: 73px;'>&nbsp; ".$text['label-expression'].":</td>\n";
@@ -474,7 +474,7 @@ function changeToInput_condition_field_2(obj){
 	tbb.setAttribute('class', 'btn');
 	tbb.setAttribute('style', 'margin-left: 4px;');
 	tbb.type='button';
-	tbb.value=$("<div />").html('&#10782;').text();
+	tbb.value=$("<div />").html('&#9665;').text();
 	tbb.objs=[obj,tb,tbb];
 	tbb.onclick=function(){ Replace_condition_field_2(this.objs); }
 	obj.parentNode.insertBefore(tb,obj);
@@ -524,7 +524,7 @@ echo "		<option value='wday'>".$text['option-day_of_week']."</option>\n";
 echo "		<option value='week'>".$text['option-week']."</option>\n";
 echo "	</optgroup>\n";
 echo "	</select>\n";
-echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
+echo "  <input type='button' id='btn_select_to_input_condition_field_2' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_2(document.getElementById(\"condition_field_2\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 echo "	<br />\n";
 echo "	</td>\n";
 echo "	<td style='width: 73px;' align='left'>\n";

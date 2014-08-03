@@ -297,7 +297,7 @@ function change_to_input(obj){
 	tbb.setAttribute('class', 'btn');
 	tbb.setAttribute('style', 'margin-left: 4px;');
 	tbb.type='button';
-	tbb.value=$("<div />").html('&#10782;').text();
+	tbb.value=$("<div />").html('&#9665;').text();
 	tbb.objs=[obj,tb,tbb];
 	tbb.onclick=function(){ replace_param(this.objs); }
 	obj.parentNode.insertBefore(tb,obj);
@@ -372,7 +372,7 @@ function replace_param(obj){
 		}
 		echo "</optgroup>\n";
 	}
-	echo "<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' name='' alt='".$text['button-back']."' onclick='change_to_input(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
+	echo "<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' name='' alt='".$text['button-back']."' onclick='change_to_input(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

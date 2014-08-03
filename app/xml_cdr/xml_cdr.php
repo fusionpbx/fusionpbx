@@ -267,7 +267,7 @@ else {
 				unset ($prep_statement);
 				echo "			</select>\n";
 				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
-				echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#10782;' onclick=\"toggle('source');\">\n";
+				echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";

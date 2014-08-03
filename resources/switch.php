@@ -409,7 +409,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		echo "	tbb.setAttribute('class', 'btn');\n";
 		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
 		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#10782;').text();\n";
+		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
 		echo "	tbb.objs=[obj,tb,tbb];\n";
 		echo "	tbb.onclick=function(){ Replace".$select_id."(this.objs); }\n";
 		echo "	obj.parentNode.insertBefore(tb,obj);\n";
@@ -1637,7 +1637,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 
 	echo "		</select>\n";
 	if (if_group("superadmin")) {
-		echo "<input type='button' id='btn_select_to_input_".$select_id."' class='btn' name='' alt='back' onclick='changeToInput".$select_id."(document.getElementById(\"".$select_id."\"));this.style.visibility = \"hidden\";' value='&#10782;'>";
+		echo "<input type='button' id='btn_select_to_input_".$select_id."' class='btn' name='' alt='back' onclick='changeToInput".$select_id."(document.getElementById(\"".$select_id."\"));this.style.visibility = \"hidden\";' value='&#9665;'>";
 	}
 }
 

@@ -434,7 +434,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	tbb.setAttribute('class', 'btn');\n";
 		echo "	tbb.setAttribute('style', 'margin-left: 4px;');\n";
 		echo "	tbb.type='button';\n";
-		echo "	tbb.value=$('<div />').html('&#10782;').text();\n";
+		echo "	tbb.value=$('<div />').html('&#9665;').text();\n";
 		echo "	tbb.objs=[obj,tb,tbb];\n";
 		echo "	tbb.onclick=function(){ Replace(this.objs); }\n";
 		echo "	obj.parentNode.insertBefore(tb,obj);\n";
