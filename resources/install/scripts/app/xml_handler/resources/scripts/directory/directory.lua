@@ -368,7 +368,9 @@
 							if (string.len(call_group) > 0) then
 								table.insert(xml, [[								<variable name="call_group" value="]] .. call_group .. [["/>]]);
 							end
-							table.insert(xml, [[								<variable name="user_record" value="]] .. user_record .. [["/>]]);
+							if (string.len(user_record) > 0) then
+								table.insert(xml, [[								<variable name="user_record" value="]] .. user_record .. [["/>]]);
+							end
 							if (string.len(hold_music) > 0) then
 								table.insert(xml, [[								<variable name="hold_music" value="]] .. hold_music .. [["/>]]);
 							end
