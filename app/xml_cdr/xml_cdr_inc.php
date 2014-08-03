@@ -52,6 +52,7 @@ else {
 		$direction = check_str($_REQUEST["direction"]);
 		$caller_id_name = check_str($_REQUEST["caller_id_name"]);
 		$caller_id_number = check_str($_REQUEST["caller_id_number"]);
+		$caller_extension_uuid = check_str($_REQUEST["caller_extension_uuid"]);
 		$destination_number = check_str($_REQUEST["destination_number"]);
 		$context = check_str($_REQUEST["context"]);
 		$start_stamp_begin = check_str($_REQUEST["start_stamp_begin"]);
@@ -86,6 +87,9 @@ else {
 	if (strlen($caller_id_name) > 0) {
 		$mod_caller_id_name = str_replace("*", "%", $caller_id_name);
 		$sql_where_ands[] = "caller_id_name like '".$mod_caller_id_name."'";
+	}
+	if (strlen($caller_extension_uuid) > 0) {
+		$sql_where_ands[] = "extension_uuid = '".$caller_extension_uuid."'";
 	}
 	if (strlen($caller_id_number) > 0) {
 		$mod_caller_id_number = str_replace("*", "%", $caller_id_number);
