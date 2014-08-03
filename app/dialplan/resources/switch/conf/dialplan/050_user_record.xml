@@ -5,24 +5,25 @@
 			<action application="set" data="from_user_exists=${user_exists id ${sip_from_user} ${sip_from_host}}" inline="true"/>
 		</condition>
 		<condition field="${user_exists}" expression="^true$"/>
-		<condition field="${user_record}" expression="^all$">
+		<condition field="${user_record}" expression="^all$" break="never">
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
 		<condition field="${user_exists}" expression="^true$"/>
-		<condition field="${call_direction}" expression="^inbound$"/>
-		<condition field="${user_record}" expression="^inbound$">
+		<condition field="${call_direction}" expression="^inbound$" break="never"/>
+		<condition field="${user_record}" expression="^inbound$" break="never">
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
 		<condition field="${user_exists}" expression="^true$"/>
-		<condition field="${call_direction}" expression="^outbound$"/>
-		<condition field="${user_record}" expression="^outbound$">
+		<condition field="${call_direction}" expression="^outbound$" break="never"/>
+		<condition field="${user_record}" expression="^outbound$" break="never">
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
 		<condition field="${user_exists}" expression="^true$"/>
-		<condition field="${call_direction}" expression="^local$"/>
-		<condition field="${user_record}" expression="^local$">
+		<condition field="${call_direction}" expression="^local$" break="never"/>
+		<condition field="${user_record}" expression="^local$" break="never">
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
+	<!--
 		<condition field="${from_user_exists}" expression="^true$">
 			<action application="set" data="from_user_record=${user_data ${sip_from_user}@${sip_from_host} var user_record}" inline="true"/>
 		</condition>
@@ -45,7 +46,8 @@
 		<condition field="${from_user_record}" expression="^local$">
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
-		<condition field="${file_exists ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}}" expression="^false$">
+	-->
+		<condition field="${file_exists ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}}" expression="^false$" break="never">
 			<action application="system" data="mkdir -p ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}"/>
 		</condition>
 		<condition field="record_session" expression="^true$">
