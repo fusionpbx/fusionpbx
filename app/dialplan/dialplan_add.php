@@ -378,7 +378,7 @@ function changeToInput_condition_field_1(obj){
 	tbb=document.createElement('INPUT');
 	tbb.setAttribute('class', 'btn');
 	tbb.type='button';
-	tbb.value='<';
+	tbb.value='&#10782;';
 	tbb.objs=[obj,tb,tbb];
 	tbb.onclick=function(){ Replace_condition_field_1(this.objs); }
 	obj.parentNode.insertBefore(tb,obj);
@@ -432,7 +432,7 @@ echo "		<option value='wday'>".$text['option-day_of_week']."</option>\n";
 echo "		<option value='week'>".$text['option-week']."</option>\n";
 echo "	</optgroup>\n";
 echo "    </select>\n";
-echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='<'>\n";
+echo "    <input type='button' id='btn_select_to_input_condition_field_1' class='btn' name='' alt='".$text['button-back']."' onclick='changeToInput_condition_field_1(document.getElementById(\"condition_field_1\"));this.style.visibility = \"hidden\";' value='&#10782;'>\n";
 echo "    <br />\n";
 echo "	</td>\n";
 echo "	<td style='width: 73px;'>&nbsp; ".$text['label-expression'].":</td>\n";

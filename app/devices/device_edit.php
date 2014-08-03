@@ -366,7 +366,7 @@ require_once "resources/require.php";
 			tbb=document.createElement('INPUT');
 			tbb.setAttribute('class', 'btn');
 			tbb.type='button';
-			tbb.value='<';
+			tbb.value='&#10782;';
 			tbb.objs=[obj,tb,tbb];
 			tbb.onclick=function(){ replace_param(this.objs); }
 			obj.parentNode.insertBefore(tb,obj);

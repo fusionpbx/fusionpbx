@@ -303,7 +303,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "			<input class='formfld' style='width: 150px; display: none;' type='text' name='upload_category_new' id='upload_category_new' maxlength='255' value=''>";
 		echo "		</td>\n";
 		echo "		<td>&nbsp;<br>\n";
-		echo "			<input id='upload_category_return' type='button' class='button' style='display: none;' value='<' onclick=\"this.style.display='none'; document.getElementById('upload_category_new').style.display='none'; document.getElementById('upload_category_new').value=''; document.getElementById('upload_category').style.display=''; document.getElementById('upload_category').selectedIndex = 0;\" title='".$text['message-click-select']."'>";
+		echo "			<input id='upload_category_return' type='button' class='button' style='display: none;' value='&#10782;' onclick=\"this.style.display='none'; document.getElementById('upload_category_new').style.display='none'; document.getElementById('upload_category_new').value=''; document.getElementById('upload_category').style.display=''; document.getElementById('upload_category').selectedIndex = 0;\" title='".$text['message-click-select']."'>";
 		echo "		</td>\n";
 		echo "		<td style='padding-left: 5px;'>&nbsp;<br>\n";
 		echo "			<input name='submit' type='submit' class='btn' id='upload' value='".$text['button-upload']."'>\n";
