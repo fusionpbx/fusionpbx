@@ -1324,8 +1324,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'hidden';
 				tbb=document.createElement('INPUT');
 				tbb.setAttribute('class', 'btn');
+				tbb.setAttribute('style', 'margin-left: 4px;');
 				tbb.type='button';
-				tbb.value='&#10782;';
+				tbb.value=$("<div />").html('&#10782;').text();
 				tbb.objs=[obj,tb,tbb];
 				tbb.onclick=function(){ replace_device_mac_address(this.objs); }
 				obj.parentNode.insertBefore(tb,obj);

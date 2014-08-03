@@ -713,8 +713,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			document.getElementById('btn_select_to_input_condition_field_1').style.visibility = 'hidden';
 			tbb=document.createElement('INPUT');
 			tbb.setAttribute('class', 'btn');
+			tbb.setAttribute('style', 'margin-left: 4px;');
 			tbb.type='button';
-			tbb.value='&#10782;';
+			tbb.value=$("<div />").html('&#10782;').text();
 			tbb.objs=[obj,tb,tbb];
 			tbb.onclick=function(){ Replace_condition_field_1(this.objs); }
 			obj.parentNode.insertBefore(tb,obj);
@@ -794,8 +795,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			document.getElementById('btn_select_to_input_condition_field_2').style.visibility = 'hidden';
 			tbb=document.createElement('INPUT');
 			tbb.setAttribute('class', 'btn');
+			tbb.setAttribute('style', 'margin-left: 4px;');
 			tbb.type='button';
-			tbb.value='&#10782;';
+			tbb.value=$("<div />").html('&#10782;').text();
 			tbb.objs=[obj,tb,tbb];
 			tbb.onclick=function(){ Replace_condition_field_2(this.objs); }
 			obj.parentNode.insertBefore(tb,obj);
