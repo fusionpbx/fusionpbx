@@ -140,6 +140,16 @@
 	$text['label-price']['pt-pt'] = "Preço";
 	$text['label-price']['fr-fr'] = "Prix";
 
+	$text['label-from']['en-us'] = "From";
+	$text['label-from']['es-cl'] = "Comienzo";
+	$text['label-from']['pt-pt'] = "Começo";
+	$text['label-from']['fr-fr'] = "Début";
+
+	$text['label-to']['en-us'] = "To";
+	$text['label-to']['es-cl'] = "Final";
+	$text['label-to']['pt-pt'] = "Final";
+	$text['label-to']['fr-fr'] = "Fin";
+
 	$text['button-statistics']['en-us'] = "Statistics";
 	$text['button-statistics']['es-cl'] = "Estadísticas";
 	$text['button-statistics']['pt-pt'] = "Estatísticas";
