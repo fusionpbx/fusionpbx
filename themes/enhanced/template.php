@@ -822,11 +822,11 @@ legend {
 	}
 
 	#domains_show_icon {
-		filter: alpha(opacity=50);
-		opacity: 0.5;
-		-moz-opacity: 0.5;
-		-khtml-opacity: 0.5;
-		margin-left: 20px;
+		filter: alpha(opacity=80);
+		opacity: 0.8;
+		-moz-opacity: 0.8;
+		-khtml-opacity: 0.8;
+		margin-left: 17px;
 	}
 
 	#domains_show_icon:hover {
