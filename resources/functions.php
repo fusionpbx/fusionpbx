@@ -999,4 +999,22 @@ if(!function_exists('validate_email')) {
 		}
 	}
 }
+
+// ellipsisnicely truncate long text
+if(!function_exists('ellipsis')) {
+	function ellipsis($string, $max_characters, $preserve_word = true) {
+		if ($max_characters+$x >= strlen($string)) { return $string; }
+		if ($preserve_word) {
+			for ($x = 0; $x < strlen($string); $x++) {
+				if ($string{$max_characters+$x} == " ") {
+					return substr($string,0,$max_characters+$x)." ...";
+				}
+				else { continue; }
+			}
+		}
+		else {
+			return substr($string,0,$max_characters)." ...";
+		}
+	}
+}
 ?>

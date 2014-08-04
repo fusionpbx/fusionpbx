@@ -682,7 +682,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 									unset ($prep_statement, $sql);
 								}
 								$dialplan_detail_data_mod = ($gateway_name != '') ? str_replace($gateway_uuid, $gateway_name, $dialplan_detail_data) : $dialplan_detail_data;
-								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".$dialplan_detail_data_mod."</label>\n";
+								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".ellipsis($dialplan_detail_data_mod, 75, false)."</label>\n";
 							}
 							echo "	<input id='dialplan_detail_data_".$x."' name='dialplan_details[".$x."][dialplan_detail_data]' class='formfld' type='text' style='width: 100%; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_data)."\">\n";
 							echo "</td>\n";
