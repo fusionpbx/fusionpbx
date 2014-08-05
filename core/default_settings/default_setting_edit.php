@@ -417,9 +417,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
 		$category == "theme" && $subcategory == "login_color" && $name == "text"
 		) {
-		// source: http://rightjs.org
-		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
-		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right-colorpicker-src.js' type='text/javascript'></script>";
 		echo "	<style>";
 		echo "		DIV.rui-colorpicker  { width: 253px; }";
 		echo "		DIV.rui-colorpicker DIV.controls { width: 61px; }";
