@@ -128,222 +128,235 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
 
-			//get the array
-				$dialplan_details = $_POST["dialplan_details"];
-
-			//remove the array from the HTTP POST
-				unset($_POST["dialplan_details"]);
-
-
 			//add the domain_uuid
 				$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
 
-			//array cleanup
-				$x = 0;
-				foreach ($dialplan_details as $row) {
-					//unset the empty row
-						if (strlen($row["dialplan_detail_data"]) == 0) {
-							unset($dialplan_details[$x]);
+			//add or update the dialplan if the destination number is set
+				if (strlen($destination_number) > 0) {
+					//get the array
+						$dialplan_details = $_POST["dialplan_details"];
+		
+					//remove the array from the HTTP POST
+						unset($_POST["dialplan_details"]);
+		
+					//array cleanup
+						$x = 0;
+						foreach ($dialplan_details as $row) {
+							//unset the empty row
+								if (strlen($row["dialplan_detail_data"]) == 0) {
+									unset($dialplan_details[$x]);
+								}
+							//increment the row
+								$x++;
 						}
-					//increment the row
-						$x++;
-				}
-
-			//check to see if the dialplan exists
-				if (strlen($dialplan_uuid) > 0) {
-					$sql = "select dialplan_uuid from v_dialplans ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-					$prep_statement = $db->prepare($sql);
-					if ($prep_statement) {
-						$prep_statement->execute();
-						$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-						if (strlen($row['dialplan_uuid']) > 0) {
-							$dialplan_uuid = $row['dialplan_uuid'];
+		
+					//check to see if the dialplan exists
+						if (strlen($dialplan_uuid) > 0) {
+							$sql = "select dialplan_uuid from v_dialplans ";
+							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+							$prep_statement = $db->prepare($sql);
+							if ($prep_statement) {
+								$prep_statement->execute();
+								$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+								if (strlen($row['dialplan_uuid']) > 0) {
+									$dialplan_uuid = $row['dialplan_uuid'];
+								}
+								else {
+									$dialplan_uuid = "";
+								}
+								unset($prep_statement);
+							}
+							else {
+								$dialplan_uuid = "";
+							}
 						}
-						else {
-							$dialplan_uuid = "";
+		
+					//build the dialplan array
+						$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
+						if (strlen($dialplan_uuid) > 0) {
+							$dialplan["dialplan_uuid"] = $dialplan_uuid;
 						}
-						unset($prep_statement);
-					}
-					else {
-						$dialplan_uuid = "";
-					}
-				}
-
-			//build the dialplan array
-				$dialplan["app_uuid"] = "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4";
-				if (strlen($dialplan_uuid) > 0) {
-					$dialplan["dialplan_uuid"] = $dialplan_uuid;
-				}
-				$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
-				$dialplan["dialplan_name"] = format_phone($destination_number);
-				$dialplan["dialplan_number"] = $destination_number;
-				$dialplan["dialplan_context"] = $destination_context;
-				$dialplan["dialplan_continue"] = "false";
-				$dialplan["dialplan_order"] = "100";
-				$dialplan["dialplan_enabled"] = $destination_enabled;
-				$dialplan["dialplan_description"] = $destination_description;
-
-				$dialplan_detail_order = 10;
-				if (strlen($dialplan_uuid) == 0) {
-					//add the public condition
-						$y = 0;
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "context";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "public";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						$y++;
-
-					//increment the dialplan detail order
-						$dialplan_detail_order = $dialplan_detail_order + 10;
-
-					//check the destination number
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $regex_destination_number;
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						$y++;
-
-					//increment the dialplan detail order
-						$dialplan_detail_order = $dialplan_detail_order + 10;
-
-					//set the caller id name prefix
-						if (strlen($destination_cid_name_prefix) > 0) {
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
-
+						$dialplan["domain_uuid"] = $_SESSION['domain_uuid'];
+						$dialplan["dialplan_name"] = format_phone($destination_number);
+						$dialplan["dialplan_number"] = $destination_number;
+						$dialplan["dialplan_context"] = $destination_context;
+						$dialplan["dialplan_continue"] = "false";
+						$dialplan["dialplan_order"] = "100";
+						$dialplan["dialplan_enabled"] = $destination_enabled;
+						$dialplan["dialplan_description"] = $destination_description;
+		
+						$dialplan_detail_order = 10;
+						if (strlen($dialplan_uuid) == 0) {
+							//add the public condition
+								$y = 0;
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "context";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "public";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$y++;
+		
 							//increment the dialplan detail order
-							$dialplan_detail_order = $dialplan_detail_order + 10;
-						}
-
-					//set the call accountcode
-						if (strlen($destination_accountcode) > 0) {
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
-
+								$dialplan_detail_order = $dialplan_detail_order + 10;
+		
+							//check the destination number
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "condition";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "destination_number";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $regex_destination_number;
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$y++;
+		
 							//increment the dialplan detail order
-							$dialplan_detail_order = $dialplan_detail_order + 10;
+								$dialplan_detail_order = $dialplan_detail_order + 10;
+		
+							//set the caller id name prefix
+								if (strlen($destination_cid_name_prefix) > 0) {
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "effective_caller_id_name=".$destination_cid_name_prefix."#\${caller_id_name}";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+		
+									//increment the dialplan detail order
+									$dialplan_detail_order = $dialplan_detail_order + 10;
+								}
+		
+							//set the call accountcode
+								if (strlen($destination_accountcode) > 0) {
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+		
+									//increment the dialplan detail order
+									$dialplan_detail_order = $dialplan_detail_order + 10;
+								}
+		
+							//set the call carrier
+								if (strlen($destination_carrier) > 0) {
+									$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+									$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "carrier=$destination_carrier";
+									$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+									$y++;
+		
+							//increment the dialplan detail order
+									$dialplan_detail_order = $dialplan_detail_order + 10;
+								}
+						}
+		
+					//add fax detection
+						if (strlen($fax_uuid) > 0) {
+							//get the fax information
+								$sql = "select * from v_fax ";
+								$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+								$sql .= "and fax_uuid = '".$fax_uuid."' ";
+								$prep_statement = $db->prepare(check_sql($sql));
+								$prep_statement->execute();
+								$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+								foreach ($result as &$row) {
+									$fax_extension = $row["fax_extension"];
+									$fax_destination_number = $row["fax_destination_number"];
+									$fax_name = $row["fax_name"];
+									$fax_email = $row["fax_email"];
+									$fax_pin_number = $row["fax_pin_number"];
+									$fax_caller_id_name = $row["fax_caller_id_name"];
+									$fax_caller_id_number = $row["fax_caller_id_number"];
+									$fax_forward_number = $row["fax_forward_number"];
+									$fax_description = $row["fax_description"];
+								}
+								unset ($prep_statement);
+		
+							//add set tone detect_hits=1
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "tone_detect_hits=1";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$y++;
+		
+							//increment the dialplan detail order
+								$dialplan_detail_order = $dialplan_detail_order + 10;
+		
+							// execute on tone detect
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$y++;
+		
+							//increment the dialplan detail order
+								$dialplan_detail_order = $dialplan_detail_order + 10;
+		
+							//add tone_detect fax 1100 r +5000
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "tone_detect";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "fax 1100 r +5000";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$y++;
+		
+							//increment the dialplan detail order
+								$dialplan_detail_order = $dialplan_detail_order + 10;
+		
+							// execute on tone detect
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "3000";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$y++;
+		
+							//increment the dialplan detail order
+								$dialplan_detail_order = $dialplan_detail_order + 10;
+						}
+		
+					//add the actions
+						foreach ($dialplan_details as $row) {
+							if (strlen($row["dialplan_detail_data"]) > 1) {
+								$actions = explode(":", $row["dialplan_detail_data"]);
+								$dialplan_detail_type = array_shift($actions);
+								$dialplan_detail_data = join(':', $actions);
+								if (isset($row["dialplan_detail_uuid"])) {
+									$dialplan["dialplan_details"][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
+								}
+								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
+								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
+								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $dialplan_detail_type;
+								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $dialplan_detail_data;
+								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
+								$dialplan_detail_order = $dialplan_detail_order + 10;
+								$y++;
+							}
+						}
+		
+					//save the dialplan
+						$orm = new orm;
+						$orm->name('dialplans');
+						if (isset($dialplan["dialplan_uuid"])) {
+							$orm->uuid($dialplan["dialplan_uuid"]);
+						}
+						$orm->save($dialplan);
+						$dialplan_response = $orm->message;
+
+					//synchronize the xml config
+						save_dialplan_xml();
+		
+					//clear memcache
+						$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+						if ($fp) {
+							$switch_cmd = "memcache delete dialplan:".$destination_context;
+							$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 						}
 
-					//set the call carrier
-						if (strlen($destination_carrier) > 0) {
-							$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-							$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "carrier=$destination_carrier";
-							$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-							$y++;
-
-					//increment the dialplan detail order
-							$dialplan_detail_order = $dialplan_detail_order + 10;
-						}
-				}
-
-			//add fax detection
-				if (strlen($fax_uuid) > 0) {
-					//get the fax information
-						$sql = "select * from v_fax ";
-						$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-						$sql .= "and fax_uuid = '".$fax_uuid."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-						foreach ($result as &$row) {
-							$fax_extension = $row["fax_extension"];
-							$fax_destination_number = $row["fax_destination_number"];
-							$fax_name = $row["fax_name"];
-							$fax_email = $row["fax_email"];
-							$fax_pin_number = $row["fax_pin_number"];
-							$fax_caller_id_name = $row["fax_caller_id_name"];
-							$fax_caller_id_number = $row["fax_caller_id_number"];
-							$fax_forward_number = $row["fax_forward_number"];
-							$fax_description = $row["fax_description"];
-						}
-						unset ($prep_statement);
-
-					//add set tone detect_hits=1
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "tone_detect_hits=1";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						$y++;
-
-					//increment the dialplan detail order
-						$dialplan_detail_order = $dialplan_detail_order + 10;
-
-					// execute on tone detect
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "set";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						$y++;
-
-					//increment the dialplan detail order
-						$dialplan_detail_order = $dialplan_detail_order + 10;
-
-					//add tone_detect fax 1100 r +5000
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "tone_detect";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "fax 1100 r +5000";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						$y++;
-
-					//increment the dialplan detail order
-						$dialplan_detail_order = $dialplan_detail_order + 10;
-
-					// execute on tone detect
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = "sleep";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "3000";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						$y++;
-
-					//increment the dialplan detail order
-						$dialplan_detail_order = $dialplan_detail_order + 10;
-				}
-
-			//add the actions
-				foreach ($dialplan_details as $row) {
-					if (strlen($row["dialplan_detail_data"]) > 1) {
-						$actions = explode(":", $row["dialplan_detail_data"]);
-						$dialplan_detail_type = array_shift($actions);
-						$dialplan_detail_data = join(':', $actions);
-						if (isset($row["dialplan_detail_uuid"])) {
-							$dialplan["dialplan_details"][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
-						}
-						$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
-						$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
-						$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $dialplan_detail_type;
-						$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = $dialplan_detail_data;
-						$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
-						$dialplan_detail_order = $dialplan_detail_order + 10;
-						$y++;
-					}
-				}
-
-			//save the dialplan
-				$orm = new orm;
-				$orm->name('dialplans');
-				if (isset($dialplan["dialplan_uuid"])) {
-					$orm->uuid($dialplan["dialplan_uuid"]);
-				}
-				$orm->save($dialplan);
-				$dialplan_response = $orm->message;
+				} //add or update the dialplan if the destination number is set
 
 			//get the destination_uuid
 				if (strlen($dialplan_response['uuid']) > 0) {
@@ -363,16 +376,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			//get the destination_uuid
 				if (strlen($destination_response['uuid']) > 0) {
 					$destination_uuid = $destination_response['uuid'];
-				}
-
-			//synchronize the xml config
-				save_dialplan_xml();
-
-			//clear memcache
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					$switch_cmd = "memcache delete dialplan:".$destination_context;
-					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
 				}
 
 			//redirect the user
@@ -411,7 +414,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				header("Location: destination_edit.php?id=".$destination_uuid);
 				return;
-
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0)
 
