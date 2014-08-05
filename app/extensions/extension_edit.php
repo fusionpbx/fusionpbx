@@ -488,7 +488,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$total_price = $default_extension_pricing * $j;
 					$total_price_current_currency = currency_convert($total_price,$billing_currency,$default_currency);
 					$balance -= $total_price_current_currency;
-					$total_price_current_currency *= -1;
 
 					$db2->sql = "UPDATE v_billings SET balance = $balance, old_balance = $balance WHERE type_value='$destination_accountcode'";
 					$db2->result = $db2->execute();
@@ -497,7 +496,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$billing_invoice_uuid = uuid();
 					$user_uuid = check_str($_SESSION['user_uuid']);
 					$settled=1;
-					$mc_gross = $total_price_current_currency;
+					$mc_gross = -1 * $total_price_current_currency;
 					$post_payload = serialize($_POST);
 					$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', '$j extension(s) created', '".$_SESSION['domain_uuid']."' )";
 					$db2->result = $db2->execute();
