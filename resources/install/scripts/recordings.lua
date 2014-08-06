@@ -142,11 +142,6 @@ if ( session:ready() ) then
 	--set the base recordings dir
 		base_recordings_dir = recordings_dir;
 
-	--get the recordings from the config.lua and append the domain_name if the system is multi-tenant
-		if (domain_count > 1) then
-			recordings_dir = recordings_dir .. "/" .. domain_name;
-		end
-
 	--use the recording_dir when the variable is set
 		if (session:getVariable("recordings_dir")) then
 			if (base_recordings_dir ~= session:getVariable("recordings_dir")) then
@@ -154,6 +149,10 @@ if ( session:ready() ) then
 			end
 		end
 
+	--get the recordings from the config.lua and append the domain_name if the system is multi-tenant
+		if (domain_count > 1) then
+			recordings_dir = recordings_dir .. "/" .. domain_name;
+		end
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
 		default_dialect = session:getVariable("default_dialect");
