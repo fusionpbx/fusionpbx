@@ -58,6 +58,24 @@
 		$apps[$x]['menu'][$y]['groups'][] = "user";
 		$apps[$x]['menu'][$y]['groups'][] = "admin";
 		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['menu'][$y]['title']['en-us'] = "Extension Summary";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Extension Summary";
+		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
+		$apps[$x]['menu'][$y]['title']['de-de'] = "";
+		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
+		$apps[$x]['menu'][$y]['title']['de-at'] = "";
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Extension Summary";
+		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
+		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
+		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Extension Summary";
+		$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+		$apps[$x]['menu'][$y]['uuid'] = "4e45a3c1-6db5-417f-9abb-1d30a4fd0bf2";
+		$apps[$x]['menu'][$y]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
+		$apps[$x]['menu'][$y]['category'] = "internal";
+		$apps[$x]['menu'][$y]['path'] = "/app/xml_cdr/xml_cdr_extension_summary.php";
+		$apps[$x]['menu'][$y]['groups'][] = "admin";
+		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 
 	//permission details
 		$y = 0;

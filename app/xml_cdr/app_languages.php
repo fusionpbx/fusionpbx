@@ -425,4 +425,85 @@
 	$text['table-days']['pt-pt'] = "Dias";
 	$text['table-days']['fr-fr'] = "Jours";
 
+	$text['button-extension_summary']['en-us'] = "Extension Summary";
+	$text['button-extension_summary']['es-cl'] = "Resumen Extensión";
+	$text['button-extension_summary']['pt-pt'] = "Resumo Extensão";
+	$text['button-extension_summary']['fr-fr'] = "Résumé d'Extension";
+
+	//xml_cdr_extension_summary
+	$text['description-extension_summary']['en-us'] = "Default View: Last 7 Days";
+	$text['description-extension_summary']['es-cl'] = "Vista predeterminada: Últimos 7 días";
+	$text['description-extension_summary']['pt-pt'] = "Exibição padrão: nos últimos 7 dias";
+	$text['description-extension_summary']['fr-fr'] = "Vue par défaut: Les 7 derniers jours";
+
+	$text['title-extension_summary']['en-us'] = "Extension Summary";
+	$text['title-extension_summary']['es-cl'] = "Resumen Extensión";
+	$text['title-extension_summary']['pt-pt'] = "Resumo Extensão";
+	$text['title-extension_summary']['fr-fr'] = "Résumé d'Extension";
+
+	$text['label-start_date_time']['en-us'] = "Start Date/Time";
+	$text['label-start_date_time']['es-cl'] = "Fecha/Hora de Comienzo";
+	$text['label-start_date_time']['pt-pt'] = "Data/Hora de Início";
+	$text['label-start_date_time']['fr-fr'] = "Date de Début/Heure";
+
+	$text['label-end_date_time']['en-us'] = "End Date/Time";
+	$text['label-end_date_time']['es-cl'] = "Fecha/Hora";
+	$text['label-end_date_time']['pt-pt'] = "Data/Hora Final";
+	$text['label-end_date_time']['fr-fr'] = "Fin Date/Heure";
+
+	$text['label-include_internal']['en-us'] = "Include Internal";
+	$text['label-include_internal']['es-cl'] = "Incluya Interna";
+	$text['label-include_internal']['pt-pt'] = "Incluir Interno";
+	$text['label-include_internal']['fr-fr'] = "Inclure Interne";
+
+	$text['button-update']['en-us'] = "Update";
+	$text['button-update']['es-cl'] = "Actualización";
+	$text['button-update']['pt-pt'] = "Atualizar";
+	$text['button-update']['fr-fr'] = "Mise à jour";
+
+	$text['label-extension']['en-us'] = "Extension";
+	$text['label-extension']['es-cl'] = "Extensión";
+	$text['label-extension']['pt-pt'] = "Extensão";
+	$text['label-extension']['fr-fr'] = "Extension";
+
+	$text['label-number_alias']['en-us'] = "Number Alias";
+	$text['label-number_alias']['es-cl'] = "Número Alias";
+	$text['label-number_alias']['pt-pt'] = "Número Alias";
+	$text['label-number_alias']['fr-fr'] = "Nombre Alias";
+
+	$text['label-username']['en-us'] = "Username";
+	$text['label-username']['es-cl'] = "Nombre de usuario";
+	$text['label-username']['pt-pt'] = "Nome de Utilizador";
+	$text['label-username']['fr-fr'] = "Nom d'Utilisateur";
+
+	$text['label-inbound_calls']['en-us'] = "Inbound Calls";
+	$text['label-inbound_calls']['es-cl'] = "Las Llamadas Entrantes";
+	$text['label-inbound_calls']['pt-pt'] = "Chamadas de Entrada";
+	$text['label-inbound_calls']['fr-fr'] = "Les Appels Entrants";
+
+	$text['label-outbound_calls']['en-us'] = "Outbound Calls";
+	$text['label-outbound_calls']['es-cl'] = "Llamadas Salientes";
+	$text['label-outbound_calls']['pt-pt'] = "Chamadas de Saída";
+	$text['label-outbound_calls']['fr-fr'] = "Appels Sortants";
+
+	$text['label-inbound_duration']['en-us'] = "Inbound Duration";
+	$text['label-inbound_duration']['es-cl'] = "Duración Inbound";
+	$text['label-inbound_duration']['pt-pt'] = "Inbound Duração";
+	$text['label-inbound_duration']['fr-fr'] = "Inbound Durée";
+
+	$text['label-outbound_duration']['en-us'] = "Outbound Duration";
+	$text['label-outbound_duration']['es-cl'] = "Duración de Salida";
+	$text['label-outbound_duration']['pt-pt'] = "Outbound Duração";
+	$text['label-outbound_duration']['fr-fr'] = "Sortant Durée";
+
+	$text['option-true']['en-us'] = "True";
+	$text['option-true']['es-cl'] = "Verdadero";
+	$text['option-true']['pt-pt'] = "Sim";
+	$text['option-true']['fr-fr'] = "Oui";
+
+	$text['option-false']['en-us'] = "False";
+	$text['option-false']['es-cl'] = "Falso";
+	$text['option-false']['pt-pt'] = "Não";
+	$text['option-false']['fr-fr'] = "Non";
+
 ?>
