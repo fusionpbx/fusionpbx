@@ -392,6 +392,18 @@ else {
 			elseif (file_exists($tmp_dir.'/'.$row['uuid'].'_1.mp3')) {
 				$tmp_name = $row['uuid']."_1.mp3";
 			}
+			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'.wav')) {
+				$tmp_name = $row['bridge_uuid'].".wav";
+			}
+			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'_1.wav')) {
+				$tmp_name = $row['bridge_uuid']."_1.wav";
+			}
+			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'.mp3')) {
+				$tmp_name = $row['bridge_uuid'].".mp3";
+			}
+			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'_1.mp3')) {
+				$tmp_name = $row['bridge_uuid']."_1.mp3";
+			}
 			$tr_link = (if_group("admin") || if_group("superadmin")) ? "href='xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (
