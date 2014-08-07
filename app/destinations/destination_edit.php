@@ -324,9 +324,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$actions = explode(":", $row["dialplan_detail_data"]);
 								$dialplan_detail_type = array_shift($actions);
 								$dialplan_detail_data = join(':', $actions);
-								if (isset($row["dialplan_detail_uuid"])) {
-									$dialplan["dialplan_details"][$y]["dialplan_detail_uuid"] = $row["dialplan_detail_uuid"];
-								}
+
 								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_type"] = $dialplan_detail_type;
@@ -336,7 +334,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$y++;
 							}
 						}
-		
+
+					//delete the previous details
+						if(strlen($row["dialplan_detail_uuid"]) > 0){
+							$sql = "delete from v_dialplan_details ";
+							$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+							$sql .= "and dialplan_uuid = '".$row["dialplan_detail_uuid"]."' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+
 					//save the dialplan
 						$orm = new orm;
 						$orm->name('dialplans');
