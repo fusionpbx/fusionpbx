@@ -209,6 +209,10 @@
 	$text['label-caller_id_name_prefix']['pt-pt'] = "Prefixo do nome do chamador";
 	$text['label-caller_id_name_prefix']['fr-fr'] = "Préfixe sur le nom d'appelant";
 
+	$text['label-caller_announce_sound']['en-us'] = "Announce Sound";
+
+	$text['label-caller_announce_frequency']['en-us'] = "Announce Frequency";
+
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "descripción";
 	$text['label-description']['pt-pt'] = "Descrição";
@@ -379,6 +383,10 @@
 	$text['description-caller_id_name_prefix']['es-cl'] = "Defina un prefijo para el nombre de quien llama.";
 	$text['description-caller_id_name_prefix']['pt-pt'] = "Defina um prefixo no nome do originador.";
 	$text['description-caller_id_name_prefix']['fr-fr'] = "";
+
+	$text['description-caller_announce_sound']['en-us'] = "A sound to play to a caller every announce sound seconds. Needs the full path to the wav file.";
+
+	$text['description-caller_announce_frequency']['en-us'] = "How often should we play the announce sound. Enter a number in seconds";
 
 	$text['description-description']['en-us'] = "Enter a description, if desired.";
 	$text['description-description']['es-cl'] = "Ingrese una descripción, opcional.";

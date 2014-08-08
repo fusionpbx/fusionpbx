@@ -70,6 +70,8 @@ else {
 			$queue_discard_abandoned_after = check_str($_POST["queue_discard_abandoned_after"]);
 			$queue_abandoned_resume_allowed = check_str($_POST["queue_abandoned_resume_allowed"]);
 			$queue_cid_prefix = check_str($_POST["queue_cid_prefix"]);
+			$queue_announce_sound = check_str($_POST["queue_announce_sound"]);
+			$queue_announce_frequency = check_str($_POST["queue_announce_frequency"]);
 			$queue_description = check_str($_POST["queue_description"]);
 
 		//replace the space in the queue name with a dash
@@ -194,6 +196,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_discard_abandoned_after, ";
 				$sql .= "queue_abandoned_resume_allowed, ";
 				$sql .= "queue_cid_prefix, ";
+				$sql .= "queue_announce_sound, ";
+				$sql .= "queue_announce_frequency, ";
 				$sql .= "queue_description ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -217,6 +221,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$queue_discard_abandoned_after', ";
 				$sql .= "'$queue_abandoned_resume_allowed', ";
 				$sql .= "'$queue_cid_prefix', ";
+				$sql .= "'$queue_announce_sound', ";
+				$sql .= "'$queue_announce_frequency', ";
 				$sql .= "'$queue_description' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -255,6 +261,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_discard_abandoned_after = '$queue_discard_abandoned_after', ";
 				$sql .= "queue_abandoned_resume_allowed = '$queue_abandoned_resume_allowed', ";
 				$sql .= "queue_cid_prefix = '$queue_cid_prefix', ";
+				$sql .= "queue_announce_sound = '$queue_announce_sound', ";
+				$sql .= "queue_announce_frequency = '$queue_announce_frequency', ";
 				$sql .= "queue_description = '$queue_description' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and call_center_queue_uuid = '$call_center_queue_uuid'";
@@ -369,6 +377,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
 			$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
 			$queue_cid_prefix = $row["queue_cid_prefix"];
+			$queue_announce_sound = $row["queue_announce_sound"];
+			$queue_announce_frequency = $row["queue_announce_frequency"];
 			$queue_description = $row["queue_description"];
 		}
 		unset ($prep_statement);
@@ -900,6 +910,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-caller_id_name_prefix']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+
+        echo "<tr>\n";
+        echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+        echo "  ".$text['label-caller_announce_sound'].":\n";
+        echo "</td>\n";
+        echo "<td class='vtable' align='left'>\n";
+        echo "  <input class='formfld' type='text' name='queue_announce_sound' maxlength='255' value='$queue_announce_sound'>\n";
+        echo "<br />\n";
+        echo $text['description-caller_announce_sound']."\n";
+        echo "</td>\n";
+        echo "</tr>\n";
+
+        echo "<tr>\n";
+        echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+        echo "  ".$text['label-caller_announce_frequency'].":\n";
+        echo "</td>\n";
+        echo "<td class='vtable' align='left'>\n";
+        echo "  <input class='formfld' type='text' name='queue_announce_frequency' maxlength='255' value='$queue_announce_frequency'>\n";
+        echo "<br />\n";
+        echo $text['description-caller_announce_frequency']."\n";
+        echo "</td>\n";
+        echo "</tr>\n";
+
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
