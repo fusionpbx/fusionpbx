@@ -85,6 +85,7 @@ function cmd_async($cmd) {
 		$broadcast_destination_type = $row["broadcast_destination_type"];
 		$broadcast_phone_numbers = $row["broadcast_phone_numbers"];
 		$broadcast_destination_data = $row["broadcast_destination_data"];
+		$broadcast_avmd = $row["broadcast_avmd"];
 		//if (strlen($row["broadcast_destination_data"]) == 0) {
 		//	$broadcast_destination_application = '';
 		//	$broadcast_destination_data = '';
@@ -165,7 +166,9 @@ function cmd_async($cmd) {
 						$channel_variables .= ",domain_uuid=".$_SESSION['domain_uuid'];
 						$channel_variables .= ",domain=".$_SESSION['domain_name'];
 						$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
-						$channel_variables .= ",execute_on_answer='avmd start'";
+						if ($broadcast_avmd == "true") {
+							$channel_variables .= ",execute_on_answer='avmd start'";
+						}
 						$origination_url = "{".$channel_variables."}".$bridge_array[0];
 
 					//get the context
