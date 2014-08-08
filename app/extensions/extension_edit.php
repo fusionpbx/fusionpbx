@@ -34,7 +34,7 @@ else {
 	exit;
 }
 
-if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 	require_once "app/billing/resources/functions/currency.php";
 	require_once "app/billing/resources/functions/rating.php";
 }
@@ -60,7 +60,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config
 			$extension = str_replace(' ','-',check_str($_POST["extension"]));
 			$number_alias = check_str($_POST["number_alias"]);
 			$password = check_str($_POST["password"]);
-			$accountcode = check_str((if_group("superadmin")?$_POST["accountcode"]:$_SESSION['domain_name']));
+			$accountcode = (if_group("superadmin") || if_group("admin"))?$_POST["accountcode"]:$_SESSION['domain_name']));
 			$effective_caller_id_name = check_str($_POST["effective_caller_id_name"]);
 			$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
 			$outbound_caller_id_name = check_str($_POST["outbound_caller_id_name"]);
@@ -473,7 +473,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$extension++;
 				}
 
-				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+				if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 					// Let's bill $j has the number of extensions to bill
 					$db2 = new database;
 					$db2->sql = "SELECT currency, billing_uuid, balance FROM v_billings WHERE type_value='$destination_accountcode'";
@@ -519,7 +519,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
-					if (if_group("superadmin")) {
+					if (if_group("superadmin") || if_group("admin")) {
 						$sql .= "accountcode = '$accountcode', ";
 					}
 					$sql .= "effective_caller_id_name = '$effective_caller_id_name', ";
@@ -835,7 +835,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	// Billing
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billings/app_config.php")){
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		if ($action == "add" && permission_exists('extension_add')) {		// only when adding
 			echo "<tr>\n";
 			echo "<td colspan='2' width='30%' nowrap='nowrap' align='left' valign='top'>\n";
@@ -1000,6 +1000,33 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td class='vtable' align='left'>\n";
 		if ($action == "add"){ $accountcode=$_SESSION['domain_name']; }
 		echo "    <input class='formfld' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
+		echo "<br />\n";
+		echo $text['description-accountcode']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}elseif (if_group("admin") &&  file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."'";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-accountcode'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select name='accountcode' id='accountcode' class='formfld'>\n";
+		$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
+		$prep_statement_accountcode->execute();
+		$result_accountcode = $prep_statement_accountcode->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result_accountcode as &$row_accountcode) {
+			$selected = '';
+			if (($action == "add") && ($row_accountcode['type_value'] == $_SESSION['domain_name'])){ 
+				$selected='selected="selected"'; 
+			}
+			elseif ($row_accountcode['type_value'] == $accountcode){
+				$selected='selected="selected"'; 
+			}
+			echo "    <option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
+		}
+		echo "</select>";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
 		echo "</td>\n";
