@@ -60,7 +60,30 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 			$extension = str_replace(' ','-',check_str($_POST["extension"]));
 			$number_alias = check_str($_POST["number_alias"]);
 			$password = check_str($_POST["password"]);
-			$accountcode = (if_group("superadmin") || if_group("admin"))?$_POST["accountcode"]:$_SESSION['domain_name']));
+
+			// Lets do some server verifications, someone may do a HTML hack
+			if (if_group("superadmin")){
+				$accountcode = $_POST["accountcode"];
+			}
+			elseif (if_group("admin") && file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+				$sql_accountcode = "SELECT COUNT(*) as count FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."' AND type_value='".$_POST["accountcode"]."'";
+				$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
+				$prep_statement_accountcode->execute();
+				$row_accountcode = $prep_statement_accountcode->fetch(PDO::FETCH_ASSOC);
+
+	                        if ($row_accountcode['count'] > 0) {
+					$accountcode = $_POST["accountcode"];
+				}
+				else {
+					$accountcode = $_SESSION['domain_name'];
+				}
+
+				unset($sql_accountcode, $prep_statement_accountcode, $row_accountcode);
+			}
+			else{
+				$accountcode = $_SESSION['domain_name'];
+			}
+
 			$effective_caller_id_name = check_str($_POST["effective_caller_id_name"]);
 			$effective_caller_id_number = check_str($_POST["effective_caller_id_number"]);
 			$outbound_caller_id_name = check_str($_POST["outbound_caller_id_name"]);
@@ -1026,6 +1049,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 			echo "    <option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
 		}
+		unset($sql_accountcode, $prep_statement_accountcode, $result_accountcode);
 		echo "</select>";
 		echo "<br />\n";
 		echo $text['description-accountcode']."\n";
