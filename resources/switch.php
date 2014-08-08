@@ -2559,6 +2559,8 @@ if (!function_exists('save_call_center_xml')) {
 					$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
 					$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
 					$queue_cid_prefix = $row["queue_cid_prefix"];
+					$queue_announce_sound = $row["queue_announce_sound"];
+					$queue_announce_frequency = $row["queue_announce_frequency"];
 					$queue_description = check_str($row["queue_description"]);
 
 				//replace space with an underscore
@@ -2771,6 +2773,8 @@ if (!function_exists('save_call_center_xml')) {
 					$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
 					$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
 					$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
+					$queue_announce_sound = $row["queue_announce_sound"];
+					$queue_announce_frequency = $row ["queue_announce_frequency"];
 					$queue_description = $row["queue_description"];
 					if ($x > 0) {
 						$v_queues .= "\n";
@@ -2805,6 +2809,8 @@ if (!function_exists('save_call_center_xml')) {
 					$v_queues .= "			<param name=\"tier-rule-no-agent-no-wait\" value=\"$queue_tier_rule_no_agent_no_wait\"/>\n";
 					$v_queues .= "			<param name=\"discard-abandoned-after\" value=\"$queue_discard_abandoned_after\"/>\n";
 					$v_queues .= "			<param name=\"abandoned-resume-allowed\" value=\"$queue_abandoned_resume_allowed\"/>\n";
+					$v_queues .= "			<param name=\"announce-sound\" value=\"$queue_announce_sound\"/>\n";
+					$v_queues .= "			<param name=\"announce_frequency\" value=\"$queue_announce_frequency\"/>\n";
 					$v_queues .= "		</queue>";
 					$x++;
 				}
