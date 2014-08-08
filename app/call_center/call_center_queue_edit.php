@@ -196,8 +196,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_discard_abandoned_after, ";
 				$sql .= "queue_abandoned_resume_allowed, ";
 				$sql .= "queue_cid_prefix, ";
-				$sql .= "queue_announce_sound, ";
-				$sql .= "queue_announce_frequency, ";
+				if (strlen($queue_announce_sound) > 0) {
+					$sql .= "queue_announce_sound, ";
+				}
+				if (strlen($queue_announce_frequency) > 0) {
+					$sql .= "queue_announce_frequency, ";
+				}
 				$sql .= "queue_description ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -221,8 +225,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$queue_discard_abandoned_after', ";
 				$sql .= "'$queue_abandoned_resume_allowed', ";
 				$sql .= "'$queue_cid_prefix', ";
-				$sql .= "'$queue_announce_sound', ";
-				$sql .= "'$queue_announce_frequency', ";
+				if (strlen($queue_announce_sound) > 0) {
+					$sql .= "'$queue_announce_sound', ";
+				}
+				if (strlen($queue_announce_frequency) > 0) {
+					$sql .= "'$queue_announce_frequency', ";
+				}
 				$sql .= "'$queue_description' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
