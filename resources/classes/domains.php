@@ -99,6 +99,16 @@
 						$prep_statement->execute();
 					}
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					//unset the arrays that domains are overriding
+					foreach ($result as $row) {
+						$name = $row['domain_setting_name'];
+						$category = $row['domain_setting_category'];
+						$subcategory = $row['domain_setting_subcategory'];
+						if ($name == "array") {
+							unset($_SESSION[$category][$subcategory]);
+						}
+					}
+					//set the settings as a session
 					foreach ($result as $row) {
 						$name = $row['domain_setting_name'];
 						$category = $row['domain_setting_category'];
