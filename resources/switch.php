@@ -2810,7 +2810,7 @@ if (!function_exists('save_call_center_xml')) {
 					$v_queues .= "			<param name=\"discard-abandoned-after\" value=\"$queue_discard_abandoned_after\"/>\n";
 					$v_queues .= "			<param name=\"abandoned-resume-allowed\" value=\"$queue_abandoned_resume_allowed\"/>\n";
 					$v_queues .= "			<param name=\"announce-sound\" value=\"$queue_announce_sound\"/>\n";
-					$v_queues .= "			<param name=\"announce_frequency\" value=\"$queue_announce_frequency\"/>\n";
+					$v_queues .= "			<param name=\"announce-frequency\" value=\"$queue_announce_frequency\"/>\n";
 					$v_queues .= "		</queue>";
 					$x++;
 				}
