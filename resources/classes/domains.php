@@ -58,6 +58,11 @@
 					$prep_statement->execute();
 				}
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				//unset the previous settings
+				foreach ($result as $row) {
+					unset($_SESSION[$row['default_setting_category']]);
+				}
+				//set the settings as a session
 				foreach ($result as $row) {
 					$name = $row['default_setting_name'];
 					$category = $row['default_setting_category'];
