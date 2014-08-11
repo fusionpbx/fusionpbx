@@ -66,17 +66,23 @@
 			sql = sql .. "WHERE  v_contact_phones.phone_number = '"..caller.."' AND v_destinations.destination_number='"..callee.."'";
 
 			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+				freeswitch.consoleLog("notice", "[cidlookup] "..sql.."\n");
 			end
 			status = dbh:query(sql, function(row)
 				name = row.name;
-				--freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db "..row.name.."\n");
 			end);
 
+			if (name == nil) then
+				freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db is nil\n");
+			else
+				freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db "..name.."\n");
+			end
+
 		--check if there is a record, if it doesnt, then use common cidlookup
-			if (string.len(name) == 0) then
-				name = api:executeString("cidlookup " .. number);
-			end	
+			if ((name == nil) or  (string.len(name) == 0)) then
+					name = api:executeString("cidlookup " .. caller);
+			end
 			
-			api:executeString("uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
+			freeswitch.consoleLog("NOTICE", "uuid_setvar " .. uuid .. " caller_id_name " .. name);
+			api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
 	
