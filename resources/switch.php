@@ -598,21 +598,21 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 						$name = $row["conference_center_name"];
 						$extension = $row["conference_center_extension"];
 						$description = $row["conference_center_description"];
-						if ("execute_extension ".$extension." XML ".$_SESSION['context'] == $select_value || "execute_extension:".$extension." XML ".$_SESSION['context'] == $select_value) {
+						if ("transfer ".$extension." XML ".$_SESSION['context'] == $select_value || "transfer:".$extension." XML ".$_SESSION['context'] == $select_value) {
 							if ($select_type == "ivr") {
-								echo "		<option value='menu-exec-app:execute_extension $extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
+								echo "		<option value='menu-exec-app:transfer $extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
 							}
 							if ($select_type == "dialplan") {
-								echo "		<option value='execute_extension:$extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
+								echo "		<option value='transfer:$extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
 							}
 							$selection_found = true;
 						}
 						else {
 							if ($select_type == "ivr") {
-								echo "		<option value='menu-exec-app:execute_extension $extension XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
+								echo "		<option value='menu-exec-app:transfer $extension XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
 							}
 							if ($select_type == "dialplan") {
-								echo "		<option value='execute_extension:".$extension." XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
+								echo "		<option value='transfer:".$extension." XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
 							}
 						}
 						$x++;
@@ -643,21 +643,21 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 						$name = $row["conference_name"];
 						$extension = $row["conference_extension"];
 						$description = $row["conference_description"];
-						if ("execute_extension ".$extension." XML ".$_SESSION['context'] == $select_value || "execute_extension:".$extension." XML ".$_SESSION['context'] == $select_value) {
+						if ("transfer ".$extension." XML ".$_SESSION['context'] == $select_value || "transfer:".$extension." XML ".$_SESSION['context'] == $select_value) {
 							if ($select_type == "ivr") {
-								echo "		<option value='menu-exec-app:execute_extension $extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
+								echo "		<option value='menu-exec-app:transfer $extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
 							}
 							if ($select_type == "dialplan") {
-								echo "		<option value='execute_extension:$extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
+								echo "		<option value='transfer:$extension XML ".$_SESSION['context']."' selected='selected'>".$name." ".$description."</option>\n";
 							}
 							$selection_found = true;
 						}
 						else {
 							if ($select_type == "ivr") {
-								echo "		<option value='menu-exec-app:execute_extension $extension XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
+								echo "		<option value='menu-exec-app:transfer $extension XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
 							}
 							if ($select_type == "dialplan") {
-								echo "		<option value='execute_extension:".$extension." XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
+								echo "		<option value='transfer:".$extension." XML ".$_SESSION['context']."'>".$name." ".$description."</option>\n";
 							}
 						}
 						$x++;
@@ -689,21 +689,21 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				$context = $row["destination_context"];
 				$extension = $row["destination_extension"];
 				$description = $row["destination_description"];
-				if ("execute_extension ".$extension." XML ".$context == $select_value || "execute_extension:".$extension." XML ".$context == $select_value) {
+				if ("transfer ".$extension." XML ".$context == $select_value || "transfer:".$extension." XML ".$context == $select_value) {
 					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:execute_extension $extension XML ".$context."' selected='selected'>".$name." ".$description."</option>\n";
+						echo "		<option value='menu-exec-app:transfer $extension XML ".$context."' selected='selected'>".$name." ".$description."</option>\n";
 					}
 					if ($select_type == "dialplan") {
-						echo "		<option value='execute_extension:$extension XML ".$context."' selected='selected'>".$name." ".$description."</option>\n";
+						echo "		<option value='transfer:$extension XML ".$context."' selected='selected'>".$name." ".$description."</option>\n";
 					}
 					$selection_found = true;
 				}
 				else {
 					if ($select_type == "ivr") {
-						echo "		<option value='menu-exec-app:execute_extension $extension XML ".$context."'>".$name." ".$description."</option>\n";
+						echo "		<option value='menu-exec-app:transfer $extension XML ".$context."'>".$name." ".$description."</option>\n";
 					}
 					if ($select_type == "dialplan") {
-						echo "		<option value='execute_extension:".$extension." XML ".$context."'>".$name." ".$description."</option>\n";
+						echo "		<option value='transfer:".$extension." XML ".$context."'>".$name." ".$description."</option>\n";
 					}
 				}
 				$x++;
