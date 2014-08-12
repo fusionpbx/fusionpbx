@@ -27,14 +27,6 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('recording_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
-require_once "resources/paging.php";
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -93,6 +85,15 @@ require_once "resources/paging.php";
 		}
 	}
 
+//check the permission
+	if (permission_exists('recording_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
+
 //build a list of recordings
 	$config_recording_list = '|';
 	$i = 0;
@@ -140,6 +141,9 @@ require_once "resources/paging.php";
 			closedir($dh);
 		}
 	}
+
+//add paging
+	require_once "resources/paging.php";
 
 //include the header
 	require_once "resources/header.php";
