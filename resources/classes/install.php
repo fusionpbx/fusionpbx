@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010
+	Copyright (C) 2010-2014
 	All Rights Reserved.
 
 	Contributor(s):
@@ -36,7 +36,7 @@ include "root.php";
 		var $switch_sounds_dir;
 
 		//$option '-n' --no-clobber
-		function recursive_copy($src, $dst, $option = '') {
+		public function recursive_copy($src, $dst, $option = '') {
 			if (file_exists('/bin/cp')) {
 				 exec ('cp -RLp '.$option.' '.$src.'/* '.$dst);
 			}
