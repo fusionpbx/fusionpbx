@@ -55,10 +55,10 @@ require_once "resources/functions.php";
 	} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/resources/config.php")) {
 		//original directory
 		$config_exists = true;
-	} elseif (file_exists("/etc/fusionpbx/config.php")){
+	} elseif (file_exists("/etc/fusionpbx/config.php")) {
 		//linux
 		$config_exists = true;
-	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")){
+	} elseif (file_exists("/usr/local/etc/fusionpbx/config.php")) {
 		$config_exists = true;
 	}
 	if ($config_exists) {
@@ -787,7 +787,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				if (file_exists('/usr/share/fusionpbx/resources/install/sql/mysql.sql')){
 					$filename = "/usr/share/fusionpbx/resources/install/sql/mysql.sql";
 				}
-				else {				
+				else {
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
 				}
 					$file_contents = file_get_contents($filename);
