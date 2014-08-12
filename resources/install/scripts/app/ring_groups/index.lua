@@ -98,9 +98,9 @@
 	end
 
 --set confirm
-	session:execute("set", "group_confirm_key=exec");
-	session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
-	
+--	session:execute("set", "group_confirm_key=exec");
+--	session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
+
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
@@ -427,7 +427,6 @@
 						end
 				end
 		end
-
 
 --actions
 	--ACTIONS = {}
