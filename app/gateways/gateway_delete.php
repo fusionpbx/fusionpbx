@@ -59,14 +59,11 @@ if (strlen($_GET["id"])>0) {
 		unset ($prep_statement);
 
 	//delete the xml file
-		if (count($_SESSION["domains"]) > 1) {
-			$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$_SESSION['domain_name'].'-'.$gateway.".xml";
-		}
-		else {
+		if ($_SESSION['switch']['sip_profiles']['dir'] != '') {
 			$gateway_xml_file = $_SESSION['switch']['sip_profiles']['dir']."/".$profile."/v_".$gateway_uuid.".xml";
-		}
-		if (file_exists($gateway_xml_file)) {
-			unlink($gateway_xml_file);
+			if (file_exists($gateway_xml_file)) {
+				unlink($gateway_xml_file);
+			}
 		}
 
 	//create the event socket connection and stop the gateway
