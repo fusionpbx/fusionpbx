@@ -71,6 +71,11 @@
 	$text['description-destinations']['fr-fr'] = "Ajouter des destinations et des paramètres au groupe de sonnerie.";
 	$text['description-destinations']['pt-pt'] = "Adicionar destinos e parâmetros ao grupo.";
 
+	$text['description-skip_active']['en-us'] = "Skip destinations with active calls.";
+	$text['description-skip_active']['es-cl'] = "Saltar destinos con llamadas activas.";
+	$text['description-skip_active']['fr-fr'] = "Passer destinations avec des appels actifs.";
+	$text['description-skip_active']['pt-pt'] = "Ir destinos com ligações ativas.";
+
 	$text['description-enabled']['en-us'] ='Set the status of this ring group.';
 	$text['description-enabled']['es-cl'] = "Define el estado de este grupo de llamado.";
 	$text['description-enabled']['fr-fr'] = "Choisir l'état de ce groupe de sonnerie";
@@ -195,6 +200,11 @@
 	$text['label-duration']['es-cl'] = "Duración";
 	$text['label-duration']['fr-fr'] = "Durée";
 	$text['label-duration']['pt-pt'] = "Duração";
+
+	$text['label-skip_active']['en-us'] = "Skip Active";
+	$text['label-skip_active']['es-cl'] = "Saltar activo";
+	$text['label-skip_active']['fr-fr'] = "Passer active";
+	$text['label-skip_active']['pt-pt'] = "Ir ativa";
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";

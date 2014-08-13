@@ -158,6 +158,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the ringback.";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_skip_active";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Skip destinations with active calls.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select enable or disable the ring group.";
