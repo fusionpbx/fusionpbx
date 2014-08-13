@@ -349,7 +349,7 @@ else {
 		echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order);
 	}
 	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order);
-	if (if_group("admin") || if_group("superadmin")) {
+	if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
 		echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	}
 	echo "</tr>\n";
@@ -404,7 +404,7 @@ else {
 			elseif (file_exists($tmp_dir.'/'.$row['bridge_uuid'].'_1.mp3')) {
 				$tmp_name = $row['bridge_uuid']."_1.mp3";
 			}
-			$tr_link = (if_group("admin") || if_group("superadmin")) ? "href='xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
+			$tr_link = (if_group("admin") || if_group("superadmin") || if_group("cdr")) ? "href='xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if (
 				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png") &&
@@ -525,14 +525,14 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null).">".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (if_group("admin") || if_group("superadmin")) {
+			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
 				echo "<a href='xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a>";
 			}
 			else {
 				echo $hangup_cause;
 			}
 			echo "	</td>\n";
-			if (if_group("admin") || if_group("superadmin")) {
+			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
 				echo "	<td class='list_control_icon'>";
 				echo "		<a href='xml_cdr_details.php?uuid=".$row['uuid']."' alt='".$text['button-view']."'>$v_link_label_view</a>";
 				echo "	</td>\n";
