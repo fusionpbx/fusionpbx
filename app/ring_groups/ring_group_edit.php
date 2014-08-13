@@ -683,7 +683,7 @@ else {
 	echo "	</tr>";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "	".$text['label-skip_active'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
