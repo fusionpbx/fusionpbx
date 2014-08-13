@@ -9,7 +9,7 @@
 --	1. Redistributions of source code must retain the above copyright notice,
 --	   this list of conditions and the following disclaimer.
 --
---	2. Redistributions in binary form must reproduce the above copyright
+--	2. Redistributions in binary form must repoduce the above copyright
 --	   notice, this list of conditions and the following disclaimer in the
 --	   documentation and/or other materials provided with the distribution.
 --
@@ -100,7 +100,7 @@
 --set confirm
 --	session:execute("set", "group_confirm_key=exec");
 --	session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
-
+	
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
@@ -108,7 +108,7 @@
 	else
 		--get the ring group destinations
 			sql = 
-			[[ SELECT r.ring_group_strategy, r.ring_group_timeout_app, d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_ringback
+			[[ SELECT r.ring_group_strategy, r.ring_group_timeout_app, d.destination_number, d.destination_delay, d.destination_timeout, d.destination_prompt, r.ring_group_timeout_data, r.ring_group_cid_name_prefix, r.ring_group_ringback, r.ring_group_skip_active
 			FROM v_ring_groups as r, v_ring_group_destinations as d
 			where d.ring_group_uuid = r.ring_group_uuid 
 			and d.ring_group_uuid = ']]..ring_group_uuid..[[' 
@@ -180,6 +180,7 @@
 					ring_group_timeout_data = row.ring_group_timeout_data;
 					ring_group_cid_name_prefix = row.ring_group_cid_name_prefix;
 					ring_group_ringback = row.ring_group_ringback;
+					ring_group_skip_active = row.ring_group_skip_active;
 					destination_number = row.destination_number;
 					destination_delay = row.destination_delay;
 					destination_timeout = row.destination_timeout;
@@ -246,12 +247,22 @@
 				--process according to user_exists, sip_uri, external number
 					if (user_exists == "true") then
 						--get the extension_uuid
-							if (user_exists == "true") then
-								cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
-								extension_uuid = trim(api:executeString(cmd));
-							end
+						cmd = "user_data ".. destination_number .."@"..domain_name.." var extension_uuid";
+						extension_uuid = trim(api:executeString(cmd));
 						--send to user
-						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+						if (ring_group_skip_active ~= nil) then
+							if (ring_group_skip_active == "true") then
+								extension_status = "show channels like "..destination_number.."@"..domain_name;
+								reply = trim(api:executeString(extension_status));
+								if (reply == "0 total.") then
+									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+								end
+							else
+								dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+							end
+						else
+							dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+						end
 					elseif (tonumber(destination_number) == nil) then
 						--sip uri
 						dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay.."]" .. row.destination_number;
@@ -316,14 +327,18 @@
 							previous_dialplan_uuid = r.dialplan_uuid;
 						end
 					end
-					freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
 
 				--use a delimiter between dialstrings
 					if (dial_string ~= nil) then
+						--freeswitch.consoleLog("notice", "[ring group] dial_string: " .. dial_string .. "\n");
 						if (x == 0) then
 							app_data = "{ignore_early_media=true}"..dial_string;
 						else
-							app_data = app_data .. delimiter .. dial_string;
+							if (app_data == nil) then
+								app_data = "{ignore_early_media=true}"..dial_string;
+							else
+								app_data = app_data .. delimiter .. dial_string;
+							end
 						end
 						--freeswitch.consoleLog("notice", "[ring group] app_data: " .. app_data .. "\n");
 					end
@@ -419,7 +434,7 @@
 							else
 								sql = "SELECT ring_group_timeout_app, ring_group_timeout_data FROM v_ring_groups ";
 								sql = sql .. "where ring_group_uuid = '"..ring_group_uuid.."' ";
-								freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "\n");
+								--freeswitch.consoleLog("notice", "[ring group] SQL:" .. sql .. "\n");
 								dbh:query(sql, function(row)
 									session:execute(row.ring_group_timeout_app, row.ring_group_timeout_data);
 								end);
@@ -427,6 +442,7 @@
 						end
 				end
 		end
+
 
 --actions
 	--ACTIONS = {}
