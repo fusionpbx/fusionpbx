@@ -1,6 +1,6 @@
 --	ring_groups.lua
 --	Part of FusionPBX
---	Copyright (C) 2010-2013 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010-2014 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,6 @@
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
 --	Luis Daniel Lucio Qurioz <dlucio@okay.com.mx>
-
 
 --connect to the database
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
@@ -56,6 +55,7 @@
 	source = session:getVariable("source");
 	uuid = session:getVariable("uuid");
 	context = session:getVariable("context");
+	call_direction = session:getVariable("call_direction");
 
 --define additional variables
 	uuids = "";
@@ -68,6 +68,20 @@
 	if (not default_language) then default_language = 'en'; end
 	if (not default_dialect) then default_dialect = 'us'; end
 	if (not default_voice) then default_voice = 'callie'; end
+
+--get record_ext
+	if (session:getVariable("record_ext")) then
+		record_ext = session:getVariable("record_ext");
+	else
+		record_ext = "wav";
+	end
+
+--set the recording path
+	recording_archive = recordings_dir
+	if (domain_count > 1) then
+		recording_archive = recording_archive.."/"..domain_name;
+	end
+	recording_archive = recording_archive.."/archive/"..(os.date("%Y")).."/"..(os.date("%b")).."/"..(os.date("%d"));
 
 --prepare the api object
 	api = freeswitch.API();
@@ -100,7 +114,7 @@
 --set confirm
 --	session:execute("set", "group_confirm_key=exec");
 --	session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
-	
+
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
@@ -114,7 +128,7 @@
 			and d.ring_group_uuid = ']]..ring_group_uuid..[[' 
 			and r.ring_group_enabled = 'true' 
 			order by d.destination_delay, d.destination_number asc ]]
-			freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
+			--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 			destinations = {};
 			x = 1;
 			assert(dbh:query(sql, function(row)
@@ -242,6 +256,29 @@
 						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,";
 					else
 						group_confirm = "";
+					end
+
+				--get user_record value and determine whether to record the session
+					cmd = "user_data ".. destination_number .."@"..domain_name.." var user_record";
+					user_record = trim(api:executeString(cmd));
+					--set the record_session variable
+					if (user_record == "all") then
+						record_session = true;
+					end
+					if (user_record == "inbound" and call_direction == "inbound") then
+						record_session = true;
+					end
+					if (user_record == "outbound" and call_direction == "outbound") then
+						record_session = true;
+					end
+					if (user_record == "local" and call_direction == "local") then
+						record_session = true;
+					end
+
+				--record the session
+					if (record_session) then
+						cmd = "uuid_record "..uuid.." start "..recording_archive.."/"..uuid.."."..record_ext;
+						response = api:executeString(cmd);
 					end
 
 				--process according to user_exists, sip_uri, external number
