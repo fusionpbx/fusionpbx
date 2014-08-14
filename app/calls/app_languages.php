@@ -55,30 +55,40 @@
 	$text['label-follow-me']['pt-pt'] = "Segue-me";
 	$text['label-follow-me']['fr-fr'] = "Follow Me";
 
-	$text['label-ring-1']['en-us'] = "Ring 1st Number";
-	$text['label-ring-1']['es-cl'] = "1º Número a Sonar";
-	$text['label-ring-1']['pt-pt'] = "1º Número a Tocar";
-	$text['label-ring-1']['fr-fr'] = "Sonner le 1er Numéro";
+	$text['label-destinations']['en-us'] = "Destinations";
+	$text['label-destinations']['es-cl'] = "Destinos";
+	$text['label-destinations']['fr-fr'] = "Destinations";
+	$text['label-destinations']['pt-pt'] = "Destinos";
 
-	$text['label-ring-2']['en-us'] = "Ring 2nd Number";
-	$text['label-ring-2']['es-cl'] = "2º Número a Sonar";
-	$text['label-ring-2']['pt-pt'] = "2º Número a Tocar";
-	$text['label-ring-2']['fr-fr'] = "Sonner le 2nd Numéro";
+	$text['label-destination_number']['en-us'] = "Destination";
+	$text['label-destination_number']['es-cl'] = "Destino";
+	$text['label-destination_number']['fr-fr'] = "Destination";
+	$text['label-destination_number']['pt-pt'] = "Destino";
 
-	$text['label-ring-3']['en-us'] = "Ring 3rd Number";
-	$text['label-ring-3']['es-cl'] = "3º Número a Sonar";
-	$text['label-ring-3']['pt-pt'] = "3º Número a Tocar";
-	$text['label-ring-3']['fr-fr'] = "Sonner le 3ème Numéro";
+	$text['label-destination_delay']['en-us'] = "Delay";
+	$text['label-destination_delay']['es-cl'] = "Retraso";
+	$text['label-destination_delay']['fr-fr'] = "Délais";
+	$text['label-destination_delay']['pt-pt'] = "Atraso";
 
-	$text['label-ring-4']['en-us'] = "Ring 4th Number";
-	$text['label-ring-4']['es-cl'] = "4º Número a Sonar";
-	$text['label-ring-4']['pt-pt'] = "4º Número a Tocar";
-	$text['label-ring-4']['fr-fr'] = "Sonner le 4ème Numéro";
+	$text['label-destination_timeout']['en-us'] = "Timeout";
+	$text['label-destination_timeout']['es-cl'] = "Timeout";
+	$text['label-destination_timeout']['fr-fr'] = "Timeout";
+	$text['label-destination_timeout']['pt-pt'] = "Timeout";
 
-	$text['label-ring-5']['en-us'] = "Ring 5th Number";
-	$text['label-ring-5']['es-cl'] = "5º Número a Sonar";
-	$text['label-ring-5']['pt-pt'] = "5º Número a Tocar";
-	$text['label-ring-5']['fr-fr'] = "Sonner le 5ème Numéro";
+	$text['label-destination_prompt']['en-us'] = "Prompt";
+	$text['label-destination_prompt']['es-cl'] = "Prompt";
+	$text['label-destination_prompt']['fr-fr'] = "Prompt";
+	$text['label-destination_prompt']['pt-pt'] = "Prompt";
+
+	$text['label-destination_prompt_confirm']['en-us'] = "Confirm";
+	$text['label-destination_prompt_confirm']['es-cl'] = "Confirmar";
+	$text['label-destination_prompt_confirm']['fr-fr'] = "Confirmer";
+	$text['label-destination_prompt_confirm']['pt-pt'] = "Confirmar";
+
+	$text['label-destination_prompt_announce']['en-us'] = "Announce";
+	$text['label-destination_prompt_announce']['es-cl'] = "Anunciar";
+	$text['label-destination_prompt_announce']['fr-fr'] = "Annonce";
+	$text['label-destination_prompt_announce']['pt-pt'] = "Anunciar";
 
 	$text['label-cid-name-prefix']['en-us'] = "Caller ID Name";
 	$text['label-cid-name-prefix']['es-cl'] = "Nombre de Caller ID";
