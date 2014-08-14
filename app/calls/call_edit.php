@@ -585,7 +585,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			</td>\n";
 	if (permission_exists('follow_me_prompt')) {
 		echo "		<td>\n";
-		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_1]'>\n";
+		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_1'>\n";
 		echo "				<option value=''></option>\n";
 		echo "				<option value='1' ".(($destination_prompt_1)?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
 		//echo "			<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
@@ -605,7 +605,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			</td>\n";
 	if (permission_exists('follow_me_prompt')) {
 		echo "		<td>\n";
-		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_2]'>\n";
+		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_2'>\n";
 		echo "				<option value=''></option>\n";
 		echo "				<option value='1' ".(($destination_prompt_2)?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
 		//echo "			<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
@@ -625,7 +625,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			</td>\n";
 	if (permission_exists('follow_me_prompt')) {
 		echo "		<td>\n";
-		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_3]'>\n";
+		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_3'>\n";
 		echo "				<option value=''></option>\n";
 		echo "				<option value='1' ".(($destination_prompt_3)?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
 		//echo "			<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
@@ -645,7 +645,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			</td>\n";
 	if (permission_exists('follow_me_prompt')) {
 		echo "		<td>\n";
-		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_4]'>\n";
+		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_4'>\n";
 		echo "				<option value=''></option>\n";
 		echo "				<option value='1' ".(($destination_prompt_4)?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
 		//echo "			<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
@@ -665,7 +665,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			</td>\n";
 	if (permission_exists('follow_me_prompt')) {
 		echo "		<td>\n";
-		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_5]'>\n";
+		echo "			<select class='formfld' style='width: 90px;' name='destination_prompt_5'>\n";
 		echo "				<option value=''></option>\n";
 		echo "				<option value='1' ".(($destination_prompt_5)?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
 		//echo "			<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
