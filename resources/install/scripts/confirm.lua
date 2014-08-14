@@ -56,15 +56,6 @@
 			if (not default_voice) then default_voice = 'callie'; end
 
 		--confirm the calls
-			--if an extension answer the call
-				if (confirm) then
-					cmd = "user_exists id ".. destination_number .." "..context;
-					result = api:executeString(cmd);
-					--freeswitch.consoleLog("NOTICE", "[confirm] "..cmd.." "..result.."\n");
-					if (result == "true") then
-						confirm = "true";
-					end
-				end
 			--prompt for digits
 				if (confirm == "true") then
 					--send to the log
