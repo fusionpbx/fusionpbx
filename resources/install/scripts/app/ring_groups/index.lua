@@ -111,10 +111,6 @@
 			end
 	end
 
---set confirm
---	session:execute("set", "group_confirm_key=exec");
---	session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
-
 --process the ring group
 	if (ring_group_forward_enabled == "true" and string.len(ring_group_forward_destination) > 0) then
 		--forward the ring group
@@ -247,15 +243,23 @@
 					end
 					session:execute("set", "uuids="..uuids);
 
+				--set confirm
+					if (ring_group_strategy == "simultaneous" 
+						or ring_group_strategy == "sequence"
+						or ring_group_strategy == "rollover") then
+							session:execute("set", "group_confirm_key=exec");
+							session:execute("set", "group_confirm_file=lua ".. scripts_dir .."/confirm.lua");
+					end
+
 				--determine confirm prompt
 					if (destination_prompt == nil) then
-						group_confirm = "";
+						group_confirm = "confirm=false,";
 					elseif (destination_prompt == "1") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,";
+						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,confirm=true,";
 					elseif (destination_prompt == "2") then
-						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,";
+						group_confirm = "group_confirm_key=exec,group_confirm_file=lua ".. scripts_dir .."/confirm.lua,confirm=true,";
 					else
-						group_confirm = "";
+						group_confirm = "confirm=false,";
 					end
 
 				--get user_record value and determine whether to record the session
