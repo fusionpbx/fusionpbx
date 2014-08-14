@@ -31,6 +31,9 @@
 		--answer the call
 			session:answer();
 
+		--add short delay before playing the audio
+			session:sleep(1000);
+
 		--get the variables
 			context = session:getVariable("context");
 			sounds_dir = session:getVariable("sounds_dir");
