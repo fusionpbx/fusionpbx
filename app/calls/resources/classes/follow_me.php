@@ -34,33 +34,37 @@ include "root.php";
 		public $cid_name_prefix;
 		public $cid_number_prefix;
 		public $accountcode;
-		public $call_prompt;
 		public $follow_me_enabled;
 		private $extension;
 
 		public $destination_data_1;
 		public $destination_type_1;
 		public $destination_delay_1;
+		public $destination_prompt_1;
 		public $destination_timeout_1;
 
 		public $destination_data_2;
 		public $destination_type_2;
 		public $destination_delay_2;
+		public $destination_prompt_2;
 		public $destination_timeout_2;
 
 		public $destination_data_3;
 		public $destination_type_3;
 		public $destination_delay_3;
+		public $destination_prompt_3;
 		public $destination_timeout_3;
 
 		public $destination_data_4;
 		public $destination_type_4;
 		public $destination_delay_4;
+		public $destination_prompt_4;
 		public $destination_timeout_4;
 
 		public $destination_data_5;
 		public $destination_type_5;
 		public $destination_delay_5;
+		public $destination_prompt_5;
 		public $destination_timeout_5;
 
 		public $destination_timeout = 0;
@@ -79,7 +83,6 @@ include "root.php";
 				if (strlen($this->cid_number_prefix) > 0) {
 					$sql .= "cid_number_prefix, ";
 				}
-				$sql .= "call_prompt, ";
 				$sql .= "follow_me_enabled ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -90,7 +93,6 @@ include "root.php";
 				if (strlen($this->cid_number_prefix) > 0) {
 					$sql .= "'$this->cid_number_prefix', ";
 				}
-				$sql .= "'$this->call_prompt', ";
 				$sql .= "'$this->follow_me_enabled' ";
 				$sql .= ")";
 				if ($v_debug) {
@@ -109,7 +111,6 @@ include "root.php";
 				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
 				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
 				$sql .= "cid_number_prefix = '$this->cid_number_prefix', ";
-				$sql .= "call_prompt = '$this->call_prompt' ";
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
 				$db->exec(check_sql($sql));
@@ -135,6 +136,7 @@ include "root.php";
 					$sql .= "follow_me_destination, ";
 					$sql .= "follow_me_timeout, ";
 					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_prompt, ";
 					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
@@ -145,6 +147,8 @@ include "root.php";
 					$sql .= "'$this->destination_data_1', ";
 					$sql .= "'$this->destination_timeout_1', ";
 					$sql .= "'$this->destination_delay_1', ";
+					$sql .= "'$this->destination_delay_1', ";
+					$sql .= "'$this->destination_prompt_1', ";
 					$sql .= "'1' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -160,6 +164,7 @@ include "root.php";
 					$sql .= "follow_me_destination, ";
 					$sql .= "follow_me_timeout, ";
 					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_prompt, ";
 					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
@@ -170,6 +175,7 @@ include "root.php";
 					$sql .= "'$this->destination_data_2', ";
 					$sql .= "'$this->destination_timeout_2', ";
 					$sql .= "'$this->destination_delay_2', ";
+					$sql .= "'$this->destination_prompt_2', ";
 					$sql .= "'2' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -185,6 +191,7 @@ include "root.php";
 					$sql .= "follow_me_destination, ";
 					$sql .= "follow_me_timeout, ";
 					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_prompt, ";
 					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
@@ -195,6 +202,7 @@ include "root.php";
 					$sql .= "'$this->destination_data_3', ";
 					$sql .= "'$this->destination_timeout_3', ";
 					$sql .= "'$this->destination_delay_3', ";
+					$sql .= "'$this->destination_prompt_3', ";
 					$sql .= "'3' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -210,6 +218,7 @@ include "root.php";
 					$sql .= "follow_me_destination, ";
 					$sql .= "follow_me_timeout, ";
 					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_prompt, ";
 					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
@@ -220,6 +229,7 @@ include "root.php";
 					$sql .= "'$this->destination_data_4', ";
 					$sql .= "'$this->destination_timeout_4', ";
 					$sql .= "'$this->destination_delay_4', ";
+					$sql .= "'$this->destination_prompt_4', ";
 					$sql .= "'4' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -235,6 +245,7 @@ include "root.php";
 					$sql .= "follow_me_destination, ";
 					$sql .= "follow_me_timeout, ";
 					$sql .= "follow_me_delay, ";
+					$sql .= "follow_me_prompt, ";
 					$sql .= "follow_me_order ";
 					$sql .= ") ";
 					$sql .= "values ";
@@ -245,6 +256,7 @@ include "root.php";
 					$sql .= "'$this->destination_data_5', ";
 					$sql .= "'$this->destination_timeout_5', ";
 					$sql .= "'$this->destination_delay_5', ";
+					$sql .= "'$this->destination_prompt_5', ";
 					$sql .= "'5' ";
 					$sql .= ")";
 					$db->exec(check_sql($sql));
@@ -280,7 +292,6 @@ include "root.php";
 				if (count($result) > 0) {
 					foreach ($result as &$row) {
 						$follow_me_uuid = $row["follow_me_uuid"];
-						$this->call_prompt = $row["call_prompt"];
 						$this->cid_name_prefix = $row["cid_name_prefix"];
 						$this->cid_number_prefix = $row["cid_number_prefix"];
 					}
@@ -345,8 +356,8 @@ include "root.php";
 								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
 									$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
 									$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
-									if ($this->call_prompt == "true") {
-										$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
+									if ($row["follow_me_prompt"] == "true") {
+										$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 									}
 									$dial_string .= "extension_uuid=".$extension_uuid.",";
 									$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
@@ -356,6 +367,9 @@ include "root.php";
 								}
 								else {
 									$replace_value = $row["follow_me_destination"].",extension_uuid=".$extension_uuid;
+									if ($row["follow_me_prompt"] == "true") {
+										$replace_value .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
+									}
 									$dial_string = $_SESSION['domain']['dial_string']['text'];
 									$dial_string = str_replace("\${dialed_user}", $replace_value, $dial_string);
 								}
@@ -363,8 +377,8 @@ include "root.php";
 							else {
 								$dial_string .= "outbound_caller_id_number=\${outbound_caller_id_number},";
 								$dial_string .= "presence_id=".$this->extension."@".$_SESSION['domain_name'].",";
-								if ($this->call_prompt == "true") {
-									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,";
+								if ($row["follow_me_prompt"] == "true") {
+									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 								}
 								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
