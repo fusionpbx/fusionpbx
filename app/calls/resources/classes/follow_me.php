@@ -346,18 +346,20 @@ include "root.php";
 								$sql .= "and (extension = '".$row["follow_me_destination"]."' or number_alias = '".$row["follow_me_destination"]."') ";
 								$prep_statement = $db->prepare(check_sql($sql));
 								$prep_statement->execute();
-								$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+								$extension_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 								$extension_uuid = '';
-								if (count($result) > 0) {
-									foreach ($result as &$row) {
-										$extension_uuid = $row["extension_uuid"];
+								if (count($extension_result) > 0) {
+									foreach ($extension_result as &$field) {
+										$extension_uuid = $field["extension_uuid"];
 									}
 								}
+								unset ($prep_statement);
+
 								//set the dial string
 								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
 									$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
 									$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
-									if ($row["follow_me_prompt"] == "true") {
+									if ($row["follow_me_prompt"] == "1") {
 										$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 									}
 									$dial_string .= "extension_uuid=".$extension_uuid.",";
@@ -368,7 +370,7 @@ include "root.php";
 								}
 								else {
 									$replace_value = $row["follow_me_destination"].",extension_uuid=".$extension_uuid;
-									if ($row["follow_me_prompt"] == "true") {
+									if ($row["follow_me_prompt"] == "1") {
 										$replace_value .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 									}
 									$dial_string = $_SESSION['domain']['dial_string']['text'];
@@ -378,7 +380,7 @@ include "root.php";
 							else {
 								$dial_string .= "outbound_caller_id_number=\${outbound_caller_id_number},";
 								$dial_string .= "presence_id=".$this->extension."@".$_SESSION['domain_name'].",";
-								if ($row["follow_me_prompt"] == "true") {
+								if ($row["follow_me_prompt"] == "1") {
 									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 								}
 								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
