@@ -63,8 +63,8 @@
 		//$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_prompt";
-		//$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
-		//$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_destination_view";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
