@@ -546,7 +546,7 @@ else {
 			echo "			<td>\n";
 			echo "				<select class='formfld' style='width: 90px;' name='ring_group_destinations[".$x."][destination_prompt]'>\n";
 			echo "					<option value=''></option>\n";
-			echo "					<option value='1'".(($row['destination_prompt'])?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
+			echo "					<option value='1' ".(($row['destination_prompt'])?"selected='selected'":null).">".$text['label-destination_prompt_confirm']."</option>\n";
 			//echo "				<option value='2'>".$text['label-destination_prompt_announce]."</option>\n";
 			echo "				</select>\n";
 			echo "			</td>\n";
@@ -558,7 +558,6 @@ else {
 		}
 		echo "				</td>\n";
 		echo "			</tr>\n";
-
 		$x++;
 	}
 	echo "			</table>\n";
