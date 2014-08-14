@@ -122,22 +122,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			$destination_data_1 = check_str($_POST["destination_data_1"]);
 			$destination_delay_1 = check_str($_POST["destination_delay_1"]);
+			$destination_prompt_1 = check_str($_POST["destination_prompt_1"]);
 			$destination_timeout_1 = check_str($_POST["destination_timeout_1"]);
 
 			$destination_data_2 = check_str($_POST["destination_data_2"]);
 			$destination_delay_2 = check_str($_POST["destination_delay_2"]);
+			$destination_prompt_2 = check_str($_POST["destination_prompt_2"]);
 			$destination_timeout_2 = check_str($_POST["destination_timeout_2"]);
 
 			$destination_data_3 = check_str($_POST["destination_data_3"]);
 			$destination_delay_3 = check_str($_POST["destination_delay_3"]);
+			$destination_prompt_3 = check_str($_POST["destination_prompt_3"]);
 			$destination_timeout_3 = check_str($_POST["destination_timeout_3"]);
 
 			$destination_data_4 = check_str($_POST["destination_data_4"]);
 			$destination_delay_4 = check_str($_POST["destination_delay_4"]);
+			$destination_prompt_4 = check_str($_POST["destination_prompt_4"]);
 			$destination_timeout_4 = check_str($_POST["destination_timeout_4"]);
 
 			$destination_data_5 = check_str($_POST["destination_data_5"]);
 			$destination_delay_5 = check_str($_POST["destination_delay_5"]);
+			$destination_prompt_5 = check_str($_POST["destination_prompt_5"]);
 			$destination_timeout_5 = check_str($_POST["destination_timeout_5"]);
 
 			$dnd_enabled = check_str($_POST["dnd_enabled"]);
@@ -259,26 +264,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$follow_me->destination_data_1 = $destination_data_1;
 			$follow_me->destination_type_1 = $destination_type_1;
 			$follow_me->destination_delay_1 = $destination_delay_1;
+			$follow_me->destination_prompt_1 = $destination_prompt_1;
 			$follow_me->destination_timeout_1 = $destination_timeout_1;
 
 			$follow_me->destination_data_2 = $destination_data_2;
 			$follow_me->destination_type_2 = $destination_type_2;
 			$follow_me->destination_delay_2 = $destination_delay_2;
+			$follow_me->destination_prompt_2 = $destination_prompt_2;
 			$follow_me->destination_timeout_2 = $destination_timeout_2;
 
 			$follow_me->destination_data_3 = $destination_data_3;
 			$follow_me->destination_type_3 = $destination_type_3;
 			$follow_me->destination_delay_3 = $destination_delay_3;
+			$follow_me->destination_prompt_3 = $destination_prompt_3;
 			$follow_me->destination_timeout_3 = $destination_timeout_3;
 
 			$follow_me->destination_data_4 = $destination_data_4;
 			$follow_me->destination_type_4 = $destination_type_4;
 			$follow_me->destination_delay_4 = $destination_delay_4;
+			$follow_me->destination_prompt_4 = $destination_prompt_4;
 			$follow_me->destination_timeout_4 = $destination_timeout_4;
 
 			$follow_me->destination_data_5 = $destination_data_5;
 			$follow_me->destination_type_5 = $destination_type_5;
 			$follow_me->destination_delay_5 = $destination_delay_5;
+			$follow_me->destination_prompt_5 = $destination_prompt_5;
 			$follow_me->destination_timeout_5 = $destination_timeout_5;
 
 			if ($follow_me_enabled == "true") {
@@ -375,26 +385,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if ($x == 1) {
 				$destination_data_1 = $row2["follow_me_destination"];
 				$destination_delay_1 = $row2["follow_me_delay"];
+				$destination_prompt_1 = $row2["follow_me_prompt"];
 				$destination_timeout_1 = $row2["follow_me_timeout"];
 			}
 			if ($x == 2) {
 				$destination_data_2 = $row2["follow_me_destination"];
 				$destination_delay_2 = $row2["follow_me_delay"];
+				$destination_prompt_2 = $row2["follow_me_prompt"];
 				$destination_timeout_2 = $row2["follow_me_timeout"];
 			}
 			if ($x == 3) {
 				$destination_data_3 = $row2["follow_me_destination"];
 				$destination_delay_3 = $row2["follow_me_delay"];
+				$destination_prompt_3 = $row2["follow_me_prompt"];
 				$destination_timeout_3 = $row2["follow_me_timeout"];
 			}
 			if ($x == 4) {
 				$destination_data_4 = $row2["follow_me_destination"];
 				$destination_delay_4 = $row2["follow_me_delay"];
+				$destination_prompt_4 = $row2["follow_me_prompt"];
 				$destination_timeout_4 = $row2["follow_me_timeout"];
 			}
 			if ($x == 5) {
 				$destination_data_5 = $row2["follow_me_destination"];
 				$destination_delay_5 = $row2["follow_me_delay"];
+				$destination_prompt_5 = $row2["follow_me_prompt"];
 				$destination_timeout_5 = $row2["follow_me_timeout"];
 			}
 			$x++;
@@ -748,5 +763,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</div>";
 
-require_once "resources/footer.php";
+//include the footer
+	require_once "resources/footer.php";
 ?>
