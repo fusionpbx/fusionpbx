@@ -508,6 +508,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$extension->xml();
 						}
 
+					// if single-tenant and variables exist, update variables > domain value to match new domain
+						if (count($_SESSION['domains']) == 1 && file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/vars/")) {
+							$sql = "update v_vars set ";
+							$sql .= "var_value = '".$domain_name."' ";
+							$sql .= "where var_name = 'domain' ";
+							$db->exec(check_sql($sql));
+							unset($sql);
+						}
+
 				}
 
 			}
