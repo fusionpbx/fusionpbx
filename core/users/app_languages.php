@@ -347,6 +347,11 @@
 	$text['button-add_member']['pt-pt'] = "Adicionar Membro";
 	$text['button-add_member']['fr-fr'] = "Ajouter un Membre";
 
+	$text['button-generate']['en-us'] = "Generate";
+	$text['button-generate']['es-cl'] = "Generar";
+	$text['button-generate']['pt-pt'] = "Geração";
+	$text['button-generate']['fr-fr'] = "Générer";
+
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['confirm-delete']['pt-pt'] = "Tem a certeza que pretende remover isto?";
