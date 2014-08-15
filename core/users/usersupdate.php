@@ -663,7 +663,8 @@ else {
 		echo "	<tr>";
 		echo "		<td class='vncell'>".$text['label-api_key'].":</td>";
 		echo "		<td class='vtable'>\n";
-		echo "			<input type=\"text\" class='formfld' name=\"api_key\" value=\"".$api_key."\" >\n";
+		echo "			<input type=\"text\" class='formfld' name=\"api_key\" id='api_key' value=\"".$api_key."\" >";
+		echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".uuid()."';\">";
 		if (strlen($text['description-api_key']) > 0) {
 			echo "			<br />".$text['description-api_key']."<br />\n";
 		}
