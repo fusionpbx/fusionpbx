@@ -104,6 +104,13 @@
 					$array[$x]['default_setting_enabled'] = 'false';
 					$array[$x]['default_setting_description'] = '';
 					$x++;
+					$array[$x]['default_setting_category'] = 'provision';
+					$array[$x]['default_setting_subcategory'] = 'voicemail_number';
+					$array[$x]['default_setting_name'] = 'text';
+					$array[$x]['default_setting_value'] = '*97';
+					$array[$x]['default_setting_enabled'] = 'false';
+					$array[$x]['default_setting_description'] = '';
+					$x++;
 					$orm = new orm;
 					$orm->name('default_settings');
 					$orm->save($array[0]);
