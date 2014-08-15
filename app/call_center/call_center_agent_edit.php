@@ -294,7 +294,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //set default values
 	if (strlen($agent_type) == 0) { $agent_type = "callback"; }
 	if (strlen($agent_call_timeout) == 0) { $agent_call_timeout = 10; }
-	if (strlen($agent_max_no_answer) == 0) { $agent_max_no_answer = "3"; }
+	if (strlen($agent_max_no_answer) == 0) { $agent_max_no_answer = "0"; }
 	if (strlen($agent_wrap_up_time) == 0) { $agent_wrap_up_time = "10"; }
 	if (strlen($agent_no_answer_delay_time) == 0) { $agent_no_answer_delay_time = "10"; }
 	if (strlen($agent_reject_delay_time) == 0) { $agent_reject_delay_time = "10"; }
