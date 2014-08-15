@@ -136,10 +136,10 @@ if ($_GET['a'] == "download") {
 		echo "<div id='sofia_status' style='margin-top: 20px; margin-bottom: 30px;'>";
 		echo "<table width='100%' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
-		echo "<th>Name</th>\n";
-		echo "<th>Type</th>\n";
-		echo "<th>Data</th>\n";
-		echo "<th>State</th>\n";
+		echo "<th>".$text['label-name']."</th>\n";
+		echo "<th>".$text['label-type']."</th>\n";
+		echo "<th>".$text['label-data']."</th>\n";
+		echo "<th>".$text['label-state']."</th>\n";
 		echo "</tr>\n";
 		foreach ($xml->profile as $row) {
 			echo "<tr>\n";
@@ -161,7 +161,14 @@ if ($_GET['a'] == "download") {
 				}
 			}
 			echo "<tr>\n";
-			echo "	<td class='".$row_style[$c]."'><a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower($row->name)."'>".$gateway_name."@".$gateway_domain_name."</a></td>\n";
+			echo "	<td class='".$row_style[$c]."'>";
+			if ($_SESSION["domain_name"] == $gateway_domain_name) {
+				echo "<a href='".PROJECT_PATH."/app/gateways/gateway_edit.php?id=".strtolower($row->name)."'>".$gateway_name."@".$gateway_domain_name."</a>";
+			}
+			else {
+				echo $gateway_name."@".$gateway_domain_name;
+			}
+			echo "	</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->type."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->data."</td>\n";
 			echo "	<td class='".$row_style[$c]."'>".$row->state."</td>\n";
