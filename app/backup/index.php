@@ -42,8 +42,23 @@ else {
 
 //download the backup
 	if ($_GET['a'] == "download" && permission_exists('backup_download')) {
-		session_cache_limiter('public');
-		if ($_GET['type'] = "rec") {
+		//build the backup file
+			$backup_path = '/tmp';
+			$backup_name = 'backup.tgz';
+			//system('cd /tmp;tar cvzf /tmp/backup.tgz backup);
+			$i = 0;
+			if (count($_SESSION['backup']['path']) > 0) {
+				$cmd = 'tar --create --verbose --gzip --file '.$backup_path.'/'.$backup_name.' --directory ';
+				foreach ($_SESSION['backup']['path'] as $value) {
+					$cmd .= $value.' ';
+					$i++;
+				}
+				//echo $cmd;
+				system($cmd);
+			}
+
+		//download the file
+			session_cache_limiter('public');
 			if (file_exists($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename']))) {
 				$fd = fopen($_SESSION['switch']['recordings']['dir'].'/'.base64_decode($_GET['filename']), "rb");
 				header("Content-Type: application/force-download");
@@ -60,19 +75,20 @@ else {
 				ob_clean();
 				fpassthru($fd);
 			}
-		}
-		exit;
+	}
+	exit;
 	}
 
 //upload the backup
 	if (permission_exists('backup_upload')) {
 		if (($_POST['submit'] == "Upload") && is_uploaded_file($_FILES['ulfile']['tmp_name']) && permission_exists('recording_upload')) {
-			if ($_POST['type'] == 'rec') {
+			//upload the file
 				move_uploaded_file($_FILES['ulfile']['tmp_name'], $_SESSION['switch']['recordings']['dir'].'/'.$_FILES['ulfile']['name']);
 				$savemsg = $text['message-uploaded']." ".$_SESSION['switch']['recordings']['dir']."/". htmlentities($_FILES['ulfile']['name']);
 				//system('chmod -R 744 '.$_SESSION['switch']['recordings']['dir'].'*');
 				unset($_POST['txtCommand']);
-			}
+			//restore the backup
+				system('tar -xvpzf /tmp/backup.tgz -C /tmp');
 		}
 	}
 
