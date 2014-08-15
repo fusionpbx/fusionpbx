@@ -96,4 +96,23 @@
 	$text['button-rescan']['pt-pt'] = "Redigitalize";
 	$text['button-rescan']['fr-fr'] = "Rescan";
 
+	$text['label-name']['en-us'] = "Name";
+	$text['label-name']['es-cl'] = "Nombre";
+	$text['label-name']['pt-pt'] = "Nome";
+	$text['label-name']['fr-fr'] = "Nom";
+
+	$text['label-type']['en-us'] = "Type";
+	$text['label-type']['es-cl'] = "Tipo";
+	$text['label-type']['pt-pt'] = "Tipo";
+	$text['label-type']['fr-fr'] = "Type";
+
+	$text['label-data']['en-us'] = "Data";
+	$text['label-data']['es-cl'] = "Datos";
+	$text['label-data']['pt-pt'] = "Dados";
+	$text['label-data']['fr-fr'] = "Données";
+
+	$text['label-state']['en-us'] = "State";
+	$text['label-state']['es-cl'] = "Estado";
+	$text['label-state']['fr-fr'] = "Etat";
+	$text['label-state']['pt-pt'] = "Estado";
 ?>
