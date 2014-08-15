@@ -345,7 +345,7 @@
 <!-- Phone/General -->
 <Station_Name group="Phone/General">{$display_name_1}</Station_Name>
 <Station_Display_Name group="Phone/General">{$display_name_1}</Station_Display_Name>
-<Voice_Mail_Number group="Phone/General">*97</Voice_Mail_Number>
+<Voice_Mail_Number group="Phone/General">{$voicemail_number}</Voice_Mail_Number>
 <Text_Logo group="Phone/General" />
 <BMP_Picture_Download_URL group="Phone/General" />
 <Select_Logo group="Phone/General" />
