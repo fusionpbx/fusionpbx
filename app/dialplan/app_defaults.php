@@ -59,17 +59,19 @@
 			}
 			unset($prep_statement);
 		//delete child data
-			$sql = "delete from v_dialplan_details ";
-			$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
-			$db->query($sql);
-			unset($sql);
+			if (isset($dialplan_uuid)) {
+				$sql = "delete from v_dialplan_details ";
+				$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
+				$db->query($sql);
+				unset($sql);
+			}
 		//delete parent data
-			$sql = "delete from v_dialplans ";
-			$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
-			$db->query($sql);
-			unset($sql);
-		//unset the variable
-			unset($dialplan_uuid);
+			if (isset($dialplan_uuid)) {
+				$sql = "delete from v_dialplans ";
+				$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
+				$db->query($sql);
+				unset($sql,$dialplan_uuid);
+			}
 	}
 
 //only run the following code if the directory exists
