@@ -46,6 +46,32 @@
 	}
 	*/
 
+//remove the global dialplan that calls app.lua dialplan
+	if (count($_SESSION['domains']) > 1) {
+		//get the dialplan data
+			$sql = "select * from v_dialplans ";
+			$sql .= "where app_uuid = '34dd307b-fffe-4ead-990c-3d070e288126' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$dialplan_uuid = $row["dialplan_uuid"];
+			}
+			unset($prep_statement);
+		//delete child data
+			$sql = "delete from v_dialplan_details ";
+			$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
+			$db->query($sql);
+			unset($sql);
+		//delete parent data
+			$sql = "delete from v_dialplans ";
+			$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
+			$db->query($sql);
+			unset($sql);
+		//unset the variable
+			unset($dialplan_uuid);
+	}
+
 //only run the following code if the directory exists
 	if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
 		//write the dialplan/default.xml if it does not exist
