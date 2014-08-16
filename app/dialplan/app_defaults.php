@@ -101,6 +101,7 @@
 	}
 
 //add the global dialplan to inbound routes
+	/*
 	if ($domains_processed == 1) {
 		$sql = "select count(*) as num_rows from v_dialplans ";
 		$sql .= "where dialplan_uuid = 'd4e06654-e394-444a-b3af-4c3d54aebbec' ";
@@ -128,8 +129,10 @@
 			unset($prep_statement);
 		}
 	}
+	*/
 
 //add not found dialplan to inbound routes
+	/*
 	if ($domains_processed == 1) {
 		if (is_readable($_SESSION['switch']['dialplan']['dir'])) {
 			$sql = "select count(*) as num_rows from v_dialplans ";
@@ -159,5 +162,5 @@
 			}
 		}
 	}
-
+	*/
 ?>
