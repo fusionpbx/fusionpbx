@@ -64,8 +64,7 @@ else {
 		//send the event socket command 
 			$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
 		//set the array
-			$result_array = json_decode($json, "true");
-			$result_array = $result_array["rows"];
+			$results = json_decode($json, "true");
 
 		//set the alternating color for each row
 			$c = 0;
@@ -102,7 +101,7 @@ else {
 			echo "<th>".$text['label-opt']."</th>\n";
 			echo "</tr>\n";
 
-			foreach ($result_array as $row) {
+			foreach ($results["rows"] as $row) {
 				//set the php variables
 					foreach ($row as $key => $value) {
 						$$key = $value;
