@@ -32,7 +32,7 @@
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "7e174c3c-e494-4bb0-a52a-4ea55209ffeb";
-		$apps[$x]['menu'][0]['parent_uuid'] = "b4750c3f-2a86-b00d-b7d0-345c14eca286";
+		$apps[$x]['menu'][0]['parent_uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 		$apps[$x]['menu'][0]['category'] = "internal";
 		$apps[$x]['menu'][0]['path'] = "/app/backup/index.php";
 		$apps[$x]['menu'][0]['groups'][] = "superadmin";
