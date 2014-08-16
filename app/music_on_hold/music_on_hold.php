@@ -257,7 +257,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "	<tr>\n";
 		echo "		<td width='100%' style='padding-right: 5px;' nowrap>\n";
 		echo "			".$text['label-file-path']."<br>\n";
-		echo "			<input name='upload_file' type='file' class='formfld' style='width: 85%; margin-right: 3px;' id='upload_file'><input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file');\">\n";
+		echo "			<input name='upload_file' type='file' class='formfld fileinput' style='width: 85%; margin-right: 3px;' id='upload_file'><input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file');\">\n";
 		echo "		</td>\n";
 		echo "		<td style='padding-right: 5px;' nowrap>".$text['label-sampling']."<br>\n";
 		echo "			<select id='upload_sampling_rate' name='upload_sampling_rate' class='formfld' style='width: auto;'>\n";

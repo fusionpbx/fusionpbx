@@ -408,7 +408,7 @@ else {
 	echo "			".$text['label-import_file_upload'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld\" id=\"ulfile\">\n";
+	echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" id=\"ulfile\">\n";
 	echo "<br />\n";
 	//echo "Select the enclosure.\n";
 	echo "</td>\n";
