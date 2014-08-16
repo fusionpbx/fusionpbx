@@ -235,7 +235,7 @@ else {
 	if (permission_exists('voicemail_greeting_upload')) {
 		echo "	<td align='right' nowrap>\n";
 		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
-		echo "		<input name=\"file\" type=\"file\" class=\"formfld\" id=\"file\">\n";
+		echo "		<input name=\"file\" type=\"file\" class=\"formfld fileinput\" id=\"file\">\n";
 		echo "		<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
 		echo "		<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
 		echo "	</td>\n";

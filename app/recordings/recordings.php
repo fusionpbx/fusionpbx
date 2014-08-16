@@ -183,7 +183,7 @@ require_once "resources/check_auth.php";
 		echo "			<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
 		echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
 		echo "			".$text['label-upload']."\n";
-		echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld\" style=\"width: 260px;\" id=\"ulfile\">\n";
+		echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" style=\"width: 260px;\" id=\"ulfile\">\n";
 		echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
 		echo "			</form>";
 		echo "		</td>\n";

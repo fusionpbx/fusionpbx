@@ -326,6 +326,10 @@ input[type=text]::-ms-clear {
     display: none;
 }
 
+input.fileinput {
+	padding: 1px;
+	}
+
 .vncell {
 	border-bottom: 1px solid #fff;
 	background-color: #e5e9f0;

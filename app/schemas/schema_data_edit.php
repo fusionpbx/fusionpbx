@@ -841,7 +841,7 @@ else {
 								echo "<td valign='top' align='left' class='vtable'>\n";
 								echo "<script type=\"text/javascript\">\n";
 								echo $row['field_name']." = \"\<input type=\'hidden\' name=\'".$x."field_name\' value=\'".$row['field_name']."\'>\\n\";\n";
-								echo $row['field_name']." += \"\<input tabindex='".$row['field_order_tab']."' class=\'txt\' type=\'file\' name='".$x."field_value\' value=\'".$data_row[$row['field_name']]."\'>\\n\";\n";
+								echo $row['field_name']." += \"\<input tabindex='".$row['field_order_tab']."' class=\'formfld fileinput\' type=\'file\' name='".$x."field_value\' value=\'".$data_row[$row['field_name']]."\'>\\n\";\n";
 								echo "</script>\n";
 
 								echo "<div id='".$row['field_name']."id'>";
@@ -873,7 +873,7 @@ else {
 							else {
 								echo "<td valign='top' align='left' class='vtable'>\n";
 								echo "<input type='hidden' name='".$x."field_name' value='".$row['field_name']."'>\n";
-								echo "<input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='file' name='".$x."field_value' value=\"".$data_row[$row['field_name']]."\">\n";
+								echo "<input tabindex='".$row['field_order_tab']."' class='formfld fileinput' style='width:90%'  type='file' name='".$x."field_value' value=\"".$data_row[$row['field_name']]."\">\n";
 								echo "</td>\n";
 							}
 							break;
@@ -882,7 +882,7 @@ else {
 								echo "<td valign='top' align='left' class='vtable'>\n";
 								echo "<script type=\"text/javascript\">\n";
 								echo $row['field_name']." = \"<input type='hidden' name='".$x."field_name' value='".$row['field_name']."'>\";\n";
-								echo $row['field_name']." += \"<input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='file' name='".$x."field_value' value='".$data_row[$row['field_name']]."'>\";\n";
+								echo $row['field_name']." += \"<input tabindex='".$row['field_order_tab']."' class='formfld fileinput' style='width:90%'  type='file' name='".$x."field_value' value='".$data_row[$row['field_name']]."'>\";\n";
 								echo "</script>\n";
 
 								echo "<span id='".$row['field_name']."'>";
@@ -902,7 +902,7 @@ else {
 							else {
 								echo "<td valign='top' align='left' class='vtable'>\n";
 								echo "<input type='hidden' name='".$x."field_name' value='".$row['field_name']."'>\n";
-								echo "<input tabindex='".$row['field_order_tab']."' class='formfld' style='width:90%'  type='file' name='".$x."field_value' value=\"".$data_row[$row['field_name']]."\">\n";
+								echo "<input tabindex='".$row['field_order_tab']."' class='formfld fileinput' style='width:90%'  type='file' name='".$x."field_value' value=\"".$data_row[$row['field_name']]."\">\n";
 								echo "</td>\n";
 							}
 
