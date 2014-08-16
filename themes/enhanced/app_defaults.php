@@ -73,6 +73,13 @@ if ($domains_processed == 1) {
 				$array[$x]['default_setting_enabled'] = 'true';
 				$array[$x]['default_setting_description'] = 'Set a background color (HTML compatible) for the login box.';
 				$x++;
+				$array[$x]['default_setting_category'] = 'theme';
+				$array[$x]['default_setting_subcategory'] = 'footer';
+				$array[$x]['default_setting_name'] = 'text';
+				$array[$x]['default_setting_value'] = 'true';
+				$array[$x]['default_setting_enabled'] = 'true';
+				$array[$x]['default_setting_description'] = '';
+				$x++;
 				$orm = new orm;
 				$orm->name('default_settings');
 				$orm->save($array[0]);

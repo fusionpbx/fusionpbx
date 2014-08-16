@@ -134,7 +134,7 @@ DIV#default_login {
 	?>
 }
 
-DIV#copyright {
+DIV#footer {
 	background-color: #000;
 	bottom: 0;
 	left: 0;
@@ -152,7 +152,7 @@ DIV#copyright {
 	padding-top: 8px;
 }
 
-.copyright {
+.footer {
 	font-size: 11px;
 	font-family: arial;
 	color: #fff;
@@ -1433,9 +1433,10 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 		</div>
 		<?php
 	}
-
-	$copyright .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='copyright' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
-	echo "<div id='copyright' style='position: absolute; z-index; 10000;'><span class='copyright'>".$copyright."</span></div>";
+	if ($_SESSION['theme']['footer']['text'] == "false"){ echo "<!--\n"; }
+	$footer .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
+	echo "<div id='footer' style='position: absolute; z-index; 10000;'><span class='footer'>".$footer."</span></div>\n";
+	if ($_SESSION['theme']['footer']['text'] == "false"){ echo "-->\n"; }
 	?>
 
 </body>
