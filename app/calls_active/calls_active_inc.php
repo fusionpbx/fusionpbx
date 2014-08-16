@@ -41,9 +41,11 @@ else {
 	}
 
 //set the command
-	$switch_cmd = 'show channels';
+	$switch_cmd = 'show channels as json';
+
 //create the event socket connection
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+
 //if the connnection is available then run it and return the results
 	if (!$fp) {
 		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>"; 
@@ -60,11 +62,10 @@ else {
 	}
 	else {
 		//send the event socket command 
-			$csv = trim(event_socket_request($fp, 'api '.$switch_cmd));
-		//prepare the string
-			$result_array = explode("\n\n",$csv);
-		//get the named array
-			$result_array = csv_to_named_array($result_array[0], ",");
+			$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
+		//set the array
+			$result_array = json_decode($json, "true");
+			$result_array = $result_array["rows"];
 
 		//set the alternating color for each row
 			$c = 0;
