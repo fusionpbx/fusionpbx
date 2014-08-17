@@ -77,6 +77,62 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_value'] = '0.2';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the opacity of the footer bar (decimal).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_default_background_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#ccffcc';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the background color (HTML compatible) for the positive (default) message bar.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_default_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#004200';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the foreground color (HTML compatible) for the positive (default) message bar text.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_negative_background_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#ffcdcd';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the background color (HTML compatible) for the negative message bar.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_negative_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#670000';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the foreground color (HTML compatible) for the negative message bar text.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_alert_background_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#ffe585';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the background color (HTML compatible) for the alert message bar.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_alert_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#d66721';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the foreground color (HTML compatible) for the alert message bar text.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_opacity';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '0.7';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the opacity of the message bar (decimal).';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'message_delay';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '1.75';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the hide delay of the message bar (seconds).';
 
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
@@ -91,7 +147,6 @@ if ($domains_processed == 1) {
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				unset($prep_statement);
 				if ($row['num_rows'] == 0) {
-
 					$orm = new orm;
 					$orm->name('default_settings');
 					$orm->save($array[$index]);

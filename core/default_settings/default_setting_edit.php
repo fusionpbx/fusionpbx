@@ -417,7 +417,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
 		$category == "theme" && $subcategory == "login_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_color" && $name == "text" ||
-		$category == "theme" && $subcategory == "footer_background_color" && $name == "text"
+		$category == "theme" && $subcategory == "footer_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_default_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_default_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_negative_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_negative_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_alert_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_alert_color" && $name == "text"
 		) {
 		echo "	<style>";
 		echo "		DIV.rui-colorpicker  { width: 253px; }";
