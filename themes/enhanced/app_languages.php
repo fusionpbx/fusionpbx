@@ -6,6 +6,11 @@
 	$text['theme-label-logout']['pt-pt'] = "Sair";
 	$text['theme-label-logout']['fr-fr'] = "Déconnexion";
 
+	$text['theme-confirm-logout']['en-us'] = "Do you really want to logout?";
+	$text['theme-confirm-logout']['es-cl'] = "¿Realmente desea cerrar la sesi?";
+	$text['theme-confirm-logout']['pt-pt'] = "Você realmente quer sair?";
+	$text['theme-confirm-logout']['fr-fr'] = "Voulez-vous vraiment vous déconnecter?";
+
 	$text['theme-label-open_selector']['en-us'] = "Domain Selector [ESC]";
 	$text['theme-label-open_selector']['es-cl'] = "Selector de Dominio Abierto";
 	$text['theme-label-open_selector']['pt-pt'] = "Seletor de Domínio Aberto";
@@ -30,5 +35,7 @@
 	$text['theme-label-search']['es-cl'] = "Buscar...";
 	$text['theme-label-search']['pt-pt'] = "Pesquisa...";
 	$text['theme-label-search']['fr-fr'] = "Recherche...";
+
+
 
 ?>
