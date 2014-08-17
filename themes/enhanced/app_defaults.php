@@ -67,26 +67,38 @@ if ($domains_processed == 1) {
 				$array[$x]['default_setting_description'] = 'Set the opacity of the login box (decimal).';
 				$x++;
 				$array[$x]['default_setting_category'] = 'theme';
-				$array[$x]['default_setting_subcategory'] = 'login_color';
+				$array[$x]['default_setting_subcategory'] = 'login_background_color';
 				$array[$x]['default_setting_name'] = 'text';
 				$array[$x]['default_setting_value'] = '#ffffff';
 				$array[$x]['default_setting_enabled'] = 'true';
 				$array[$x]['default_setting_description'] = 'Set a background color (HTML compatible) for the login box.';
 				$x++;
 				$array[$x]['default_setting_category'] = 'theme';
-				$array[$x]['default_setting_subcategory'] = 'footer';
+				$array[$x]['default_setting_subcategory'] = 'footer_background_color';
 				$array[$x]['default_setting_name'] = 'text';
-				$array[$x]['default_setting_value'] = 'true';
+				$array[$x]['default_setting_value'] = '#000000';
 				$array[$x]['default_setting_enabled'] = 'true';
-				$array[$x]['default_setting_description'] = '';
+				$array[$x]['default_setting_description'] = 'Set a background color (HTML compatible) for the footer bar.';
+				$x++;
+				$array[$x]['default_setting_category'] = 'theme';
+				$array[$x]['default_setting_subcategory'] = 'footer_color';
+				$array[$x]['default_setting_name'] = 'text';
+				$array[$x]['default_setting_value'] = '#ffffff';
+				$array[$x]['default_setting_enabled'] = 'true';
+				$array[$x]['default_setting_description'] = 'Set a foreground color (HTML compatible) for the footer bar.';
+				$x++;
+				$array[$x]['default_setting_category'] = 'theme';
+				$array[$x]['default_setting_subcategory'] = 'footer_opacity';
+				$array[$x]['default_setting_name'] = 'text';
+				$array[$x]['default_setting_value'] = '0.2';
+				$array[$x]['default_setting_enabled'] = 'true';
+				$array[$x]['default_setting_description'] = 'Set the opacity of the footer bar (decimal).';
 				$x++;
 				$orm = new orm;
 				$orm->name('default_settings');
-				$orm->save($array[0]);
-				$orm->save($array[1]);
-				$orm->save($array[2]);
-				$orm->save($array[3]);
-				$orm->save($array[4]);
+				foreach ($array as $index => $null) {
+					$orm->save($array[$index]);
+				}
 				$message = $orm->message;
 				//print_r($message);
 			}

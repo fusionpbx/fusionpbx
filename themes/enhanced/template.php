@@ -118,7 +118,7 @@ DIV#default_login {
 		$_SESSION['theme']['background_color'][0] != '' ||
 		$_SESSION['theme']['background_color'][1] != ''
 		) { ?>
-		background-color: <?php echo $_SESSION['theme']['login_color']['text']; ?>;
+		background-color: <?php echo $_SESSION['theme']['login_background_color']['text']; ?>;
 		opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
 		filter: alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['login_opacity']['text']); ?>);
 		-moz-opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
@@ -135,17 +135,16 @@ DIV#default_login {
 }
 
 DIV#footer {
-	background-color: #000;
+	background-color: <?php echo $_SESSION['theme']['footer_background_color']['text']; ?>;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	height: 20px;
-	-khtml-opacity: 0.2;
-	-moz-opacity: 0.2;
-	-ms-filter: "alpha(opacity=20)";
-	filter: alpha(opacity=20);
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.2);
-	opacity: 0.2;
+	-khtml-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
+	-moz-opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
+	filter: alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['footer_opacity']['text']); ?>);
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=<?php echo $_SESSION['theme']['footer_opacity']['text']; ?>);
+	opacity: <?php echo $_SESSION['theme']['footer_opacity']['text']; ?>;
 	text-align: center;
 	vertical-align: middle;
 	padding-bottom: 0;
@@ -155,7 +154,7 @@ DIV#footer {
 .footer {
 	font-size: 11px;
 	font-family: arial;
-	color: #fff;
+	color: <?php echo $_SESSION['theme']['footer_color']['text']; ?>;
 }
 
 img {
@@ -1411,10 +1410,8 @@ if (strlen($_SESSION['message']) > 0) {
 		</div>
 		<?php
 	}
-	if ($_SESSION['theme']['footer']['text'] == "false"){ echo "<!--\n"; }
 	$footer .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
 	echo "<div id='footer' style='position: absolute; z-index; 10000;'><span class='footer'>".$footer."</span></div>\n";
-	if ($_SESSION['theme']['footer']['text'] == "false"){ echo "-->\n"; }
 	?>
 
 </body>
