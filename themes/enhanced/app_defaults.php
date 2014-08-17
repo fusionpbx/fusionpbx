@@ -29,13 +29,6 @@ if ($domains_processed == 1) {
 	//define array of settings
 		$x = 0;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'background_image';
-		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '';
-		$array[$x]['default_setting_enabled'] = 'false';
-		$array[$x]['default_setting_description'] = 'Specify a folder path or file path/url to enable background image(s) within a selected compatible template.';
-		$x++;
-		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'background_color';
 		$array[$x]['default_setting_name'] = 'array';
 		$array[$x]['default_setting_value'] = '#ffffff';
@@ -204,7 +197,7 @@ if ($domains_processed == 1) {
 					$array[$x]['default_setting_name'] = 'array';
 					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
 					$array[$x]['default_setting_enabled'] = 'true';
-					$array[$x]['default_setting_description'] = '';
+					$array[$x]['default_setting_description'] = 'Specify a folder path or file path/url to enable background image(s) within a selected compatible template.';
 				}
 				if ($x > 300) { break; };
 			}
