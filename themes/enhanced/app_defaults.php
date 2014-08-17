@@ -197,7 +197,7 @@ if ($domains_processed == 1) {
 					$array[$x]['default_setting_name'] = 'array';
 					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
 					$array[$x]['default_setting_enabled'] = 'true';
-					$array[$x]['default_setting_description'] = 'Specify a folder path or file path/url to enable background image(s) within a selected compatible template.';
+					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
 				}
 				if ($x > 300) { break; };
 			}
