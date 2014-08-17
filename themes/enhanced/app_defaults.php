@@ -108,7 +108,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'message_opacity';
 		$array[$x]['default_setting_name'] = 'text';
-		$array[$x]['default_setting_value'] = '0.7';
+		$array[$x]['default_setting_value'] = '0.9';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the opacity of the message bar (decimal).';
 		$x++;

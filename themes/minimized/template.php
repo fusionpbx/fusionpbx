@@ -962,6 +962,7 @@ legend {
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
+		$("#message_text").click(function() { $(this).css({top: '-=80'}); $("#message_container").css({top: '-=80'}); });
 		$("#domain_selector_icon").click(function() { show_domains(); });
 		$("#domains_hide").click(function() { hide_domains(); });
 
@@ -1205,14 +1206,14 @@ legend {
 			}
 			else {
 				// use theme images/backgrounds folder as root
-				$source_path = PROJECT_PATH.'/themes/minimized/images/backgrounds/'.$background_image;
+				$source_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds/'.$background_image;
 			}
 
 		}
 		else {
 			// not set, so use default backgrounds folder and images
 			$image_source = 'folder';
-			$source_path = PROJECT_PATH.'/themes/minimized/images/backgrounds';
+			$source_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds';
 		}
 
 		if ($image_source == 'folder') {
