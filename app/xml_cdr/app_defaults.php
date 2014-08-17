@@ -75,9 +75,9 @@
 					$x++;
 					$orm = new orm;
 					$orm->name('default_settings');
-					$orm->save($array[0]);
-					$orm->save($array[1]);
-					$orm->save($array[2]);
+					foreach ($array as $index => $null) {
+						$orm->save($array[$index]);
+					}
 					$message = $orm->message;
 					//print_r($message);
 				}
