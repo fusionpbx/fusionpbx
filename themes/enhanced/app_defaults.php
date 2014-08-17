@@ -196,7 +196,7 @@ if ($domains_processed == 1) {
 					$array[$x]['default_setting_subcategory'] = 'background_image';
 					$array[$x]['default_setting_name'] = 'array';
 					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
-					$array[$x]['default_setting_enabled'] = 'true';
+					$array[$x]['default_setting_enabled'] = 'false';
 					$array[$x]['default_setting_description'] = 'Set a relative path or URL within a selected compatible template.';
 				}
 				if ($x > 300) { break; };
