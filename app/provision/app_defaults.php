@@ -50,76 +50,81 @@
 
 //process this code online once
 	if ($domains_processed == 1) {
-		//add provision category to default settings
-			$sql = "select count(*) as num_rows from v_default_settings ";
-			$sql .= "where default_setting_category = 'provision' ";
-			$sql .= "and default_setting_subcategory = 'enabled' ";
-			$sql .= "and default_setting_name = 'text' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset($prep_statement);
-				if ($row['num_rows'] == 0) {
-					$x = 0;
-					$array[$x]['default_setting_category'] = 'provision';
-					$array[$x]['default_setting_subcategory'] = 'enabled';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = '';
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'provision';
-					$array[$x]['default_setting_subcategory'] = 'http_auth_username';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = '';
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'provision';
-					$array[$x]['default_setting_subcategory'] = 'http_auth_password';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = '';
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'provision';
-					$array[$x]['default_setting_subcategory'] = 'cidr';
-					$array[$x]['default_setting_name'] = 'array';
-					$array[$x]['default_setting_value'] = '';
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'provision';
-					$array[$x]['default_setting_subcategory'] = 'admin_name';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = '';
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'provision';
-					$array[$x]['default_setting_subcategory'] = 'admin_password';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = '';
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'provision';
-					$array[$x]['default_setting_subcategory'] = 'voicemail_number';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = '*97';
-					$array[$x]['default_setting_enabled'] = 'false';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$orm = new orm;
-					$orm->name('default_settings');
-					foreach ($array as $index => $null) {
+
+		//define array of settings
+			$x = 0;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'enabled';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'http_auth_username';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'http_auth_password';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'cidr';
+			$array[$x]['default_setting_name'] = 'array';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'admin_name';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'admin_password';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+			$x++;
+			$array[$x]['default_setting_category'] = 'provision';
+			$array[$x]['default_setting_subcategory'] = 'voicemail_number';
+			$array[$x]['default_setting_name'] = 'text';
+			$array[$x]['default_setting_value'] = '*97';
+			$array[$x]['default_setting_enabled'] = 'false';
+			$array[$x]['default_setting_description'] = '';
+
+		//iterate and add each, if necessary
+			foreach ($array as $index => $default_settings) {
+
+			//add provision default settings
+				$sql = "select count(*) as num_rows from v_default_settings ";
+				$sql .= "where default_setting_category = 'provision' ";
+				$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
+				$prep_statement = $db->prepare($sql);
+				if ($prep_statement) {
+					$prep_statement->execute();
+					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+					unset($prep_statement);
+					if ($row['num_rows'] == 0) {
+
+						$orm = new orm;
+						$orm->name('default_settings');
 						$orm->save($array[$index]);
+						$message = $orm->message;
+						//print_r($message);
 					}
-					$message = $orm->message;
-					//print_r($message);
+					unset($row);
 				}
-				unset($row);
+
 			}
 
 		//move the dynamic provision variables that from v_vars table to v_default_settings
