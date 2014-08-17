@@ -249,17 +249,13 @@ if ($db_type == "pgsql") {
 			unset($result, $prep_statement);
 			natsort($domain_names);
 		//get the domains in the natural sort order
-			$sql = "select * from v_domains ";
-			//$sql .= "order by field(domain_name, '".implode("','", $domain_names)."') ";
-			//$sql .= "order by domain_name asc ";
-			$sql .= "order by case ";
 			$n = 1;
+			$sql = "select * from v_domains order by case ";
 			foreach ($domain_names as $dn) {
 				$sql .= "when domain_name = '".$dn."' then ".$n." ";
 				$n++;
 			}
 			$sql .= "else ".$n." end ";
-			//echo $sql; exit;
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
