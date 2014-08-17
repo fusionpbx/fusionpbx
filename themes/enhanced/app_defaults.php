@@ -164,7 +164,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'background_color';
 		$array[$x]['default_setting_name'] = 'array';
-		$array[$x]['default_setting_value'] = '#f0f2f6';
+		$array[$x]['default_setting_value'] = '#e7ebf1';
 		$array[$x]['default_setting_order'] = '1';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set a secondary background (HTML compatible) color, for a gradient effect.';
