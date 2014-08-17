@@ -19,12 +19,12 @@
 
 		//------
 
-		$text['title-menu-edit']['en-us'] = "Menu Edit";
+		$text['title-menu-edit']['en-us'] = "Menu";
 		$text['title-menu-edit']['es-cl'] = "Editar Menú";
 		$text['title-menu-edit']['pt-pt'] = "Editar Menu";
 		$text['title-menu-edit']['fr-fr'] = "Editer le Menu";
 
-		$text['header-menu-edit']['en-us'] = "Menu Edit";
+		$text['header-menu-edit']['en-us'] = "Menu";
 		$text['header-menu-edit']['es-cl'] = "Editar Menú";
 		$text['header-menu-edit']['pt-pt'] = "Editar Menu";
 		$text['header-menu-edit']['fr-fr'] = "Editer le Menu";
@@ -36,12 +36,12 @@
 
 		//------
 
-		$text['title-menu-add']['en-us'] = "Menu Add";
+		$text['title-menu-add']['en-us'] = "Menu";
 		$text['title-menu-add']['es-cl'] = "Agregar Menú";
 		$text['title-menu-add']['pt-pt'] = "Adicionar Menu";
 		$text['title-menu-add']['fr-fr'] = "Ajouter un menu";
 
-		$text['header-menu-add']['en-us'] = "Menu Add";
+		$text['header-menu-add']['en-us'] = "Menu";
 		$text['header-menu-add']['es-cl'] = "Agregar Menú";
 		$text['header-menu-add']['pt-pt'] = "Adicionar Menu";
 		$text['header-menu-add']['fr-fr'] = "Ajouter un menu";
@@ -85,12 +85,12 @@
 
 		//------ items
 
-		$text['title-menu_item-edit']['en-us'] = "Menu Item Edit";
+		$text['title-menu_item-edit']['en-us'] = "Menu Item";
 		$text['title-menu_item-edit']['es-cl'] = "Editar Ítem de Menú";
 		$text['title-menu_item-edit']['pt-pt'] = "Editar o Item do Menu";
 		$text['title-menu_item-edit']['fr-fr'] = "Editer l'objet menu";
 
-		$text['header-menu_item-edit']['en-us'] = "Menu Item Edit";
+		$text['header-menu_item-edit']['en-us'] = "Menu Item";
 		$text['header-menu_item-edit']['es-cl'] = "Editar Ítem de Menú";
 		$text['header-menu_item-edit']['pt-pt'] = "Editar o Item do Menu";
 		$text['header-menu_item-edit']['fr-fr'] = "Editer l'objet menu";
@@ -98,9 +98,6 @@
 		$text['description-menu_item-edit']['en-us'] = "Description";
 		$text['description-menu_item-edit']['pt-pt'] = "Descrição";
 		$text['description-menu_item-edit']['fr-fr'] = "";
-
-
-		//------
 
 		$text['title-menu_item-add']['en-us'] = "Menu Item Add";
 		$text['title-menu_item-add']['es-cl'] = "Agregar Ítem de Menú";
@@ -116,8 +113,6 @@
 		$text['description-menu_item-add']['es-cl'] = "";
 		$text['description-menu_item-add']['pt-pt'] = "Descrição";
 		$text['description-menu_item-add']['fr-fr'] = "";
-
-		//------
 
 		$text['label-title']['en-us'] = "Title";
 		$text['label-title']['es-cl'] = "Título";
