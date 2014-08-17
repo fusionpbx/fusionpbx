@@ -63,7 +63,7 @@ DIV#page {
 
 <?php
 if (
-	isset($_SESSION['theme']['background_image']['text']) ||
+	isset($_SESSION['theme']['background_image']) ||
 	$_SESSION['theme']['background_color'][0] != '' ||
 	$_SESSION['theme']['background_color'][1] != ''
 	) { ?>
@@ -114,7 +114,7 @@ DIV#default_login {
 	height: <?php echo ($_SESSION['login']['domain_name.visible']['boolean']) ? '300px' : '267px'; ?>;
 	<?php
 	if (
-		isset($_SESSION['theme']['background_image']['text']) ||
+		isset($_SESSION['theme']['background_image']) ||
 		$_SESSION['theme']['background_color'][0] != '' ||
 		$_SESSION['theme']['background_color'][1] != ''
 		) { ?>
@@ -580,7 +580,7 @@ legend {
 		if (
 			strlen($_SESSION["username"]) > 0 &&
 			(
-				isset($_SESSION['theme']['background_image']['text']) ||
+				isset($_SESSION['theme']['background_image']) ||
 				$_SESSION['theme']['background_color'][0] != '' ||
 				$_SESSION['theme']['background_color'][1] != ''
 			)) { ?>
@@ -1124,14 +1124,19 @@ if (strlen($_SESSION['message']) > 0) {
 
 	<?php
 	// check for background image
-	if (isset($_SESSION['theme']['background_image']['text'])) {
+	if (isset($_SESSION['theme']['background_image'])) {
 		// background image is enabled
 		$image_extensions = array('jpg','jpeg','png','gif');
 
-		if ($_SESSION['theme']['background_image']['text'] != '') {
+		if (count($_SESSION['theme']['background_image']) > 0) {
+
+			if (strlen($_SESSION['background_image']) == 0) {
+				$_SESSION['background_image'] = $_SESSION['theme']['background_image'][array_rand($_SESSION['theme']['background_image'])];
+				$background_image = $_SESSION['background_image'];
+			}
 
 			// background image(s) specified, check if source is file or folder
-			if (in_array(strtolower(pathinfo($_SESSION['theme']['background_image']['text'], PATHINFO_EXTENSION)), $image_extensions)) {
+			if (in_array(strtolower(pathinfo($background_image, PATHINFO_EXTENSION)), $image_extensions)) {
 				$image_source = 'file';
 			}
 			else {
@@ -1139,18 +1144,16 @@ if (strlen($_SESSION['message']) > 0) {
 			}
 
 			// is source (file/folder) local or remote
-			if (
-				substr($_SESSION['theme']['background_image']['text'], 0, 4) == 'http'
-				) {
-				$source_path = $_SESSION['theme']['background_image']['text'];
+			if (substr($background_image, 0, 4) == 'http') {
+				$source_path = $background_image;
 			}
-			else if (substr($_SESSION['theme']['background_image']['text'], 0, 1) == '/') { //
+			else if (substr($background_image, 0, 1) == '/') { //
 				// use project path as root
-				$source_path = PROJECT_PATH.$_SESSION['theme']['background_image']['text'];
+				$source_path = PROJECT_PATH.$background_image;
 			}
 			else {
 				// use theme images/backgrounds folder as root
-				$source_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds/'.$_SESSION['theme']['background_image']['text'];
+				$source_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds/'.$background_image;
 			}
 
 		}
