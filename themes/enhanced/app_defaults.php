@@ -29,14 +29,6 @@ if ($domains_processed == 1) {
 	//define array of settings
 		$x = 0;
 		$array[$x]['default_setting_category'] = 'theme';
-		$array[$x]['default_setting_subcategory'] = 'background_color';
-		$array[$x]['default_setting_name'] = 'array';
-		$array[$x]['default_setting_value'] = '#ffffff';
-		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_order'] = '0';
-		$array[$x]['default_setting_description'] = 'Set a background (HTML compatible) color.';
-		$x++;
-		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'login_opacity';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '0.35';
@@ -157,6 +149,14 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'background_color';
 		$array[$x]['default_setting_name'] = 'array';
+		$array[$x]['default_setting_value'] = '#ffffff';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_order'] = '0';
+		$array[$x]['default_setting_description'] = 'Set a background (HTML compatible) color.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'background_color';
+		$array[$x]['default_setting_name'] = 'array';
 		$array[$x]['default_setting_value'] = '#e7ebf1';
 		$array[$x]['default_setting_order'] = '1';
 		$array[$x]['default_setting_enabled'] = 'true';
@@ -171,10 +171,12 @@ if ($domains_processed == 1) {
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 			unset($prep_statement);
-			if ($row['num_rows'] == 1) {
+			if ($row['num_rows'] == 0) {
 				$orm = new orm;
 				$orm->name('default_settings');
-				$orm->save($array[0]);
+				foreach ($array as $index => $null) {
+					$orm->save($array[$index]);
+				}
 				$message = $orm->message;
 				//print_r($message);
 			}
@@ -184,6 +186,7 @@ if ($domains_processed == 1) {
 	//get the background images
 		$relative_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds';
 		$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
+		unset($array);
 		$x = 0;
 		while (false !== ($file = readdir($backgrounds))) {
 			if ($file != "." AND $file != ".."){
