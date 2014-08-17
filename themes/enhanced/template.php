@@ -802,27 +802,27 @@ legend {
 	}
 
 	.message_container_mood_default {
-		background-color: #ccffcc;
+		background-color: <?php echo $_SESSION['theme']['message_default_background_color']['text']; ?>;
 	}
 
 	.message_container_mood_negative {
-		background-color: #ffcdcd;
+		background-color: <?php echo $_SESSION['theme']['message_negative_background_color']['text']; ?>;
 	}
 
 	.message_container_mood_alert {
-		background-color: #ffe585;
+		background-color: <?php echo $_SESSION['theme']['message_alert_background_color']['text']; ?>;
 	}
 
 	.message_text_mood_default {
-		color: #004200;
+		color: <?php echo $_SESSION['theme']['message_default_color']['text']; ?>;
 	}
 
 	.message_text_mood_negative {
-		color: #670000;
+		color: <?php echo $_SESSION['theme']['message_negative_color']['text']; ?>;
 	}
 
 	.message_text_mood_alert {
-		color: #d66721;
+		color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
 	}
 
 	#logout_icon {
@@ -841,7 +841,7 @@ legend {
 		cursor: pointer;
 	}
 
-	#domains_show_icon {
+	#domain_selector_icon {
 		filter: alpha(opacity=80);
 		opacity: 0.8;
 		-moz-opacity: 0.8;
@@ -849,7 +849,7 @@ legend {
 		margin-left: 17px;
 	}
 
-	#domains_show_icon:hover {
+	#domain_selector_icon:hover {
 		filter: alpha(opacity=100);
 		opacity: 1;
 		-moz-opacity: 1;
@@ -963,7 +963,7 @@ legend {
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
-		$("#domains_show_icon").click(function() { show_domains(); });
+		$("#domain_selector_icon").click(function() { show_domains(); });
 		$("#domains_hide").click(function() { hide_domains(); });
 
 		function show_domains() {
@@ -1031,8 +1031,8 @@ legend {
 			$("#message_text").html(msg);
 			$("#message_container").css({height: $("#message_text").css("height")});
 			$("#message_container").css({width: inner_width});
-			$("#message_text").animate({top: '+=200'}, 0).animate({opacity: 1}, "fast").delay(1750).animate({top: '-=200'}, 1000).animate({opacity: 0});
-			$("#message_container").animate({top: '+=200'}, 0).animate({opacity: 0.7}, "fast").delay(1750).animate({top: '-=200'}, 1000).animate({opacity: 0}, function() {
+			$("#message_text").animate({top: '+=200'}, 0).animate({opacity: 1}, "fast").delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=200'}, 1000).animate({opacity: 0});
+			$("#message_container").animate({top: '+=200'}, 0).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=200'}, 1000).animate({opacity: 0}, function() {
 				$("#message_container").removeClass('message_container_mood_'+mood);
 			});
 		}
@@ -1270,7 +1270,7 @@ if (strlen($_SESSION['message']) > 0) {
 
 								//domain selector icon
 									if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-										echo "<img id='domains_show_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none; margin-top: 15px;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
+										echo "<img id='domain_selector_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none; margin-top: 15px;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
 									}
 
 									echo "</span>\n";
