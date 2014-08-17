@@ -949,13 +949,16 @@ legend {
 	//-->
 </SCRIPT>
 
-<!-- // javascript calendar and color picker (source: http://rightjs.org) - keep before jquery load -->
-<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right.js'></script>
-<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right-calendar-src.js'></script>
-<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right-colorpicker-src.js'></script>
+<?php if (substr_count($_SERVER["PHP_SELF"], "xml_cdr_statistics.php") == 0) { ?>
+	<!-- // javascript calendar and color picker (source: http://rightjs.org) -->
+	<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right.js'></script>
+	<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right-calendar-src.js'></script>
+	<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right-colorpicker-src.js'></script>
+<?php } ?>
 
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
+
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
