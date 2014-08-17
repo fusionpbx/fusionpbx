@@ -28,29 +28,29 @@ include "root.php";
 require_once "resources/functions.php";
 
 //set defaults
-	if (isset($dbtype) > 0) { 
-		$db_type = $dbtype; 
+	if (isset($dbtype) > 0) {
+		$db_type = $dbtype;
 	}
-	if (isset($dbhost) > 0) { 
-		$db_host = $dbhost; 
+	if (isset($dbhost) > 0) {
+		$db_host = $dbhost;
 	}
-	if (isset($dbport) > 0) { 
-		$db_port = $dbport; 
+	if (isset($dbport) > 0) {
+		$db_port = $dbport;
 	}
-	if (isset($dbname) > 0) { 
-		$db_name = $dbname; 
+	if (isset($dbname) > 0) {
+		$db_name = $dbname;
 	}
-	if (isset($dbusername) > 0) { 
-		$db_username = $dbusername; 
+	if (isset($dbusername) > 0) {
+		$db_username = $dbusername;
 	}
-	if (isset($dbpassword) > 0) { 
-		$db_password = $dbpassword; 
+	if (isset($dbpassword) > 0) {
+		$db_password = $dbpassword;
 	}
-	if (isset($db_file_path) > 0) { 
-		$db_path = $db_file_path; 
+	if (isset($db_file_path) > 0) {
+		$db_path = $db_file_path;
 	}
-	if (isset($dbfilename) > 0) { 
-		$db_name = $dbfilename; 
+	if (isset($dbfilename) > 0) {
+		$db_name = $dbfilename;
 	}
 
 if (!function_exists('get_db_field_names')) {
@@ -236,9 +236,30 @@ if ($db_type == "pgsql") {
 	if (strlen($_SESSION["domain_uuid"]) == 0) {
 		//get the domain
 			$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-		//get the domain_uuid
+		//natural sort domains into array
+			$sql = "select domain_name from v_domains";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			if (count($result) > 0) {
+				foreach($result as $row) {
+					$domain_names[] = $row['domain_name'];
+				}
+			}
+			unset($result, $prep_statement);
+			natsort($domain_names);
+		//get the domains in the natural sort order
 			$sql = "select * from v_domains ";
-			$sql .= "order by domain_name asc ";
+			//$sql .= "order by field(domain_name, '".implode("','", $domain_names)."') ";
+			//$sql .= "order by domain_name asc ";
+			$sql .= "order by case ";
+			$n = 1;
+			foreach ($domain_names as $dn) {
+				$sql .= "when domain_name = '".$dn."' then ".$n." ";
+				$n++;
+			}
+			$sql .= "else ".$n." end ";
+			//echo $sql; exit;
 			$prep_statement = $db->prepare($sql);
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -281,7 +302,7 @@ if ($db_type == "pgsql") {
 	}
 
 //set the domain_uuid variable from the session
-	if (strlen($_SESSION["domain_uuid"]) > 0) { 
+	if (strlen($_SESSION["domain_uuid"]) > 0) {
 		$domain_uuid = $_SESSION["domain_uuid"];
 	}
 	else {
