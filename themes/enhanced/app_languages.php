@@ -1,17 +1,12 @@
 <?php
 	// Theme
 
-	$text['theme-label-user']['en-us'] = "User:";
-	$text['theme-label-user']['es-cl'] = "Usuario:";
-	$text['theme-label-user']['pt-pt'] = "Usuário:";
-	$text['theme-label-user']['fr-fr'] = "Utilisateur:";
+	$text['theme-label-logout']['en-us'] = "Logout";
+	$text['theme-label-logout']['es-cl'] = "Salir";
+	$text['theme-label-logout']['pt-pt'] = "Sair";
+	$text['theme-label-logout']['fr-fr'] = "Déconnexion";
 
-	$text['theme-label-domain']['en-us'] = "Domain:";
-	$text['theme-label-domain']['es-cl'] = "Dominio:";
-	$text['theme-label-domain']['pt-pt'] = "Domínio:";
-	$text['theme-label-domain']['fr-fr'] = "Domaine:";
-
-	$text['theme-label-open_selector']['en-us'] = "Open Domain Selector [ESC]";
+	$text['theme-label-open_selector']['en-us'] = "Domain Selector [ESC]";
 	$text['theme-label-open_selector']['es-cl'] = "Selector de Dominio Abierto";
 	$text['theme-label-open_selector']['pt-pt'] = "Seletor de Domínio Aberto";
 	$text['theme-label-open_selector']['fr-fr'] = "Sélecteur Domaine Ouvert";
