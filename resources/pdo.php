@@ -28,28 +28,28 @@ include "root.php";
 require_once "resources/functions.php";
 
 //set defaults
-	if (isset($dbtype) > 0) {
+	if (isset($dbtype)) {
 		$db_type = $dbtype;
 	}
-	if (isset($dbhost) > 0) {
+	if (isset($dbhost)) {
 		$db_host = $dbhost;
 	}
-	if (isset($dbport) > 0) {
+	if (isset($dbport)) {
 		$db_port = $dbport;
 	}
-	if (isset($dbname) > 0) {
+	if (isset($dbname)) {
 		$db_name = $dbname;
 	}
-	if (isset($dbusername) > 0) {
+	if (isset($dbusername)) {
 		$db_username = $dbusername;
 	}
-	if (isset($dbpassword) > 0) {
+	if (isset($dbpassword)) {
 		$db_password = $dbpassword;
 	}
-	if (isset($db_file_path) > 0) {
+	if (isset($db_file_path)) {
 		$db_path = $db_file_path;
 	}
-	if (isset($dbfilename) > 0) {
+	if (isset($dbfilename)) {
 		$db_name = $dbfilename;
 	}
 
@@ -213,7 +213,6 @@ if ($db_type == "mysql") {
 		die();
 	}
 } //end if db_type mysql
-
 
 if ($db_type == "pgsql") {
 	//database connection
