@@ -17,8 +17,6 @@
 		$text['description-menus']['pt-pt'] = "Utilizado para customizar um ou mais menus.";
 		$text['description-menus']['fr-fr'] = "Personnaliser un ou plusieurs menus.";
 
-		//------
-
 		$text['title-menu-edit']['en-us'] = "Menu";
 		$text['title-menu-edit']['es-cl'] = "Editar Menú";
 		$text['title-menu-edit']['pt-pt'] = "Editar Menu";
@@ -34,8 +32,6 @@
 		$text['description-menu-edit']['pt-pt'] = "Utilizado para customizar um ou mais menus.";
 		$text['description-menu-edit']['fr-fr'] = "Personnaliser un ou plusieurs menus.";
 
-		//------
-
 		$text['title-menu-add']['en-us'] = "Menu";
 		$text['title-menu-add']['es-cl'] = "Agregar Menú";
 		$text['title-menu-add']['pt-pt'] = "Adicionar Menu";
@@ -50,8 +46,6 @@
 		$text['description-menu-add']['es-cl'] = "Se usa para personalizar uno o más menús.";
 		$text['description-menu-add']['pt-pt'] = "Utilizado para customizar um ou mais menus.";
 		$text['description-menu-add']['fr-fr'] = "Personnaliser un ou plusieurs menus.";
-
-		//------
 
 		$text['label-name']['en-us'] = "Name";
 		$text['label-name']['es-cl'] = "Nombre";
@@ -83,8 +77,6 @@
 		$text['description-description']['pt-pt'] = "Introduza a descrição para este menu, caso deseje.";
 		$text['description-description']['fr-fr'] = "";
 
-		//------ items
-
 		$text['title-menu_item-edit']['en-us'] = "Menu Item";
 		$text['title-menu_item-edit']['es-cl'] = "Editar Ítem de Menú";
 		$text['title-menu_item-edit']['pt-pt'] = "Editar o Item do Menu";
@@ -99,12 +91,12 @@
 		$text['description-menu_item-edit']['pt-pt'] = "Descrição";
 		$text['description-menu_item-edit']['fr-fr'] = "";
 
-		$text['title-menu_item-add']['en-us'] = "Menu Item Add";
+		$text['title-menu_item-add']['en-us'] = "Menu Item";
 		$text['title-menu_item-add']['es-cl'] = "Agregar Ítem de Menú";
 		$text['title-menu_item-add']['pt-pt'] = "Adicionar um Item ao Menu";
 		$text['title-menu_item-add']['fr-fr'] = "Ajouter un objet menu";
 
-		$text['header-menu_item-add']['en-us'] = "Menu Item Add";
+		$text['header-menu_item-add']['en-us'] = "Menu Item";
 		$text['header-menu_item-add']['es-cl'] = "Agregar Ítem de Menú";
 		$text['header-menu_item-add']['pt-pt'] = "Adicionar um Item ao Menu";
 		$text['header-menu_item-add']['fr-fr'] = "Ajouter un objet menu";
