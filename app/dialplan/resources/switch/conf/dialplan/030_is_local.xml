@@ -1,0 +1,7 @@
+<context name="{v_context}">
+	<extension name="is_local" number="" continue="true" app_uuid="a1685b18-21aa-4d77-9f95-c0013b7286a3" enabled="false">
+		<condition>
+			<action application="lua" data="app.lua is_local"/>
+		</condition>
+	</extension>
+</context>
