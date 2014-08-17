@@ -36,6 +36,4 @@
 	$text['theme-label-search']['pt-pt'] = "Pesquisa...";
 	$text['theme-label-search']['fr-fr'] = "Recherche...";
 
-
-
 ?>
