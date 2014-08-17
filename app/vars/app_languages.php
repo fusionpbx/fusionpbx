@@ -5,11 +5,11 @@
 	$text['title-variables']['pt-pt'] = "Variáveis do Softswitch";
 	$text['title-variables']['fr-fr'] = "Variables Système";
 
-	$text['title-variable_add']['en-us'] = "Variable Add";
+	$text['title-variable_add']['en-us'] = "Variable";
 	$text['title-variable_add']['pt-pt'] = "Adicionar Variável";
 	$text['title-variable_add']['fr-fr'] = "Ajouter une Variable";
 
-	$text['title-variable_edit']['en-us'] = "Variable Edit";
+	$text['title-variable_edit']['en-us'] = "Variable";
 	$text['title-variable_edit']['es-cl'] = "Editar Variable";
 	$text['title-variable_edit']['pt-pt'] = "Editar Variável";
 	$text['title-variable_edit']['fr-fr'] = "Editer la Variable";
@@ -24,12 +24,12 @@
 	$text['header-variables']['pt-pt'] = "Variáveis do Softswitch";
 	$text['header-variables']['fr-fr'] = "Variables Système";
 
-	$text['header-variable_add']['en-us'] = "Variable Add";
+	$text['header-variable_add']['en-us'] = "Variable";
 	$text['header-variable_add']['es-cl'] = "Agregar Variable";
 	$text['header-variable_add']['pt-pt'] = "Adicionar variável";
 	$text['header-variable_add']['fr-fr'] = "Ajouter une Variable";
 
-	$text['header-variable_edit']['en-us'] = "Variable Edit";
+	$text['header-variable_edit']['en-us'] = "Variable";
 	$text['header-variable_edit']['es-cl'] = "Editar Variable";
 	$text['header-variable_edit']['pt-pt'] = "Editar variável";
 	$text['header-variable_edit']['fr-fr'] = "Editer la Variable";
