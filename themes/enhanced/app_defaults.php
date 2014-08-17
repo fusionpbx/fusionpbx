@@ -188,6 +188,53 @@ if ($domains_processed == 1) {
 			unset($row);
 		}
 
+	//get the background images
+		$relative_path = PROJECT_PATH.'/themes/enhanced/images/backgrounds';
+		$backgrounds = opendir($_SERVER["DOCUMENT_ROOT"].'/'.$relative_path);
+		$x = 0;
+		while (false !== ($file = readdir($backgrounds))) {
+			if ($file != "." AND $file != ".."){
+				$new_path = $dir.'/'.$file;
+				$level = explode('/',$new_path);
+				$ext = pathinfo($file, PATHINFO_EXTENSION);
+				if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "gif") {
+					$x++;
+					$array[$x]['default_setting_category'] = 'theme';
+					$array[$x]['default_setting_subcategory'] = 'background_image';
+					$array[$x]['default_setting_name'] = 'array';
+					$array[$x]['default_setting_value'] = $relative_path.'/'.$file;
+					$array[$x]['default_setting_enabled'] = 'true';
+					$array[$x]['default_setting_description'] = '';
+				}
+				if ($x > 300) { break; };
+			}
+		}
+
+	//get default settings
+		$sql = "select * from v_default_settings ";
+		$sql .= "where default_setting_category = 'theme' ";
+		$sql .= "and default_setting_subcategory = 'background_image' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		unset($prep_statement);
+
+	//add theme default settings
+		foreach ($array as $row) {
+			$found = false;
+			foreach ($default_settings as $field) {
+				if ($field["default_setting_value"] == $row["default_setting_value"]) {
+					$found = true;
+				}
+			}
+			if (!$found) {
+				$orm = new orm;
+				$orm->name('default_settings');
+				$orm->save($row);
+				$message = $orm->message;
+				//print_r($message);
+			}
+		}
 }
 
 ?>
