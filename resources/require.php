@@ -48,13 +48,23 @@
 		}
 		private function loader($class_name) {
 			//use glob to check "/resources/classes", "/{core,app}/*/resources/classes";
-				$results = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "{/*/*,}/resources/classes/".$class_name.".php", GLOB_BRACE);
+				if (defined("GLOB_BRACE")) {
+					$results = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "{/*/*,}/resources/classes/".$class_name.".php", GLOB_BRACE);
+				}
+				else {
+					$array_1 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/resources/classes/".$class_name.".php");
+					$array_2 = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/resources/classes/".$class_name.".php");
+					$results = array_merge((array)$array_1,(array)$array_2);
+					unset($array_1, $array_2);
+				}
+
 			//include the class
 				foreach ($results as &$class_file) {
 					if (!class_exists($class_name)) {
 						include $class_file;
 					}
 				}
+				unset($results);
 		}
 	}
 	$autoload = new auto_loader();
