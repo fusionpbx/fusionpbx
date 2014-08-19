@@ -960,7 +960,7 @@ legend {
 	<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right-colorpicker-src.js'></script>
 <?php } ?>
 
-<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
@@ -1103,8 +1103,8 @@ if (strlen($_SESSION['message']) > 0) {
 				</div>
 
 				<script>
-					var domain_names = new Array("<?=implode('","', $ary_domain_names)?>");
-					var domain_descs = new Array("<?=implode('","', $ary_domain_descs)?>");
+					var domain_names = new Array("<?php echo implode('","', $ary_domain_names)?>");
+					var domain_descs = new Array("<?php echo implode('","', $ary_domain_descs)?>");
 
 					function domain_search(criteria) {
 						for (var x = 0; x < domain_names.length; x++) {
