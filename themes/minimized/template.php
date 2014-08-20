@@ -962,7 +962,7 @@ legend {
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
-		$("#message_text").click(function() { $(this).css({top: '-=80'}); $("#message_container").css({top: '-=80'}); });
+		$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
 		$("#domain_selector_icon").click(function() { show_domains(); });
 		$("#domains_hide").click(function() { hide_domains(); });
 
@@ -1047,8 +1047,8 @@ legend {
 			$("#message_text").html(msg);
 			$("#message_container").css({height: $("#message_text").css("height")});
 			$("#message_container").css({width: inner_width});
-			$("#message_text").animate({top: '+=80'}, 500).animate({opacity: 1}, 'fast').delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=80'}, 1000).animate({opacity: 0});
-			$("#message_container").animate({top: '+=80'}, 500).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, 'fast').delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=80'}, 1000).animate({opacity: 0}, function() {
+			$("#message_text").show().animate({top: '+=80'}, 500).animate({opacity: 1}, 'fast').delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=80'}, 1000).animate({opacity: 0});
+			$("#message_container").show().animate({top: '+=80'}, 500).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, 'fast').delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=80'}, 1000).animate({opacity: 0}, function() {
 				$("#message_container").removeClass('message_container_mood_'+mood);
 			});
 		}
