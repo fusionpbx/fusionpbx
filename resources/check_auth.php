@@ -60,6 +60,13 @@ require_once "resources/require.php";
 						$username_array = explode("@", check_str($_REQUEST["username"]));
 						if (count($username_array) > 1) {
 							$domain_name = $username_array[count($username_array) -1];
+							$_SESSION['domain_name'] = $domain_name;
+							foreach ($_SESSION['domains'] as $row) {
+								if ($row['domain_name'] == $domain_name) {
+									$_SESSION['domain_uuid'] = $row['domain_uuid'];
+									break;
+								}
+							}
 							$_REQUEST["username"] = substr(check_str($_REQUEST["username"]), 0, -(strlen($domain_name)+1));
 						}
 					}
