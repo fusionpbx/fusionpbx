@@ -826,7 +826,7 @@ legend {
 		opacity: 0.9;
 		-moz-opacity: 0.9;
 		-khtml-opacity: 0.9;
-		margin-left: 17px;
+		margin: 0px 15px 0px 17px;
 	}
 
 	#logout_icon:hover {
@@ -842,7 +842,7 @@ legend {
 		opacity: 0.9;
 		-moz-opacity: 0.9;
 		-khtml-opacity: 0.9;
-		margin: 0px 20px 0px 15px;
+		margin: 0px 20px 0px 0px;
 	}
 
 	#domain_selector_icon:hover {
