@@ -16,7 +16,7 @@
 --
 --	The Initial Developer of the Original Code is
 --	Mark J Crane <markjcrane@fusionpbx.com>
---	Copyright (C) 2010
+--	Copyright (C) 2010 - 2014
 --	the Initial Developer. All Rights Reserved.
 --
 --	Contributor(s):
@@ -56,6 +56,7 @@ if ( session:ready() ) then
 		sounds_dir = session:getVariable("sounds_dir");
 		domain_name = session:getVariable("domain_name");
 		context = session:getVariable("context");
+		sofia_profile_name = session:getVariable("sofia_profile_name");
 
 	--set the sounds path for the language, dialect and voice
 		default_language = session:getVariable("default_language");
@@ -107,7 +108,7 @@ if ( session:ready() ) then
 		end
 
 	--check the database to get the uuid of a ringing call
-		sql = "select call_uuid as uuid from channels ";
+		sql = "select call_uuid as uuid, hostname, ip_addr from channels ";
 		sql = sql .. "where callstate = 'RINGING' ";
 		if (extension) then
 			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
@@ -124,13 +125,28 @@ if ( session:ready() ) then
 			--	freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
 			--end
 			uuid = result.uuid;
+			call_hostname = result.hostname;
+			ip_addr = result.ip_addr;
 		end);
 
 end
 
+--get the hostname
+	hostname = freeswitch.getGlobalVariable("hostname");
+	freeswitch.consoleLog("NOTICE", "Hostname:"..hostname.."  Call Hostname:"..call_hostname.."\n");
+
 --intercept a call that is ringing
 	if (uuid) then
-		session:execute("intercept", uuid);
+		if (hostname == call_hostname) then
+			session:execute("intercept", uuid);
+		else
+			session:execute("export", "sip_h_X-intercept_uuid="..uuid);
+			session:execute("export", "sip_h_X-domain_uuid="..domain_uuid);
+			session:execute("export", "sip_h_X-domain_name="..domain_name);
+			port = freeswitch.getGlobalVariable(sofia_profile_name.."_sip_port");
+			session:execute("bridge", "sofia/"..sofia_profile_name.."/*8@"..call_hostname..":"..port);
+			freeswitch.consoleLog("NOTICE", "Send call to other host.... \n");
+		end
 	end
 
 --notes

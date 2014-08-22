@@ -56,12 +56,6 @@
 			caller_id_number = session:getVariable("caller_id_number");
 			sofia_profile_name = session:getVariable("sofia_profile_name");
 
-			if (domain_count > 1) then
-				if (context == "public") then
-					context = domain_name;
-				end
-			end
-
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -193,6 +187,7 @@
 			end);
 	end
 
+--get the hostname
 	hostname = freeswitch.getGlobalVariable("hostname");
 	freeswitch.consoleLog("NOTICE", "Hostname:"..hostname.."  Call Hostname:"..call_hostname.."\n");
 
@@ -215,4 +210,3 @@
 		--cmd = "originate user/1007@voip.example.com &intercept("..uuid..")";
 		--api = freeswitch.API();
 		--result = api:executeString(cmd);
-
