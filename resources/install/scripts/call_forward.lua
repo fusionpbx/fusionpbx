@@ -56,10 +56,10 @@
 	dofile(config());
 
 --check if the session is ready
-	if ( session:ready() ) then
+	if (session:ready()) then
 		--answer the call
 			session:answer();
-	
+
 		--get the variables
 			enabled = session:getVariable("enabled");
 			pin_number = session:getVariable("pin_number");
@@ -69,7 +69,8 @@
 			extension_uuid = session:getVariable("extension_uuid");
 			context = session:getVariable("context");
 			if (not context ) then context = 'default'; end
-	
+			request_id = session:getVariable("request_id");
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -77,37 +78,93 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
-	
+
 		--a moment to sleep
 			session:sleep(1000);
-	
+
 		--connect to the database
 			dofile(scripts_dir.."/resources/functions/database_handle.lua");
 			dbh = database_handle('system');
-	
-		--determine whether to update the dial string
-			sql = "select * from v_extensions ";
-			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-			sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+
+		--request id is true
+			if (request_id == "true") then
+				--unset extension uuid
+					extension_uuid = nil;
+
+				--get the id
+					if (session:ready()) then
+						min_digits = 2;
+						max_digits = 20;
+						id = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_id:#", "", "\\d+");
+					end
+
+				--get the pin number
+					if (session:ready()) then
+						min_digits = 3;
+						max_digits = 20;
+						caller_pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:voicemail_enter_pass:#", "", "\\d+");
+					end
+
+				--check to see if the pin number is correct
+					if (session:ready()) then
+						sql = "SELECT * FROM v_voicemails ";
+						sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .."' ";
+						sql = sql .. "AND voicemail_id = '" .. id .."' ";
+						if (debug["sql"]) then
+							freeswitch.consoleLog("notice", "[call_forward] "..sql .."\n");
+						end
+						dbh:query(sql, function(row)
+							voicemail_password = row.voicemail_password;
+							--freeswitch.consoleLog("notice", "[call_forward] "..voicemail_password .."\n");
+						end);
+						if (voicemail_password ~= caller_pin_number) then
+							--access denied
+							session:streamFile("phrase:voicemail_fail_auth:#");
+							session:hangup("NORMAL_CLEARING");
+						end
+					end
 			end
-			status = dbh:query(sql, function(row)
-				extension = row.extension;
-				number_alias = row.number_alias;
-				accountcode = row.accountcode;
-				follow_me_uuid = row.follow_me_uuid;
-				--freeswitch.consoleLog("NOTICE", "[call forward] extension "..row.extension.."\n");
-				--freeswitch.consoleLog("NOTICE", "[call forward] accountcode "..row.accountcode.."\n");
-			end);
-	
-		--set the variables
-			if (enabled == "true") then
+
+		--determine whether to update the dial string
+			if (session:ready()) then
+				sql = "select * from v_extensions ";
+				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+				if (extension_uuid ~= nil) then
+					sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+				else
+					sql = sql .. "and (extension = '"..id.."' or number_alias = '"..id.."') ";
+				end
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+				end
+				status = dbh:query(sql, function(row)
+					extension_uuid = row.extension_uuid;
+					extension = row.extension;
+					number_alias = row.number_alias;
+					accountcode = row.accountcode;
+					forward_all_enabled = row.forward_all_enabled;
+					follow_me_uuid = row.follow_me_uuid;
+					--freeswitch.consoleLog("NOTICE", "[call forward] extension "..row.extension.."\n");
+					--freeswitch.consoleLog("NOTICE", "[call forward] accountcode "..row.accountcode.."\n");
+				end);
+			end
+
+		--toggle enabled
+			if (session:ready() and enabled == "toggle") then
+				if (forward_all_enabled == "true") then
+					enabled = "false";
+				else
+					enabled = "true";
+				end
+			end
+
+		--get the forward destination
+			if (session:ready() and enabled == "true" or enabled == "toggle") then
 				forward_all_destination = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
 			end
-	
+
 		--set the dial string
-			if (enabled == "true") then
+			if (session:ready() and enabled == "true") then
 				dial_string = "{presence_id="..forward_all_destination.."@"..domain_name;
 				dial_string = dial_string .. ",instant_ringback=true";
 				dial_string = dial_string .. ",domain_uuid="..domain_uuid;
@@ -118,7 +175,7 @@
 					dial_string = dial_string .. ",accountcode="..accountcode;
 				end
 				dial_string = dial_string .. "}";
-	
+
 				cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
 				user_exists = trim(api:executeString(cmd));
 				if (user_exists) then
@@ -127,25 +184,25 @@
 					dial_string = dial_string .. "loopback/"..forward_all_destination;
 				end
 			end
-	
+
 		--set call forward
-			if (enabled == "true") then
+			if (session:ready() and enabled == "true") then
 				--set forward_all_enabled
 					forward_all_enabled = "true";
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_set.wav");
 			end
-		
+
 		--unset call forward
-			if (enabled == "false") then
+			if (session:ready() and enabled == "false") then
 				--set forward_all_enabled
 					forward_all_enabled = "false";
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-call_forwarding_has_been_cancelled.wav");
 			end
-	
+
 		--disable the follow me
-			if (enabled == "true" and follow_me_uuid ~= nil) then
+			if (session:ready() and enabled == "true" and follow_me_uuid ~= nil) then
 				sql = "update v_follow_me set ";
 				sql = sql .. "follow_me_enabled = 'false' ";
 				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
@@ -155,33 +212,37 @@
 				end
 				dbh:query(sql);
 			end
-	
+
 		--update the extension
-			sql = "update v_extensions set ";
-			if (enabled == "true") then
-				sql = sql .. "forward_all_destination = '"..forward_all_destination.."', ";
-				sql = sql .. "dial_string = '"..dial_string.."', ";
-				sql = sql .. "do_not_disturb = 'false', ";
-			else
-				sql = sql .. "dial_string = null, ";
+			if (session:ready()) then
+				sql = "update v_extensions set ";
+				if (enabled == "true") then
+					sql = sql .. "forward_all_destination = '"..forward_all_destination.."', ";
+					sql = sql .. "dial_string = '"..dial_string.."', ";
+					sql = sql .. "do_not_disturb = 'false', ";
+				else
+					sql = sql .. "dial_string = null, ";
+				end
+				sql = sql .. "forward_all_enabled = '"..forward_all_enabled.."' ";
+				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+				sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
+				if (debug["sql"]) then
+					freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+				end
+				dbh:query(sql);
 			end
-			sql = sql .. "forward_all_enabled = '"..forward_all_enabled.."' ";
-			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-			sql = sql .. "and extension_uuid = '"..extension_uuid.."' ";
-			if (debug["sql"]) then
-				freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+
+		--clear the cache and hangup
+			if (session:ready()) then
+				--clear the cache
+					if (extension ~= nil) then
+						api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
+					end
+
+				--wait for the file to be written before proceeding
+					session:sleep(100);
+
+				--end the call
+					session:hangup();
 			end
-			dbh:query(sql);
-					
-		--clear the cache
-			if (extension ~= nil) then
-				api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
-			end
-	
-		--wait for the file to be written before proceeding
-			session:sleep(1000);
-	
-		--end the call
-			session:hangup();
-	
 	end
