@@ -1,11 +1,16 @@
 <context name="{v_context}">
-	<extension name="call-forward" number="*72,*73" continue="false" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" enabled="true">
+	<extension name="call-forward" number="*72,*73,*74" continue="false" app_uuid="b4b32fb4-0181-4876-9bec-b9dff1299d60" enabled="true">
 		<condition field="destination_number" expression="^\*72$" break="on-true">
 			<action application="set" data="enabled=true"/>
 			<action application="lua" data="call_forward.lua"/>
 		</condition>
-		<condition field="destination_number" expression="^\*73$">
+		<condition field="destination_number" expression="^\*73$" break="on-true">
 			<action application="set" data="enabled=false"/>
+			<action application="lua" data="call_forward.lua"/>
+		</condition>
+		<condition field="destination_number" expression="^\*74$" break="on-true">
+			<action application="set" data="request_id=true"/>
+			<action application="set" data="enabled=toggle"/>
 			<action application="lua" data="call_forward.lua"/>
 		</condition>
 	</extension>
