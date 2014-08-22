@@ -26,7 +26,7 @@
 --set defaults
 	expire = {}
 	expire["directory"] = "3600";
-	expire["dialplan"] = "300";
+	expire["dialplan"] = "3600";
 	expire["sofia.conf"] = "3600";
 	load_balancing = false;
 
