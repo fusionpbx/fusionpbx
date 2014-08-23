@@ -281,6 +281,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-invoices']."' onclick=\"window.location='".PROJECT_PATH."/app/invoices/invoices.php?id=$contact_uuid'\" value='".$text['button-invoices']."'>\n";
 	}
+	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/certificates')) {
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-certificate']."' onclick=\"window.location='".PROJECT_PATH."/app/certificates/index.php?name=".urlencode($contact_name_given." ".$contact_name_family)."'\" value='".$text['button-certificate']."'>\n";
+	}
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
