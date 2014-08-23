@@ -21,6 +21,7 @@
 --
 --	Contributor(s):
 --	Mark J Crane <markjcrane@fusionpbx.com>
+--	Errol W Samuels <ewsamuels@gmail.com>
 
 --user defined variables
 	max_tries = "3";
@@ -54,6 +55,7 @@ if ( session:ready() ) then
 	--get session variables
 		pin_number = session:getVariable("pin_number");
 		sounds_dir = session:getVariable("sounds_dir");
+		domain_uuid = session:getVariable("domain_uuid");
 		domain_name = session:getVariable("domain_name");
 		context = session:getVariable("context");
 		sofia_profile_name = session:getVariable("sofia_profile_name");
@@ -108,7 +110,7 @@ if ( session:ready() ) then
 		end
 
 	--check the database to get the uuid of a ringing call
-		sql = "select call_uuid as uuid, hostname, ip_addr from channels ";
+		sql = "select call_uuid as uuid, hostname, callee_num, ip_addr from channels ";
 		sql = sql .. "where callstate = 'RINGING' ";
 		if (extension) then
 			sql = sql .. "and presence_id = '"..extension.."@"..domain_name.."' ";
@@ -126,9 +128,9 @@ if ( session:ready() ) then
 			--end
 			uuid = result.uuid;
 			call_hostname = result.hostname;
+			callee_num = result.callee_num;
 			ip_addr = result.ip_addr;
 		end);
-
 end
 
 --get the hostname
@@ -143,8 +145,9 @@ end
 			session:execute("export", "sip_h_X-intercept_uuid="..uuid);
 			session:execute("export", "sip_h_X-domain_uuid="..domain_uuid);
 			session:execute("export", "sip_h_X-domain_name="..domain_name);
+			session:execute("export", "sip_h_X-callee_num="..callee_num);
 			port = freeswitch.getGlobalVariable(sofia_profile_name.."_sip_port");
-			session:execute("bridge", "sofia/"..sofia_profile_name.."/*8@"..call_hostname..":"..port);
+			session:execute("bridge", "sofia/"..sofia_profile_name.."/**@"..call_hostname..":"..port);
 			freeswitch.consoleLog("NOTICE", "Send call to other host.... \n");
 		end
 	end
