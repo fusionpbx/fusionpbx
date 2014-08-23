@@ -223,7 +223,7 @@
 				switch(check_str(urldecode($xml->variables->call_direction))){
 					case "outbound":
 							$database->fields['carrier_name'] = check_str(urldecode($xml->variables->lcr_carrier));
-							$sql_rate ="SELECT connect_increment, talk_increment, currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
+							$sql_rate ="SELECT v_lcr.connect_increment, v_lcr.talk_increment, v_lcr. currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
 							$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid='' AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") ORDER BY digits DESC, rate ASC limit 1";
 							if ($debug) {
 								echo "sql_rate: $sql_rate\n";
@@ -250,7 +250,7 @@
 							unset($db2->result);
 							break;
 					case "inbound":
-							$sql_user_rate = "SELECT rate, connect_increment, talk_increment, currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='inbound' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$sql_user_rate = "SELECT v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='inbound' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";
 							}
@@ -270,7 +270,7 @@
 							unset($db2->result);
 							break;
 					case "local":
-							$sql_user_rate = "SELECT rate, connect_increment, talk_increment, currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='local' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$sql_user_rate = "SELECT v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='local' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";
 							}
