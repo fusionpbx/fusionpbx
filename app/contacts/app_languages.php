@@ -198,6 +198,11 @@
 		$text['button-invoices']['pt-pt'] = "Facturas";
 		$text['button-invoices']['fr-fr'] = "Factures";
 
+		$text['button-certificate']['en-us'] = "Certificate";
+		$text['button-certificate']['es-cl'] = "Certificado";
+		$text['button-certificate']['pt-pt'] = "Certificado";
+		$text['button-certificate']['fr-fr'] = "Certificat";
+
 	// contact phones
 		$text['title-contact_phones-add']['en-us'] = "Contact Phone Add";
 		$text['title-contact_phones-add']['es-cl'] = "Agregar Número de Contacto";
