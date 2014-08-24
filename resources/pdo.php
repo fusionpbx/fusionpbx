@@ -183,7 +183,8 @@ if ($db_type == "mysql") {
 	try {
 		//required for mysql_real_escape_string
 			if (function_exists(mysql_connect)) {
-				$mysql_connection = mysql_connect($db_host, $db_username, $db_password);
+				$mysql_connection = @mysql_connect($db_host, $db_username, $db_password);
+				//$mysql_connection = mysqli_connect($db_host, $db_username, $db_password,$db_name) or die("Error " . mysqli_error($link)); 
 			}
 		//mysql pdo connection
 			if (strlen($db_host) == 0 && strlen($db_port) == 0) {
