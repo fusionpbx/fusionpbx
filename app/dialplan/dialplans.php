@@ -269,31 +269,6 @@ else {
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$app_uuid = $row['app_uuid'];
-			if (strlen($row['dialplan_number']) == 0) {
-				$sql = "select * from v_dialplan_details ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and dialplan_uuid = '".$row['dialplan_uuid']."' ";
-				$sql .= "and dialplan_detail_type = 'destination_number' ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$tmp_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($tmp_result as &$tmp) {
-					//prepare the extension number
-						preg_match_all('/[\|0-9\*]/',$tmp["dialplan_detail_data"], $tmp_match);
-						$dialplan_number = implode("",$tmp_match[0]);
-						$dialplan_number = str_replace("|", " ", $dialplan_number);
-						$row['dialplan_number'] = $dialplan_number;
-					//update the extension number
-						$sql = "update v_dialplans set ";
-						$sql .= "dialplan_number = '$dialplan_number' ";
-						$sql .= "where domain_uuid = '$domain_uuid' ";
-						$sql .= "and dialplan_uuid = '".$row['dialplan_uuid']."'";
-						$db->exec($sql);
-						unset($sql);
-					break; //limit to 1 row
-				}
-				unset ($prep_statement);
-			}
 
 			// blank app id if doesn't match others, so will return to dialplan manager
 			switch ($app_uuid) {
