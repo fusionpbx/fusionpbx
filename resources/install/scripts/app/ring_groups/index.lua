@@ -299,10 +299,15 @@
 								
 								if (reply == "0 total.") then
 									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+								else
+									if (string.find(reply, domain_name)) then
+										--active call
+									else
+										dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
+									end
 								end
 							else
 								--look inside the reply to check for the correct domain_name
-								if string.find(reply, domain_name) then
 									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 								end
 							end
@@ -488,7 +493,6 @@
 						end
 				end
 		end
-
 
 --actions
 	--ACTIONS = {}
