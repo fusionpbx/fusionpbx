@@ -277,54 +277,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //function to show the list of sound files
-	function recur_sounds_dir($dir) {
-		global $dir_array;
-		global $dir_path;
-		$dir_list = opendir($dir);
-		while ($file = readdir ($dir_list)) {
-			if ($file != '.' && $file != '..') {
-				$newpath = $dir.'/'.$file;
-				$level = explode('/',$newpath);
-				if (substr($newpath, -4) == ".svn") {
-					//ignore .svn dir and subdir
-				}
-				else {
-					if (is_dir($newpath)) { //directories
-						recur_sounds_dir($newpath);
-					}
-					else { //files
-						if (strlen($newpath) > 0) {
-							//make the path relative
-								$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
-							//remove the 8000-48000 khz from the path
-								$relative_path = str_replace("/8000/", "/", $relative_path);
-								$relative_path = str_replace("/16000/", "/", $relative_path);
-								$relative_path = str_replace("/32000/", "/", $relative_path);
-								$relative_path = str_replace("/48000/", "/", $relative_path);
-							//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
-								$file_array = explode( "/", $relative_path );
-								$x = 1;
-								$relative_path = '';
-								foreach( $file_array as $tmp) {
-									if ($x == 5) { $relative_path .= $tmp; }
-									if ($x > 5) { $relative_path .= '/'.$tmp; }
-									$x++;
-								}
-							//add the file if it does not exist in the array
-								if (isset($dir_array[$relative_path])) {
-									//already exists
-								}
-								else {
-									//add the new path
-										if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
-								}
-						}
-					}
-				}
-			}
-		}
-		closedir($dir_list);
-	}
+	// moved to functions.php
 
 //pre-populate the form
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {

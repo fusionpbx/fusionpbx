@@ -988,33 +988,86 @@ function number_pad($number,$n) {
 }
 
 // validate email address syntax
-if(!function_exists('validate_email')) {
-	function valid_email($email) {
-		$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,6}$/';
-		if ($email != "" && preg_match($regex, $email) == 0) {
-			return false; // email address does not have valid syntax
-		}
-		else {
-			return true; // email address has valid syntax
-		}
-	}
-}
-
-// ellipsisnicely truncate long text
-if(!function_exists('ellipsis')) {
-	function ellipsis($string, $max_characters, $preserve_word = true) {
-		if ($max_characters+$x >= strlen($string)) { return $string; }
-		if ($preserve_word) {
-			for ($x = 0; $x < strlen($string); $x++) {
-				if ($string{$max_characters+$x} == " ") {
-					return substr($string,0,$max_characters+$x)." ...";
-				}
-				else { continue; }
+	if(!function_exists('validate_email')) {
+		function valid_email($email) {
+			$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,6}$/';
+			if ($email != "" && preg_match($regex, $email) == 0) {
+				return false; // email address does not have valid syntax
+			}
+			else {
+				return true; // email address has valid syntax
 			}
 		}
-		else {
-			return substr($string,0,$max_characters)." ...";
+	}
+
+// ellipsis nicely truncate long text
+	if(!function_exists('ellipsis')) {
+		function ellipsis($string, $max_characters, $preserve_word = true) {
+			if ($max_characters+$x >= strlen($string)) { return $string; }
+			if ($preserve_word) {
+				for ($x = 0; $x < strlen($string); $x++) {
+					if ($string{$max_characters+$x} == " ") {
+						return substr($string,0,$max_characters+$x)." ...";
+					}
+					else { continue; }
+				}
+			}
+			else {
+				return substr($string,0,$max_characters)." ...";
+			}
 		}
 	}
-}
+
+//function to show the list of sound files
+	if (!function_exists('recur_sounds_dir')) {
+		function recur_sounds_dir($dir) {
+			global $dir_array;
+			global $dir_path;
+			$dir_list = opendir($dir);
+			while ($file = readdir ($dir_list)) {
+				if ($file != '.' && $file != '..') {
+					$newpath = $dir.'/'.$file;
+					$level = explode('/',$newpath);
+					if (substr($newpath, -4) == ".svn") {
+						//ignore .svn dir and subdir
+					}
+					else {
+						if (is_dir($newpath)) { //directories
+							recur_sounds_dir($newpath);
+						}
+						else { //files
+							if (strlen($newpath) > 0) {
+								//make the path relative
+									$relative_path = substr($newpath, strlen($dir_path), strlen($newpath));
+								//remove the 8000-48000 khz from the path
+									$relative_path = str_replace("/8000/", "/", $relative_path);
+									$relative_path = str_replace("/16000/", "/", $relative_path);
+									$relative_path = str_replace("/32000/", "/", $relative_path);
+									$relative_path = str_replace("/48000/", "/", $relative_path);
+								//remove the default_language, default_dialect, and default_voice (en/us/callie) from the path
+									$file_array = explode( "/", $relative_path );
+									$x = 1;
+									$relative_path = '';
+									foreach( $file_array as $tmp) {
+										if ($x == 5) { $relative_path .= $tmp; }
+										if ($x > 5) { $relative_path .= '/'.$tmp; }
+										$x++;
+									}
+								//add the file if it does not exist in the array
+									if (isset($dir_array[$relative_path])) {
+										//already exists
+									}
+									else {
+										//add the new path
+											if (strlen($relative_path) > 0) { $dir_array[$relative_path] = '0'; }
+									}
+							}
+						}
+					}
+				}
+			}
+			closedir($dir_list);
+		}
+	}
+
 ?>
