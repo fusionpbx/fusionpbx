@@ -295,8 +295,7 @@
 							if (ring_group_skip_active == "true") then
 								cmd = "show channels like "..destination_number;
 								reply = trim(api:executeString(cmd));
-								--freeswitch.consoleLog("notice", "[ring group] mmm reply "..cmd.." " .. reply .. "\n");
-								
+								--freeswitch.consoleLog("notice", "[ring group] reply "..cmd.." " .. reply .. "\n");
 								if (reply == "0 total.") then
 									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
 								else
@@ -309,7 +308,6 @@
 							else
 								--look inside the reply to check for the correct domain_name
 									dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
-								end
 							end
 						else
 							dial_string = "[sip_invite_domain="..domain_name..","..group_confirm.."leg_timeout="..destination_timeout..",leg_delay_start="..destination_delay..",dialed_extension=" .. row.destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. row.destination_number .. "@" .. domain_name;
