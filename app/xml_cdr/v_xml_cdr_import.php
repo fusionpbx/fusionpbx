@@ -43,7 +43,7 @@
 	}
 
 //set debug
-	$debug = false; //true //false
+	$debug = true; //true //false
 	if($debug){
 		$time5 = microtime(true);
 		$insert_time=$insert_count=0;
@@ -223,7 +223,7 @@
 				switch(check_str(urldecode($xml->variables->call_direction))){
 					case "outbound":
 							$database->fields['carrier_name'] = check_str(urldecode($xml->variables->lcr_carrier));
-							$sql_rate ="SELECT v_lcr.connect_increment, v_lcr.talk_increment, v_lcr. currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
+							$sql_rate ="SELECT v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
 							$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid='' AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") ORDER BY digits DESC, rate ASC limit 1";
 							if ($debug) {
 								echo "sql_rate: $sql_rate\n";
@@ -303,9 +303,14 @@
 
 				$db2->table = "v_xml_cdr";
 				$accountcode = (strlen(urldecode($xml->variables->accountcode)))?check_str(urldecode($xml->variables->accountcode)):$domain_name;
-				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode'";
+
+				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode' LIMIT 1";
 				$db2->result = $db2->execute();
-				$default_currency = (strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD');
+
+				$actual_currency = (strlen($lcr_currency)?
+								$lcr_currency:
+								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
+				);
 				$billing_currency = (strlen($db2->result[0]['currency'])?$db2->result[0]['currency']:$default_currency);
 
 				if ($debug) {
@@ -315,19 +320,12 @@
 					echo "b r:$lcr_rate - $lcr_first_increment - $lcr_first_increment = $call_buy\n";
 					echo "s r:$lcr_user_rate - $lcr_user_first_increment - $lcr_user_second_increment = $call_sell\n";
 					echo "lc $lcr_currency\n";
+					echo "ac $actual_currency\n";
 					echo "bc $billing_currency\n";
 				}
 
 				unset($database->sql);
 				unset($database->result);
-
-				$db2->sql = "SELECT currency FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
-				$db2->result = $database->execute();
-				$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
-
-				if ($debug) {
-					echo "bc $billing_currency\n";
-				}
 
 				$sql_balance = "SELECT balance, old_balance FROM v_billings WHERE type_value='".check_str(urldecode($xml->variables->accountcode))."'";
 				$db2->sql = $sql_balance;
@@ -342,7 +340,7 @@
 				}
 
 				// Lets convert rate from lcr_currency to billing_currency
-				$billing_call_sell = currency_convert($call_sell, $billing_currency, $lcr_currency);
+				$billing_call_sell = currency_convert($call_sell, $billing_currency, $actual_currency);
 
 				if ($debug) {
 					echo "bcs: $billing_call_sell $billing_currency\n";
