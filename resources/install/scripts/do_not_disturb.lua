@@ -59,7 +59,7 @@
 	if ( session:ready() ) then
 		--answer the call
 			session:answer();
-	
+
 		--get the variables
 			enabled = session:getVariable("enabled");
 			pin_number = session:getVariable("pin_number");
@@ -69,7 +69,7 @@
 			extension_uuid = session:getVariable("extension_uuid");
 			context = session:getVariable("context");
 			if (not context ) then context = 'default'; end
-	
+
 		--set the sounds path for the language, dialect and voice
 			default_language = session:getVariable("default_language");
 			default_dialect = session:getVariable("default_dialect");
@@ -77,14 +77,14 @@
 			if (not default_language) then default_language = 'en'; end
 			if (not default_dialect) then default_dialect = 'us'; end
 			if (not default_voice) then default_voice = 'callie'; end
-	
+
 		--a moment to sleep
 			session:sleep(1000);
-	
+
 		--connect to the database
 			dofile(scripts_dir.."/resources/functions/database_handle.lua");
 			dbh = database_handle('system');
-	
+
 		--determine whether to update the dial string
 			sql = "select * from v_extensions ";
 			sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
@@ -100,12 +100,12 @@
 				--freeswitch.consoleLog("NOTICE", "[call forward] extension "..row.extension.."\n");
 				--freeswitch.consoleLog("NOTICE", "[call forward] accountcode "..row.accountcode.."\n");
 			end);
-	
+
 		--set the dial string
 			if (enabled == "true") then
 				dial_string = "loopback/*99"..extension;	
 			end
-	
+
 		--set do not disturb
 			if (enabled == "true") then
 				--set do_not_disturb_enabled
@@ -113,7 +113,7 @@
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-dnd_activated.wav");
 			end
-		
+
 		--unset do not disturb
 			if (enabled == "false") then
 				--set fdo_not_disturb_enabled
@@ -121,17 +121,19 @@
 				--notify the caller
 					session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-dnd_cancelled.wav");
 			end
-	
+
 		--disable follow me
-			if (enabled == "true" and follow_me_uuid ~= nil) then
-				sql = "update v_follow_me set ";
-				sql = sql .. "follow_me_enabled = 'false' ";
-				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-				sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+			if (follow_me_uuid ~= nil) then
+				if (enabled == "true") then
+					sql = "update v_follow_me set ";
+					sql = sql .. "follow_me_enabled = 'false' ";
+					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+					sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[do_not_disturb] "..sql.."\n");
+					end
+					dbh:query(sql);
 				end
-				dbh:query(sql);
 			end
 
 		--update the extension
@@ -151,16 +153,15 @@
 			end
 			dbh:query(sql);
 
-			
 		--clear the cache
 			if (extension ~= nil) then
 				api:execute("memcache", "delete directory:"..extension.."@"..domain_name);
 			end
-	
+
 		--wait for the file to be written before proceeding
 			session:sleep(1000);
-	
+
 		--end the call
 			session:hangup();
-	
+
 	end
