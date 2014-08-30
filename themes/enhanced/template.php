@@ -825,12 +825,17 @@ legend {
 		color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
 	}
 
+	#header_icons {
+		display: inline-block;
+		margin-top: 10px;
+		}
+
 	#logout_icon {
 		filter: alpha(opacity=80);
 		opacity: 0.8;
 		-moz-opacity: 0.8;
 		-khtml-opacity: 0.8;
-		margin-left: 17px;
+		margin-left: 6px;
 	}
 
 	#logout_icon:hover {
@@ -846,7 +851,7 @@ legend {
 		opacity: 0.8;
 		-moz-opacity: 0.8;
 		-khtml-opacity: 0.8;
-		margin-left: 17px;
+		padding-left: 10px;
 	}
 
 	#domain_selector_icon:hover {
@@ -856,6 +861,24 @@ legend {
 		-khtml-opacity: 1;
 		cursor: pointer;
 	}
+
+	#domain_selector_domain {
+		display: <?php echo ($_SESSION['theme']['domain_visible']['text'] != 'true') ? 'none' : 'inline-block'; ?>;
+		white-space: nowrap;
+		margin-top: 10px;
+		padding: 3px 7px 1px 7px;
+		margin-top: -1px;
+		background-color: rgba(<?php echo hex2rgb($_SESSION['theme']['domain_background_color']['text'],','); ?>, <?php echo $_SESSION['theme']['domain_background_opacity']['text']; ?>);
+		-webkit-border-radius: 1px;
+		-moz-border-radius: 1px;
+		border-radius: 1px;
+		font-size: 10px;
+		color: <?php echo $_SESSION['theme']['domain_color']['text']; ?>;
+	}
+
+	#domain_selector_domain:hover {
+		cursor: pointer;
+		}
 
 	#domains_container {
 		z-index: 99990;
@@ -965,6 +988,7 @@ legend {
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 
+		$("#domain_selector_domain").click(function() { show_domains(); });
 		$("#domain_selector_icon").click(function() { show_domains(); });
 		$("#domains_hide").click(function() { hide_domains(); });
 
@@ -1264,18 +1288,18 @@ if (strlen($_SESSION['message']) > 0) {
 								</td>
 								<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
 									<?php
-									echo "<span style='white-space: nowrap;'>";
+									echo "<span id='header_icons'>";
+
+								//domain selector icon
+									if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+										echo "&nbsp;<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
+									}
 
 								//logout icon
 									if ($_SESSION['username'] != '') {
 										$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
-										echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_logout.png' style='width: 28px; height: 23px; border: none; margin-top: 15px;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
+										echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_logout.png' style='width: 28px; height: 23px; border: none;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
 										unset($username_full);
-									}
-
-								//domain selector icon
-									if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-										echo "<img id='domain_selector_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none; margin-top: 15px;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
 									}
 
 									echo "</span>\n";
