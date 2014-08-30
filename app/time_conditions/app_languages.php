@@ -66,7 +66,7 @@
 	$text['label-optgroup-us-holidays']['pt-pt'] = "Férias US";
 	$text['label-optgroup-us-holidays']['fr-fr'] = "Vacances US";
 
-	$text['label-option-us-holidays-new-year']['en-us'] = "New Year\'s Day";
+	$text['label-option-us-holidays-new-year']['en-us'] = "New Year's Day";
 	$text['label-option-us-holidays-new-year']['es-cl'] = "Año Nuevo";
 	$text['label-option-us-holidays-new-year']['pt-pt'] = "Dia de Ano Novo";
 	$text['label-option-us-holidays-new-year']['fr-fr'] = "Nouvel an";
@@ -101,10 +101,10 @@
 	$text['label-option-us-holidays-columbus']['pt-pt'] = "Dia de Colombo";
 	$text['label-option-us-holidays-columbus']['fr-fr'] = "Columbus Day";
 
-	$text['label-option-us-holidays-veteran']['en-us'] = "Veteran\'s Day";
+	$text['label-option-us-holidays-veteran']['en-us'] = "Veteran's Day";
 	$text['label-option-us-holidays-veteran']['es-cl'] = "Día de los Veteranos";
 	$text['label-option-us-holidays-veteran']['pt-pt'] = "Dia dos Veteranos";
-	$text['label-option-us-holidays-veteran']['fr-fr'] = "Veteran\'s Day";
+	$text['label-option-us-holidays-veteran']['fr-fr'] = "Veteran's Day";
 
 	$text['label-option-us-holidays-thanksgiving']['en-us'] = "Thanksgiving";
 	$text['label-option-us-holidays-thanksgiving']['es-cl'] = "Thanksgiving";
