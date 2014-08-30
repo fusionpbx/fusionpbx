@@ -1070,4 +1070,29 @@ function number_pad($number,$n) {
 		}
 	}
 
+//function to convert hexidecimal color value to rgb value
+	if (!function_exists('hex2rgb')) {
+		function hex2rgb($hex, $delim = '') {
+			$hex = str_replace("#", "", $hex);
+
+			if (strlen($hex) == 3) {
+				$r = hexdec(substr($hex,0,1).substr($hex,0,1));
+				$g = hexdec(substr($hex,1,1).substr($hex,1,1));
+				$b = hexdec(substr($hex,2,1).substr($hex,2,1));
+			}
+			else {
+				$r = hexdec(substr($hex,0,2));
+				$g = hexdec(substr($hex,2,2));
+				$b = hexdec(substr($hex,4,2));
+			}
+			$rgb = array($r, $g, $b);
+
+			if ($delim != '') {
+				return implode($delim, $rgb); // return rgb delimited string
+			}
+			else {
+				return $rgb; // return array of rgb values
+			}
+		}
+	}
 ?>

@@ -416,6 +416,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif (
 		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
 		$category == "theme" && $subcategory == "login_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "domain_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "domain_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "footer_background_color" && $name == "text" ||
 		$category == "theme" && $subcategory == "message_default_background_color" && $name == "text" ||
