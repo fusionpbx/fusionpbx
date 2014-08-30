@@ -866,13 +866,13 @@ legend {
 		display: <?php echo ($_SESSION['theme']['domain_visible']['text'] != 'true') ? 'none' : 'inline-block'; ?>;
 		white-space: nowrap;
 		margin-top: 10px;
-		padding: 3px 7px 1px 7px;
+		padding: 2px <?php echo ($_SESSION['theme']['domain_background_opacity']['text'] != '' && $_SESSION['theme']['domain_background_opacity']['text'] != 0) ? 7 : 0; ?>px 1px 7px;
 		margin-top: -1px;
-		background-color: rgba(<?php echo hex2rgb($_SESSION['theme']['domain_background_color']['text'],','); ?>, <?php echo $_SESSION['theme']['domain_background_opacity']['text']; ?>);
+		background-color: rgba(<?php echo hex2rgb($_SESSION['theme']['domain_background_color']['text'],','); ?>, <?php echo ($_SESSION['theme']['domain_background_opacity']['text'] != '') ? $_SESSION['theme']['domain_background_opacity']['text'] : 0; ?>);
 		-webkit-border-radius: 1px;
 		-moz-border-radius: 1px;
 		border-radius: 1px;
-		font-size: 10px;
+		font-size: 12px;
 		color: <?php echo $_SESSION['theme']['domain_color']['text']; ?>;
 	}
 
@@ -1292,7 +1292,7 @@ if (strlen($_SESSION['message']) > 0) {
 
 								//domain selector icon
 									if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-										echo "&nbsp;<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
+										echo "<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
 									}
 
 								//logout icon
