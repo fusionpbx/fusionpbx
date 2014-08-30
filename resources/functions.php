@@ -756,23 +756,7 @@ function format_string ($format, $data) {
 
 //get the format and use it to format the phone number
 	function format_phone($phone_number) {
-		if ((is_string($_SESSION["format_phone_array"])) && (strlen($_SESSION["format_phone_array"]) == 0)) {
-			$_SESSION["format_phone_array"] = ""; //clear the menu
-			global $domain_uuid, $db;
-			$sql = "select * from v_vars ";
-			$sql .= "where var_name = 'format_phone' ";
-			$sql .= "and var_enabled = 'true' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-				foreach ($result as &$row) {
-					$_SESSION["format_phone_array"][] = $row["var_value"];
-				}
-				unset ($prep_statement);
-			}
-		}
-		foreach ($_SESSION["format_phone_array"] as &$format) {
+		foreach ($_SESSION["format"]["phone"] as &$format) {
 			$format_count = substr_count($format, 'x');
 			$format_count = $format_count + substr_count($format, 'R');
 			if ($format_count == strlen($phone_number)) {
