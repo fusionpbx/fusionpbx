@@ -64,8 +64,6 @@ $vars = <<<EOD
 {"var_name":"default_dialect","var_value":"us","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"default_voice","var_value":"callie","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"ajax_refresh_rate","var_value":"3000","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"format_phone","var_value":"Rxxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"format_phone","var_value":"xxx-xxx-xxxx","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"xml_cdr_archive","var_value":"dir","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"transfer_ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""}
