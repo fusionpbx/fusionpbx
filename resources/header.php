@@ -104,7 +104,7 @@ require_once "resources/require.php";
 			$content_prep_statement->bindParam(':content', $content);
 		}
 		$content_prep_statement->execute();
-		$result = $content_prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$content_result = $content_prep_statement->fetchAll(PDO::FETCH_NAMED);
 		$page["title"] = '';
 		foreach($content_result as $content_row) {
 			$template_rss_sub_category = $content_row['rss_sub_category'];
