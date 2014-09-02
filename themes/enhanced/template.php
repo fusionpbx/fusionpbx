@@ -878,7 +878,7 @@ legend {
 
 	#domain_selector_domain:hover {
 		cursor: pointer;
-		}
+	}
 
 	#domains_container {
 		z-index: 99990;
