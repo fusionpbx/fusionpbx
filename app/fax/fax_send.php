@@ -158,11 +158,6 @@ else {
 //upload (if necessary) and send the fax
 	if (($_POST['action'] == "send")) {
 
-		echo "<pre>";
-		print_r($_FILES['fax_files']);
-		echo "</pre>";
-		exit;
-
 		$fax_number = check_str($_POST['fax_number']);
 		if (strlen($fax_number) > 0) {
 			$fax_number = preg_replace("~[^0-9]~", "",$fax_number);
