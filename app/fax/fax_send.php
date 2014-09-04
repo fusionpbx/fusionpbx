@@ -155,35 +155,13 @@ else {
 //clear file status cache
 	clearstatcache();
 
-//upload and send the fax
-	if (($_POST['type'] == "fax_send") && is_uploaded_file($_FILES['fax_file']['tmp_name'])) {
+//upload (if necessary) and send the fax
+	if (($_POST['action'] == "send")) {
 
 		$fax_number = check_str($_POST['fax_number']);
 		if (strlen($fax_number) > 0) {
 			$fax_number = preg_replace("~[^0-9]~", "",$fax_number);
 		}
-
-		$fax_name = $_FILES['fax_file']['name'];
-		$fax_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fax_name);
-		$fax_name = str_replace(" ", "_", $fax_name);
-
-		//lua doesn't seem to like special chars with env:GetHeader
-		$fax_name = str_replace(";", "_", $fax_name);
-		$fax_name = str_replace(",", "_", $fax_name);
-		$fax_name = str_replace("'", "_", $fax_name);
-		$fax_name = str_replace("!", "_", $fax_name);
-		$fax_name = str_replace("@", "_", $fax_name);
-		$fax_name = str_replace("#", "_", $fax_name);
-		$fax_name = str_replace("$", "_", $fax_name);
-		$fax_name = str_replace("%", "_", $fax_name);
-		$fax_name = str_replace("^", "_", $fax_name);
-		$fax_name = str_replace("`", "_", $fax_name);
-		$fax_name = str_replace("~", "_", $fax_name);
-		$fax_name = str_replace("&", "_", $fax_name);
-		$fax_name = str_replace("(", "_", $fax_name);
-		$fax_name = str_replace(")", "_", $fax_name);
-		$fax_name = str_replace("+", "_", $fax_name);
-		$fax_name = str_replace("=", "_", $fax_name);
 
 		$provider_type = check_str($_POST['provider_type']);
 		$fax_uuid = check_str($_POST["id"]);
@@ -200,289 +178,385 @@ else {
 		$fax_subject = check_str($_POST['fax_subject']);
 		$fax_message = check_str($_POST['fax_message']);
 		$fax_resolution = check_str($_POST['fax_resolution']);
+		$fax_page_size = check_str($_POST['fax_page_size']);
 
-		//get the fax file extension
-			$fax_file_extension = strtolower(pathinfo($_FILES['fax_file']['name'], PATHINFO_EXTENSION));
-			if ($fax_file_extension == "tiff" || $fax_file_extension == "tif") { $fax_file_extension = "tif"; }
+		// process uploaded files, if any
+		foreach ($_FILES['fax_files']['tmp_name'] as $index => $fax_tmp_name) {
+			if (
+				is_uploaded_file($fax_tmp_name)
+				&& $_FILES['fax_files']['error'][$index] == 0
+				&& $_FILES['fax_files']['size'][$index] > 0
+				) {
 
-		//upload the file
-			move_uploaded_file($_FILES['fax_file']['tmp_name'], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				//get the file extension
+				$fax_file_extension = strtolower(pathinfo($_FILES['fax_files']['name'][$index], PATHINFO_EXTENSION));
+				if ($fax_file_extension == "tiff" || $fax_file_extension == "tif") { $fax_file_extension = "tif"; }
 
-		//convert uploaded file to pdf, if necessary
-			if ($fax_file_extension != "pdf") {
-				chdir($dir_fax_temp);
-				exec("export HOME=/tmp && libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
-			}
+				//skip files other than pdf and tif (for now)
+				if ($fax_file_extension != 'pdf' && $fax_file_extension != 'tif') { continue; }
 
-		//load pdf tools
-			require_once("resources/tcpdf/tcpdf.php");
-			require_once("resources/fpdi/fpdi.php");
+				$fax_name = $_FILES['fax_files']['name'][$index];
+				$fax_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fax_name);
+				$fax_name = str_replace(" ", "_", $fax_name);
 
-			$pdf = new FPDI('P', 'in');
-			$pdf -> SetAutoPageBreak(false);
-			$pdf -> setPrintHeader(false);
-			$pdf -> setPrintFooter(false);
-			$pdf -> SetMargins(0, 0, 0, true);
+				//lua doesn't seem to like special chars with env:GetHeader
+				$fax_name = str_replace(";", "_", $fax_name);
+				$fax_name = str_replace(",", "_", $fax_name);
+				$fax_name = str_replace("'", "_", $fax_name);
+				$fax_name = str_replace("!", "_", $fax_name);
+				$fax_name = str_replace("@", "_", $fax_name);
+				$fax_name = str_replace("#", "_", $fax_name);
+				$fax_name = str_replace("$", "_", $fax_name);
+				$fax_name = str_replace("%", "_", $fax_name);
+				$fax_name = str_replace("^", "_", $fax_name);
+				$fax_name = str_replace("`", "_", $fax_name);
+				$fax_name = str_replace("~", "_", $fax_name);
+				$fax_name = str_replace("&", "_", $fax_name);
+				$fax_name = str_replace("(", "_", $fax_name);
+				$fax_name = str_replace(")", "_", $fax_name);
+				$fax_name = str_replace("+", "_", $fax_name);
+				$fax_name = str_replace("=", "_", $fax_name);
 
-		//determine total pages uploaded
-			$page_count = 0;
-			$pdf_files = array($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				//move uploaded file
+				move_uploaded_file($_FILES['fax_files']['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+
+				//convert uploaded file to pdf, if necessary
+				if ($fax_file_extension != "pdf") {
+					chdir($dir_fax_temp);
+					exec("export HOME=/tmp && libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+				}
+
+				//add file to arrays
+				$uploaded_file_names[] = $fax_name.'.'.$fax_file_extension;
+				$pdf_files[] = $dir_fax_temp.'/'.$fax_name.'.pdf';
+
+			} //if
+		} //foreach
+
+		//load pdf libraries
+		require_once("resources/tcpdf/tcpdf.php");
+		require_once("resources/fpdi/fpdi.php");
+
+		$pdf = new FPDI('P', 'in');
+		$pdf -> SetAutoPageBreak(false);
+		$pdf -> setPrintHeader(false);
+		$pdf -> setPrintFooter(false);
+		$pdf -> SetMargins(0, 0, 0, true);
+
+		$page_count = 0;
+		if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
+			//determine total pages
 			foreach ($pdf_files as $pdf_file) {
 				$page_count += $pdf -> setSourceFile($pdf_file);
 			}
+		}
 
 		//determine page size
-			$pdf -> setSourceFile($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
-			$tmpl = $pdf -> ImportPage(1);
-			$page_size = $pdf -> getTemplateSize($tmpl);
-			$page_width = round($page_size['w'], 2, PHP_ROUND_HALF_DOWN);
-			$page_height = round($page_size['h'], 2, PHP_ROUND_HALF_DOWN);
+		switch ($fax_page_size) {
+			case 'auto' :
+				if ($page_count > 0) {
+					// retrieve from uploaded file
+					$pdf -> setSourceFile($pdf_files[0]);
+					$tmpl = $pdf -> ImportPage(1);
+					$page_size = $pdf -> getTemplateSize($tmpl);
+					$page_width = round($page_size['w'], 2, PHP_ROUND_HALF_DOWN);
+					$page_height = round($page_size['h'], 2, PHP_ROUND_HALF_DOWN);
+				}
+				else {
+					$page_width = 8.5; //in
+					$page_height = 11; //in
+				}
+				break;
+			case 'a4' :
+				$page_width = 8.3; //in
+				$page_height = 11.7; //in
+				break;
+			case 'legal' :
+				$page_width = 8.5; //in
+				$page_height = 14; //in
+				break;
+			case 'letter' :
+			default	:
+				$page_width = 8.5; //in
+				$page_height = 11; //in
+		}
+
+		// unique id for this fax
+		$fax_instance_uuid = uuid();
 
 		//generate cover page, merge with pdf
-			if ($fax_subject != '' || $fax_message != '') {
+		if ($fax_subject != '' || $fax_message != '') {
 
-				//add blank page
-				$pdf -> AddPage('P', array($page_size['w'], $page_size['h']));
+			//add blank page
+			$pdf -> AddPage('P', array($page_width, $page_height));
 
-				// content offset, if necessary
-				$x = 0;
-				$y = 0;
+			// content offset, if necessary
+			$x = 0;
+			$y = 0;
 
-				// output grid
-				//showgrid($pdf);
+			// output grid
+			//showgrid($pdf);
 
-				//logo
-				if (isset($_SESSION['fax']['cover_logo']['text'])) {
-					$logo = $_SESSION['fax']['cover_logo']['text'];
-				}
-				if (substr($logo, 0, 4) == 'http') {
-					$remote_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
-					$remote_fileext = pathinfo($remote_filename, PATHINFO_EXTENSION);
-					if ($remote_fileext == 'gif' || $remote_fileext == 'jpg' || $remote_fileext == 'jpeg' || $remote_fileext == 'png' || $remote_fileext == 'bmp') {
-						if (!file_exists($dir_fax_temp.'/'.$remote_filename)) {
-							$raw = file_get_contents($logo);
-							if (file_put_contents($dir_fax_temp.'/'.$remote_filename, $raw)) {
-								$logo = $dir_fax_temp.'/'.$remote_filename;
-							}
-							else {
-								unset($logo);
-							}
-						}
-						else {
+			//logo
+			if (isset($_SESSION['fax']['cover_logo']['text'])) {
+				$logo = $_SESSION['fax']['cover_logo']['text'];
+			}
+			if (substr($logo, 0, 4) == 'http') {
+				$remote_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
+				$remote_fileext = pathinfo($remote_filename, PATHINFO_EXTENSION);
+				if ($remote_fileext == 'gif' || $remote_fileext == 'jpg' || $remote_fileext == 'jpeg' || $remote_fileext == 'png' || $remote_fileext == 'bmp') {
+					if (!file_exists($dir_fax_temp.'/'.$remote_filename)) {
+						$raw = file_get_contents($logo);
+						if (file_put_contents($dir_fax_temp.'/'.$remote_filename, $raw)) {
 							$logo = $dir_fax_temp.'/'.$remote_filename;
 						}
+						else {
+							unset($logo);
+						}
 					}
 					else {
-						unset($logo);
+						$logo = $dir_fax_temp.'/'.$remote_filename;
 					}
 				}
-				if ($logo == '') {
-					$logo = PROJECT_PATH."/app/fax/logo.jpg";
+				else {
+					unset($logo);
 				}
-				$pdf -> Image($logo, 0.5, 0.4, 2.5, 0.9, null, null, 'N', true, 300, null, false, false, 0, true);
+			}
+			if ($logo == '') {
+				$logo = PROJECT_PATH."/app/fax/logo.jpg";
+			}
+			$pdf -> Image($logo, 0.5, 0.4, 2.5, 0.9, null, null, 'N', true, 300, null, false, false, 0, true);
 
-				//contact info
-				if (isset($_SESSION['fax']['cover_contact_info']['text'])) {
-					$pdf -> SetLeftMargin(0.5);
-					$pdf -> SetFont("times", "", 10);
-					$pdf -> Write(0.3, $_SESSION['fax']['cover_contact_info']['text']);
-				}
+			//contact info
+			if (isset($_SESSION['fax']['cover_contact_info']['text'])) {
+				$pdf -> SetLeftMargin(0.5);
+				$pdf -> SetFont("times", "", 10);
+				$pdf -> Write(0.3, $_SESSION['fax']['cover_contact_info']['text']);
+			}
 
-				//fax, cover sheet
-				$pdf -> SetTextColor(0,0,0);
-				$pdf -> SetFont("times", "B", 55);
-				$pdf -> SetXY($x + 4.55, $y + 0.25);
-				$pdf -> Cell($x + 3.50, $y + 0.4, $text['label-fax-fax'], 0, 0, 'R', false, null, 0, false, 'T', 'T');
+			//fax, cover sheet
+			$pdf -> SetTextColor(0,0,0);
+			$pdf -> SetFont("times", "B", 55);
+			$pdf -> SetXY($x + 4.55, $y + 0.25);
+			$pdf -> Cell($x + 3.50, $y + 0.4, $text['label-fax-fax'], 0, 0, 'R', false, null, 0, false, 'T', 'T');
+			$pdf -> SetFont("times", "", 12);
+			$pdf -> SetFontSpacing(0.0425);
+			$pdf -> SetXY($x + 4.55, $y + 1.0);
+			$pdf -> Cell($x + 3.50, $y + 0.4, $text['label-fax-cover-sheet'], 0, 0, 'R', false, null, 0, false, 'T', 'T');
+			$pdf -> SetFontSpacing(0);
+
+			//field labels
+			$pdf -> SetFont("times", "B", 12);
+			$pdf -> Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
+			$pdf -> Text($x + 0.5, $y + 2.3, strtoupper($text['label-fax-sender']).":");
+			if ($page_count > 0) {
+				$pdf -> Text($x + 0.5, $y + 2.6, strtoupper($text['label-fax-attached']).":");
+			}
+			if ($fax_subject != '') {
+				$pdf -> Text($x + 0.5, $y + 2.9, strtoupper($text['label-fax-subject']).":");
+			}
+
+			//field values
+			$pdf -> SetFont("times", "", 12);
+			$pdf -> Text($x + 2.0, $y + 2.0, (($fax_recipient != '') ? $fax_recipient.'  ('.format_phone($fax_number).')' : format_phone($fax_number)) );
+			$pdf -> Text($x + 2.0, $y + 2.3, (($fax_sender != '') ? $fax_sender.'  ('.format_phone($fax_caller_id_number).')' : format_phone($fax_caller_id_number)) );
+			if ($page_count > 0) {
+				$pdf -> Text($x + 2.0, $y + 2.6, $page_count.' '.$text['label-fax-page'.(($page_count > 1) ? 's' : null)]);
+			}
+			if ($fax_subject != '') {
+				$pdf -> Text($x + 2.0, $y + 2.9, $fax_subject);
+			}
+
+			//message
+			if ($fax_message != '') {
+				$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.5, 'D');
 				$pdf -> SetFont("times", "", 12);
-				$pdf -> SetFontSpacing(0.0425);
-				$pdf -> SetXY($x + 4.55, $y + 1.0);
-				$pdf -> Cell($x + 3.50, $y + 0.4, $text['label-fax-cover-sheet'], 0, 0, 'R', false, null, 0, false, 'T', 'T');
-				$pdf -> SetFontSpacing(0);
+				$pdf -> SetXY($x + 0.75, $y + 3.65);
+				$pdf -> MultiCell(7, 6, $fax_message, 0, 'L', false);
+			}
 
-				//field labels
-				$pdf -> SetFont("times", "B", 12);
-				$pdf -> Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
-				$pdf -> Text($x + 0.5, $y + 2.3, strtoupper($text['label-fax-sender']).":");
-				if ($page_count > 0) {
-					$pdf -> Text($x + 0.5, $y + 2.6, strtoupper($text['label-fax-attached']).":");
-				}
-				if ($fax_subject != '') {
-					$pdf -> Text($x + 0.5, $y + 2.9, strtoupper($text['label-fax-subject']).":");
-				}
+			//disclaimer
+			if ($_SESSION['fax']['cover_disclaimer']['text'] != '') {
+				$pdf -> SetFont("helvetica", "", 8);
+				$pdf -> SetXY($x + 0.5, $y + 10.15);
+				$pdf -> MultiCell(7.5, 0.75, $_SESSION['fax']['cover_disclaimer']['text'], 0, 'C', false);
+			}
 
-				//field values
-				$pdf -> SetFont("times", "", 12);
-				$pdf -> Text($x + 2.0, $y + 2.0, (($fax_recipient != '') ? $fax_recipient.'  ('.format_phone($fax_number).')' : format_phone($fax_number)) );
-				$pdf -> Text($x + 2.0, $y + 2.3, (($fax_sender != '') ? $fax_sender.'  ('.format_phone($fax_caller_id_number).')' : format_phone($fax_caller_id_number)) );
-				if ($page_count > 0) {
-					$pdf -> Text($x + 2.0, $y + 2.6, $page_count.' '.$text['label-fax-page'.(($page_count > 1) ? 's' : null)]);
-				}
-				if ($fax_subject != '') {
-					$pdf -> Text($x + 2.0, $y + 2.9, $fax_subject);
-				}
+			// save cover pdf file and add to array of pages
+			if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
+				array_unshift($pdf_files, $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf');
+			}
+			else {
+				$pdf_files[] = $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf';
+			}
+			$pdf -> Output($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload
+		}
 
-				//message
-				if ($fax_message != '') {
-					$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.5, 'D');
-					$pdf -> SetFont("times", "", 12);
-					$pdf -> SetXY($x + 0.75, $y + 3.65);
-					$pdf -> MultiCell(7, 6, $fax_message, 0, 'L', false);
-				}
 
-				//disclaimer
-				if ($_SESSION['fax']['cover_disclaimer']['text'] != '') {
-					$pdf -> SetFont("helvetica", "", 8);
-					$pdf -> SetXY($x + 0.5, $y + 10.15);
-					$pdf -> MultiCell(7.5, 0.75, $_SESSION['fax']['cover_disclaimer']['text'], 0, 'C', false);
-				}
 
-				//import uploaded pdf pages
-				$pdf_files = array($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
-				foreach ($pdf_files as $pdf_file) {
-					$page_count = $pdf -> setSourceFile($pdf_file);
-					for ($p = 1; $p <= $page_count; $p++) {
-						$tmpl = $pdf -> ImportPage($p);
+		//create new pdf object
+		unset($pdf);
+		$pdf = new FPDI('P', 'in');
+		$pdf -> SetAutoPageBreak(false);
+		$pdf -> setPrintHeader(false);
+		$pdf -> setPrintFooter(false);
+		$pdf -> SetMargins(0, 0, 0, true);
+
+		//combine pages into single pdf, delete temporary cover pdf (if exists)
+		if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
+			foreach ($pdf_files as $pdf_file) {
+				$pdf_file_pages = $pdf -> setSourceFile($pdf_file);
+				for ($p = 1; $p <= $pdf_file_pages; $p++) {
+					$tmpl = $pdf -> ImportPage($p);
+					if ($fax_page_size == 'auto') {
+						//use individual page dimensions
 						$page_size = $pdf -> getTemplateSize($tmpl);
-						$pdf -> AddPage('P', array($page_size['w'], $page_size['h']));
-						$pdf -> useTemplate($tmpl);
+						$page_width = round($page_size['w'], 2, PHP_ROUND_HALF_DOWN);
+						$page_height = round($page_size['h'], 2, PHP_ROUND_HALF_DOWN);
 					}
+					$pdf -> AddPage('P', array($page_width, $page_height));
+					$pdf -> useTemplate($tmpl);
 				}
-
-				// save new file with cover
-				$pdf -> Output($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension, "F");	// Display [I]nline, Save to [F]ile, [D]ownload
 			}
+			$pdf -> Output($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload (or a combination - eg. 'FI' or 'FD')
+			@unlink($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf');
+		}
+		else {
+			//nothing to send, redirect the browser
+			$_SESSION['message_mood'] = 'negative';
+			$_SESSION["message"] = $text['message-invalid-fax'];
+			header("Location: fax_send.php?id=".$fax_uuid);
+			exit;
+		}
 
-		//convert pdf to a tif
-			if (file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')) {
-				@unlink($dir_fax_temp.'/'.$fax_name.'.tif');
-				switch ($fax_resolution) {
-					case 'normal':
-						$r = '204x98'; $g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 98));
-						break;
-					case 'fine':
-						$r = '204x196'; $g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
-						break;
-					case 'superfine':
-						$r = '408x391';	$g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
-						break;
-				}
-				chdir($dir_fax_temp);
-				exec("gs -q -sDEVICE=tiffg3 -r".$r." -g".$g." -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit");
+		//convert pdf to tif
+		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
+			switch ($fax_resolution) {
+				case 'normal':
+					$r = '204x98'; $g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 98));
+					break;
+				case 'fine':
+					$r = '204x196'; $g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
+					break;
+				case 'superfine':
+					$r = '408x391';	$g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
+					break;
 			}
+			chdir($dir_fax_temp);
+			exec("gs -q -sDEVICE=tiffg3 -r".$r." -g".$g." -dNOPAUSE -sOutputFile=".$fax_instance_uuid.".tif -- ".$fax_instance_uuid.".pdf -c quit");
+		}
 
 		//preview, if requested
-			if ($_REQUEST['submit'] == $text['button-preview']) {
-				if (file_exists($dir_fax_temp.'/'.$fax_name.'.tif')) {
-					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
-					$fd = fopen($dir_fax_temp.'/'.$fax_name.'.tif', "rb");
-					header("Content-Type: application/force-download");
-					header("Content-Type: application/octet-stream");
-					header("Content-Type: application/download");
-					header("Content-Description: File Transfer");
-					header('Content-Disposition: attachment; filename="'.$fax_name.'.tif"');
-					header("Content-Type: image/tiff");
-					header('Accept-Ranges: bytes');
-					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
-					header("Content-Length: ".filesize($dir_fax_temp.'/'.$fax_name.'.tif'));
-					fpassthru($fd);
+		if ($_REQUEST['submit'] == $text['button-preview']) {
+			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.tif')) {
+				//delete pdf and uploaded files
+				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf');
+				foreach ($uploaded_file_names as $uploaded_file_name) {
+					@unlink($dir_fax_temp.'/'.$uploaded_file_name);
 				}
-				exit;
+				//push download
+				$fd = fopen($dir_fax_temp.'/'.$fax_instance_uuid.'.tif', "rb");
+				header("Content-Type: application/force-download");
+				header("Content-Type: application/octet-stream");
+				header("Content-Type: application/download");
+				header("Content-Description: File Transfer");
+				header('Content-Disposition: attachment; filename="'.$fax_instance_uuid.'.tif"');
+				header("Content-Type: image/tiff");
+				header('Accept-Ranges: bytes');
+				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
+				header("Content-Length: ".filesize($dir_fax_temp.'/'.$fax_instance_uuid.'.tif'));
+				fpassthru($fd);
 			}
+			exit;
+		}
 
 		//get some more info to send the fax
-			if (isset($_SESSION['fax']['smtp_from']['var'])) {
-				$mailfrom_address = $_SESSION['fax']['smtp_from']['var'];
-			}
-			else {
-				$mailfrom_address = $_SESSION['email']['smtp_from']['var'];
-			}
-			//echo 'mail from: '.$mailfrom_address.'<br>';
+		if (isset($_SESSION['fax']['smtp_from']['var'])) {
+			$mailfrom_address = $_SESSION['fax']['smtp_from']['var'];
+		}
+		else {
+			$mailfrom_address = $_SESSION['email']['smtp_from']['var'];
+		}
 
-			$sql = "select fax_email from v_fax where fax_uuid = '".$fax_uuid."'; ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			$mailto_address_fax = $result["fax_email"];
-			//echo 'mail address fax: '.$mailto_address_fax.'<br>';
+		$sql = "select fax_email from v_fax where fax_uuid = '".$fax_uuid."'; ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+		$mailto_address_fax = $result["fax_email"];
 
-			$sql = "select contact_uuid from v_users where user_uuid = '".$_SESSION['user_uuid']."'; ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			//print_r($result);
+		$sql = "select contact_uuid from v_users where user_uuid = '".$_SESSION['user_uuid']."'; ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 
-			$sql = "select contact_email from v_contacts where contact_uuid = '".$result["contact_uuid"]."'; ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			//print_r($result);
-			$mailto_address_user = $result["contact_email"];
-			//echo 'mail address user: '.$mailto_address_user.'<br>';
+		$sql = "select contact_email from v_contacts where contact_uuid = '".$result["contact_uuid"]."'; ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetch(PDO::FETCH_NAMED);
+		$mailto_address_user = $result["contact_email"];
 
-			if ($mailto_address_user != $mailto_address_fax) {
-				$mailto_address = "'".$mailto_address_fax."\,".$mailto_address_user."'";
-			}
-			else {
-				$mailto_address = $mailto_address_user;
-			}
+		if ($mailto_address_user != $mailto_address_fax) {
+			$mailto_address = "'".$mailto_address_fax."\,".$mailto_address_user."'";
+		}
+		else {
+			$mailto_address = $mailto_address_user;
+		}
 
 		//send the fax
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				//prepare the fax command
-					$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_number);
-					$fax_file = $dir_fax_temp."/".$fax_name.".tif";
-					if (count($route_array) == 0) {
-						//send the internal call to the registered extension
-							$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
-							$t38 = "";
-					}
-					else {
-						//send the external call
-							$fax_uri = $route_array[0];
-							$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
-					}
-					$cmd = "api originate {mailto_address='".$mailto_address."',mailfrom_address='".$mailfrom_address."',origination_caller_id_name='".$fax_caller_id_name."',origination_caller_id_number='".$fax_caller_id_number."',fax_ident='".$fax_caller_id_number."',fax_header='".$fax_caller_id_name."',fax_uri=".$fax_uri.",fax_file='".$fax_file."',fax_retry_attempts=1,fax_retry_limit=20,fax_retry_sleep=180,fax_verbose=true,fax_use_ecm=off,".$t38."api_hangup_hook='lua fax_retry.lua'}".$fax_uri." &txfax('".$fax_file."')";
-				//send the command to event socket
-					$response = event_socket_request($fp, $cmd);
-					$response = str_replace("\n", "", $response);
-					$uuid = str_replace("+OK ", "", $response);
-					fclose($fp);
+		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+		if ($fp) {
+			//prepare the fax command
+			$route_array = outbound_route_to_bridge($_SESSION['domain_uuid'], $fax_number);
+			$fax_file = $dir_fax_temp."/".$fax_instance_uuid.".tif";
+			if (count($route_array) == 0) {
+				//send the internal call to the registered extension
+					$fax_uri = "user/".$fax_number."@".$_SESSION['domain_name'];
+					$t38 = "";
 			}
+			else {
+				//send the external call
+					$fax_uri = $route_array[0];
+					$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
+			}
+			$cmd = "api originate {mailto_address='".$mailto_address."',mailfrom_address='".$mailfrom_address."',origination_caller_id_name='".$fax_caller_id_name."',origination_caller_id_number='".$fax_caller_id_number."',fax_ident='".$fax_caller_id_number."',fax_header='".$fax_caller_id_name."',fax_uri=".$fax_uri.",fax_file='".$fax_file."',fax_retry_attempts=1,fax_retry_limit=20,fax_retry_sleep=180,fax_verbose=true,fax_use_ecm=off,".$t38."api_hangup_hook='lua fax_retry.lua'}".$fax_uri." &txfax('".$fax_file."')";
+			//send the command to event socket
+			$response = event_socket_request($fp, $cmd);
+			$response = str_replace("\n", "", $response);
+			$uuid = str_replace("+OK ", "", $response);
+			fclose($fp);
+		}
 
 		//wait for a few seconds
-			sleep(5);
+		sleep(5);
 
-		//copy the .tif to the sent directory
-			exec("cp ".$dir_fax_temp.'/'.$fax_name.".tif ".$dir_fax_sent.'/'.$fax_name.".tif");
+		//move the generated tif and pdf files to the sent directory
+		exec("mv ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif ".$dir_fax_sent.'/'.$fax_instance_uuid.".tif");
+		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
+			exec("mv ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
+		}
 
-		//copy the .pdf to the sent directory
-			if (file_exists($dir_fax_temp.'/'.$fax_name.".pdf")) {
-				exec("cp ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_sent.'/'.$fax_name.".pdf");
-			}
-
-		//copy the original file to the sent box
-			foreach ($_SESSION['fax']['save'] as $row) {
-				if ($row == "all" || $row == "original") {
-					if ($fax_file_extension != "pdf" || $fax_file_extension != "tif") {
-						exec("cp ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_sent.'/'.$fax_name.'.'.$fax_file_extension);
+		//copy the original uploaded file to the sent box
+		foreach ($_SESSION['fax']['save'] as $row) {
+			if ($row == "all" || $row == "original") {
+				if (is_array($uploaded_file_names) && sizeof($uploaded_file_names) > 0) {
+					foreach ($uploaded_file_names as $uploaded_file_name) {
+						exec('cp '.$dir_fax_temp.'/'.$uploaded_file_name.' '.$dir_fax_sent.'/'.$uploaded_file_name);
 					}
 				}
 			}
+		}
 
-		//convert the tif to pdf and png
-			//chdir($dir_fax_sent);
-			//which tiff2pdf
-			//if (is_file("/usr/local/bin/tiff2png")) {
-			//	exec($_SESSION['switch']['bin']['dir']."/tiff2png ".$dir_fax_sent.$fax_name.".tif");
-			//	exec($_SESSION['switch']['bin']['dir']."/tiff2pdf -f -o ".$fax_name.".pdf ".$dir_fax_sent.$fax_name.".tif");
-			//}
+		//delete uploaded files from temp
+		foreach ($uploaded_file_names as $uploaded_file_name) {
+			@unlink($dir_fax_temp.'/'.$uploaded_file_name);
+		}
 
 		//redirect the browser
-			$_SESSION["message"] = $response;
-			header("Location: fax_box.php?id=".$fax_uuid."&box=sent");
-			exit;
+		$_SESSION["message"] = $response;
+		header("Location: fax_box.php?id=".$fax_uuid."&box=sent");
+		exit;
+
 	} //end upload and send fax
 
 //show the header
@@ -547,12 +621,15 @@ else {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-fax_file']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input name='fax_file' type='file' class='formfld fileinput' id='fax_file' accept='image/tiff,application/pdf'>\n";
-	echo "	<br />\n";
+	for ($f = 1; $f <= 5; $f++) {
+		echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
+		echo "	<input name='fax_files[]' type='file' class='formfld fileinput' ".(($f > 1) ? "style='margin-top: 3px;'" : null)." accept='image/tiff,application/pdf' ".(($f < 5) ? "onchange=\"document.getElementById('fax_file_".($f+1)."').style.display='';\"" : null)."><br />";
+		echo "	</span>\n";
+	}
 	echo "	".$text['description-upload']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -569,6 +646,22 @@ else {
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo "".$text['description-fax-resolution']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "		".$text['label-fax-page-size']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select name='fax_page_size' class='formfld'>\n";
+	echo "		<option value='auto' ".(($_SESSION['fax']['page_size']['text'] == 'auto') ? 'selected' : null).">".$text['option-fax-page-size-auto']."</option>\n";
+	echo "		<option value='letter' ".(($_SESSION['fax']['page_size']['text'] == 'letter') ? 'selected' : null).">Letter</option>\n";
+	echo "		<option value='legal' ".(($_SESSION['fax']['page_size']['text'] == 'legal') ? 'selected' : null).">Legal</option>\n";
+	echo "		<option value='a4' ".(($_SESSION['fax']['page_size']['text'] == 'a4') ? 'selected' : null).">A4</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo "".$text['description-fax-page-size']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -600,7 +693,7 @@ else {
 	echo "			<input type='hidden' name='fax_caller_id_number' value='".$fax_caller_id_number."'>\n";
 	echo "			<input type='hidden' name='fax_extension' value='".$fax_extension."'>\n";
 	echo "			<input type='hidden' name='id' value='".$fax_uuid."'>\n";
-	echo "			<input type='hidden' name='type' value='fax_send'>\n";
+	echo "			<input type='hidden' name='action' value='send'>\n";
 	echo "			<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
 	echo "			<input type='submit' name='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
 	echo "		</td>\n";

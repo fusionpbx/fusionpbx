@@ -143,6 +143,11 @@
 		$text['label-none']['pt-pt'] = "Nenhum";
 		$text['label-none']['fr-fr'] = "Aucun";
 
+		$text['label-auto']['en-us'] = "Auto";
+		$text['label-auto']['es-cl'] = "Automático";
+		$text['label-auto']['pt-pt'] = "Automático";
+		$text['label-auto']['fr-fr'] = "Automatique";
+
 		$text['button-add']['en-us'] = "Add";
 		$text['button-add']['es-cl'] = "Agregar";
 		$text['button-add']['pt-pt'] = "Adicionar";

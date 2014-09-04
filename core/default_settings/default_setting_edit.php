@@ -438,6 +438,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input class='formfld' id='default_setting_value' name='default_setting_value' data-colorpcker=\"{format: 'hex'}\" value=\"".$row['default_setting_value']."\">\n";
 		echo "	<script type='text/javascript'>new Colorpicker().assignTo('default_setting_value');</script>";
 	}
+	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {
+		echo "	<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value='auto' ".(($row['default_setting_value'] == 'auto') ? 'selected' : null).">".$text['label-auto']."</option>";
+		echo "		<option value='letter' ".(($row['default_setting_value'] == 'letter') ? 'selected' : null).">Letter</option>";
+		echo "		<option value='legal' ".(($row['default_setting_value'] == 'legal') ? 'selected' : null).">Legal</option>";
+		echo "		<option value='a4' ".(($row['default_setting_value'] == 'a4') ? 'selected' : null).">A4</option>";
+		echo "	</select>";
+	}
 	else {
 		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}

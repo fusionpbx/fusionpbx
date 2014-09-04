@@ -80,7 +80,7 @@
 	$text['label-fax_file']['pt-pt'] = "Carregar";
 	$text['label-fax_file']['fr-fr'] = "Télécharegr";
 
-	$text['description-upload']['en-us'] = "Select the file to upload and send as a fax.";
+	$text['description-upload']['en-us'] = "Select the file(s) to upload and send.";
 	$text['description-upload']['es-cl'] = "Seleccione el archivo a subir y enviar como fax.";
 	$text['description-upload']['pt-pt'] = "Selecione o ficheiro a carregar para enviar por fax.";
 	$text['description-upload']['fr-fr'] = "Choisir un fichier à télécharger pour être émis en tant que Fax.";
@@ -124,6 +124,11 @@
 	$text['button-save']['es-cl'] = "Guardar";
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
+
+	$text['button-file_additional']['en-us'] = "Add Additional File";
+	$text['button-file_additional']['es-cl'] = "Añadir Archivo Adicional";
+	$text['button-file_additional']['pt-pt'] = "Adicionar Arquivo Adicionais";
+	$text['button-file_additional']['fr-fr'] = "Ajouter un Fichier Supplémentaire";
 
 	//fax_copy
 	$text['confirm-copy']['en-us'] = "Copy Complete";
@@ -253,7 +258,7 @@
 	$text['label-file']['pt-pt'] = "Ficheiro não encontrado.";
 	$text['label-file']['fr-fr'] = "Fichier non trové";
 
-	$text['description-2']['en-us'] = "To send a fax, upload a <strong>TIF</strong> or (if ghost script has been installed) <strong>PDF</strong> file.";
+	$text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.";
 	$text['description-2']['es-cl'] = "Para enviar un fax puede subir un archivo .tif o si ghost script está instalado entonces también puede enviar un fax subiendo un archivo PDF.";
 	$text['description-2']['pt-pt'] = "Para enviar um fax pode carregar um ficheiro .tif ou, se o ghost script tiver sido instalado, enviar um fax, carregando um ficheiro .pdf.";
 	$text['description-2']['fr-fr'] = "Pour envoyer un fax, vous pouvez télécharger un fichier <b>TIF</b>. Si ghost script a été installé, vous pouvez également utiliser un fichier <b>PDF</b>.";
@@ -338,6 +343,21 @@
 	$text['option-fax-resolution-superfine']['pt-pt'] = "Extrafino";
 	$text['option-fax-resolution-superfine']['fr-fr'] = "Superfin";
 
+	$text['label-fax-page-size']['en-us'] = "Page Size";
+	$text['label-fax-page-size']['es-cl'] = "Tamaño de Página";
+	$text['label-fax-page-size']['pt-pt'] = "Tamanho da Página";
+	$text['label-fax-page-size']['fr-fr'] = "Taille de la Page";
+
+	$text['description-fax-page-size']['en-us'] = "Select the page size to transmit.";
+	$text['description-fax-page-size']['es-cl'] = "Seleccione el tamaño de página de transmitir.";
+	$text['description-fax-page-size']['pt-pt'] = "Selecione o tamanho da página para transmitir.";
+	$text['description-fax-page-size']['fr-fr'] = "Sélectionnez le format de page pour nous transmettre.";
+
+	$text['option-fax-page-size-auto']['en-us'] = "Auto";
+	$text['option-fax-page-size-auto']['es-cl'] = "Automático";
+	$text['option-fax-page-size-auto']['pt-pt'] = "Automático";
+	$text['option-fax-page-size-auto']['fr-fr'] = "Automatique";
+
 	$text['label-fax-fax']['en-us'] = "FAX";
 	$text['label-fax-fax']['es-cl'] = "Facsímil";
 	$text['label-fax-fax']['pt-pt'] = "Fax";
@@ -387,4 +407,10 @@
 	$text['table-size']['es-cl'] = "Tamaño";
 	$text['table-size']['pt-pt'] = "Tamanho";
 	$text['table-size']['fr-fr'] = "Taille";
+
+	$text['message-invalid-fax']['en-us'] = "Invalid Fax - Please enter a message or select a file to send.";
+	$text['message-invalid-fax']['es-cl'] = "Fax Inválido - Por favor ingrese el mensaje o seleccione un archivo para enviar.";
+	$text['message-invalid-fax']['pt-pt'] = "Fax inválida - Por favor, digite uma mensagem ou selecionar um arquivo a ser enviado.";
+	$text['message-invalid-fax']['fr-fr'] = "Invalid Fax - S'il vous plaît entrer un message ou sélectionner un fichier à envoyer.";
+
 ?>
