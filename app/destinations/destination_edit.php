@@ -130,9 +130,15 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//add the domain_uuid
 				$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
-
+			//determine whether save the dialplan
+				foreach ($_POST["dialplan_details"] as $row) {
+					if (strlen($row["dialplan_detail_data"]) > 0) {
+						$add_dialplan = true;
+						break;
+					}
+				}
 			//add or update the dialplan if the destination number is set
-				if (strlen($_POST["dialplan_details"][0]["dialplan_detail_data"]) > 0) {
+				if ($add_dialplan) {
 					//get the array
 						$dialplan_details = $_POST["dialplan_details"];
 
@@ -231,7 +237,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
-
+	
 								//increment the dialplan detail order
 								$dialplan_detail_order = $dialplan_detail_order + 10;
 							}
@@ -278,10 +284,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "tone_detect_hits=1";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
-
+		
 							//increment the dialplan detail order
 								$dialplan_detail_order = $dialplan_detail_order + 10;
-
+		
 							// execute on tone detect
 								$dialplan["dialplan_details"][$y]["domain_uuid"] = $_SESSION['domain_uuid'];
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -412,6 +418,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$db2->sql = "INSERT INTO v_billing_invoices (billing_invoice_uuid, billing_uuid, payer_uuid, billing_payment_date, settled, amount, debt, post_payload,plugin_used, domain_uuid) VALUES ('$billing_invoice_uuid', '$billing_uuid', '$user_uuid', NOW(), $settled, $mc_gross, $balance, '$post_payload', 'DID $destination_number Assigment', '".$_SESSION['domain_uuid']."' )";
 						$db2->result = $db2->execute();
 						unset($db2->sql, $db2->result);
+
 					}
 				}
 				if ($action == "update") {
