@@ -25,6 +25,13 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_enabled'] = 'false';
 		$array[$x]['default_setting_description'] = 'Contact information displayed below the logo in the cover sheet header.';
 		$x++;
+		$array[$x]['default_setting_category'] = 'fax';
+		$array[$x]['default_setting_subcategory'] = 'page_size';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'auto';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the default page size of new faxes.';
+		$x++;
 
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
