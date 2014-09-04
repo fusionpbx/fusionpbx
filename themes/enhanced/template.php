@@ -266,6 +266,7 @@ input.btn:hover, input.button:hover, img.list_control_icon:hover {
 	-moz-box-shadow: 0 0 5px #cddaf0;
 	opacity: 1.0;
 	-moz-opacity: 1.0;
+	cursor: pointer;
 	}
 
 input.txt, textarea.txt, select.txt, .formfld {
@@ -865,7 +866,6 @@ legend {
 	#domain_selector_domain {
 		display: <?php echo ($_SESSION['theme']['domain_visible']['text'] != 'true') ? 'none' : 'inline-block'; ?>;
 		white-space: nowrap;
-		margin-top: 10px;
 		padding: 2px <?php echo ($_SESSION['theme']['domain_background_opacity']['text'] != '' && $_SESSION['theme']['domain_background_opacity']['text'] != 0) ? 7 : 0; ?>px 1px 7px;
 		margin-top: -1px;
 		background-color: rgba(<?php echo hex2rgb($_SESSION['theme']['domain_background_color']['text'],','); ?>, <?php echo ($_SESSION['theme']['domain_background_opacity']['text'] != '') ? $_SESSION['theme']['domain_background_opacity']['text'] : 0; ?>);
