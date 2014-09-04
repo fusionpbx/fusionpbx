@@ -319,7 +319,12 @@ require_once "resources/require.php";
 	$sql .= "WHEN 'programmable' THEN 3 ";
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "ELSE 100 END, ";
-	$sql .= "cast(device_key_id as numeric) asc ";
+	if ($db_type == "mysql") {
+		$sql .= "device_key_id asc ";
+	}
+	else {
+		$sql .= "cast(device_key_id as numeric) asc ";
+	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
