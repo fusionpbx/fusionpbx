@@ -148,6 +148,21 @@
 		$text['label-auto']['pt-pt'] = "Automático";
 		$text['label-auto']['fr-fr'] = "Automatique";
 
+		$text['label-normal']['en-us'] = "Normal";
+		$text['label-normal']['es-cl'] = "Normal";
+		$text['label-normal']['pt-pt'] = "Normal";
+		$text['label-normal']['fr-fr'] = "Normal";
+
+		$text['label-fine']['en-us'] = "Fine";
+		$text['label-fine']['es-cl'] = "Fine";
+		$text['label-fine']['pt-pt'] = "Belas";
+		$text['label-fine']['fr-fr'] = "Fin";
+
+		$text['label-superfine']['en-us'] = "Superfine";
+		$text['label-superfine']['es-cl'] = "Superfino";
+		$text['label-superfine']['pt-pt'] = "Extrafino";
+		$text['label-superfine']['fr-fr'] = "Superfin";
+
 		$text['button-add']['en-us'] = "Add";
 		$text['button-add']['es-cl'] = "Agregar";
 		$text['button-add']['pt-pt'] = "Adicionar";

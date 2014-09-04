@@ -75,15 +75,15 @@
 	$text['label-description']['pt-pt'] = "Descrição";
 	$text['label-description']['fr-fr'] = "Description";
 
-	$text['label-fax_file']['en-us'] = "Fax File";
-	$text['label-fax_file']['es-cl'] = "Subir";
-	$text['label-fax_file']['pt-pt'] = "Carregar";
-	$text['label-fax_file']['fr-fr'] = "Télécharegr";
+	$text['label-fax_files']['en-us'] = "Fax File(s)";
+	$text['label-fax_files']['es-cl'] = "Facsímil del Archivo(s)";
+	$text['label-fax_files']['pt-pt'] = "Fax Arquivo(s)";
+	$text['label-fax_files']['fr-fr'] = "Télécopieur Fichier(s)";
 
-	$text['description-upload']['en-us'] = "Select the file(s) to upload and send.";
-	$text['description-upload']['es-cl'] = "Seleccione el archivo a subir y enviar como fax.";
-	$text['description-upload']['pt-pt'] = "Selecione o ficheiro a carregar para enviar por fax.";
-	$text['description-upload']['fr-fr'] = "Choisir un fichier à télécharger pour être émis en tant que Fax.";
+	$text['description-fax_files']['en-us'] = "Select the file(s) to upload and send.";
+	$text['description-fax_files']['es-cl'] = "Seleccione el archivo a subir y enviar como fax.";
+	$text['description-fax_files']['pt-pt'] = "Selecione o ficheiro a carregar para enviar por fax.";
+	$text['description-fax_files']['fr-fr'] = "Choisir un fichier à télécharger pour être émis en tant que Fax.";
 
 	$text['button-edit']['en-us'] = "Edit";
 	$text['button-edit']['es-cl'] = "Editar";
@@ -278,6 +278,16 @@
 	$text['description-fax-sender']['pt-pt'] = "Digite o nome do remetente (opcional).";
 	$text['description-fax-sender']['fr-fr'] = "Entrez le nom de l'expéditeur (facultatif).";
 
+	$text['label-fax-contact-info']['en-us'] = "Contact Info";
+	$text['label-fax-contact-info']['es-cl'] = "Información de Contacto";
+	$text['label-fax-contact-info']['pt-pt'] = "Informações de Contato";
+	$text['label-fax-contact-info']['fr-fr'] = "Contacter";
+
+	$text['description-fax-contact-info']['en-us'] = "Contact information to appear beneath the logo on the cover page (optional).";
+	$text['description-fax-contact-info']['es-cl'] = "La información de contacto para aparecer debajo del logotipo en la portada (opcional).";
+	$text['description-fax-contact-info']['pt-pt'] = "Informações de contato para aparecer abaixo do logotipo na página de rosto (opcional).";
+	$text['description-fax-contact-info']['fr-fr'] = "Contactez-indications à faire figurer sous le logo sur la page de couverture (en option).";
+
 	$text['label-fax-recipient']['en-us'] = "To";
 	$text['label-fax-recipient']['es-cl'] = "Destinatario";
 	$text['label-fax-recipient']['pt-pt'] = "Destinatário";
@@ -317,6 +327,16 @@
 	$text['description-fax-message']['es-cl'] = "Escriba un mensaje para la portada (opcional).";
 	$text['description-fax-message']['pt-pt'] = "Digite uma mensagem para a página de rosto (opcional).";
 	$text['description-fax-message']['fr-fr'] = "Entrez un message pour la page de couverture (en option).";
+
+	$text['label-fax-footer']['en-us'] = "Footer";
+	$text['label-fax-footer']['es-cl'] = "Pie de Página";
+	$text['label-fax-footer']['pt-pt'] = "Rodapé";
+	$text['label-fax-footer']['fr-fr'] = "Footer";
+
+	$text['description-fax-confidentiality']['en-us'] = "Displayed in the footer of the cover sheet (optional).";
+	$text['description-fax-confidentiality']['es-cl'] = "Se muestra en el pie de página de la portada (opcional).";
+	$text['description-fax-confidentiality']['pt-pt'] = "Exibido no rodapé da folha de rosto (opcional).";
+	$text['description-fax-confidentiality']['fr-fr'] = "Affiché dans le bas de la feuille de couverture (en option).";
 
 	$text['label-fax-resolution']['en-us'] = "Resolution";
 	$text['label-fax-resolution']['es-cl'] = "Resolución";

@@ -158,6 +158,11 @@ else {
 //upload (if necessary) and send the fax
 	if (($_POST['action'] == "send")) {
 
+		echo "<pre>";
+		print_r($_FILES['fax_files']);
+		echo "</pre>";
+		exit;
+
 		$fax_number = check_str($_POST['fax_number']);
 		if (strlen($fax_number) > 0) {
 			$fax_number = preg_replace("~[^0-9]~", "",$fax_number);
@@ -174,11 +179,13 @@ else {
 		}
 
 		$fax_sender = check_str($_POST['fax_sender']);
+		$fax_contact_info = check_str($_POST['fax_contact_info']);
 		$fax_recipient = check_str($_POST['fax_recipient']);
 		$fax_subject = check_str($_POST['fax_subject']);
 		$fax_message = check_str($_POST['fax_message']);
 		$fax_resolution = check_str($_POST['fax_resolution']);
 		$fax_page_size = check_str($_POST['fax_page_size']);
+		$fax_footer = check_str($_POST['fax_footer']);
 
 		// process uploaded files, if any
 		foreach ($_FILES['fax_files']['tmp_name'] as $index => $fax_tmp_name) {
@@ -298,40 +305,50 @@ else {
 			//showgrid($pdf);
 
 			//logo
-			if (isset($_SESSION['fax']['cover_logo']['text'])) {
-				$logo = $_SESSION['fax']['cover_logo']['text'];
+			$display_logo = false;
+			if (!isset($_SESSION['fax']['cover_logo']['text'])) {
+				$logo = PROJECT_PATH."/app/fax/logo.jpg";
+				$display_logo = true;
 			}
-			if (substr($logo, 0, 4) == 'http') {
-				$remote_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
-				$remote_fileext = pathinfo($remote_filename, PATHINFO_EXTENSION);
-				if ($remote_fileext == 'gif' || $remote_fileext == 'jpg' || $remote_fileext == 'jpeg' || $remote_fileext == 'png' || $remote_fileext == 'bmp') {
-					if (!file_exists($dir_fax_temp.'/'.$remote_filename)) {
-						$raw = file_get_contents($logo);
-						if (file_put_contents($dir_fax_temp.'/'.$remote_filename, $raw)) {
-							$logo = $dir_fax_temp.'/'.$remote_filename;
+			else if (isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
+				$logo = $_SESSION['fax']['cover_logo']['text'];
+				if (substr($logo, 0, 4) == 'http') {
+					$remote_filename = strtolower(pathinfo($logo, PATHINFO_BASENAME));
+					$remote_fileext = pathinfo($remote_filename, PATHINFO_EXTENSION);
+					if ($remote_fileext == 'gif' || $remote_fileext == 'jpg' || $remote_fileext == 'jpeg' || $remote_fileext == 'png' || $remote_fileext == 'bmp') {
+						if (!file_exists($dir_fax_temp.'/'.$remote_filename)) {
+							$raw = file_get_contents($logo);
+							if (file_put_contents($dir_fax_temp.'/'.$remote_filename, $raw)) {
+								$logo = $dir_fax_temp.'/'.$remote_filename;
+							}
+							else {
+								unset($logo);
+							}
 						}
 						else {
-							unset($logo);
+							$logo = $dir_fax_temp.'/'.$remote_filename;
 						}
 					}
 					else {
-						$logo = $dir_fax_temp.'/'.$remote_filename;
+						unset($logo);
 					}
 				}
-				else {
-					unset($logo);
-				}
+				$display_logo = true;
 			}
-			if ($logo == '') {
-				$logo = PROJECT_PATH."/app/fax/logo.jpg";
+
+			if ($display_logo) {
+				$pdf -> Image($logo, 0.5, 0.4, 2.5, 0.9, null, null, 'N', true, 300, null, false, false, 0, true);
 			}
-			$pdf -> Image($logo, 0.5, 0.4, 2.5, 0.9, null, null, 'N', true, 300, null, false, false, 0, true);
+			else {
+				//set position for contact info, if enabled
+				$pdf -> SetXY($x + 0.5, $y + 0.4);
+			}
 
 			//contact info
 			if (isset($_SESSION['fax']['cover_contact_info']['text'])) {
 				$pdf -> SetLeftMargin(0.5);
 				$pdf -> SetFont("times", "", 10);
-				$pdf -> Write(0.3, $_SESSION['fax']['cover_contact_info']['text']);
+				$pdf -> Write(0.3, $fax_contact_info);
 			}
 
 			//fax, cover sheet
@@ -347,8 +364,12 @@ else {
 
 			//field labels
 			$pdf -> SetFont("times", "B", 12);
-			$pdf -> Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
-			$pdf -> Text($x + 0.5, $y + 2.3, strtoupper($text['label-fax-sender']).":");
+			if ($fax_recipient != '' || $fax_number != '') {
+				$pdf -> Text($x + 0.5, $y + 2.0, strtoupper($text['label-fax-recipient']).":");
+			}
+			if ($fax_sender != '' || $fax_caller_id_number != '') {
+				$pdf -> Text($x + 0.5, $y + 2.3, strtoupper($text['label-fax-sender']).":");
+			}
 			if ($page_count > 0) {
 				$pdf -> Text($x + 0.5, $y + 2.6, strtoupper($text['label-fax-attached']).":");
 			}
@@ -358,8 +379,30 @@ else {
 
 			//field values
 			$pdf -> SetFont("times", "", 12);
-			$pdf -> Text($x + 2.0, $y + 2.0, (($fax_recipient != '') ? $fax_recipient.'  ('.format_phone($fax_number).')' : format_phone($fax_number)) );
-			$pdf -> Text($x + 2.0, $y + 2.3, (($fax_sender != '') ? $fax_sender.'  ('.format_phone($fax_caller_id_number).')' : format_phone($fax_caller_id_number)) );
+			$pdf -> SetXY($x + 2.0, $y + 1.95);
+			if ($fax_recipient != '') {
+				$pdf -> Write(0.3, $fax_recipient);
+				if ($fax_number != '') {
+					$pdf -> Write(0.3, '  ('.format_phone($fax_number).')');
+				}
+			}
+			else {
+				if ($fax_number != '') {
+					$pdf -> Write(0.3, format_phone($fax_number));
+				}
+			}
+			$pdf -> SetXY($x + 2.0, $y + 2.25);
+			if ($fax_sender != '') {
+				$pdf -> Write(0.3, $fax_sender);
+				if ($fax_caller_id_number != '') {
+					$pdf -> Write(0.3, '  ('.format_phone($fax_caller_id_number).')');
+				}
+			}
+			else {
+				if ($fax_caller_id_number != '') {
+					$pdf -> Write(0.3, format_phone($fax_caller_id_number));
+				}
+			}
 			if ($page_count > 0) {
 				$pdf -> Text($x + 2.0, $y + 2.6, $page_count.' '.$text['label-fax-page'.(($page_count > 1) ? 's' : null)]);
 			}
@@ -368,18 +411,18 @@ else {
 			}
 
 			//message
+			$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.25, 'D');
 			if ($fax_message != '') {
-				$pdf -> Rect($x + 0.5, $y + 3.4, 7.5, 6.5, 'D');
 				$pdf -> SetFont("times", "", 12);
 				$pdf -> SetXY($x + 0.75, $y + 3.65);
-				$pdf -> MultiCell(7, 6, $fax_message, 0, 'L', false);
+				$pdf -> MultiCell(7, 5.75, $fax_message, 0, 'L', false);
 			}
 
-			//disclaimer
-			if ($_SESSION['fax']['cover_disclaimer']['text'] != '') {
+			//footer
+			if ($fax_footer != '') {
 				$pdf -> SetFont("helvetica", "", 8);
-				$pdf -> SetXY($x + 0.5, $y + 10.15);
-				$pdf -> MultiCell(7.5, 0.75, $_SESSION['fax']['cover_disclaimer']['text'], 0, 'C', false);
+				$pdf -> SetXY($x + 0.5, $y + 9.9);
+				$pdf -> MultiCell(7.5, 0.75, $fax_footer, 0, 'C', false);
 			}
 
 			// save cover pdf file and add to array of pages
@@ -391,8 +434,6 @@ else {
 			}
 			$pdf -> Output($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload
 		}
-
-
 
 		//create new pdf object
 		unset($pdf);
@@ -519,7 +560,7 @@ else {
 					$fax_uri = $route_array[0];
 					$t38 = "fax_enable_t38=true,fax_enable_t38_request=true,";
 			}
-			$cmd = "api originate {mailto_address='".$mailto_address."',mailfrom_address='".$mailfrom_address."',origination_caller_id_name='".$fax_caller_id_name."',origination_caller_id_number='".$fax_caller_id_number."',fax_ident='".$fax_caller_id_number."',fax_header='".$fax_caller_id_name."',fax_uri=".$fax_uri.",fax_file='".$fax_file."',fax_retry_attempts=1,fax_retry_limit=20,fax_retry_sleep=180,fax_verbose=true,fax_use_ecm=off,".$t38."api_hangup_hook='lua fax_retry.lua'}".$fax_uri." &txfax('".$fax_file."')";
+			$cmd = "api originate {domain_uuid=".$_SESSION["domain_uuid"].",domain_name=".$_SESSION["domain_name"].",mailto_address='".$mailto_address."',mailfrom_address='".$mailfrom_address."',origination_caller_id_name='".$fax_caller_id_name."',origination_caller_id_number='".$fax_caller_id_number."',fax_ident='".$fax_caller_id_number."',fax_header='".$fax_caller_id_name."',fax_uri=".$fax_uri.",fax_file='".$fax_file."',fax_retry_attempts=1,fax_retry_limit=20,fax_retry_sleep=180,fax_verbose=true,fax_use_ecm=off,".$t38."api_hangup_hook='lua fax_retry.lua'}".$fax_uri." &txfax('".$fax_file."')";
 			//send the command to event socket
 			$response = event_socket_request($fp, $cmd);
 			$response = str_replace("\n", "", $response);
@@ -530,11 +571,15 @@ else {
 		//wait for a few seconds
 		sleep(5);
 
+		/*
+		//handled with lua retry script
+
 		//move the generated tif and pdf files to the sent directory
-		exec("mv ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif ".$dir_fax_sent.'/'.$fax_instance_uuid.".tif");
+		exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif ".$dir_fax_sent.'/'.$fax_instance_uuid.".tif");
 		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
-			exec("mv ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
+			exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 		}
+		*/
 
 		//copy the original uploaded file to the sent box
 		foreach ($_SESSION['fax']['save'] as $row) {
@@ -593,8 +638,19 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".$fax_caller_id_name."'>\n";
-	echo "<br />\n";
-	echo "".$text['description-fax-sender']."\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-sender']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-fax-contact-info']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input type='text' name='fax_contact_info' class='formfld' style='' value='".$_SESSION['fax']['cover_contact_info']['text']."'>\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-contact-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -604,8 +660,8 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input type='text' name='fax_recipient' class='formfld' style='' value=''>\n";
-	echo "<br />\n";
-	echo "".$text['description-fax-recipient']."\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-recipient']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -615,22 +671,38 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input type='text' name='fax_number' class='formfld' style='' value=''>\n";
-	echo "<br />\n";
-	echo "".$text['description-fax-number']."\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-number']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-fax_file']."\n";
+	echo "	".$text['label-fax_files']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	for ($f = 1; $f <= 5; $f++) {
+	echo "	<script>";
+	echo "	function list_selected_files(file_input_number) {";
+	echo "		var inp = document.getElementById('fax_files_'+file_input_number);";
+	echo "		var files_selected = [];";
+	echo "		for (var i = 0; i < inp.files.length; ++i) {";
+  	echo "			var file_name = inp.files.item(i).name;";
+  	echo "			files_selected.push(file_name);";
+  	echo "		}";
+	echo "		if (files_selected.length > 1) {";
+	echo "			document.getElementById('file_list_'+file_input_number).innerHTML = '<strong>Selected</strong>: ';";
+  	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += files_selected.join(', ');";
+  	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += '<br />';";
+  	echo "		}";
+	echo "	}";
+	echo "	</script>";
+	for ($f = 1; $f <= 3; $f++) {
 		echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
-		echo "	<input name='fax_files[]' type='file' class='formfld fileinput' ".(($f > 1) ? "style='margin-top: 3px;'" : null)." accept='image/tiff,application/pdf' ".(($f < 5) ? "onchange=\"document.getElementById('fax_file_".($f+1)."').style.display='';\"" : null)."><br />";
+		echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' ".(($f > 1) ? "style='margin-top: 3px;'" : null)." accept='image/tiff,application/pdf' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'><br />";
+		echo "	<span id='file_list_".$f."'></span>";
 		echo "	</span>\n";
 	}
-	echo "	".$text['description-upload']."\n";
+	echo "	".$text['description-fax_files']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -640,12 +712,12 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='fax_resolution' class='formfld'>\n";
-	echo "		<option value='normal'>".$text['option-fax-resolution-normal']."</option>\n";
-	echo "		<option value='fine'>".$text['option-fax-resolution-fine']."</option>\n";
-	echo "		<option value='superfine'>".$text['option-fax-resolution-superfine']."</option>\n";
+	echo "		<option value='normal' ".(($_SESSION['fax']['resolution']['text'] == 'normal') ? 'selected' : null).">".$text['option-fax-resolution-normal']."</option>\n";
+	echo "		<option value='fine' ".(($_SESSION['fax']['resolution']['text'] == 'fine') ? 'selected' : null).">".$text['option-fax-resolution-fine']."</option>\n";
+	echo "		<option value='superfine' ".(($_SESSION['fax']['resolution']['text'] == 'superfine') ? 'selected' : null).">".$text['option-fax-resolution-superfine']."</option>\n";
 	echo "	</select>\n";
-	echo "<br />\n";
-	echo "".$text['description-fax-resolution']."\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-resolution']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -660,8 +732,8 @@ else {
 	echo "		<option value='legal' ".(($_SESSION['fax']['page_size']['text'] == 'legal') ? 'selected' : null).">Legal</option>\n";
 	echo "		<option value='a4' ".(($_SESSION['fax']['page_size']['text'] == 'a4') ? 'selected' : null).">A4</option>\n";
 	echo "	</select>\n";
-	echo "<br />\n";
-	echo "".$text['description-fax-page-size']."\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-page-size']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -671,8 +743,8 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input type='text' name='fax_subject' class='formfld' style='' value=''>\n";
-	echo "<br />\n";
-	echo "".$text['description-fax-subject']."\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-subject']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -681,9 +753,20 @@ else {
 	echo "		".$text['label-fax-message']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 50%; height: 150px;'></textarea>\n";
+	echo "	<textarea type='text' name='fax_message' class='formfld' style='width: 65%; height: 175px;'></textarea>\n";
 	echo "<br />\n";
-	echo "".$text['description-fax-message']."\n";
+	echo "	".$text['description-fax-message']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-fax-footer']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<textarea type='text' name='fax_footer' class='formfld' style='width: 65%; height: 100px;'>".$_SESSION['fax']['cover_footer']['text']."</textarea>\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-footer']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
