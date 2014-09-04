@@ -1,10 +1,42 @@
---contribtors: Mark J. Crane, James O. Rose
+--
+--	FusionPBX
+--	Version: MPL 1.1
+--
+--	The contents of this file are subject to the Mozilla Public License Version
+--	1.1 (the "License"); you may not use this file except in compliance with
+--	the License. You may obtain a copy of the License at
+--	http://www.mozilla.org/MPL/
+--
+--	Software distributed under the License is distributed on an "AS IS" basis,
+--	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+--	for the specific language governing rights and limitations under the
+--	License.
+--
+--	The Original Code is FusionPBX
+--
+--	The Initial Developer of the Original Code is
+--	Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2010 - 2014
+--	the Initial Developer. All Rights Reserved.
+--
+--	Contributor(s):
+--		Mark J. Crane
+--		James O. Rose
 
 --set default variables
 	fax_retry_sleep = 30;
 	fax_retry_limit = 4;
 	fax_busy_limit = 5;
 	api = freeswitch.API();
+
+--include config.lua
+	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
+	dofile(scripts_dir.."/resources/functions/config.lua");
+	dofile(config());
+
+--connect to the database
+	dofile(scripts_dir.."/resources/functions/database_handle.lua");
+	dbh = database_handle('system');
 
 -- show all channel variables
 	--dat = env:serialize()
@@ -27,7 +59,8 @@
 	uuid = env:getHeader("uuid");
 	fax_success = env:getHeader("fax_success");
 	fax_result_text = env:getHeader("fax_result_text");
-	--fax_ecm_used = env:getHeader("fax_ecm_used");
+	fax_local_station_id = env:getHeader("fax_local_station_id");
+	fax_ecm_used = env:getHeader("fax_ecm_used");
 	fax_retry_attempts = tonumber(env:getHeader("fax_retry_attempts"));
 	fax_retry_limit = tonumber(env:getHeader("fax_retry_limit"));
 	--fax_retry_sleep = tonumber(env:getHeader("fax_retry_sleep"));
@@ -36,13 +69,14 @@
 	fax_extension_number = env:getHeader("fax_extension_number");
 	origination_caller_id_name = env:getHeader("origination_caller_id_name");
 	origination_caller_id_number = env:getHeader("origination_caller_id_number");
+	fax_bad_rows = env:getHeader("fax_bad_rows");
+	fax_transfer_rate = env:getHeader("fax_transfer_rate");
 
 	bridge_hangup_cause = env:getHeader("bridge_hangup_cause");
 	fax_result_code = env:getHeader("fax_result_code");
 	fax_busy_attempts = tonumber(env:getHeader("fax_busy_attempts"));
 
 	hangup_cause_q850 = tonumber(env:getHeader("hangup_cause_q850"));
-
 
 --set default values
 	if (not origination_caller_id_name) then
@@ -59,16 +93,107 @@
 		fax_success = "0";
 		fax_result_code = 2;
 	end
-	
 	if (hangup_cause_q850 == "17") then
 		fax_success = "0";
 		fax_result_code = 2;
 	end
-
 	if (not fax_result_text) then
 		fax_result_text = "FS_NOT_SET";
 	end
 
+--add to fax logs
+	sql = "insert into v_fax_logs ";
+	sql = sql .. "(";
+	--sql = sql .. "domain_uuid, ";
+	--sql = sql .. "domain_name, ";
+	sql = sql .. "fax_success, ";
+	sql = sql .. "fax_result_code, ";
+	sql = sql .. "fax_result_text, ";
+	sql = sql .. "fax_file, ";
+	sql = sql .. "uuid, ";
+	if (fax_ecm_used ~= nil) then
+		sql = sql .. "fax_ecm_used, ";
+	end
+	if (fax_local_station_id ~= nil) then
+		sql = sql .. "fax_local_station_id, ";
+	end
+	sql = sql .. "fax_document_transferred_pages, ";
+	sql = sql .. "fax_document_total_pages, ";
+	if (fax_image_resolution ~= nil) then
+		sql = sql .. "fax_image_resolution, ";
+	end
+	if (fax_image_size ~= nil) then
+		sql = sql .. "fax_image_size, ";
+	end
+	if (fax_bad_rows ~= nil) then
+		sql = sql .. "fax_bad_rows, ";
+	end
+	if (fax_transfer_rate ~= nil) then
+		sql = sql .. "fax_transfer_rate, ";
+	end
+	if (fax_retry_attempts ~= nil) then
+		sql = sql .. "fax_retry_attempts, ";
+	end
+	if (fax_retry_limit ~= nil) then
+		sql = sql .. "fax_retry_limit, ";
+	end
+	if (fax_retry_sleep ~= nil) then
+		sql = sql .. "fax_retry_sleep, ";
+	end
+	sql = sql .. "fax_uri ";
+	sql = sql .. ") ";
+	sql = sql .. "values ";
+	sql = sql .. "(";
+	--sql = sql .. "'"..domain_uuid.."', ";
+	--sql = sql .. "'"..domain_name.."', ";
+	sql = sql .. "'"..fax_success.."', ";
+	sql = sql .. "'"..fax_result_code .."', ";
+	sql = sql .. "'"..fax_result_text.."', ";
+	sql = sql .. "'"..fax_file.."', ";
+	sql = sql .. "'"..uuid.."', ";
+	if (fax_ecm_used ~= nil) then
+		sql = sql .. "'"..fax_ecm_used.."', ";
+	end
+	if (fax_local_station_id ~= nil) then
+		sql = sql .. "'"..fax_local_station_id.."', ";
+	end
+	if (fax_document_transferred_pages == nil) then
+		sql = sql .. "'0', ";
+	else
+		sql = sql .. "'"..fax_document_transferred_pages.."', ";
+	end
+	if (fax_document_total_pages == nil) then
+		sql = sql .. "'0', ";
+	else
+		sql = sql .. "'"..fax_document_total_pages.."', ";
+	end
+	if (fax_image_resolution ~= nil) then
+		sql = sql .. "'"..fax_image_resolution.."', ";
+	end
+	if (fax_image_size ~= nil) then
+		sql = sql .. "'"..fax_image_size.."', ";
+	end
+	if (fax_bad_rows ~= nil) then
+		sql = sql .. "'"..fax_bad_rows.."', ";
+	end
+	if (fax_transfer_rate ~= nil) then
+		sql = sql .. "'"..fax_transfer_rate.."', ";
+	end
+	if (fax_retry_attempts ~= nil) then
+		sql = sql .. "'"..fax_retry_attempts.."', ";
+	end
+	if (fax_retry_limit ~= nil) then
+		sql = sql .. "'"..fax_retry_limit.."', ";
+	end
+	if (fax_retry_sleep ~= nil) then
+		sql = sql .. "'"..fax_retry_sleep.."', ";
+	end
+	sql = sql .. "'"..fax_uri.."' ";
+	sql = sql .. ")";
+	--if (debug["sql"]) then
+		freeswitch.consoleLog("notice", "[fax_retry] "..sql.."\n");
+	--end
+	dbh:query(sql);
 
 --for email
 	email_address = env:getHeader("mailto_address");
@@ -228,7 +353,7 @@
 		end
 
 	else
-		--Huzah! Success!
+		--Success
 		if (fax_retry_attempts == 0) then
 			fax_trial = "fax_use_ecm=false,fax_enable_t38=true,fax_enable_t38_request=true,fax_disable_v17=default";
 		elseif (fax_retry_attempts == 1) then
