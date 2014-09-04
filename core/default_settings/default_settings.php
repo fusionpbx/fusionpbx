@@ -391,6 +391,9 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
 			}
+			elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+				echo "		".ucwords($row['default_setting_value']);
+			}
 			elseif ($category == "email" && $subcategory == "smtp_password" && $name == "var" ) {
 				echo "		******** &nbsp;\n";
 			}

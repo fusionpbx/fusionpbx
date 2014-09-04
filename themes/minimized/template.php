@@ -266,6 +266,7 @@ input.btn:hover, input.button:hover, img.list_control_icon:hover {
 	-moz-box-shadow: 0 0 5px #cddaf0;
 	opacity: 1.0;
 	-moz-opacity: 1.0;
+	cursor: pointer;
 	}
 
 input.txt, textarea.txt, select.txt, .formfld {
@@ -579,9 +580,9 @@ legend {
 		-webkit-border-radius: 0px 0px 4px 4px;
 		-moz-border-radius: 0px 0px 4px 4px;
 		border-radius: 0px 0px 4px 4px;
-		-webkit-box-shadow: 0 1px 4px #aaa;
-		-moz-box-shadow: 0 1px 4px #aaa;
-		box-shadow: 0 1px 4px #aaa;
+		-webkit-box-shadow: 0 3px 5px #777;
+		-moz-box-shadow: 0 3px 5px #777;
+		box-shadow: 0 3px 5px #777;
 	}
 
 	.menu_bg {
@@ -823,10 +824,11 @@ legend {
 
 	#logout_icon {
 		filter: alpha(opacity=80);
-		opacity: 0.9;
-		-moz-opacity: 0.9;
-		-khtml-opacity: 0.9;
-		margin: 0px 15px 0px 17px;
+		opacity: 0.85;
+		-moz-opacity: 0.85;
+		-khtml-opacity: 0.85;
+		margin-left: 8px;
+		margin-right: 18px;
 	}
 
 	#logout_icon:hover {
@@ -839,13 +841,33 @@ legend {
 
 	#domain_selector_icon {
 		filter: alpha(opacity=80);
-		opacity: 0.9;
-		-moz-opacity: 0.9;
-		-khtml-opacity: 0.9;
-		margin: 0px 20px 0px 0px;
+		opacity: 0.85;
+		-moz-opacity: 0.85;
+		-khtml-opacity: 0.85;
+		padding-left: 10px;
 	}
 
 	#domain_selector_icon:hover {
+		filter: alpha(opacity=100);
+		opacity: 1;
+		-moz-opacity: 1;
+		-khtml-opacity: 1;
+		cursor: pointer;
+	}
+
+	#domain_selector_domain {
+		display: <?php echo ($_SESSION['theme']['domain_visible']['text'] != 'true') ? 'none' : 'inline-block'; ?>;
+		white-space: nowrap;
+		padding: 2px 0px 1px 7px;
+		margin-top: 2px;
+		font-size: 12px;
+		opacity: 0.8;
+		-moz-opacity: 0.8;
+		-khtml-opacity: 0.8;
+		color: #fff;
+	}
+
+	#domain_selector_domain:hover {
 		filter: alpha(opacity=100);
 		opacity: 1;
 		-moz-opacity: 1;
@@ -963,6 +985,8 @@ legend {
 	$(document).ready(function() {
 
 		$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
+
+		$("#domain_selector_domain").click(function() { show_domains(); });
 		$("#domain_selector_icon").click(function() { show_domains(); });
 		$("#domains_hide").click(function() { hide_domains(); });
 
@@ -1102,16 +1126,16 @@ legend {
 					<td width="100%"><!--{menu}--></td>
 					<td style='white-space: nowrap;'>
 						<?php
+						//domain selector icon
+						if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+							echo "<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
+						}
+
 						//logout icon
 						if ($_SESSION['username'] != '') {
 							$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
 							echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_logout.png' style='width: 28px; height: 23px; border: none;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
 							unset($username_full);
-						}
-
-						//domain selector icon
-						if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-							echo "<img id='domain_selector_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
 						}
 						?>
 					</td>
