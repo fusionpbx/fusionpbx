@@ -446,6 +446,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<option value='a4' ".(($row['default_setting_value'] == 'a4') ? 'selected' : null).">A4</option>";
 		echo "	</select>";
 	}
+	elseif ($category == "fax" && $subcategory == "resolution" && $name == "text" ) {
+		echo "	<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value='normal' ".(($row['default_setting_value'] == 'normal') ? 'selected' : null).">".$text['label-normal']."</option>";
+		echo "		<option value='fine' ".(($row['default_setting_value'] == 'fine') ? 'selected' : null).">".$text['label-fine']."</option>";
+		echo "		<option value='superfine' ".(($row['default_setting_value'] == 'superfine') ? 'selected' : null).">".$text['label-fine']."</option>";
+		echo "	</select>";
+	}
 	else {
 		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$row['default_setting_value']."\">\n";
 	}
