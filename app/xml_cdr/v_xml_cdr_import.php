@@ -219,12 +219,13 @@
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 				$db2 = new database;
 				$lcr_currency = 'USD';
-
+				$destination_number = check_str(urldecode($row->caller_profile->destination_number));
+				$destination_number_serie = number_series($destination_number);
 				switch(check_str(urldecode($xml->variables->call_direction))){
 					case "outbound":
 							$database->fields['carrier_name'] = check_str(urldecode($xml->variables->lcr_carrier));
-							$sql_rate ="SELECT v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits in (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
-							$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN (".check_str(urldecode($xml->variables->lcr_query_expanded_digits)).") ORDER BY digits DESC, rate ASC limit 1";
+							$sql_rate ="SELECT v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr, v_carriers WHERE v_carriers.carrier_name = '".$xml->variables->lcr_carrier."' AND v_lcr.rate=".$xml->variables->lcr_rate." AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN ($destination_number_serie) AND v_lcr.carrier_uuid = v_carriers.carrier_uuid  ORDER BY digits DESC, rate ASC limit 1";
+							$sql_user_rate = "SELECT connect_increment, talk_increment FROM v_lcr WHERE carrier_uuid IS NULL AND v_lcr.lcr_direction = '".check_str(urldecode($xml->variables->call_direction))."' AND digits IN ($destination_number_serie) ORDER BY digits DESC, rate ASC limit 1";
 							if ($debug) {
 								echo "sql_rate: $sql_rate\n";
 								echo "sql_user_rate: $sql_user_rate\n";
