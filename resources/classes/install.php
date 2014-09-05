@@ -38,7 +38,12 @@ include "root.php";
 		//$option '-n' --no-clobber
 		public function recursive_copy($src, $dst, $option = '') {
 			if (file_exists('/bin/cp')) {
+				// here we are checking if the OS is SUN since the copy command is slightly different
+				if (strtoupper(substr(PHP_OS, 0, 3)) === 'SUN') {
+				exec ('cp -Rp '.$src.'/* '.$dst);
+				} else { //not sun system
 				 exec ('cp -RLp '.$option.' '.$src.'/* '.$dst);
+				}
 			}
 			else {
 				$dir = opendir($src);
