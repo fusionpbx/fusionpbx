@@ -245,6 +245,14 @@ else {
 		$pdf -> setPrintFooter(false);
 		$pdf -> SetMargins(0, 0, 0, true);
 
+/*	Works to get the bad PDF into a good (sort of) PDF, but don't have a dynamic method to obtain the correct page size first, so is a guess. */
+// 		chdir($dir_fax_temp);
+// 		exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1687x2291 -dNOPAUSE -sOutputFile=".$fax_name."_converted.tif -- ".$fax_name.".pdf -c quit");
+// 		exec("mv ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_temp.'/'.$fax_name."_uploaded.pdf");
+// 		exec("libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'_converted.tif');
+// 		echo "Done";
+// 		exit;
+
 		$page_count = 0;
 		if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
 			//determine total pages
@@ -602,8 +610,30 @@ else {
 //show the header
 	require_once "resources/header.php";
 
-//fax extension form
+//javascript to toggle input/select boxes
+	echo "<script type='text/javascript'>";
+	echo "	function toggle(field) {";
+	echo "		if (field == 'fax_recipient') {";
+	echo "			document.getElementById('fax_recipient_select').selectedIndex = 0;";
+	echo "			$('#fax_recipient_select').toggle();";
+	echo "			$('#fax_recipient').toggle();";
+	echo "			if ($('#fax_recipient').is(':visible')) { $('#fax_recipient').focus(); } else { $('#fax_recipient_select').focus(); }";
+	echo "		}";
+	echo "	}";
 
+	echo "	function contact_load(obj_sel) {";
+	echo "		obj_sel.style.display='none';";
+	echo "		document.getElementById('fax_recipient').style.display='';";
+	echo "		var selected_option_value = obj_sel.options[obj_sel.selectedIndex].value;";
+	echo "		var selected_option_values = selected_option_value.split('|', 2);";
+	echo "		document.getElementById('fax_recipient').value = selected_option_values[1];";
+	echo "		document.getElementById('fax_number').value = selected_option_values[0];";
+	echo "		$('#fax_recipient').css({width: '50%'});";
+	echo "		$('#fax_number').css({width: '120px'});";
+	echo "	}";
+	echo "</script>";
+
+//fax extension form
 	echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
@@ -654,34 +684,6 @@ else {
 	echo "	".$text['label-fax-recipient']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-
-//javascript to toggle input/select boxes
-	echo "<script type='text/javascript'>";
-	echo "	function toggle(field) {";
-	echo "		if (field == 'to') {";
-	echo "			document.getElementById('fax_recipient_select').selectedIndex = 0;";
-	echo "			$('#fax_recipient_select').toggle();";
-	echo "			$('#fax_recipient').toggle();";
-	echo "			if ($('#fax_recipient').is(':visible')) { $('#fax_recipient').focus(); } else { $('#fax_recipient_select').focus(); }";
-	echo "		}";
-	echo "	}";
-	echo "</script>";
-	?>
-	<script>
-	function contact_load(obj_sel) {
-		obj_sel.style.display='none';
-		document.getElementById('fax_recipient').style.display='';
-		var selected_option_value = obj_sel.options[obj_sel.selectedIndex].value;
-		var selected_option_values = selected_option_value.split('|', 2);
-		document.getElementById('fax_recipient').value = selected_option_values[1];
-		document.getElementById('fax_number').value = selected_option_values[0];
-		$("#fax_recipient").css({width: '50%'});
-		$("#fax_number").css({width: '120px'});
-	}
-	</script>
-	<?
-	echo "	<select class='formfld' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
-	echo "		<option value=''></option>\n";
 	$sql = "select ";
 	$sql .= "c.contact_organization, ";
 	$sql .= "c.contact_name_given, ";
@@ -698,34 +700,41 @@ else {
 	$sql .= "cp.phone_type = 'fax' and ";
 	$sql .= "cp.phone_number is not null and ";
 	$sql .= "cp.phone_number <> '' ";
-	$sql .= "order by ";
-	$sql .= "c.contact_organization asc, ";
-	$sql .= "c.contact_name_given asc, ";
-	$sql .= "c.contact_name_family asc ";
-	echo $sql;
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement -> execute();
-	$result_e = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
-	foreach ($result_e as &$row) {
-		if ($row['contact_organization'] != '') {
-			$contact_option_label = $row['contact_organization'];
+	$result = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
+	$result_count = count($result);
+	if ($result_count > 0) {
+		foreach ($result as &$row) {
+			if ($row['contact_organization'] != '') {
+				$contact_option_label = $row['contact_organization'];
+			}
+			if ($row['contact_name_given'] != '' || $row['contact_name_family'] != '' || $row['contact_nickname'] != '') {
+				$contact_option_label .= ($row['contact_organization'] != '') ? "," : null;
+				$contact_option_label .= ($row['contact_name_given'] != '') ? (($row['contact_organization'] != '') ? " " : null).$row['contact_name_given'] : null;
+				$contact_option_label .= ($row['contact_name_family'] != '') ? (($row['contact_organization'] != '' || $row['contact_name_given'] != '') ? " " : null).$row['contact_name_family'] : null;
+				$contact_option_label .= ($row['contact_nickname'] != '') ? (($row['contact_organization'] != '' || $row['contact_name_given'] != '' || $row['contact_name_family'] != '') ? " (".$row['contact_nickname'].")" : $row['contact_nickname']) : null;
+			}
+			$contact_option_value_recipient = $contact_option_label;
+			$contact_option_value_faxnumber = $row['phone_number'];
+			$contact_option_label .= ":&nbsp;&nbsp;".format_phone($row['phone_number']);
+			$contact_labels[] = $contact_option_label;
+			$contact_values[] = $contact_option_value_faxnumber."|".$contact_option_value_recipient;
+			unset($contact_option_label);
 		}
-		if ($row['contact_name_given'] != '' || $row['contact_name_family'] != '' || $row['contact_nickname'] != '') {
-			$contact_option_label .= ($row['contact_organization'] != '') ? "," : null;
-			$contact_option_label .= ($row['contact_name_given'] != '') ? " ".$row['contact_name_given'] : null;
-			$contact_option_label .= ($row['contact_name_family'] != '') ? " ".$row['contact_name_family'] : null;
-			$contact_option_label .= ($row['contact_nickname'] != '') ? " (".$row['contact_nickname'].")" : null;
+		asort($contact_labels, SORT_NATURAL); // sort by name(s)
+		echo "	<select class='formfld' style='display: none;' id='fax_recipient_select' onchange='contact_load(this);'>\n";
+		echo "		<option value=''></option>\n";
+		foreach ($contact_labels as $index => $contact_label) {
+			echo "	<option value=\"".$contact_values[$index]."\">".$contact_label."</option>\n";
 		}
-		$contact_option_value_recipient = $contact_option_label;
-		$contact_option_value_faxnumber = $row['phone_number'];
-		$contact_option_label .= ":&nbsp;&nbsp;".format_phone($row['phone_number']);
-		echo "	<option value=\"".$contact_option_value_faxnumber."|".$contact_option_value_recipient."\">".$contact_option_label."</option>\n";
-		unset($contact_option_label);
+		echo "	</select>\n";
 	}
 	unset ($prep_statement);
-	echo "	</select>\n";
 	echo "	<input type='text' name='fax_recipient' id='fax_recipient' class='formfld' style='' value=''>\n";
-	echo "	<input type='button' id='btn_toggle_recipient' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('to');\">\n";
+	if ($result_count > 0) {
+		echo "	<input type='button' id='btn_toggle_recipient' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('fax_recipient');\">\n";
+	}
 	echo "	<br />\n";
 	echo "	".$text['description-fax-recipient']."\n";
 	echo "</td>\n";
