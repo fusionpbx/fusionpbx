@@ -258,7 +258,7 @@
 	$text['label-file']['pt-pt'] = "Ficheiro não encontrado.";
 	$text['label-file']['fr-fr'] = "Fichier non trové";
 
-	$text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.";
+	$text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> (requires LibreOffice) file.";
 	$text['description-2']['es-cl'] = "Para enviar un fax puede subir un archivo .tif o si ghost script está instalado entonces también puede enviar un fax subiendo un archivo PDF.";
 	$text['description-2']['pt-pt'] = "Para enviar um fax pode carregar um ficheiro .tif ou, se o ghost script tiver sido instalado, enviar um fax, carregando um ficheiro .pdf.";
 	$text['description-2']['fr-fr'] = "Pour envoyer un fax, vous pouvez télécharger un fichier <b>TIF</b>. Si ghost script a été installé, vous pouvez également utiliser un fichier <b>PDF</b>.";
