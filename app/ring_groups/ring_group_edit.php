@@ -77,6 +77,7 @@ else {
 			$ring_group_strategy = check_str($_POST["ring_group_strategy"]);
 			$ring_group_timeout_action = check_str($_POST["ring_group_timeout_action"]);
 			$ring_group_cid_name_prefix = check_str($_POST["ring_group_cid_name_prefix"]);
+			$ring_group_cid_number_prefix = check_str($_POST["ring_group_cid_number_prefix"]);
 			$ring_group_ringback = check_str($_POST["ring_group_ringback"]);
 			$ring_group_skip_active = check_str($_POST["ring_group_skip_active"]);
 			$ring_group_enabled = check_str($_POST["ring_group_enabled"]);
@@ -144,7 +145,8 @@ else {
 			if (strlen($ring_group_extension) == 0) { $msg .= $text['message-extension']."<br>\n"; }
 			if (strlen($ring_group_strategy) == 0) { $msg .= $text['message-strategy']."<br>\n"; }
 			//if (strlen($ring_group_timeout_app) == 0) { $msg .= $text['message-timeout-action']."<br>\n"; }
-			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Prefix<br>\n"; }
+			//if (strlen($ring_group_cid_name_prefix) == 0) { $msg .= "Please provide: Caller ID Name Prefix<br>\n"; }
+			//if (strlen($ring_group_cid_number_prefix) == 0) { $msg .= "Please provide: Caller ID Number Prefix<br>\n"; }
 			//if (strlen($ring_group_ringback) == 0) { $msg .= "Please provide: Ringback<br>\n"; }
 			if (strlen($ring_group_enabled) == 0) { $msg .= $text['message-enabled']."<br>\n"; }
 			//if (strlen($ring_group_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
@@ -326,6 +328,7 @@ else {
 			$ring_group_timeout_app = $row["ring_group_timeout_app"];
 			$ring_group_timeout_data = $row["ring_group_timeout_data"];
 			$ring_group_cid_name_prefix = $row["ring_group_cid_name_prefix"];
+			$ring_group_cid_number_prefix = $row["ring_group_cid_number_prefix"];
 			$ring_group_ringback = $row["ring_group_ringback"];
 			$ring_group_skip_active = $row["ring_group_skip_active"];
 			$ring_group_enabled = $row["ring_group_enabled"];
@@ -580,12 +583,23 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-cid-prefix'].":\n";
+	echo "	".$text['label-cid-name-prefix'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='ring_group_cid_name_prefix' maxlength='255' value='$ring_group_cid_name_prefix'>\n";
 	echo "<br />\n";
-	echo $text['description-cid-prefix']." \n";
+	echo $text['description-cid-name-prefix']." \n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-cid-number-prefix'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "  <input class='formfld' type='text' name='ring_group_cid_number_prefix' maxlength='255' value='$ring_group_cid_number_prefix'>\n";
+	echo "<br />\n";
+	echo $text['description-cid-number-prefix']." \n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
