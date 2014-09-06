@@ -56,10 +56,15 @@
 	$text['description']['fr-fr'] = "Un groupe de sonnerie est un groupe de destinations pouvant être appelé via une stratégie de sonnerie.";
 	$text['description']['pt-pt'] = "Um grupo é um conjunto de destinos que podem ser chamados segunda uma determinada estratégia.";
 
-	$text['description-cid-prefix']['en-us'] = "Set a prefix on the caller ID name.";
-	$text['description-cid-prefix']['es-cl'] = "Indique un prefijo para el nombre de Caller ID";
-	$text['description-cid-prefix']['fr-fr'] = "Choisir un préfixe pour le nom de l'appelant.";
-	$text['description-cid-prefix']['pt-pt'] = "Escolha um prefixo para o nome do originador da chamada.";
+	$text['description-cid-name-prefix']['en-us'] = "Set a prefix on the caller ID name.";
+	$text['description-cid-name-prefix']['es-cl'] = "Indique un prefijo para el nombre de Caller ID";
+	$text['description-cid-name-prefix']['fr-fr'] = "Choisir un préfixe pour le nom de l'appelant.";
+	$text['description-cid-name-prefix']['pt-pt'] = "Escolha um prefixo para o nome do originador da chamada.";
+
+	$text['description-cid-number-prefix']['en-us'] = "Set a prefix on the caller ID number.";
+	$text['description-cid-number-prefix']['es-cl'] = "Establezca un prefijo del número de identificación de llamadas.";
+	$text['description-cid-number-prefix']['fr-fr'] = "Définir un préfixe sur le nombre d'ID d'appelant.";
+	$text['description-cid-number-prefix']['pt-pt'] = "Definir um prefixo do número de identificação de chamadas.";
 
 	$text['description-description']['en-us'] = "Enter a description (optional).";
 	$text['description-description']['es-cl'] = "Ingrese una descripción (opcional)";
@@ -141,10 +146,15 @@
 	$text['label-call-forward']['fr-fr'] = "Renvoi d'Appel:";
 	$text['label-call-forward']['pt-pt'] = "Encaminhar Chamada:";
 
-	$text['label-cid-prefix']['en-us'] = "CID Prefix";
-	$text['label-cid-prefix']['es-cl'] = "Prefijo CID";
-	$text['label-cid-prefix']['fr-fr'] = "CID Préfixe";
-	$text['label-cid-prefix']['pt-pt'] = "Prefixo CID";
+	$text['label-cid-name-prefix']['en-us'] = "CID Name Prefix";
+	$text['label-cid-name-prefix']['es-cl'] = "CID Nombre Prefijo";
+	$text['label-cid-name-prefix']['fr-fr'] = "CID Préfixe de Nom";
+	$text['label-cid-name-prefix']['pt-pt'] = "CID Prefixo do Nome";
+
+	$text['label-cid-number-prefix']['en-us'] = "CID Number Prefix";
+	$text['label-cid-number-prefix']['es-cl'] = "Número CID Prefijo";
+	$text['label-cid-number-prefix']['fr-fr'] = "CID Nombre Préfixe";
+	$text['label-cid-number-prefix']['pt-pt'] = "CID Prefixo";
 
 	$text['label-context']['en-us'] = "Context";
 	$text['label-context']['es-cl'] = "Contexto";
