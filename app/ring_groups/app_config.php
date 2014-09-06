@@ -140,7 +140,11 @@
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_cid_name_prefix";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
-		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID prefix.";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID name prefix.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_cid_number_prefix";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the caller ID number prefix.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "ring_group_strategy";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
