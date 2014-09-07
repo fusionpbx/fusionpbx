@@ -245,13 +245,13 @@ else {
 		$pdf -> setPrintFooter(false);
 		$pdf -> SetMargins(0, 0, 0, true);
 
-/*	Works to get the bad PDF into a good (sort of) PDF, but don't have a dynamic method to obtain the correct page size first, so is a guess. */
-// 		chdir($dir_fax_temp);
-// 		exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1687x2291 -dNOPAUSE -sOutputFile=".$fax_name."_converted.tif -- ".$fax_name.".pdf -c quit");
-// 		exec("mv ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_temp.'/'.$fax_name."_uploaded.pdf");
-// 		exec("libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'_converted.tif');
-// 		echo "Done";
-// 		exit;
+		//Get the bad PDF into a good (sort of) PDF, but don't have a dynamic method to obtain the correct page size first, so is a guess.
+		// 		chdir($dir_fax_temp);
+		// 		exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1687x2291 -dNOPAUSE -sOutputFile=".$fax_name."_converted.tif -- ".$fax_name.".pdf -c quit");
+		// 		exec("mv ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_temp.'/'.$fax_name."_uploaded.pdf");
+		// 		exec("libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'_converted.tif');
+		// 		echo "Done";
+		// 		exit;
 
 		$page_count = 0;
 		if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
@@ -574,15 +574,11 @@ else {
 		//wait for a few seconds
 		sleep(5);
 
-		/*
-		//handled with lua retry script
-
 		//move the generated tif and pdf files to the sent directory
 		exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif ".$dir_fax_sent.'/'.$fax_instance_uuid.".tif");
 		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
 			exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
 		}
-		*/
 
 		//copy the original uploaded file to the sent box
 		foreach ($_SESSION['fax']['save'] as $row) {
@@ -862,28 +858,25 @@ else {
 //show the footer
 	require_once "resources/footer.php";
 
-
-
-// ******************************************************************
-/*  potentially used by pdf generation */
-
-function showgrid($pdf) {
-	// generate a grid for placement
-	for ($x=0; $x<=8.5; $x+=0.1) {
-		for ($y=0; $y<=11; $y+=0.1) {
-			$pdf -> SetTextColor(0,0,0);
-			$pdf -> SetFont("courier", "", 3);
-			$pdf -> Text($x-0.01,$y-0.01,".");
+// used by pdf generation
+	function showgrid($pdf) {
+		// generate a grid for placement
+		for ($x=0; $x<=8.5; $x+=0.1) {
+			for ($y=0; $y<=11; $y+=0.1) {
+				$pdf -> SetTextColor(0,0,0);
+				$pdf -> SetFont("courier", "", 3);
+				$pdf -> Text($x-0.01,$y-0.01,".");
+			}
+		}
+		for ($x=0; $x<=9; $x+=1) {
+			for ($y=0; $y<=11; $y+=1) {
+				$pdf -> SetTextColor(255,0,0);
+				$pdf -> SetFont("times", "", 10);
+				$pdf -> Text($x-.02,$y-.01,".");
+				$pdf -> SetFont("courier", "", 4);
+				$pdf -> Text($x+0.01,$y+0.035,$x.",".$y);
+			}
 		}
 	}
-	for ($x=0; $x<=9; $x+=1) {
-		for ($y=0; $y<=11; $y+=1) {
-			$pdf -> SetTextColor(255,0,0);
-			$pdf -> SetFont("times", "", 10);
-			$pdf -> Text($x-.02,$y-.01,".");
-			$pdf -> SetFont("courier", "", 4);
-			$pdf -> Text($x+0.01,$y+0.035,$x.",".$y);
-		}
-	}
-}
+
 ?>
