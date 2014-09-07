@@ -38,6 +38,26 @@
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
+--define the explode function
+	function explode ( seperator, str ) 
+		local pos, arr = 0, {}
+		for st, sp in function() return string.find( str, seperator, pos, true ) end do -- for each divider found
+			table.insert( arr, string.sub( str, pos, st-1 ) ) -- attach chars left of current divider
+			pos = sp + 1 -- jump past current divider
+		end
+		table.insert( arr, string.sub( str, pos ) ) -- attach chars right of last divider
+		return arr
+	end
+
+--array count
+	function count(t)
+		c = 0;
+		for k,v in pairs(t) do
+  			c = c+1;
+		end
+		return c;
+	end
+
 -- show all channel variables
 	--dat = env:serialize()
 	--freeswitch.consoleLog("INFO","info:\n" .. dat .. "\n")
@@ -101,16 +121,33 @@
 		fax_result_text = "FS_NOT_SET";
 	end
 
+--get the values from the fax file
+	array = explode("/", fax_file);
+	domain_name = array[count(array)-3];
+	extension_name = array[count(array)-2];
+	file_name = array[count(array)];
+
+--get the domain_uuid using the domain name required for multi-tenant
+	if (domain_name ~= nil) then
+		sql = "SELECT domain_uuid FROM v_domains ";
+		sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+		end
+		status = dbh:query(sql, function(rows)
+			domain_uuid = rows["domain_uuid"];
+		end);
+	end
+
 --add to fax logs
 	sql = "insert into v_fax_logs ";
 	sql = sql .. "(";
-	--sql = sql .. "domain_uuid, ";
-	--sql = sql .. "domain_name, ";
+	sql = sql .. "fax_log_uuid, ";
+	sql = sql .. "domain_uuid, ";
 	sql = sql .. "fax_success, ";
 	sql = sql .. "fax_result_code, ";
 	sql = sql .. "fax_result_text, ";
 	sql = sql .. "fax_file, ";
-	sql = sql .. "uuid, ";
 	if (fax_ecm_used ~= nil) then
 		sql = sql .. "fax_ecm_used, ";
 	end
@@ -140,17 +177,18 @@
 	if (fax_retry_sleep ~= nil) then
 		sql = sql .. "fax_retry_sleep, ";
 	end
-	sql = sql .. "fax_uri ";
+	sql = sql .. "fax_uri, ";
+	sql = sql .. "fax_date, ";
+	sql = sql .. "fax_epoch ";
 	sql = sql .. ") ";
 	sql = sql .. "values ";
 	sql = sql .. "(";
-	--sql = sql .. "'"..domain_uuid.."', ";
-	--sql = sql .. "'"..domain_name.."', ";
+	sql = sql .. "'"..uuid.."', ";
+	sql = sql .. "'"..domain_uuid.."', ";
 	sql = sql .. "'"..fax_success.."', ";
 	sql = sql .. "'"..fax_result_code .."', ";
 	sql = sql .. "'"..fax_result_text.."', ";
 	sql = sql .. "'"..fax_file.."', ";
-	sql = sql .. "'"..uuid.."', ";
 	if (fax_ecm_used ~= nil) then
 		sql = sql .. "'"..fax_ecm_used.."', ";
 	end
@@ -188,7 +226,13 @@
 	if (fax_retry_sleep ~= nil) then
 		sql = sql .. "'"..fax_retry_sleep.."', ";
 	end
-	sql = sql .. "'"..fax_uri.."' ";
+	sql = sql .. "'"..fax_uri.."', ";
+	if (database["type"] == "sqlite") then
+		sql = sql .. "'"..os.date("%Y-%m-%d %X").."', ";
+	else
+		sql = sql .. "now(), ";
+	end
+	sql = sql .. "'"..os.time().."' ";
 	sql = sql .. ")";
 	--if (debug["sql"]) then
 		freeswitch.consoleLog("notice", "[fax_retry] "..sql.."\n");
