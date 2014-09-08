@@ -250,7 +250,7 @@ else {
 	}
 
 //get the results from the db
-	$sql = "select * from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
+	$sql = "select *, (answer_epoch - start_epoch) as tta from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
 	if ($rows_per_page == 0) {
 		$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";

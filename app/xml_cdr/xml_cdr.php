@@ -325,6 +325,20 @@ else {
 
 //show the results
 	echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
+
+	echo "<tr>\n";
+	echo "<td colspan='11' align='left'>\n";
+	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
+	echo "	</tr>\n";
+ 	echo "	</table>\n";
+ 	echo "	<br />\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "<tr>\n";
 	echo "<th>&nbsp;</th>\n";
 	//echo th_order_by('direction', 'Direction', $order_by, $order);
@@ -336,6 +350,7 @@ else {
 	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>\n";
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order);
+	echo th_order_by('tta', 'TTA', $order_by, $order);
 	//echo th_order_by('end_stamp', 'End', $order_by, $order);
 	echo th_order_by('duration', $text['label-duration'], $order_by, $order);
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
@@ -418,21 +433,21 @@ else {
 				switch ($row['direction']) {
 					case "inbound" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' style='border: none;' alt='".$text['label-inbound']." ".$text['label-missed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png' style='border: none;' title='".$text['label-inbound']." ".$text['label-missed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' style='border: none;' alt='".$text['label-inbound']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_connected.png' style='border: none;' title='".$text['label-inbound']."'>\n";
 						break;
 					case "outbound" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png' style='border: none;' alt='".$text['label-outbound']." ".$text['label-failed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_failed.png' style='border: none;' title='".$text['label-outbound']." ".$text['label-failed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png' style='border: none;' alt='".$text['label-outbound']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_outbound_connected.png' style='border: none;' title='".$text['label-outbound']."'>\n";
 						break;
 					case "local" :
 						if ($row['billsec'] == 0)
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' style='border: none;' alt='".$text['label-local']." ".$text['label-failed']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_failed.png' style='border: none;' title='".$text['label-local']." ".$text['label-failed']."'>\n";
 						else
-							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' alt='".$text['label-local']."'>\n";
+							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' title='".$text['label-local']."'>\n";
 						break;
 				}
 				echo "	</td>\n";
@@ -487,6 +502,8 @@ else {
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_start_epoch."</td>\n";
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['end_stamp']."</td>\n";
+
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
 
 			//If they cancelled, show the ring time, not the bill time.
 			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
