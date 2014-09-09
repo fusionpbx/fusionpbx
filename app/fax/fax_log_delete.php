@@ -17,7 +17,7 @@ else {
 	}
 
 //get the id
-	if (count($_GET)>0) {
+	if (count($_GET) > 0) {
 		$id = check_str($_GET["id"]);
 	}
 
