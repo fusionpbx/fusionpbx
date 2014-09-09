@@ -38,7 +38,9 @@ else {
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-fax_logs']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
+	echo "		<td width='50%' align='right'>\n";
+	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
