@@ -212,6 +212,7 @@ else {
 		}
 
 		// process uploaded files, if any
+		$fax_page_count = 0;
 		foreach ($_FILES['fax_files']['tmp_name'] as $index => $fax_tmp_name) {
 			if (
 				is_uploaded_file($fax_tmp_name)
@@ -281,6 +282,11 @@ else {
 					chdir($dir_fax_temp);
 					exec("gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit"); //convert pdf to tif
 					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
+				}
+
+				$tif_page_count = exec("tiffinfo ".$dir_fax_temp.'/'.$fax_name.".tif | grep \"Page Number\" | grep -c \"P\"");
+				if ($tif_page_count != '') {
+					$fax_page_count += $tif_page_count;
 				}
 
 				//add file to array
@@ -381,7 +387,7 @@ else {
 			if ($fax_sender != '' || $fax_caller_id_number != '') {
 				$pdf -> Text($x + 0.5, $y + 2.3, strtoupper($text['label-fax-sender']).":");
 			}
-			if ($page_count > 0) {
+			if ($fax_page_count > 0) {
 				$pdf -> Text($x + 0.5, $y + 2.6, strtoupper($text['label-fax-attached']).":");
 			}
 			if ($fax_subject != '') {
@@ -414,8 +420,8 @@ else {
 					$pdf -> Write(0.3, format_phone($fax_caller_id_number));
 				}
 			}
-			if ($page_count > 0) {
-				$pdf -> Text($x + 2.0, $y + 2.6, $page_count.' '.$text['label-fax-page'.(($page_count > 1) ? 's' : null)]);
+			if ($fax_page_count > 0) {
+				$pdf -> Text($x + 2.0, $y + 2.6, $fax_page_count.' '.$text['label-fax-page'.(($fax_page_count > 1) ? 's' : null)]);
 			}
 			if ($fax_subject != '') {
 				$pdf -> Text($x + 2.0, $y + 2.9, $fax_subject);
@@ -740,8 +746,9 @@ else {
   	echo "			var file_name = inp.files.item(i).name;";
   	echo "			files_selected.push(file_name);";
   	echo "		}";
+	echo "		document.getElementById('file_list_'+file_input_number).innerHTML = '';";
 	echo "		if (files_selected.length > 1) {";
-	echo "			document.getElementById('file_list_'+file_input_number).innerHTML = '<strong>Selected</strong>: ';";
+	echo "			document.getElementById('file_list_'+file_input_number).innerHTML = '<strong>".$text['label-selected']."</strong>: ';";
   	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += files_selected.join(', ');";
   	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += '<br />';";
   	echo "		}";
