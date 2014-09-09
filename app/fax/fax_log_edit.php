@@ -436,6 +436,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-fax_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	echo "	<input name='fax_date' class='formfld' value='$fax_date' type='text' class='formfld'>\n";
 	echo "<br />\n";
 	echo $text['description-fax_date']."\n";
 	echo "</td>\n";
