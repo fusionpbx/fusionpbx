@@ -20,13 +20,14 @@ else {
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
 		$fax_log_uuid = check_str($_REQUEST["id"]);
+		$fax_uuid = check_str($_REQUEST["fax_uuid"]);
 	}
 	else {
 		$action = "add";
 	}
 
 //get http post variables and set them to php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		$fax_log_uuid = check_str($_POST["fax_log_uuid"]);
 		$fax_success = check_str($_POST["fax_success"]);
 		$fax_result_code = check_str($_POST["fax_result_code"]);
@@ -91,6 +92,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 		if ($_POST["persistformvar"] != "true") {
+			/*
 			if ($action == "add" && permission_exists('fax_log_add')) {
 				$sql = "insert into v_fax_logs ";
 				$sql .= "(";
@@ -150,6 +152,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 
 			} //if ($action == "add")
+			*/
 
 			if ($action == "update" && permission_exists('fax_log_edit')) {
 				$sql = "update v_fax_logs set ";
@@ -236,8 +239,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-fax_log']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='fax_logs.php'\" value='".$text['button-back']."'>";
-	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
+	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='fax_logs.php?id=$fax_uuid'\" value='".$text['button-back']."'>";
+	//echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -459,7 +462,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='fax_log_uuid' value='$fax_log_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	//echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";

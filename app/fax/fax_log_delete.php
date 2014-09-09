@@ -19,6 +19,7 @@ else {
 //get the id
 	if (count($_GET) > 0) {
 		$id = check_str($_GET["id"]);
+		$fax_uuid = check_str($_GET["fax_uuid"]);
 	}
 
 if (strlen($id)>0) {
@@ -33,7 +34,6 @@ if (strlen($id)>0) {
 
 //redirect the user
 	$_SESSION['message'] = $text['message-delete'];
-	header('Location: fax_logs.php');
-
+	header('Location: fax_logs.php?id=$fax_uuid');
 
 ?>
