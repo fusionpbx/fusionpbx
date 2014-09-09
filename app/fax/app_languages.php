@@ -258,45 +258,45 @@
 	$text['label-file']['pt-pt'] = "Ficheiro não encontrado.";
 	$text['label-file']['fr-fr'] = "Fichier non trové";
 
-	$text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> (requires LibreOffice) file.";
-	$text['description-2']['es-cl'] = "Para enviar un fax puede subir un archivo .tif o si ghost script está instalado entonces también puede enviar un fax subiendo un archivo PDF.";
-	$text['description-2']['pt-pt'] = "Para enviar um fax pode carregar um ficheiro .tif ou, se o ghost script tiver sido instalado, enviar um fax, carregando um ficheiro .pdf.";
-	$text['description-2']['fr-fr'] = "Pour envoyer un fax, vous pouvez télécharger un fichier <b>TIF</b>. Si ghost script a été installé, vous pouvez également utiliser un fichier <b>PDF</b>.";
+	$text['description-2']['en-us'] = "To send a fax, upload a <strong>PDF</strong> or <strong>TIF</strong> file.  To generate a cover sheet, enter a Subject and/or Message below.";
+	$text['description-2']['es-cl'] = "Para enviar un fax, cargar un archivo <strong>PDF</strong> o <strong>TIF</strong>.  Para generar una hoja de presentación, escriba un asunto y / o mensaje a continuación.";
+	$text['description-2']['pt-pt'] = "Pour envoyer un fax, télécharger un fichier <strong>PDF</strong> ou <strong>TIF</strong>.  Para gerar uma folha de rosto, digite um assunto e / ou mensagem abaixo.";
+	$text['description-2']['fr-fr'] = "Pour envoyer un fax, télécharger un fichier <strong>PDF</strong> ou <strong>TIF</strong>.  Pour générer une feuille de couverture, entrer un sujet et / ou un message ci-dessous.";
 
-	$text['description-3']['en-us'] = "View status of the fax transmission by viewing the logs from the Status tab or by watching the response from the console.";
-	$text['description-3']['es-cl'] = "Cuando envie un fax puede ver el estado de la transmision revisando los logs desde la pestaña Estado o viendo la respuesta desde la consola.";
-	$text['description-3']['pt-pt'] = "Ao enviar um fax pode ver o estado da transmissão, visualizando os logs da tab Estado ou visualizando a resposta através da consola.";
-	$text['description-3']['fr-fr'] = "";
+	$text['description-3']['en-us'] = "Install LibreOffice for additional file format support (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, etc).  View the status of a fax transmission on the Active Calls page, in the Log Viewer, or by watching the results in the switch console.";
+	$text['description-3']['es-cl'] = "Instalar LibreOffice de apoyo adicional de formato de archivo (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, ...). Ver el estado de una transmisión de fax en la página de llamadas activas, el Visor de registro, o por ver los resultados en la consola del switch.";
+	$text['description-3']['pt-pt'] = "Instalar LibreOffice para suporte adicional formato de arquivo (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, ...). Exibir o status de uma transmissão de fax na página de chamadas ativas, o Log Viewer, ou assistindo os resultados no console switch.";
+	$text['description-3']['fr-fr'] = "Installer LibreOffice pour un soutien supplémentaire de format de fichier (DOC, DOCX, XLS, XLSX, ODT, OTT, RTF, ...). Afficher l'état d'une transmission de télécopie sur la page Appels actifs, le Log Viewer, ou en regardant les résultats dans la console du commutateur.";
 
 	$text['label-fax-sender']['en-us'] = "From";
 	$text['label-fax-sender']['es-cl'] = "Remitente";
 	$text['label-fax-sender']['pt-pt'] = "Sender";
 	$text['label-fax-sender']['fr-fr'] = "Expéditeur";
 
-	$text['description-fax-sender']['en-us'] = "Enter the sender's name for the cover page (optional).";
-	$text['description-fax-sender']['es-cl'] = "Introduzca el nombre del remitente (opcional).";
-	$text['description-fax-sender']['pt-pt'] = "Digite o nome do remetente (opcional).";
-	$text['description-fax-sender']['fr-fr'] = "Entrez le nom de l'expéditeur (facultatif).";
+	$text['description-fax-sender']['en-us'] = "Enter the sender's name for the cover sheet (optional).";
+	$text['description-fax-sender']['es-cl'] = "Introduzca el nombre del remitente para la portada (opcional).";
+	$text['description-fax-sender']['pt-pt'] = "Digite o nome do remetente para a folha de rosto (opcional).";
+	$text['description-fax-sender']['fr-fr'] = "Entrez le nom de l'expéditeur pour la feuille de couverture (en option).";
 
-	$text['label-fax-contact-info']['en-us'] = "Contact Info";
-	$text['label-fax-contact-info']['es-cl'] = "Información de Contacto";
-	$text['label-fax-contact-info']['pt-pt'] = "Informações de Contato";
-	$text['label-fax-contact-info']['fr-fr'] = "Contacter";
+	$text['label-fax-header']['en-us'] = "Header";
+	$text['label-fax-header']['es-cl'] = "Header";
+	$text['label-fax-header']['pt-pt'] = "Cabeçalho";
+	$text['label-fax-header']['fr-fr'] = "Tête";
 
-	$text['description-fax-contact-info']['en-us'] = "Contact information to appear beneath the logo on the cover page (optional).";
-	$text['description-fax-contact-info']['es-cl'] = "La información de contacto para aparecer debajo del logotipo en la portada (opcional).";
-	$text['description-fax-contact-info']['pt-pt'] = "Informações de contato para aparecer abaixo do logotipo na página de rosto (opcional).";
-	$text['description-fax-contact-info']['fr-fr'] = "Contactez-indications à faire figurer sous le logo sur la page de couverture (en option).";
+	$text['description-fax-header']['en-us'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
+	$text['description-fax-header']['es-cl'] = "Aparece debajo del logotipo en la cabecera de la portada (opcional).";
+	$text['description-fax-header']['pt-pt'] = "Exibido abaixo do logotipo no cabeçalho da folha de rosto (opcional).";
+	$text['description-fax-header']['fr-fr'] = "Affiché sous le logo dans l'en-tête de la feuille de couverture (en option).";
 
 	$text['label-fax-recipient']['en-us'] = "To";
 	$text['label-fax-recipient']['es-cl'] = "Destinatario";
 	$text['label-fax-recipient']['pt-pt'] = "Destinatário";
 	$text['label-fax-recipient']['fr-fr'] = "Destinataire";
 
-	$text['description-fax-recipient']['en-us'] = "Enter the recipient's name for the cover page (optional).";
-	$text['description-fax-recipient']['es-cl'] = "Introduzca el nombre del destinatario (opcional).";
-	$text['description-fax-recipient']['pt-pt'] = "Digite o nome do destinatário (opcional).";
-	$text['description-fax-recipient']['fr-fr'] = "Entrez le nom du destinataire (facultatif).";
+	$text['description-fax-recipient']['en-us'] = "Enter the recipient's name for the cover sheet (optional).";
+	$text['description-fax-recipient']['es-cl'] = "Introduzca el nombre del destinatario de la portada (opcional).";
+	$text['description-fax-recipient']['pt-pt'] = "Digite o nome do destinatário para a folha de rosto (opcional).";
+	$text['description-fax-recipient']['fr-fr'] = "Entrez le nom du destinataire de la feuille de couverture (en option).";
 
 	$text['label-fax-number']['en-us'] = "Fax Number";
 	$text['label-fax-number']['es-cl'] = "Número de Fax";
@@ -313,30 +313,30 @@
 	$text['label-fax-subject']['pt-pt'] = "Assunto";
 	$text['label-fax-subject']['fr-fr'] = "Sujet";
 
-	$text['description-fax-subject']['en-us'] = "Enter a subject for the cover page (optional).";
+	$text['description-fax-subject']['en-us'] = "Enter a subject for the cover sheet (optional).";
 	$text['description-fax-subject']['es-cl'] = "Escriba un asunto para la portada (opcional).";
-	$text['description-fax-subject']['pt-pt'] = "Introduza um assunto para a capa (opcional).";
-	$text['description-fax-subject']['fr-fr'] = "Entrez un sujet pour la page de couverture (en option).";
+	$text['description-fax-subject']['pt-pt'] = "Insira um assunto para a folha de rosto (opcional).";
+	$text['description-fax-subject']['fr-fr'] = "Entrez l'objet de la feuille de couverture (en option).";
 
 	$text['label-fax-message']['en-us'] = "Message";
 	$text['label-fax-message']['es-cl'] = "Mensaje";
 	$text['label-fax-message']['pt-pt'] = "Mensagem";
 	$text['label-fax-message']['fr-fr'] = "Message";
 
-	$text['description-fax-message']['en-us'] = "Enter a message for the cover page (optional).";
+	$text['description-fax-message']['en-us'] = "Enter a message for the cover sheet (optional).";
 	$text['description-fax-message']['es-cl'] = "Escriba un mensaje para la portada (opcional).";
-	$text['description-fax-message']['pt-pt'] = "Digite uma mensagem para a página de rosto (opcional).";
-	$text['description-fax-message']['fr-fr'] = "Entrez un message pour la page de couverture (en option).";
+	$text['description-fax-message']['pt-pt'] = "Digite uma mensagem para a folha de rosto (opcional).";
+	$text['description-fax-message']['fr-fr'] = "Entrez un message pour la feuille de couverture (en option).";
 
 	$text['label-fax-footer']['en-us'] = "Footer";
 	$text['label-fax-footer']['es-cl'] = "Pie de Página";
 	$text['label-fax-footer']['pt-pt'] = "Rodapé";
 	$text['label-fax-footer']['fr-fr'] = "Footer";
 
-	$text['description-fax-confidentiality']['en-us'] = "Displayed in the footer of the cover sheet (optional).";
-	$text['description-fax-confidentiality']['es-cl'] = "Se muestra en el pie de página de la portada (opcional).";
-	$text['description-fax-confidentiality']['pt-pt'] = "Exibido no rodapé da folha de rosto (opcional).";
-	$text['description-fax-confidentiality']['fr-fr'] = "Affiché dans le bas de la feuille de couverture (en option).";
+	$text['description-fax-footer']['en-us'] = "Displayed in the footer of the cover sheet (optional).";
+	$text['description-fax-footer']['es-cl'] = "Se muestra en el pie de página de la portada (opcional).";
+	$text['description-fax-footer']['pt-pt'] = "Exibido no rodapé da folha de rosto (opcional).";
+	$text['description-fax-footer']['fr-fr'] = "Affiché dans le bas de la feuille de couverture (en option).";
 
 	$text['label-fax-resolution']['en-us'] = "Resolution";
 	$text['label-fax-resolution']['es-cl'] = "Resolución";
@@ -372,11 +372,6 @@
 	$text['description-fax-page-size']['es-cl'] = "Seleccione el tamaño de página de transmitir.";
 	$text['description-fax-page-size']['pt-pt'] = "Selecione o tamanho da página para transmitir.";
 	$text['description-fax-page-size']['fr-fr'] = "Sélectionnez le format de page pour nous transmettre.";
-
-	$text['option-fax-page-size-auto']['en-us'] = "Auto";
-	$text['option-fax-page-size-auto']['es-cl'] = "Automático";
-	$text['option-fax-page-size-auto']['pt-pt'] = "Automático";
-	$text['option-fax-page-size-auto']['fr-fr'] = "Automatique";
 
 	$text['label-fax-fax']['en-us'] = "FAX";
 	$text['label-fax-fax']['es-cl'] = "Facsímil";
