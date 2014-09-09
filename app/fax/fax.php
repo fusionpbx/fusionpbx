@@ -156,10 +156,10 @@ require_once "resources/paging.php";
 					echo "		<a href='fax_box.php?id=".$row['fax_uuid']."&box=inbox'>".$text['label-inbox']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_sent_view')) {
-					echo "		<a href='fax_box.php?id=".$row['fax_uuid']."&box=sent'>".$text['label-sent']."</a>";
+					echo "		<a href='fax_box.php?id=".$row['fax_uuid']."&box=sent'>".$text['label-sent']."</a>&nbsp;&nbsp;";
 				}
 				if (permission_exists('fax_log_view')) {
-					echo "		<a href='fax_log.php?id=".$row['fax_uuid']."'>".$text['label-log']."</a>";
+					echo "		<a href='fax_logs.php?id=".$row['fax_uuid']."'>".$text['label-log']."</a>";
 				}
 				echo "	</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
