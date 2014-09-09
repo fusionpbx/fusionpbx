@@ -405,7 +405,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_organization'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_organization' maxlength='255' value=\"$contact_organization\">\n";
+		echo "	<input class='formfld' type='text' name='contact_organization' maxlength='255' value=\"$contact_organization\">\n";
 		echo "<br />\n";
 		echo $text['description-contact_organization']."\n";
 		echo "</td>\n";
@@ -416,7 +416,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_name_given'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_name_given' maxlength='255' value=\"$contact_name_given\">\n";
+		echo "	<input class='formfld' type='text' name='contact_name_given' maxlength='255' value=\"$contact_name_given\">\n";
 		echo "<br />\n";
 		echo $text['description-contact_name_given']."\n";
 		echo "</td>\n";
@@ -427,7 +427,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_name_family'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_name_family' maxlength='255' value=\"$contact_name_family\">\n";
+		echo "	<input class='formfld' type='text' name='contact_name_family' maxlength='255' value=\"$contact_name_family\">\n";
 		echo "<br />\n";
 		echo $text['description-contact_name_family']."\n";
 		echo "</td>\n";
@@ -438,7 +438,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_nickname'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_nickname' maxlength='255' value=\"$contact_nickname\">\n";
+		echo "	<input class='formfld' type='text' name='contact_nickname' maxlength='255' value=\"$contact_nickname\">\n";
 		echo "<br />\n";
 		echo $text['description-contact_nickname']."\n";
 		echo "</td>\n";
@@ -464,7 +464,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	</select>\n";
 		}
 		else {
-			echo "	<input class='formfld' style='width:85%;' type='text' name='contact_title' maxlength='255' value=\"$contact_title\">\n";
+			echo "	<input class='formfld' type='text' name='contact_title' maxlength='255' value=\"$contact_title\">\n";
 		}
 		echo "<br />\n";
 		echo $text['description-contact_title']."\n";
@@ -491,7 +491,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	</select>\n";
 		}
 		else {
-			echo "	<input class='formfld' style='width:85%;' type='text' name='contact_category' maxlength='255' value=\"$contact_category\">\n";
+			echo "	<input class='formfld' type='text' name='contact_category' maxlength='255' value=\"$contact_category\">\n";
 		}
 		echo "<br />\n";
 		echo $text['description-contact_category']."\n";
@@ -518,7 +518,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	</select>\n";
 		}
 		else {
-			echo "	<input class='formfld' style='width:85%;' type='text' name='contact_role' maxlength='255' value=\"$contact_role\">\n";
+			echo "	<input class='formfld' type='text' name='contact_role' maxlength='255' value=\"$contact_role\">\n";
 		}
 		echo "<br />\n";
 		echo $text['description-contact_role']."\n";
@@ -530,7 +530,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_email'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_email' maxlength='255' value=\"$contact_email\">\n";
+		echo "	<input class='formfld' type='text' name='contact_email' maxlength='255' value=\"$contact_email\">\n";
 		echo "<br />\n";
 		echo $text['description-contact_email']."\n";
 		echo "</td>\n";
@@ -541,7 +541,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_url'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' style='width:85%;' type='text' name='contact_url' maxlength='255' value='$contact_url'>\n";
+		echo "  <input class='formfld' type='text' name='contact_url' maxlength='255' value='$contact_url'>\n";
 		echo "<br />\n";
 		echo $text['description-contact_url']."\n";
 		echo "</td>\n";
@@ -557,7 +557,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_time_zone'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' style='width:85%;' type='text' name='contact_time_zone' maxlength='255' value=\"$contact_time_zone\">\n";
+		echo "	<input class='formfld' type='text' name='contact_time_zone' maxlength='255' value=\"$contact_time_zone\">\n";
 		echo "<br />\n";
 		echo $text['description-contact_time_zone']."\n";
 		echo "</td>\n";
@@ -568,7 +568,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-contact_note'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' style='width:85%;' type='text' name='contact_note' maxlength='255' value='$contact_note'>\n";
+		echo "  <input class='formfld' type='text' name='contact_note' maxlength='255' value='$contact_note'>\n";
 		echo "<br />\n";
 		echo $text['description-contact_note']."\n";
 		echo "</td>\n";
