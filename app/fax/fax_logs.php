@@ -112,12 +112,7 @@ else {
 	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
 	//echo th_order_by('fax_epoch', $text['label-fax_epoch'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
-	if (permission_exists('fax_log_add')) {
-		echo "<a href='fax_log_edit.php?fax_uuid=$fax_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo "&nbsp;\n";
-	}
+	echo "&nbsp;\n";
 	echo "</td>\n";
 	echo "<tr>\n";
 
@@ -165,14 +160,7 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
-	if (permission_exists('fax_log_add')) {
-		echo 		"<a href='fax_log_edit.php?fax_uuid=$fax_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>";
-	}
-	else {
-		echo 		"&nbsp;";
-	}
-	echo "		</td>\n";
+	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
 	echo "	</tr>\n";
  	echo "	</table>\n";
 	echo "</td>\n";
