@@ -34,6 +34,6 @@ if (strlen($id)>0) {
 
 //redirect the user
 	$_SESSION['message'] = $text['message-delete'];
-	header('Location: fax_logs.php?id=$fax_uuid');
+	header('Location: fax_logs.php?id='.$fax_uuid);
 
 ?>
