@@ -124,18 +124,25 @@
 --get the values from the fax file
 	array = explode("/", fax_file);
 	domain_name = array[count(array)-3];
-	extension_name = array[count(array)-2];
+	fax_extension = array[count(array)-2];
 	file_name = array[count(array)];
 
 --get the domain_uuid using the domain name required for multi-tenant
 	if (domain_name ~= nil) then
 		sql = "SELECT domain_uuid FROM v_domains ";
 		sql = sql .. "WHERE domain_name = '" .. domain_name .. "' ";
-		if (debug["sql"]) then
-			freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-		end
 		status = dbh:query(sql, function(rows)
 			domain_uuid = rows["domain_uuid"];
+		end);
+	end
+
+--get the domain_uuid using the domain name required for multi-tenant
+	if (domain_uuid ~= nil and fax_extension ~= nil) then
+		sql = "SELECT fax_uuid FROM v_fax ";
+		sql = sql .. "WHERE domain_uuid = '" .. domain_uuid .. "' ";
+		sql = sql .. "AND fax_extension = '" .. fax_extension .. "' ";
+		status = dbh:query(sql, function(rows)
+			fax_uuid = rows["fax_uuid"];
 		end);
 	end
 
@@ -144,6 +151,9 @@
 	sql = sql .. "(";
 	sql = sql .. "fax_log_uuid, ";
 	sql = sql .. "domain_uuid, ";
+	if (fax_uuid ~= nil) then
+		sql = sql .. "fax_uuid, ";
+	end
 	sql = sql .. "fax_success, ";
 	sql = sql .. "fax_result_code, ";
 	sql = sql .. "fax_result_text, ";
@@ -185,6 +195,9 @@
 	sql = sql .. "(";
 	sql = sql .. "'"..uuid.."', ";
 	sql = sql .. "'"..domain_uuid.."', ";
+	if (fax_uuid ~= nil) then
+		sql = sql .. "'"..fax_uuid.."', ";
+	end
 	sql = sql .. "'"..fax_success.."', ";
 	sql = sql .. "'"..fax_result_code .."', ";
 	sql = sql .. "'"..fax_result_text.."', ";
