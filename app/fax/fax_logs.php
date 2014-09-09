@@ -19,6 +19,11 @@ else {
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
 
+//get the fax_uuid
+	if (count($_GET) > 0) {
+		$fax_uuid = check_str($_GET["fax_uuid"]);
+	}
+
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
@@ -45,6 +50,7 @@ else {
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_fax_logs ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and fax_uuid = '$fax_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
@@ -69,6 +75,7 @@ else {
 	//get the list
 		$sql = "select * from v_fax_logs ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and fax_uuid = '$fax_uuid' ";
 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -104,7 +111,7 @@ else {
 	//echo th_order_by('fax_epoch', $text['label-fax_epoch'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('fax_log_add')) {
-		echo "<a href='fax_log_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='fax_log_edit.php?fax_uuid=$fax_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo "&nbsp;\n";
@@ -115,7 +122,7 @@ else {
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			if (permission_exists('fax_log_edit')) {
-				$tr_link = "href='fax_log_edit.php?id=".$row['fax_log_uuid']."'";
+				$tr_link = "href='fax_log_edit.php?id=".$row['fax_log_uuid']."&fax_uuid=$fax_uuid'";
 			}
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_success']."&nbsp;</td>\n";
@@ -138,10 +145,10 @@ else {
 			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['fax_epoch']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('fax_log_edit')) {
-				echo "<a href='fax_log_edit.php?id=".$row['fax_log_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
+				echo "<a href='fax_log_edit.php?id=".$row['fax_log_uuid']."&fax_uuid=$fax_uuid' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('fax_log_delete')) {
-				echo "<a href='fax_log_delete.php?id=".$row['fax_log_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='fax_log_delete.php?id=".$row['fax_log_uuid']."&fax_uuid=$fax_uuid' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
@@ -158,7 +165,7 @@ else {
 	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	if (permission_exists('fax_log_add')) {
-		echo 		"<a href='fax_log_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo 		"<a href='fax_log_edit.php?fax_uuid=$fax_uuid' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	else {
 		echo 		"&nbsp;";

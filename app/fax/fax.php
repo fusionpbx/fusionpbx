@@ -158,6 +158,9 @@ require_once "resources/paging.php";
 				if (permission_exists('fax_sent_view')) {
 					echo "		<a href='fax_box.php?id=".$row['fax_uuid']."&box=sent'>".$text['label-sent']."</a>";
 				}
+				if (permission_exists('fax_log_view')) {
+					echo "		<a href='fax_log.php?id=".$row['fax_uuid']."'>".$text['label-log']."</a>";
+				}
 				echo "	</td>\n";
 				echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['fax_description']."&nbsp;</td>\n";
 				echo "	<td class='list_control_icons'>";
