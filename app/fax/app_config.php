@@ -20,26 +20,36 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Fax Server";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Servidor de Fax";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Servidor de Fax";
-		$apps[$x]['menu'][0]['title']['de-de'] = "Faxserver";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "Faxserver";
-		$apps[$x]['menu'][0]['title']['de-at'] = "Faxserver";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Serveur Fax";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "Serveur du fax";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Servidor de Fax";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
-		$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/fax/fax.php";
-		$apps[$x]['menu'][0]['groups'][] = "user";
-		$apps[$x]['menu'][0]['groups'][] = "admin";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
+		$y = 0;
+		$apps[$x]['menu'][$y]['title']['en-us'] = "Fax Server";
+		$apps[$x]['menu'][$y]['title']['es-cl'] = "Servidor de Fax";
+		$apps[$x]['menu'][$y]['title']['es-mx'] = "Servidor de Fax";
+		$apps[$x]['menu'][$y]['title']['de-de'] = "Faxserver";
+		$apps[$x]['menu'][$y]['title']['de-ch'] = "Faxserver";
+		$apps[$x]['menu'][$y]['title']['de-at'] = "Faxserver";
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Serveur Fax";
+		$apps[$x]['menu'][$y]['title']['fr-ca'] = "Serveur du fax";
+		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
+		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Servidor de Fax";
+		$apps[$x]['menu'][$y]['title']['pt-br'] = "";
+		$apps[$x]['menu'][$y]['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
+		$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
+		$apps[$x]['menu'][$y]['category'] = "internal";
+		$apps[$x]['menu'][$y]['path'] = "/app/fax/fax.php";
+		$apps[$x]['menu'][$y]['groups'][] = "user";
+		$apps[$x]['menu'][$y]['groups'][] = "admin";
+		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
+		$y++;
+
+		//$apps[$x]['menu'][$y]['title']['en-us'] = 'FAX Logs';
+		//$apps[$x]['menu'][$y]['uuid'] = 'f91b1476-e7e9-40f5-a181-2f3e1e5bc16b';
+		//$apps[$x]['menu'][$y]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
+		//$apps[$x]['menu'][$y]['category'] = 'internal';
+		//$apps[$x]['menu'][$y]['path'] = '/app/fax_logs/fax_logs.php';
+		//$apps[$x]['menu'][$y]['groups'][] = 'superadmin';
 
 	//permission details
+		$y = 0;
 		$apps[$x]['permissions'][$y]['name'] = "fax_extension_view";
 		$apps[$x]['permissions'][$y]['menu']['uuid'] = "9c9642e4-2b9b-2785-18d0-6c0a4ede2b2f";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
