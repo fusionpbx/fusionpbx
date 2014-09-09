@@ -436,12 +436,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-fax_date']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "	<td valign='top' align='top'><input name='fax_date' readonly class='formfld' value='$fax_date' type='text' class='formfld' onclick='popUpCalendar(this, this, \"mm/dd/yyyy\");'></td>\n";
-	echo "	<td valign='middle' align='top' width='20' align='right'><img src='/images/icon_calendar.gif' onclick='popUpCalendar(this, frm.fax_date, \"mm/dd/yyyy\");'></td>\n";
-	echo "	</tr>\n";
-	echo "	</table>\n";
 	echo "<br />\n";
 	echo $text['description-fax_date']."\n";
 	echo "</td>\n";
@@ -462,7 +456,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='fax_log_uuid' value='$fax_log_uuid'>\n";
 	}
-	//echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
