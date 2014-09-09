@@ -85,6 +85,11 @@
 	$text['description-fax_files']['pt-pt'] = "Selecione o ficheiro a carregar para enviar por fax.";
 	$text['description-fax_files']['fr-fr'] = "Choisir un fichier à télécharger pour être émis en tant que Fax.";
 
+	$text['label-selected']['en-us'] = "Selected";
+	$text['label-selected']['es-cl'] = "Seleccionado";
+	$text['label-selected']['pt-pt'] = "Selecionado";
+	$text['label-selected']['fr-fr'] = "Sélectionné";
+
 	$text['button-edit']['en-us'] = "Edit";
 	$text['button-edit']['es-cl'] = "Editar";
 	$text['button-edit']['pt-pt'] = "Editar";
