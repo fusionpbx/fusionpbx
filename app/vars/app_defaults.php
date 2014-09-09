@@ -66,21 +66,27 @@ $vars = <<<EOD
 {"var_name":"ajax_refresh_rate","var_value":"3000","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"xml_cdr_archive","var_value":"dir","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""},
-{"var_name":"transfer_ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""}
+{"var_name":"transfer_ringback","var_value":"\$\${us-ring}","var_cat":"Defaults","var_enabled":"true","var_description":""},
+{"var_name":"record_ext","var_value":"wav","var_cat":"Defaults","var_enabled":"true","var_description":""}
 ]
 EOD;
 
 //if there are no variables in the vars table then add them
 	if ($domains_processed == 1) {
-		$sql = "select count(*) as num_rows from v_vars ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		if ($prep_statement) {
-			$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] == 0) {
-				$result = json_decode($vars, true);
-				$x = 1;
-				foreach($result as $row) {
+
+		$result = json_decode($vars, true);
+		$x = 1;
+		foreach($result as $row) {
+
+			$sql = "select count(*) as num_rows from v_vars ";
+			$sql .= "where var_name = '".$row['var_name']."' ";
+			$sql .= "and var_cat = '".$row['var_cat']."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row2 = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				if ($row2['num_rows'] == 0) {
+
 					$sql = "insert into v_vars ";
 					$sql .= "(";
 					$sql .= "var_uuid, ";
@@ -104,82 +110,18 @@ EOD;
 					$db->exec($sql);
 					unset($sql);
 					$x++;
+
 				}
 			}
-			unset($prep_statement, $result);
+			unset($prep_statement, $row2);
+
 		}
+		unset($result, $row);
+
 	}
 
 //adjust the variables required variables
 	if ($domains_processed == 1) {
-		//set the ringback
-			$sql = "select count(*) as num_rows from v_vars ";
-			$sql .= "where var_name = 'ringback' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] == 0) {
-					$sql = "insert into v_vars ";
-					$sql .= "(";
-					$sql .= "var_uuid, ";
-					$sql .= "var_name, ";
-					$sql .= "var_value, ";
-					$sql .= "var_cat, ";
-					$sql .= "var_enabled, ";
-					$sql .= "var_order, ";
-					$sql .= "var_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'ringback', ";
-					$sql .= "'\$\${us-ring}', ";
-					$sql .= "'Defaults', ";
-					$sql .= "'true', ";
-					$sql .= "'333', ";
-					$sql .= "'' ";
-					$sql .= ");";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-				unset($prep_statement, $row);
-			}
-
-		//set the transfer_ringback
-			$sql = "select count(*) as num_rows from v_vars ";
-			$sql .= "where var_name = 'transfer_ringback' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				if ($row['num_rows'] == 0) {
-					$sql = "insert into v_vars ";
-					$sql .= "(";
-					$sql .= "var_uuid, ";
-					$sql .= "var_name, ";
-					$sql .= "var_value, ";
-					$sql .= "var_cat, ";
-					$sql .= "var_enabled, ";
-					$sql .= "var_order, ";
-					$sql .= "var_description ";
-					$sql .= ")";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'transfer_ringback', ";
-					$sql .= "'\$\${us-ring}', ";
-					$sql .= "'Defaults', ";
-					$sql .= "'true', ";
-					$sql .= "'334', ";
-					$sql .= "'' ";
-					$sql .= ");";
-					$db->exec(check_sql($sql));
-					unset($sql);
-				}
-				unset($prep_statement, $row);
-			}
-
 		//set variables that depend on the number of domains
 			if (count($_SESSION['domains']) > 1) {
 				//disable the domain and domain_uuid for systems with multiple domains
