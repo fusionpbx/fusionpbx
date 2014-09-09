@@ -173,14 +173,43 @@ else {
 			$fax_forward_number = preg_replace("~[^0-9]~", "",$fax_forward_number);
 		}
 
+		$fax_header = check_str($_POST['fax_header']);
 		$fax_sender = check_str($_POST['fax_sender']);
-		$fax_contact_info = check_str($_POST['fax_contact_info']);
 		$fax_recipient = check_str($_POST['fax_recipient']);
 		$fax_subject = check_str($_POST['fax_subject']);
 		$fax_message = check_str($_POST['fax_message']);
 		$fax_resolution = check_str($_POST['fax_resolution']);
 		$fax_page_size = check_str($_POST['fax_page_size']);
 		$fax_footer = check_str($_POST['fax_footer']);
+
+		//determine page size
+		switch ($fax_page_size) {
+			case 'a4' :
+				$page_width = 8.3; //in
+				$page_height = 11.7; //in
+				break;
+			case 'legal' :
+				$page_width = 8.5; //in
+				$page_height = 14; //in
+				break;
+			case 'letter' :
+			default	:
+				$page_width = 8.5; //in
+				$page_height = 11; //in
+		}
+
+		//set resolution
+		switch ($fax_resolution) {
+			case 'normal':
+				$gs_r = '204x98'; $gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 98));
+				break;
+			case 'fine':
+				$gs_r = '204x196'; $gs_g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
+				break;
+			case 'superfine':
+				$gs_r = '408x391';	$gs_g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
+				break;
+		}
 
 		// process uploaded files, if any
 		foreach ($_FILES['fax_files']['tmp_name'] as $index => $fax_tmp_name) {
@@ -192,10 +221,28 @@ else {
 
 				//get the file extension
 				$fax_file_extension = strtolower(pathinfo($_FILES['fax_files']['name'][$index], PATHINFO_EXTENSION));
-				if ($fax_file_extension == "tiff" || $fax_file_extension == "tif") { $fax_file_extension = "tif"; }
+				if ($fax_file_extension == "tiff") { $fax_file_extension = "tif"; }
 
-				//skip files other than pdf and tif (for now)
-				if ($fax_file_extension != 'pdf' && $fax_file_extension != 'tif') { continue; }
+				//block unauthorized files
+				if (
+					$fax_file_extension == 'sh' ||
+					$fax_file_extension == 'ssh' ||
+					$fax_file_extension == 'so' ||
+					$fax_file_extension == 'dll' ||
+					$fax_file_extension == 'exe' ||
+					$fax_file_extension == 'bat' ||
+					$fax_file_extension == 'vbs' ||
+					$fax_file_extension == 'zip' ||
+					$fax_file_extension == 'rar' ||
+					$fax_file_extension == 'z' ||
+					$fax_file_extension == 'tar' ||
+					$fax_file_extension == 'tbz' ||
+					$fax_file_extension == 'tgz' ||
+					$fax_file_extension == 'gz' ||
+					$fax_file_extension == ''
+					) {
+					continue;
+				}
 
 				$fax_name = $_FILES['fax_files']['name'][$index];
 				$fax_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $fax_name);
@@ -223,79 +270,40 @@ else {
 				move_uploaded_file($_FILES['fax_files']['tmp_name'][$index], $dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
 
 				//convert uploaded file to pdf, if necessary
-				if ($fax_file_extension != "pdf") {
+				if ($fax_file_extension != "pdf" && $fax_file_extension != "tif") {
 					chdir($dir_fax_temp);
-					exec("export HOME=/tmp && libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+					exec("libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
+					@unlink($dir_fax_temp.'/'.$fax_name.'.'.$fax_file_extension);
 				}
 
-				//add file to arrays
-				$uploaded_file_names[] = $fax_name.'.'.$fax_file_extension;
-				$pdf_files[] = $dir_fax_temp.'/'.$fax_name.'.pdf';
+				//convert uploaded pdf to tif
+				if (file_exists($dir_fax_temp.'/'.$fax_name.'.pdf')) {
+					chdir($dir_fax_temp);
+					exec("gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_name.".tif -- ".$fax_name.".pdf -c quit"); //convert pdf to tif
+					@unlink($dir_fax_temp.'/'.$fax_name.'.pdf');
+				}
 
+				//add file to array
+				$tif_files[] = $dir_fax_temp.'/'.$fax_name.'.tif';
 			} //if
 		} //foreach
-
-		//load pdf libraries
-		require_once("resources/tcpdf/tcpdf.php");
-		require_once("resources/fpdi/fpdi.php");
-
-		$pdf = new FPDI('P', 'in');
-		$pdf -> SetAutoPageBreak(false);
-		$pdf -> setPrintHeader(false);
-		$pdf -> setPrintFooter(false);
-		$pdf -> SetMargins(0, 0, 0, true);
-
-		//Get the bad PDF into a good (sort of) PDF, but don't have a dynamic method to obtain the correct page size first, so is a guess.
-		// 		chdir($dir_fax_temp);
-		// 		exec("gs -q -sDEVICE=tiffg3 -r204x196 -g1687x2291 -dNOPAUSE -sOutputFile=".$fax_name."_converted.tif -- ".$fax_name.".pdf -c quit");
-		// 		exec("mv ".$dir_fax_temp.'/'.$fax_name.".pdf ".$dir_fax_temp.'/'.$fax_name."_uploaded.pdf");
-		// 		exec("libreoffice --headless --convert-to pdf --outdir ".$dir_fax_temp." ".$dir_fax_temp.'/'.$fax_name.'_converted.tif');
-		// 		echo "Done";
-		// 		exit;
-
-		$page_count = 0;
-		if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
-			//determine total pages
-			foreach ($pdf_files as $pdf_file) {
-				$page_count += $pdf -> setSourceFile($pdf_file);
-			}
-		}
-
-		//determine page size
-		switch ($fax_page_size) {
-			case 'auto' :
-				if ($page_count > 0) {
-					// retrieve from uploaded file
-					$pdf -> setSourceFile($pdf_files[0]);
-					$tmpl = $pdf -> ImportPage(1);
-					$page_size = $pdf -> getTemplateSize($tmpl);
-					$page_width = round($page_size['w'], 2, PHP_ROUND_HALF_DOWN);
-					$page_height = round($page_size['h'], 2, PHP_ROUND_HALF_DOWN);
-				}
-				else {
-					$page_width = 8.5; //in
-					$page_height = 11; //in
-				}
-				break;
-			case 'a4' :
-				$page_width = 8.3; //in
-				$page_height = 11.7; //in
-				break;
-			case 'legal' :
-				$page_width = 8.5; //in
-				$page_height = 14; //in
-				break;
-			case 'letter' :
-			default	:
-				$page_width = 8.5; //in
-				$page_height = 11; //in
-		}
 
 		// unique id for this fax
 		$fax_instance_uuid = uuid();
 
 		//generate cover page, merge with pdf
 		if ($fax_subject != '' || $fax_message != '') {
+
+			//load pdf libraries
+			require_once("resources/tcpdf/tcpdf.php");
+			require_once("resources/fpdi/fpdi.php");
+
+			// initialize pdf
+			$pdf = new FPDI('P', 'in');
+			$pdf -> SetAutoPageBreak(false);
+			$pdf -> setPrintHeader(false);
+			$pdf -> setPrintFooter(false);
+			$pdf -> SetMargins(0, 0, 0, true);
 
 			//add blank page
 			$pdf -> AddPage('P', array($page_width, $page_height));
@@ -343,15 +351,15 @@ else {
 				$pdf -> Image($logo, 0.5, 0.4, 2.5, 0.9, null, null, 'N', true, 300, null, false, false, 0, true);
 			}
 			else {
-				//set position for contact info, if enabled
+				//set position for header text, if enabled
 				$pdf -> SetXY($x + 0.5, $y + 0.4);
 			}
 
-			//contact info
-			if (isset($_SESSION['fax']['cover_contact_info']['text'])) {
+			//header
+			if (isset($_SESSION['fax']['cover_header']['text'])) {
 				$pdf -> SetLeftMargin(0.5);
 				$pdf -> SetFont("times", "", 10);
-				$pdf -> Write(0.3, $fax_contact_info);
+				$pdf -> Write(0.3, $fax_header);
 			}
 
 			//fax, cover sheet
@@ -428,42 +436,41 @@ else {
 				$pdf -> MultiCell(7.5, 0.75, $fax_footer, 0, 'C', false);
 			}
 
-			// save cover pdf file and add to array of pages
-			if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
-				array_unshift($pdf_files, $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf');
-			}
-			else {
-				$pdf_files[] = $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf';
-			}
+			// save cover pdf
 			$pdf -> Output($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload
+
+			//convert pdf to tif, add to array of pages, delete pdf
+			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf')) {
+				chdir($dir_fax_temp);
+				exec("gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_instance_uuid."_cover.tif -- ".$fax_instance_uuid."_cover.pdf -c quit");
+				if (is_array($tif_files) && sizeof($tif_files) > 0) {
+					array_unshift($tif_files, $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.tif');
+				}
+				else {
+					$tif_files[] = $dir_fax_temp.'/'.$fax_instance_uuid.'_cover.tif';
+				}
+				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf');
+			}
 		}
 
-		//create new pdf object
-		unset($pdf);
-		$pdf = new FPDI('P', 'in');
-		$pdf -> SetAutoPageBreak(false);
-		$pdf -> setPrintHeader(false);
-		$pdf -> setPrintFooter(false);
-		$pdf -> SetMargins(0, 0, 0, true);
-
-		//combine pages into single pdf, delete temporary cover pdf (if exists)
-		if (is_array($pdf_files) && sizeof($pdf_files) > 0) {
-			foreach ($pdf_files as $pdf_file) {
-				$pdf_file_pages = $pdf -> setSourceFile($pdf_file);
-				for ($p = 1; $p <= $pdf_file_pages; $p++) {
-					$tmpl = $pdf -> ImportPage($p);
-					if ($fax_page_size == 'auto') {
-						//use individual page dimensions
-						$page_size = $pdf -> getTemplateSize($tmpl);
-						$page_width = round($page_size['w'], 2, PHP_ROUND_HALF_DOWN);
-						$page_height = round($page_size['h'], 2, PHP_ROUND_HALF_DOWN);
-					}
-					$pdf -> AddPage('P', array($page_width, $page_height));
-					$pdf -> useTemplate($tmpl);
-				}
+		//combine tif files into single multi-page tif
+		if (is_array($tif_files) && sizeof($tif_files) > 0) {
+			$cmd = "tiffcp -c none ";
+			foreach ($tif_files as $tif_file) {
+				$cmd .= $tif_file.' ';
 			}
-			$pdf -> Output($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf', "F");	// Display [I]nline, Save to [F]ile, [D]ownload (or a combination - eg. 'FI' or 'FD')
-			@unlink($dir_fax_temp.'/'.$fax_instance_uuid.'_cover.pdf');
+			$cmd .= $dir_fax_temp.'/'.$fax_instance_uuid.'.tif';
+			exec($cmd);
+			foreach ($tif_files as $tif_file) {
+				@unlink($tif_file);
+			}
+			//generate pdf (a work around, as tiff2pdf was improperly inverting the colors)
+			exec("tiff2pdf -u i -p ".$fax_page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif");
+			chdir($dir_fax_temp);
+			exec("gs -q -sDEVICE=tiffg3 -r".$gs_r." -g".$gs_g." -dNOPAUSE -sOutputFile=".$fax_instance_uuid."_temp.tif -- ".$fax_instance_uuid.".pdf -c quit"); //convert pdf to tif
+			@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
+			exec("tiff2pdf -u i -p ".$fax_page_size." -w ".$page_width." -l ".$page_height." -f -o ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_temp.'/'.$fax_instance_uuid."_temp.tif");
+			@unlink($dir_fax_temp.'/'.$fax_instance_uuid."_temp.tif");
 		}
 		else {
 			//nothing to send, redirect the browser
@@ -473,44 +480,34 @@ else {
 			exit;
 		}
 
-		//convert pdf to tif
-		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
-			switch ($fax_resolution) {
-				case 'normal':
-					$r = '204x98'; $g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 98));
-					break;
-				case 'fine':
-					$r = '204x196'; $g = ((int) ($page_width * 204)).'x'.((int) ($page_height * 196));
-					break;
-				case 'superfine':
-					$r = '408x391';	$g = ((int) ($page_width * 408)).'x'.((int) ($page_height * 391));
-					break;
-			}
-			chdir($dir_fax_temp);
-			exec("gs -q -sDEVICE=tiffg3 -r".$r." -g".$g." -dNOPAUSE -sOutputFile=".$fax_instance_uuid.".tif -- ".$fax_instance_uuid.".pdf -c quit");
-		}
-
 		//preview, if requested
 		if ($_REQUEST['submit'] == $text['button-preview']) {
-			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.tif')) {
-				//delete pdf and uploaded files
-				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf');
-				foreach ($uploaded_file_names as $uploaded_file_name) {
-					@unlink($dir_fax_temp.'/'.$uploaded_file_name);
-				}
+			unset($file_type);
+			if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.pdf')) {
+				$file_type = 'pdf';
+				$content_type = 'application/pdf';
+				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".tif");
+			}
+			else if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.'.tif')) {
+				$file_type = 'tif';
+				$content_type = 'image/tiff';
+				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".pdf");
+			}
+			if ($file_type != '') {
 				//push download
-				$fd = fopen($dir_fax_temp.'/'.$fax_instance_uuid.'.tif', "rb");
+				$fd = fopen($dir_fax_temp.'/'.$fax_instance_uuid.'.'.$file_type, "rb");
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
 				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
-				header('Content-Disposition: attachment; filename="'.$fax_instance_uuid.'.tif"');
-				header("Content-Type: image/tiff");
+				header('Content-Disposition: attachment; filename="'.$fax_instance_uuid.'.'.$file_type.'"');
+				header("Content-Type: ".$content_type);
 				header('Accept-Ranges: bytes');
 				header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 				header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // date in the past
-				header("Content-Length: ".filesize($dir_fax_temp.'/'.$fax_instance_uuid.'.tif'));
+				header("Content-Length: ".filesize($dir_fax_temp.'/'.$fax_instance_uuid.'.'.$file_type));
 				fpassthru($fd);
+				@unlink($dir_fax_temp.'/'.$fax_instance_uuid.".".$file_type);
 			}
 			exit;
 		}
@@ -574,26 +571,10 @@ else {
 		//wait for a few seconds
 		sleep(5);
 
-		//move the generated tif and pdf files to the sent directory
+		//move the generated tif (and pdf) files to the sent directory
 		exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".tif ".$dir_fax_sent.'/'.$fax_instance_uuid.".tif");
 		if (file_exists($dir_fax_temp.'/'.$fax_instance_uuid.".pdf")) {
 			exec("cp ".$dir_fax_temp.'/'.$fax_instance_uuid.".pdf ".$dir_fax_sent.'/'.$fax_instance_uuid.".pdf");
-		}
-
-		//copy the original uploaded file to the sent box
-		foreach ($_SESSION['fax']['save'] as $row) {
-			if ($row == "all" || $row == "original") {
-				if (is_array($uploaded_file_names) && sizeof($uploaded_file_names) > 0) {
-					foreach ($uploaded_file_names as $uploaded_file_name) {
-						exec('cp '.$dir_fax_temp.'/'.$uploaded_file_name.' '.$dir_fax_sent.'/'.$uploaded_file_name);
-					}
-				}
-			}
-		}
-
-		//delete uploaded files from temp
-		foreach ($uploaded_file_names as $uploaded_file_name) {
-			@unlink($dir_fax_temp.'/'.$uploaded_file_name);
 		}
 
 		//redirect the browser
@@ -647,11 +628,21 @@ else {
 	echo "<table width='100%' border='0' cellspacing='0' cellpadding='3'>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='left'>\n";
-	//pkg_add -r ghostscript8-nox11; rehash
-	echo "			".$text['description-2']." \n";
+	echo "			".$text['description-2']." ".((if_group('superadmin')) ? $text['description-3'] : null)." \n";
 	echo "			<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-fax-header']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input type='text' name='fax_header' class='formfld' style='' value='".$_SESSION['fax']['cover_header']['text']."'>\n";
+	echo "	<br />\n";
+	echo "	".$text['description-fax-header']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -661,17 +652,6 @@ else {
 	echo "	<input type='text' name='fax_sender' class='formfld' style='' value='".$fax_caller_id_name."'>\n";
 	echo "	<br />\n";
 	echo "	".$text['description-fax-sender']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-fax-contact-info']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input type='text' name='fax_contact_info' class='formfld' style='' value='".$_SESSION['fax']['cover_contact_info']['text']."'>\n";
-	echo "	<br />\n";
-	echo "	".$text['description-fax-contact-info']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -769,7 +749,7 @@ else {
 	echo "	</script>";
 	for ($f = 1; $f <= 3; $f++) {
 		echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
-		echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' ".(($f > 1) ? "style='margin-top: 3px;'" : null)." accept='image/tiff,application/pdf' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'><br />";
+		echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' ".(($f > 1) ? "style='margin-top: 3px;'" : null)." onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'><br />";
 		echo "	<span id='file_list_".$f."'></span>";
 		echo "	</span>\n";
 	}
@@ -798,7 +778,6 @@ else {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='fax_page_size' class='formfld'>\n";
-	echo "		<option value='auto' ".(($_SESSION['fax']['page_size']['text'] == 'auto') ? 'selected' : null).">".$text['option-fax-page-size-auto']."</option>\n";
 	echo "		<option value='letter' ".(($_SESSION['fax']['page_size']['text'] == 'letter') ? 'selected' : null).">Letter</option>\n";
 	echo "		<option value='legal' ".(($_SESSION['fax']['page_size']['text'] == 'legal') ? 'selected' : null).">Legal</option>\n";
 	echo "		<option value='a4' ".(($_SESSION['fax']['page_size']['text'] == 'a4') ? 'selected' : null).">A4</option>\n";
