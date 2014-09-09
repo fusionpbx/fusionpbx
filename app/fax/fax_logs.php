@@ -21,7 +21,7 @@ else {
 
 //get the fax_uuid
 	if (count($_GET) > 0) {
-		$fax_uuid = check_str($_GET["fax_uuid"]);
+		$fax_uuid = check_str($_GET["id"]);
 	}
 
 //additional includes
