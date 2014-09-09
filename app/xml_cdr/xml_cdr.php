@@ -56,7 +56,7 @@ else {
 //javascript function: send_cmd
 	echo "<script type=\"text/javascript\">\n";
 	echo "function send_cmd(url) {\n";
-	echo "	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari\n";
+	echo "	if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari\n";
 	echo "		xmlhttp=new XMLHttpRequest();\n";
 	echo "	}\n";
 	echo "	else {// code for IE6, IE5\n";
@@ -449,6 +449,8 @@ else {
 						else
 							echo "<img src='/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_local_connected.png' style='border: none;' title='".$text['label-local']."'>\n";
 						break;
+					default:
+						echo "&nbsp;";
 				}
 				echo "	</td>\n";
 			}
