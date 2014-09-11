@@ -115,6 +115,11 @@
 	$text['label-play']['pt-pt'] = "Tocar";
 	$text['label-play']['fr-fr'] = "Jouer";
 
+	$text['label-pause']['en-us'] = "Pause";
+	$text['label-pause']['es-cl'] = "Pausa";
+	$text['label-pause']['pt-pt'] = "Pausa";
+	$text['label-pause']['fr-fr'] = "Pause";
+
 	$text['label-download']['en-us'] = "Download";
 	$text['label-download']['es-cl'] = "Descargar";
 	$text['label-download']['pt-pt'] = "Descarregar";

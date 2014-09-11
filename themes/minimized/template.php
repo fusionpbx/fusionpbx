@@ -209,7 +209,7 @@ td {
 td.list_control_icons {
 	/* multiple icons exist (horizontally) */
 	padding: none;
-	padding-left: 3px;
+	padding-left: 2px;
 	width: 50px;
 	text-align: right;
 	vertical-align: top;
@@ -430,6 +430,16 @@ table.tr_hover tr:hover td a {
 	color: #000;
 	text-align: left;
 	padding: 5px 7px;
+}
+
+.row_style2 {
+	border-bottom: 1px solid #c5d1e5;
+	background-color: #fff;
+	color: #000;
+	text-align: left;
+	padding: 0 0 0 2px;
+	width: 42px;
+	white-space: nowrap;
 }
 
 .row_stylebg {
@@ -1076,6 +1086,31 @@ legend {
 				$("#message_container").removeClass('message_container_mood_'+mood);
 			});
 		}
+	}
+</script>
+
+<script type='text/javascript'>
+	// preload images
+	img_play = new Image();	img_play.src = "<?=$v_link_label_play?>";
+	img_pause = new Image(); img_pause.src = "<?=$v_link_label_pause?>";
+
+	var recording_audio;
+
+	function recording_play(recording_id) {
+		recording_audio = document.getElementById('recording_audio_'+recording_id)
+
+		if (recording_audio.paused) {
+			recording_audio.play();
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?=str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause)?>";
+		}
+		else {
+			recording_audio.pause();
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?=$v_link_label_play?>";
+		}
+	}
+
+	function recording_reset(recording_id) {
+		document.getElementById('recording_button_'+recording_id).innerHTML = "<?=$v_link_label_play?>";
 	}
 </script>
 
