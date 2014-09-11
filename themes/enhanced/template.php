@@ -1077,8 +1077,8 @@ legend {
 
 <script type='text/javascript'>
 	// preload images
-	img_play = new Image();	img_play.src = "<?=$v_link_label_play?>";
-	img_pause = new Image(); img_pause.src = "<?=$v_link_label_pause?>";
+	img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/enhanced/images/icon_play.png";
+	img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/enhanced/images/icon_pause.png";
 
 	var recording_audio;
 
