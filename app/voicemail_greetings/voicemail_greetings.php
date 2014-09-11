@@ -291,13 +291,16 @@ else {
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+	$row_style["2"] = "row_style2";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th>".$text['table-choose']."</th>\n";
 	echo th_order_by('greeting_name', $text['table-name'], $order_by, $order);
-	echo "<th align='right'>".$text['label-tools']."</th>\n";
-	echo "<th width=\"50px\" class=\"listhdr\" nowrap=\"nowrap\">".$text['table-size']."</th>\n";
+	if (permission_exists('voicemail_greeting_download')) {
+		echo "<th>".$text['label-tools']."</th>\n";
+	}
+	echo "<th class=\"listhdr\" style='text-align: right;' nowrap=\"nowrap\">".$text['table-size']."</th>\n";
 	echo th_order_by('greeting_description', $text['table-description'], $order_by, $order);
 	echo "<td align='right' width='21'>\n";
 	//if (permission_exists('voicemail_greeting_add')) {
@@ -321,18 +324,28 @@ else {
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_name']."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-
 			if (permission_exists('voicemail_greeting_download')) {
-				echo "	<a href=\"voicemail_greetings.php?id=$voicemail_id&a=download&type=rec&t=bin&filename=".base64_encode($row['greeting_name'])."\">".$text['table-download']."</a>";
+				if (strlen($row['greeting_name']) > 0) {
+					echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+					$recording_file_path = $row['greeting_name'];
+					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
+					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+					switch ($recording_file_ext) {
+						case "wav" : $recording_type = "audio/wav"; break;
+						case "mp3" : $recording_type = "audio/mpeg"; break;
+						case "ogg" : $recording_type = "audio/ogg"; break;
+					}
+					echo "<audio id='recording_audio_".$row['voicemail_greeting_uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['voicemail_greeting_uuid']."');\" src=\"voicemail_greetings.php?id=".$voicemail_id."&a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+					echo "<span id='recording_button_".$row['voicemail_greeting_uuid']."' onclick=\"recording_play('".$row['voicemail_greeting_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+					echo "<a href=\"voicemail_greetings.php?id=".$voicemail_id."&a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+				}
+				else {
+					echo "	<td valign='top' class='".$row_style[$c]."'>";
+					echo "&nbsp;";
+				}
+				echo "	</td>\n";
 			}
-				//echo "&nbsp;\n";
-				//echo "<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_greeting_play.php?id=$voicemail_id&a=download&type=rec&filename=".base64_encode($row['greeting_name'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
-				//echo "play";
-				//echo "</a>";
-
-			echo "	</td>\n";
-			echo "	<td class='".$row_style[$c]."' nowrap>".$tmp_filesize."</td>\n";
+			echo "	<td class='".$row_style[$c]."' style='text-align: right;' nowrap>".$tmp_filesize."</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['greeting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>\n";
 			if (permission_exists('voicemail_greeting_edit')) {

@@ -56,6 +56,21 @@
 	$text['label-tools']['pt-pt'] = "Ferramentas";
 	$text['label-tools']['fr-fr'] = "Outils";
 
+	$text['label-download']['en-us'] = "Download";
+	$text['label-download']['es-cl'] = "Descargar";
+	$text['label-download']['pt-pt'] = "Descarregar";
+	$text['label-download']['fr-fr'] = "Télécharger";
+
+	$text['label-play']['en-us'] = "Play";
+	$text['label-play']['es-cl'] = "Reproducir";
+	$text['label-play']['pt-pt'] = "Tocar";
+	$text['label-play']['fr-fr'] = "Jouer";
+
+	$text['label-pause']['en-us'] = "Pause";
+	$text['label-pause']['es-cl'] = "Pausa";
+	$text['label-pause']['pt-pt'] = "Pausa";
+	$text['label-pause']['fr-fr'] = "Pause";
+
 	//voicemail_greeting_edit
 	$text['confirm-name']['en-us'] = "Please provide: Greeting Name (play)";
 	$text['confirm-name']['es-cl'] = "Por favor indique: Nombre de Bienvenida (reproducir)";

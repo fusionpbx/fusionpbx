@@ -345,7 +345,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 							$row_uuid = uuid();
 							echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
 							$recording_file_path = $file;
-							$recording_file_name = strtolower(pathinfo($row['recording_filename'], PATHINFO_BASENAME));
+							$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
 							$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
 							switch ($recording_file_ext) {
 								case "wav" : $recording_type = "audio/wav"; break;
