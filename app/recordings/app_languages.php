@@ -91,6 +91,11 @@
 	$text['label-play']['pt-pt'] = "Tocar";
 	$text['label-play']['fr-fr'] = "Jouer";
 
+	$text['label-pause']['en-us'] = "Pause";
+	$text['label-pause']['es-cl'] = "Pausa";
+	$text['label-pause']['pt-pt'] = "Pausa";
+	$text['label-pause']['fr-fr'] = "Pause";
+
 	$text['label-description']['en-us'] = "Size";
 	$text['label-description']['es-cl'] = "Descripción";
 	$text['label-description']['pt-pt'] = "Descrição";
