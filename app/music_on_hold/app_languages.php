@@ -107,6 +107,11 @@
 	$text['label-play']['pt-pt'] = "Tocar";
 	$text['label-play']['fr-fr'] = "Jouer";
 
+	$text['label-pause']['en-us'] = "Pause";
+	$text['label-pause']['es-cl'] = "Pausa";
+	$text['label-pause']['pt-pt'] = "Pausa";
+	$text['label-pause']['fr-fr'] = "Pause";
+
 	$text['label-uploaded']['en-us'] = "Uploaded";
 	$text['label-uploaded']['es-cl'] = "Subir";
 	$text['label-uploaded']['pt-pt'] = "Carregado";
