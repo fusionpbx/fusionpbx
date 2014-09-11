@@ -121,15 +121,20 @@
 		$text['label-message_size']['pt-pt'] = "Tamanho";
 		$text['label-message_size']['fr-fr'] = "Taille";
 
+		$text['label-download']['en-us'] = "Download";
+		$text['label-download']['es-cl'] = "Descargar";
+		$text['label-download']['pt-pt'] = "Descarregar";
+		$text['label-download']['fr-fr'] = "Télécharger";
+
 		$text['label-play']['en-us'] = "Play";
 		$text['label-play']['es-cl'] = "Reproducir";
 		$text['label-play']['pt-pt'] = "Tocar";
 		$text['label-play']['fr-fr'] = "Jouer";
 
-		$text['label-download']['en-us'] = "Download";
-		$text['label-download']['es-cl'] = "Descargar";
-		$text['label-download']['pt-pt'] = "Descarregar";
-		$text['label-download']['fr-fr'] = "Télécharger";
+		$text['label-pause']['en-us'] = "Pause";
+		$text['label-pause']['es-cl'] = "Pausa";
+		$text['label-pause']['pt-pt'] = "Pausa";
+		$text['label-pause']['fr-fr'] = "Pause";
 
 		$text['label-view']['en-us'] = "View";
 		$text['label-view']['es-cl'] = "Ver";

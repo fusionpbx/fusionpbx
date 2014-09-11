@@ -124,7 +124,7 @@
 				$sql .= "and (";
 				$x = 0;
 				foreach($this->voicemail_id as $row) {
-					if ($x > 0) { 
+					if ($x > 0) {
 						$sql .= "or ";
 					}
 					$sql .= "v.voicemail_id = '".$row['voicemail_id']."' ";
@@ -283,16 +283,16 @@
 						header("Content-Description: File Transfer");
 						$file_ext = substr($file_path, -3);
 						if ($file_ext == "wav") {
-							header('Content-Disposition: attachment; filename="voicemail.wav"');
+							header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.wav"');
 						}
 						if ($file_ext == "mp3") {
-							header('Content-Disposition: attachment; filename="voicemail.mp3"');
+							header('Content-Disposition: attachment; filename="msg_'.$this->voicemail_message_uuid.'.mp3"');
 						}
 					}
 					else {
 						$file_ext = substr($file_path, -3);
 						if ($file_ext == "wav") {
-							header("Content-Type: audio/x-wav");
+							header("Content-Type: audio/wav");
 						}
 						if ($file_ext == "mp3") {
 							header("Content-Type: audio/mp3");

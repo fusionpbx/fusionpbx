@@ -103,6 +103,7 @@ else {
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+	$row_style["2"] = "row_style2";
 
 	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -113,9 +114,9 @@ else {
 	//$table_header .= th_order_by('read_epoch', $text['label-read_epoch'], $order_by, $order);
 	$table_header .= th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
 	$table_header .= th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
-	$table_header .= th_order_by('message_length', $text['label-message_length'], $order_by, $order);
-	$table_header .= "<th>".$text['label-message_size']."</th>\n";
 	$table_header .= "<th>".$text['label-tools']."</th>\n";
+	$table_header .= th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "style='text-align: right;'");
+	$table_header .= "<th style='text-align: right;'>".$text['label-message_size']."</th>\n";
 	//$table_header .= th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
 	$table_header .= "<td align='right' width='21'>\n";
 	$table_header .= "	&nbsp;\n";
@@ -146,25 +147,29 @@ else {
 			}
 
 			foreach($field['messages'] as &$row) {
-				if ($row['message_status'] == '') { $style = "style=\"font-weight:bold;\""; } else { $style = ''; }
-				echo "<td valign='top' class='".$row_style[$c]."' $style nowrap=\"nowrap\">";
+				if ($row['message_status'] == '') { $style = "font-weight: bold;"; } else { $style = ''; }
+				echo "<td valign='top' class='".$row_style[$c]."' style=\"".$style."\" nowrap=\"nowrap\">";
 				echo "	".$row['created_date'];
 				echo "</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_name']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['caller_id_number']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_length_label']."&nbsp;</td>\n";
-				//echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['message_status']."&nbsp;</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."' $style>".$row['file_size_label']."</td>\n";
-				echo "	<td valign='top' class='".$row_style[$c]."' $style>\n";
-				//echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('voicemail_msgs_play.php?action=download&type=vm&uuid=".$row['voicemail_message_uuid']."&id=".$row['voicemail_id']."&ext=".$row['file_ext']."&desc=".urlencode($row['cid_name']." ".$row['cid_number'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">\n";
-				//echo "			".$text['label-play']."\n";
-				//echo "		</a>\n";
-				echo "		&nbsp;&nbsp;\n";
-				echo "		<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\">\n";
-				echo "			".$text['label-download']."\n";
-				echo "		</a>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_name']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_number']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+					$recording_file_path = $file;
+					$recording_file_name = strtolower(pathinfo($recording_file_path, PATHINFO_BASENAME));
+					$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+					switch ($recording_file_ext) {
+						case "wav" : $recording_type = "audio/wav"; break;
+						case "mp3" : $recording_type = "audio/mpeg"; break;
+						case "ogg" : $recording_type = "audio/ogg"; break;
+					}
+					echo "<audio id='recording_audio_".$row['voicemail_message_uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['voicemail_message_uuid']."');\" src=\"voicemail_messages.php?action=download&type=vm&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" type='".$recording_type."'></audio>";
+					echo "<span id='recording_button_".$row['voicemail_message_uuid']."' onclick=\"recording_play('".$row['voicemail_message_uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+					echo "<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 				echo "	</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['message_length_label']."&nbsp;</td>\n";
+				//echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['message_status']."&nbsp;</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['file_size_label']."</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
 				echo "	<td class='list_control_icon'>\n";
 				if (permission_exists('voicemail_message_delete')) {
