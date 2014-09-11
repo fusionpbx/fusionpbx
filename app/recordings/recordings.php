@@ -149,13 +149,6 @@ require_once "resources/check_auth.php";
 	require_once "resources/header.php";
 
 //begin the content
-	echo "<script>\n";
-	echo "function EvalSound(soundobj) {\n";
-	echo "  var thissound= eval(\"document.\"+soundobj);\n";
-	echo "  thissound.Play();\n";
-	echo "}\n";
-	echo "</script>";
-
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 	echo "<tr class='border'>\n";
@@ -220,13 +213,14 @@ require_once "resources/check_auth.php";
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
+	$row_style["2"] = "row_style2";
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('recording_name', $text['label-recording_name'], $order_by, $order);
 	echo th_order_by('recording_filename', $text['label-file_name'], $order_by, $order);
 	echo "<th class=\"listhdr\" nowrap>".$text['label-tools']."</th>\n";
-	echo "<th class=\"listhdr\" nowrap>".$text['label-file-size']."</th>\n";
+	echo "<th class=\"listhdr\" style='text-align: center;' nowrap>".$text['label-file-size']."</th>\n";
 	echo th_order_by('recording_description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
@@ -246,13 +240,26 @@ require_once "resources/check_auth.php";
 			echo $row['recording_filename'];
 			echo "	  </a>";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
-			echo "		<a href=\"javascript:void(0);\" onclick=\"window.open('recording_play.php?a=download&type=rec&filename=".base64_encode($row['recording_filename'])."', 'play',' width=420,height=40,menubar=no,status=no,toolbar=no')\">".$text['label-play']."</a>&nbsp;&nbsp;&nbsp;";
-			echo "		<a href=\"recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($row['recording_filename'])."\">".$text['label-download']."</a>";
+			if (strlen($row['recording_filename']) > 0) {
+				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+				$recording_file_path = $row['recording_filename'];
+				$recording_file_name = strtolower(pathinfo($row['recording_filename'], PATHINFO_BASENAME));
+				$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+				switch ($recording_file_ext) {
+					case "wav" : $recording_type = "audio/wav"; break;
+					case "mp3" : $recording_type = "audio/mpeg"; break;
+					case "ogg" : $recording_type = "audio/ogg"; break;
+				}
+				echo "<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+				echo "<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+				echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+			}
+			else {
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				echo "&nbsp;";
+			}
 			echo "	</td>\n";
-			echo "	<td class='".$row_style[$c]."'>\n";
-			echo "	".$tmp_filesize;
-			echo "	</td>\n";
+			echo "	<td class='".$row_style[$c]."' style='text-align: center;'>".$tmp_filesize."</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='30%'>".$row['recording_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('recording_edit')) {
