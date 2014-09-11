@@ -341,29 +341,24 @@ else {
 
 	echo "<tr>\n";
 	echo "<th>&nbsp;</th>\n";
-	//echo th_order_by('direction', 'Direction', $order_by, $order);
-	//echo th_order_by('default_language', 'Language', $order_by, $order);
-	//echo th_order_by('context', 'Context', $order_by, $order);
-	//echo th_order_by('leg', 'Leg', $order_by, $order);
 	echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order);
 	echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order);
 	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order);
-	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order);
-	echo th_order_by('tta', 'TTA', $order_by, $order);
-	//echo th_order_by('end_stamp', 'End', $order_by, $order);
-	echo th_order_by('duration', $text['label-duration'], $order_by, $order);
+	echo "<th>".$text['label-tools']."</th>\n";
+	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: right;'");
+	echo th_order_by('tta', 'TTA', $order_by, $order, null, "style='text-align: right;'");
+	echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'");
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		// billing collumns
 		echo "<th>".$text['label-price']."</th>\n";
 	}
 	if (permission_exists('xml_cdr_pdd')) {
-		echo th_order_by('pdd_ms', 'PDD', $order_by, $order);
+		echo th_order_by('pdd_ms', 'PDD', $order_by, $order, null, "style='text-align: right;'");
 	}
 	if (permission_exists('xml_cdr_mos')) {
-		echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order);
+		echo th_order_by('rtp_audio_in_mos', 'MOS', $order_by, $order, null, "style='text-align: center;'");
 	}
 	echo th_order_by('hangup_cause', $text['label-status'], $order_by, $order);
-	echo "<th>".$text['label-tools']."</th>\n";
 	if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
 		echo "<td class='list_control_icon'>&nbsp;</td>\n";
 	}
@@ -389,6 +384,9 @@ else {
 			$hangup_cause = str_replace("_", " ", $hangup_cause);
 			$hangup_cause = strtolower($hangup_cause);
 			$hangup_cause = ucwords($hangup_cause);
+
+			//If they cancelled, show the ring time, not the bill time.
+			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
 
 			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			$tmp_name = '';
@@ -457,9 +455,6 @@ else {
 			else {
 				echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
 			}
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['default_language']."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['context']."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['leg']."</td>\n";
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			echo 	$row['caller_id_name'].' ';
@@ -486,15 +481,32 @@ else {
 			}
 			echo "		</a>\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$tmp_start_epoch."</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['end_stamp']."</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
+			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name) && $seconds > 0) {
+				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
+				$recording_file_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name;
+				$recording_file_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
+				$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
+				switch ($recording_file_ext) {
+					case "wav" : $recording_type = "audio/wav"; break;
+					case "mp3" : $recording_type = "audio/mpeg"; break;
+					case "ogg" : $recording_type = "audio/ogg"; break;
+				}
+				echo "<audio id='recording_audio_".$row['uuid']."' style='display: none;' preload='none' onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+				echo "<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
+				echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+			}
+			else {
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				echo "&nbsp;";
+			}
+			echo "	</td>\n";
 
-			//If they cancelled, show the ring time, not the bill time.
-			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".$tmp_start_epoch."</td>\n";
 
-			echo "	<td valign='top' class='".$row_style[$c]."'>".gmdate("G:i:s", $seconds)."</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($row['tta'] > 0) ? $row['tta']."s" : "&nbsp;")."</td>\n";
+
+			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".gmdate("G:i:s", $seconds)."</td>\n";
 
 			if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 
@@ -522,10 +534,10 @@ else {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($price,6)." $billing_currency</td>\n";
 			}
 			if (permission_exists("xml_cdr_pdd")) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".number_format($row['pdd_ms']/1000,2)."s</td>\n";
 			}
 			if (permission_exists("xml_cdr_mos")) {
-				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null).">".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."' ".((strlen($row['rtp_audio_in_mos']) > 0) ? "title='".($row['rtp_audio_in_mos'] / 5 * 100)."%'" : null)." style='text-align: center;'>".((strlen($row['rtp_audio_in_mos']) > 0) ? $row['rtp_audio_in_mos'] : "&nbsp;")."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -533,25 +545,6 @@ else {
 			}
 			else {
 				echo $hangup_cause;
-			}
-			echo "	</td>\n";
-			if (strlen($tmp_name) > 0 && file_exists($_SESSION['switch']['recordings']['dir'].'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name)) {
-				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
-				$recording_file_path = '/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day.'/'.$tmp_name;
-				$recording_file_name = strtolower(pathinfo($tmp_name, PATHINFO_BASENAME));
-				$recording_file_ext = pathinfo($recording_file_name, PATHINFO_EXTENSION);
-				switch ($recording_file_ext) {
-					case "wav" : $recording_type = "audio/wave"; break;
-					case "mp3" : $recording_type = "audio/mpeg"; break;
-					case "ogg" : $recording_type = "audio/ogg"; break;
-				}
-				echo "<audio id='recording_audio_".$row['uuid']."' style='display: none;' controls='controls' onended=\"recording_reset('".$row['uuid']."');\" src=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&filename=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
-				echo "<span id='recording_button_".$row['uuid']."' onclick=\"recording_play('".$row['uuid']."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-				echo "<a href=\"".PROJECT_PATH."/app/recordings/recordings.php?a=download&type=rec&t=bin&filename=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
-			}
-			else {
-				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
-				echo "&nbsp;";
 			}
 			echo "	</td>\n";
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {

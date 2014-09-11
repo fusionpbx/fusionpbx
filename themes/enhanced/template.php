@@ -436,8 +436,8 @@ table.tr_hover tr:hover td a {
 	border-bottom: 1px solid #c5d1e5;
 	background-color: #fff;
 	color: #000;
-	text-align: left;
-	padding: 0 0 0 2px;
+	text-align: center;
+	padding: 0 1px 0 1px;
 	width: 42px;
 	white-space: nowrap;
 }
