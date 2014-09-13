@@ -127,8 +127,9 @@ include "root.php";
 						}
 					}
 				//copy resources/templates/conf to the freeswitch conf dir
-					if (file_exists('/usr/share/fusionpbx/resources/templates/conf')){
-						$src_dir = "/usr/share/fusionpbx/resources/templates/conf";
+				// added /examples/ into the string
+					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')){
+						$src_dir = "/usr/share/examples/fusionpbx/resources/templates/conf";
 					}
 					else {
 						
@@ -141,11 +142,11 @@ include "root.php";
 					//print_r($install->result);
 			}
 		}
-
+		// added /examples/ into the string
 		function copy_scripts() {
 			if (file_exists($this->switch_scripts_dir)) {
-				if (file_exists('/usr/share/fusionpbx/resources/install/scripts')){
-					$src_dir = '/usr/share/fusionpbx/resources/install/scripts';
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/scripts')){
+					$src_dir = '/usr/share/examples/fusionpbx/resources/install/scripts';
 				}
 				else {
 					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/scripts';
@@ -158,11 +159,18 @@ include "root.php";
 				chmod($dst_dir, 0774);
 			}
 		}
-
+		
 		function copy_sounds() {
 			if (file_exists($this->switch_sounds_dir)) {
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/';
-				$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/';
+					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sounds/en/us/callie/custom/')){
+					$src_dir = '/usr/share/fusionpbx/resources/install/sounds/en/us/callie/custom/';
+					// changes the output dir for testing
+					$dst_dir = $this->switch_sounds_dir.'/en/us/fusionpbx/custom/';
+				}
+				else {
+					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/';
+					$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/';
+				}
 				$this->recursive_copy($src_dir, $dst_dir, "-n");
 				if (is_readable($this->switch_sounds_dir)) {
 					$this->recursive_copy($src_dir, $dst_dir);

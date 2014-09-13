@@ -163,17 +163,21 @@ require_once "resources/functions.php";
 				if (file_exists('/usr/bin')) {
 					$switch_bin_dir = '/usr/bin'; //freeswitch bin directory
 				}
-				if (file_exists('/etc/fusionpbx/conf')) {
-					$switch_conf_dir = '/etc/fusionpbx/conf';
+				 //new
+				if (file_exists('/etc/fusionpbx/switch/conf')) {
+					$switch_conf_dir = '/etc/fusionpbx/switch/conf';
 					$switch_extensions_dir = $switch_conf_dir.'/directory';
 					$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
 				}
+				//old
+				else {
 				if (file_exists('/etc/freeswitch/vars.xml')) {
 					$switch_conf_dir = '/etc/freeswitch';
 					$switch_extensions_dir = $switch_conf_dir.'/directory';
 					$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
+					}
 				}
 				if (file_exists('/var/lib/freeswitch/db')) {
 					$switch_db_dir = '/var/lib/freeswitch/db';
@@ -184,21 +188,47 @@ require_once "resources/functions.php";
 				if (file_exists('/usr/lib/freeswitch/mod')) {
 					$switch_mod_dir = '/usr/lib/freeswitch/mod';
 				}
-				if (file_exists('/usr/share/freeswitch/scripts')) {
-					$switch_scripts_dir = '/usr/share/freeswitch/scripts';
-				}
+				//new
 				if (file_exists('/var/lib/fusionpbx/scripts')) {
 					$switch_scripts_dir = '/var/lib/fusionpbx/scripts';
 				}
+				//old
+				else {
+				if (file_exists('/usr/share/freeswitch/scripts')) {
+					$switch_scripts_dir = '/usr/share/freeswitch/scripts';
+					}
+				}	
+				//new
 				if (file_exists('/usr/share/freeswitch/grammar')) {
 					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
 				}
+				//old
+				else {								
+				if (file_exists('/usr/share/freeswitch/grammar')) {
+					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
+					}
+				}
+				//new
+				if (file_exists('/var/lib/fusionpbx/storage')) {
+					$switch_storage_dir = '/var/lib/fusionpbx/storage';
+					$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
+				}				
+				else {
+				//old
 				if (file_exists('/var/lib/freeswitch/storage')) {
 					$switch_storage_dir = '/var/lib/freeswitch/storage';
 					$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
+					}
 				}
+				//new
+				if (file_exists('/var/lib/fusionpbx/recordings')) {
+					$switch_recordings_dir = '/var/lib/fusionpbx/recordings';
+				}				
+				else {
+				//old
 				if (file_exists('/var/lib/freeswitch/recordings')) {
 					$switch_recordings_dir = '/var/lib/freeswitch/recordings';
+					}
 				}
 				if (file_exists('/usr/share/freeswitch/sounds')) {
 					$switch_sounds_dir = '/usr/share/freeswitch/sounds';
@@ -211,22 +241,21 @@ require_once "resources/functions.php";
 						//set the default db_path
 							if (strlen($db_path) == 0) {
 								$db_path = '/var/db/fusionpbx';
-								if (!is_readable($db_path)) { mkdir($db_path,0777,true); }
+								if (!is_readable($db_path)) { mkdir($db_path,0774,true); }
 							}
 						//set the other default directories
 							$switch_bin_dir = '/usr/local/bin'; //freeswitch bin directory
-							$switch_conf_dir = '/usr/local/etc/freeswitch/conf';
+							$switch_conf_dir = '/usr/local/etc/freeswitch';
 							$switch_db_dir = '/var/db/freeswitch';
 							$switch_log_dir = '/var/log/freeswitch';
 							$switch_mod_dir = '/usr/local/lib/freeswitch/mod';
 							$switch_extensions_dir = $switch_conf_dir.'/directory';
 							$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 							$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
-							$switch_scripts_dir = '/usr/local/etc/freeswitch/scripts';
-							$switch_grammar_dir = '/usr/local/etc/freeswitch/grammar';
-							$switch_storage_dir = '/var/freeswitch';
-							$switch_voicemail_dir = '/var/spool/freeswitch/voicemail';
-							$switch_recordings_dir = '/var/freeswitch/recordings';
+							$switch_scripts_dir = '/var/cache/freeswitch/scripts';
+							$switch_grammar_dir = '/usr/local/share/freeswitch/grammar';
+							$switch_storage_dir = '/var/cache/freeswitch/storage';
+							$switch_recordings_dir = '/var/cache/freeswitch/recordings';
 							$switch_sounds_dir = '/usr/local/share/freeswitch/sounds';
 				}
 				elseif (file_exists('/data/freeswitch')) {
