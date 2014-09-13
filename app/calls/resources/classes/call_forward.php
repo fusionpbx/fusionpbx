@@ -90,9 +90,16 @@ include "root.php";
 
 			//update the extension
 				$sql = "update v_extensions set ";
-				$sql .= "forward_all_destination = '$this->forward_all_destination', ";
-				$sql .= "dial_string = '".$this->dial_string."', ";
-				$sql .= "forward_all_enabled = '$this->forward_all_enabled' ";
+				if (strlen($this->forward_all_destination) == 0 || $this->forward_all_enabled == "false") {
+					$sql .= "forward_all_destination = null, ";
+					$sql .= "dial_string = null, ";
+					$sql .= "forward_all_enabled = false ";
+				}
+				else {
+					$sql .= "forward_all_destination = '$this->forward_all_destination', ";
+					$sql .= "dial_string = '".$this->dial_string."', ";
+					$sql .= "forward_all_enabled = 'true' ";
+				}
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and extension_uuid = '$this->extension_uuid' ";
 				if ($this->debug) {
