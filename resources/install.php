@@ -171,13 +171,11 @@ require_once "resources/functions.php";
 					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
 				}
 				//old
-				else {
-				if (file_exists('/etc/freeswitch/vars.xml')) {
+				elseif (file_exists('/etc/freeswitch/vars.xml')) {
 					$switch_conf_dir = '/etc/freeswitch';
 					$switch_extensions_dir = $switch_conf_dir.'/directory';
 					$switch_sip_profiles_dir = $switch_conf_dir.'/sip_profiles';
 					$switch_dialplan_dir = $switch_conf_dir.'/dialplan';
-					}
 				}
 				if (file_exists('/var/lib/freeswitch/db')) {
 					$switch_db_dir = '/var/lib/freeswitch/db';
@@ -193,40 +191,33 @@ require_once "resources/functions.php";
 					$switch_scripts_dir = '/var/lib/fusionpbx/scripts';
 				}
 				//old
-				else {
-				if (file_exists('/usr/share/freeswitch/scripts')) {
+				elseif (file_exists('/usr/share/freeswitch/scripts')) {
 					$switch_scripts_dir = '/usr/share/freeswitch/scripts';
-					}
 				}	
 				//new
 				if (file_exists('/usr/share/freeswitch/grammar')) {
 					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
 				}
 				//old
-				else {								
-				if (file_exists('/usr/share/freeswitch/grammar')) {
+				else (file_exists('/usr/share/freeswitch/grammar')) {
 					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
-					}
 				}
 				//new
 				if (file_exists('/var/lib/fusionpbx/storage')) {
 					$switch_storage_dir = '/var/lib/fusionpbx/storage';
 					$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
 				}				
-				else {
 				//old
-				if (file_exists('/var/lib/freeswitch/storage')) {
+				elseif (file_exists('/var/lib/freeswitch/storage')) {
 					$switch_storage_dir = '/var/lib/freeswitch/storage';
 					$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
-					}
 				}
 				//new
 				if (file_exists('/var/lib/fusionpbx/recordings')) {
 					$switch_recordings_dir = '/var/lib/fusionpbx/recordings';
-				}				
-				else {
-				//old
-				if (file_exists('/var/lib/freeswitch/recordings')) {
+				}
+				//old				
+				elseif (file_exists('/var/lib/freeswitch/recordings')) {
 					$switch_recordings_dir = '/var/lib/freeswitch/recordings';
 					}
 				}
