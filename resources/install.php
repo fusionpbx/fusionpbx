@@ -199,7 +199,7 @@ require_once "resources/functions.php";
 					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
 				}
 				//old
-				else (file_exists('/usr/share/freeswitch/grammar')) {
+				elseif (file_exists('/usr/share/freeswitch/grammar')) {
 					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
 				}
 				//new
@@ -219,7 +219,6 @@ require_once "resources/functions.php";
 				//old				
 				elseif (file_exists('/var/lib/freeswitch/recordings')) {
 					$switch_recordings_dir = '/var/lib/freeswitch/recordings';
-					}
 				}
 				if (file_exists('/usr/share/freeswitch/sounds')) {
 					$switch_sounds_dir = '/usr/share/freeswitch/sounds';
