@@ -241,6 +241,8 @@
 							$xml .= "    <params>\n";
 							$xml .= "      <param name=\"a1-hash\" value=\"" . $a1_hash . "\"/>\n";
 							//$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+							$xml .= "      <param name=\"reverse-auth-user\" value=\"" . $row['extension'] . "\"/>\n";
+							$xml .= "      <param name=\"reverse-auth-pass\" value=\"" . $row['password'] . "\"/>\n";
 
 							//voicemail settings
 							$xml .= "      <param name=\"vm-a1-hash\" value=\"" . $vm_a1_hash. "\"/>\n";
