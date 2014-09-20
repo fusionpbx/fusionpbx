@@ -36,7 +36,7 @@ if (count($_SESSION['email']) == 0 && $domains_processed == 1) {
 		}
 
 	//check the row count
-		if (count($row) == 0) {
+		if (strlen($row['event_socket_ip_address']) == 0) {
 			//add default settings
 			$event_socket_ip_address = "127.0.0.1";
 			$event_socket_port = "8021";
