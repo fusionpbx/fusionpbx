@@ -5,6 +5,7 @@
 		</condition>
 		<condition field="${user_exists}" expression="^true$" break="">
 			<action application="set" data="extension_uuid=${user_data ${destination_number}@${domain_name} var extension_uuid}"/>
+			<action application="set" data="hold_music=${user_data ${destination_number}@${domain_name} var hold_music}"/>
 		</condition>
 	</extension>
 </context>
