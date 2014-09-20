@@ -170,12 +170,14 @@
 									//no menu item groups found add the defaults
 									$sql = "insert into v_menu_item_groups ";
 									$sql .= "(";
+									$sql .= "menu_item_group_uuid, ";
 									$sql .= "menu_uuid, ";
 									$sql .= "menu_item_uuid, ";
 									$sql .= "group_name ";
 									$sql .= ")";
 									$sql .= "values ";
 									$sql .= "(";
+									$sql .= "'".uuid()."', ";
 									$sql .= "'".$this->menu_uuid."', ";
 									$sql .= "'".$sub_row['uuid']."', ";
 									$sql .= "'".$group."' ";
@@ -360,12 +362,14 @@
 									//no menu item groups found add the defaults
 									$sql = "insert into v_menu_item_groups ";
 									$sql .= "(";
+									$sql .= "menu_item_group_uuid, ";
 									$sql .= "menu_uuid, ";
 									$sql .= "menu_item_uuid, ";
 									$sql .= "group_name ";
 									$sql .= ")";
 									$sql .= "values ";
 									$sql .= "(";
+									$sql .= "'".uuid()."', ";
 									$sql .= "'".$this->menu_uuid."', ";
 									$sql .= "'".$sub_row['uuid']."', ";
 									$sql .= "'".$group."' ";
