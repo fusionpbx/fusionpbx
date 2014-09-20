@@ -324,6 +324,11 @@
 	$text['label-start']['pt-pt'] = "Começo";
 	$text['label-start']['fr-fr'] = "Démarrer";
 
+	$text['label-tta']['en-us'] = "TTA";
+	$text['label-tta']['es-cl'] = "TTA";
+	$text['label-tta']['pt-pt'] = "TTA";
+	$text['label-tta']['fr-fr'] = "TTA";
+
 	$text['label-answer']['en-us'] = "Answer";
 	$text['label-answer']['es-cl'] = "Respuesta";
 	$text['label-answer']['pt-pt'] = "Resposta";

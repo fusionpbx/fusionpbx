@@ -346,7 +346,7 @@ else {
 	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>\n";
 	echo th_order_by('start_stamp', $text['label-start'], $order_by, $order, null, "style='text-align: right;'");
-	echo th_order_by('tta', 'TTA', $order_by, $order, null, "style='text-align: right;'");
+	echo th_order_by('tta', $text['label-tta'], $order_by, $order, null, "style='text-align: right;'");
 	echo th_order_by('duration', $text['label-duration'], $order_by, $order, null, "style='text-align: center;'");
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		// billing collumns
