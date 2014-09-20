@@ -206,7 +206,7 @@ require_once "resources/functions.php";
 				if (file_exists('/var/lib/fusionpbx/storage')) {
 					$switch_storage_dir = '/var/lib/fusionpbx/storage';
 					$switch_voicemail_dir = $switch_storage_dir.'/voicemail';
-				}				
+				}
 				//old
 				elseif (file_exists('/var/lib/freeswitch/storage')) {
 					$switch_storage_dir = '/var/lib/freeswitch/storage';
@@ -216,7 +216,7 @@ require_once "resources/functions.php";
 				if (file_exists('/var/lib/fusionpbx/recordings')) {
 					$switch_recordings_dir = '/var/lib/fusionpbx/recordings';
 				}
-				//old				
+				//old
 				elseif (file_exists('/var/lib/freeswitch/recordings')) {
 					$switch_recordings_dir = '/var/lib/freeswitch/recordings';
 				}
