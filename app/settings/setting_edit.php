@@ -433,7 +433,39 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-shout-decoder']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='mod_shout_decoder' maxlength='255' value=\"$mod_shout_decoder\">\n";
+	echo "    <select class='formfld' name='mod_shout_decoder'>\n";
+	echo "    <option value=''></option>\n";
+	if ($mod_shout_decoder == "i486") {
+		echo "    <option value='i486' selected='selected'>i486</option>\n";
+	}
+	else {
+		echo "    <option value='i486'>i486</option>\n";
+	}
+	if ($mod_shout_decoder == "i586") {
+		echo "    <option value='i586' selected='selected'>i586</option>\n";
+	}
+	else {
+		echo "    <option value='i586'>i586</option>\n";
+	}
+	if ($mod_shout_decoder == "i686") {
+		echo "    <option value='i686' selected='selected'>i686</option>\n";
+	}
+	else {
+		echo "    <option value='i686'>i686</option>\n";
+	}
+	if ($mod_shout_decoder == "amd64") {
+		echo "    <option value='amd64' selected='selected'>amd64</option>\n";
+	}
+	else {
+		echo "    <option value='amd64'>amd64</option>\n";
+	}
+	if ($mod_shout_decoder == "generic") {
+		echo "    <option value='generic' selected='selected'>generic</option>\n";
+	}
+	else {
+		echo "    <option value='generic'>generic</option>\n";
+	}
+	echo "    </select>\n";
 	echo "<br />\n";
 	echo $text['description-shout-decoder']."\n";
 	echo "</td>\n";
