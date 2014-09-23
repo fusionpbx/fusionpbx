@@ -191,7 +191,7 @@
 					cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
 				end
 				user_exists = trim(api:executeString(cmd));
-				if (user_exists) then
+				if (user_exists == "true") then
 					if (destination_user ~= nil) then
 						dial_string = dial_string .. "user/"..destination_user.."@"..domain_name;
 					else
