@@ -165,6 +165,15 @@
 
 		--set the dial string
 			if (session:ready() and enabled == "true") then
+				--used for number_alias to get the correct user
+				sql = "select * from v_extensions ";
+				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+				sql = sql .. "and number_alias = '"..forward_all_destination.."' ";
+				status = dbh:query(sql, function(row)
+					destination_user = row.extension;
+				end);
+
+				--set the dial_string
 				dial_string = "{presence_id="..forward_all_destination.."@"..domain_name;
 				dial_string = dial_string .. ",instant_ringback=true";
 				dial_string = dial_string .. ",domain_uuid="..domain_uuid;
@@ -176,10 +185,18 @@
 				end
 				dial_string = dial_string .. "}";
 
-				cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
+				if (destination_user ~= nil) then
+					cmd = "user_exists id ".. destination_user .." "..domain_name;
+				else
+					cmd = "user_exists id ".. forward_all_destination .." "..domain_name;
+				end
 				user_exists = trim(api:executeString(cmd));
 				if (user_exists) then
-					dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
+					if (destination_user ~= nil) then
+						dial_string = dial_string .. "user/"..destination_user.."@"..domain_name;
+					else
+						dial_string = dial_string .. "user/"..forward_all_destination.."@"..domain_name;
+					end
 				else
 					dial_string = dial_string .. "loopback/"..forward_all_destination;
 				end
@@ -214,7 +231,7 @@
 			end
 
 		--check the destination
-			if (forward_all_destination == "nil") then
+			if (forward_all_destination == nil) then
 				enabled = false;
 				forward_all_enabled = "false";
 			else
