@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -62,6 +63,26 @@ else {
 		$broadcast_phone_numbers = check_str($_POST["broadcast_phone_numbers"]);
 		$broadcast_avmd = check_str($_POST["broadcast_avmd"]);
 		$broadcast_destination_data = check_str($_POST["broadcast_destination_data"]);
+                        
+		if (if_group("superadmin")){
+			$broadcast_accountcode = check_str($_POST["broadcast_accountcode"]);
+		}
+		elseif (if_group("admin") && file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+			$sql_accountcode = "SELECT COUNT(*) as count FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."' AND type_value='".$_POST["accountcode"]."'";
+			$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
+			$prep_statement_accountcode->execute();
+			$row_accountcode = $prep_statement_accountcode->fetch(PDO::FETCH_ASSOC);
+			if ($row_accountcode['count'] > 0) {
+				$broadcast_accountcode = check_str($_POST["broadcast_accountcode"]);
+			}
+			else {
+				$broadcast_accountcode = $_SESSION['domain_name'];
+			}
+			unset($sql_accountcode, $prep_statement_accountcode, $row_accountcode);
+		}
+		else{
+			$broadcast_accountcode = $_SESSION['domain_name'];
+		}
 	}
 
 if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
@@ -114,7 +135,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "broadcast_destination_type, ";
 			$sql .= "broadcast_phone_numbers, ";
 			$sql .= "broadcast_avmd, ";
-			$sql .= "broadcast_destination_data ";
+			$sql .= "broadcast_destination_data, ";
+			$sql .= "broadcast_accountcode ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
@@ -140,7 +162,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$broadcast_destination_type', ";
 			$sql .= "'$broadcast_phone_numbers', ";
 			$sql .= "'$broadcast_avmd', ";
-			$sql .= "'$broadcast_destination_data' ";
+			$sql .= "'$broadcast_destination_data', ";
+			$sql .= "'$broadcast_accountcode' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -172,14 +195,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "broadcast_destination_type = '$broadcast_destination_type', ";
 			$sql .= "broadcast_phone_numbers = '$broadcast_phone_numbers', ";
 			$sql .= "broadcast_avmd = '$broadcast_avmd', ";
-			$sql .= "broadcast_destination_data = '$broadcast_destination_data' ";
+			$sql .= "broadcast_destination_data = '$broadcast_destination_data', ";
+			$sql .= "broadcast_accountcode = '$broadcast_accountcode' ";
 			$sql .= "where domain_uuid = '$domain_uuid' ";
 			$sql .= "and call_broadcast_uuid = '$call_broadcast_uuid'";
 			echo $sql."<br><br>";
 			$db->exec(check_sql($sql));
 			unset($sql);
-
-
 
 			$_SESSION["message"] = $text['confirm-update'];
 			header("Location: call_broadcast.php");
@@ -208,6 +230,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$broadcast_phone_numbers = $row["broadcast_phone_numbers"];
 			$broadcast_avmd = $row["broadcast_avmd"];
 			$broadcast_destination_data = $row["broadcast_destination_data"];
+			$broadcast_accountcode = $row["broadcast_accountcode"];
 			break; //limit to 1 row
 		}
 		unset ($prep_statement);
@@ -252,6 +275,50 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "".$text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+        
+	if (if_group("superadmin")){
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-accountcode'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		if ($action == "add"){ $accountcode=$_SESSION['domain_name']; }
+		echo "    <input class='formfld' type='text' name='broadcast_accountcode' maxlength='255' value=\"$broadcast_accountcode\">\n";
+		echo "<br />\n";
+		echo $text['description-accountcode']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}elseif (if_group("admin") &&  file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."'";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-accountcode'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "  <select name='broadcast_accountcode' id='broadcast_accountcode' class='formfld'>\n";
+		$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
+		$prep_statement_accountcode->execute();
+		$result_accountcode = $prep_statement_accountcode->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result_accountcode as &$row_accountcode) {
+			$selected = '';
+			if (($action == "add") && ($row_accountcode['type_value'] == $_SESSION['domain_name'])){
+				$selected='selected="selected"';
+			}
+			elseif ($row_accountcode['type_value'] == $accountcode){
+				$selected='selected="selected"';
+			}
+			echo "    <option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
+		}
+                
+		unset($sql_accountcode, $prep_statement_accountcode, $result_accountcode);
+		echo "</select>";
+		echo "<br />\n";
+		echo $text['description-accountcode']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";

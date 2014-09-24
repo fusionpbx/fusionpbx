@@ -143,5 +143,8 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_destination_data";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
-
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_accountcode";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 ?>
