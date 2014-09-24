@@ -101,6 +101,11 @@
 	$text['label-agent']['pt-pt'] = "Agente";
 	$text['label-agent']['fr-fr'] = "Agent";
 
+	$text['label-hostname']['en-us'] = "Hostname";
+	$text['label-hostname']['es-cl'] = "Hostname";
+	$text['label-hostname']['pt-pt'] = "Hostname";
+	$text['label-hostname']['fr-fr'] = "Nom d'hôte";
+
 	$text['label-ip']['en-us'] = "IP";
 	$text['label-ip']['es-cl'] = "IP";
 	$text['label-ip']['pt-pt'] = "IP";
