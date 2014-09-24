@@ -83,10 +83,20 @@
 	$text['label-timeout']['pt-pt'] = "Timeout";
 	$text['label-timeout']['fr-fr'] = "Timeout";
 
+	$text['label-accountcode']['en-us'] = "Accountcode";
+	$text['label-accountcode']['es-cl'] = "Código de cuenta";
+	$text['label-accountcode']['pt-pt'] = "Accountcode";
+	$text['label-accountcode']['fr-fr'] = "Code de l'account";
+
 	$text['description-timeout']['en-us'] = "Limit the length of the call. Leave this empty for no limit.";
 	$text['description-timeout']['es-cl'] = "Limitar la duración de la llamada. Deje en blanco para no establecer un límite.";
 	$text['description-timeout']['pt-pt'] = "Limitar a duração da chamada. Deixe este campo em branco para não ter limite.";
 	$text['description-timeout']['fr-fr'] = "Limiter la durée de l'appel. Laisser vide pour illimité.";
+
+	$text['description-timeout']['en-us'] = "";
+	$text['description-timeout']['es-cl'] = "";
+	$text['description-timeout']['pt-pt'] = "";
+	$text['description-timeout']['fr-fr'] = "";
 
 	$text['description-concurrent-limit']['en-us'] = "Limit the approximate number of concurrent calls. Leave this empty for no limit.";
 	$text['description-concurrent-limit']['es-cl'] = "Limitar el número de llamadas simultaneas. Deje en blanco para no establecer un límite.";

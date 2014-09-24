@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -86,6 +87,7 @@ function cmd_async($cmd) {
 		$broadcast_phone_numbers = $row["broadcast_phone_numbers"];
 		$broadcast_destination_data = $row["broadcast_destination_data"];
 		$broadcast_avmd = $row["broadcast_avmd"];
+		$broadcast_accountcode = $row["broadcast_accountcode"];
 		//if (strlen($row["broadcast_destination_data"]) == 0) {
 		//	$broadcast_destination_application = '';
 		//	$broadcast_destination_data = '';
@@ -104,6 +106,9 @@ function cmd_async($cmd) {
 	}
 	if (strlen($broadcast_caller_id_number) == 0) {
 		$broadcast_caller_id_number = "0000000000";
+	}
+	if (strlen($broadcast_accountcode) == 0) {
+		$broadcast_accountcode = $_SESSION['domain_name'];;
 	}
 
 	//get the recording name
@@ -166,6 +171,7 @@ function cmd_async($cmd) {
 						$channel_variables .= ",domain_uuid=".$_SESSION['domain_uuid'];
 						$channel_variables .= ",domain=".$_SESSION['domain_name'];
 						$channel_variables .= ",domain_name=".$_SESSION['domain_name'];
+						$channel_variables .= ",accountcode='$broadcast_accountcode'";
 						if ($broadcast_avmd == "true") {
 							$channel_variables .= ",execute_on_answer='avmd start'";
 						}
