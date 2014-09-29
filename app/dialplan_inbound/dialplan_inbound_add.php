@@ -363,7 +363,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$dialplan_detail_uuid', ";
 			$sql .= "'action', ";
 			$sql .= "'limit', ";
-			$sql .= "'db \${domain} inbound ".$limit." !USER_BUSY', ";
+			$sql .= "'hash \${domain} inbound ".$limit." !USER_BUSY', ";
 			$sql .= "'70' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));

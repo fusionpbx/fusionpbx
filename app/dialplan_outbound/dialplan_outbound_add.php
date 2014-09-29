@@ -457,8 +457,8 @@ else {
 
 					if (strlen($limit) > 0) {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'limit_execute';
-						$dialplan_detail_data = "db \${domain} outbound ".$limit." !USER_BUSY";
+						$dialplan_detail_type = 'limit';
+						$dialplan_detail_data = "hash \${domain} outbound ".$limit." !USER_BUSY";
 						$dialplan_detail_order = '050';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
