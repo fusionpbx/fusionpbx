@@ -976,11 +976,11 @@ function number_pad($number,$n) {
 	if(!function_exists('validate_email')) {
 		function valid_email($email) {
 			$regex = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,6}$/';
-			if ($email != "" && preg_match($regex, $email) == 0) {
-				return false; // email address does not have valid syntax
+			if ($email != "" && preg_match($regex, $email) == 1) {
+				return true; // email address has valid syntax
 			}
 			else {
-				return true; // email address has valid syntax
+				return false; // email address does not have valid syntax
 			}
 		}
 	}
