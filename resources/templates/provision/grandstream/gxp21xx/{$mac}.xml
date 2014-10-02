@@ -2684,10 +2684,10 @@
     <P1359></P1359>
     <!-- HTTP/HTTPS User Name -->
     <!-- String -->
-    <P1360></P1360>
+    <P1360>{$http_auth_username}</P1360>
     <!-- HTTP/HTTPS Password -->
     <!-- String -->
-    <P1361></P1361>
+    <P1361>{$http_auth_password}</P1361>
     <!-- Firmware Upgrade Via. 0 - TFTP Upgrade,  1 - HTTP Upgrade, 2 - HTTPS Upgrade. Default is 1 -->
     <!-- Number: 0, 1, 2 -->
     <!-- Mandatory -->
