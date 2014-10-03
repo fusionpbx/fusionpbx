@@ -382,7 +382,7 @@
 				freeswitch.consoleLog("notice", "[conference center] SQL: " .. sql .. "\n");
 			end
 			status = dbh_switch:query(sql, function(rows)
-				conference_hostname = string.lower(rows["hostname"]);
+				conference_hostname = rows["hostname"];
 			end);
 
 		--if conference hosntame exist, then we bridge there
