@@ -80,7 +80,7 @@
 			session:execute("set", "playback_terminators=#");
 
 		--begin recording
-			session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 180 200");
+			session:execute("record", "'"..recordings_dir.."/"..recording_name.."' 10800 500 500");
 
 		--preview the recording
 			session:streamFile(recordings_dir.."/"..recording_name);
