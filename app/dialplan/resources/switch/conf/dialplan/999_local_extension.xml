@@ -7,7 +7,7 @@
 			<action application="limit" data="hash ${domain_name} $1 ${limit_max} ${limit_destination}"/>
 			<!-- bind_meta_app can have these args <key> [a|b|ab] [a|b|o|s] <app> -->
 			<action application="bind_meta_app" data="1 ab s execute_extension::dx XML ${context}"/>
-			<action application="bind_meta_app" data="2 ab s record_session::$${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext}"/>
+			<action application="bind_meta_app" data="2 ab s record_session::$${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.wav"/>
 			<action application="bind_meta_app" data="3 ab s execute_extension::cf XML ${context}"/>
 			<action application="bind_meta_app" data="4 ab s execute_extension::att_xfer XML ${context}"/>
 			<!--<action application="set" data="ringback=${ringback}"/>-->
