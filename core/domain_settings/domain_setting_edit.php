@@ -447,10 +447,20 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 		echo "	<input class='formfld' type='password' name='domain_setting_value' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"".$row['domain_setting_value']."\">\n";
 	}
-	elseif ($category == "theme" && $subcategory == "background_color" && $name == "array") {
-		// source: http://rightjs.org
-		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right.js'></script>";
-		echo "	<script src='".PROJECT_PATH."/resources/rightjs/right-colorpicker-src.js' type='text/javascript'></script>";
+	elseif (
+		$category == "theme" && $subcategory == "background_color" && $name == "array" ||
+		$category == "theme" && $subcategory == "login_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "domain_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "domain_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "footer_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "footer_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_default_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_default_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_negative_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_negative_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_alert_background_color" && $name == "text" ||
+		$category == "theme" && $subcategory == "message_alert_color" && $name == "text"
+		) {
 		echo "	<style>";
 		echo "		DIV.rui-colorpicker  { width: 253px; }";
 		echo "		DIV.rui-colorpicker DIV.controls { width: 61px; }";
@@ -462,6 +472,30 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input class='formfld' id='domain_setting_value' name='domain_setting_value' data-colorpcker=\"{format: 'hex'}\" value=\"".$row['domain_setting_value']."\">\n";
 		echo "	<script type='text/javascript'>new Colorpicker().assignTo('domain_setting_value');</script>";
 	}
+	elseif ($category == "fax" && $subcategory == "page_size" && $name == "text" ) {
+		echo "	<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value='letter' ".(($row['default_setting_value'] == 'letter') ? 'selected' : null).">Letter</option>";
+		echo "		<option value='legal' ".(($row['default_setting_value'] == 'legal') ? 'selected' : null).">Legal</option>";
+		echo "		<option value='a4' ".(($row['default_setting_value'] == 'a4') ? 'selected' : null).">A4</option>";
+		echo "	</select>";
+	}
+	elseif ($category == "fax" && $subcategory == "resolution" && $name == "text" ) {
+		echo "	<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
+		echo "		<option value='normal' ".(($row['default_setting_value'] == 'normal') ? 'selected' : null).">".$text['label-normal']."</option>";
+		echo "		<option value='fine' ".(($row['default_setting_value'] == 'fine') ? 'selected' : null).">".$text['label-fine']."</option>";
+		echo "		<option value='superfine' ".(($row['default_setting_value'] == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
+		echo "	</select>";
+	} elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
+		echo "    <select class='formfld' name='default_setting_value'>\n";
+		echo "    	<option value='false' ".(($row['default_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "    	<option value='true' ".(($row['default_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    </select>\n";
+	} elseif ($category == "theme" && $subcategory == "cache" && $name == "boolean" ) {
+		echo "    <select class='formfld' name='default_setting_value'>\n";
+		echo "    	<option value='true' ".(($row['default_setting_value'] == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($row['default_setting_value'] == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+		echo "    </select>\n";
+	}
 	else {
 		echo "	<input class='formfld' type='text' name='domain_setting_value' maxlength='255' value=\"".$row['domain_setting_value']."\">\n";
 	}
@@ -470,7 +504,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($name == "array") {
+	if ($name == "array" || $name == '') {
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 		echo "    ".$text['label-order']."\n";
@@ -527,7 +561,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-description'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_setting_description' maxlength='255' value=\"$domain_setting_description\">\n";
+	echo "	<input class='formfld' type='text' name='domain_setting_description' maxlength='255' value=\"".$domain_setting_description."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
