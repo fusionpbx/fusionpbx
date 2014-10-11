@@ -153,7 +153,7 @@
 				}
 				unset ($prep_statement);
 		}
-*/
+
 		public function xml() {
 			if (isset($_SESSION['switch']['extensions']['dir'])) {
 				//declare global variables
