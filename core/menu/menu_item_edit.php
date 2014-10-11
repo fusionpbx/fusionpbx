@@ -216,14 +216,17 @@ else {
 				if ($_REQUEST["a"] != "delete" && strlen($group_name) > 0 && permission_exists('menu_add')) {
 					//add the group to the menu
 						if (strlen($menu_item_uuid) > 0) {
+							$menu_item_group_uuid = uuid();
 							$sql_insert = "insert into v_menu_item_groups ";
 							$sql_insert .= "(";
+							$sql_insert .= "menu_item_group_uuid, ";
 							$sql_insert .= "menu_uuid, ";
 							$sql_insert .= "menu_item_uuid, ";
 							$sql_insert .= "group_name ";
 							$sql_insert .= ")";
 							$sql_insert .= "values ";
 							$sql_insert .= "(";
+							$sql_insert .= "'".$menu_item_group_uuid."', ";
 							$sql_insert .= "'".$menu_uuid."', ";
 							$sql_insert .= "'".$menu_item_uuid."', ";
 							$sql_insert .= "'".$group_name."' ";
