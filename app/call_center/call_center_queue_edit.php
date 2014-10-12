@@ -270,7 +270,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "queue_abandoned_resume_allowed = '$queue_abandoned_resume_allowed', ";
 				$sql .= "queue_cid_prefix = '$queue_cid_prefix', ";
 				$sql .= "queue_announce_sound = '$queue_announce_sound', ";
-				$sql .= "queue_announce_frequency = '$queue_announce_frequency', ";
+				if (strlen($queue_announce_frequency) > 0) {
+					$sql .= "queue_announce_frequency = '$queue_announce_frequency', ";
+				}
 				$sql .= "queue_description = '$queue_description' ";
 				$sql .= "where domain_uuid = '$domain_uuid' ";
 				$sql .= "and call_center_queue_uuid = '$call_center_queue_uuid'";
