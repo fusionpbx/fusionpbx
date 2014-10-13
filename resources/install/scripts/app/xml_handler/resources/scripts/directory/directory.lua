@@ -195,8 +195,10 @@
 									cidr = [[ cidr="]] .. row.cidr .. [["]];
 								end
 								number_alias = "";
+								number_alias_string = "";
 								if (string.len(row.number_alias) > 0) then
-									number_alias = [[ number-alias="]] .. row.number_alias .. [["]];
+									number_alias = row.number_alias;
+									number_alias_string = [[ number-alias="]] .. row.number_alias .. [["]];
 								end
 							--params
 								password = row.password;
@@ -259,12 +261,16 @@
 
 				--get the voicemail from the database
 					if (continue) then
-						sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. user .. "' ";
+						vm_enabled = "true";
+						if (tonumber(user) == nil) then
+							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
+						else
+							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. user .. "' ";
+						end
 						if (debug["sql"]) then
 							freeswitch.consoleLog("notice", "[xml_handler] SQL: " .. sql .. "\n");
 						end
 						dbh:query(sql, function(row)
-							vm_enabled = "true";
 							if (string.len(row.voicemail_enabled) > 0) then
 								vm_enabled = row.voicemail_enabled;
 							end
@@ -339,9 +345,9 @@
 							table.insert(xml, [[					<users>]]);
 							if (number_alias) then
 								if (cidr) then
-									table.insert(xml, [[						<user id="]] .. extension .. [["]] .. cidr .. number_alias .. [[ type=>]]);
+									table.insert(xml, [[						<user id="]] .. extension .. [["]] .. cidr .. number_alias_string .. [[ type=>]]);
 								else
-									table.insert(xml, [[						<user id="]] .. extension .. [["]] .. number_alias .. [[>]]);
+									table.insert(xml, [[						<user id="]] .. extension .. [["]] .. number_alias_string .. [[>]]);
 								end
 							else
 								if (cidr) then
