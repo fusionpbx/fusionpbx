@@ -135,10 +135,10 @@
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
-	$text['button-file_additional']['en-us'] = "Add Additional File";
-	$text['button-file_additional']['es-cl'] = "Añadir Archivo Adicional";
-	$text['button-file_additional']['pt-pt'] = "Adicionar Arquivo Adicionais";
-	$text['button-file_additional']['fr-fr'] = "Ajouter un Fichier Supplémentaire";
+	$text['button-clear']['en-us'] = "Clear";
+	$text['button-clear']['es-cl'] = "Limpiar";
+	$text['button-clear']['pt-pt'] = "Apagar";
+	$text['button-clear']['fr-fr'] = "Nettoyer";
 
 	//fax_copy
 	$text['confirm-copy']['en-us'] = "Copy Complete";
