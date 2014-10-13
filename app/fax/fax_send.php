@@ -594,7 +594,9 @@ else {
 	require_once "resources/header.php";
 
 //javascript to toggle input/select boxes
-	echo "<script type='text/javascript'>";
+	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/javascript/reset_file_input.js'></script>\n";
+	echo "<script language='JavaScript' type='text/javascript'>";
+
 	echo "	function toggle(field) {";
 	echo "		if (field == 'fax_recipient') {";
 	echo "			document.getElementById('fax_recipient_select').selectedIndex = 0;";
@@ -614,6 +616,22 @@ else {
 	echo "		$('#fax_recipient').css({width: '50%'});";
 	echo "		$('#fax_number').css({width: '120px'});";
 	echo "	}";
+
+	echo "	function list_selected_files(file_input_number) {";
+	echo "		var inp = document.getElementById('fax_files_'+file_input_number);";
+	echo "		var files_selected = [];";
+	echo "		for (var i = 0; i < inp.files.length; ++i) {";
+  	echo "			var file_name = inp.files.item(i).name;";
+  	echo "			files_selected.push(file_name);";
+  	echo "		}";
+	echo "		document.getElementById('file_list_'+file_input_number).innerHTML = '';";
+	echo "		if (files_selected.length > 1) {";
+	echo "			document.getElementById('file_list_'+file_input_number).innerHTML = '<strong>".$text['label-selected']."</strong>: ';";
+  	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += files_selected.join(', ');";
+  	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += '<br />';";
+  	echo "		}";
+	echo "	}";
+
 	echo "</script>";
 
 //fax extension form
@@ -738,25 +756,9 @@ else {
 	echo "	".$text['label-fax_files']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<script>";
-	echo "	function list_selected_files(file_input_number) {";
-	echo "		var inp = document.getElementById('fax_files_'+file_input_number);";
-	echo "		var files_selected = [];";
-	echo "		for (var i = 0; i < inp.files.length; ++i) {";
-  	echo "			var file_name = inp.files.item(i).name;";
-  	echo "			files_selected.push(file_name);";
-  	echo "		}";
-	echo "		document.getElementById('file_list_'+file_input_number).innerHTML = '';";
-	echo "		if (files_selected.length > 1) {";
-	echo "			document.getElementById('file_list_'+file_input_number).innerHTML = '<strong>".$text['label-selected']."</strong>: ';";
-  	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += files_selected.join(', ');";
-  	echo "			document.getElementById('file_list_'+file_input_number).innerHTML += '<br />';";
-  	echo "		}";
-	echo "	}";
-	echo "	</script>";
 	for ($f = 1; $f <= 3; $f++) {
 		echo "	<span id='fax_file_".$f."' ".(($f > 1) ? "style='display: none;'" : null).">";
-		echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' ".(($f > 1) ? "style='margin-top: 3px;'" : null)." onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'><br />";
+		echo "	<input name='fax_files[]' id='fax_files_".$f."' type='file' class='formfld fileinput' style='margin-right: 3px; ".(($f > 1) ? "margin-top: 3px;" : null)."' onchange=\"".(($f < 3) ? "document.getElementById('fax_file_".($f+1)."').style.display='';" : null)." list_selected_files(".$f.");\" multiple='multiple'><input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('fax_files_".$f."'); document.getElementById('file_list_".$f."').innerHTML='';\"><br />";
 		echo "	<span id='file_list_".$f."'></span>";
 		echo "	</span>\n";
 	}
