@@ -34,12 +34,16 @@
 --get the action
 	action = params:getHeader("action");
 	purpose = params:getHeader("purpose");
-		--sip_auth - registration
-		--group_call - call group has been called
-		--user_call - user has been called
+	--sip_auth - registration
+	--group_call - call group has been called
+	--user_call - user has been called
 
 --additional information
-		--event_calling_function = params:getHeader("Event-Calling-Function");
+	--event_calling_function = params:getHeader("Event-Calling-Function");
+
+--set the variables as a string to prevent nil errors
+	number_alias = "";
+	number_alias_string = "";
 
 --determine the correction action to perform
 	if (purpose == "gateways") then
@@ -194,8 +198,6 @@
 								if (string.len(row.cidr) > 0) then
 									cidr = [[ cidr="]] .. row.cidr .. [["]];
 								end
-								number_alias = "";
-								number_alias_string = "";
 								if (string.len(row.number_alias) > 0) then
 									number_alias = row.number_alias;
 									number_alias_string = [[ number-alias="]] .. row.number_alias .. [["]];
@@ -262,8 +264,8 @@
 				--get the voicemail from the database
 					if (continue) then
 						vm_enabled = "true";
-						if (tonumber(user) == nil) then
-							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
+						if tonumber(user) == nil then
+   							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. number_alias .. "' ";
 						else
 							sql = "SELECT * FROM v_voicemails WHERE domain_uuid = '" .. domain_uuid .. "' and voicemail_id = '" .. user .. "' ";
 						end
