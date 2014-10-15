@@ -328,95 +328,76 @@ require_once "resources/paging.php";
 
 //show the content
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-group_permissions'].$group_name."</b></td>\n";
-	echo "<td width='50%' align=\"right\">\n";
-	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
-	echo "	<input type='button' class='btn' alt='".$text['button-copy']."' onclick='copy_group();' value='".$text['button-copy']."'>";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align=\"left\" colspan='2'>\n";
-	echo "	".$text['description-group_permissions']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</tr></table>\n";
-
+	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-group_permissions'].$group_name."</b></td>\n";
+	echo "		<td width='50%' align=\"right\">\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
+	echo "			<input type='button' class='btn' alt='".$text['button-copy']."' onclick='copy_group();' value='".$text['button-copy']."'>";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "	<tr>\n";
+	echo "		<td align=\"left\" colspan='2'>\n";
+	echo "			".$text['description-group_permissions']."<br /><br />\n";
+	echo "		</td>\n";
+	echo "	</tr>\n";
+	echo "</table>\n";
 	echo "<br />\n";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='left'>\n";
-
 	//list all the permissions
-		foreach($apps as $app) {
+		foreach($apps as $app_index => $app) {
 			$app_name = $app['name'];
 			$description = $app['description']['en-us'];
 
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr>\n";
-			echo "	<td valign='top' style='width:80%' nowrap='nowrap'>\n";
 			echo "<strong>".$app_name."</strong><br />\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n";
-			echo "	<td valign='top'>\n";
-			echo "".$description."<br /><br />";
-			echo "	</td>\n";
-			echo "</tr>\n";
-			echo "</table>";
+			echo $description."<br /><br />\n";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr>\n";
-			echo "<th>".$text['label-permission_permissions']."</th>\n";
-			echo "<th>".$text['label-permission_description']."</th>\n";
-			echo "<tr>\n";
+			echo "	<tr>\n";
+			echo "		<th><input type='checkbox' id='check_toggle_".$app_index."' onclick=\"check_toggle('".$app_index."', this.checked);\"></th>\n";
+			echo "		<th>".$text['label-permission_permissions']."</th>\n";
+			echo "		<th>".$text['label-permission_description']."</th>\n";
+			echo "	<tr>\n";
 
-			foreach ($app['permissions'] as $row) {
+			foreach ($app['permissions'] as $permission_index => $row) {
+				$checked = ($permissions_db_checklist[$row['name']] == "true") ? "checked='checked'" : null;
 				echo "<tr >\n";
-				echo "	<td valign='top' style='width:250px' nowrap='nowrap' class='".$row_style[$c]."'>\n";
-				if ($permissions_db_checklist[$row['name']] == "true") {
-					echo "		<input type='checkbox' name='permissions_form[]' checked='checked' value='".$row['name']."'>\n";
-				}
-				else {
-					echo "		<input type='checkbox' name='permissions_form[]' value='".$row['name']."'>\n";
-				}
-				echo "		&nbsp; ".$row['name']."\n";
-				echo "	</td>\n";
-				echo "	<td valign='top' class='row_stylebg'>\n";
-				echo "		&nbsp; ".$row['description']."\n";
-				echo "	</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'><input type='checkbox' name='permissions_form[]' id='perm_".$app_index."_".$permission_index."' ".$checked." value='".$row['name']."'></td>\n";
+				echo "	<td valign='top' width='30%' nowrap='nowrap' class='".$row_style[$c]."'>".$row['name']."</td>\n";
+				echo "	<td valign='top' width='70%' class='row_stylebg'>".$row['description']."&nbsp;</td>\n";
 				echo "</tr>\n";
-				if ($c==0) { $c=1; } else { $c=0; }
+				$c = ($c == 0) ? 1 : 0;
+
+				$app_permissions[$app_index][] = "perm_".$app_index."_".$permission_index;
 			}
 
-			echo "<tr>\n";
-			echo "	<td colspan='3' align='right' style='padding-top: 5px;'>\n";
-			echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-			echo "	</td>\n";
-			echo "</tr>\n";
+			echo "	<tr>\n";
+			echo "		<td colspan='3' align='right' style='padding-top: 5px;'><input type='submit' name='submit' class='btn' value='".$text['button-save']."'></td>\n";
+			echo "	</tr>\n";
 			echo "</table>";
 			echo "<br />\n";
 		} //end foreach
 		unset($sql, $result, $row_count);
 
-	echo "</div>";
-	echo "<br><br>";
-	echo "<br><br>";
+		echo "<script>\n";
+		echo "function check_toggle(app_index, toggle_state) {\n";
+		echo "	switch (app_index) {\n";
+		foreach ($app_permissions as $app_index => $app_permission_ids) {
+			echo "	case '".$app_index."':\n";
+			foreach ($app_permission_ids as $app_permission_id) {
+				echo "	document.getElementById('".$app_permission_id."').checked = toggle_state;\n";
+			}
+			echo "	break;\n";
+		}
+		echo "	}\n";
+		echo "}\n";
+		echo "</script>\n";
 
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<form>\n";
+	echo "</form>\n";
 
 //show the footer
 	require_once "resources/footer.php";
