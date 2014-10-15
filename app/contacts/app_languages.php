@@ -183,6 +183,16 @@
 		$text['description-contact_note']['pt-pt'] = "Introduza uma nota.";
 		$text['description-contact_note']['fr-fr'] = "";
 
+		$text['label-groups']['en-us'] = "Groups";
+		$text['label-groups']['es-cl'] = "Grupos";
+		$text['label-groups']['pt-pt'] = "Grupos";
+		$text['label-groups']['fr-fr'] = "Groupes";
+
+		$text['description-groups']['en-us'] = "Contacts assigned to a Group will be visible to all Users in the Group.";
+		$text['description-groups']['es-cl'] = "Contactos asignados a un grupo serán visibles por todos los usuarios del grupo.";
+		$text['description-groups']['pt-pt'] = "Contatos atribuídos a um grupo será visível por todos os usuários do grupo.";
+		$text['description-groups']['fr-fr'] = "Contacts affectés à un groupe seront visibles par tous les utilisateurs du groupe.";
+
 		$text['button-qr_code']['en-us'] = "QR Code";
 		$text['button-qr_code']['es-cl'] = "Código QR";
 		$text['button-qr_code']['pt-pt'] = "Código QR.";

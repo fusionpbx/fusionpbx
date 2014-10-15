@@ -40,6 +40,21 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//handle removal of contact group
+	if ($_GET['a'] == 'delete') {
+		$contact_uuid = $_GET["id"];
+		$contact_group_uuid = $_GET["cgid"];
+		$sql = "delete from v_contact_groups ";
+		$sql .= "where contact_uuid = '".$contact_uuid."' ";
+		$sql .= "and contact_group_uuid = '".$contact_group_uuid."' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: contact_edit.php?id=".$contact_uuid);
+		exit;
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
@@ -99,10 +114,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
+
 		if ($action == "add") {
 			$contact_uuid = uuid();
 			$sql = "insert into v_contacts ";
-			$sql .= "(";
+			$sql .= "( ";
 			$sql .= "domain_uuid, ";
 			$sql .= "contact_uuid, ";
 			$sql .= "contact_type, ";
@@ -117,55 +133,85 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_url, ";
 			$sql .= "contact_time_zone, ";
 			$sql .= "contact_note ";
-			$sql .= ")";
+			$sql .= ") ";
 			$sql .= "values ";
-			$sql .= "(";
+			$sql .= "( ";
 			$sql .= "'".$_SESSION['domain_uuid']."', ";
-			$sql .= "'$contact_uuid', ";
-			$sql .= "'$contact_type', ";
-			$sql .= "'$contact_organization', ";
-			$sql .= "'$contact_name_given', ";
-			$sql .= "'$contact_name_family', ";
-			$sql .= "'$contact_nickname', ";
-			$sql .= "'$contact_title', ";
-			$sql .= "'$contact_category', ";
-			$sql .= "'$contact_role', ";
-			$sql .= "'$contact_email', ";
-			$sql .= "'$contact_url', ";
-			$sql .= "'$contact_time_zone', ";
-			$sql .= "'$contact_note' ";
+			$sql .= "'".$contact_uuid."', ";
+			$sql .= "'".$contact_type."', ";
+			$sql .= "'".$contact_organization."', ";
+			$sql .= "'".$contact_name_given."', ";
+			$sql .= "'".$contact_name_family."', ";
+			$sql .= "'".$contact_nickname."', ";
+			$sql .= "'".$contact_title."', ";
+			$sql .= "'".$contact_category."', ";
+			$sql .= "'".$contact_role."', ";
+			$sql .= "'".$contact_email."', ";
+			$sql .= "'".$contact_url."', ";
+			$sql .= "'".$contact_time_zone."', ";
+			$sql .= "'".$contact_note."' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
 			$_SESSION["message"] = $text['message-add'];
-			header("Location: contacts.php");
-			return;
+			$location = "contacts.php";
 		} //if ($action == "add")
+
+		//handle insertion of contact group
+		if ($_POST['group_uuid'] != '') {
+			$group_uuid = $_POST["group_uuid"];
+			$sql = "insert into v_contact_groups ";
+			$sql .= "( ";
+			$sql .= "contact_group_uuid, ";
+			$sql .= "domain_uuid, ";
+			$sql .= "contact_uuid, ";
+			$sql .= "group_uuid ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "( ";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'".$domain_uuid."', ";
+			$sql .= "'".$contact_uuid."', ";
+			$sql .= "'".$group_uuid."' ";
+			$sql .= ") ";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
 
 		if ($action == "update") {
 			$sql = "update v_contacts set ";
-			$sql .= "contact_type = '$contact_type', ";
-			$sql .= "contact_organization = '$contact_organization', ";
-			$sql .= "contact_name_given = '$contact_name_given', ";
-			$sql .= "contact_name_family = '$contact_name_family', ";
-			$sql .= "contact_nickname = '$contact_nickname', ";
-			$sql .= "contact_title = '$contact_title', ";
-			$sql .= "contact_category = '$contact_category', ";
-			$sql .= "contact_role = '$contact_role', ";
-			$sql .= "contact_email = '$contact_email', ";
-			$sql .= "contact_url = '$contact_url', ";
-			$sql .= "contact_time_zone = '$contact_time_zone', ";
-			$sql .= "contact_note = '$contact_note' ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-			$sql .= "and contact_uuid = '$contact_uuid' ";
+			$sql .= "contact_type = '".$contact_type."', ";
+			$sql .= "contact_organization = '".$contact_organization."', ";
+			$sql .= "contact_name_given = '".$contact_name_given."', ";
+			$sql .= "contact_name_family = '".$contact_name_family."', ";
+			$sql .= "contact_nickname = '".$contact_nickname."', ";
+			$sql .= "contact_title = '".$contact_title."', ";
+			$sql .= "contact_category = '".$contact_category."', ";
+			$sql .= "contact_role = '".$contact_role."', ";
+			$sql .= "contact_email = '".$contact_email."', ";
+			$sql .= "contact_url = '".$contact_url."', ";
+			$sql .= "contact_time_zone = '".$contact_time_zone."', ";
+			$sql .= "contact_note = '".$contact_note."' ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and contact_uuid = '".$contact_uuid."' ";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
 			$_SESSION["message"] = $text['message-update'];
-			header("Location: contacts.php");
-			return;
+			$location = "contacts.php";
 		} //if ($action == "update")
+
+		//handle redirect
+		if ($_POST['submit'] == $text['button-add']) {
+			$group_uuid = $_POST['group_uuid'];
+			//insert
+			$location = "contact_edit.php?id=".$contact_uuid;
+		}
+
+		header("Location: ".$location);
+		return;
+
 	} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
@@ -256,14 +302,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<img id='img-buffer' src='".PROJECT_PATH."/themes/".$_SESSION["domain"]["template"]["name"]."/images/qr_code.png' style='display: none;'>";
 
 //show the content
-	echo "<div align='center'>";
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
-	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
@@ -563,6 +602,82 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
+		if (permission_exists('contact_group_view')) {
+			echo "<tr>";
+			echo "	<td class='vncell' valign='top'>".$text['label-groups'].":</td>";
+			echo "	<td class='vtable'>";
+
+			$sql = "select ";
+			$sql .= "g.*, ";
+			$sql .= "cg.contact_group_uuid ";
+			$sql .= "from ";
+			$sql .= "v_groups as g, ";
+			$sql .= "v_contact_groups as cg ";
+			$sql .= "where ";
+			$sql .= "cg.group_uuid = g.group_uuid ";
+			$sql .= "and g.domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and cg.domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and cg.contact_uuid = '".$contact_uuid."' ";
+			$sql .= "order by g.group_name asc ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$result_count = count($result);
+			if ($result_count > 0) {
+				echo "	<table width='52%'>\n";
+				foreach($result as $field) {
+					if (strlen($field['group_name']) > 0) {
+						echo "<tr>\n";
+						echo "	<td class='vtable'>".$field['group_name']."</td>\n";
+						echo "	<td>\n";
+						if (permission_exists('contact_group_delete') || if_group("superadmin")) {
+							echo "		<a href='contact_edit.php?id=".$contact_uuid."&cgid=".$field['contact_group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+						}
+						echo "	</td>\n";
+						echo "</tr>\n";
+						$assigned_groups[] = $field['group_uuid'];
+					}
+				}
+				echo "	</table>\n";
+				echo "	<br />\n";
+			}
+			unset($sql, $prep_statement, $result, $field);
+
+			if (permission_exists('contact_group_add') || if_group("superadmin")) {
+				$sql = "select * from v_groups ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				if (sizeof($assigned_groups) > 0) {
+					$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
+				}
+				$sql .= "order by group_name asc ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				$result_count = count($result);
+				if ($result_count > 0) {
+					echo "	<select name='group_uuid' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+					echo "		<option value=''></option>\n";
+					foreach($result as $field) {
+						if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show superadmin group to superadmins
+						if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin"))) { continue; }	//only show admin group to admins
+						echo "<option value='".$field['group_uuid']."'>".$field['group_name']."</option>\n";
+					}
+					echo "	</select>";
+
+					if ($action == "update") {
+						echo "	<input type='submit' name='submit' class='btn' value=\"".$text['button-add']."\">\n";
+					}
+					echo "<br>";
+				}
+				unset($sql, $prep_statement, $result, $field);
+			}
+
+			echo "		".$text['description-groups']."\n";
+
+			echo "	</td>";
+			echo "</tr>";
+		}
+
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_note'].":\n";
@@ -599,17 +714,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "</tr>\n";
 	echo "</table>\n";
-
-	if ($action == "update") {
-		echo "<br/>\n";
-
-	}
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
 	echo "</form>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";
