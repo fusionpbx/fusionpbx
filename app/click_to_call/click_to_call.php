@@ -126,7 +126,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		if (strlen($dest) < 7) {
 			if (strpbrk($dest, '@') != FALSE) {
 				//echo "Found an @ 2<br><br>";
-				$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,call_direction=outbound}sofia/external/$dest)";
+				$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number,call_direction=outbound}sofia/external/$dest)";
 				echo "$switch_cmd";
 			}
 			else {
@@ -157,7 +157,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 				if (strpbrk($dest, '@') != FALSE) {
 					//call a sip uri
 					//echo "Found an @ 4, do nothing for now<br><br>";
-					$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,call_direction=outbound}sofia/external/$dest)";
+					$switch_cmd = "api originate $source &bridge({origination_caller_id_name='$dest_cid_name',origination_caller_id_number=$dest_cid_number,call_direction=outbound}sofia/external/$dest)";
 					//echo "<br>SWITCH-CMD: $switch_cmd<br>";
 				}
 				else {
