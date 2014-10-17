@@ -868,7 +868,6 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		}
 
 	//gateways
-		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/conference_centers/app_config.php")) {
 			if (if_group("superadmin")) {
 				if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact" || $select_type == "bridge") {
 					echo "<optgroup label='Gateways'>\n";
@@ -896,8 +895,42 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					if ($select_type == "ivr") {
 						echo "		<option value='menu-exec-app:bridge sofia/gateway/".$row['gateway_uuid']."/xxxxx' $tmp_selected>".$row['gateway']."@".$row['domain_name']."</option>\n";
 					}
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/conference_centers/app_config.php")) {
 					if ($select_type == "call_center_contact") {
 						echo "		<option value='sofia/gateway/".$row['gateway_uuid']."/xxxxx' $tmp_selected>".$row['gateway']."@".$row['domain_name']."</option>\n";
+					}
+		}
+					$tmp_selected = '';
+				}
+				unset($sql, $result);
+				if ($select_type == "dialplan" || $select_type == "ivr" || $select_type == "call_center_contact") {
+					echo "</optgroup>\n";
+				}
+			}
+		
+
+	//xmpp
+		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/xmpp/app_config.php")) {
+			if (if_group("superadmin")) {
+				if ($select_type == "bridge") {
+					echo "<optgroup label='XMPP Gateways'>\n";
+				}
+				$sql = "select v_xmpp.xmpp_profile_uuid, v_xmpp.profile_name, v_domains.domain_name from v_xmpp ";
+				$sql .= "inner join v_domains on v_xmpp.domain_uuid=v_domains.domain_uuid ";
+				$sql .= "where enabled = 'true' ";
+				$sql .= "order by profile_name asc ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+				$result_count = count($result);
+				unset ($prep_statement, $sql);
+				$tmp_selected = '';
+				foreach($result as $row) {
+					if ($row['gateway'] == $select_value) {
+						$tmp_selected = "selected='selected'";
+					}
+					if ($select_type == "bridge") {
+						echo "		<option value='dingaling/".$row['profile_name']."/' $tmp_selected>".$row['profile_name']."@".$row['domain_name']."</option>\n";
 					}
 					$tmp_selected = '';
 				}
