@@ -2692,7 +2692,7 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_uuid = $dialplan_uuid;
 							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
 							$dialplan->dialplan_detail_type = 'set';
-							$dialplan->dialplan_detail_data = "caller_id_name=".$queue_cid_prefix."#\${caller_id_name}";
+							$dialplan->dialplan_detail_data = "effective_caller_id_name=".$queue_cid_prefix."-\${caller_id_name}";
 							$dialplan->dialplan_detail_break = '';
 							$dialplan->dialplan_detail_inline = '';
 							$dialplan->dialplan_detail_group = '2';
