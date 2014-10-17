@@ -432,8 +432,8 @@
 			function get_pin_number(domain_uuid)
 				--if the pin number is provided then require it
 					if (not pin_number) then 
-						min_digits = 3;
-						max_digits = 12;
+						min_digits = 2;
+						max_digits = 20;
 						max_tries = 1;
 						digit_timeout = 5000;
 						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-pin.wav", "", "\\d+");
