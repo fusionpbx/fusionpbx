@@ -134,7 +134,7 @@
 				}
 
 			//get the user settings
-				if (strlen($_SESSION["user_uuid"]) > 0) {
+				if (strlen($_SESSION["domain_uuid"]) > 0 && strlen($_SESSION["user_uuid"]) > 0) {
 					$sql = "select * from v_user_settings ";
 					$sql .= "where domain_uuid = '" . $_SESSION["domain_uuid"] . "' ";
 					$sql .= "and user_uuid = '" . $_SESSION["user_uuid"] . "' ";
