@@ -183,15 +183,35 @@
 		$text['description-contact_note']['pt-pt'] = "Introduza uma nota.";
 		$text['description-contact_note']['fr-fr'] = "";
 
+		$text['label-shared']['en-us'] = "Shared";
+		$text['label-shared']['es-cl'] = "Compartido";
+		$text['label-shared']['pt-pt'] = "Partilhada";
+		$text['label-shared']['fr-fr'] = "Commun";
+
+		$text['description-shared']['en-us'] = "Share this contact with other users on the domain.";
+		$text['description-shared']['es-cl'] = "Comparte este contacto con otros usuarios en el dominio.";
+		$text['description-shared']['pt-pt'] = "Compartilhe esse contato com outros usuários do domínio.";
+		$text['description-shared']['fr-fr'] = "Partager ce contact avec d'autres utilisateurs sur le domaine.";
+
+		$text['option-true']['en-us'] = "True";
+		$text['option-true']['es-cl'] = "Verdadero";
+		$text['option-true']['pt-pt'] = "Sim";
+		$text['option-true']['fr-fr'] = "Oui";
+
+		$text['option-false']['en-us'] = "False";
+		$text['option-false']['es-cl'] = "Falso";
+		$text['option-false']['pt-pt'] = "Não";
+		$text['option-false']['fr-fr'] = "Non";
+
 		$text['label-groups']['en-us'] = "Groups";
 		$text['label-groups']['es-cl'] = "Grupos";
 		$text['label-groups']['pt-pt'] = "Grupos";
 		$text['label-groups']['fr-fr'] = "Groupes";
 
-		$text['description-groups']['en-us'] = "Contacts assigned to a Group will be visible to all Users in the Group.";
-		$text['description-groups']['es-cl'] = "Contactos asignados a un grupo serán visibles por todos los usuarios del grupo.";
-		$text['description-groups']['pt-pt'] = "Contatos atribuídos a um grupo será visível por todos os usuários do grupo.";
-		$text['description-groups']['fr-fr'] = "Contacts affectés à un groupe seront visibles par tous les utilisateurs du groupe.";
+		$text['description-groups']['en-us'] = "Contacts assigned to a group are only visible to users in the group.  Contacts not assigned to a group will be visible to all users in the domain.";
+		$text['description-groups']['es-cl'] = "Contactos asignados a un grupo sólo son visibles para los usuarios del grupo. Los contactos no asignados a un grupo serán visibles para todos los usuarios del dominio.";
+		$text['description-groups']['pt-pt'] = "Contatos atribuídos a um grupo só são visíveis para os usuários do grupo. Contatos não atribuídos a um grupo será visível para todos os usuários no domínio.";
+		$text['description-groups']['fr-fr'] = "Contacts affectés à un groupe ne sont accessibles qu'aux utilisateurs du groupe. Contacts ne sont pas affectés à un groupe seront visibles à tous les utilisateurs dans le domaine.";
 
 		$text['button-qr_code']['en-us'] = "QR Code";
 		$text['button-qr_code']['es-cl'] = "Código QR";

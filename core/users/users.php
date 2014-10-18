@@ -187,7 +187,7 @@ echo "	<td align=\"center\">\n";
 					echo $text['option-false'];
 				}
 				echo "&nbsp;</td>\n";
-				echo "	<td valign='top' align='right'>";
+				echo "	<td valign='top' align='right' class='tr_link_void'>";
 				if (permission_exists('user_edit')) {
 					echo "<a href='usersupdate.php?id=".$row['user_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 				}
