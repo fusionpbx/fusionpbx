@@ -634,15 +634,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//private by default on contact add
 			$contact_shared = 'false';
 		}
+		//disable shared change if user (superadmin) is accessing a foreign domain
+		$contact_shared_disabled = ($_SESSION['groups'][0]['domain_uuid'] != $_SESSION['domain_uuid']) ? "disabled='disabled'" : null;
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-shared'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<select class='formfld' name='contact_shared' id='contact_shared' ".((permission_exists('contact_group_view')) ? "onchange=\"$('#div_groups').slideToggle('400');\"" : null).">\n";
+		echo "	<select class='formfld' ".(($contact_shared_disabled == '') ? "name='contact_shared'" : null)." id='contact_shared' ".((permission_exists('contact_group_view')) ? "onchange=\"$('#div_groups').slideToggle('400');\"" : null)." ".$contact_shared_disabled.">\n";
 		echo "		<option value='false'>".$text['option-false']."</option>\n";
 		echo "		<option value='true' ".(($contact_shared == 'true') ? "selected" : null).">".$text['option-true']."</option>\n";
 		echo "	</select>\n";
+		if ($contact_shared_disabled != '') {
+			echo "	<input type='hidden' name='contact_shared' value='".$contact_shared."'>";
+		}
 		echo "<br />\n";
 		echo $text['description-shared']."\n";
 		echo "</td>\n";
