@@ -102,8 +102,7 @@ include "root.php";
 
 		function copy() {
 			$this->copy_scripts();
-			$this->copy_sounds();
-			$this->copy_swf();
+			//$this->copy_sounds();
 		}
 
 		function copy_conf() {
