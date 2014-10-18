@@ -123,56 +123,30 @@
 		$db->commit();
 	}
 
-//find rows that have a null user_uuid and set the correct user_uuid
+//find rows that have a null group_uuid and set the correct group_uuid
 	$sql = "select * from v_group_users ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and user_uuid is null; ";
+	$sql .= "where group_uuid is null; ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach($result as $row) {
-			if (strlen($row['username']) > 0) {
-				//get the user_uuid
-					$sql = "select user_uuid from v_users ";
-					$sql .= "where username = '".$row['username']."' ";
-					$sql .= "and user_enabled = 'true' ";
+			if (strlen($row['group_name']) > 0) {
+				//get the group_uuid
+					$sql = "select group_uuid from v_groups ";
+					$sql .= "where group_name = '".$row['group_name']."' ";
+					$sql .= "and domain_uuid = '".$row['domain_uuid']."' ";
 					$prep_statement_sub = $db->prepare($sql);
 					$prep_statement_sub->execute();
 					$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
 					unset ($prep_statement_sub);
-					$user_uuid = $sub_result['user_uuid'];
-				//set the user uuid
+					$group_uuid = $sub_result['group_uuid'];
+				//set the group_uuid
 					$sql = "update v_group_users set ";
-					$sql .= "user_uuid = '".$user_uuid."' ";
-					$sql .= "where username = '".$row['username']."'; ";
+					$sql .= "group_uuid = '".$group_uuid."' ";
+					$sql .= "where group_user_uuid = '".$row['group_user_uuid']."'; ";
 					$db->exec($sql);
 					unset($sql);
-			}
-			else {
-				//get the number of users
-					$sql = "select count(*) as num_rows from v_users ";
-					$sql .= "where user_enabled = 'true' ";
-					$prep_statement_sub = $db->prepare($sql);
-					$prep_statement_sub->execute();
-					$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
-					unset ($prep_statement_sub);
-					$num_rows = $sub_result['num_rows'];
-				if ($num_rows == 1) {
-					//get the user_uuid
-						$sql = "select user_uuid from v_users ";
-						$sql .= "and user_enabled = 'true' ";
-						$prep_statement_sub = $db->prepare($sql);
-						$prep_statement_sub->execute();
-						$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
-						unset ($prep_statement_sub);
-						$user_uuid = $sub_result['user_uuid'];
-					//set the user uuid
-						$sql = "update v_group_users set ";
-						$sql .= "user_uuid = '".$user_uuid."' ";
-						$db->exec($sql);
-						unset($sql);
-				}
 			}
 		}
 		unset ($prep_statement);
