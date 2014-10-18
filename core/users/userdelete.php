@@ -34,6 +34,12 @@ else {
 	return;
 }
 
+//add multi-lingual support
+	require_once "app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 //get the id
 	$user_uuid = check_str($_GET["id"]);
 
@@ -54,7 +60,7 @@ else {
 //required to be a superadmin to delete a member of the superadmin group
 	$superadmin_list = superadmin_list($db);
 	if (if_superadmin($superadmin_list, $user_uuid)) {
-		if (!if_group("superadmin")) { 
+		if (!if_group("superadmin")) {
 			//access denied - do not delete the user
 			header("Location: index.php");
 			return;
@@ -84,6 +90,7 @@ else {
 	}
 
 //redirect the user
+	$_SESSION["message"] = $text['message-delete'];
 	header("Location: index.php");
 
 ?>

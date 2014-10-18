@@ -158,9 +158,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$location = "contacts.php";
 		} //if ($action == "add")
 
-		//handle insertion of contact group
-		if ($_POST['group_uuid'] != '') {
-			$group_uuid = $_POST["group_uuid"];
+		//if contact is shared, remove contact group record containing user's uuid
+		if ($_POST['contact_shared'] == 'true') {
+			$sql = "delete from v_contact_groups ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and contact_uuid = '".$contact_uuid."' ";
+			$sql .= "and group_uuid = '".$_SESSION['groups'][0]['user_uuid']."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($prep_statement, $sql);
+			$group_uuid = $_POST['group_uuid'];
+		}
+		//if private contact, delete any groups currently assigned, set group uuid to user's uuid
+		else {
+			$sql = "delete from v_contact_groups ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and contact_uuid = '".$contact_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($prep_statement, $sql);
+			$group_uuid = $_SESSION['groups'][0]['user_uuid'];
+		}
+
+		//handle insertion of contact group (or private contact, if not shared)
+		if ($group_uuid != '') {
 			$sql = "insert into v_contact_groups ";
 			$sql .= "( ";
 			$sql .= "contact_group_uuid, ";
@@ -586,11 +607,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		//echo "<tr>\n";
-		//echo "<td><strong>Additional Information</strong></td>\n";
-		//echo "<td>&nbsp;</td>\n";
-		//echo "<tr>\n";
-
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_time_zone'].":\n";
@@ -602,11 +618,43 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		if (permission_exists('contact_group_view')) {
-			echo "<tr>";
-			echo "	<td class='vncell' valign='top'>".$text['label-groups'].":</td>";
-			echo "	<td class='vtable'>";
+		//determine if contact is shared or private
+		if ($action == 'update') {
+			$sql = "select count(*) as num_rows from v_contact_groups ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and contact_uuid = '".$contact_uuid."' ";
+			$sql .= "and group_uuid = '".$_SESSION['groups'][0]['user_uuid']."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			$contact_shared = ($row['num_rows'] > 0) ? 'false' : 'true';
+			unset ($sql, $prep_statement, $row);
+		}
+		else {
+			//private by default on contact add
+			$contact_shared = 'false';
+		}
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-shared'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='contact_shared' id='contact_shared' ".((permission_exists('contact_group_view')) ? "onchange=\"$('#div_groups').slideToggle('400');\"" : null).">\n";
+		echo "		<option value='false'>".$text['option-false']."</option>\n";
+		echo "		<option value='true' ".(($contact_shared == 'true') ? "selected" : null).">".$text['option-true']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo $text['description-shared']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "</table>";
 
+		if (permission_exists('contact_group_view')) {
+			echo "<div id='div_groups' ".(($contact_shared != 'true') ? "style='display: none;'" : null).">\n";
+			echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
+			echo "<tr>";
+			echo "	<td width='30%' class='vncell' valign='top'>".$text['label-groups'].":</td>";
+			echo "	<td width='70%' class='vtable'>";
 			$sql = "select ";
 			$sql .= "g.*, ";
 			$sql .= "cg.contact_group_uuid ";
@@ -618,6 +666,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "and g.domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and cg.domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and cg.contact_uuid = '".$contact_uuid."' ";
+			$sql .= "and cg.group_uuid <> '".$_SESSION['groups'][0]['user_uuid']."' ";
 			$sql .= "order by g.group_name asc ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
@@ -631,7 +680,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						echo "	<td class='vtable'>".$field['group_name']."</td>\n";
 						echo "	<td>\n";
 						if (permission_exists('contact_group_delete') || if_group("superadmin")) {
-							echo "		<a href='contact_edit.php?id=".$contact_uuid."&cgid=".$field['contact_group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+							echo "	<a href='contact_edit.php?id=".$contact_uuid."&cgid=".$field['contact_group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 						}
 						echo "	</td>\n";
 						echo "</tr>\n";
@@ -676,13 +725,16 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 			echo "	</td>";
 			echo "</tr>";
+			echo "</table>\n";
+			echo "</div>";
 		}
 
+		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_note'].":\n";
 		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='text' name='contact_note' maxlength='255' value='$contact_note'>\n";
 		echo "<br />\n";
 		echo $text['description-contact_note']."\n";

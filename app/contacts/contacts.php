@@ -54,21 +54,15 @@ require_once "resources/paging.php";
 	$order = check_str($_GET["order"]);
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br>";
-
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "	<td align=\"left\" valign=\"top\">\n";
 	echo "		<span class='title'><strong>".$text['header-contacts']."</strong></span><br>\n";
 	echo "		".$text['description-contacts']."<br /><br />\n";
 	echo "	</td>\n";
-	echo "	<td align=\"right\" valign=\"middle\">\n";
+	echo "	<td align=\"right\" valign=\"top\">\n";
 	echo "		<form method=\"GET\" name=\"frm_search\" action=\"\">\n";
-	echo "			<input class=\"formfld\" type=\"text\" name=\"search_all\" value=\"$search_all\">\n";
+	echo "			<input class=\"formfld\" style='text-align: right;' type=\"text\" name=\"search_all\" value=\"$search_all\">\n";
 	echo "			<input class=\"btn\" type=\"submit\" name=\"submit\" value=\"".$text['button-search']."\">\n";
 	if (permission_exists('contact_add')) {
 		echo 		"<input type='button' class='btn' name='' alt='back' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>";
@@ -77,44 +71,76 @@ require_once "resources/paging.php";
 	echo "	</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "<br />\n";
+
+	//retrieve current user's assigned groups (uuids)
+	foreach ($_SESSION['groups'] as $group_data) {
+		$user_group_uuids[] = $group_data['group_uuid'];
+	}
+	//add user's uuid to group uuid list to include private (non-shared) contacts
+	$user_group_uuids[] = $_SESSION['groups'][0]['user_uuid'];
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_contacts ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		if (sizeof($user_group_uuids) > 0) {
+			//only show contacts assigned to current user's group(s) and those not assigned to any group
+			$sql .= "and ( \n";
+			$sql .= "	contact_uuid in ( \n";
+			$sql .= "		select contact_uuid from v_contact_groups ";
+			$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
+			$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "	) \n";
+			$sql .= "	or \n";
+			$sql .= "	contact_uuid not in ( \n";
+ 			$sql .= "		select contact_uuid from v_contact_groups ";
+			$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "	) \n";
+			$sql .= ") \n";
+		}
 		if (strlen($phone_number) > 0) {
 			$phone_number = preg_replace('{\D}', '', $phone_number);
-			$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
-			$sql .= "where phone_number like '%".$phone_number."%') \n";
+			$sql .= "and contact_uuid in ( ";
+			$sql .= "	select contact_uuid from v_contact_phones ";
+			$sql .= "	where phone_number like '%".$phone_number."%' ";
+			$sql .= ") \n";
 		}
 		else {
 			if (strlen($search_all) > 0) {
 				if (is_numeric($search_all)) {
-					$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
-					$sql .= "where phone_number like '%".$search_all."%') \n";
+					$sql .= "and contact_uuid in ( \n";
+					$sql .= "	select contact_uuid from v_contact_phones ";
+					$sql .= "	where phone_number like '%".$search_all."%' ";
+					$sql .= ") \n";
 				}
 				else {
-					$sql .= "and contact_uuid in (\n";
+					$sql .= "and contact_uuid in ( \n";
 					$sql .= "	select contact_uuid from v_contacts ";
 					$sql .= "	where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
-					$sql .= "	and (\n";
-					$sql .= "	lower(contact_organization) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_name_given) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_name_family) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_nickname) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_title) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_category) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_role) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_email) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_url) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_time_zone) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_note) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_type) like '%".$search_all."%'\n";
-					$sql .= "	)\n";
-					$sql .= ")\n";
+					$sql .= "	and ( \n";
+					$sql .= "		lower(contact_organization) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_name_given) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_name_family) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_nickname) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_title) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_category) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_role) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_email) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_url) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_time_zone) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_note) like '%".$search_all."%' or \n";
+					$sql .= "		lower(contact_type) like '%".$search_all."%' \n";
+					$sql .= "	) \n";
+					$sql .= ") \n";
 				}
 			}
 		}
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		if (strlen($order_by) > 0) {
+			$sql .= "order by ".$order_by." ".$order." ";
+		}
+		else {
+			$sql .= "order by contact_organization asc, contact_name_given asc, contact_name_family asc ";
+		}
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -135,42 +161,9 @@ require_once "resources/paging.php";
 		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
 		$offset = $rows_per_page * $page;
 
-	//get the  list
-		$sql = "select * from v_contacts ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		if (strlen($phone_number) > 0) {
-			$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
-			$sql .= "where phone_number like '%".$phone_number."%') \n";
-		}
-		else {
-			if (strlen($search_all) > 0) {
-				if (is_numeric($search_all)) {
-					$sql .= "and contact_uuid in (select contact_uuid from v_contact_phones ";
-					$sql .= "where phone_number like '%".$search_all."%') \n";
-				}
-				else {
-					$sql .= "and contact_uuid in (\n";
-					$sql .= "	select contact_uuid from v_contacts where domain_uuid = '".$_SESSION['domain_uuid']."' \n";
-					$sql .= "	and (\n";
-					$sql .= "	lower(contact_organization) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_name_given) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_name_family) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_nickname) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_title) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_category) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_role) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_email) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_url) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_time_zone) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_note) like '%".$search_all."%' or \n";
-					$sql .= "	lower(contact_type) like '%".$search_all."%'\n";
-					$sql .= "	)\n";
-					$sql .= ")\n";
-				}
-			}
-		}
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= "limit $rows_per_page offset $offset ";
+	//get the list
+		$sql = str_replace('count(*) as num_rows', '*', $sql); // modify query created above
+		$sql .= "limit ".$rows_per_page." offset ".$offset." ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -242,15 +235,6 @@ require_once "resources/paging.php";
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
-	echo "<br><br>";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
 
 //include the footer
 	require_once "resources/footer.php";
