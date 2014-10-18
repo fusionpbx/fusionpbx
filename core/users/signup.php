@@ -94,6 +94,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	//if (strlen($contact_name_given) == 0) { $msg .= $text['message-required'].$text['label-first_name']."<br>\n"; }
 	//if (strlen($contact_name_family) == 0) { $msg .= $text['message-required'].$text['label-last_name']."<br>\n"; }
 	if (strlen($user_email) == 0) { $msg .= $text['message-required'].$text['label-email']."<br>\n"; }
+	if (strlen($group_uuid_name) == 0) { $msg .= $text['message-required'].$text['label-group']."<br>\n"; }
 
 	if (strlen($msg) > 0) {
 		require_once "resources/header.php";
@@ -237,26 +238,23 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "	}";
 	echo "</script>";
 
-	echo "<div align='center'>";
-
 	$tablewidth ='width="100%"';
 	echo "<form method='post' action=''>";
-	echo "<div class='borderlight' style='padding:10px;'>\n";
 
-	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
+	echo "<table border='0' $tablewidth cellpadding='0' cellspacing='0'>";
 	echo "	<tr>\n";
-	echo "		<td width='80%'>\n";
+	echo "		<td width='80%' valign='top'>\n";
 	echo "			<b>".$text['header-user_add']."</b>\n";
 	echo "			<br><br>\n";
 	echo "			".$text['description-user_add']."\n";
 	echo "		</td>\n";
-	echo "		<td width='20%' align='right'>\n";
-	echo "			<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"window.history.back()\" value='".$text['button-back']."'>\n";
+	echo "		<td width='20%' valign='top' align='right'>\n";
+	echo "			<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"document.location.href='index.php';\" value='".$text['button-back']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	echo "<table border='0' $tablewidth cellpadding='6' cellspacing='0'>";
+	echo "<table border='0' $tablewidth cellpadding='0' cellspacing='0'>";
 	echo "	<tr>";
 	echo "		<td class='vncellreq' width='30%'>".$text['label-username'].":</td>";
 	echo "		<td class='vtable' width='70%'><input type='text' class='formfld' autocomplete='off' name='username' value='$username'></td>";
@@ -275,7 +273,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "		<td class='vtable'><input type='text' class='formfld' name='user_email' value='$user_email'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-group'].":</td>";
+	echo "		<td class='vncellreq' valign='top'>".$text['label-group'].":</td>";
 	echo "		<td class='vtable'>";
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
@@ -306,20 +304,13 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "		<td class='vncell'>".$text['label-company_name'].":</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='contact_organization' value='$contact_organization'></td>";
 	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
-
-	echo "<div class='' style='padding:10px;'>\n";
-	echo "<table $tablewidth>";
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
-	echo "       <input type='submit' name='submit' class='btn' value='".$text['button-create_account']."'>";
+	echo "      	<br><input type='submit' name='submit' class='btn' value='".$text['button-create_account']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
-
-	echo "</div>";
 
 //show the footer
 	require_once "resources/footer.php";
