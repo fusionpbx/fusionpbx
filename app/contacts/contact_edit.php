@@ -163,7 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql = "delete from v_contact_groups ";
 			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$sql .= "and group_uuid = '".$_SESSION['groups'][0]['user_uuid']."' ";
+			$sql .= "and group_uuid = '".$_SESSION["user_uuid"]."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			unset($prep_statement, $sql);
@@ -177,7 +177,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			unset($prep_statement, $sql);
-			$group_uuid = $_SESSION['groups'][0]['user_uuid'];
+			$group_uuid = $_SESSION["user_uuid"];
 		}
 
 		//handle insertion of contact group (or private contact, if not shared)
@@ -623,7 +623,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql = "select count(*) as num_rows from v_contact_groups ";
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and contact_uuid = '".$contact_uuid."' ";
-			$sql .= "and group_uuid = '".$_SESSION['groups'][0]['user_uuid']."' ";
+			$sql .= "and group_uuid = '".$_SESSION["user_uuid"]."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
@@ -666,7 +666,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "and g.domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and cg.domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and cg.contact_uuid = '".$contact_uuid."' ";
-			$sql .= "and cg.group_uuid <> '".$_SESSION['groups'][0]['user_uuid']."' ";
+			$sql .= "and cg.group_uuid <> '".$_SESSION["user_uuid"]."' ";
 			$sql .= "order by g.group_name asc ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();

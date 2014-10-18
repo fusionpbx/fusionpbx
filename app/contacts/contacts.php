@@ -78,7 +78,7 @@ require_once "resources/paging.php";
 		$user_group_uuids[] = $group_data['group_uuid'];
 	}
 	//add user's uuid to group uuid list to include private (non-shared) contacts
-	$user_group_uuids[] = $_SESSION['groups'][0]['user_uuid'];
+	$user_group_uuids[] = $_SESSION["user_uuid"];
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_contacts ";
