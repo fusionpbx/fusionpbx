@@ -631,8 +631,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset ($sql, $prep_statement, $row);
 		}
 		else {
-			//private by default on contact add
-			$contact_shared = 'false';
+			//private by default on contact add, unless being done by a superadmin from a different domain
+			$contact_shared = ($_SESSION['groups'][0]['domain_uuid'] != $_SESSION['domain_uuid']) ? 'true' : 'false';
 		}
 		//disable shared change if user (superadmin) is accessing a foreign domain
 		$contact_shared_disabled = ($_SESSION['groups'][0]['domain_uuid'] != $_SESSION['domain_uuid']) ? "disabled='disabled'" : null;
