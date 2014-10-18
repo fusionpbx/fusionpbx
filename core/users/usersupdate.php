@@ -63,12 +63,12 @@ else {
 //delete the group from the user
 	if ($_GET["a"] == "delete" && permission_exists("user_delete")) {
 		//set the variables
-			$group_name = check_str($_GET["group_name"]);
+			$group_uuid = check_str($_GET["group_uuid"]);
 		//delete the group from the users
 			$sql = "delete from v_group_users ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and group_name = '$group_name' ";
-			$sql .= "and user_uuid = '$user_uuid' ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and group_uuid = '".$group_uuid."' ";
+			$sql .= "and user_uuid = '".$user_uuid."' ";
 			$db->exec(check_sql($sql));
 		//redirect the user
 			$_SESSION["message"] = $text['message-update'];
@@ -252,29 +252,34 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 
 	//assign the user to the group
-		if (strlen($_REQUEST["group_name"]) > 0) {
+		if (strlen($_REQUEST["group_uuid_name"]) > 0) {
+			$group_data = explode('|', $_REQUEST["group_uuid_name"]);
+			$group_uuid = $group_data[0];
+			$group_name = $group_data[1];
 			$sql_insert = "insert into v_group_users ";
 			$sql_insert .= "(";
 			$sql_insert .= "group_user_uuid, ";
 			$sql_insert .= "domain_uuid, ";
 			$sql_insert .= "group_name, ";
+			$sql_insert .= "group_uuid, ";
 			$sql_insert .= "user_uuid ";
-			$sql_insert .= ")";
+			$sql_insert .= ") ";
 			$sql_insert .= "values ";
-			$sql_insert .= "(";
+			$sql_insert .= "( ";
 			$sql_insert .= "'".uuid()."', ";
-			$sql_insert .= "'$domain_uuid', ";
-			$sql_insert .= "'".$_REQUEST["group_name"]."', ";
-			$sql_insert .= "'$user_uuid' ";
+			$sql_insert .= "'".$domain_uuid."', ";
+			$sql_insert .= "'".$group_name."', ";
+			$sql_insert .= "'".$group_uuid."', ";
+			$sql_insert .= "'".$user_uuid."' ";
 			$sql_insert .= ")";
-			if ($_REQUEST["group_name"] == "superadmin") {
-				//only a user in the superadmin group can add other users to that group
-				if (if_group("superadmin")) {
+			//only a superadmin can add other superadmins or admins, admins can only add other admins
+			switch ($group_name) {
+				case "superadmin" :
+					if (!if_group("superadmin")) { break; }
+				case "admin" :
+					if (!if_group("superadmin") && !if_group("admin")) { break; }
+				default :
 					$db->exec($sql_insert);
-				}
-			}
-			else {
-				$db->exec($sql_insert);
 			}
 		}
 
@@ -337,7 +342,12 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 
 	//redirect the browser
 		$_SESSION["message"] = $text['message-update'];
-		header("Location: index.php");
+		if ($_REQUEST['submit'] == $text['button-add']) {
+			header("Location: usersupdate.php?id=".$user_uuid);
+		}
+		else {
+			header("Location: index.php");
+		}
 		return;
 
 }
@@ -457,7 +467,6 @@ else {
 	echo "		<td class='vncell' valign='top'>".$text['label-groups'].":</td>";
 	echo "		<td class='vtable'>";
 
-	echo "<table width='52%'>\n";
 	$sql = "SELECT * FROM v_group_users ";
 	$sql .= "where domain_uuid=:domain_uuid ";
 	$sql .= "and user_uuid=:user_uuid ";
@@ -467,39 +476,51 @@ else {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	$result_count = count($result);
-	foreach($result as $field) {
-		if (strlen($field['group_name']) > 0) {
-			echo "<tr>\n";
-			echo "	<td class='vtable'>".$field['group_name']."</td>\n";
-			echo "	<td>\n";
-			if (permission_exists('group_member_delete') || if_group("superadmin")) {
-				echo "		<a href='usersupdate.php?id=".$user_uuid."&domain_uuid=".$domain_uuid."&group_name=".$field['group_name']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+	if ($result_count > 0) {
+		echo "<table width='30%'>\n";
+		foreach($result as $field) {
+			if (strlen($field['group_name']) > 0) {
+				echo "<tr>\n";
+				echo "	<td class='vtable'>".$field['group_name']."</td>\n";
+				echo "	<td>\n";
+				if (permission_exists('group_member_delete') || if_group("superadmin")) {
+					echo "		<a href='usersupdate.php?id=".$user_uuid."&domain_uuid=".$domain_uuid."&group_uuid=".$field['group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				}
+				echo "	</td>\n";
+				echo "</tr>\n";
+				$assigned_groups[] = $field['group_uuid'];
 			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			$assigned_groups[] = $field['group_name'];
 		}
+		echo "</table>\n";
 	}
-	echo "</table>\n";
+	unset($sql, $prep_statement, $result, $result_count);
 
-	echo "<br />\n";
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	if (sizeof($assigned_groups) > 0) {
+		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
+	}
 	$sql .= "order by group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
-	echo "<select name=\"group_name\" class='formfld' style='width: auto; margin-right: 3px;'>\n";
-	echo "<option value=\"\"></option>\n";
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
-		if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other users in the superadmin group
-		if (!in_array($field["group_name"], $assigned_groups)) {
-			echo "<option value='".$field['group_name']."'>".$field['group_name']."</option>\n";
+	$result_count = count($result);
+	if ($result_count > 0) {
+		echo "<br />\n";
+		echo "<select name='group_uuid_name' class='formfld' style='width: auto; margin-right: 3px;'>\n";
+		echo "<option value=''></option>\n";
+		foreach($result as $field) {
+			if ($field['group_name'] == "superadmin" && !if_group("superadmin")) { continue; }	//only show the superadmin group to other superadmins
+			if ($field['group_name'] == "admin" && (!if_group("superadmin") && !if_group("admin") )) { continue; }	//only show the admin group to other admins
+			if (!in_array($field["group_uuid"], $assigned_groups)) {
+				echo "<option value='".$field['group_uuid']."|".$field['group_name']."'>".$field['group_name']."</option>\n";
+			}
 		}
+		echo "</select>";
+		echo "<input type='submit' name='submit' class='btn' value=\"".$text['button-add']."\">\n";
 	}
-	echo "</select>";
-	echo "<input type=\"submit\" class='btn' value=\"".$text['button-add']."\">\n";
-	unset($sql, $result);
+	unset($sql, $prep_statement, $result);
+
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
