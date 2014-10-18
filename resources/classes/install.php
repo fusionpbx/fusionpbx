@@ -160,40 +160,24 @@ include "root.php";
 			}
 		}
 		
-		function copy_sounds() {
-			if (file_exists($this->switch_sounds_dir)) {
-					if (file_exists('/usr/share/examples/fusionpbx/resources/install/sounds/en/us/callie/custom/')){
-					$src_dir = '/usr/share/fusionpbx/resources/install/sounds/en/us/callie/custom/';
+		//function copy_sounds() {
+		//	if (file_exists($this->switch_sounds_dir)) {
+		//			if (file_exists('/usr/share/examples/fusionpbx/resources/install/sounds/en/us/callie/custom/')){
+		//			$src_dir = '/usr/share/fusionpbx/resources/install/sounds/en/us/callie/custom/';
 					// changes the output dir for testing
-					$dst_dir = $this->switch_sounds_dir.'/en/us/fusionpbx/custom/';
-				}
-				else {
-					$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/';
-					$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/';
-				}
-				$this->recursive_copy($src_dir, $dst_dir, "-n");
-				if (is_readable($this->switch_sounds_dir)) {
-					$this->recursive_copy($src_dir, $dst_dir);
-					chmod($dst_dir, 0664);
-				}
-			}
-		}
-
-		function copy_swf() {
-			clearstatcache();
-			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/recordings')) {
-				$file = "slim.swf";
-				$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/htdocs';
-				$dst_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/recordings';
-				if (copy($src_dir.'/'.$file, $dst_dir.'/'.$file)) {
-					$this->result['copy']['swf'][] = "copied from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-				}
-				else {
-					$this->result['copy']['swf'][] = "copy failed from ".$src_dir."/".$file." to ".$dst_dir."/".$file."<br />\n";
-				}
-			}
-		}
-
+		//			$dst_dir = $this->switch_sounds_dir.'/en/us/fusionpbx/custom/';
+		//		}
+		//		else {
+		//			$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sounds/en/us/callie/custom/';
+		//			$dst_dir = $this->switch_sounds_dir.'/en/us/callie/custom/';
+		//		}
+		//		$this->recursive_copy($src_dir, $dst_dir, "-n");
+		//		if (is_readable($this->switch_sounds_dir)) {
+		//			$this->recursive_copy($src_dir, $dst_dir);
+		//			chmod($dst_dir, 0664);
+		//		}
+		//	}
+		//}
 	}
 
 //how to use the class
