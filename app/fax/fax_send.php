@@ -684,6 +684,12 @@ else {
 	echo "	".$text['label-fax-recipient']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
+	//retrieve current user's assigned groups (uuids)
+	foreach ($_SESSION['groups'] as $group_data) {
+		$user_group_uuids[] = $group_data['group_uuid'];
+	}
+	//add user's uuid to group uuid list to include private (non-shared) contacts
+	$user_group_uuids[] = $_SESSION["user_uuid"];
 	$sql = "select ";
 	$sql .= "c.contact_organization, ";
 	$sql .= "c.contact_name_given, ";
@@ -700,6 +706,21 @@ else {
 	$sql .= "cp.phone_type = 'fax' and ";
 	$sql .= "cp.phone_number is not null and ";
 	$sql .= "cp.phone_number <> '' ";
+	if (sizeof($user_group_uuids) > 0) {
+		//only show contacts assigned to current user's group(s) and those not assigned to any group
+		$sql .= "and ( \n";
+		$sql .= "	c.contact_uuid in ( \n";
+		$sql .= "		select contact_uuid from v_contact_groups ";
+		$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
+		$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "	) \n";
+		$sql .= "	or \n";
+		$sql .= "	c.contact_uuid not in ( \n";
+		$sql .= "		select contact_uuid from v_contact_groups ";
+		$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "	) \n";
+		$sql .= ") \n";
+	}
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement -> execute();
 	$result = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
