@@ -416,14 +416,9 @@ else {
 
 	echo "<form method='post' action=''>";
 
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr>\n";
-	echo "<td>\n";
-
-	echo "<table $table_width cellpadding='3' cellspacing='0' border='0'>";
+	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
 	echo "<td align='left' width='90%' nowrap><b>".$text['header-user_edit']."</b></td>\n";
-	echo "<td nowrap='nowrap'>\n";
+	echo "<td align='right' nowrap>\n";
 	echo "	<input type='button' class='btn' onclick=\"window.location='index.php'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "</td>\n";
@@ -437,7 +432,7 @@ else {
 
 	echo "<br />\n";
 
-	echo "<table $table_width cellpadding='6' cellspacing='0' border='0'>";
+	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
 	echo "<tr>\n";
 	echo "	<th class='th' colspan='2' align='left'>".$text['label-user_info']."</th>\n";
 	echo "</tr>\n";
@@ -464,7 +459,7 @@ else {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-groups'].":</td>";
+	echo "		<td class='vncellreq' valign='top'>".$text['label-groups'].":</td>";
 	echo "		<td class='vtable'>";
 
 	$sql = "SELECT * FROM v_group_users ";
@@ -482,11 +477,13 @@ else {
 			if (strlen($field['group_name']) > 0) {
 				echo "<tr>\n";
 				echo "	<td class='vtable'>".$field['group_name']."</td>\n";
-				echo "	<td>\n";
-				if (permission_exists('group_member_delete') || if_group("superadmin")) {
-					echo "		<a href='usersupdate.php?id=".$user_uuid."&domain_uuid=".$domain_uuid."&group_uuid=".$field['group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				if ($result_count > 1) {
+					echo "	<td>\n";
+					if (permission_exists('group_member_delete') || if_group("superadmin")) {
+						echo "		<a href='usersupdate.php?id=".$user_uuid."&domain_uuid=".$domain_uuid."&group_uuid=".$field['group_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+					}
+					echo "	</td>\n";
 				}
-				echo "	</td>\n";
 				echo "</tr>\n";
 				$assigned_groups[] = $field['group_uuid'];
 			}
@@ -717,13 +714,8 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	</table>";
-	echo "<br>";
-
-	echo "<div class='' style='padding:10px;'>\n";
-	echo "<table $table_width>";
 	echo "	<tr>";
-	echo "		<td colspan='2' align='right'>";
+	echo "		<td colspan='2' align='right'><br>";
 	echo "			<input type='hidden' name='id' value=\"$user_uuid\">";
 	echo "			<input type='hidden' name='username_old' value=\"$username\">";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
@@ -731,10 +723,6 @@ else {
 	echo "	</tr>";
 	echo "</table>";
 
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "</form>";
 
 //include the footer
