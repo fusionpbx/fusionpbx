@@ -124,7 +124,7 @@
 
 		--disable follow me
 			if (follow_me_uuid ~= nil) then
-				if (enabled == "true") then
+				if (string.len(follow_me_uuid) > 0 and enabled == "true") then
 					sql = "update v_follow_me set ";
 					sql = sql .. "follow_me_enabled = 'false' ";
 					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
