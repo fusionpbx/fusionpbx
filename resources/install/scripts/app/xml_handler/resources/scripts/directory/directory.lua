@@ -34,16 +34,17 @@
 --get the action
 	action = params:getHeader("action");
 	purpose = params:getHeader("purpose");
-	--sip_auth - registration
-	--group_call - call group has been called
-	--user_call - user has been called
+		--sip_auth - registration
+		--group_call - call group has been called
+		--user_call - user has been called
 
 --additional information
-	--event_calling_function = params:getHeader("Event-Calling-Function");
+		--event_calling_function = params:getHeader("Event-Calling-Function");
 
---set the variables as a string to prevent nil errors
+--set the variables as a string
 	number_alias = "";
 	number_alias_string = "";
+	vm_mailto = "";
 
 --determine the correction action to perform
 	if (purpose == "gateways") then
@@ -380,6 +381,9 @@
 							table.insert(xml, [[								<variable name="domain_uuid" value="]] .. domain_uuid .. [["/>]]);
 							table.insert(xml, [[								<variable name="domain_name" value="]] .. domain_name .. [["/>]]);
 							table.insert(xml, [[								<variable name="extension_uuid" value="]] .. extension_uuid .. [["/>]]);
+							if (string.len(number_alias) > 0) then
+								table.insert(xml, [[								<variable name="number-alias" value="]] .. number_alias .. [["/>]]);
+							end
 							--table.insert(xml, [[								<variable name="call_timeout" value="]] .. call_timeout .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_name" value="]] .. sip_from_user .. [["/>]]);
 							table.insert(xml, [[								<variable name="caller_id_number" value="]] .. sip_from_user .. [["/>]]);
@@ -485,6 +489,13 @@
 								freeswitch.consoleLog("notice", "[xml_handler] directory:" .. user .. "@" .. domain_name .. " source: database\n");
 							end
 					end
+			end
+
+		--disable registration for number-alias
+			if (params:getHeader("type") ~= "attr") then
+				if (api:execute("user_data", user .. "@" .. domain_name .." attr id") ~= user) then
+					XML_STRING = nil;
+				end
 			end
 
 		--get the XML string from the cache
