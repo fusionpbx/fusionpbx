@@ -122,6 +122,11 @@
 				domain_uuid = string.lower(domain_uuid);
 			end
 
+		--if voicemail_id is non numeric then get the number-alias
+			if tonumber(voicemail_id) == nil then
+				 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");	 
+			end
+
 		--set the voicemail_dir
 			voicemail_dir = voicemail_dir.."/default/"..domain_name;
 			if (debug["info"]) then
@@ -231,6 +236,7 @@
 				else
 					check_password(voicemail_id, password_tries);
 				end
+
 			--send to the main menu
 				timeouts = 0;
 				main_menu();
@@ -239,6 +245,7 @@
 
 --leave a message
 	if (voicemail_action == "save") then
+
 		--check the voicemail quota
 			if (vm_disk_quota) then
 				--get voicemail message seconds
@@ -251,13 +258,11 @@
 					status = dbh:query(sql, function(row)
 						message_sum = row["message_sum"];
 					end);
-					if (message_sum ~= '') then
-						if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
-							--play message mailbox full
-								session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
-							--set the voicemail_uuid to nil to prevent saving the voicemail
-								voicemail_uuid = nil;
-						end
+					if (tonumber(vm_disk_quota) <= tonumber(message_sum)) then
+						--play message mailbox full
+							session:execute("playback", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-mailbox_full.wav")
+						--set the voicemail_uuid to nil to prevent saving the voicemail
+							voicemail_uuid = nil;
 					end
 			end
 
