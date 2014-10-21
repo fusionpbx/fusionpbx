@@ -26,7 +26,7 @@
 		        <anti-action application="set" data="caller_id_name=Page" />
 		        <anti-action application="set" data="caller_id_number=" />
 		        <anti-action application="set" data="pin_number=" />
-		        <anti-action application="set" data="extension_list=2000-2002" />
+		        <anti-action application="set" data="destinations=100-103" />
 		        <anti-action application="lua" data="page.lua" />
 		</condition>
 	</extension>

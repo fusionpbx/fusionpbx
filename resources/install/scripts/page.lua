@@ -49,10 +49,13 @@ if ( session:ready() ) then
 		pin_number = session:getVariable("pin_number");
 		domain_name = session:getVariable("domain_name");
 		sounds_dir = session:getVariable("sounds_dir");
-		extension_list = session:getVariable("extension_list");
+		destinations = session:getVariable("destinations");
+		if (destinations == nil) then
+			destinations = session:getVariable("extension_list");	
+		end
+		destination_table = explode(",",destinations);
 		caller_id_name = session:getVariable("caller_id_name");
 		caller_id_number = session:getVariable("caller_id_number");
-		extension_table = explode(",",extension_list);
 		sip_from_user = session:getVariable("sip_from_user");
 		mute = session:getVariable("mute");
 
@@ -119,24 +122,27 @@ if ( session:ready() ) then
 
 	destination_count = 0;
 	api = freeswitch.API();
-	for index,value in pairs(extension_table) do
+	for index,value in pairs(destination_table) do
 		if (string.find(value, "-") == nill) then
 			value = value..'-'..value;
 		end
 		sub_table = explode("-",value);
-		for extension=sub_table[1],sub_table[2] do
-			--extension_exists = "username_exists id "..extension.."@"..domain_name;
-			--reply = trim(api:executeString(extension_exists));
+		for destination=sub_table[1],sub_table[2] do
+			--get the destination required for number-alias
+			destination = api:execute("user_data", destination .. "@" .. domain_name .. " attr id");	 
+
+			--cmd = "username_exists id "..destination.."@"..domain_name;
+			--reply = trim(api:executeString(cmd));
 			--if (reply == "true") then
-				extension_status = "show channels like "..extension.."@";
-				reply = trim(api:executeString(extension_status));
+				destination_status = "show channels like "..destination.."@";
+				reply = trim(api:executeString(destination_status));
 				if (reply == "0 total.") then
-					--freeswitch.consoleLog("NOTICE", "extension "..extension.." available\n");
-					if (extension == tonumber(sip_from_user)) then
-						--this extension is the caller that initated the page
+					--freeswitch.consoleLog("NOTICE", "destination "..destination.." available\n");
+					if (destination == tonumber(sip_from_user)) then
+						--this destination is the caller that initated the page
 					else
 						--originate the call
-						cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
+						cmd_string = "bgapi originate {sip_auto_answer=true,sip_h_Alert-Info='Ring Answer',hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
 						api:executeString(cmd_string);
 						destination_count = destination_count + 1;
 					end
@@ -144,14 +150,14 @@ if ( session:ready() ) then
 				else
 					--look inside the reply to check for the correct domain_name
 					if string.find(reply, domain_name) then
-						--found: extension number is busy
+						--found: user is busy
 					else
 						--not found
-						if (extension == tonumber(sip_from_user)) then
-							--this extension is the caller that initated the page
+						if (destination == tonumber(sip_from_user)) then
+							--this destination is the caller that initated the page
 						else
 							--originate the call
-							cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..extension.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
+							cmd_string = "bgapi originate {sip_auto_answer=true,hangup_after_bridge=false,origination_caller_id_name='"..caller_id_name.."',origination_caller_id_number="..caller_id_number.."}user/"..destination.."@"..domain_name.." conference:page-"..destination_number.."@page+"..flags.." inline";
 							api:executeString(cmd_string);
 							destination_count = destination_count + 1;
 						end
