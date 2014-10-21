@@ -2158,7 +2158,7 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 	unset($sql);
 }
 
-function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data) {
+function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break) {
 	global $db;
 	$dialplan_detail_uuid = uuid();
 	$sql = "insert into v_dialplan_details ";
@@ -2170,7 +2170,8 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 	$sql .= "dialplan_detail_group, ";
 	$sql .= "dialplan_detail_order, ";
 	$sql .= "dialplan_detail_type, ";
-	$sql .= "dialplan_detail_data ";
+	$sql .= "dialplan_detail_data, ";
+	$sql .= "dialplan_detail_break ";
 	$sql .= ") ";
 	$sql .= "values ";
 	$sql .= "(";
@@ -2186,7 +2187,13 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 	}
 	$sql .= "'".check_str($dialplan_detail_order)."', ";
 	$sql .= "'".check_str($dialplan_detail_type)."', ";
-	$sql .= "'".check_str($dialplan_detail_data)."' ";
+	$sql .= "'".check_str($dialplan_detail_data)."', ";
+	if (strlen($dialplan_detail_break) == 0) {
+		$sql .= "null ";
+	}
+	else {
+		$sql .= "'".check_str($dialplan_detail_break)."' ";
+	}
 	$sql .= ")";
 	$db->exec(check_sql($sql));
 	unset($sql);
