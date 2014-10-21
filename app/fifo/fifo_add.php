@@ -103,7 +103,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan_detail_data = '^'.$queue_extension_number.'$';
 					$dialplan_detail_order = '000';
 					$dialplan_detail_group = '1';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					if ((strlen($agent_queue_extension_number) > 0) || (strlen($agent_login_logout_extension_number) > 0)) {
+						$dialplan_detail_break = 'on-true';
+					} else {
+						$dialplan_detail_break = '';
+					}						
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break);
 				//set the hold music
 					//if (strlen($hold_music) > 0) {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
@@ -155,7 +160,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan_detail_data = '^'.$agent_queue_extension_number.'$';
 					$dialplan_detail_order = '000';
 					$dialplan_detail_group = '2';
-					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					if (strlen($agent_login_logout_extension_number) > 0) {
+						$dialplan_detail_break = 'on-true';
+					} else {
+						$dialplan_detail_break = '';
+					}						
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break);
 				//set the hold music
 					//if (strlen($hold_music) > 0) {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
@@ -214,39 +224,46 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$dialplan_detail_order = '001';
 					$dialplan_detail_group = '3';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+				//set the user_name
+					$dialplan_detail_tag = 'action'; //condition, action, antiaction
+					$dialplan_detail_type = 'set';
+					$dialplan_detail_data = 'user_name=${caller_id_number}@${domain_name}';
+					$dialplan_detail_order = '002';
+					$dialplan_detail_group = '3';
+					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 				//set the fifo_simo
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
 					$dialplan_detail_data = 'fifo_simo=1';
-					$dialplan_detail_order = '002';
+					$dialplan_detail_order = '003';
 					$dialplan_detail_group = '3';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 				//set the fifo_timeout
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
 					$dialplan_detail_data = 'fifo_timeout=10';
-					$dialplan_detail_order = '003';
+					$dialplan_detail_order = '004';
 					$dialplan_detail_group = '3';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 				//set the fifo_lag
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
 					$dialplan_detail_data = 'fifo_lag=10';
-					$dialplan_detail_order = '004';
+					$dialplan_detail_order = '005';
 					$dialplan_detail_group = '3';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 				//set the pin_number
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
 					$dialplan_detail_data = 'pin_number=';
-					$dialplan_detail_order = '005';
+					$dialplan_detail_order = '006';
 					$dialplan_detail_group = '3';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 				//action lua
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'lua';
 					$dialplan_detail_data = 'fifo_member.lua';
-					$dialplan_detail_order = '006';
+					$dialplan_detail_order = '007';
 					$dialplan_detail_group = '3';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 			}
