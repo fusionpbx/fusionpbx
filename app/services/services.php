@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -43,11 +43,11 @@ else {
 require_once "resources/header.php";
 require_once "resources/paging.php";
 
-$order_by = $_GET["order_by"];
-$order = $_GET["order"];
+$order_by = check_str($_GET["order_by"]);
+$order = check_str($_GET["order"]);
 
 if (strlen($_GET["a"]) > 0) {
-	$service_uuid = $_GET["id"];
+	$service_uuid = check_str($_GET["id"]);
 	$sql = "select * from v_services ";
 	$sql .= "where service_uuid = '$service_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -61,7 +61,6 @@ if (strlen($_GET["a"]) > 0) {
 		$service_cmd_start = $row["service_cmd_start"];
 		$service_cmd_stop = $row["service_cmd_stop"];
 		$service_description = $row["service_description"];
-		break; //limit to 1 row
 	}
 	unset ($prep_statement);
 
@@ -148,10 +147,7 @@ if (strlen($_GET["a"]) > 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count == 0) {
-		//no results
-	}
-	else { //received results
+	if ($result_count > 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('service_edit')) ? "href='service_edit.php?id=".$row[service_uuid]."'" : null;
 			echo "<tr ".$tr_link.">\n";
@@ -164,20 +160,41 @@ if (strlen($_GET["a"]) > 0) {
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			$pid = file_get_contents($row[service_data]);
-			if (is_process_running($pid)) {
-				echo "<strong>Running</strong>";
+			if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
+				$pid = file_get_contents($row[service_data]);
+				if (is_process_running($pid)) {
+					echo "<strong>Running</strong>";
+				}
+				else {
+					echo "<strong>Stopped</strong>";
+				}
 			}
-			else {
-				echo "<strong>Stopped</strong>";
+			if ($row[service_type] == "file") {
+				$service_data = $row[service_data];
+				if (file_exists($service_data)) {
+					echo "<strong>Running</strong>";
+				}
+				else {
+					echo "<strong>Stopped</strong>";
+				}
 			}
 			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
-			if (is_process_running($pid)) {
-				echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>Stop</a>";
+			if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
+				if (is_process_running($pid)) {
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>Stop</a>";
+				}
+				else {
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
+				}
 			}
-			else {
-				echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
+			if ($row[service_type] == "file") {
+				if (file_exists($service_data)) {
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>Stop</a>";
+				}
+				else {
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
+				}
 			}
 			echo "</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row[service_description]."&nbsp;</td>\n";
