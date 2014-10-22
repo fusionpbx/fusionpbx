@@ -29,8 +29,10 @@
 	dofile(config());
 
 --define general settings
-	tmp_file = "/usr/local/freeswitch/log/mwi.tmp";
 	sleep = 300;
+
+--define the run file
+	run_file = scripts_dir .. "/resources/run/voicemail-mwi.tmp";
 
 --debug
 	debug["sql"] = false;
@@ -43,7 +45,7 @@
 	dbh = database_handle('system');
 
 --used to stop the lua service
-	local file = assert(io.open(tmp_file, "w"));
+	local file = assert(io.open(run_file, "w"));
 	file:write("remove this file to stop the script");
 
 --add the trim function
@@ -64,8 +66,8 @@
 	while true do
 
 		--exit the loop when the file does not exist
-			if (not file_exists(tmp_file)) then
-				freeswitch.consoleLog("NOTICE", tmp_file.." not found\n");
+			if (not file_exists(run_file)) then
+				freeswitch.consoleLog("NOTICE", run_file.." not found\n");
 				break;
 			end
 
