@@ -489,7 +489,7 @@
 			end
 
 		--disable registration for number-alias
-			if (params:getHeader("type") ~= "attr") then
+			if (params:getHeader("sip_auth_method") == "REGISTER") then
 				if (api:execute("user_data", user .. "@" .. domain_name .." attr id") ~= user) then
 					XML_STRING = nil;
 				end
