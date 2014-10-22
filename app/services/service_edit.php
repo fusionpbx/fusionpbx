@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -212,17 +212,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='service_type'>\n";
 	echo "	<option value=''></option>\n";
-	if ($service_type == "pid_file") {
-		echo "	<option value='pid_file' SELECTED >pid file</option>\n";
+	if ($service_type == "pid" || $service_type == "pid_file") {
+		echo "	<option value='pid' selected='selected'>pid</option>\n";
 	}
 	else {
-		echo "	<option value='pid_file'>pid file</option>\n";
+		echo "	<option value='pid'>pid</option>\n";
 	}
-	if ($service_type == "php") {
-		echo "	<option value='php' SELECTED >php</option>\n";
+	//if ($service_type == "php") {
+	//	echo "	<option value='php' selected='selected'>php</option>\n";
+	//}
+	//else {
+	//	echo "	<option value='php'>php</option>\n";
+	//}
+	if ($service_type == "file") {
+		echo "	<option value='file' selected='selected'>file</option>\n";
 	}
 	else {
-		echo "	<option value='php'>php</option>\n";
+		echo "	<option value='file'>file</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
