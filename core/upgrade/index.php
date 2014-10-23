@@ -122,7 +122,7 @@ echo "<br><br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
 
-if (permission_exists("upgrade_svn") && !is_dir("/usr/share/fusionpbx")) {
+if (permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";

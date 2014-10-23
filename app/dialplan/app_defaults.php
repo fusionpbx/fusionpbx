@@ -78,8 +78,8 @@
 	if (is_dir($_SESSION['switch']['dialplan']['dir'])) {
 		//write the dialplan/default.xml if it does not exist
 			//set the path
-				if (file_exists('/usr/share/fusionpbx/resources/templates/conf')) {
-					$path = "/usr/share/fusionpbx/resources/templates/conf";
+				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
+					$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
 				}
 				else {
 					$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf';

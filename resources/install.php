@@ -541,8 +541,8 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/fusionpbx/resources/install/sql/sqlite.sql')){
-					$filename = "/usr/share/fusionpbx/resources/install/sql/sqlite.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql')){
+					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/sqlite.sql";
 				}
 				else {
 				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/sqlite.sql';
@@ -631,8 +631,8 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				$schema->exec();
 
 			//get the contents of the sql file
-				if (file_exists('/usr/share/fusionpbx/resources/install/sql/pgsql.sql')){
-					$filename = "/usr/share/fusionpbx/resources/install/sql/pgsql.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql')){
+					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/pgsql.sql";
 				}
 				else {
 				$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/pgsql.sql';
@@ -803,8 +803,8 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 
 			//add the defaults data into the database
 				//get the contents of the sql file
-				if (file_exists('/usr/share/fusionpbx/resources/install/sql/mysql.sql')){
-					$filename = "/usr/share/fusionpbx/resources/install/sql/mysql.sql";
+				if (file_exists('/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql')){
+					$filename = "/usr/share/examples/fusionpbx/resources/install/sql/mysql.sql";
 				}
 				else {
 					$filename = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/install/sql/mysql.sql';
