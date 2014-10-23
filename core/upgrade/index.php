@@ -55,7 +55,7 @@ if (sizeof($_POST) > 0) {
 	$do = $_POST['do'];
 
 	// run svn update
-	if ($do["svn"] && permission_exists("upgrade_svn") && !is_dir("/var/lib/fusionpbx")) {
+	if ($do["svn"] && permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
 		$cmd = "svn up /var/www/fusionpbx";
 		exec($cmd, $response_svn_update);
 		if (sizeof($response_svn_update) > 0) {
