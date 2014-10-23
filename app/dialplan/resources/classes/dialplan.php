@@ -182,8 +182,8 @@ include "root.php";
 				$switch_dialplan_dir = $this->switch_dialplan_dir;
 				if (is_dir($switch_dialplan_dir)) {
 					//copy resources/templates/conf to the freeswitch conf dir
-						if (file_exists('/usr/share/fusionpbx/resources/templates/conf')){
-							$src_dir = "/usr/share/fusionpbx/resources/templates/conf";
+						if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')){
+							$src_dir = "/usr/share/examples/fusionpbx/resources/templates/conf";
 						}
 						else {
 							$src_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";

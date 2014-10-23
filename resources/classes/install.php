@@ -162,7 +162,7 @@ include "root.php";
 		//function copy_sounds() {
 		//	if (file_exists($this->switch_sounds_dir)) {
 		//			if (file_exists('/usr/share/examples/fusionpbx/resources/install/sounds/en/us/callie/custom/')){
-		//			$src_dir = '/usr/share/fusionpbx/resources/install/sounds/en/us/callie/custom/';
+		//			$src_dir = '/usr/share/examples/fusionpbx/resources/install/sounds/en/us/callie/custom/';
 					// changes the output dir for testing
 		//			$dst_dir = $this->switch_sounds_dir.'/en/us/fusionpbx/custom/';
 		//		}

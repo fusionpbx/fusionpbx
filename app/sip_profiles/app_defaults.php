@@ -33,7 +33,7 @@
 			if (file_exists('/etc/fusionpbx')) {
 				//linux
 				$custom = '/etc/fusionpbx/resources/templates/conf/sip_profiles';
-				$source = '/usr/share/fusionpbx/resources/templates/conf/sip_profiles';
+				$source = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles';
 			}
 			if (file_exists('/usr/local/etc/fusionpbx')) {
 				//bsd
