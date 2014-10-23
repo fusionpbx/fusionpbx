@@ -1297,10 +1297,10 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				if (!is_readable($install_backup_dir)) { mkdir($install_backup_dir,0777,true); }
 				if (is_readable($switch_log_dir)) {
 					if (!is_readable($switch_scripts_dir.'') && $switch_scripts_dir != "/scripts") { mkdir($switch_scripts_dir.'',0777,true); }
-					if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/8000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/8000',0777,true); }
-					if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/16000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/16000',0777,true); }
-					if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/32000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/32000',0777,true); }
-					if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/48000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/48000',0777,true); }
+			//		if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/8000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/8000',0777,true); }
+			//		if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/16000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/16000',0777,true); }
+			//		if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/32000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/32000',0777,true); }
+			//		if (!is_readable($switch_sounds_dir.'/en/us/callie/custom/48000') && $switch_scripts_dir != "/sounds") { mkdir($switch_sounds_dir.'/en/us/callie/custom/48000',0777,true); }
 					if (!is_readable($switch_storage_dir.'/fax/') && $switch_scripts_dir != "/storage") { mkdir($switch_storage_dir.'/fax',0777,true); }
 					if (!is_readable($switch_recordings_dir.'') && $switch_scripts_dir != "/recordings") { mkdir($switch_recordings_dir.'',0777,true); }
 				}
@@ -1312,7 +1312,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				$install->domain = $domain_name;
 				$install->switch_conf_dir = $switch_conf_dir;
 				$install->switch_scripts_dir = $switch_scripts_dir;
-				$install->switch_sounds_dir = $switch_sounds_dir;
+			//	$install->switch_sounds_dir = $switch_sounds_dir;
 				$install->copy_conf();
 				$install->copy();
 
