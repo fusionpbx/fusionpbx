@@ -181,8 +181,12 @@ include "root.php";
 
 		public function save() {
 			//get the contents of the template
+			if (file_exists('/usr/share/examples/fusionpbx')) {
+				$file_contents = file_get_contents("/usr/share/examples/fusionpbx/resources/templates/conf/autoload_configs/local_stream.conf.xml");
+			else
 				$file_contents = file_get_contents($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf/autoload_configs/local_stream.conf.xml");
-
+			fi
+			}
 			//replace the variable
 				$file_contents = str_replace("{v_moh_categories}", $this->xml, $file_contents);
 
