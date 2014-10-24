@@ -97,14 +97,8 @@ else {
 		//get the agent list
 
 			//show the title
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
-				echo "  <tr>\n";
-				echo "	<td align='left'><b>".$text['header-agents']."</b><br />\n";
-				echo "		".$text['description-agents']."<br />\n";
-				echo "	</td>\n";
-				echo "  </tr>\n";
-				echo "</table>\n";
-				echo "<br />\n";
+				echo "<b>".$text['header-agents']."</b><br />\n";
+				echo $text['description-agents']."<br /><br />\n";
 
 			//send the event socket command and get the response
 				//callcenter_config queue list tiers [queue_name] |
@@ -243,12 +237,12 @@ else {
 					if ($c==0) { $c=1; } else { $c=0; }
 				}
 				echo "</table>\n\n";
-				echo "</br>";
 
 		//add vertical spacing
-			echo "<br />\n";
-			echo "<br />\n";
-			echo "<br />\n";
+			echo "<br />";
+			echo "<br />";
+			echo "<br />";
+			echo "<br />";
 
 
 		//get the queue list
@@ -259,11 +253,26 @@ else {
 				$result = str_to_named_array($event_socket_str, '|');
 
 			//show the title
-				echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+				$q_waiting=0;
+				$q_trying=0;
+				$q_answered=0;
+
+				echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 				echo "  <tr>\n";
 				echo "	<td align='left'><b>".$text['label-queue'].": ".ucfirst($_GET[queue_name])."</b><br />\n";
 				echo "		".$text['description-queue']."<br />\n";
 				echo "	</td>\n";
+				echo "	<td align='right' valign='top'>";
+				foreach ($result as $row) {
+					$state = $row['state'];
+					$q_trying += ($state == "Trying") ? 1 : 0;
+					$q_waiting += ($state == "Waiting") ? 1 : 0;
+					$q_answered += ($state == "Answered") ? 1 : 0;
+				}
+				echo "		<strong>".$text['label-waiting'].":</strong> <b>".$q_waiting."</b>&nbsp;&nbsp;&nbsp;";
+				echo "		<strong>".$text['label-trying'].":</strong> <b>".$q_trying."</b>&nbsp;&nbsp;&nbsp; ";
+				echo "		<strong>".$text['label-answered'].":</strong> <b>".$q_answered."</b>";
+				echo "	</td>";
 				echo "  </tr>\n";
 				echo "</table>\n";
 				echo "<br />\n";
@@ -275,15 +284,11 @@ else {
 			echo "<th>".$text['label-name']."</th>\n";
 			echo "<th>".$text['label-number']."</th>\n";
 			echo "<th>".$text['label-status']."</th>\n";
-			if (if_group("admin") || if_group("superadmin")) {
+			if ((if_group("admin") || if_group("superadmin"))) {
 				echo "<th>".$text['label-options']."</th>\n";
 			}
 			echo "<th>".$text['label-agent']."</th>\n";
 			echo "</tr>\n";
-
-			$q_waiting=0;
-			$q_trying=0;
-			$q_answered=0;
 
 			foreach ($result as $row) {
 				$queue = $row['queue'];
@@ -302,10 +307,6 @@ else {
 				$serving_agent = $row['serving_agent'];
 				$serving_system = $row['serving_system'];
 				$state = $row['state'];
-				if ($state=="Trying") {$q_trying = $q_trying + 1;}
-				if ($state=="Waiting") {$q_waiting = $q_waiting + 1;}
-				if ($state=="Answered") {$q_answered = $q_answered + 1;}
-
 				$joined_seconds = time() - $joined_epoch;
 				$joined_length_hour = floor($joined_seconds/3600);
 				$joined_length_min = floor($joined_seconds/60 - ($joined_length_hour * 60));
@@ -330,17 +331,19 @@ else {
 				echo "<td valign='top' class='".$row_style[$c]."'>".$state."</td>\n";
 				if (if_group("admin") || if_group("superadmin")) {
 					echo "<td valign='top' class='".$row_style[$c]."'>";
+					if ($state != "Abandoned") {
+						$q_caller_number = urlencode($caller_number);
+						$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")";
 
-					$q_caller_number = urlencode($caller_number);
-					$orig_command="{origination_caller_id_name=eavesdrop,origination_caller_id_number=".$q_caller_number."}user/".$_SESSION['user']['extension'][0]['user']."@".$_SESSION['domain_name']." %26eavesdrop(".$session_uuid.")";
+						//debug
+						//echo $orig_command;
+						//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
 
-					//debug
-					//echo $orig_command;
-					//echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=log+".$orig_command.")');}\">log_cmd</a>&nbsp;\n";
-
-					echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
-
-
+						echo "  <a href='javascript:void(0);' style='color: #444444;' onclick=\"confirm_response = confirm('".$text['message-confirm']."');if (confirm_response){send_cmd('call_center_exec.php?cmd=originate+".$orig_command.")');}\">".$text['label-eavesdrop']."</a>&nbsp;\n";
+					}
+					else {
+						echo "&nbsp;";
+					}
 					echo "</td>";
 				}
 				echo "<td valign='top' class='".$row_style[$c]."'>".$serving_agent."&nbsp;</td>\n";
@@ -348,8 +351,6 @@ else {
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
 			echo "</table>\n";
-			echo "</br>";
-			echo "<b>".$text['label-total_waiting'].": {$q_waiting}<br>".$text['label-total_trying'].": {$q_trying}<br>".$text['label-total_answered'].": {$q_answered}\n</b>";
 
 		//add vertical spacing
 			echo "<br />\n";

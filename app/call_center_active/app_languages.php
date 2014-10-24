@@ -194,20 +194,20 @@
 	$text['label-time_base_score']['fr-fr'] = "Score basé sur le temps";
 	$text['label-time_base_score']['pt-pt'] = "Pontuação baseada no tempo";
 
-	$text['label-total_answered']['en-us'] = "Total Answered";
-	$text['label-total_answered']['es-cl'] = "Total Respondido";
-	$text['label-total_answered']['fr-fr'] = "Total répondu";
-	$text['label-total_answered']['pt-pt'] = "Total Atendidas";
+	$text['label-answered']['en-us'] = "Answered";
+	$text['label-answered']['es-cl'] = "Respondido";
+	$text['label-answered']['fr-fr'] = "Répondu";
+	$text['label-answered']['pt-pt'] = "Atendidas";
 
-	$text['label-total_trying']['en-us'] = "Total Trying";
-	$text['label-total_trying']['es-cl'] = "Total Intentando";
-	$text['label-total_trying']['fr-fr'] = "Total d'essais";
-	$text['label-total_trying']['pt-pt'] = "Total a Tentar";
+	$text['label-trying']['en-us'] = "Trying";
+	$text['label-trying']['es-cl'] = "Intentando";
+	$text['label-trying']['fr-fr'] = "d'essais";
+	$text['label-trying']['pt-pt'] = "Tentar";
 
-	$text['label-total_waiting']['en-us'] = "Total Waiting";
-	$text['label-total_waiting']['es-cl'] = "Total Esperando";
-	$text['label-total_waiting']['fr-fr'] = "Total d'attente";
-	$text['label-total_waiting']['pt-pt'] = "Total em Espera";
+	$text['label-waiting']['en-us'] = "Waiting";
+	$text['label-waiting']['es-cl'] = "Esperando";
+	$text['label-waiting']['fr-fr'] = "d'attente";
+	$text['label-waiting']['pt-pt'] = "Espera";
 
 	$text['label-transfer']['en-us'] = "Transfer";
 	$text['label-transfer']['es-cl'] = "Transferir";
