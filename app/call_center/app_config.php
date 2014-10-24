@@ -344,6 +344,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_hangup_cause";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "cc_cancel_reason";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y = 2; //table array index
 		$z = 0; //field array index
