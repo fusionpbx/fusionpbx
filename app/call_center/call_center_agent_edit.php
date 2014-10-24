@@ -56,7 +56,7 @@ else {
 		$agent_call_timeout = check_str($_POST["agent_call_timeout"]);
 		$agent_contact = check_str($_POST["agent_contact"]);
 		$agent_status = check_str($_POST["agent_status"]);
-		$agent_logout = check_str($_POST["agent_logout"]);
+		//$agent_logout = check_str($_POST["agent_logout"]);
 		$agent_no_answer_delay_time = check_str($_POST["agent_no_answer_delay_time"]);
 		$agent_max_no_answer = check_str($_POST["agent_max_no_answer"]);
 		$agent_wrap_up_time = check_str($_POST["agent_wrap_up_time"]);
@@ -203,7 +203,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "agent_call_timeout, ";
 				$sql .= "agent_contact, ";
 				$sql .= "agent_status, ";
-				$sql .= "agent_logout, ";
+				//$sql .= "agent_logout, ";
 				$sql .= "agent_no_answer_delay_time, ";
 				$sql .= "agent_max_no_answer, ";
 				$sql .= "agent_wrap_up_time, ";
@@ -219,7 +219,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'$agent_call_timeout', ";
 				$sql .= "'$agent_contact', ";
 				$sql .= "'$agent_status', ";
-				$sql .= "'$agent_logout', ";
+				//$sql .= "'$agent_logout', ";
 				$sql .= "'$agent_no_answer_delay_time', ";
 				$sql .= "'$agent_max_no_answer', ";
 				$sql .= "'$agent_wrap_up_time', ";
@@ -244,7 +244,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "agent_call_timeout = '$agent_call_timeout', ";
 			$sql .= "agent_contact = '$agent_contact', ";
 			$sql .= "agent_status = '$agent_status', ";
-			$sql .= "agent_logout = '$agent_logout', ";
+			//$sql .= "agent_logout = '$agent_logout', ";
 			$sql .= "agent_no_answer_delay_time = '$agent_no_answer_delay_time', ";
 			$sql .= "agent_max_no_answer = '$agent_max_no_answer', ";
 			$sql .= "agent_wrap_up_time = '$agent_wrap_up_time', ";
@@ -280,7 +280,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$agent_call_timeout = $row["agent_call_timeout"];
 			$agent_contact = $row["agent_contact"];
 			$agent_status = $row["agent_status"];
-			$agent_logout = $row["agent_logout"];
+			//$agent_logout = $row["agent_logout"];
 			$agent_no_answer_delay_time = $row["agent_no_answer_delay_time"];
 			$agent_max_no_answer = $row["agent_max_no_answer"];
 			$agent_wrap_up_time = $row["agent_wrap_up_time"];
@@ -310,15 +310,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_agent_add']."</b></td>\n";
@@ -331,12 +324,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	//echo "Call Center agents settings.<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
 
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-agent_name'].":\n";
@@ -412,7 +403,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='agent_status'>\n";
-	echo "	<option value=''></option>\n";
 	if ($agent_status == "Logged Out") {
 		echo "	<option value='Logged Out' SELECTED >".$text['option-logged_out']."</option>\n";
 	}
@@ -498,6 +488,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	/*
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-agent_logout'].":\n";
@@ -508,22 +499,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-agent_logout']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	*/
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='call_center_agent_uuid' value='$call_center_agent_uuid'>\n";
+		echo "		<input type='hidden' name='call_center_agent_uuid' value='$call_center_agent_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br /><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //footer
 	require_once "resources/footer.php";

@@ -629,20 +629,20 @@
 	$text['button-view']['pt-pt'] = "Ver";
 	$text['button-view']['fr-fr'] = "Voir";
 
-	$text['button-load']['en-us'] = "Load";
-	$text['button-load']['es-cl'] = "Cargar";
-	$text['button-load']['pt-pt'] = "Carregar";
-	$text['button-load']['fr-fr'] = "charger";
+	$text['button-start']['en-us'] = "Start";
+	$text['button-start']['es-cl'] = "Iniciar";
+	$text['button-start']['pt-pt'] = "Iniciar";
+	$text['button-start']['fr-fr'] = "Démarrer";
 
-	$text['button-unload']['en-us'] = "Unload";
-	$text['button-unload']['es-cl'] = "Descargar";
-	$text['button-unload']['pt-pt'] = "Descarregar";
-	$text['button-unload']['fr-fr'] = "décharger";
+	$text['button-stop']['en-us'] = "Stop";
+	$text['button-stop']['es-cl'] = "Detener";
+	$text['button-stop']['pt-pt'] = "Parar";
+	$text['button-stop']['fr-fr'] = "Stop";
 
-	$text['button-reload']['en-us'] = "Reload";
-	$text['button-reload']['es-cl'] = "Recargar";
-	$text['button-reload']['pt-pt'] = "Recarregar";
-	$text['button-reload']['fr-fr'] = "recharger";
+	$text['button-restart']['en-us'] = "Restart";
+	$text['button-restart']['es-cl'] = "Reanudar";
+	$text['button-restart']['pt-pt'] = "Restart";
+	$text['button-restart']['fr-fr'] = "Redémarrer";
 
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";

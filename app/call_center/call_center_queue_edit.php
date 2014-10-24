@@ -407,7 +407,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($queue_tier_rules_apply) == 0) { $queue_tier_rules_apply = "false"; }
 	if (strlen($queue_tier_rule_wait_second) == 0) { $queue_tier_rule_wait_second = "3"; }
 	if (strlen($queue_tier_rule_wait_multiply_level) == 0) { $queue_tier_rule_wait_multiply_level = "true"; }
-	if (strlen($queue_tier_rule_no_agent_no_wait) == 0) { $queue_tier_rule_no_agent_no_wait = "false"; }
+	if (strlen($queue_tier_rule_no_agent_no_wait) == 0) { $queue_tier_rule_no_agent_no_wait = "true"; }
 	if (strlen($queue_discard_abandoned_after) == 0) { $queue_discard_abandoned_after = "60"; }
 	if (strlen($queue_abandoned_resume_allowed) == 0) { $queue_abandoned_resume_allowed = "false"; }
 
@@ -421,44 +421,32 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_queue_add']."</b></td>\n";
+		echo "<td align='left' nowrap='nowrap'><b>".$text['header-call_center_queue_add']."</b></td>\n";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-call_center_queue_edit']."</b></td>\n";
+		echo "<td align='left' nowrap='nowrap'><b>".$text['header-call_center_queue_edit']."</b></td>\n";
 	}
-	echo "<td width='70%' align='right'>\n";
+	echo "<td align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_queues.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
 		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=$database_queue_name';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-load']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-unload']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
-		echo "  <input type='button' class='btn' value='".$text['button-reload']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	//echo "Call Center queue settings.<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "</table>\n";
+	echo "<br />\n";
 
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-queue_name'].":\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='queue_name' maxlength='255' value=\"$queue_name\">\n";
 	echo "<br />\n";
 	echo $text['description-queue_name']."\n";
@@ -482,7 +470,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_strategy'>\n";
-	echo "	<option value=''></option>\n";
 	if ($queue_strategy == "ring-all") {
 		echo "	<option value='ring-all' selected='selected' >".$text['option-ring_all']."</option>\n";
 	}
@@ -724,7 +711,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_time_base_score'>\n";
-	echo "	<option value=''></option>\n";
 	if ($queue_time_base_score == "system") {
 		echo "	<option value='system' selected='selected' >".$text['option-system']."</option>\n";
 	}
@@ -794,7 +780,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_tier_rules_apply'>\n";
-	echo "	<option value=''></option>\n";
 	if ($queue_tier_rules_apply == "true") {
 		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
 	}
@@ -830,7 +815,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_tier_rule_wait_multiply_level'>\n";
-	echo "	<option value=''></option>\n";
 	if ($queue_tier_rule_wait_multiply_level == "true") {
 		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
 	}
@@ -855,7 +839,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_tier_rule_no_agent_no_wait'>\n";
-	echo "	<option value=''></option>\n";
 	if ($queue_tier_rule_no_agent_no_wait == "true") {
 		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
 	}
@@ -891,18 +874,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='queue_abandoned_resume_allowed'>\n";
-	echo "	<option value=''></option>\n";
-	if ($queue_abandoned_resume_allowed == "true") {
-		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['option-true']."</option>\n";
-	}
 	if ($queue_abandoned_resume_allowed == "false") {
 		echo "	<option value='false' selected='selected' >".$text['option-false']."</option>\n";
 	}
 	else {
 		echo "	<option value='false'>".$text['option-false']."</option>\n";
+	}
+	if ($queue_abandoned_resume_allowed == "true") {
+		echo "	<option value='true' selected='selected' >".$text['option-true']."</option>\n";
+	}
+	else {
+		echo "	<option value='true'>".$text['option-true']."</option>\n";
 	}
 	echo "	</select>\n";
 	echo "<br />\n";
@@ -963,16 +945,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<input type='hidden' name='delete_type' id='delete_type' value=''>";
 		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
 	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br /><input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 require_once "resources/footer.php";
 ?>
