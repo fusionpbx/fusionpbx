@@ -113,18 +113,7 @@ function send_cmd(url) {
 </script>
 
 <?php
-echo "<div align='center'>";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\">\n";
-
-echo "	<div id=\"ajax_response\">\n";
-echo "	</div>\n";
-
-echo "	</td>";
-echo "	</tr>";
-echo "</table>";
-echo "</div>";
+echo "	<div id='ajax_response'></div>\n";
 
 require_once "resources/footer.php";
 ?>
