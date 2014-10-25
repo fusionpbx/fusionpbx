@@ -32,6 +32,9 @@
 	dofile(scripts_dir.."/resources/functions/database_handle.lua");
 	dbh = database_handle('system');
 
+--prepare the api object
+	api = freeswitch.API();
+
 --get the cache
 	cache = trim(api:execute("memcache", "get app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name));
 
