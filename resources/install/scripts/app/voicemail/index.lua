@@ -123,8 +123,10 @@
 			end
 
 		--if voicemail_id is non numeric then get the number-alias
-			if tonumber(voicemail_id) == nil then
-				 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");	 
+			if (voicemail_id ~= nil) then
+				if tonumber(voicemail_id) == nil then
+					 voicemail_id = api:execute("user_data", voicemail_id .. "@" .. domain_name .. " attr number-alias");	 
+				end
 			end
 
 		--set the voicemail_dir
