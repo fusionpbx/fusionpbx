@@ -35,38 +35,58 @@ else {
 }
 
 
-//delete domain settings
-	if (sizeof($_REQUEST) > 0) {
-		$action = check_str($_REQUEST["action"]);
+if (sizeof($_REQUEST) > 1) {
+
+	$action = check_str($_REQUEST["action"]);
+	$domain_uuid = check_str($_REQUEST["domain_id"]);
+	$domain_setting_uuids = $_REQUEST["id"];
+	$enabled = check_str($_REQUEST['enabled']);
+
+	//change enabled value
+		if ($domain_uuid != '' && sizeof($domain_setting_uuids) == 1 && $enabled != '') {
+			$sql = "update v_domain_settings set ";
+			$sql .= "domain_setting_enabled = '".$enabled."' ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and domain_setting_uuid = '".$domain_setting_uuids[0]."' ";
+			echo $sql."<br><br>";
+			$db->exec(check_sql($sql));
+			unset($sql);
+
+			$_SESSION["message"] = $text['message-update'];
+			header("Location: domain_edit.php?id=".$domain_uuid);
+			exit;
+		}
+
+	//delete domain settings
 		if ($action == 'delete' && permission_exists('domain_setting_delete')) {
 			//add multi-lingual support
 				require_once "app_languages.php";
 				foreach($text as $key => $value) {
 					$text[$key] = $value[$_SESSION['domain']['language']['code']];
 				}
-			//delete the selected domain settings
-				$domain_setting_uuids = $_REQUEST["id"];
-				if (sizeof($domain_setting_uuids) > 0) {
-					foreach ($domain_setting_uuids as $domain_setting_uuid) {
-						$sql = "delete from v_domain_settings ";
-						$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
-						$prep_statement = $db->prepare(check_sql($sql));
-						$prep_statement->execute();
-						unset($sql);
-					}
-					// set message
-					$_SESSION["message"] = $text['message-delete'].": ".sizeof($domain_setting_uuids);
+
+			if (sizeof($domain_setting_uuids) > 0) {
+				foreach ($domain_setting_uuids as $domain_setting_uuid) {
+					$sql = "delete from v_domain_settings ";
+					$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					unset($sql);
 				}
-				else {
-					// set message
-					$_SESSION["message"] = $text['message-delete_failed'];
-					$_SESSION["message_mood"] = "negative";
-				}
-			//redirect the user
-				header("Location: domain_edit.php?id=".check_str($_REQUEST["domain_uuid"]));
-				exit;
+				// set message
+				$_SESSION["message"] = $text['message-delete'].": ".sizeof($domain_setting_uuids);
+			}
+			else {
+				// set message
+				$_SESSION["message"] = $text['message-delete_failed'];
+				$_SESSION["message_mood"] = "negative";
+			}
+
+			header("Location: domain_edit.php?id=".check_str($_REQUEST["domain_uuid"]));
+			exit;
 		}
-	} //REQUEST
+
+} //REQUEST
 
 //include the paging
 	require_once "resources/paging.php";
@@ -136,6 +156,7 @@ else {
 		$previous_category = '';
 		foreach($result as $row) {
 			if ($previous_category != $row['domain_setting_category']) {
+				$c = 0;
 				echo "<tr>\n";
 				echo "	<td colspan='7' align='left'>\n";
 				echo "		<br />\n";
@@ -154,11 +175,11 @@ else {
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				if ((permission_exists("domain_select") 
-					&& permission_exists("domain_setting_add") 
+				if ((permission_exists("domain_select")
+					&& permission_exists("domain_setting_add")
 					&& count($_SESSION['domains']) > 1) ||
 					permission_exists('domain_setting_delete')) {
-						echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['domain_setting_category'])."') : check('none','".strtolower($row['domain_setting_category'])."');\"></th>";
+						echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['domain_setting_category'])."') : check('none','".strtolower($row['domain_setting_category'])."');\"></th>";
 				}
 				echo "<th>".$text['label-subcategory']."</th>";
 				echo "<th>".$text['label-type']."</th>";
@@ -221,7 +242,9 @@ else {
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".ucwords($row['domain_setting_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
+			echo "		<a href='?domain_id=".$row['domain_uuid']."&id[]=".$row['domain_setting_uuid']."&enabled=".(($row['domain_setting_enabled'] == 'true') ? 'false' : 'true')."'>".ucwords($row['domain_setting_enabled'])."</a>\n";
+			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['domain_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('domain_setting_edit')) {
