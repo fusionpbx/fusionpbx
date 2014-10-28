@@ -240,6 +240,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 				$sql_insert .= "device_line_uuid, ";
 				$sql_insert .= "domain_uuid, ";
 				$sql_insert .= "server_address, ";
+				$sql_insert .= "display_name, ";
 				$sql_insert .= "user_id, ";
 				$sql_insert .= "auth_id, ";
 				$sql_insert .= "password, ";
@@ -251,6 +252,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 				$sql_insert .= "'".$device_line_uuid."', ";
 				$sql_insert .= "'".$_SESSION['domain_uuid']."', ";
 				$sql_insert .= "'".$_SESSION['domain_name']."', ";
+				$sql_insert .= "'".$extension."', ";
 				$sql_insert .= "'".$extension."', ";
 				$sql_insert .= "'".$extension."', ";
 				$sql_insert .= "'".$password."', ";
