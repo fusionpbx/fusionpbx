@@ -45,6 +45,19 @@ if (sizeof($_REQUEST) > 0) {
 
 	$action = check_str($_REQUEST["action"]);
 	$default_setting_uuids = $_REQUEST["id"];
+	$enabled = check_str($_REQUEST['enabled']);
+
+	if (sizeof($default_setting_uuids) == 1 && $enabled != '') {
+		$sql = "update v_default_settings set ";
+		$sql .= "default_setting_enabled = '".$enabled."' ";
+		$sql .= "where default_setting_uuid = '".$default_setting_uuids[0]."'";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: default_settings.php");
+		exit;
+	}
 
 	if ($action == 'copy' && permission_exists('domain_setting_add')) {
 
@@ -318,6 +331,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 		foreach($result as $row) {
 
 			if ($previous_category != $row['default_setting_category']) {
+				$c = 0;
 				echo "<tr>\n";
 				echo "	<td colspan='7' align='left'>\n";
 				if ($previous_category != '') { echo "		<br /><br />"; }
@@ -340,7 +354,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 					(permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) ||
 					permission_exists('default_setting_delete')
 					) {
-					echo "<th style='text-align: center;' style='text-align: center; padding: 3px 0px 0px 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
+					echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all','".strtolower($row['default_setting_category'])."') : check('none','".strtolower($row['default_setting_category'])."');\"></th>";
 				}
 				echo "<th>".$text['label-subcategory']."</th>";
 				echo "<th>".$text['label-type']."</th>";
@@ -404,7 +418,9 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".ucwords($row['default_setting_enabled'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
+			echo "		<a href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."'>".ucwords($row['default_setting_enabled'])."</a>\n";
+			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('default_setting_edit')) {
