@@ -80,24 +80,34 @@ else {
 //upload the recording
 	if (($_POST['submit'] == $text['button-upload']) && is_uploaded_file($_FILES['file']['tmp_name']) && permission_exists('voicemail_greeting_upload')) {
 		if ($_POST['type'] == 'rec') {
-			for($i = 1; $i < 10; $i++){
-				$tmp_greeting = 'greeting_'.$i.'.wav';
-				if (!file_exists($v_greeting_dir.'/'.$tmp_greeting)) {
-					$_REQUEST['greeting'] = $tmp_greeting;
-					break;
+			//find the next available
+				for($i = 1; $i < 10; $i++){
+					$file_name = 'greeting_'.$i.'.wav';
+					if (!file_exists($v_greeting_dir.'/'.$file_name)) {
+						$greeting_id = $i;
+						$_REQUEST['greeting'] = $file_name;
+						break;
+					}
 				}
-			}
-			unset($tmp_greeting);
-			if ($_REQUEST['greeting']) {
-				mkdir($v_greeting_dir, 0777, true);
-				move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$_REQUEST['greeting']);
-				$_SESSION["message"] = $text['message-uploaded'].": ".$_REQUEST['greeting'];
-			}
+			//move the uploaded greeting
+				if ($_REQUEST['greeting']) {
+					mkdir($v_greeting_dir, 0777, true);
+					move_uploaded_file($_FILES['file']['tmp_name'], $v_greeting_dir.'/'.$_REQUEST['greeting']);
+					$_SESSION["message"] = $text['message-uploaded'].": ".$_REQUEST['greeting'];
+				}
+			//set the greeting_id
+				$sql = "update v_voicemails ";
+				$sql .= "set greeting_id = '$greeting_id' ";
+				$sql .= "where domain_uuid = '$domain_uuid' ";
+				$sql .= "and voicemail_id = '$voicemail_id' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				unset($prep_statement);
 		}
 	}
 
-//save the selected greeting
-	if ($_REQUEST['submit'] == $text['button-upload']) {
+//set the greeting
+	if ($_REQUEST['action'] == "set") {
 		//save the greeting_id to a variable
 			$greeting_id = check_str($_REQUEST['greeting_id']);
 
@@ -234,7 +244,7 @@ else {
 
 	if (permission_exists('voicemail_greeting_upload')) {
 		echo "	<td align='right' nowrap>\n";
-		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"javascript:history.back();\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+		echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/voicemails/voicemails.php';\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 		echo "		<input name=\"file\" type=\"file\" class=\"formfld fileinput\" id=\"file\">\n";
 		echo "		<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
 		echo "		<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
@@ -317,10 +327,10 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td class='".$row_style[$c]." tr_link_void' width='30px;' valign='top'>\n";
 			if (preg_replace('{\D}', '', $row['greeting_name']) == $greeting_id) {
-				echo "		<input type=\"radio\" name=\"greeting_id\" value=\"".preg_replace('{\D}', '', $row['greeting_name'])."\" checked=\"checked\">\n";
+				echo "		<input type=\"radio\" onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=$voicemail_id&greeting_id=".preg_replace('{\D}', '', $row['greeting_name'])."&action=set';\" name=\"greeting_id\" value=\"".preg_replace('{\D}', '', $row['greeting_name'])."\" checked=\"checked\">\n";
 			}
 			else {
-				echo "		<input type=\"radio\" name=\"greeting_id\" value=\"".preg_replace('{\D}', '', $row['greeting_name'])."\">\n";
+				echo "		<input type=\"radio\" onclick=\"window.location='".PROJECT_PATH."/app/voicemail_greetings/voicemail_greetings.php?id=$voicemail_id&greeting_id=".preg_replace('{\D}', '', $row['greeting_name'])."&action=set';\" name=\"greeting_id\" value=\"".preg_replace('{\D}', '', $row['greeting_name'])."\" >\n";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['greeting_name']."</td>\n";
