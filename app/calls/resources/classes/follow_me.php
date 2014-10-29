@@ -23,6 +23,8 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
+	Salvatore Caruso <salvatore.caruso@nems.it>
+	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 include "root.php";
 
@@ -312,7 +314,8 @@ include "root.php";
 						$prep_statement_2 = $db->prepare(check_sql($sql));
 						$prep_statement_2->execute();
 						$result = $prep_statement_2->fetchAll(PDO::FETCH_NAMED);
-						$dial_string = "{instant_ringback=true";
+						$dial_string = "{fail_on_single_reject=USER_BUSY";
+						$dial_string .= ",instant_ringback=true";
 						$dial_string .= ",ignore_early_media=true,";
 						$dial_string .= ",domain_uuid=".$_SESSION['domain_uuid'];
 						$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];

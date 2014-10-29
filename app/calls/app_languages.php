@@ -11,7 +11,7 @@
 	$text['description']['fr-fr'] = "Rediriger les appels entrant pour l'extension:";
 
 	$text['description-2']['en-us'] = "Use the links to configure call forward follow me, or do not disturb.";
-	$text['descriptionA-2']['es-cl'] = "Utilice los links para configurar reenvio de llamada, sígueme o no Molestar.";
+	$text['description-2']['es-cl'] = "Utilice los links para configurar reenvio de llamada, sígueme o no Molestar.";
 	$text['description-2']['pt-pt'] = "Utilizar os links para definir as funcinalidades de encaminhamento de chamada, seguimento ou de não perturbar.";
 	$text['description-2']['fr-fr'] = "Utiliser les liens afin de configurer le renvoi \"follow me\", ou ne pas déranger.";
 
@@ -24,6 +24,9 @@
 	$text['label-call-forward']['es-cl'] = "Reenvio de Llamadas";
 	$text['label-call-forward']['pt-pt'] = "Encaminhamento de Chamadas";
 	$text['label-call-forward']['fr-fr'] = "Renvoi d'appel";
+
+	$text['label-forward-busy']['en-us'] = "Forward on busy";
+	$text['label-forward-busy']['it-it'] = "Rinvio su occupato";
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activo";
