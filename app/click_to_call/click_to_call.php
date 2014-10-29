@@ -376,7 +376,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 		echo "    <option value='uk-ring' selected='selected'>".$text['opt-ukring']."</option>\n";
 	}
 	else {
-		echo "    <option value='uk-ring'>".$text['opt-ukring']."/option>\n";
+		echo "    <option value='uk-ring'>".$text['opt-ukring']."</option>\n";
 	}
 	if ($ringback == "rs-ring") { 
 		echo "    <option value='rs-ring' selected='selected'>".$text['opt-rsring']."</option>\n";
