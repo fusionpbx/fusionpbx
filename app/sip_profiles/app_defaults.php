@@ -27,28 +27,28 @@
 //if the number of rows is 0 then read the sip profile xml into the database
 	if ($domains_processed == 1) {
 		//define the variables
-			$custom = '';
 			$source = '';
+			$destination = '';
 		//check if the directory exists and set the paths
-			if (file_exists('/etc/fusionpbx')) {
+			if (file_exists('/etc/fusionpbx/resources/templates/conf')) {
 				//linux
-				$custom = '/etc/fusionpbx/resources/templates/conf/sip_profiles';
 				$source = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles';
+				$destination = '/etc/fusionpbx/resources/templates/conf/sip_profiles';
 			}
-			if (file_exists('/usr/local/etc/fusionpbx')) {
+			if (file_exists('/usr/local/etc/fusionpbx/resources/templates/conf')) {
 				//bsd
-				$custom = '/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles';
 				$source = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles';
+				$destination = '/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles';
 			}
 		//copy the conf sip profiles to the /etc/fusionpbx/resources/templates/conf directory
-			if (strlen($custom) > 0 && strlen($source) > 0) {
-				if (!file_exists($custom)) {
+			if (strlen($source) > 0 && strlen($destination) > 0) {
+				if (!file_exists($destination)) {
 					if (file_exists($source)) {
 						//add the directory structure
-							mkdir($custom,0777,true);
-						//copy from source to custom
+							mkdir($destination,0777,true);
+						//copy from source to destination
 							$obj = new install;
-							$obj->recursive_copy($source,$custom);
+							$obj->recursive_copy($source,$destination);
 					}
 				}
 			}
@@ -60,10 +60,10 @@
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] == 0) {
-					if (file_exists('/etc/fusionpbx')) {
+					if (file_exists('/etc/fusionpbx/resources/templates/conf/sip_profiles')) {
 						$sip_profile_dir = '/etc/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
 					}
-					elseif (file_exists('/usr/local/etc/fusionpbx')) {
+					elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles')) {
 						$sip_profile_dir = '/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
 					}
 					else {
