@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Adminer (précédemment phpMinAdmin) est un outil gestion de base de données complet Ã©crite en php. Adminer est disponible pour MySQL, PostgreSQL, SQLite, MS SQL et Oracle.";
+		$apps[$x]['description']['fr-fr'] = "Adminer (précédemment phpMinAdmin) est un outil gestion de base de données complet écrite en php. Adminer est disponible pour MySQL, PostgreSQL, SQLite, MS SQL et Oracle.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Adminer (anteriormente phpMinAdmin) é uma ferramenta completa para gestão de bases de dados escrita em PHP. O Adminer está disponível para MySQL, PostgreSQL, SQLite, MS SQL e Oracle.";

@@ -54,17 +54,17 @@
 	$text['button-unregister']['en-us'] = "Unregister";
 	$text['button-unregister']['es-cl'] = "";
 	$text['button-unregister']['pt-pt'] = "";
-	$text['button-unregister']['fr-fr'] = "";
+	$text['button-unregister']['fr-fr'] = "Désenregistrer";
 
 	$text['button-reboot']['en-us'] = "Reboot";
 	$text['button-reboot']['es-cl'] = "Reiniciar";
 	$text['button-reboot']['pt-pt'] = "Reinicialização";
-	$text['button-reboot']['fr-fr'] = "Redémarrage";
+	$text['button-reboot']['fr-fr'] = "Redémarrer";
 
 	$text['button-provision']['en-us'] = "Provision";
 	$text['button-provision']['es-cl'] = "";
 	$text['button-provision']['pt-pt'] = "";
-	$text['button-provision']['fr-fr'] = "";
+	$text['button-provision']['fr-fr'] = "Provisionner";
 
 	$text['label-message']['en-us'] = "Message";
 	$text['label-message']['es-cl'] = "Mensaje";

@@ -13,7 +13,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "L'éditeur permet d'éditer les scripts lua, javascript ou autres.";
+		$apps[$x]['description']['fr-fr'] = "L'éditeur permet de modifier les scripts lua, javascript ou autres.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Editor de script pode ser usado para editar lua, javascript ou outros scripts.";
@@ -61,7 +61,7 @@
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
 		$apps[$x]['menu'][$y]['title']['de-at'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Provisioning";
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Editeur de Provisioning";
 		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Editor de Provisionamento";

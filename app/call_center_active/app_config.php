@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Affiche les appels actifs et les agents en file sur le centre d'appels.";
+		$apps[$x]['description']['fr-fr'] = "Affiche les appels actifs et les agents en queue sur le centre d'appel.";
 		$apps[$x]['description']['fr-ca'] = "Il montre les appels actives et des agents en queue du centre d'appels.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Mostra as chamadas ativas e agentes na fila do centro de chamadas.";
@@ -24,7 +24,7 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Centre Appels Actifs";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Centre d'Appel Actif";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "Centre d'Appels Active";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Centro de Chamadas Activo";

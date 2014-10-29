@@ -196,7 +196,7 @@
 	$text['description-name']['en-us'] = "Enter a name for the IVR menu.";
 	$text['description-name']['es-cl'] = "Ingrese un nombre para el menú IVR.";
 	$text['description-name']['pt-pt'] = "Introduza um nome para o menu de IVR.";
-	$text['description-name']['fr-fr'] =  "Choisir un nom pour le menu SVI";
+	$text['description-name']['fr-fr'] = "Choisir un nom pour le menu SVI";
 
 	$text['description-extension']['en-us'] = "Enter the extension number.";
 	$text['description-extension']['es-cl'] = "Ingrese el número de extensión.";

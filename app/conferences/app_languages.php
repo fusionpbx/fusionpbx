@@ -19,7 +19,7 @@
 	$text['title-3']['en-us'] = "Active Conference";
 	$text['title-3']['es-cl'] = "Conferencia Activa";
 	$text['title-3']['pt-pt'] = "Conferência Activa";
-	$text['title-3']['fr-fr'] = "Conférence actives";
+	$text['title-3']['fr-fr'] = "Conférence active";
 
 	$text['description-2']['en-us'] = "and then select a conference to monitor and interact with it.";
 	$text['description-2']['es-cl'] = "y luego seleccionar una conferencia para monitorear e interacuar con ella.";

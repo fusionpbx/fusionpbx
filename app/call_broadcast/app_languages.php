@@ -4,7 +4,7 @@
 	$text['title']['en-us'] = "Call Broadcasts";
 	$text['title']['es-cl'] = "Llamada Masiva (Broadcast)";
 	$text['title']['pt-pt'] = "Chamadas de Broadcast";
-	$text['title']['fr-fr'] = "Appels de Masse";
+	$text['title']['fr-fr'] = "Campagne d'appels";
 
 	$text['label-name']['en-us'] = "Name";
 	$text['label-name']['es-cl'] = "Nombre";
@@ -14,7 +14,7 @@
 	$text['label-concurrent-limit']['en-us'] = "Concurrent Limit";
 	$text['label-concurrent-limit']['es-cl'] = "Límite de concurrencia";
 	$text['label-concurrent-limit']['pt-pt'] = "Limite de chamadas concorrentes";
-	$text['label-concurrent-limit']['fr-fr'] = "Limite concurrents";
+	$text['label-concurrent-limit']['fr-fr'] = "Appels Simultanés";
 
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";

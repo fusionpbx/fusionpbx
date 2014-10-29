@@ -39,7 +39,7 @@
 	$text['label-src-caller-id-nam']['en-us'] = "Source Caller ID Name";
 	$text['label-src-caller-id-nam']['es-cl'] = "Nombre de Caller ID de origen";
 	$text['label-src-caller-id-nam']['pt-pt'] = "Nome do Chamador";
-	$text['label-src-caller-id-nam']['fr-fr'] = "Nom Caller ID Source";
+	$text['label-src-caller-id-nam']['fr-fr'] = "Nom de l'appelant";
 
 	$text['desc-src-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to your phone.";
 	$text['desc-src-caller-id-nam']['es-cl'] = "Ingrese el nombre del Caller ID para enviar a su teléfono.";
@@ -49,7 +49,7 @@
 	$text['label-src-caller-id-num']['en-us'] = "Source Caller ID Number";
 	$text['label-src-caller-id-num']['es-cl'] = "Número de Caller ID de origen";
 	$text['label-src-caller-id-num']['pt-pt'] = "Número do Chamador";
-	$text['label-src-caller-id-num']['fr-fr'] = "Numéro Caller ID Source";
+	$text['label-src-caller-id-num']['fr-fr'] = "Numéro de l'appelant";
 
 	$text['desc-src-caller-id-num']['en-us'] = "Enter the Caller ID number to send to your phone (you probably want this to be the same as the destination number).";
 	$text['desc-src-caller-id-num']['es-cl'] = "Ingrese el número del Caller ID para enviar a su teléfono (probablemente desee que sea el mismo que el número de destino).";
@@ -59,7 +59,7 @@
 	$text['label-dest-caller-id-nam']['en-us'] = "Destination Caller ID Name";
 	$text['label-dest-caller-id-nam']['es-cl'] = "Nombre de Caller ID de destino";
 	$text['label-dest-caller-id-nam']['pt-pt'] = "Nome do Chamador";
-	$text['label-dest-caller-id-nam']['fr-fr'] = "Nom Caller ID Destination";
+	$text['label-dest-caller-id-nam']['fr-fr'] = "Nom de l'appelant";
 
 	$text['desc-dest-caller-id-nam']['en-us'] = "Enter the Caller ID name to send to the destination number.";
 	$text['desc-dest-caller-id-nam']['es-cl'] = "Ingrese el nombre de Caller ID para enviar al número de destino.";
@@ -69,7 +69,7 @@
 	$text['label-dest-caller-id-num']['en-us'] = "Destination Caller ID Number";
 	$text['label-dest-caller-id-num']['es-cl'] = "Número de Caller ID de destino";
 	$text['label-dest-caller-id-num']['pt-pt'] = "Número a apresentar no destino";
-	$text['label-dest-caller-id-num']['fr-fr'] = "Numéro Caller ID Destination";
+	$text['label-dest-caller-id-num']['fr-fr'] = "Numéro de l'appelant";
 
 	$text['desc-dest-caller-id-num']['en-us'] = "Enter the Caller ID number to send to the destination number (you probably want this to be your phone number).";
 	$text['desc-dest-caller-id-num']['es-cl'] = "Ingrese número de Caller ID para enviar al número de destino (probablemente desee que sea su número de teléfono).";
@@ -109,7 +109,7 @@
 	$text['label-record']['en-us'] = "Record";
 	$text['label-record']['es-cl'] = "Grabar";
 	$text['label-record']['pt-pt'] = "Gravar";
-	$text['label-record']['fr-fr'] = "Enregistré";
+	$text['label-record']['fr-fr'] = "Enregistrer";
 
 	$text['label-true']['en-us'] = "true";
 	$text['label-true']['es-cl'] = "verdadero";
@@ -129,7 +129,7 @@
 	$text['label-ringback']['en-us'] = "Ring Back";
 	$text['label-ringback']['es-cl'] = "Regresar tono";
 	$text['label-ringback']['pt-pt'] = "Ring Back";
-	$text['label-ringback']['fr-fr'] = "Retoure de sonnerie";
+	$text['label-ringback']['fr-fr'] = "Retour de sonnerie";
 
 	$text['desc-ringback']['en-us'] = "Defines what the you will hear while destination is being called. The choices are music (music on hold) ring (ring tone).";
 	$text['desc-ringback']['es-cl'] = "Defina qué desea escuchar mientras se llama al destinatario. Las opciones son música (música en espera) o tono de marcado";

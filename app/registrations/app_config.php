@@ -13,7 +13,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Afficher les enregistrements des équipements";
+		$apps[$x]['description']['fr-fr'] = "Afficher les enregistrements des équipements.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Exibe registos de terminais SIP.";
@@ -26,7 +26,7 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Connexions";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Enregistrements SIP";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Registos";

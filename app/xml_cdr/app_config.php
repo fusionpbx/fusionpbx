@@ -46,7 +46,7 @@
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
 		$apps[$x]['menu'][$y]['title']['de-at'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Statistics CDR";
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Statistiques CDR";
 		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Statistics CDR";
@@ -65,7 +65,7 @@
 		$apps[$x]['menu'][$y]['title']['de-de'] = "";
 		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
 		$apps[$x]['menu'][$y]['title']['de-at'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Extension Summary";
+		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Résumé de l'Extension";
 		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Extension Summary";

@@ -106,7 +106,7 @@
 
 	$text['label-park']['en-us'] = "park";
 	$text['label-park']['es-cl'] = "parquear";
-	$text['label-park']['fr-fr'] = "Parquer";
+	$text['label-park']['fr-fr'] = "parquer";
 	$text['label-park']['pt-pt'] = "parquear";
 
 	$text['label-park-extension']['en-us'] = "Park";

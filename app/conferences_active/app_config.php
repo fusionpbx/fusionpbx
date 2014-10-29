@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Outil en AJAX pour voir et gerer toutes les conferences actives.";
+		$apps[$x]['description']['fr-fr'] = "Outil en AJAX pour voir et gérer toutes les conférences actives.";
 		$apps[$x]['description']['fr-ca'] = "Outil en AJAX pour voir et gerer toutes les conferences actives aux chambres.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "A ferramenta AJAX permite visualizar e gerir todas as chamadas ativas numa sala de conferências.";
@@ -24,7 +24,7 @@
 		$apps[$x]['menu'][0]['title']['de-de'] = "";
 		$apps[$x]['menu'][0]['title']['de-ch'] = "";
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Conferences en cours";
+		$apps[$x]['menu'][0]['title']['fr-fr'] = "Conférences en cours";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Conferencias Activas";

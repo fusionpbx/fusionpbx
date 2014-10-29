@@ -13,7 +13,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale";
+		$apps[$x]['description']['fr-fr'] = "Accueil messagerie Vocale.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gestor de saudações de correio de voz para extensões.";

@@ -88,7 +88,7 @@
 	$text['description-user_list']['en-us'] = "Assign the users that are assigned to this extension. ";
 	$text['description-user_list']['es-cl'] = "Asigna los usuarios asociados a esta extensión";
 	$text['description-user_list']['pt-pt'] = "Atribuir os utilizadores que estão associados a esta extensão.";
-	$text['description-user_list']['fr-fr'] = "Assigner cette extension aux utilisateur.";
+	$text['description-user_list']['fr-fr'] = "Assigner cette extension aux utilisateurs.";
 
 	$text['label-voicemail_password']['en-us'] = "Voicemail Password";
 	$text['label-voicemail_password']['es-cl'] = "Contraseña de correo de voz";
@@ -168,7 +168,7 @@
 	$text['description-emergency_caller_id_name']['en-us'] = "Enter the emergency caller ID name here.";
 	$text['description-emergency_caller_id_name']['es-cl'] = "Ingrese el nombre de Caller ID de emergencia aquí.";
 	$text['description-emergency_caller_id_name']['pt-pt'] = "Introduza o nome de emergência do chamador aqui.";
-	$text['description-emergency_caller_id_name']['fr-fr'] = "Entrez le nom d'identification de l'appelant d'urgence ici.";
+	$text['description-emergency_caller_id_name']['fr-fr'] = "Entrez le nom d'identification de l'appelant pour les urgences.";
 
 	$text['label-emergency_caller_id_number']['en-us'] = "Emergency Caller ID Number";
 	$text['label-emergency_caller_id_number']['es-cl'] = "Número de Caller ID de emergencia";
@@ -178,7 +178,7 @@
 	$text['description-emergency_caller_id_number']['en-us'] = "Enter the emergency caller ID number here.";
 	$text['description-emergency_caller_id_number']['es-cl'] = "Ingrese el número de Caller ID de emergencia aquí.";
 	$text['description-emergency_caller_id_number']['pt-pt'] = "Introduza o número de emergência do chamador aqui.";
-	$text['description-emergency_caller_id_number']['fr-fr'] = "Entrez le numéro d'identification de l'appelant d'urgence ici.";
+	$text['description-emergency_caller_id_number']['fr-fr'] = "Entrez le numéro d'identification de l'appelant pour les urgences.";
 
 	$text['label-directory_full_name']['en-us'] = "Directory Full Name";
 	$text['label-directory_full_name']['es-cl'] = "Nombre Completo de Directorio";
@@ -365,7 +365,7 @@
 	$text['description-hold_music']['en-us'] = "Select the MOH Category here.";
 	$text['description-hold_music']['es-cl'] = "Ingrese la categoría de música en espera aquí";
 	$text['description-hold_music']['pt-pt'] = "Escolha a categoria MOH da música aqui.";
-	$text['description-hold_music']['fr-fr'] = "Choisir la catégorie de musique de garde.";
+	$text['description-hold_music']['fr-fr'] = "Choisir la musique de garde.";
 
 	$text['label-user_context']['en-us'] = "Context";
 	$text['label-user_context']['es-cl'] = "Contexto";
@@ -430,12 +430,12 @@
 	$text['label-sip_force_expires']['en-us'] = "SIP Force Expires";
 	$text['label-sip_force_expires']['es-cl'] = "Forzado SIP Expira";
 	$text['label-sip_force_expires']['pt-pt'] = "Forçar o tempo de expiração SIP";
-	$text['label-sip_force_expires']['fr-fr'] = "SIP Force Expires";
+	$text['label-sip_force_expires']['fr-fr'] = "Forcer SIP expiration";
 
 	$text['description-sip_force_expires']['en-us'] = "To prevent stale registrations SIP Force expires can override the client expire.";
 	$text['description-sip_force_expires']['es-cl'] = "Seleccione si desea reescribir solo el puerto de contacto, o la dirección IP junto con el puerto.";
 	$text['description-sip_force_expires']['pt-pt'] = "Para prevenir registos SIP \"agarrados\", o forçar do tempo de expiração pode sobrepor-se ao tempo de expiração do cliente.";
-	$text['description-sip_force_expires']['fr-fr'] = "";
+	$text['description-sip_force_expires']['fr-fr'] = "Pour prévenir les enregitrements SIP obsolètes ou forcer l'expirartion de l'enregistrement SIP du client.";
 
 	$text['label-nibble_account']['en-us'] = "Nibble Account";
 	$text['label-nibble_account']['es-cl'] = "Cuenta Nibble";
@@ -490,7 +490,7 @@
 	$text['description-dial_string']['en-us'] = "Location of the endpoint.";
 	$text['description-dial_string']['es-cl'] = "Ubicación de extremo.";
 	$text['description-dial_string']['pt-pt'] = "Localização do endpoint.";
-	$text['description-dial_string']['fr-fr'] = "Location of the endpoint.";
+	$text['description-dial_string']['fr-fr'] = "Emplacement de la cible.";
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";

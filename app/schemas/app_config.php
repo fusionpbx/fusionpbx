@@ -13,7 +13,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Fourni la possibilité de rapidement définir les informations à stocker et dynamiquement rendre disponible des outils pour voir, éditer, supprimer et chercher. ";
+		$apps[$x]['description']['fr-fr'] = "Fourni la possibilité de rapidement définir les informations à stocker et dynamiquement rendre disponible des outils pour voir, éditer, supprimer et chercher.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Fornece a capacidade de definir rapidamente a informação para armazenar e dinamicamente faz ferramentas disponíveis para visualizar, adicionar, editar, apagar e pesquisa.";

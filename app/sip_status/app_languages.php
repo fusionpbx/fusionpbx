@@ -54,7 +54,7 @@
 	$text['button-flush_memcache']['en-us'] = "Flush Memcache";
 	$text['button-flush_memcache']['es-cl'] = "Memcache Flush";
 	$text['button-flush_memcache']['pt-pt'] = "Memcache Lavar";
-	$text['button-flush_memcache']['fr-fr'] = "Memcache Rincer";
+	$text['button-flush_memcache']['fr-fr'] = "Vider Memcache";
 
 	$text['button-reload_acl']['en-us'] = "Reload ACL";
 	$text['button-reload_acl']['es-cl'] = "Actualizar ACL";
@@ -69,12 +69,12 @@
 	$text['button-flush_registrations']['en-us'] = "Flush Registrations";
 	$text['button-flush_registrations']['es-cl'] = "Inscripciones Flush";
 	$text['button-flush_registrations']['pt-pt'] = "Inscrições Lavar";
-	$text['button-flush_registrations']['fr-fr'] = "Inscriptions Rincer";
+	$text['button-flush_registrations']['fr-fr'] = "Nettoyer enregistrements";
 
 	$text['button-registrations']['en-us'] = "Registrations";
 	$text['button-registrations']['es-cl'] = "Inscripciones";
 	$text['button-registrations']['pt-pt'] = "Inscrições";
-	$text['button-registrations']['fr-fr'] = "Inscriptions";
+	$text['button-registrations']['fr-fr'] = "Enregistrements";
 
 	$text['button-start']['en-us'] = "Start";
 	$text['button-start']['es-cl'] = "Iniciar";

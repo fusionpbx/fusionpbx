@@ -14,7 +14,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Permet d'utiliser un téléphone flash comme extension";
+		$apps[$x]['description']['fr-fr'] = "Permet d'utiliser un téléphone flash comme extension.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Permitir que o utilizador abra um Telefone Flash para a sua extensão.";

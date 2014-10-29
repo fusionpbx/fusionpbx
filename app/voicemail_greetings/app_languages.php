@@ -125,6 +125,6 @@
 	$text['description-info']['en-us'] = "You may enter a description here for your reference (not parsed).";
 	$text['description-info']['es-cl'] = "Ingrese una descripción (Opcional).";
 	$text['description-info']['pt-pt'] = "Pode inserir uma descrição para referência futura aqui.";
-	$text['description-info']['fr-fr'] = "";
+	$text['description-info']['fr-fr'] = "Vous pouvez entrer ici une description pour votre référence (non parsé).";
 
 ?>
