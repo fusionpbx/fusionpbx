@@ -96,10 +96,10 @@
 	$text['description-type']['pt-pt'] = "Seleccione o tipo de serviço.";
 	$text['description-type']['fr-fr'] = "Choisir le type de service.";
 
-	$text['label-data']['en-us'] =  "Data:";
-	$text['label-data']['es-cl'] =  "Datos:";
-	$text['label-data']['pt-pt'] =  "Dados:";
-	$text['label-data']['fr-fr'] =  "Données:";
+	$text['label-data']['en-us'] = "Data:";
+	$text['label-data']['es-cl'] = "Datos:";
+	$text['label-data']['pt-pt'] = "Dados:";
+	$text['label-data']['fr-fr'] = "Données:";
 
 	$text['description-data']['en-us'] = "Enter the service data.";
 	$text['description-data']['es-cl'] = "Ingrese los datos del servicio.";

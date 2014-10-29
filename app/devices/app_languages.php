@@ -14,7 +14,7 @@
 		$text['description-devices']['en-us'] = "Devices are endpoints that register to one or more extensions. They are added to the list manually or automatically when the device requests the provisioning information over HTTP/HTTPS.";
 		$text['description-devices']['es-cl'] = "Dispositivos son terminales que registran una o más extensiones. Se agregan a la lista manual o automáticamente cuando el dispositivo solicita información de provisionamiento vía HTTP/HTTPS.";
 		$text['description-devices']['pt-pt'] = "Os dispositivos são endpoints que registam numa ou mais extensões. São adicionadas à lista manualmente ou automaticamente quando o dispositivo realiza um pedido de aprovisionamento através de HTTP/HTTPS.";
-		$text['description-devices']['fr-fr'] = "Ce sont les équipements qui enregistrent une ou plusieures extensions. Elles sont ajoutées manuellement ou automatiquement à la liste quand l'équipement fait une demande de provisioning par HTTP/HTTPS";
+		$text['description-devices']['fr-fr'] = "Ce sont les équipements qui s'enregistrent pour une ou plusieures extensions. Ils sont ajoutées manuellement ou automatiquement à la liste quand l'équipement fait une demande de provisioning par HTTP/HTTPS.";
 
 		$text['header-device']['en-us'] = "Device";
 		$text['header-device']['es-cl'] = "Dispositivo";
@@ -24,7 +24,7 @@
 		$text['description-device']['en-us'] = "The following information is used to provision endpoints.";
 		$text['description-device']['es-cl'] = "La siguiente información es utilizada para provisonar los terminales";
 		$text['description-device']['pt-pt'] = "A seguinte informação é usada para aprovisionar endpoints.";
-		$text['description-device']['fr-fr'] = "Les informations suivantes servent à enregistrer les Equipements.";
+		$text['description-device']['fr-fr'] = "Les informations suivantes servent à provisionner les Equipements.";
 
 		$text['label-device_mac_address']['en-us'] = "MAC Address";
 		$text['label-device_mac_address']['es-cl'] = "Dirección MAC";

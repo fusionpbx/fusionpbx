@@ -13,7 +13,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels sélon les conditions et context.  Vous pouvez en utiliser pour diriger les appels vers gateways, IVR, nombres éxterieurs ou quelqu'autre déstination.";
+		$apps[$x]['description']['fr-fr'] = "Les dialplans son utilisés pour configurer les destinations d'appels selon des conditions et contextes.  Vous pouvez en utiliser pour diriger les appels vers les passerelles, IVR, numéross exterieurs ou tout autre destination.";
 		$apps[$x]['description']['fr-ca'] = "";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "O dialplan é usado para configurar destinos de chamada com base nas condições e contexto. Você pode usar o dialplan para enviar chamadas para gateways, atendedores automáticos, números externos, para scripts, ou qualquer destino.";
@@ -45,7 +45,7 @@
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";
 		$apps[$x]['menu'][1]['title']['de-at'] = "";
-		$apps[$x]['menu'][1]['title']['fr-fr'] = "Gestion du Dialplan";
+		$apps[$x]['menu'][1]['title']['fr-fr'] = "Gestion du Plan de Numérotation";
 		$apps[$x]['menu'][1]['title']['fr-ca'] = "Administrateur de Dialplan";
 		$apps[$x]['menu'][1]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][1]['title']['pt-pt'] = "Gestor de Dialplan";

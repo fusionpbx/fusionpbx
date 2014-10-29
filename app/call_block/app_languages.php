@@ -185,7 +185,7 @@
 	$text['description-enable']['en-us'] = "Set to true to enable call blocking for this number.";
 	$text['description-enable']['es-cl'] = "Seleccione verdadero para activar el bloqueo de llamadas desde este número.";
 	$text['description-enable']['pt-pt'] = "Escolha 'sim' para activar o bloqueio de chamadas para este número.";
-	$text['description-enable']['fr-fr'] = "Choisir Oui pour activer le bloquage d'appel. ";
+	$text['description-enable']['fr-fr'] = "Choisir Oui pour activer le bloquage d'appel.";
 
 	$text['button-save']['en-us'] = "Save";
 	$text['button-save']['es-cl'] = "Guardar";

@@ -94,7 +94,7 @@
 		$text['description-voicemail_enabled']['en-us'] = "Select to enable or disable this voicemail.";
 		$text['description-voicemail_enabled']['es-cl'] = "Indique si desea activar este correo";
 		$text['description-voicemail_enabled']['pt-pt'] = "Escolha se pretende habilitar ou desabilitar esta caixa de correio de voz.";
-		$text['description-voicemail_enabled']['fr-fr'] ="Messagerie Vocale activée ou non.";
+		$text['description-voicemail_enabled']['fr-fr'] = "Messagerie Vocale activée ou non.";
 
 		$text['label-voicemail_description']['en-us'] = "Description";
 		$text['label-voicemail_description']['es-cl'] = "Descripción";

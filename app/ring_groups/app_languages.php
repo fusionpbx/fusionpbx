@@ -81,7 +81,7 @@
 	$text['description-skip_active']['fr-fr'] = "Passer destinations avec des appels actifs.";
 	$text['description-skip_active']['pt-pt'] = "Ir destinos com ligações ativas.";
 
-	$text['description-enabled']['en-us'] ='Set the status of this ring group.';
+	$text['description-enabled']['en-us'] = "Set the status of this ring group.";
 	$text['description-enabled']['es-cl'] = "Define el estado de este grupo de llamado.";
 	$text['description-enabled']['fr-fr'] = "Choisir l'état de ce groupe de sonnerie";
 	$text['description-enabled']['pt-pt'] = "Escolher o estado do grupo.";

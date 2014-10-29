@@ -114,7 +114,7 @@
 	$text['description-description']['en-us'] = "You may enter a description here for your reference (not parsed).";
 	$text['description-description']['es-cl'] = "Puede ingresar una descripción aquí para su referencia.";
 	$text['description-description']['pt-pt'] = "Deverá introduzir uma descrição para sua referência.";
-	$text['description-description']['fr-fr'] = "";
+	$text['description-description']['fr-fr'] = "Vous pouvez entrer ici une description pour votre référence (non parsé).";
 
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";

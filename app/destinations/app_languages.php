@@ -95,7 +95,7 @@
 		$text['description-destination_cid_name_prefix']['en-us'] = "Set a prefix on the caller ID name.";
 		$text['description-destination_cid_name_prefix']['es-cl'] = "Configurar el prefijo del nombre de Caller ID.";
 		$text['description-destination_cid_name_prefix']['pt-pt'] = "Escolha um prefixo a adicionar ao nome do chamador.";
-		$text['description-destination_cid_name_prefix']['fr-fr'] = "Choisie un préfixe à ajouter au nom de l'appelant.";
+		$text['description-destination_cid_name_prefix']['fr-fr'] = "Choisir un préfixe à ajouter au nom de l'appelant.";
 
 		$text['label-destination_context']['en-us'] = "Context";
 		$text['label-destination_context']['es-cl'] = "Contexto";
@@ -115,7 +115,7 @@
 		$text['label-fax_uuid']['en-us'] = "Fax Detection";
 		$text['label-fax_uuid']['es-cl'] = "Detección de Fax";
 		$text['label-fax_uuid']['pt-pt'] = "Detecção de fax";
-		$text['label-fax_uuid']['fr-fr'] = "Détection Fax";
+		$text['label-fax_uuid']['fr-fr'] = "Détection de Fax";
 
 		$text['description-fax_uuid']['en-us'] = "Select the fax destination to enable fax detection. ";
 		$text['description-fax_uuid']['es-cl'] = "Seleccione el destino de fax para activar su detección";

@@ -151,37 +151,37 @@
 
 	$text['label-tier_level']['en-us'] = "Tier Level";
 	$text['label-tier_level']['es-cl'] = "Nivel";
-	$text['label-tier_level']['fr-fr'] = "Niveau du Tier";
+	$text['label-tier_level']['fr-fr'] = "Niveau";
 	$text['label-tier_level']['pt-pt'] = "Nível do Tier";
 
 	$text['label-tier_position']['en-us'] = "Tier Position";
 	$text['label-tier_position']['es-cl'] = "Posición de Nivel";
-	$text['label-tier_position']['fr-fr'] = "Position Tier";
+	$text['label-tier_position']['fr-fr'] = "Position du Niveau";
 	$text['label-tier_position']['pt-pt'] = "Posição do Tier";
 
 	$text['label-tier_rule_no_agent_no_wait']['en-us'] = "Tier Rule No Agent No Wait";
 	$text['label-tier_rule_no_agent_no_wait']['es-cl'] = "Regla de Nivel sin Agente sin Espera";
-	$text['label-tier_rule_no_agent_no_wait']['fr-fr'] = "Règle de Tier Pas d'agent, pas d'attente";
+	$text['label-tier_rule_no_agent_no_wait']['fr-fr'] = "Règle du Niveau Pas d'agent, pas d'attente";
 	$text['label-tier_rule_no_agent_no_wait']['pt-pt'] = "Regra de Nível Sem Agente Sem Espera";
 
 	$text['label-tier_rule_wait_multiply_level']['en-us'] = "Tier Rule Wait Multiply Level";
 	$text['label-tier_rule_wait_multiply_level']['es-cl'] = "Regla de nivel multiplicar nivel de espera";
-	$text['label-tier_rule_wait_multiply_level']['fr-fr'] = "Niveaux multipliés d'attente des Règle de Tier";
+	$text['label-tier_rule_wait_multiply_level']['fr-fr'] = "Règle d'attente multipliée par Niveau";
 	$text['label-tier_rule_wait_multiply_level']['pt-pt'] = "Regra de nível de espera multiplicado pelo nível";
 
 	$text['label-tier_rule_wait_second']['en-us'] = "Tier Rule Wait Second";
 	$text['label-tier_rule_wait_second']['es-cl'] = "Regla de nível segundo de espera";
-	$text['label-tier_rule_wait_second']['fr-fr'] = "Attente en secondes de la règle du Tier";
+	$text['label-tier_rule_wait_second']['fr-fr'] = "Attente en secondes de la règle du Niveau";
 	$text['label-tier_rule_wait_second']['pt-pt'] = "Regra de nível segundo espera";
 
 	$text['label-tier_rules_apply']['en-us'] = "Tier Rules Apply";
 	$text['label-tier_rules_apply']['es-cl'] = "Aplicar Reglas de Nivel";
-	$text['label-tier_rules_apply']['fr-fr'] = "Appliquer les règles de Tier";
+	$text['label-tier_rules_apply']['fr-fr'] = "Appliquer les règles du Niveau";
 	$text['label-tier_rules_apply']['pt-pt'] = "Aplicar as Regras do Nível";
 
 	$text['label-tier_state']['en-us'] = "Tier State";
 	$text['label-tier_state']['es-cl'] = "Estado de Nivel";
-	$text['label-tier_state']['fr-fr'] = "Etat du Tier";
+	$text['label-tier_state']['fr-fr'] = "Etat du Niveau";
 	$text['label-tier_state']['pt-pt'] = "Estado do Nível";
 
 	$text['label-time']['en-us'] = "Time";

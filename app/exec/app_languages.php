@@ -39,7 +39,7 @@
 	$text['label-shell']['en-us'] = "Shell command";
 	$text['label-shell']['es-cl'] = "Terminal de Comandos";
 	$text['label-shell']['pt-pt'] = "Comando Shell";
-	$text['label-shell']['fr-fr'] = "Comamnde Shell";
+	$text['label-shell']['fr-fr'] = "Commande Shell";
 
 	$text['description-shell']['en-us'] = "System commands.";
 	$text['description-shell']['es-cl'] = "Comandos de sistema";

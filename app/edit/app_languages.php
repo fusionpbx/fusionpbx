@@ -168,7 +168,7 @@
 	$text['button-del-dir']['en-us'] = "Delete Dir"; //delete directory
 	$text['button-del-dir']['es-cl'] = "Eliminar Carpeta"; //delete directory
 	$text['button-del-dir']['pt-pt'] = "Remover Directoria"; //delete directory
-	$text['button-del-dir']['fr-fr'] = "Supprimer le répertoire"; //delete directory
+	$text['button-del-dir']['fr-fr'] = "Supprimer le Répertoire"; //delete directory
 
 	$text['message-error']['en-us'] = "Error!!";
 	$text['message-error']['es-cl'] = "Error";

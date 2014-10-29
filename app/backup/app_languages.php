@@ -33,12 +33,12 @@
 	$text['description-restore_warning']['en-us'] = "Warning: Existing files, if any, will be overwritten.";
 	$text['description-restore_warning']['es-cl'] = "Advertencia: Los archivos existentes, si los hay, se sobrescribirá.";
 	$text['description-restore_warning']['pt-pt'] = "Aviso: Os arquivos existentes, se houver, serão substituídos.";
-	$text['description-restore_warning']['fr-fr'] = "Attention: les fichiers existants, le cas échéant, sera écrasé.";
+	$text['description-restore_warning']['fr-fr'] = "Attention: les fichiers existants, s'il y en a, seront écrasés.";
 
 	$text['label-select_backup']['en-us'] = "Select Backup File";
 	$text['label-select_backup']['es-cl'] = "Seleccione Copia de Seguridad";
 	$text['label-select_backup']['pt-pt'] = "Selecione Backup";
-	$text['label-select_backup']['fr-fr'] = "Sélectionnez Sauvegarde";
+	$text['label-select_backup']['fr-fr'] = "Sélectionnez le Fichier de Sauvegarde";
 
 	$text['button-backup']['en-us'] = "Backup";
 	$text['button-backup']['es-cl'] = "Copia de Seguridad";
@@ -53,12 +53,12 @@
 	$text['message-backup_failed_format']['en-us'] = "Backup Failed - Unable to Create Backup File";
 	$text['message-backup_failed_format']['es-cl'] = "Copia de seguridad Error - No se puede crear archivo de copia de seguridad";
 	$text['message-backup_failed_format']['pt-pt'] = "Falha no backup - Não é possível criar arquivo de backup";
-	$text['message-backup_failed_format']['fr-fr'] = "Échec de la sauvegarde - Impossible de créer le fichier de sauvegarde";
+	$text['message-backup_failed_format']['fr-fr'] = "Echec de la sauvegarde - Impossible de créer le fichier de sauvegarde";
 
 	$text['message-backup_failed_paths']['en-us'] = "Backup Failed - No Backup Paths Defined";
 	$text['message-backup_failed_paths']['es-cl'] = "Fallidos de copia de seguridad - No hay rutas de copia de seguridad definida";
 	$text['message-backup_failed_paths']['pt-pt'] = "Backup falhou - Sem Caminhos backup definido";
-	$text['message-backup_failed_paths']['fr-fr'] = "Échec de sauvegarde - Pas de chemins sauvegarde définie";
+	$text['message-backup_failed_paths']['fr-fr'] = "Echec de sauvegarde - Pas de chemins sauvegarde définis";
 
 	$text['message-restore_completed']['en-us'] = "Restore Completed";
 	$text['message-restore_completed']['es-cl'] = "Restaurar Completado";
@@ -73,5 +73,5 @@
 	$text['message-restore_failed_upload']['en-us'] = "Restore Failed - File Upload Failed";
 	$text['message-restore_failed_upload']['es-cl'] = "Falló la recup - Cargar archivo Error";
 	$text['message-restore_failed_upload']['pt-pt'] = "Falha de restauração - Upload de arquivo falhou";
-	$text['message-restore_failed_upload']['fr-fr'] = "Échec de la restauration - File Upload Échec";
+	$text['message-restore_failed_upload']['fr-fr'] = "Echec de la restauration - Echec du téléchargement";
 ?>

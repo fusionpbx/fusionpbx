@@ -192,10 +192,12 @@
 	$text['label-channels']['en-us'] = "Channels";
 	$text['label-channels']['es-cl'] = "Canales";
 	$text['label-channels']['pt-pt'] = "Canais";
+	$text['label-channels']['fr-fr'] = "Canaux";
 
 	$text['description-channels']['en-us'] = "Maximum number of simultaneous channels available in the gateway.";
 	$text['description-channels']['es-cl'] = "Número máximo de canales simultaneos disponibles en la pasarela.";
 	$text['description-channels']['pt-pt'] = "Número máximo de canais simultâneos no gateway.";
+	$text['description-channels']['fr-fr'] = "Nombre max de canaux simultanés disponibles sur la passerelle.";
 
 	$text['label-caller_id_in_from']['en-us'] = "Caller ID In From";
 	$text['label-caller_id_in_from']['es-cl'] = "Caller ID In From";
@@ -230,12 +232,12 @@
 	$text['label-codec_prefs']['en-us'] = "Codec Preferences";
 	$text['label-codec_prefs']['es-cl'] = "Lista de Codecs";
 	$text['label-codec_prefs']['pt-pt'] = "Lista de Codecs";
-	$text['label-codec_prefs']['fr-fr'] = "";
+	$text['label-codec_prefs']['fr-fr'] = "Liste des Codecs";
 
 	$text['description-codec_prefs']['en-us'] = "Enter the codec preferences as a list. Ex: PCMA,PCMU,G722";
 	$text['description-codec_prefs']['es-cl'] = "Ingrese el listado de codecs a utilizar. Ej: PCMA,PCMU,G722";
 	$text['description-codec_prefs']['pt-pt'] = "Introduza os codecs a utilizar no gateway sob a forma de lista. Ex: PCMA,PCMU,G722";
-	$text['description-codec_prefs']['fr-fr'] = "";
+	$text['description-codec_prefs']['fr-fr'] = "Choisir une liste de codec utilisé sur ce lien. Ex: PCMA,PCMU,G722";
 
 	$text['label-extension_in_contact']['en-us'] = "Extension In Contact";
 	$text['label-extension_in_contact']['es-cl'] = "Extensión en Contacto";

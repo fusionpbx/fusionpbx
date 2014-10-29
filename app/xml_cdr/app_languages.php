@@ -73,17 +73,17 @@
 	$text['label-start_range']['en-us'] = "Start Range";
 	$text['label-start_range']['es-cl'] = "Comienzo Lapso";
 	$text['label-start_range']['pt-pt'] = "Começo Palmo";
-	$text['label-start_range']['fr-fr'] = "Démarrer Envergure";
+	$text['label-start_range']['fr-fr'] = "Début Intervale";
 
 	$text['label-answer_range']['en-us'] = "Answer Range";
 	$text['label-answer_range']['es-cl'] = "Respuesta Lapso";
 	$text['label-answer_range']['pt-pt'] = "Resposta Palmo";
-	$text['label-answer_range']['fr-fr'] = "Réponse Envergure";
+	$text['label-answer_range']['fr-fr'] = "Réponse Intervale";
 
 	$text['label-end_range']['en-us'] = "End Range";
 	$text['label-end_range']['es-cl'] = "Fin Lapso";
 	$text['label-end_range']['pt-pt'] = "Fim Palmo";
-	$text['label-end_range']['fr-fr'] = "Fin Envergure";
+	$text['label-end_range']['fr-fr'] = "Fin Intervale";
 
 	$text['label-status']['en-us'] = "Status";
 	$text['label-status']['es-cl'] = "Estado";
@@ -214,7 +214,7 @@
 	$text['description-7']['en-us'] = "call variables, call flow, timing information, and other useful call details.";
 	$text['description-7']['es-cl'] = "variables de llamada, flujo, información temporal y otros detalles útiles.";
 	$text['description-7']['pt-pt'] = "variáveis de chamada, fluxo da chamada, informações de tempo e outras informações úteis.";
-	$text['description-7']['fr-fr'] = "les variables de l'appel, le chemin, les temporisations et d'autres détails.";
+	$text['description-7']['fr-fr'] = "les variables de l'appel, le chemin, les compteurs et d'autres détails.";
 
 	$text['label-summary']['en-us'] = "Summary";
 	$text['label-summary']['es-cl'] = "Sumario";
@@ -248,7 +248,7 @@
 	$text['label-channel']['en-us'] = "Channel Data";
 	$text['label-channel']['es-cl'] = "Datos del Canal";
 	$text['label-channel']['pt-pt'] = "Dados do Canal";
-	$text['label-channel']['fr-fr'] = "Données de canal";
+	$text['label-channel']['fr-fr'] = "Données du canal";
 
 	$text['label-value']['en-us'] = "Value";
 	$text['label-value']['es-cl'] = "Valor";
@@ -258,7 +258,7 @@
 	$text['label-application-log']['en-us'] = "Application Log";
 	$text['label-application-log']['es-cl'] = "Registro de Aplicación";
 	$text['label-application-log']['pt-pt'] = "Log de Aplicação";
-	$text['label-application-log']['fr-fr'] = "Log de l'Application Log";
+	$text['label-application-log']['fr-fr'] = "Log de l'Application";
 
 	$text['label-a-leg']['en-us'] = "A-leg";
 	$text['label-a-leg']['pt-pt'] = "A-leg";
@@ -296,7 +296,7 @@
 	$text['label-call-flow-5']['en-us'] = "Call Flow: Times";
 	$text['label-call-flow-5']['es-cl'] = "Flujos de llamada: Tiempos";
 	$text['label-call-flow-5']['pt-pt'] = "Fluxo de chamada: Tempos";
-	$text['label-call-flow-5']['fr-fr'] = "Flux d'appel: temporisations ";
+	$text['label-call-flow-5']['fr-fr'] = "Flux d'appel: Compteurs";
 
 	//xml_cdr_search
 	$text['label-caller_id_name']['en-us'] = "CID Name";
@@ -307,12 +307,12 @@
 	$text['label-caller_id_number']['en-us'] = "CID Number";
 	$text['label-caller_id_number']['es-cl'] = "Número CID";
 	$text['label-caller_id_number']['pt-pt'] = "Número CID";
-	$text['label-caller_id_number']['fr-fr'] = "Nombre de l'Appelant";
+	$text['label-caller_id_number']['fr-fr'] = "Numéro de l'Appelant";
 
 	$text['label-destination']['en-us'] = "Destination Number";
 	$text['label-destination']['es-cl'] = "Número de destino";
 	$text['label-destination']['pt-pt'] = "Número Destino";
-	$text['label-destination']['fr-fr'] = "Nombre de Destinations";
+	$text['label-destination']['fr-fr'] = "Numéro de Destinations";
 
 	$text['label-context']['en-us'] = "Context";
 	$text['label-context']['es-cl'] = "Contexto";
@@ -347,7 +347,7 @@
 	$text['label-billsec']['en-us'] = "Bill Seconds";
 	$text['label-billsec']['es-cl'] = "Segundos Bill";
 	$text['label-billsec']['pt-pt'] = "Segundos Bill";
-	$text['label-billsec']['fr-fr'] = "Secondes de Factures";
+	$text['label-billsec']['fr-fr'] = "Facture en Secondes";
 
 	$text['label-hangup_cause']['en-us'] = "Status";
 	$text['label-hangup_cause']['es-cl'] = "Estado";
@@ -382,7 +382,7 @@
 	$text['label-remote_media_ip']['en-us'] = "Remote Media IP";
 	$text['label-remote_media_ip']['es-cl'] = "Remoto IP Media";
 	$text['label-remote_media_ip']['pt-pt'] = "IP Media Remote";
-	$text['label-remote_media_ip']['fr-fr'] = "IP Media Remote";
+	$text['label-remote_media_ip']['fr-fr'] = "IP Média Distante";
 
 	$text['label-network_addr']['en-us'] = "Network Address";
 	$text['label-network_addr']['es-cl'] = "Dirección de red";
@@ -438,7 +438,7 @@
 	$text['button-extension_summary']['en-us'] = "Extension Summary";
 	$text['button-extension_summary']['es-cl'] = "Resumen Extensión";
 	$text['button-extension_summary']['pt-pt'] = "Resumo Extensão";
-	$text['button-extension_summary']['fr-fr'] = "Résumé d'Extension";
+	$text['button-extension_summary']['fr-fr'] = "Résumé par Extension";
 
 	//xml_cdr_extension_summary
 	$text['description-extension_summary']['en-us'] = "Default View: Last 7 Days";
@@ -449,7 +449,7 @@
 	$text['title-extension_summary']['en-us'] = "Extension Summary";
 	$text['title-extension_summary']['es-cl'] = "Resumen Extensión";
 	$text['title-extension_summary']['pt-pt'] = "Resumo Extensão";
-	$text['title-extension_summary']['fr-fr'] = "Résumé d'Extension";
+	$text['title-extension_summary']['fr-fr'] = "Résumé par Extension";
 
 	$text['label-start_date_time']['en-us'] = "Start Date/Time";
 	$text['label-start_date_time']['es-cl'] = "Fecha/Hora de Comienzo";
@@ -479,7 +479,7 @@
 	$text['label-number_alias']['en-us'] = "Number Alias";
 	$text['label-number_alias']['es-cl'] = "Número Alias";
 	$text['label-number_alias']['pt-pt'] = "Número Alias";
-	$text['label-number_alias']['fr-fr'] = "Nombre Alias";
+	$text['label-number_alias']['fr-fr'] = "Numéros Alias";
 
 	$text['label-username']['en-us'] = "Username";
 	$text['label-username']['es-cl'] = "Nombre de usuario";
@@ -489,7 +489,7 @@
 	$text['label-inbound_calls']['en-us'] = "Inbound Calls";
 	$text['label-inbound_calls']['es-cl'] = "Las Llamadas Entrantes";
 	$text['label-inbound_calls']['pt-pt'] = "Chamadas de Entrada";
-	$text['label-inbound_calls']['fr-fr'] = "Les Appels Entrants";
+	$text['label-inbound_calls']['fr-fr'] = "Appels Entrants";
 
 	$text['label-outbound_calls']['en-us'] = "Outbound Calls";
 	$text['label-outbound_calls']['es-cl'] = "Llamadas Salientes";
@@ -499,12 +499,12 @@
 	$text['label-inbound_duration']['en-us'] = "Inbound Duration";
 	$text['label-inbound_duration']['es-cl'] = "Duración Inbound";
 	$text['label-inbound_duration']['pt-pt'] = "Inbound Duração";
-	$text['label-inbound_duration']['fr-fr'] = "Inbound Durée";
+	$text['label-inbound_duration']['fr-fr'] = "Durée Entrants";
 
 	$text['label-outbound_duration']['en-us'] = "Outbound Duration";
 	$text['label-outbound_duration']['es-cl'] = "Duración de Salida";
 	$text['label-outbound_duration']['pt-pt'] = "Outbound Duração";
-	$text['label-outbound_duration']['fr-fr'] = "Sortant Durée";
+	$text['label-outbound_duration']['fr-fr'] = "Durée Sortants";
 
 	$text['option-true']['en-us'] = "True";
 	$text['option-true']['es-cl'] = "Verdadero";

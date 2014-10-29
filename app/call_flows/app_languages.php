@@ -13,7 +13,7 @@
 	$text['description-call_flows']['en-us'] = "Direct calls between two destinations by calling a feature code.";
 	$text['description-call_flows']['es-cl'] = "Llamadas directas entre dos destinatarios llamando a un código distintivo.";
 	$text['description-call_flows']['pt-pt'] = "Chamadas directas entre dois destinos recorrendo a um código de função.";
-	$text['description-call_flows']['fr-fr'] = "Appels directs entre deux destionation en appelant une fonction via un code. ";
+	$text['description-call_flows']['fr-fr'] = "Appels directs entre deux destinations en appelant une fonction.";
 
 	$text['title-call_flow-edit']['en-us'] = "Call Flow";
 	$text['title-call_flow-edit']['es-cl'] = "Flujo de Llamada";
@@ -43,7 +43,7 @@
 	$text['description-name']['en-us'] = "Enter the name.";
 	$text['description-name']['es-cl'] = "Ingrese el nombre.";
 	$text['description-name']['pt-pt'] = "Introduza o nome.";
-	$text['description-name']['fr-fr'] = "";
+	$text['description-name']['fr-fr'] = "Choisr le nom.";
 
 	$text['label-extension']['en-us'] = "Extension";
 	$text['label-extension']['es-cl'] = "Extensión";
@@ -53,7 +53,7 @@
 	$text['description-extension']['en-us'] = "Enter the extension number.";
 	$text['description-extension']['es-cl'] = "Ingrese el número de extensión.";
 	$text['description-extension']['pt-pt'] = "Introduza o número da extensão.";
-	$text['description-extension']['fr-fr'] = "";
+	$text['description-extension']['fr-fr'] = "Choisir le numéro d'extension.";
 
 	$text['label-feature_code']['en-us'] = "Feature Code";
 	$text['label-feature_code']['es-cl'] = "Código distintivo";
@@ -63,7 +63,7 @@
 	$text['description-feature_code']['en-us'] = "Enter the feature code.";
 	$text['description-feature_code']['es-cl'] = "Ingrese el código distintivo.";
 	$text['description-feature_code']['pt-pt'] = "Introduza o código de função.";
-	$text['description-feature_code']['fr-fr'] = "";
+	$text['description-feature_code']['fr-fr'] = "Choisir le code la fonction";
 
 	$text['label-context']['en-us'] = "Context";
 	$text['label-context']['es-cl'] = "Contexto";
@@ -73,7 +73,7 @@
 	$text['description-context']['en-us'] = "Enter the context.";
 	$text['description-context']['es-cl'] = "Ingrese el contexto.";
 	$text['description-context']['pt-pt'] = "Introduza o contexto";
-	$text['description-context']['fr-fr'] = "";
+	$text['description-context']['fr-fr'] = "Choisir le contexte.";
 
 	$text['label-status']['en-us'] = "Status";
 	$text['label-status']['es-cl'] = "Estado";
@@ -83,7 +83,7 @@
 	$text['description-status']['en-us'] = "Select the status.";
 	$text['description-status']['es-cl'] = "Seleccione el estado.";
 	$text['description-status']['pt-pt'] = "Seleccione o estado.";
-	$text['description-status']['fr-fr'] = "";
+	$text['description-status']['fr-fr'] = "Choisir le statut.";
 
 	$text['label-pin_number']['en-us'] = "PIN Number";
 	$text['label-pin_number']['es-cl'] = "Número PIN";
@@ -93,7 +93,7 @@
 	$text['description-pin_number']['en-us'] = "Enter the pin number.";
 	$text['description-pin_number']['es-cl'] = "Ingrese el número PIN.";
 	$text['description-pin_number']['pt-pt'] = "Introduza o código PIN";
-	$text['description-pin_number']['fr-fr'] = "";
+	$text['description-pin_number']['fr-fr'] = "Choisir le code PIN.";
 
 	$text['label-destination_label']['en-us'] = "Destination Label";
 	$text['label-destination_label']['es-cl'] = "Etiqueta de Destino";
@@ -103,7 +103,7 @@
 	$text['description-destination_label']['en-us'] = "Enter the destination label.";
 	$text['description-destination_label']['es-cl'] = "Ingrese la etiqueta de destino.";
 	$text['description-destination_label']['pt-pt'] = "Introduza o destino.";
-	$text['description-destination_label']['fr-fr'] = "";
+	$text['description-destination_label']['fr-fr'] = "Choisir le label de la destination.";
 
 	$text['label-destination']['en-us'] = "Destination";
 	$text['label-destination']['es-cl'] = "Destino";
@@ -113,7 +113,7 @@
 	$text['description-destination']['en-us'] = "Select the destination.";
 	$text['description-destination']['es-cl'] = "Seleccione el destino.";
 	$text['description-destination']['pt-pt'] = "Seleccione o destino.";
-	$text['description-destination']['fr-fr'] = "";
+	$text['description-destination']['fr-fr'] = "Choisir la destination.";
 
 	$text['label-alternate_label']['en-us'] = "Alternate Label";
 	$text['label-alternate_label']['es-cl'] = "Etiqueta alternativa";
@@ -123,7 +123,7 @@
 	$text['description-alternate_label']['en-us'] = "Enter the alternate destination label.";
 	$text['description-alternate_label']['es-cl'] = "Ingrese la etiqueta de destino alternativo.";
 	$text['description-alternate_label']['pt-pt'] = "Introduza um destino alternativo.";
-	$text['description-alternate_label']['fr-fr'] = "";
+	$text['description-alternate_label']['fr-fr'] = "Choisir le label de la destination alternative.";
 
 	$text['label-alternate_destination']['en-us'] = "Alternate Destination";
 	$text['label-alternate_destination']['es-cl'] = "Destino Alternativo";
@@ -133,7 +133,7 @@
 	$text['description-alternate_destination']['en-us'] = "Select the alternate destination.";
 	$text['description-alternate_destination']['es-cl'] = "Seleccione el destino alternativo.";
 	$text['description-alternate_destination']['pt-pt'] = "Seleccione um destino alternativo.";
-	$text['description-alternate_destination']['fr-fr'] = "";
+	$text['description-alternate_destination']['fr-fr'] = "Choisir la destination alternative.";
 
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";

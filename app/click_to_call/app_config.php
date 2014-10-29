@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Appeler avec une URL";
+		$apps[$x]['description']['fr-fr'] = "Appeler à partir d'une URL";
 		$apps[$x]['description']['fr-ca'] = "Appeller avec d'URL";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Originar chamadas com um URL.";

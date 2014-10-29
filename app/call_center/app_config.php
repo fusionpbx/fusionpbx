@@ -12,7 +12,7 @@
 		$apps[$x]['description']['de-de'] = "";
 		$apps[$x]['description']['de-ch'] = "";
 		$apps[$x]['description']['de-at'] = "";
-		$apps[$x]['description']['fr-fr'] = "Files d'attente d'appels entrants distribués aux agents disponibles";
+		$apps[$x]['description']['fr-fr'] = "Files d'attente d'appels entrants distribués aux agents disponibles.";
 		$apps[$x]['description']['fr-ca'] = "Queues pour envoyer les appels entrants vers les agents disponibles.";
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "As filas servem para gerenciamento de chamadas de entrada e encaminhamento das mesmas para os agentes disponíveis.";
@@ -42,7 +42,7 @@
 		$apps[$x]['menu'][1]['title']['de-de'] = "";
 		$apps[$x]['menu'][1]['title']['de-ch'] = "";
 		$apps[$x]['menu'][1]['title']['de-at'] = "";
-		$apps[$x]['menu'][1]['title']['fr-fr'] = "État d'agent";
+		$apps[$x]['menu'][1]['title']['fr-fr'] = "État de l'agent";
 		$apps[$x]['menu'][1]['title']['fr-ca'] = "";
 		$apps[$x]['menu'][1]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][1]['title']['pt-pt'] = "Estado do Agente";

@@ -118,7 +118,7 @@
 	$text['button-preview']['en-us'] = "Preview";
 	$text['button-preview']['es-cl'] = "Prevista";
 	$text['button-preview']['pt-pt'] = "Pré-Visualização";
-	$text['button-preview']['fr-fr'] = "Avant-Première";
+	$text['button-preview']['fr-fr'] = "Pré-Visualisation";
 
 	$text['button-send']['en-us'] = "Send";
 	$text['button-send']['es-cl'] = "Enviar";
@@ -291,7 +291,7 @@
 	$text['label-fax-header']['en-us'] = "Header";
 	$text['label-fax-header']['es-cl'] = "Header";
 	$text['label-fax-header']['pt-pt'] = "Cabeçalho";
-	$text['label-fax-header']['fr-fr'] = "Tête";
+	$text['label-fax-header']['fr-fr'] = "Entête";
 
 	$text['description-fax-header']['en-us'] = "Displayed beneath the logo in the header of the cover sheet (optional).";
 	$text['description-fax-header']['es-cl'] = "Aparece debajo del logotipo en la cabecera de la portada (opcional).";
@@ -381,7 +381,7 @@
 	$text['description-fax-page-size']['en-us'] = "Select the page size to transmit.";
 	$text['description-fax-page-size']['es-cl'] = "Seleccione el tamaño de página de transmitir.";
 	$text['description-fax-page-size']['pt-pt'] = "Selecione o tamanho da página para transmitir.";
-	$text['description-fax-page-size']['fr-fr'] = "Sélectionnez le format de page pour nous transmettre.";
+	$text['description-fax-page-size']['fr-fr'] = "Sélectionnez le format de page à transmettre.";
 
 	$text['label-fax-fax']['en-us'] = "FAX";
 	$text['label-fax-fax']['es-cl'] = "Facsímil";
@@ -391,7 +391,7 @@
 	$text['label-fax-cover-sheet']['en-us'] = "COVER SHEET";
 	$text['label-fax-cover-sheet']['es-cl'] = "CARTA DE PRESENTACIÓN";
 	$text['label-fax-cover-sheet']['pt-pt'] = "CARTA DE APRESENTAÇÃO";
-	$text['label-fax-cover-sheet']['fr-fr'] = "LETTRE DE MOTIVATION";
+	$text['label-fax-cover-sheet']['fr-fr'] = "PAGE DE PRESENTATION";
 
 	$text['label-fax-attached']['en-us'] = "Attached";
 	$text['label-fax-attached']['es-cl'] = "Adjunto";
@@ -416,12 +416,12 @@
 	$text['table-file']['en-us'] = "File Name (Download)";
 	$text['table-file']['es-cl'] = "Nombre de Archivo (Descargar)";
 	$text['table-file']['pt-pt'] = "Nome do Ficheiro (Descarregar)";
-	$text['table-file']['fr-fr'] = "Nom du fichier (télécharger";
+	$text['table-file']['fr-fr'] = "Nom du Fichier (télécharger)";
 
 	$text['table-view']['en-us'] = "View";
 	$text['table-view']['es-cl'] = "Ver";
 	$text['table-view']['pt-pt'] = "Visualizar";
-	$text['table-view']['fr-fr'] = "voir";
+	$text['table-view']['fr-fr'] = "Visualiser";
 
 	$text['table-modified']['en-us'] = "Last Modified";
 	$text['table-modified']['es-cl'] = "Última modificación";
@@ -436,7 +436,7 @@
 	$text['message-invalid-fax']['en-us'] = "Invalid Fax - Please enter a message or select a file to send.";
 	$text['message-invalid-fax']['es-cl'] = "Fax Inválido - Por favor ingrese el mensaje o seleccione un archivo para enviar.";
 	$text['message-invalid-fax']['pt-pt'] = "Fax inválida - Por favor, digite uma mensagem ou selecionar um arquivo a ser enviado.";
-	$text['message-invalid-fax']['fr-fr'] = "Invalid Fax - S'il vous plaît entrer un message ou sélectionner un fichier à envoyer.";
+	$text['message-invalid-fax']['fr-fr'] = "Fax Invalide - Merci d'entrer un message ou sélectionner un fichier à envoyer.";
 
 	//fax logs
 	$text['title-fax_logs']['en-us'] = 'FAX Logs';
