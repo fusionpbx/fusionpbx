@@ -25,8 +25,11 @@
 	$text['label-call-forward']['pt-pt'] = "Encaminhamento de Chamadas";
 	$text['label-call-forward']['fr-fr'] = "Renvoi d'appel";
 
-	$text['label-forward-busy']['en-us'] = "Forward on busy";
-	$text['label-forward-busy']['it-it'] = "Rinvio su occupato";
+	$text['label-on-busy']['en-us'] = "On Busy";
+	$text['label-on-busy']['es-cl'] = "Concurrida";
+	$text['label-on-busy']['pt-pt'] = "Movimentado";
+	$text['label-on-busy']['fr-fr'] = "Sur Occupé";
+	$text['label-on-busy']['it-it'] = "Rinvio su occupato";
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activo";

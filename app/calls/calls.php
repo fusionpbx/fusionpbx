@@ -155,7 +155,6 @@ else {
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['extension']."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if (permission_exists('call_forward')) { 	echo "<a href='".$tr_url."'>".$text['label-call-forward']."</a>&nbsp;&nbsp;&nbsp;"; }
-			if (permission_exists('call_forward')) { 	echo "<a href='".$tr_url."'>".$text['label-forward-busy']."</a>&nbsp;&nbsp;&nbsp;"; }
 			if (permission_exists('follow_me')) {		echo "<a href='".$tr_url."'>".$text['label-follow-me']."</a>&nbsp;&nbsp;&nbsp;"; }
 			if (permission_exists('do_not_disturb')) {	echo "<a href='".$tr_url."'>".$text['label-dnd']."</a>"; }
 			echo "	</td>\n";
