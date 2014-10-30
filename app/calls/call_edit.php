@@ -358,7 +358,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "and extension_uuid = '$extension_uuid'";
 		$db->exec(check_sql($sql));
 		unset($sql);
-                
+
 	//delete extension from memcache
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if ($fp) {
@@ -538,17 +538,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
-	echo "	<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	/* BUSY handling */
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	<strong>".$text['label-forward-busy'].":</strong>\n";
+	echo "	".$text['label-on-busy'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('dnd_enabled').checked=false;";
