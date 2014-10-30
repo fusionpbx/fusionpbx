@@ -61,6 +61,11 @@
 	$text['label-follow-me']['pt-pt'] = "Segue-me";
 	$text['label-follow-me']['fr-fr'] = "Follow Me";
 
+	$text['label-destination']['en-us'] = "Destination";
+	$text['label-destination']['es-cl'] = "Destino";
+	$text['label-destination']['fr-fr'] = "Destination";
+	$text['label-destination']['pt-pt'] = "Destino";
+
 	$text['label-destinations']['en-us'] = "Destinations";
 	$text['label-destinations']['es-cl'] = "Destinos";
 	$text['label-destinations']['fr-fr'] = "Destinations";
