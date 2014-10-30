@@ -689,7 +689,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-record_template'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-  $record_ext=($_SESSION['record_ext']=='mp3'?'mp3':'wav');
+   $record_ext=($_SESSION['record_ext']=='mp3'?'mp3':'wav');
 	$record_template = $_SESSION['switch']['recordings']['dir']."/archive/\${strftime(%Y)}/\${strftime(%b)}/\${strftime(%d)}/\${uuid}.".$record_ext;
 	echo "	<select class='formfld' name='queue_record_template'>\n";
 	if (strlen($queue_record_template) > 0) {
