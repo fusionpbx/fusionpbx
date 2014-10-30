@@ -517,13 +517,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"\" value='false' checked='checked' /> ".$text['label-disabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"\" value='false' /> ".$text['label-disable']."</label> \n";
+		echo "	<label for='forward_all_disabled'><input type='radio' name='forward_all_enabled' id='forward_all_disabled' onclick=\"\" value='false' /> ".$text['label-disabled']."</label> \n";
 	}
 	if ($forward_all_enabled == "true") {
 		echo "	<label for='forward_all_enabled'><input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' checked='checked'/> ".$text['label-enabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='forward_all_enabled'><input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' /> ".$text['label-enable']."</label> \n";
+		echo "	<label for='forward_all_enabled'><input type='radio' name='forward_all_enabled' id='forward_all_enabled' onclick=\"$on_click\" value='true' /> ".$text['label-enabled']."</label> \n";
 	}
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
@@ -543,13 +543,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<label for='forward_busy_disabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_disabled' onclick=\"\" value='false' checked='checked' /> ".$text['label-disabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='forward_busy_disabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_disabled' onclick=\"\" value='false' /> ".$text['label-disable']."</label> \n";
+		echo "	<label for='forward_busy_disabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_disabled' onclick=\"\" value='false' /> ".$text['label-disabled']."</label> \n";
 	}
 	if ($forward_busy_enabled == "true") {
 		echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"$on_click\" value='true' checked='checked'/> ".$text['label-enabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"$on_click\" value='true' /> ".$text['label-enable']."</label> \n";
+		echo "	<label for='forward_busy_enabled'><input type='radio' name='forward_busy_enabled' id='forward_busy_enabled' onclick=\"$on_click\" value='true' /> ".$text['label-enabled']."</label> \n";
 	}
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
@@ -572,13 +572,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' value='false' onclick=\"\" checked='checked' /> ".$text['label-disabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' value='false' onclick=\"\" /> ".$text['label-disable']."</label> \n";
+		echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' value='false' onclick=\"\" /> ".$text['label-disabled']."</label> \n";
 	}
 	if ($follow_me_enabled == "true") {
 		echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' value='true' onclick=\"$on_click\" checked='checked'/> ".$text['label-enabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' value='true' onclick=\"$on_click\" /> ".$text['label-enable']."</label> \n";
+		echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' value='true' onclick=\"$on_click\" /> ".$text['label-enabled']."</label> \n";
 	}
 	unset($on_click);
 	echo "<br />\n";
@@ -749,13 +749,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<label for='dnd_disabled'><input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" checked='checked' /> ".$text['label-disabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='dnd_disabled'><input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" /> ".$text['label-disable']."</label> \n";
+		echo "	<label for='dnd_disabled'><input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" /> ".$text['label-disabled']."</label> \n";
 	}
 	if ($dnd_enabled == "true") {
 		echo "	<label for='dnd_enabled'><input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\" checked='checked'/> ".$text['label-enabled']."</label> \n";
 	}
 	else {
-		echo "	<label for='dnd_enabled'><input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\"/> ".$text['label-enable']."</label> \n";
+		echo "	<label for='dnd_enabled'><input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\"/> ".$text['label-enabled']."</label> \n";
 	}
 	echo "	<br />\n";
 	echo "</td>\n";
