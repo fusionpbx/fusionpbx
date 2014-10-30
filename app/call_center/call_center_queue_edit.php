@@ -431,13 +431,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<td align='left' nowrap='nowrap'><b>".$text['header-call_center_queue_edit']."</b></td>\n";
 	}
 	echo "<td align='right'>\n";
-  echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
-	echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
-	echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+$database_queue_name@".$_SESSION['domain_name']."';\" />\n";
-	echo "	&nbsp;&nbsp;&nbsp;";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='call_center_queues.php'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
-		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=$database_queue_name';\" />\n";
+		echo "	&nbsp;&nbsp;&nbsp;";
+		echo "  <input type='button' class='btn' value='".$text['button-stop']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+unload+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-start']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+load+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-restart']."' onclick=\"document.location.href='cmd.php?cmd=api+callcenter_config+queue+reload+".$database_queue_name."@".$_SESSION['domain_name']."';\" />\n";
+		echo "  <input type='button' class='btn' value='".$text['button-view']."' onclick=\"document.location.href='".PROJECT_PATH."/app/call_center_active/call_center_active.php?queue_name=".$database_queue_name."';\" />\n";
+		echo "	&nbsp;&nbsp;&nbsp;";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
