@@ -458,31 +458,11 @@ else {
 	echo "	".$text['label-strategy'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_strategy'>\n";
-	if ($ring_group_strategy == "sequence") {
-		echo "	<option value='sequence' selected='selected'>".$text['option-sequence']."</option>\n";
-	}
-	else {
-		echo "	<option value='sequence'>".$text['option-sequence']."</option>\n";
-	}
-	if ($ring_group_strategy == "simultaneous" || $ring_group_strategy == '') {
-		echo "	<option value='simultaneous' selected='selected'>".$text['option-simultaneous']."</option>\n";
-	}
-	else {
-		echo "	<option value='simultaneous'>".$text['option-simultaneous']."</option>\n";
-	}
-	if ($ring_group_strategy == "enterprise") {
-		echo "	<option value='enterprise' selected='selected'>".$text['option-enterprise']."</option>\n";
-	}
-	else {
-		echo "	<option value='enterprise'>".$text['option-enterprise']."</option>\n";
-	}
-	if ($ring_group_strategy == "rollover") {
-		echo "	<option value='rollover' selected='selected'>".$text['option-rollover']."</option>\n";
-	}
-	else {
-		echo "	<option value='rollover'>".$text['option-rollover']."</option>\n";
-	}
+	echo "	<select class='formfld' name='ring_group_strategy' onchange=\"getElementById('destination_delayorder').innerHTML = (this.selectedIndex == 0 || this.selectedIndex == 3) ? '".$text['label-destination_order']."' : '".$text['label-destination_delay']."';\">\n";
+	echo "	<option value='simultaneous' ".(($ring_group_strategy == "simultaneous") ? "selected='selected'" : null).">".$text['option-simultaneous']."</option>\n";
+	echo "	<option value='sequence' ".(($ring_group_strategy == "sequence") ? "selected='selected'" : null).">".$text['option-sequence']."</option>\n";
+	echo "	<option value='enterprise' ".(($ring_group_strategy == "enterprise") ? "selected='selected'" : null).">".$text['option-enterprise']."</option>\n";
+	echo "	<option value='rollover' ".(($ring_group_strategy == "rollover") ? "selected='selected'" : null).">".$text['option-rollover']."</option>\n";
 	echo "	</select>\n";
 	echo "<br />\n";
 	echo $text['description-strategy']."\n";
@@ -496,7 +476,9 @@ else {
 	echo "			<table border='0' cellpadding='2' cellspacing='0'>\n";
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
-	echo "					<td class='vtable'>".$text['label-destination_delay']."</td>\n";
+	echo "					<td class='vtable' id='destination_delayorder'>";
+	echo 						($ring_group_strategy == 'simultaneous' || $ring_group_strategy == 'rollover' || $ring_group_strategy == '') ? $text['label-destination_order'] : $text['label-destination_delay'];
+	echo "					</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination_timeout']."</td>\n";
 	if (permission_exists('ring_group_prompt')) {
 		echo "				<td class='vtable'>".$text['label-destination_prompt']."</td>\n";

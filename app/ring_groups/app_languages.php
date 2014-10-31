@@ -176,6 +176,11 @@
 	$text['label-destination_delay']['fr-fr'] = "Délais";
 	$text['label-destination_delay']['pt-pt'] = "Atraso";
 
+	$text['label-destination_order']['en-us'] = "Order";
+	$text['label-destination_order']['es-cl'] = "Orden";
+	$text['label-destination_order']['fr-fr'] = "Ordem";
+	$text['label-destination_order']['pt-pt'] = "Ordre";
+
 	$text['label-destination_number']['en-us'] = "Destination";
 	$text['label-destination_number']['es-cl'] = "Destino";
 	$text['label-destination_number']['fr-fr'] = "Destination";
