@@ -458,7 +458,7 @@ else {
 	echo "	".$text['label-strategy'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='ring_group_strategy' onchange=\"getElementById('destination_delayorder').innerHTML = (this.selectedIndex == 0 || this.selectedIndex == 3) ? '".$text['label-destination_order']."' : '".$text['label-destination_delay']."';\">\n";
+	echo "	<select class='formfld' name='ring_group_strategy' onchange=\"getElementById('destination_delayorder').innerHTML = (this.selectedIndex == 1 || this.selectedIndex == 3) ? '".$text['label-destination_order']."' : '".$text['label-destination_delay']."';\">\n";
 	echo "	<option value='simultaneous' ".(($ring_group_strategy == "simultaneous") ? "selected='selected'" : null).">".$text['option-simultaneous']."</option>\n";
 	echo "	<option value='sequence' ".(($ring_group_strategy == "sequence") ? "selected='selected'" : null).">".$text['option-sequence']."</option>\n";
 	echo "	<option value='enterprise' ".(($ring_group_strategy == "enterprise") ? "selected='selected'" : null).">".$text['option-enterprise']."</option>\n";
@@ -477,7 +477,7 @@ else {
 	echo "				<tr>\n";
 	echo "					<td class='vtable'>".$text['label-destination_number']."</td>\n";
 	echo "					<td class='vtable' id='destination_delayorder'>";
-	echo 						($ring_group_strategy == 'simultaneous' || $ring_group_strategy == 'rollover' || $ring_group_strategy == '') ? $text['label-destination_order'] : $text['label-destination_delay'];
+	echo 						($ring_group_strategy == 'sequence' || $ring_group_strategy == 'rollover') ? $text['label-destination_order'] : $text['label-destination_delay'];
 	echo "					</td>\n";
 	echo "					<td class='vtable'>".$text['label-destination_timeout']."</td>\n";
 	if (permission_exists('ring_group_prompt')) {
