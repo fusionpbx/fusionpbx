@@ -30,12 +30,12 @@
 			$source = '';
 			$destination = '';
 		//check if the directory exists and set the paths
-			if (file_exists('/etc/fusionpbx/resources/templates/conf')) {
+			if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
 				//linux
 				$source = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles';
 				$destination = '/etc/fusionpbx/resources/templates/conf/sip_profiles';
 			}
-			if (file_exists('/usr/local/etc/fusionpbx/resources/templates/conf')) {
+			if (file_exists('/usr/local/share/fusionpbx/resources/templates/conf')) {
 				//bsd
 				$source = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles';
 				$destination = '/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles';
@@ -60,11 +60,11 @@
 				$prep_statement->execute();
 				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 				if ($row['num_rows'] == 0) {
-					if (file_exists('/etc/fusionpbx/resources/templates/conf/sip_profiles')) {
-						$sip_profile_dir = '/etc/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
+					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles')) {
+						$sip_profile_dir = '/usr/share/examples/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
 					}
-					elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles')) {
-						$sip_profile_dir = '/usr/local/etc/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
+					elseif (file_exists('/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles')) {
+						$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
 					}
 					else {
 						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'resources/templates/conf/sip_profiles/*.xml';
