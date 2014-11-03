@@ -673,6 +673,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	else {
 		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
 	}
+	if ($queue_moh_sound == "\${it-ring}" || $queue_moh_sound == "it-ring") {
+		$select_options .= "		<option value='\${it-ring}' selected='selected'>".$text['option-itring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${it-ring}'>".$text['option-itring']."</option>\n";
+	}
 	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 	$moh= new switch_music_on_hold;
 	$moh->select_name = "queue_moh_sound";

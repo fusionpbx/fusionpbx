@@ -214,6 +214,7 @@
   <X-PRE-PROCESS cmd="set" data="pl-ring=%(1000,4000,425)"/>
   <X-PRE-PROCESS cmd="set" data="ro-ring=%(1850,4150,475,425)"/>
   <X-PRE-PROCESS cmd="set" data="rs-ring=%(1000,4000,425)"/>
+  <X-PRE-PROCESS cmd="set" data="it-ring=%(1000,4000,425)"/>
   <X-PRE-PROCESS cmd="set" data="ru-ring=%(800,3200,425)"/>
   <X-PRE-PROCESS cmd="set" data="sa-ring=%(1200,4600,425)"/>
   <X-PRE-PROCESS cmd="set" data="tr-ring=%(2000,4000,450)"/>

@@ -96,6 +96,9 @@
 			elseif (ringback == "rs-ring") then
 				session:setVariable("ringback", "%(1000, 4000, 425.0, 0.0)");
 				session:setVariable("transfer_ringback", "%(1000, 4000, 425.0, 0.0)");
+			elseif (ringback == "it-ring") then
+				session:setVariable("ringback", "%(1000, 4000, 425.0, 0.0)");
+				session:setVariable("transfer_ringback", "%(1000, 4000, 425.0, 0.0)");
 			else
 				session:execute("set", "ringback=local_stream://default"); --set to ringtone
 				session:execute("set", "transfer_ringback=local_stream://default"); --set to ringtone

@@ -218,6 +218,9 @@
 					if (ring_group_ringback == "${rs-ring}") then
 						ring_group_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
 					end
+					if (ring_group_ringback == "${it-ring}") then
+						ring_group_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
+					end
 					if (ring_group_ringback == "") then
 						ring_group_ringback = "local_stream://default";
 					end

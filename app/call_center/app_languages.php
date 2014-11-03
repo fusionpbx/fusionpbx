@@ -138,6 +138,11 @@
 	$text['option-rsring']['pt-pt'] = "rs-ring";
 	$text['option-rsring']['fr-fr'] = "rs-ring";
 
+	$text['option-itring']['en-us'] = "it-ring";
+	$text['option-itring']['es-cl'] = "it-ring";
+	$text['option-itring']['pt-pt'] = "it-ring";
+	$text['option-itring']['fr-fr'] = "it-ring";
+
 	$text['label-record_template']['en-us'] = "Record";
 	$text['label-record_template']['es-cl'] = "Guardar";
 	$text['label-record_template']['pt-pt'] = "Gravar";

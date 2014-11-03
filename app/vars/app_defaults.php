@@ -46,6 +46,7 @@ $vars = <<<EOD
 {"var_name":"pt-ring","var_value":"%(1000, 5000, 400.0, 0.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"fr-ring","var_value":"%(1500, 3500, 440.0, 0.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"rs-ring","var_value":"%(1000, 4000, 425.0, 0.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
+{"var_name":"it-ring","var_value":"%(1000, 4000, 425.0, 0.0)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"bong-ring","var_value":"v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"sit","var_value":"%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)","var_cat":"Defaults","var_enabled":"true","var_description":""},
 {"var_name":"sip_tls_version","var_value":"tlsv1","var_cat":"SIP","var_enabled":"true","var_description":"U0lQIGFuZCBUTFMgc2V0dGluZ3Mu"},

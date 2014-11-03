@@ -622,6 +622,12 @@ else {
 	else {
 		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
 	}
+	if ($ring_group_ringback == "\${it-ring}" || $ring_group_ringback == "it-ring") {
+		$select_options .= "		<option value='\${it-ring}' selected='selected'>".$text['option-itring']."</option>\n";
+	}
+	else {
+		$select_options .= "		<option value='\${it-ring}'>".$text['option-itring']."</option>\n";
+	}
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/music_on_hold')) {
 		require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 		$moh = new switch_music_on_hold;
