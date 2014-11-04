@@ -21,7 +21,11 @@
 --
 --	Contributor(s):
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
---	add this like to use it: action set caller_id_name=${luarun cidlookup.lua ${uuid}}
+--	Riccardo Granchi <riccardo.granchi@nems.it>
+--
+--	add this in Inbound Routes before transfer to use it: 
+--	action set caller_id_name=${luarun cidlookup.lua ${uuid}}
+
 --debug
 	debug["sql"] = true;
 
@@ -48,6 +52,32 @@
 	caller = api:executeString("uuid_getvar " .. uuid .. " caller_id_number");
 	callee = api:executeString("uuid_getvar " .. uuid .. " destination_number");
 
+--clean local country prefix from caller (ex: +39 or 0039 in Italy)
+	exitCode    = api:executeString("uuid_getvar " .. uuid .. " default_exitcode");
+	countryCode = api:executeString("uuid_getvar " .. uuid .. " default_countrycode");
+
+	if ((countryCode ~= nil) and (string.len(countryCode) > 0)) then
+		
+		countryPrefix = "+" .. countryCode;
+		
+		if (string.sub(caller, 1, string.len(countryPrefix)) == countryPrefix) then
+			cleanCaller = string.sub(caller, string.len(countryPrefix)+1);
+			freeswitch.consoleLog("NOTICE", "[cidlookup] ignoring local international prefix " .. countryPrefix .. ": " .. caller .. " ==> " .. cleanCaller .. "\n");
+			caller = cleanCaller;
+		else
+			if ((exitCode ~= nil) and (string.len(exitCode) > 0)) then
+				
+				countryPrefix = exitCode .. countryCode;
+
+				if (string.sub(caller, 1, string.len(countryPrefix)) == countryPrefix) then
+					cleanCaller = string.sub(caller, string.len(countryPrefix)+1);
+					freeswitch.consoleLog("NOTICE", "[cidlookup] ignoring local international prefix " .. countryPrefix .. ": " .. caller .. " ==> " .. cleanCaller .. "\n");
+					caller = cleanCaller;
+				end;
+			end;
+		end;		
+	end;
+
 --include config.lua
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
 	dofile(scripts_dir.."/resources/functions/config.lua");
@@ -59,8 +89,12 @@
 			dofile(scripts_dir.."/resources/functions/database_handle.lua");
 			dbh = database_handle('system');
 	
-		--determine whether to update the dial string
-			sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
+			if (database["type"] == "mysql") then
+				sql = "SELECT CONCAT(v_contacts.contact_name_given, ' ', v_contacts.contact_name_family,' (',v_contact_phones.phone_type,')') AS name FROM v_contacts ";
+			else
+				sql = "SELECT v_contacts.contact_name_given || ' ' || v_contacts.contact_name_family || ' (' || v_contact_phones.phone_type || ')' AS name FROM v_contacts ";
+			end
+	
 			sql = sql .. "INNER JOIN v_contact_phones ON v_contact_phones.contact_uuid = v_contacts.contact_uuid ";
 			sql = sql .. "INNER JOIN v_destinations ON v_destinations.domain_uuid = v_contacts.domain_uuid ";
 			sql = sql .. "WHERE  v_contact_phones.phone_number = '"..caller.."' AND v_destinations.destination_number='"..callee.."'";
@@ -75,14 +109,16 @@
 			if (name == nil) then
 				freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db is nil\n");
 			else
-				freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db "..name.."\n");
+				freeswitch.consoleLog("NOTICE", "[cidlookup] caller name from contacts db: "..name.."\n");
 			end
 
 		--check if there is a record, if it doesnt, then use common cidlookup
 			if ((name == nil) or  (string.len(name) == 0)) then
-					name = api:executeString("cidlookup " .. caller);
+				name = api:executeString("cidlookup " .. caller);
 			end
 			
-			freeswitch.consoleLog("NOTICE", "uuid_setvar " .. uuid .. " caller_id_name " .. name);
+			freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " caller_id_name " .. name);
 			api:executeString("uuid_setvar " .. uuid .. " caller_id_name " .. name);
-	
+
+			freeswitch.consoleLog("NOTICE", "[cidlookup] uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
+			api:executeString("uuid_setvar " .. uuid .. " effective_caller_id_name " .. name);
