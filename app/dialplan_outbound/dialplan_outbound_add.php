@@ -53,6 +53,7 @@ else {
 			$dialplan_name = check_str($_POST["dialplan_name"]);
 			$dialplan_order = check_str($_POST["dialplan_order"]);
 			$dialplan_expression = check_str($_POST["dialplan_expression"]);
+			$custom_outbound_prefix = check_str($_POST["custom-outbound-prefix"]);
 			$prefix_number = check_str($_POST["prefix_number"]);
 			$condition_field_1 = check_str($_POST["condition_field_1"]);
 			$condition_expression_1 = check_str($_POST["condition_expression_1"]);
@@ -392,7 +393,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'sip_h_X-Tag=';
-						$dialplan_detail_order = '012';
+						$dialplan_detail_order = '015';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -400,22 +401,31 @@ else {
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'set';
 					$dialplan_detail_data = 'call_direction=outbound';
-					$dialplan_detail_order = '015';
+					$dialplan_detail_order = '020';
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
+					if (strlen($custom_outbound_prefix) > 0) {
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'outbound_prefix='.$custom_outbound_prefix;
+						$dialplan_detail_order = '025';
+						$dialplan_detail_group = '';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
+					}
+					
 					if ($gateway_type != "transfer") {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'hangup_after_bridge=true';
-						$dialplan_detail_order = '020';
+						$dialplan_detail_order = '030';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'effective_caller_id_name=${outbound_caller_id_name}';
-						$dialplan_detail_order = '025';
+						$dialplan_detail_order = '035';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
@@ -427,21 +437,21 @@ else {
 						else {
 							$dialplan_detail_data = 'effective_caller_id_number=${outbound_caller_id_number}';
 						}
-						$dialplan_detail_order = '030';
+						$dialplan_detail_order = '040';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'inherit_codec=true';
-						$dialplan_detail_order = '035';
+						$dialplan_detail_order = '045';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'continue_on_fail=true';
-						$dialplan_detail_order = '040';
+						$dialplan_detail_order = '050';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -450,7 +460,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'enum';
 						$dialplan_detail_data = $prefix_number."$1 e164.org";
-						$dialplan_detail_order = '045';
+						$dialplan_detail_order = '055';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -459,7 +469,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'limit';
 						$dialplan_detail_data = "hash \${domain} outbound ".$limit." !USER_BUSY";
-						$dialplan_detail_order = '050';
+						$dialplan_detail_order = '060';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -467,7 +477,7 @@ else {
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'bridge';
 					$dialplan_detail_data = $action_data;
-					$dialplan_detail_order = '055';
+					$dialplan_detail_order = '065';
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
@@ -475,7 +485,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'bridge';
 						$dialplan_detail_data = $bridge_2_data;
-						$dialplan_detail_order = '060';
+						$dialplan_detail_order = '070';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -484,7 +494,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'bridge';
 						$dialplan_detail_data = $bridge_3_data;
-						$dialplan_detail_order = '065';
+						$dialplan_detail_order = '075';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -542,6 +552,7 @@ function type_onchange(dialplan_detail_type) {
 			document.getElementById("desc_condition_expression_2").innerHTML = "";
 		}
 	}
+}
 -->
 </script>
 
@@ -612,6 +623,22 @@ function type_onchange(dialplan_detail_type) {
 		echo "	obj[2].parentNode.insertBefore(obj[0],obj[2]);\n";
 		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
 		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
+		echo "}\n";
+		echo "function update_dialplan_expression() {\n";
+		echo "    if ( document.getElementById('dialplan_expression_select').value == 'CUSTOM_PREFIX' ) {\n";
+		echo "        document.getElementById('dialplan_expression').value = '^(\\\d*)\$';\n";
+		echo "        $('#enter_custom_outbound_prefix_box').slideDown();\n";
+		echo "        $('#dialplan_expression_box').slideUp();\n";
+		echo "        document.getElementById('outbound_prefix').value = '';\n";
+		echo "    } else { \n";
+		echo "        document.getElementById('dialplan_expression').value = document.getElementById('dialplan_expression_select').value;\n";
+		echo "        $('#enter_custom_outbound_prefix_box').slideUp();\n";
+		echo "        $('#dialplan_expression_box').slideDown();\n";
+		echo "        document.getElementById('outbound_prefix').value = '';\n";
+		echo "    }\n";
+		echo "}\n";
+		echo "function update_outbound_prefix() {\n";
+		echo "    document.getElementById('dialplan_expression').value = '^' + document.getElementById('outbound_prefix').value + '(\\\d*)\$';\n";
 		echo "}\n";
 		echo "</script>\n";
 		echo "\n";
@@ -797,9 +824,18 @@ function type_onchange(dialplan_detail_type) {
 	echo "<tr>\n";
 	echo "  <td valign=\"top\" class=\"vncellreq\">".$text['label-dialplan-expression'].":</td>\n";
 	echo "  <td align='left' class=\"vtable\">";
-	echo "    <textarea name=\"dialplan_expression\" id=\"dialplan_expression\" class=\"formfld\" style='width: 60%;' cols=\"30\" rows=\"4\" wrap=\"off\"></textarea>\n";
-	echo "    <br>\n";
-	echo "    <select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"document.getElementById('dialplan_expression').value += document.getElementById('dialplan_expression_select').value + '\\n';\" class='formfld' style='width: 60%;'>\n";
+
+	echo "    <div id=\"dialplan_expression_box\" >\n";
+	echo "        <textarea name=\"dialplan_expression\" id=\"dialplan_expression\" class=\"formfld\" style='width: 60%;' cols=\"30\" rows=\"4\" wrap=\"off\"></textarea>\n";
+	echo "        <br>\n";
+	echo "    </div>\n";
+	
+	echo "    <div id=\"enter_custom_outbound_prefix_box\" style=\"display:none\">\n";
+	echo "        <input class='formfld' style='width: 10%;' type='text' name='custom-outbound-prefix' id=\"outbound_prefix\" onchange=\"update_outbound_prefix()\" maxlength='255'><br />\n";
+	echo "        ".$text['description-enter-custom-outbound-prefix'].".\n";
+	echo "    </div>\n";
+	
+	echo "    <select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"update_dialplan_expression()\" class='formfld' style='width: 60%;'>\n";
 	echo "    <option></option>\n";
 	echo "    <option value='^(\\d{2})\$'>".$text['label-2d']."</option>\n";
 	echo "    <option value='^(\\d{3})\$'>".$text['label-3d']."</option>\n";
@@ -830,6 +866,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    <option value='^9(\\d{10})\$'>".$text['label-9d10']."</option>\n";
 	echo "    <option value='^9(\\d{11})\$'>".$text['label-9d11']."</option>\n";
 	echo "    <option value='^9(\\d{12,20})\$'>".$text['label-9d.12-20']."</option>\n";
+	echo "    <option value='CUSTOM_PREFIX'>".$text['label-custom-outbound-prefix']."</option>\n";
 	echo "    </select>\n";
 	echo "    <span class=\"vexpl\">\n";
 	echo "    <br />\n";

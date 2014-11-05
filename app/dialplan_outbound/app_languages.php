@@ -191,6 +191,16 @@
 	$text['label-800']['pt-pt'] = "Sem Custo";
 	$text['label-800']['fr-fr'] = "Sans Charge";
 
+	$text['label-custom-outbound-prefix']['en-us'] = "Dial custom prefix, then Digits";
+	$text['label-custom-outbound-prefix']['es-cl'] = "Marcar prefijo personalizados, luego Dígitos";
+	$text['label-custom-outbound-prefix']['pt-pt'] = "Marque prefixo personalizado, seguido de Dígitos";
+	$text['label-custom-outbound-prefix']['fr-fr'] = "Compose préfixe personnalisé, puis Digits";
+
+	$text['description-enter-custom-outbound-prefix']['en-us'] = "Enter custom outbound prefix";
+	$text['description-enter-custom-outbound-prefix']['es-cl'] = "Ingrese un prefijo de salida personalizados";
+	$text['description-enter-custom-outbound-prefix']['pt-pt'] = "Introduza um prefixo de saída personalizado";
+	$text['description-enter-custom-outbound-prefix']['fr-fr'] = "Choisir le préfixe sortantes personnalisé";
+	
 	$text['message-update']['en-us'] = "Update Complete";
 	$text['message-update']['es-cl'] = "Actualización Completa";
 	$text['message-update']['pt-pt'] = "Actualização Efectuada";
