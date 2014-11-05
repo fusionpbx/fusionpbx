@@ -57,6 +57,16 @@
 	$text['label-action']['pt-pt'] = "Acção";
 	$text['label-action']['fr-fr'] = "Action";
 
+	$text['label-redial-outbound-prefix']['en-us'] = "Redial outbound prefix";
+	$text['label-redial-outbound-prefix']['es-cl'] = "Redial prefijo de salida";
+	$text['label-redial-outbound-prefix']['pt-pt'] = "Remarcar prefixo de saída";
+	$text['label-redial-outbound-prefix']['fr-fr'] = "Bis préfixe pour sortant";
+
+	$text['description-redial-outbound-prefix']['en-us'] = "Effective Caller ID Number prefix";
+	$text['description-redial-outbound-prefix']['es-cl'] = "Prefijo par Número de Caller ID Efectivo";
+	$text['description-redial-outbound-prefix']['pt-pt'] = "Prefixo par Número interno";
+	$text['description-redial-outbound-prefix']['fr-fr'] = "Préfixe pour Numéro interne";
+
 	$text['label-limit']['en-us'] = "Limit";
 	$text['label-limit']['es-cl'] = "Límite";
 	$text['label-limit']['pt-pt'] = "Limite";
