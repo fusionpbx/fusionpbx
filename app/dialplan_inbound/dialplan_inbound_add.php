@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
+	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -55,6 +56,7 @@ require_once "resources/paging.php";
 //get the http post values and set them as php variables
 	if (count($_POST)>0) {
 		$dialplan_name = check_str($_POST["dialplan_name"]);
+		$redial_outbound_prefix = check_str($_POST["redial_outbound_prefix"]);
 		$limit = check_str($_POST["limit"]);
 		$public_order = check_str($_POST["public_order"]);
 		$condition_field_1 = check_str($_POST["condition_field_1"]);
@@ -365,6 +367,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'limit', ";
 			$sql .= "'hash \${domain} inbound ".$limit." !USER_BUSY', ";
 			$sql .= "'70' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+
+	//set redial outbound prefix
+		if (strlen($redial_outbound_prefix) > 0) {
+			$dialplan_detail_uuid = uuid();
+			$sql = "insert into v_dialplan_details ";
+			$sql .= "(";
+			$sql .= "domain_uuid, ";
+			$sql .= "dialplan_uuid, ";
+			$sql .= "dialplan_detail_uuid, ";
+			$sql .= "dialplan_detail_tag, ";
+			$sql .= "dialplan_detail_type, ";
+			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_order ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'$domain_uuid', ";
+			$sql .= "'$dialplan_uuid', ";
+			$sql .= "'$dialplan_detail_uuid', ";
+			$sql .= "'action', ";
+			$sql .= "'set', ";
+			$sql .= "'effective_caller_id_number=".$redial_outbound_prefix."\${caller_id_number}', ";
+			$sql .= "'72' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -927,6 +956,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
 	echo "<br />\n";
+	echo "\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-redial-outbound-prefix'].":\n";
+	echo "</td>\n";
+	echo "<td colspan='4' class='vtable' align='left'>\n";
+	echo "    <input class='formfld' type='text' name='redial_outbound_prefix' maxlength='255' value=\"$limit\">\n";
+	echo "<br />\n";
+	echo "".$text['description-redial-outbound-prefix']."<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
