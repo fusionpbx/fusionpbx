@@ -24,6 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
 	Philippe Rioual <bhouba@gmail.com>
+	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 
 	$text['title-dialplan-outbound-add']['en-us'] = "Outbound Call Routing";
