@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
+	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -2158,7 +2159,7 @@ function dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_or
 	unset($sql);
 }
 
-function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break) {
+function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline) {
 	global $db;
 	$dialplan_detail_uuid = uuid();
 	$sql = "insert into v_dialplan_details ";
@@ -2171,7 +2172,8 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 	$sql .= "dialplan_detail_order, ";
 	$sql .= "dialplan_detail_type, ";
 	$sql .= "dialplan_detail_data, ";
-	$sql .= "dialplan_detail_break ";
+	$sql .= "dialplan_detail_break, ";
+	$sql .= "dialplan_detail_inline ";
 	$sql .= ") ";
 	$sql .= "values ";
 	$sql .= "(";
@@ -2189,10 +2191,16 @@ function dialplan_detail_add($domain_uuid, $dialplan_uuid, $dialplan_detail_tag,
 	$sql .= "'".check_str($dialplan_detail_type)."', ";
 	$sql .= "'".check_str($dialplan_detail_data)."', ";
 	if (strlen($dialplan_detail_break) == 0) {
+		$sql .= "null, ";
+	}
+	else {
+		$sql .= "'".check_str($dialplan_detail_break)."', ";
+	}
+	if (strlen($dialplan_detail_inline) == 0) {
 		$sql .= "null ";
 	}
 	else {
-		$sql .= "'".check_str($dialplan_detail_break)."' ";
+		$sql .= "'".check_str($dialplan_detail_inline)."' ";
 	}
 	$sql .= ")";
 	$db->exec(check_sql($sql));

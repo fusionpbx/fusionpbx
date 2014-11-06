@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
+	Riccardo Granchi <riccardo.granchi@nems.it>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -405,27 +406,18 @@ else {
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
-					if (strlen($custom_outbound_prefix) > 0) {
-						$dialplan_detail_tag = 'action'; //condition, action, antiaction
-						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'outbound_prefix='.$custom_outbound_prefix;
-						$dialplan_detail_order = '025';
-						$dialplan_detail_group = '';
-						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
-					}
-					
 					if ($gateway_type != "transfer") {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'hangup_after_bridge=true';
-						$dialplan_detail_order = '030';
+						$dialplan_detail_order = '025';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'effective_caller_id_name=${outbound_caller_id_name}';
-						$dialplan_detail_order = '035';
+						$dialplan_detail_order = '030';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
@@ -437,21 +429,21 @@ else {
 						else {
 							$dialplan_detail_data = 'effective_caller_id_number=${outbound_caller_id_number}';
 						}
-						$dialplan_detail_order = '040';
+						$dialplan_detail_order = '035';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'inherit_codec=true';
-						$dialplan_detail_order = '045';
+						$dialplan_detail_order = '040';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
 						$dialplan_detail_data = 'continue_on_fail=true';
-						$dialplan_detail_order = '050';
+						$dialplan_detail_order = '045';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -460,7 +452,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'enum';
 						$dialplan_detail_data = $prefix_number."$1 e164.org";
-						$dialplan_detail_order = '055';
+						$dialplan_detail_order = '050';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -469,11 +461,22 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'limit';
 						$dialplan_detail_data = "hash \${domain} outbound ".$limit." !USER_BUSY";
-						$dialplan_detail_order = '060';
+						$dialplan_detail_order = '055';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
 
+					if (strlen($custom_outbound_prefix) > 0) {
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'set';
+						$dialplan_detail_data = 'outbound_prefix='.$custom_outbound_prefix;
+						$dialplan_detail_order = '060';
+						$dialplan_detail_group = '';
+						$dialplan_detail_break = '';
+						$dialplan_detail_inline = 'true';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline);
+					}
+					
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'bridge';
 					$dialplan_detail_data = $action_data;
