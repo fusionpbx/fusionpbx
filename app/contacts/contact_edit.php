@@ -766,6 +766,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			require "contact_addresses.php";
 			require "contact_extensions.php";
 			require "contact_notes.php";
+			require "contact_settings.php";
 		echo "</td>\n";
 	}
 
