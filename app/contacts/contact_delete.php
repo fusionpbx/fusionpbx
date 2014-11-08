@@ -78,6 +78,16 @@ if (strlen($id)>0) {
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
+
+	//delete settings
+                
+		$sql = "";
+		$sql = "delete from v_contact_settings ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($prep_statement, $sql);
 }
 
 
