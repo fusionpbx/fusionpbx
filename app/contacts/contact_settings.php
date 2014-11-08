@@ -31,8 +31,8 @@ require_once "resources/check_auth.php";
 require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_contact_settings ";
@@ -105,9 +105,9 @@ require_once "resources/paging.php";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				echo "<th>".$text['label-subcategory']."sub</th>";
-				echo "<th>".$text['label-type']."type</th>";
-				echo "<th>".$text['label-value']."value</th>";
+				echo "<th>".$text['label-contact_subcategory']."sub</th>";
+				echo "<th>".$text['label-contact_type']."type</th>";
+				echo "<th>".$text['label-contact_value']."value</th>";
 				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
 				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
