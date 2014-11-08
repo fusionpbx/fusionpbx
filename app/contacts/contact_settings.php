@@ -27,14 +27,12 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-
 //require_once "resources/header.php";
 require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];
 	$order = $_GET["order"];
-
 
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_contact_settings ";
@@ -82,15 +80,15 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 //show the content
-        
-	echo "<table width='100%' border='0'>\n";
-	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-contact_properties']."</b></td>\n";
-	echo "<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
+	if ($num_rows == 0) {
+		echo "<table width='100%' border='0'>\n";
+		echo "<tr>\n";
+		echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-contact_settings']."</b></td>\n";
+		echo "<td width='50%' align='right'>&nbsp;</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+	}
 
-	echo "<br /><br />";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count > 0) {
@@ -107,9 +105,9 @@ require_once "resources/paging.php";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				echo "<th>".$text['label-subcategory']."</th>";
-				echo "<th>".$text['label-type']."</th>";
-				echo "<th>".$text['label-value']."</th>";
+				echo "<th>".$text['label-subcategory']."sub</th>";
+				echo "<th>".$text['label-type']."type</th>";
+				echo "<th>".$text['label-value']."value</th>";
 				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
 				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
@@ -165,7 +163,6 @@ require_once "resources/paging.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>";
-
 
 //include the footer
 	//require_once "resources/footer.php";

@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2014
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -34,20 +34,21 @@ require_once "resources/check_auth.php";
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//set the variables
+	if (count($_GET) > 0) {
+		$id = check_str($_GET["id"]);
+		$contact_uuid = check_str($_GET["contact_uuid"]);
+	}
 
-if (strlen($id)>0) {
-	//delete domain_setting
-		$sql = "delete from v_contact_settings ";
-		$sql .= "where contact_uuid = '$contact_uuid' ";
-		$sql .= "and contact_setting_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-}
+//delete domain_setting
+	if (strlen($id) > 0) {
+			$sql = "delete from v_contact_settings ";
+			$sql .= "where contact_uuid = '$contact_uuid' ";
+			$sql .= "and contact_setting_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
+	}
 
 //redirect the user
 	$_SESSION["message"] = $text['message-delete'];
