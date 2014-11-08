@@ -90,7 +90,6 @@ require_once "resources/paging.php";
 	}
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-
 	if ($result_count > 0) {
 		$previous_category = '';
 		foreach($result as $row) {
@@ -105,9 +104,9 @@ require_once "resources/paging.php";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
-				echo "<th>".$text['label-contact_subcategory']."sub</th>";
-				echo "<th>".$text['label-contact_type']."type</th>";
-				echo "<th>".$text['label-contact_value']."value</th>";
+				echo "<th>".$text['label-contact_subcategory']."</th>";
+				echo "<th>".$text['label-contact_type']."</th>";
+				echo "<th>".$text['label-contact_value']."</th>";
 				echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
 				echo "<th>".$text['label-description']."</th>";
 				echo "<td class='list_control_icons'>";
