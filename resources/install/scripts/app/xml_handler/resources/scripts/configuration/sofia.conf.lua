@@ -33,7 +33,7 @@
 	end
 
 --set the cache
-	if (XML_STRING == "-ERR NOT FOUND") then
+	if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
 
 		--connect to the database
 			dofile(scripts_dir.."/resources/functions/database_handle.lua");
