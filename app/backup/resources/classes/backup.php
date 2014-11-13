@@ -81,6 +81,7 @@ include "root.php";
 			public function backup($type, $format) {
 				$cmd = $this->command("backup", $format);
 				exec($cmd);
+				return $cmd;
 			}
 
 			public function restore($file) {
@@ -95,6 +96,7 @@ include "root.php";
 				}
 				$cmd = $this->command("restore", $file);
 				exec($cmd);
+				return $cmd;
 			}
 
 			public function download($file) {
@@ -116,7 +118,6 @@ include "root.php";
 					fpassthru($fd);
 					exit;
 				}
-				exec($cmd);
 			}
 		}
 	}
