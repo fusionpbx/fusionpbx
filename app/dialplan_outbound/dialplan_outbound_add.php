@@ -62,7 +62,11 @@ else {
 			$gateway = check_str($_POST["gateway"]);
 			$limit = check_str($_POST["limit"]);
 			$accountcode = check_str($_POST["accountcode"]);
-
+			
+			$toll_allow_enable = check_str($_POST["toll_allow_enabled"]);
+		//set default to enabled
+			if (strlen($toll_allow_enable) == 0) { $toll_allow_enable = "false"; }
+			
 		//set the default type
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
@@ -267,7 +271,7 @@ else {
 					$tmp_prefix == $dialplan_expression
 							? $outbound_prefix = ""
 							: $outbound_prefix = $tmp_prefix;
-					
+												
 					if ($gateway_type == "gateway") {
 						$dialplan_name = $gateway_name.".".$abbrv;
 						$action_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
@@ -482,10 +486,21 @@ else {
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline);
 					}
 					
+					if ($toll_allow_enable == "true") {
+						$dialplan_detail_tag = 'action'; //condition, action, antiaction
+						$dialplan_detail_type = 'lua';
+						$dialplan_detail_data = 'app.lua toll_allow ${uuid}';
+						$dialplan_detail_order = '065';
+						$dialplan_detail_group = '';
+						$dialplan_detail_break = '';
+						$dialplan_detail_inline = 'true';
+						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break, $dialplan_detail_inline);
+					}
+
 					$dialplan_detail_tag = 'action'; //condition, action, antiaction
 					$dialplan_detail_type = 'bridge';
 					$dialplan_detail_data = $action_data;
-					$dialplan_detail_order = '065';
+					$dialplan_detail_order = '070';
 					$dialplan_detail_group = '';
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 
@@ -493,7 +508,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'bridge';
 						$dialplan_detail_data = $bridge_2_data;
-						$dialplan_detail_order = '070';
+						$dialplan_detail_order = '075';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -502,7 +517,7 @@ else {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'bridge';
 						$dialplan_detail_data = $bridge_3_data;
-						$dialplan_detail_order = '075';
+						$dialplan_detail_order = '080';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
@@ -913,6 +928,20 @@ function type_onchange(dialplan_detail_type) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "    ".$text['label-toll_allow'].":\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='toll_allow_enabled' style='width: 60%;'>\n";
+	echo "		<option value='true'                 >".$text['label-true']."</option>\n";
+	echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-enable-toll_allow']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+	
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 	echo "	".$text['label-order'].":\n";
