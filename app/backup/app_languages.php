@@ -10,15 +10,40 @@
 	$text['header-backup']['pt-pt'] = "Backup";
 	$text['header-backup']['fr-fr'] = "Sauvegarde";
 
-	$text['description-backup']['en-us'] = "To create a backup of paths defined in Default Settings, click the 'Backup' button below and then choose a location on your local system to save the file.";
-	$text['description-backup']['es-cl'] = "Para crear una copia de seguridad de rutas definidas en la configuración predeterminada, haga clic en el botón 'Copia de seguridad' a continuación y luego elija una ubicación en el sistema local para guardar el archivo.";
-	$text['description-backup']['pt-pt'] = "Para criar uma cópia de segurança dos caminhos definidos em configurações padrão, clique no botão 'Backup' abaixo e, em seguida, escolher um local em seu sistema local para salvar o arquivo.";
-	$text['description-backup']['fr-fr'] = "Pour créer une sauvegarde de chemins définis dans les paramètres par défaut, cliquez sur le bouton 'Sauvegarder' ci-dessous, puis choisissez un emplacement sur votre système local pour enregistrer le fichier.";
+	$text['description-backup']['en-us'] = "To create a backup of the Source Paths below (defined in Default Settings), select the desired File Format and Target Type.";
+	$text['description-backup']['es-cl'] = "Para crear una copia de seguridad de las rutas de origen siguientes (definidos en la configuración predeterminada), seleccione el formato de archivo deseado y tipo de destino.";
+	$text['description-backup']['pt-pt'] = "Para criar uma cópia de segurança dos caminhos de origem abaixo (definidos em Default Settings), selecione o formato de arquivo desejado e Target Type.";
+	$text['description-backup']['fr-fr'] = "Pour créer une sauvegarde des chemins source ci-dessous (défini dans les paramètres par défaut), sélectionnez le format de fichier désiré et Type de cible.";
+
+	$text['label-source_paths']['en-us'] = "Source Paths";
+	$text['label-source_paths']['es-cl'] = "Fuente Caminos";
+	$text['label-source_paths']['pt-pt'] = "Fonte Caminhos";
+	$text['label-source_paths']['fr-fr'] = "Chemins Source";
 
 	$text['label-file_format']['en-us'] = "File Format";
 	$text['label-file_format']['es-cl'] = "Formato de Archivo";
 	$text['label-file_format']['pt-pt'] = "Formato de arquivo";
 	$text['label-file_format']['fr-fr'] = "Format de Fichier";
+
+	$text['label-target_type']['en-us'] = "Target Type";
+	$text['label-target_type']['es-cl'] = "Tipo de destino";
+	$text['label-target_type']['pt-pt'] = "Tipo de Destino";
+	$text['label-target_type']['fr-fr'] = "type de cible";
+
+	$text['option-file_download']['en-us'] = "File Download";
+	$text['option-file_download']['es-cl'] = "Descarga de archivos";
+	$text['option-file_download']['pt-pt'] = "download do arquivo";
+	$text['option-file_download']['fr-fr'] = "Télécharger le fichier";
+
+	$text['option-cron_script']['en-us'] = "Cron Script";
+	$text['option-cron_script']['es-cl'] = "Cron Guión";
+	$text['option-cron_script']['pt-pt'] = "Cron Script";
+	$text['option-cron_script']['fr-fr'] = "Cron Script";
+
+	$text['label-cron_script']['en-us'] = "Cron Script";
+	$text['label-cron_script']['es-cl'] = "Cron Guión";
+	$text['label-cron_script']['pt-pt'] = "Cron Script";
+	$text['label-cron_script']['fr-fr'] = "Cron Script";
 
 	$text['header-restore']['en-us'] = "Restore";
 	$text['header-restore']['es-cl'] = "Restaurar";
@@ -40,10 +65,15 @@
 	$text['label-select_backup']['pt-pt'] = "Selecione Backup";
 	$text['label-select_backup']['fr-fr'] = "Sélectionnez le Fichier de Sauvegarde";
 
-	$text['button-backup']['en-us'] = "Backup";
-	$text['button-backup']['es-cl'] = "Copia de Seguridad";
-	$text['button-backup']['pt-pt'] = "Backup";
-	$text['button-backup']['fr-fr'] = "Sauvegarde";
+	$text['button-download']['en-us'] = "Download";
+	$text['button-download']['es-cl'] = "Descargar";
+	$text['button-download']['pt-pt'] = "Baixar";
+	$text['button-download']['fr-fr'] = "Télécharger";
+
+	$text['button-generate']['en-us'] = "Generate";
+	$text['button-generate']['es-cl'] = "Generar";
+	$text['button-generate']['pt-pt'] = "Gerar";
+	$text['button-generate']['fr-fr'] = "Générer";
 
 	$text['button-restore']['en-us'] = "Restore";
 	$text['button-restore']['es-cl'] = "Restaurar";
