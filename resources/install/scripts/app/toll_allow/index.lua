@@ -23,7 +23,7 @@
 --	Riccardo Granchi <riccardo.granchi@nems.it>
 
 --debug
-	debug["toll_type"] = true
+	debug["toll_type"] = false
 	
 	dofile(scripts_dir.."/resources/functions/explode.lua");
 
@@ -40,7 +40,7 @@
 --Define templates for every toll type for your country
 	function get_toll_types_it()
 		if (debug["toll_type"]) then
-			freeswitch.consoleLog("NOTICE", "[toll_type_assignment] using IT toll types\n")
+			freeswitch.consoleLog("NOTICE", "[toll_allow] using IT toll types\n")
 		end
 		
 		templates["mobile"]        = "[35]%d%d%d%d%d%d+"
@@ -54,7 +54,7 @@
 
 	function get_toll_types_us()
 		if (debug["toll_type"]) then
-			freeswitch.consoleLog("NOTICE", "[toll_type_assignment] using US toll types\n")
+			freeswitch.consoleLog("NOTICE", "[toll_allow] using US toll types\n")
 		end
 		
 		templates["unknown"]       = "%d+"
@@ -69,10 +69,10 @@
 	caller = api:executeString("uuid_getvar " .. uuid .. " caller_id_number")
 		
 	if (debug["toll_type"]) then
-		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] called: " .. called .. "\n")
-		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] prefix: " .. prefix .. "\n")
-		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] country: " .. country .. "\n")
-		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] tollAllow: " .. toll_allow .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_allow] called: " .. called .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_allow] prefix: " .. prefix .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_allow] country: " .. country .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_allow] tollAllow: " .. toll_allow .. "\n")
 	end
 	
 	templates = {}
@@ -89,7 +89,7 @@
 		elseif country == "US" then get_toll_types_us()
 		else
 			if (debug["toll_type"]) then
-				freeswitch.consoleLog("NOTICE", "[toll_type_assignment] toll type: " .. toll_type .. "\n")
+				freeswitch.consoleLog("NOTICE", "[toll_allow] toll type: " .. toll_type .. "\n")
 			end
 			return toll_type
 		end
@@ -99,7 +99,7 @@
 		for i,label in pairs(template_indexes) do
 			template = templates[label]
 			if (debug["toll_type"]) then
-				freeswitch.consoleLog("NOTICE", "[toll_type_assignment] checking toll type " .. label .. " template: " .. template .. "\n")
+				freeswitch.consoleLog("NOTICE", "[toll_allow] checking toll type " .. label .. " template: " .. template .. "\n")
 			end
 			
 		--Doing split on | character
@@ -108,12 +108,12 @@
 			for index,part in pairs(parts) do
 				pattern = "^" .. prefix .. part .. "$"
 				if (debug["toll_type"]) then
-					--freeswitch.consoleLog("NOTICE", "[toll_type_assignment] checking toll type " .. label .. " pattern: " .. pattern .. "\n")
+					--freeswitch.consoleLog("NOTICE", "[toll_allow] checking toll type " .. label .. " pattern: " .. pattern .. "\n")
 				end
 				
 				if ( string.match(called, pattern) ~= nil ) then
 					if (debug["toll_type"]) then
-						freeswitch.consoleLog("NOTICE", "[toll_type_assignment] destination number " .. called .. " matches " .. label .. " pattern: " .. pattern .. "\n")
+						freeswitch.consoleLog("NOTICE", "[toll_allow] destination number " .. called .. " matches " .. label .. " pattern: " .. pattern .. "\n")
 					end
 					toll_type = label
 					found = true
@@ -126,7 +126,7 @@
 			end
 		end
 	
-		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] toll type: " .. toll_type .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_allow] toll type: " .. toll_type .. "\n")
 	--	api:executeString("uuid_setvar " .. uuid .. " toll_type " .. toll_type);
 	--	session:setVariable('toll_type', toll_type);
 		
@@ -139,7 +139,7 @@
 			
 			for i,part in pairs(parts) do
 				if (debug["toll_type"]) then
-					freeswitch.consoleLog("NOTICE", "[toll_type_assignment] checking toll allow part " .. part .. "\n")
+					freeswitch.consoleLog("NOTICE", "[toll_allow] checking toll allow part " .. part .. "\n")
 				end
 				
 				if ( part == toll_type ) then
@@ -148,7 +148,7 @@
 				end
 			end
 		else
-			freeswitch.consoleLog("WARNING", domain_name .. " - toll_allow not defined for extension " .. caller .. "\n")
+			freeswitch.consoleLog("WARNING", "[toll_allow] toll_allow not defined for extension " .. caller .. "\n")
 			
 			-- Uncomment following line to allow all calls for extensions without toll_allow
 			-- allow = true
@@ -156,10 +156,10 @@
 		
 	--hangup not allowed calls
 		if ( not allow ) then
-			freeswitch.consoleLog("WARNING", domain_name .. " - " .. toll_type .. " call not authorized from " .. caller .. " to " .. called .. " : REJECTING!\n")
+			freeswitch.consoleLog("WARNING", "[toll_allow] " .. toll_type .. " call not authorized from " .. caller .. " to " .. called .. " : OUTGOING_CALL_BARRED\n")
 			session:hangup("OUTGOING_CALL_BARRED")
 		else
-			freeswitch.consoleLog("NOTICE", domain_name .. " - " .. toll_type .. " call authorized from " .. caller .. " to " .. called .. "\n")
+			freeswitch.consoleLog("NOTICE", "[toll_allow] " .. toll_type .. " call authorized from " .. caller .. " to " .. called .. "\n")
 		end
 	end
 	
