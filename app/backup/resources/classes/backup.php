@@ -61,7 +61,6 @@ include "root.php";
 					$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
 					$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changin the directory with the file name
 					$format = substr($file,-3);
-					$file = 'backup_'.date('Ymd_His').'.'.$format;
 					if (count($_SESSION['backup']['path']) > 0) {
 						switch ($format) {
 							case "rar" : $cmd = 'rar x -ow -o+ '.$path.'/'.$file.' /'; break;
