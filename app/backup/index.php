@@ -41,7 +41,7 @@ else {
 	}
 
 //download the backup
-	if ($_GET['a'] == "backup" && permission_exists('backup_download')) {
+	if ($_GET['a'] == "download" && permission_exists('backup_download')) {
 		$file_format = $_GET['file_format'];
 		$file_format = ($file_format != '') ? $file_format : 'tgz';
 
@@ -94,6 +94,14 @@ else {
 			}
 	}
 
+//script a backup (cron)
+	if ($_GET['a'] == "script" && permission_exists('backup_download')) {
+		$file_format = $_GET['file_format'];
+		$target_type = "script";
+
+		$backup = new backup;
+		$cron_script = $backup->command("backup", $file_format);
+	}
 
 //restore a backup
 	if ($_POST['a'] == "restore" && permission_exists('backup_upload')) {
@@ -140,66 +148,110 @@ else {
 	require_once "resources/header.php";
 	$document['title'] = $text['title-destinations'];
 
+// backup type switch javascript
+	echo "<script language='javascript' type='text/javascript'>";
+	echo "	var fade_speed = 400;";
+	echo "	function toggle_target(first_elem, second_elem) {";
+	echo "		$('#cron_script').fadeOut(fade_speed);";
+	echo "		$('#'+first_elem).fadeToggle(fade_speed, function() {";
+	echo "			$('#cron_script').slideUp(fade_speed, function() {";
+	echo "				$('#'+second_elem).fadeToggle(fade_speed);";
+	echo "			});";
+	echo "		});";
+	echo "	}";
+	echo "</script>";
+
 //show the content
-	echo "<div align='center'>";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td width='50%' valign='top'>\n";
 
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-backup']."</b></td>\n";
-	echo "		<td width='50%' align='right'></td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>".$text['description-backup']."</td>\n";
+		echo "<b>".$text['header-backup']."</b>\n";
+		echo "<br><br>";
+		echo $text['description-backup']."\n";
+		echo "<br><br><br>";
+		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
+		echo "<tr>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-source_paths']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		foreach ($_SESSION['backup']['path'] as $backup_path) {
+			echo $backup_path."<br>\n";
+		}
+		echo "</td>";
+		echo "</tr>";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-file_format']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='file_format' id='file_format'>";
+		echo "		<option value='tgz' ".(($file_format == 'tgz') ? 'selected' : null).">TAR GZIP</option>";
+		echo "		<option value='tbz' ".(($file_format == 'tbz') ? 'selected' : null).">TAR BZIP</option>";
+		echo "		<option value='rar' ".(($file_format == 'rar') ? 'selected' : null).">RAR</option>";
+		echo "		<option value='zip' ".(($file_format == 'zip') ? 'selected' : null).">ZIP</option>";
+		echo "	</select>";
+		echo "</td>";
+		echo "</tr>";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-target_type']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='target_type' id='target_type' onchange=\"(this.selectedIndex == 0) ? toggle_target('btn_script','btn_download') : toggle_target('btn_download','btn_script');\">";
+		echo "		<option value='download'>".$text['option-file_download']."</option>";
+		echo "		<option value='script' ".(($target_type == 'script') ? 'selected' : null).">".$text['option-cron_script']."</option>";
+		echo "	</select>";
+		echo "</td>";
+		echo "</tr>";
+		echo "</table>";
+		echo "<div id='cron_script' ".(($cron_script == '') ? "style='display: none;'" : null).">";
+		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
+		echo "<tr>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-cron_script']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		echo "	<textarea class='formfld' style='width: 100%; height: 200px; font-family: courier;'>".$cron_script."</textarea>";
+		echo "</td>";
+		echo "</tr>";
+		echo "</table>";
+		echo "</div>";
+		echo "<br>";
+		echo "<div align='right'>";
+		echo "<input type='button' id='btn_script' class='btn' ".(($target_type != 'script') ? "style='display: none;'" : null)." value='".$text['button-generate']."' onclick=\"document.location.href='".PROJECT_PATH."/app/backup/index.php?a=script&file_format='+document.getElementById('file_format').options[document.getElementById('file_format').selectedIndex].value;\">";
+		echo "<input type='button' id='btn_download' class='btn' ".(($target_type == 'script') ? "style='display: none;'" : null)." value='".$text['button-download']."' onclick=\"document.location.href='".PROJECT_PATH."/app/backup/index.php?a=download&file_format='+document.getElementById('file_format').options[document.getElementById('file_format').selectedIndex].value;\">";
+		echo "</div>";
+		echo "<br><br>";
+
+	echo "		</td>\n";
+	echo "		<td width='20'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+	echo "		<td width='50%' valign='top'>\n";
+
+		echo "<b>".$text['header-restore']."</b>\n";
+		echo "<br><br>";
+		echo $text['description-restore']."\n";
+		echo "<br><br><br>";
+		echo "<div align='center'>";
+		echo "<form name='frmrestore' method='post' enctype='multipart/form-data' action=''>";
+		echo "<input type='hidden' name='a' value='restore'>";
+		echo "<table>";
+		echo "	<tr>";
+		echo "		<td nowrap>".$text['label-select_backup']."&nbsp;</td>";
+		echo "		<td><input type='file' class='formfld fileinput' name='backup_file'></td>";
+		echo "		<td><input type='submit' class='btn' value='".$text['button-restore']."'></td>";
+		echo "	</tr>";
+		echo "</table>";
+		echo "<br>";
+		echo "<span style='font-weight: bold; text-decoration: underline; color: #000;'>".$text['description-restore_warning']."</span>";
+		echo "</form>\n";
+		echo "</div>";
+
+	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br><br>";
-
-	echo "<div align='center'>";
-	echo "<table>";
-	echo "	<tr>";
-	echo "		<td>".$text['label-file_format']."&nbsp;</td>";
-	echo "		<td>";
-	echo "			<select class='formfld' name='file_format' id='file_format'>";
-	echo "				<option value='tgz' ".(($file_format == 'tgz') ? 'selected' : null).">TAR GZIP</option>";
-	echo "				<option value='tbz' ".(($file_format == 'tbz') ? 'selected' : null).">TAR BZIP</option>";
-	echo "				<option value='rar' ".(($file_format == 'rar') ? 'selected' : null).">RAR</option>";
-	echo "				<option value='zip' ".(($file_format == 'zip') ? 'selected' : null).">ZIP</option>";
-	echo "			</select>";
-	echo "		</td>";
-	echo "		<td><input type='button' class='btn' value='".$text['button-backup']."' onclick=\"document.location.href='".PROJECT_PATH."/app/backup/index.php?a=backup&file_format='+document.getElementById('file_format').options[document.getElementById('file_format').selectedIndex].value;\"></td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
-
-	echo "<table width='100%' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-restore']."</b></td>\n";
-	echo "		<td width='50%' align='right'></td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>".$text['description-restore']."</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
-	echo "<br><br>";
-
-	echo "<div align='center'>";
-	echo "<form name='frmrestore' method='post' enctype='multipart/form-data' action=''>";
-	echo "<input type='hidden' name='a' value='restore'>";
-	echo "<table>";
-	echo "	<tr>";
-	echo "		<td>".$text['label-select_backup']."&nbsp;</td>";
-	echo "		<td><input type='file' class='formfld fileinput' name='backup_file'></td>";
-	echo "		<td><input type='submit' class='btn' value='".$text['button-restore']."'></td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "<br>";
-	echo "<span style='font-weight: bold; text-decoration: underline; color: #000;'>".$text['description-restore_warning']."</span>";
-	echo "</form>\n";
-	echo "</div>";
-	echo "<br><br><br>";
-
-	echo "</div>";
 
  //show the footer
  	require_once "resources/footer.php";
