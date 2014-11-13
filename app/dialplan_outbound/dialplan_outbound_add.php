@@ -54,7 +54,6 @@ else {
 			$dialplan_name = check_str($_POST["dialplan_name"]);
 			$dialplan_order = check_str($_POST["dialplan_order"]);
 			$dialplan_expression = check_str($_POST["dialplan_expression"]);
-			$custom_outbound_prefix = check_str($_POST["custom-outbound-prefix"]);
 			$prefix_number = check_str($_POST["prefix_number"]);
 			$condition_field_1 = check_str($_POST["condition_field_1"]);
 			$condition_expression_1 = check_str($_POST["condition_expression_1"]);
@@ -262,7 +261,13 @@ else {
 						$label = $dialplan_expression;
 						$abbrv = filename_safe($dialplan_expression);
 					}
-
+					
+					// Use as outbound prefix all digits beetwen ^ and first (
+					$tmp_prefix = preg_replace("/^\^(\d{1,})\(.*/", "$1", $dialplan_expression);
+					$tmp_prefix == $dialplan_expression
+							? $outbound_prefix = ""
+							: $outbound_prefix = $tmp_prefix;
+					
 					if ($gateway_type == "gateway") {
 						$dialplan_name = $gateway_name.".".$abbrv;
 						$action_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
@@ -466,10 +471,10 @@ else {
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
 					}
 
-					if (strlen($custom_outbound_prefix) > 0) {
+					if (strlen($outbound_prefix) > 0) {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'set';
-						$dialplan_detail_data = 'outbound_prefix='.$custom_outbound_prefix;
+						$dialplan_detail_data = 'outbound_prefix='.$outbound_prefix;
 						$dialplan_detail_order = '060';
 						$dialplan_detail_group = '';
 						$dialplan_detail_break = '';
@@ -629,19 +634,16 @@ function type_onchange(dialplan_detail_type) {
 		echo "}\n";
 		echo "function update_dialplan_expression() {\n";
 		echo "    if ( document.getElementById('dialplan_expression_select').value == 'CUSTOM_PREFIX' ) {\n";
-		echo "        document.getElementById('dialplan_expression').value = '^(\\\d*)\$';\n";
+		echo "        document.getElementById('outbound_prefix').value = '';\n";
 		echo "        $('#enter_custom_outbound_prefix_box').slideDown();\n";
-		echo "        $('#dialplan_expression_box').slideUp();\n";
-		echo "        document.getElementById('outbound_prefix').value = '';\n";
 		echo "    } else { \n";
-		echo "        document.getElementById('dialplan_expression').value = document.getElementById('dialplan_expression_select').value;\n";
-		echo "        $('#enter_custom_outbound_prefix_box').slideUp();\n";
-		echo "        $('#dialplan_expression_box').slideDown();\n";
+		echo "        document.getElementById('dialplan_expression').value += document.getElementById('dialplan_expression_select').value + '\\n';\n";
 		echo "        document.getElementById('outbound_prefix').value = '';\n";
+		echo "        $('#enter_custom_outbound_prefix_box').slideUp();\n";
 		echo "    }\n";
 		echo "}\n";
 		echo "function update_outbound_prefix() {\n";
-		echo "    document.getElementById('dialplan_expression').value = '^' + document.getElementById('outbound_prefix').value + '(\\\d*)\$';\n";
+		echo "    document.getElementById('dialplan_expression').value += '^' + document.getElementById('outbound_prefix').value + '(\\\d*)\$' + '\\n';\n";
 		echo "}\n";
 		echo "</script>\n";
 		echo "\n";
@@ -834,8 +836,9 @@ function type_onchange(dialplan_detail_type) {
 	echo "    </div>\n";
 	
 	echo "    <div id=\"enter_custom_outbound_prefix_box\" style=\"display:none\">\n";
-	echo "        <input class='formfld' style='width: 10%;' type='text' name='custom-outbound-prefix' id=\"outbound_prefix\" onchange=\"update_outbound_prefix()\" maxlength='255'><br />\n";
-	echo "        ".$text['description-enter-custom-outbound-prefix'].".\n";
+	echo "        <input class='formfld' style='width: 10%;' type='text' name='custom-outbound-prefix' id=\"outbound_prefix\" maxlength='255'>\n";
+	echo "        <input type='button' class='btn' name='' onclick=\"update_outbound_prefix()\" value='".$text['button-add']."'>\n";
+	echo "        <br />".$text['description-enter-custom-outbound-prefix'].".\n";
 	echo "    </div>\n";
 	
 	echo "    <select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"update_dialplan_expression()\" class='formfld' style='width: 60%;'>\n";
