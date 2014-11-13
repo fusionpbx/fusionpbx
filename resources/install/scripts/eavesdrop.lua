@@ -39,9 +39,12 @@ extension = argv[1];
 	if (file_exists(database_dir.."/core.db")) then
 		--dbh = freeswitch.Dbh("core:core"); -- when using sqlite
 		dbh = freeswitch.Dbh("sqlite://"..database_dir.."/core.db");
+		freeswitch.consoleLog("NOTICE", "[eavesdrop] using core.db\n");
 	else
 		dofile(scripts_dir.."/resources/functions/database_handle.lua");
 		dbh = database_handle('switch');
+		freeswitch.consoleLog("NOTICE", "[eavesdrop] using freeswitch db\n");
+
 	end
 
 --exits the script if we didn't connect properly
@@ -82,6 +85,7 @@ if ( session:ready() ) then
 			digits = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-please_enter_pin_followed_by_pound.wav", "", "\\d+");
 			if (digits == pin_number) then
 				--pin is correct
+				freeswitch.consoleLog("NOTICE", "[eavesdrop] pin is correct\n");
 			else
 				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-fail_auth.wav");
 				session:hangup("NORMAL_CLEARING");
@@ -92,10 +96,10 @@ if ( session:ready() ) then
 	--check the database to get the uuid
 		--eavesdrop
 			sql = "select uuid from channels where presence_id = '"..extension.."@"..domain_name.."' ";
-			freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
+			freeswitch.consoleLog("NOTICE", "[eavesdrop] sql "..sql.."\n");
 		dbh:query(sql, function(result)
 			for key, val in pairs(result) do
-				freeswitch.consoleLog("NOTICE", "result "..key.." "..val.."\n");
+				freeswitch.consoleLog("NOTICE", "[eavesdrop] result "..key.." "..val.."\n");
 			end
 			uuid = result.uuid;
 		end);
