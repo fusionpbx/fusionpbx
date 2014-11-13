@@ -5,6 +5,7 @@
   -->
 
   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>
+  <X-PRE-PROCESS cmd="set" data="record_ext=wav"/>
 
   <!--
       This setting is what sets the default domain FreeSWITCH will use if all else fails.
