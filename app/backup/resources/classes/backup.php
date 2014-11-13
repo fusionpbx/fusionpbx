@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010-2014
+	Copyright (C) 2014
 	All Rights Reserved.
 
 	Contributor(s):
@@ -28,15 +28,17 @@ include "root.php";
 //define the backup class
 	if (!class_exists('backup')) {
 		class backup {
-			//variables
 			public $result;
 			public $domain_uuid;
 
-			public function command($type, $format) {
-				global $db;
+			public function command($type, $file) {
 				if ($type == "backup") {
-					$backup_path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
-					$backup_file = 'backup_'.date('Ymd_His').'.'.$format;
+					$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
+					$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changin the directory with the file name
+					$format = substr($file,-3);
+					if (strlen($file) == 3) {
+						$file = 'backup_'.date('Ymd_His').'.'.$format;
+					}
 					if (count($_SESSION['backup']['path']) > 0) {
 						//determine compression method
 						switch ($format) {
@@ -45,7 +47,7 @@ include "root.php";
 							case "tbz" : $cmd = 'tar -jvcf '; break;
 							default : $cmd = 'tar -zvcf ';
 						}
-						$cmd .= $backup_path.'/'.$backup_file.' ';
+						$cmd .= $path.'/'.$file.' ';
 						foreach ($_SESSION['backup']['path'] as $value) {
 							$cmd .= $value.' ';
 						}
@@ -56,14 +58,16 @@ include "root.php";
 					}
 				}
 				if ($type == "restore") {
-					$backup_path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
-					$backup_file = 'backup_'.date('Ymd_His').'.'.$format;
+					$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
+					$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changin the directory with the file name
+					$format = substr($file,-3);
+					$file = 'backup_'.date('Ymd_His').'.'.$format;
 					if (count($_SESSION['backup']['path']) > 0) {
 						switch ($format) {
-							case "rar" : $cmd = 'rar x -ow -o+ '.$backup_path.'/'.$backup_file.' /'; break;
-							case "zip" : $cmd = 'umask 755; unzip -o -qq -X -K '.$backup_path.'/'.$backup_file.' -d /'; break;
-							case "tbz" : $cmd = 'tar -xvpjf '.$backup_path.'/'.$backup_file.' -C /'; break;
-							case "tgz" : $cmd = 'tar -xvpzf '.$backup_path.'/'.$backup_file.' -C /'; break;
+							case "rar" : $cmd = 'rar x -ow -o+ '.$path.'/'.$file.' /'; break;
+							case "zip" : $cmd = 'umask 755; unzip -o -qq -X -K '.$path.'/'.$file.' -d /'; break;
+							case "tbz" : $cmd = 'tar -xvpjf '.$path.'/'.$file.' -C /'; break;
+							case "tgz" : $cmd = 'tar -xvpzf '.$path.'/'.$file.' -C /'; break;
 							default: $valid_format = false;
 						}
 						return $cmd;
@@ -74,6 +78,46 @@ include "root.php";
 				}
 			}
 
+			public function backup($type, $format) {
+				$cmd = $this->command("backup", $format);
+				exec($cmd);
+			}
+
+			public function restore($file) {
+				$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
+				$format = substr($file,-3);
+				switch ($format) {
+					case "rar" : break;
+					case "zip" : break;
+					case "tbz" : break;
+					case "tgz" : break;
+					default: return false;
+				}
+				$cmd = $this->command("restore", $file);
+				exec($cmd);
+			}
+
+			public function download($file) {
+				$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
+				session_cache_limiter('public');
+				$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changin the directory with the file name
+				if (file_exists($path."/".$file)) {
+					$fd = fopen($path."/".$file, 'rb');
+					header("Content-Type: application/octet-stream");
+					header("Content-Transfer-Encoding: binary");
+					header("Content-Description: File Transfer");
+					header('Content-Disposition: attachment; filename='.$file);
+					header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+					header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+					header("Content-Length: ".filesize($path."/".$file));
+					header("Pragma: no-cache");
+					header("Expires: 0");
+					ob_clean();
+					fpassthru($fd);
+					exit;
+				}
+				exec($cmd);
+			}
 		}
 	}
 
