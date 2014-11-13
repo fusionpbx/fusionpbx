@@ -46,7 +46,6 @@
 			<action application="set" data="record_session=true" inline="true"/>
 		</condition>
 		<condition field="${record_session}" expression="^true$">
-			<action application="set" data="record_ext=wav"/>
 			<action application="set" data="api_on_answer=uuid_record ${uuid} start ${recordings_dir}/${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext}"/>
 		</condition>
 	</extension>
