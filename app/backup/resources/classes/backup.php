@@ -36,7 +36,7 @@ include "root.php";
 				global $db;
 				if ($type == "backup") {
 					$backup_path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
-					$backup_file = 'backup_'.date('Ymd_His').'.'.$file_format;
+					$backup_file = 'backup_'.date('Ymd_His').'.'.$format;
 					if (count($_SESSION['backup']['path']) > 0) {
 						//determine compression method
 						switch ($format) {
@@ -57,7 +57,7 @@ include "root.php";
 				}
 				if ($type == "restore") {
 					$backup_path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
-					$backup_file = 'backup_'.date('Ymd_His').'.'.$file_format;
+					$backup_file = 'backup_'.date('Ymd_His').'.'.$format;
 					if (count($_SESSION['backup']['path']) > 0) {
 						switch ($format) {
 							case "rar" : $cmd = 'rar x -ow -o+ '.$backup_path.'/'.$backup_file.' /'; break;
