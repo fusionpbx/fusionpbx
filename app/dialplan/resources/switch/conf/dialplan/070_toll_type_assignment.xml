@@ -1,7 +1,0 @@
-<context name="{v_context}">
-	<extension name="toll_type_assignment" continue="true" app_uuid="742714e5-8cdf-32fd-462c-cbe7e3d655db" enabled="false">
-		<condition field="destination_number" expression="^.*$">
-			<action application="set" data="toll_type=${luarun toll_type_assignment.lua ${uuid}}" inline="true"/>
-		</condition>
-	</extension>
-</context>

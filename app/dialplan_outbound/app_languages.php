@@ -302,6 +302,16 @@
 	$text['description-accountcode']['pt-pt'] = "Introduza a conta.";
 	$text['description-accountcode']['fr-fr'] = "";
 
+	$text['label-toll_allow']['en-us'] = "Toll allow";
+	$text['label-toll_allow']['es-cl'] = "Permitir Tarifas Especiales";
+	$text['label-toll_allow']['pt-pt'] = "Permissões";
+	$text['label-toll_allow']['fr-fr'] = "Droits";
+
+	$text['description-enable-toll_allow']['en-us'] = "Set to true to enable toll allow";
+	$text['description-enable-toll_allow']['es-cl'] = "Seleccione verdadero para activar permitir Tarifas Especiales";
+	$text['description-enable-toll_allow']['pt-pt'] = "scolha 'sim' para activar permissões";
+	$text['description-enable-toll_allow']['fr-fr'] = "Choisir Oui pour activer droits";
+	
 	$text['label-order']['en-us'] = "Order";
 	$text['label-order']['es-cl'] = "Orden";
 	$text['label-order']['pt-pt'] = "Ordem";

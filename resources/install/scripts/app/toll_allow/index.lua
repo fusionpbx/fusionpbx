@@ -23,19 +23,20 @@
 --	Riccardo Granchi <riccardo.granchi@nems.it>
 
 --debug
-	debug["toll_type"] = false
+	debug["toll_type"] = true
 	
-	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1))
-	dofile(scripts_dir .. "/resources/functions/explode.lua")
+	dofile(scripts_dir.."/resources/functions/explode.lua");
 
 --create the api object and get variables
 	api = freeswitch.API()
-	uuid = argv[1]
+	uuid = argv[2]
 	
 	if not uuid or uuid == "" then
 		return
 	end
 	
+	template_indexes = { "mobile", "landline", "international", "tollfree", "sharedcharge", "premium", "unknown"}
+
 --Define templates for every toll type for your country
 	function get_toll_types_it()
 		if (debug["toll_type"]) then
@@ -63,8 +64,17 @@
 	called  = api:executeString("uuid_getvar " .. uuid .. " destination_number")
 	prefix  = api:executeString("uuid_getvar " .. uuid .. " outbound_prefix")
 	country = api:executeString("uuid_getvar " .. uuid .. " default_country")
+	toll_allow = api:executeString("uuid_getvar " .. uuid .. " toll_allow")
+	domain_name = api:executeString("uuid_getvar " .. uuid .. " domain_name")
+	caller = api:executeString("uuid_getvar " .. uuid .. " caller_id_number")
 		
-	template_indexes = { "mobile", "landline", "international", "tollfree", "sharedcharge", "premium", "unknown"}
+	if (debug["toll_type"]) then
+		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] called: " .. called .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] prefix: " .. prefix .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] country: " .. country .. "\n")
+		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] tollAllow: " .. toll_allow .. "\n")
+	end
+	
 	templates = {}
 	local toll_type = "unknown"
 		
@@ -78,11 +88,13 @@
 		if     country == "IT" then get_toll_types_it()
 		elseif country == "US" then get_toll_types_us()
 		else
-			freeswitch.consoleLog("NOTICE", "[toll_type_assignment] toll type: " .. toll_type .. "\n")
+			if (debug["toll_type"]) then
+				freeswitch.consoleLog("NOTICE", "[toll_type_assignment] toll type: " .. toll_type .. "\n")
+			end
 			return toll_type
 		end
 		
-	--test templates matching to set correct toll_type
+	--set toll_type
 		local found = false
 		for i,label in pairs(template_indexes) do
 			template = templates[label]
@@ -113,7 +125,41 @@
 				break
 			end
 		end
+	
+		freeswitch.consoleLog("NOTICE", "[toll_type_assignment] toll type: " .. toll_type .. "\n")
+	--	api:executeString("uuid_setvar " .. uuid .. " toll_type " .. toll_type);
+	--	session:setVariable('toll_type', toll_type);
+		
+		
+	--check toll allow
+		allow = false
+		
+		if ((toll_allow ~= nil) and (string.len(toll_allow) > 0) and (toll_allow ~= "_undef_")) then
+			parts = explode(",", toll_allow)
+			
+			for i,part in pairs(parts) do
+				if (debug["toll_type"]) then
+					freeswitch.consoleLog("NOTICE", "[toll_type_assignment] checking toll allow part " .. part .. "\n")
+				end
+				
+				if ( part == toll_type ) then
+					allow = true
+					break
+				end
+			end
+		else
+			freeswitch.consoleLog("WARNING", domain_name .. " - toll_allow not defined for extension " .. caller .. "\n")
+			
+			-- Uncomment following line to allow all calls for extensions without toll_allow
+			-- allow = true
+		end
+		
+	--hangup not allowed calls
+		if ( not allow ) then
+			freeswitch.consoleLog("WARNING", domain_name .. " - " .. toll_type .. " call not authorized from " .. caller .. " to " .. called .. " : REJECTING!\n")
+			session:hangup("OUTGOING_CALL_BARRED")
+		else
+			freeswitch.consoleLog("NOTICE", domain_name .. " - " .. toll_type .. " call authorized from " .. caller .. " to " .. called .. "\n")
+		end
 	end
 	
-	freeswitch.consoleLog("NOTICE", "[toll_type_assignment] toll type: " .. toll_type .. "\n")
-	return toll_type
