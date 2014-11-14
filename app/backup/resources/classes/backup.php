@@ -34,7 +34,7 @@ include "root.php";
 			public function command($type, $file) {
 				if ($type == "backup") {
 					$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
-					$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changin the directory with the file name
+					$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changing the directory with the file name
 					$format = substr($file,-3);
 					if (strlen($file) == 3) {
 						$file = 'backup_'.date('Ymd_His').'.'.$format;
@@ -59,7 +59,7 @@ include "root.php";
 				}
 				if ($type == "restore") {
 					$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
-					$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changin the directory with the file name
+					$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changing the directory with the file name
 					$format = substr($file,-3);
 					if (count($_SESSION['backup']['path']) > 0) {
 						switch ($format) {
@@ -101,7 +101,7 @@ include "root.php";
 			public function download($file) {
 				$path = ($_SESSION['server']['backup']['path'] != '') ? $_SESSION['server']['backup']['path'] : '/tmp';
 				session_cache_limiter('public');
-				$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changin the directory with the file name
+				$file = str_replace(array("/", "\\"),'',$file); //remove slashes to prevent changing the directory with the file name
 				if (file_exists($path."/".$file)) {
 					$fd = fopen($path."/".$file, 'rb');
 					header("Content-Type: application/octet-stream");
