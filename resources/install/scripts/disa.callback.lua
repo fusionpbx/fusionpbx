@@ -24,7 +24,7 @@
 --	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 --debug
-	debug["sql"] = true;
+	debug["sql"] = false;
 
 --include config.lua
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
@@ -61,10 +61,9 @@ freeswitch.consoleLog("notice", "[disa] a_user_exists "..a_user_exists.."\n");
 
 --Lets build correct dialstring
 if (a_user_exists == "true") then
-	--
 	cmd = "user_data ".. aleg_number .."@"..context.." var extension_uuid";
 	extension_uuid = trim(api:executeString(cmd));
-	a_dialstring = "[direction=outbound,origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..aleg_number.."@"..context;
+	a_dialstring = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..aleg_number.."@"..context;
 else
 	sql = [[select * from v_dialplans as d, v_dialplan_details as s 
 			where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
@@ -118,7 +117,7 @@ else
 				dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
 				--if the session is set then process the actions
 				if (y == 0) then
-					square = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid..",";
+					square = "[direction=outbound,origination_caller_id_number="..bleg_number..",outbound_caller_id_number="..bleg_number..",call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid..",";
 				end
 				if (r.dialplan_detail_type == "set") then
 					if (dialplan_detail_data == "sip_h_X-accountcode=${accountcode}") then
@@ -168,23 +167,18 @@ if session1:ready() and session1:answered() then
 	freeswitch.consoleLog("info", "[disa.callback] calling " .. bleg_number .. "\n");
 
 	t_started2 = os.date();
-	b_dialstring = "{context="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."}loopback/"..bleg_number.."/"..context;
 
+	cmd = "user_exists id ".. bleg_number .." "..context;
+	b_user_exists = trim(api:executeString(cmd));
+	freeswitch.consoleLog("notice", "[disa] b_user_exists "..b_user_exists.."\n");
 
-
-
-cmd = "user_exists id ".. bleg_number .." "..context;
-b_user_exists = trim(api:executeString(cmd));
-freeswitch.consoleLog("notice", "[disa] b_user_exists "..b_user_exists.."\n");
-
---Lets build correct dialstring
-if (b_user_exists == "true") then
-	--
-	cmd = "user_data ".. bleg_number .."@"..context.." var extension_uuid";
-	extension_uuid = trim(api:executeString(cmd));
-	b_dialstring = "[direction=outbound,origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..bleg_number.."@"..context;
-else
-	sql = [[select * from v_dialplans as d, v_dialplan_details as s 
+	--Lets build correct dialstring
+	if (b_user_exists == "true") then
+		cmd = "user_data ".. bleg_number .."@"..context.." var extension_uuid";
+		extension_uuid = trim(api:executeString(cmd));
+		b_dialstring = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid.."]user/"..bleg_number.."@"..context;
+	else
+		sql = [[select * from v_dialplans as d, v_dialplan_details as s 
 			where (d.domain_uuid = ']] .. domain_uuid .. [[' or d.domain_uuid is null)
 				and d.app_uuid = '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' 
 				and d.dialplan_enabled = 'true' 
@@ -200,74 +194,68 @@ else
 				WHEN 'anti-action' THEN 3 
 				ELSE 100 END, 
 				s.dialplan_detail_order asc ]]
-	if (debug["sql"]) then
-		freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "\n");
-	end
-	dialplans = {};
-	x = 1;
-	assert(dbh:query(sql, function(row)
-		dialplans[x] = row;
-		x = x + 1;
-		end));
-	
-	y = 0;
-	previous_dialplan_uuid = '';
-	for k, r in pairs(dialplans) do
-		if (y > 0) then
-			if (previous_dialplan_uuid ~= r.dialplan_uuid) then
-				regex_match = false;
-				bridge_match = false;
-				square = square .. "]";
-				y = 0;
-			end
+		if (debug["sql"]) then
+			freeswitch.consoleLog("notice", "[disa ] sql for dialplans:" .. sql .. "\n");
 		end
-		if (r.dialplan_detail_tag == "condition") then
-			if (r.dialplan_detail_type == "destination_number") then
-				if (api:execute("regex", "m:~"..bleg_number.."~"..r.dialplan_detail_data) == "true") then
-					--get the regex result
-					destination_result = trim(api:execute("regex", "m:~"..bleg_number.."~"..r.dialplan_detail_data.."~$1"));
-					regex_match = true
+		dialplans = {};
+		x = 1;
+		assert(dbh:query(sql, function(row)
+			dialplans[x] = row;
+			x = x + 1;
+			end));	
+		y = 0;
+		previous_dialplan_uuid = '';
+		for k, r in pairs(dialplans) do
+			if (y > 0) then
+				if (previous_dialplan_uuid ~= r.dialplan_uuid) then
+					regex_match = false;
+					bridge_match = false;
+					square = square .. "]";
+					y = 0;
 				end
 			end
-		end
-		if (r.dialplan_detail_tag == "action") then
-			if (regex_match) then
-				--replace $1
-				dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
-				--if the session is set then process the actions
-				if (y == 0) then
-					square = "[origination_caller_id_number=*3472,outbound_caller_id_number=*3472,call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid..",";
-				end
-				if (r.dialplan_detail_type == "set") then
-					if (dialplan_detail_data == "sip_h_X-accountcode=${accountcode}") then
-						square = square .. "sip_h_X-accountcode="..accountcode..",";
-					elseif (dialplan_detail_data == "effective_caller_id_name=${outbound_caller_id_name}") then
-					elseif (dialplan_detail_data == "effective_caller_id_number=${outbound_caller_id_number}") then
-					else
-						square = square .. dialplan_detail_data..",";
+			if (r.dialplan_detail_tag == "condition") then
+				if (r.dialplan_detail_type == "destination_number") then
+					if (api:execute("regex", "m:~"..bleg_number.."~"..r.dialplan_detail_data) == "true") then
+						--get the regex result
+						destination_result = trim(api:execute("regex", "m:~"..bleg_number.."~"..r.dialplan_detail_data.."~$1"));
+						regex_match = true
 					end
-				elseif (r.dialplan_detail_type == "bridge") then
-					if (bridge_match) then
-						dial_string = dial_string .. "," .. square .."]"..dialplan_detail_data;
-						 square = "[";
-					else
-						dial_string = square .."]"..dialplan_detail_data;
-					end
-					bridge_match = true;
 				end
-			y = y + 1;
 			end
+			if (r.dialplan_detail_tag == "action") then
+				if (regex_match) then
+					--replace $1
+					dialplan_detail_data = r.dialplan_detail_data:gsub("$1", destination_result);
+					--if the session is set then process the actions
+					if (y == 0) then
+						square = "[direction=outbound,origination_caller_id_number="..aleg_number..",outbound_caller_id_number="..aleg_number..",call_timeout=30,context="..context..",sip_invite_domain="..context..",domain_name="..context..",domain="..context..",accountcode="..accountcode..",domain_uuid="..domain_uuid..",";
+					end
+					if (r.dialplan_detail_type == "set") then
+						if (dialplan_detail_data == "sip_h_X-accountcode=${accountcode}") then
+							square = square .. "sip_h_X-accountcode="..accountcode..",";
+						elseif (dialplan_detail_data == "effective_caller_id_name=${outbound_caller_id_name}") then
+						elseif (dialplan_detail_data == "effective_caller_id_number=${outbound_caller_id_number}") then
+						else
+							square = square .. dialplan_detail_data..",";
+						end
+					elseif (r.dialplan_detail_type == "bridge") then
+						if (bridge_match) then
+							dial_string = dial_string .. "," .. square .."]"..dialplan_detail_data;
+							 square = "[";
+						else
+							dial_string = square .."]"..dialplan_detail_data;
+						end
+						bridge_match = true;
+					end
+				y = y + 1;
+				end
+			end
+			previous_dialplan_uuid = r.dialplan_uuid;
 		end
-		previous_dialplan_uuid = r.dialplan_uuid;
+		--end for
+		b_dialstring = dial_string;
 	end
-	--end for
-	b_dialstring = dial_string;
-end
-
-
-
-
-
 	freeswitch.consoleLog("info", "[disa.callback] b_dialstring " .. b_dialstring .. "\n");
 
 	session2 = freeswitch.Session(b_dialstring);
