@@ -118,11 +118,11 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	//source should see the destination caller id
 		if (strlen($src) < 7) {
-			$source = "{".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound,domain_uuid=".$domain_uuid.",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/$src@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+			$source = "{click_to_call=true,".$sip_auto_answer."origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound,domain_uuid=".$domain_uuid.",domain_name=".$_SESSION['domains'][$domain_uuid]['domain_name']."}user/$src@".$_SESSION['domains'][$domain_uuid]['domain_name'];
 		}
 		else {
 			$bridge_array = outbound_route_to_bridge ($_SESSION['domain_uuid'], $src);
-			$source = "{origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}".$bridge_array[0];
+			$source = "{click_to_call=true,origination_caller_id_name='$src_cid_name',origination_caller_id_number=$src_cid_number,instant_ringback=true,ringback=$ringback_value,presence_id=$src@".$_SESSION['domains'][$domain_uuid]['domain_name'].",call_direction=outbound}".$bridge_array[0];
 		}
 
 	//destination needs to see the source caller id
