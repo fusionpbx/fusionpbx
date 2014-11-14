@@ -264,6 +264,33 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($sql);
 		}
 
+	//export alert-info for distinctive ringtones
+		if (count($_SESSION["domains"]) > 1) {
+			$dialplan_detail_uuid = uuid();
+			$sql = "insert into v_dialplan_details ";
+			$sql .= "(";
+			$sql .= "domain_uuid, ";
+			$sql .= "dialplan_uuid, ";
+			$sql .= "dialplan_detail_uuid, ";
+			$sql .= "dialplan_detail_tag, ";
+			$sql .= "dialplan_detail_type, ";
+			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_order ";
+			$sql .= ") ";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'$domain_uuid', ";
+			$sql .= "'$dialplan_uuid', ";
+			$sql .= "'$dialplan_detail_uuid', ";
+			$sql .= "'action', ";
+			$sql .= "'export', ";
+			$sql .= "'alert_info=http://www.notused.com;info=alert-external;x-line-id=0', ";
+			$sql .= "'45' ";
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
+
 	//set call_direction
 		if (count($_SESSION["domains"]) > 1) {
 			$dialplan_detail_uuid = uuid();
@@ -285,7 +312,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'call_direction=inbound', ";
-			$sql .= "'60' ";
+			$sql .= "'50' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -312,7 +339,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'accountcode=$destination_accountcode', ";
-			$sql .= "'62' ";
+			$sql .= "'55' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -339,7 +366,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'carrier=$destination_carrier', ";
-			$sql .= "'64' ";
+			$sql .= "'60' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -366,7 +393,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'limit', ";
 			$sql .= "'hash \${domain} inbound ".$limit." !USER_BUSY', ";
-			$sql .= "'70' ";
+			$sql .= "'65' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
@@ -393,7 +420,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'effective_caller_id_number=".$redial_outbound_prefix."\${caller_id_number}', ";
-			$sql .= "'72' ";
+			$sql .= "'70' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
