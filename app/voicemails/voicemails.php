@@ -33,6 +33,7 @@ else {
 	echo "access denied";
 	exit;
 }
+
 //add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
@@ -41,7 +42,12 @@ else {
 
 //set the voicemail_id array
 	foreach ($_SESSION['user']['extension'] as $value) {
-		$voicemail_ids[]['voicemail_id'] = $value['user'];
+		if (strlen($row['number_alias']) > 0) {
+			$voicemail_ids[]['voicemail_id'] = $row['number_alias'];
+		}
+		else {
+			$voicemail_ids[]['voicemail_id'] = $row['user'];
+		}
 	}
 
 //get the http values and set them as variables

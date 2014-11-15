@@ -178,6 +178,7 @@ function load_extensions() {
 					$x = 0;
 					foreach($result as $row) {
 						$_SESSION['user']['extension'][$x]['user'] = $row['extension'];
+						$_SESSION['user']['extension'][$x]['number_alias'] = $row['number_alias'];
 						$_SESSION['user']['extension'][$x]['extension_uuid'] = $row['extension_uuid'];
 						$_SESSION['user']['extension'][$x]['outbound_caller_id_name'] = $row['outbound_caller_id_name'];
 						$_SESSION['user']['extension'][$x]['outbound_caller_id_number'] = $row['outbound_caller_id_number'];
