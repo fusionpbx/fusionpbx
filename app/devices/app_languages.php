@@ -36,10 +36,10 @@
 		$text['description-device_mac_address']['pt-pt'] = "Introduza o endereço MAC.";
 		$text['description-device_mac_address']['fr-fr'] = "";
 
-		$text['label-extension']['en-us'] = "Extensions";
-		$text['label-extension']['es-cl'] = "Extensiones";
-		$text['label-extension']['pt-pt'] = "Extensões";
-		$text['label-extension']['fr-fr'] = "Extensions";
+		$text['label-extension']['en-us'] = "Extension";
+		$text['label-extension']['es-cl'] = "Extension";
+		$text['label-extension']['pt-pt'] = "Extensõe";
+		$text['label-extension']['fr-fr'] = "Extension";
 
 		$text['description-extension']['en-us'] = "Assign the extension and line numbers to the device.";
 		$text['description-extension']['es-cl'] = "Asignar la etensión y números de línea al dispositivo";
@@ -373,6 +373,11 @@
 		$text['label-presence_watcher']['pt-pt'] = "Vigilante de Presença";
 		$text['label-presence_watcher']['fr-fr'] = "Présence Watcher";
 
+		$text['label-presence']['en-us'] = "Presence";
+		$text['label-presence']['es-cl'] = "Presencia";
+		$text['label-presence']['pt-pt'] = "Presença";
+		$text['label-presence']['fr-fr'] = "Présence";
+
 		$text['label-eventlist_blf']['en-us'] = "Eventlist BLF";
 		$text['label-eventlist_blf']['es-cl'] = "Eventlist BLF";
 		$text['label-eventlist_blf']['pt-pt'] = "Eventlist BLF";
@@ -397,6 +402,11 @@
 		$text['label-dial_dtmf']['es-cl'] = "Marcación DTMF";
 		$text['label-dial_dtmf']['pt-pt'] = "Marque DTMF";
 		$text['label-dial_dtmf']['fr-fr'] = "Composez DTMF";
+
+		$text['label-dtmf']['en-us'] = "DTMF";
+		$text['label-dtmf']['es-cl'] = "DTMF";
+		$text['label-dtmf']['pt-pt'] = "DTMF";
+		$text['label-dtmf']['fr-fr'] = "DTMF";
 
 		$text['label-transfer']['en-us'] = "Transfer";
 		$text['label-transfer']['es-cl'] = "Transferencia";
@@ -502,6 +512,61 @@
 		$text['label-record']['es-cl'] = "Registro";
 		$text['label-record']['pt-pt'] = "Registo";
 		$text['label-record']['fr-fr'] = "Record";
+
+		$text['label-none']['en-us'] = "None";
+		$text['label-none']['es-cl'] = "Ninguno";
+		$text['label-none']['pt-pt'] = "Nenhum";
+		$text['label-none']['fr-fr'] = "Aucun";
+
+		$text['label-action_url']['en-us'] = "Action URL";
+		$text['label-action_url']['es-cl'] = "URL Acción";
+		$text['label-action_url']['pt-pt'] = "URL ação";
+		$text['label-action_url']['fr-fr'] = "URL d'action";
+
+		$text['label-auto_answer']['en-us'] = "Auto Answer";
+		$text['label-auto_answer']['es-cl'] = "Respuesta Automática";
+		$text['label-auto_answer']['pt-pt'] = "Resposta Automática";
+		$text['label-auto_answer']['fr-fr'] = "Réponse Automatique";
+
+		$text['label-call_agent']['en-us'] = "Call Agent";
+		$text['label-call_agent']['es-cl'] = "Llame Agente";
+		$text['label-call_agent']['pt-pt'] = "Call Agent";
+		$text['label-call_agent']['fr-fr'] = "Agent d'appel";
+
+		$text['label-redirect']['en-us'] = "Redirect";
+		$text['label-redirect']['es-cl'] = "Redirigir";
+		$text['label-redirect']['pt-pt'] = "Redirecionar";
+		$text['label-redirect']['fr-fr'] = "Réorienter";
+
+		$text['label-key_event']['en-us'] = "Key Event";
+		$text['label-key_event']['es-cl'] = "Evento clave";
+		$text['label-key_event']['pt-pt'] = "Evento Key";
+		$text['label-key_event']['fr-fr'] = "Evénement clé";
+
+		$text['label-orbit']['en-us'] = "Park + Orbit";
+		$text['label-orbit']['es-cl'] = "Park + Órbita";
+		$text['label-orbit']['pt-pt'] = "Parque + Orbit";
+		$text['label-orbit']['fr-fr'] = "Parc + Orbit";
+
+		$text['label-p2t']['en-us'] = "Push to Talk";
+		$text['label-p2t']['es-cl'] = "Pulsar para hablar";
+		$text['label-p2t']['pt-pt'] = "Push to Talk";
+		$text['label-p2t']['fr-fr'] = "Push to Talk";
+
+		$text['label-multicast_page']['en-us'] = "Multicast Page";
+		$text['label-multicast_page']['es-cl'] = "Página Multicast";
+		$text['label-multicast_page']['pt-pt'] = "Página multicast";
+		$text['label-multicast_page']['fr-fr'] = "Cette page multicast";
+
+		$text['label-button']['en-us'] = "Button";
+		$text['label-button']['es-cl'] = "Botón";
+		$text['label-button']['pt-pt'] = "Botão";
+		$text['label-button']['fr-fr'] = "Bouton";
+
+		$text['label-ivr']['en-us'] = "IVR";
+		$text['label-ivr']['es-cl'] = "IVR";
+		$text['label-ivr']['pt-pt'] = "IVR";
+		$text['label-ivr']['fr-fr'] = "IVR";
 
 		$text['label-xml_browser']['en-us'] = "XML Browser";
 		$text['label-xml_browser']['es-cl'] = "Navegador XML";
