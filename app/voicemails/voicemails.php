@@ -41,7 +41,7 @@ else {
 	}
 
 //set the voicemail_id array
-	foreach ($_SESSION['user']['extension'] as $value) {
+	foreach ($_SESSION['user']['extension'] as $row) {
 		if (strlen($row['number_alias']) > 0) {
 			$voicemail_ids[]['voicemail_id'] = $row['number_alias'];
 		}
