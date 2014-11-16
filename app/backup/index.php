@@ -100,7 +100,7 @@ else {
 		$target_type = "script";
 
 		$backup = new backup;
-		$cron_script = $backup->command("backup", $file_format);
+		$command = $backup->command("backup", $file_format);
 	}
 
 //restore a backup
@@ -152,9 +152,9 @@ else {
 	echo "<script language='javascript' type='text/javascript'>";
 	echo "	var fade_speed = 400;";
 	echo "	function toggle_target(first_elem, second_elem) {";
-	echo "		$('#cron_script').fadeOut(fade_speed);";
+	echo "		$('#command').fadeOut(fade_speed);";
 	echo "		$('#'+first_elem).fadeToggle(fade_speed, function() {";
-	echo "			$('#cron_script').slideUp(fade_speed, function() {";
+	echo "			$('#command').slideUp(fade_speed, function() {";
 	echo "				$('#'+second_elem).fadeToggle(fade_speed);";
 	echo "			});";
 	echo "		});";
@@ -201,19 +201,19 @@ else {
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='target_type' id='target_type' onchange=\"(this.selectedIndex == 0) ? toggle_target('btn_script','btn_download') : toggle_target('btn_download','btn_script');\">";
 		echo "		<option value='download'>".$text['option-file_download']."</option>";
-		echo "		<option value='script' ".(($target_type == 'script') ? 'selected' : null).">".$text['option-cron_script']."</option>";
+		echo "		<option value='script' ".(($target_type == 'script') ? 'selected' : null).">".$text['option-command']."</option>";
 		echo "	</select>";
 		echo "</td>";
 		echo "</tr>";
 		echo "</table>";
-		echo "<div id='cron_script' ".(($cron_script == '') ? "style='display: none;'" : null).">";
+		echo "<div id='command' ".(($command == '') ? "style='display: none;'" : null).">";
 		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-cron_script']."\n";
+		echo "	".$text['label-command']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "	<textarea class='formfld' style='width: 100%; height: 200px; font-family: courier;'>".$cron_script."</textarea>";
+		echo "	<textarea class='formfld' style='width: 100%; height: 200px; font-family: courier;'>".$command."</textarea>";
 		echo "</td>";
 		echo "</tr>";
 		echo "</table>";
