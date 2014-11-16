@@ -124,7 +124,7 @@ else {
 	echo "		</span>\n";
 	echo "	</td>\n";
 
-	echo "	<td align='right' valign='top' nowrap style='padding-left: 50px;>\n";
+	echo "	<td align='right' valign='top' nowrap='nowrap' style='padding-left: 50px;'>\n";
 	echo "		<form name='frm_search' method='get' action=''>\n";
 	echo "		<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	if (strlen($app_uuid) > 0) {
