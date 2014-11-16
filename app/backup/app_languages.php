@@ -35,15 +35,15 @@
 	$text['option-file_download']['pt-pt'] = "download do arquivo";
 	$text['option-file_download']['fr-fr'] = "Télécharger le fichier";
 
-	$text['option-cron_script']['en-us'] = "Cron Script";
-	$text['option-cron_script']['es-cl'] = "Cron Guión";
-	$text['option-cron_script']['pt-pt'] = "Cron Script";
-	$text['option-cron_script']['fr-fr'] = "Cron Script";
+	$text['option-command']['en-us'] = "Command";
+	$text['option-command']['es-cl'] = "Comando";
+	$text['option-command']['pt-pt'] = "Comando";
+	$text['option-command']['fr-fr'] = "Commandementt";
 
-	$text['label-cron_script']['en-us'] = "Cron Script";
-	$text['label-cron_script']['es-cl'] = "Cron Guión";
-	$text['label-cron_script']['pt-pt'] = "Cron Script";
-	$text['label-cron_script']['fr-fr'] = "Cron Script";
+	$text['label-command']['en-us'] = "Command";
+	$text['label-command']['es-cl'] = "Comando";
+	$text['label-command']['pt-pt'] = "Comando";
+	$text['label-command']['fr-fr'] = "Commandementt";
 
 	$text['header-restore']['en-us'] = "Restore";
 	$text['header-restore']['es-cl'] = "Restaurar";
