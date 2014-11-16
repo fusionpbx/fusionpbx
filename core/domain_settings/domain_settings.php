@@ -71,7 +71,7 @@ if (sizeof($_REQUEST) > 1) {
 					$sql .= "where domain_setting_uuid = '".$domain_setting_uuid."' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
-					unset($sql);
+					unset ($prep_statement, $sql);
 				}
 				// set message
 				$_SESSION["message"] = $text['message-delete'].": ".sizeof($domain_setting_uuids);
@@ -110,7 +110,7 @@ if (sizeof($_REQUEST) > 1) {
 	$sql .= "where domain_uuid = '$domain_uuid' ";
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
-	$prep_statement->execute();
+		$prep_statement->execute();
 		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 		if ($row['num_rows'] > 0) {
 			$num_rows = $row['num_rows'];
@@ -118,6 +118,7 @@ if (sizeof($_REQUEST) > 1) {
 		else {
 			$num_rows = '0';
 		}
+		unset ($prep_statement, $sql);
 	}
 
 //prepare to page the results
@@ -225,6 +226,7 @@ if (sizeof($_REQUEST) > 1) {
 				$sub_prep_statement = $db->prepare(check_sql($sql));
 				$sub_prep_statement->execute();
 				$sub_result = $sub_prep_statement->fetchAll(PDO::FETCH_NAMED);
+				unset ($prep_statement, $sql);
 				foreach ($sub_result as &$sub_row) {
 					echo $sub_row["menu_language"]." - ".$sub_row["menu_name"]."\n";
 				}
