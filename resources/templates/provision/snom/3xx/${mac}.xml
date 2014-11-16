@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+<phone-settings e="2">
+<language perm="">English</language>
+<update_policy perm="">auto_update</update_policy>
+<setting_server perm="RW">http://{$domain_name}{$project_path}/app/provision/index.php?mac={$mac}</setting_server>
+<dhcp perm="R">on</dhcp>
+<timezone perm="">{$snom_time_zone}</timezone>
+<firmware_status perm="R">http://{$domain_name}{$project_path}/app/provision/firmware.xml</firmware_status>
+{if isset($admin_password) }
+<http_user perm="">{$admin_name}</http_user>
+<http_pass perm="">{$admin_password}</http_pass>
+{/if}
+<web_logout_timer>5</web_logout_timer>
+{if isset($admin_password) }
+<admin_mode_login perm="">{$admin_name}</admin_mode_login>
+<admin_mode_password perm="">{$admin_password}</admin_mode_password>
+<admin_mode_password_confirm perm="">{$admin_password}</admin_mode_password_confirm>
+{else}
+<admin_mode_password>0000</admin_mode_password>
+<admin_mode_password_confirm>0000</admin_mode_password_confirm>
+{/if}
+<admin_mode perm="">on</admin_mode>
+<attended_transfer_on_ringing perm="">on</attended_transfer_on_ringing>
+<was_never_registered perm="">off</was_never_registered>
+<user_active idx="1" perm="">on</user_active>
+<user_active idx="2" perm="">on</user_active>
+<user_active idx="3" perm="">on</user_active>
+<user_active idx="4" perm="">on</user_active>
+<user_active idx="5" perm="">on</user_active>
+<user_active idx="6" perm="">on</user_active>
+<user_active idx="7" perm="">on</user_active>
+<user_active idx="8" perm="">on</user_active>
+<user_active idx="9" perm="">on</user_active>
+<user_active idx="10" perm="">on</user_active>
+<user_realname idx="1" perm="">{$display_name_1}</user_realname>
+<user_name idx="1" perm="">{$user_id_1}</user_name>
+<user_pass idx="1" perm="">{$user_password_1}</user_pass>
+<user_host idx="1" perm="">{$server_address_1}</user_host>
+<user_server_type idx="1" perm="">Default</user_server_type>
+<user_srtp idx="1" perm="">off</user_srtp>
+<user_mailbox idx="1" perm="">*97</user_mailbox>
+<user_realname idx="2" perm="">{$display_name_2}</user_realname>
+<user_name idx="2" perm="">{$user_id_2}</user_name>
+<user_pass idx="2" perm="">{$user_password_2}</user_pass>
+<user_host idx="2" perm="">{$server_address_2}</user_host>
+<user_server_type idx="2" perm="">Default</user_server_type>
+<user_srtp idx="2" perm="">off</user_srtp>
+<user_mailbox idx="2" perm="">*97</user_mailbox>
+<user_realname idx="3" perm="">{$display_name_3}</user_realname>
+<user_name idx="3" perm="">{$user_id_3}</user_name>
+<user_pass idx="3" perm="">{$user_password_3}</user_pass>
+<user_host idx="3" perm="">{$server_address_3}</user_host>
+<user_server_type idx="3" perm="">Default</user_server_type>
+<user_srtp idx="3" perm="">off</user_srtp>
+<user_mailbox idx="3" perm="">*97</user_mailbox>
+<user_realname idx="4" perm="">{$display_name_4}</user_realname>
+<user_name idx="4" perm="">{$user_id_4}</user_name>
+<user_pass idx="4" perm="">{$user_password_4}</user_pass>
+<user_host idx="4" perm="">{$server_address_4}</user_host>
+<user_server_type idx="4" perm="">Default</user_server_type>
+<user_srtp idx="4" perm="">off</user_srtp>
+<user_mailbox idx="4" perm="">*97</user_mailbox>
+<user_realname idx="5" perm="">{$display_name_5}</user_realname>
+<user_name idx="5" perm="">{$user_id_5}</user_name>
+<user_pass idx="5" perm="">{$user_password_5}</user_pass>
+<user_host idx="5" perm="">{$server_address_5}</user_host>
+<user_server_type idx="5" perm="">Default</user_server_type>
+<user_srtp idx="5" perm="">off</user_srtp>
+<user_mailbox idx="5" perm="">*97</user_mailbox>
+<user_symmetrical_rtp idx="1" perm="">on</user_symmetrical_rtp>
+<user_ice idx="1" perm="">off</user_ice>
+<stun_server idx="1" perm=""></stun_server>
+<codec_priority_list idx="1" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="2" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="3" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="4" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="5" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="6" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="7" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="8" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="9" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="10" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="11" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+<codec_priority_list idx="12" perm="">g722,pcmu,pcma,gsm,g726-32,aal2-g726-32,g723,g729,telephone-event</codec_priority_list>
+</phone-settings>
+<functionKeys e="2">
+{foreach $keys as $row}
+{if $row.device_key_line == ""}
+    {if $row.device_key_category == "line"}
+    <fkey idx="{$row.device_key_id-1}" context="active" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
+    {else}
+    <fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
+    {/if}
+{else}
+    {if $row.device_key_category == "line"}
+    <fkey idx="{$row.device_key_id-1}" context="{$row.device_key_line}" label="{$row.device_key_label}" perm="">{$row.device_key_type} {$row.device_key_value} {$row.device_key_extension}</fkey>
+    {else}
+    <fkey idx="{$row.device_key_id}" context="active" label="" perm="">line</fkey>
+    {/if}
+{/if}
+{/foreach}
+</functionKeys>
+<tbook e="2">
+</tbook>
+</settings>
