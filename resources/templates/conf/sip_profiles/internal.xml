@@ -267,11 +267,11 @@
 		If you need more than ONE domain you'll need to not use these options.
 		-->
 		<!--all inbound reg will look in this domain for the users -->
-		<param name="force-register-domain" value="$${domain}"/>
+		<!--<param name="force-register-domain" value="$${domain}"/>-->
 		<!--force the domain in subscriptions to this value -->
-		<param name="force-subscription-domain" value="$${domain}"/>
+		<!--<param name="force-subscription-domain" value="$${domain}"/>-->
 		<!--all inbound reg will stored in the db using this domain -->
-		<param name="force-register-db-domain" value="$${domain}"/>
+		<!--<param name="force-register-db-domain" value="$${domain}"/>-->
 
 		<!--<param name="delete-subs-on-register" value="false"/>-->
 
