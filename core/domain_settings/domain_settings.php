@@ -48,7 +48,7 @@ if (sizeof($_REQUEST) > 1) {
 			$sql .= "domain_setting_enabled = '".$enabled."' ";
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and domain_setting_uuid = '".$domain_setting_uuids[0]."' ";
-			echo $sql."<br><br>";
+			//echo $sql."<br><br>";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
