@@ -43,6 +43,10 @@
 			context = session:getVariable("context");
 			domain_name = session:getVariable("domain_name");
 			uuid = session:getVariable("uuid");
+			send_to_voicemail = session:getVariable("send_to_voicemail");
+			if (send_to_voicemail == nil) then
+				send_to_voicemail = "true";
+			end
 
 			--get the domain_uuid
 			domain_uuid = session:getVariable("domain_uuid");
@@ -85,15 +89,15 @@
 						if ( debug["info"] ) then
 							freeswitch.consoleLog("notice", "[forward_on_busy] forward_busy_destination: " .. forward_busy_destination .. "\n");
 						end
-
 						session:transfer(forward_busy_destination, "XML", context);
 						forward = true;
 					else
 						if ( debug["info"] ) then
 							freeswitch.consoleLog("notice", "[forward_on_busy] forward on busy disabled or destination unset - HANGUP WITH USER BUSY \n");
 						end
-
-						session:hangup("USER_BUSY");
+						if (send_to_voicemail == "false") then
+							session:hangup("USER_BUSY");
+						end
 						forward = false;
 					end
 				end

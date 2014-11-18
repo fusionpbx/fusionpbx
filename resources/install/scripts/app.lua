@@ -65,8 +65,7 @@
 			end
 		end
 		if (originate_disposition ~= nil) then
-			send_to_voicemail = session:getVariable("send_to_voicemail");
-			if (originate_disposition == 'USER_BUSY' and send_to_voicemail ~= "true") then
+			if (originate_disposition == 'USER_BUSY') then
 				freeswitch.consoleLog("notice", "[app] forward on busy: ".. scripts_dir .. "/app/forward_on_busy/index.lua" .. arguments .."\n");
 				forward_on_busy = loadfile(scripts_dir .. "/app/forward_on_busy/index.lua")(argv);      
 				freeswitch.consoleLog("notice", "[app] forward on busy: ".. tostring(forward_on_busy) .. "\n");
