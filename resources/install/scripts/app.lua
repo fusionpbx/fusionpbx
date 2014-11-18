@@ -37,9 +37,9 @@
 	script_name = argv[0];
 	app_name = argv[1];
 
--- variables
+--set the default variables
 	forward_on_busy = false;
-	send_to_voicemail = false;
+	send_to_voicemail = true;
 
 --example use command
 	--luarun app.lua app_name 'a' 'b 123' 'c'
@@ -53,38 +53,36 @@
 		end
 	end
 
+--if the session exists then check originate disposition and causes
 	if (session ~= nil) then    
 		originate_disposition = session:getVariable("originate_disposition");
 		originate_causes = session:getVariable("originate_causes");
-
 		if (originate_causes ~= nil) then
 			array = explode("|",originate_causes);
-			if string.find(array[1], "USER_BUSY") then
+			if (string.find(array[1], "USER_BUSY")) then
 				originate_disposition = "USER_BUSY";
 				session:setVariable("originate_disposition", originate_disposition);
 			end
 		end
-
-		if( originate_disposition ~= nil ) then
-
+		if (originate_disposition ~= nil) then
 			send_to_voicemail = session:getVariable("send_to_voicemail");
-
-			if( originate_disposition=='USER_BUSY' and not send_to_voicemail ) then
+			if (originate_disposition == 'USER_BUSY' and send_to_voicemail ~= "true") then
 				freeswitch.consoleLog("notice", "[app] forward on busy: ".. scripts_dir .. "/app/forward_on_busy/index.lua" .. arguments .."\n");
-
 				forward_on_busy = loadfile(scripts_dir .. "/app/forward_on_busy/index.lua")(argv);      
-
 				freeswitch.consoleLog("notice", "[app] forward on busy: ".. tostring(forward_on_busy) .. "\n");
 			end
 		end
 	end
 
-	if( originate_disposition == "SUBSCRIBER_ABSENT" ) then
+--hangup on subscriber absent
+	if (originate_disposition == "SUBSCRIBER_ABSENT") then
 		--return 404 UNALLOCATED_NUMBER if extension doesn't exist
-		--freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments ..". HANGUP.\n");
+		freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments ..". HANGUP.\n");
 		session:hangup("UNALLOCATED_NUMBER");
-	elseif( not forward_on_busy and originate_disposition ~= "CALL_REJECTED" ) then
-		--route the request to the application
+	end
+
+--route the request to the application
+	if (not forward_on_busy and originate_disposition ~= "CALL_REJECTED") then
 		--freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments .."\n");
 		loadfile(scripts_dir .. "/app/" .. app_name .. "/index.lua")(argv);
 	end
