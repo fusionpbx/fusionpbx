@@ -75,7 +75,5 @@
 	end
 
 --route the request to the application
-	if (not forward_on_busy and originate_disposition ~= "CALL_REJECTED") then
-		--freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments .."\n");
-		loadfile(scripts_dir .. "/app/" .. app_name .. "/index.lua")(argv);
-	end
+	--freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments .."\n");
+	loadfile(scripts_dir .. "/app/" .. app_name .. "/index.lua")(argv);
