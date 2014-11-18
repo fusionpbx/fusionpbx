@@ -91,7 +91,7 @@
 						forward = true;
 					else
 						if( debug["info"] ) then
-							freeswitch.consoleLog("notice", "[forward_on_busy] forward on busy disabled or destination unsetted - HANGUP WITH USER BUSY \n");
+							freeswitch.consoleLog("notice", "[forward_on_busy] forward on busy disabled or destination unset - HANGUP WITH USER BUSY \n");
 						end
 
 						session:hangup("USER_BUSY");
