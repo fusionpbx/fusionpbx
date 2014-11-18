@@ -74,13 +74,6 @@
 		end
 	end
 
---hangup on subscriber absent
-	if (originate_disposition == "SUBSCRIBER_ABSENT") then
-		--return 404 UNALLOCATED_NUMBER if extension doesn't exist
-		freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments ..". HANGUP.\n");
-		session:hangup("UNALLOCATED_NUMBER");
-	end
-
 --route the request to the application
 	if (not forward_on_busy and originate_disposition ~= "CALL_REJECTED") then
 		--freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments .."\n");
