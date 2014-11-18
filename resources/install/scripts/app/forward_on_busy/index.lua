@@ -61,14 +61,13 @@
 			end
 			domain_uuid = string.lower(domain_uuid);
 
-			if( debug["info"] ) then
+			if ( debug["info"] ) then
 				freeswitch.consoleLog("info", "[forward_on_busy] originate_disposition: " .. originate_disposition .. "\n");
 				freeswitch.consoleLog("info", "[forward_on_busy] dialed_extension     : " .. dialed_extension .. "\n");
 			end
 
 			if (dialed_extension ~= nil) then
 				if (session:ready()) then
-
 					--get the information from the database
 					sql = [[SELECT * FROM v_extensions
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -82,15 +81,15 @@
 					end);
 
 					--set default values
-					if (forward_busy_destination ~= nil and string.len(forward_busy_destination)>0 ) then
-						if( debug["info"] ) then
+					if (forward_busy_destination ~= nil and string.len(forward_busy_destination) > 0 ) then
+						if ( debug["info"] ) then
 							freeswitch.consoleLog("notice", "[forward_on_busy] forward_busy_destination: " .. forward_busy_destination .. "\n");
 						end
 
 						session:transfer(forward_busy_destination, "XML", context);
 						forward = true;
 					else
-						if( debug["info"] ) then
+						if ( debug["info"] ) then
 							freeswitch.consoleLog("notice", "[forward_on_busy] forward on busy disabled or destination unset - HANGUP WITH USER BUSY \n");
 						end
 
