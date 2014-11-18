@@ -91,7 +91,9 @@ include "root.php";
 			//update the extension
 				$sql = "update v_extensions set ";
 				if (strlen($this->forward_all_destination) == 0 || $this->forward_all_enabled == "false") {
-					$sql .= "forward_all_destination = null, ";
+					if (strlen($this->forward_all_destination) == 0) {
+						$sql .= "forward_all_destination = null, ";
+					}
 					$sql .= "dial_string = null, ";
 					$sql .= "forward_all_enabled = 'false' ";
 				}
