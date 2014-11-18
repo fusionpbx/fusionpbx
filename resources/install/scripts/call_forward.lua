@@ -143,6 +143,7 @@
 					number_alias = row.number_alias;
 					accountcode = row.accountcode;
 					forward_all_enabled = row.forward_all_enabled;
+					forward_all_destination = row.forward_all_destination;
 					follow_me_uuid = row.follow_me_uuid;
 					--freeswitch.consoleLog("NOTICE", "[call forward] extension "..row.extension.."\n");
 					--freeswitch.consoleLog("NOTICE", "[call forward] accountcode "..row.accountcode.."\n");
@@ -160,7 +161,9 @@
 
 		--get the forward destination
 			if (session:ready() and enabled == "true" or enabled == "toggle") then
-				forward_all_destination = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
+				if (string.len(forward_all_destination) == 0) then
+					forward_all_destination = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-enter_destination_telephone_number.wav", "", "\\d+");
+				end
 			end
 
 		--set the dial string
@@ -237,7 +240,7 @@
 			else
 				if (string.len(forward_all_destination) == 0) then
 					enabled = false;
-					forward_all_enabled = "false";	
+					forward_all_enabled = "false";
 				end	
 			end
 
@@ -250,7 +253,6 @@
 					sql = sql .. "do_not_disturb = 'false', ";
 				else
 					sql = sql .. "dial_string = null, ";
-					sql = sql .. "forward_all_destination = null, ";
 				end
 				sql = sql .. "forward_all_enabled = '"..forward_all_enabled.."' ";
 				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
