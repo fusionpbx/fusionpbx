@@ -36,8 +36,8 @@
 
 	if (session ~= nil) then    
 		originate_disposition = session:getVariable("originate_disposition");
-	  
-		if( originate_disposition=='USER_BUSY' ) then
+
+		if ( originate_disposition=='USER_BUSY' ) then
 
 			dialed_extension = session:getVariable("dialed_extension");
 			context = session:getVariable("context");
@@ -68,7 +68,7 @@
 
 			if (dialed_extension ~= nil) then
 				if (session:ready()) then
-					
+
 					--get the information from the database
 					sql = [[SELECT * FROM v_extensions
 					WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -78,8 +78,8 @@
 						freeswitch.consoleLog("notice", "[forward_on_busy] SQL: " .. sql .. "\n");
 					end
 					status = dbh:query(sql, function(row)
-					forward_busy_destination = string.lower(row["forward_busy_destination"]);
-						end);
+						forward_busy_destination = string.lower(row["forward_busy_destination"]);
+					end);
 
 					--set default values
 					if (forward_busy_destination ~= nil and string.len(forward_busy_destination)>0 ) then
@@ -104,5 +104,5 @@
 
 	--close the database connection
 	dbh:release();
-  
+
 	return forward;
