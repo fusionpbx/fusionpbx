@@ -38,8 +38,8 @@ else {
 require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+// 	$order_by = $_GET["order_by"];
+// 	$order = $_GET["order"];
 
 //javascript function: send_cmd
 	echo "<script type=\"text/javascript\">\n";
@@ -66,36 +66,37 @@ require_once "resources/paging.php";
 	echo "</table>\n";
 
 	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_contact_phones ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		$sql .= " and contact_uuid = '$contact_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
-		}
+// 		$sql = "select count(*) as num_rows from v_contact_phones ";
+// 		$sql .= " where domain_uuid = '$domain_uuid' ";
+// 		$sql .= " and contact_uuid = '$contact_uuid' ";
+// 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+// 		$prep_statement = $db->prepare($sql);
+// 		if ($prep_statement) {
+// 		$prep_statement->execute();
+// 			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+// 			if ($row['num_rows'] > 0) {
+// 				$num_rows = $row['num_rows'];
+// 			}
+// 			else {
+// 				$num_rows = '0';
+// 			}
+// 		}
 
 	//prepare to page the results
-		$rows_per_page = 10;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
+// 		$rows_per_page = 10;
+// 		$param = "";
+// 		$page = $_GET['page'];
+// 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+// 		list($paging_controls, $rows_per_page, $var_3) = paging($num_rows, $param, $rows_per_page);
+// 		$offset = $rows_per_page * $page;
 
 	//get the contact list
 		$sql = "select * from v_contact_phones ";
-		$sql .= " where domain_uuid = '$domain_uuid' ";
-		$sql .= " and contact_uuid = '$contact_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "and contact_uuid = '$contact_uuid' ";
+		$sql .= "order by phone_primary desc, phone_label asc ";
+// 		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+// 		$sql .= " limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -109,10 +110,11 @@ require_once "resources/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('phone_type', $text['label-phone_type'], $order_by, $order);
-	echo th_order_by('phone_number', $text['label-phone_number'], $order_by, $order);
+	echo "<th>".$text['label-phone_label']."</th>\n";
+	echo "<th>".$text['label-phone_number']."</th>\n";
+	echo "<th>".$text['label-phone_type']."</th>\n";
 	echo "<th>".$text['label-phone_tools']."</th>\n";
-	echo th_order_by('phone_description', $text['label-phone_description'], $order_by, $order);
+	echo "<th>".$text['label-phone_description']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	echo 	"<a href='contact_phone_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	echo "</td>\n";
@@ -120,17 +122,28 @@ require_once "resources/paging.php";
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$tr_link = "href='contact_phone_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_phone_uuid']."'";
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['phone_type'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			echo "<tr ".$tr_link." ".(($row['phone_primary']) ? "style='font-weight: bold;'" : null).">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['phone_label'] == strtolower($row['phone_label'])) ? ucwords($row['phone_label']) : $row['phone_label'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>\n";
 			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
 			echo "		".format_phone($row['phone_number'])."</a>&nbsp;\n";
 			echo "	</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
+			if ($row['phone_type_voice']) { $phone_types[] = $text['label-voice']; }
+			if ($row['phone_type_fax']) { $phone_types[] = $text['label-fax']; }
+			if ($row['phone_type_video']) { $phone_types[] = $text['label-video']; }
+			if ($row['phone_type_text']) { $phone_types[] = $text['label-text']; }
+			if (is_array($phone_types)) {
+				echo "	".implode(", ", $phone_types)."\n";
+			}
+			unset($phone_types);
+			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>\n";
-			echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">".$text['label-phone_call']."</a>\n";
-			echo "		&nbsp;\n";
 			echo "		<a href=\"".PROJECT_PATH."/app/xml_cdr/xml_cdr.php?caller_id_number=".$row['phone_number']."&destination_number=".$row['phone_number']."\">CDR</a>\n";
-			echo "		&nbsp;\n";
+			if ($row['phone_type_voice']) {
+				echo "		&nbsp;\n";
+				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['phone_number'])."&src_cid_number=".urlencode($row['phone_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['phone_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">".$text['label-phone_call']."</a>\n";
+			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['phone_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
@@ -144,11 +157,11 @@ require_once "resources/paging.php";
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='5' align='left'>\n";
+	echo "<td colspan='6' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
+//	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
+//	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	echo 			"<a href='contact_phone_edit.php?contact_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	echo "		</td>\n";

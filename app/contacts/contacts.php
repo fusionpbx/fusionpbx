@@ -57,7 +57,7 @@ require_once "resources/paging.php";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "	<td align=\"left\" valign=\"top\">\n";
-	echo "		<span class='title'><strong>".$text['header-contacts']."</strong></span><br>\n";
+	echo "		<b>".$text['header-contacts']."</b><br>\n";
 	echo "		".$text['description-contacts']."<br /><br />\n";
 	echo "	</td>\n";
 	echo "	<td align=\"right\" valign=\"top\">\n";
@@ -174,7 +174,6 @@ require_once "resources/paging.php";
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('contact_type', $text['label-contact_type'], $order_by, $order);

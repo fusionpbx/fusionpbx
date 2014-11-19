@@ -162,54 +162,45 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap'>";
 	if ($action == "add") {
-		echo "<td align='left' width='15%' nowrap='nowrap'><b>".$text['header-contact_notes-add']."</b></td>\n";
+		echo "<b>".$text['header-contact_notes-add']."</b>";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='15%' nowrap='nowrap'><b>".$text['header-contact_notes-edit']."</b></td>\n";
+		echo "<b>".$text['header-contact_notes-edit']."</b>\n";
 	}
+	echo "</td>\n";
 	echo "<td width='70%' align='right'>";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contact_edit.php?id=$contact_uuid'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+	echo "<tr><td colspan='2'>&nbsp;</td></tr>\n";
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-contact_note'].":\n";
+	echo "	".$text['label-contact_note']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <textarea class='formfld' type='text' rows=\"20\" style=\"width: 100%\" name='contact_note'>$contact_note</textarea>\n";
+	echo "  <textarea class='formfld' type='text' rows=\"20\" style='width: 100%' name='contact_note'>".$contact_note."</textarea>\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
+	echo "			<br>";
+	echo "			<input type='hidden' name='contact_uuid' value='$contact_uuid'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='contact_note_uuid' value='$contact_note_uuid'>\n";
+		echo "		<input type='hidden' name='contact_note_uuid' value='$contact_note_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";

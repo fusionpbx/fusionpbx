@@ -35,6 +35,15 @@ else {
 }
 
 if (count($_GET)>0) {
+
+	//add multi-lingual support
+		if ($_GET['type'] == 'download' || $_GET['type'] == 'html') {
+			require_once "app_languages.php";
+			foreach($text as $key => $value) {
+				$text[$key] = $value[$_SESSION['domain']['language']['code']];
+			}
+		}
+
 	//create the vcard object
 		require_once "resources/classes/vcard.php";
 		$vcard = new vcard();
@@ -43,10 +52,9 @@ if (count($_GET)>0) {
 		$contact_uuid = $_GET["id"];
 
 	//get the contact's information
-		$sql = "";
-		$sql .= "select * from v_contacts ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and contact_uuid = '$contact_uuid' ";
+		$sql = "select * from v_contacts ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and contact_uuid = '".$contact_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -58,8 +66,6 @@ if (count($_GET)>0) {
 			$contact_nickname = $row["contact_nickname"];
 			$contact_title = $row["contact_title"];
 			$contact_role = $row["contact_role"];
-			$contact_email = $row["contact_email"];
-			$contact_url = $row["contact_url"];
 			$contact_time_zone = $row["contact_time_zone"];
 			$contact_note = $row["contact_note"];
 			break; //limit to 1 row
@@ -69,8 +75,36 @@ if (count($_GET)>0) {
 		$vcard->data['company'] = $contact_organization;
 		$vcard->data['first_name'] = $contact_name_given;
 		$vcard->data['last_name'] = $contact_name_family;
-		$vcard->data['email1'] = $contact_email;
-		$vcard->data['url'] = $contact_url;
+
+	//get the contact's primary (and a secondary, if available) email
+		$sql = "select email_address from v_contact_emails ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and contact_uuid = '".$contact_uuid."' ";
+		$sql .= "order by email_primary desc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$e = 0;
+		foreach ($result as &$row) {
+			$vcard->data['email'.$e] = $row["email_address"];
+			if (++$e == 2) { break; } //limit to 2 rows
+		}
+		unset ($prep_statement);
+
+	//get the contact's primary url
+		$sql = "select url_address from v_contact_urls ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and contact_uuid = '".$contact_uuid."' ";
+		$sql .= "and url_primary = 1 ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			$vcard->data['url'] = $row["url_address"];
+			break;	//limit to 1 row
+		}
+		unset ($prep_statement);
+
 
 		if ($_GET['type'] == "image" || $_GET['type'] == "html") {
 			//don't add this to the QR code at this time
@@ -85,17 +119,24 @@ if (count($_GET)>0) {
 		}
 
 	//get the contact's telephone numbers
-		$sql = "";
-		$sql .= "select * from v_contact_phones ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and contact_uuid = '$contact_uuid' ";
+		$sql = "select * from v_contact_phones ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and contact_uuid = '".$contact_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
-			$phone_type = $row["phone_type"];
+			$phone_label = $row["phone_label"];
 			$phone_number = $row["phone_number"];
-			$vcard->data[$phone_type.'_tel'] = $phone_number;
+			if ($phone_label == $text['option-work']) { $vcard_phone_type = 'work'; }
+			else if ($phone_label == $text['option-home']) { $vcard_phone_type = 'home'; }
+			else if ($phone_label == $text['option-mobile']) { $vcard_phone_type = 'cell'; }
+			else if ($phone_label == $text['option-fax']) { $vcard_phone_type = 'fax'; }
+			else if ($phone_label == $text['option-pager']) { $vcard_phone_type = 'pager'; }
+			else { $vcard_phone_type = 'voice'; }
+			if ($vcard_phone_type != '') {
+				$vcard->data[$vcard_phone_type.'_tel'] = $phone_number;
+			}
 		}
 		unset ($prep_statement);
 
@@ -104,10 +145,9 @@ if (count($_GET)>0) {
 			//don't add this to the QR code at this time
 		}
 		else {
-			$sql = "";
-			$sql .= "select * from v_contact_addresses ";
-			$sql .= "where domain_uuid = '$domain_uuid' ";
-			$sql .= "and contact_uuid = '$contact_uuid' ";
+			$sql = "select * from v_contact_addresses ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "and contact_uuid = '".$contact_uuid."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -138,7 +178,7 @@ if (count($_GET)>0) {
 			$vcard->download();
 		}
 
-	//show the vcard in an text qr code
+	//show the vcard in a text qr code
 		if ($_GET['type'] == "text") {
 			$vcard->build();
 			$content = $vcard->card;

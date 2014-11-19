@@ -136,7 +136,7 @@
 		$text['label-contact_subcategory']['es-cl'] = "Subcategoría";
 		$text['label-contact_subcategory']['pt-pt'] = "Subcategoria";
 		$text['label-contact_subcategory']['fr-fr'] = "Sous-Catégorie";
-                
+
 		$text['description-contact_subcategory']['en-us'] = "Enter the subcategory.";
 		$text['description-contact_subcategory']['es-cl'] = "Ingrese la categoría.";
 		$text['description-contact_subcategory']['pt-pt'] = "Introduza a subcategoria";
@@ -303,40 +303,50 @@
 		$text['button-certificate']['fr-fr'] = "Certificat";
 
 	// contact phones
-		$text['title-contact_phones-add']['en-us'] = "Contact Phone Add";
+		$text['title-contact_phones-add']['en-us'] = "Contact Number Add";
 		$text['title-contact_phones-add']['es-cl'] = "Agregar Número de Contacto";
 		$text['title-contact_phones-add']['pt-pt'] = "Adicionar contacto telefónico";
 		$text['title-contact_phones-add']['fr-fr'] = "Ajouter un téléphone au Contact";
 
-		$text['header-contact_phones-add']['en-us'] = "Contact Phone Add";
+		$text['header-contact_phones-add']['en-us'] = "Contact Number Add";
 		$text['header-contact_phones-add']['es-cl'] = "Agregar Número de Contacto";
 		$text['header-contact_phones-add']['pt-pt'] = "Adicionar contacto telefónico";
 		$text['header-contact_phones-add']['fr-fr'] = "Ajouter un téléphone au Contact";
 
-		$text['title-contact_phones-edit']['en-us'] = "Contact Phone Edit";
+		$text['title-contact_phones-edit']['en-us'] = "Contact Number Edit";
 		$text['title-contact_phones-edit']['es-cl'] = "Editar Número de Contacto";
 		$text['title-contact_phones-edit']['pt-pt'] = "Editar contacto telefónico";
 		$text['title-contact_phones-edit']['fr-fr'] = "Editer le téléphone du Contact";
 
-		$text['header-contact_phones-edit']['en-us'] = "Contact Phone Edit";
+		$text['header-contact_phones-edit']['en-us'] = "Contact Number Edit";
 		$text['header-contact_phones-edit']['es-cl'] = "Editar Número de Contacto";
 		$text['header-contact_phones-edit']['pt-pt'] = "Editar contacto telefónico";
 		$text['header-contact_phones-edit']['fr-fr'] = "Editer le téléphone du Contact";
 
-		$text['label-phone_numbers']['en-us'] = "Phone Numbers";
-		$text['label-phone_numbers']['es-cl'] = "Números telefónicos";
-		$text['label-phone_numbers']['pt-pt'] = "Números de telefone";
-		$text['label-phone_numbers']['fr-fr'] = "Numéros de téléphone";
+		$text['label-phone_numbers']['en-us'] = "Numbers";
+		$text['label-phone_numbers']['es-cl'] = "Números";
+		$text['label-phone_numbers']['pt-pt'] = "Números";
+		$text['label-phone_numbers']['fr-fr'] = "Numéros";
 
 		$text['label-phone_type']['en-us'] = "Type";
 		$text['label-phone_type']['es-cl'] = "Tipo";
 		$text['label-phone_type']['pt-pt'] = "Tipo";
 		$text['label-phone_type']['fr-fr'] = "Type";
 
-		$text['description-phone_type']['en-us'] = "Select the phone type.";
+		$text['description-phone_type']['en-us'] = "Define the number type or purpose.";
 		$text['description-phone_type']['es-cl'] = "Seleccione el tipo de teléfono.";
 		$text['description-phone_type']['pt-pt'] = "Seleccionar tipo de telefone";
 		$text['description-phone_type']['fr-fr'] = "";
+
+		$text['label-phone_label']['en-us'] = "Label";
+		$text['label-phone_label']['es-cl'] = "Etiqueta";
+		$text['label-phone_label']['pt-pt'] = "Etiqueta";
+		$text['label-phone_label']['fr-fr'] = "Etiquette";
+
+		$text['description-phone_label']['en-us'] = "Select or enter a custom label.";
+		$text['description-phone_label']['es-cl'] = "Seleccione o introduzca una etiqueta personalizada.";
+		$text['description-phone_label']['pt-pt'] = "Selecione ou digite um rótulo personalizado.";
+		$text['description-phone_label']['fr-fr'] = "Sélectionnez ou entrez une étiquette personnalisée.";
 
 		$text['label-phone_number']['en-us'] = "Number";
 		$text['label-phone_number']['es-cl'] = "Número";
@@ -377,6 +387,61 @@
 		$text['label-phone_call']['es-cl'] = "Llamar";
 		$text['label-phone_call']['pt-pt'] = "Chamada";
 		$text['label-phone_call']['fr-fr'] = "Appel";
+
+		$text['label-voice']['en-us'] = "Voice";
+		$text['label-voice']['es-cl'] = "Voz";
+		$text['label-voice']['pt-pt'] = "Voz";
+		$text['label-voice']['fr-fr'] = "Voix";
+
+		$text['label-fax']['en-us'] = "Fax";
+		$text['label-fax']['es-cl'] = "Facsímil";
+		$text['label-fax']['pt-pt'] = "Fax";
+		$text['label-fax']['fr-fr'] = "Télécopie";
+
+		$text['label-video']['en-us'] = "Video";
+		$text['label-video']['es-cl'] = "Vídeo";
+		$text['label-video']['pt-pt'] = "Vídeo";
+		$text['label-video']['fr-fr'] = "Vidéo";
+
+		$text['label-text']['en-us'] = "Text";
+		$text['label-text']['es-cl'] = "Texto";
+		$text['label-text']['pt-pt'] = "Texto";
+		$text['label-text']['fr-fr'] = "Texte";
+
+		$text['option-mobile']['en-us'] = "Mobile";
+		$text['option-mobile']['es-cl'] = "Celular";
+		$text['option-mobile']['pt-pt'] = "Celular";
+		$text['option-mobile']['fr-fr'] = "Cellulaire";
+
+		$text['option-main']['en-us'] = "Main";
+		$text['option-main']['es-cl'] = "Principal";
+		$text['option-main']['pt-pt'] = "Principal";
+		$text['option-main']['fr-fr'] = "Principal";
+
+		$text['option-fax']['en-us'] = "Fax";
+		$text['option-fax']['es-cl'] = "Facsímil";
+		$text['option-fax']['pt-pt'] = "Fax";
+		$text['option-fax']['fr-fr'] = "Télécopie";
+
+		$text['option-pager']['en-us'] = "Pager";
+		$text['option-pager']['es-cl'] = "Buscapersonas";
+		$text['option-pager']['pt-pt'] = "Pager";
+		$text['option-pager']['fr-fr'] = "Pager";
+
+		$text['option-voicemail']['en-us'] = "Voicemail";
+		$text['option-voicemail']['es-cl'] = "Correo de Voz";
+		$text['option-voicemail']['pt-pt'] = "Voicemail";
+		$text['option-voicemail']['fr-fr'] = "Messagerie Vocale";
+
+		$text['option-text']['en-us'] = "Text";
+		$text['option-text']['es-cl'] = "Texto";
+		$text['option-text']['pt-pt'] = "Texto";
+		$text['option-text']['fr-fr'] = "Texte";
+
+		$text['option-other']['en-us'] = "Other";
+		$text['option-other']['es-cl'] = "Otro";
+		$text['option-other']['pt-pt'] = "Outro";
+		$text['option-other']['fr-fr'] = "Autre";
 
 	// contact addresses
 		$text['title-contact_addresses-add']['en-us'] = "Contact Address Add";
@@ -419,30 +484,30 @@
 		$text['label-address_type']['pt-pt'] = "Tipo";
 		$text['label-address_type']['fr-fr'] = "Type";
 
-		$text['description-address_type']['en-us'] = "Enter the address type.";
-		$text['description-address_type']['es-cl'] = "Ingrese el tipo de dirección.";
-		$text['description-address_type']['pt-pt'] = "Introduza o tipo de endereço";
-		$text['description-address_type']['fr-fr'] = "";
+		$text['description-address_type']['en-us'] = "Define the address type (used for vCard generation).";
+		$text['description-address_type']['es-cl'] = "Definir el tipo de dirección (utilizado para la generación de vCard).";
+		$text['description-address_type']['pt-pt'] = "Defina o tipo de endereço (usado para geração de vCard).";
+		$text['description-address_type']['fr-fr'] = "Définir le type d'adresse (utilisé pour la production vCard).";
 
-		$text['label-address_street']['en-us'] = "Street Address";
-		$text['label-address_street']['es-cl'] = "Calle";
-		$text['label-address_street']['pt-pt'] = "Rua";
-		$text['label-address_street']['fr-fr'] = "Rue";
+		$text['label-address_label']['en-us'] = "Label";
+		$text['label-address_label']['es-cl'] = "Etiqueta";
+		$text['label-address_label']['pt-pt'] = "Etiqueta";
+		$text['label-address_label']['fr-fr'] = "Etiquette";
 
-		$text['description-address_street']['en-us'] = "Enter the street address.";
-		$text['description-address_street']['es-cl'] = "Ingrese la calle.";
-		$text['description-address_street']['pt-pt'] = "Introduza o endereço da rua";
-		$text['description-address_street']['fr-fr'] = "";
+		$text['description-address_label']['en-us'] = "Select or enter a custom label.";
+		$text['description-address_label']['es-cl'] = "Seleccione o introduzca una etiqueta personalizada.";
+		$text['description-address_label']['pt-pt'] = "Selecione ou digite um rótulo personalizado.";
+		$text['description-address_label']['fr-fr'] = "Sélectionnez ou entrez une étiquette personnalisée.";
 
-		$text['label-address_extended']['en-us'] = "Extended Address";
-		$text['label-address_extended']['es-cl'] = "Dirección Extendida";
-		$text['label-address_extended']['pt-pt'] = "Mais informações";
-		$text['label-address_extended']['fr-fr'] = "Autres infos";
+		$text['label-address_address']['en-us'] = "Address";
+		$text['label-address_address']['es-cl'] = "Calle";
+		$text['label-address_address']['pt-pt'] = "Rua";
+		$text['label-address_address']['fr-fr'] = "Rue";
 
-		$text['description-address_extended']['en-us'] = "Enter the extended address.";
-		$text['description-address_extended']['es-cl'] = "Ingrese la dirección extendida.";
-		$text['description-address_extended']['pt-pt'] = "Introduza mais informações relativamente ao endereço.";
-		$text['description-address_extended']['fr-fr'] = "";
+		$text['description-address_address']['en-us'] = "Enter the address.";
+		$text['description-address_address']['es-cl'] = "Ingrese la calle.";
+		$text['description-address_address']['pt-pt'] = "Introduza o endereço da rua";
+		$text['description-address_address']['fr-fr'] = "Saisissez l'adresse.";
 
 		$text['label-address_locality']['en-us'] = "City";
 		$text['label-address_locality']['es-cl'] = "Ciudad";
@@ -529,6 +594,56 @@
 		$text['option-work']['pt-pt'] = "Local de Trabalho";
 		$text['option-work']['fr-fr'] = "En Milieu de Travail";
 
+		$text['option-dom']['en-us'] = "Domestic";
+		$text['option-dom']['es-cl'] = "Doméstico";
+		$text['option-dom']['pt-pt'] = "Doméstico";
+		$text['option-dom']['fr-fr'] = "Domestique";
+
+		$text['option-intl']['en-us'] = "International";
+		$text['option-intl']['es-cl'] = "Internacional";
+		$text['option-intl']['pt-pt'] = "Internacional";
+		$text['option-intl']['fr-fr'] = "international";
+
+		$text['option-postal']['en-us'] = "Postal";
+		$text['option-postal']['es-cl'] = "Postal";
+		$text['option-postal']['pt-pt'] = "Postal";
+		$text['option-postal']['fr-fr'] = "Postal";
+
+		$text['option-parcel']['en-us'] = "Parcel";
+		$text['option-parcel']['es-cl'] = "Parcela";
+		$text['option-parcel']['pt-pt'] = "Parcela";
+		$text['option-parcel']['fr-fr'] = "Parcelle";
+
+		$text['option-pref']['en-us'] = "Preferred";
+		$text['option-pref']['es-cl'] = "Preferido";
+		$text['option-pref']['pt-pt'] = "Preferido";
+		$text['option-pref']['fr-fr'] = "Préféré";
+
+		$text['option-mailing']['en-us'] = "Mailing";
+		$text['option-mailing']['es-cl'] = "Mailing";
+		$text['option-mailing']['pt-pt'] = "Mailing";
+		$text['option-mailing']['fr-fr'] = "Postale";
+
+		$text['option-physical']['en-us'] = "Physical";
+		$text['option-physical']['es-cl'] = "Físico";
+		$text['option-physical']['pt-pt'] = "Físico";
+		$text['option-physical']['fr-fr'] = "Physique";
+
+		$text['option-shipping']['en-us'] = "Shipping";
+		$text['option-shipping']['es-cl'] = "Envío";
+		$text['option-shipping']['pt-pt'] = "Remessa";
+		$text['option-shipping']['fr-fr'] = "Livraison";
+
+		$text['option-billing']['en-us'] = "Billing";
+		$text['option-billing']['es-cl'] = "Facturación";
+		$text['option-billing']['pt-pt'] = "Faturamento";
+		$text['option-billing']['fr-fr'] = "Facturation";
+
+		$text['label-google_map']['en-us'] = "Open with Google Maps";
+		$text['label-google_map']['es-cl'] = "Abrir con Google Maps";
+		$text['label-google_map']['pt-pt'] = "Abrir com o Google Maps";
+		$text['label-google_map']['fr-fr'] = "Ouvrir avec Google Maps";
+
 	// contact extensions
 		$text['label-contact_extensions']['en-us'] = "Extensions";
 		$text['label-contact_extensions']['es-cl'] = "Extensións";
@@ -550,6 +665,93 @@
 		$text['label-description']['pt-pt'] = "Descrição";
 		$text['label-description']['fr-fr'] = "Description";
 
+	// contact emails
+		$text['header-contact_email-add']['en-us'] = "Contact Email Add";
+		$text['header-contact_email-add']['es-cl'] = "Correo electrónico de contacto Agregar";
+		$text['header-contact_email-add']['pt-pt'] = "Contato e-mail Adicionar";
+		$text['header-contact_email-add']['fr-fr'] = "Contactez-mail Ajouter";
+
+		$text['description-contact_email-add']['en-us'] = "Contact email address information.";
+		$text['description-contact_email-add']['es-cl'] = "Contactar con información de la dirección de correo electrónico.";
+		$text['description-contact_email-add']['pt-pt'] = "As informações de contato endereço de email.";
+		$text['description-contact_email-add']['fr-fr'] = "Coordonnées de l'adresse e-mail.";
+
+		$text['header-contact_email-edit']['en-us'] = "Contact Email Edit";
+		$text['header-contact_email-edit']['es-cl'] = "Correo electrónico de contacto Editar";
+		$text['header-contact_email-edit']['pt-pt'] = "Email de Contato Editar";
+		$text['header-contact_email-edit']['fr-fr'] = "Contact Courriel Modifier";
+
+		$text['description-contact_email-edit']['en-us'] = "Contact email address information.";
+		$text['description-contact_email-edit']['es-cl'] = "Contactar con información de la dirección de correo electrónico.";
+		$text['description-contact_email-edit']['pt-pt'] = "As informações de contato endereço de email.";
+		$text['description-contact_email-edit']['fr-fr'] = "Coordonnées de l'adresse e-mail.";
+
+		$text['label-emails']['en-us'] = "Emails";
+		$text['label-emails']['es-cl'] = "Extensións";
+		$text['label-emails']['pt-pt'] = "Extensões";
+		$text['label-emails']['fr-fr'] = "Extensions";
+
+		$text['label-email_label']['en-us'] = "Label";
+		$text['label-email_label']['es-cl'] = "Etiqueta";
+		$text['label-email_label']['pt-pt'] = "Etiqueta";
+		$text['label-email_label']['fr-fr'] = "Etiquette";
+
+		$text['label-email_address']['en-us'] = "Address";
+		$text['label-email_address']['es-cl'] = "Calle";
+		$text['label-email_address']['pt-pt'] = "Rua";
+		$text['label-email_address']['fr-fr'] = "Rue";
+
+		$text['label-email_description']['en-us'] = "Description";
+		$text['label-email_description']['es-cl'] = "Descripción";
+		$text['label-email_description']['pt-pt'] = "Descrição";
+		$text['label-email_description']['fr-fr'] = "Description";
+
+	// contact urls
+		$text['header-contact_url-add']['en-us'] = "Contact URL Add";
+		$text['header-contact_url-add']['es-cl'] = "Correo electrónico de contacto Agregar";
+		$text['header-contact_url-add']['pt-pt'] = "Contato e-mail Adicionar";
+		$text['header-contact_url-add']['fr-fr'] = "Contactez-mail Ajouter";
+
+		$text['description-contact_url-add']['en-us'] = "Contact url address information.";
+		$text['description-contact_url-add']['es-cl'] = "Contactar con información de la dirección de correo electrónico.";
+		$text['description-contact_url-add']['pt-pt'] = "As informações de contato endereço de url.";
+		$text['description-contact_url-add']['fr-fr'] = "Coordonnées de l'adresse e-mail.";
+
+		$text['header-contact_url-edit']['en-us'] = "Contact URL Edit";
+		$text['header-contact_url-edit']['es-cl'] = "Correo electrónico de contacto Editar";
+		$text['header-contact_url-edit']['pt-pt'] = "URL de Contato Editar";
+		$text['header-contact_url-edit']['fr-fr'] = "Contact Courriel Modifier";
+
+		$text['description-contact_url-edit']['en-us'] = "Contact url address information.";
+		$text['description-contact_url-edit']['es-cl'] = "Contactar con información de la dirección de correo electrónico.";
+		$text['description-contact_url-edit']['pt-pt'] = "As informações de contato endereço de url.";
+		$text['description-contact_url-edit']['fr-fr'] = "Coordonnées de l'adresse e-mail.";
+
+		$text['label-urls']['en-us'] = "URLs";
+		$text['label-urls']['es-cl'] = "Extensións";
+		$text['label-urls']['pt-pt'] = "Extensões";
+		$text['label-urls']['fr-fr'] = "Extensions";
+
+		$text['label-url_label']['en-us'] = "Label";
+		$text['label-url_label']['es-cl'] = "Etiqueta";
+		$text['label-url_label']['pt-pt'] = "Etiqueta";
+		$text['label-url_label']['fr-fr'] = "Etiquette";
+
+		$text['label-url_address']['en-us'] = "Address";
+		$text['label-url_address']['es-cl'] = "Calle";
+		$text['label-url_address']['pt-pt'] = "Rua";
+		$text['label-url_address']['fr-fr'] = "Rue";
+
+		$text['label-url_description']['en-us'] = "Description";
+		$text['label-url_description']['es-cl'] = "Descripción";
+		$text['label-url_description']['pt-pt'] = "Descrição";
+		$text['label-url_description']['fr-fr'] = "Description";
+
+		$text['option-personal']['en-us'] = "Personal";
+		$text['option-personal']['es-cl'] = "Personal";
+		$text['option-personal']['pt-pt'] = "Pessoal";
+		$text['option-personal']['fr-fr'] = "Personnel";
+
 	// contact notes
 		$text['title-contact_notes-add']['en-us'] = "Contact Note Add";
 		$text['title-contact_notes-add']['es-cl'] = "Agregar Nota de Contacto";
@@ -561,7 +763,7 @@
 		$text['header-contact_notes-add']['pt-pt'] = "Adicionar nota de contacto";
 		$text['header-contact_notes-add']['fr-fr'] = "Ajouter une note au contact";
 
-		$text['description-contact_notes-add']['en-us'] = "";
+		$text['description-contact_notes-add']['en-us'] = "Enter the desired note below.";
 		$text['description-contact_notes-add']['es-cl'] = "Ingrese una nota de contacto.";
 		$text['description-contact_notes-add']['pt-pt'] = "";
 		$text['description-contact_notes-add']['fr-fr'] = "";
@@ -576,11 +778,10 @@
 		$text['header-contact_notes-edit']['pt-pt'] = "Editar notas de contacto";
 		$text['header-contact_notes-edit']['fr-fr'] = "Editer la note du contact";
 
-		$text['description-contact_notes-edit']['en-us'] = ".";
+		$text['description-contact_notes-edit']['en-us'] = "Enter the desired note below.";
 		$text['description-contact_notes-edit']['es-cl'] = "Modifique la nota de contacto";
 		$text['description-contact_notes-edit']['pt-pt'] = "";
-		$text['description-contact_notes-edit']['fr-fr'] = ".";
-
+		$text['description-contact_notes-edit']['fr-fr'] = "";
 
 		$text['label-contact_notes']['en-us'] = "Notes";
 		$text['label-contact_notes']['es-cl'] = "Notas";
@@ -596,6 +797,16 @@
 		$text['description-contact_note']['es-cl'] = "Nota de contacto";
 		$text['description-contact_note']['pt-pt'] = "";
 		$text['description-contact_note']['fr-fr'] = "";
+
+		$text['label-note_content']['en-us'] = "Content";
+		$text['label-note_content']['es-cl'] = "";
+		$text['label-note_content']['pt-pt'] = "";
+		$text['label-note_content']['fr-fr'] = "";
+
+		$text['label-note_user']['en-us'] = "User";
+		$text['label-note_user']['es-cl'] = "";
+		$text['label-note_user']['pt-pt'] = "";
+		$text['label-note_user']['fr-fr'] = "";
 
 	// contact import
 		$text['title-contacts_import']['en-us'] = "Import Contacts";
@@ -649,6 +860,31 @@
 		$text['message-results']['fr-fr'] = "Les contacts suivants ont été téléchargés correctement à partir di fichier CSV:";
 
 	// general labels
+		$text['label-primary']['en-us'] = "Primary";
+		$text['label-primary']['es-cl'] = "Primário";
+		$text['label-primary']['pt-pt'] = "Primário";
+		$text['label-primary']['fr-fr'] = "Primaire";
+
+		$text['description-phone_primary']['en-us'] = "Set as the primary Number for this contact.";
+		$text['description-phone_primary']['es-cl'] = "Establecer como el número primario para este contacto.";
+		$text['description-phone_primary']['pt-pt'] = "Definir como o principal número para este contato.";
+		$text['description-phone_primary']['fr-fr'] = "Définir comme primaire numéro pour ce contact.";
+
+		$text['description-address_primary']['en-us'] = "Set as the primary Address for this contact.";
+		$text['description-address_primary']['es-cl'] = "Establecer como dirección principal para este contacto.";
+		$text['description-address_primary']['pt-pt'] = "Definir como o principal endereço para este contato.";
+		$text['description-address_primary']['fr-fr'] = "Définir comme adresse principale pour ce contact.";
+
+		$text['description-email_primary']['en-us'] = "Set as the primary Email for this contact.";
+		$text['description-email_primary']['es-cl'] = "Establecer como el correo electrónico principal para este contacto.";
+		$text['description-email_primary']['pt-pt'] = "Definir como o principal e-mail para este contato.";
+		$text['description-email_primary']['fr-fr'] = "Définir comme primaire par mail pour ce contact.";
+
+		$text['description-url_primary']['en-us'] = "Set as the primary URL for this contact.";
+		$text['description-url_primary']['es-cl'] = "Establecer como la URL principal de este contacto.";
+		$text['description-url_primary']['pt-pt'] = "Definir como a URL principal para este contato.";
+		$text['description-url_primary']['fr-fr'] = "Définir comme l'URL principale de ce contact.";
+
 		$text['button-add']['en-us'] = "Add";
 		$text['button-add']['es-cl'] = "Agregar";
 		$text['button-add']['pt-pt'] = "Adicionar";

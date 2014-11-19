@@ -46,9 +46,11 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-	$sql = "delete from v_contact_addresses ";
+	$sql = "";
+	$sql .= "delete from v_contact_urls ";
 	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and contact_address_uuid = '$id' ";
+	$sql .= "and contact_url_uuid = '".$id."' ";
+
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	unset($sql);
