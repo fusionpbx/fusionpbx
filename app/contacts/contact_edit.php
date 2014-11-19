@@ -74,8 +74,6 @@ else {
 		$contact_title = check_str($_POST["contact_title"]);
 		$contact_category = check_str($_POST["contact_category"]);
 		$contact_role = check_str($_POST["contact_role"]);
-		$contact_email = check_str($_POST["contact_email"]);
-		$contact_url = check_str($_POST["contact_url"]);
 		$contact_time_zone = check_str($_POST["contact_time_zone"]);
 		$contact_note = check_str($_POST["contact_note"]);
 	}
@@ -95,8 +93,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//if (strlen($contact_nickname) == 0) { $msg .= $text['message-required'].$text['label-contact_nickname']."<br>\n"; }
 		//if (strlen($contact_title) == 0) { $msg .= $text['message-required'].$text['label-contact_title']."<br>\n"; }
 		//if (strlen($contact_role) == 0) { $msg .= $text['message-required'].$text['label-contact_role']."<br>\n"; }
-		//if (strlen($contact_email) == 0) { $msg .= $text['message-required'].$text['label-contact_email']."<br>\n"; }
-		//if (strlen($contact_url) == 0) { $msg .= $text['message-required'].$text['label-contact_url']."<br>\n"; }
 		//if (strlen($contact_time_zone) == 0) { $msg .= $text['message-required'].$text['label-contact_time_zone']."<br>\n"; }
 		//if (strlen($contact_note) == 0) { $msg .= $text['message-required'].$text['label-contact_note']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -129,8 +125,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_title, ";
 			$sql .= "contact_category, ";
 			$sql .= "contact_role, ";
-			$sql .= "contact_email, ";
-			$sql .= "contact_url, ";
 			$sql .= "contact_time_zone, ";
 			$sql .= "contact_note ";
 			$sql .= ") ";
@@ -146,8 +140,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'".$contact_title."', ";
 			$sql .= "'".$contact_category."', ";
 			$sql .= "'".$contact_role."', ";
-			$sql .= "'".$contact_email."', ";
-			$sql .= "'".$contact_url."', ";
 			$sql .= "'".$contact_time_zone."', ";
 			$sql .= "'".$contact_note."' ";
 			$sql .= ")";
@@ -210,8 +202,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_title = '".$contact_title."', ";
 			$sql .= "contact_category = '".$contact_category."', ";
 			$sql .= "contact_role = '".$contact_role."', ";
-			$sql .= "contact_email = '".$contact_email."', ";
-			$sql .= "contact_url = '".$contact_url."', ";
 			$sql .= "contact_time_zone = '".$contact_time_zone."', ";
 			$sql .= "contact_note = '".$contact_note."' ";
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
@@ -237,7 +227,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
-	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
+	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$contact_uuid = $_GET["id"];
 		$sql = "select * from v_contacts ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -254,11 +244,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$contact_title = $row["contact_title"];
 			$contact_category = $row["contact_category"];
 			$contact_role = $row["contact_role"];
-			$contact_email = $row["contact_email"];
-			$contact_url = $row["contact_url"];
 			$contact_time_zone = $row["contact_time_zone"];
 			$contact_note = $row["contact_note"];
-			break; //limit to 1 row
 		}
 		unset ($prep_statement);
 	}
@@ -326,17 +313,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
+	echo "<td valign='top' align='left' width='30%' nowrap='nowrap'><b>";
 	switch ($action) {
 		case "add" : 	echo $text['header-contact-add'];	break;
 		case "update" :	echo $text['header-contact-edit'];	break;
 	}
 	echo "</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
+	echo "<td valign='top' width='70%' align='right'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 	if ($action == "update") {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-qr_code']."' onclick=\"$('#qr_code_container').fadeIn(400);\" value='".$text['button-qr_code']."'>\n";
-		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=$contact_uuid&type=download'\" value='".$text['button-vcard']."'>\n";
+		echo "	<input type='button' class='btn' name='' alt='".$text['button-vcard']."' onclick=\"window.location='contacts_vcard.php?id=".$contact_uuid."&type=download'\" value='".$text['button-vcard']."'>\n";
 	}
 	if ($action == "update" && is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/invoices')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-invoices']."' onclick=\"window.location='".PROJECT_PATH."/app/invoices/invoices.php?id=$contact_uuid'\" value='".$text['button-invoices']."'>\n";
@@ -358,19 +345,18 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	echo "<table border='0' cellpadding='3' cellspacing='3' width='100%'>\n";
+	echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 	echo "<tr>\n";
 	echo "<td width='40%' valign='top' align='left' nowrap='nowrap'>\n";
 
 		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_type'].":\n";
+		echo "	".$text['label-contact_type']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-
-		if (is_array($_SESSION["contact"]["role"])) {
-			sort($_SESSION["contact"]["role"]);
+		if (is_array($_SESSION["contact"]["type"])) {
+			sort($_SESSION["contact"]["type"]);
 			echo "	<select class='formfld' name='contact_type'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["type"] as $row) {
@@ -462,7 +448,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_organization'].":\n";
+		echo "	".$text['label-contact_organization']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_organization' maxlength='255' value=\"$contact_organization\">\n";
@@ -473,7 +459,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_name_given'].":\n";
+		echo "	".$text['label-contact_name_given']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_given' maxlength='255' value=\"$contact_name_given\">\n";
@@ -484,7 +470,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_name_family'].":\n";
+		echo "	".$text['label-contact_name_family']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_family' maxlength='255' value=\"$contact_name_family\">\n";
@@ -495,7 +481,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_nickname'].":\n";
+		echo "	".$text['label-contact_nickname']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_nickname' maxlength='255' value=\"$contact_nickname\">\n";
@@ -506,7 +492,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_title'].":\n";
+		echo "	".$text['label-contact_title']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION["contact"]["title"])) {
@@ -533,7 +519,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_category'].":\n";
+		echo "	".$text['label-contact_category']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION["contact"]["category"])) {
@@ -560,7 +546,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_role'].":\n";
+		echo "	".$text['label-contact_role']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if (is_array($_SESSION["contact"]["role"])) {
@@ -587,29 +573,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_email'].":\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='contact_email' maxlength='255' value=\"$contact_email\">\n";
-		echo "<br />\n";
-		echo $text['description-contact_email']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_url'].":\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='contact_url' maxlength='255' value='$contact_url'>\n";
-		echo "<br />\n";
-		echo $text['description-contact_url']."\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_time_zone'].":\n";
+		echo "	".$text['label-contact_time_zone']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_time_zone' maxlength='255' value=\"$contact_time_zone\">\n";
@@ -638,7 +602,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$contact_shared_disabled = ($_SESSION['groups'][0]['domain_uuid'] != $_SESSION['domain_uuid']) ? "disabled='disabled'" : null;
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-shared'].":\n";
+		echo "	".$text['label-shared']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' ".(($contact_shared_disabled == '') ? "name='contact_shared'" : null)." id='contact_shared' ".((permission_exists('contact_group_view')) ? "onchange=\"$('#div_groups').slideToggle('400');\"" : null)." ".$contact_shared_disabled.">\n";
@@ -737,10 +701,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-contact_note'].":\n";
+		echo "	".$text['label-contact_note']."\n";
 		echo "</td>\n";
 		echo "<td width='70%' class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='contact_note' maxlength='255' value='$contact_note'>\n";
+		echo "  <textarea class='formfld' style='width: 100%; height: 80px;' name='contact_note'>".$contact_note."</textarea>\n";
 		echo "<br />\n";
 		echo $text['description-contact_note']."\n";
 		echo "</td>\n";
@@ -759,11 +723,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 
 	if ($action == "update") {
-		echo "<td>&nbsp;&nbsp;</td>";
+		echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "<td width='60%' class='' valign='top' align='center'>\n";
 			//echo "	<img src='contacts_vcard.php?id=$contact_uuid&type=image' width='90%'><br /><br />\n";
 			require "contact_phones.php";
 			require "contact_addresses.php";
+			require "contact_emails.php";
+			require "contact_urls.php";
 			require "contact_extensions.php";
 			require "contact_notes.php";
 			require "contact_settings.php";

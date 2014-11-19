@@ -106,68 +106,41 @@ class vcard {
 		if ($this->data['department']) { $this->card .= ";".$this->data['department']; }
 		$this->card .= "\r\n";
 
-		if ($this->data['work_po_box']
-		|| $this->data['work_extended_address']
-		|| $this->data['work_address']
-		|| $this->data['work_city']
-		|| $this->data['work_state']
-		|| $this->data['work_postal_code']
-		|| $this->data['work_country']) {
-			$this->card .= "ADR;TYPE=work:";
-			if (strlen($this->data['work_po_box']) > 0) {
-				$this->card .= $this->data['work_po_box'].";";
+		$vcard_address_type_values = array('work','home','dom','intl','postal','parcel','pref');
+		foreach ($vcard_address_type_values as $vcard_address_type_value) {
+			if ($this->data[$vcard_address_type_value.'_po_box']
+			|| $this->data[$vcard_address_type_value.'_extended_address']
+			|| $this->data[$vcard_address_type_value.'_address']
+			|| $this->data[$vcard_address_type_value.'_city']
+			|| $this->data[$vcard_address_type_value.'_state']
+			|| $this->data[$vcard_address_type_value.'_postal_code']
+			|| $this->data[$vcard_address_type_value.'_country']) {
+				$this->card .= "ADR;TYPE=".$vcard_address_type_value.":";
+				if (strlen($this->data[$vcard_address_type_value.'_po_box']) > 0) {
+					$this->card .= $this->data[$vcard_address_type_value.'_po_box'].";";
+				}
+				if (strlen($this->data[$vcard_address_type_value.'_extended_address']) > 0) {
+					$this->card .= $this->data[$vcard_address_type_value.'_extended_address'].";";
+				}
+				if (strlen($this->data[$vcard_address_type_value.'_address']) > 0) {
+					$this->card .= $this->data[$vcard_address_type_value.'_address'].";";
+				}
+				if (strlen($this->data[$vcard_address_type_value.'_city']) > 0) {
+					$this->card .= $this->data[$vcard_address_type_value.'_city'].";";
+				}
+				if (strlen($this->data[$vcard_address_type_value.'_state']) > 0) {
+					$this->card .= $this->data[$vcard_address_type_value.'_state'].";";
+				}
+				if (strlen($this->data[$vcard_address_type_value.'_postal_code']) > 0) {
+					$this->card .= $this->data[$vcard_address_type_value.'_postal_code'].";";
+				}
+				if (strlen($this->data[$vcard_address_type_value.'_country']) > 0) {
+					$this->card .= $this->data[$vcard_address_type_value.'_country']."";
+				}
+				$this->card .= "\r\n";
 			}
-			if (strlen($this->data['work_extended_address']) > 0) {
-				$this->card .= $this->data['work_extended_address'].";";
-			}
-			if (strlen($this->data['work_address']) > 0) {
-				$this->card .= $this->data['work_address'].";";
-			}
-			if (strlen($this->data['work_city']) > 0) {
-				$this->card .= $this->data['work_city'].";";
-			}
-			if (strlen($this->data['work_state']) > 0) {
-				$this->card .= $this->data['work_state'].";";
-			}
-			if (strlen($this->data['work_postal_code']) > 0) {
-				$this->card .= $this->data['work_postal_code'].";";
-			}
-			if (strlen($this->data['work_country']) > 0) {
-				$this->card .= $this->data['work_country']."";
-			}
-			$this->card .= "\r\n";
 		}
-		if ($this->data['home_po_box']
-		|| $this->data['home_extended_address']
-		|| $this->data['home_address']
-		|| $this->data['home_city']
-		|| $this->data['home_state']
-		|| $this->data['home_postal_code']
-		|| $this->data['home_country']) {
-			$this->card .= "ADR;TYPE=home:";
-			if (strlen($this->data['home_po_box']) > 0) {
-				$this->card .= $this->data['home_po_box'].";";
-			}
-			if (strlen($this->data['home_extended_address']) > 0) {
-				$this->card .= $this->data['home_extended_address'].";";
-			}
-			if (strlen($this->data['home_address']) > 0) {
-				$this->card .= $this->data['home_address'].";";
-			}
-			if (strlen($this->data['home_city']) > 0) {
-				$this->card .= $this->data['home_city'].";";
-			}
-			if (strlen($this->data['home_state']) > 0) {
-				$this->card .= $this->data['home_state'].";";
-			}
-			if (strlen($this->data['home_postal_code']) > 0) {
-				$this->card .= $this->data['home_postal_code'].";";
-			}
-			if (strlen($this->data['home_country']) > 0) {
-				$this->card .= $this->data['home_country'];
-			}
-			$this->card .= "\r\n";
-		}
+
 		if ($this->data['email1']) { $this->card .= "EMAIL;PREF=1:".$this->data['email1']."\r\n"; }
 		if ($this->data['email2']) { $this->card .= "EMAIL;PREF=2:".$this->data['email2']."\r\n"; }
 		if ($this->data['voice_tel']) { $this->card .= "TEL;TYPE=voice:".$this->data['voice_tel']."\r\n"; }

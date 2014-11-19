@@ -203,62 +203,76 @@ else {
 							$x = 0;
 							if (strlen($data['BusinessFax']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessFax']);
-								$phone_array[$x]['phone_type'] = 'fax';
+								$phone_array[$x]['phone_type_fax'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-fax'];
+								$phone_array[$x]['phone_description'] = $text['option-work'];
 								$x++;
 							}
 							if (strlen($data['BusinessPhone']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone']);
-								$phone_array[$x]['phone_type'] = 'work';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-work'];
 								$x++;
 							}
 							if (strlen($data['BusinessPhone2']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['BusinessPhone2']);
-								$phone_array[$x]['phone_type'] = 'work';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-work'];
 								$x++;
 							}
 							if (strlen($data['CompanyMainPhone']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['CompanyMainPhone']);
-								$phone_array[$x]['phone_type'] = 'pref';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-main'];
 								$x++;
 							}
 							if (strlen($data['HomeFax']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomeFax']);
-								$phone_array[$x]['phone_type'] = 'fax';
+								$phone_array[$x]['phone_type_fax'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-fax'];
+								$phone_array[$x]['phone_description'] = $text['option-home'];
 								$x++;
 							}
 							if (strlen($data['HomePhone']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone']);
-								$phone_array[$x]['phone_type'] = 'home';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-home'];
 								$x++;
 							}
 							if (strlen($data['HomePhone2']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['HomePhone2']);
-								$phone_array[$x]['phone_type'] = 'home';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-home'];
 								$x++;
 							}
 							if (strlen($data['MobilePhone']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['MobilePhone']);
-								$phone_array[$x]['phone_type'] = 'cell';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-mobile'];
 								$x++;
 							}
 							if (strlen($data['OtherFax']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherFax']);
-								$phone_array[$x]['phone_type'] = 'fax';
+								$phone_array[$x]['phone_type_fax'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-fax'];
 								$x++;
 							}
 							if (strlen($data['OtherPhone']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['OtherPhone']);
-								$phone_array[$x]['phone_type'] = 'home';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-other'];
 								$x++;
 							}
 							if (strlen($data['Pager']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['Pager']);
-								$phone_array[$x]['phone_type'] = 'page';
+								$phone_array[$x]['phone_type_text'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-pager'];
 								$x++;
 							}
 							if (strlen($data['PrimaryPhone']) > 0) {
 								$phone_array[$x]['phone_number'] = preg_replace('{\D}', '', $data['PrimaryPhone']);
-								$phone_array[$x]['phone_type'] = 'pref';
+								$phone_array[$x]['phone_type_voice'] = 1;
+								$phone_array[$x]['phone_label'] = $text['option-main'];
 								$x++;
 							}
 							foreach ($phone_array as $row) {
@@ -268,16 +282,26 @@ else {
 								$sql .= "domain_uuid, ";
 								$sql .= "contact_uuid, ";
 								$sql .= "contact_phone_uuid, ";
-								$sql .= "phone_type, ";
-								$sql .= "phone_number ";
+								$sql .= "phone_type_voice, ";
+								$sql .= "phone_type_fax, ";
+								$sql .= "phone_type_video, ";
+								$sql .= "phone_type_text, ";
+								$sql .= "phone_label, ";
+								$sql .= "phone_number, ";
+								$sql .= "phone_description ";
 								$sql .= ")";
 								$sql .= "values ";
 								$sql .= "(";
 								$sql .= "'$domain_uuid', ";
 								$sql .= "'$contact_uuid', ";
 								$sql .= "'$contact_phone_uuid', ";
-								$sql .= "'".$row['phone_type']."', ";
-								$sql .= "'".$row['phone_number']."' ";
+								$sql .= (($row['phone_type_voice']) ? 1 : 0).", ";
+								$sql .= (($row['phone_type_fax']) ? 1 : 0).", ";
+								$sql .= (($row['phone_type_video']) ? 1 : 0).", ";
+								$sql .= (($row['phone_type_text']) ? 1 : 0).", ";
+								$sql .= "'".$row['phone_label']."', ";
+								$sql .= "'".$row['phone_number']."', ";
+								$sql .= "'".$row['phone_description']."', ";
 								$sql .= ")";
 								$db->exec(check_sql($sql));
 								unset($sql);
@@ -299,8 +323,7 @@ else {
 
 		//show the header
 			require_once "resources/header.php";
-			echo "<div align='center'>\n";
-			echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
 			echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-contacts_import']."</b></td>\n";
 			echo "<td width='70%' align='right'>\n";
@@ -315,7 +338,7 @@ else {
 			echo "</table>\n";
 
 		//show the results
-			echo "<table width='100%'  border='0' cellpadding='3' cellspacing='0' width='100%'>\n";
+			echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 			echo "<tr>\n";
 			echo "	<th>".$text['label-contact_name']."</th>\n";
 			echo "	<th>".$text['label-contact_organization']."</th>\n";
@@ -351,19 +374,13 @@ else {
 	require_once "resources/header.php";
 
 //begin the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br>";
-
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
-	echo "	<td align='left' width='30%' nowrap='nowrap'>\n";
+	echo "	<td valign='top' align='left' width='30%' nowrap='nowrap'>\n";
 	echo "		<b>".$text['header-contacts_import']."</b><br />\n";
 	echo "		".$text['description-contacts_import']."\n";
 	echo "	</td>\n";
-	echo "	<td width='70%' align='right'>\n";
+	echo "	<td valign='top' width='70%' align='right'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='contacts.php?".$_GET["query_string"]."'\" value='".$text['button-back']."'>\n";
 	echo "		<input name=\"submit\" type=\"submit\" class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
 	echo "	</td>\n";
@@ -373,7 +390,7 @@ else {
 	echo "<br />\n";
 
 	echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
-	echo "	<table border='0' width='100%'>\n";
+	echo "	<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -419,6 +436,7 @@ else {
 	echo "			&nbsp;\n";
 	echo "		</td>\n";
 	echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
+	echo "			<br />\n";
 	echo "			<input name=\"type\" type=\"hidden\" value=\"csv\">\n";
 	echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
 	echo "		</td>\n";

@@ -117,9 +117,9 @@ require_once "resources/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('extension', $text['label-extension'], $order_by, $order);
-	echo th_order_by('enabled', $text['label-enabled'], $order_by, $order);
-	echo th_order_by('phone_description', $text['label-description'], $order_by, $order);
+	echo "<th>".$text['label-extension']."</th>\n";
+	echo "<th>".$text['label-enabled']."</th>\n";
+	echo "<th>".$text['label-description']."</th>\n";
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('extension_add')) {
 		echo "  <a href='/app/extensions/extension_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>\n";

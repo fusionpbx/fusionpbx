@@ -42,12 +42,12 @@ require_once "resources/check_auth.php";
 
 //delete domain_setting
 	if (strlen($id) > 0) {
-			$sql = "delete from v_contact_settings ";
-			$sql .= "where contact_uuid = '$contact_uuid' ";
-			$sql .= "and contact_setting_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			unset($sql);
+		$sql = "delete from v_contact_settings ";
+		$sql .= "where contact_uuid = '$contact_uuid' ";
+		$sql .= "and contact_setting_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($sql);
 	}
 
 //redirect the user

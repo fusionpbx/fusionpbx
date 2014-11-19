@@ -703,7 +703,7 @@ else {
 	$sql .= "c.contact_uuid = cp.contact_uuid and  ";
 	$sql .= "c.domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 	$sql .= "cp.domain_uuid = '".$_SESSION['domain_uuid']."' and ";
-	$sql .= "cp.phone_type = 'fax' and ";
+	$sql .= "cp.phone_type_fax = 1 and ";
 	$sql .= "cp.phone_number is not null and ";
 	$sql .= "cp.phone_number <> '' ";
 	if (sizeof($user_group_uuids) > 0) {

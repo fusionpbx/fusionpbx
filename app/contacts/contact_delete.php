@@ -45,14 +45,6 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
-	//delete a contact
-		$sql = "delete from v_contacts ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and contact_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($prep_statement, $sql);
-
 	//delete addresses
 		$sql = "delete from v_contact_addresses ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -70,6 +62,24 @@ if (strlen($id)>0) {
 		$prep_statement->execute();
 		unset($prep_statement, $sql);
 
+	//delete emails
+		$sql = "";
+		$sql .= "delete from v_contact_emails ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($prep_statement, $sql);
+
+	//delete urls
+		$sql = "";
+		$sql .= "delete from v_contact_urls ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($prep_statement, $sql);
+
 	//delete notes
 		$sql = "";
 		$sql .= "delete from v_contact_notes ";
@@ -80,9 +90,16 @@ if (strlen($id)>0) {
 		unset($prep_statement, $sql);
 
 	//delete settings
-                
 		$sql = "";
 		$sql = "delete from v_contact_settings ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($prep_statement, $sql);
+
+	//delete a contact
+		$sql = "delete from v_contacts ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		$sql .= "and contact_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
