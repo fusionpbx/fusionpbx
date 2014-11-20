@@ -71,7 +71,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 				$prep_statement_accountcode->execute();
 				$row_accountcode = $prep_statement_accountcode->fetch(PDO::FETCH_ASSOC);
 
-	                        if ($row_accountcode['count'] > 0) {
+				if ($row_accountcode['count'] > 0) {
 					$accountcode = $_POST["accountcode"];
 				}
 				else {
@@ -186,6 +186,9 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.
 				$device_mac_address = check_str($_REQUEST["device_mac_address"]);
 				$device_mac_address = strtolower($device_mac_address);
 				$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+
+			//set a default line number
+				if (strlen($line_number) == 0) { $line_number = '1'; }
 
 			//add the device if it doesn't exist, if it does exist get the device_uuid
 				$sql = "select device_uuid from v_devices ";
@@ -1318,7 +1321,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 				echo "			<td>\n";
 				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'device_line'; document.getElementById('delete_uuid').value = '".$row['device_line_uuid']."'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
-//				echo "				<a href='extension_edit.php?id=".$extension_uuid."&device_line_uuid=".$row['device_line_uuid']."&domain_uuid=".$_SESSION['domain_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 			}
