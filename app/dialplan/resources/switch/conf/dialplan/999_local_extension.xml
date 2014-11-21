@@ -25,6 +25,8 @@
 			<!--<action application="bridge" data="${sofia_contact(${dialed_extension}@${domain_name})}"/>-->
 			<!-- number-alias / https://confluence.freeswitch.org/display/FREESWITCH/XML+User+Directory -->
 			<!--<action application="bridge" data="user/${user_data(${destination_number}@${domain_name} attr id)}@${domain_name}"/> -->
+			<!-- handles bridge failures before answer -->
+			<action application="lua" data="app.lua failure_handler"/>
 			<action application="answer"/>
 			<action application="sleep" data="1000"/>
 			<!--<action application="voicemail" data="default ${domain_name} ${dialed_extension}"/>-->

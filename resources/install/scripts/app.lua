@@ -22,24 +22,16 @@
 --	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 --	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --	POSSIBILITY OF SUCH DAMAGE.
---
---	Contributor(s):
---	Salvatore Caruso <salvatore.caruso@nems.it>
---	Riccardo Granchi <riccardo.granchi@nems.it>
+
 
 --include config.lua
 	scripts_dir = string.sub(debug.getinfo(1).source,2,string.len(debug.getinfo(1).source)-(string.len(argv[0])+1));
 	dofile(scripts_dir.."/resources/functions/config.lua");
-	dofile(scripts_dir.."/resources/functions/explode.lua");
 	dofile(config());
 
 --get the argv values
 	script_name = argv[0];
 	app_name = argv[1];
-
---set the default variables
-	forward_on_busy = false;
-	send_to_voicemail = true;
 
 --example use command
 	--luarun app.lua app_name 'a' 'b 123' 'c'
@@ -53,26 +45,6 @@
 		end
 	end
 
---if the session exists then check originate disposition and causes
-	if (session ~= nil) then    
-		originate_disposition = session:getVariable("originate_disposition");
-		originate_causes = session:getVariable("originate_causes");
-		if (originate_causes ~= nil) then
-			array = explode("|",originate_causes);
-			if (string.find(array[1], "USER_BUSY")) then
-				originate_disposition = "USER_BUSY";
-				session:setVariable("originate_disposition", originate_disposition);
-			end
-		end
-		if (originate_disposition ~= nil) then
-			if (originate_disposition == 'USER_BUSY') then
-				freeswitch.consoleLog("notice", "[app] forward on busy: ".. scripts_dir .. "/app/forward_on_busy/index.lua" .. arguments .."\n");
-				forward_on_busy = loadfile(scripts_dir .. "/app/forward_on_busy/index.lua")(argv);      
-				freeswitch.consoleLog("notice", "[app] forward on busy: ".. tostring(forward_on_busy) .. "\n");
-			end
-		end
-	end
-
 --route the request to the application
-	--freeswitch.consoleLog("notice", "[app] lua route: ".. scripts_dir .. "/app/" .. app_name .. "/index.lua" .. arguments .."\n");
+	--freeswitch.consoleLog("notice", "["..app_name.."]".. scripts_dir .. "/app/" .. app_name .. "/index.lua\n");
 	loadfile(scripts_dir .. "/app/" .. app_name .. "/index.lua")(argv);

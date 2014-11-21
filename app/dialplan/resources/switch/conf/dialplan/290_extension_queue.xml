@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="extension_queue" app_uuid="eb837d10-890d-11e3-baa8-0800200c9a66">
+	<extension name="extension_queue" number="*800[ext]" app_uuid="eb837d10-890d-11e3-baa8-0800200c9a66">
 		<condition field="destination_number" expression="^\*800(.*)$" >
 			<action application="set" data="fifo_music=$${hold_music}" />
 			<action application="set" data="extension_queue=queue_$1@\${domain_name}" />
