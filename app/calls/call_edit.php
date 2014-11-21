@@ -554,6 +554,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_busy_destination' id='forward_busy_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_busy_destination."\">\n";
+	echo " <br />".$text['description-on-busy'].".\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

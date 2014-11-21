@@ -29,7 +29,10 @@
 	$text['label-on-busy']['es-cl'] = "Concurrida";
 	$text['label-on-busy']['pt-pt'] = "Movimentado";
 	$text['label-on-busy']['fr-fr'] = "Sur Occupé";
-	$text['label-on-busy']['it-it'] = "Rinvio su occupato";
+	$text['label-on-busy']['it-it'] = "Su occupato";
+	
+	$text['description-on-busy']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension";
+	$text['description-on-busy']['it-it'] = "Se abilitato, esegue l'override del valore di abilitazione voicemail nell'estensione";
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activo";
