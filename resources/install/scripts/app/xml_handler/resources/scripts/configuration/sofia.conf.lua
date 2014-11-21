@@ -208,7 +208,7 @@
 
 						table.insert(xml, [[					</gateways>]]);
 						table.insert(xml, [[					<domains>]]);
-						table.insert(xml, [[						<domain name="all" alias="false" parse="true"/>]]);
+						table.insert(xml, [[						<domain name="all" alias="true" parse="true"/>]]);
 						table.insert(xml, [[					</domains>]]);
 						table.insert(xml, [[					<settings>]]);
 						profile_tag_status = "open";
