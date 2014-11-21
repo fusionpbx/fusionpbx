@@ -1041,51 +1041,6 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		$db_tmp->commit();
 		unset($tmp);
 
-	//add domain settings
-		$x = 0;
-		$tmp[$x]['name'] = 'uuid';
-		$tmp[$x]['value'] = $menu_uuid;
-		$tmp[$x]['category'] = 'domain';
-		$tmp[$x]['subcategory'] = 'menu';
-		$tmp[$x]['enabled'] = 'true';
-		$x++;
-		$tmp[$x]['name'] = 'name';
-		$tmp[$x]['value'] = $install_template_name;
-		$tmp[$x]['category'] = 'domain';
-		$tmp[$x]['subcategory'] = 'template';
-		$tmp[$x]['enabled'] = 'true';
-		$x++;
-		$db_tmp->beginTransaction();
-		foreach($tmp as $row) {
-			$sql = "insert into v_domain_settings ";
-			$sql .= "(";
-			$sql .= "domain_uuid, ";
-			$sql .= "domain_setting_uuid, ";
-			$sql .= "domain_setting_name, ";
-			$sql .= "domain_setting_value, ";
-			$sql .= "domain_setting_category, ";
-			$sql .= "domain_setting_subcategory, ";
-			$sql .= "domain_setting_enabled ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "(";
-			$sql .= "'".$_SESSION["domain_uuid"]."', ";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'".$row['name']."', ";
-			$sql .= "'".$row['value']."', ";
-			$sql .= "'".$row['category']."', ";
-			$sql .= "'".$row['subcategory']."', ";
-			$sql .= "'".$row['enabled']."' ";
-			$sql .= ");";
-			if ($v_debug) {
-				fwrite($fp, $sql."\n");
-			}
-			$db_tmp->exec(check_sql($sql));
-			unset($sql);
-		}
-		$db_tmp->commit();
-		unset($tmp);
-
 	//get the list of installed apps from the core and mod directories
 		$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
 		$x=0;
