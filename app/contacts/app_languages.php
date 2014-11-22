@@ -82,6 +82,16 @@
 		$text['label-contact_name']['pt-pt'] = "Nome";
 		$text['label-contact_name']['fr-fr'] = "Nom";
 
+		$text['label-contact_name_prefix']['en-us'] = "Prefix";
+		$text['label-contact_name_prefix']['es-cl'] = "Prefijo";
+		$text['label-contact_name_prefix']['pt-pt'] = "Prefixo";
+		$text['label-contact_name_prefix']['fr-fr'] = "Préfixe";
+
+		$text['description-contact_name_prefix']['en-us'] = "Enter the name prefix.";
+		$text['description-contact_name_prefix']['es-cl'] = "Introduzca el prefijo del nombre.";
+		$text['description-contact_name_prefix']['pt-pt'] = "Digite o prefixo do nome.";
+		$text['description-contact_name_prefix']['fr-fr'] = "Entrez le préfixe de nom.";
+
 		$text['label-contact_name_given']['en-us'] = "First Name";
 		$text['label-contact_name_given']['es-cl'] = "Primer Nombre";
 		$text['label-contact_name_given']['pt-pt'] = "Primeiro Nome";
@@ -92,6 +102,16 @@
 		$text['description-contact_name_given']['pt-pt'] = "Introduzir o nome";
 		$text['description-contact_name_given']['fr-fr'] = "";
 
+		$text['label-contact_name_middle']['en-us'] = "Middle";
+		$text['label-contact_name_middle']['es-cl'] = "Segundo Nombre";
+		$text['label-contact_name_middle']['pt-pt'] = "Nome Do Meio";
+		$text['label-contact_name_middle']['fr-fr'] = "Deuxième Nom";
+
+		$text['description-contact_name_middle']['en-us'] = "Enter the middle name.";
+		$text['description-contact_name_middle']['es-cl'] = "Introduzca el segundo nombre.";
+		$text['description-contact_name_middle']['pt-pt'] = "Digite o nome do meio.";
+		$text['description-contact_name_middle']['fr-fr'] = "Entrez le nom du milieu.";
+
 		$text['label-contact_name_family']['en-us'] = "Last Name";
 		$text['label-contact_name_family']['es-cl'] = "Segundo Nombre";
 		$text['label-contact_name_family']['pt-pt'] = "Último nome";
@@ -101,6 +121,16 @@
 		$text['description-contact_name_family']['es-cl'] = "Ingrese el apellido.";
 		$text['description-contact_name_family']['pt-pt'] = "Introduzir o nome de família";
 		$text['description-contact_name_family']['fr-fr'] = "";
+
+		$text['label-contact_name_suffix']['en-us'] = "Suffix";
+		$text['label-contact_name_suffix']['es-cl'] = "Sufijo";
+		$text['label-contact_name_suffix']['pt-pt'] = "Sufixo";
+		$text['label-contact_name_suffix']['fr-fr'] = "Suffixe";
+
+		$text['description-contact_name_suffix']['en-us'] = "Enter the name suffix.";
+		$text['description-contact_name_suffix']['es-cl'] = "";
+		$text['description-contact_name_suffix']['pt-pt'] = "";
+		$text['description-contact_name_suffix']['fr-fr'] = "";
 
 		$text['label-contact_nickname']['en-us'] = "Nickname";
 		$text['label-contact_nickname']['es-cl'] = "Apodo";
