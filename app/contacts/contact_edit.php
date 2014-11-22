@@ -68,8 +68,11 @@ else {
 	if (count($_POST)>0) {
 		$contact_type = check_str($_POST["contact_type"]);
 		$contact_organization = check_str($_POST["contact_organization"]);
+		$contact_name_prefix = check_str($_POST["contact_name_prefix"]);
 		$contact_name_given = check_str($_POST["contact_name_given"]);
+		$contact_name_middle = check_str($_POST["contact_name_middle"]);
 		$contact_name_family = check_str($_POST["contact_name_family"]);
+		$contact_name_suffix = check_str($_POST["contact_name_suffix"]);
 		$contact_nickname = check_str($_POST["contact_nickname"]);
 		$contact_title = check_str($_POST["contact_title"]);
 		$contact_category = check_str($_POST["contact_category"]);
@@ -88,8 +91,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		//if (strlen($contact_type) == 0) { $msg .= $text['message-required'].$text['label-contact_type']."<br>\n"; }
 		//if (strlen($contact_organization) == 0) { $msg .= $text['message-required'].$text['label-contact_organization']."<br>\n"; }
+		//if (strlen($contact_name_prefix) == 0) { $msg .= $text['message-required'].$text['label-contact_name_prefix']."<br>\n"; }
 		//if (strlen($contact_name_given) == 0) { $msg .= $text['message-required'].$text['label-contact_name_given']."<br>\n"; }
+		//if (strlen($contact_name_middle) == 0) { $msg .= $text['message-required'].$text['label-contact_name_middle']."<br>\n"; }
 		//if (strlen($contact_name_family) == 0) { $msg .= $text['message-required'].$text['label-contact_name_family']."<br>\n"; }
+		//if (strlen($contact_name_suffix) == 0) { $msg .= $text['message-required'].$text['label-contact_name_suffix']."<br>\n"; }
 		//if (strlen($contact_nickname) == 0) { $msg .= $text['message-required'].$text['label-contact_nickname']."<br>\n"; }
 		//if (strlen($contact_title) == 0) { $msg .= $text['message-required'].$text['label-contact_title']."<br>\n"; }
 		//if (strlen($contact_role) == 0) { $msg .= $text['message-required'].$text['label-contact_role']."<br>\n"; }
@@ -119,8 +125,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "contact_uuid, ";
 			$sql .= "contact_type, ";
 			$sql .= "contact_organization, ";
+			$sql .= "contact_name_prefix, ";
 			$sql .= "contact_name_given, ";
+			$sql .= "contact_name_middle, ";
 			$sql .= "contact_name_family, ";
+			$sql .= "contact_name_suffix, ";
 			$sql .= "contact_nickname, ";
 			$sql .= "contact_title, ";
 			$sql .= "contact_category, ";
@@ -134,8 +143,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'".$contact_uuid."', ";
 			$sql .= "'".$contact_type."', ";
 			$sql .= "'".$contact_organization."', ";
+			$sql .= "'".$contact_name_prefix."', ";
 			$sql .= "'".$contact_name_given."', ";
+			$sql .= "'".$contact_name_middle."', ";
 			$sql .= "'".$contact_name_family."', ";
+			$sql .= "'".$contact_name_suffix."', ";
 			$sql .= "'".$contact_nickname."', ";
 			$sql .= "'".$contact_title."', ";
 			$sql .= "'".$contact_category."', ";
@@ -196,8 +208,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql = "update v_contacts set ";
 			$sql .= "contact_type = '".$contact_type."', ";
 			$sql .= "contact_organization = '".$contact_organization."', ";
+			$sql .= "contact_name_prefix = '".$contact_name_prefix."', ";
 			$sql .= "contact_name_given = '".$contact_name_given."', ";
+			$sql .= "contact_name_middle = '".$contact_name_middle."', ";
 			$sql .= "contact_name_family = '".$contact_name_family."', ";
+			$sql .= "contact_name_suffix = '".$contact_name_suffix."', ";
 			$sql .= "contact_nickname = '".$contact_nickname."', ";
 			$sql .= "contact_title = '".$contact_title."', ";
 			$sql .= "contact_category = '".$contact_category."', ";
@@ -238,8 +253,11 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$contact_type = $row["contact_type"];
 			$contact_organization = $row["contact_organization"];
+			$contact_name_prefix = $row["contact_name_prefix"];
 			$contact_name_given = $row["contact_name_given"];
+			$contact_name_middle = $row["contact_name_middle"];
 			$contact_name_family = $row["contact_name_family"];
+			$contact_name_suffix = $row["contact_name_suffix"];
 			$contact_nickname = $row["contact_nickname"];
 			$contact_title = $row["contact_title"];
 			$contact_category = $row["contact_category"];
@@ -459,6 +477,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-contact_name_prefix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='contact_name_prefix' maxlength='255' value=\"$contact_name_prefix\">\n";
+		echo "<br />\n";
+		echo $text['description-contact_name_prefix']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_name_given']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
@@ -470,12 +499,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-contact_name_middle']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='contact_name_middle' maxlength='255' value=\"$contact_name_middle\">\n";
+		echo "<br />\n";
+		echo $text['description-contact_name_middle']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 		echo "	".$text['label-contact_name_family']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='contact_name_family' maxlength='255' value=\"$contact_name_family\">\n";
 		echo "<br />\n";
 		echo $text['description-contact_name_family']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-contact_name_suffix']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='contact_name_suffix' maxlength='255' value=\"$contact_name_suffix\">\n";
+		echo "<br />\n";
+		echo $text['description-contact_name_suffix']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
