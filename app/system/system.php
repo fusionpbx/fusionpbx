@@ -336,14 +336,9 @@ echo "<br />";
 		echo "	</tr>\n";
 
 		$mc_fail = false;
-
-		require_once "resources/classes/modules.php";
-		$mod = new switch_modules;
-
+		$mod = new modules;
 		if ($mod -> active("mod_memcache")) {
-
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-
 			if ($fp) {
 				$switch_cmd = "memcache status verbose";
 				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
