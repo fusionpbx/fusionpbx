@@ -27,7 +27,7 @@
 
 //use the module class to get the list of modules from the db and add any missing modules
 	if ($domains_processed == 1) {
-		$mod = new switch_modules;
+		$mod = new modules;
 		$mod->db = $db;
 		$mod->dir = $_SESSION['switch']['mod']['dir'];
 		$mod->get_modules();

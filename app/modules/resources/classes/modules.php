@@ -28,7 +28,7 @@ include "root.php";
 //add the database structure
 /*
 require_once "resources/classes/modules.php";
-$mod = new switch_modules;
+$mod = new modules;
 $mod->dir = $_SESSION['switch']['mod']['dir'];
 echo $mod->dir."\n";
 //database connection object
@@ -65,7 +65,7 @@ echo $mod->dir."\n";
 */
 
 //define the directory class
-	class switch_modules {
+	class modules {
 		public $db;
 		public $dir;
 		public $fp;

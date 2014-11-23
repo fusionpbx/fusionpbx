@@ -69,7 +69,7 @@ if (strlen($_GET["a"]) > 0) {
 }
 
 //use the module class to get the list of modules from the db and add any missing modules
-	$mod = new switch_modules;
+	$mod = new modules;
 	$mod->db = $db;
 	$mod->dir = $_SESSION['switch']['mod']['dir'];
 	$mod->get_modules();
