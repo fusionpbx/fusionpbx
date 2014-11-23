@@ -69,7 +69,6 @@ if (strlen($_GET["a"]) > 0) {
 }
 
 //use the module class to get the list of modules from the db and add any missing modules
-	require_once "resources/classes/modules.php";
 	$mod = new switch_modules;
 	$mod->db = $db;
 	$mod->dir = $_SESSION['switch']['mod']['dir'];
