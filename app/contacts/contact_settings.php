@@ -98,7 +98,7 @@ require_once "resources/paging.php";
 	echo "<tr>\n";
 	echo "<th>".$text['label-contact_category']."</th>";
 	echo "<th>".$text['label-contact_subcategory']."</th>";
-	echo "<th>".$text['label-contact_type']."</th>";
+	echo "<th>".$text['label-contact_name']."</th>";
 	echo "<th>".$text['label-contact_value']."</th>";
 	echo "<th style='text-align: center;'>".$text['label-enabled']."</th>";
 	echo "<th>".$text['label-description']."</th>";
