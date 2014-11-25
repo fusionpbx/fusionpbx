@@ -506,19 +506,48 @@ else {
 				$database->sql = "SELECT currency FROM v_billings WHERE type_value='$accountcode'";
 				$database->result = $database->execute();
 				$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:'USD');
+				$billing_currency = (strlen($database->result[0]['currency'])?$database->result[0]['currency']:
+					(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
+				);
 				unset($database->sql);
 				unset($database->result);
 
 				$sell_price = $row['call_sell'];
 				$lcr_direction = (strlen($row['direction'])?$row['direction']:"outbound");
-				$n = (($lcr_direction == "inbound")?$row['caller_id_number']:$row['destination_number']);
+
+				$xml_string = trim($row["xml"]);
+				$json_string = trim($row["json"]);
+				if (strlen($xml_string) > 0) {
+					$format = "xml";
+				}
+				if (strlen($json_string) > 0) {
+					$format = "json";
+				}
+				try {
+					if ($format == 'json') {
+						$array = json_decode($json_string,true);
+					}
+					if ($format == 'xml') {
+						$array = json_decode(json_encode((array)simplexml_load_string($xml_string)),true);
+					}
+				}
+				catch(Exception $e) {
+					echo $e->getMessage();
+				}
+
+				$n = (($lcr_direction == "inbound")?
+					check_str(urldecode($array["caller_profile"]["caller_id_number"])):
+					check_str(urldecode($array["variables"]["lcr_query_digits"]))
+				);
 
 				$database->table = "v_lcr";
-				$database->sql = "SELECT currency FROM v_lcr WHERE v_lcr.carrier_uuid= '' AND v_lcr.enabled='true' AND v_lcr.lcr_direction='$lcr_direction' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+				$database->sql = "SELECT currency FROM v_lcr WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.enabled='true' AND v_lcr.lcr_direction='$lcr_direction' AND v_lcr.digits IN (".number_series($n).") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 				$database->result = $database->execute();
-				//print "<pre>"; print_r($database->result); print "[".$database->result[0]['currency']."]"; print "</pre>";
+				// print "<pre>"; print $database->sql . ":";print "[".$database->result[0]['currency']."]"; print_r($array); print "</pre>";
 
-				$lcr_currency = ((is_string($database->result[0]['currency']) && strlen($database->result[0]['currency']))?$database->result[0]['currency']:'USD');	//billed currency
+				$lcr_currency = ((is_string($database->result[0]['currency']) && strlen($database->result[0]['currency']))?$database->result[0]['currency']:
+					(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
+				);      //billed currency
 				unset($database->sql);
 				unset($database->result);
 				$price = currency_convert($sell_price, $billing_currency, $lcr_currency);
