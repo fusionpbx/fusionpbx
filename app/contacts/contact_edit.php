@@ -376,87 +376,26 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (is_array($_SESSION["contact"]["type"])) {
 			sort($_SESSION["contact"]["type"]);
 			echo "	<select class='formfld' name='contact_type'>\n";
-			echo "	<option value=''></option>\n";
+			echo "		<option value=''></option>\n";
 			foreach($_SESSION["contact"]["type"] as $row) {
-				if ($row == $contact_type) {
-					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
-				}
-				else {
-					echo "	<option value='".$row."'>".$row."</option>\n";
-				}
+				echo "	<option value='".$row."' ".(($row == $contact_type) ? "selected='selected'" : null).">".$row."</option>\n";
 			}
 			echo "	</select>\n";
 		}
 		else {
 			echo "	<select class='formfld' name='contact_type'>\n";
-			echo "	<option value=''></option>\n";
-
-			if ($contact_type == "customer") {
-				echo "	<option value='customer' selected='selected' >Customer</option>\n";
-			}
-			else {
-				echo "	<option value='customer'>Customer</option>\n";
-			}
-			if ($contact_type == "contractor") {
-				echo "	<option value='contractor' selected='selected' >Contractor</option>\n";
-			}
-			else {
-				echo "	<option value='contractor'>Contractor</option>\n";
-			}
-			if ($contact_type == "friend") {
-				echo "	<option value='friend' selected='selected' >Friend</option>\n";
-			}
-			else {
-				echo "	<option value='friend'>Friend</option>\n";
-			}
-			if ($contact_type == "lead") {
-				echo "	<option value='lead' selected='selected' >Lead</option>\n";
-			}
-			else {
-				echo "	<option value='lead'>Lead</option>\n";
-			}
-			if ($contact_type == "member") {
-				echo "	<option value='member' selected='selected' >Member</option>\n";
-			}
-			else {
-				echo "	<option value='member'>Member</option>\n";
-			}
-			if ($contact_type == "family") {
-				echo "	<option value='family' selected='selected' >Family</option>\n";
-			}
-			else {
-				echo "	<option value='family'>Family</option>\n";
-			}
-			if ($contact_type == "subscriber") {
-				echo "	<option value='subscriber' selected='selected' >Subscriber</option>\n";
-			}
-			else {
-				echo "	<option value='subscriber'>Subscriber</option>\n";
-			}
-			if ($contact_type == "supplier") {
-				echo "	<option value='supplier' selected='selected' >Supplier</option>\n";
-			}
-			else {
-				echo "	<option value='supplier'>Supplier</option>\n";
-			}
-			if ($contact_type == "provider") {
-				echo "	<option value='provider' selected='selected' >Provider</option>\n";
-			}
-			else {
-				echo "	<option value='provider'>Provider</option>\n";
-			}
-			if ($contact_type == "user") {
-				echo "	<option value='user' selected='selected' >User</option>\n";
-			}
-			else {
-				echo "	<option value='user'>User</option>\n";
-			}
-			if ($contact_type == "volunteer") {
-				echo "	<option value='volunteer' selected='selected' >Volunteer</option>\n";
-			}
-			else {
-				echo "	<option value='volunteer'>Volunteer</option>\n";
-			}
+			echo "		<option value=''></option>\n";
+			echo "		<option value='customer' ".(($contact_type == "customer") ? "selected='selected'" : null).">".$text['option-contact_type_customer']."</option>\n";
+			echo "		<option value='contractor' ".(($contact_type == "contractor") ? "selected='selected'" : null).">".$text['option-contact_type_contractor']."</option>\n";
+			echo "		<option value='friend' ".(($contact_type == "friend") ? "selected='selected'" : null).">".$text['option-contact_type_friend']."</option>\n";
+			echo "		<option value='lead' ".(($contact_type == "lead") ? "selected='selected'" : null).">".$text['option-contact_type_lead']."</option>\n";
+			echo "		<option value='member' ".(($contact_type == "member") ? "selected='selected'" : null).">".$text['option-contact_type_member']."</option>\n";
+			echo "		<option value='family' ".(($contact_type == "family") ? "selected='selected'" : null).">".$text['option-contact_type_family']."</option>\n";
+			echo "		<option value='subscriber' ".(($contact_type == "subscriber") ? "selected='selected'" : null).">".$text['option-contact_type_subscriber']."</option>\n";
+			echo "		<option value='supplier' ".(($contact_type == "supplier") ? "selected='selected'" : null).">".$text['option-contact_type_supplier']."</option>\n";
+			echo "		<option value='provider' ".(($contact_type == "provider") ? "selected='selected'" : null).">".$text['option-contact_type_provider']."</option>\n";
+			echo "		<option value='user' ".(($contact_type == "user") ? "selected='selected'" : null).">".$text['option-contact_type_user']."</option>\n";
+			echo "		<option value='volunteer' ".(($contact_type == "volunteer") ? "selected='selected'" : null).">".$text['option-contact_type_volunteer']."</option>\n";
 			echo "	</select>\n";
 		}
 		echo "<br />\n";
@@ -551,12 +490,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<select class='formfld' name='contact_title'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["title"] as $row) {
-				if ($row == $contact_title) {
-					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
-				}
-				else {
-					echo "	<option value='".$row."'>".$row."</option>\n";
-				}
+				echo "	<option value='".$row."' ".(($row == $contact_title) ? "selected='selected'" : null).">".$row."</option>\n";
 			}
 			echo "	</select>\n";
 		}
@@ -578,12 +512,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<select class='formfld' name='contact_category'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["category"] as $row) {
-				if ($row == $contact_category) {
-					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
-				}
-				else {
-					echo "	<option value='".$row."'>".$row."</option>\n";
-				}
+				echo "	<option value='".$row."' ".(($row == $contact_category) ? "selected='selected'" : null).">".$row."</option>\n";
 			}
 			echo "	</select>\n";
 		}
@@ -605,12 +534,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<select class='formfld' name='contact_role'>\n";
 			echo "	<option value=''></option>\n";
 			foreach($_SESSION["contact"]["role"] as $row) {
-				if ($row == $contact_role) {
-					echo "	<option value='".$row."' selected='selected'>".$row."</option>\n";
-				}
-				else {
-					echo "	<option value='".$row."'>".$row."</option>\n";
-				}
+				echo "	<option value='".$row."' ".(($row == $contact_role) ? "selected='selected'" : null).">".$row."</option>\n";
 			}
 			echo "	</select>\n";
 		}

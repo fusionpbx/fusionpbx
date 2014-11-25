@@ -432,7 +432,9 @@ else {
 
 	echo "	<tr>\n";
 	echo "		<td valign=\"bottom\" class=\"label\">\n";
-	echo "			<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
+	if (function_exists('curl_version') && $_SESSION['contact']['google_oauth_client_id']['text'] != '' && $_SESSION['contact']['google_oauth_client_secret']['text'] != '') {
+		echo "		<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
+	}
 	echo "		</td>\n";
 	echo "		<td valign=\"bottom\" align='right' class=\"label\" nowrap>\n";
 	echo "			<br />\n";

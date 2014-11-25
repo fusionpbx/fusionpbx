@@ -67,10 +67,70 @@
 		$text['label-contact_type']['pt-pt'] = "Tipo";
 		$text['label-contact_type']['fr-fr'] = "Type";
 
-		$text['description-contact_type']['en-us'] = "Select the contact type.";
-		$text['description-contact_type']['es-cl'] = "Seleccione el tipo de contacto.";
-		$text['description-contact_type']['pt-pt'] = "Seleccionar o tipo de contacto.";
-		$text['description-contact_type']['fr-fr'] = "Choisir le type de contact.";
+		$text['option-contact_type_customer']['en-us'] = "Customer";
+		$text['option-contact_type_customer']['es-cl'] = "Cliente";
+		$text['option-contact_type_customer']['pt-pt'] = "Cliente";
+		$text['option-contact_type_customer']['fr-fr'] = "Client";
+
+		$text['option-contact_type_contractor']['en-us'] = "Contractor";
+		$text['option-contact_type_contractor']['es-cl'] = "Contratista";
+		$text['option-contact_type_contractor']['pt-pt'] = "Contratante";
+		$text['option-contact_type_contractor']['fr-fr'] = "Entrepreneur";
+
+		$text['option-contact_type_friend']['en-us'] = "Friend";
+		$text['option-contact_type_friend']['es-cl'] = "Amigo";
+		$text['option-contact_type_friend']['pt-pt'] = "Amigo";
+		$text['option-contact_type_friend']['fr-fr'] = "Ami";
+
+		$text['option-contact_type_lead']['en-us'] = "Lead";
+		$text['option-contact_type_lead']['es-cl'] = "Supervisor";
+		$text['option-contact_type_lead']['pt-pt'] = "Supervisor";
+		$text['option-contact_type_lead']['fr-fr'] = "Superviseur";
+
+		$text['option-contact_type_member']['en-us'] = "Member";
+		$text['option-contact_type_member']['es-cl'] = "Miembro";
+		$text['option-contact_type_member']['pt-pt'] = "Membro";
+		$text['option-contact_type_member']['fr-fr'] = "Membre";
+
+		$text['option-contact_type_family']['en-us'] = "Family";
+		$text['option-contact_type_family']['es-cl'] = "Familia";
+		$text['option-contact_type_family']['pt-pt'] = "Família";
+		$text['option-contact_type_family']['fr-fr'] = "Famille";
+
+		$text['option-contact_type_subscriber']['en-us'] = "Subscriber";
+		$text['option-contact_type_subscriber']['es-cl'] = "Suscriptor";
+		$text['option-contact_type_subscriber']['pt-pt'] = "Assinante";
+		$text['option-contact_type_subscriber']['fr-fr'] = "Abonné";
+
+		$text['option-contact_type_supplier']['en-us'] = "Supplier";
+		$text['option-contact_type_supplier']['es-cl'] = "Proveedor";
+		$text['option-contact_type_supplier']['pt-pt'] = "Fornecedor";
+		$text['option-contact_type_supplier']['fr-fr'] = "Fournisseur";
+
+		$text['option-contact_type_provider']['en-us'] = "Provider";
+		$text['option-contact_type_provider']['es-cl'] = "Proveedor";
+		$text['option-contact_type_provider']['pt-pt'] = "Provedor";
+		$text['option-contact_type_provider']['fr-fr'] = "Fournisseur";
+
+		$text['option-contact_type_user']['en-us'] = "User";
+		$text['option-contact_type_user']['es-cl'] = "Usuario";
+		$text['option-contact_type_user']['pt-pt'] = "Usuário";
+		$text['option-contact_type_user']['fr-fr'] = "Utilisateur";
+
+		$text['option-contact_type_volunteer']['en-us'] = "Volunteer";
+		$text['option-contact_type_volunteer']['es-cl'] = "Voluntario";
+		$text['option-contact_type_volunteer']['pt-pt'] = "Voluntário";
+		$text['option-contact_type_volunteer']['fr-fr'] = "Bénévole";
+
+		$text['description-contact_type']['en-us'] = "Set the contact type.";
+		$text['description-contact_type']['es-cl'] = "Establecer el tipo de contacto.";
+		$text['description-contact_type']['pt-pt'] = "Defina o tipo de contato.";
+		$text['description-contact_type']['fr-fr'] = "Définissez le type de contact.";
+
+		$text['description-contact_type_import']['en-us'] = "Set a type for the contacts.";
+		$text['description-contact_type_import']['es-cl'] = "Definición de un tipo de los contactos.";
+		$text['description-contact_type_import']['pt-pt'] = "Definir um tipo para os contatos.";
+		$text['description-contact_type_import']['fr-fr'] = "Définir un type pour les contacts.";
 
 		$text['label-contact_organization']['en-us'] = "Organization";
 		$text['label-contact_organization']['es-cl'] = "Organización";
@@ -80,7 +140,7 @@
 		$text['description-contact_organization']['en-us'] = "Enter the organization.";
 		$text['description-contact_organization']['es-cl'] = "Ingrese la organización.";
 		$text['description-contact_organization']['pt-pt'] = "Introduzir a organização.";
-		$text['description-contact_organization']['fr-fr'] = "";
+		$text['description-contact_organization']['fr-fr'] = "Entrez l'organisation.";
 
 		$text['label-contact_name']['en-us'] = "Name";
 		$text['label-contact_name']['es-cl'] = "Nombre";
@@ -105,7 +165,7 @@
 		$text['description-contact_name_given']['en-us'] = "Enter the given name.";
 		$text['description-contact_name_given']['es-cl'] = "Ingrese el nombre dado.";
 		$text['description-contact_name_given']['pt-pt'] = "Introduzir o nome";
-		$text['description-contact_name_given']['fr-fr'] = "";
+		$text['description-contact_name_given']['fr-fr'] = "Entrez le nom donné.";
 
 		$text['label-contact_name_middle']['en-us'] = "Middle";
 		$text['label-contact_name_middle']['es-cl'] = "Segundo Nombre";
@@ -125,7 +185,7 @@
 		$text['description-contact_name_family']['en-us'] = "Enter the family name.";
 		$text['description-contact_name_family']['es-cl'] = "Ingrese el apellido.";
 		$text['description-contact_name_family']['pt-pt'] = "Introduzir o nome de família";
-		$text['description-contact_name_family']['fr-fr'] = "";
+		$text['description-contact_name_family']['fr-fr'] = "Entrez le nom de famille.";
 
 		$text['label-contact_name_suffix']['en-us'] = "Suffix";
 		$text['label-contact_name_suffix']['es-cl'] = "Sufijo";
@@ -133,9 +193,9 @@
 		$text['label-contact_name_suffix']['fr-fr'] = "Suffixe";
 
 		$text['description-contact_name_suffix']['en-us'] = "Enter the name suffix.";
-		$text['description-contact_name_suffix']['es-cl'] = "";
-		$text['description-contact_name_suffix']['pt-pt'] = "";
-		$text['description-contact_name_suffix']['fr-fr'] = "";
+		$text['description-contact_name_suffix']['es-cl'] = "Introduzca el nombre del sufijo.";
+		$text['description-contact_name_suffix']['pt-pt'] = "Digite o nome do sufixo.";
+		$text['description-contact_name_suffix']['fr-fr'] = "Entrez le suffixe de nom.";
 
 		$text['label-contact_nickname']['en-us'] = "Nickname";
 		$text['label-contact_nickname']['es-cl'] = "Apodo";
@@ -145,7 +205,7 @@
 		$text['description-contact_nickname']['en-us'] = "Enter the nickname.";
 		$text['description-contact_nickname']['es-cl'] = "Ingrese un apodo.";
 		$text['description-contact_nickname']['pt-pt'] = "Introduza o nickname.";
-		$text['description-contact_nickname']['fr-fr'] = "";
+		$text['description-contact_nickname']['fr-fr'] = "Entrez le surnom.";
 
 		$text['label-contact_title']['en-us'] = "Title";
 		$text['label-contact_title']['es-cl'] = "Título";
@@ -155,17 +215,22 @@
 		$text['description-contact_title']['en-us'] = "Enter the title.";
 		$text['description-contact_title']['es-cl'] = "Ingrese el título.";
 		$text['description-contact_title']['pt-pt'] = "Introduza o título.";
-		$text['description-contact_title']['fr-fr'] = "";
+		$text['description-contact_title']['fr-fr'] = "Entrez le titre.";
 
 		$text['label-contact_category']['en-us'] = "Category";
 		$text['label-contact_category']['es-cl'] = "Categoría";
 		$text['label-contact_category']['pt-pt'] = "Categoria";
 		$text['label-contact_category']['fr-fr'] = "Catégorie";
 
-		$text['description-contact_category']['en-us'] = "Enter the category.";
-		$text['description-contact_category']['es-cl'] = "Ingrese la categoría.";
-		$text['description-contact_category']['pt-pt'] = "Introduza a categoria.";
-		$text['description-contact_category']['fr-fr'] = "Entrez la catégorie.";
+		$text['description-contact_category']['en-us'] = "Set the contact category.";
+		$text['description-contact_category']['es-cl'] = "Establezca la categoría de contactos.";
+		$text['description-contact_category']['pt-pt'] = "Defina a categoria de contato.";
+		$text['description-contact_category']['fr-fr'] = "Définissez la catégorie de contacts.";
+
+		$text['description-contact_category_import']['en-us'] = "Set a category for the contacts.";
+		$text['description-contact_category_import']['es-cl'] = "Establezca una categoría para los contactos.";
+		$text['description-contact_category_import']['pt-pt'] = "Definir uma categoria para os contatos.";
+		$text['description-contact_category_import']['fr-fr'] = "Définir une catégorie pour les contacts.";
 
 		$text['label-contact_role']['en-us'] = "Role";
 		$text['label-contact_role']['es-cl'] = "Rol";
@@ -185,7 +250,7 @@
 		$text['description-contact_email']['en-us'] = "Enter the email address.";
 		$text['description-contact_email']['es-cl'] = "Ingrese la dirección de correo electrónico.";
 		$text['description-contact_email']['pt-pt'] = "Introduza o endereço de email.";
-		$text['description-contact_email']['fr-fr'] = "";
+		$text['description-contact_email']['fr-fr'] = "Entrez l'adresse e-mail.";
 
 		$text['label-contact_url']['en-us'] = "URL";
 		$text['label-contact_url']['es-cl'] = "URL";
@@ -205,7 +270,7 @@
 		$text['description-contact_time_zone']['en-us'] = "Enter the time zone.";
 		$text['description-contact_time_zone']['es-cl'] = "Ingrese la zona horaria.";
 		$text['description-contact_time_zone']['pt-pt'] = "Introduza o time zone.";
-		$text['description-contact_time_zone']['fr-fr'] = "";
+		$text['description-contact_time_zone']['fr-fr'] = "Entrez le fuseau horaire.";
 
 		$text['label-contact_note']['en-us'] = "Note";
 		$text['label-contact_note']['es-cl'] = "Notas";
@@ -215,7 +280,7 @@
 		$text['description-contact_note']['en-us'] = "Enter a note.";
 		$text['description-contact_note']['es-cl'] = "Ingrese una nota.";
 		$text['description-contact_note']['pt-pt'] = "Introduza uma nota.";
-		$text['description-contact_note']['fr-fr'] = "";
+		$text['description-contact_note']['fr-fr'] = "Entrez une note.";
 
 		$text['label-true']['en-us'] = "True";
 		$text['label-true']['es-cl'] = "Verdadero";
@@ -233,9 +298,9 @@
 		$text['label-order']['fr-fr'] = "Ordre";
 
 		$text['description-order']['en-us'] = "Set the order (index) for this array element.";
-		$text['description-order']['es-cl'] = "Establecer el orden (<ED>ndice) para este elemento de la matriz.";
-		$text['description-order']['pt-pt'] = "Defina a ordem (<ED>ndice) para este elemento da matriz.";
-		$text['description-order']['fr-fr'] = "D<E9>finir l'ordre (index) pour cet <E9>l<E9>ment de tableau.";
+		$text['description-order']['es-cl'] = "Establecer el orden (índice) para este elemento de la matriz.";
+		$text['description-order']['pt-pt'] = "Defina a ordem (índice) para este elemento da matriz.";
+		$text['description-order']['fr-fr'] = "Définissez l'ordre (index) pour cet élément de tableau.";
 
 		$text['label-shared']['en-us'] = "Shared";
 		$text['label-shared']['es-cl'] = "Compartido";
@@ -246,6 +311,11 @@
 		$text['description-shared']['es-cl'] = "Comparte este contacto con otros usuarios en el dominio.";
 		$text['description-shared']['pt-pt'] = "Compartilhe esse contato com outros usuários do domínio.";
 		$text['description-shared']['fr-fr'] = "Partager ce contact avec d'autres utilisateurs sur le domaine.";
+
+		$text['description-shared_import']['en-us'] = "Share contacts with other users on the domain.";
+		$text['description-shared_import']['es-cl'] = "Comparte estos contactos con otros usuarios en el dominio.";
+		$text['description-shared_import']['pt-pt'] = "Compartilhe estes contatos com outros usuários do domínio.";
+		$text['description-shared_import']['fr-fr'] = "Partager ces contacts avec d'autres utilisateurs sur le domaine.";
 
 		$text['option-true']['en-us'] = "True";
 		$text['option-true']['es-cl'] = "Verdadero";
@@ -321,7 +391,7 @@
 		$text['description-phone_type']['en-us'] = "Define the number type or purpose.";
 		$text['description-phone_type']['es-cl'] = "Seleccione el tipo de teléfono.";
 		$text['description-phone_type']['pt-pt'] = "Seleccionar tipo de telefone";
-		$text['description-phone_type']['fr-fr'] = "";
+		$text['description-phone_type']['fr-fr'] = "Définir le type ou le but numéro.";
 
 		$text['label-phone_label']['en-us'] = "Label";
 		$text['label-phone_label']['es-cl'] = "Etiqueta";
@@ -341,7 +411,7 @@
 		$text['description-phone_number']['en-us'] = "Enter the phone number.";
 		$text['description-phone_number']['es-cl'] = "Ingrese el número de teléfono.";
 		$text['description-phone_number']['pt-pt'] = "Introduza o número de telefone";
-		$text['description-phone_number']['fr-fr'] = "";
+		$text['description-phone_number']['fr-fr'] = "Entrez le numéro de téléphone.";
 
 		$text['label-phone_extension']['en-us'] = "Extension";
 		$text['label-phone_extension']['es-cl'] = "Extensión";
@@ -351,7 +421,7 @@
 		$text['description-phone_extension']['en-us'] = "Enter the extension.";
 		$text['description-phone_extension']['es-cl'] = "Ingrese la extensión.";
 		$text['description-phone_extension']['pt-pt'] = "Introduza a extensão";
-		$text['description-phone_extension']['fr-fr'] = "";
+		$text['description-phone_extension']['fr-fr'] = "Entrez l'extension.";
 
 		$text['label-phone_description']['en-us'] = "Description";
 		$text['label-phone_description']['es-cl'] = "Descripción";
@@ -361,7 +431,7 @@
 		$text['description-phone_description']['en-us'] = "Enter the description.";
 		$text['description-phone_description']['es-cl'] = "Ingrese una descripción.";
 		$text['description-phone_description']['pt-pt'] = "Introduza a descrição";
-		$text['description-phone_description']['fr-fr'] = "";
+		$text['description-phone_description']['fr-fr'] = "Entrez la description.";
 
 		$text['label-phone_tools']['en-us'] = "Tools";
 		$text['label-phone_tools']['es-cl'] = "Herramientas";
@@ -512,7 +582,7 @@
 		$text['description-address_locality']['en-us'] = "Enter the city.";
 		$text['description-address_locality']['es-cl'] = "Ingrese la ciudad";
 		$text['description-address_locality']['pt-pt'] = "Introduza a cidade.";
-		$text['description-address_locality']['fr-fr'] = "";
+		$text['description-address_locality']['fr-fr'] = "Entrez dans la ville.";
 
 		$text['label-address_region']['en-us'] = "Region";
 		$text['label-address_region']['es-cl'] = "Región";
@@ -522,7 +592,7 @@
 		$text['description-address_region']['en-us'] = "Enter the state or province.";
 		$text['description-address_region']['es-cl'] = "Ingrese el estado o provincia.";
 		$text['description-address_region']['pt-pt'] = "Introduza o estado ou província.";
-		$text['description-address_region']['fr-fr'] = "";
+		$text['description-address_region']['fr-fr'] = "Entrez l'état ou province.";
 
 		$text['label-address_postal_code']['en-us'] = "Postal Code";
 		$text['label-address_postal_code']['es-cl'] = "Código Postal";
@@ -532,7 +602,7 @@
 		$text['description-address_postal_code']['en-us'] = "Enter the postal code.";
 		$text['description-address_postal_code']['es-cl'] = "Ingrese el código postal.";
 		$text['description-address_postal_code']['pt-pt'] = "Introduza o código postal.";
-		$text['description-address_postal_code']['fr-fr'] = "";
+		$text['description-address_postal_code']['fr-fr'] = "Entrez le code postal.";
 
 		$text['label-address_country']['en-us'] = "Country";
 		$text['label-address_country']['es-cl'] = "País";
@@ -542,7 +612,7 @@
 		$text['description-address_country']['en-us'] = "Enter the country.";
 		$text['description-address_country']['es-cl'] = "Ingrese el país.";
 		$text['description-address_country']['pt-pt'] = "Introduza o país.";
-		$text['description-address_country']['fr-fr'] = "";
+		$text['description-address_country']['fr-fr'] = "Entrez le pays.";
 
 		$text['label-address_latitude']['en-us'] = "Latitude";
 		$text['label-address_latitude']['es-cl'] = "Latitud";
@@ -572,7 +642,7 @@
 		$text['description-address_description']['en-us'] = "Enter a description.";
 		$text['description-address_description']['es-cl'] = "Ingrese una descripción";
 		$text['description-address_description']['pt-pt'] = "Introduza uma descrição.";
-		$text['description-address_description']['fr-fr'] = "";
+		$text['description-address_description']['fr-fr'] = "Entrez une description.";
 
 		$text['label-address_tools']['en-us'] = "Tools";
 		$text['label-address_tools']['es-cl'] = "Herramientas";
@@ -760,8 +830,8 @@
 
 		$text['description-contact_notes-add']['en-us'] = "Enter the desired note below.";
 		$text['description-contact_notes-add']['es-cl'] = "Ingrese una nota de contacto.";
-		$text['description-contact_notes-add']['pt-pt'] = "";
-		$text['description-contact_notes-add']['fr-fr'] = "";
+		$text['description-contact_notes-add']['pt-pt'] = "Digite a nota desejada abaixo.";
+		$text['description-contact_notes-add']['fr-fr'] = "Entrez ci-dessous la note désirée.";
 
 		$text['title-contact_notes-edit']['en-us'] = "Contact Note Edit";
 		$text['title-contact_notes-edit']['es-cl'] = "Editar Nota de Contactos";
@@ -775,8 +845,8 @@
 
 		$text['description-contact_notes-edit']['en-us'] = "Enter the desired note below.";
 		$text['description-contact_notes-edit']['es-cl'] = "Modifique la nota de contacto";
-		$text['description-contact_notes-edit']['pt-pt'] = "";
-		$text['description-contact_notes-edit']['fr-fr'] = "";
+		$text['description-contact_notes-edit']['pt-pt'] = "Digite a nota desejada abaixo.";
+		$text['description-contact_notes-edit']['fr-fr'] = "Entrez ci-dessous la note désirée.";
 
 		$text['label-contact_notes']['en-us'] = "Notes";
 		$text['label-contact_notes']['es-cl'] = "Notas";
@@ -877,7 +947,7 @@
 		$text['description-contact_setting_value']['en-us'] = "Enter the value of this setting.";
 		$text['description-contact_setting_value']['es-cl'] = "Ingrese el valor para esta configuración.";
 		$text['description-contact_setting_value']['pt-pt'] = "Introduza o valor desta definição.";
-		$text['description-contact_setting_value']['fr-fr'] = "";
+		$text['description-contact_setting_value']['fr-fr'] = "Entrez la valeur de ce paramètre.";
 
 	// contact import
 		$text['title-contacts_import']['en-us'] = "Import Contacts";
@@ -960,6 +1030,16 @@
 		$text['label-contacts_import_google_account']['pt-pt'] = "Conta";
 		$text['label-contacts_import_google_account']['fr-fr'] = "Compte";
 
+		$text['label-import_fields']['en-us'] = "Fields";
+		$text['label-import_fields']['es-cl'] = "Campos";
+		$text['label-import_fields']['pt-pt'] = "Campos";
+		$text['label-import_fields']['fr-fr'] = "Les Champs";
+
+		$text['description-import_fields']['en-us'] = "Select contact data fields to import.";
+		$text['description-import_fields']['es-cl'] = "Seleccionar campos de datos de contactos para importar.";
+		$text['description-import_fields']['pt-pt'] = "Selecione os campos de dados de contacto para importar.";
+		$text['description-import_fields']['fr-fr'] = "Sélectionner les champs de données de contact à importer.";
+
 		$text['label-group']['en-us'] = "Group";
 		$text['label-group']['es-cl'] = "Grupo";
 		$text['label-group']['pt-pt'] = "Grupo";
@@ -981,9 +1061,9 @@
 		$text['message-google_signed_out']['fr-fr'] = "Compte Google: Déconnecté";
 
 		$text['message-contacts_imported']['en-us'] = "Contacts Imported: ";
-		$text['message-contacts_imported']['es-cl'] = "";
-		$text['message-contacts_imported']['pt-pt'] = "";
-		$text['message-contacts_imported']['fr-fr'] = "";
+		$text['message-contacts_imported']['es-cl'] = "Contactos Importados: ";
+		$text['message-contacts_imported']['pt-pt'] = "Contatos Importados: ";
+		$text['message-contacts_imported']['fr-fr'] = "Contacts Importés: ";
 
 	// general labels
 		$text['label-primary']['en-us'] = "Primary";
