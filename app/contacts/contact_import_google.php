@@ -80,6 +80,7 @@ if ($_POST['a'] == 'import') {
 			$sql .= "( ";
 			$sql .= "domain_uuid, ";
 			$sql .= "contact_uuid, ";
+			$sql .= "contact_type, ";
 			$sql .= "contact_organization, ";
 			$sql .= "contact_name_prefix, ";
 			$sql .= "contact_name_given, ";
@@ -88,12 +89,14 @@ if ($_POST['a'] == 'import') {
 			$sql .= "contact_name_suffix, ";
 			$sql .= "contact_nickname, ";
 			$sql .= "contact_title, ";
+			$sql .= "contact_category, ";
 			$sql .= "contact_note ";
 			$sql .= ") ";
 			$sql .= "values ";
 			$sql .= "( ";
 			$sql .= "'".$_SESSION['domain_uuid']."', ";
 			$sql .= "'".$contact_uuid."', ";
+			$sql .= "'".check_str($_POST['import_type'])."', ";
 			$sql .= "'".check_str($contact['organization'])."', ";
 			$sql .= "'".check_str($contact['name_prefix'])."', ";
 			$sql .= "'".check_str($contact['name_given'])."', ";
@@ -102,33 +105,34 @@ if ($_POST['a'] == 'import') {
 			$sql .= "'".check_str($contact['name_suffix'])."', ";
 			$sql .= "'".check_str($contact['nickname'])."', ";
 			$sql .= "'".check_str($contact['title'])."', ";
+			$sql .= "'".check_str($_POST['import_category'])."', ";
 			$sql .= "'".check_str($contact['notes'])."' ";
 			$sql .= ")";
-			//echo $sql."<br><br>";
 			$db->exec(check_sql($sql));
 			unset($sql);
 
-			//make contact private
-			$sql = "insert into v_contact_groups ";
-			$sql .= "( ";
-			$sql .= "contact_group_uuid, ";
-			$sql .= "domain_uuid, ";
-			$sql .= "contact_uuid, ";
-			$sql .= "group_uuid ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "( ";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'".$_SESSION['domain_uuid']."', ";
-			$sql .= "'".$contact_uuid."', ";
-			$sql .= "'".$_SESSION["user_uuid"]."' ";
-			$sql .= ")";
-			//echo $sql."<br><br>";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			//set sharing
+			if ($_POST['import_shared'] != 'true') {
+				$sql = "insert into v_contact_groups ";
+				$sql .= "( ";
+				$sql .= "contact_group_uuid, ";
+				$sql .= "domain_uuid, ";
+				$sql .= "contact_uuid, ";
+				$sql .= "group_uuid ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "( ";
+				$sql .= "'".uuid()."', ";
+				$sql .= "'".$_SESSION['domain_uuid']."', ";
+				$sql .= "'".$contact_uuid."', ";
+				$sql .= "'".$_SESSION["user_uuid"]."' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+			}
 
 			//insert emails
-			if (sizeof($contact['emails']) > 0) {
+			if ($_POST['import_fields']['email'] && sizeof($contact['emails']) > 0) {
 				foreach ($contact['emails'] as $contact_email) {
 					$sql = "insert into v_contact_emails ";
 					$sql .= "(";
@@ -148,14 +152,13 @@ if ($_POST['a'] == 'import') {
 					$sql .= "'".check_str($contact_email['address'])."', ";
 					$sql .= (($contact_email['primary']) ? 1 : 0)." ";
 					$sql .= ")";
-					//echo $sql."<br><br>";
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
 			}
 
 			//insert numbers
-			if (sizeof($contact['numbers']) > 0) {
+			if ($_POST['import_fields']['number'] && sizeof($contact['numbers']) > 0) {
 				foreach ($contact['numbers'] as $contact_number) {
 					$sql = "insert into v_contact_phones ";
 					$sql .= "(";
@@ -179,14 +182,13 @@ if ($_POST['a'] == 'import') {
 					$sql .= "'".check_str($contact_number['number'])."', ";
 					$sql .= ((sizeof($contact['numbers']) == 1) ? 1 : 0)." ";
 					$sql .= ")";
-					//echo $sql."<br><br>";
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
 			}
 
 			//insert urls
-			if (sizeof($contact['urls']) > 0) {
+			if ($_POST['import_fields']['url'] && sizeof($contact['urls']) > 0) {
 				foreach ($contact['urls'] as $contact_url) {
 					$sql = "insert into v_contact_urls ";
 					$sql .= "(";
@@ -206,14 +208,13 @@ if ($_POST['a'] == 'import') {
 					$sql .= "'".check_str($contact_url['url'])."', ";
 					$sql .= ((sizeof($contact['urls']) == 1) ? 1 : 0)." ";
 					$sql .= ")";
-					//echo $sql."<br><br>";
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
 			}
 
 			//insert addresses
-			if (sizeof($contact['addresses']) > 0) {
+			if ($_POST['import_fields']['address'] && sizeof($contact['addresses']) > 0) {
 				foreach ($contact['addresses'] as $contact_address) {
 					$sql = "insert into v_contact_addresses ";
 					$sql .= "(";
@@ -255,7 +256,6 @@ if ($_POST['a'] == 'import') {
 					$sql .= "'".check_str($contact_address['country'])."', ";
 					$sql .= ((sizeof($contact['addresses']) == 1) ? 1 : 0)." ";
 					$sql .= ")";
-					echo $sql."<br><br>";
 					$db->exec(check_sql($sql));
 					unset($sql);
 				}
@@ -346,6 +346,98 @@ $row_style["1"] = "row_style1";
 
 echo "<form name='frm_import' id='frm_import' method='post'>\n";
 echo "<input type='hidden' name='a' value='import'>\n";
+
+echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+echo "<tr>\n";
+echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+echo "	".$text['label-import_fields']."\n";
+echo "</td>\n";
+echo "<td width='70%' class='vtable' align='left'>\n";
+echo "	<input type='checkbox' disabled='disabled' checked>&nbsp;".$text['label-contact_name']."&nbsp;\n";
+echo "	<input type='checkbox' disabled='disabled' checked>&nbsp;".$text['label-contact_organization']."&nbsp;\n";
+echo "	<input type='checkbox' name='import_fields[email]' id='field_email' value='1' checked><label for='field_email'>&nbsp;".$text['label-contact_email']."</label>&nbsp;\n";
+echo "	<input type='checkbox' name='import_fields[number]' id='field_number' value='1' checked><label for='field_number'>&nbsp;".$text['label-phone_number']."</label>&nbsp;\n";
+echo "	<input type='checkbox' name='import_fields[url]' id='field_url' value='1' checked><label for='field_url'>&nbsp;".$text['label-contact_url']."</label>&nbsp;\n";
+echo "	<input type='checkbox' name='import_fields[addresse]' id='field_address' value='1' checked><label for='field_address'>&nbsp;".$text['label-address_address']."</label>\n";
+echo "<br />\n";
+echo $text['description-import_fields']."\n";
+echo "</td>\n";
+echo "</tr>\n";
+
+echo "<tr>\n";
+echo "<td width='30%' class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+echo "	".$text['label-contact_type']."\n";
+echo "</td>\n";
+echo "<td class='vtable' align='left'>\n";
+if (is_array($_SESSION["contact"]["type"])) {
+	sort($_SESSION["contact"]["type"]);
+	echo "	<select class='formfld' name='import_type'>\n";
+	echo "		<option value=''></option>\n";
+	foreach($_SESSION["contact"]["type"] as $row) {
+		echo "	<option value='".$row."'>".$row."</option>\n";
+	}
+	echo "	</select>\n";
+}
+else {
+	echo "	<select class='formfld' name='import_type'>\n";
+	echo "		<option value=''></option>\n";
+	echo "		<option value='customer'>".$text['option-contact_type_customer']."</option>\n";
+	echo "		<option value='contractor'>".$text['option-contact_type_contractor']."</option>\n";
+	echo "		<option value='friend'>".$text['option-contact_type_friend']."</option>\n";
+	echo "		<option value='lead'>".$text['option-contact_type_lead']."</option>\n";
+	echo "		<option value='member'>".$text['option-contact_type_member']."</option>\n";
+	echo "		<option value='family'>".$text['option-contact_type_family']."</option>\n";
+	echo "		<option value='subscriber'>".$text['option-contact_type_subscriber']."</option>\n";
+	echo "		<option value='supplier'>".$text['option-contact_type_supplier']."</option>\n";
+	echo "		<option value='provider'>".$text['option-contact_type_provider']."</option>\n";
+	echo "		<option value='user'>".$text['option-contact_type_user']."</option>\n";
+	echo "		<option value='volunteer'>".$text['option-contact_type_volunteer']."</option>\n";
+	echo "	</select>\n";
+}
+echo "<br />\n";
+echo $text['description-contact_type_import']."\n";
+echo "</td>\n";
+echo "</tr>\n";
+
+echo "<tr>\n";
+echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+echo "	".$text['label-contact_category']."\n";
+echo "</td>\n";
+echo "<td class='vtable' align='left'>\n";
+if (is_array($_SESSION["contact"]["category"])) {
+	sort($_SESSION["contact"]["category"]);
+	echo "	<select class='formfld' name='import_category'>\n";
+	echo "		<option value=''></option>\n";
+	foreach($_SESSION["contact"]["category"] as $row) {
+		echo "	<option value='".$row."'>".$row."</option>\n";
+	}
+	echo "	</select>\n";
+}
+else {
+	echo "	<input class='formfld' type='text' name='import_category' maxlength='255'>\n";
+}
+echo "<br />\n";
+echo $text['description-contact_category_import']."\n";
+echo "</td>\n";
+echo "</tr>\n";
+
+echo "<tr>\n";
+echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+echo "	".$text['label-shared']."\n";
+echo "</td>\n";
+echo "<td class='vtable' align='left'>\n";
+echo "	<select class='formfld' name='import_shared' id='import_shared'>\n";
+echo "		<option value='false'>".$text['option-false']."</option>\n";
+echo "		<option value='true'>".$text['option-true']."</option>\n";
+echo "	</select>\n";
+echo "	<br />\n";
+echo $text['description-shared_import']."\n";
+echo "</td>\n";
+echo "</tr>\n";
+
+echo "</table>";
+echo "<br><br>";
 
 //display groups
 echo "<b>".$text['label-groups']."</b>";
