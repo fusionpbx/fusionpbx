@@ -117,7 +117,7 @@ require_once "resources/paging.php";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".$row['address_locality'].(($row['address_region'] != '') ? ", ".$row['address_region'] : null)."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: center;'>".$row['address_country']."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]." tr_link_void' style='padding: 0px;'>\n";
-			echo "		<a href=\"http://maps.google.com/maps?q=".urlencode($map_query)."&hl=en\" target=\"_blank\"><img src='resources/images/icon_gmaps.png' style='width: 21px; height: 21px; alt='".$text['label-google_map']."' title='".$text['label-google_map']."'></a>\n";
+			echo "		<a href=\"http://maps.google.com/maps?q=".urlencode($map_query)."&hl=en\" target=\"_blank\"><img src='icon_gmaps.png' style='width: 21px; height: 21px; alt='".$text['label-google_map']."' title='".$text['label-google_map']."'></a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['address_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";

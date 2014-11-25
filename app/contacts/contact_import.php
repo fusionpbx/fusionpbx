@@ -432,10 +432,10 @@ else {
 	echo "</tr>\n";
 
 	echo "	<tr>\n";
-	echo "		<td valign=\"top\" class=\"label\">\n";
+	echo "		<td valign=\"bottom\" class=\"label\">\n";
 	echo "			&nbsp;\n";
 	echo "		</td>\n";
-	echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
+	echo "		<td valign=\"bottom\" align='right' class=\"label\" nowrap>\n";
 	echo "			<br />\n";
 	echo "			<input name=\"type\" type=\"hidden\" value=\"csv\">\n";
 	echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
