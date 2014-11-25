@@ -61,6 +61,7 @@ if (strlen($_GET["contact_uuid"]) > 0) {
 		$address_label_custom = check_str($_POST["address_label_custom"]);
 		$address_street = check_str($_POST["address_street"]);
 		$address_extended = check_str($_POST["address_extended"]);
+		$address_community = check_str($_POST["address_community"]);
 		$address_locality = check_str($_POST["address_locality"]);
 		$address_region = check_str($_POST["address_region"]);
 		$address_postal_code = check_str($_POST["address_postal_code"]);
@@ -118,6 +119,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "address_label, ";
 			$sql .= "address_street, ";
 			$sql .= "address_extended, ";
+			$sql .= "address_community, ";
 			$sql .= "address_locality, ";
 			$sql .= "address_region, ";
 			$sql .= "address_postal_code, ";
@@ -136,6 +138,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'".$address_label."', ";
 			$sql .= "'".$address_street."', ";
 			$sql .= "'".$address_extended."', ";
+			$sql .= "'".$address_community."', ";
 			$sql .= "'".$address_locality."', ";
 			$sql .= "'".$address_region."', ";
 			$sql .= "'".$address_postal_code."', ";
@@ -160,6 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "address_label = '".$address_label."', ";
 			$sql .= "address_street = '".$address_street."', ";
 			$sql .= "address_extended = '".$address_extended."', ";
+			$sql .= "address_community = '".$address_community."', ";
 			$sql .= "address_locality = '".$address_locality."', ";
 			$sql .= "address_region = '".$address_region."', ";
 			$sql .= "address_postal_code = '".$address_postal_code."', ";
@@ -195,6 +199,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$address_label = $row["address_label"];
 			$address_street = $row["address_street"];
 			$address_extended = $row["address_extended"];
+			$address_community = $row["address_community"];
 			$address_locality = $row["address_locality"];
 			$address_region = $row["address_region"];
 			$address_postal_code = $row["address_postal_code"];
@@ -323,10 +328,21 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-address_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='address_street' maxlength='255' value=\"$address_street\" style='margin-bottom: 3px;'><br>\n";
+	echo "	<textarea class='formfld' name='address_street' style='margin-bottom: 3px;'>$address_street</textarea><br>\n";
 	echo "	<input class='formfld' type='text' name='address_extended' maxlength='255' value=\"$address_extended\">\n";
 	echo "<br />\n";
 	echo $text['description-address_address']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-address_community']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='address_community' maxlength='255' value=\"$address_community\">\n";
+	echo "<br />\n";
+	echo $text['description-address_community']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

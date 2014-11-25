@@ -65,7 +65,7 @@ require_once "resources/paging.php";
 	echo "			<input class=\"formfld\" style='text-align: right;' type=\"text\" name=\"search_all\" value=\"$search_all\">\n";
 	echo "			<input class=\"btn\" type=\"submit\" name=\"submit\" value=\"".$text['button-search']."\">\n";
 	if (permission_exists('contact_add')) {
-		echo 		"<input type='button' class='btn' name='' alt='back' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>";
+		echo 		"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
 	}
 	echo "		</form>\n";
 	echo "	</td>\n";

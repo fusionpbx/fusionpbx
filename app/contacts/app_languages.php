@@ -539,6 +539,16 @@
 		$text['description-address_address']['pt-pt'] = "Introduza o endereço da rua";
 		$text['description-address_address']['fr-fr'] = "Saisissez l'adresse.";
 
+		$text['label-address_community']['en-us'] = "Community";
+		$text['label-address_community']['es-cl'] = "Comunidad";
+		$text['label-address_community']['pt-pt'] = "Comunidade";
+		$text['label-address_community']['fr-fr'] = "Communauté";
+
+		$text['description-address_community']['en-us'] = "Enter the community.";
+		$text['description-address_community']['es-cl'] = "Ingrese la comunidad.";
+		$text['description-address_community']['pt-pt'] = "Entre a comunidade.";
+		$text['description-address_community']['fr-fr'] = "Entrez dans la communauté.";
+
 		$text['label-address_locality']['en-us'] = "City";
 		$text['label-address_locality']['es-cl'] = "Ciudad";
 		$text['label-address_locality']['pt-pt'] = "Cidade";
@@ -823,20 +833,20 @@
 		$text['label-contact_note']['pt-pt'] = "Nota";
 		$text['label-contact_note']['fr-fr'] = "Note";
 
-		$text['description-contact_note']['en-us'] = "";
+		$text['description-contact_note']['en-us'] = "Enter a note for this contact.";
 		$text['description-contact_note']['es-cl'] = "Nota de contacto";
-		$text['description-contact_note']['pt-pt'] = "";
-		$text['description-contact_note']['fr-fr'] = "";
+		$text['description-contact_note']['pt-pt'] = "Ingrese una nota para este contacto.";
+		$text['description-contact_note']['fr-fr'] = "Entrez une note à ce contact.";
 
 		$text['label-note_content']['en-us'] = "Content";
-		$text['label-note_content']['es-cl'] = "";
-		$text['label-note_content']['pt-pt'] = "";
-		$text['label-note_content']['fr-fr'] = "";
+		$text['label-note_content']['es-cl'] = "Contenido";
+		$text['label-note_content']['pt-pt'] = "Conteúdo";
+		$text['label-note_content']['fr-fr'] = "Content";
 
 		$text['label-note_user']['en-us'] = "User";
-		$text['label-note_user']['es-cl'] = "";
-		$text['label-note_user']['pt-pt'] = "";
-		$text['label-note_user']['fr-fr'] = "";
+		$text['label-note_user']['es-cl'] = "Usuario";
+		$text['label-note_user']['pt-pt'] = "Usuário";
+		$text['label-note_user']['fr-fr'] = "Utilisateur";
 
 	// contact import
 		$text['title-contacts_import']['en-us'] = "Import Contacts";
@@ -888,6 +898,52 @@
 		$text['message-results']['es-cl'] = "Los siguientes contactos fueron importados exitosamente desde el archivo CSV:";
 		$text['message-results']['pt-pt'] = "Os seguintes contactos foram importados com sucesso a partir do ficheiro CSV submetido:";
 		$text['message-results']['fr-fr'] = "Les contacts suivants ont été téléchargés correctement à partir di fichier CSV:";
+
+		$text['message-access_denied']['en-us'] = "Access Denied";
+		$text['message-access_denied']['es-cl'] = "Acceso Denegado";
+		$text['message-access_denied']['pt-pt'] = "Acesso Negado";
+		$text['message-access_denied']['fr-fr'] = "Accès Refusé";
+
+		$text['message-invalid_credentials']['en-us'] = "Invalid Credentials";
+		$text['message-invalid_credentials']['es-cl'] = "Credenciales No Válidas";
+		$text['message-invalid_credentials']['pt-pt'] = "Credenciais Inválidas";
+		$text['message-invalid_credentials']['fr-fr'] = "Pouvoirs Invalides";
+
+		$text['title-contacts_import_google']['en-us'] = "Import Google Contacts";
+		$text['title-contacts_import_google']['es-cl'] = "Importar Contactos de Google";
+		$text['title-contacts_import_google']['pt-pt'] = "Importar Contatos do Google";
+		$text['title-contacts_import_google']['fr-fr'] = "Importer les Contacts Google";
+
+		$text['header-contacts_import_google']['en-us'] = "Import Google Contacts";
+		$text['header-contacts_import_google']['es-cl'] = "Importar Contactos de Google";
+		$text['header-contacts_import_google']['pt-pt'] = "Importar Contatos do Google";
+		$text['header-contacts_import_google']['fr-fr'] = "Importer les Contacts Google";
+
+		$text['description-contacts_import_google']['en-us'] = "Select the desired contacts to import.";
+		$text['description-contacts_import_google']['es-cl'] = "Seleccione los contactos de Google deseados importar.";
+		$text['description-contacts_import_google']['pt-pt'] = "Selecione os desejados Google Contacts para importar.";
+		$text['description-contacts_import_google']['fr-fr'] = "Sélectionnez les contacts Google souhaités à importer.";
+
+		$text['label-contacts_import_google_account']['en-us'] = "Account";
+		$text['label-contacts_import_google_account']['es-cl'] = "Cuenta";
+		$text['label-contacts_import_google_account']['pt-pt'] = "Conta";
+		$text['label-contacts_import_google_account']['fr-fr'] = "Compte";
+
+		$text['button-reload']['en-us'] = "Reload";
+		$text['button-reload']['es-cl'] = "Recargar";
+		$text['button-reload']['pt-pt'] = "Recarregar";
+		$text['button-reload']['fr-fr'] = "Recharger";
+
+		$text['button-sign_out']['en-us'] = "Sign Out";
+		$text['button-sign_out']['es-cl'] = "Desconectar";
+		$text['button-sign_out']['pt-pt'] = "Sair";
+		$text['button-sign_out']['fr-fr'] = "Se Déconnecter";
+
+		$text['message-google_signed_out']['en-us'] = "Google Account: Signed Out";
+		$text['message-google_signed_out']['es-cl'] = "Cuenta de Google: Cerrado la Sesión";
+		$text['message-google_signed_out']['pt-pt'] = "Conta do Google: Assinado Fora";
+		$text['message-google_signed_out']['fr-fr'] = "Compte Google: Déconnecté";
+
 
 	// general labels
 		$text['label-primary']['en-us'] = "Primary";
