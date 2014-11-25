@@ -69,6 +69,9 @@
 	}
 	$autoload = new auto_loader();
 
+//define variable(s)
+	$default_login = false;	//used in the themes
+
 //additional includes
 	require_once "resources/php.php";
 	require "resources/pdo.php";
