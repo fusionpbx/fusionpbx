@@ -359,7 +359,7 @@ echo "	<input type='checkbox' disabled='disabled' checked>&nbsp;".$text['label-c
 echo "	<input type='checkbox' name='import_fields[email]' id='field_email' value='1' checked><label for='field_email'>&nbsp;".$text['label-contact_email']."</label>&nbsp;\n";
 echo "	<input type='checkbox' name='import_fields[number]' id='field_number' value='1' checked><label for='field_number'>&nbsp;".$text['label-phone_number']."</label>&nbsp;\n";
 echo "	<input type='checkbox' name='import_fields[url]' id='field_url' value='1' checked><label for='field_url'>&nbsp;".$text['label-contact_url']."</label>&nbsp;\n";
-echo "	<input type='checkbox' name='import_fields[addresse]' id='field_address' value='1' checked><label for='field_address'>&nbsp;".$text['label-address_address']."</label>\n";
+echo "	<input type='checkbox' name='import_fields[address]' id='field_address' value='1' checked><label for='field_address'>&nbsp;".$text['label-address_address']."</label>\n";
 echo "<br />\n";
 echo $text['description-import_fields']."\n";
 echo "</td>\n";
