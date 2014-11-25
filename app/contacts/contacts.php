@@ -80,12 +80,49 @@ require_once "resources/paging.php";
 	//add user's uuid to group uuid list to include private (non-shared) contacts
 	$user_group_uuids[] = $_SESSION["user_uuid"];
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_contacts ";
+	//get contact sync sources
+		$sql = "select ";
+		$sql .= "contact_uuid, ";
+		$sql .= "contact_setting_value ";
+		$sql .= "from ";
+		$sql .= "v_contact_settings ";
+		$sql .= "where ";
+		$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_setting_category = 'sync' ";
+		$sql .= "and contact_setting_subcategory = 'source' ";
+		$sql .= "and contact_setting_name = 'array' ";
+		$sql .= "and contact_setting_value <> '' ";
+		$sql .= "and contact_setting_value is not null ";
+		if (sizeof($user_group_uuids) > 0) {
+			$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
+			$sql .= "	contact_uuid in ( \n";
+			$sql .= "		select contact_uuid from v_contact_groups ";
+			$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
+			$sql .= "		and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "	) \n";
+			$sql .= "	or \n";
+			$sql .= "	contact_uuid not in ( \n";
+			$sql .= "		select contact_uuid from v_contact_groups ";
+			$sql .= "		where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "	) \n";
+			$sql .= ") \n";
+		}
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		if (count($result) > 0) {
+			foreach($result as $row) {
+				$contact_sync_sources[$row['contact_uuid']][] = $row['contact_setting_value'];
+			}
+		}
+		unset ($sql, $prep_statement, $result);
+
+	//build query for paging and list
+		$sql = "select count(*) as num_rows ";
+ 		$sql .= "from v_contacts as c ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		if (sizeof($user_group_uuids) > 0) {
-			//only show contacts assigned to current user's group(s) and those not assigned to any group
-			$sql .= "and ( \n";
+			$sql .= "and ( \n"; //only contacts assigned to current user's group(s) and those not assigned to any group
 			$sql .= "	contact_uuid in ( \n";
 			$sql .= "		select contact_uuid from v_contact_groups ";
 			$sql .= "		where group_uuid in ('".implode("','", $user_group_uuids)."') ";
@@ -182,12 +219,8 @@ require_once "resources/paging.php";
 	echo th_order_by('contact_name_family', $text['label-contact_name_family'], $order_by, $order);
 	echo th_order_by('contact_nickname', $text['label-contact_nickname'], $order_by, $order);
 	echo th_order_by('contact_title', $text['label-contact_title'], $order_by, $order);
-	//echo th_order_by('contact_category', $text['label-contact_category'], $order_by, $order);
 	echo th_order_by('contact_role', $text['label-contact_role'], $order_by, $order);
-	//echo th_order_by('contact_email', $text['label-contact_email'], $order_by, $order);
-	//echo th_order_by('contact_url', $text['label-contact_url'], $order_by, $order);
-	//echo th_order_by('contact_time_zone', $text['label-contact_time_zone'], $order_by, $order);
-	//echo th_order_by('contact_note', $text['label-contact_note'], $order_by, $order);
+	echo "<th style='padding: 0px;'>&nbsp;</th>\n";
 	echo "<td class='list_control_icons'>";
 	echo 	"<a href='contact_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	echo "</td>\n";
@@ -198,17 +231,22 @@ require_once "resources/paging.php";
 			$tr_link = "href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'";
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['contact_type'])."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_organization']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_given']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_family']."</a>&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_nickname']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_title']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_category']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_role']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_email']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_url']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_time_zone']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['contact_note']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 35%; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_organization']."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_given']."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'><a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."'>".$row['contact_name_family']."</a>&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='white-space: nowrap;'>".$row['contact_nickname']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['contact_title']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='width: 10%; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>".$row['contact_role']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."' style='padding: 2px 2px; text-align: center; width: 25px;'>";
+				if (sizeof($contact_sync_sources[$row['contact_uuid']]) > 0) {
+					foreach ($contact_sync_sources[$row['contact_uuid']] as $contact_sync_source) {
+						switch ($contact_sync_source) {
+							case 'google': echo "<img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; padding-left: 2px;' alt='".$text['label-contact_google']."'>"; break;
+						}
+					}
+				}
+				else { echo "&nbsp;"; }
+			echo "	</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='contact_edit.php?id=".$row['contact_uuid']."&query_string=".urlencode($_SERVER["QUERY_STRING"])."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			echo 		"<a href='contact_delete.php?id=".$row['contact_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";

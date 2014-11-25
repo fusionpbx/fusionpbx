@@ -107,7 +107,7 @@ require_once "resources/paging.php";
 			$tr_link = "href='contact_url_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_url_uuid']."'";
 			echo "<tr ".$tr_link." ".(($row['url_primary']) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['url_label']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='width: 40%; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='".$row['url_address']."' target='_blank'>".$row['url_address']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='width: 40%; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><a href='".$row['url_address']."' target='_blank'>".str_replace("http://", "", str_replace("https://", "", $row['url_address']))."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['address_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='contact_url_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_url_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";

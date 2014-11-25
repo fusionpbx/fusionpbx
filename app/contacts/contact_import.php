@@ -427,13 +427,12 @@ else {
 	echo "<td class='vtable' align='left'>\n";
 	echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" id=\"ulfile\">\n";
 	echo "<br />\n";
-	//echo "Select the enclosure.\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "	<tr>\n";
 	echo "		<td valign=\"bottom\" class=\"label\">\n";
-	echo "			&nbsp;\n";
+	echo "			<a href='contact_import_google.php'><img src='resources/images/icon_gcontacts.png' style='width: 21px; height: 21px; border: none; text-decoration: none; margin-right: 5px;' align='absmiddle'>".$text['header-contacts_import_google']."</a>\n";
 	echo "		</td>\n";
 	echo "		<td valign=\"bottom\" align='right' class=\"label\" nowrap>\n";
 	echo "			<br />\n";
