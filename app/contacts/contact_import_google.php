@@ -66,10 +66,46 @@ if ($_POST['a'] == 'import') {
 
 	//iterate selected contact ids, insert contact into database
 	$contacts_imported = 0;
+	$contacts_skipped = 0;
+	$contacts_replaced = 0;
+
 	if (sizeof($import_ids) > 0) {
 
 		$import_ids = array_unique($import_ids);
 		foreach ($import_ids as $contact_id) {
+
+			//check for duplicate contact (already exists, previously imported, etc)
+			$sql = "select contact_uuid from v_contact_settings ";
+			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "and contact_setting_category = 'google' ";
+			$sql .= "and contact_setting_subcategory = 'id' ";
+			$sql .= "and contact_setting_value = '".$contact_id."' ";
+			$sql .= "and contact_setting_enabled = 'true' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$result = $prep_statement->fetch(PDO::FETCH_ASSOC);
+			if ($result['contact_uuid'] != '') {
+				$duplicate_exists = true;
+				$duplicate_contact_uuid = $result['contact_uuid'];
+			}
+			else {
+				$duplicate_exists = false;
+			}
+			unset($sql, $prep_statement, $result);
+
+			//skip importing contact
+			if ($duplicate_exists && $_POST['import_duplicates'] == 'skip') {
+				$contacts_skipped++;
+				continue;
+			}
+			//replace contact (delete before inserts below)
+			else if ($duplicate_exists && $_POST['import_duplicates'] == 'replace') {
+				$contact_uuid = $duplicate_contact_uuid;
+				$included = true;
+				require_once "contact_delete.php";
+				unset($contact_uuid, $duplicate_contact_uuid);
+				$contacts_replaced++;
+			}
 
 			//extract contact record from array using contact id
 			$contact = $_SESSION['contact_auth']['google'][$contact_id];
@@ -288,7 +324,10 @@ if ($_POST['a'] == 'import') {
 
 		}
 
-		$_SESSION["message"] = $text['message-contacts_imported']." ".$contacts_imported;
+		$message = $text['message-contacts_imported']." ".$contacts_imported;
+		if ($contacts_replaced > 0) { $message .= " (".$text['message_contacts_imported_replaced']." ".$contacts_replaced.")"; }
+		if ($contacts_skipped > 0) { $message .= ", ".$text['message_contacts_imported_skipped']." ".$contacts_skipped; }
+		$_SESSION["message"] = $message;
 		header("Location: contacts.php");
 		exit;
 
@@ -433,6 +472,20 @@ echo "		<option value='true'>".$text['option-true']."</option>\n";
 echo "	</select>\n";
 echo "	<br />\n";
 echo $text['description-shared_import']."\n";
+echo "</td>\n";
+echo "</tr>\n";
+
+echo "<tr>\n";
+echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+echo "    ".$text['label-import_duplicates']."\n";
+echo "</td>\n";
+echo "<td class='vtable' align='left'>\n";
+echo "    <select class='formfld' style='width: 150px;' name='import_duplicates'>\n";
+echo "    <option value='skip'>".$text['option-import_duplicates_skip']."</option>\n";
+echo "    <option value='replace'>".$text['option-import_duplicates_replace']."</option>\n";
+echo "    </select>\n";
+echo "<br />\n";
+echo $text['description-import_duplicates']."\n";
 echo "</td>\n";
 echo "</tr>\n";
 
