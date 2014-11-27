@@ -62,15 +62,16 @@
 			--all other directory actions: sip_auth, user_call 
 			--except for the action: group_call
 
+			if (user == nil) then
+				user = "";
+			end
+
 		--get the cache
 			if (trim(api:execute("module_exists", "mod_memcache")) == "true") then
-				if (user == nil) then
-					user = "";
-				end
 				if (domain_name) then
 					XML_STRING = trim(api:execute("memcache", "get directory:" .. user .. "@" .. domain_name));
 				end
-				if (XML_STRING == "-ERR NOT FOUND") then
+				if (XML_STRING == "-ERR NOT FOUND") or (XML_STRING == "-ERR CONNECTION FAILURE") then
 					source = "database";
 					continue = true;
 				else
