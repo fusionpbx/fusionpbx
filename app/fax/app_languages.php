@@ -140,6 +140,11 @@
 	$text['button-clear']['pt-pt'] = "Apagar";
 	$text['button-clear']['fr-fr'] = "Nettoyer";
 
+	$text['button-refresh']['en-us'] = "Refresh";
+	$text['button-refresh']['es-cl'] = "Actualizar";
+	$text['button-refresh']['pt-pt'] = "Actualizar";
+	$text['button-refresh']['fr-fr'] = "rafraîchir";
+
 	//fax_copy
 	$text['confirm-copy']['en-us'] = "Copy Complete";
 	$text['confirm-copy']['es-cl'] = "Copia Completada";
@@ -193,10 +198,10 @@
 	$text['description-extension']['pt-pt'] = "Introduza aqui a extensão do fax";
 	$text['description-extension']['fr-fr'] = "Choisir un numéro d'extension.";
 
-	$text['description-destination-number']['en-us'] = "Enter the fax destination number";
-	$text['description-destination-number']['es-cl'] = "Ingrese el número de fax de destino";
-	$text['description-destination-number']['pt-pt'] = "Introduza o número de fax para onde pretende enviar";
-	$text['description-destination-number']['fr-fr'] = "";
+	$text['description-destination-number']['en-us'] = "Enter the fax destination number.";
+	$text['description-destination-number']['es-cl'] = "Ingrese el número de fax de destino.";
+	$text['description-destination-number']['pt-pt'] = "Introduza o número de fax para onde pretende enviar.";
+	$text['description-destination-number']['fr-fr'] = "Entrez le numéro de télécopie de destination.";
 
 	$text['description-email']['en-us'] = "Enter the email address to send the FAX to.";
 	$text['description-email']['es-cl'] = "Ingrese la dirección de email para enviar el fax.";
@@ -206,7 +211,97 @@
 	$text['description-info']['en-us'] = "Enter the description here.";
 	$text['description-info']['es-cl'] = "Ingrese una descripción aquí.";
 	$text['description-info']['pt-pt'] = "Introduza aqui a descrição";
-	$text['description-info']['fr-fr'] = "";
+	$text['description-info']['fr-fr'] = "Entrez la description ici.";
+
+	$text['label-email_connection_type']['en-us'] = "Type";
+	$text['label-email_connection_type']['es-cl'] = "Tipo";
+	$text['label-email_connection_type']['pt-pt'] = "Tipo";
+	$text['label-email_connection_type']['fr-fr'] = "Type";
+
+	$text['description-email_connection_type']['en-us'] = "Select the type of connection.";
+	$text['description-email_connection_type']['es-cl'] = "Seleccione el tipo de conexión.";
+	$text['description-email_connection_type']['pt-pt'] = "Selecione o tipo de conexão.";
+	$text['description-email_connection_type']['fr-fr'] = "Sélectionnez le type de connexion.";
+
+	$text['label-email_connection_server']['en-us'] = "Server";
+	$text['label-email_connection_server']['es-cl'] = "Servidor";
+	$text['label-email_connection_server']['pt-pt'] = "Servidor";
+	$text['label-email_connection_server']['fr-fr'] = "Serveur";
+
+	$text['description-email_connection_server']['en-us'] = "Enter the host address and port.";
+	$text['description-email_connection_server']['es-cl'] = "Introduzca la dirección de host y el puerto.";
+	$text['description-email_connection_server']['pt-pt'] = "Digite o endereço de host e porta.";
+	$text['description-email_connection_server']['fr-fr'] = "Entrez l'adresse hôte et le port.";
+
+	$text['label-email_connection_security']['en-us'] = "Security";
+	$text['label-email_connection_security']['es-cl'] = "seguridad";
+	$text['label-email_connection_security']['pt-pt'] = "Segurança";
+	$text['label-email_connection_security']['fr-fr'] = "Sécurité";
+
+	$text['description-email_connection_security']['en-us'] = "Select the required security.";
+	$text['description-email_connection_security']['es-cl'] = "Seleccione la seguridad requerida.";
+	$text['description-email_connection_security']['pt-pt'] = "Selecione a segurança necessária.";
+	$text['description-email_connection_security']['fr-fr'] = "Sélectionnez la sécurité requise.";
+
+	$text['label-email_connection_validate']['en-us'] = "Validate Certificate";
+	$text['label-email_connection_validate']['es-cl'] = "Validar Certificado";
+	$text['label-email_connection_validate']['pt-pt'] = "Validar Certificado";
+	$text['label-email_connection_validate']['fr-fr'] = "Valider le Certificat";
+
+	$text['description-email_connection_validate']['en-us'] = "Enable server certificate validation (select 'False' for self-signed certificates).";
+	$text['description-email_connection_validate']['es-cl'] = "Activar la validación del certificado del servidor (seleccione 'Falso' para certificados con firma).";
+	$text['description-email_connection_validate']['pt-pt'] = "Habilitar a validação do certificado do servidor (selecione 'Não' para os certificados auto-assinados).";
+	$text['description-email_connection_validate']['fr-fr'] = "Activer la validation du certificat du serveur (sélectionner 'Non' pour les certificats auto-signés).";
+
+	$text['label-email_connection_username']['en-us'] = "Username";
+	$text['label-email_connection_username']['es-cl'] = "Nombre de usuario";
+	$text['label-email_connection_username']['pt-pt'] = "Nome de Usuário";
+	$text['label-email_connection_username']['fr-fr'] = "Nom d'utilisateur";
+
+	$text['description-email_connection_username']['en-us'] = "Enter the authentication username.";
+	$text['description-email_connection_username']['es-cl'] = "Introduzca el nombre de usuario de autenticación.";
+	$text['description-email_connection_username']['pt-pt'] = "Digite o nome de usuário de autenticação.";
+	$text['description-email_connection_username']['fr-fr'] = "Entrez le nom d'utilisateur d'authentification.";
+
+	$text['label-email_connection_password']['en-us'] = "Password";
+	$text['label-email_connection_password']['es-cl'] = "Contraseña";
+	$text['label-email_connection_password']['pt-pt'] = "Senha";
+	$text['label-email_connection_password']['fr-fr'] = "Mot de Passe";
+
+	$text['description-email_connection_password']['en-us'] = "Enter the authentication password.";
+	$text['description-email_connection_password']['es-cl'] = "Introduzca la contraseña de autenticación.";
+	$text['description-email_connection_password']['pt-pt'] = "Digite a senha de autenticação.";
+	$text['description-email_connection_password']['fr-fr'] = "Entrez le mot de passe d'authentification.";
+
+	$text['label-email_connection_mailbox']['en-us'] = "Mailbox Folder";
+	$text['label-email_connection_mailbox']['es-cl'] = "Carpeta Buzón";
+	$text['label-email_connection_mailbox']['pt-pt'] = "Pasta Caixa";
+	$text['label-email_connection_mailbox']['fr-fr'] = "Dossier Boîte aux Lettres";
+
+	$text['description-email_connection_mailbox']['en-us'] = "Enter the remote folder name to view.";
+	$text['description-email_connection_mailbox']['es-cl'] = "Escriba el nombre de la carpeta a distancia para ver.";
+	$text['description-email_connection_mailbox']['pt-pt'] = "Digite o nome da pasta remota para ver.";
+	$text['description-email_connection_mailbox']['fr-fr'] = "Entrez le nom du dossier à distance pour voir.";
+
+	$text['option-true']['en-us'] = "True";
+	$text['option-true']['es-cl'] = "Verdadero";
+	$text['option-true']['pt-pt'] = "Sim";
+	$text['option-true']['fr-fr'] = "Oui";
+
+	$text['option-false']['en-us'] = "False";
+	$text['option-false']['es-cl'] = "Falso";
+	$text['option-false']['pt-pt'] = "Não";
+	$text['option-false']['fr-fr'] = "Non";
+
+	$text['button-advanced']['en-us'] = "Advanced";
+	$text['button-advanced']['es-cl'] = "Avanzado";
+	$text['button-advanced']['pt-pt'] = "Avançadas";
+	$text['button-advanced']['fr-fr'] = "Afficher les paramètres avancés";
+
+	$text['message-cannot_connect']['en-us'] = "Connection Failed";
+	$text['message-cannot_connect']['es-cl'] = "Error de Conexión";
+	$text['message-cannot_connect']['pt-pt'] = "Falha na Conexão";
+	$text['message-cannot_connect']['fr-fr'] = "Échec de la Connexion";
 
 	$text['label-pin']['en-us'] = "PIN Number";
 	$text['label-pin']['es-cl'] = "Número PIN";
@@ -316,7 +411,7 @@
 	$text['description-fax-number']['en-us'] = "Enter the recipient's fax number.";
 	$text['description-fax-number']['es-cl'] = "Ingrese el número aquí.";
 	$text['description-fax-number']['pt-pt'] = "Introduza aqui o número.";
-	$text['description-fax-number']['fr-fr'] = "";
+	$text['description-fax-number']['fr-fr'] = "Entrez le numéro de fax du destinataire.";
 
 	$text['label-fax-subject']['en-us'] = "Subject";
 	$text['label-fax-subject']['es-cl'] = "Asunto";
@@ -438,137 +533,250 @@
 	$text['message-invalid-fax']['pt-pt'] = "Fax inválida - Por favor, digite uma mensagem ou selecionar um arquivo a ser enviado.";
 	$text['message-invalid-fax']['fr-fr'] = "Fax Invalide - Merci d'entrer un message ou sélectionner un fichier à envoyer.";
 
+	$text['label-email_received']['en-us'] = "Received";
+	$text['label-email_received']['es-cl'] = "Recibido";
+	$text['label-email_received']['pt-pt'] = "Recebido";
+	$text['label-email_received']['fr-fr'] = "Reçu";
+
+	$text['label-email_size']['en-us'] = "Size";
+	$text['label-email_size']['es-cl'] = "Tamaño";
+	$text['label-email_size']['pt-pt'] = "Tamanho";
+	$text['label-email_size']['fr-fr'] = "Taille";
+
+	$text['label-email-fax']['en-us'] = "Fax";
+	$text['label-email-fax']['es-cl'] = "Facsímil";
+	$text['label-email-fax']['pt-pt'] = "Fax";
+	$text['label-email-fax']['fr-fr'] = "Télécopie";
+
 	//fax logs
-	$text['title-fax_logs']['en-us'] = 'FAX Logs';
-	$text['title-fax_logs']['pt-pt'] = '';
+	$text['title-fax_logs']['en-us'] = "Fax Logs";
+	$text['title-fax_logs']['es-cl'] = "Registros de fax";
+	$text['title-fax_logs']['pt-pt'] = "Logs de fax";
+	$text['title-fax_logs']['fr-fr'] = "Journaux Fax";
 
-	$text['title-fax_log']['en-us'] = 'Fax Log';
-	$text['title-fax_log']['pt-pt'] = '';
+	$text['title-fax_log']['en-us'] = "Fax Log";
+	$text['title-fax_log']['es-cl'] = "Registro de fax";
+	$text['title-fax_log']['pt-pt'] = "Fax Log";
+	$text['title-fax_log']['fr-fr'] = "Fax Connexion";
 
-	$text['description-fax_log']['en-us'] = 'The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.   ';
-	$text['description-fax_log']['pt-pt'] = '';
+	$text['description-fax_log']['en-us'] = "The details for sending and receiving a fax included are whether fax was successful, ECM (Error Correction Mode), number of retries, destination number, date, etc.";
+	$text['description-fax_log']['es-cl'] = "Los detalles para el envío y recepción de faxes se incluyen si fax se ha realizado correctamente, ECM (Modo de Corrección de Errores), número de reintentos, número de destino, fecha, etc.";
+	$text['description-fax_log']['pt-pt'] = "Os detalhes para o envio e recebimento de um fax estão incluídos se fax foi bem-sucedida, ECM (Modo de correção de erros), número de repetições, número de destino, data, etc.";
+	$text['description-fax_log']['fr-fr'] = "Les détails pour envoyer et recevoir un fax sont inclus si fax a réussi, ECM (Mode de correction d'erreur), nombre de tentatives, le numéro de destination, la date, etc.";
 
-	$text['label-fax_success']['en-us'] = 'Success';
-	$text['label-fax_success']['pt-pt'] = '';
+	$text['label-fax_success']['en-us'] = "Success";
+	$text['label-fax_success']['es-cl'] = "éxito";
+	$text['label-fax_success']['pt-pt'] = "sucesso";
+	$text['label-fax_success']['fr-fr'] = "succès";
 
-	$text['description-fax_success']['en-us'] = '';
-	$text['description-fax_success']['pt-pt'] = '';
+	$text['description-fax_success']['en-us'] = "";
+	$text['description-fax_success']['es-cl'] = "";
+	$text['description-fax_success']['pt-pt'] = "";
+	$text['description-fax_success']['fr-fr'] = "";
 
-	$text['label-fax_result_code']['en-us'] = 'Code';
-	$text['label-fax_result_code']['pt-pt'] = '';
+	$text['label-fax_result_code']['en-us'] = "Code";
+	$text['label-fax_result_code']['es-cl'] = "Código";
+	$text['label-fax_result_code']['pt-pt'] = "Código";
+	$text['label-fax_result_code']['fr-fr'] = "Code";
 
-	$text['description-fax_result_code']['en-us'] = '';
-	$text['description-fax_result_code']['pt-pt'] = '';
+	$text['description-fax_result_code']['en-us'] = "";
+	$text['description-fax_result_code']['es-cl'] = "";
+	$text['description-fax_result_code']['pt-pt'] = "";
+	$text['description-fax_result_code']['fr-fr'] = "";
 
-	$text['label-fax_result_text']['en-us'] = 'Result';
-	$text['label-fax_result_text']['pt-pt'] = '';
+	$text['label-fax_result_text']['en-us'] = "Result";
+	$text['label-fax_result_text']['es-cl'] = "Resultado";
+	$text['label-fax_result_text']['pt-pt'] = "Resultado";
+	$text['label-fax_result_text']['fr-fr'] = "Résultat";
 
-	$text['description-fax_result_text']['en-us'] = '';
-	$text['description-fax_result_text']['pt-pt'] = '';
+	$text['description-fax_result_text']['en-us'] = "";
+	$text['description-fax_result_text']['es-cl'] = "";
+	$text['description-fax_result_text']['pt-pt'] = "";
+	$text['description-fax_result_text']['fr-fr'] = "";
 
-	$text['label-fax_file']['en-us'] = 'File';
-	$text['label-fax_file']['pt-pt'] = '';
+	$text['label-fax_file']['en-us'] = "File";
+	$text['label-fax_file']['es-cl'] = "Expediente";
+	$text['label-fax_file']['pt-pt'] = "Arquivo";
+	$text['label-fax_file']['fr-fr'] = "Fichier";
 
-	$text['description-fax_file']['en-us'] = '';
-	$text['description-fax_file']['pt-pt'] = '';
+	$text['description-fax_file']['en-us'] = "";
+	$text['description-fax_file']['es-cl'] = "";
+	$text['description-fax_file']['pt-pt'] = "";
+	$text['description-fax_file']['fr-fr'] = "";
 
-	$text['label-fax_ecm_used']['en-us'] = 'ECM';
-	$text['label-fax_ecm_used']['pt-pt'] = '';
+	$text['label-fax_ecm_used']['en-us'] = "ECM";
+	$text['label-fax_ecm_used']['es-cl'] = "ECM";
+	$text['label-fax_ecm_used']['pt-pt'] = "ECM";
+	$text['label-fax_ecm_used']['fr-fr'] = "ECM";
 
-	$text['description-fax_ecm_used']['en-us'] = '';
-	$text['description-fax_ecm_used']['pt-pt'] = '';
+	$text['description-fax_ecm_used']['en-us'] = "";
+	$text['description-fax_ecm_used']['es-cl'] = "";
+	$text['description-fax_ecm_used']['pt-pt'] = "";
+	$text['description-fax_ecm_used']['fr-fr'] = "";
 
-	$text['label-fax_local_station_id']['en-us'] = 'Local Station ID';
-	$text['label-fax_local_station_id']['pt-pt'] = '';
+	$text['label-fax_local_station_id']['en-us'] = "Local Station ID";
+	$text['label-fax_local_station_id']['es-cl'] = "Local ID de la estación";
+	$text['label-fax_local_station_id']['pt-pt'] = "Local Station ID";
+	$text['label-fax_local_station_id']['fr-fr'] = "Local ID station";
 
-	$text['description-fax_local_station_id']['en-us'] = '';
-	$text['description-fax_local_station_id']['pt-pt'] = '';
+	$text['description-fax_local_station_id']['en-us'] = "";
+	$text['description-fax_local_station_id']['es-cl'] = "";
+	$text['description-fax_local_station_id']['pt-pt'] = "";
+	$text['description-fax_local_station_id']['fr-fr'] = "";
 
-	$text['label-fax_document_transferred_pages']['en-us'] = 'Document Transferred Pages';
-	$text['label-fax_document_transferred_pages']['pt-pt'] = '';
+	$text['label-fax_document_transferred_pages']['en-us'] = "Document Transferred Pages";
+	$text['label-fax_document_transferred_pages']['es-cl'] = "Páginas de documentos Transferido";
+	$text['label-fax_document_transferred_pages']['pt-pt'] = "Documento Transferido Pages";
+	$text['label-fax_document_transferred_pages']['fr-fr'] = "Pages de document transféré";
 
-	$text['description-fax_document_transferred_pages']['en-us'] = '';
-	$text['description-fax_document_transferred_pages']['pt-pt'] = '';
+	$text['description-fax_document_transferred_pages']['en-us'] = "";
+	$text['description-fax_document_transferred_pages']['es-cl'] = "";
+	$text['description-fax_document_transferred_pages']['pt-pt'] = "";
+	$text['description-fax_document_transferred_pages']['fr-fr'] = "";
 
-	$text['label-fax_document_total_pages']['en-us'] = 'Document Total Pages';
-	$text['label-fax_document_total_pages']['pt-pt'] = '';
+	$text['label-fax_document_total_pages']['en-us'] = "Document Total Pages";
+	$text['label-fax_document_total_pages']['es-cl'] = "Documento Total de páginas";
+	$text['label-fax_document_total_pages']['pt-pt'] = "Documento Total de Páginas";
+	$text['label-fax_document_total_pages']['fr-fr'] = "Document de nombre total de pages";
 
-	$text['description-fax_document_total_pages']['en-us'] = '';
-	$text['description-fax_document_total_pages']['pt-pt'] = '';
+	$text['description-fax_document_total_pages']['en-us'] = "";
+	$text['description-fax_document_total_pages']['es-cl'] = "";
+	$text['description-fax_document_total_pages']['pt-pt'] = "";
+	$text['description-fax_document_total_pages']['fr-fr'] = "";
 
-	$text['label-fax_image_resolution']['en-us'] = 'Image Resolution';
-	$text['label-fax_image_resolution']['pt-pt'] = '';
+	$text['label-fax_image_resolution']['en-us'] = "Image Resolution";
+	$text['label-fax_image_resolution']['es-cl'] = "Resolución de la imagen";
+	$text['label-fax_image_resolution']['pt-pt'] = "Resolução da imagem";
+	$text['label-fax_image_resolution']['fr-fr'] = "Résolution de l'image";
 
-	$text['description-fax_image_resolution']['en-us'] = '';
-	$text['description-fax_image_resolution']['pt-pt'] = '';
+	$text['description-fax_image_resolution']['en-us'] = "";
+	$text['description-fax_image_resolution']['es-cl'] = "";
+	$text['description-fax_image_resolution']['pt-pt'] = "";
+	$text['description-fax_image_resolution']['fr-fr'] = "";
 
-	$text['label-fax_image_size']['en-us'] = 'Image Size';
-	$text['label-fax_image_size']['pt-pt'] = '';
+	$text['label-fax_image_size']['en-us'] = "Image Size";
+	$text['label-fax_image_size']['es-cl'] = "Tamaño de la Imagen";
+	$text['label-fax_image_size']['pt-pt'] = "Tamanho da Imagem";
+	$text['label-fax_image_size']['fr-fr'] = "Taille de l'image";
 
-	$text['description-fax_image_size']['en-us'] = '';
-	$text['description-fax_image_size']['pt-pt'] = '';
+	$text['description-fax_image_size']['en-us'] = "";
+	$text['description-fax_image_size']['es-cl'] = "";
+	$text['description-fax_image_size']['pt-pt'] = "";
+	$text['description-fax_image_size']['fr-fr'] = "";
 
-	$text['label-fax_bad_rows']['en-us'] = 'Bad Rows';
-	$text['label-fax_bad_rows']['pt-pt'] = '';
+	$text['label-fax_bad_rows']['en-us'] = "Bad Rows";
+	$text['label-fax_bad_rows']['es-cl'] = "Bad Filas";
+	$text['label-fax_bad_rows']['pt-pt'] = "Bad Fileiras";
+	$text['label-fax_bad_rows']['fr-fr'] = "Bad Lignes";
 
-	$text['description-fax_bad_rows']['en-us'] = '';
-	$text['description-fax_bad_rows']['pt-pt'] = '';
+	$text['description-fax_bad_rows']['en-us'] = "";
+	$text['description-fax_bad_rows']['es-cl'] = "";
+	$text['description-fax_bad_rows']['pt-pt'] = "";
+	$text['description-fax_bad_rows']['fr-fr'] = "";
 
-	$text['label-fax_transfer_rate']['en-us'] = 'Transfer Rate';
-	$text['label-fax_transfer_rate']['pt-pt'] = '';
+	$text['label-fax_transfer_rate']['en-us'] = "Transfer Rate";
+	$text['label-fax_transfer_rate']['es-cl'] = "Velocidad de Transferencia";
+	$text['label-fax_transfer_rate']['pt-pt'] = "Taxa de Transferência";
+	$text['label-fax_transfer_rate']['fr-fr'] = "Taux de Transfert";
 
-	$text['description-fax_transfer_rate']['en-us'] = '';
-	$text['description-fax_transfer_rate']['pt-pt'] = '';
+	$text['description-fax_transfer_rate']['en-us'] = "";
+	$text['description-fax_transfer_rate']['es-cl'] = "";
+	$text['description-fax_transfer_rate']['pt-pt'] = "";
+	$text['description-fax_transfer_rate']['fr-fr'] = "";
 
-	$text['label-fax_retry_attempts']['en-us'] = 'Retry';
-	$text['label-fax_retry_attempts']['pt-pt'] = '';
+	$text['label-fax_retry_attempts']['en-us'] = "Retry";
+	$text['label-fax_retry_attempts']['es-cl'] = "Vuelva a Intentarlo";
+	$text['label-fax_retry_attempts']['pt-pt'] = "Tentar Novamente";
+	$text['label-fax_retry_attempts']['fr-fr'] = "Refaire";
 
-	$text['description-fax_retry_attempts']['en-us'] = '';
-	$text['description-fax_retry_attempts']['pt-pt'] = '';
+	$text['description-fax_retry_attempts']['en-us'] = "";
+	$text['description-fax_retry_attempts']['es-cl'] = "";
+	$text['description-fax_retry_attempts']['pt-pt'] = "";
+	$text['description-fax_retry_attempts']['fr-fr'] = "";
 
-	$text['label-fax_retry_limit']['en-us'] = 'Retry Limit';
-	$text['label-fax_retry_limit']['pt-pt'] = '';
+	$text['label-fax_retry_limit']['en-us'] = "Retry Limit";
+	$text['label-fax_retry_limit']['es-cl'] = "Límite de Reintentos";
+	$text['label-fax_retry_limit']['pt-pt'] = "Limite de Repetições";
+	$text['label-fax_retry_limit']['fr-fr'] = "Retry Limit";
 
-	$text['description-fax_retry_limit']['en-us'] = '';
-	$text['description-fax_retry_limit']['pt-pt'] = '';
+	$text['description-fax_retry_limit']['en-us'] = "";
+	$text['description-fax_retry_limit']['es-cl'] = "";
+	$text['description-fax_retry_limit']['pt-pt'] = "";
+	$text['description-fax_retry_limit']['fr-fr'] = "";
 
-	$text['label-fax_retry_sleep']['en-us'] = 'Retry Sleep';
-	$text['label-fax_retry_sleep']['pt-pt'] = '';
+	$text['label-fax_retry_sleep']['en-us'] = "Retry Sleep";
+	$text['label-fax_retry_sleep']['es-cl'] = "Vuelva a Intentar el Sueño";
+	$text['label-fax_retry_sleep']['pt-pt'] = "Repetir o Sono";
+	$text['label-fax_retry_sleep']['fr-fr'] = "Réessayez Sommeil";
 
-	$text['description-fax_retry_sleep']['en-us'] = '';
-	$text['description-fax_retry_sleep']['pt-pt'] = '';
+	$text['description-fax_retry_sleep']['en-us'] = "";
+	$text['description-fax_retry_sleep']['es-cl'] = "";
+	$text['description-fax_retry_sleep']['pt-pt'] = "";
+	$text['description-fax_retry_sleep']['fr-fr'] = "";
 
-	$text['label-fax_destination']['en-us'] = 'Destination';
-	$text['label-fax_destination']['pt-pt'] = '';
+	$text['label-fax_destination']['en-us'] = "Destination";
+	$text['label-fax_destination']['es-cl'] = "Destino";
+	$text['label-fax_destination']['pt-pt'] = "Destino";
+	$text['label-fax_destination']['fr-fr'] = "Destination";
 
-	$text['label-fax_uri']['en-us'] = 'URI';
-	$text['label-fax_uri']['pt-pt'] = '';
+	$text['label-fax_uri']['en-us'] = "URI";
+	$text['label-fax_uri']['es-cl'] = "URI";
+	$text['label-fax_uri']['pt-pt'] = "URI";
+	$text['label-fax_uri']['fr-fr'] = "URI";
 
-	$text['description-fax_uri']['en-us'] = '';
-	$text['description-fax_uri']['pt-pt'] = '';
+	$text['description-fax_uri']['en-us'] = "";
+	$text['description-fax_uri']['es-cl'] = "";
+	$text['description-fax_uri']['pt-pt'] = "";
+	$text['description-fax_uri']['fr-fr'] = "";
 
-	$text['label-fax_date']['en-us'] = 'Date';
-	$text['label-fax_date']['pt-pt'] = '';
+	$text['label-fax_date']['en-us'] = "Date";
+	$text['label-fax_date']['es-cl'] = "Fecha";
+	$text['label-fax_date']['pt-pt'] = "Data";
+	$text['label-fax_date']['fr-fr'] = "Date";
 
-	$text['description-fax_date']['en-us'] = '';
-	$text['description-fax_date']['pt-pt'] = '';
+	$text['description-fax_date']['en-us'] = "";
+	$text['description-fax_date']['es-cl'] = "";
+	$text['description-fax_date']['pt-pt'] = "";
+	$text['description-fax_date']['fr-fr'] = "";
 
-	$text['label-fax_epoch']['en-us'] = 'Epoch';
-	$text['label-fax_epoch']['pt-pt'] = '';
+	$text['label-fax_epoch']['en-us'] = "Epoch";
+	$text['label-fax_epoch']['es-cl'] = "época";
+	$text['label-fax_epoch']['pt-pt'] = "época";
+	$text['label-fax_epoch']['fr-fr'] = "époque";
 
-	$text['description-fax_epoch']['en-us'] = '';
-	$text['description-fax_epoch']['pt-pt'] = '';
+	$text['description-fax_epoch']['en-us'] = "";
+	$text['description-fax_epoch']['es-cl'] = "";
+	$text['description-fax_epoch']['pt-pt'] = "";
+	$text['description-fax_epoch']['fr-fr'] = "";
 
-	$text['message-add']['en-us'] = 'Add Completed';
-	$text['message-add']['pt-pt'] = '';
+	$text['message-add']['en-us'] = "Add Completed";
+	$text['message-add']['es-cl'] = "Añadir Completado";
+	$text['message-add']['pt-pt'] = "Adicionar Concluído";
+	$text['message-add']['fr-fr'] = "Ajouter Terminé";
 
-	$text['message-update']['en-us'] = 'Update Completed';
-	$text['message-update']['pt-pt'] = '';
+	$text['message-update']['en-us'] = "Update Completed";
+	$text['message-update']['es-cl'] = "Actualización Finalizada";
+	$text['message-update']['pt-pt'] = "Atualização Concluída";
+	$text['message-update']['fr-fr'] = "Mise à Jour Terminée";
 
-	$text['message-delete']['en-us'] = 'Delete Completed';
-	$text['message-delete']['pt-pt'] = '';
+	$text['message-delete']['en-us'] = "Delete Completed";
+	$text['message-delete']['es-cl'] = "Eliminación Completada";
+	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
+	$text['message-delete']['fr-fr'] = "Supprimé";
 
-	$text['message-required']['en-us'] = 'Please provide: ';
-	$text['message-required']['pt-pt'] = '';
+	$text['message-required']['en-us'] = "Please provide: ";
+	$text['message-required']['es-cl'] = "Sírvanse proporcionar: ";
+	$text['message-required']['pt-pt'] = "Por favor, forneça: ";
+	$text['message-required']['fr-fr'] = "Se il vous plaît fournir: ";
+
+	$text['message-delete_failed']['en-us'] = "Delete Failed";
+	$text['message-delete_failed']['es-cl'] = "Eliminar Error";
+	$text['message-delete_failed']['pt-pt'] = "Falha na exclusão";
+	$text['message-delete_failed']['fr-fr'] = "Echec de la suppression";
+
+	$text['message-no_faxes_found']['en-us'] = "No Faxes Found";
+	$text['message-no_faxes_found']['es-cl'] = "No Hay Faxes Encontrados";
+	$text['message-no_faxes_found']['pt-pt'] = "Não Faxes Encontrado";
+	$text['message-no_faxes_found']['fr-fr'] = "Aucun Télécopieurs Trouvés";
 
 ?>

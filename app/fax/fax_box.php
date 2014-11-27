@@ -77,6 +77,7 @@ else {
 		}
 		foreach ($result as &$row) {
 			//set database fields as variables
+				$fax_name = $row["fax_name"];
 				$fax_extension = $row["fax_extension"];
 			//limit to one row
 				break;
@@ -85,12 +86,7 @@ else {
 	}
 
 //set the fax directory
-	if (count($_SESSION["domains"]) > 1) {
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax/'.$_SESSION['domain_name'];
-	}
-	else {
-		$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax';
-	}
+	$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
 
 //delete a fax
 	if ($_GET['a'] == "del") {
@@ -200,29 +196,28 @@ else {
 
 //show the inbox
 	if ($_REQUEST['box'] == 'inbox' && permission_exists('fax_inbox_view')) {
-		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
+		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
-		echo "		<td align='left'>\n";
-		echo "			<span class=\"vexpl\"><span class=\"title\">".$text['header-inbox']." ".$fax_extension."</span>\n";
+		echo "		<td align='left' valign='top'>\n";
+		echo "			<b>".$text['header-inbox'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
 		echo "		</td>\n";
-		echo "		<td width='70%' align='right'>\n";
+		echo "		<td width='70%' align='right' valign='top'>\n";
 		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";
-		echo "    </table>\n";
+		echo "</table>\n";
 		echo "<br>\n";
 
 		$c = 0;
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
-		echo "	<div id=\"\">\n";
-		echo "	<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
-		echo "		<th width='60%'>".$text['table-file']."</td>\n";
-		echo "		<th width='10%'>".$text['table-view']."</td>\n";
-		echo "		<th width='20%'>".$text['table-modified']."</td>\n";
-		echo "		<th width='10%' nowrap>".$text['table-size']."</td>\n";
+		echo "		<th width='60%'>".$text['table-file']."</th>\n";
+		echo "		<th width='10%'>".$text['table-view']."</th>\n";
+		echo "		<th width='20%'>".$text['table-modified']."</th>\n";
+		echo "		<th width='10%' nowrap>".$text['table-size']."</th>\n";
 		echo "	</tr>";
 
 		if ($handle = opendir($dir_fax_inbox)) {
@@ -330,25 +325,23 @@ else {
 		echo "		<td class=\"list\" colspan=\"3\"></td>\n";
 		echo "		<td class=\"list\"></td>\n";
 		echo "	</tr>\n";
-		echo "	</table>\n";
-		echo "\n";
-		echo "	<br />\n";
+		echo "</table>\n";
+		echo "<br><br><br>\n";
 		if (if_group('superadmin')) {
 			echo "<strong>".$text['label-location'].":</strong>&nbsp;&nbsp;".$dir_fax_inbox;
 		}
 		echo "<br /><br />\n";
-		echo "\n";
 	}
 
 //show the sent box
 	if ($_REQUEST['box'] == 'sent' && permission_exists('fax_sent_view')) {
-		echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
+		echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "	<tr>\n";
-		echo "		<td align='left'>\n";
-		echo "			<span class=\"vexpl\"><span class=\"title\">".$text['header-sent']."</span>\n";
+		echo "		<td align='left' valign='top'>\n";
+		echo "			<b>".$text['header-sent'].": <span style='color: #000;'>".$fax_name." (".$fax_extension.")</span></b>\n";
 		echo "		</td>\n";
-		echo "		<td width='70%' align='right'>\n";
-		echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
+		echo "		<td width='70%' align='right' valign='top'>\n";
+		echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";
 		echo "</table>\n";
@@ -469,9 +462,8 @@ else {
 		echo "       <td class=\"list\" colspan=\"3\"></td>\n";
 		echo "       <td class=\"list\"></td>\n";
 		echo "     </tr>\n";
-		echo "     </table>\n";
-		echo "\n";
-		echo "	<br />\n";
+		echo "	</table>\n";
+		echo "	<br><br><br>\n";
 		if (if_group('superadmin')) {
 			echo "<strong>".$text['label-location'].":</strong>&nbsp;&nbsp;".$dir_fax_sent;
 		}
@@ -480,7 +472,6 @@ else {
 	echo "	</td>";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
 
 //show the footer
 	require_once "resources/footer.php";
