@@ -417,4 +417,10 @@
 	$text['message-new_group_description']['pt-pt'] = "Digite uma Descrição para o novo grupo...";
 	$text['message-new_group_description']['fr-fr'] = "Entrez une Description pour le nouveau groupe...";
 
+	$text['message-cannot_delete_own_account']['en-us'] = "You cannot delete your own user account.\\n\\nPlease login as a different user, then try again.";
+	$text['message-cannot_delete_own_account']['es-cl'] = "No se puede eliminar su propia cuenta de usuario.\\n\\nPor favor, iniciar sesión como un usuario diferente, vuelva a intentarlo.";
+	$text['message-cannot_delete_own_account']['pt-pt'] = "Você não pode excluir a sua própria conta de usuário.\\n\\nIdentifique-se como um usuário diferente, em seguida, tente novamente.";
+	$text['message-cannot_delete_own_account']['fr-fr'] = "Vous ne pouvez pas supprimer votre propre compte utilisateur.\\n\\nSe il vous plaît vous identifier en tant qu'utilisateur différent, puis réessayez.";
+
+
 ?>
