@@ -99,6 +99,14 @@ else {
 		$fax_extension = check_str($_POST["fax_extension"]);
 		$fax_destination_number = check_str($_POST["fax_destination_number"]);
 		$fax_email = check_str($_POST["fax_email"]);
+		$fax_email_connection_type = check_str($_POST["fax_email_connection_type"]);
+		$fax_email_connection_host = check_str($_POST["fax_email_connection_host"]);
+		$fax_email_connection_port = check_str($_POST["fax_email_connection_port"]);
+		$fax_email_connection_security = check_str($_POST["fax_email_connection_security"]);
+		$fax_email_connection_validate = check_str($_POST["fax_email_connection_validate"]);
+		$fax_email_connection_username = check_str($_POST["fax_email_connection_username"]);
+		$fax_email_connection_password = check_str($_POST["fax_email_connection_password"]);
+		$fax_email_connection_mailbox = check_str($_POST["fax_email_connection_mailbox"]);
 		//$fax_pin_number = check_str($_POST["fax_pin_number"]);
 		$fax_caller_id_name = check_str($_POST["fax_caller_id_name"]);
 		$fax_caller_id_number = check_str($_POST["fax_caller_id_number"]);
@@ -228,6 +236,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number, ";
 					$sql .= "fax_name, ";
 					$sql .= "fax_email, ";
+					$sql .= "fax_email_connection_type, ";
+					$sql .= "fax_email_connection_host, ";
+					$sql .= "fax_email_connection_port, ";
+					$sql .= "fax_email_connection_security, ";
+					$sql .= "fax_email_connection_validate, ";
+					$sql .= "fax_email_connection_username, ";
+					$sql .= "fax_email_connection_password, ";
+					$sql .= "fax_email_connection_mailbox, ";
 					//$sql .= "fax_pin_number, ";
 					$sql .= "fax_caller_id_name, ";
 					$sql .= "fax_caller_id_number, ";
@@ -245,6 +261,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_destination_number', ";
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
+					$sql .= "'$fax_email_connection_type', ";
+					$sql .= "'$fax_email_connection_host', ";
+					$sql .= "'$fax_email_connection_port', ";
+					$sql .= "'$fax_email_connection_security', ";
+					$sql .= "'$fax_email_connection_validate', ";
+					$sql .= "'$fax_email_connection_username', ";
+					$sql .= "'$fax_email_connection_password', ";
+					$sql .= "'$fax_email_connection_mailbox', ";
 					//$sql .= "'$fax_pin_number', ";
 					$sql .= "'$fax_caller_id_name', ";
 					$sql .= "'$fax_caller_id_number', ";
@@ -271,6 +295,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
+					$sql .= "fax_email_connection_type = '$fax_email_connection_type', ";
+					$sql .= "fax_email_connection_host = '$fax_email_connection_host', ";
+					$sql .= "fax_email_connection_port = '$fax_email_connection_port', ";
+					$sql .= "fax_email_connection_security = '$fax_email_connection_security', ";
+					$sql .= "fax_email_connection_validate = '$fax_email_connection_validate', ";
+					$sql .= "fax_email_connection_username = '$fax_email_connection_username', ";
+					$sql .= "fax_email_connection_password = '$fax_email_connection_password', ";
+					$sql .= "fax_email_connection_mailbox = '$fax_email_connection_mailbox', ";
 					//$sql .= "fax_pin_number = '$fax_pin_number', ";
 					$sql .= "fax_caller_id_name = '$fax_caller_id_name', ";
 					$sql .= "fax_caller_id_number = '$fax_caller_id_number', ";
@@ -500,6 +532,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_destination_number = $row["fax_destination_number"];
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
+			$fax_email_connection_type = $row["fax_email_connection_type"];
+			$fax_email_connection_host = $row["fax_email_connection_host"];
+			$fax_email_connection_port = $row["fax_email_connection_port"];
+			$fax_email_connection_security = $row["fax_email_connection_security"];
+			$fax_email_connection_validate = $row["fax_email_connection_validate"];
+			$fax_email_connection_username = $row["fax_email_connection_username"];
+			$fax_email_connection_password = $row["fax_email_connection_password"];
+			$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
 			//$fax_pin_number = $row["fax_pin_number"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
@@ -520,16 +560,22 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 //show the header
 	require_once "resources/header.php";
 
+//advanced button js
+	echo "<script type='text/javascript' language='JavaScript'>\n";
+	echo "function toggle_advanced(advanced_id) {\n";
+	echo "	$('#'+advanced_id).slideToggle(800);\n";
+	echo "}\n";
+	echo "</script>\n";
+
 //fax extension form
-	echo "<div align='center'>";
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "	<td align='left' width='30%' valign='top' nowrap><b>".$text['header-fax_server_settings']."</b><br><br></td>\n";
 	echo "		<td width='70%' valign='top' align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt=\"".$text['button-back']."\" onclick=\"window.location='fax.php'\" value=\"".$text['button-back']."\">\n";
 	if ((if_group("admin") || if_group("superadmin")) && $action == "update") {
-		echo "		<input type='button' class='btn' name='' alt='copy' onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value='".$text['button-copy']."'>\n";
+		echo "		<input type='button' class='btn' alt=\"".$text['button-copy']."\" onclick=\"if (confirm('".$text['confirm-copy-info']."')){window.location='fax_copy.php?id=".$fax_uuid."';}\" value=\"".$text['button-copy']."\">\n";
 	}
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
@@ -549,7 +595,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 
 	}
-	else { //admin,superadmin,etc
+	else { //admin, superadmin, etc
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -590,10 +636,111 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
+		if (function_exists("imap_open")) {
+			echo "	<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"toggle_advanced('advanced_email_connection');\">\n";
+		}
 		echo "<br />\n";
 		echo "	".$text['description-email']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		echo "</table>\n";
+
+		echo "<div id='advanced_email_connection' ".(($fax_email_connection_host == '') ? "style='display: none;'" : null).">\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+
+		echo "<tr>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email_connection_type']."\n";
+		echo "</td>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='fax_email_connection_type'>\n";
+		echo "		<option value='imap'>IMAP</option>\n";
+		echo "		<option value='pop3' ".(($fax_email_connection_type == 'pop3') ? "selected" : null).">POP3</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_connection_type']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email_connection_server']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_email_connection_host' maxlength='255' value=\"$fax_email_connection_host\">&nbsp;:&nbsp;";
+		echo 	"<input class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' type='text' name='fax_email_connection_port' maxlength='5' value=\"$fax_email_connection_port\">\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_connection_server']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email_connection_security']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='fax_email_connection_security'>\n";
+		echo "		<option value=''></option>\n";
+		echo "		<option value='ssl' ".(($fax_email_connection_security == 'ssl') ? "selected" : null).">SSL</option>\n";
+		echo "		<option value='tls' ".(($fax_email_connection_security == 'tls') ? "selected" : null).">TLS</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_connection_security']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email_connection_validate']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<select class='formfld' name='fax_email_connection_validate'>\n";
+		echo "		<option value='true'>".$text['option-true']."</option>\n";
+		echo "		<option value='false' ".(($fax_email_connection_validate == 'false') ? "selected" : null).">".$text['option-false']."</option>\n";
+		echo "	</select>\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_connection_validate']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email_connection_username']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_email_connection_username' maxlength='255' value=\"$fax_email_connection_username\">\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_connection_username']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email_connection_password']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_email_connection_password' maxlength='255' value=\"$fax_email_connection_password\">\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_connection_password']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "	".$text['label-email_connection_mailbox']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "	<input class='formfld' type='text' name='fax_email_connection_mailbox' maxlength='255' value=\"$fax_email_connection_mailbox\">\n";
+		echo "<br />\n";
+		echo "	".$text['description-email_connection_mailbox']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		echo "</table>\n";
+		echo "</div>\n";
+
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		//echo "<tr>\n";
 		//echo "<td class='vncell' valign='top' align='left' nowrap>\n";
@@ -607,10 +754,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		//echo "</tr>\n";
 
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-caller-id-name']."\n";
 		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
+		echo "<td width='70%' class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='fax_caller_id_name' maxlength='255' value=\"$fax_caller_id_name\">\n";
 		echo "<br />\n";
 		echo "".$text['description-caller-id-name']."\n";
@@ -712,6 +859,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
+	echo "			<br>";
 	if ($action == "update") {
 		if (if_group("user")) {
 			echo "	<input type='hidden' name='fax_name' value=\"$fax_name\">\n";
@@ -731,9 +879,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
-	echo "</div>";
 
-	echo "<br />\n";
 	echo "<br />\n";
 
 //show the footer

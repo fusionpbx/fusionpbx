@@ -636,20 +636,21 @@ else {
 
 //fax extension form
 	echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' onSubmit=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td align='left' width='30%'>\n";
+	echo "	<td align='left' valign='top' width='30%'>\n";
 	echo "		<span class='title'>".$text['header-send']."</span>\n";
 	echo "	</td>\n";
-	echo "	<td width='70%' align='right'>\n";
+	echo "	<td width='70%' align='right' valign='top'>\n";
 	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
 	echo "		<input type='submit' name='submit' class='btn' id='preview' value='".$text['button-preview']."'>\n";
 	echo "		<input name='submit' type='submit' class='btn' id='upload' value='".$text['button-send']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+	echo "<br>\n";
 
-	echo "<table width='100%' border='0' cellspacing='0' cellpadding='3'>\n";
+	echo "<table width='100%' border='0' cellspacing='0' cellpadding='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='left'>\n";
 	echo "			".$text['description-2']." ".((if_group('superadmin')) ? $text['description-3'] : null)." \n";
@@ -852,6 +853,7 @@ else {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
+	echo "			<br>\n";
 	echo "			<input type='hidden' name='fax_caller_id_name' value='".$fax_caller_id_name."'>\n";
 	echo "			<input type='hidden' name='fax_caller_id_number' value='".$fax_caller_id_number."'>\n";
 	echo "			<input type='hidden' name='fax_extension' value='".$fax_extension."'>\n";
