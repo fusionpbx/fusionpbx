@@ -34,17 +34,20 @@ else {
 	exit;
 }
 
-//add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+// check if included in another file
+if (!$included) {
+	//add multi-lingual support
+		require_once "app_languages.php";
+		foreach($text as $key => $value) {
+			$text[$key] = $value[$_SESSION['domain']['language']['code']];
+		}
 
-if (count($_GET)>0) {
-	$contact_uuid = check_str($_GET["id"]);
+	if (count($_GET)>0) {
+		$contact_uuid = check_str($_GET["id"]);
+	}
 }
 
-if (strlen($contact_uuid)>0) {
+if (strlen($contact_uuid) > 0) {
 	//delete addresses
 		$sql = "delete from v_contact_addresses ";
 		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -110,9 +113,10 @@ if (strlen($contact_uuid)>0) {
 		unset($prep_statement, $sql);
 }
 
-
-$_SESSION["message"] = $text['message-delete'];
-header("Location: contacts.php");
-return;
+if (!$included) {
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: contacts.php");
+	return;
+}
 
 ?>

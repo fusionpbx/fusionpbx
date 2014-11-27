@@ -1060,10 +1060,40 @@
 		$text['message-google_signed_out']['pt-pt'] = "Conta do Google: Assinado Fora";
 		$text['message-google_signed_out']['fr-fr'] = "Compte Google: Déconnecté";
 
-		$text['message-contacts_imported']['en-us'] = "Contacts Imported: ";
-		$text['message-contacts_imported']['es-cl'] = "Contactos Importados: ";
-		$text['message-contacts_imported']['pt-pt'] = "Contatos Importados: ";
-		$text['message-contacts_imported']['fr-fr'] = "Contacts Importés: ";
+		$text['message-contacts_imported']['en-us'] = "Contacts Imported:";
+		$text['message-contacts_imported']['es-cl'] = "Contactos Importados:";
+		$text['message-contacts_imported']['pt-pt'] = "Contatos Importados:";
+		$text['message-contacts_imported']['fr-fr'] = "Contacts Importés:";
+
+		$text['label-import_duplicates']['en-us'] = "Duplicates";
+		$text['label-import_duplicates']['es-cl'] = "Duplicados";
+		$text['label-import_duplicates']['pt-pt'] = "Duplicatas";
+		$text['label-import_duplicates']['fr-fr'] = "Doublons";
+
+		$text['option-import_duplicates_skip']['en-us'] = "Skip";
+		$text['option-import_duplicates_skip']['es-cl'] = "Omitir";
+		$text['option-import_duplicates_skip']['pt-pt'] = "Pular";
+		$text['option-import_duplicates_skip']['fr-fr'] = "Sauter";
+
+		$text['option-import_duplicates_replace']['en-us'] = "Replace";
+		$text['option-import_duplicates_replace']['es-cl'] = "Reemplazar";
+		$text['option-import_duplicates_replace']['pt-pt'] = "Substituir";
+		$text['option-import_duplicates_replace']['fr-fr'] = "Remplacer";
+
+		$text['description-import_duplicates']['en-us'] = "Select how to treat contacts previously imported.";
+		$text['description-import_duplicates']['es-cl'] = "Seleccione la forma de tratar a los contactos previamente importados.";
+		$text['description-import_duplicates']['pt-pt'] = "Escolha como tratar os contatos previamente importados.";
+		$text['description-import_duplicates']['fr-fr'] = "Sélectionnez la façon de traiter les contacts importés auparavant.";
+
+		$text['message_contacts_imported_skipped']['en-us'] = "Skipped:";
+		$text['message_contacts_imported_skipped']['es-cl'] = "Saltado:";
+		$text['message_contacts_imported_skipped']['pt-pt'] = "Ignorados:";
+		$text['message_contacts_imported_skipped']['fr-fr'] = "Arrêté:";
+
+		$text['message_contacts_imported_replaced']['en-us'] = "Replaced:";
+		$text['message_contacts_imported_replaced']['es-cl'] = "Sustituido:";
+		$text['message_contacts_imported_replaced']['pt-pt'] = "Substituído:";
+		$text['message_contacts_imported_replaced']['fr-fr'] = "Remplacé:";
 
 	// general labels
 		$text['label-primary']['en-us'] = "Primary";
