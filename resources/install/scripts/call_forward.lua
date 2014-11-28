@@ -223,14 +223,16 @@
 
 		--disable the follow me
 			if (session:ready() and enabled == "true" and follow_me_uuid ~= nil) then
-				sql = "update v_follow_me set ";
-				sql = sql .. "follow_me_enabled = 'false' ";
-				sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
-				sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
-				if (debug["sql"]) then
-					freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+				if (string.len(follow_me_uuid) > 0) then
+					sql = "update v_follow_me set ";
+					sql = sql .. "follow_me_enabled = 'false' ";
+					sql = sql .. "where domain_uuid = '"..domain_uuid.."' ";
+					sql = sql .. "and follow_me_uuid = '"..follow_me_uuid.."' ";
+					if (debug["sql"]) then
+						freeswitch.consoleLog("notice", "[call_forward] "..sql.."\n");
+					end
+					dbh:query(sql);
 				end
-				dbh:query(sql);
 			end
 
 		--check the destination
