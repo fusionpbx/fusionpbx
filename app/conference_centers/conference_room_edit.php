@@ -59,6 +59,8 @@ else {
 		$record = check_str($_POST["record"]);
 		$user_uuid = check_str($_POST["user_uuid"]);
 		$max_members = check_str($_POST["max_members"]);
+		$start_datetime = check_str($_POST["start_datetime"]);
+		$stop_datetime = check_str($_POST["stop_datetime"]);
 		$wait_mod = check_str($_POST["wait_mod"]);
 		$announce = check_str($_POST["announce"]);
 		$sounds = check_str($_POST["sounds"]);
@@ -214,6 +216,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		//if (strlen($conference_center_uuid) == 0) { $msg .= "Please provide: Conference UUID<br>\n"; }
 		//if (strlen($max_members) == 0) { $msg .= "Please provide: Max Members<br>\n"; }
+		//if (strlen($start_datetime) == 0) { $msg .= "Please provide: Start Date/Time<br>\n"; }
+		//if (strlen($stop_datetime) == 0) { $msg .= "Please provide: Stop Date/Time<br>\n"; }
 		//if (strlen($wait_mod) == 0) { $msg .= "Please provide: Wait for the Moderator<br>\n"; }
 		//if (strlen($profile) == 0) { $msg .= "Please provide: Conference Profile<br>\n"; }
 		//if (strlen($announce) == 0) { $msg .= "Please provide: Announce<br>\n"; }
@@ -285,6 +289,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "profile, ";
 					$sql .= "record, ";
 					$sql .= "max_members, ";
+					$sql .= "start_datetime, ";
+					$sql .= "stop_datetime, ";
 					$sql .= "wait_mod, ";
 					$sql .= "announce, ";
 					$sql .= "sounds, ";
@@ -303,6 +309,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$profile', ";
 					$sql .= "'$record', ";
 					$sql .= "'$max_members', ";
+					$sql .= "'$start_datetime', ";
+					$sql .= "'$stop_datetime', ";
 					$sql .= "'$wait_mod', ";
 					$sql .= "'$announce', ";
 					$sql .= "'$sounds', ";
@@ -379,6 +387,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($max_members) > 0) {
 						$sql .= "max_members = '$max_members', ";
 					}
+					if (strlen($start_datetime) > 0) {
+						$sql .= "start_datetime = '".$start_datetime."', ";
+					}
+					if (strlen($stop_datetime) > 0) {
+						$sql .= "stop_datetime = '".$stop_datetime."', ";
+					}
 					if (strlen($wait_mod) > 0) {
 						$sql .= "wait_mod = '$wait_mod', ";
 					}
@@ -451,6 +465,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$profile = $row["profile"];
 				$record = $row["record"];
 				$max_members = $row["max_members"];
+				$start_datetime = $row["start_datetime"];
+				$stop_datetime = $row["stop_datetime"];
 				$wait_mod = $row["wait_mod"];
 				$announce = $row["announce"];
 				$sounds = $row["sounds"];
@@ -495,18 +511,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
+	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-back']."'>\n";
 	if (strlen($meeting_uuid) > 0) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-sessions']."' onclick=\"window.location='conference_sessions.php?id=".$meeting_uuid."'\" value='".$text['button-sessions']."'>\n";
@@ -661,6 +671,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+	echo "	".$text['label-schedule']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
+	echo "	<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='".$start_datetime."'>\n";
+	echo "	<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='".$stop_datetime."'>\n";
+	echo "	<br>".$text['description-schedule'];
+	echo "</td>\n";
+	echo "</tr>\n";
 
 	if (permission_exists('conference_room_wait_mod')) {
 		echo "<tr>\n";
@@ -860,12 +881,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+
 	echo "</form>";
 
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";
