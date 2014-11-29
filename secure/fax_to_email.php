@@ -147,6 +147,7 @@ if (defined('STDIN')) {
 			$fax_forward_number = $row["fax_forward_number"];
 			//$fax_user_list = $row["fax_user_list"];
 			$fax_description = $row["fax_description"];
+			$fax_email_inbound_subject_tag = $row['fax_email_inbound_subject_tag'];
 	}
 	unset ($prep_statement);
 
@@ -233,7 +234,7 @@ if (defined('STDIN')) {
 //send the email
 	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_name.".tif")) {
 		//prepare the message
-			$tmp_subject = "Fax Received: ".$fax_name;
+			$tmp_subject = (($fax_email_inbound_subject_tag != '') ? "[".$fax_email_inbound_subject_tag."]" : "Fax Received").": ".$fax_name;
 			$tmp_text_plain  = "\nFax Received:\n";
 			$tmp_text_plain .= "Name: ".$fax_name."\n";
 			$tmp_text_plain .= "Extension: ".$fax_extension."\n";
