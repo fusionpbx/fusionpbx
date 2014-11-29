@@ -28,7 +28,7 @@
 		$apps[$x]['menu'][0]['title']['de-at'] = "";
 		$apps[$x]['menu'][0]['title']['fr-fr'] = "Extensions";
 		$apps[$x]['menu'][0]['title']['fr-ca'] = "Post téléphonique";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = ""; 
+		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
 		$apps[$x]['menu'][0]['title']['pt-pt'] = "Extensões";
 		$apps[$x]['menu'][0]['title']['pt-br'] = "";
 		$apps[$x]['menu'][0]['uuid'] = "d3036a99-9a9f-2ad6-a82a-1fe7bebbe2d3";
@@ -306,6 +306,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_busy_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_unanswered_destination";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_unanswered_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
 		$z++;
