@@ -268,6 +268,26 @@
 		$text['label-max-members']['pt-pt'] = "Nº máximo de membros";
 		$text['label-max-members']['fr-fr'] = "Membres Max";
 
+		$text['label-schedule']['en-us'] = "Schedule";
+		$text['label-schedule']['es-cl'] = "Horario";
+		$text['label-schedule']['pt-pt'] = "Horário";
+		$text['label-schedule']['fr-fr'] = "Calendrier";
+
+		$text['description-schedule']['en-us'] = "Set a start and stop date/time for this room.";
+		$text['description-schedule']['es-cl'] = "Establezca un inicio y parada de fecha/hora para esta sala.";
+		$text['description-schedule']['pt-pt'] = "Definir uma partida e parada de data/hora para este quarto.";
+		$text['description-schedule']['fr-fr'] = "Définir un démarrage et d'arrêt de date/heure pour cette chambre.";
+
+		$text['label-from']['en-us'] = "From";
+		$text['label-from']['es-cl'] = "Desde";
+		$text['label-from']['pt-pt'] = "A Partir De";
+		$text['label-from']['fr-fr'] = "A Partir De";
+
+		$text['label-to']['en-us'] = "To";
+		$text['label-to']['es-cl'] = "Final";
+		$text['label-to']['pt-pt'] = "Final";
+		$text['label-to']['fr-fr'] = "Fin";
+
 		$text['label-wait-for-moderator']['en-us'] = "Wait for Moderator";
 		$text['label-wait-for-moderator']['es-cl'] = "Esperar un Moderador";
 		$text['label-wait-for-moderator']['pt-pt'] = "Esperar pelo Moderador";

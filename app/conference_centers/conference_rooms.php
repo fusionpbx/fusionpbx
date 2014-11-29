@@ -150,24 +150,18 @@ else {
 	$order = $_GET["order"];
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<form method='get' action=''>\n";
-	echo "			<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
-	echo "			<td width='50%' align='right'>\n";
+	echo "			<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['title-conference-rooms']."</b></td>\n";
+	echo "			<td width='50%' align='right' valign='top'>\n";
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</td>\n";
 	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-	echo "<br />\n";
+	echo "<br /><br>\n";
 
 	//get the conference room count
 		require_once "app/conference_centers/resources/classes/conference_center.php";
@@ -210,7 +204,6 @@ else {
 		$row_style["1"] = "row_style1";
 
 	//table header
-		echo "<div align='center'>\n";
 		echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
@@ -220,7 +213,7 @@ else {
 		//echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 		echo th_order_by('record', $text['label-record'], $order_by, $order);
 		//echo th_order_by('max_members', 'Max', $order_by, $order);
-		echo th_order_by('wait_mod', $text['label-wait-moderator'], $order_by, $order);
+		echo th_order_by('wait_mod', $text['label-moderator'], $order_by, $order);
 		echo th_order_by('announce', $text['label-announce'], $order_by, $order);
 		//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order);
 		echo th_order_by('mute', $text['label-mute'], $order_by, $order);
@@ -373,15 +366,7 @@ else {
 
 //close the tables
 	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
+	echo "<br><br>";
 
 //include the footer
 	require_once "resources/footer.php";

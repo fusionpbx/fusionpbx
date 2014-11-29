@@ -112,6 +112,11 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "conference_room_schedule";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$apps[$x]['permissions'][$y]['groups'][] = "user";
+		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "conference_room_announce";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
@@ -259,6 +264,14 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "max_members";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "numeric";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Limit number of people in the conference.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "start_datetime";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Open the conference room at the start time.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "stop_datetime";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Close the conference room at the stop time.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "wait_mod";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
