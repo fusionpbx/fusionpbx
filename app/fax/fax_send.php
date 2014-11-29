@@ -503,24 +503,24 @@ if (!$included) {
 		$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 		$mailto_address_fax = $result["fax_email"];
 
-		if (!included) {
+		if (!$included) {
 			$sql = "select contact_uuid from v_users where user_uuid = '".$_SESSION['user_uuid']."'; ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
 
-			$sql = "select contact_email from v_contacts where contact_uuid = '".$result["contact_uuid"]."'; ";
+			$sql = "select email_address from v_contact_emails where contact_uuid = '".$result["contact_uuid"]."' order by email_primary desc;";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetch(PDO::FETCH_NAMED);
-			$mailto_address_user = $result["contact_email"];
+			$mailto_address_user = $result["email_address"];
 		}
 		else {
 			//use email-to-fax from address
 		}
 
 		if ($mailto_address_fax != '' && $mailto_address_user != $mailto_address_fax) {
-			$mailto_address = "'".$mailto_address_fax."\,".$mailto_address_user."'";
+			$mailto_address = $mailto_address_fax.",".$mailto_address_user;
 		}
 		else {
 			$mailto_address = $mailto_address_user;
