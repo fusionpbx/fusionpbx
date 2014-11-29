@@ -25,6 +25,8 @@
 	James Rose <james.o.rose@gmail.com>
 */
 
+if (!isset($included)) { $included = false; }
+
 if (!$included) {
 
 	include "root.php";
