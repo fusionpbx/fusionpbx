@@ -260,7 +260,7 @@
 	--end
 	email_address = email_address:gsub(",", "\\,");
 	from_address = env:getHeader("mailfrom_address");
-	if (from_address == null) then
+	if (from_address == nil) then
 		from_address = email_address;
 	end
 	--needs to be fixed on operating systems that do not have sed or echo utilities.
@@ -270,7 +270,7 @@
 	email_message_success = "We are happy to report the fax was sent successfully.  It has been attached for your records."
 
 -- send the selected variables to the console
-	if (fax_success == null) then
+	if (fax_success ~= nil) then
 		freeswitch.consoleLog("INFO","fax_success: '" .. fax_success .. "'\n");
 	end
 	freeswitch.consoleLog("INFO","fax_result_text: '" .. fax_result_text .. "'\n");
