@@ -27,6 +27,8 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+require_once "resources/functions/object_to_array.php";
+require_once "resources/functions/parse_attachments.php";
 if (permission_exists('fax_inbox_view')) {
 	//access granted
 }
@@ -79,6 +81,7 @@ else {
 			$fax_email_connection_username = $row["fax_email_connection_username"];
 			$fax_email_connection_password = $row["fax_email_connection_password"];
 			$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
+			$fax_email_inbound_subject_tag = $row["fax_email_inbound_subject_tag"];
 			break;
 		}
 		unset ($prep_statement);
@@ -88,7 +91,7 @@ else {
 		$fax_email_connection .= ($fax_email_connection_security != '') ? "/".$fax_email_connection_security : "/notls";
 		$fax_email_connection .= "/".(($fax_email_connection_validate == 'false') ? "no" : null)."validate-cert";
 		$fax_email_connection .= "}".$fax_email_connection_mailbox;
-		if (!$mailbox = imap_open($fax_email_connection, $fax_email_connection_username, $fax_email_connection_password)) {
+		if (!$connection = imap_open($fax_email_connection, $fax_email_connection_username, $fax_email_connection_password)) {
 			$_SESSION["message_mood"] = 'negative';
 			$_SESSION["message"] = $text['message-cannot_connect']."(".imap_last_error().")";
 			header("Location: fax.php");
@@ -107,7 +110,7 @@ else {
 
 		//download attachment
 		if (isset($_GET['download'])) {
-			$attachment = get_attachments($mailbox, $email_id, FT_UID);
+			$attachment = parse_attachments($connection, $email_id, FT_UID);
 			$file_type = pathinfo($attachment[0]['filename'], PATHINFO_EXTENSION);
 			switch ($file_type) {
 				case "pdf" : header("Content-Type: application/pdf"); break;
@@ -130,9 +133,9 @@ else {
 
 		//delete email
 		if (isset($_GET['delete']) && permission_exists('fax_inbox_delete')) {
-			$attachment = get_attachments($mailbox, $email_id, FT_UID);
-			if (imap_delete($mailbox, $email_id, FT_UID)) {
-				if (imap_expunge($mailbox)) {
+			$attachment = parse_attachments($connection, $email_id, FT_UID);
+			if (imap_delete($connection, $email_id, FT_UID)) {
+				if (imap_expunge($connection)) {
 					//clean up local inbox copy
 					$fax_dir = $_SESSION['switch']['storage']['dir'].'/fax'.((count($_SESSION["domains"]) > 1) ? '/'.$_SESSION['domain_name'] : null);
 					@unlink($fax_dir.'/'.$fax_extension.'/inbox/'.$attachment[0]['filename']);
@@ -161,7 +164,7 @@ else {
 	}
 
 //get emails
-	$emails = imap_search($mailbox, 'SUBJECT "Fax"', SE_UID);
+	$emails = imap_search($connection, "SUBJECT \"".$fax_email_inbound_subject_tag."\"", SE_UID);
 
 //show the header
 	require_once "resources/header.php";
@@ -199,8 +202,8 @@ else {
 		rsort($emails); // most recent on top
 
 		foreach ($emails as $email_id) {
-			$metadata = object_to_array(imap_fetch_overview($mailbox, $email_id, FT_UID));
-			$attachment = get_attachments($mailbox, $email_id, FT_UID);
+			$metadata = object_to_array(imap_fetch_overview($connection, $email_id, FT_UID));
+			$attachment = parse_attachments($connection, $email_id, FT_UID);
 
 			echo "<tr ".(($metadata[0]['seen'] == 0) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$metadata[0]['date']."</td>\n";
@@ -210,8 +213,10 @@ else {
 				echo "	<td class='list_control_icons'><a href='?id=".$fax_uuid."&email_id=".$email_id."&delete' onclick=\"return confirm('".$text['message-confirm-delete']."')\">$v_link_label_delete</a></td>\n";
 			}
 			echo "</tr>\n";
-			//$message = imap_fetchbody($mailbox, $email_id, 2, FT_UID);
-			//echo $message;
+// 			$fax_message = imap_fetchbody($connection, $email_id, '1.1', FT_UID);
+// 			if ($fax_message == '') {
+// 				$fax_message = imap_fetchbody($connection, $email_id, '1', FT_UID);
+// 			}
 		}
 
 	}
@@ -230,57 +235,4 @@ imap_close($inbox);
 
 //show the footer
 	require_once "resources/footer.php";
-
-
-
-//functions used above
-function object_to_array($obj) {
-	if (!is_object($obj) && !is_array($obj)) { return $obj; }
-	if (is_object($obj)) { $obj = get_object_vars($obj); }
-	return array_map('object_to_array', $obj);
-}
-
-function get_attachments($connection, $message_number, $option = '') {
-    $attachments = array();
-    $structure = imap_fetchstructure($connection, $message_number, $option);
-
-    if(isset($structure->parts) && count($structure->parts)) {
-
-        for($i = 0; $i < count($structure->parts); $i++) {
-
-            if($structure->parts[$i]->ifdparameters) {
-                foreach($structure->parts[$i]->dparameters as $object) {
-                    if(strtolower($object->attribute) == 'filename') {
-                        $attachments[$i]['is_attachment'] = true;
-                        $attachments[$i]['filename'] = $object->value;
-                    }
-                }
-            }
-
-            if($structure->parts[$i]->ifparameters) {
-                foreach($structure->parts[$i]->parameters as $object) {
-                    if(strtolower($object->attribute) == 'name') {
-                        $attachments[$i]['is_attachment'] = true;
-                        $attachments[$i]['name'] = $object->value;
-                    }
-                }
-            }
-
-            if($attachments[$i]['is_attachment']) {
-                $attachments[$i]['attachment'] = imap_fetchbody($connection, $message_number, $i+1, $option);
-                if($structure->parts[$i]->encoding == 3) { // 3 = BASE64
-                    $attachments[$i]['attachment'] = base64_decode($attachments[$i]['attachment']);
-                }
-                elseif($structure->parts[$i]->encoding == 4) { // 4 = QUOTED-PRINTABLE
-                    $attachments[$i]['attachment'] = quoted_printable_decode($attachments[$i]['attachment']);
-                }
-            }
-
-			unset($attachments[$i]['is_attachment']);
-        }
-
-    }
-    return array_values($attachments); //reindex
-}
-
 ?>
