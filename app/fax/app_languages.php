@@ -248,10 +248,10 @@
 	$text['label-email_connection_validate']['pt-pt'] = "Validar Certificado";
 	$text['label-email_connection_validate']['fr-fr'] = "Valider le Certificat";
 
-	$text['description-email_connection_validate']['en-us'] = "Enable server certificate validation (select 'False' for self-signed certificates).";
-	$text['description-email_connection_validate']['es-cl'] = "Activar la validación del certificado del servidor (seleccione 'Falso' para certificados con firma).";
-	$text['description-email_connection_validate']['pt-pt'] = "Habilitar a validação do certificado do servidor (selecione 'Não' para os certificados auto-assinados).";
-	$text['description-email_connection_validate']['fr-fr'] = "Activer la validation du certificat du serveur (sélectionner 'Non' pour les certificats auto-signés).";
+	$text['description-email_connection_validate']['en-us'] = "Enable server certificate validation.<br>(Select 'False' for self-signed certificates.)";
+	$text['description-email_connection_validate']['es-cl'] = "Activar la validación del certificado del servidor.<br>(Seleccione 'Falso' para certificados con firma.)";
+	$text['description-email_connection_validate']['pt-pt'] = "Habilitar a validação do certificado do servidor.<br>(Selecione 'Não' para os certificados auto-assinados.)";
+	$text['description-email_connection_validate']['fr-fr'] = "Activer la validation du certificat du serveur.<br>(Sélectionner 'Non' pour les certificats auto-signés.)";
 
 	$text['label-email_connection_username']['en-us'] = "Username";
 	$text['label-email_connection_username']['es-cl'] = "Nombre de usuario";
@@ -278,10 +278,65 @@
 	$text['label-email_connection_mailbox']['pt-pt'] = "Pasta Caixa";
 	$text['label-email_connection_mailbox']['fr-fr'] = "Dossier Boîte aux Lettres";
 
-	$text['description-email_connection_mailbox']['en-us'] = "Enter the remote folder name to view.";
-	$text['description-email_connection_mailbox']['es-cl'] = "Escriba el nombre de la carpeta a distancia para ver.";
-	$text['description-email_connection_mailbox']['pt-pt'] = "Digite o nome da pasta remota para ver.";
-	$text['description-email_connection_mailbox']['fr-fr'] = "Entrez le nom du dossier à distance pour voir.";
+	$text['description-email_connection_mailbox']['en-us'] = "Enter the remote folder name to monitor.";
+	$text['description-email_connection_mailbox']['es-cl'] = "Escriba el nombre de la carpeta remota para monitorear.";
+	$text['description-email_connection_mailbox']['pt-pt'] = "Digite o nome da pasta remoto para monitorar.";
+	$text['description-email_connection_mailbox']['fr-fr'] = "Entrez le nom du dossier à distance pour surveiller.";
+
+	$text['label-advanced_settings']['en-us'] = "Advanced Settings";
+	$text['label-advanced_settings']['es-cl'] = "Configuración Avanzada";
+	$text['label-advanced_settings']['pt-pt'] = "Configurações Avançadas";
+	$text['label-advanced_settings']['fr-fr'] = "Paramètres Avancés";
+
+	$text['description-advanced_settings']['en-us'] = "Configure the settings below to enable Remote Inbox and Email-to-Fax functionality.";
+	$text['description-advanced_settings']['es-cl'] = "Configure las opciones de abajo para permitir que la bandeja de entrada remota y funcionalidad-Email-a-Fax.";
+	$text['description-advanced_settings']['pt-pt'] = "Defina as configurações abaixo para permitir Inbox remoto e funcionalidade Email-to-Fax.";
+	$text['description-advanced_settings']['fr-fr'] = "Configurez les paramètres ci-dessous pour activer la boîte de réception à distance et la fonctionnalité Email-à-Fax.";
+
+	$text['label-email_account_connection']['en-us'] = "Account Connection";
+	$text['label-email_account_connection']['es-cl'] = "Conexión Cuenta";
+	$text['label-email_account_connection']['pt-pt'] = "Connection Conta";
+	$text['label-email_account_connection']['fr-fr'] = "Compte Connexion";
+
+	$text['label-email_remote_inbox']['en-us'] = "Remote Inbox";
+	$text['label-email_remote_inbox']['es-cl'] = "Bandeja de Entrada Remota";
+	$text['label-email_remote_inbox']['pt-pt'] = "Inbox Remoto";
+	$text['label-email_remote_inbox']['fr-fr'] = "Boîte de Réception à Distance";
+
+	$text['label-email_inbound_subject_tag']['en-us'] = "Subject Tag";
+	$text['label-email_inbound_subject_tag']['es-cl'] = "Asunto Tag";
+	$text['label-email_inbound_subject_tag']['pt-pt'] = "Assunto Tag";
+	$text['label-email_inbound_subject_tag']['fr-fr'] = "Tag Sujet";
+
+	$text['description-email_inbound_subject_tag']['en-us'] = "Set the email subject tag for inbound faxes.";
+	$text['description-email_inbound_subject_tag']['es-cl'] = "Ajuste la etiqueta de asunto del correo electrónico para los faxes entrantes.";
+	$text['description-email_inbound_subject_tag']['pt-pt'] = "Defina a tag e-mail assunto para faxes recebidos.";
+	$text['description-email_inbound_subject_tag']['fr-fr'] = "Réglez le tag objet du courriel pour les fax entrants.";
+
+	$text['label-email_email-to-fax']['en-us'] = "Email-to-Fax";
+	$text['label-email_email-to-fax']['es-cl'] = "Email-a-Fax";
+	$text['label-email_email-to-fax']['pt-pt'] = "Email-to-Fax";
+	$text['label-email_email-to-fax']['fr-fr'] = "Email-à-Fax";
+
+	$text['label-email_outbound_subject_tag']['en-us'] = "Subject Tag";
+	$text['label-email_outbound_subject_tag']['es-cl'] = "Asunto Tag";
+	$text['label-email_outbound_subject_tag']['pt-pt'] = "Assunto Tag";
+	$text['label-email_outbound_subject_tag']['fr-fr'] = "Tag Sujet";
+
+	$text['description-email_outbound_subject_tag']['en-us'] = "Set the email subject tag for outbound faxes.";
+	$text['description-email_outbound_subject_tag']['es-cl'] = "Ajuste la etiqueta de asunto del correo electrónico para los faxes salientes.";
+	$text['description-email_outbound_subject_tag']['pt-pt'] = "Defina a tag e-mail assunto para faxes de saída.";
+	$text['description-email_outbound_subject_tag']['fr-fr'] = "Réglez le tag objet du courriel pour les fax sortants.";
+
+	$text['label-email_outbound_authorized_senders']['en-us'] = "Authorized Senders";
+	$text['label-email_outbound_authorized_senders']['es-cl'] = "Los Remitentes Autorizados";
+	$text['label-email_outbound_authorized_senders']['pt-pt'] = "Remetentes Autorizados";
+	$text['label-email_outbound_authorized_senders']['fr-fr'] = "Expéditeurs Autorisés";
+
+	$text['description-email_outbound_authorized_senders']['en-us'] = "Define the email address(es) allowed to send faxes through this server.";
+	$text['description-email_outbound_authorized_senders']['es-cl'] = "Definir la dirección de correo electrónico(es) pueden enviar faxes a través de este servidor.";
+	$text['description-email_outbound_authorized_senders']['pt-pt'] = "Defina o endereço de e-mail(s) permissão para enviar faxes através deste servidor.";
+	$text['description-email_outbound_authorized_senders']['fr-fr'] = "Définir l'adresse e-mail(s) autorisé à envoyer des télécopies via ce serveur.";
 
 	$text['option-true']['en-us'] = "True";
 	$text['option-true']['es-cl'] = "Verdadero";
@@ -408,10 +463,10 @@
 	$text['label-fax-number']['pt-pt'] = "Número de Fax";
 	$text['label-fax-number']['fr-fr'] = "Numéro de Fax";
 
-	$text['description-fax-number']['en-us'] = "Enter the recipient's fax number.";
-	$text['description-fax-number']['es-cl'] = "Ingrese el número aquí.";
-	$text['description-fax-number']['pt-pt'] = "Introduza aqui o número.";
-	$text['description-fax-number']['fr-fr'] = "Entrez le numéro de fax du destinataire.";
+	$text['description-fax-number']['en-us'] = "Enter the recipient fax number(s).";
+	$text['description-fax-number']['es-cl'] = "Introduzca el número(s) de fax del destinatario.";
+	$text['description-fax-number']['pt-pt'] = "Digite o número do(s) de fax do destinatário.";
+	$text['description-fax-number']['fr-fr'] = "Entrez le numéro(s) de fax du destinataire.";
 
 	$text['label-fax-subject']['en-us'] = "Subject";
 	$text['label-fax-subject']['es-cl'] = "Asunto";
