@@ -387,12 +387,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					if (strlen($max_members) > 0) {
 						$sql .= "max_members = '$max_members', ";
 					}
-					if (strlen($start_datetime) > 0) {
-						$sql .= "start_datetime = '".$start_datetime."', ";
-					}
-					if (strlen($stop_datetime) > 0) {
-						$sql .= "stop_datetime = '".$stop_datetime."', ";
-					}
+					$sql .= "start_datetime = '".$start_datetime."', ";
+					$sql .= "stop_datetime = '".$stop_datetime."', ";
 					if (strlen($wait_mod) > 0) {
 						$sql .= "wait_mod = '$wait_mod', ";
 					}
@@ -872,15 +868,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
+	echo "			<br>";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
-		echo "				<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
-		echo "				<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
+		echo "		<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
+		echo "		<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
+		echo "		<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br>";
 
 	echo "</form>";
 
