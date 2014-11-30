@@ -252,6 +252,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "meeting_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Meeting UUID";
 		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "conference_room_name";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the conference room name.";
+		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "profile";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select the conference profile.";

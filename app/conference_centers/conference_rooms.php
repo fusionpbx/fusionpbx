@@ -208,17 +208,16 @@ else {
 		echo "<tr>\n";
 		//echo th_order_by('conference_center_uuid', 'Conference UUID', $order_by, $order);
 		//echo th_order_by('meeting_uuid', 'Meeting UUID', $order_by, $order);
+		echo "<th nowrap='nowrap'>".$text['label-name']."</th>\n";
 		echo "<th nowrap='nowrap'>".$text['label-moderator-pin']."</th>\n";
 		echo "<th nowrap='nowrap'>".$text['label-participant-pin']."</th>\n";
 		//echo th_order_by('profile', $text['label-profile'], $order_by, $order);
 		echo th_order_by('record', $text['label-record'], $order_by, $order);
 		//echo th_order_by('max_members', 'Max', $order_by, $order);
-		echo th_order_by('wait_mod', $text['label-moderator'], $order_by, $order);
+		echo th_order_by('wait_mod', $text['label-wait-moderator'], $order_by, $order);
 		echo th_order_by('announce', $text['label-announce'], $order_by, $order);
 		//echo th_order_by('enter_sound', 'Enter Sound', $order_by, $order);
 		echo th_order_by('mute', $text['label-mute'], $order_by, $order);
-		//echo th_order_by('created', 'Created', $order_by, $order);
-		//echo th_order_by('created_by', 'Created By', $order_by, $order);
 		echo th_order_by('sounds', $text['label-sounds'], $order_by, $order);
 		echo "<th>".$text['label-members']."</th>\n";
 		echo "<th>".$text['label-tools']."</th>\n";
@@ -240,6 +239,7 @@ else {
 		if ($result_count > 0) {
 			foreach($result as $row) {
 				$meeting_uuid = $row['meeting_uuid'];
+				$conference_room_name = $row['conference_room_name'];
 				$moderator_pin = $row['moderator_pin'];
 				$participant_pin = $row['participant_pin'];
 				if (strlen($moderator_pin) == 9)  {
@@ -251,6 +251,7 @@ else {
 
 				$tr_link = (permission_exists('conference_room_edit')) ? "href='conference_room_edit.php?id=".$row['conference_room_uuid']."'" : null;
 				echo "<tr ".$tr_link.">\n";
+				echo "	<td valign='middle' class='".$row_style[$c]."'>".(($conference_room_name != '') ? "<a ".$tr_link.">".$conference_room_name."</a>" : "&nbsp;")."</td>\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>".$moderator_pin."</td>\n";
 				echo "	<td valign='middle' class='".$row_style[$c]."'>".$participant_pin."</td>\n";
 				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_center_uuid']."&nbsp;</td>\n";
