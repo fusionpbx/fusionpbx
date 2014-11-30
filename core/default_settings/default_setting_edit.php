@@ -123,7 +123,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				$_SESSION["message"] = $text['message-add'];
-				header("Location: default_settings.php");
+				header("Location: default_settings.php#".$default_setting_category);
 				return;
 			} //if ($action == "add")
 
@@ -141,7 +141,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				$_SESSION["message"] = $text['message-update'];
-				header("Location: default_settings.php");
+				header("Location: default_settings.php#".$default_setting_category);
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
