@@ -198,6 +198,16 @@
 		$text['label-conference-name']['pt-pt'] = "Nome da Conferência";
 		$text['label-conference-name']['fr-fr'] = "Nom de la Conférence";
 
+		$text['label-room-name']['en-us'] = "Room Name";
+		$text['label-room-name']['es-cl'] = "Nombre de la Sala";
+		$text['label-room-name']['pt-pt'] = "Nome da Sala";
+		$text['label-room-name']['fr-fr'] = "Nom de Chambre";
+
+		$text['description-room-name']['en-us'] = "Enter a name for the conference room.";
+		$text['description-room-name']['es-cl'] = "Introduzca un nombre para la sala de conferencias.";
+		$text['description-room-name']['pt-pt'] = "Digite um nome para a sala de conferências.";
+		$text['description-room-name']['fr-fr'] = "Entrez un nom pour la salle de conférence.";
+
 		$text['label-greeting']['en-us'] = "Greeting";
 		$text['label-greeting']['es-cl'] = "Mensaje";
 		$text['label-greeting']['pt-pt'] = "Saudaçãoa";

@@ -53,6 +53,7 @@ else {
 	if (count($_POST) > 0) {
 		$conference_center_uuid = check_str($_POST["conference_center_uuid"]);
 		$meeting_uuid = check_str($_POST["meeting_uuid"]);
+		$conference_room_name = check_str($_POST['conference_room_name']);
 		$moderator_pin = check_str($_POST["moderator_pin"]);
 		$participant_pin = check_str($_POST["participant_pin"]);
 		$profile = check_str($_POST["profile"]);
@@ -286,6 +287,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "conference_room_uuid, ";
 					$sql .= "conference_center_uuid, ";
 					$sql .= "meeting_uuid, ";
+					$sql .= "conference_room_name, ";
 					$sql .= "profile, ";
 					$sql .= "record, ";
 					$sql .= "max_members, ";
@@ -306,6 +308,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$conference_room_uuid', ";
 					$sql .= "'$conference_center_uuid', ";
 					$sql .= "'$meeting_uuid', ";
+					$sql .= "'$conference_room_name', ";
 					$sql .= "'$profile', ";
 					$sql .= "'$record', ";
 					$sql .= "'$max_members', ";
@@ -378,6 +381,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql = "update v_conference_rooms set ";
 					$sql .= "conference_center_uuid = '$conference_center_uuid', ";
 					//$sql .= "meeting_uuid = '$meeting_uuid', ";
+					$sql .= "conference_room_name = '$conference_room_name', ";
 					if (strlen($profile) > 0) {
 						$sql .= "profile = '$profile', ";
 					}
@@ -458,6 +462,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$meeting_uuid = $row["meeting_uuid"];
 				$moderator_pin = $row["moderator_pin"];
 				$participant_pin = $row["participant_pin"];
+				$conference_room_name = $row["conference_room_name"];
 				$profile = $row["profile"];
 				$record = $row["record"];
 				$max_members = $row["max_members"];
@@ -525,9 +530,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-conference-name'].":\n";
-	echo "</td>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-conference-name']."</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_center_uuid'>\n";
 	foreach ($conference_centers as &$row) {
@@ -546,27 +549,34 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin'].":</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-room-name']."</td>";
+	echo "		<td class='vtable' align='left'>";
+	echo "  		<input class='formfld' type='text' name='conference_room_name' maxlength='255' value='$conference_room_name'>\n";
+	echo "			<br />\n";
+	echo "			".$text['description-room-name']."\n";
+	echo "		</td>";
+	echo "	</tr>";
+
+	echo "	<tr>";
+	echo "		<td class='vncell' valign='top'>".$text['label-moderator-pin']."</td>";
 	echo "		<td class='vtable' align='left'>";
 	echo "  		<input class='formfld' type='text' name='moderator_pin' maxlength='255' value='$moderator_pin'>\n";
 	echo "			<br />\n";
 	echo "			".$text['description-moderator-pin']."\n";
-	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-participant-pin'].":</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-participant-pin']."</td>";
 	echo "		<td class='vtable' align='left'>";
 	echo "  		<input class='formfld' type='text' name='participant_pin' maxlength='255' value='$participant_pin'>\n";
 	echo "			<br />\n";
 	echo "			".$text['description-participant-pin']."\n";
-	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-users'].":</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
 	echo "		<td class='vtable' align='left'>";
 	if ($action == "update") {
 		echo "			<table border='0' style='width : 235px;'>\n";
@@ -611,15 +621,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($sql, $result);
 	echo "			<br>\n";
 	echo "			".$text['description-users']."\n";
-	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
 
 	if (permission_exists('conference_room_profile')) {
 		echo "<tr>\n";
-		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-profile'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>".$text['label-profile']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='profile' maxlength='255' value='$profile'>\n";
 		echo "	<br />\n";
@@ -630,9 +637,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('conference_room_record')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-record'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-record']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='record'>\n";
 		echo "	<option value=''></option>\n";
@@ -650,16 +655,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
 
 	if (permission_exists('conference_room_max_members')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-max-members'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-max-members']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='text' name='max_members' maxlength='255' value='$max_members'>\n";
 		echo "<br />\n";
@@ -669,9 +671,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
-	echo "	".$text['label-schedule']."\n";
-	echo "</td>\n";
+	echo "<td class='vncell' valign='top' nowrap='nowrap' width='30%'>".$text['label-schedule']."</td>\n";
 	echo "<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
 	echo "	<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='start_datetime' id='start_datetime' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-from']."' value='".$start_datetime."'>\n";
 	echo "	<input type='text' class='formfld' style='min-width: 115px; width: 115px; max-width: 115px;' name='stop_datetime' id='stop_datetime' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: false, fxName: null, showButtons: true}\" placeholder='".$text['label-to']."' value='".$stop_datetime."'>\n";
@@ -681,9 +681,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('conference_room_wait_mod')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-wait-for-moderator'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-wait-for-moderator']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='wait_mod'>\n";
 		echo "	<option value=''></option>\n";
@@ -701,16 +699,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
 
 	if (permission_exists('conference_room_announce')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-announce'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-announce']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='announce'>\n";
 		echo "	<option value=''></option>\n";
@@ -728,7 +723,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "	</select>\n";
 		echo "<br />\n";
-		echo "\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
@@ -746,9 +740,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('conference_room_mute')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-mute'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-mute']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='mute'>\n";
 		echo "	<option value=''></option>\n";
@@ -771,42 +763,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	/*
-	if ($action == "update" && permission_exists('conference_room_edit')) {
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	Created:\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
-		echo "	<tr>\n";
-		echo "	<td valign='top' align='top'><input name='created' readonly class='formfld' value='$created' type='text' class='formfld' onclick='popUpCalendar(this, this, \"mm/dd/yyyy\");'></td>\n";
-		echo "	<td valign='middle' align='top' width='20' align='right'><img src='/images/icon_calendar.gif' onclick='popUpCalendar(this, frm.created, \"mm/dd/yyyy\");'></td>\n";
-		echo "	</tr>\n";
-		echo "	</table>\n";
-		echo "<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	Created By:\n";
-		echo "</td>\n";
-		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='created_by' maxlength='255' value=\"$created_by\">\n";
-		echo "<br />\n";
-		echo "\n";
-		echo "</td>\n";
-		echo "</tr>\n";
-	}
-	*/
-
 	if (permission_exists('conference_room_profile')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-enabled'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-enabled']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='enabled'>\n";
 		echo "	<option value=''></option>\n";
@@ -831,9 +790,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	if (permission_exists('conference_room_sounds')) {
 		echo "<tr>\n";
-		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-sounds'].":\n";
-		echo "</td>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-sounds']."</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select class='formfld' name='sounds'>\n";
 		echo "	<option value=''></option>\n";
@@ -857,26 +814,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-description'].":\n";
-	echo "</td>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>".$text['label-description']."</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='description' maxlength='255' value=\"$description\">\n";
 	echo "<br />\n";
 	echo "\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br>";
+
+	echo "<tr>\n";
+	echo "	<td colspan='2' align='right'>\n";
+	echo "		<br>";
 	if ($action == "update") {
-		echo "		<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
-		echo "		<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
-		echo "		<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
+		echo "	<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
+		echo "	<input type='hidden' name='meeting_uuid' value='$meeting_uuid'>\n";
+		echo "	<input type='hidden' name='conference_room_uuid' value='$conference_room_uuid'>\n";
 	}
-	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	</td>\n";
+	echo "</tr>";
+
 	echo "</table>";
 	echo "<br>";
 
