@@ -328,7 +328,7 @@ else {
 					echo "	</td>\n";
 				}
 
-				echo "	<td valign='middle' class='row_stylebg' width='20%'>";
+				echo "	<td valign='middle' class='row_stylebg'>";
 				echo "		".$row['description']."\n";
 				echo "		&nbsp;\n";
 				echo "	</td>\n";
