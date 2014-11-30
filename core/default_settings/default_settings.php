@@ -222,25 +222,39 @@ require_once "resources/paging.php";
 
 // copy settings javascript
 if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
-	echo "<script language='javascript' type='text/javascript'>";
-	echo "	var fade_speed = 400;";
-	echo "	function show_domains() {";
-	echo "		document.getElementById('action').value = 'copy';";
-	echo "		$('#button_copy').fadeOut(fade_speed, function() {";
-	echo "			$('#button_back').fadeIn(fade_speed);";
-	echo "			$('#target_domain_uuid').fadeIn(fade_speed);";
-	echo "			$('#button_paste').fadeIn(fade_speed);";
+	echo "<script language='javascript' type='text/javascript'>\n";
+	echo "	var fade_speed = 400;\n";
+	echo "	function show_domains() {\n";
+	echo "		document.getElementById('action').value = 'copy';\n";
+	echo "		$('#button_copy').fadeOut(fade_speed, function() {\n";
+	echo "			$('#button_back').fadeIn(fade_speed);\n";
+	echo "			$('#target_domain_uuid').fadeIn(fade_speed);\n";
+	echo "			$('#button_paste').fadeIn(fade_speed);\n";
 	echo "		});";
 	echo "	}";
-	echo "	function hide_domains() {";
-	echo "		document.getElementById('action').value = '';";
-	echo "		$('#button_back').fadeOut(fade_speed);";
-	echo "		$('#target_domain_uuid').fadeOut(fade_speed);";
-	echo "		$('#button_paste').fadeOut(fade_speed, function() {";
-	echo "			$('#button_copy').fadeIn(fade_speed);";
-	echo "			document.getElementById('target_domain_uuid').selectedIndex = 0;";
-	echo "		});";
-	echo "	}";
+	echo "	function hide_domains() {\n";
+	echo "		document.getElementById('action').value = '';\n";
+	echo "		$('#button_back').fadeOut(fade_speed);\n";
+	echo "		$('#target_domain_uuid').fadeOut(fade_speed);\n";
+	echo "		$('#button_paste').fadeOut(fade_speed, function() {\n";
+	echo "			$('#button_copy').fadeIn(fade_speed);\n";
+	echo "			document.getElementById('target_domain_uuid').selectedIndex = 0;\n";
+	echo "		});\n";
+	echo "	}\n";
+	echo "\n";
+	echo "	$( document ).ready(function() {\n";
+	echo "		// scroll to previous category\n";
+	echo "		var category_span_id;\n";
+	echo "		var url = document.location.href;\n";
+	echo "		var hashindex = url.indexOf('#');\n";
+	echo "		if (hashindex == -1) { }\n";
+	echo "		else {\n";
+	echo "			category_span_id = url.substr(hashindex + 1);\n";
+	echo "		}\n";
+	echo "		if (category_span_id) {\n";
+	echo "			$('#page').animate({scrollTop: $('#anchor_'+category_span_id).offset().top - 200}, 'slow');\n";
+	echo "		}\n";
+	echo "	});\n";
 	echo "</script>";
 }
 
@@ -248,16 +262,14 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	echo "<form name='frm' id='frm' method='post' action=''>";
 	echo "<input type='hidden' name='action' id='action' value=''>";
 
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
 	echo "<table width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-default_settings']."</b></td>\n";
-	echo "		<td width='50%' align='right'>";
+	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'>";
+	echo "			<b>".$text['header-default_settings']."</b>";
+	echo "			<br><br>";
+	echo "			".$text['description-default_settings'];
+	echo "		</td>\n";
+	echo "		<td width='50%' align='right' valign='top'>";
 	if (permission_exists("domain_select") && permission_exists("domain_setting_add") && count($_SESSION['domains']) > 1) {
 		echo "		<input type='button' class='btn' id='button_copy' alt='".$text['button-copy']."' onclick='show_domains();' value='".$text['button-copy']."'>";
 		echo "		<input type='button' class='btn' style='display: none;' id='button_back' alt='".$text['button-back']."' onclick='hide_domains();' value='".$text['button-back']."'> ";
@@ -274,16 +286,11 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-default_settings']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "<br>";
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_default_settings ";
-//		if (strlen($order_by) > 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -323,7 +330,6 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count > 0) {
@@ -334,7 +340,10 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 				$c = 0;
 				echo "<tr>\n";
 				echo "	<td colspan='7' align='left'>\n";
-				if ($previous_category != '') { echo "		<br /><br />"; }
+				if ($previous_category != '') {
+					echo "		<span id='anchor_".$row['default_setting_category']."'></span>";
+					echo "		<br /><br />";
+				}
 				echo "		<br />\n";
 				echo "		<b>\n";
 				if (strtolower($row['default_setting_category']) == "cdr") {
@@ -466,14 +475,8 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
 	echo "<br /><br />";
 	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 
 	echo "</form>";
 
