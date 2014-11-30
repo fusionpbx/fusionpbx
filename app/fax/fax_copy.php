@@ -69,6 +69,9 @@ else {
 		$fax_email_connection_username = $row["fax_email_connection_username"];
 		$fax_email_connection_password = $row["fax_email_connection_password"];
 		$fax_email_connection_mailbox = $row["fax_email_connection_mailbox"];
+		$fax_email_inbound_subject_tag = $row["fax_email_inbound_subject_tag"];
+		$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
+		$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
 		$fax_pin_number = $row["fax_pin_number"];
 		$fax_caller_id_name = $row["fax_caller_id_name"];
 		$fax_caller_id_number = $row["fax_caller_id_number"];
@@ -96,6 +99,9 @@ else {
 	$sql .= "fax_email_connection_username, ";
 	$sql .= "fax_email_connection_password, ";
 	$sql .= "fax_email_connection_mailbox, ";
+	$sql .= "fax_email_inbound_subject_tag, ";
+	$sql .= "fax_email_outbound_subject_tag, ";
+	$sql .= "fax_email_outbound_authorized_senders, ";
 	$sql .= "fax_pin_number, ";
 	$sql .= "fax_caller_id_name, ";
 	$sql .= "fax_caller_id_number, ";
@@ -120,6 +126,9 @@ else {
 	$sql .= "'$fax_email_connection_username', ";
 	$sql .= "'$fax_email_connection_password', ";
 	$sql .= "'$fax_email_connection_mailbox', ";
+	$sql .= "'$fax_email_inbound_subject_tag', ";
+	$sql .= "'$fax_email_outbound_subject_tag', ";
+	$sql .= "'$fax_email_outbound_authorized_senders', ";
 	$sql .= "'$fax_pin_number', ";
 	$sql .= "'$fax_caller_id_name', ";
 	$sql .= "'$fax_caller_id_number', ";
