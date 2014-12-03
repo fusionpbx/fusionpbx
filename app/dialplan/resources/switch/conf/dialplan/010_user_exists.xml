@@ -6,6 +6,13 @@
 		<condition field="${user_exists}" expression="^true$" break="">
 			<action application="set" data="extension_uuid=${user_data ${destination_number}@${domain_name} var extension_uuid}"/>
 			<action application="set" data="hold_music=${user_data ${destination_number}@${domain_name} var hold_music}"/>
+			<action application="set" data="forward_all_enabled=${user_data ${destination_number}@${domain_name} var forward_all_enabled}"/>
+			<action application="set" data="forward_all_destination=${user_data ${destination_number}@${domain_name} var forward_all_destination}"/>
+			<action application="set" data="forward_busy_enabled=${user_data ${destination_number}@${domain_name} var forward_busy_enabled}"/>
+			<action application="set" data="forward_busy_destination=${user_data ${destination_number}@${domain_name} var forward_busy_destination}"/>
+			<action application="set" data="forward_no_answer_enabled=${user_data ${destination_number}@${domain_name} var forward_no_answer_enabled}"/>
+			<action application="set" data="forward_no_answer_destination=${user_data ${destination_number}@${domain_name} var forward_no_answer_destination}"/>
+			<action application="set" data="do_not_disturb=${user_data ${destination_number}@${domain_name} var do_not_disturb}"/>
 		</condition>
 	</extension>
 </context>
