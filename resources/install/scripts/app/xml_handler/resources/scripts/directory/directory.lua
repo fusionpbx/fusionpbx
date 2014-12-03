@@ -454,6 +454,27 @@
 							if (sip_bypass_media == "proxy-media") then
 								table.insert(xml, [[								<variable name="proxy_media" value="true"/>]]);
 							end
+							if (string.len(forward_all_enabled) > 0) then
+								table.insert(xml, [[								<variable name="forward_all_enabled" value="forward_all_enabled"/>]]);
+							end
+							if (string.len(forward_all_destination) > 0) then
+								table.insert(xml, [[								<variable name="forward_all_destination" value="forward_all_destination"/>]]);
+							end
+							if (string.len(forward_busy_enabled) > 0) then
+								table.insert(xml, [[								<variable name="forward_busy_enabled" value="forward_busy_enabled"/>]]);
+							end
+							if (string.len(forward_busy_destination) > 0) then
+								table.insert(xml, [[								<variable name="forward_busy_destination" value="forward_busy_destination"/>]]);
+							end
+							if (string.len(forward_no_answer_enabled) > 0) then
+								table.insert(xml, [[								<variable name="forward_no_answer_enabled" value="forward_no_answer_enabled"/>]]);
+							end
+							if (string.len(forward_no_answer_destination) > 0) then
+								table.insert(xml, [[								<variable name="forward_no_answer_destination" value="forward_no_answer_destination"/>]]);
+							end
+							if (string.len(do_not_disturb) > 0) then
+								table.insert(xml, [[								<variable name="do_not_disturb" value="do_not_disturb"/>]]);
+							end
 							table.insert(xml, [[								<variable name="record_stereo" value="true"/>]]);
 							table.insert(xml, [[								<variable name="transfer_fallback_extension" value="operator"/>]]);
 							table.insert(xml, [[								<variable name="export_vars" value="domain_name"/>]]);
