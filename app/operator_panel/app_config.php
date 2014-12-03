@@ -38,7 +38,7 @@
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = 'operator_panel_view';
-		$apps[$x]['permissions'][5]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][5]['groups'][] = 'admin';
+		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][0]['groups'][] = 'admin';
 
 ?>
