@@ -28,7 +28,7 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 require_once "resources/functions/get_call_activity.php";
 
-if (permission_exists('extensions_active_view')) {
+if (permission_exists('operator_panel_view')) {
 	//access granted
 }
 else {

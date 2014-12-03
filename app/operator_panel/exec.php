@@ -29,15 +29,14 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-/*
-if (permission_exists('calls_active_view') || permission_exists('extensions_active_view')) {
+
+if (permission_exists('operator_panel_view')) {
 	//access granted
 }
 else {
 	echo "access denied";
 	exit;
 }
-*/
 
 //authorized referrer
 // 	if(stristr($_SERVER["HTTP_REFERER"], '/index.php') === false) {
