@@ -325,14 +325,10 @@ foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
 	$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
 }
 
-
-if (isset($_GET['debug'])) {
-	echo "<div id='drop_action' style='display: none;'></div>";
-	echo "<div id='cmd_reponse' style='display: none;'></div>";
-}
 echo "<div id='ajax_reponse'>";
 //	include("index_inc.php");
 echo "</div>\n";
+echo "<div id='cmd_reponse' style='display: none;'></div>";
 echo "<br><br>";
 
 
