@@ -231,7 +231,7 @@ if (sizeof($user_extensions) > 0) {
 }
 
 if ($_REQUEST['group'] != '') {
-	echo "<br>";
+	if (sizeof($user_extensions) > 0) { echo "<br>"; }
 	echo "<strong style='color: black;'>".ucwords($_REQUEST['group'])."</strong>";
 	echo "<br><br>";
 }
