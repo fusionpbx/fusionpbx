@@ -232,6 +232,13 @@
 								sip_force_expires = row.sip_force_expires;
 								nibble_account = row.nibble_account;
 								sip_bypass_media = row.sip_bypass_media;
+								forward_all_enabled = row.forward_all_enabled;
+								forward_all_destination = row.forward_all_destination;
+								forward_busy_enabled = row.forward_busy_enabled;
+								forward_busy_destination = row.forward_busy_destination;
+								forward_no_answer_enabled = row.forward_no_answer_enabled;
+								forward_no_answer_destination = row.forward_no_answer_destination;
+								do_not_disturb = row.do_not_disturb;
 
 							--set the dial_string
 								if (string.len(row.dial_string) > 0) then
@@ -333,6 +340,13 @@
 							sip_force_expires = row.sip_force_expires;
 							nibble_account = row.nibble_account;
 							sip_bypass_media = row.sip_bypass_media;
+							forward_all_enabled = row.forward_all_enabled;
+							forward_all_destination = row.forward_all_destination;
+							forward_busy_enabled = row.forward_busy_enabled;
+							forward_busy_destination = row.forward_busy_destination;
+							forward_no_answer_enabled = row.forward_no_answer_enabled;
+							forward_no_answer_destination = row.forward_no_answer_destination;
+							do_not_disturb = row.do_not_disturb;
 						end);
 					end
 
@@ -455,25 +469,25 @@
 								table.insert(xml, [[								<variable name="proxy_media" value="true"/>]]);
 							end
 							if (string.len(forward_all_enabled) > 0) then
-								table.insert(xml, [[								<variable name="forward_all_enabled" value="forward_all_enabled"/>]]);
+								table.insert(xml, [[								<variable name="forward_all_enabled" value="]] .. forward_all_enabled .. [["/>]]);
 							end
 							if (string.len(forward_all_destination) > 0) then
-								table.insert(xml, [[								<variable name="forward_all_destination" value="forward_all_destination"/>]]);
+								table.insert(xml, [[								<variable name="forward_all_destination" value="]] .. forward_all_destination .. [["/>]]);
 							end
 							if (string.len(forward_busy_enabled) > 0) then
-								table.insert(xml, [[								<variable name="forward_busy_enabled" value="forward_busy_enabled"/>]]);
+								table.insert(xml, [[								<variable name="forward_busy_enabled" value="]] .. forward_busy_enabled .. [["/>]]);
 							end
 							if (string.len(forward_busy_destination) > 0) then
-								table.insert(xml, [[								<variable name="forward_busy_destination" value="forward_busy_destination"/>]]);
+								table.insert(xml, [[								<variable name="forward_busy_destination" value="]] .. forward_busy_destination .. [["/>]]);
 							end
 							if (string.len(forward_no_answer_enabled) > 0) then
-								table.insert(xml, [[								<variable name="forward_no_answer_enabled" value="forward_no_answer_enabled"/>]]);
+								table.insert(xml, [[								<variable name="forward_no_answer_enabled" value="]] .. forward_no_answer_enabled .. [["/>]]);
 							end
 							if (string.len(forward_no_answer_destination) > 0) then
-								table.insert(xml, [[								<variable name="forward_no_answer_destination" value="forward_no_answer_destination"/>]]);
+								table.insert(xml, [[								<variable name="forward_no_answer_destination" value="]] .. forward_no_answer_destination .. [["/>]]);
 							end
 							if (string.len(do_not_disturb) > 0) then
-								table.insert(xml, [[								<variable name="do_not_disturb" value="do_not_disturb"/>]]);
+								table.insert(xml, [[								<variable name="do_not_disturb" value="]] .. do_not_disturb .. [["/>]]);
 							end
 							table.insert(xml, [[								<variable name="record_stereo" value="true"/>]]);
 							table.insert(xml, [[								<variable name="transfer_fallback_extension" value="operator"/>]]);
