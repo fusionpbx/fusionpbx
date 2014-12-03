@@ -37,17 +37,17 @@
 	$text['description-on-busy']['fr-fr'] = "Se il est activé, il remplace la valeur de la messagerie vocale permettant en extension.";
 	$text['description-on-busy']['it-it'] = "Se abilitato, esegue l'override del valore di abilitazione voicemail nell'estensione.";
 
-	$text['label-unanswered']['en-us'] = "Unanswered";
-	$text['label-unanswered']['es-cl'] = "Sin Respuesta";
-	$text['label-unanswered']['pt-pt'] = "Sem Resposta";
-	$text['label-unanswered']['fr-fr'] = "Sans Réponse";
-	$text['label-unanswered']['it-it'] = "Senza Risposta";
+	$text['label-no_answer']['en-us'] = "No Answer";
+	$text['label-no_answer']['es-cl'] = "Sin Respuesta";
+	$text['label-no_answer']['pt-pt'] = "Sem Resposta";
+	$text['label-no_answer']['fr-fr'] = "Sans Réponse";
+	$text['label-no_answer']['it-it'] = "Senza Risposta";
 
-	$text['description-unanswered']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
-	$text['description-unanswered']['es-cl'] = "Si está habilitada, anula el valor del correo de voz que permite en la extensión.";
-	$text['description-unanswered']['pt-pt'] = "Se ativado, ele substitui o valor de correio de voz que permite em extensão.";
-	$text['description-unanswered']['fr-fr'] = "Se il est activé, il remplace la valeur de la messagerie vocale permettant en extension.";
-	$text['description-unanswered']['it-it'] = "Se abilitato, esegue l'override del valore di abilitazione voicemail nell'estensione.";
+	$text['description-no_answer']['en-us'] = "If enabled, it overrides the value of voicemail enabling in extension.";
+	$text['description-no_answer']['es-cl'] = "Si está habilitada, anula el valor del correo de voz que permite en la extensión.";
+	$text['description-no_answer']['pt-pt'] = "Se ativado, ele substitui o valor de correio de voz que permite em extensão.";
+	$text['description-no_answer']['fr-fr'] = "Se il est activé, il remplace la valeur de la messagerie vocale permettant en extension.";
+	$text['description-no_answer']['it-it'] = "Se abilitato, esegue l'override del valore di abilitazione voicemail nell'estensione.";
 
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activo";
