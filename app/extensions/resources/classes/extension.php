@@ -368,6 +368,27 @@
 										$xml .= "      <variable name=\"proxy_media\" value=\"true\"/>\n";
 										break;
 							}
+							if (strlen($row['forward_all_enabled']) > 0) {
+								$xml .= "      <variable name=\"forward_all_enabled\" value=\"" . $row['forward_all_enabled'] . "\"/>\n";
+							}
+							if (strlen($row['forward_all_destination']) > 0) {
+								$xml .= "      <variable name=\"forward_all_destination\" value=\"" . $row['forward_all_destination'] . "\"/>\n";
+							}
+							if (strlen($row['forward_busy_enabled']) > 0) {
+								$xml .= "      <variable name=\"forward_busy_enabled\" value=\"" . $row['forward_busy_enabled'] . "\"/>\n";
+							}
+							if (strlen($row['forward_busy_destination']) > 0) {
+								$xml .= "      <variable name=\"forward_busy_destination\" value=\"" . $row['forward_busy_destination'] . "\"/>\n";
+							}
+							if (strlen($row['forward_no_answer_enabled']) > 0) {
+								$xml .= "      <variable name=\"forward_no_answer_enabled\" value=\"" . $row['forward_no_answer_enabled'] . "\"/>\n";
+							}
+							if (strlen($row['forward_no_answer_destination']) > 0) {
+								$xml .= "      <variable name=\"forward_no_answer_destination\" value=\"" . $row['forward_no_answer_destination'] . "\"/>\n";
+							}
+							if (strlen($row['do_not_disturb']) > 0) {
+								$xml .= "      <variable name=\"do_not_disturb\" value=\"" . $row['do_not_disturb'] . "\"/>\n";
+							}
 							$xml .= "    </variables>\n";
 							$xml .= "  </user>\n";
 
