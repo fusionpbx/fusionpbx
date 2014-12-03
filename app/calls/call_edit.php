@@ -101,8 +101,8 @@ else {
 			$forward_all_enabled = $row["forward_all_enabled"];
 			$forward_busy_destination = $row["forward_busy_destination"];
 			$forward_busy_enabled = $row["forward_busy_enabled"];
-			$forward_unanswered_destination = $row["forward_unanswered_destination"];
-			$forward_unanswered_enabled = $row["forward_unanswered_enabled"];
+			$forward_no_answer_destination = $row["forward_no_answer_destination"];
+			$forward_no_answer_enabled = $row["forward_no_answer_enabled"];
 			$follow_me_uuid = $row["follow_me_uuid"];
 			break; //limit to 1 row
 		}
@@ -120,8 +120,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$forward_all_destination = check_str($_POST["forward_all_destination"]);
 			$forward_busy_enabled = check_str($_POST["forward_busy_enabled"]);
 			$forward_busy_destination = check_str($_POST["forward_busy_destination"]);
-			$forward_unanswered_enabled = check_str($_POST["forward_unanswered_enabled"]);
-			$forward_unanswered_destination = check_str($_POST["forward_unanswered_destination"]);
+			$forward_no_answer_enabled = check_str($_POST["forward_no_answer_enabled"]);
+			$forward_no_answer_destination = check_str($_POST["forward_no_answer_destination"]);
 			$cid_name_prefix = check_str($_POST["cid_name_prefix"]);
 			$cid_number_prefix = check_str($_POST["cid_number_prefix"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
@@ -159,8 +159,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (strlen($forward_busy_destination) > 0) {
 			//	$forward_busy_destination = preg_replace("~[^0-9*]~", "",$forward_busy_destination);
 			}
-			if (strlen($forward_unanswered_destination) > 0) {
-			//	$forward_unanswered_destination = preg_replace("~[^0-9*]~", "",$forward_unanswered_destination);
+			if (strlen($forward_no_answer_destination) > 0) {
+			//	$forward_no_answer_destination = preg_replace("~[^0-9*]~", "",$forward_no_answer_destination);
 			}
 			if (strlen($destination_data_1) > 0) {
 			//	$destination_data_1 = preg_replace("~[^0-9]~", "",$destination_data_1);
@@ -184,8 +184,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			//if (strlen($forward_all_destination) == 0) { $msg .= "Please provide: Forward Number<br>\n"; }
 			//if (strlen($forward_busy_enabled) == 0) { $msg .= "Please provide: On Busy<br>\n"; }
 			//if (strlen($forward_busy_destination) == 0) { $msg .= "Please provide: Busy Number<br>\n"; }
-			//if (strlen($forward_unanswered_enabled) == 0) { $msg .= "Please provide: Unanswered<br>\n"; }
-			//if (strlen($forward_unanswered_destination) == 0) { $msg .= "Please provide: Unanswered Number<br>\n"; }
+			//if (strlen($forward_no_answer_enabled) == 0) { $msg .= "Please provide: no_answer<br>\n"; }
+			//if (strlen($forward_no_answer_destination) == 0) { $msg .= "Please provide: no_answer Number<br>\n"; }
 			//if (strlen($follow_me_enabled) == 0) { $msg .= "Please provide: Follow Me<br>\n"; }
 			//if (strlen($destination_data_1) == 0) { $msg .= "Please provide: 1st Number<br>\n"; }
 			//if (strlen($destination_timeout_1) == 0) { $msg .= "Please provide: sec<br>\n"; }
@@ -361,12 +361,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			unset($ext);
 		}
 
-	// Forward on busy and unanswered is stored in table and will be used by lua scripts
+	// Forward on busy and no_answer is stored in table and will be used by lua scripts
 		$sql = "update v_extensions set ";
 		$sql .= "forward_busy_destination = '".$forward_busy_destination."', ";
 		$sql .= "forward_busy_enabled = '".$forward_busy_enabled."', ";
-		$sql .= "forward_unanswered_destination = '".$forward_unanswered_destination."', ";
-		$sql .= "forward_unanswered_enabled = '".$forward_unanswered_enabled."' ";
+		$sql .= "forward_no_answer_destination = '".$forward_no_answer_destination."', ";
+		$sql .= "forward_no_answer_enabled = '".$forward_no_answer_enabled."' ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and extension_uuid = '".$extension_uuid."'";
 		$db->exec(check_sql($sql));
@@ -550,17 +550,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-unanswered']."\n";
+	echo "	".$text['label-no_answer']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('dnd_disabled').checked=true;";
-	$on_click .= "document.getElementById('forward_unanswered_destination').focus();";
-	echo "	<label for='forward_unanswered_disabled'><input type='radio' name='forward_unanswered_enabled' id='forward_unanswered_disabled' onclick=\"\" value='false' ".(($forward_unanswered_enabled == "false" || $forward_unanswered_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
-	echo "	<label for='forward_unanswered_enabled'><input type='radio' name='forward_unanswered_enabled' id='forward_unanswered_enabled' onclick=\"$on_click\" value='true' ".(($forward_unanswered_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
+	$on_click .= "document.getElementById('forward_no_answer_destination').focus();";
+	echo "	<label for='forward_no_answer_disabled'><input type='radio' name='forward_no_answer_enabled' id='forward_no_answer_disabled' onclick=\"\" value='false' ".(($forward_no_answer_enabled == "false" || $forward_no_answer_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
+	echo "	<label for='forward_no_answer_enabled'><input type='radio' name='forward_no_answer_enabled' id='forward_no_answer_enabled' onclick=\"$on_click\" value='true' ".(($forward_no_answer_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
-	echo "	<input class='formfld' type='text' name='forward_unanswered_destination' id='forward_unanswered_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_unanswered_destination."\">\n";
-	echo " <br />".$text['description-unanswered'].".\n";
+	echo "	<input class='formfld' type='text' name='forward_no_answer_destination' id='forward_no_answer_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_no_answer_destination."\">\n";
+	echo " <br />".$text['description-no_answer'].".\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -736,7 +736,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('forward_all_disabled').checked=true;";
 	$on_click .= "document.getElementById('forward_busy_disabled').checked=true;";
-	$on_click .= "document.getElementById('forward_unanswered_disabled').checked=true;";
+	$on_click .= "document.getElementById('forward_no_answer_disabled').checked=true;";
 	$on_click .= "document.getElementById('follow_me_disabled').checked=true;";
 	echo "	<label for='dnd_disabled'><input type='radio' name='dnd_enabled' id='dnd_disabled' value='false' onclick=\"\" ".(($dnd_enabled == "false" || $dnd_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 	echo "	<label for='dnd_enabled'><input type='radio' name='dnd_enabled' id='dnd_enabled' value='true' onclick=\"$on_click\" ".(($dnd_enabled == "true") ? "checked='checked'" : null)." /> ".$text['label-enabled']."</label> \n";
