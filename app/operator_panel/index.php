@@ -212,7 +212,7 @@ require_once "resources/header.php";
 	echo "}\n";
 
 	echo "function get_originate_cmd(source, destination) {\n";
-	echo "	cmd = \"bgapi originate {origination_caller_id_number=\"+destination+\"}user/\"+source+\" \"+destination+\" XML ".trim($_SESSION['user_context'])."\";\n";
+	echo "	cmd = \"bgapi originate {sip_auto_answer=true,origination_caller_id_number=\"+destination+\",sip_h_Call-Info=_undef_}user/\"+source+\" \"+destination+\" XML ".trim($_SESSION['user_context'])."\";\n";
 	echo "	return cmd;\n";
 	echo "}\n";
 
