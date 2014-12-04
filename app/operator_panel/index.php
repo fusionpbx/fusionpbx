@@ -44,10 +44,15 @@ else {
 require_once "resources/header.php";
 ?>
 
+<!-- virtual_drag function holding elements -->
+<input type='hidden' class='formfld' id='vd_call_id' value=''>
+<input type='hidden' class='formfld' id='vd_ext_from' value=''>
+<input type='hidden' class='formfld' id='vd_ext_to' value=''>
+
 <script type="text/javascript">
 //ajax refresh
-	var refresh = 1000;
-	var source_url = 'index_inc.php?<?php if (isset($_GET['debug'])) { echo "&debug"; } ?>';
+	var refresh = 1200;
+	var source_url = 'index_inc.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 
 	function loadXmlHttp(url, id) {
@@ -85,7 +90,16 @@ require_once "resources/header.php";
 	}
 
 	var requestTime = function() {
-		new loadXmlHttp(source_url + '&group=' + ((document.getElementById('group')) ? document.getElementById('group').options[document.getElementById('group').selectedIndex].value : '') <?php if (isset($_GET['debug'])) { echo "+ '&debug'"; } ?>, 'ajax_reponse');
+		var url = source_url;
+		url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
+		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
+		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').options[document.getElementById('group').selectedIndex].value : '');
+		<?php
+		if (isset($_GET['debug'])) {
+			echo "url += '&debug';";
+		}
+		?>
+		new loadXmlHttp(url, 'ajax_reponse');
 		refresh_start();
 	}
 
@@ -99,9 +113,10 @@ require_once "resources/header.php";
 
 //drag/drop functionality
 	function drag(ev, from_ext) {
+		refresh_stop();
 		ev.dataTransfer.setData("Call", ev.target.id);
 		ev.dataTransfer.setData("From", from_ext);
-		refresh_stop();
+		virtual_drag_reset();
 	}
 
 	function allowDrop(ev, target_id) {
@@ -140,7 +155,18 @@ require_once "resources/header.php";
 	}
 
 	function refresh_start() {
-		interval_timer_id = setInterval(function(){new loadXmlHttp(source_url + '&group=' + ((document.getElementById('group')) ? document.getElementById('group').options[document.getElementById('group').selectedIndex].value : '') <?php if (isset($_GET['debug'])) { echo "+ '&debug'"; } ?>, 'ajax_reponse');}, refresh);
+		interval_timer_id = setInterval( function() {
+			url = source_url;
+			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
+			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
+			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').options[document.getElementById('group').selectedIndex].value : '');
+			<?php
+			if (isset($_GET['debug'])) {
+				echo "url += '&debug';";
+			}
+			?>
+			new loadXmlHttp(url, 'ajax_reponse');
+		}, refresh);
 	}
 
 //call destination
@@ -196,6 +222,61 @@ require_once "resources/header.php";
 	echo "}\n";
 ?>
 
+//virtual functions
+	function virtual_drag(call_id, ext) {
+		if (document.getElementById('vd_ext_from').value != '' && document.getElementById('vd_ext_to').value != '') {
+			virtual_drag_reset();
+		}
+
+		if (call_id != '') {
+			document.getElementById('vd_call_id').value = call_id;
+		}
+
+		if (ext != '') {
+			if (document.getElementById('vd_ext_from').value == '') {
+				document.getElementById('vd_ext_from').value = ext;
+				document.getElementById(ext).style.borderStyle = 'dotted';
+				if (document.getElementById('vd_ext_to').value != '') {
+					document.getElementById(document.getElementById('vd_ext_to').value).style.borderStyle = '';
+					document.getElementById('vd_ext_to').value = '';
+				}
+			}
+			else {
+				document.getElementById('vd_ext_to').value = ext;
+				if (document.getElementById('vd_ext_from').value != document.getElementById('vd_ext_to').value) {
+					if (document.getElementById('vd_call_id').value != '') {
+						cmd = get_transfer_cmd(document.getElementById('vd_call_id').value, document.getElementById('vd_ext_to').value); //transfer a call
+					}
+					else {
+						cmd = get_originate_cmd(document.getElementById('vd_ext_from').value + '@<?=$_SESSION["domain_name"]?>', document.getElementById('vd_ext_to').value); //originate a call
+					}
+					if (cmd != '') {
+						//alert(cmd);
+						send_cmd('exec.php?cmd='+escape(cmd));
+					}
+				}
+				virtual_drag_reset();
+			}
+		}
+	}
+
+	function virtual_drag_reset(vd_var) {
+		if (!(vd_var === undefined)) {
+			document.getElementById(vd_var).value = '';
+		}
+		else {
+			document.getElementById('vd_call_id').value = '';
+			if (document.getElementById('vd_ext_from').value != '') {
+				document.getElementById(document.getElementById('vd_ext_from').value).style.borderStyle = '';
+				document.getElementById('vd_ext_from').value = '';
+			}
+			if (document.getElementById('vd_ext_to').value != '') {
+				document.getElementById(document.getElementById('vd_ext_to').value).style.borderStyle = '';
+				document.getElementById('vd_ext_to').value = '';
+			}
+		}
+	}
+
 </script>
 
 <style type="text/css">
@@ -231,7 +312,7 @@ require_once "resources/header.php";
 
 	TABLE {
 		border-spacing: 0px;
-		border-collapse: collapse; //or 'separate'
+		border-collapse: collapse;
 		border: none;
 		}
 
@@ -249,7 +330,6 @@ require_once "resources/header.php";
 
 	TD.ext_icon {
 		vertical-align: middle;
-		/*background: rgba(255, 255, 255, 0.5); */
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 		border-radius: 5px;

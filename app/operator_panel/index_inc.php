@@ -59,6 +59,7 @@ foreach ($activity as $extension => $fields) {
 $groups = array_unique($groups);
 sort($groups);
 
+
 echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>";
 echo "	<tr>";
 echo "		<td>";
@@ -141,10 +142,28 @@ foreach ($activity as $extension => $ext) {
 	}
 
 	//determine extension draggable state
-	if (!in_array($extension, $_SESSION['user']['extensions']) && $ext_state != "ringing") {
-		$draggable = false;
+	if (!in_array($extension, $_SESSION['user']['extensions'])) {
+		if ($ext_state == "ringing") {
+			if ($_GET['vd_ext_from'] == '') {
+				$draggable = true; // selectable - is ringing so can transfer away the call (can set as vd_ext_from)
+			}
+			else {
+				$draggable = false; // unselectable - is ringing so can't send a call to the ext (can't set as vd_ext_to)
+			}
+		}
+		else if ($ext_state == 'active') {
+			$draggable = false; // unselectable - on a call already so can't transfer or send a call to the ext (can't set as vd_ext_from or vd_ext_to)
+		}
+		else { // idle
+			if ($_GET['vd_ext_from'] == '') {
+				$draggable = false; // unselectable - is idle, but can't initiate a call from the ext as is not assigned to user (can't set as vd_ext_from)
+			}
+			else {
+				$draggable = true; // selectable - is idle, so can transfer a call in to ext (can set as vd_ext_to).
+			}
+		}
 	}
-	else if ($ext['uuid'] != '' && $ext['call_uuid'] == $ext['uuid'] && $ext['variable_bridge_uuid'] == '') {
+	else if ($ext['uuid'] != '' && $ext['uuid'] == $ext['call_uuid'] && $ext['variable_bridge_uuid'] == '') {
 		$draggable = false;
 	}
 	else if ($ext_state == 'ringing' && $ext['variable_call_direction'] == 'local') {
@@ -157,12 +176,12 @@ foreach ($activity as $extension => $ext) {
 		$draggable = true;
 	}
 
-	$block .= "<div id='".$extension."' class='ext ".$style."' ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // TO
+	$block .= "<div id='".$extension."' class='ext ".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
 	$block .= "<table class='ext ".$style."'>";
 	$block .= "	<tr>";
 	$block .= "		<td class='ext_icon'>";
-	$block .= "			<span id='".$extension."'>"; // FROM
-	$block .= 				"<img id='".$call_identifier."' class='ext_icon' src='resources/images/person.png' ".(($draggable) ? "draggable='true' ondragstart='drag(event, this.parentNode.id);' " : "draggable='false' style='cursor: not-allowed;'").">";
+	$block .= "			<span name='".$extension."'>"; // DRAG FROM
+	$block .= 				"<img id='".$call_identifier."' class='ext_icon' src='resources/images/person.png' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".$call_identifier."', '".$extension."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
 	$block .= 			"</span>";
 	$block .= "		</td>";
 	$block .= "		<td class='ext_info ".$style."'>";
@@ -185,10 +204,10 @@ foreach ($activity as $extension => $ext) {
 	}
 	else {
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= "		<img src='resources/images/keypad.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."');\">";
-			$block .= "		<form onsubmit=\"call_destination('".$extension."', document.getElementById('destination_".$extension."').value); return false;\">";
-			$block .= "			<input type='text' class='formfld' name='destination' id='destination_".$extension."' style='width: 110px; min-width: 110px; max-width: 110px; margin-top: 10px; text-align: center; display: none;' onblur=\"if (this.value == '') { refresh_start(); }\">";
-			$block .= "		</form>";
+// 			$block .= "		<img src='resources/images/keypad.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."');\">";
+// 			$block .= "		<form onsubmit=\"call_destination('".$extension."', document.getElementById('destination_".$extension."').value); return false;\">";
+// 			$block .= "			<input type='text' class='formfld' name='destination' id='destination_".$extension."' style='width: 110px; min-width: 110px; max-width: 110px; margin-top: 10px; text-align: center; display: none;' onblur=\"if (this.value == '') { refresh_start(); }\">";
+// 			$block .= "		</form>";
 		}
 	}
 	$block .= "		</td>";
