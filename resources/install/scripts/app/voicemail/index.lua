@@ -271,80 +271,109 @@
 		--valid voicemail
 			if (voicemail_uuid ~= nil) then
 
-				--save the recording
+				--play the greeting
 					timeouts = 0;
 					play_greeting();
+
+				--save the message
 					record_message();
 
-				--save the message to the voicemail messages
-					if (message_length > 2) then
-						local sql = {}
-						table.insert(sql, "INSERT INTO v_voicemail_messages ");
-						table.insert(sql, "(");
-						table.insert(sql, "voicemail_message_uuid, ");
-						table.insert(sql, "domain_uuid, ");
-						table.insert(sql, "voicemail_uuid, ");
-						table.insert(sql, "created_epoch, ");
-						table.insert(sql, "caller_id_name, ");
-						table.insert(sql, "caller_id_number, ");
-						table.insert(sql, "message_length ");
-						--table.insert(sql, "message_status, ");
-						--table.insert(sql, "message_priority, ");
-						table.insert(sql, ") ");
-						table.insert(sql, "VALUES ");
-						table.insert(sql, "( ");
-						table.insert(sql, "'".. uuid .."', ");
-						table.insert(sql, "'".. domain_uuid .."', ");
-						table.insert(sql, "'".. voicemail_uuid .."', ");
-						table.insert(sql, "'".. start_epoch .."', ");
-						table.insert(sql, "'".. caller_id_name .."', ");
-						table.insert(sql, "'".. caller_id_number .."', ");
-						table.insert(sql, "'".. message_length .."' ");
-						--table.insert(sql, "'".. message_status .."', ");
-						--table.insert(sql, "'".. message_priority .."' ");
-						table.insert(sql, ") ");
-						sql = table.concat(sql, "\n");
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-						dbh:query(sql);
+				--get the voicemail destinations
+					sql = [[select * from v_voicemail_destinations 
+					where voicemail_uuid = ']]..voicemail_uuid..[[']]
+					--freeswitch.consoleLog("notice", "[voicemail][destinations] SQL:" .. sql .. "\n");
+					destinations = {};
+					x = 1;
+					table.insert(destinations, {domain_uuid=domain_uuid,voicemail_destination_uuid=voicemail_uuid,voicemail_uuid=voicemail_uuid,voicemail_uuid_copy=voicemail_uuid});
+					x = x + 1;
+					assert(dbh:query(sql, function(row)
+						destinations[x] = row;
+						x = x + 1;
+					end));
+
+				--loop through the voicemail destinations
+					for key,row in pairs(destinations) do
+						--save the message to the voicemail messages
+							if (tonumber(message_length) > 2) then
+								local sql = {}
+								table.insert(sql, "INSERT INTO v_voicemail_messages ");
+								table.insert(sql, "(");
+								table.insert(sql, "voicemail_message_uuid, ");
+								table.insert(sql, "domain_uuid, ");
+								table.insert(sql, "voicemail_uuid, ");
+								table.insert(sql, "created_epoch, ");
+								table.insert(sql, "caller_id_name, ");
+								table.insert(sql, "caller_id_number, ");
+								table.insert(sql, "message_length ");
+								--table.insert(sql, "message_status, ");
+								--table.insert(sql, "message_priority, ");
+								table.insert(sql, ") ");
+								table.insert(sql, "VALUES ");
+								table.insert(sql, "( ");
+								table.insert(sql, "'".. uuid .."', ");
+								table.insert(sql, "'".. domain_uuid .."', ");
+								table.insert(sql, "'".. row.voicemail_uuid_copy .."', ");
+								table.insert(sql, "'".. start_epoch .."', ");
+								table.insert(sql, "'".. caller_id_name .."', ");
+								table.insert(sql, "'".. caller_id_number .."', ");
+								table.insert(sql, "'".. message_length .."' ");
+								--table.insert(sql, "'".. message_status .."', ");
+								--table.insert(sql, "'".. message_priority .."' ");
+								table.insert(sql, ") ");
+								sql = table.concat(sql, "\n");
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+								end
+								dbh:query(sql);
+							end
+
+						--get saved and new message counts
+							sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
+								WHERE domain_uuid = ']] .. domain_uuid ..[['
+								AND voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[['
+								AND (message_status is null or message_status = '') ]];
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+								end
+							status = dbh:query(sql, function(result)
+								new_messages = result["new_messages"];
+							end);
+							sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
+								WHERE domain_uuid = ']] .. domain_uuid ..[['
+								AND voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[['
+								AND message_status = 'saved' ]];
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+								end
+							status = dbh:query(sql, function(result)
+								saved_messages = result["saved_messages"];
+							end);
+
+						--get the voicemail_id
+							sql = [[SELECT voicemail_id FROM v_voicemails
+								WHERE voicemail_uuid = ']] .. row.voicemail_uuid_copy ..[[']];
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+								end
+							status = dbh:query(sql, function(result)
+								voicemail_id_copy = result["voicemail_id"];
+							end);
+
+						--set the message waiting event
+							if (tonumber(message_length) > 2) then
+								local event = freeswitch.Event("message_waiting");
+								event:addHeader("MWI-Messages-Waiting", "yes");
+								event:addHeader("MWI-Message-Account", "sip:"..voicemail_id_copy.."@"..domain_name);
+								event:addHeader("MWI-Voice-Message", new_messages.."/"..saved_messages.." (0/0)");
+								event:fire();
+							end
+
+						--send the email with the voicemail recording attached
+							if (tonumber(message_length) > 2) then
+								send_email(voicemail_id_copy, uuid);
+							end
 					end
 
-				--get saved and new message counts
-					sql = [[SELECT count(*) as new_messages FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-						AND (message_status is null or message_status = '') ]];
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-					status = dbh:query(sql, function(row)
-						new_messages = row["new_messages"];
-					end);
-					sql = [[SELECT count(*) as saved_messages FROM v_voicemail_messages
-						WHERE domain_uuid = ']] .. domain_uuid ..[['
-						AND voicemail_uuid = ']] .. voicemail_uuid ..[['
-						AND message_status = 'saved' ]];
-						if (debug["sql"]) then
-							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
-						end
-					status = dbh:query(sql, function(row)
-						saved_messages = row["saved_messages"];
-					end);
-
-				--set the message waiting event
-					if (message_length > 2) then
-						local event = freeswitch.Event("message_waiting");
-						event:addHeader("MWI-Messages-Waiting", "yes");
-						event:addHeader("MWI-Message-Account", "sip:"..voicemail_id.."@"..domain_name);
-						event:addHeader("MWI-Voice-Message", new_messages.."/"..saved_messages.." (0/0)");
-						event:fire();
-					end
-
-				--send the email with the voicemail recording attached
-					if (message_length > 2) then
-						send_email(voicemail_id, uuid);
-					end
 			else
 				--voicemail not enabled or does not exist
 					referred_by = session:getVariable("sip_h_Referred-By");
