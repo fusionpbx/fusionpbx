@@ -90,15 +90,17 @@ else {
 			$voicemail_uuid_copy = check_str($_REQUEST["voicemail_uuid_copy"]);
 		//assign the user to the extension
 			$sqli = "
-				insert into
-					v_voicemail_destinations
+				insert into 
+				v_voicemail_destinations
 				(
+					domain_uuid,
 					voicemail_destination_uuid,
 					voicemail_uuid,
 					voicemail_uuid_copy
 				)
 				values
 				(
+					'".$domain_uuid."',
 					'".uuid()."',
 					'".$voicemail_uuid."',
 					'".$voicemail_uuid_copy."'
