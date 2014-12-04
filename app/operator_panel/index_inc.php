@@ -204,10 +204,10 @@ foreach ($activity as $extension => $ext) {
 	}
 	else {
 		if (in_array($extension, $_SESSION['user']['extensions'])) {
-// 			$block .= "		<img src='resources/images/keypad.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."');\">";
-// 			$block .= "		<form onsubmit=\"call_destination('".$extension."', document.getElementById('destination_".$extension."').value); return false;\">";
-// 			$block .= "			<input type='text' class='formfld' name='destination' id='destination_".$extension."' style='width: 110px; min-width: 110px; max-width: 110px; margin-top: 10px; text-align: center; display: none;' onblur=\"if (this.value == '') { refresh_start(); }\">";
-// 			$block .= "		</form>";
+			$block .= "		<img src='resources/images/keypad.png' style='width: 12px; height: 12px; border: none; margin-top: 26px; cursor: pointer;' align='right' onclick=\"toggle_destination('".$extension."');\">";
+			$block .= "		<form onsubmit=\"call_destination('".$extension."', document.getElementById('destination_".$extension."').value); return false;\">";
+			$block .= "			<input type='text' class='formfld' name='destination' id='destination_".$extension."' style='width: 110px; min-width: 110px; max-width: 110px; margin-top: 10px; text-align: center; display: none;' onblur=\"if (this.value == '') { refresh_start(); }\">";
+			$block .= "		</form>";
 		}
 	}
 	$block .= "		</td>";
