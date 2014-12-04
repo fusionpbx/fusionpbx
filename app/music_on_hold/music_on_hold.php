@@ -45,8 +45,8 @@ else {
 require_once "resources/paging.php";
 
 $sampling_rate_dirs = Array(8000, 16000, 32000, 48000);
-if (file_exists('/var/lib/fusionpbx/sounds/music')) {
-	$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music/fusionpbx';
+if (file_exists('/var/lib/fusionpbx/sounds/music/default')) {
+	$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music/fusionpbx/default';
 }
 else {
 	$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
