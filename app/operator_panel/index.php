@@ -51,7 +51,7 @@ require_once "resources/header.php";
 
 <script type="text/javascript">
 //ajax refresh
-	var refresh = 1200;
+	var refresh = 1950;
 	var source_url = 'index_inc.php?' <?php if (isset($_GET['debug'])) { echo " + '&debug'"; } ?>;
 	var interval_timer_id;
 
@@ -174,8 +174,18 @@ require_once "resources/header.php";
 		if (destination != '') {
 			cmd = get_originate_cmd(from_ext+'@<?=$_SESSION["domain_name"]?>', destination); //make a call
 		}
-		if (cmd != '') { send_cmd('exec.php?cmd='+escape(cmd)); }
+		if (cmd != '') {
+			send_cmd('exec.php?cmd='+escape(cmd));
+		}
 		refresh_start();
+	}
+
+//kill call
+	function kill_call(call_id) {
+		if (call_id != '') {
+			cmd = 'uuid_kill ' + call_id;
+			send_cmd('exec.php?cmd='+escape(cmd));
+		}
 	}
 
 //used by call control and ajax refresh functions

@@ -198,7 +198,21 @@ foreach ($activity as $extension => $ext) {
 	$block .= "			</span><br>";
 	if ($ext_state != '') {
 		$block .= "		<span class='caller_info'>";
-		$block .= "			<table align='right'><tr><td><span class='call_info'>".$ext['call_length']."</span></td></tr></table>";
+		$block .= "			<table align='right'><tr><td style='text-align: right;'>";
+		$block .= "				<span class='call_info'>".$ext['call_length']."</span>";
+		if (in_array($extension, $_SESSION['user']['extensions'])) {
+			if ($ext['variable_bridge_uuid'] == '' && $ext_state == 'ringing') {
+				$call_identifier_kill = $ext['uuid'];
+			}
+			else if ($dir_icon == 'outbound') {
+				$call_identifier_kill = $ext['uuid'];
+			}
+			else {
+				$call_identifier_kill = $call_identifier;
+			}
+			$block .= "		<br><img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin-top: 5px; cursor: pointer;' onclick=\"kill_call('".$call_identifier_kill."');\">";
+		}
+		$block .= "			</td></tr></table>";
 		$block .= "			<strong>".$call_name."</strong><br>".$call_number;
 		$block .= "		</span>";
 	}
