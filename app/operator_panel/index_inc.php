@@ -210,7 +210,7 @@ foreach ($activity as $extension => $ext) {
 			else {
 				$call_identifier_kill = $call_identifier;
 			}
-			$block .= "		<br><img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin-top: 5px; cursor: pointer;' onclick=\"kill_call('".$call_identifier_kill."');\">";
+			$block .= "		<br><img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin-top: 4px; margin-right: -1px; cursor: pointer;' onclick=\"kill_call('".$call_identifier_kill."');\">";
 		}
 		$block .= "			</td></tr></table>";
 		$block .= "			<strong>".$call_name."</strong><br>".$call_number;
