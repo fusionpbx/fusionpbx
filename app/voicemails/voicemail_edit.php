@@ -107,9 +107,7 @@ else {
 				)";
 			$db->exec(check_sql($sqli));
 		//redirect the browser
-//			$_SESSION["message"] = $text['message-add'];
-//			header("Location: voicemail_edit.php?id=".$voicemail_uuid);
-//			return;
+			$_SESSION["message"] = $text['message-add'];
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -205,12 +203,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				unset($sql);
 
 				$_SESSION["message"] = $text['message-update'];
-				if ($referer_path == "/app/voicemails/voicemail_messages.php") {
-					header("Location: voicemail_messages.php?".$referer_query);
-				}
-				else {
-					header("Location: voicemail_edit.php?id=".$voicemail_uuid);
-				}
+				header("Location: voicemail_edit.php?id=".$voicemail_uuid);
 				return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
