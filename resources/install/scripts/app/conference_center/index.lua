@@ -473,7 +473,7 @@
 			end
 
 		--get the pin
-			pin_number = session:getVariable("pin_number", conference_center_greeting);
+			pin_number = session:getVariable("pin_number");
 			if (not pin_number) then
 				pin_number = nil;
 				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
