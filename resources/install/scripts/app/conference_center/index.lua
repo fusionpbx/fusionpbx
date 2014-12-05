@@ -325,6 +325,9 @@
 		--answer the call
 			session:preAnswer();
 
+		--set the session sleep
+			session:sleep(1000);
+
 		--get session variables
 			sounds_dir = session:getVariable("sounds_dir");
 			hold_music = session:getVariable("hold_music");
@@ -357,8 +360,9 @@
 				conference_center_greeting = string.lower(row["conference_center_greeting"]);
 			end);
 			if (conference_center_greeting) then
-				session:sleep(1000);
-				session:execute("playback", conference_center_greeting);
+				--conference_center_greeting is ready to be used with get_pin_number
+			else
+				conference_center_greeting = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-pin.wav";
 			end
 
 		--connect to the switch database
@@ -429,14 +433,14 @@
 			chan_name = session:getVariable("chan_name");
 
 		--define the function get_pin_number
-			function get_pin_number(domain_uuid)
+			function get_pin_number(domain_uuid, prompt_audio_file)
 				--if the pin number is provided then require it
 					if (not pin_number) then 
 						min_digits = 2;
 						max_digits = 20;
 						max_tries = 1;
 						digit_timeout = 5000;
-						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-pin.wav", "", "\\d+");
+						pin_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", prompt_audio_file, "", "\\d+");
 					end
 				if (pin_number ~= "") then
 					sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
@@ -469,21 +473,21 @@
 			end
 
 		--get the pin
-			pin_number = session:getVariable("pin_number");
+			pin_number = session:getVariable("pin_number", conference_center_greeting);
 			if (not pin_number) then
 				pin_number = nil;
-				pin_number = get_pin_number(domain_uuid);
+				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
 			if (pin_number == nil) then
-				pin_number = get_pin_number(domain_uuid);
-			end
-			if (pin_number == nil) then
-				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-bad-pin.wav");
-				pin_number = get_pin_number(domain_uuid);
+				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
 			if (pin_number == nil) then
 				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-bad-pin.wav");
-				pin_number = get_pin_number(domain_uuid);
+				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
+			end
+			if (pin_number == nil) then
+				session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-bad-pin.wav");
+				pin_number = get_pin_number(domain_uuid, conference_center_greeting);
 			end
 			if (pin_number ~= nil) then
 				sql = [[SELECT * FROM v_conference_rooms as r, v_meetings as m
