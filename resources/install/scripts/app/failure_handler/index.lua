@@ -70,7 +70,7 @@
 					if (dialed_extension ~= nil and dialed_extension ~= last_busy_dialed_extension) then
 						forward_busy_enabled = session:getVariable("forward_busy_enabled");
 						if (forward_busy_enabled == "true") then
-							forward_busy_destination = string.lower(row["forward_busy_destination"]);
+							forward_busy_destination = session:getVariable("forward_busy_destination");
 							if (forward_busy_destination ~= nil and string.len(forward_busy_destination) > 0) then
 								--handle USER_BUSY - forwarding to number
 								session:setVariable("last_busy_dialed_extension", dialed_extension);
