@@ -465,7 +465,7 @@ else {
 			}
 
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo 	$row['caller_id_name'].' ';
+			echo 	$row['caller_id_name'].'&nbsp;';
 			echo "	</td>\n";
 
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
