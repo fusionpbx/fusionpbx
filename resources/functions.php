@@ -1080,4 +1080,158 @@ function number_pad($number,$n) {
 			}
 		}
 	}
+
+//function to send email
+	if (!function_exists('send_email')) {
+		function send_email($eml_recipients, $eml_subject, $eml_body, &$eml_error = '', $eml_from_address = '', $eml_from_name = '', $eml_priority = 3) {
+			/*
+			RECIPIENTS NOTE:
+
+				Pass in a single email address...
+
+					user@domain.com
+
+				Pass in a comma or semi-colon delimited string of e-mail addresses...
+
+					user@domain.com,user2@domain2.com,user3@domain3.com
+					user@domain.com;user2@domain2.com;user3@domain3.com
+
+				Pass in a simple array of email addresses...
+
+					Array (
+						[0] => user@domain.com
+						[1] => user2@domain2.com
+						[2] => user3@domain3.com
+					)
+
+				Pass in a multi-dimentional array of addresses (delivery, address, name)...
+
+					Array (
+						[0] => Array (
+							[delivery] => to
+							[address] => user@domain.com
+							[name] => user 1
+							)
+						[1] => Array (
+							[delivery] => cc
+							[address] => user2@domain2.com
+							[name] => user 2
+							)
+						[2] => Array (
+							[delivery] => bcc
+							[address] => user3@domain3.com
+							[name] => user 3
+							)
+					)
+
+
+			ERROR RESPONSE:
+
+				Error messages are stored in the variable passed into $eml_error BY REFERENCE
+
+			*/
+
+			include_once("resources/phpmailer/class.phpmailer.php");
+			include_once("resources/phpmailer/class.smtp.php");
+
+			$regexp = '/^[A-z0-9][\w.-]*@[A-z0-9][\w\-\.]+\.[A-z0-9]{2,6}$/';
+
+			$mail = new PHPMailer();
+			$mail -> IsSMTP();
+			$mail -> Host = $_SESSION['email']['smtp_host']['var'];
+			if ($_SESSION['email']['smtp_port']['var'] != '') {
+				$mail -> Port = $_SESSION['email']['smtp_port']['var'];
+			}
+			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
+				$mail -> SMTPAuth = $_SESSION['email']['smtp_auth']['var'];
+			}
+			if ($_SESSION['email']['smtp_username']['var']) {
+				$mail -> Username = $_SESSION['email']['smtp_username']['var'];
+				$mail -> Password = $_SESSION['email']['smtp_password']['var'];
+			}
+			if ($_SESSION['email']['smtp_secure']['var'] == "none") {
+				$_SESSION['email']['smtp_secure']['var'] = '';
+			}
+			if ($_SESSION['email']['smtp_secure']['var'] != '') {
+				$mail -> SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
+			}
+			$eml_from_address = ($eml_from_address != '') ? $eml_from_address : $_SESSION['email']['smtp_from']['var'];
+			$eml_from_name = ($eml_from_name != '') ? $eml_from_name : $_SESSION['email']['smtp_from_name']['var'];
+			$mail -> SetFrom($eml_from_address, $eml_from_name);
+			$mail -> AddReplyTo($eml_from_address, $eml_from_name);
+			$mail -> Subject = $eml_subject;
+			$mail -> MsgHTML($eml_body);
+			$mail -> Priority = $eml_priority;
+
+			$address_found = false;
+
+			if (!is_array($eml_recipients)) { // must be a single or delimited recipient address(s)
+				$eml_recipients = str_replace(' ', '', $eml_recipients);
+				if (substr_count(',', $eml_recipients)) { $delim = ','; }
+				if (substr_count(';', $eml_recipients)) { $delim = ';'; }
+				if ($delim) { $eml_recipients = explode($delim, $eml_recipients); } // delimiter found, convert to array of addresses
+			}
+
+			if (is_array($eml_recipients)) { // check if multiple recipients
+				foreach ($eml_recipients as $eml_recipient) {
+					if (is_array($eml_recipient)) { // check if each recipient has multiple fields
+						if ($eml_recipient["address"] != '' && preg_match($regexp, $eml_recipient["address"]) == 1) { // check if valid address
+							switch ($eml_recipient["delivery"]) {
+								case "cc" :		$mail -> AddCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+								case "bcc" :	$mail -> AddBCC($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);			break;
+								default :		$mail -> AddAddress($eml_recipient["address"], ($eml_recipient["name"]) ? $eml_recipient["name"] : $eml_recipient["address"]);
+							}
+							$address_found = true;
+						}
+					}
+					else if ($eml_recipient != '' && preg_match($regexp, $eml_recipient) == 1) { // check if recipient value is simply (only) an address
+						$mail -> AddAddress($eml_recipient);
+						$address_found = true;
+					}
+				}
+
+				if (!$address_found) {
+					$eml_error = "No valid e-mail address provided.";
+					return false;
+				}
+
+			}
+			else { // just a single e-mail address found, not an array of addresses
+				if ($eml_recipients != '' && preg_match($regexp, $eml_recipients) == 1) { // check if email syntax is valid
+					$mail -> AddAddress($eml_recipients);
+				}
+				else {
+					$eml_error = "No valid e-mail address provided.";
+					return false;
+				}
+			}
+
+			if (!$mail -> Send()) {
+				$eml_error = $mail -> ErrorInfo;
+				return false;
+			}
+			else {
+				return true;
+			}
+
+			$mail	->	ClearAddresses();
+			$mail	->	SmtpClose();
+
+			unset($mail);
+		}
+	}
+
+//encrypt a string
+	if (!function_exists('encrypt')) {
+		function encrypt($key, $str_to_enc) {
+			return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $str_to_enc, MCRYPT_MODE_CBC, md5(md5($key))));
+		}
+	}
+
+//decrypt a string
+	if (!function_exists('decrypt')) {
+		function decrypt($key, $str_to_dec) {
+			return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($str_to_dec), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+		}
+	}
 ?>

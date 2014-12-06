@@ -120,6 +120,13 @@ if (
 	?>
 }
 
+A.login_box_link {
+	font-size: 11px;
+	text-shadow: 0 0 2px <?php echo ($_SESSION['theme']['login_background_color']['text'] != '') ? $_SESSION['theme']['login_background_color']['text'] : "#fff"; ?>;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
 DIV#footer {
 	background-color: <?php echo $_SESSION['theme']['footer_background_color']['text']; ?>;
 	bottom: 0;
@@ -1038,7 +1045,7 @@ legend {
 </script>
 
 <script language="JavaScript" type="text/javascript">
-	function display_message(msg, mood) {
+	function display_message(msg, mood, delay = <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>) {
 		mood = typeof mood !== 'undefined' ? mood : 'default';
 		if (msg != '') {
 			// insert temp div to get width w/o scroll bar
@@ -1053,8 +1060,8 @@ legend {
 			$("#message_text").html(msg);
 			$("#message_container").css({height: $("#message_text").css("height")});
 			$("#message_container").css({width: inner_width});
-			$("#message_text").animate({top: '+=200'}, 0).animate({opacity: 1}, "fast").delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=200'}, 1000).animate({opacity: 0});
-			$("#message_container").animate({top: '+=200'}, 0).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(<?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>).animate({top: '-=200'}, 1000).animate({opacity: 0}, function() {
+			$("#message_text").animate({top: '+=200'}, 0).animate({opacity: 1}, "fast").delay(delay).animate({top: '-=200'}, 1000).animate({opacity: 0});
+			$("#message_container").animate({top: '+=200'}, 0).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(delay).animate({top: '-=200'}, 1000).animate({opacity: 0}, function() {
 				$("#message_container").removeClass('message_container_mood_'+mood);
 			});
 		}
@@ -1089,17 +1096,25 @@ legend {
 </head>
 
 <?php
+//add multi-lingual support
+	require_once "themes/minimized/app_languages.php";
+	foreach($text as $key => $value) {
+		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	}
+
 // set message_onload
 if (strlen($_SESSION['message']) > 0) {
 	$message_text = addslashes($_SESSION['message']);
 	$message_mood = $_SESSION['message_mood'];
+	$message_delay = $_SESSION['message_delay'];
 
 	$onload .= "display_message('".$message_text."'";
-	if ($message_mood != '') {
-		$onload .= ", '".$message_mood."'";
+	$onload .= ($message_mood != '') ? ", '".$message_mood."'" : ", 'default'";
+	if ($message_delay != '') {
+		$onload .= ", '".$message_delay."'";
 	}
 	$onload .= "); ";
-	unset($_SESSION['message'], $_SESSION['message_mood']);
+	unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 }
 ?>
 
