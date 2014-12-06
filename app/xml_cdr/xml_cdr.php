@@ -27,7 +27,7 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-require_once "app_languages.php";
+
 if (permission_exists('xml_cdr_view')) {
 	//access granted
 }
@@ -37,6 +37,7 @@ else {
 }
 
 //add multi-lingual support
+	require_once "app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
@@ -81,22 +82,22 @@ else {
 	echo "	}";
 	echo "</script>";
 
+//javascript to toggle export select box
+	echo "<script language='javascript' type='text/javascript'>";
+	echo "	var fade_speed = 400;";
+	echo "	function toggle_select(select_id) {";
+	echo "		$('#'+select_id).fadeToggle(fade_speed, function() {";
+	echo "			document.getElementById(select_id).selectedIndex = 0;";
+	echo "		});";
+	echo "	}";
+	echo "</script>";
+
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='50%' nowrap='nowrap' style='vertical-align: top;'><b>".$text['title']."</b><br><br><br></td>\n";
 	echo "<td align='right' width='100%' style='vertical-align: top;'>\n";
-	echo "<table>\n";
-	echo "<tr>\n";
-	echo "<td>\n";
-	if (permission_exists('xml_cdr_search_advanced')) {
-		echo "	<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php';\">\n";
-	}
-	echo "	<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?missed=true';\">\n";
-	echo "	<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
-	echo "</td>\n";
-	echo "<form method='post' action='xml_cdr_csv.php'>";
-	echo "<td>\n";
+	echo "	<form id='frm_export' method='post' action='xml_cdr_export.php'>";
 	echo "	<input type='hidden' name='direction' value='$direction'>\n";
 	echo "	<input type='hidden' name='caller_id_name' value='$caller_id_name'>\n";
 	echo "	<input type='hidden' name='start_stamp_begin' value='$start_stamp_begin'>\n";
@@ -106,6 +107,7 @@ else {
 	echo "	<input type='hidden' name='caller_id_number' value='$caller_id_number'>\n";
 	echo "	<input type='hidden' name='destination_extension_uuid' value='$destination_extension_uuid'>\n";
 	echo "	<input type='hidden' name='destination_number' value='$destination_number'>\n";
+	echo "	<input type='hidden' name='context' value='$context'>\n";
 	echo "	<input type='hidden' name='answer_stamp_begin' value='$answer_stamp_begin'>\n";
 	echo "	<input type='hidden' name='answer_stamp_end' value='$answer_stamp_end'>\n";
 	echo "	<input type='hidden' name='end_stamp_begin' value='$end_stamp_begin'>\n";
@@ -119,11 +121,26 @@ else {
 	echo "	<input type='hidden' name='write_codec' value='$write_codec'>\n";
 	echo "	<input type='hidden' name='remote_media_ip' value='$remote_media_ip'>\n";
 	echo "	<input type='hidden' name='network_addr' value='$network_addr'>\n";
-	echo "	<input type='submit' class='btn' name='submit' value=' csv '>\n";
-	echo "</td>\n";
+	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
+	echo "		<tr>\n";
+	echo "			<td style='vertical-align: top;'>\n";
+	if (permission_exists('xml_cdr_search_advanced')) {
+		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php';\">\n";
+	}
+	echo "				<input type='button' class='btn' value='".$text['button-missed']."' onclick=\"document.location.href='xml_cdr.php?missed=true';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-statistics']."' onclick=\"document.location.href='xml_cdr_statistics.php';\">\n";
+	echo "				<input type='button' class='btn' value='".$text['button-export']."' onclick=\"toggle_select('export_format');\">\n";
+	echo "			</td>";
+	echo "			<td style='vertical-align: top;'>";
+	echo "				<select class='formfld' style='display: none; width: auto; margin-left: 3px;' name='export_format' id='export_format' onchange=\"display_message('".$text['message-preparing_download']."'); toggle_select('export_format'); document.getElementById('frm_export').submit();\">\n";
+	echo "					<option value=''>...</option>\n";
+	echo "					<option value='csv'>CSV</option>\n";
+	echo "					<option value='pdf'>PDF</option>\n";
+	echo "				</select>\n";
+	echo "			</td>\n";
+	echo "		</tr>\n";
+	echo "	</table>\n";
 	echo "	</form>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -377,7 +394,7 @@ else {
 			$hangup_cause = ucwords($hangup_cause);
 
 			//If they cancelled, show the ring time, not the bill time.
-			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : $row['billsec'];
+			$seconds = ($row['hangup_cause']=="ORIGINATOR_CANCEL") ? $row['duration'] : round(($row['billmsec'] / 1000), 0, PHP_ROUND_HALF_UP);
 
 			$tmp_dir = $_SESSION['switch']['recordings']['dir'].'/'.$path_mod.'/archive/'.$tmp_year.'/'.$tmp_month.'/'.$tmp_day;
 			$tmp_name = '';
