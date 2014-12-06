@@ -155,6 +155,21 @@
 	$text['label-to']['pt-pt'] = "Final";
 	$text['label-to']['fr-fr'] = "Fin";
 
+	$text['label-total']['en-us'] = "Total";
+	$text['label-total']['es-cl'] = "Total";
+	$text['label-total']['pt-pt'] = "Total";
+	$text['label-total']['fr-fr'] = "Total";
+
+	$text['label-average']['en-us'] = "Average";
+	$text['label-average']['es-cl'] = "Promedio";
+	$text['label-average']['pt-pt'] = "Média";
+	$text['label-average']['fr-fr'] = "Moyenne";
+
+	$text['button-export']['en-us'] = 'Export';
+	$text['button-export']['es-cl'] = 'Exportación';
+	$text['button-export']['pt-pt'] = 'Exportação';
+	$text['button-export']['fr-fr'] = 'Exportation';
+
 	$text['button-statistics']['en-us'] = "Statistics";
 	$text['button-statistics']['es-cl'] = "Estadísticas";
 	$text['button-statistics']['pt-pt'] = "Estatísticas";
@@ -184,6 +199,11 @@
 	$text['button-advanced_search']['es-cl'] = "Búsqueda Avanzada";
 	$text['button-advanced_search']['pt-pt'] = "Pesquisa Avançada";
 	$text['button-advanced_search']['fr-fr'] = "Recherche Avancée";
+
+	$text['message-preparing_download']['en-us'] = 'Preparing file for download, please wait...';
+	$text['message-preparing_download']['es-cl'] = 'Archivo de Preparación para la descarga, por favor espere ...';
+	$text['message-preparing_download']['pt-pt'] = 'Preparando arquivos para download, por favor aguarde ...';
+	$text['message-preparing_download']['fr-fr'] = 'Préparation fichier à télécharger, se il vous plaît patienter ...';
 
 	//xml_cdr_details
 	$text['title2']['en-us'] = "Call Details";
@@ -261,10 +281,12 @@
 	$text['label-application-log']['fr-fr'] = "Log de l'Application";
 
 	$text['label-a-leg']['en-us'] = "A-leg";
+	$text['label-a-leg']['es-cl'] = "A-leg";
 	$text['label-a-leg']['pt-pt'] = "A-leg";
 	$text['label-a-leg']['fr-fr'] = "A-leg";
 
 	$text['label-b-leg']['en-us'] = "B-leg";
+	$text['label-b-leg']['es-cl'] = "B-leg";
 	$text['label-b-leg']['pt-pt'] = "B-leg";
 	$text['label-b-leg']['fr-fr'] = "B-leg";
 
@@ -309,10 +331,10 @@
 	$text['label-caller_id_number']['pt-pt'] = "Número CID";
 	$text['label-caller_id_number']['fr-fr'] = "Numéro de l'Appelant";
 
-	$text['label-destination']['en-us'] = "Destination Number";
-	$text['label-destination']['es-cl'] = "Número de destino";
-	$text['label-destination']['pt-pt'] = "Número Destino";
-	$text['label-destination']['fr-fr'] = "Numéro de Destinations";
+	$text['label-destination']['en-us'] = "Destination";
+	$text['label-destination']['es-cl'] = "Destino";
+	$text['label-destination']['pt-pt'] = "Destino";
+	$text['label-destination']['fr-fr'] = "Destination";
 
 	$text['label-context']['en-us'] = "Context";
 	$text['label-context']['es-cl'] = "Contexto";
