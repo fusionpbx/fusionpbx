@@ -46,6 +46,7 @@ if (sizeof($_REQUEST) > 0) {
 	$action = check_str($_REQUEST["action"]);
 	$default_setting_uuids = $_REQUEST["id"];
 	$enabled = check_str($_REQUEST['enabled']);
+	$category = check_str($_REQUEST['category']);
 
 	if (sizeof($default_setting_uuids) == 1 && $enabled != '') {
 		$sql = "update v_default_settings set ";
@@ -55,7 +56,7 @@ if (sizeof($_REQUEST) > 0) {
 		unset($sql);
 
 		$_SESSION["message"] = $text['message-update'];
-		header("Location: default_settings.php");
+		header("Location: default_settings.php#".$category);
 		exit;
 	}
 
@@ -428,7 +429,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center;'>\n";
-			echo "		<a href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."'>".ucwords($row['default_setting_enabled'])."</a>\n";
+			echo "		<a href='?id[]=".$row['default_setting_uuid']."&enabled=".(($row['default_setting_enabled'] == 'true') ? 'false' : 'true')."&category=".$category."'>".ucwords($row['default_setting_enabled'])."</a>\n";
 			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['default_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
