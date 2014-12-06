@@ -97,38 +97,24 @@ if (
 	?>
 <?php } ?>
 
-DIV#default_login {
-	z-index: 1000;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	width: 100%;
-	height: 100%;
-}
-
-#default_login_container {
-	display: block;
-	width: 300px;
-	height: <?php echo ($_SESSION['login']['domain_name.visible']['boolean']) ? '300px' : '267px'; ?>;
+#default_login {
+	display: inline-block;
+	padding: 30px;
+	margin-bottom: 28px;
 	<?php
 	if (
 		isset($_SESSION['theme']['background_image']) ||
 		$_SESSION['theme']['background_color'][0] != '' ||
 		$_SESSION['theme']['background_color'][1] != ''
 		) { ?>
-		background-color: <?php echo $_SESSION['theme']['login_background_color']['text']; ?>;
-		opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
-		filter: alpha(opacity=<?php echo (100 * (float) $_SESSION['theme']['login_opacity']['text']); ?>);
-		-moz-opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
-		-khtml-opacity: <?php echo $_SESSION['theme']['login_opacity']['text']; ?>;
+		background-color: <?php echo ($_SESSION['theme']['login_background_color']['text'] != '') ? $_SESSION['theme']['login_background_color']['text'] : "#fff"; ?>;
+		background: rgba(<?php echo ($_SESSION['theme']['login_background_color']['text'] != '') ? hex2rgb($_SESSION['theme']['login_background_color']['text'], ',') : "255, 255, 255"; ?>, <?php echo ($_SESSION['theme']['login_opacity']['text'] != '') ? $_SESSION['theme']['login_opacity']['text'] : "1"; ?>);
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		-webkit-box-shadow: 0 1px 20px #888;
-		-moz-box-shadow: 0 1px 20px #888;
-		box-shadow: 0 1px 20px #888;
+		-webkit-box-shadow: 0 1px 20px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		-moz-box-shadow: 0 1px 20px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		box-shadow: 0 1px 20px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
 		<?php
 	}
 	?>
@@ -1434,13 +1420,16 @@ if (strlen($_SESSION['message']) > 0) {
 
 		// default login being used
 		else {
+			$logo = (isset($_SESSION['theme']['logo']['text'])) ? $_SESSION['theme']['logo']['text'] : PROJECT_PATH."/themes/enhanced/images/logo.png";
 			?>
 			<div id="main_content" class='main_content' style='position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 0;'>
 				<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
 					<tr>
 						<td align='center' valign='middle'>
-							<span id='default_login_container'></span>
-							<br /><br /><br />
+							<span id='default_login'>
+								<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' width='250'></a><br />
+								<!--{body}-->
+							</span>
 						</td>
 					</tr>
 				</table>
@@ -1451,29 +1440,6 @@ if (strlen($_SESSION['message']) > 0) {
 	</div>
 
 	<?php
-	if (isset($_SESSION['theme']['logo']['text'])){
-		$logo = $_SESSION['theme']['logo']['text'];
-	}
-	else {
-		$logo = PROJECT_PATH."/themes/enhanced/images/logo.png";
-	}
-
-	if ($default_login) {
-		?>
-		<div id="default_login">
-			<table cellpadding='0' cellspacing='0' border='0' width='100%' height='100%'>
-				<tr>
-					<td align='center' valign='middle'>
-						<a href='<?php echo PROJECT_PATH; ?>/'><img src='<?php echo $logo; ?>' width='250'></a>
-						<br />
-						<!--{body}-->
-						<br /><br /><br />
-					</td>
-				</tr>
-			</table>
-		</div>
-		<?php
-	}
 	$footer .= "&copy; Copyright 2008 - ".date("Y")." <a href='http://www.fusionpbx.com' class='footer' target='_blank'>fusionpbx.com</a>. All rights reserved.\n";
 	echo "<div id='footer' style='position: absolute; z-index; 10000;'><span class='footer'>".$footer."</span></div>\n";
 	?>

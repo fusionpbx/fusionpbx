@@ -36,11 +36,18 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_description'] = 'Set the opacity of the login box (decimal).';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
+		$array[$x]['default_setting_subcategory'] = 'login_shadow_color';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = '#888888';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Set the shadow color (HTML compatible) of the login box.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'login_background_color';
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#ffffff';
 		$array[$x]['default_setting_enabled'] = 'true';
-		$array[$x]['default_setting_description'] = 'Set the background color (HTML compatible) for the login box.';
+		$array[$x]['default_setting_description'] = 'Set the background color (hexadecimal) for the login box.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'domain_visible';
@@ -61,7 +68,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_name'] = 'text';
 		$array[$x]['default_setting_value'] = '#000000';
 		$array[$x]['default_setting_enabled'] = 'false';
-		$array[$x]['default_setting_description'] = 'Set the background color (hexidecimal) for the domain name.';
+		$array[$x]['default_setting_description'] = 'Set the background color (hexadecimal) for the domain name.';
 		$x++;
 		$array[$x]['default_setting_category'] = 'theme';
 		$array[$x]['default_setting_subcategory'] = 'domain_background_opacity';
