@@ -529,7 +529,7 @@ else {
 				unset($database->sql);
 				unset($database->result);
 
-				$sell_price = $row['call_sell'];
+				$sell_price = strlen($row['call_sell'])?$row['call_sell']:0;
 				$lcr_direction = (strlen($row['direction'])?$row['direction']:"outbound");
 
 				$xml_string = trim($row["xml"]);
@@ -567,7 +567,9 @@ else {
 				);      //billed currency
 				unset($database->sql);
 				unset($database->result);
-				$price = currency_convert($sell_price, $billing_currency, $lcr_currency);
+				if ($sell_price){
+					$price = currency_convert($sell_price, $billing_currency, $lcr_currency);
+				}
 				echo "	<td valign='top' class='".$row_style[$c]."'>".number_format($price,6)." $billing_currency</td>\n";
 			}
 			if (permission_exists("xml_cdr_pdd")) {
