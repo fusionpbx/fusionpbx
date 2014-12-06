@@ -55,15 +55,70 @@
 	$text['label-domain']['pt-pt'] = "Domínio";
 	$text['label-domain']['fr-fr'] = "Domaine";
 
+	$text['label-reset_password']['en-us'] = "Reset Password";
+	$text['label-reset_password']['es-cl'] = "Restablecer contraseña";
+	$text['label-reset_password']['pt-pt'] = "Reset Password";
+	$text['label-reset_password']['fr-fr'] = "Réinitialiser mot de passe";
+
+	$text['message-password_reset']['en-us'] = "Password Reset";
+	$text['message-password_reset']['es-cl'] = "Restablecer Contraseña";
+	$text['message-password_reset']['pt-pt'] = "Password Reset";
+	$text['message-password_reset']['fr-fr'] = "Réinitialiser votre mot de passe";
+
+	$text['label-email_address']['en-us'] = "Email Address";
+	$text['label-email_address']['es-cl'] = "Dirección de Correo Electrónico";
+	$text['label-email_address']['pt-pt'] = "Endereço de Email";
+	$text['label-email_address']['fr-fr'] = "Adresse E-mail";
+
 	$text['button-login']['en-us'] = "Login";
 	$text['button-login']['es-cl'] = "Ingresar";
 	$text['button-login']['pt-pt'] = "Iniciar Sessão";
 	$text['button-login']['fr-fr'] = "connexion";
 
+	$text['button-reset']['en-us'] = "Reset";
+	$text['button-reset']['es-cl'] = "Reajustar";
+	$text['button-reset']['pt-pt'] = "Restabelecer";
+	$text['button-reset']['fr-fr'] = "Remettre";
+
+	$text['label-cancel']['en-us'] = "Cancel";
+	$text['label-cancel']['es-cl'] = "Cancelar";
+	$text['label-cancel']['pt-pt'] = "Cancelar";
+	$text['label-cancel']['fr-fr'] = "Annuler";
+
+	$text['message-invalid_email']['en-us'] = "Invalid Email Address";
+	$text['message-invalid_email']['es-cl'] = "Dirección no válida de correo electrónico";
+	$text['message-invalid_email']['pt-pt'] = "Endereço inválido Email";
+	$text['message-invalid_email']['fr-fr'] = "Adresse email invalide";
+
+	$text['message-reset_link_sent']['en-us'] = "Password Reset Link Sent";
+	$text['message-reset_link_sent']['es-cl'] = "Restablecer Contraseña de Conexión Enviados";
+	$text['message-reset_link_sent']['pt-pt'] = "Password Reset Link Enviado";
+	$text['message-reset_link_sent']['fr-fr'] = "Password Reset Lien Envoyé";
+
+	$text['label-reset_link']['en-us'] = "Password Reset Link";
+	$text['label-reset_link']['es-cl'] = "Password Reset Enlace";
+	$text['label-reset_link']['pt-pt'] = "Password Reset Link";
+	$text['label-reset_link']['fr-fr'] = "Password Reset Lien";
+
 	$text['label-confirm-password']['en-us'] = "Confirm Password";
 	$text['label-confirm-password']['es-cl'] = "Confirmar Contraseña";
 	$text['label-confirm-password']['pt-pt'] = "Confirmar Palavra-Passe";
 	$text['label-confirm-password']['fr-fr'] = "Confirmation du mot de passe";
+
+	$text['label-new_password']['en-us'] = "New Password";
+	$text['label-new_password']['es-cl'] = "Nueva Contraseña";
+	$text['label-new_password']['pt-pt'] = "Nova Senha";
+	$text['label-new_password']['fr-fr'] = "Nouveau Mot de Passe";
+
+	$text['label-repeat_password']['en-us'] = "Repeat Password";
+	$text['label-repeat_password']['es-cl'] = "Repita la Contraseña";
+	$text['label-repeat_password']['pt-pt'] = "Repita a Senha";
+	$text['label-repeat_password']['fr-fr'] = "Répéter le Mot de Passe";
+
+	$text['message-invalid_username_mismatch_passwords']['en-us'] = "Invalid Username and/or Mismatched Passwords";
+	$text['message-invalid_username_mismatch_passwords']['es-cl'] = "Nombre de usuario válido y/o contraseñas no coincidentes";
+	$text['message-invalid_username_mismatch_passwords']['pt-pt'] = "Nome de usuário inválido e/ou palavras-passe não correspondentes";
+	$text['message-invalid_username_mismatch_passwords']['fr-fr'] = "Nom d'utilisateur valide et/ou mots de passe Mismatched";
 
 	$text['label-extension']['en-us'] = "Extension";
 	$text['label-extension']['es-cl'] = "Extensión";
