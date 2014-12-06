@@ -885,7 +885,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				unset ($prep_statement, $sql);
 				$tmp_selected = '';
 				foreach($result as $row) {
-					if ($row['gateway'] == $select_value) {
+					if ('sofia/gateway/'.$row['gateway_uuid'].'/' == $select_value) {
 						$tmp_selected = "selected='selected'";
 					}
 					if ($select_type == "dialplan") {
@@ -928,7 +928,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				unset ($prep_statement, $sql);
 				$tmp_selected = '';
 				foreach($result as $row) {
-					if ($row['gateway'] == $select_value) {
+					if ('dingaling/'.$row['profile_name'].'/' == $select_value) {
 						$tmp_selected = "selected='selected'";
 					}
 					if ($select_type == "bridge") {
