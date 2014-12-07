@@ -157,6 +157,7 @@
 			assert(dbh:connected());
 
 		--check the database to get the uuid of a ringing call
+			call_hostname = "";
 			sql = "SELECT call_uuid AS uuid, hostname, ip_addr FROM channels ";
 			sql = sql .. "WHERE callstate = 'RINGING' ";
 			sql = sql .. "AND (";
@@ -169,10 +170,10 @@
 				end
 				x = x + 1;
 			end
-			sql = sql .. ")";
-			if (domain_count > 1) then
-				sql = sql .. "and context = '"..context.."' ";
-			end
+			sql = sql .. ") ";
+			--if (domain_count > 1) then
+			--	sql = sql .. "and context = '"..context.."' ";
+			--end
 			sql = sql .. "limit 1 ";
 			if (debug["sql"]) then
 				freeswitch.consoleLog("NOTICE", "sql "..sql.."\n");
@@ -192,7 +193,7 @@
 	freeswitch.consoleLog("NOTICE", "Hostname:"..hostname.."  Call Hostname:"..call_hostname.."\n");
 
 --intercept a call that is ringing
-	if (uuid) then
+	if (uuid ~= nil) then
 		if (hostname == call_hostname) then
 			session:execute("intercept", uuid);
 		else
