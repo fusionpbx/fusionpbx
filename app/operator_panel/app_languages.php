@@ -20,4 +20,34 @@
 	$text['label-no_extensions_found']['pt-pt'] = "Sem extensões encontrado.";
 	$text['label-no_extensions_found']['fr-fr'] = "Aucun extensions trouvés.";
 
+	$text['label-status_available']['en-us'] = "Available";
+	$text['label-status_available']['es-cl'] = "Disponible";
+	$text['label-status_available']['pt-pt'] = "Disponível";
+	$text['label-status_available']['fr-fr'] = "Disponible";
+
+	$text['label-status_available_on_demand']['en-us'] = "Available (On Demand)";
+	$text['label-status_available_on_demand']['es-cl'] = "Disponible (A Pedido)";
+	$text['label-status_available_on_demand']['pt-pt'] = "Disponível (A Pedido)";
+	$text['label-status_available_on_demand']['fr-fr'] = "Disponble (sur demande)";
+
+	$text['label-status_logged_out']['en-us'] = "Logged Out";
+	$text['label-status_logged_out']['es-cl'] = "Desconectado";
+	$text['label-status_logged_out']['pt-pt'] = "Desligado";
+	$text['label-status_logged_out']['fr-fr'] = "Déconnexion";
+
+	$text['label-status_logged_out_or_unknown']['en-us'] = "Logged Out / Unknown";
+	$text['label-status_logged_out_or_unknown']['es-cl'] = "Desconectado / Desconocido";
+	$text['label-status_logged_out_or_unknown']['pt-pt'] = "Desligado / Unknown";
+	$text['label-status_logged_out_or_unknown']['fr-fr'] = "Déconnexion / Unknown";
+
+	$text['label-status_on_break']['en-us'] = "On Break";
+	$text['label-status_on_break']['es-cl'] = "En Pausa";
+	$text['label-status_on_break']['pt-pt'] = "Em Pausa";
+	$text['label-status_on_break']['fr-fr'] = "En Pause";
+
+	$text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
+	$text['label-status_do_not_disturb']['es-cl'] = "No molestar";
+	$text['label-status_do_not_disturb']['pt-pt'] = "Não Perturbar";
+	$text['label-status_do_not_disturb']['fr-fr'] = "Ne pas déranger";
+
 ?>

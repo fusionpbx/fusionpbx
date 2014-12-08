@@ -2,10 +2,23 @@
 function get_call_activity() {
 	global $db;
 
-	//get the extensions
-		$sql = "select extension, number_alias, effective_caller_id_name, effective_caller_id_number, call_group, description from v_extensions ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "order by extension asc ";
+	//get the extensions and their user status
+		$sql = "select ";
+		$sql .= "e.extension, ";
+		$sql .= "e.number_alias, ";
+		$sql .= "e.effective_caller_id_name, ";
+		$sql .= "e.effective_caller_id_number, ";
+		$sql .= "e.call_group, ";
+		$sql .= "e.description, ";
+		$sql .= "u.user_status ";
+		$sql .= "from ";
+		$sql .= "v_extensions as e ";
+		$sql .= "left outer join v_extension_users as eu on ( eu.extension_uuid = e.extension_uuid and eu.domain_uuid = '".$_SESSION['domain_uuid']."' ) ";
+		$sql .= "left outer join v_users as u on ( u.user_uuid = eu.user_uuid and u.domain_uuid = '".$_SESSION['domain_uuid']."' ) ";
+		$sql .= "where ";
+		$sql .= "e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "order by ";
+		$sql .= "e.extension asc ";
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		$extensions = $prep_statement->fetchAll(PDO::FETCH_NAMED);
