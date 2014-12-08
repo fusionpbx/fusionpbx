@@ -58,10 +58,23 @@ if (sizeof($_POST) > 0) {
 	if ($do["svn"] && permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
 		$cmd = "svn up /var/www/fusionpbx";
 		exec($cmd, $response_svn_update);
+		$update_failed = true;
 		if (sizeof($response_svn_update) > 0) {
 			$_SESSION["response_svn_update"] = $response_svn_update;
+			foreach ($response_svn_update as $response_line) {
+				if (substr_count($response_line, "Updated to revision") > 0 || substr_count($response_line, "At revision") > 0) {
+					$update_failed = false;
+				}
+			}
 		}
-		$response_message = $text['message-upgrade_svn'];
+		if ($update_failed) {
+			$_SESSION["message_delay"] = 3500;
+			$_SESSION["message_mood"] = 'negative';
+			$response_message = $text['message-upgrade_svn_failed'];
+		}
+		else {
+			$response_message = $text['message-upgrade_svn'];
+		}
 	}
 
 	// load an array of the database schema and compare it with the active database
@@ -115,15 +128,15 @@ if (sizeof($_POST) > 0) {
 require_once "resources/header.php";
 $document['title'] = $text['title-upgrade'];
 
-echo "<br />";
-echo "<b>".$text['header-upgrade']."</b><br>";
+echo "<b>".$text['header-upgrade']."</b>";
+echo "<br><br>";
 echo $text['description-upgrade'];
-echo "<br><br><br>";
+echo "<br><br>";
 
 echo "<form name='frm' method='post' action=''>\n";
 
 if (permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")) {
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		".$text['label-upgrade_svn'];
@@ -139,7 +152,7 @@ if (permission_exists("upgrade_svn") && !is_dir("/usr/share/examples/fusionpbx")
 }
 
 if (permission_exists("upgrade_schema")) {
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		".$text['label-upgrade_schema'];
@@ -154,7 +167,7 @@ if (permission_exists("upgrade_schema")) {
 	echo "</table>\n";
 
 	echo "<div id='tr_data_types' style='display: none;'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		".$text['label-upgrade_data_types'];
@@ -171,7 +184,7 @@ if (permission_exists("upgrade_schema")) {
 }
 
 if (permission_exists("upgrade_apps")) {
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		".$text['label-upgrade_apps'];
@@ -187,7 +200,7 @@ if (permission_exists("upgrade_apps")) {
 }
 
 if (permission_exists("menu_restore")) {
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		".$text['label-upgrade_menu'];
@@ -215,7 +228,7 @@ if (permission_exists("menu_restore")) {
 }
 
 if (permission_exists("group_edit")) {
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td width='30%' class='vncell'>\n";
 	echo "		".$text['label-upgrade_permissions'];
@@ -230,20 +243,15 @@ if (permission_exists("group_edit")) {
 	echo "</table>\n";
 }
 
-echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-echo "<tr>\n";
-echo "	<td colspan='2' style='text-align: right;'>\n";
-echo "		<input type='submit' class='btn' value='".$text['button-upgrade_execute']."'>\n";
-echo "	</td>\n";
-echo "</tr>\n";
-echo "</table>\n";
-
+echo "<br>";
+echo "<div style='text-align: right;'><input type='submit' class='btn' value='".$text['button-upgrade_execute']."'></div>";
+echo "<br><br>";
 echo "</form>\n";
 
 
 // output result of svn update
-if ($_SESSION["response_svn_update"] != '') {
-	echo "<br /><br /><br />";
+if (sizeof($_SESSION["response_svn_update"]) > 0) {
+	echo "<br />";
 	echo "<b>".$text['header-svn_update_results']."</b>";
 	echo "<br /><br />";
 	echo "<pre>";
@@ -256,7 +264,7 @@ if ($_SESSION["response_svn_update"] != '') {
 
 // output result of upgrade schema
 if ($_SESSION["schema"]["response"] != '') {
-	echo "<br /><br /><br />";
+	echo "<br />";
 	echo "<b>".$text['header-upgrade_schema_results']."</b>";
 	echo "<br /><br />";
 	echo $_SESSION["schema"]["response"];
