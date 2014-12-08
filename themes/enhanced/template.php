@@ -1097,7 +1097,7 @@ legend {
 
 <?php
 //add multi-lingual support
-	require_once "themes/minimized/app_languages.php";
+	require_once "themes/enhanced/app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
