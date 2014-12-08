@@ -141,6 +141,7 @@ require_once "resources/header.php";
 		if (ie_workaround) { // potentially set on drag() function above
 			var call_id = document.getElementById('vd_call_id').value;
 			var from_ext = document.getElementById('vd_ext_from').value;
+			virtual_drag_reset();
 		}
 		else {
 			var call_id = ev.dataTransfer.getData("Call");
@@ -159,8 +160,6 @@ require_once "resources/header.php";
 		}
 
 		if (cmd != '') { send_cmd('exec.php?cmd='+escape(cmd)); }
-
-		if (ie_workaround) { virtual_drag_reset(); }
 
 		refresh_start();
 	}
