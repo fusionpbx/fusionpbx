@@ -170,6 +170,11 @@
 	$text['message-upgrade_svn']['pt-pt'] = "Fonte arquivos atualizados";
 	$text['message-upgrade_svn']['fr-fr'] = "Source Fichiers mis à jour";
 
+	$text['message-upgrade_svn_failed']['en-us'] = "Source Files Update Failed - Please Run SVN Update Via Console";
+	$text['message-upgrade_svn_failed']['es-cl'] = "Fuente actualización de archivos Error - Por favor, ejecuta svn update Vía Consola";
+	$text['message-upgrade_svn_failed']['pt-pt'] = "Fonte Arquivos Update Failed - execute o SVN Atualização Via Console";
+	$text['message-upgrade_svn_failed']['fr-fr'] = "Source des fichiers de mise à jour a échoué - Se il vous plaît Exécutez SVN Update Via Console";
+
 	$text['message-upgrade_schema']['en-us'] = "Schema Verified";
 	$text['message-upgrade_schema']['es-cl'] = "Esquema Verified";
 	$text['message-upgrade_schema']['pt-pt'] = "Esquema Verificado";
