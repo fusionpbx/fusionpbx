@@ -144,8 +144,8 @@ foreach ($activity as $extension => $ext) {
 	//determine extension draggable state
 	if (!in_array($extension, $_SESSION['user']['extensions'])) {
 		if ($ext_state == "ringing") {
-			if ($_GET['vd_ext_from'] == '') {
-				$draggable = true; // selectable - is ringing so can transfer away the call (can set as vd_ext_from)
+			if ($_GET['vd_ext_from'] == '' && $dir_icon == 'inbound') {
+				$draggable = true; // selectable - is ringing and not outbound so can transfer away the call (can set as vd_ext_from)
 			}
 			else {
 				$draggable = false; // unselectable - is ringing so can't send a call to the ext (can't set as vd_ext_to)
@@ -176,12 +176,35 @@ foreach ($activity as $extension => $ext) {
 		$draggable = true;
 	}
 
+	//determine extension (user) status
+	switch ($ext['user_status']) {
+		case "Available" :
+			$status_icon = "available";
+			$status_hover = $text['label-status_available'];
+			break;
+		case "Available (On Demand)" :
+			$status_icon = "available_on_demand";
+			$status_hover = $text['label-status_available_on_demand'];
+			break;
+		case "On Break" :
+			$status_icon = "on_break";
+			$status_hover = $text['label-status_on_break'];
+			break;
+		case "Do Not Disturb" :
+			$status_icon = "do_not_disturb";
+			$status_hover = $text['label-status_do_not_disturb'];
+			break;
+		default :
+			$status_icon = "logged_out";
+			$status_hover = $text['label-status_logged_out_or_unknown'];
+	}
+
 	$block .= "<div id='".$extension."' class='ext ".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
 	$block .= "<table class='ext ".$style."'>";
 	$block .= "	<tr>";
 	$block .= "		<td class='ext_icon'>";
 	$block .= "			<span name='".$extension."'>"; // DRAG FROM
-	$block .= 				"<img id='".$call_identifier."' class='ext_icon' src='resources/images/person.png' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".$call_identifier."', '".$extension."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
+	$block .= 				"<img id='".$call_identifier."' class='ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".$call_identifier."', '".$extension."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
 	$block .= 			"</span>";
 	$block .= "		</td>";
 	$block .= "		<td class='ext_info ".$style."'>";
