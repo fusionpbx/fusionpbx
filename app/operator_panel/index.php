@@ -112,11 +112,20 @@ require_once "resources/header.php";
 
 
 //drag/drop functionality
+	var ie_workaround = false;
+
 	function drag(ev, from_ext) {
 		refresh_stop();
-		ev.dataTransfer.setData("Call", ev.target.id);
-		ev.dataTransfer.setData("From", from_ext);
-		virtual_drag_reset();
+		try {
+			ev.dataTransfer.setData("Call", ev.target.id);
+			ev.dataTransfer.setData("From", from_ext);
+			virtual_drag_reset();
+		}
+		catch (err) {
+			// likely internet explorer being used, do workaround
+			virtual_drag(ev.target.id, from_ext);
+			ie_workaround = true;
+		}
 	}
 
 	function allowDrop(ev, target_id) {
@@ -129,9 +138,14 @@ require_once "resources/header.php";
 
 	function drop(ev, to_ext) {
 		ev.preventDefault();
-
-		var call_id = ev.dataTransfer.getData("Call");
-		var from_ext = ev.dataTransfer.getData("From");
+		if (ie_workaround) { // potentially set on drag() function above
+			var call_id = document.getElementById('vd_call_id').value;
+			var from_ext = document.getElementById('vd_ext_from').value;
+		}
+		else {
+			var call_id = ev.dataTransfer.getData("Call");
+			var from_ext = ev.dataTransfer.getData("From");
+		}
 		var to_ext = to_ext;
 		var cmd;
 
@@ -145,6 +159,8 @@ require_once "resources/header.php";
 		}
 
 		if (cmd != '') { send_cmd('exec.php?cmd='+escape(cmd)); }
+
+		if (ie_workaround) { virtual_drag_reset(); }
 
 		refresh_start();
 	}
