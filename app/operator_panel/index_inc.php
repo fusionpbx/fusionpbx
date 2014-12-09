@@ -60,21 +60,32 @@ $groups = array_unique($groups);
 sort($groups);
 
 
-echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>";
-echo "	<tr>";
-echo "		<td>";
 if (sizeof($groups) > 0) {
-	echo 		$text['label-call_group']." ";
-	echo "		<select id='group' class='formfld' onchange='refresh_start();' onfocus='refresh_stop();' onblur='refresh_start();'>\n";
-	echo "			<option value=''></option>";
-	foreach ($groups as $group) {
-		echo "		<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
-	}
-	echo "		</select>\n";
+	echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>";
+	echo "	<tr>";
+	echo "		<td>";
+		echo "		<input type='hidden' id='group' value=\"".$_REQUEST['group']."\">";
+		echo "		<strong style='color: #000;'>".$text['label-call_group']."</strong>&nbsp;&nbsp;";
+		if (sizeof($groups) > 5) {
+			//show select box
+			echo "	<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' onblur='refresh_start();'>\n";
+			echo "		<option value=''></option>";
+			foreach ($groups as $group) {
+				echo "	<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
+			}
+			echo "	</select>\n";
+		}
+		else {
+			//show buttons
+			echo "	<input type='button' class='btn' value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\">";
+			foreach ($groups as $group) {
+				echo "	<input type='button' class='btn' value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\">";
+			}
+		}
+	echo "		</td>";
+	echo "	</tr>";
+	echo "</table>";
 }
-echo "		</td>";
-echo "	</tr>";
-echo "</table>";
 
 echo "<b>".$text['title-operator_panel']."</b>";
 echo "<br><br><br>";
@@ -142,38 +153,47 @@ foreach ($activity as $extension => $ext) {
 	}
 
 	//determine extension draggable state
-	if (!in_array($extension, $_SESSION['user']['extensions'])) {
-		if ($ext_state == "ringing") {
-			if ($_GET['vd_ext_from'] == '' && $dir_icon == 'inbound') {
-				$draggable = true; // selectable - is ringing and not outbound so can transfer away the call (can set as vd_ext_from)
+	if (permission_exists('operator_panel_manage')) {
+		if (!in_array($extension, $_SESSION['user']['extensions'])) {
+			//other extension
+			if ($ext_state == "ringing") {
+				if ($_GET['vd_ext_from'] == '' && $dir_icon == 'inbound') {
+					$draggable = true; // selectable - is ringing and not outbound so can transfer away the call (can set as vd_ext_from)
+				}
+				else {
+					$draggable = false; // unselectable - is ringing so can't send a call to the ext (can't set as vd_ext_to)
+				}
+			}
+			else if ($ext_state == 'active') {
+				$draggable = false; // unselectable - on a call already so can't transfer or send a call to the ext (can't set as vd_ext_from or vd_ext_to)
+			}
+			else { // idle
+				if ($_GET['vd_ext_from'] == '') {
+					$draggable = false; // unselectable - is idle, but can't initiate a call from the ext as is not assigned to user (can't set as vd_ext_from)
+				}
+				else {
+					$draggable = true; // selectable - is idle, so can transfer a call in to ext (can set as vd_ext_to).
+				}
+			}
+		}
+		else {
+			//user extension
+			if ($ext['uuid'] != '' && $ext['uuid'] == $ext['call_uuid'] && $ext['variable_bridge_uuid'] == '') {
+				$draggable = false;
+			}
+			else if ($ext_state == 'ringing' && $ext['variable_call_direction'] == 'local') {
+				$draggable = false;
+			}
+			else if ($ext_state != '' && !$format_number) {
+				$draggable = false;
 			}
 			else {
-				$draggable = false; // unselectable - is ringing so can't send a call to the ext (can't set as vd_ext_to)
+				$draggable = true;
 			}
 		}
-		else if ($ext_state == 'active') {
-			$draggable = false; // unselectable - on a call already so can't transfer or send a call to the ext (can't set as vd_ext_from or vd_ext_to)
-		}
-		else { // idle
-			if ($_GET['vd_ext_from'] == '') {
-				$draggable = false; // unselectable - is idle, but can't initiate a call from the ext as is not assigned to user (can't set as vd_ext_from)
-			}
-			else {
-				$draggable = true; // selectable - is idle, so can transfer a call in to ext (can set as vd_ext_to).
-			}
-		}
-	}
-	else if ($ext['uuid'] != '' && $ext['uuid'] == $ext['call_uuid'] && $ext['variable_bridge_uuid'] == '') {
-		$draggable = false;
-	}
-	else if ($ext_state == 'ringing' && $ext['variable_call_direction'] == 'local') {
-		$draggable = false;
-	}
-	else if ($ext_state != '' && !$format_number) {
-		$draggable = false;
 	}
 	else {
-		$draggable = true;
+		$draggable = false;
 	}
 
 	//determine extension (user) status
@@ -209,7 +229,7 @@ foreach ($activity as $extension => $ext) {
 	$block .= "		</td>";
 	$block .= "		<td class='ext_info ".$style."'>";
 	if ($dir_icon != '') {
-		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 2px; width: 12px; height: 12px;' draggable='false'>";
+		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px;' draggable='false'>";
 	}
 	$block .= "			<span class='user_info'>";
 	if ($ext['effective_caller_id_name'] != '' && $ext['effective_caller_id_name'] != $extension) {
@@ -222,8 +242,13 @@ foreach ($activity as $extension => $ext) {
 	if ($ext_state != '') {
 		$block .= "		<span class='caller_info'>";
 		$block .= "			<table align='right'><tr><td style='text-align: right;'>";
-		$block .= "				<span class='call_info'>".$ext['call_length']."</span>";
-		if (in_array($extension, $_SESSION['user']['extensions'])) {
+		$block .= "				<span class='call_info'>".$ext['call_length']."</span><br>";
+		//eavesdrop
+		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && !in_array($extension, $_SESSION['user']['extensions'])) {
+			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$extension."','".$call_identifier."');\">";
+		}
+		//kill
+		if (in_array($extension, $_SESSION['user']['extensions']) || permission_exists('operator_panel_kill')) {
 			if ($ext['variable_bridge_uuid'] == '' && $ext_state == 'ringing') {
 				$call_identifier_kill = $ext['uuid'];
 			}
@@ -233,7 +258,7 @@ foreach ($activity as $extension => $ext) {
 			else {
 				$call_identifier_kill = $call_identifier;
 			}
-			$block .= "		<br><img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin-top: 4px; margin-right: -1px; cursor: pointer;' onclick=\"kill_call('".$call_identifier_kill."');\">";
+			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-kill']."' onclick=\"kill_call('".$call_identifier_kill."');\">";
 		}
 		$block .= "			</td></tr></table>";
 		$block .= "			<strong>".$call_name."</strong><br>".$call_number;

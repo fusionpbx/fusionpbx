@@ -50,4 +50,19 @@
 	$text['label-status_do_not_disturb']['pt-pt'] = "Não Perturbar";
 	$text['label-status_do_not_disturb']['fr-fr'] = "Ne pas déranger";
 
+	$text['label-eavesdrop']['en-us'] = "Eavesdrop";
+	$text['label-eavesdrop']['es-cl'] = "Escuchar";
+	$text['label-eavesdrop']['pt-pt'] = "Bisbilhotar";
+	$text['label-eavesdrop']['fr-fr'] = "Espionner";
+
+	$text['label-kill']['en-us'] = "Kill";
+	$text['label-kill']['es-cl'] = "Finalizar Llamada";
+	$text['label-kill']['pt-pt'] = "Chamada Final";
+	$text['label-kill']['fr-fr'] = "Tuer Appel";
+
+	$text['button-all']['en-us'] = "All";
+	$text['button-all']['es-cl'] = "Todos";
+	$text['button-all']['pt-pt'] = "Tudo";
+	$text['button-all']['fr-fr'] = "Tous";
+
 ?>
