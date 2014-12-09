@@ -1126,13 +1126,6 @@ if (strlen($_SESSION['message']) > 0) {
 	<?php
 	//logged in show the domains block
 	if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-
-		//add multi-lingual support
-		require_once "themes/enhanced/app_languages.php";
-		foreach($text as $key => $value) {
-			$text[$key] = $value[$_SESSION['domain']['language']['code']];
-		}
-
 		?>
 		<div id="domains_container">
 			<input type="hidden" id="domains_visible" value="0">
