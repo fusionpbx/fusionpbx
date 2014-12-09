@@ -93,7 +93,7 @@ require_once "resources/header.php";
 		var url = source_url;
 		url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
-		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').options[document.getElementById('group').selectedIndex].value : '');
+		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 		<?php
 		if (isset($_GET['debug'])) {
 			echo "url += '&debug';";
@@ -174,7 +174,7 @@ require_once "resources/header.php";
 			url = source_url;
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
-			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').options[document.getElementById('group').selectedIndex].value : '');
+			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
 			<?php
 			if (isset($_GET['debug'])) {
 				echo "url += '&debug';";
@@ -200,6 +200,16 @@ require_once "resources/header.php";
 		if (call_id != '') {
 			cmd = 'uuid_kill ' + call_id;
 			send_cmd('exec.php?cmd='+escape(cmd));
+		}
+	}
+
+//eavesdrop call
+	function eavesdrop_call(ext, chan_uuid) {
+		if (ext != '' && chan_uuid != '') {
+			cmd = get_eavesdrop_cmd(ext, chan_uuid);
+			if (cmd != '') {
+				send_cmd('exec.php?cmd='+escape(cmd));
+			}
 		}
 	}
 
@@ -238,6 +248,11 @@ require_once "resources/header.php";
 
 	echo "function get_originate_cmd(source, destination) {\n";
 	echo "	cmd = \"bgapi originate {sip_auto_answer=true,origination_caller_id_number=\"+destination+\",sip_h_Call-Info=_undef_}user/\"+source+\" \"+destination+\" XML ".trim($_SESSION['user_context'])."\";\n";
+	echo "	return cmd;\n";
+	echo "}\n";
+
+	echo "function get_eavesdrop_cmd(ext, chan_uuid) {\n";
+	echo "	cmd = \"bgapi originate {origination_caller_id_name=".$text['label-eavesdrop'].",origination_caller_id_number=\"+ext+\"}user/".$_SESSION['user']['extensions'][0]."@".$_SESSION['domain_name']." &eavesdrop(\"+chan_uuid+\")\";";
 	echo "	return cmd;\n";
 	echo "}\n";
 
@@ -426,6 +441,7 @@ require_once "resources/header.php";
 <?php
 
 //create simple array of users own extensions
+unset($_SESSION['user']['extensions']);
 foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
 	$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
 }
