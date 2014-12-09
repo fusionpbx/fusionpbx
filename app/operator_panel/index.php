@@ -41,6 +41,33 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
+//set user status
+	if (isset($_REQUEST['status']) && $_REQUEST['status'] != '') {
+		$user_status = check_str($_REQUEST['status']);
+	//sql update
+		$sql  = "update v_users set ";
+		$sql .= "user_status = '".$user_status."' ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and user_uuid = '".$_SESSION['user']['user_uuid']."' ";
+		if (permission_exists("user_account_setting_edit")) {
+			$count = $db->exec(check_sql($sql));
+		}
+
+	//if call center app is installed then update the user_status
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/call_center')) {
+			//update the user_status
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				$switch_cmd .= "callcenter_config agent set status ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." '".$user_status."'";
+				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+
+			//update the user state
+				$cmd = "api callcenter_config agent set state ".$_SESSION['user']['username']."@".$_SESSION['domain_name']." Waiting";
+				$response = event_socket_request($fp, $cmd);
+		}
+
+		exit;
+	}
+
 require_once "resources/header.php";
 ?>
 
@@ -213,6 +240,16 @@ require_once "resources/header.php";
 		}
 	}
 
+//record call
+	function record_call(chan_uuid) {
+		if (chan_uuid != '') {
+			cmd = get_record_cmd(chan_uuid);
+			if (cmd != '') {
+				send_cmd('exec.php?cmd='+escape(cmd));
+			}
+		}
+	}
+
 //used by call control and ajax refresh functions
 	function send_cmd(url) {
 		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -323,7 +360,7 @@ require_once "resources/header.php";
 	DIV.ext {
 		float: left;
 		width: 235px;
-		margin: 0px 10px 10px 0px;
+		margin: 0px 8px 8px 0px;
 		padding: 0px;
 		border-style: solid;
 		-moz-border-radius: 5px;
