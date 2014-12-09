@@ -194,10 +194,12 @@
 //show the content
 	echo "<script>";
 	echo "	var speed = 350;";
-	echo "	function toggle_password_reset(hide_id, show_id, focus_id) {";
-	echo "		$('#'+hide_id).slideToggle(speed, function() {;";
-	echo "			$('#'+show_id).slideToggle(speed, function() {;";
-	echo "				$('#'+focus_id).focus();";
+	echo "	function toggle_password_reset(hide_id, show_id, focus_id = '') {";
+	echo "		$('#'+hide_id).slideToggle(speed, function() {";
+	echo "			$('#'+show_id).slideToggle(speed, function() {";
+	echo "				if (focus_id != '') {";
+	echo "					$('#'+focus_id).focus();";
+	echo "				}";
 	echo "			});";
 	echo "		});";
 	echo "	}";
@@ -207,7 +209,7 @@
 
 	if (!$password_reset) {
 
-		echo "<span id='login_form'>\n";
+		echo "<div id='login_form'>\n";
 		echo "<form name='login' method='post' action='".$_SESSION['login']['destination']['url']."'>\n";
 		echo "<input type='hidden' name='path' value='".$path."'>\n";
 		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='username' id='username' placeholder=\"".$text['label-username']."\"><br />\n";
@@ -232,16 +234,16 @@
 		}
 		echo "</form>";
 		echo "<script>document.getElementById('username').focus();</script>";
-		echo "</span>";
+		echo "</div>";
 
-		echo "<span id='request_form' style='display: none;'>\n";
+		echo "<div id='request_form' style='display: none;'>\n";
 		echo "<form name='request' method='post' action=''>\n";
 		echo "<input type='hidden' name='action' value='request'>\n";
 		echo "<input type='text' class='formfld' style='text-align: center; min-width: 200px; width: 200px; margin-bottom: 8px;' name='email' id='email' placeholder=\"".$text['label-email_address']."\"><br />\n";
 		echo "<input type='submit' class='btn' style='width: 100px; margin-top: 15px;' value='".$text['button-reset']."'>\n";
 		echo "<br><br><a class='login_box_link' onclick=\"toggle_password_reset('request_form','login_form','username');\">".$text['label-cancel']."</a>";
 		echo "</form>";
-		echo "</span>";
+		echo "</div>";
 
 	}
 	else {
