@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2010 - 2013
+	Copyright (C) 2010 - 2014
 	All Rights Reserved.
 
 	Contributor(s):
@@ -239,14 +239,14 @@
 							}
 							$xml .= "  <user id=\"".$row['extension']."\"".$cidr."".$number_alias.">\n";
 							$xml .= "    <params>\n";
-							$xml .= "      <param name=\"a1-hash\" value=\"" . $a1_hash . "\"/>\n";
-							//$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
+							//$xml .= "      <param name=\"a1-hash\" value=\"" . $a1_hash . "\"/>\n";
+							$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
 							$xml .= "      <param name=\"reverse-auth-user\" value=\"" . $row['extension'] . "\"/>\n";
 							$xml .= "      <param name=\"reverse-auth-pass\" value=\"" . $row['password'] . "\"/>\n";
 
 							//voicemail settings
-							$xml .= "      <param name=\"vm-a1-hash\" value=\"" . $vm_a1_hash. "\"/>\n";
-							//$xml .= "      <param name=\"vm-password\" value=\"" . $voicemail_password . "\"/>\n";
+							//$xml .= "      <param name=\"vm-a1-hash\" value=\"" . $vm_a1_hash. "\"/>\n";
+							$xml .= "      <param name=\"vm-password\" value=\"" . $voicemail_password . "\"/>\n";
 							switch ($row['voicemail_enabled']) {
 							case "true":
 								$xml .= "      <param name=\"vm-enabled\" value=\"true\"/>\n";
