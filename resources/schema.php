@@ -31,6 +31,4 @@ include "root.php";
 //$db->db_type = $db_type;
 //$db->add();
 
-
-
 ?>
