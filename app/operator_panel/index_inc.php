@@ -65,17 +65,18 @@ echo "		<td valign='top' align='left' width='50%' nowrap>";
 echo "			<b>".$text['title-operator_panel']."</b>";
 echo "		</td>";
 echo "		<td valign='top' align='center' nowrap>";
-echo "			<input type='hidden' id='current_user_status' value=''>";
 
-$status_options = Array(
-	"Available" => $text['label-status_available'],
-	"Available (On Demand)" => $text['label-status_on_demand'],
-	"On Break" => $text['label-status_on_break'],
-	"Do Not Disturb" => $text['label-status_do_not_disturb'],
-	"Logged Out" => $text['label-status_logged_out']
-	);
-foreach ($status_options as $status_value => $status_label) {
-	echo "		<input type='button' class='btn' value=\"".$status_label."\" onclick=\"send_cmd('index.php?status='+escape('".$status_value."'));\">";
+if (sizeof($_SESSION['user']['extensions']) > 0) {
+	$status_options = Array(
+		"Available" => $text['label-status_available'],
+		"Available (On Demand)" => $text['label-status_on_demand'],
+		"On Break" => $text['label-status_on_break'],
+		"Do Not Disturb" => $text['label-status_do_not_disturb'],
+		"Logged Out" => $text['label-status_logged_out']
+		);
+	foreach ($status_options as $status_value => $status_label) {
+		echo "		<input type='button' class='btn' value=\"".$status_label."\" onclick=\"send_cmd('index.php?status='+escape('".$status_value."'));\">";
+	}
 }
 
 echo "		</td>";
