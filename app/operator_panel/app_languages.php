@@ -30,6 +30,11 @@
 	$text['label-status_available_on_demand']['pt-pt'] = "Disponível (A Pedido)";
 	$text['label-status_available_on_demand']['fr-fr'] = "Disponble (sur demande)";
 
+	$text['label-status_on_demand']['en-us'] = "On Demand";
+	$text['label-status_on_demand']['es-cl'] = "A Pedido";
+	$text['label-status_on_demand']['pt-pt'] = "A Pedido";
+	$text['label-status_on_demand']['fr-fr'] = "Sur Demande";
+
 	$text['label-status_logged_out']['en-us'] = "Logged Out";
 	$text['label-status_logged_out']['es-cl'] = "Desconectado";
 	$text['label-status_logged_out']['pt-pt'] = "Desligado";
@@ -46,9 +51,9 @@
 	$text['label-status_on_break']['fr-fr'] = "En Pause";
 
 	$text['label-status_do_not_disturb']['en-us'] = "Do Not Disturb";
-	$text['label-status_do_not_disturb']['es-cl'] = "No molestar";
+	$text['label-status_do_not_disturb']['es-cl'] = "No Molestar";
 	$text['label-status_do_not_disturb']['pt-pt'] = "Não Perturbar";
-	$text['label-status_do_not_disturb']['fr-fr'] = "Ne pas déranger";
+	$text['label-status_do_not_disturb']['fr-fr'] = "Ne pas Déranger";
 
 	$text['label-eavesdrop']['en-us'] = "Eavesdrop";
 	$text['label-eavesdrop']['es-cl'] = "Escuchar";
@@ -59,6 +64,16 @@
 	$text['label-kill']['es-cl'] = "Finalizar Llamada";
 	$text['label-kill']['pt-pt'] = "Chamada Final";
 	$text['label-kill']['fr-fr'] = "Tuer Appel";
+
+	$text['label-record']['en-us'] = "Record";
+	$text['label-record']['es-cl'] = "Registro";
+	$text['label-record']['pt-pt'] = "Registro";
+	$text['label-record']['fr-fr'] = "Enregistrer";
+
+	$text['label-recording']['en-us'] = "Recording";
+	$text['label-recording']['es-cl'] = "Grabación de Llamadas";
+	$text['label-recording']['pt-pt'] = "Gravação de Chamadas";
+	$text['label-recording']['fr-fr'] = "Enregistrement de L'appel";
 
 	$text['button-all']['en-us'] = "All";
 	$text['button-all']['es-cl'] = "Todos";

@@ -59,36 +59,53 @@ foreach ($activity as $extension => $fields) {
 $groups = array_unique($groups);
 sort($groups);
 
+echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
+echo "	<tr>";
+echo "		<td valign='top' align='left' width='50%' nowrap>";
+echo "			<b>".$text['title-operator_panel']."</b>";
+echo "		</td>";
+echo "		<td valign='top' align='center' nowrap>";
+echo "			<input type='hidden' id='current_user_status' value=''>";
 
-if (sizeof($groups) > 0) {
-	echo "<table cellpadding='0' cellspacing='0' border='0' align='right'>";
-	echo "	<tr>";
-	echo "		<td>";
-		echo "		<input type='hidden' id='group' value=\"".$_REQUEST['group']."\">";
-		echo "		<strong style='color: #000;'>".$text['label-call_group']."</strong>&nbsp;&nbsp;";
-		if (sizeof($groups) > 5) {
-			//show select box
-			echo "	<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' onblur='refresh_start();'>\n";
-			echo "		<option value=''></option>";
-			foreach ($groups as $group) {
-				echo "	<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
-			}
-			echo "	</select>\n";
-		}
-		else {
-			//show buttons
-			echo "	<input type='button' class='btn' value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\">";
-			foreach ($groups as $group) {
-				echo "	<input type='button' class='btn' value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\">";
-			}
-		}
-	echo "		</td>";
-	echo "	</tr>";
-	echo "</table>";
+$status_options = Array(
+	"Available" => $text['label-status_available'],
+	"Available (On Demand)" => $text['label-status_on_demand'],
+	"On Break" => $text['label-status_on_break'],
+	"Do Not Disturb" => $text['label-status_do_not_disturb'],
+	"Logged Out" => $text['label-status_logged_out']
+	);
+foreach ($status_options as $status_value => $status_label) {
+	echo "		<input type='button' class='btn' value=\"".$status_label."\" onclick=\"send_cmd('index.php?status='+escape('".$status_value."'));\">";
 }
 
-echo "<b>".$text['title-operator_panel']."</b>";
-echo "<br><br><br>";
+echo "		</td>";
+echo "		<td valign='top' align='right' width='50%' nowrap>";
+
+if (sizeof($groups) > 0) {
+	echo "		<input type='hidden' id='group' value=\"".$_REQUEST['group']."\">";
+	if (sizeof($groups) > 5) {
+		//show select box
+		echo "	<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' onblur='refresh_start();'>\n";
+		echo "		<option value='' ".(($_REQUEST['group'] == '') ? "selected" : null).">".$text['label-call_group']."</option>";
+		echo "		<option value=''>".$text['button-all']."</option>";
+		foreach ($groups as $group) {
+			echo "	<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
+		}
+		echo "	</select>\n";
+	}
+	else {
+		//show buttons
+		echo "	<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\">";
+		foreach ($groups as $group) {
+			echo "	<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\">";
+		}
+	}
+}
+
+echo "		</td>";
+echo "	</tr>";
+echo "</table>";
+echo "<br>";
 
 foreach ($activity as $extension => $ext) {
 	unset($block);
@@ -243,6 +260,17 @@ foreach ($activity as $extension => $ext) {
 		$block .= "		<span class='caller_info'>";
 		$block .= "			<table align='right'><tr><td style='text-align: right;'>";
 		$block .= "				<span class='call_info'>".$ext['call_length']."</span><br>";
+		//record
+		if (permission_exists('operator_panel_record') && $ext_state == 'active') {
+			$call_identifier_record = $ext['call_uuid'];
+			$rec_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$call_identifier_record.".wav";
+			if (file_exists($rec_file)) {
+				$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\">";
+			}
+			else {
+				$block .= 		"<img src='resources/images/record.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title=\"".$text['label-record']."\" onclick=\"record_call('".$call_identifier_record."');\">";
+			}
+		}
 		//eavesdrop
 		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && !in_array($extension, $_SESSION['user']['extensions'])) {
 			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$extension."','".$call_identifier."');\">";

@@ -37,8 +37,24 @@
 		$apps[$x]['menu'][0]['groups'][] = 'admin';
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = 'operator_panel_view';
-		$apps[$x]['permissions'][0]['groups'][] = 'superadmin';
-		$apps[$x]['permissions'][0]['groups'][] = 'admin';
-
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = 'operator_panel_view';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'operator_panel_manage';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'operator_panel_eavesdrop';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'operator_panel_kill';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'operator_panel_record';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$apps[$x]['permissions'][$y]['groups'][] = 'admin';
 ?>
