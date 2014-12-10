@@ -139,7 +139,7 @@
 	else
 		ivr_menu_greet_short = ivr_menu_greet_long;
 	end
-	ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/ivr/ivr-that_was_an_invalid_entry.wav";
+	ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_invalid_sound;
 
 --prepare the api object
 	api = freeswitch.API();
