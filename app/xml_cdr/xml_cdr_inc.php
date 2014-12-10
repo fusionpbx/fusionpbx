@@ -172,8 +172,7 @@ else {
 	}
 
 //set the param variable which is used with paging
-	$param = "";
-	$param .= "&missed=".$missed;
+	$param = "&missed=".$missed;
 	$param .= "&caller_id_name=".$caller_id_name;
 	$param .= "&start_stamp=".$start_stamp;
 	$param .= "&hangup_cause=".$hangup_cause;
@@ -250,7 +249,34 @@ else {
 	}
 
 //get the results from the db
-	$sql = "select *, (answer_epoch - start_epoch) as tta from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
+	$sql = "select ";
+	$sql .= "start_stamp, ";
+	$sql .= "start_epoch, ";
+	$sql .= "hangup_cause, ";
+	$sql .= "duration, ";
+	$sql .= "billmsec, ";
+	$sql .= "recording_file, ";
+	$sql .= "uuid, ";
+	$sql .= "bridge_uuid, ";
+	$sql .= "direction, ";
+	$sql .= "billsec, ";
+	$sql .= "caller_id_name, ";
+	$sql .= "caller_id_number, ";
+	$sql .= "destination_number, ";
+	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
+		$sql .= "accountcode, ";
+		$sql .= "call_sell, ";
+		$sql .= "xml, ";
+		$sql .= "json, ";
+	}
+	if (permission_exists("xml_cdr_pdd")) {
+		$sql .= "pdd_ms, ";
+	}
+	if (permission_exists("xml_cdr_mos")) {
+		$sql .= "rtp_audio_in_mos, ";
+	}
+	$sql .= "(answer_epoch - start_epoch) as tta ";
+	$sql .= "from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
 	if ($rows_per_page == 0) {
 		$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
