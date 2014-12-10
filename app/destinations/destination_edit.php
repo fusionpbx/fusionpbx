@@ -601,7 +601,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$x = 0;
 	$order = 10;
 	foreach($dialplan_details as $row) {
-		if ($row["dialplan_detail_type"] == "transfer" || $row["dialplan_detail_type"] == "bridge" || $row["dialplan_detail_type"] == "") {
+		if ($row["dialplan_detail_tag"] != "condition") {
 			echo "				<tr>\n";
 			echo "					<td>\n";
 			if (strlen($row['dialplan_detail_uuid']) > 0) {
