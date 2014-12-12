@@ -367,10 +367,10 @@
 		$text['label-blf']['pt-pt'] = "BLF";
 		$text['label-blf']['fr-fr'] = "BLF";
 
-		$text['label-blf_xfer']['en-us'] = "BLF/xfer";
-		$text['label-blf_xfer']['es-cl'] = "BLF/xfer";
-		$text['label-blf_xfer']['pt-pt'] = "BLF/xfer";
-		$text['label-blf_xfer']['fr-fr'] = "BLF/xfer";
+		$text['label-blf_xfer']['en-us'] = "BLF Xfer";
+		$text['label-blf_xfer']['es-cl'] = "BLF Xfer";
+		$text['label-blf_xfer']['pt-pt'] = "BLF Xfer";
+		$text['label-blf_xfer']['fr-fr'] = "BLF Xfer";
 
 		$text['label-presence_watcher']['en-us'] = "Presence Watcher";
 		$text['label-presence_watcher']['es-cl'] = "Presencia Watcher";
