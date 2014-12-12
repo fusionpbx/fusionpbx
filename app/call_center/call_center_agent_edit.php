@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -293,12 +293,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 //set default values
 	if (strlen($agent_type) == 0) { $agent_type = "callback"; }
-	if (strlen($agent_call_timeout) == 0) { $agent_call_timeout = 10; }
+	if (strlen($agent_call_timeout) == 0) { $agent_call_timeout = "15"; }
 	if (strlen($agent_max_no_answer) == 0) { $agent_max_no_answer = "0"; }
 	if (strlen($agent_wrap_up_time) == 0) { $agent_wrap_up_time = "10"; }
-	if (strlen($agent_no_answer_delay_time) == 0) { $agent_no_answer_delay_time = "10"; }
-	if (strlen($agent_reject_delay_time) == 0) { $agent_reject_delay_time = "10"; }
-	if (strlen($agent_busy_delay_time) == 0) { $agent_busy_delay_time = "60"; }
+	if (strlen($agent_no_answer_delay_time) == 0) { $agent_no_answer_delay_time = "30"; }
+	if (strlen($agent_reject_delay_time) == 0) { $agent_reject_delay_time = "90"; }
+	if (strlen($agent_busy_delay_time) == 0) { $agent_busy_delay_time = "90"; }
 
 //show the header
 	require_once "resources/header.php";
