@@ -59,7 +59,7 @@ foreach ($activity as $extension => $fields) {
 $groups = array_unique($groups);
 sort($groups);
 
-echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>";
+echo "<table width='100%'>";
 echo "	<tr>";
 echo "		<td valign='top' align='left' width='50%' nowrap>";
 echo "			<b>".$text['title-operator_panel']."</b>";
@@ -67,15 +67,24 @@ echo "		</td>";
 echo "		<td valign='top' align='center' nowrap>";
 
 if (sizeof($_SESSION['user']['extensions']) > 0) {
-	$status_options = Array(
-		"Available" => $text['label-status_available'],
-		"Available (On Demand)" => $text['label-status_on_demand'],
-		"On Break" => $text['label-status_on_break'],
-		"Do Not Disturb" => $text['label-status_do_not_disturb'],
-		"Logged Out" => $text['label-status_logged_out']
-		);
-	foreach ($status_options as $status_value => $status_label) {
-		echo "		<input type='button' class='btn' value=\"".$status_label."\" onclick=\"send_cmd('index.php?status='+escape('".$status_value."'));\">";
+	$status_options[1]['status'] = "Available";
+	$status_options[1]['label'] = $text['label-status_available'];
+	$status_options[1]['style'] = "op_btn_status_available";
+	$status_options[2]['status'] = "Available (On Demand)";
+	$status_options[2]['label'] = $text['label-status_on_demand'];
+	$status_options[2]['style'] = "op_btn_status_available_on_demand";
+	$status_options[3]['status'] = "On Break";
+	$status_options[3]['label'] = $text['label-status_on_break'];
+	$status_options[3]['style'] = "op_btn_status_on_break";
+	$status_options[4]['status'] = "Do Not Disturb";
+	$status_options[4]['label'] = $text['label-status_do_not_disturb'];
+	$status_options[4]['style'] = "op_btn_status_do_not_disturb";
+	$status_options[5]['status'] = "Logged Out";
+	$status_options[5]['label'] = $text['label-status_logged_out'];
+	$status_options[5]['style'] = "op_btn_status_logged_out";
+
+	foreach ($status_options as $status_option) {
+		echo "	<input type='button' id='".$status_option['style']."' class='btn' value=\"".$status_option['label']."\" onclick=\"send_cmd('index.php?status='+escape('".$status_option['status']."'));\">\n";
 	}
 }
 
@@ -157,7 +166,7 @@ foreach ($activity as $extension => $ext) {
 	}
 
 	//determine block style by state (if any)
-	$style = ($ext_state != '') ? "state_".$ext_state : null;
+	$style = ($ext_state != '') ? "op_state_".$ext_state : null;
 
 	//determine the call identifier passed on drop
 	if ($ext['uuid'] == $ext['call_uuid'] && $ext['variable_bridge_uuid'] == '') { // transfer an outbound internal call
@@ -237,19 +246,19 @@ foreach ($activity as $extension => $ext) {
 			$status_hover = $text['label-status_logged_out_or_unknown'];
 	}
 
-	$block .= "<div id='".$extension."' class='ext ".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
-	$block .= "<table class='ext ".$style."'>";
+	$block .= "<div id='".$extension."' class='op_ext ".$style."' ".(($_GET['vd_ext_from'] == $extension || $_GET['vd_ext_to'] == $extension) ? "style='border-style: dotted;'" : null)." ".(($ext_state != 'active' && $ext_state != 'ringing') ? "ondrop='drop(event, this.id);' ondragover='allowDrop(event, this.id);' ondragleave='discardDrop(event, this.id);'" : null).">"; // DRAG TO
+	$block .= "<table class='op_ext ".$style."'>";
 	$block .= "	<tr>";
-	$block .= "		<td class='ext_icon'>";
+	$block .= "		<td class='op_ext_icon'>";
 	$block .= "			<span name='".$extension."'>"; // DRAG FROM
-	$block .= 				"<img id='".$call_identifier."' class='ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".$call_identifier."', '".$extension."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
+	$block .= 				"<img id='".$call_identifier."' class='op_ext_icon' src='resources/images/status_".$status_icon.".png' title='".$status_hover."' ".(($draggable) ? "draggable='true' ondragstart=\"drag(event, this.parentNode.getAttribute('name'));\" onclick=\"virtual_drag('".$call_identifier."', '".$extension."');\"" : "onfocus='this.blur();' draggable='false' style='cursor: not-allowed;'").">";
 	$block .= 			"</span>";
 	$block .= "		</td>";
-	$block .= "		<td class='ext_info ".$style."'>";
+	$block .= "		<td class='op_ext_info ".$style."'>";
 	if ($dir_icon != '') {
 		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px;' draggable='false'>";
 	}
-	$block .= "			<span class='user_info'>";
+	$block .= "			<span class='op_user_info'>";
 	if ($ext['effective_caller_id_name'] != '' && $ext['effective_caller_id_name'] != $extension) {
 		$block .= "			<strong class='strong'>".$ext['effective_caller_id_name']."</strong> (".$extension.")";
 	}
@@ -258,9 +267,9 @@ foreach ($activity as $extension => $ext) {
 	}
 	$block .= "			</span><br>";
 	if ($ext_state != '') {
-		$block .= "		<span class='caller_info'>";
+		$block .= "		<span class='op_caller_info'>";
 		$block .= "			<table align='right'><tr><td style='text-align: right;'>";
-		$block .= "				<span class='call_info'>".$ext['call_length']."</span><br>";
+		$block .= "				<span class='op_call_info'>".$ext['call_length']."</span><br>";
 		//record
 		if (permission_exists('operator_panel_record') && $ext_state == 'active') {
 			$call_identifier_record = $ext['call_uuid'];

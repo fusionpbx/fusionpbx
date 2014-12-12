@@ -263,41 +263,39 @@ require_once "resources/header.php";
 		document.getElementById('cmd_reponse').innerHTML=xmlhttp.responseText;
 	}
 
-<?php
 //hide/show destination input field
-	echo "function toggle_destination(ext) {\n";
-	echo "	refresh_stop();\n";
-	echo "	$('#destination_'+ext).fadeToggle(200, function(){\n";
-	echo "		if ($('#destination_'+ext).is(':visible')) {\n";
-	echo "			$('#destination_'+ext).focus();\n";
-	echo "		}\n";
-	echo "		else {\n";
-	echo "			$('#destination_'+ext).val('');\n";
-	echo "			refresh_start();\n";
-	echo "		}\n";
-	echo "	});\n";
-	echo "}\n";
+	function toggle_destination(ext) {
+		refresh_stop();
+		$('#destination_'+ext).fadeToggle(200, function(){
+			if ($('#destination_'+ext).is(':visible')) {
+				$('#destination_'+ext).focus();
+			}
+			else {
+				$('#destination_'+ext).val('');
+				refresh_start();
+			}
+		});
+	}
 
-	echo "function get_transfer_cmd(uuid, destination) {\n";
-	echo "	cmd = \"uuid_transfer \"+uuid+\" \"+destination+\" XML ".trim($_SESSION['user_context'])."\";\n";
-	echo "	return cmd;\n";
-	echo "}\n";
+	function get_transfer_cmd(uuid, destination) {
+		cmd = "uuid_transfer " + uuid + " " + destination + " XML <?=trim($_SESSION['user_context'])?>";
+		return cmd;
+	}
 
-	echo "function get_originate_cmd(source, destination) {\n";
-	echo "	cmd = \"bgapi originate {sip_auto_answer=true,origination_caller_id_number=\"+destination+\",sip_h_Call-Info=_undef_}user/\"+source+\" \"+destination+\" XML ".trim($_SESSION['user_context'])."\";\n";
-	echo "	return cmd;\n";
-	echo "}\n";
+	function get_originate_cmd(source, destination) {
+		cmd = "bgapi originate {sip_auto_answer=true,origination_caller_id_number=" + destination + ",sip_h_Call-Info=_undef_}user/" + source + " " + destination + " XML <?=trim($_SESSION['user_context'])?>";
+		return cmd;
+	}
 
-	echo "function get_eavesdrop_cmd(ext, chan_uuid) {\n";
-	echo "	cmd = \"bgapi originate {origination_caller_id_name=".$text['label-eavesdrop'].",origination_caller_id_number=\"+ext+\"}user/".$_SESSION['user']['extensions'][0]."@".$_SESSION['domain_name']." &eavesdrop(\"+chan_uuid+\")\";";
-	echo "	return cmd;\n";
-	echo "}\n";
+	function get_eavesdrop_cmd(ext, chan_uuid) {
+		cmd = "bgapi originate {origination_caller_id_name=<?=$text['label-eavesdrop']?>,origination_caller_id_number=" + ext + "}user/<?=$_SESSION['user']['extensions'][0]?>@<?=$_SESSION['domain_name']?> &eavesdrop(" + chan_uuid + ")";
+		return cmd;
+	}
 
-	echo "function get_record_cmd(uuid) {\n";
-	echo "	cmd = \"uuid_record \"+uuid+\" start ".$_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/\"+uuid+\".wav\";\n";
-	echo "	return cmd;\n";
-	echo "}\n";
-?>
+	function get_record_cmd(uuid) {
+		cmd = "uuid_record " + uuid + " start <?=$_SESSION['switch']['recordings']['dir']?>/archive/<?=date('Y')?>/<?=date('M')?>/<?=date('d')?>/" + uuid + ".wav";
+		return cmd;
+	}
 
 //virtual functions
 	function virtual_drag(call_id, ext) {
@@ -357,138 +355,25 @@ require_once "resources/header.php";
 </script>
 
 <style type="text/css">
-	DIV.ext {
-		float: left;
-		width: 235px;
-		margin: 0px 8px 8px 0px;
-		padding: 0px;
-		border-style: solid;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		-webkit-box-shadow: 0 0 3px #e5e9f0;
-		-moz-box-shadow: 0 0 3px #e5e9f0;
-		box-shadow: 0 0 3px #e5e9f0;
-		border-width: 1px 3px;
-		border-color: #b9c5d8 #c5d1e5;
-		background-color: #e5eaf5;
-		cursor: default;
-		}
-
-	DIV.state_active {
-		background-color: #baf4bb;
-		border-width: 1px 3px;
-		border-color: #77d779;
-		}
-
-	DIV.state_ringing {
-		background-color: #a8dbf0;
-		border-width: 1px 3px;
-		border-color: #41b9eb;
-		}
-
 	TABLE {
 		border-spacing: 0px;
 		border-collapse: collapse;
 		border: none;
 		}
-
-	TABLE.ext {
-		width: 100%;
-		height: 60px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		background-color: #e5eaf5;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		}
-
-	TD.ext_icon {
-		vertical-align: middle;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		}
-
-	IMG.ext_icon {
-		cursor: move;
-		width: 39px;
-		height: 42px;
-		border: none;
-		}
-
-	TD.ext_info {
-		text-align: left;
-		vertical-align: top;
-		font-family: arial;
-		font-size: 10px;
-		overflow: auto;
-		width: 100%;
-		padding: 3px 5px 3px 7px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-		background-color: #f0f2f6;
-		}
-
-	TD.state_ringing {
-		background-color: #d1f1ff;
-		}
-
-	TD.state_active {
-		background-color: #e1ffe2;
-		}
-
-	TABLE.state_ringing {
-		background-color: #a8dbf0;
-		}
-
-	TABLE.state_active {
-		background-color: #baf4bb;
-		}
-
-	.user_info {
-		font-family: arial;
-		font-size: 10px;
-		display: inline-block;
-		}
-
-	.user_info strong {
-		color: #3164AD;
-		}
-
-	.caller_info {
-		display: block;
-		margin-top: 7px;
-		font-family: arial;
-		font-size: 10px;
-		}
-
-	.call_info {
-		display: inline-block;
-		padding: 0px;
-		font-family: arial;
-		font-size: 10px;
-		}
-
 </style>
 
 <?php
-
 //create simple array of users own extensions
 unset($_SESSION['user']['extensions']);
 foreach ($_SESSION['user']['extension'] as $assigned_extensions) {
 	$_SESSION['user']['extensions'][] = $assigned_extensions['user'];
 }
+?>
 
-echo "<div id='ajax_reponse'>";
-//	include("index_inc.php");
-echo "</div>\n";
-echo "<div id='cmd_reponse' style='display: none;'></div>";
-echo "<br><br>";
+<div id='ajax_reponse'></div>
+<div id='cmd_reponse' style='display: none;'></div>
+<br><br>
 
-
+<?php
 require_once "resources/footer.php";
 ?>
