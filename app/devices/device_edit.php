@@ -727,6 +727,16 @@ require_once "resources/require.php";
 				<select class='formfld' style='width:80px;' name='device_keys[<?php echo $x; ?>][device_key_type]'>
 				<option value=''></option>
 				<?php
+				if (strtolower($device_vendor) == "aastra" || strlen($device_vendor) == 0) {
+					if (strlen($device_vendor) == 0) { echo "<optgroup label='Aastra'>"; }
+					?>
+					<option value='blf' <?php if ($row['device_key_type'] == "blf") { echo $selected;$found=true; } ?>><?php echo $text['label-blf'] ?></option>
+					<option value='blfxfer' <?php if ($row['device_key_type'] == "blfxfer") { echo $selected;$found=true; } ?>><?php echo $text['label-blfxfer'] ?></option>
+					<option value='dnd' <?php if ($row['device_key_type'] == "dnd") { echo $selected;$found=true; } ?>><?php echo $text['label-dnd'] ?></option>
+					<option value='speeddial' <?php if ($row['device_key_type'] == "speeddial") { echo $selected;$found=true; } ?>><?php echo $text['label-speeddial'] ?></option>
+					<?php
+					if (strlen($device_vendor) == 0) { echo "</optgroup>"; }
+				}
 				if (strtolower($device_vendor) == "cisco" || strlen($device_vendor) == 0) {
 					if (strlen($device_vendor) == 0) { echo "<optgroup label='Cisco'>"; }
 					?>
