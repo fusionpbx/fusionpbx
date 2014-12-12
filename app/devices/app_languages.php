@@ -216,7 +216,6 @@
 		$text['description-password']['pt-pt'] = "Introduza a password.";
 		$text['description-password']['fr-fr'] = "Entrez le mot de passe.";
 
-
 		$text['label-device_time_zone']['en-us'] = "Time Zone";
 		$text['label-device_time_zone']['es-cl'] = "Zona Horaria";
 		$text['label-device_time_zone']['pt-pt'] = "Fuso Horário";
@@ -367,6 +366,11 @@
 		$text['label-blf']['es-cl'] = "BLF";
 		$text['label-blf']['pt-pt'] = "BLF";
 		$text['label-blf']['fr-fr'] = "BLF";
+
+		$text['label-blf_xfer']['en-us'] = "BLF/xfer";
+		$text['label-blf_xfer']['es-cl'] = "BLF/xfer";
+		$text['label-blf_xfer']['pt-pt'] = "BLF/xfer";
+		$text['label-blf_xfer']['fr-fr'] = "BLF/xfer";
 
 		$text['label-presence_watcher']['en-us'] = "Presence Watcher";
 		$text['label-presence_watcher']['es-cl'] = "Presencia Watcher";
