@@ -109,7 +109,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
 
-
 	//add the main dialplan include entry
 		$dialplan_uuid = uuid();
 		$sql = "insert into v_dialplans ";
@@ -139,6 +138,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
+	//set the dialplan_order
+		$dialplan_detail_order = 10;
+
 	//add a destination number
 		if (strlen($dialplan_number) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -160,10 +162,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'destination_number', ";
 			$sql .= "'^$dialplan_number$', ";
-			$sql .= "'1' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 
 	//add time based conditions
@@ -187,10 +192,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'wday', ";
 			$sql .= "'$condition_wday', ";
-			$sql .= "'1' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_minute_of_day) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -212,10 +220,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'minute-of-day', ";
 			$sql .= "'$condition_minute_of_day', ";
-			$sql .= "'2' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_mday) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -237,10 +248,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'mday', ";
 			$sql .= "'$condition_mday', ";
-			$sql .= "'3' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_mweek) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -262,10 +276,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'mweek', ";
 			$sql .= "'$condition_mweek', ";
-			$sql .= "'4' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_mon) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -287,10 +304,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'mon', ";
 			$sql .= "'$condition_mon', ";
-			$sql .= "'5' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_hour) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -312,10 +332,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'hour', ";
 			$sql .= "'$condition_hour', ";
-			$sql .= "'6' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_minute) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -337,10 +360,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'minute', ";
 			$sql .= "'$condition_minute', ";
-			$sql .= "'7' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_week) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -362,10 +388,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'week', ";
 			$sql .= "'$condition_week', ";
-			$sql .= "'8' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_yday) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -387,10 +416,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'yday', ";
 			$sql .= "'$condition_yday', ";
-			$sql .= "'9' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 		if (strlen($condition_year) > 0) {
 			$dialplan_detail_uuid = uuid();
@@ -412,10 +444,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'year', ";
 			$sql .= "'$condition_year', ";
-			$sql .= "'10' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
+
+			//increment the dialplan detail order
+			$dialplan_detail_order = $dialplan_detail_order + 10;
 		}
 
 	//add action 1
@@ -438,10 +473,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'action', ";
 		$sql .= "'$action_application_1', ";
 		$sql .= "'$action_data_1', ";
-		$sql .= "'3' ";
+		$sql .= "'$dialplan_detail_order' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
 		unset($sql);
+
+	//increment the dialplan detail order
+		$dialplan_detail_order = $dialplan_detail_order + 10;
 
 	//add anti-action 1
 		if (strlen($anti_action_application_1) > 0) {
@@ -464,7 +502,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'anti-action', ";
 			$sql .= "'$anti_action_application_1', ";
 			$sql .= "'$anti_action_data_1', ";
-			$sql .= "'4' ";
+			$sql .= "'$dialplan_detail_order' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
