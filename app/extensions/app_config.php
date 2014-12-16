@@ -309,13 +309,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "forward_no_answer_destination";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "forward_unanswered_destination";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_no_answer_destination";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
 		$z++;
-		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "forward_no_answer_enabled";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "forward_unanswered_enabled";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "forward_no_answer_enabled";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en'] = "";
 		$z++;
