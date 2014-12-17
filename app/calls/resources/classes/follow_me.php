@@ -343,8 +343,12 @@ include "root.php";
 							$dial_string .= ",accountcode=".$this->accountcode;
 						}
 						$dial_string .= "}";
+						$x = 0;
 						foreach ($result as &$row) {
-							$dial_string .= ",[";
+							if ($x > 0) {
+								$dial_string .= ",";
+							}
+							$dial_string .= "[";
 							if (extension_exists($row["follow_me_destination"])) {
 								//set the dial string
 								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
@@ -393,6 +397,7 @@ include "root.php";
 									$dial_string .= $row["follow_me_destination"];
 								}
 							}
+							$x++;
 						}
 						$this->dial_string = $dial_string;
 				}
