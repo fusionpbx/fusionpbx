@@ -348,10 +348,10 @@ include "root.php";
 							if ($x > 0) {
 								$dial_string .= ",";
 							}
-							$dial_string .= "[";
 							if (extension_exists($row["follow_me_destination"])) {
 								//set the dial string
 								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
+									$dial_string .= "[";
 									$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
 									$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 									if ($row["follow_me_prompt"] == "1") {
@@ -364,7 +364,7 @@ include "root.php";
 								else {
 									$replace_value = $row["follow_me_destination"];
 									if ($row["follow_me_prompt"] == "1") {
-										$replace_value .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true]";
+										$replace_value .= "[group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true]";
 									}
 									$local_dial_string = $_SESSION['domain']['dial_string']['text'];
 									$local_dial_string = str_replace("\${dialed_user}", $replace_value, $local_dial_string);
@@ -375,6 +375,7 @@ include "root.php";
 								}
 							}
 							else {
+								$dial_string .= "[";
 								$dial_string .= "outbound_caller_id_number=\${outbound_caller_id_number},";
 								$dial_string .= "presence_id=".$this->extension."@".$_SESSION['domain_name'].",";
 								if ($row["follow_me_prompt"] == "1") {
