@@ -356,15 +356,14 @@ include "root.php";
 									$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 									$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
 									$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
-									//$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 								}
 								else {
 									$replace_value = $row["follow_me_destination"];
 									if ($row["follow_me_prompt"] == "1") {
-										$replace_value .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
+										$replace_value .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true]";
 									}
-									$dial_string = $_SESSION['domain']['dial_string']['text'];
-									$dial_string = str_replace("\${dialed_user}", $replace_value, $dial_string);
+									$session_dial_string = $_SESSION['domain']['dial_string']['text'];
+									$dial_string = str_replace("\${dialed_user}", $replace_value, $session_dial_string);
 								}
 							}
 							else {
@@ -376,12 +375,17 @@ include "root.php";
 								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
 								if (is_numeric($row["follow_me_destination"])) {
-									$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
-									if ($_SESSION['follow me']['bridge']['text'] == "bridge") {
+									if ($_SESSION['domain']['bridge']['text'] == "outbound") {
+										$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
 										$dial_string .= $bridge[0].",";
 									}
+									elseif ($_SESSION['domain']['bridge']['text'] == "loopback") {
+										$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
+									}
+									elseif ($_SESSION['domain']['bridge']['text'] == "lcr") {
+										$dial_string .= "lcr/".$_SESSION['lcr']['profile']['text']."/".$_SESSION['domain_name'];
+									}
 									else {
-										//$dial_string .= "loopback/".$row["follow_me_destination"].",";
 										$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
 									}
 								}
