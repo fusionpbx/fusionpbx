@@ -321,7 +321,7 @@ include "root.php";
 						$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
 						$dial_string .= ",domain_name=".$_SESSION['domain_name'];
 						$dial_string .= ",domain=".$_SESSION['domain_name'];
-						$dial_string .= ",extension_uuid=".$extension_uuid;
+						$dial_string .= ",extension_uuid=".$this->extension_uuid;
 						$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
 
 						if (strlen($this->cid_name_prefix) > 0) {
