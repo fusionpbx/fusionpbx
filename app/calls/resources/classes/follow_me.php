@@ -371,7 +371,7 @@ include "root.php";
 									$local_dial_string = str_replace("\${dialed_domain}", $_SESSION['domain_name'], $local_dial_string);
 									$local_dial_string = str_replace("\${call_timeout}", $row["follow_me_timeout"], $local_dial_string);
 									$local_dial_string = str_replace("\${leg_timeout}", $row["follow_me_timeout"], $local_dial_string);
-									$dial_string .= $session_dial_string;
+									$dial_string .= $local_dial_string;
 								}
 							}
 							else {
