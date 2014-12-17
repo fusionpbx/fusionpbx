@@ -321,6 +321,7 @@ include "root.php";
 						$dial_string .= ",sip_invite_domain=".$_SESSION['domain_name'];
 						$dial_string .= ",domain_name=".$_SESSION['domain_name'];
 						$dial_string .= ",domain=".$_SESSION['domain_name'];
+						$dial_string .= ",extension_uuid=".$extension_uuid;
 						$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
 
 						if (strlen($this->cid_name_prefix) > 0) {
@@ -343,23 +344,8 @@ include "root.php";
 						}
 						$dial_string .= "}";
 						foreach ($result as &$row) {
-							$dial_string .= "[";
+							$dial_string .= ",[";
 							if (extension_exists($row["follow_me_destination"])) {
-								//get the extension uuid
-								$sql = "select * from v_extensions ";
-								$sql .= "where domain_uuid = '".$this->domain_uuid."' ";
-								$sql .= "and (extension = '".$row["follow_me_destination"]."' or number_alias = '".$row["follow_me_destination"]."') ";
-								$prep_statement = $db->prepare(check_sql($sql));
-								$prep_statement->execute();
-								$extension_result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-								$extension_uuid = '';
-								if (count($extension_result) > 0) {
-									foreach ($extension_result as &$field) {
-										$extension_uuid = $field["extension_uuid"];
-									}
-								}
-								unset ($prep_statement);
-
 								//set the dial string
 								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
 									$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
@@ -367,14 +353,13 @@ include "root.php";
 									if ($row["follow_me_prompt"] == "1") {
 										$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 									}
-									$dial_string .= "extension_uuid=".$extension_uuid.",";
 									$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 									$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
-									$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")},";
+									$dial_string .= "\${sofia_contact(".$row["follow_me_destination"]."@".$_SESSION['domain_name'].")}";
 									//$dial_string .= "user/".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 								}
 								else {
-									$replace_value = $row["follow_me_destination"].",extension_uuid=".$extension_uuid;
+									$replace_value = $row["follow_me_destination"];
 									if ($row["follow_me_prompt"] == "1") {
 										$replace_value .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
 									}
@@ -392,19 +377,20 @@ include "root.php";
 								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
 								if (is_numeric($row["follow_me_destination"])) {
 									$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
-									//if (strlen($bridge[0]) > 0) {
-									//	$dial_string .= "".$bridge[0].",";
-									//}
-									//else {
-										$dial_string .= "loopback/".$row["follow_me_destination"].",";
-									//}
+									if ($_SESSION['follow me']['bridge']['text'] == "bridge") {
+										$dial_string .= $bridge[0].",";
+									}
+									else {
+										//$dial_string .= "loopback/".$row["follow_me_destination"].",";
+										$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
+									}
 								}
 								else {
-									$dial_string .= $row["follow_me_destination"].",";
+									$dial_string .= $row["follow_me_destination"];
 								}
 							}
 						}
-						$this->dial_string = trim($dial_string, ",");
+						$this->dial_string = $dial_string;
 				}
 				else {
 					$this->dial_string = '';
