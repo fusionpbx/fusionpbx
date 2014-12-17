@@ -368,6 +368,7 @@ include "root.php";
 									}
 									$session_dial_string = $_SESSION['domain']['dial_string']['text'];
 									$dial_string = str_replace("\${dialed_user}", $replace_value, $session_dial_string);
+									$dial_string = str_replace("\${dialed_domain}", $_SESSION['domain_name'], $dial_string);
 								}
 							}
 							else {
