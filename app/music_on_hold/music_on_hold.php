@@ -47,8 +47,8 @@ else {
 
 //set the music on hold directory
 	$sampling_rate_dirs = Array(8000, 16000, 32000, 48000);
-	if (file_exists('/var/lib/fusionpbx/sounds/music/default')) {
-		$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music/fusionpbx/default';
+	if (file_exists('/var/lib/fusionpbx/sounds/music')) {
+		$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music/fusionpbx';
 	}
 	else {
 		$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
