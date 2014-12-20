@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -42,21 +42,28 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "resources/paging.php";
+//include paging
+	require_once "resources/paging.php";
 
-$sampling_rate_dirs = Array(8000, 16000, 32000, 48000);
-if (file_exists('/var/lib/fusionpbx/sounds/music/default')) {
-	$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music/fusionpbx/default';
-}
-else {
-	$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
-}
-ini_set(max_execution_time,7200);
+//set the music on hold directory
+	$sampling_rate_dirs = Array(8000, 16000, 32000, 48000);
+	if (file_exists('/var/lib/fusionpbx/sounds/music/default')) {
+		$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music/fusionpbx/default';
+	}
+	else {
+		$music_on_hold_dir = $_SESSION['switch']['sounds']['dir'].'/music';
+	}
+	ini_set(max_execution_time,7200);
 
-$order_by = $_GET["order_by"];
-$order = $_GET["order"];
+//set the order by
+	$order_by = check_str($_GET["order_by"]);
+	$order = check_str($_GET["order"]);
 
 if ($_GET['a'] == "download") {
+	$slashes = array("/", "\\");
+	$_GET['category']  = str_replace($slashes, "", $_GET['category']);
+	$_GET['file_name']  = str_replace($slashes, "", $_GET['file_name']);
+
 	$category_dir = $_GET['category'];
 	$sampling_rate_dir = $_GET['sampling_rate'];
 
@@ -100,6 +107,11 @@ if (is_uploaded_file($_FILES['upload_file']['tmp_name'])) {
 	$file_ext = strtolower(pathinfo($_FILES['upload_file']['name'], PATHINFO_EXTENSION));
 	if ($file_ext == 'wav' || $file_ext == 'mp3') {
 		if ($_POST['type'] == 'moh' && permission_exists('music_on_hold_add')) {
+
+			//remove the slashes
+				$slashes = array("/", "\\");
+				$_POST['upload_category_new']  = str_replace($slashes, "", $_POST['upload_category_new']);
+				$_FILES['upload_file']['name']  = str_replace($slashes, "", $_FILES['upload_file']['name']);
 
 			// replace any spaces in the file_name with dashes
 				$new_file_name = str_replace(' ', '-', $_FILES['upload_file']['name']);
@@ -163,6 +175,10 @@ if (is_uploaded_file($_FILES['upload_file']['tmp_name'])) {
 
 if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 	if ($_GET['type'] == 'moh') {
+		//remove the slashes
+			$slashes = array("/", "\\");
+			$_GET['category']  = str_replace($slashes, "", $_GET['category']);
+			$_GET['file_name']  = str_replace($slashes, "", $_GET['file_name']);
 		//set the variables
 			$sampling_rate_dir = $_GET['sampling_rate'];
 			$category_dir = $_GET['category'];
@@ -428,9 +444,9 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 								case "mp3" : $recording_type = "audio/mpeg"; break;
 								case "ogg" : $recording_type = "audio/ogg"; break;
 							}
-							echo "<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' onended=\"recording_reset('".$row_uuid."');\" src=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
+							echo "<audio id='recording_audio_".$row_uuid."' style='display: none;' preload='none' onended=\"recording_reset('".$row_uuid."');\" src=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&type=moh&file_name=".base64_encode($recording_file_path)."\" type='".$recording_type."'></audio>";
 							echo "<span id='recording_button_".$row_uuid."' onclick=\"recording_play('".$row_uuid."')\" title='".$text['label-play']." / ".$text['label-pause']."'>".$v_link_label_play."</span>";
-							echo "<a href=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
+							echo "<a href=\"".PROJECT_PATH."/app/music_on_hold/music_on_hold.php?a=download&category=".$category_dir."&sampling_rate=".$sampling_rate_dir."&type=moh&t=bin&file_name=".base64_encode($recording_file_path)."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 						}
 						else {
 							echo "	<td valign='top' class='".$row_style[$c]."'>";
