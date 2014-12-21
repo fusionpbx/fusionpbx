@@ -440,7 +440,7 @@ require_once "resources/require.php";
 	echo "	".$text['label-device_mac_address'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\">\n";
+	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\" pattern='^([0-9A-F]{2}[:-]?){5}([0-9A-F]{2})$' required='required'>\n";
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
 	echo "	<div style='display: none;' id='duplicate_mac_found'></div>\n";
 	echo "<br />\n";
@@ -581,7 +581,7 @@ require_once "resources/require.php";
 			echo "			</td>\n";
 
 			echo "			<td class='vtable' align='left'>\n";
-			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][sip_port]' maxlength='255' value=\"".$row['sip_port']."\">\n";
+			echo "				<input class='formfld' style='width: 75px;' type='number' name='device_lines[".$x."][sip_port]' maxlength='255' min='1' max='65535' step='1' value=\"".$row['sip_port']."\">\n";
 			echo "			</td>\n";
 
 			echo "			<td class='vtable' align='left'>\n";
@@ -593,7 +593,7 @@ require_once "resources/require.php";
 			echo "			</td>\n";
 
 			echo "			<td class='vtable' align='left'>\n";
-			echo "				<input class='formfld' style='width: 75px;' type='text' name='device_lines[".$x."][register_expires]' maxlength='255' value=\"".$row['register_expires']."\">\n";
+			echo "				<input class='formfld' style='width: 75px;' type='number' name='device_lines[".$x."][register_expires]' maxlength='255' min='1' max='65535' step='1' value=\"".$row['register_expires']."\">\n";
 			echo "			</td>\n";
 
 			//echo "			<td class='vtable' align='left'>\n";
