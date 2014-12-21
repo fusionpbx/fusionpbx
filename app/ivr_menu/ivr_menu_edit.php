@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -350,7 +351,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ivr_menu_name' maxlength='255' value=\"$ivr_menu_name\">\n";
+	echo "	<input class='formfld' type='text' name='ivr_menu_name' maxlength='255' value=\"$ivr_menu_name\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -361,7 +362,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='$ivr_menu_extension'>\n";
+	echo "  <input class='formfld' type='number' name='ivr_menu_extension' maxlength='255' min='0' step='1' value='$ivr_menu_extension' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -666,7 +667,7 @@ for ($c = 0; $c < 1; $c++) {
 	echo "	".$text['label-timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ivr_menu_timeout' maxlength='255' value='$ivr_menu_timeout'>\n";
+	echo "  <input class='formfld' type='number' name='ivr_menu_timeout' maxlength='255' min='1' step='1' value='$ivr_menu_timeout' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-timeout']."\n";
 	echo "</td>\n";
@@ -803,7 +804,7 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	".$text['label-invalid_sound'].":\n";
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ivr_menu_invalid_sound' maxlength='255' value=\"$ivr_menu_invalid_sound\">\n";
+		echo "	<input class='formfld' type='text' name='ivr_menu_invalid_sound' maxlength='255' value=\"$ivr_menu_invalid_sound\" required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-invalid_sound']."\n";
 		echo "</td>\n";
@@ -869,7 +870,7 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	".$text['label-comfirm_attempts'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='ivr_menu_confirm_attempts' maxlength='255' value='$ivr_menu_confirm_attempts'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_confirm_attempts' maxlength='255' min='1' step='1' value='$ivr_menu_confirm_attempts' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-comfirm_attempts']."\n";
 		echo "</td>\n";
@@ -880,7 +881,7 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	".$text['label-inter-digit_timeout'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='ivr_menu_inter_digit_timeout' maxlength='255' value='$ivr_menu_inter_digit_timeout'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_inter_digit_timeout' maxlength='255' min='1' step='1' value='$ivr_menu_inter_digit_timeout' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-inter-digit_timeout']."\n";
 		echo "</td>\n";
@@ -891,7 +892,7 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	".$text['label-max_failures'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='ivr_menu_max_failures' maxlength='255' value='$ivr_menu_max_failures'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_max_failures' maxlength='255' min='0' step='1' value='$ivr_menu_max_failures' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-max_failures']."\n";
 		echo "</td>\n";
@@ -902,7 +903,7 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	".$text['label-max_timeouts'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='ivr_menu_max_timeouts' maxlength='255' value='$ivr_menu_max_timeouts'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_max_timeouts' maxlength='255' min='0' step='1' value='$ivr_menu_max_timeouts' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-max_timeouts']."\n";
 		echo "</td>\n";
@@ -913,7 +914,7 @@ for ($c = 0; $c < 1; $c++) {
 		echo "	".$text['label-digit_length'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "  <input class='formfld' type='text' name='ivr_menu_digit_len' maxlength='255' value='$ivr_menu_digit_len'>\n";
+		echo "  <input class='formfld' type='number' name='ivr_menu_digit_len' maxlength='255' min='1' step='1' value='$ivr_menu_digit_len' required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-digit_length']."\n";
 		echo "</td>\n";
