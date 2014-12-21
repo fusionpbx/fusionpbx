@@ -21,6 +21,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -291,7 +292,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-unique_id'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='unique_id' autocomplete='off' maxlength='255' value=\"$unique_id\">\n";
+	echo "    <input class='formfld' type='number' name='unique_id' autocomplete='off' maxlength='255' min='0' step='1' required='required' value=\"$unique_id\">\n";
 	echo "<br />\n";
 	echo $text['description-unique_id']."\n";
 	echo "</td>\n";
