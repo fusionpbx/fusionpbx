@@ -879,7 +879,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='extension' autocomplete='off' maxlength='255' value=\"$extension\">\n";
+	echo "    <input class='formfld' type='text' name='extension' autocomplete='off' maxlength='255' value=\"$extension\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -890,7 +890,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-number_alias'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='number_alias' autocomplete='off' maxlength='255' value=\"$number_alias\">\n";
+	echo "    <input class='formfld' type='number' name='number_alias' autocomplete='off' maxlength='255' min='0' step='1' value=\"$number_alias\">\n";
 	echo "<br />\n";
 	echo $text['description-number_alias']."\n";
 	echo "</td>\n";
@@ -902,7 +902,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-password'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='password' name='password' id='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"$password\">\n";
+		echo "    <input class='formfld' type='password' name='password' id='password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" autocomplete='off' maxlength='50' value=\"$password\" required='required'>\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-password']."\n";
 		echo "</td>\n";
@@ -1015,7 +1015,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-voicemail_password'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='password' name='voicemail_password' id='voicemail_password' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value='$voicemail_password'>\n";
+		echo "    <input class='formfld' type='password' name='voicemail_password' id='voicemail_password' onmouseover=\"this.type='number'; this.min='0'; this.step='1';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" maxlength='255' value='$voicemail_password'>\n";
 		echo "    <br />\n";
 		echo "    ".$text['description-voicemail_password']."\n";
 		echo "</td>\n";
@@ -1073,7 +1073,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-effective_caller_id_number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='effective_caller_id_number' maxlength='255' value=\"$effective_caller_id_number\">\n";
+	echo "    <input class='formfld' type='number' name='effective_caller_id_number' min='0' step='1' maxlength='255' value=\"$effective_caller_id_number\">\n";
 	echo "<br />\n";
 	echo $text['description-effective_caller_id_number']."\n";
 	echo "</td>\n";
@@ -1154,7 +1154,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		unset ($prep_statement);
 	}
 	else {
-		echo "    <input class='formfld' type='text' name='outbound_caller_id_number' maxlength='255' value=\"$outbound_caller_id_number\">\n";
+		echo "    <input class='formfld' type='number' name='outbound_caller_id_number' maxlength='255' min='0' step='1' value=\"$outbound_caller_id_number\">\n";
 		echo "<br />\n";
 		echo $text['description-outbound_caller_id_number-custom']."\n";
 	}
@@ -1177,7 +1177,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-emergency_caller_id_number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='emergency_caller_id_number' maxlength='255' value=\"$emergency_caller_id_number\">\n";
+	echo "    <input class='formfld' type='number' name='emergency_caller_id_number' maxlength='255' min='0' step='1' value=\"$emergency_caller_id_number\">\n";
 	echo "<br />\n";
 	echo $text['description-emergency_caller_id_number']."\n";
 	echo "</td>\n";
@@ -1249,7 +1249,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-limit_max'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='limit_max' maxlength='255' value=\"$limit_max\">\n";
+	echo "    <input class='formfld' type='number' name='limit_max' maxlength='255' min='1' step='1' value=\"$limit_max\">\n";
 	echo "<br />\n";
 	echo $text['description-limit_max']."\n";
 	echo "</td>\n";
@@ -1371,6 +1371,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				tb.className='formfld';
 				tb.setAttribute('id', 'device_mac_address');
 				tb.setAttribute('style', 'width: 80%;');
+				tb.setAttribute('pattern', '^([0-9A-F]{2}[:-]?){5}([0-9A-F]{2})$');
 				tb.value=obj.options[obj.selectedIndex].value;
 				document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'hidden';
 				tbb=document.createElement('INPUT');
@@ -1497,7 +1498,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-voicemail_mail_to'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='voicemail_mail_to' maxlength='255' value=\"$voicemail_mail_to\">\n";
+		echo "    <input class='formfld' type='email' name='voicemail_mail_to' maxlength='255' value=\"$voicemail_mail_to\">\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_mail_to']."\n";
 		echo "</td>\n";
@@ -1570,7 +1571,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-call_timeout'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_timeout' maxlength='255' value=\"$call_timeout\">\n";
+	echo "	<input class='formfld' type='number' name='call_timeout' maxlength='255' min='1' step='1' value=\"$call_timeout\">\n";
 	echo "<br />\n";
 	echo $text['description-call_timeout']."\n";
 	echo "</td>\n";
@@ -1655,7 +1656,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-user_context'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='user_context' maxlength='255' value=\"$user_context\">\n";
+		echo "    <input class='formfld' type='text' name='user_context' maxlength='255' value=\"$user_context\" required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-user_context']."\n";
 		echo "</td>\n";
@@ -1730,7 +1731,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-sip_force_expires'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='sip_force_expires' maxlength='255' value=\"$sip_force_expires\">\n";
+	echo "    <input class='formfld' type='number' name='sip_force_expires' maxlength='255' min='1' step='1' value=\"$sip_force_expires\">\n";
 	echo "<br />\n";
 	echo $text['description-sip_force_expires']."\n";
 	echo "</td>\n";
