@@ -1,4 +1,4 @@
-<?
+<?php
 function get_call_activity() {
 	global $db;
 
