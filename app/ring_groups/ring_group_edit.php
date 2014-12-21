@@ -23,6 +23,7 @@
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 	James Rose <james.o.rose@gmail.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -423,7 +424,7 @@ else {
 	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_name' maxlength='255' value=\"$ring_group_name\">\n";
+	echo "	<input class='formfld' type='text' name='ring_group_name' maxlength='255' value=\"$ring_group_name\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -434,7 +435,7 @@ else {
 	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='ring_group_extension' maxlength='255' value=\"$ring_group_extension\">\n";
+	echo "	<input class='formfld' type='number' name='ring_group_extension' maxlength='255' min='0' step='1' value=\"$ring_group_extension\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -446,7 +447,7 @@ else {
 		echo "	".$text['label-context'].":\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='text' name='ring_group_context' maxlength='255' value=\"$ring_group_context\">\n";
+		echo "	<input class='formfld' type='text' name='ring_group_context' maxlength='255' value=\"$ring_group_context\" required='required'>\n";
 		echo "<br />\n";
 		echo $text['description-enter-context']."\n";
 		echo "</td>\n";
@@ -579,7 +580,7 @@ else {
 	echo "	".$text['label-cid-number-prefix'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='ring_group_cid_number_prefix' maxlength='255' value='$ring_group_cid_number_prefix'>\n";
+	echo "  <input class='formfld' type='number' name='ring_group_cid_number_prefix' maxlength='255' min='0' step='1' value='$ring_group_cid_number_prefix'>\n";
 	echo "<br />\n";
 	echo $text['description-cid-number-prefix']." \n";
 	echo "</td>\n";
