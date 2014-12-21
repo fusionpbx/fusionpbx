@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -359,7 +360,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    ".$text['label-name']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' width='70%' align='left'>\n";
-		echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\">\n";
+		echo "    <input class='formfld' type='text' name='dialplan_name' maxlength='255' placeholder='' value=\"".htmlspecialchars($dialplan_name)."\" required='required'>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
 
@@ -715,7 +716,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_group_".$x."\">".$dialplan_detail_group."</label>\n";
 							}
-							echo "	<input id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' type='text' style='width: 30px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_group)."\" onclick='this.select();'>\n";
+							echo "	<input id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' type='number' min='0' step='1' style='width: 30px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_group)."\" onclick='this.select();'>\n";
 							/*
 							echo "	<select id='dialplan_detail_group_".$x."' name='dialplan_details[".$x."][dialplan_detail_group]' class='formfld' style='".$element['width']." ".$element['visibility']."'>\n";
 							echo "	<option value=''></option>\n";
@@ -735,7 +736,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							if ($element['hidden']) {
 								echo "	<label id=\"label_dialplan_detail_order_".$x."\">".$dialplan_detail_order."</label>\n";
 							}
-							echo "	<input id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' type='text' style='width: 32px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_order)."\" onclick='this.select();'>\n";
+							echo "	<input id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' type='number' min='1' step='1' style='width: 32px; text-align: center; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_order)."\" onclick='this.select();'>\n";
 							/*
 							echo "	<select id='dialplan_detail_order_".$x."' name='dialplan_details[".$x."][dialplan_detail_order]' class='formfld' style='".$element['width']." ".$element['visibility']."'>\n";
 							if (strlen($dialplan_detail_order)> 0) {
