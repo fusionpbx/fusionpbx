@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 
 	Call Block is written by Gerrit Visser <gerrit308@gmail.com>
 */
@@ -270,7 +271,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-number'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"$call_block_number\">\n";
+	echo "	<input class='formfld' type='text' name='call_block_number' maxlength='255' value=\"$call_block_number\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-number']."\n";
 	echo "<br />\n";
@@ -282,7 +283,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-name'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"$call_block_name\">\n";
+	echo "	<input class='formfld' type='text' name='call_block_name' maxlength='255' value=\"$call_block_name\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
