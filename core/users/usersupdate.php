@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 require_once "resources/require.php";
@@ -441,7 +442,7 @@ else {
 	echo "		<td width='30%' class='vncellreq'>".$text['label-username'].":</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (if_group("admin") || if_group("superadmin")) {
-		echo "		<input type='txt' autocomplete='off' class='formfld' name='username' value='".$username."'>";
+		echo "		<input type='txt' autocomplete='off' class='formfld' name='username' value='".$username."' required='required'>";
 	}
 	else {
 		echo "		".$username;
