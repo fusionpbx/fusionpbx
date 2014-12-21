@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -452,7 +453,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-queue_name'].":\n";
 	echo "</td>\n";
 	echo "<td width='70%' class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='queue_name' maxlength='255' value=\"$queue_name\">\n";
+	echo "	<input class='formfld' type='text' name='queue_name' maxlength='255' value=\"$queue_name\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-queue_name']."\n";
 	echo "</td>\n";
@@ -463,7 +464,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='queue_extension' maxlength='255' value=\"$queue_extension\">\n";
+	echo "	<input class='formfld' type='number' name='queue_extension' maxlength='255' min='0' step='1' value=\"$queue_extension\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -738,7 +739,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-max_wait_time'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_max_wait_time' maxlength='255' value='$queue_max_wait_time'>\n";
+	echo "  <input class='formfld' type='number' name='queue_max_wait_time' maxlength='255' min='0' step='1' value='$queue_max_wait_time'>\n";
 	echo "<br />\n";
 	echo $text['description-max_wait_time']."\n";
 	echo "</td>\n";
@@ -749,7 +750,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-max_wait_time_with_no_agent'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_max_wait_time_with_no_agent' maxlength='255' value='$queue_max_wait_time_with_no_agent'>\n";
+	echo "  <input class='formfld' type='number' name='queue_max_wait_time_with_no_agent' maxlength='255' min='1' step='1' value='$queue_max_wait_time_with_no_agent'>\n";
 	echo "<br />\n";
 	echo $text['description-max_wait_time_with_no_agent']."\n";
 	echo "</td>\n";
@@ -760,7 +761,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-max_wait_time_with_no_agent_time_reached'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_max_wait_time_with_no_agent_time_reached' maxlength='255' value='$queue_max_wait_time_with_no_agent_time_reached'>\n";
+	echo "  <input class='formfld' type='number' name='queue_max_wait_time_with_no_agent_time_reached' maxlength='255' min='1' step='1' value='$queue_max_wait_time_with_no_agent_time_reached'>\n";
 	echo "<br />\n";
 	echo $text['description-max_wait_time_with_no_agent_time_reached']."\n";
 	echo "</td>\n";
@@ -807,7 +808,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-tier_rule_wait_second'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_tier_rule_wait_second' maxlength='255' value='$queue_tier_rule_wait_second'>\n";
+	echo "  <input class='formfld' type='number' name='queue_tier_rule_wait_second' maxlength='255' min='1' step='1' value='$queue_tier_rule_wait_second'>\n";
 	echo "<br />\n";
 	echo $text['description-tier_rule_wait_second']."\n";
 	echo "</td>\n";
@@ -866,7 +867,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-discard_abandoned_after'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_discard_abandoned_after' maxlength='255' value='$queue_discard_abandoned_after'>\n";
+	echo "  <input class='formfld' type='number' name='queue_discard_abandoned_after' maxlength='255' min='1' step='1' value='$queue_discard_abandoned_after'>\n";
 	echo "<br />\n";
 	echo $text['description-discard_abandoned_after']."\n";
 	echo "</td>\n";
@@ -923,7 +924,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "  ".$text['label-caller_announce_frequency'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='queue_announce_frequency' maxlength='255' value='$queue_announce_frequency'>\n";
+	echo "  <input class='formfld' type='number' name='queue_announce_frequency' maxlength='255' min='1' step='1' value='$queue_announce_frequency'>\n";
 	echo "<br />\n";
 	echo $text['description-caller_announce_frequency']."\n";
 	echo "</td>\n";
