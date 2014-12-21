@@ -396,7 +396,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-gateway'].":\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='gateway' maxlength='255' value=\"$gateway\">\n";
+	echo "    <input class='formfld' type='text' name='gateway' maxlength='255' value=\"$gateway\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-gateway-name']."\n";
 	echo "</td>\n";
@@ -407,7 +407,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-username'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='username' maxlength='255' autocomplete='off' value=\"$username\">\n";
+	echo "    <input class='formfld' type='text' name='username' maxlength='255' autocomplete='off' value=\"$username\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-username']."\n";
 	echo "</td>\n";
@@ -418,7 +418,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-password'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"$password\">\n";
+	echo "    <input class='formfld' type='password' name='password' id='password' autocomplete='off' maxlength='255' onmouseover=\"this.type='text';\" onfocus=\"this.type='text';\" onmouseout=\"if (!$(this).is(':focus')) { this.type='password'; }\" onblur=\"this.type='password';\" value=\"$password\" required='required'>\n";
 	echo "    <br />\n";
 	echo "    ".$text['description-password']."\n";
 	echo "</td>\n";
@@ -451,7 +451,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-proxy'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='proxy' maxlength='255' value=\"$proxy\">\n";
+	echo "    <input class='formfld' type='text' name='proxy' maxlength='255' value=\"$proxy\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-proxy']."\n";
 	echo "</td>\n";
@@ -474,7 +474,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (strlen($expire_seconds) == 0) { $expire_seconds = "800"; }
-	echo "  <input class='formfld' type='text' name='expire_seconds' maxlength='255' value='$expire_seconds'>\n";
+	echo "  <input class='formfld' type='number' name='expire_seconds' maxlength='255' value='$expire_seconds' min='1' max='65535' step='1' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-expire_seconds']."\n";
 	echo "</td>\n";
@@ -509,7 +509,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-retry_seconds'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='text' name='retry_seconds' maxlength='255' value='$retry_seconds'>\n";
+	echo "  <input class='formfld' type='number' name='retry_seconds' maxlength='255' value='$retry_seconds' min='1' max='65535' step='1' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-retry_seconds']."\n";
 	echo "</td>\n";
@@ -688,7 +688,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-sip_cid_type'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='sip_cid_type' maxlength='255' value=\"$sip_cid_type\">\n";
+	echo "    <input class='formfld' type='text' name='sip_cid_type' maxlength='255' value=\"$sip_cid_type\" pattern='^(none|pid|rpid)$'>\n";
 	echo "<br />\n";
 	echo $text['description-sip_cid_type']."\n";
 	echo "</td>\n";
@@ -735,7 +735,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-ping'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='ping' maxlength='255' value=\"$ping\">\n";
+	echo "    <input class='formfld' type='number' name='ping' maxlength='255' min='1' max='65535' step='1' value=\"$ping\">\n";
 	echo "<br />\n";
 	echo $text['description-ping']."\n";
 	echo "</td>\n";
@@ -746,7 +746,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "    ".$text['label-channels'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='channels' maxlength='255' value=\"$channels\">\n";
+	echo "    <input class='formfld' type='number' name='channels' maxlength='255' value=\"$channels\" min='0' max='65535' step='1'>\n";
 	echo "<br />\n";
 	echo $text['description-channels']."\n";
 	echo "</td>\n";
@@ -777,7 +777,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	if (strlen($profile) == 0) { $profile = "external"; }
-	echo "	<input class='formfld' type='text' name='profile' maxlength='255' value=\"$profile\">\n";
+	echo "	<input class='formfld' type='text' name='profile' maxlength='255' value=\"$profile\" required='required' >\n";
 	echo "<br />\n";
 	echo $text['description-profile']."\n";
 	echo "</td>\n";
