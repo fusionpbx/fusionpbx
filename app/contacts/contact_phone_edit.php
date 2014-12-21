@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -292,7 +293,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-phone_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' value=\"$phone_number\">\n";
+	echo "	<input class='formfld' type='number' name='phone_number' maxlength='255' min='0' step='1' value=\"$phone_number\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_number']."\n";
 	echo "</td>\n";
@@ -303,7 +304,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-phone_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='phone_extension' maxlength='255' value=\"$phone_extension\">\n";
+	echo "	<input class='formfld' type='number' name='phone_extension' min='0' step='1' maxlength='255' value=\"$phone_extension\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_extension']."\n";
 	echo "</td>\n";

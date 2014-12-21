@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -252,7 +253,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-url_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='url_address' maxlength='255' value=\"".$url_address."\" placeholder='http://...'>\n";
+	echo "	<input class='formfld' type='url' name='url_address' maxlength='255' value=\"".$url_address."\" placeholder='http://...'>\n";
 	echo "<br />\n";
 	echo $text['description-url_address']."\n";
 	echo "</td>\n";
