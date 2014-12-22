@@ -467,7 +467,7 @@ include "root.php";
 					case "snom":
 						$mac = strtolower($mac);
 						break;
-					case "yealink":
+					case "polycom":
 						$mac = strtolower($mac);
 						break;
 					default:
