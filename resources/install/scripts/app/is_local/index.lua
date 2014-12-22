@@ -35,6 +35,13 @@
 --prepare the api object
 	api = freeswitch.API();
 
+--add the trim function
+	function trim(s)
+		if (s) then
+			return s:gsub("^%s+", ""):gsub("%s+$", "")
+		end
+	end
+
 --get the cache
 	cache = trim(api:execute("memcache", "get app:dialplan:outbound:is_local:" .. destination_number .. "@" .. domain_name));
 
