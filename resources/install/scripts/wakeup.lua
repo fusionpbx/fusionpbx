@@ -98,7 +98,7 @@ else
 			if (extension_type == "prompt") then
 				min_digits = 1;
 				max_digits = 11;
-				wakeup_time = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:wakeup-get-extension", "", "\\d+");
+				wakeup_number = session:playAndGetDigits(min_digits, max_digits, max_tries, digit_timeout, "#", "phrase:wakeup-get-extension", "", "\\d+");
 			end
 
 		--get the wakeup time
