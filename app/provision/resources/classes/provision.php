@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 include "root.php";
 
@@ -464,6 +465,9 @@ include "root.php";
 						$mac = strtoupper($mac);
 						break;
 					case "snom":
+						$mac = strtolower($mac);
+						break;
+					case "yealink":
 						$mac = strtolower($mac);
 						break;
 					default:
