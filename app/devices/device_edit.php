@@ -440,7 +440,7 @@ require_once "resources/require.php";
 	echo "	".$text['label-device_mac_address'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\" pattern='^([0-9A-F]{2}[:-]?){5}([0-9A-F]{2})$' required='required'>\n";
+	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\" pattern='^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$' required='required'>\n";
 	echo "	<div style='display: none;' id='duplicate_mac_response'></div>\n";
 	echo "	<div style='display: none;' id='duplicate_mac_found'></div>\n";
 	echo "<br />\n";
