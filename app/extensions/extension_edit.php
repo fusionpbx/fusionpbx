@@ -1371,7 +1371,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				tb.className='formfld';
 				tb.setAttribute('id', 'device_mac_address');
 				tb.setAttribute('style', 'width: 80%;');
-				tb.setAttribute('pattern', '^([0-9A-F]{2}[:-]?){5}([0-9A-F]{2})$');
+				tb.setAttribute('pattern', '^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$');
 				tb.value=obj.options[obj.selectedIndex].value;
 				document.getElementById('btn_select_to_input_device_mac_address').style.visibility = 'hidden';
 				tbb=document.createElement('INPUT');
