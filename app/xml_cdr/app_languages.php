@@ -45,6 +45,11 @@
 	$text['label-cid-number']['pt-pt'] = "Número CID";
 	$text['label-cid-number']['fr-fr'] = "Nombre de l'Appelant";
 
+	$text['label-description']['en-us'] = "Description";
+	$text['label-description']['es-cl'] = "Descripción";
+	$text['label-description']['pt-pt'] = "Descrição";
+	$text['label-description']['fr-fr'] = "Description";
+
 	$text['label-inbound']['en-us'] = "Inbound";
 	$text['label-inbound']['es-cl'] = "Entrada";
 	$text['label-inbound']['pt-pt'] = "Entrada";
