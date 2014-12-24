@@ -201,10 +201,10 @@ include "root.php";
 		}
 	}
 
-//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
-//$moh= new switch_music_on_hold;
-//$moh->select_name = "hold_music";
-//$moh->select_value = $hold_music;
-//echo $moh->select();
+//build and save the XML
+	//require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
+	//$moh = new switch_music_on_hold;
+	//$moh->xml();
+	//$moh->save();
 
 ?>
