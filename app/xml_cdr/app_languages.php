@@ -140,6 +140,21 @@
 	$text['label-missed']['pt-pt'] = "Perdidas";
 	$text['label-missed']['fr-fr'] = "Perdus";
 
+	$text['label-no_answer']['en-us'] = "No Answer";
+	$text['label-no_answer']['es-cl'] = "Sin Respuesta";
+	$text['label-no_answer']['pt-pt'] = "Sem Resposta";
+	$text['label-no_answer']['fr-fr'] = "Pas de Réponse";
+
+	$text['label-aloc']['en-us'] = "ALOC";
+	$text['label-aloc']['es-cl'] = "ALOC";
+	$text['label-aloc']['pt-pt'] = "ALOC";
+	$text['label-aloc']['fr-fr'] = "ALOC";
+
+	$text['label-busy']['en-us'] = "Busy";
+	$text['label-busy']['es-cl'] = "Ocupado";
+	$text['label-busy']['pt-pt'] = "Ocupado";
+	$text['label-busy']['fr-fr'] = "Occupé";
+
 	$text['label-failed']['en-us'] = "Failed";
 	$text['label-failed']['es-cl'] = "Fracasado";
 	$text['label-failed']['pt-pt'] = "Fracassado";
