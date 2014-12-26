@@ -43,15 +43,12 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_add";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_edit";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_delete";
-		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "group_member_view";
@@ -234,6 +231,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
@@ -337,6 +335,7 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_domains";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "domain_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "v_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";

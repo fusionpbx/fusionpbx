@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,14 +25,16 @@
 */
 include "root.php";
 require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('group_add')) {
-	//access allowed
-}
-else {
-	echo "access denied";
-	return;
-}
+
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('group_add')) {
+		//access allowed
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -46,35 +48,34 @@ else {
 	$group_name = check_str($_POST["group_name"]);
 	$group_description = check_str($_POST["group_description"]);
 
-if (strlen($group_name) > 0) {
-	$sql_insert = "insert into v_groups ";
-	$sql_insert .= "(";
-	$sql_insert .= "domain_uuid, ";
-	$sql_insert .= "group_uuid, ";
-	$sql_insert .= "group_name, ";
-	$sql_insert .= "group_description ";
-	$sql_insert .= ")";
-	$sql_insert .= "values ";
-	$sql_insert .= "(";
-	$sql_insert .= "'$domain_uuid', ";
-	$sql_insert .= "'".uuid()."', ";
-	$sql_insert .= "'$group_name', ";
-	$sql_insert .= "'$group_description' ";
-	$sql_insert .= ")";
-	if (!$db->exec($sql_insert)) {
-		//echo $db->errorCode() . "<br>";
-		$info = $db->errorInfo();
-		print_r($info);
-		// $info[0] == $db->errorCode() unified error code
-		// $info[1] is the driver specific error code
-		// $info[2] is the driver specific error string
-	}
+//insert into groups
+	if (strlen($group_name) > 0) {
+		$sql_insert = "insert into v_groups ";
+		$sql_insert .= "(";
+		$sql_insert .= "group_uuid, ";
+		$sql_insert .= "group_name, ";
+		$sql_insert .= "group_description ";
+		$sql_insert .= ")";
+		$sql_insert .= "values ";
+		$sql_insert .= "(";
+		$sql_insert .= "'".uuid()."', ";
+		$sql_insert .= "'$group_name', ";
+		$sql_insert .= "'$group_description' ";
+		$sql_insert .= ")";
+		if (!$db->exec($sql_insert)) {
+			//echo $db->errorCode() . "<br>";
+			$info = $db->errorInfo();
+			print_r($info);
+			// $info[0] == $db->errorCode() unified error code
+			// $info[1] is the driver specific error code
+			// $info[2] is the driver specific error string
+		}
 
-	//redirect the user
-		$_SESSION["message"] = $text['message-add'];
-		header("Location: groups.php");
-		return;
-}
+		//redirect the user
+			$_SESSION["message"] = $text['message-add'];
+			header("Location: groups.php");
+			return;
+	}
 
 //include the header
 	include "resources/header.php";
