@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -27,14 +27,14 @@ include "root.php";
 require_once "resources/require.php";
 
 //check the permissions
-require_once "resources/check_auth.php";
-if (if_group("admin") || if_group("superadmin")) {
-	//access allowed
-}
-else {
-	echo "access denied";
-	return;
-}
+	require_once "resources/check_auth.php";
+	if (if_group("admin") || if_group("superadmin")) {
+		//access allowed
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
 //add multi-lingual support
 	require_once "app_languages.php";

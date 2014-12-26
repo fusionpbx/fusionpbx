@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,22 +25,23 @@
 */
 include "root.php";
 require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('group_delete') || if_group("superadmin")) {
-	//access allowed
-}
-else {
-	echo "access denied";
-	return;
-}
+
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('group_delete') || if_group("superadmin")) {
+		//access allowed
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
 //get the http value and set as a variable
 	$id = check_str($_GET["id"]);
 
 //delete the group
 	$sqldelete = "delete from v_groups ";
-	$sqldelete .= "where domain_uuid = '$domain_uuid' ";
-	$sqldelete .= "and group_uuid = '$id' ";
+	$sqldelete .= "where group_uuid = '$id' ";
 	if (!$db->exec($sqldelete)) {
 		//echo $db->errorCode() . "<br>";
 		$info = $db->errorInfo();

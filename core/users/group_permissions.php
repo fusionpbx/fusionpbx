@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,15 +25,16 @@
 */
 require_once "root.php";
 require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists('group_permissions') || if_group("superadmin")) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//check permisions
+	require_once "resources/check_auth.php";
+	if (permission_exists('group_permissions') || if_group("superadmin")) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -41,10 +42,12 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-require_once "resources/header.php";
-$document['title'] = $text['title-group_permissions'];
+//include the header
+	$document['title'] = $text['title-group_permissions'];
+	require_once "resources/header.php";
 
-require_once "resources/paging.php";
+//include paging
+	require_once "resources/paging.php";
 
 //get the list of installed apps from the core and mod directories
 	$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
@@ -73,14 +76,12 @@ require_once "resources/paging.php";
 					$sql = "insert into v_group_permissions ";
 					$sql .= "(";
 					$sql .= "group_permission_uuid, ";
-					$sql .= "domain_uuid, ";
 					$sql .= "permission_name, ";
 					$sql .= "group_name ";
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'".uuid()."', ";
-					$sql .= "'$domain_uuid', ";
 					$sql .= "'".$row['name']."', ";
 					$sql .= "'".$group."' ";
 					$sql .= ")";
@@ -96,8 +97,7 @@ require_once "resources/paging.php";
 
 //get the permissions assigned to this group
 	$sql = " select * from v_group_permissions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and group_name = '$group_name' ";
+	$sql .= "where group_name = '$group_name' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -163,8 +163,7 @@ require_once "resources/paging.php";
 					if ($permissions_db_checklist[$permission] == "true" && $permissions_form_checklist[$permission] == "false") {
 						//delete the record
 							$sql = "delete from v_group_permissions ";
-							$sql .= "where domain_uuid = '$domain_uuid' ";
-							$sql .= "and group_name = '$group_name' ";
+							$sql .= "where group_name = '$group_name' ";
 							$sql .= "and permission_name = '$permission' ";
 							$db->exec(check_sql($sql));
 							unset($sql);
@@ -180,8 +179,7 @@ require_once "resources/paging.php";
 									$db->exec(check_sql($sql));
 									unset($sql);
 
-									$sql = "";
-									$sql .= " select menu_item_parent_uuid from v_menu_items ";
+									$sql = " select menu_item_parent_uuid from v_menu_items ";
 									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
 									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
 									$prep_statement = $db->prepare(check_sql($sql));
@@ -192,8 +190,7 @@ require_once "resources/paging.php";
 									}
 									unset ($prep_statement);
 
-									$sql = "";
-									$sql .= " select * from v_menu_items as i, v_menu_item_groups as g  ";
+									$sql = " select * from v_menu_items as i, v_menu_item_groups as g  ";
 									$sql .= "where i.menu_item_uuid = g.menu_item_uuid ";
 									$sql .= "and i.menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
 									$sql .= "and i.menu_item_parent_uuid = '$menu_item_parent_uuid' ";
@@ -211,9 +208,6 @@ require_once "resources/paging.php";
 										unset($sql);
 									}
 									unset ($prep_statement);
-
-
-
 								}
 							}
 						}
@@ -225,14 +219,12 @@ require_once "resources/paging.php";
 							$sql = "insert into v_group_permissions ";
 							$sql .= "(";
 							$sql .= "group_permission_uuid, ";
-							$sql .= "domain_uuid, ";
 							$sql .= "permission_name, ";
 							$sql .= "group_name ";
 							$sql .= ")";
 							$sql .= "values ";
 							$sql .= "(";
 							$sql .= "'".uuid()."', ";
-							$sql .= "'$domain_uuid', ";
 							$sql .= "'$permission', ";
 							$sql .= "'$group_name' ";
 							$sql .= ")";
@@ -258,8 +250,7 @@ require_once "resources/paging.php";
 									$db->exec(check_sql($sql));
 									unset($sql);
 
-									$sql = "";
-									$sql .= " select menu_item_parent_uuid from v_menu_items ";
+									$sql = " select menu_item_parent_uuid from v_menu_items ";
 									$sql .= "where menu_item_uuid = '".$row['menu']['uuid']."' ";
 									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
 									$prep_statement = $db->prepare(check_sql($sql));
@@ -270,8 +261,7 @@ require_once "resources/paging.php";
 									}
 									unset ($prep_statement);
 
-									$sql = "";
-									$sql .= " select * from v_menu_item_groups ";
+									$sql = " select * from v_menu_item_groups ";
 									$sql .= "where menu_item_uuid = '$menu_item_parent_uuid' ";
 									$sql .= "and group_name = '$group_name' ";
 									$sql .= "and menu_uuid = 'b4750c3f-2a86-b00d-b7d0-345c14eca286' ";
@@ -310,8 +300,7 @@ require_once "resources/paging.php";
 		return;
 	}
 
-// copy group javascript
-
+//copy group javascript
 	echo "<script language='javascript' type='text/javascript'>\n";
 	echo "	function copy_group() {\n";
 	echo "		var new_group_name;\n";

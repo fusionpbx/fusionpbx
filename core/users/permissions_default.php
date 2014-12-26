@@ -17,30 +17,32 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-if (!$included) {
-	include "root.php";
-	require_once "resources/require.php";
-	require_once "resources/check_auth.php";
-	if (permission_exists('group_edit')) {
-		//access granted
-	}
-	else {
-		echo "access denied";
-		return;
+
+//check permisions
+	if (!$included) {
+		include "root.php";
+		require_once "resources/require.php";
+		require_once "resources/check_auth.php";
+		if (permission_exists('group_edit')) {
+			//access granted
+		}
+		else {
+			echo "access denied";
+			return;
+		}
 	}
 
-	//add multi-lingual support
+//add multi-lingual support
 	require_once "app_languages.php";
 	foreach($text as $key => $value) {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
-}
 
 //permission restore default
 	require_once "core/users/resources/classes/permission.php";
@@ -48,11 +50,12 @@ if (!$included) {
 	$permission->db = $db;
 	$permission->restore();
 
-if (!$included) {
-	//show a message to the user
-	$_SESSION["message"] = $text['message-restore'];
-	header("Location: groups.php");
-	return;
-}
+//redirect the users
+	if (!$included) {
+		//show a message to the user
+		$_SESSION["message"] = $text['message-restore'];
+		header("Location: groups.php");
+		return;
+	}
 
 ?>

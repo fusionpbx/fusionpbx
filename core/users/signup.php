@@ -25,15 +25,16 @@
 */
 include "root.php";
 require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (if_group("admin") || if_group("superadmin")) {
-	//access allowed
-}
-else {
-	echo "access denied";
-	return;
-}
+//check permissions
+	require_once "resources/check_auth.php";
+	if (if_group("admin") || if_group("superadmin")) {
+		//access allowed
+	}
+	else {
+		echo "access denied";
+		return;
+	}
 
 //add multi-lingual support
 	require_once "app_languages.php";
