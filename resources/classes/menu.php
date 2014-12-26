@@ -51,7 +51,7 @@
 					$db = $this->db;
 
 				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_menu.php");
 					$x=0;
 					foreach ($config_list as &$config_path) {
 						include($config_path);
@@ -204,7 +204,7 @@
 					$db->beginTransaction();
 
 				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_menu.php");
 					$x=0;
 					foreach ($config_list as &$config_path) {
 						include($config_path);

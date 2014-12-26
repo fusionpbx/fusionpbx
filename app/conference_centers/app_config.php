@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Conference Center";
 		$apps[$x]['uuid'] = "8d083f5a-f726-42a8-9ffa-8d28f848f10e";
@@ -17,25 +18,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "O centro de conferências permite gerir uma ou mais salas de conferência, audio e vídeo.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$y = 0;
-		$apps[$x]['menu'][$y]['title']['en-us'] = "Conference Center";
-		$apps[$x]['menu'][$y]['title']['es-cl'] = "Cent. de Conferencias";
-		$apps[$x]['menu'][$y]['title']['de-de'] = "";
-		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['de-at'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Centre de Conférences";
-		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Conferencias";
-		$apps[$x]['menu'][$y]['title']['pt-br'] = "";
-		$apps[$x]['menu'][$y]['uuid'] = "95f88726-4706-43f0-b52b-9504a0b8046f";
-		$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		$apps[$x]['menu'][$y]['category'] = "internal";
-		$apps[$x]['menu'][$y]['path'] = "/app/conference_centers/conference_centers.php";
-		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
-		$apps[$x]['menu'][$y]['groups'][] = "admin";
 
 	//permission details
 		$y = 0;

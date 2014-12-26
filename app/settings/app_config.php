@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Settings";
 		$apps[$x]['uuid'] = "b6b1b2e5-4ba5-044c-8a5c-18709a15eb60";
@@ -18,24 +19,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Definições do PBX.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Settings";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Configuraciones";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "";
-		$apps[$x]['menu'][0]['title']['de-de'] = "";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "";
-		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Configuration";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Definições";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "148ea42a-3711-3d64-181b-07a6a3c3ed60";
-		$apps[$x]['menu'][0]['parent_uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/settings/setting_edit.php";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 	//permission details
 		$y = 0;

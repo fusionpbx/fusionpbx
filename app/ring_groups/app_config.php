@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Ring Groups";
 		$apps[$x]['uuid'] = "1d61fb65-1eec-bc73-a6ee-a6203b4fe6f2";
@@ -18,25 +19,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Uma ferramenta para chamar várias extensões.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Ring Groups";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Grupo de llamados";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "";
-		$apps[$x]['menu'][0]['title']['de-de'] = "";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "";
-		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Groupes de sonnerie";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Grupos de Ring";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "b30f085f-3ec6-2819-7e62-53dfba5cb8d5";
-		$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/ring_groups/ring_groups.php";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
-		$apps[$x]['menu'][0]['groups'][] = "admin";
 
 	//permission details
 		$y = 0;
@@ -60,7 +42,6 @@
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_forward";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
-		//$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ring_group_prompt";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
@@ -263,4 +244,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['table'] = "v_users";
 		$apps[$x]['db'][$y]['fields'][$z]['key']['reference']['field'] = "user_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
 ?>

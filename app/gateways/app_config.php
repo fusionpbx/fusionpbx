@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Gateways";
 		$apps[$x]['uuid'] = "297ab33e-2c2f-8196-552c-f3567d2caaf8";
@@ -18,24 +19,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "As Gateways garatem o acesso a redes de voz fornecidas por outros operdadores. Estes podem ser os operadores de voz ou outros sistemas que exigem registo SIP.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Gateways";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Pasarelas";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Pasarelas";
-		$apps[$x]['menu'][0]['title']['de-de'] = "";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "";
-		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Passerelles";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Gateways";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";
-		$apps[$x]['menu'][0]['parent_uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/gateways/gateways.php";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "gateway_view";

@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Call Broadcast";
 		$apps[$x]['uuid'] = "efc11f6b-ed73-9955-4d4d-3a1bed75a056";
@@ -17,24 +18,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Programação para imediatamente fazer várias chamadas para uma extensão, um IVR, Sala de Conferência, ou qualquer outro número.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Call Broadcast";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Llamada Broadcast";
-		$apps[$x]['menu'][0]['title']['de-de'] = "";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "";
-		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Campagne d'Appels";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Chamada em Broadcast";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "50153bbf-78c5-b49e-7bd9-4b3e4b1134e6";
-		$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['groups'][] = "admin";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
-		$apps[$x]['menu'][0]['path'] = "/app/call_broadcast/call_broadcast.php";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "call_broadcast_view";
@@ -147,4 +130,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "broadcast_accountcode";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "XML CDR";
 		$apps[$x]['uuid'] = "4a085c51-7635-ff03-f67b-86e834422848";
@@ -18,64 +19,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Detalhes das Gravações de Voz com todas as informações sobre a chamada.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$y = 0;
-		$apps[$x]['menu'][$y]['title']['en-us'] = "Call Detail Records";
-		$apps[$x]['menu'][$y]['title']['es-cl'] = "Registro de detalle de llamada";
-		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-		$apps[$x]['menu'][$y]['title']['de-de'] = "";
-		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['de-at'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Historiques Appels";
-		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Detalhes das Gravações de Voz";
-		$apps[$x]['menu'][$y]['title']['pt-br'] = "";
-		$apps[$x]['menu'][$y]['uuid'] = "8f80e71a-31a5-6432-47a0-7f5a7b271f05";
-		$apps[$x]['menu'][$y]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		$apps[$x]['menu'][$y]['category'] = "internal";
-		$apps[$x]['menu'][$y]['path'] = "/app/xml_cdr/xml_cdr.php";
-		$apps[$x]['menu'][$y]['groups'][] = "user";
-		$apps[$x]['menu'][$y]['groups'][] = "admin";
-		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['menu'][$y]['title']['en-us'] = "CDR Statistics";
-		$apps[$x]['menu'][$y]['title']['es-cl'] = "Statistics CDR";
-		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-		$apps[$x]['menu'][$y]['title']['de-de'] = "";
-		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['de-at'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Statistiques CDR";
-		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Statistics CDR";
-		$apps[$x]['menu'][$y]['title']['pt-br'] = "";
-		$apps[$x]['menu'][$y]['uuid'] = "032887d2-2315-4e10-b3a2-8989f719c80c";
-		$apps[$x]['menu'][$y]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
-		$apps[$x]['menu'][$y]['category'] = "internal";
-		$apps[$x]['menu'][$y]['path'] = "/app/xml_cdr/xml_cdr_statistics.php";
-		$apps[$x]['menu'][$y]['groups'][] = "user";
-		$apps[$x]['menu'][$y]['groups'][] = "admin";
-		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
-		$y++;
-		$apps[$x]['menu'][$y]['title']['en-us'] = "Extension Summary";
-		$apps[$x]['menu'][$y]['title']['es-cl'] = "Extension Summary";
-		$apps[$x]['menu'][$y]['title']['es-mx'] = "";
-		$apps[$x]['menu'][$y]['title']['de-de'] = "";
-		$apps[$x]['menu'][$y]['title']['de-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['de-at'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-fr'] = "Résumé de l'Extension";
-		$apps[$x]['menu'][$y]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][$y]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][$y]['title']['pt-pt'] = "Extension Summary";
-		$apps[$x]['menu'][$y]['title']['pt-br'] = "";
-		$apps[$x]['menu'][$y]['uuid'] = "4e45a3c1-6db5-417f-9abb-1d30a4fd0bf2";
-		$apps[$x]['menu'][$y]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
-		$apps[$x]['menu'][$y]['category'] = "internal";
-		$apps[$x]['menu'][$y]['path'] = "/app/xml_cdr/xml_cdr_extension_summary.php";
-		$apps[$x]['menu'][$y]['groups'][] = "admin";
-		$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 
 	//permission details
 		$y = 0;
