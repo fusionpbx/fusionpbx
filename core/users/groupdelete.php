@@ -40,9 +40,9 @@ require_once "resources/require.php";
 	$id = check_str($_GET["id"]);
 
 //delete the group
-	$sqldelete = "delete from v_groups ";
-	$sqldelete .= "where group_uuid = '$id' ";
-	if (!$db->exec($sqldelete)) {
+	$sql = "delete from v_groups ";
+	$sql .= "where group_uuid = '$id' ";
+	if (!$db->exec($sql)) {
 		//echo $db->errorCode() . "<br>";
 		$info = $db->errorInfo();
 		print_r($info);
