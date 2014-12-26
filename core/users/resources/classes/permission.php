@@ -27,10 +27,29 @@
 //define the permission class
 	class permission {
 
+		//delete the permissions
+			function delete() {
+				//set the variables
+					$db = $this->db;
+				//delete the group permisisons
+					$sql = "delete from v_group_permissions ";
+					if (!$db->exec($sql)) {
+						//echo $db->errorCode() . "<br>";
+						$info = $db->errorInfo();
+						print_r($info);
+						// $info[0] == $db->errorCode() unified error code
+						// $info[1] is the driver specific error code
+						// $info[2] is the driver specific error string
+					}
+			}
+
 		//restore the permissions
 			function restore() {
 				//set the variables
 					$db = $this->db;
+
+				//delete the group permisisons
+					$this-delete();
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
