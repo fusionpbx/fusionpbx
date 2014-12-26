@@ -26,7 +26,7 @@
 
 //if the are no groups add the default groups
 	$sql = "SELECT * FROM v_groups ";
-	$sql .= "WHERE domain_uuid = '$domain_uuid' ";
+	$sql .= "WHERE domain_uuid = 'null' ";
 	$sub_result = $db->query($sql)->fetch();
 	$prep_statement = $db->prepare(check_sql($sql));
 	if ($prep_statement) {
@@ -65,7 +65,7 @@
 					$sql .= ")";
 					$sql .= "values ";
 					$sql .= "(";
-					$sql .= "'$domain_uuid', ";
+					$sql .= "null, ";
 					$sql .= "'".uuid()."', ";
 					$sql .= "'".$row['group_name']."', ";
 					$sql .= "'".$row['group_description']."', ";
@@ -81,7 +81,7 @@
 
 //if there are no permissions listed in v_group_permissions then set the default permissions
 	$sql = "select count(*) as count from v_group_permissions ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "where domain_uuid = null ";
 	$prep_statement = $db->prepare($sql);
 	$prep_statement->execute();
 	$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
@@ -111,7 +111,7 @@
 					$sql .= "values ";
 					$sql .= "(";
 					$sql .= "'".uuid()."', ";
-					$sql .= "'$domain_uuid', ";
+					$sql .= "null, ";
 					$sql .= "'".$sub_row['name']."', ";
 					$sql .= "'".$group."' ";
 					$sql .= ")";
