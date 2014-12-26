@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Voicemail Greetings";
 		$apps[$x]['uuid'] = "e4b4fbee-9e4d-8e46-3810-91ba663db0c2";
@@ -18,15 +19,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Gestor de saudações de correio de voz para extensões.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		//$apps[$x]['menu'][0]['title']['en-us'] = "Voicemail Greetings";
-		//$apps[$x]['menu'][0]['uuid'] = "71197938-224b-3a90-c076-3979cabb3ee9";
-		//$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		//$apps[$x]['menu'][0]['category'] = "internal";
-		//$apps[$x]['menu'][0]['path'] = "/app/voicemail_greetings/voicemail_greetings.php";
-		//$apps[$x]['menu'][0]['groups'][] = "admin";
-		//$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "voicemail_greeting_view";

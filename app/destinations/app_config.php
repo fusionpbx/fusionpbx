@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Destinations";
 		$apps[$x]['uuid'] = "5ec89622-b19c-3559-64f0-afde802ab139";
@@ -18,25 +19,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "Utilizado para definir os números de destino externos.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Destinations";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Destinos";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "Destinos";
-		$apps[$x]['menu'][0]['title']['de-de'] = "";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "";
-		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Destinations";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "Cibler";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Destinos";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "fd2a708a-ff03-c707-c19d-5a4194375eba";
-		$apps[$x]['menu'][0]['parent_uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/destinations/destinations.php";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
-		//$apps[$x]['menu'][0]['groups'][] = "admin";
 
 	//permission details
 		$y = 0;
@@ -140,4 +122,5 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Enter the accountcode.";
 		$z++;
+
 ?>

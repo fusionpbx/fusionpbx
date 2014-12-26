@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "IVR Menu";
 		$apps[$x]['uuid'] = "a5788e9b-58bc-bd1b-df59-fff5d51253ab";
@@ -18,25 +19,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "O menu IVR toca uma gravação ou uma frase pré-definidos, que são apresentados ao chamador na forma de opções para escolher. Cada opção tem um destino correspondente. Os destinos podem ser extensões, correio de voz, outros IVRs, grupos, extensões de fax, etc.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "IVR Menu";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Menú IVR";
-		$apps[$x]['menu'][0]['title']['es-mx'] = "";
-		$apps[$x]['menu'][0]['title']['de-de'] = "";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "";
-		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Menu SVI";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Menu de IVR";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "72259497-a67b-e5aa-cac2-0f2dcef16308";
-		$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/ivr_menu/ivr_menus.php";
-		$apps[$x]['menu'][0]['groups'][] = "admin";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
 	//permission details
 		$y = 0;

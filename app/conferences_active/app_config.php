@@ -1,4 +1,5 @@
 <?php
+
 	//application details
 		$apps[$x]['name'] = "Conferences Active";
 		$apps[$x]['uuid'] = "c168c943-833a-c29c-7ef9-d1ee78810b71";
@@ -17,25 +18,6 @@
 		$apps[$x]['description']['fr-ch'] = "";
 		$apps[$x]['description']['pt-pt'] = "A ferramenta AJAX permite visualizar e gerir todas as chamadas ativas numa sala de conferências.";
 		$apps[$x]['description']['pt-br'] = "";
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = "Active Conferences";
-		$apps[$x]['menu'][0]['title']['es-cl'] = "Conferencias Activas";
-		$apps[$x]['menu'][0]['title']['de-de'] = "";
-		$apps[$x]['menu'][0]['title']['de-ch'] = "";
-		$apps[$x]['menu'][0]['title']['de-at'] = "";
-		$apps[$x]['menu'][0]['title']['fr-fr'] = "Conférences en cours";
-		$apps[$x]['menu'][0]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][0]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][0]['title']['pt-pt'] = "Conferencias Activas";
-		$apps[$x]['menu'][0]['title']['pt-br'] = "";
-		$apps[$x]['menu'][0]['uuid'] = "2d857bbb-43b9-b8f7-a138-642868e0453a";
-		$apps[$x]['menu'][0]['parent_uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
-		$apps[$x]['menu'][0]['category'] = "internal";
-		$apps[$x]['menu'][0]['path'] = "/app/conferences_active/conferences_active.php";
-		$apps[$x]['menu'][0]['groups'][] = "admin";
-		$apps[$x]['menu'][0]['groups'][] = "superadmin";
-		$apps[$x]['menu'][0]['groups'][] = "user";
 
 	//permission details
 		$apps[$x]['permissions'][0]['name'] = "conference_active_view";
@@ -88,4 +70,5 @@
 		$apps[$x]['permissions'][9]['name'] = "conference_active_advanced_view";
 		$apps[$x]['permissions'][9]['groups'][] = "admin";
 		$apps[$x]['permissions'][9]['groups'][] = "superadmin";
+
 ?>
