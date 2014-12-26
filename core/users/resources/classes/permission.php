@@ -49,7 +49,7 @@
 					$db = $this->db;
 
 				//delete the group permisisons
-					$this-delete();
+					$this->delete();
 
 				//get the $apps array from the installed apps from the core and mod directories
 					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_config.php");
