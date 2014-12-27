@@ -1,4 +1,4 @@
-<php
+<?php
 
 	$y = 0;
 	$apps[$x]['menu'][$y]['title']['en-us'] = "Script Editor";
