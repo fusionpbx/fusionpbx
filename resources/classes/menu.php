@@ -51,9 +51,10 @@
 					$db = $this->db;
 
 				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_menu.php");
-					$x=0;
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_{config|menu}.php");
+					$x = 0;
 					foreach ($config_list as &$config_path) {
+						$y = 0;
 						try {
 							include($config_path);
 							$x++;
@@ -210,11 +211,18 @@
 					$db->beginTransaction();
 
 				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_menu.php");
-					$x=0;
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_{config|menu}.php");
+					$x = 0;
 					foreach ($config_list as &$config_path) {
-						include($config_path);
-						$x++;
+						$y = 0;
+						try {
+							include($config_path);
+							$x++;
+						}
+						catch (Exception $e) {
+							echo 'exception caught: ' . $e->getMessage() . "\n";
+							exit;
+						}
 					}
 
 				//use the app array to restore the default menu
