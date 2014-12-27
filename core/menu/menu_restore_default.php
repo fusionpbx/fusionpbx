@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -62,10 +62,9 @@
 	$_SESSION["template_content"] = '';
 
 //redirect
-	if (!$included) {
-		//show a message to the user
-		$_SESSION["message"] = $text['message-restore'];
-		header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".$menu_uuid);
-		return;
-	}
+	//show a message to the user
+	$_SESSION["message"] = $text['message-restore'];
+	header("Location: ".PROJECT_PATH."/core/menu/menu_edit.php?id=".$menu_uuid);
+	return;
+
 ?>
