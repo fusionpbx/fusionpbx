@@ -27,7 +27,7 @@
 if ($domains_processed == 1) {
 	//if the are no groups add the default groups
 		$sql = "SELECT * FROM v_groups ";
-		$sql .= "WHERE domain_uuid = 'null' ";
+		$sql .= "WHERE domain_uuid = null ";
 		$sub_result = $db->query($sql)->fetch();
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
