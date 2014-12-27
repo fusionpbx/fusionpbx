@@ -51,11 +51,12 @@
 					$db = $this->db;
 
 				//get the $apps array from the installed apps from the core and mod directories
-					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_{config,menu}.php",GLOB_BRACE);
+					$config_list = glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/*/*/app_{menu}.php",GLOB_BRACE);
 					$x = 0;
 					foreach ($config_list as &$config_path) {
 						$y = 0;
 						try {
+							//echo "[".$x ."] ".$config_path."\n";
 							include($config_path);
 							$x++;
 						}
@@ -200,6 +201,7 @@
 					if ($db_type == "sqlite") {
 						$db->commit();
 					}
+
 			} //end function
 
 			//restore the menu and group permissions
