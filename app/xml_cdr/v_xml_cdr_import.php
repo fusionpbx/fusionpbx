@@ -272,9 +272,9 @@
 							$lcr_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
-							$lcr_user_rate = (strlen($db2->result[0]['rate']))?strlen($db2->result[0]['rate']):0;
-							$lcr_user_first_increment = (strlen($db2->result[0]['connect_increment']))?strlen($db2->result[0]['connect_increment']):60;
-							$lcr_user_second_increment = (strlen($db2->result[0]['talk_increment']))?strlen($db2->result[0]['talk_increment']):60;
+							$lcr_user_rate = (strlen($db2->result[0]['rate']))?($db2->result[0]['rate']):0;
+							$lcr_user_first_increment = (strlen($db2->result[0]['connect_increment']))?($db2->result[0]['connect_increment']):60;
+							$lcr_user_second_increment = (strlen($db2->result[0]['talk_increment']))?($db2->result[0]['talk_increment']):60;
 							$lcr_user_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
@@ -299,9 +299,9 @@
 							$lcr_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
-							$lcr_user_rate = (strlen($db2->result[0]['rate']))?strlen($$db2->result[0]['rate']):0;
-							$lcr_user_first_increment = (strlen($db2->result[0]['connect_increment']))?strlen($db2->result[0]['connect_increment']):60;
-							$lcr_user_second_increment = (strlen($db2->result[0]['talk_increment']))?strlen($db2->result[0]['talk_increment']):60;
+							$lcr_user_rate = (strlen($db2->result[0]['rate']))?($$db2->result[0]['rate']):0;
+							$lcr_user_first_increment = (strlen($db2->result[0]['connect_increment']))?($db2->result[0]['connect_increment']):60;
+							$lcr_user_second_increment = (strlen($db2->result[0]['talk_increment']))?($db2->result[0]['talk_increment']):60;
 							$lcr_user_currency = (strlen($db2->result[0]['currency'])?check_str($db2->result[0]['currency']):
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
