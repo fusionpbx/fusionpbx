@@ -67,7 +67,7 @@
 						$sip_profile_dir = '/usr/local/share/fusionpbx/resources/templates/conf/sip_profiles/*.xml';
 					}
 					else {
-						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].'/'.PROJECT_PATH.'resources/templates/conf/sip_profiles/*.xml';
+						$sip_profile_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/conf/sip_profiles/*.xml';
 					}
 					$xml_files = glob($sip_profile_dir);
 					foreach ($xml_files as &$xml_file) {
