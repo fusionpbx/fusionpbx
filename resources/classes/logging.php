@@ -84,4 +84,8 @@ class Logging
 	}
 }
 
+//$log = new Logging();
+//$log->log("debug", "passed validation, ".__line__);
+//$log->log("debug", check_str($_POST["ivr_menu_uuid"]));
+
 ?>
