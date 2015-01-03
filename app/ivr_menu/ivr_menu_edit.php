@@ -42,10 +42,6 @@ else {
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-	$log = new Logging();
-	$log->log("debug", "passed validation, line 45");
-	$log->log("debug", check_str($_POST["ivr_menu_uuid"]));
-
 //function to show the list of sound files
 	// moved to functions.php
 
