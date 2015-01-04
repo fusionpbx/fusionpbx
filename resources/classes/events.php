@@ -33,8 +33,12 @@ if (!class_exists('database')) {
 
 		public function execute_event($event_type, $params=null){
 			foreach ($this->event[$event_type] as $event_function){
-				call_user_func($event_function, $params);
-
+				try{
+					call_user_func($event_function, $params);
+				}
+				catch (Exception $e) {
+					echo 'Exception: ',  $e->getMessage(), "\n";
+				}
 				// Lets log
 				foreach ($this->handler as $handler){
 					$handler->log_event($event_type, $params);
