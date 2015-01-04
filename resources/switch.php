@@ -1258,18 +1258,18 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 								if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$file) {
 									$tmp_selected = true;
 									if ($select_type == "dialplan") {
-										echo "		<option value='playback:".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
+										echo "		<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
 									}
 									if ($select_type == "ivr") {
-										echo "		<option value='menu-exec-app:playback ".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
+										echo "		<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
 									}
 								}
 								else {
 									if ($select_type == "dialplan") {
-										echo "		<option value='playback:".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
+										echo "		<option value='lua:streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
 									}
 									if ($select_type == "ivr") {
-										echo "		<option value='menu-exec-app:playback ".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
+										echo "		<option value='menu-exec-app:lua streamfile.lua ".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
 									}
 								}
 							}
