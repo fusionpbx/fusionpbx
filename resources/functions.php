@@ -22,11 +22,18 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 	if (!function_exists('software_version')) {
 		function software_version() {
 			return '3.7.1';
+		}
+	}
+
+	if (!function_exists('version')) {
+		function version() {
+			return software_version();
 		}
 	}
 
