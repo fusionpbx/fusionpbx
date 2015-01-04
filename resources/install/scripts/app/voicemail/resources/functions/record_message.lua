@@ -76,7 +76,7 @@
 			silence_threshold = 30;
 			silence_seconds = 5;
 			mkdir(voicemail_dir.."/"..voicemail_id);
-			if (vm_message_ext == "mp3") then
+			if (vm_message_ext == "mp3" and trim(api:execute("module_exists", "mod_shout")) == "false") then
 				--make the recording
 					--session:execute("record", "vlc://#standard{access=file,mux=mp3,dst="..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."}");
 					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
