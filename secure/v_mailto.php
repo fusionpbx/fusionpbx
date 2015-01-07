@@ -23,6 +23,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 //set the include path
@@ -83,6 +84,7 @@
 	}
 	else {
 		//get the headers
+			print_r($decoded[0]);
 			$headers = json_decode($decoded[0]["Headers"]["x-headers:"], true);
 			$subject = $decoded[0]["Headers"]["subject:"];
 			$from = $decoded[0]["Headers"]["from:"];
@@ -105,9 +107,10 @@
 			}
 			else {
 				$content_type_array = explode(";", $content_type);
-				if ($content_type_array[0] == "text/html" || $content_type_array[0] == "text/plain") {
-					$body = $row["Body"];
-				}
+				$body = $decoded[0]["Body"];
+				//if ($content_type_array[0] == "text/html" || $content_type_array[0] == "text/plain") {
+				//	$body = $row["Body"];
+				//}
 			}
 	}
 
@@ -175,7 +178,7 @@
 	echo "Reply-to: ".$reply_to."\n";
 	echo "To: ".$to."\n";
 	echo "Date: ".$date."\n";
-	//echo "Body: ".$body."\n";
+	echo "Body: ".$body."\n";
 
 //add to, from, fromname, custom headers and subject to the email
 	$mail->From = $smtp['from'] ;
