@@ -56,6 +56,7 @@ require_once "resources/require.php";
 		//get the groups data
 			$sql = "select * from v_groups ";
 			$sql .= "where domain_uuid = '".$domain_uuid."' ";
+			$sql .= "or domain_uuid is null ";
 			$sql .= "and group_name = '".$group_name."' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
