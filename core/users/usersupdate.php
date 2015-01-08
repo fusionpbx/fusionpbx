@@ -495,6 +495,7 @@ else {
 
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "or domain_uuid is null ";
 	if (sizeof($assigned_groups) > 0) {
 		$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 	}
