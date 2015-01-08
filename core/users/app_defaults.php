@@ -27,7 +27,7 @@
 if ($domains_processed == 1) {
 	//if the are no groups add the default groups
 		$sql = "SELECT * FROM v_groups ";
-		$sql .= "WHERE domain_uuid = null ";
+		$sql .= "WHERE domain_uuid is null ";
 		$sub_result = $db->query($sql)->fetch();
 		$prep_statement = $db->prepare(check_sql($sql));
 		if ($prep_statement) {
@@ -82,7 +82,7 @@ if ($domains_processed == 1) {
 
 	//if there are no permissions listed in v_group_permissions then set the default permissions
 		$sql = "select count(*) as count from v_group_permissions ";
-		$sql .= "where domain_uuid = null ";
+		$sql .= "where domain_uuid is null ";
 		$prep_statement = $db->prepare($sql);
 		$prep_statement->execute();
 		$sub_result = $prep_statement->fetch(PDO::FETCH_ASSOC);
