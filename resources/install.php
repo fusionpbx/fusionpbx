@@ -1068,14 +1068,12 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 		foreach($tmp as $row) {
 			$sql = "insert into v_groups ";
 			$sql .= "(";
-			$sql .= "domain_uuid, ";
 			$sql .= "group_uuid, ";
 			$sql .= "group_name, ";
 			$sql .= "group_description ";
 			$sql .= ") ";
 			$sql .= "values ";
 			$sql .= "(";
-			$sql .= "'".$_SESSION["domain_uuid"]."', ";
 			$sql .= "'".uuid()."', ";
 			$sql .= "'".$row['group_name']."', ";
 			$sql .= "'".$row['group_description']."' ";
@@ -1181,14 +1179,12 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 							$sql = "insert into v_group_permissions ";
 							$sql .= "(";
 							$sql .= "group_permission_uuid, ";
-							$sql .= "domain_uuid, ";
 							$sql .= "permission_name, ";
 							$sql .= "group_name ";
 							$sql .= ") ";
 							$sql .= "values ";
 							$sql .= "(";
 							$sql .= "'".uuid()."', ";
-							$sql .= "'".$_SESSION["domain_uuid"]."', ";
 							$sql .= "'".$row['name']."', ";
 							$sql .= "'".$group."' ";
 							$sql .= ");";

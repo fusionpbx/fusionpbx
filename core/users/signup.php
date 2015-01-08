@@ -278,6 +278,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "		<td class='vtable'>";
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "or domain_uuid is null ";
 	$sql .= "order by group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();

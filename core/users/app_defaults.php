@@ -136,7 +136,6 @@ if ($domains_processed == 1) {
 					//get the group_uuid
 						$sql = "select group_uuid from v_groups ";
 						$sql .= "where group_name = '".$row['group_name']."' ";
-						//$sql .= "and domain_uuid = '".$row['domain_uuid']."' ";
 						$prep_statement_sub = $db->prepare($sql);
 						$prep_statement_sub->execute();
 						$sub_result = $prep_statement_sub->fetch(PDO::FETCH_ASSOC);
