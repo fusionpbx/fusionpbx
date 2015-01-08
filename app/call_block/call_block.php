@@ -27,15 +27,16 @@
 */
 require_once "root.php";
 require_once "resources/require.php";
-require_once "resources/check_auth.php";
 
-if (permission_exists('call_block_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
-}
+//check permissions
+	require_once "resources/check_auth.php";
+	if (permission_exists('call_block_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 
 //add multi-lingual support
 	require_once "app_languages.php";
@@ -69,41 +70,42 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	//prepare to page the results
-		$sql = "select count(*) as num_rows from v_call_block ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' and direction <> 'outbound' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$prep_statement = $db->prepare($sql);
-		if ($prep_statement) {
-		$prep_statement->execute();
-			$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-			if ($row['num_rows'] > 0) {
-				$num_rows = $row['num_rows'];
-			}
-			else {
-				$num_rows = '0';
-			}
+//prepare to page the results
+	$sql = "select count(*) as num_rows from v_call_block ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$prep_statement = $db->prepare($sql);
+	if ($prep_statement) {
+	$prep_statement->execute();
+		$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+		if ($row['num_rows'] > 0) {
+			$num_rows = $row['num_rows'];
 		}
+		else {
+			$num_rows = '0';
+		}
+	}
 
-	//prepare to page the results
-		$rows_per_page = 10;
-		$param = "";
-		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
-		$offset = $rows_per_page * $page;
+//prepare to page the results
+	$rows_per_page = 100;
+	$param = "";
+	$page = $_GET['page'];
+	if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+	list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+	$offset = $rows_per_page * $page;
 
-	//get the  list
-		$sql = " select * from v_call_block ";
-		$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
-		$sql .= " limit $rows_per_page offset $offset ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll();
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
+//get the  list
+	$sql = "select * from v_call_block ";
+	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+	$sql .= " limit $rows_per_page offset $offset ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll();
+	$result_count = count($result);
+	unset ($prep_statement, $sql);
 
+//table headers
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -123,6 +125,7 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+//show the results
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('call_block_edit')) ? "href='call_block_edit.php?id=".$row['call_block_uuid']."'" : null;
@@ -159,6 +162,7 @@ else {
 		unset($sql, $result, $row_count);
 	} //end if results
 
+//complete the content
 	echo "<tr>\n";
 	echo "<td colspan='11' align='left'>\n";
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
@@ -188,4 +192,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
