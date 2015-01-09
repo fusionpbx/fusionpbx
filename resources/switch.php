@@ -2029,8 +2029,7 @@ function outbound_route_to_bridge ($domain_uuid, $destination_number) {
 		//get the extension number using the dialplan_uuid
 			$sql = "select * ";
 			$sql .= "from v_dialplan_details ";
-			$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
-			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+			$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
 			$sql .= "order by dialplan_detail_order asc ";
 			$sub_result = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 			$regex_match = false;

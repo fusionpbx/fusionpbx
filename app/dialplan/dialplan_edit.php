@@ -807,4 +807,5 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
