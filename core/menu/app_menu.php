@@ -29,7 +29,7 @@
 	$apps[$x]['menu'][1]['uuid'] = "02194288-6d56-6d3e-0b1a-d53a2bc10788";
 	$apps[$x]['menu'][1]['parent_uuid'] = "";
 	$apps[$x]['menu'][1]['category'] = "internal";
-	$apps[$x]['menu'][1]['path'] = "/core/user_settings/user_dashboard.php";
+	$apps[$x]['menu'][1]['path'] = "";
 	$apps[$x]['menu'][1]['order'] = "5";
 	$apps[$x]['menu'][1]['groups'][] = "user";
 	$apps[$x]['menu'][1]['groups'][] = "admin";
@@ -48,7 +48,7 @@
 	$apps[$x]['menu'][2]['uuid'] = "bc96d773-ee57-0cdd-c3ac-2d91aba61b55";
 	$apps[$x]['menu'][2]['parent_uuid'] = "";
 	$apps[$x]['menu'][2]['category'] = "internal";
-	$apps[$x]['menu'][2]['path'] = "/core/users/index.php";
+	$apps[$x]['menu'][2]['path'] = "";
 	$apps[$x]['menu'][2]['order'] = "10";
 	$apps[$x]['menu'][2]['groups'][] = "admin";
 	$apps[$x]['menu'][2]['groups'][] = "superadmin";
@@ -58,7 +58,7 @@
 		$apps[$x]['menu'][3]['uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
 		$apps[$x]['menu'][3]['parent_uuid'] = "";
 		$apps[$x]['menu'][3]['category'] = "internal";
-		$apps[$x]['menu'][3]['path'] = "/app/dialplan/dialplans.php";
+		$apps[$x]['menu'][3]['path'] = "";
 		$apps[$x]['menu'][3]['order'] = "15";
 		$apps[$x]['menu'][3]['groups'][] = "admin";
 		$apps[$x]['menu'][3]['groups'][] = "superadmin";
@@ -96,7 +96,7 @@
 	$apps[$x]['menu'][5]['uuid'] = "594d99c5-6128-9c88-ca35-4b33392cec0f";
 	$apps[$x]['menu'][5]['parent_uuid'] = "";
 	$apps[$x]['menu'][5]['category'] = "internal";
-	$apps[$x]['menu'][5]['path'] = "/core/domain_settings/domains.php";
+	$apps[$x]['menu'][5]['path'] = "";
 	$apps[$x]['menu'][5]['order'] = "30";
 	$apps[$x]['menu'][5]['groups'][] = "superadmin";
 
