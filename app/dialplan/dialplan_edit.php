@@ -132,9 +132,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				if (strlen($row["dialplan_detail_uuid"]) > 0) {
 					$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 				}
-				else {
-					$array['dialplan_details'][$x]['domain_uuid'] = $_SESSION['domain_uuid'];
-				}
+				$array['dialplan_details'][$x]['domain_uuid'] = $array['domain_uuid'];
 				$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
 				$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
 				$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
