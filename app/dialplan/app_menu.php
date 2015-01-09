@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][0]['uuid'] = "b94e8bd9-9eb5-e427-9c26-ff7a6c21552a";
 	$apps[$x]['menu'][0]['parent_uuid'] = "";
 	$apps[$x]['menu'][0]['category'] = "internal";
-	$apps[$x]['menu'][0]['path'] = "/app/dialplan/dialplans.php";
+	$apps[$x]['menu'][0]['path'] = "";
 	$apps[$x]['menu'][0]['order'] = "15";
 	$apps[$x]['menu'][0]['groups'][] = "admin";
 	$apps[$x]['menu'][0]['groups'][] = "superadmin";

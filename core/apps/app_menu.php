@@ -13,12 +13,7 @@
 	$apps[$x]['menu'][0]['uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][0]['parent_uuid'] = "";
 	$apps[$x]['menu'][0]['category'] = "internal";
-	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/xml_cdr')) {
-		$apps[$x]['menu'][0]['path'] = "/app/xml_cdr/xml_cdr.php";
-	}
-	else {
-		$apps[$x]['menu'][0]['path'] = PROJECT_PATH;
-	}
+	$apps[$x]['menu'][0]['path'] = "";
 	$apps[$x]['menu'][0]['order'] = "20";
 	$apps[$x]['menu'][0]['groups'][] = "user";
 	$apps[$x]['menu'][0]['groups'][] = "admin";
@@ -39,6 +34,5 @@
 	$apps[$x]['menu'][1]['category'] = "internal";
 	$apps[$x]['menu'][1]['path'] = "/core/apps/apps.php";
 	$apps[$x]['menu'][1]['groups'][] = "superadmin";
-
 
 ?>
