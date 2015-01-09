@@ -495,7 +495,12 @@
 								//hide login and sign-up when the user is logged in
 							}
 							else {
-								$db_menu .= "<a ".$menu_tags." style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
+								if (strlen($field['menu_item_link']) == 0) {
+									$db_menu .= "<h2 align='center' style=''>".$menu_item_title."</h2>\n";
+								}
+								else {
+									$db_menu .= "<a ".$menu_tags." style='padding: 0px 0px; border-style: none; background: none;'><h2 align='center' style=''>".$menu_item_title."</h2></a>\n";
+								}
 							}
 						}
 					}

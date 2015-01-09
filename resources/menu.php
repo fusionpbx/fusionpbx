@@ -77,4 +77,5 @@ require_once "resources/require.php";
 
 //testing
 	//echo $_SESSION["menu"];
+
 ?>

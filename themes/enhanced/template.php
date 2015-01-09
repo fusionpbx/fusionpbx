@@ -623,6 +623,7 @@ legend {
 	}
 
 	#menu h2{
+		color:#FFFFFF;
 		/*background:#222222 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
 		/*text-transform:uppercase*/
 		<?php

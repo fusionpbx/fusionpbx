@@ -632,6 +632,7 @@ legend {
 	}
 
 	#menu h2{
+		color:#FFFFFF;
 		font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 		font-weight: normal;
 		font-size: 12pt;
