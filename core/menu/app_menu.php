@@ -64,26 +64,24 @@
 		$apps[$x]['menu'][3]['groups'][] = "superadmin";
 	}
 
-	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/calls_active/calls_active_extensions.php")) {
-		$apps[$x]['menu'][4]['title']['en-us'] = "Status";
-		$apps[$x]['menu'][4]['title']['es-cl'] = "Estado";
-		$apps[$x]['menu'][4]['title']['de-de'] = "";
-		$apps[$x]['menu'][4]['title']['de-ch'] = "";
-		$apps[$x]['menu'][4]['title']['de-at'] = "";
-		$apps[$x]['menu'][4]['title']['fr-fr'] = "Etat";
-		$apps[$x]['menu'][4]['title']['fr-ca'] = "";
-		$apps[$x]['menu'][4]['title']['fr-ch'] = "";
-		$apps[$x]['menu'][4]['title']['pt-pt'] = "Estado";
-		$apps[$x]['menu'][4]['title']['pt-br'] = "";
-		$apps[$x]['menu'][4]['uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
-		$apps[$x]['menu'][4]['parent_uuid'] = "";
-		$apps[$x]['menu'][4]['category'] = "internal";
-		$apps[$x]['menu'][4]['path'] = "/app/calls_active/calls_active_extensions.php";
-		$apps[$x]['menu'][4]['order'] = "25";
-		$apps[$x]['menu'][4]['groups'][] = "user";
-		$apps[$x]['menu'][4]['groups'][] = "admin";
-		$apps[$x]['menu'][4]['groups'][] = "superadmin";
-	}
+	$apps[$x]['menu'][4]['title']['en-us'] = "Status";
+	$apps[$x]['menu'][4]['title']['es-cl'] = "Estado";
+	$apps[$x]['menu'][4]['title']['de-de'] = "";
+	$apps[$x]['menu'][4]['title']['de-ch'] = "";
+	$apps[$x]['menu'][4]['title']['de-at'] = "";
+	$apps[$x]['menu'][4]['title']['fr-fr'] = "Etat";
+	$apps[$x]['menu'][4]['title']['fr-ca'] = "";
+	$apps[$x]['menu'][4]['title']['fr-ch'] = "";
+	$apps[$x]['menu'][4]['title']['pt-pt'] = "Estado";
+	$apps[$x]['menu'][4]['title']['pt-br'] = "";
+	$apps[$x]['menu'][4]['uuid'] = "0438b504-8613-7887-c420-c837ffb20cb1";
+	$apps[$x]['menu'][4]['parent_uuid'] = "";
+	$apps[$x]['menu'][4]['category'] = "internal";
+	$apps[$x]['menu'][4]['path'] = "";
+	$apps[$x]['menu'][4]['order'] = "25";
+	$apps[$x]['menu'][4]['groups'][] = "user";
+	$apps[$x]['menu'][4]['groups'][] = "admin";
+	$apps[$x]['menu'][4]['groups'][] = "superadmin";
 
 	$apps[$x]['menu'][5]['title']['en-us'] = "Advanced";
 	$apps[$x]['menu'][5]['title']['es-cl'] = "Avanzado";
