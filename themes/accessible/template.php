@@ -384,6 +384,7 @@ table tr:last-child td:last-child {
 	}
 
 	#menu h2 {
+		color:#FFFFFF;
 		align: left;
 		/*text-transform:uppercase*/
 	}

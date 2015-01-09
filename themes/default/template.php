@@ -428,6 +428,7 @@ table tr:nth-last-child(-5) td:first-of-type {
 	}
 
 	#menu h2{
+		color:#FFFFFF;
 		/*background:#222222 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
 		/*text-transform:uppercase*/
 		width:118px;
