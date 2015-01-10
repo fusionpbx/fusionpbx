@@ -237,7 +237,7 @@ require_once "resources/require.php";
 					}
 
 				//write the provision files
-					if (strlen($_SESSION['switch']['provision']['dir'])) {
+					if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
 						require_once "app/provision/provision_write.php";
 					}
 
