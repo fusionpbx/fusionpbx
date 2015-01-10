@@ -41,7 +41,7 @@ require_once "resources/require.php";
 		$text[$key] = $value[$_SESSION['domain']['language']['code']];
 	}
 
-// check duplicate mac address
+//check duplicate mac address
 	if ($_GET["mac"] != '' && $_GET["mac"] != "000000000000") {
 		$sql = "select ";
 		$sql .= "d2.domain_name ";
@@ -152,22 +152,19 @@ require_once "resources/require.php";
 
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
-
 				//add domain_uuid to the array
-					if (!isset($_POST["domain_uuid"])) {
-						$_POST["domain_uuid"] = $_SESSION["domain_uuid"];
-					}
 					foreach ($_POST as $key => $value) {
 						if (is_array($value)) {
 							$y = 0;
 							foreach ($value as $k => $v) {
 								if (!isset($v["domain_uuid"])) {
-									$_POST[$key][$y]["domain_uuid"] = $_SESSION["domain_uuid"];
+									$_POST[$key][$y]["domain_uuid"] = $_POST["domain_uuid"];
 								}
 								$y++;
 							}
 						}
 					}
+
 				//array cleanup
 					$x = 0;
 					foreach ($_POST["device_lines"] as $row) {
@@ -240,7 +237,9 @@ require_once "resources/require.php";
 					}
 
 				//write the provision files
-					require_once "app/provision/provision_write.php";
+					if (strlen($_SESSION['switch']['provision']['dir'])) {
+						require_once "app/provision/provision_write.php";
+					}
 
 				//set the message
 					if (!isset($_SESSION['message'])) {
