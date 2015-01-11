@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014f
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -924,7 +924,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "  ".$text['label-caller_announce_frequency'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='queue_announce_frequency' maxlength='255' min='1' step='1' value='$queue_announce_frequency'>\n";
+	echo "  <input class='formfld' type='number' name='queue_announce_frequency' maxlength='255' min='0' step='1' value='$queue_announce_frequency'>\n";
 	echo "<br />\n";
 	echo $text['description-caller_announce_frequency']."\n";
 	echo "</td>\n";
