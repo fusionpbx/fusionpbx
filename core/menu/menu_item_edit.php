@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2014
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -418,7 +418,7 @@ else {
 
 	echo "<br />\n";
 	$sql = "SELECT * FROM v_groups ";
-	$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null ";
 	$sql .= "order by group_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
