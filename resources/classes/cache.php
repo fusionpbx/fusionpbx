@@ -3,14 +3,17 @@
 /**
  * cache class provides an abstracted cache
  * 
- * @method string send
+ * @method string set
+ * @method string get
+ * @method string delete
+ * @method string flush
  */
 class cache {
 
 	/**
-	 * @var string $type		type of cache current options memcache
+	 * @var string $zzz		description for the variable
 	 */
-	private $zzz;
+	//private $zzz;
 
 	/**
 	 * Called when the object is created
