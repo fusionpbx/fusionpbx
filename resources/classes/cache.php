@@ -98,5 +98,6 @@ class cache {
 				return false;
 			}
 	}
+}
 
 ?>
