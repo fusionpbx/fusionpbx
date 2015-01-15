@@ -32,7 +32,7 @@ class cache {
 	 * @var string $key		the cache id
 	 * @var string $value	string to be cached
 	 */
-	private function set($key, $value) {
+	public function set($key, $value) {
 		//send a custom event
 			
 		//run the memcache
@@ -50,7 +50,7 @@ class cache {
 	 * Get a specific item from the cache
 	 * @var string $key		cache id
 	 */
-	private function get($key) {
+	public function get($key) {
 		//send a custom event
 			
 		//run the memcache
@@ -68,7 +68,7 @@ class cache {
 	 * Delete a specific item from the cache
 	 * @var string $key		cache id
 	 */
-	private function delete($key) {
+	public function delete($key) {
 		//send a custom event
 			
 		//run the memcache
@@ -85,7 +85,7 @@ class cache {
 	/**
 	 * Delete the entire cache
 	 */
-	private function flush() {
+	public function flush() {
 		//send a custom event
 			
 		//run the memcache
