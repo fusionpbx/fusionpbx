@@ -39,7 +39,7 @@ class cache {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				$command = "memcache set ".$key." ".$value;
-				$return = event_socket_request($fp, 'api '.$command);
+				return event_socket_request($fp, 'api '.$command);
 			}
 			else {
 				return false;
@@ -57,7 +57,7 @@ class cache {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				$command = "memcache get ".$key;
-				$return = event_socket_request($fp, 'api '.$command);
+				return event_socket_request($fp, 'api '.$command);
 			}
 			else {
 				return false;
@@ -75,7 +75,7 @@ class cache {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				$command = "memcache delete ".$key;
-				$return = event_socket_request($fp, 'api '.$command);
+				return event_socket_request($fp, 'api '.$command);
 			}
 			else {
 				return false;
@@ -92,7 +92,7 @@ class cache {
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
 				$command = "memcache flush";
-				$return = event_socket_request($fp, 'api '.$command);
+				return event_socket_request($fp, 'api '.$command);
 			}
 			else {
 				return false;
