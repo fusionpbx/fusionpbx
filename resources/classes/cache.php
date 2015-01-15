@@ -11,11 +11,6 @@
 class cache {
 
 	/**
-	 * @var string $zzz		description for the variable
-	 */
-	//private $zzz;
-
-	/**
 	 * Called when the object is created
 	 */
 	public function __construct() {
