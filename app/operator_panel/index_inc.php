@@ -70,9 +70,11 @@ if (sizeof($_SESSION['user']['extensions']) > 0) {
 	$status_options[1]['status'] = "Available";
 	$status_options[1]['label'] = $text['label-status_available'];
 	$status_options[1]['style'] = "op_btn_status_available";
-	$status_options[2]['status'] = "Available (On Demand)";
-	$status_options[2]['label'] = $text['label-status_on_demand'];
-	$status_options[2]['style'] = "op_btn_status_available_on_demand";
+	if (permission_exists('operator_panel_on_demand')) {
+		$status_options[2]['status'] = "Available (On Demand)";
+		$status_options[2]['label'] = $text['label-status_on_demand'];
+		$status_options[2]['style'] = "op_btn_status_available_on_demand";
+	}
 	$status_options[3]['status'] = "On Break";
 	$status_options[3]['label'] = $text['label-status_on_break'];
 	$status_options[3]['style'] = "op_btn_status_on_break";
