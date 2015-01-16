@@ -267,7 +267,8 @@ function build_menu() {
 }
 
 
-function event_socket_create($host, $port, $password){
+
+function event_socket_create($host, $port, $password) {
 	$fp = fsockopen($host, $port, $errno, $errdesc, 3);
 	socket_set_blocking($fp,false);
 
@@ -293,23 +294,28 @@ function event_socket_create($host, $port, $password){
 
 function event_socket_request($fp, $cmd) {
 	if ($fp) {
-		fputs($fp, $cmd."\n\n");
+		$cmd_array = explode("\n",$cmd);
+		foreach ($cmd_array as &$value) {
+		    fputs($fp, $value."\n");
+		}
+		fputs($fp, "\n"); //second line feed to end the headers
+		
 		usleep(100); //allow time for reponse
 
 		$response = "";
 		$i = 0;
-		$contentlength = 0;
+		$content_length = 0;
 		while (!feof($fp)) {
 			$buffer = fgets($fp, 4096);
-			if ($contentlength > 0) {
+			if ($content_length > 0) {
 				$response .= $buffer;
 			}
 
-			if ($contentlength == 0) { //if the content has length don't process again
+			if ($content_length == 0) { //if the content has length don't process again
 				if (strlen(trim($buffer)) > 0) { //run only if buffer has content
-					$temparray = explode(":", trim($buffer));
-					if ($temparray[0] == "Content-Length") {
-						$contentlength = trim($temparray[1]);
+					$array = explode(":", trim($buffer));
+					if ($array[0] == "Content-Length") {
+						$content_length = trim($array[1]);
 					}
 				}
 			}
@@ -317,11 +323,11 @@ function event_socket_request($fp, $cmd) {
 			usleep(20); //allow time for reponse
 
 			//prevent an endless loop //optional because of script timeout
-			if ($i > 1000000) { break; }
+			if ($i > 1000) { break; }
 
-			if ($contentlength > 0) { //is contentlength set
+			if ($content_length > 0) { //is content_length set
 				//stop reading if all content has been read.
-				if (strlen($response) >= $contentlength) {
+				if (strlen($response) >= $content_length) {
 					break;
 				}
 			}
