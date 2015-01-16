@@ -85,6 +85,10 @@ if (strlen($id) > 0) {
 		$db->query($sql);
 		unset($sql);
 
+	//clear the cache
+		$cache = new cache;
+		$cache->delete("memcache delete dialplan:".$_SESSION["context"]);
+
 	//syncrhonize configuration
 		save_dialplan_xml();
 
@@ -92,8 +96,8 @@ if (strlen($id) > 0) {
 		$_SESSION["reload_xml"] = true;
 }
 
-
-$_SESSION["message"] = $text['message-delete'];
-header("Location: call_center_queues.php");
-return;
+//redirect the browser
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: call_center_queues.php");
+	return;
 ?>

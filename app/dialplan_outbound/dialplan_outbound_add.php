@@ -45,7 +45,6 @@ else {
 //show the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-dialplan-outbound-add'];
-
 	require_once "resources/paging.php";
 
 //get the http post values and set theme as php variables
@@ -62,11 +61,11 @@ else {
 			$gateway = check_str($_POST["gateway"]);
 			$limit = check_str($_POST["limit"]);
 			$accountcode = check_str($_POST["accountcode"]);
-			
 			$toll_allow_enable = check_str($_POST["toll_allow_enabled"]);
+
 		//set default to enabled
 			if (strlen($toll_allow_enable) == 0) { $toll_allow_enable = "false"; }
-			
+
 		//set the default type
 			$gateway_type = 'gateway';
 			$gateway_2_type = 'gateway';
@@ -265,13 +264,13 @@ else {
 						$label = $dialplan_expression;
 						$abbrv = filename_safe($dialplan_expression);
 					}
-					
+
 					// Use as outbound prefix all digits beetwen ^ and first (
 					$tmp_prefix = preg_replace("/^\^(\d{1,})\(.*/", "$1", $dialplan_expression);
 					$tmp_prefix == $dialplan_expression
 							? $outbound_prefix = ""
 							: $outbound_prefix = $tmp_prefix;
-												
+
 					if ($gateway_type == "gateway") {
 						$dialplan_name = $gateway_name.".".$abbrv;
 						$action_data = "sofia/gateway/".$gateway_uuid."/".$prefix_number."\$1";
@@ -532,19 +531,17 @@ else {
 			} //end for each
 		}
 
-		//delete the dialplan context from memcache
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_cmd = "memcache delete dialplan:".$dialplan_context;
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-			}
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$dialplan_context);
 
 		//synchronize the xml config
 			save_dialplan_xml();
 
-		$_SESSION["message"] = $text['message-update'];
-		header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
-		return;
+		//redirect the browser
+			$_SESSION["message"] = $text['message-update'];
+			header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3");
+			return;
 	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 ?>
 

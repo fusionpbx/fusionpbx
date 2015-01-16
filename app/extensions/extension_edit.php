@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2014 All Rights Reserved.
+	Copyright (C) 2008-2015 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -659,12 +659,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$ext = new extension;
 					}
 
-				//delete extension from memcache
-					$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-					if ($fp) {
-						$switch_cmd = "memcache delete directory:".$extension."@".$user_context;
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					}
+				//clear the cache
+					$cache = new cache;
+					$cache->delete("directory:".$extension."@".$user_context);
 			}
 
 		//show the action and redirect the user

@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -45,6 +45,20 @@ if (count($_GET)>0) {
 }
 
 if (strlen($id)>0) {
+
+	//get the details fo the sip profile
+		$sql = "select * from v_sip_profiles ";
+		$sql .= "where sip_profile_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll();
+		foreach ($result as &$row) {
+			$sip_profile_name = $row["sip_profile_name"];
+			$sip_profile_hostname = $row["sip_profile_hostname"];
+			$sip_profile_description = $row["sip_profile_description"];
+		}
+		unset ($prep_statement);
+
 	//delete the sip profile settings
 		$sql = "delete from v_sip_profile_settings ";
 		$sql .= "where sip_profile_uuid = '$id' ";
@@ -69,12 +83,18 @@ if (strlen($id)>0) {
 	//apply settings reminder
 		$_SESSION["reload_xml"] = true;
 
-	//delete the sip profiles from memcache
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$switch_cmd = "memcache delete configuration:sofia.conf";
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+	//get the hostname
+		if ($sip_profile_name == nul) {
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$switch_cmd = "hostname";
+				$sip_profile_name = event_socket_request($fp, 'api '.$switch_cmd);
+			}
 		}
+
+	//clear the cache
+		$cache = new cache;
+		$cache->delete("configuration:sofia.conf:".$sip_profile_name);
 }
 
 //redirect the browser

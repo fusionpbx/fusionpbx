@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -46,7 +46,7 @@ else {
 	}
 
 //delete the fax extension
-	if (strlen($fax_uuid)>0) {
+	if (strlen($fax_uuid) > 0) {
 
 		//get the dialplan uuid
 			$sql = "select * from v_fax ";
@@ -87,12 +87,9 @@ else {
 		//apply settings reminder
 			$_SESSION["reload_xml"] = true;
 
-		//delete the dialplan context from memcache
-			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-			if ($fp) {
-				$switch_cmd .= "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
-				$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-			}
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$_SESSION["context"]);
 	}
 
 //redirect the user
