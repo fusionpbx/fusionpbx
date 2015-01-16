@@ -60,8 +60,8 @@ else {
 
 		//memcache flush
 			if ($cmd == "api memcache flush") {
-				$response = event_socket_request($fp, $cmd);
-				unset($cmd);
+				$cache = new cache;
+				$cache->flush();
 			}
 
 		//reloadacl
