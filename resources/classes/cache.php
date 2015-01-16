@@ -70,7 +70,16 @@ class cache {
 	 */
 	public function delete($key) {
 		//send a custom event
-			
+			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+			if ($fp) {
+				$event = "sendevent CUSTOM\n";
+				$event .= "Event-Name: MEMCACHE\n";
+				$event .= "Event-Subclass: delete \n";
+				$event .= "API-Command: memcache\n";
+				$event .= "API-Command-Argument: delete ".$key."\n";
+				echo event_socket_request($fp, $event);
+			}
+
 		//run the memcache
 			$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 			if ($fp) {
