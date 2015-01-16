@@ -78,12 +78,9 @@ if (strlen($id)>0) {
 		$db->query($sql);
 		unset($sql);
 
-	//delete the dialplan context from memcache
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$switch_cmd = "memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name'];
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-		}
+	//clear the cache
+		$cache = new cache;
+		$cache->delete("dialplan:".$_SESSION["context"]);
 
 	//syncrhonize configuration
 		save_dialplan_xml();

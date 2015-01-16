@@ -372,12 +372,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
-	//delete extension from memcache
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$switch_cmd = "memcache delete directory:".$extension."@".$_SESSION['domain_name'];
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-		}
+	//clear the cache
+		$cache = new cache;
+		$cache->delete("memcache delete directory:".$extension."@".$_SESSION['domain_name']);
 
 	//redirect the user
 		$_SESSION["message"] = $text['confirm-update'];

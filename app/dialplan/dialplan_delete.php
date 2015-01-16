@@ -100,14 +100,11 @@ else {
 		//strip duplicate contexts
 			$dialplan_contexts = array_unique($dialplan_contexts, SORT_STRING);
 
-		//delete the dialplan contexts from memcache
+		//clear the cache
+			$cache = new cache;
 			if (sizeof($dialplan_contexts) > 0) {
-				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-				if ($fp) {
-					foreach($dialplan_contexts as $dialplan_context) {
-						$switch_cmd = "memcache delete dialplan:".$dialplan_context;
-						$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-					}
+				foreach($dialplan_contexts as $dialplan_context) {
+					$cache->delete("dialplan:".$dialplan_context);
 				}
 			}
 	}
