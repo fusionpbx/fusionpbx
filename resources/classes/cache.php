@@ -74,7 +74,7 @@ class cache {
 			if ($fp) {
 				$event = "sendevent CUSTOM\n";
 				$event .= "Event-Name: MEMCACHE\n";
-				$event .= "Event-Subclass: delete \n";
+				$event .= "Event-Subclass: delete\n";
 				$event .= "API-Command: memcache\n";
 				$event .= "API-Command-Argument: delete ".$key."\n";
 				echo event_socket_request($fp, $event);
