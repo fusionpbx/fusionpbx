@@ -359,6 +359,14 @@
 								voicemail_id_copy = result["voicemail_id"];
 							end);
 
+						--make sure the voicemail directory exists
+							mkdir(voicemail_dir.."/"..voicemail_id_copy);
+
+						--copy the voicemail to each destination
+							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
+								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..uuid.."."..vm_message_ext);
+							end
+
 						--set the message waiting event
 							if (tonumber(message_length) > 2) then
 								local event = freeswitch.Event("message_waiting");
