@@ -156,8 +156,7 @@ if ($domains_processed == 1) {
 
 	//iterate and add each, if necessary
 		foreach ($array as $index => $default_settings) {
-
-		//add theme default settings
+			//add theme default settings
 			$sql = "select count(*) as num_rows from v_default_settings ";
 			$sql .= "where default_setting_category = 'theme' ";
 			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
@@ -171,11 +170,9 @@ if ($domains_processed == 1) {
 					$orm->name('default_settings');
 					$orm->save($array[$index]);
 					$message = $orm->message;
-					//print_r($message);
 				}
 				unset($row);
 			}
-
 		}
 
 	//define secondary background color array
