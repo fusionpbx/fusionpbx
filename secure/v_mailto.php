@@ -116,13 +116,13 @@
 
 //prepare smtp server settings
 	// load default smtp settings
-	$smtp['host'] 		= $_SESSION['email']['smtp_host']['var'];
+	$smtp['host'] 		= (strlen($_SESSION['email']['smtp_host']['var'])?$_SESSION['email']['smtp_host']['var']:'127.0.0.1');
 	$smtp['secure'] 	= $_SESSION['email']['smtp_secure']['var'];
 	$smtp['auth'] 		= $_SESSION['email']['smtp_auth']['var'];
 	$smtp['username'] 	= $_SESSION['email']['smtp_username']['var'];
 	$smtp['password'] 	= $_SESSION['email']['smtp_password']['var'];
-	$smtp['from'] 		= $_SESSION['email']['smtp_from']['var'];
-	$smtp['from_name'] 	= $_SESSION['email']['smtp_from_name']['var'];
+	$smtp['from'] 		= (strlen($_SESSION['email']['smtp_from']['var'])?$_SESSION['email']['smtp_from']['var']:'fusionpbx@example.com');
+	$smtp['from_name'] 	= (strlen($_SESSION['email']['smtp_from_name']['var'])?$_SESSION['email']['smtp_from_name']['var']:'FusionPBX Voicemail');
 
 	// overwrite with domain-specific smtp server settings, if any
 	if ($headers["X-FusionPBX-Domain-UUID"] != '') {
