@@ -86,6 +86,26 @@ else {
 			$tmp_domain = substr($name, -strlen($_SESSION['domain_name']));
 			if ($tmp_domain == $_SESSION['domain_name']) {
 				$conference_name = substr($name, 0, strlen($name) - strlen('-'.$_SESSION['domain_name']));
+
+				if (is_uuid($conference_name)) {
+					$sql = "select * from v_meetings ";
+					$sql .= "where meeting_uuid = '$conference_name'; ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll();
+					foreach ($result as &$row) {
+						$moderator_pin = $row["moderator_pin"];
+						$participant_pin = $row["participant_pin"];
+						if (strlen($conference_name) > 0) {
+							$conference_name = $row["description"];
+						}
+						else {
+							$conference_name = $row["participant_pin"];
+						}
+					}
+					unset ($prep_statement);
+				}
+
 				$conference_display_name = str_replace("-", " ", $conference_name);
 				$conference_display_name = str_replace("_", " ", $conference_display_name);
 
