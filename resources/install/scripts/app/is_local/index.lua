@@ -55,7 +55,6 @@
 		--freeswitch.consoleLog("notice", "SQL:" .. sql .. "\n");
 		assert(dbh:query(sql, function(row)
 
-
 			--set the outbound caller id
 				if (outbound_caller_id_name ~= nil) then
 					session:execute("export", "caller_id_name="..outbound_caller_id_name);
