@@ -293,7 +293,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-phone_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='number' name='phone_number' maxlength='255' min='0' step='1' value=\"$phone_number\">\n";
+	echo "	<input class='formfld' type='text' name='phone_number' maxlength='255' min='0' step='1' value=\"$phone_number\">\n";
 	echo "<br />\n";
 	echo $text['description-phone_number']."\n";
 	echo "</td>\n";
