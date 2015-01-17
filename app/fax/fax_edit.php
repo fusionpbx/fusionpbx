@@ -210,6 +210,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			return;
 		}
 
+	//replace the spaces with a dash
+		$fax_name = str_replace(" ", "-", $fax_name);
+
 	//escape the commas with a backslash and remove the spaces
 		$fax_email = str_replace(" ", "", $fax_email);
 		$fax_email = str_replace(",", "\\,", $fax_email);
@@ -571,6 +574,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset ($prep_statement);
 	}
+
+//replace the dash with a space
+	$fax_name = str_replace("-", " ", $fax_name);
 
 //remove the backslash
 	$fax_email = str_replace("\\", "", $fax_email);
