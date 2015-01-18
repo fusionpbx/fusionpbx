@@ -423,13 +423,18 @@ else {
 	echo "	<td class=\"vtable\" align='left'>\n";
 	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
 	echo "		<option value=''></option>\n";
-	foreach ($languages as $key => $value) {
-		if ($key == $user_settings['domain']['language']['code']) {
-			echo "		<option value='$key' selected='selected'>$key</option>\n";
-		}
-		else {
-			echo "		<option value='$key'>$key</option>\n";
-		}
+	//get all language codes from database
+	$sql = "select * from v_languages order by language asc";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$language_codes[$row["code"]] = $row["language"];
+	}
+	unset($prep_statement, $result, $row);
+	foreach ($_SESSION['app']['languages'] as $code) {
+		$selected = ($code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
+		echo "	<option value='".$code."' ".$selected.">".$language_codes[$code]." [".$code."]</option>\n";
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
