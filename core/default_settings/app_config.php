@@ -73,4 +73,17 @@
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
+		$y = 1; //table array index
+		$z = 0; //field array index
+		$apps[$x]['db'][$y]['table'] = "v_translate_languages";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "language";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The language name/title.";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "code";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['key']['type'] = "primary";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "The language code.";
+		$z++;
+
 ?>
