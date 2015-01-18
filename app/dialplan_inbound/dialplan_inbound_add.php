@@ -445,6 +445,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				unset ($prep_statement);
 
+			//add set codec_string=PCMU,PCMA
+				$dialplan_detail_uuid = uuid();
+				$sql = "insert into v_dialplan_details ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "dialplan_uuid, ";
+				$sql .= "dialplan_detail_uuid, ";
+				$sql .= "dialplan_detail_tag, ";
+				$sql .= "dialplan_detail_type, ";
+				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_order ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'$dialplan_uuid', ";
+				$sql .= "'$dialplan_detail_uuid', ";
+				$sql .= "'action', ";
+				$sql .= "'set', ";
+				$sql .= "'codec_string=PCMU,PCMA', ";
+				$sql .= "'73' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
 			//add set tone_detect_hits=1
 				$dialplan_detail_uuid = uuid();
 				$sql = "insert into v_dialplan_details ";
@@ -541,6 +566,31 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'sleep', ";
 				$sql .= "'3000', ";
 				$sql .= "'90' ";
+				$sql .= ")";
+				$db->exec(check_sql($sql));
+				unset($sql);
+
+			//set codec_string=${ep_codec_string}
+				$dialplan_detail_uuid = uuid();
+				$sql = "insert into v_dialplan_details ";
+				$sql .= "(";
+				$sql .= "domain_uuid, ";
+				$sql .= "dialplan_uuid, ";
+				$sql .= "dialplan_detail_uuid, ";
+				$sql .= "dialplan_detail_tag, ";
+				$sql .= "dialplan_detail_type, ";
+				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_order ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "(";
+				$sql .= "'$domain_uuid', ";
+				$sql .= "'$dialplan_uuid', ";
+				$sql .= "'$dialplan_detail_uuid', ";
+				$sql .= "'action', ";
+				$sql .= "'export', ";
+				$sql .= "'codec_string=\${ep_codec_string}', ";
+				$sql .= "'93' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
 				unset($sql);
