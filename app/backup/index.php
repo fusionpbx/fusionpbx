@@ -35,10 +35,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //download the backup
 	if ($_GET['a'] == "download" && permission_exists('backup_download')) {

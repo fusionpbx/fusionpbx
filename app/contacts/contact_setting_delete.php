@@ -29,10 +29,8 @@ require_once "resources/require.php";
 require_once "resources/check_auth.php";
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //set the variables
 	if (count($_GET) > 0) {

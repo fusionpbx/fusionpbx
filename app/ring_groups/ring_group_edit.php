@@ -37,10 +37,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //delete the user from v_ring_group_users
 	if ($_GET["a"] == "delete" && strlen($_REQUEST["user_uuid"]) > 0 && permission_exists("ring_group_edit")) {

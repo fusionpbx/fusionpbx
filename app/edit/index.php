@@ -36,10 +36,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //set the directory
 	$_SESSION["app"]["edit"]["dir"] = $_GET["dir"];

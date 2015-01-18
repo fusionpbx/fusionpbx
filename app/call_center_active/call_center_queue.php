@@ -35,18 +35,17 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
-require_once "resources/header.php";
-$document['title'] = $text['title-active_call_center'];
+//includes and title
+	require_once "resources/header.php";
+	$document['title'] = $text['title-active_call_center'];
+	require_once "resources/paging.php";
 
-require_once "resources/paging.php";
-
-$order_by = $_GET["order_by"];
-$order = $_GET["order"];
+//get the variables
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";

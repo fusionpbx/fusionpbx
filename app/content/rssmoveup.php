@@ -37,10 +37,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //move down more than one level at a time
 //update v_rss set rss_order = (rss_order+1) where rss_order > 2 or rss_order = 2

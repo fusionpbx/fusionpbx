@@ -39,11 +39,8 @@ else {
 	$order = check_str($_GET["order"]);
 
 //add multi-lingual support
-	unset($text);
-	require_once "app/calls/app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //begin the content
 	require_once "resources/header.php";

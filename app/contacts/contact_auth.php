@@ -40,10 +40,8 @@ exit;
 */
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 
 $_SESSION['contact_auth']['source'] = ($_SESSION['contact_auth']['source'] == '') ? $_REQUEST['source'] : $_SESSION['contact_auth']['source'];

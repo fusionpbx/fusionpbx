@@ -35,63 +35,63 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	$language = new text;
+	$text = $language->get();
+
+//get the id
+	if (count($_GET)>0) {
+		$id = check_str($_GET["id"]);
 	}
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-}
+//delete the records
+	if (strlen($id) > 0) {
 
-if (strlen($id)>0) {
+		//get the dialplan uuid
+			$sql = "select * from v_conference_centers ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and conference_center_uuid = '$id' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
+				$dialplan_uuid = $row['dialplan_uuid'];
+			}
 
-	//get the dialplan uuid
-		$sql = "select * from v_conference_centers ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_center_uuid = '$id' ";
-		$prep_statement = $db->prepare($sql);
-		$prep_statement->execute();
-		while($row = $prep_statement->fetch(PDO::FETCH_ASSOC)) {
-			$dialplan_uuid = $row['dialplan_uuid'];
-		}
+		//delete the conference center
+			$sql = "delete from v_conference_centers ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and conference_center_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
 
-	//delete the conference center
-		$sql = "delete from v_conference_centers ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and conference_center_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
+		//delete the dialplan entry
+			$sql = "delete from v_dialplans ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+			$db->query($sql);
+			unset($sql);
 
-	//delete the dialplan entry
-		$sql = "delete from v_dialplans ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		$db->query($sql);
-		unset($sql);
+		//delete the dialplan details
+			$sql = "delete from v_dialplan_details ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+			$db->query($sql);
+			unset($sql);
 
-	//delete the dialplan details
-		$sql = "delete from v_dialplan_details ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-		$db->query($sql);
-		unset($sql);
+		//clear the cache
+			$cache = new cache;
+			$cache->delete("dialplan:".$_SESSION["context"]);
 
-	//clear the cache
-		$cache = new cache;
-		$cache->delete("dialplan:".$_SESSION["context"]);
+		//syncrhonize configuration
+			save_dialplan_xml();
 
-	//syncrhonize configuration
-		save_dialplan_xml();
+		//apply settings reminder
+			$_SESSION["reload_xml"] = true;
+	}
 
-	//apply settings reminder
-		$_SESSION["reload_xml"] = true;
-}
-
-
-$_SESSION["message"] = $text['message-delete'];
-header("Location: conference_centers.php");
-return;
+//redirect the browser
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: conference_centers.php");
+	return;
 
 ?>

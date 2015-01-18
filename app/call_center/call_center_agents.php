@@ -35,15 +35,13 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
-require_once "resources/header.php";
-$document['title'] = $text['title-call_center_agents'];
-
-require_once "resources/paging.php";
+//includes and title
+	require_once "resources/header.php";
+	$document['title'] = $text['title-call_center_agents'];
+	require_once "resources/paging.php";
 
 //get http values and set them to php variables
 	$order_by = $_GET["order_by"];

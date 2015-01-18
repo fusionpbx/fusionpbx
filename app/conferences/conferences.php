@@ -35,13 +35,12 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
-	}
-    
-require_once "resources/header.php";
-require_once "resources/paging.php";
+	$language = new text;
+	$text = $language->get();
+
+//includes
+	require_once "resources/header.php";
+	require_once "resources/paging.php";
 
 //get variables used to control the order
 	$order_by = $_GET["order_by"];

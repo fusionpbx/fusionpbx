@@ -38,12 +38,8 @@ require_once "resources/check_auth.php";
 	}
 
 //add multi-lingual support
-	if (!is_array($text)) {
-		require_once "app_languages.php";
-		foreach($text as $key => $value) {
-			$text[$key] = $value[$_SESSION['domain']['language']['code']];
-		}
-	}
+	$language = new text;
+	$text = $language->get();
 
 //request profile
 	$sip_profile_name = trim($_REQUEST["profile"]);

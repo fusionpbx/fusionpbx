@@ -37,17 +37,13 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 require_once "resources/header.php";
 
 $order_by = $_GET["order_by"];
 $order = $_GET["order"];    
-
-
 
 echo "<div align='center'>";
 echo "<table border='0' cellpadding='0' cellspacing='2'>\n";

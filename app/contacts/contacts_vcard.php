@@ -37,12 +37,8 @@ else {
 if (count($_GET)>0) {
 
 	//add multi-lingual support
-		if ($_GET['type'] == 'download' || $_GET['type'] == 'html') {
-			require_once "app_languages.php";
-			foreach($text as $key => $value) {
-				$text[$key] = $value[$_SESSION['domain']['language']['code']];
-			}
-		}
+		$language = new text;
+		$text = $language->get();
 
 	//create the vcard object
 		require_once "resources/classes/vcard.php";

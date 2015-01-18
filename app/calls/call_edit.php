@@ -26,7 +26,6 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-require_once "app_languages.php";
 if (permission_exists('follow_me') || permission_exists('call_forward') || permission_exists('do_not_disturb')) {
 	//access granted
 }
@@ -36,9 +35,8 @@ else {
 }
 
 //add multi-lingual support
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //define the destination_select function
 	function destination_select($select_name, $select_value, $select_default) {
