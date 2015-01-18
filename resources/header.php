@@ -130,4 +130,8 @@ require_once "resources/require.php";
 //start the output buffer
 	ob_start();
 
+//for translate tool (if available)
+	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/translate")) {
+		require_once("app/translate/translate_header.php");
+	}
 ?>
