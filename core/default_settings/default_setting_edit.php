@@ -17,7 +17,7 @@
 
  The Initial Developer of the Original Code is
  Mark J Crane <markjcrane@fusionpbx.com>
- Portions created by the Initial Developer are Copyright (C) 2008-2012
+ Portions created by the Initial Developer are Copyright (C) 2008-2014
  the Initial Developer. All Rights Reserved.
 
  Contributor(s):
@@ -316,12 +316,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		</select>\n";
 	} elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
-		foreach ($languages as $key => $value) {
+		foreach ($_SESSION['app']['languages'] as $key => $value) {
 			if ($row['default_setting_value'] == $key) {
-				echo "		<option value='$key' selected='selected'>$key</option>\n";
+				echo "		<option value='$value' selected='selected'>$value</option>\n";
 			}
 			else {
-				echo "		<option value='$key'>$key</option>\n";
+				echo "		<option value='$value'>$value</option>\n";
 			}
 		}
 		echo "		</select>\n";
