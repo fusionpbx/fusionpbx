@@ -31,8 +31,8 @@ class text {
 	 */
 	public function get($language_code = null, $app_path = null) {
 		//get the app_languages.php
-			if (isset($app_path)) {
-				require glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/".$app_path."/app_{languages}.php",GLOB_BRACE);
+			if ($app_path != null) {
+				require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
 			}
 			else {
 				require getcwd().'/app_languages.php';
