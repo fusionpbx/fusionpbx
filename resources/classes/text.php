@@ -2,7 +2,7 @@
 
 /**
  * Get the text for the correct translation
- * 
+ *
  * @method array get
  */
 class text {
@@ -32,10 +32,10 @@ class text {
 	public function get($language_code = null, $app_path = null) {
 		//get the app_languages.php
 			if (isset($app_path)) {
-				require_once glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/".$app_path."/app_{languages}.php",GLOB_BRACE);
+				require glob($_SERVER["DOCUMENT_ROOT"] . PROJECT_PATH . "/".$app_path."/app_{languages}.php",GLOB_BRACE);
 			}
 			else {
-				require_once getcwd().'/app_languages.php';
+				require getcwd().'/app_languages.php';
 			}
 
 		//get the available languages
@@ -49,7 +49,7 @@ class text {
 			}
 			$_SESSION['app']['languages'] = array_unique($app_languages);
 
-		//add multi-lingual support
+		//reduce to specific language
 			if ($language_code != 'all') {
 				foreach($text as $key => $value) {
 					if ($language_code == null) {
