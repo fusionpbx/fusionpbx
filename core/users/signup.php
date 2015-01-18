@@ -37,19 +37,18 @@ require_once "resources/require.php";
 	}
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
-$username = check_str($_POST["username"]);
-$password = check_str($_POST["password"]);
-$confirmpassword = check_str($_POST["confirmpassword"]);
-$group_uuid_name = check_str($_POST["group_uuid_name"]);
-$user_email = check_str($_POST["user_email"]);
-$contact_organization = check_str($_POST["contact_organization"]);
-$contact_name_given = check_str($_POST["contact_name_given"]);
-$contact_name_family = check_str($_POST["contact_name_family"]);
+//get the values from http and set as variables
+	$username = check_str($_POST["username"]);
+	$password = check_str($_POST["password"]);
+	$confirmpassword = check_str($_POST["confirmpassword"]);
+	$group_uuid_name = check_str($_POST["group_uuid_name"]);
+	$user_email = check_str($_POST["user_email"]);
+	$contact_organization = check_str($_POST["contact_organization"]);
+	$contact_name_given = check_str($_POST["contact_name_given"]);
+	$contact_name_family = check_str($_POST["contact_name_family"]);
 
 if ($group_uuid_name != '') {
 	$group_data = explode('|', $group_uuid_name);

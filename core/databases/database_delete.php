@@ -35,26 +35,27 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	$language = new text;
+	$text = $language->get();
+
+//get the id
+	if (count($_GET) > 0) {
+		$id = check_str($_GET["id"]);
 	}
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-}
+//delete the records
+	if (strlen($id) > 0) {
+		$sql = "";
+		$sql .= "delete from v_databases ";
+		$sql .= "where database_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($sql);
+	}
 
-if (strlen($id)>0) {
-	$sql = "";
-	$sql .= "delete from v_databases ";
-	$sql .= "where database_uuid = '$id' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	unset($sql);
-}
-
-$_SESSION["message"] = $text['message-delete'];
-header("Location: databases.php");
-return;
+//redirect the browser
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: databases.php");
+	return;
 
 ?>
