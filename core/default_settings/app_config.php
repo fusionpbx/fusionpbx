@@ -76,7 +76,7 @@
 		$y = 1; //table array index
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = "v_languages";
-		$apps[$x]['db'][$y]['fields'][$z]['name'] = "languages_uuid";
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "language_uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "uuid";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "char(36)";
