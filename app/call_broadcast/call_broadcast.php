@@ -26,7 +26,6 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-require_once "app_languages.php";
 if (permission_exists('call_broadcast_view')) {
 	//access granted
 }

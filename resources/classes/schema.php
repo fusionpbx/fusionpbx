@@ -446,20 +446,18 @@ include "root.php";
 
 		//datatase schema
 			public function schema ($format) {
-			
+
 				//set the global variable
 					global $db, $db_type, $db_name, $db_username, $db_password;
 					global $db_host, $db_path, $db_port, $upgrade_data_types, $text;
-				
+
 				//get the PROJECT PATH
 					include "root.php";
 
 				//add multi-lingual support
 					if (!isset($text)) {
-						require "core/upgrade/app_languages.php";
-						foreach($text as $key => $value) {
-							$text[$key] = $value[$_SESSION['domain']['language']['code']];
-						}
+						$language = new text;
+						$text = $language->get(null,'core/upgrade');
 					}
 
 				//PHP PDO check if table or column exists

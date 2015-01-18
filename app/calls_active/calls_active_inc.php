@@ -26,7 +26,6 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-include "app_languages.php";
 if (permission_exists('call_active_view')) {
 	//access granted
 }
@@ -47,7 +46,7 @@ else {
 
 //if the connnection is available then run it and return the results
 	if (!$fp) {
-		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>"; 
+		$msg = "<div align='center'>".$text['confirm-socket']."<br /></div>";
 		echo "<div align='center'>\n";
 		echo "<table width='40%'>\n";
 		echo "<tr>\n";
@@ -60,7 +59,7 @@ else {
 		echo "</div>\n";
 	}
 	else {
-		//send the event socket command 
+		//send the event socket command
 			$json = trim(event_socket_request($fp, 'api '.$switch_cmd));
 		//set the array
 			$results = json_decode($json, "true");

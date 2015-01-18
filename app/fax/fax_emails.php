@@ -41,10 +41,6 @@ unset($sql, $prep_statement);
 
 if (sizeof($result) != 0) {
 
-	//load language file
-	require_once "app_languages.php";
-	$text_original = $text;
-
 	//load default settings
 	$default_settings = load_default_settings();
 
