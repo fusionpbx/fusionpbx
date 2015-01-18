@@ -35,18 +35,17 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
-require_once "resources/header.php";
-$document['title'] = $text['title-modules'];
+//get includes and the title
+	require_once "resources/header.php";
+	$document['title'] = $text['title-modules'];
+	require_once "resources/paging.php";
 
-require_once "resources/paging.php";
-
-$order_by = $_GET["order_by"];
-$order = $_GET["order"];
+//get the http values ans set as variables
+	$order_by = $_GET["order_by"];
+	$order = $_GET["order"];
 
 $fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 if (strlen($_GET["a"]) > 0) {

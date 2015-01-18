@@ -37,10 +37,8 @@ else {
 }
 
 //add multi-lingual support
-	include "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 $activity = get_call_activity();
 

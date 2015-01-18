@@ -36,15 +36,13 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
-require_once "resources/header.php";
-$document['title'] = $text['title-queue_add'];
-
-require_once "resources/paging.php";
+//includes and title
+	require_once "resources/header.php";
+	$document['title'] = $text['title-queue_add'];
+	require_once "resources/paging.php";
 
 //get http values and set them as variables
 	if (count($_POST)>0) {

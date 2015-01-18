@@ -36,9 +36,8 @@ else {
 }
 
 //add multi-lingual support
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];                
-	}
+	$language = new text;
+	$text = $language->get();
 
 //set the command
 	$switch_cmd = 'show channels as json';

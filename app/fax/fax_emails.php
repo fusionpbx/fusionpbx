@@ -142,9 +142,8 @@ if (sizeof($result) != 0) {
 				if ($sender_authorized) {
 
 					//add multi-lingual support
-					foreach($text_original as $key => $value) {
-						$text[$key] = $value[$_SESSION['domain']['language']['code']];
-					}
+					$language = new text;
+					$text = $language->get();
 
 					//sent sender address (used in api call)
 					$mailto_address_user = $metadata[0]['from'];

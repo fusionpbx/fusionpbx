@@ -41,10 +41,8 @@ if (!$included) {
 	}
 
 	//add multi-lingual support
-		require_once "app_languages.php";
-		foreach($text as $key => $value) {
-			$text[$key] = $value[$_SESSION['domain']['language']['code']];
-		}
+		$language = new text;
+		$text = $language->get();
 
 	//get the fax_extension and save it as a variable
 		if (strlen($_REQUEST["fax_extension"]) > 0) {

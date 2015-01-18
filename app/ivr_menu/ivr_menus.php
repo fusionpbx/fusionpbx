@@ -35,15 +35,12 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //additional includes
 	require_once "resources/header.php";
 	$document['title'] = $text['title-ivr_menus'];
-
 	require_once "resources/paging.php";
 
 //get the http values and set them as variables

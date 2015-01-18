@@ -45,12 +45,9 @@ $document['title'] = $text['title-extensions'];
 
 require_once "resources/paging.php";
 
-//get the http values and set them as variables
-	$search = check_str($_GET["search"]);
-	if (isset($_GET["order_by"])) {
-		$order_by = check_str($_GET["order_by"]);
-		$order = check_str($_GET["order"]);
-	}
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
 
 //show the content
 	echo "<div align='center'>";

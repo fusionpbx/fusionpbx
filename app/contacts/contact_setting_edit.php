@@ -27,14 +27,10 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
+
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text['button-save'] as $key => $value) {
-		$languages[$key] = '';
-	}
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //action add or update
 	if (isset($_REQUEST["id"])) {

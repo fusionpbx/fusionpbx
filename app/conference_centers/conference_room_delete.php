@@ -35,14 +35,13 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-}
+//get the id
+	if (count($_GET)>0) {
+		$id = check_str($_GET["id"]);
+	}
 
 if (strlen($id)>0) {
 	//get the meeting_uuid

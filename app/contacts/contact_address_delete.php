@@ -35,27 +35,28 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	$language = new text;
+	$text = $language->get();
+
+//get the http values and set as variables
+	if (count($_GET) > 0) {
+		$id = check_str($_GET["id"]);
+		$contact_uuid = check_str($_GET["contact_uuid"]);
 	}
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-	$contact_uuid = check_str($_GET["contact_uuid"]);
-}
+//delete the record
+	if (strlen($id) > 0) {
+		$sql = "delete from v_contact_addresses ";
+		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and contact_address_uuid = '$id' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		unset($sql);
+	}
 
-if (strlen($id)>0) {
-	$sql = "delete from v_contact_addresses ";
-	$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and contact_address_uuid = '$id' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	unset($sql);
-}
-
-$_SESSION["message"] = $text['message-delete'];
-header("Location: contact_edit.php?id=".$contact_uuid);
-return;
+//redirect the browser
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: contact_edit.php?id=".$contact_uuid);
+	return;
 
 ?>

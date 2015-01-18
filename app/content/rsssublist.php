@@ -37,10 +37,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 $rss_uuid = $_GET["rss_uuid"];
 $order_by = $_GET["order_by"];

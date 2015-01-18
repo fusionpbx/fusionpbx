@@ -34,15 +34,12 @@ else {
 	echo "access denied";
 	exit;
 }
-
 //add multi-lingual support
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 $conference_name = trim($_REQUEST["c"]);
 $tmp_conference_name = str_replace("_", " ", $conference_name);
-
 
 require_once "resources/header.php";
 $document['title'] = $text['title'];
