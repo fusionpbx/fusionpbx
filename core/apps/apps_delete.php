@@ -35,16 +35,15 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	$language = new text;
+	$text = $language->get();
+
+//get the id
+	if (count($_GET) > 0) {
+		$id = check_str($_GET["id"]);
 	}
 
-if (count($_GET) > 0) {
-	$id = check_str($_GET["id"]);
-}
-
-if (strlen($id)>0) {
+if (strlen($id) > 0) {
 
 	if (count($_GET)>0 && $_POST["persistformvar"] != "true") {
 		$app_uuid = $_GET["id"];

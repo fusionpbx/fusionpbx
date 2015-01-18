@@ -37,10 +37,8 @@ require_once "resources/require.php";
 	}
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //get the http values and set them as variables
 	$path = check_str($_GET["path"]);

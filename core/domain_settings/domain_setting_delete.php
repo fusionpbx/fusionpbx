@@ -35,25 +35,25 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
+	$language = new text;
+	$text = $language->get();
+
+//get the variables
+	if (count($_GET)>0) {
+		$id = check_str($_GET["id"]);
+		$domain_uuid = check_str($_GET["domain_uuid"]);
 	}
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-	$domain_uuid = check_str($_GET["domain_uuid"]);
-}
-
-if (strlen($id)>0) {
-	//delete domain_setting
-		$sql = "delete from v_domain_settings ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and domain_setting_uuid = '$id' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		unset($sql);
-}
+//delete the record
+	if (strlen($id) > 0) {
+		//delete domain_setting
+			$sql = "delete from v_domain_settings ";
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			$sql .= "and domain_setting_uuid = '$id' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			unset($sql);
+	}
 
 //redirect the user
 	$_SESSION["message"] = $text['message-delete'];

@@ -60,10 +60,8 @@ if (sizeof($_REQUEST) > 1) {
 	//delete domain settings
 		if ($action == 'delete' && permission_exists('domain_setting_delete')) {
 			//add multi-lingual support
-				require_once "app_languages.php";
-				foreach($text as $key => $value) {
-					$text[$key] = $value[$_SESSION['domain']['language']['code']];
-				}
+				$language = new text;
+				$text = $language->get();
 
 			if (sizeof($domain_setting_uuids) > 0) {
 				foreach ($domain_setting_uuids as $domain_setting_uuid) {
