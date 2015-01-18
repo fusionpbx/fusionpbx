@@ -25,10 +25,8 @@
 */
 
 //add multi-lingual support
-	require_once "core/user_settings/app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get(null,'core/user_settings');
 
 //get action, if any
 	if (isset($_REQUEST['action'])) {

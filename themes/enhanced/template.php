@@ -1248,10 +1248,8 @@ legend {
 
 <?php
 //add multi-lingual support
-	require_once "themes/enhanced/app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get(null,'themes/enhanced');
 
 // set message_onload
 if (strlen($_SESSION['message']) > 0) {

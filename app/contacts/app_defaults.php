@@ -12,10 +12,8 @@ if ($domains_processed == 1) {
 	$field_exists = $obj->column_exists($db_name, 'v_contact_phones', 'phone_type');	//check if field exists
 	if ($field_exists) {
 		//add multi-lingual support
-		require_once "app/contacts/app_languages.php";
-		foreach($text as $key => $value) {
-			$text[$key] = $value[$_SESSION['domain']['language']['code']];
-		}
+		$language = new text;
+		$text = $language->get();
 
 		// populate phone_type_* values
 		$sql = "update v_contact_phones set phone_type_voice = '1' ";

@@ -34,10 +34,9 @@ else {
 	exit;
 }
 
-require_once "app/devices/app_languages.php";
-foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+//add multi-lingual support
+	$language = new text;
+	$text = $language->get();
 
 require_once "resources/header.php";
 require_once "resources/paging.php";
