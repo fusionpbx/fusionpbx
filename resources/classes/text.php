@@ -11,9 +11,7 @@ class text {
 	 * Called when the object is created
 	 */
 	public function __construct() {
-		if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/translate")) {
-			include("app/translate/translate_include.php");
-		}
+		//place holder
 	}
 
 	/**
@@ -40,6 +38,17 @@ class text {
 				require_once getcwd().'/app_languages.php';
 			}
 
+		//get the available languages
+			krsort($text);
+			foreach ($text as $lang_label => $lang_codes) {
+				foreach ($lang_codes as $lang_code => $lang_text) {
+					if ($lang_text != '') {
+						$app_languages[] = $lang_code;
+					}
+				}
+			}
+			$_SESSION['app']['languages'] = array_unique($app_languages);
+
 		//add multi-lingual support
 			if ($language_code != 'all') {
 				foreach($text as $key => $value) {
@@ -54,7 +63,9 @@ class text {
 
 		//return the array of translations
 			return $text;
+
 	}
+
 }
 
 ?>
