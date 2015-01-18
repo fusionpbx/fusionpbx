@@ -35,10 +35,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //action add or update
 	if (isset($_REQUEST["id"])) {
@@ -90,7 +88,7 @@ else {
 			$voicemail_uuid_copy = check_str($_REQUEST["voicemail_uuid_copy"]);
 		//assign the user to the extension
 			$sqli = "
-				insert into 
+				insert into
 				v_voicemail_destinations
 				(
 					domain_uuid,

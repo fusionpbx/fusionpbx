@@ -35,10 +35,8 @@ else {
 }
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //pdo database connection
 	if (strlen($_REQUEST['id']) > 0) {
@@ -81,7 +79,7 @@ else {
 		}
 		return $result;
 	}
-			
+
 //set the headers
 	header('Content-type: application/octet-binary');
 	header('Content-Disposition: attachment; filename=database_backup.sql');

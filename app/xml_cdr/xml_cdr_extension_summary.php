@@ -117,7 +117,7 @@ require_once "resources/require.php";
 			}
 			if ($row['hangup_cause'] == "NO_ANSWER") {
 				$summary[$row['destination_number']]['no_answer']++;
-			}		
+			}
 			if ($row['hangup_cause'] == "USER_BUSY") {
 				$summary[$row['destination_number']]['busy']++;
 			}
@@ -126,10 +126,8 @@ require_once "resources/require.php";
 	unset ($sql, $prep_statement, $result, $row_count);
 
 //add multi-lingual support
-	require_once "app_languages.php";
-	foreach($text as $key => $value) {
-		$text[$key] = $value[$_SESSION['domain']['language']['code']];
-	}
+	$language = new text;
+	$text = $language->get();
 
 //additional includes
 	require_once "resources/header.php";
@@ -228,7 +226,7 @@ require_once "resources/require.php";
 	echo "		<th style='text-align: right;'>".$text['label-inbound_duration']."</th>\n";
 	echo "		<th style='text-align: right;'>".$text['label-outbound_calls']."</th>\n";
 	echo "		<th style='text-align: right;'>".$text['label-outbound_duration']."</th>\n";
-	echo "		<th style='text-align: right;'>".$text['label-description']."</th>\n";	
+	echo "		<th style='text-align: right;'>".$text['label-description']."</th>\n";
 	echo "	</tr>\n";
 
 	$c = 0;
