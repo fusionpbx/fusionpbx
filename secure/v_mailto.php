@@ -256,7 +256,7 @@
 	}
 
 //add the body to the email
-	if (substr($body, 0, 5) == "<html") {
+	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
 		$mail->Body = $body;
 	}
