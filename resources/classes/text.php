@@ -32,10 +32,10 @@ class text {
 	public function get($language_code = null, $app_path = null) {
 		//get the app_languages.php
 			if ($app_path != null) {
-				require $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
+				include $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/".$app_path."/app_languages.php";
 			}
 			else {
-				require getcwd().'/app_languages.php';
+				include getcwd().'/app_languages.php';
 			}
 
 		//get the available languages
