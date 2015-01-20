@@ -26,6 +26,9 @@
 include "root.php";
 require_once "resources/functions.php";
 
+//include required classes
+	require_once "resources/classes/text.php";
+
 //set debug to true or false
 	$v_debug = true;
 
@@ -724,7 +727,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 							}
 						}
 
-					//set account to unlimitted use
+					//set account to unlimited use
 						try {
 							if ($db_host == "localhost" || $db_host == "127.0.0.1") {
 								$tmp_sql = "GRANT USAGE ON * . * TO '".$db_username."'@'localhost' ";
