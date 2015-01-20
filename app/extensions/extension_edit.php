@@ -264,12 +264,21 @@ else {
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
-	$msg = '';
-	if ($action == "update") {
-		$extension_uuid = check_str($_POST["extension_uuid"]);
-	}
+	//get the id
+		if ($action == "update") {
+			$extension_uuid = check_str($_POST["extension_uuid"]);
+		}
+
+	//set the domain_uuid
+		if (permission_exists('extension_domain')) {
+			$domain_uuid = check_str($_POST["domain_uuid"]);
+		}
+		else {
+			$domain_uuid = $_SESSION['domain_uuid'];
+		}
 
 	//check for all required data
+		$msg = '';
 		if (strlen($extension) == 0) { $msg .= $text['message-required'].$text['label-extension']."<br>\n"; }
 		//if (strlen($number_alias) == 0) { $msg .= $text['message-required']."Number Alias<br>\n"; }
 		//if (strlen($voicemail_password) == 0) { $msg .= $text['message-required']."Voicemail Password<br>\n"; }
@@ -410,7 +419,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$sql .= ")";
 							$sql .= "values ";
 							$sql .= "(";
-							$sql .= "'".$_SESSION['domain_uuid']."', ";
+							$sql .= "'".$domain_uuid."', ";
 							$sql .= "'$extension_uuid', ";
 							$sql .= "'$extension', ";
 							$sql .= "'$number_alias', ";
@@ -485,7 +494,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							//voicemail class
 								$ext = new extension;
 								$ext->db = $db;
-								$ext->domain_uuid = $_SESSION['domain_uuid'];
+								$ext->domain_uuid = $domain_uuid;
 								$ext->extension = $extension;
 								$ext->number_alias = $number_alias;
 								$ext->voicemail_password = $voicemail_password;
@@ -544,6 +553,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 				//update extensions
 					$sql = "update v_extensions set ";
+					if (permission_exists('extension_domain')) {
+						$sql .= "domain_uuid = '$domain_uuid', ";
+					}
 					$sql .= "extension = '$extension', ";
 					$sql .= "number_alias = '$number_alias', ";
 					$sql .= "password = '$password', ";
@@ -605,8 +617,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "enabled = '$enabled', ";
 					}
 					$sql .= "description = '$description' ";
-					$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-					$sql .= "and extension_uuid = '$extension_uuid'";
+					$sql .= "where extension_uuid = '$extension_uuid'  ";
+					if (!permission_exists('extension_domain')) {
+						$sql .= "and domain_uuid = '".$domain_uuid."'  ";
+					}
 					$db->exec(check_sql($sql));
 					unset($sql);
 
@@ -615,7 +629,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						require_once "app/extensions/resources/classes/extension.php";
 						$ext = new extension;
 						$ext->db = $db;
-						$ext->domain_uuid = $_SESSION['domain_uuid'];
+						$ext->domain_uuid = $domain_uuid;
 						$ext->extension = $extension;
 						$ext->number_alias = $number_alias;
 						$ext->voicemail_password = $voicemail_password;
@@ -631,8 +645,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				//update devices having extension assigned to line(s) with new password
 					$sql = "update v_device_lines set ";
 					$sql .= "password = '".$password."' ";
-					$sql .= "where ";
-					$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
+					$sql .= "where domain_uuid = '".$domain_uuid."' ";
 					$sql .= "and server_address = '".$_SESSION['domain_name']."' ";
 					$sql .= "and user_id = '".$extension."' ";
 					$db->exec(check_sql($sql));
@@ -718,8 +731,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$extension_uuid = $_GET["id"];
 		$sql = "select * from v_extensions ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and extension_uuid = '$extension_uuid' ";
+		$sql .= "where extension_uuid = '$extension_uuid' ";
+		$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -763,7 +776,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
 		//get the voicemails
 			$sql = "select * from v_voicemails ";
-			$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "where domain_uuid = '".$domain_uuid."' ";
 			if (is_numeric($extension)) {
 				$sql .= "and voicemail_id = '$extension' ";
 			}
@@ -956,7 +969,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
 		$sql .= "where e.user_uuid = u.user_uuid  ";
 		$sql .= "and u.user_enabled = 'true' ";
-		$sql .= "and e.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "and e.domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and e.extension_uuid = '".$extension_uuid."' ";
 		$sql .= "order by u.username asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -970,7 +983,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "			<td class='vtable'><a href='/core/users/usersupdate.php?id=".$field['user_uuid']."'>".$field['username']."</a></td>\n";
 				echo "			<td>\n";
 				echo "				<a href='#' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('delete_type').value = 'user'; document.getElementById('delete_uuid').value = '".$field['user_uuid']."'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>$v_link_label_delete</a>\n";
-//				echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
+				//echo "				<a href='extension_edit.php?id=".$extension_uuid."&domain_uuid=".$_SESSION['domain_uuid']."&user_uuid=".$field['user_uuid']."&a=delete' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
 				echo "			</td>\n";
 				echo "		</tr>\n";
 				$assigned_user_uuids[] = $field['user_uuid'];
@@ -979,7 +992,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<br />\n";
 		}
 		$sql = "SELECT * FROM v_users ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		foreach($assigned_user_uuids as $assigned_user_uuid) {
 			$sql .= "and user_uuid <> '".$assigned_user_uuid."' ";
 		}
@@ -1024,7 +1037,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		if ($billing_app_exists) {
-			$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$_SESSION['domain_uuid']."'";
+			$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$domain_uuid."'";
 			echo "<select name='accountcode' id='accountcode' class='formfld'>\n";
 			$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
 			$prep_statement_accountcode->execute();
@@ -1081,7 +1094,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('outbound_caller_id_select')) {
 		$sql = "select * from v_destinations ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and destination_type = 'inbound' ";
 		$sql .= "order by destination_number asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -1122,7 +1135,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	if (permission_exists('outbound_caller_id_select')) {
 		$sql = "select * from v_destinations ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and destination_type = 'inbound' ";
 		$sql .= "order by destination_number asc ";
 		$prep_statement = $db->prepare(check_sql($sql));
@@ -1294,7 +1307,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql = "SELECT d.device_mac_address, d.device_template, d.device_description, l.device_line_uuid, l.device_uuid, l.line_number ";
 			$sql .= "FROM v_device_lines as l, v_devices as d ";
 			$sql .= "WHERE l.user_id = '".$extension."' ";
-			$sql .= "AND l.domain_uuid = '".$_SESSION['domain_uuid']."' ";
+			$sql .= "AND l.domain_uuid = '".$domain_uuid."' ";
 			$sql .= "AND l.device_uuid = d.device_uuid ";
 			$sql .= "ORDER BY l.line_number, d.device_mac_address asc ";
 			$prep_statement = $db->prepare(check_sql($sql));
@@ -1391,7 +1404,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			</script>
 			<?php
 			$sql = "SELECT * FROM v_devices ";
-			$sql .= "WHERE domain_uuid = '".$_SESSION["domain_uuid"]."' ";
+			$sql .= "WHERE domain_uuid = '".$domain_uuid."' ";
 			$sql .= "ORDER BY device_mac_address asc ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
@@ -1402,7 +1415,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				foreach($result as $field) {
 					if (strlen($field["device_mac_address"]) > 0) {
 						if ($field_current_value == $field["device_mac_address"]) {
-							echo "					<option value=\"".$field["device_mac_address"]."\" selected>".$field["device_mac_address"]."</option>\n";
+							echo "					<option value=\"".$field["device_mac_address"]."\" selected=\"selected\">".$field["device_mac_address"]."</option>\n";
 						}
 						else {
 							echo "					<option value=\"".$field["device_mac_address"]."\">".$field["device_mac_address"]."  ".$field['device_model']." ".$field['device_description']."</option>\n";
@@ -1778,6 +1791,28 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
+	if (permission_exists('extension_domain')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		foreach ($_SESSION['domains'] as $row) {
+			if ($row['domain_uuid'] == $domain_uuid) {
+				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+			}
+			else {
+				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			}
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
+
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 	echo "    ".$text['label-dial_string'].":\n";
@@ -1838,7 +1873,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "		<input type='hidden' name='extension_uuid' value='".$extension_uuid."'>\n";
 		echo "		<input type='hidden' name='id' id='id' value='".$extension_uuid."'>";
-		echo "		<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
+		if (!permission_exists('extension_domain')) {
+			echo "		<input type='hidden' name='domain_uuid' id='domain_uuid' value='".$_SESSION['domain_uuid']."'>";
+		}
 		echo "		<input type='hidden' name='delete_type' id='delete_type' value=''>";
 		echo "		<input type='hidden' name='delete_uuid' id='delete_uuid' value=''>";
 	}
@@ -1853,5 +1890,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "</div>";
 
-require_once "resources/footer.php";
+//include the footer
+	require_once "resources/footer.php";
+
 ?>

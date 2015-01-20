@@ -492,6 +492,16 @@
 	$text['description-dial_string']['pt-pt'] = "Localização do endpoint.";
 	$text['description-dial_string']['fr-fr'] = "Emplacement de la cible.";
 
+	$text['label-domain']['en-us'] = "Domain";
+	$text['label-domain']['es-cl'] = "Dominio";
+	$text['label-domain']['pt-pt'] = "Domínio";
+	$text['label-domain']['fr-fr'] = "Domaine";
+
+	$text['description-domain']['en-us'] = "";
+	$text['description-domain']['es-cl'] = "";
+	$text['description-domain']['pt-pt'] = "";
+	$text['description-domain']['fr-fr'] = "";
+
 	$text['label-enabled']['en-us'] = "Enabled";
 	$text['label-enabled']['es-cl'] = "Activado";
 	$text['label-enabled']['pt-pt'] = "Habilitada";
