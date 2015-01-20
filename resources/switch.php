@@ -323,7 +323,7 @@ function event_socket_request($fp, $cmd) {
 			usleep(20); //allow time for reponse
 
 			//prevent an endless loop //optional because of script timeout
-			if ($i > 1000) { break; }
+			if ($i > 2000) { break; }
 
 			if ($content_length > 0) { //is content_length set
 				//stop reading if all content has been read.
