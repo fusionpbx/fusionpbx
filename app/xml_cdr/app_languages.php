@@ -557,5 +557,30 @@
 	$text['option-false']['es-cl'] = "Falso";
 	$text['option-false']['pt-pt'] = "Não";
 	$text['option-false']['fr-fr'] = "Non";
+	
+    $text['option-default']['en-us'] = "Default";
+    $text['option-default']['es-cl'] = "Default";
+    $text['option-default']['pt-pt'] = "Default";
+    $text['option-default']['fr-fr'] = "Default";
+    $text['option-last_hour']['en-us'] = "Last Hour";
+    $text['option-last_hour']['es-cl'] = "Last Hour";
+    $text['option-last_hour']['pt-pt'] = "Last Hour";
+    $text['option-last_hour']['fr-fr'] = "Last Hour";
+    $text['option-today']['en-us'] = "Today";
+    $text['option-today']['es-cl'] = "Today";
+    $text['option-today']['pt-pt'] = "Today";
+    $text['option-today']['fr-fr'] = "Today";
+    $text['option-yesterday']['en-us'] = "Yesterday";
+    $text['option-yesterday']['es-cl'] = "Yesterday";
+    $text['option-yesterday']['pt-pt'] = "Yesterday";
+    $text['option-yesterday']['fr-fr'] = "Yesterday";
+    $text['option-this_month']['en-us'] = "This Month";
+    $text['option-this_month']['es-cl'] = "This Month";
+    $text['option-this_month']['pt-pt'] = "This Month";
+    $text['option-this_month']['fr-fr'] = "This Month";
+    $text['option-this_year']['en-us'] = "This Year";
+    $text['option-this_year']['es-cl'] = "This Year";
+    $text['option-this_year']['pt-pt'] = "This Year";
+    $text['option-this_year']['fr-fr'] = "This Year";
 
 ?>
