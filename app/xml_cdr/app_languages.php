@@ -184,6 +184,11 @@
 	$text['label-average']['es-cl'] = "Promedio";
 	$text['label-average']['pt-pt'] = "Média";
 	$text['label-average']['fr-fr'] = "Moyenne";
+	
+    $text['label-preset']['en-us'] = 'Quick Select';
+    $text['label-preset']['es-cl'] = 'Quick Select';
+    $text['label-preset']['pt-pt'] = 'Quick Select';
+    $text['label-preset']['fr-fr'] = 'Quick Select';
 
 	$text['button-export']['en-us'] = 'Export';
 	$text['button-export']['es-cl'] = 'Exportación';
