@@ -21,6 +21,7 @@
 --
 --	Contributor(s):
 --	Riccardo Granchi <riccardo.granchi@nems.it>
+--	Philippe Rioual <bhouba@gmail.com>
 
 --debug
 	debug["toll_type"] = false
@@ -60,7 +61,20 @@
 		templates["unknown"]       = "%d+"
 	end
 
-
+	function get_toll_types_fr()
+		if (debug["toll_type"]) then
+			freeswitch.consoleLog("NOTICE", "[toll_allow] using FR toll types\n")
+		end 
+      
+		templates["mobile"]        = "0[67]%d%d%d%d%d%d%d%d%d"
+		templates["landline"]      = "0[1234589]%d%d%d%d%d%d%d%d%d"
+		templates["international"] = "00%d+"
+		templates["tollfree"]      = "15|17|18|112|114|115|116%d%d%d|118%d%d%d|119|19[16]|1[06]%d%d|080%d+"
+		templates["sharedcharge"]  = "081%d+|082[0156]%d+|0884%d+|089[0123789]%d+"
+		templates["premium"]       = "%d%d+"
+		templates["unknown"]       = "%d%d+" 
+	end
+   
 	called  = api:executeString("uuid_getvar " .. uuid .. " destination_number")
 	prefix  = api:executeString("uuid_getvar " .. uuid .. " outbound_prefix")
 	country = api:executeString("uuid_getvar " .. uuid .. " default_country")
@@ -87,6 +101,7 @@
 	--set templates for default country
 		if     country == "IT" then get_toll_types_it()
 		elseif country == "US" then get_toll_types_us()
+    elseif country == "FR" then get_toll_types_fr()
 		else
 			if (debug["toll_type"]) then
 				freeswitch.consoleLog("NOTICE", "[toll_allow] toll type: " .. toll_type .. "\n")
