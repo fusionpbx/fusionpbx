@@ -37,6 +37,19 @@ require_once "resources/require.php";
 		exit;
 	}
 
+//add multi-lingual support
+    $language = new text;
+    $text = $language->get();
+
+//additional includes
+    require_once "resources/header.php";
+
+//retrieve submitted data
+    $start_stamp_begin = check_str($_REQUEST['start_stamp_begin']);
+    $start_stamp_end = check_str($_REQUEST['start_stamp_end']);
+    $include_internal = check_str($_REQUEST['include_internal']);
+    $quick_select = check_str($_REQUEST['quick_select']);
+
 //get current extension info
 	$sql = "select ";
 	$sql .= "extension_uuid, ";
@@ -85,14 +98,33 @@ require_once "resources/require.php";
 	if (!$include_internal) {
 		$sql .= " and ( direction = 'inbound' or direction = 'outbound' ) ";
 	}
-	if (strlen($start_stamp_begin) == 0 && strlen($start_stamp_end) == 0) {
-		$sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; // show last 7 days if no range specified
-	}
-	else if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql .= " and start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
-	else {
-		if (strlen($start_stamp_begin) > 0) { $sql .= " and start_stamp >= '".$start_stamp_begin.":00.000'"; }
-		if (strlen($start_stamp_end) > 0) { $sql .= " and start_stamp <= '".$start_stamp_end.":59.999'"; }
-	}
+    if (strlen($quick_select) == 0 || $quick_select == 0 ) {
+    if (strlen($start_stamp_begin) == 0 && strlen($start_stamp_end) == 0) {
+        $sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 week"))."' "; // show last 7 days if no range specified
+    }
+    else if (strlen($start_stamp_begin) > 0 && strlen($start_stamp_end) > 0) { $sql .= " and start_stamp BETWEEN '".$start_stamp_begin.":00.000' AND '".$start_stamp_end.":59.999'"; }
+    else {
+        if (strlen($start_stamp_begin) > 0) { $sql .= " and start_stamp >= '".$start_stamp_begin.":00.000'"; }
+        if (strlen($start_stamp_end) > 0) { $sql .= " and start_stamp <= '".$start_stamp_end.":59.999'"; }
+    }
+    }
+    else {
+        if ($quick_select == 1){
+			$sql .= "and start_stamp >= '".date('Y-m-d H:i:s.000', strtotime("-1 hour"))."' "; // show last hour
+        }
+        if ($quick_select == 2){
+            $sql .= "and start_stamp >= '".date('Y-m-d')." "."00:00.000' "; // show today
+        }
+        if ($quick_select == 3){
+            $sql .= "and start_stamp BETWEEN '".date('Y-m-d',strtotime("-1 day"))." "."00:00.000' AND '".date('Y-m-d',strtotime("-1 day"))." "."23:59.999'"; // show yesterday
+        }
+        if ($quick_select == 4){
+            $sql .= "and start_stamp >= '".date('Y-m-')."01 "."00:00.000'"; // show this month
+        }
+        if ($quick_select == 5){
+            $sql .= "and start_stamp >= '".date('Y-')."01-01 "."00:00.000'"; // show this year
+        }
+    }
 	//echo $sql."<br><br>";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
@@ -125,18 +157,6 @@ require_once "resources/require.php";
 	} //end if results
 	unset ($sql, $prep_statement, $result, $row_count);
 
-//add multi-lingual support
-	$language = new text;
-	$text = $language->get();
-
-//additional includes
-	require_once "resources/header.php";
-
-//retrieve submitted data
-	$start_stamp_begin = check_str($_REQUEST['start_stamp_begin']);
-	$start_stamp_end = check_str($_REQUEST['start_stamp_end']);
-	$include_internal = check_str($_REQUEST['include_internal']);
-
 //page title and description
 	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -155,7 +175,7 @@ require_once "resources/require.php";
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "	<tr>\n";
-		echo "		<td width='33%' style='vertical-align: top;'>\n";
+		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
 		echo "			<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 		echo "				<tr>\n";
@@ -169,7 +189,7 @@ require_once "resources/require.php";
 		echo "			</table>\n";
 
 		echo "		</td>";
-		echo "		<td width='33%' style='vertical-align: top;'>\n";
+		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
 		echo "			<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 		echo "				<tr>\n";
@@ -183,7 +203,7 @@ require_once "resources/require.php";
 		echo "			</table>\n";
 
 		echo "		</td>";
-		echo "		<td width='33%' style='vertical-align: top;'>\n";
+		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
 		echo "			<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
 		echo "				<tr>\n";
@@ -200,9 +220,28 @@ require_once "resources/require.php";
 		echo "			</table>\n";
 
 		echo "		</td>";
+        echo "          <td width='25%' style='vertical-align: top;'>\n";
+        echo "                  <table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+        echo "                          <tr>\n";
+        echo "                                  <td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+        echo "                                          ".$text['label-preset']."\n";
+        echo "                                  </td>\n";
+        echo "                                  <td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
+        echo "                                          <select class='formfld' name='quick_select' id='quick_select'>\n";
+        echo "                                                  <option value='0'>".$text['option-default']."</option>\n";
+        echo "                                                  <option value='1' ".(($quick_select == 1) ? "selected" : null).">".$text['option-last_hour']."</option>\n";
+        echo "                                                  <option value='2' ".(($quick_select == 2) ? "selected" : null).">".$text['option-today']."</option>\n";
+        echo "                                                  <option value='3' ".(($quick_select == 3) ? "selected" : null).">".$text['option-yesterday']."</option>\n";
+        echo "                                                  <option value='4' ".(($quick_select == 4) ? "selected" : null).">".$text['option-this_month']."</option>\n";
+        echo "                                                  <option value='5' ".(($quick_select == 5) ? "selected" : null).">".$text['option-this_year']."</option>\n";
+        echo "                                          </select>\n";
+        echo "                                  </td>\n";
+        echo "                          </tr>\n";
+        echo "                  </table>\n";
+        echo "          </td>";
 		echo "	</tr>";
 		echo "	<tr>";
-		echo "		<td colspan='3' style='padding-top: 8px;' align='right'>";
+		echo "		<td colspan='4' style='padding-top: 8px;' align='right'>";
 		echo "			<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
 		echo "			<input type='submit' class='btn' name='submit' value='".$text['button-update']."'>\n";
 		echo "		</td>";
