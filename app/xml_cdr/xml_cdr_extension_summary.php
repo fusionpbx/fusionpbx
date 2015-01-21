@@ -288,7 +288,7 @@ require_once "resources/require.php";
 		$missed = $summary[$extension]['missed'];
 
 		//volume
-		$volume = $summary[$extension]['inbound']['seconds'] + $summary[$extension]['outbound']['seconds'];
+		$volume = $summary[$extension]['inbound']['count'] + $summary[$extension]['outbound']['count'];
 
 		//average length of call
 		$summary[$extension]['aloc'] = ($seconds['inbound'] + $seconds['outbound']) / ($volume - $missed);
@@ -300,7 +300,7 @@ require_once "resources/require.php";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['missed']."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['no_answer']."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['busy']."&nbsp;</td>\n";
-		echo "	<td valign='top' class='".$row_style[$c]."'>".$summary[$extension]['aloc']."&nbsp;</td>\n";
+		echo "  <td valign='top' class='".$row_style[$c]."'>".gmdate("H:i:s",$summary[$extension]['aloc'])."&nbsp;</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($summary[$extension]['inbound']['count'] != '') ? $summary[$extension]['inbound']['count'] : "0")."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>".(($seconds['inbound'] != '') ? gmdate("G:i:s", $seconds['inbound']) : '0:00:00')."</td>\n";
 		echo "	<td valign='top' class='".$row_style[$c]."' style='text-align: right;'>&nbsp;".(($summary[$extension]['outbound']['count'] != '') ? $summary[$extension]['outbound']['count'] : "0")."</td>\n";
