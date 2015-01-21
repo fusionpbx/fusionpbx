@@ -631,41 +631,42 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 
 	$select_options = "";
-	if ($queue_moh_sound == "\${us-ring}" || $queue_moh_sound == "us-ring") {
-		$select_options .= "		<option value='\${us-ring}' selected='selected'>".$text['option-usring']."</option>\n";
+	if ($queue_moh_sound == "tone_stream://\$\${us-ring};loops=-1" || $queue_moh_sound == "us-ring") {
+		$select_options .= "            <option value='tone_stream://\$\${us-ring};loops=-1' selected='selected'>".$text['option-usring']."</option>\n";
 	}
 	else {
-		$select_options .= "		<option value='\${us-ring}'>".$text['option-usring']."</option>\n";
+		$select_options .= "            <option value='tone_stream://\$\${us-ring};loops=-1'>".$text['option-usring']."</option>\n";
 	}
-	if ($queue_moh_sound == "\${pt-ring}" || $queue_moh_sound == "pt-ring") {
-		$select_options .= "		<option value='\${pt-ring}' selected='selected'>".$text['option-ptring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${pt-ring}'>".$text['option-ptring']."</option>\n";
-	}
-	if ($queue_moh_sound == "\${fr-ring}" || $queue_moh_sound == "fr-ring") {
-		$select_options .= "		<option value='\${fr-ring}' selected='selected'>".$text['option-frring']."</option>\n";
+	if ($queue_moh_sound == "tone_stream://\$\${pt-ring};loops=-1" || $queue_moh_sound == "pt-ring") {
+		$select_options .= "            <option value='tone_stream://\$\${pt-ring};loops=-1' selected='selected'>".$text['option-ptring']."</option>\n";
 	}
 	else {
-		$select_options .= "		<option value='\${fr-ring}'>".$text['option-frring']."</option>\n";
+		$select_options .= "            <option value='tone_stream://\$\${pt-ring};loops=-1'>".$text['option-ptring']."</option>\n";
 	}
-	if ($queue_moh_sound == "\${uk-ring}" || $queue_moh_sound == "uk-ring") {
-		$select_options .= "		<option value='\${uk-ring}' selected='selected'>".$text['option-ukring']."</option>\n";
-	}
-	else {
-		$select_options .= "		<option value='\${uk-ring}'>".$text['option-ukring']."</option>\n";
-	}
-	if ($queue_moh_sound == "\${rs-ring}" || $queue_moh_sound == "rs-ring") {
-		$select_options .= "		<option value='\${rs-ring}' selected='selected'>".$text['option-rsring']."</option>\n";
+	if ($queue_moh_sound == "tone_stream://\$\${fr-ring};loops=-1" || $queue_moh_sound == "fr-ring") {
+		$select_options .= "            <option value='tone_stream://\$\${fr-ring};loops=-1' selected='selected'>".$text['option-frring']."</option>\n";
 	}
 	else {
-		$select_options .= "		<option value='\${rs-ring}'>".$text['option-rsring']."</option>\n";
+		$select_options .= "            <option value='tone_stream://\$\${fr-ring};loops=-1'>".$text['option-frring']."</option>\n";
 	}
-	if ($queue_moh_sound == "\${it-ring}" || $queue_moh_sound == "it-ring") {
-		$select_options .= "		<option value='\${it-ring}' selected='selected'>".$text['option-itring']."</option>\n";
+	if ($queue_moh_sound == "tone_stream://\$\${uk-ring};loops=-1" || $queue_moh_sound == "uk-ring") {
+		$select_options .= "            <option value='tone_stream://\$\${uk-ring};loops=-1' selected='selected'>".$text['option-ukring']."</option>\n";
 	}
 	else {
-		$select_options .= "		<option value='\${it-ring}'>".$text['option-itring']."</option>\n";
+		$select_options .= "            <option value='tone_stream://\$\${uk-ring};loops=-1'>".$text['option-ukring']."</option>\n";
+	}
+	if ($queue_moh_sound == "tone_stream://\$\${rs-ring};loops=-1" || $queue_moh_sound == "rs-ring") {
+		$select_options .= "            <option value='tone_stream://\$\${rs-ring};loops=-1' selected='selected'>".$text['option-rsring']."</option>\n";
+	}
+	else {
+		$select_options .= "            <option value='tone_stream://\$\${rs-ring};loops=-1'>".$text['option-rsring']."</option>\n";
+	}
+
+	if ($queue_moh_sound == "tone_stream://\$\${it-ring};loops=-1" || $queue_moh_sound == "it-ring") {
+		$select_options .= "            <option value='tone_stream://\$\${it-ring};loops=-1' selected='selected'>".$text['option-itring']."</option>\n";
+	}
+	else {
+		$select_options .= "            <option value='tone_stream://\$\${it-ring};loops=-1'>".$text['option-itring']."</option>\n";
 	}
 	require_once "app/music_on_hold/resources/classes/switch_music_on_hold.php";
 	$moh= new switch_music_on_hold;
