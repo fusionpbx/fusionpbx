@@ -258,9 +258,9 @@
 							unset($db2->result);
 							break;
 					case "inbound":
-							$caller_number = check_str(urldecode($row->caller_profile->caller_id_number));
-							$caller_number_serie = number_series($caller_number);
-							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.enabled='true' AND v_lcr.lcr_direction='inbound' AND v_lcr.digits IN (".$caller_number_serie.") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
+							$callee_number = check_str(urldecode($row->caller_profile->destination_number));
+							$callee_number_serie = number_series($callee_number);
+							$sql_user_rate = "SELECT v_lcr.currency, v_lcr.rate, v_lcr.connect_increment, v_lcr.talk_increment, v_lcr.currency FROM v_lcr WHERE v_lcr.carrier_uuid IS NULL AND v_lcr.enabled='true' AND v_lcr.lcr_direction='inbound' AND v_lcr.digits IN (".$callee_number_serie.") ORDER BY digits DESC, rate ASC, date_start DESC LIMIT 1";
 							if ($debug) {
 								echo "sql_user_rate: $sql_user_rate\n";
 							}
