@@ -98,9 +98,9 @@
 		<param name="rtp-hold-timeout-sec" value="1800"/>
 		<!-- VAD choose one (out is a good choice); -->
 		<!-- <param name="vad" value="in"/> -->
-		<param name="vad" value="out" value="false"/>
+		<param name="vad" value="out" enabled="false"/>
 		<!-- <param name="vad" value="both"/> -->
-		<param name="alias" value="sip:10.0.1.251:5555" value="false"/>
+		<param name="alias" value="sip:10.0.1.251:5555" enabled="false"/>
 		<!--
 		These are enabled to make the default config work better out of the box.
 		If you need more than ONE domain you'll need to not use these options.
