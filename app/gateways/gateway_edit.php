@@ -143,7 +143,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$gateway_uuid = uuid();
 				$sql = "insert into v_gateways ";
 				$sql .= "(";
-				$sql .= "domain_uuid, ";
+				if (strlen($domain_uuid) > 0) {
+					$sql .= "domain_uuid, ";
+				}
 				$sql .= "gateway_uuid, ";
 				$sql .= "gateway, ";
 				$sql .= "username, ";
@@ -175,7 +177,9 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= ")";
 				$sql .= "values ";
 				$sql .= "(";
-				$sql .= "'$domain_uuid', ";
+				if (strlen($domain_uuid) > 0) {
+					$sql .= "'$domain_uuid', ";
+				}
 				$sql .= "'$gateway_uuid', ";
 				$sql .= "'$gateway', ";
 				$sql .= "'$username', ";
@@ -236,7 +240,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "extension_in_contact = '$extension_in_contact', ";
 				$sql .= "context = '$context', ";
 				$sql .= "profile = '$profile', ";
-				$sql .= "domain_uuid = '$domain_uuid', ";
+				if (strlen($domain_uuid) == 0) {
+					$sql .= "domain_uuid = null, ";
+				}
+				else {
+					$sql .= "domain_uuid = '$domain_uuid', ";
+				}
 				$sql .= "enabled = '$enabled', ";
 				$sql .= "description = '$description' ";
 				$sql .= "where gateway_uuid = '$gateway_uuid'";
