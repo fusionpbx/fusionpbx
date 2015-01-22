@@ -48,6 +48,12 @@ else {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
+		//save the sip profile xml
+		save_sip_profile_xml();
+
+		//apply settings reminder
+		$_SESSION["reload_xml"] = true;
+
 		$_SESSION["message"] = $text['message-update'];
 		header("Location: sip_profile_edit.php?id=".$_REQUEST['spid']);
 		exit;
