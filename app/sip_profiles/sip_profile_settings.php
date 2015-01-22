@@ -37,8 +37,8 @@ require_once "resources/header.php";
 require_once "resources/paging.php";
 
 //get variables used to control the order
-	$order_by = $_GET["order_by"];
-	$order = $_GET["order"];
+	$order_by = ($_GET["order_by"] != '') ? $_GET["order_by"] : 'sip_profile_setting_name';
+	$order = ($_GET["order"] != '') ? $_GET["order"] : 'asc';
 
 //show the content
 	echo "<table width='100%' border='0'>\n";
@@ -51,7 +51,6 @@ require_once "resources/paging.php";
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_sip_profile_settings ";
 		$sql .= "where sip_profile_uuid = '$sip_profile_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -89,10 +88,10 @@ require_once "resources/paging.php";
 	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('sip_profile_setting_name', $text['label-setting_name'], $order_by, $order);
-	echo th_order_by('sip_profile_setting_value', $text['label-setting_value'], $order_by, $order);
-	echo th_order_by('sip_profile_setting_enabled', $text['label-setting_enabled'], $order_by, $order);
-	echo th_order_by('sip_profile_setting_description', $text['label-setting_description'], $order_by, $order);
+	echo th_order_by('sip_profile_setting_name', $text['label-setting_name'], $order_by, $order, null, null, "id=".$sip_profile_uuid);
+	echo th_order_by('sip_profile_setting_value', $text['label-setting_value'], $order_by, $order, null, null, "id=".$sip_profile_uuid);
+	echo th_order_by('sip_profile_setting_enabled', $text['label-setting_enabled'], $order_by, $order, null, null, "id=".$sip_profile_uuid);
+	echo th_order_by('sip_profile_setting_description', $text['label-setting_description'], $order_by, $order, null, null, "id=".$sip_profile_uuid);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('sip_profile_setting_add')) {
 		echo "<a href='sip_profile_setting_edit.php?sip_profile_uuid=".$_GET['id']."' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -113,7 +112,9 @@ require_once "resources/paging.php";
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['sip_profile_setting_value']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['sip_profile_setting_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>";
+			echo "		<a href='?spid=".$row['sip_profile_uuid']."&spsid=".$row['sip_profile_setting_uuid']."&enabled=".(($row['sip_profile_setting_enabled'] == 'true') ? 'false' : 'true')."'>".(($row['sip_profile_setting_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."</a>";
+			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row['sip_profile_setting_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('sip_profile_setting_edit')) {
