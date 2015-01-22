@@ -655,7 +655,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							//echo "	<input type='button' id='btn_select_to_input_dialplan_detail_type' class='btn' style='visibility:hidden;' name='' alt='".$text['button-back']."' onclick='change_to_input(document.getElementById(\"dialplan_detail_type\"));this.style.visibility = \"hidden\";' value='&#9665;'>\n";
 							echo "</td>\n";
 						//data
-							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='width: 100%;' nowrap='nowrap'>\n";
+							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_data_".$x."','dialplan_detail_data_".$x."');\" style='width: 100%; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' nowrap='nowrap'>\n";
 							if ($element['hidden']) {
 								if ($dialplan_detail_type == 'bridge') {
 									// parse out gateway uuid
@@ -674,7 +674,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan_detail_data_mod = ($gateway_name != '') ? str_replace($gateway_uuid, $gateway_name, $dialplan_detail_data) : $dialplan_detail_data;
 								echo "	<label id=\"label_dialplan_detail_data_".$x."\">".htmlspecialchars($dialplan_detail_data_mod)."</label>\n";
 							}
-							echo "	<input id='dialplan_detail_data_".$x."' name='dialplan_details[".$x."][dialplan_detail_data]' class='formfld' type='text' style='width: 100%; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_data)."\">\n";
+							echo "	<input id='dialplan_detail_data_".$x."' name='dialplan_details[".$x."][dialplan_detail_data]' class='formfld' type='text' style='width: 100%; min-width: 100%; max-width: 100%; ".$element['visibility']."' placeholder='' value=\"".htmlspecialchars($dialplan_detail_data)."\">\n";
 							echo "</td>\n";
 						//break
 							echo "<td class='vtablerow' onclick=\"label_to_form('label_dialplan_detail_break_".$x."','dialplan_detail_break_".$x."');\" nowrap='nowrap'>\n";
