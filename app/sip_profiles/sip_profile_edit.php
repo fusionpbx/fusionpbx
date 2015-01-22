@@ -39,6 +39,20 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//toggle enabled state
+	if ($_REQUEST['spid'] != '' && $_REQUEST['spsid'] != '' && $_REQUEST['enabled'] != '') {
+		$sql = "update v_sip_profile_settings set ";
+		$sql .= "sip_profile_setting_enabled = '".check_str($_REQUEST['enabled'])."' ";
+		$sql .= "where sip_profile_setting_uuid = '".check_str($_REQUEST['spsid'])."' ";
+		$sql .= "and sip_profile_uuid = '".check_str($_REQUEST['spid'])."' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: sip_profile_edit.php?id=".$_REQUEST['spid']);
+		exit;
+	}
+
 //action add or update
 	if (isset($_REQUEST["id"])) {
 		$action = "update";
