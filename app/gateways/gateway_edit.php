@@ -49,6 +49,7 @@ else {
 
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
+		$domain_uuid = check_str($_POST["domain_uuid"]);
 		$gateway = check_str($_POST["gateway"]);
 		$username = check_str($_POST["username"]);
 		$password = check_str($_POST["password"]);
@@ -235,10 +236,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "extension_in_contact = '$extension_in_contact', ";
 				$sql .= "context = '$context', ";
 				$sql .= "profile = '$profile', ";
+				$sql .= "domain_uuid = '$domain_uuid', ";
 				$sql .= "enabled = '$enabled', ";
 				$sql .= "description = '$description' ";
-				$sql .= "where domain_uuid = '$domain_uuid' ";
-				$sql .= "and gateway_uuid = '$gateway_uuid'";
+				$sql .= "where gateway_uuid = '$gateway_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
 			} //if ($action == "update")
@@ -292,12 +293,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$gateway_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_gateways ";
-		$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-		$sql .= "and gateway_uuid = '".$gateway_uuid."' ";
+		$sql .= "where gateway_uuid = '".$gateway_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
+			$domain_uuid = $row["domain_uuid"];
 			$gateway = $row["gateway"];
 			$username = $row["username"];
 			$password = $row["password"];
@@ -749,6 +750,34 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo $text['description-channels']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
+	if (permission_exists('gateway_domain')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "	".$text['label-domain'].":\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <select class='formfld' name='domain_uuid'>\n";
+		if (strlen($domain_uuid) == 0) {
+			echo "    <option value='' selected='selected'>".$text['select-global']."</option>\n";
+		}
+		else {
+			echo "    <option value=''>".$text['select-global']."</option>\n";
+		}
+		foreach ($_SESSION['domains'] as $row) {
+			if ($row['domain_uuid'] == $domain_uuid) {
+				echo "    <option value='".$row['domain_uuid']."' selected='selected'>".$row['domain_name']."</option>\n";
+			}
+			else {
+				echo "    <option value='".$row['domain_uuid']."'>".$row['domain_name']."</option>\n";
+			}
+		}
+		echo "    </select>\n";
+		echo "<br />\n";
+		echo $text['description-domain_name']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "	</table>\n";
 	echo "	</div>";

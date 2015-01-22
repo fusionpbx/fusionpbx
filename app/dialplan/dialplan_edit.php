@@ -777,17 +777,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	} //end if update
 
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-		echo "	<tr>\n";
-		echo "		<td colspan='2' align='right'>\n";
-		if ($action == "update") {
-			echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
-		}
-		echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-		echo "		</td>\n";
-		echo "	</tr>";
-		echo "</table>";
-
+	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "	<tr>\n";
+	echo "		<td colspan='2' align='right'>\n";
+	if ($action == "update") {
+		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+	}
+	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		</td>\n";
+	echo "	</tr>";
+	echo "</table>";
 	echo "</form>";
 
 	echo "	</td>";

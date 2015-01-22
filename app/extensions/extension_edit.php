@@ -729,7 +729,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$extension_uuid = $_GET["id"];
+		$extension_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_extensions ";
 		$sql .= "where extension_uuid = '$extension_uuid' ";
 		$sql .= "and domain_uuid = '".$domain_uuid."' ";
