@@ -38,6 +38,25 @@ else {
 	$language = new text;
 	$text = $language->get();
 
+//toggle enabled state
+	if ($_REQUEST['id'] != '' && $_REQUEST['enabled'] != '') {
+		$sql = "update v_vars set ";
+		$sql .= "var_enabled = '".check_str($_REQUEST['enabled'])."' ";
+		$sql .= "where var_uuid = '".check_str($_REQUEST['id'])."' ";
+		$db->exec(check_sql($sql));
+		unset($sql);
+
+		//unset the user defined variables
+		$_SESSION["user_defined_variables"] = "";
+
+		//synchronize the configuration
+		save_var_xml();
+
+		$_SESSION["message"] = $text['message-update'];
+		header("Location: vars.php?id=".$_REQUEST['id']);
+		exit;
+	}
+
 //include the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-variables'];
@@ -137,13 +156,8 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>".substr($var_value,0,30)."</td>\n";
 			echo "	<td valign='top' align='left' class='".$row_style[$c]."'>";
-			if ($row['var_enabled'] == "true") {
-				echo $text['option-true'];
-			}
-			else if ($row['var_enabled'] == "false") {
-				echo $text['option-false'];
-			}
-			echo "</td>\n";
+			echo "		<a href='?id=".$row['var_uuid']."&enabled=".(($row['var_enabled'] == 'true') ? 'false' : 'true')."'>".(($row['var_enabled'] == 'true') ? $text['option-true'] : $text['option-false'])."</a>";
+			echo "	</td>\n";
 			$var_description = str_replace("\n", "<br />", trim(substr(base64_decode($row['var_description']),0,40)));
 			$var_description = str_replace("   ", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $var_description);
 			echo "	<td valign='top' align='left' class='row_stylebg'>".$var_description."&nbsp;</td>\n";
