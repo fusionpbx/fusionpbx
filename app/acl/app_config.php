@@ -1,6 +1,6 @@
 <?php
 	//application details
-		$apps[$x]['name'] = 'Access Control List';
+		$apps[$x]['name'] = 'Access Control';
 		$apps[$x]['uuid'] = 'd8b0a50b-abf3-49db-b396-b1af8a700c88';
 		$apps[$x]['category'] = '';
 		$apps[$x]['subcategory'] = '';
@@ -8,16 +8,6 @@
 		$apps[$x]['license'] = 'Mozilla Public License 1.1';
 		$apps[$x]['url'] = 'http://www.fusionpbx.com';
 		$apps[$x]['description']['en-us'] = '';
-
-	//menu details
-		$apps[$x]['menu'][0]['title']['en-us'] = 'Access Control List';
-		$apps[$x]['menu'][0]['uuid'] = '0044c532-07ca-477f-aa2d-920ee58e100b';
-		$apps[$x]['menu'][0]['parent_uuid'] = 'fd29e39c-c936-f5fc-8e2b-611681b266b5';
-		$apps[$x]['menu'][0]['category'] = 'internal';
-		$apps[$x]['menu'][0]['path'] = '/app/acl/acl.php';
-		//$apps[$x]['menu'][0]['groups'][] = 'user';
-		//$apps[$x]['menu'][0]['groups'][] = 'admin';
-		$apps[$x]['menu'][0]['groups'][] = 'superadmin';
 
 	//permission details
 		$y = 0;
