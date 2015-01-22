@@ -124,6 +124,8 @@
 									//get the name and value pair
 										$sip_profile_setting_name = $row['@attributes']['name'];
 										$sip_profile_setting_value = $row['@attributes']['value'];
+										$sip_profile_setting_enabled = $row['@attributes']['enabled'];
+										if ($sip_profile_setting_enabled != "false") { $sip_profile_setting_enabled = "true"; }
 										//echo "name: $name value: $value\n";
 									//add the profile settings into the database
 										$sip_profile_setting_uuid = uuid();
@@ -141,7 +143,7 @@
 										$sql .= "'".check_str($sip_profile_uuid)."', ";
 										$sql .= "'".check_str($sip_profile_setting_name)."', ";
 										$sql .= "'".check_str($sip_profile_setting_value)."', ";
-										$sql .= "'true' ";
+										$sql .= "'".$sip_profile_setting_enabled."' ";
 										$sql .= ")";
 										//echo $sql."\n\n";
 										$db->exec(check_sql($sql));
