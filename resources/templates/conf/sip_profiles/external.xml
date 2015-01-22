@@ -19,12 +19,12 @@
 	<settings>
 		<param name="debug" value="0"/>
 		<!-- If you want FreeSWITCH to shutdown if this profile fails to load, uncomment the next line. -->
-		<!-- <param name="shutdown-on-fail" value="true"/> -->
+		<param name="shutdown-on-fail" value="true" enabled="false"/>
 		<param name="sip-trace" value="no"/>
 		<param name="sip-capture" value="no"/>        
 		<param name="rfc2833-pt" value="101"/>
 		<!-- RFC 5626 : Send reg-id and sip.instance -->
-		<!--<param name="enable-rfc-5626" value="true"/> -->
+		<param name="enable-rfc-5626" value="true" enabled="false"/>
 		<param name="sip-port" value="$${external_sip_port}"/>
 		<param name="dialplan" value="XML"/>
 		<param name="context" value="public"/>
@@ -34,8 +34,8 @@
 		<param name="hold-music" value="$${hold_music}"/>
 		<param name="zrtp-passthru" value="true"/>
 		<param name="rtp-timer-name" value="soft"/>
-		<!--<param name="enable-100rel" value="true"/>-->
-		<!--<param name="disable-srv503" value="true"/>-->                
+		<param name="enable-100rel" value="true" enabled="false"/>
+		<param name="disable-srv503" value="true" enabled="false"/>
 		<!-- This could be set to "passive" -->
 		<param name="local-network-acl" value="localnet.auto"/>
 		<param name="manage-presence" value="false"/>
@@ -46,11 +46,11 @@
 		 for presence.
 		-->
 		<!-- Name of the db to use for this profile -->
-		<!--<param name="dbname" value="share_presence"/>-->
-		<!--<param name="presence-hosts" value="$${domain}"/>-->
-		<!--<param name="force-register-domain" value="$${domain}"/>-->
+		<param name="dbname" value="share_presence" enabled="false"/>
+		<param name="presence-hosts" value="$${domain}" enabled="false"/>
+		<param name="force-register-domain" value="$${domain}" enabled="false"/>
 		<!--all inbound reg will stored in the db using this domain -->
-		<!--<param name="force-register-db-domain" value="$${domain}"/>-->
+		<param name="force-register-db-domain" value="$${domain}" enabled="false"/>
 		<!-- ************************************************* -->
 
 		<!--<param name="aggressive-nat-detection" value="true"/>-->

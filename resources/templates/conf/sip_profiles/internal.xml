@@ -32,24 +32,24 @@
 		When calls are in no media this will bring them back to media
 		when you press the hold button.
 		-->
-		<!--<param name="media-option" value="resume-media-on-hold"/> -->
+		<param name="media-option" value="resume-media-on-hold" enabled="false"/>
 		<!--
 		This will allow a call after an attended transfer go back to 
 		 bypass media after an attended transfer.
 		-->
-		<!--<param name="media-option" value="bypass-media-after-att-xfer"/>-->
-		<!-- <param name="user-agent-string" value="FreeSWITCH Rocks!"/> -->
+		<param name="media-option" value="bypass-media-after-att-xfer" enabled="false"/>
+		<param name="user-agent-string" value="FreeSWITCH Rocks!" enabled="false"/>
 		<param name="debug" value="0"/>
 		<!-- If you want FreeSWITCH to shutdown if this profile fails to load, uncomment the next line. -->
-		<!-- <param name="shutdown-on-fail" value="true"/> -->
+		<param name="shutdown-on-fail" value="true" enabled="false"/>
 		<param name="sip-trace" value="no"/>
 		<param name="sip-capture" value="no"/>
 
 		<!-- Use presence_map.conf.xml to convert extension regex to presence protos for routing -->
-		<!-- <param name="presence-proto-lookup" value="true"/> -->
+		<param name="presence-proto-lookup" value="true" enabled="false"/>
 
 		<!-- Don't be picky about negotiated DTMF just always offer 2833 and accept both 2833 and INFO -->
-		<!--<param name="liberal-dtmf" value="true"/>-->
+		<param name="liberal-dtmf" value="true" enabled="false"/>
 
 		<!-- 
 			Sometimes, in extremely rare edge cases, the Sofia SIP stack may stop
@@ -92,81 +92,81 @@
 		<param name="apply-nat-acl" value="nat.auto"/>
 
 		<!-- (default true) set to false if you do not wish to have called party info in 1XX responses -->
-		<!-- <param name="cid-in-1xx" value="false"/> -->
+		<param name="cid-in-1xx" value="false" enabled="false"/>
 
 		<!-- extended info parsing -->
-		<!-- <param name="extended-info-parsing" value="true"/> -->
+		<param name="extended-info-parsing" value="true" enabled="false"/>
 
-		<!--<param name="aggressive-nat-detection" value="true"/>-->
+		<param name="aggressive-nat-detection" value="true" enabled="false"/>
 		<!--
 		There are known issues (asserts and segfaults) when 100rel is enabled.
 		It is not recommended to enable 100rel at this time.
 		-->
-		<!--<param name="enable-100rel" value="true"/>-->
+		<param name="enable-100rel" value="true" enabled="false"/>
 
 		<!-- uncomment if you don't wish to try a next SRV destination on 503 response -->
 		<!-- RFC3263 Section 4.3 -->
-		<!--<param name="disable-srv503" value="true"/>-->    
+		<param name="disable-srv503" value="true" enabled="false"/>
 
 		<!-- Enable Compact SIP headers. -->
-		<!--<param name="enable-compact-headers" value="true"/>-->
+		<param name="enable-compact-headers" value="true" enabled="false"/>
 		<!--
 		enable/disable session timers 
 		-->
-		<!--<param name="enable-timer" value="false"/>-->
-		<!--<param name="minimum-session-expires" value="120"/>-->
+		<param name="enable-timer" value="false" enabled="false"/>
+		<param name="minimum-session-expires" value="120" enabled="false"/>
 		<param name="apply-inbound-acl" value="domains"/>
 		<!--
 		This defines your local network, by default we detect your local network
 		and create this localnet.auto ACL for this.
 		-->
 		<param name="local-network-acl" value="localnet.auto"/>
-		<!--<param name="apply-register-acl" value="domains"/>-->
-		<!--<param name="dtmf-type" value="info"/>-->
+		<param name="apply-register-acl" value="domains" enabled="false"/>
+		<param name="dtmf-type" value="info" enabled="false"/>
 
 		<!-- 'true' means every time 'first-only' means on the first register -->
-		<!--<param name="send-message-query-on-register" value="true"/>-->
+		<param name="send-message-query-on-register" value="true" enabled="false"/>
 
 		<!-- 'true' means every time 'first-only' means on the first register -->
-		<param name="send-presence-on-register" value="true"/>
+		<param name="send-presence-on-register" value="true" enabled="false"/>
 
 		<!-- Caller-ID type (choose one, can be overridden by inbound call type and/or sip_cid_type channel variable -->
 		<!-- Remote-Party-ID header -->
-		<!--<param name="caller-id-type" value="rpid"/>-->
+		<param name="caller-id-type" value="rpid" enabled="false"/>
 
 		<!-- P-*-Identity family of headers -->
-		<!--<param name="caller-id-type" value="pid"/>-->
+		<param name="caller-id-type" value="pid" enabled="false"/>
 
 		<!-- neither one -->
-		<!--<param name="caller-id-type" value="none"/>-->
+		<param name="caller-id-type" value="none" enabled="false"/>
 
 		<param name="record-path" value="$${recordings_dir}"/>
 		<param name="record-template" value="${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.wav"/>
 		<!--enable to use presence -->
 		<param name="manage-presence" value="true"/>
 		<!-- send a presence probe on each register to query devices to send presence instead of sending presence with less info -->
-		<!--<param name="presence-probe-on-register" value="true"/>-->
-		<!--<param name="manage-shared-appearance" value="true"/>-->
+		<param name="presence-probe-on-register" value="true"/>
+		<param name="manage-shared-appearance" value="true"/>
 		<!-- used to share presence info across sofia profiles -->
 		<!-- Name of the db to use for this profile -->
-		<!--<param name="dbname" value="share_presence"/>-->
+		<param name="dbname" value="share_presence" enabled="false"/>
 		<param name="presence-hosts" value="$${domain},$${local_ip_v4}"/>
 		<param name="presence-privacy" value="$${presence_privacy}"/>
 		<!-- ************************************************* -->
 
 		<!-- This setting is for AAL2 bitpacking on G726 -->
-		<!-- <param name="bitpacking" value="aal2"/> -->
+		<param name="bitpacking" value="aal2" enabled="false"/>
 		<!--max number of open dialogs in proceeding -->
-		<!--<param name="max-proceeding" value="1000"/>-->
+		<param name="max-proceeding" value="1000" enabled="false"/>
 		<!--session timers for all call to expire after the specified seconds -->
-		<!--<param name="session-timeout" value="1800"/>-->
+		<param name="session-timeout" value="1800" enabled="false"/>
 		<!-- Can be 'true' or 'contact' -->
-		<!--<param name="multiple-registrations" value="contact"/>-->
+		<param name="multiple-registrations" value="contact" enabled="false"/>
 		<!--set to 'greedy' if you want your codec list to take precedence -->
 		<param name="inbound-codec-negotiation" value="generous"/>
 		<!-- if you want to send any special bind params of your own -->
-		<!--<param name="bind-params" value="transport=udp"/>-->
-		<!--<param name="unregister-on-options-fail" value="true"/>-->
+		<param name="bind-params" value="transport=udp" enabled="false"/>
+		<param name="unregister-on-options-fail" value="true" enabled="false"/>
 
 		<!-- TLS: disabled by default, set to "true" to enable -->
 		<param name="tls" value="$${internal_ssl_enable}"/>
@@ -194,48 +194,48 @@
 
 		<!-- turn on auto-flush during bridge (skip timer sleep when the socket already has data) 
 		 (reduces delay on latent connections default true, must be disabled explicitly)-->
-		<!--<param name="rtp-autoflush-during-bridge" value="false"/>-->
+		<param name="rtp-autoflush-during-bridge" value="false" enabled="false"/>
 
 		<!--If you don't want to pass through timestamps from 1 RTP call to another (on a per call basis with rtp_rewrite_timestamps chanvar)-->
-		<!--<param name="rtp-rewrite-timestamps" value="true"/>-->
-		<!--<param name="pass-rfc2833" value="true"/>-->
+		<param name="rtp-rewrite-timestamps" value="true" enabled="false"/>
+		<param name="pass-rfc2833" value="true" enabled="false"/>
 		<!--If you have ODBC support and a working dsn you can use it instead of SQLite-->
-		<!--<param name="odbc-dsn" value="$${dsn}"/>-->
+		<param name="odbc-dsn" value="$${dsn}" enabled="false"/>
 
 		<!--Uncomment to set all inbound calls to no media mode-->
-		<!--<param name="inbound-bypass-media" value="true"/>-->
+		<param name="inbound-bypass-media" value="true" enabled="false"/>
 
 		<!--Uncomment to set all inbound calls to proxy media mode-->
-		<!--<param name="inbound-proxy-media" value="true"/>-->
+		<param name="inbound-proxy-media" value="true" enabled="false"/>
 
 		<!--Uncomment to let calls hit the dialplan *before* you decide if the codec is ok-->
-		<!--<param name="inbound-late-negotiation" value="true"/>-->
+		<param name="inbound-late-negotiation" value="true" enabled="false"/>
 
 		<!-- this lets anything register -->
 		<!--  comment the next line and uncomment one or both of the other 2 lines for call authentication -->
-		<!-- <param name="accept-blind-reg" value="true"/> -->
+		<param name="accept-blind-reg" value="true" enabled="false"/>
 
 		<!-- accept any authentication without actually checking (not a good feature for most people) -->
-		<!-- <param name="accept-blind-auth" value="true"/> -->
+		<param name="accept-blind-auth" value="true" enabled="false"/>
 
 		<!-- suppress CNG on this profile or per call with the 'suppress_cng' variable -->
-		<!-- <param name="suppress-cng" value="true"/> -->
+		<param name="suppress-cng" value="true" enabled="false"/>
 
 		<!--TTL for nonce in sip auth-->
 		<param name="nonce-ttl" value="60"/>
 		<!--Uncomment if you want to force the outbound leg of a bridge to only offer the codec 
 		that the originator is using-->
-		<!--<param name="disable-transcoding" value="true"/>-->
+		<param name="disable-transcoding" value="true" enabled="false"/>
 		<!-- Handle 302 Redirect in the dialplan -->
-		<!--<param name="manual-redirect" value="true"/> -->
+		<param name="manual-redirect" value="true" enabled="false"/>
 		<!-- Disable Transfer -->
-		<!--<param name="disable-transfer" value="true"/> -->
+		<param name="disable-transfer" value="true" enabled="false"/>
 		<!-- Disable Register -->
-		<!--<param name="disable-register" value="true"/> -->
+		<param name="disable-register" value="true" enabled="false"/>
 		<!-- Used for when phones respond to a challenged ACK with method INVITE in the hash -->
-		<!--<param name="NDLB-broken-auth-hash" value="true"/>-->
+		<param name="NDLB-broken-auth-hash" value="true" enabled="false"/>
 		<!-- add a ;received="<ip>:<port>" to the contact when replying to register for nat handling -->
-		<!--<param name="NDLB-received-in-nat-reg-contact" value="true"/>-->
+		<param name="NDLB-received-in-nat-reg-contact" value="true" enabled="false"/>
 		<param name="auth-calls" value="$${internal_auth_calls}"/>
 		<!-- Force the user and auth-user to match. -->
 		<param name="inbound-reg-force-matching-username" value="true"/>
@@ -258,41 +258,41 @@
 		<param name="rtp-timeout-sec" value="300"/>
 		<param name="rtp-hold-timeout-sec" value="1800"/>
 		<!-- VAD choose one (out is a good choice); -->
-		<!-- <param name="vad" value="in"/> -->
-		<!-- <param name="vad" value="out"/> -->
-		<!-- <param name="vad" value="both"/> -->
-		<!--<param name="alias" value="sip:10.0.1.251:5555"/>-->
+		<!-- <param name="vad" value="in" enabled="false"/> -->
+		<param name="vad" value="out" enabled="false"/>
+		<!-- <param name="vad" value="both" enabled="false"/> -->
+		<param name="alias" value="sip:10.0.1.251:5555" enabled="false"/>
 		<!--
 		These are enabled to make the default config work better out of the box.
 		If you need more than ONE domain you'll need to not use these options.
 		-->
 		<!--all inbound reg will look in this domain for the users -->
-		<!--<param name="force-register-domain" value="$${domain}"/>-->
+		<param name="force-register-domain" value="$${domain}" enabled="false"/>
 		<!--force the domain in subscriptions to this value -->
-		<!--<param name="force-subscription-domain" value="$${domain}"/>-->
+		<param name="force-subscription-domain" value="$${domain}" enabled="false"/>
 		<!--all inbound reg will stored in the db using this domain -->
-		<!--<param name="force-register-db-domain" value="$${domain}"/>-->
+		<param name="force-register-db-domain" value="$${domain}" enabled="false"/>
 
-		<!--<param name="delete-subs-on-register" value="false"/>-->
+		<param name="delete-subs-on-register" value="false" enabled="false"/>
 
 		<!-- enable rtcp on every channel also can be done per leg basis with rtcp_audio_interval_msec variable set to passthru to pass it across a call-->
-		<!--<param name="rtcp-audio-interval-msec" value="5000"/>-->
-		<!--<param name="rtcp-video-interval-msec" value="5000"/>-->
+		<param name="rtcp-audio-interval-msec" value="5000" enabled="false"/>
+		<param name="rtcp-video-interval-msec" value="5000" enabled="false"/>
 
 		<!--force suscription expires to a lower value than requested-->
-		<!--<param name="force-subscription-expires" value="60"/>-->
+		<param name="force-subscription-expires" value="60" enabled="false"/>
 		<!-- disable register and transfer which may be undesirable in a public switch -->
-		<!--<param name="disable-transfer" value="true"/>-->
-		<!--<param name="disable-register" value="true"/>-->
+		<param name="disable-transfer" value="true" enabled="false"/>
+		<param name="disable-register" value="true" enabled="false"/>
 
 		<!-- 
 		enable-3pcc can be set to either 'true' or 'proxy', true accepts the call
 		right away, proxy waits until the call has been answered then sends accepts
 		-->
-		<!--<param name="enable-3pcc" value="true"/>-->
+		<param name="enable-3pcc" value="true" enabled="false"/>
 
 		<!-- use at your own risk or if you know what this does.-->
-		<!--<param name="NDLB-force-rport" value="true"/>-->
+		<param name="NDLB-force-rport" value="true" enabled="false"/>
 		<!--
 		Choose the realm challenge key. Default is auto_to if not set. 
 
@@ -308,29 +308,28 @@
 		Note: comment out to restore the behavior before 2008-09-29
 		-->
 		<param name="challenge-realm" value="auto_from"/>
-		<!--<param name="disable-rtp-auto-adjust" value="true"/>-->
+		<param name="disable-rtp-auto-adjust" value="true" enabled="false"/>
 		<!-- on inbound calls make the uuid of the session equal to the sip call id of that call -->
-		<!--<param name="inbound-use-callid-as-uuid" value="true"/>-->
+		<param name="inbound-use-callid-as-uuid" value="true" enabled="false"/>
 		<!-- on outbound calls set the callid to match the uuid of the session -->
-		<!--<param name="outbound-use-uuid-as-callid" value="true"/>-->
+		<param name="outbound-use-uuid-as-callid" value="true" enabled="false"/>
 		<!-- set to false disable this feature -->
-		<!--<param name="rtp-autofix-timing" value="false"/>-->
+		<param name="rtp-autofix-timing" value="false" enabled="false"/>
 
 		<!-- set this param to false if your gateway for some reason hates X- headers that it is supposed to ignore-->
-		<!--<param name="pass-callee-id" value="false"/>-->
+		<param name="pass-callee-id" value="false" enabled="false"/>
 
 		<!-- clear clears them all or supply the name to add or the name prefixed with ~ to remove
 		 valid values:
-
 		 clear
 		 CISCO_SKIP_MARK_BIT_2833
 		 SONUS_SEND_INVALID_TIMESTAMP_2833
 		-->
-		<!--<param name="auto-rtp-bugs" data="clear"/>-->
+		<param name="auto-rtp-bugs" data="clear" enabled="false"/>
 
-		 <!-- the following can be used as workaround with bogus SRV/NAPTR records -->
-		 <!--<param name="disable-srv" value="false" />-->
-		 <!--<param name="disable-naptr" value="false" />-->
+		<!-- the following can be used as workaround with bogus SRV/NAPTR records -->
+		<param name="disable-srv" value="false" enabled="false"/>
+		<param name="disable-naptr" value="false" enabled="false"/>
 
 		<!-- The following can be used to fine-tune timers within sofia's transport layer 
 			 Those settings are for advanced users and can safely be left as-is -->
@@ -338,36 +337,36 @@
 		<!-- Initial retransmission interval (in milliseconds).
 			Set the T1 retransmission interval used by the SIP transaction engine. 
 			The T1 is the initial duration used by request retransmission timers A and E (UDP) as well as response retransmission timer G. 	 -->
-		<!-- <param name="timer-T1" value="500" /> -->
+		<param name="timer-T1" value="500" enabled="false"/>
 
 		<!--  Transaction timeout (defaults to T1 * 64).
 			Set the T1x64 timeout value used by the SIP transaction engine.
 			The T1x64 is duration used for timers B, F, H, and J (UDP) by the SIP transaction engine. 
 			The timeout value T1x64 can be adjusted separately from the initial retransmission interval T1. -->
-		<!-- <param name="timer-T1X64" value="32000" /> -->
+		<param name="timer-T1X64" value="32000" enabled="false"/>
 
 		<!-- Maximum retransmission interval (in milliseconds).
 			Set the maximum retransmission interval used by the SIP transaction engine. 
 			The T2 is the maximum duration used for the timers E (UDP) and G by the SIP transaction engine. 
 			Note that the timer A is not capped by T2. Retransmission interval of INVITE requests grows exponentially 
 			until the timer B fires.  -->
-		<!-- <param name="timer-T2" value="4000" /> -->
+		<param name="timer-T2" value="4000" enabled="false"/>
 
 		<!--
 			Transaction lifetime (in milliseconds).
 			Set the lifetime for completed transactions used by the SIP transaction engine. 
 			A completed transaction is kept around for the duration of T4 in order to catch late responses. 
 			The T4 is the maximum duration for the messages to stay in the network and the duration of SIP timer K. -->
-		<!-- <param name="timer-T4" value="4000" /> -->
+		<param name="timer-T4" value="4000" enabled="false"/>
 
 		<!-- Turn on a jitterbuffer for every call -->
-		<!-- <param name="auto-jitterbuffer-msec" value="60"/> -->
+		<param name="auto-jitterbuffer-msec" value="60" enabled="false"/>
 
 		<!-- By default mod_sofia will ignore the codecs in the sdp for hold/unhold operations 
 			Set this to true if you want to actually parse the sdp and re-negotiate the codec during hold/unhold.
 			It's probably not what you want so stick with the default unless you really need to change this.
 		-->
-		<!--<param name="renegotiate-codec-on-hold" value="true"/>-->
+		<param name="renegotiate-codec-on-hold" value="true" enabled="false"/>
 
 	</settings>
 </profile>
