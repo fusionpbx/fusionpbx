@@ -21,18 +21,22 @@
 		$apps[$x]['description']['pt-br'] = "";
 
 	//permission details
-		$apps[$x]['permissions'][0]['name'] = "gateway_view";
-		$apps[$x]['permissions'][0]['menu']['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";
-		$apps[$x]['permissions'][0]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][1]['name'] = "gateway_add";
-		$apps[$x]['permissions'][1]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][2]['name'] = "gateway_edit";
-		$apps[$x]['permissions'][2]['groups'][] = "superadmin";
-
-		$apps[$x]['permissions'][3]['name'] = "gateway_delete";
-		$apps[$x]['permissions'][3]['groups'][] = "superadmin";
+		$y = 0;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_view";
+		$apps[$x]['permissions'][$y]['menu']['uuid'] = "237a512a-f8fe-1ce4-b5d7-e71c401d7159";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_add";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_edit";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_delete";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "gateway_domain";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
 
 	//schema details
 		$y = 0; //table array index
