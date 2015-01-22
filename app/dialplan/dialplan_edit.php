@@ -309,15 +309,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 <?php
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
-	echo "<div align='center'>\n";
 
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
@@ -484,13 +477,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
+	echo "<br><br>";
 
 	//dialplan details
 	if ($action == "update") {
-
-		echo "<table width='100%'  border='0' cellpadding='3' cellspacing='0'>\n";
-		echo "<tr>\n";
-		echo "<td valign='top' align='left' nowrap='nowrap' colspan='2' style='padding: 20px 0px;'>\n";
 
 		//define the alternating row styles
 			$c = 0;
@@ -515,7 +505,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//display the results
 			if ($result_count > 0) {
 
-				echo "<table width='100%' border='0' cellpadding='0' cellspacing='3' style='margin: -3px;'>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
 
 				$x = 0;
 				foreach($details as $group) {
@@ -771,28 +761,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 			} //end if results
 
-		echo "</td>\n";
-		echo "</tr>\n";
-		echo "</table>";
 
 	} //end if update
 
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
+	echo "<div align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
-	echo "				<input type='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
-	echo "</table>";
+	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "</div>\n";
 	echo "</form>";
 
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		echo "<p>".$text['billing-warning']."</p>";
 	}
