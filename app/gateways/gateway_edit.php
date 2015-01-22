@@ -79,14 +79,20 @@ else {
 		$description = check_str($_POST["description"]);
 	}
 
-if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
-
-	$msg = '';
-	if ($action == "update") {
-		$gateway_uuid = check_str($_POST["gateway_uuid"]);
+//prevent the domain_uuid from not being set by someone without this permission
+	if (!permission_exists('gateway_domain')) {
+		$domain_uuid = $_SESSION['domain_uuid'];
 	}
 
+if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+
+	//get the id
+		if ($action == "update") {
+			$gateway_uuid = check_str($_POST["gateway_uuid"]);
+		}
+
 	//check for all required data
+		$msg = '';
 		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
 		if (strlen($gateway) == 0) { $msg .= $text['message-required']." ".$text['label-gateway']."<br>\n"; }
 		if ($register == "true") {
