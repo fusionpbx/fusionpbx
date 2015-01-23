@@ -352,7 +352,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 					echo "		LDAP";
 				}
 				else {
-					echo "		".ucfirst($row['default_setting_category']);
+					echo "		".ucwords(str_replace("_", " ", $row['default_setting_category']));
 				}
 				echo "		</b>\n";
 				echo "	</td>\n";
@@ -455,26 +455,19 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	else {
 		$colspan = 6;
 	}
-	echo "<td colspan='".$colspan."' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td class='list_control_icons'>";
+	echo "<td colspan='".$colspan."' class='list_control_icons'>\n";
 	if (permission_exists('default_setting_add')) {
-		echo 		"<a href='default_setting_edit.php?' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='default_setting_edit.php?' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	if (permission_exists('default_setting_delete')) {
 		echo "<a href='javascript:void(0);' onclick=\"if (confirm('".$text['confirm-delete']."')) { document.getElementById('action').value = 'delete'; document.forms.frm.submit(); }\" alt='".$text['button-delete']."'>".$v_link_label_delete."</a>";
 	}
-	echo "		</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "<br /><br />";
+	echo "<br />";
+	echo $paging_controls;
 	echo "<br /><br />";
 
 	echo "</form>";
