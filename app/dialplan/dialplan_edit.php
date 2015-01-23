@@ -505,7 +505,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		//display the results
 			if ($result_count > 0) {
 
-				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='2' style='margin: -2px;'>\n";
 
 				$x = 0;
 				foreach($details as $group) {
@@ -523,7 +523,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-group']."</td>\n";
 					echo "<td class='vncellcolreq' style='text-align: center;'>".$text['label-order']."</td>\n";
 					echo "<td>&nbsp;</td>\n";
-					echo "<tr>\n";
+					echo "</tr>\n";
 
 					foreach($group as $index => $row) {
 
