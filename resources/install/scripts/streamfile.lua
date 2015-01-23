@@ -7,7 +7,7 @@
 		if (type == "dtmf") then
 			freeswitch.console_log("info", "[streamfile] dtmf digit: " .. obj['digit'] .. ", duration: " .. obj['duration'] .. "\n"); 
 			if (obj['digit'] == "*") then
-				return false; --end playback
+				return("false"); --return to previous
 			elseif (obj['digit'] == "0") then
 				return("restart"); --start over
 			elseif (obj['digit'] == "1") then
