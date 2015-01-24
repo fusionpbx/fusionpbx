@@ -1241,4 +1241,12 @@ function number_pad($number,$n) {
 			return rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($str_to_dec), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
 		}
 	}
+
+//json detection
+	if (!function_exists('is_json')) {
+		function is_json($str) {
+			return (is_string($str) && is_object(json_decode($str))) ? true : false;
+		}
+	}
+
 ?>
