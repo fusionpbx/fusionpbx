@@ -1319,7 +1319,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
 				echo "		<tr>\n";
 				echo "			<td class='vtable'>".$row['line_number']."</td>\n";
-				echo "			<td class='vtable'><a href='/app/devices/device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a></td>\n";
+				echo "			<td class='vtable'><a href='".PROJECT_PATH."/app/devices/device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a></td>\n";
 				echo "			<td class='vtable'>".$row['device_template']."&nbsp;</td>\n";
 				//echo "			<td class='vtable'>".$row['device_description']."&nbsp;</td>\n";
 				echo "			<td>\n";
