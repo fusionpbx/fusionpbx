@@ -261,7 +261,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<option value='xml'>xml</option>\n";
 		}
 		echo "		</select>\n";
-	} elseif ($category == "cdr" && $subcategory == "storage" && $name == "text" ) {
+	}
+	elseif ($category == "cdr" && $subcategory == "storage" && $name == "text" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		if ($default_setting_value == "db") {
 			echo "		<option value='db' selected='selected'>db</option>\n";
@@ -276,7 +277,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<option value='dir'>dir</option>\n";
 		}
 		echo "		</select>\n";
-	} elseif ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
+	}
+	elseif ($category == "domain" && $subcategory == "menu" && $name == "uuid" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		$sql = "";
 		$sql .= "select * from v_menus ";
@@ -294,7 +296,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		unset ($sub_prep_statement);
 		echo "		</select>\n";
-	} elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
+	}
+	elseif ($category == "domain" && $subcategory == "template" && $name == "name" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		//add all the themes to the list
 		$theme_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/themes';
@@ -314,7 +317,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			closedir($handle);
 		}
 		echo "		</select>\n";
-	} elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
+	}
+	elseif ($category == "domain" && $subcategory == "language" && $name == "code" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		foreach ($_SESSION['app']['languages'] as $key => $value) {
 			if ($default_setting_value == $key) {
@@ -325,7 +329,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			}
 		}
 		echo "		</select>\n";
-	} elseif ($category == "email" && $subcategory == "smtp_auth" && $name == "var" ) {
+	}
+	elseif ($category == "email" && $subcategory == "smtp_auth" && $name == "var" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    <option value=''></option>\n";
 		if ($default_setting_value == "true") {
@@ -341,7 +346,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='false'>".$text['label-false']."</option>\n";
 		}
 		echo "    </select>\n";
-	} elseif ($category == "email" && $subcategory == "smtp_secure" && $name == "var" ) {
+	}
+	elseif ($category == "email" && $subcategory == "smtp_secure" && $name == "var" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		if ($default_setting_value == "none") {
 		echo "    <option value='none' selected='selected'>".$text['label-none']."</option>\n";
@@ -362,7 +368,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "    <option value='ssl'>SSL</option>\n";
 		}
 		echo "    </select>\n";
-	} elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
+	}
+	elseif ($category == "domain" && $subcategory == "time_zone" && $name == "name" ) {
 		echo "		<select id='default_setting_value' name='default_setting_value' class='formfld' style=''>\n";
 		//$list = DateTimeZone::listAbbreviations();
 		$time_zone_identifiers = DateTimeZone::listIdentifiers();
@@ -447,16 +454,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "		<option value='fine' ".(($default_setting_value == 'fine') ? 'selected' : null).">".$text['label-fine']."</option>";
 		echo "		<option value='superfine' ".(($default_setting_value == 'superfine') ? 'selected' : null).">".$text['label-superfine']."</option>";
 		echo "	</select>";
-	} elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
+	}
+	elseif ($category == "theme" && $subcategory == "domain_visible" && $name == "text" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    	<option value='true' ".(($default_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    </select>\n";
-	} elseif ($category == "theme" && $subcategory == "cache" && $name == "boolean" ) {
+	}
+	elseif ($category == "theme" && $subcategory == "cache" && $name == "boolean" ) {
 		echo "    <select class='formfld' name='default_setting_value'>\n";
 		echo "    	<option value='true' ".(($default_setting_value == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
 		echo "    	<option value='false' ".(($default_setting_value == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    </select>\n";
+	}
+	elseif (is_json($default_setting_value)) {
+		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier; white-space: nowrap; overflow: auto;' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
 	}
 	else {
 		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$default_setting_value."\">\n";
