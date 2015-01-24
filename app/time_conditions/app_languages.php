@@ -45,187 +45,151 @@
 	$text['description-template']['pt-pt'] = "Os templates oferecem uma lista condições temporais.";
 	$text['description-template']['fr-fr'] = "Le modèle fourni une liste de présélection.";
 
-//begin: Template options
-	$text['label-optgroup-office']['en-us'] = "Office";
-	$text['label-optgroup-office']['es-cl'] = "Oficina";
-	$text['label-optgroup-office']['pt-pt'] = "Escritório";
-	$text['label-optgroup-office']['fr-fr'] = "Bureau";
+	$text['label-conditions']['en-us'] = "Conditions";
+	$text['label-conditions']['es-cl'] = "Condiciones";
+	$text['label-conditions']['pt-pt'] = "Condições";
+	$text['label-conditions']['fr-fr'] = "Conditions";
 
-	$text['label-option-office-8am-5pm']['en-us'] = "Office Hours Mon-Fri 8am-5pm";
-	$text['label-option-office-8am-5pm']['es-cl'] = "Horas de oficina Lun-Vier 8h-17h";
-	$text['label-option-office-8am-5pm']['pt-pt'] = "Horas de Trabalho Seg-Sex 8h-17h";
-	$text['label-option-office-8am-5pm']['fr-fr'] = "Heures de Bureau Lun-Ven 8h-17h";
+	$text['description-conditions']['en-us'] = "Define conditions for the Action.";
+	$text['description-conditions']['es-cl'] = "Definir condiciones para la Acción.";
+	$text['description-conditions']['pt-pt'] = "Definir condições para a ação.";
+	$text['description-conditions']['fr-fr'] = "Définir les conditions pour l'action.";
 
-	$text['label-option-office-9am-6pm']['en-us'] = "Office Hours Mon-Fri 9am-6pm";
-	$text['label-option-office-9am-6pm']['es-cl'] = "Horario de oficina Lun-Vier 9h-18h";
-	$text['label-option-office-9am-6pm']['pt-pt'] = "Horas de Trabalho Seg-Sex 9h-18h";
-	$text['label-option-office-9am-6pm']['fr-fr'] = "Heures de Bureau Lun-Ven 9h-18h";
+	$text['label-condition_parameter']['en-us'] = "Parameter";
+	$text['label-condition_parameter']['es-cl'] = "Parámetro";
+	$text['label-condition_parameter']['pt-pt'] = "Parâmetro";
+	$text['label-condition_parameter']['fr-fr'] = "Paramètre";
 
-	$text['label-optgroup-us-holidays']['en-us'] = "US Holidays";
-	$text['label-optgroup-us-holidays']['es-cl'] = "Feriados US";
-	$text['label-optgroup-us-holidays']['pt-pt'] = "Férias US";
-	$text['label-optgroup-us-holidays']['fr-fr'] = "Vacances US";
+	$text['label-condition_scope']['en-us'] = "Scope";
+	$text['label-condition_scope']['es-cl'] = "Alcance";
+	$text['label-condition_scope']['pt-pt'] = "Escopo";
+	$text['label-condition_scope']['fr-fr'] = "Portée";
 
-	$text['label-option-us-holidays-new-year']['en-us'] = "New Year's Day";
-	$text['label-option-us-holidays-new-year']['es-cl'] = "Año Nuevo";
-	$text['label-option-us-holidays-new-year']['pt-pt'] = "Dia de Ano Novo";
-	$text['label-option-us-holidays-new-year']['fr-fr'] = "Nouvel an";
+	$text['label-condition_values']['en-us'] = "Value(s)";
+	$text['label-condition_values']['es-cl'] = "";
+	$text['label-condition_values']['pt-pt'] = "";
+	$text['label-condition_values']['fr-fr'] = "";
 
-	$text['label-option-us-holidays-martin-luther-king']['en-us'] = "Martin Luther King Jr Day";
-	$text['label-option-us-holidays-martin-luther-king']['es-cl'] = "Día de Martin Luther King Jr";
-	$text['label-option-us-holidays-martin-luther-king']['pt-pt'] = "Dia de Martin Luther King Jr";
-	$text['label-option-us-holidays-martin-luther-king']['fr-fr'] = "Martin Luther King Jr Day";
+	$text['label-presets']['en-us'] = "Presets";
+	$text['label-presets']['es-cl'] = "Valor(s)";
+	$text['label-presets']['pt-pt'] = "Preço(s)";
+	$text['label-presets']['fr-fr'] = "Valeur (s)";
 
-	$text['label-option-us-holidays-president']['en-us'] = "Presidents Day";
-	$text['label-option-us-holidays-president']['es-cl'] = "Día de los Presidentes";
-	$text['label-option-us-holidays-president']['pt-pt'] = "Dia dos Presidentes";
-	$text['label-option-us-holidays-president']['fr-fr'] = "Presidents Day";
+	$text['description-presets']['en-us'] = "Pre-defined conditions.";
+	$text['description-presets']['es-cl'] = "Las condiciones pre-definida.";
+	$text['description-presets']['pt-pt'] = "Condições pré-definidas.";
+	$text['description-presets']['fr-fr'] = "Conditions pré-définies.";
 
-	$text['label-option-us-holidays-memorial']['en-us'] = "Memorial Day";
-	$text['label-option-us-holidays-memorial']['es-cl'] = "Día del Memorial";
-	$text['label-option-us-holidays-memorial']['pt-pt'] = "Dia do Memorial";
-	$text['label-option-us-holidays-memorial']['fr-fr'] = "Memorial Day";
+	$text['label-preset_new_years_day']['en-us'] = "New Year's Day";
+	$text['label-preset_new_years_day']['es-cl'] = "Año Nuevo";
+	$text['label-preset_new_years_day']['pt-pt'] = "Dia de Ano Novo";
+	$text['label-preset_new_years_day']['fr-fr'] = "Nouvel an";
 
-	$text['label-option-us-holidays-independence']['en-us'] = "Independence Day";
-	$text['label-option-us-holidays-independence']['es-cl'] = "Día de la Independencia";
-	$text['label-option-us-holidays-independence']['pt-pt'] = "Dia da Independência";
-	$text['label-option-us-holidays-independence']['fr-fr'] = "Independence Day";
+	$text['label-preset_martin_luther_king_jr_day']['en-us'] = "Martin Luther King Jr. Day";
+	$text['label-preset_martin_luther_king_jr_day']['es-cl'] = "Día de Martin Luther King Jr.";
+	$text['label-preset_martin_luther_king_jr_day']['pt-pt'] = "Dia de Martin Luther King Jr.";
+	$text['label-preset_martin_luther_king_jr_day']['fr-fr'] = "Martin Luther King Jr. Day";
 
-	$text['label-option-us-holidays-labor']['en-us'] = "Labor Day";
-	$text['label-option-us-holidays-labor']['es-cl'] = "Día del Trabajo";
-	$text['label-option-us-holidays-labor']['pt-pt'] = "Dia do Trabalho";
-	$text['label-option-us-holidays-labor']['fr-fr'] = "Labor Day";
+	$text['label-preset_presidents_day']['en-us'] = "Presidents Day";
+	$text['label-preset_presidents_day']['es-cl'] = "Día de los Presidentes";
+	$text['label-preset_presidents_day']['pt-pt'] = "Dia dos Presidentes";
+	$text['label-preset_presidents_day']['fr-fr'] = "Presidents Day";
 
-	$text['label-option-us-holidays-columbus']['en-us'] = "Columbus Day";
-	$text['label-option-us-holidays-columbus']['es-cl'] = "Día de Colón";
-	$text['label-option-us-holidays-columbus']['pt-pt'] = "Dia de Colombo";
-	$text['label-option-us-holidays-columbus']['fr-fr'] = "Columbus Day";
+	$text['label-preset_memorial_day']['en-us'] = "Memorial Day";
+	$text['label-preset_memorial_day']['es-cl'] = "Día del Memorial";
+	$text['label-preset_memorial_day']['pt-pt'] = "Dia do Memorial";
+	$text['label-preset_memorial_day']['fr-fr'] = "Memorial Day";
 
-	$text['label-option-us-holidays-veteran']['en-us'] = "Veteran's Day";
-	$text['label-option-us-holidays-veteran']['es-cl'] = "Día de los Veteranos";
-	$text['label-option-us-holidays-veteran']['pt-pt'] = "Dia dos Veteranos";
-	$text['label-option-us-holidays-veteran']['fr-fr'] = "Veteran's Day";
+	$text['label-preset_independence_day']['en-us'] = "Independence Day";
+	$text['label-preset_independence_day']['es-cl'] = "Día de la Independencia";
+	$text['label-preset_independence_day']['pt-pt'] = "Dia da Independência";
+	$text['label-preset_independence_day']['fr-fr'] = "Independence Day";
 
-	$text['label-option-us-holidays-thanksgiving']['en-us'] = "Thanksgiving";
-	$text['label-option-us-holidays-thanksgiving']['es-cl'] = "Thanksgiving";
-	$text['label-option-us-holidays-thanksgiving']['pt-pt'] = "Thanksgiving";
-	$text['label-option-us-holidays-thanksgiving']['fr-fr'] = "Thanksgiving";
+	$text['label-preset_labor_day']['en-us'] = "Labor Day";
+	$text['label-preset_labor_day']['es-cl'] = "Día del Trabajo";
+	$text['label-preset_labor_day']['pt-pt'] = "Dia do Trabalho";
+	$text['label-preset_labor_day']['fr-fr'] = "Labor Day";
 
-	$text['label-option-us-holidays-christmas']['en-us'] = "Christmas";
-	$text['label-option-us-holidays-christmas']['es-cl'] = "Navidad";
-	$text['label-option-us-holidays-christmas']['pt-pt'] = "Natal";
-	$text['label-option-us-holidays-christmas']['fr-fr'] = "Noël";
+	$text['label-preset_columbus_day']['en-us'] = "Columbus Day";
+	$text['label-preset_columbus_day']['es-cl'] = "Día de Colón";
+	$text['label-preset_columbus_day']['pt-pt'] = "Dia de Colombo";
+	$text['label-preset_columbus_day']['fr-fr'] = "Columbus Day";
 
-//end: TemplateOptions
+	$text['label-preset_veterans_day']['en-us'] = "Veteran's Day";
+	$text['label-preset_veterans_day']['es-cl'] = "Día de los Veteranos";
+	$text['label-preset_veterans_day']['pt-pt'] = "Dia dos Veteranos";
+	$text['label-preset_veterans_day']['fr-fr'] = "Veteran's Day";
 
-	$text['label-day-of-month']['en-us'] = "Day of Month";
-	$text['label-day-of-month']['es-cl'] = "Día del Mes";
-	$text['label-day-of-month']['pt-pt'] = "Dia do Mês";
-	$text['label-day-of-month']['fr-fr'] = "Jour du Mois";
+	$text['label-preset_thanksgiving_day']['en-us'] = "Thanksgiving Day";
+	$text['label-preset_thanksgiving_day']['es-cl'] = "Thanksgiving";
+	$text['label-preset_thanksgiving_day']['pt-pt'] = "Thanksgiving";
+	$text['label-preset_thanksgiving_day']['fr-fr'] = "Thanksgiving";
 
-	$text['description-day-of-month']['en-us'] = "Enter the day of the month.";
-	$text['description-day-of-month']['es-cl'] = "Introduzca el día del mes.";
-	$text['description-day-of-month']['pt-pt'] = "Introduza o dia do mês.";
-	$text['description-day-of-month']['fr-fr'] = "Choisir le jour du mois.";
-
-	$text['label-day-of-week']['en-us'] = "Day of Week";
-	$text['label-day-of-week']['es-cl'] = "Día de la Semana";
-	$text['label-day-of-week']['pt-pt'] = "Dia da Semana";
-	$text['label-day-of-week']['fr-fr'] = "Jour de la semaine";
-
-	$text['description-day-of-week']['en-us'] = "Enter the day of the week. 1-7 (Sun=1, Mon=2, Tues=3)";
-	$text['description-day-of-week']['es-cl'] = "Introduzca un día de semana. 1-7 (Dom=1, Lun=2, Mar=3)";
-	$text['description-day-of-week']['pt-pt'] = "Introduza o dia da semana. 1-7 (Dom=1, Seg=2, Ter=3)";
-	$text['description-day-of-week']['fr-fr'] = "Choisir le jour de la semaine. 1-7 (Dim=1, Lun=2, Mar=3).";
-
-	$text['label-minute-of-day']['en-us'] = "Minute of Day";
-	$text['label-minute-of-day']['es-cl'] = "Minuto del Día";
-	$text['label-minute-of-day']['pt-pt'] = "Minuto do Dia";
-	$text['label-minute-of-day']['fr-fr'] = "Minute de la journée";
-
-	$text['description-minute-of-day']['en-us'] = "Enter the minute of the day. 1-1440 (midnight = 1, 8am=480, 9am=540, 6pm=1080)";
-	$text['description-minute-of-day']['es-cl'] = "Introduzca un minuto del día. 1-1440 (Media noche = 1, 8h=480, 9h=540, 18h=1080)";
-	$text['description-minute-of-day']['pt-pt'] = "Introduza o minuto do dia. 1-1440 (meia-noite = 1, 8h=480, 9h=540, 18h=1080)";
-	$text['description-minute-of-day']['fr-fr'] = "Choisir la minute de la journée. 1-1440 (minuit = 1, 8h=480, 9h=540, 6h=1080)";
-
-	$text['label-month']['en-us'] = "Month";
-	$text['label-month']['es-cl'] = "Més";
-	$text['label-month']['pt-pt'] = "Mês";
-	$text['label-month']['fr-fr'] = "Mois";
-
-	$text['description-month']['en-us'] = "Enter the month. 1-12 (Jan=1, Feb=2, Mar=3, April=4, May=5, Jun=6, July=7 etc.)";
-	$text['description-month']['es-cl'] = "Introduzca un mes. 1-12 (Ene=1, Feb=2, Mar=3, Abr=4, May=5, Junio=6, Julio=7 etc.)";
-	$text['description-month']['pt-pt'] = "Introduza o mês. 1-12 (Jan=1, Fev=2, Mar=3, Abr=4, Maio=5, Junho=6, Julho=7 etc.)";
-	$text['description-month']['fr-fr'] = "Choisir le mois. 1-12 (Jan=1, Fev=2, Mar=3, Avr=4, Mai=5, etc.).";
-
-	$text['label-week-of-month']['en-us'] = "Week of Month";
-	$text['label-week-of-month']['es-cl'] = "Semana del Mes";
-	$text['label-week-of-month']['pt-pt'] = "Semana do Mês";
-	$text['label-week-of-month']['fr-fr'] = "Semaine du Mois";
-
-	$text['description-week-of-month']['en-us'] = "Enter the week of the month.";
-	$text['description-week-of-month']['es-cl'] = "Introduzca una semana del mes.";
-	$text['description-week-of-month']['pt-pt'] = "Introduza a semana do mês.";
-	$text['description-week-of-month']['fr-fr'] = "Choisir le numéro de la semaine dans le mois";
-
-//begin: show_advanced
-
-	$text['button-advanced']['en-us'] = "Advanced";
-	$text['button-advanced']['es-cl'] = "Avanzadas";
-	$text['button-advanced']['pt-pt'] = "Avançadas";
-	$text['button-advanced']['fr-fr'] = "Afficher les paramètres avancés";
-
-	$text['label-day-of-year']['en-us'] = "Day of Year";
-	$text['label-day-of-year']['es-cl'] = "Día del Año";
-	$text['label-day-of-year']['pt-pt'] = "Dia do Ano";
-	$text['label-day-of-year']['fr-fr'] = "Jour de l'année";
-
-	$text['description-day-of-year']['en-us'] = "Enter the day of the year.";
-	$text['description-day-of-year']['es-cl'] = "Introduzca un día del año.";
-	$text['description-day-of-year']['pt-pt'] = "Introduza o dia do ano.";
-	$text['description-day-of-year']['fr-fr'] = "Choisir le numéro du jour de l'année.";
-
-	$text['label-hour']['en-us'] = "Hour";
-	$text['label-hour']['es-cl'] = "Hora";
-	$text['label-hour']['pt-pt'] = "Hora";
-	$text['label-hour']['fr-fr'] = "Heure";
-
-	$text['description-hour']['en-us'] = "Enter the hour.";
-	$text['description-hour']['es-cl'] = "Introduzca una hora.";
-	$text['description-hour']['pt-pt'] = "Introduza a hora.";
-	$text['description-hour']['fr-fr'] = "Choisir l'heure.";
-
-	$text['label-minute']['en-us'] = "Minute";
-	$text['label-minute']['es-cl'] = "Minuto";
-	$text['label-minute']['pt-pt'] = "Minuto";
-	$text['label-minute']['fr-fr'] = "Minute";
-
-	$text['description-minute']['en-us'] = "Enter the minute.";
-	$text['description-minute']['es-cl'] = "Introduzca un minuto.";
-	$text['description-minute']['pt-pt'] = "Introduza o minuto.";
-	$text['description-minute']['fr-fr'] = "Choisir la minute.";
-
-	$text['label-week']['en-us'] = "Week";
-	$text['label-week']['es-cl'] = "Semana";
-	$text['label-week']['pt-pt'] = "Semana";
-	$text['label-week']['fr-fr'] = "Semaine";
-
-	$text['description-week']['en-us'] = "Enter the week.";
-	$text['description-week']['es-cl'] = "Introduzca una semana.";
-	$text['description-week']['pt-pt'] = "Introduza a semana.";
-	$text['description-week']['fr-fr'] = "Choisir le numéro de la semaine.";
+	$text['label-preset_christmas_day']['en-us'] = "Christmas Day";
+	$text['label-preset_christmas_day']['es-cl'] = "Navidad";
+	$text['label-preset_christmas_day']['pt-pt'] = "Natal";
+	$text['label-preset_christmas_day']['fr-fr'] = "Noël";
 
 	$text['label-year']['en-us'] = "Year";
 	$text['label-year']['es-cl'] = "Año";
 	$text['label-year']['pt-pt'] = "Ano";
 	$text['label-year']['fr-fr'] = "Année";
 
-	$text['description-year']['en-us'] = "Enter the year.";
-	$text['description-year']['es-cl'] = "Introduzca un año.";
-	$text['description-year']['pt-pt'] = "Introduza o ano.";
-	$text['description-year']['fr-fr'] = "Choisir l'année.";
+	$text['label-month']['en-us'] = "Month";
+	$text['label-month']['es-cl'] = "Més";
+	$text['label-month']['pt-pt'] = "Mês";
+	$text['label-month']['fr-fr'] = "Mois";
 
-//end: show_advanced
+	$text['label-day-of-month']['en-us'] = "Day of Month";
+	$text['label-day-of-month']['es-cl'] = "Día del Mes";
+	$text['label-day-of-month']['pt-pt'] = "Dia do Mês";
+	$text['label-day-of-month']['fr-fr'] = "Jour du Mois";
+
+	$text['label-day-of-week']['en-us'] = "Day of Week";
+	$text['label-day-of-week']['es-cl'] = "Día de la Semana";
+	$text['label-day-of-week']['pt-pt'] = "Dia da Semana";
+	$text['label-day-of-week']['fr-fr'] = "Jour de la semaine";
+
+	$text['label-day-of-year']['en-us'] = "Day of Year";
+	$text['label-day-of-year']['es-cl'] = "Día del Año";
+	$text['label-day-of-year']['pt-pt'] = "Dia do Ano";
+	$text['label-day-of-year']['fr-fr'] = "Jour de l'année";
+
+	$text['label-week-of-year']['en-us'] = "Week of Year";
+	$text['label-week-of-year']['es-cl'] = "Semana del año";
+	$text['label-week-of-year']['pt-pt'] = "Semana do ano";
+	$text['label-week-of-year']['fr-fr'] = "Semaine de l'année";
+
+	$text['label-week-of-month']['en-us'] = "Week of Month";
+	$text['label-week-of-month']['es-cl'] = "Semana del Mes";
+	$text['label-week-of-month']['pt-pt'] = "Semana do Mês";
+	$text['label-week-of-month']['fr-fr'] = "Semaine du Mois";
+
+	$text['label-hour-of-day']['en-us'] = "Hour of Day";
+	$text['label-hour-of-day']['es-cl'] = "Hora del día";
+	$text['label-hour-of-day']['pt-pt'] = "Hora do dia";
+	$text['label-hour-of-day']['fr-fr'] = "Heure du jour";
+
+	$text['label-minute-of-hour']['en-us'] = "Minute of Hour";
+	$text['label-minute-of-hour']['es-cl'] = "Minuto de horas";
+	$text['label-minute-of-hour']['pt-pt'] = "Minuto de horas";
+	$text['label-minute-of-hour']['fr-fr'] = "Minute Hour";
+
+	$text['label-minute-of-day']['en-us'] = "Minute of Day";
+	$text['label-minute-of-day']['es-cl'] = "Minuto del Día";
+	$text['label-minute-of-day']['pt-pt'] = "Minuto do Dia";
+	$text['label-minute-of-day']['fr-fr'] = "Minute de la journée";
+
+	$text['label-time-of-day']['en-us'] = "Time of Day";
+	$text['label-time-of-day']['es-cl'] = "Hora del día";
+	$text['label-time-of-day']['pt-pt'] = "Hora do Dia";
+	$text['label-time-of-day']['fr-fr'] = "Heure de la journée";
+
+	$text['label-date-and-time']['en-us'] = "Date & Time";
+	$text['label-date-and-time']['es-cl'] = "Fecha y hora";
+	$text['label-date-and-time']['pt-pt'] = "Data e Hora";
+	$text['label-date-and-time']['fr-fr'] = "Date et heure";
+
 	$text['label-true']['en-us'] = "True";
 	$text['label-true']['es-cl'] = "Verdadero";
 	$text['label-true']['pt-pt'] = "Sim";
@@ -236,15 +200,15 @@
 	$text['label-false']['pt-pt'] = "Não";
 	$text['label-false']['fr-fr'] = "Non";
 
-	$text['label-action-when-true']['en-us'] = "Action when True";
-	$text['label-action-when-true']['es-cl'] = "Acción cuando sea Verdadeo";
-	$text['label-action-when-true']['pt-pt'] = "Acção quando Verdadeiro";
-	$text['label-action-when-true']['fr-fr'] = "Action quand Vrai";
+	$text['label-action']['en-us'] = "Action";
+	$text['label-action']['es-cl'] = "Acción cuando sea Verdadeo";
+	$text['label-action']['pt-pt'] = "Acção quando Verdadeiro";
+	$text['label-action']['fr-fr'] = "Action quand Vrai";
 
-	$text['label-action-when-false']['en-us'] = "Action when False";
-	$text['label-action-when-false']['es-cl'] = "Acción cuando sea Falso";
-	$text['label-action-when-false']['pt-pt'] = "Acção quando Falso";
-	$text['label-action-when-false']['fr-fr'] = "Action quand Faux";
+	$text['label-action-alternate']['en-us'] = "Alternate Action";
+	$text['label-action-alternate']['es-cl'] = "Acción cuando sea Falso";
+	$text['label-action-alternate']['pt-pt'] = "Acção quando Falso";
+	$text['label-action-alternate']['fr-fr'] = "Action quand Faux";
 
 	$text['label-order']['en-us'] = "Order";
 	$text['label-order']['es-cl'] = "Orden";
@@ -266,11 +230,6 @@
 	$text['button-save']['pt-pt'] = "Guardar";
 	$text['button-save']['fr-fr'] = "Sauvegarder";
 
-	$text['label-required-domain_uuid']['en-us'] = "Please provide: domain_uuid";
-	$text['label-required-domain_uuid']['es-cl'] = "Por favor indique: domain_uuid";
-	$text['label-required-domain_uuid']['pt-pt'] = "Por favor indique: domain_uuid";
-	$text['label-required-domain_uuid']['fr-fr'] = "Merci d'indiquer: domain_uuid";
-
 	$text['label-required-dialplan_name']['en-us'] = "Please provide: Extension Name";
 	$text['label-required-dialplan_name']['es-cl'] = "Por favor indique: Nombre de Extensión";
 	$text['label-required-dialplan_name']['pt-pt'] = "Por favor indique: Nome da Extensão";
@@ -281,9 +240,19 @@
 	$text['label-required-dialplan_number']['pt-pt'] = "Por favor indique: Número da Extensão";
 	$text['label-required-dialplan_number']['fr-fr'] = "Merci d'indiquer: Numéro de l'extension";
 
-	$text['confirm-update-complete']['en-us'] = "Update Complete";
-	$text['confirm-update-complete']['es-cl'] = "Actualización Completada";
-	$text['confirm-update-complete']['pt-pt'] = "Actualização Efectuada";
-	$text['confirm-update-complete']['fr-fr'] = "Mis à jour";
+	$text['label-required-action']['en-us'] = "Please provide: Action";
+	$text['label-required-action']['es-cl'] = "Por favor indique: Acción cuando sea Verdadeo";
+	$text['label-required-action']['pt-pt'] = "Por favor indique: Acção quando Verdadeiro";
+	$text['label-required-action']['fr-fr'] = "Merci d'indiquer: Action quand Vrai";
+
+	$text['message-update']['en-us'] = "Update Complete";
+	$text['message-update']['es-cl'] = "Actualización Completada";
+	$text['message-update']['pt-pt'] = "Actualização Efectuada";
+	$text['message-update']['fr-fr'] = "Mis à jour";
+
+	$text['message-add']['en-us'] = "Add Complete";
+	$text['message-add']['es-cl'] = "Agregar Completado";
+	$text['message-add']['fr-fr'] = "Ajouté";
+	$text['message-add']['pt-pt'] = "Adição Efectuada";
 
 ?>

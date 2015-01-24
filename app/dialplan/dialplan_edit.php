@@ -764,12 +764,14 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	} //end if update
 
+	echo "<br>\n";
 	echo "<div align='right'>\n";
 	if ($action == "update") {
 		echo "	<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
 	}
 	echo "	<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "</div>\n";
+	echo "<br><br>\n";
 	echo "</form>";
 
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){

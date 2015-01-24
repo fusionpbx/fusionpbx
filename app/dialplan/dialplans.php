@@ -254,7 +254,7 @@ else {
 		echo "<a href='".PROJECT_PATH."/app/fifo/fifo_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_add')) {
-		echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	elseif (permission_exists('dialplan_add')) {
 		echo "<a href='dialplan_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
@@ -358,7 +358,7 @@ else {
 		echo "<a href='".PROJECT_PATH."/app/fifo/fifo_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	elseif ($app_uuid == "4b821450-926b-175a-af93-a03c441818b1" && permission_exists('time_condition_add')) {
-		echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
+		echo "<a href='".PROJECT_PATH."/app/time_conditions/time_condition_edit.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
 	}
 	elseif (permission_exists('dialplan_add')) {
 		echo "<a href='dialplan_add.php' alt='".$text['button-add']."'>$v_link_label_add</a>";
