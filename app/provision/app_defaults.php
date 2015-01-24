@@ -173,6 +173,9 @@
 				//$db->exec(check_sql($sql));
 				//echo "$var_name $var_value \n";
 			}
+
+		//unset the array variable
+			unset($array);
 	}
 
 ?>
