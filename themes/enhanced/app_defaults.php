@@ -263,6 +263,9 @@ if ($domains_processed == 1) {
 				//print_r($message);
 			}
 		}
+
+	//unset the array variable
+		unset($array);
 }
 
 ?>

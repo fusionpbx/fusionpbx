@@ -61,7 +61,10 @@ if ($domains_processed == 1) {
 			unset($orm);
 			//print_r($message);
 		}
+		unset($missing);
 
+	//unset the array variable
+		unset($array);
 }
 
 ?>
