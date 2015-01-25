@@ -122,6 +122,21 @@
 		$text['description-fax_uuid']['pt-pt'] = "Seleccione o destino de fax para activar a detecção de fax.";
 		$text['description-fax_uuid']['fr-fr'] = "Insérer la destination Fax afin d'activer la détection de Fax.";
 
+		$text['label-domain']['en-us'] = "Domain";
+		$text['label-domain']['es-cl'] = "Dominio";
+		$text['label-domain']['pt-pt'] = "Domínio";
+		$text['label-domain']['fr-fr'] = "Domaine";
+
+		$text['description-domain']['en-us'] = "";
+		$text['description-domain']['es-cl'] = "";
+		$text['description-domain']['pt-pt'] = "";
+		$text['description-domain']['fr-fr'] = "";
+
+		$text['select-global']['en-us'] = "Global";
+		$text['select-global']['es-cl'] = "Global";
+		$text['select-global']['pt-pt'] = "Global";
+		$text['select-global']['fr-fr'] = "Mondial";
+
 		$text['label-destination_enabled']['en-us'] = "Enabled";
 		$text['label-destination_enabled']['es-cl'] = "Activado";
 		$text['label-destination_enabled']['pt-pt'] = "Activado";
