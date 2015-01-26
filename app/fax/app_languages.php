@@ -804,6 +804,11 @@
 	$text['description-fax_epoch']['pt-pt'] = "";
 	$text['description-fax_epoch']['fr-fr'] = "";
 
+	$text['label-accountcode']['en-us'] = "Account Code";
+	$text['label-accountcode']['es-cl'] = "Código de Cuenta";
+	$text['label-accountcode']['pt-pt'] = "Código de Conta";
+	$text['label-accountcode']['fr-fr'] = "Centre de frais";
+
 	$text['message-add']['en-us'] = "Add Completed";
 	$text['message-add']['es-cl'] = "Añadir Completado";
 	$text['message-add']['pt-pt'] = "Adicionar Concluído";

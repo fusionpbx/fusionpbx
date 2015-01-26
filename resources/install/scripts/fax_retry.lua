@@ -22,6 +22,7 @@
 --	Contributor(s):
 --		Mark J. Crane
 --		James O. Rose
+--		Luis Daniel Lucio Quiroz
 
 --set default variables
 	fax_retry_sleep = 30;
@@ -91,6 +92,7 @@
 	origination_caller_id_number = env:getHeader("origination_caller_id_number");
 	fax_bad_rows = env:getHeader("fax_bad_rows");
 	fax_transfer_rate = env:getHeader("fax_transfer_rate");
+	accountcode = env:getHeader("accountcode");
 
 	bridge_hangup_cause = env:getHeader("bridge_hangup_cause");
 	fax_result_code = env:getHeader("fax_result_code");
@@ -134,6 +136,11 @@
 		status = dbh:query(sql, function(rows)
 			domain_uuid = rows["domain_uuid"];
 		end);
+	end
+
+--be sure accountcode is not empty
+	if (accountcode == nil) then
+		accountcode = domain_name;
 	end
 
 --get the domain_uuid using the domain name required for multi-tenant
@@ -282,6 +289,7 @@
 	freeswitch.consoleLog("INFO","fax_retry_limit: " .. fax_retry_limit.. "\n");
 	freeswitch.consoleLog("INFO","fax_retry_sleep: " .. fax_retry_sleep.. "\n");
 	freeswitch.consoleLog("INFO","fax_uri: '" .. fax_uri.. "'\n");
+	freeswitch.consoleLog("INFO","accountcode: '" .. accountcode .. "'\n");
 	freeswitch.consoleLog("INFO","origination_caller_id_name: " .. origination_caller_id_name .. "\n");
 	freeswitch.consoleLog("INFO","origination_caller_id_number: " .. origination_caller_id_number .. "\n");
 	freeswitch.consoleLog("INFO","fax_result_code: ".. fax_result_code .."\n");
@@ -295,7 +303,7 @@
 	--email_cmd = "/bin/echo '"..email_message_fail.."' | /usr/bin/mail -s 'Fax to: "..number_dialed.." FAILED' -r "..from_address.." -a '"..fax_file.."' "..email_address;
 
 --to keep the originate command shorter these are things we always send. One place to adjust for all.
-	originate_same = "mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
+	originate_same = "absolute_codec_string='PCMU,PCMA',accountcode='"..accountcode.."',mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
 
 
 		if (fax_retry_attempts < fax_retry_limit) then 

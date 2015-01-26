@@ -35,6 +35,14 @@ else {
 	exit;
 }
 
+//detect billing app
+	$billing_app_exists = file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php");
+
+	if ($billing_app_exists) {
+		require_once "app/billing/resources/functions/currency.php";
+		require_once "app/billing/resources/functions/rating.php";
+	}
+
 //add multi-lingual support
 	$language = new text;
 	$text = $language->get();
@@ -96,6 +104,7 @@ else {
 	if (count($_POST)>0) {
 		$fax_name = check_str($_POST["fax_name"]);
 		$fax_extension = check_str($_POST["fax_extension"]);
+		$fax_accountcode = check_str($_POST["accountcode"]);
 		$fax_destination_number = check_str($_POST["fax_destination_number"]);
 		$fax_email = check_str($_POST["fax_email"]);
 		$fax_email_connection_type = check_str($_POST["fax_email_connection_type"]);
@@ -248,6 +257,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_uuid, ";
 					$sql .= "dialplan_uuid, ";
 					$sql .= "fax_extension, ";
+					$sql .= "accountcode, ";
 					$sql .= "fax_destination_number, ";
 					$sql .= "fax_name, ";
 					$sql .= "fax_email, ";
@@ -276,6 +286,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_uuid', ";
 					$sql .= "'$dialplan_uuid', ";
 					$sql .= "'$fax_extension', ";
+					$sql .= "'$fax_accountcode', ";
 					$sql .= "'$fax_destination_number', ";
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
@@ -313,6 +324,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "dialplan_uuid = '".$dialplan_uuid."', ";
 					}
 					$sql .= "fax_extension = '$fax_extension', ";
+					$sql .= "accountcode = '$fax_accountcode', ";
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
@@ -654,6 +666,42 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "".$text['description-extension']."\n";
 		echo "</td>\n";
 		echo "</tr>\n";
+
+		if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
+			echo "<tr>\n";
+			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+			echo "    ".$text['label-accountcode'].":\n";
+			echo "</td>\n";
+			echo "<td class='vtable' align='left'>\n";
+			if ($billing_app_exists) {
+				$sql_accountcode = "SELECT type_value FROM v_billings WHERE domain_uuid = '".$domain_uuid."'";
+				echo "<select name='accountcode' id='accountcode' class='formfld'>\n";
+				$prep_statement_accountcode = $db->prepare(check_sql($sql_accountcode));
+				$prep_statement_accountcode->execute();
+				$result_accountcode = $prep_statement_accountcode->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result_accountcode as &$row_accountcode) {
+					$selected = '';
+					if (($action == "add") && ($row_accountcode['type_value'] == $_SESSION['domain_name'])){
+						$selected='selected="selected"';
+					}
+					elseif ($row_accountcode['type_value'] == $accountcode){
+						$selected='selected="selected"';
+					}
+					echo "<option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
+				}
+				unset($sql_accountcode, $prep_statement_accountcode, $result_accountcode);
+				echo "</select>";
+			}
+			else {
+				if ($action == "add") { $accountcode = $_SESSION['domain_name']; }
+				echo "<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$accountcode."\">\n";
+			}
+                
+			echo "<br />\n";
+			echo $text['description-accountcode']."\n";
+			echo "</td>\n";
+			echo "</tr>\n";
+		}
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
