@@ -246,6 +246,10 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'] = "faxdescription";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "accountcode";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "";
 
 		$y = 1; //table array index
 		$z = 0; //field array index
