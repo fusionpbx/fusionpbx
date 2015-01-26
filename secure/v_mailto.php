@@ -38,6 +38,20 @@
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
 	require_once "resources/require.php";
+function rip_tags($string) {
+	// ----- remove HTML TAGs -----
+	$string = preg_replace ('/<[^>]*>/', ' ', $string);
+
+	// ----- remove control characters -----
+       
+	$string = str_replace("\r", '', $string);    // --- replace with empty space
+	$string = str_replace("\n", ' ', $string);   // --- replace with space
+	$string = str_replace("\t", ' ', $string);   // --- replace with space
+
+	// ----- remove multiple spaces -----
+	$string = trim(preg_replace('/ {2,}/', ' ', $string));
+	return $string;
+}
 
 //set init settings
 	ini_set('max_execution_time',1800); //30 minutes
@@ -102,7 +116,7 @@
 				foreach($decoded[0]["Parts"] as $row) {
 					$body_content_type = $row["Headers"]["content-type:"];
 					if (substr($body_content_type, 0, 9) == "text/html") { $body = $row["Body"]; }
-					if (substr($body_content_type, 0, 10) == "text/plain") { $body_plain = $row["Body"]; }
+					if (substr($body_content_type, 0, 10) == "text/plain") { $body_plain = $row["Body"];  $body = $body_plain; }
 				}
 			}
 			else {
@@ -256,12 +270,16 @@
 	}
 
 //add the body to the email
+	$body_plain = rip_tags($body);
+	echo "body_plain = $body_plain\n";
 	if ((substr($body, 0, 5) == "<html") ||  (substr($body, 0, 9) == "<!doctype")) {
 		$mail->ContentType = "text/html";
 		$mail->Body = $body;
+		$mail->AltBody = $body_plain;
 	}
 	else {
-		$mail->Body = ($body != '') ? $body : $body_plain;
+		// $mail->Body = ($body != '') ? $body : $body_plain;
+		$mail->Body = $body_plain;
 		$mail->AltBody = $body_plain;
 	}
 
