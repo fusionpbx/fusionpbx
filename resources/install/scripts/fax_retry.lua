@@ -303,7 +303,7 @@
 	--email_cmd = "/bin/echo '"..email_message_fail.."' | /usr/bin/mail -s 'Fax to: "..number_dialed.." FAILED' -r "..from_address.." -a '"..fax_file.."' "..email_address;
 
 --to keep the originate command shorter these are things we always send. One place to adjust for all.
-	originate_same = "absolute_codec_string='PCMU,PCMA',accountcode='"..accountcode.."',mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
+	originate_same = "for_fax=1,absolute_codec_string='PCMU,PCMA',accountcode='"..accountcode.."',mailto_address='"..email_address.."',mailfrom_address='"..from_address.."',origination_caller_id_name='"..origination_caller_id_name.. "',origination_caller_id_number="..origination_caller_id_number..",fax_uri="..fax_uri..",fax_retry_limit="..fax_retry_limit..",fax_retry_sleep="..fax_retry_sleep..",fax_verbose=true,fax_file='"..fax_file.."'";
 
 
 		if (fax_retry_attempts < fax_retry_limit) then 
