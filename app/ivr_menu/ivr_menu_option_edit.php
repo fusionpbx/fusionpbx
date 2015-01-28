@@ -290,7 +290,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (strlen($ivr_menu_option_action.$ivr_menu_option_param) > 0) {
 		$tmp_select_value = $ivr_menu_option_action.':'.$ivr_menu_option_param;
 	}
-	switch_select_destination("ivr", $ivr_menu_options_label, "ivr_menu_option_param", $tmp_select_value, "", $ivr_menu_option_action);
+	switch_select_destination("ivr", $ivr_menu_options_label, "ivr_menu_option_param", $tmp_select_value, "width: 350px;", $ivr_menu_option_action);
 	unset($tmp_select_value);
 
 	echo "<br />\n";
