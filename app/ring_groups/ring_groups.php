@@ -68,12 +68,6 @@ require_once "resources/paging.php";
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_ring_groups ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		if (strlen($order_by) == 0) {
-			$sql .= "order by ring_group_name, ring_group_extension asc ";
-		}
-		else {
-			$sql .= "order by $order_by $order ";
-		}
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
