@@ -339,6 +339,14 @@
 			--freeswitch.consoleLog("notice", "[conference center] destination_number: " .. destination_number .. "\n");
 			--freeswitch.consoleLog("notice", "[conference center] caller_id_number: " .. caller_id_number .. "\n");
 
+		--set the sounds path for the language, dialect and voice
+			default_language = session:getVariable("default_language");
+			default_dialect = session:getVariable("default_dialect");
+			default_voice = session:getVariable("default_voice");
+			if (not default_language) then default_language = 'en'; end
+			if (not default_dialect) then default_dialect = 'us'; end
+			if (not default_voice) then default_voice = 'callie'; end
+
 		--get the domain_uuid
 			if (domain_name ~= nil and domain_uuid == nil) then
 				sql = "SELECT domain_uuid FROM v_domains ";
@@ -359,9 +367,7 @@
 				conference_center_uuid = string.lower(row["conference_center_uuid"]);
 				conference_center_greeting = string.lower(row["conference_center_greeting"]);
 			end);
-			if (conference_center_greeting) then
-				--conference_center_greeting is ready to be used with get_pin_number
-			else
+			if (conference_center_greeting == '') then
 				conference_center_greeting = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-pin.wav";
 			end
 
@@ -407,14 +413,6 @@
 			if (domain_count > 1) then
 				recordings_dir = recordings_dir.."/"..domain_name;
 			end
-
-		--set the sounds path for the language, dialect and voice
-			default_language = session:getVariable("default_language");
-			default_dialect = session:getVariable("default_dialect");
-			default_voice = session:getVariable("default_voice");
-			if (not default_language) then default_language = 'en'; end
-			if (not default_dialect) then default_dialect = 'us'; end
-			if (not default_voice) then default_voice = 'callie'; end
 
 		--sounds
 			enter_sound = "tone_stream://v=-20;%(100,1000,100);v=-20;%(90,60,440);%(90,60,620)";
