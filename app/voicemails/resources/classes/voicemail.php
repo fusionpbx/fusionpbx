@@ -96,6 +96,7 @@
 						$sql .= "and voicemail_uuid = '' ";
 					}
 				}
+				$sql .= "order by voicemail_id asc ";
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				$prep_statement->execute();
 				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
