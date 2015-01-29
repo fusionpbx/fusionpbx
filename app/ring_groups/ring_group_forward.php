@@ -37,7 +37,7 @@ else {
 
 //add multi-lingual support
 	$language = new text;
-	$text = (is_array($text)) ? array_merge($text, $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups')) : $language->get();
+	$text = $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups');
 
 require_once "resources/header.php";
 require_once "resources/paging.php";
