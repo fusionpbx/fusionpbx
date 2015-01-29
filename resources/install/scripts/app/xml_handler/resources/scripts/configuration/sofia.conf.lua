@@ -113,7 +113,7 @@
 								sql = "select * from v_gateways as g, v_domains as d ";
 								sql = sql .. "where g.profile = '"..sip_profile_name.."' ";
 								sql = sql .. "and g.enabled = 'true' ";
-								sql = sql .. "and g.domain_uuid = d.domain_uuid ";
+								sql = sql .. "and (g.domain_uuid = d.domain_uuid or g.domain_uuid is null) ";
 							else
 								sql = "select * from v_gateways ";
 								sql = sql .. "where enabled = 'true' and profile = '"..sip_profile_name.."' ";
@@ -126,9 +126,7 @@
 								table.insert(xml, [[						<gateway name="]] .. string.lower(field.gateway_uuid) .. [[">]]);
 
 								if (string.len(field.username) > 0) then
-									table.insert(xml, [[							<param name="username" value="]] .. field.username .. [["/>]]);
-								else
-									table.insert(xml, [[							<param name="username" value="register:false"/>]]);
+									table.insert(xml, [[							<param name="username" value="]] .. field.username .. [["/>]]);;
 								end
 								if (string.len(field.distinct_to) > 0) then
 									table.insert(xml, [[							<param name="distinct-to" value="]] .. field.distinct_to .. [["/>]]);
@@ -137,9 +135,7 @@
 									table.insert(xml, [[							<param name="auth-username" value="]] .. field.auth_username .. [["/>]]);
 								end
 								if (string.len(field.password) > 0) then
-									table.insert(xml, [[							<param name="password" value="]] .. field.password .. [["/>]]);
-								else
-									table.insert(xml, [[							<param name="password" value="register:false"/>]]);
+									table.insert(xml, [[							<param name="password" value="]] .. field.password .. [["/>]]);;
 								end
 								if (string.len(field.realm) > 0) then
 									table.insert(xml, [[							<param name="realm" value="]] .. field.realm .. [["/>]]);

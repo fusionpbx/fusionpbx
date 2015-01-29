@@ -1808,7 +1808,7 @@ function save_gateway_xml() {
 
 	//get the list of gateways and write the xml
 		$sql = "select * from v_gateways ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
@@ -1827,9 +1827,6 @@ function save_gateway_xml() {
 						if (strlen($row['username']) > 0) {
 							$xml .= "      <param name=\"username\" value=\"" . $row['username'] . "\"/>\n";
 						}
-						else {
-							$xml .= "      <param name=\"username\" value=\"register:false\"/>\n";
-						}
 						if (strlen($row['distinct_to']) > 0) {
 							$xml .= "      <param name=\"distinct-to\" value=\"" . $row['distinct_to'] . "\"/>\n";
 						}
@@ -1838,9 +1835,6 @@ function save_gateway_xml() {
 						}
 						if (strlen($row['password']) > 0) {
 							$xml .= "      <param name=\"password\" value=\"" . $row['password'] . "\"/>\n";
-						}
-						else {
-							$xml .= "      <param name=\"password\" value=\"register:false\"/>\n";
 						}
 						if (strlen($row['realm']) > 0) {
 							$xml .= "      <param name=\"realm\" value=\"" . $row['realm'] . "\"/>\n";
