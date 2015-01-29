@@ -257,16 +257,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
 					$db->query($sql);
 
-				//clear the cache
-					$cache = new cache;
-					$cache->delete("memcache delete dialplan:".$_SESSION["context"]."@".$_SESSION['domain_name']);
-
-				//save the xml
+				//syncrhonize configuration
 					save_dialplan_xml();
 
-				$_SESSION["message"] = $text['message-update'];
-				header("Location: conference_centers.php");
-				return;
+				//apply settings reminder
+					$_SESSION["reload_xml"] = true;
+
+				//clear the cache
+					$cache = new cache;
+					$cache->delete("dialplan:".$_SESSION["context"]);
+
+				//redirect the browser
+					$_SESSION["message"] = $text['message-update'];
+					header("Location: conference_centers.php");
+					return;
 			} //if ($action == "update")
 		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
