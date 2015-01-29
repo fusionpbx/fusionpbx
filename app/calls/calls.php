@@ -40,7 +40,7 @@ else {
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get();
+	$text = (is_array($text)) ? array_merge($text, $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups')) : $language->get();
 
 //begin the content
 	require_once "resources/header.php";
