@@ -37,7 +37,7 @@ else {
 
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get();
+	$text = (is_array($text)) ? array_merge($text, $language->get($_SESSION['domain']['language']['code'], 'app/ring_groups')) : $language->get();
 
 require_once "resources/header.php";
 require_once "resources/paging.php";
@@ -95,9 +95,9 @@ require_once "resources/paging.php";
 		$rows_per_page = 10;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the  list
 		if (permission_exists('ring_group_add') || permission_exists('ring_group_edit')) {
