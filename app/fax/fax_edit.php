@@ -719,7 +719,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-email']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='email' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
+		echo "	<input class='formfld' type='text' name='fax_email' maxlength='255' value=\"$fax_email\">\n";
 		if (function_exists("imap_open") && file_exists("fax_box_remote.php")) {
 			echo "<input type='button' class='btn' value='".$text['button-advanced']."' onclick=\"toggle_advanced('advanced_email_connection');\">\n";
 		}
