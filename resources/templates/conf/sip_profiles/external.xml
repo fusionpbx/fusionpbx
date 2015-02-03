@@ -92,5 +92,7 @@
 		<!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
 		<param name="tls-version" value="$${sip_tls_version}"/>
 
+		<!--If you have ODBC support and a working dsn you can use it instead of SQLite-->
+		<param name="odbc-dsn" value="$${dsn}" enabled="false"/>
 	</settings>
 </profile>
