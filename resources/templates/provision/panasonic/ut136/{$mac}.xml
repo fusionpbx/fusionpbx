@@ -281,7 +281,7 @@
           <X_P_IPTEL_SDP>
             <RTCPSendBySDP RTCP_SEND_BY_SDP_1="0"/>
             <UserID SDP_USER_ID_1="-"/>
-            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_1="Y"/>
+            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_1="N"/>
             <RTPCloseEnable RTP_CLOSE_ENABLE_1="Y"/>
           </X_P_IPTEL_SDP>
           <X_P_IPTEL_Jitter>
@@ -364,7 +364,7 @@
           <X_P_IPTEL_SDP>
             <RTCPSendBySDP RTCP_SEND_BY_SDP_2="0"/>
             <UserID SDP_USER_ID_2="-"/>
-            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_2="Y"/>
+            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_2="N"/>
             <RTPCloseEnable RTP_CLOSE_ENABLE_2="Y"/>
           </X_P_IPTEL_SDP>
           <X_P_IPTEL_Jitter>
@@ -447,7 +447,7 @@
           <X_P_IPTEL_SDP>
             <RTCPSendBySDP RTCP_SEND_BY_SDP_3="0"/>
             <UserID SDP_USER_ID_3="-"/>
-            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_3="Y"/>
+            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_3="N"/>
             <RTPCloseEnable RTP_CLOSE_ENABLE_3="Y"/>
           </X_P_IPTEL_SDP>
           <X_P_IPTEL_Jitter>
@@ -530,7 +530,7 @@
           <X_P_IPTEL_SDP>
             <RTCPSendBySDP RTCP_SEND_BY_SDP_4="0"/>
             <UserID SDP_USER_ID_4="-"/>
-            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_4="Y"/>
+            <RFC2543HoldEnable RFC2543_HOLD_ENABLE_4="N"/>
             <RTPCloseEnable RTP_CLOSE_ENABLE_4="Y"/>
           </X_P_IPTEL_SDP>
           <X_P_IPTEL_Jitter>
