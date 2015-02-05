@@ -70,7 +70,7 @@ else {
 			$xml = new SimpleXMLElement($xml_str);
 		}
 		catch(Exception $e) {
-			echo $e->getMessage();
+			//echo $e->getMessage();
 		}
 		//$name = $xml->conference['name'];
 		$session_uuid = $xml->conference['uuid'];
