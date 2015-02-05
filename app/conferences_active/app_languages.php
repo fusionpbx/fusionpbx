@@ -235,9 +235,14 @@
 	$text['label-member-count']['pt-pt'] = "Total de membros";
 	$text['label-member-count']['fr-fr'] = "Décompte des participants";
 
-	$text['button-view']['en-us'] = "view";
-	$text['button-view']['es-cl'] = "ver";
-	$text['button-view']['pt-pt'] = "vista";
+	$text['button-view']['en-us'] = "View";
+	$text['button-view']['es-cl'] = "Ver";
+	$text['button-view']['pt-pt'] = "Vista";
 	$text['button-view']['fr-fr'] = "Voir";
+
+	$text['label-participant-pin']['en-us'] = "Participant PIN";
+	$text['label-participant-pin']['es-cl'] = "Participante PIN";
+	$text['label-participant-pin']['pt-pt'] = "Participante PIN";
+	$text['label-participant-pin']['fr-fr'] = "Code Participant";
 
 ?>
