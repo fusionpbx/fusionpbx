@@ -174,7 +174,7 @@ if (defined('STDIN')) {
 	}
 	else {
 		$fax_file_warning = " Fax image not available on server.";
-		echo "$fax_file_warning\n";
+		echo "$fax_file_warning<br>";
 	}
 
 //forward the fax
@@ -235,40 +235,38 @@ if (defined('STDIN')) {
 	if (strlen($fax_email) > 0 && file_exists($dir_fax."/".$fax_name.".tif")) {
 		//prepare the message
 			$tmp_subject = (($fax_email_inbound_subject_tag != '') ? "[".$fax_email_inbound_subject_tag."]" : "Fax Received").": ".$fax_name;
-			$tmp_text_plain  = "\nFax Received:\n";
-			$tmp_text_plain .= "Name: ".$fax_name."\n";
-			$tmp_text_plain .= "Extension: ".$fax_extension."\n";
-			$tmp_text_plain .= "Messages: ".$fax_messages."\n";
-			$tmp_text_plain .= $fax_file_warning."\n";
+
+			$tmp_text_html = "<br><strong>Fax Received</strong><br><br>";
+			$tmp_text_html .= "Name: ".$fax_name."<br>";
+			$tmp_text_html .= "Extension: ".$fax_extension."<br>";
+			$tmp_text_html .= "Messages: ".$fax_messages."<br>";
+			$tmp_text_html .= $fax_file_warning."<br>";
 			if ($fax_relay == 'yes') {
 				$tmp_subject = "Fax Received for Relay: ".$fax_name;
-				//$tmp_text_plain .= "This message arrived earlier and has been queued until now due to email server issues.\n";
-				$tmp_text_plain .= "\nThis message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified later as to the success or failure of this fax.\n";
+				$tmp_text_html .= "<br>This message arrived successfully from your fax machine, and has been queued for outbound fax delivery. You will be notified later as to the success or failure of this fax.<br>";
 			}
-			$tmp_text_html = $tmp_text_plain;
+			$tmp_text_plain = strip_tags(str_replace("<br>", "\n", $tmp_text_html));
 
 		//prepare the mail object
 			$mail = new PHPMailer();
 			$mail->IsSMTP(); // set mailer to use SMTP
+
 			if ($_SESSION['email']['smtp_auth']['var'] == "true") {
 				$mail->SMTPAuth = $_SESSION['email']['smtp_auth']['var']; // turn on/off SMTP authentication
 			}
 			$mail->Host = $_SESSION['email']['smtp_host']['var'];
-			if ($_SESSION['email']['smtp_secure']['var'] == "none") {
-				$_SESSION['email']['smtp_secure']['var'] = '';
-			}
-			if (strlen($_SESSION['email']['smtp_secure']['var']) > 0) {
+			if (strlen($_SESSION['email']['smtp_secure']['var']) > 0 && $_SESSION['email']['smtp_secure']['var'] != 'none') {
 				$mail->SMTPSecure = $_SESSION['email']['smtp_secure']['var'];
 			}
-			if ($_SESSION['email']['smtp_username']['var']) {
+			if ($_SESSION['email']['smtp_username']['var'] != '') {
 				$mail->Username = $_SESSION['email']['smtp_username']['var'];
 				$mail->Password = $_SESSION['email']['smtp_password']['var'];
 			}
 			$mail->SMTPDebug  = 2;
-			$mail->From       = $_SESSION['email']['smtp_from']['var'];
-			$mail->FromName   = $_SESSION['email']['smtp_from_name']['var'];
-			$mail->Subject    = $tmp_subject;
-			$mail->AltBody    = $tmp_text_plain;
+			$mail->From = $_SESSION['email']['smtp_from']['var'];
+			$mail->FromName = $_SESSION['email']['smtp_from_name']['var'];
+			$mail->Subject = $tmp_subject;
+			$mail->AltBody = $tmp_text_plain;
 			$mail->MsgHTML($tmp_text_html);
 
 			$tmp_to = $fax_email;
