@@ -70,7 +70,7 @@ else {
 			$xml = new SimpleXMLElement($xml_str);
 		}
 		catch(Exception $e) {
-			//echo $e->getMessage();
+			echo $e->getMessage();
 		}
 		//$name = $xml->conference['name'];
 		$session_uuid = $xml->conference['uuid'];
@@ -95,8 +95,7 @@ else {
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
 
-		echo "<div id='cmd_reponse'>\n";
-		echo "</div>\n";
+		echo "<div id='cmd_reponse'></div>\n";
 
 		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
@@ -119,12 +118,8 @@ else {
 			$recording_name = $session_uuid.".mp3";
 		}
 
-		if ($recording == "true") {
-			echo "	".$text['label-recording']." &nbsp;";
-		}
-		else {
-			echo "	".$text['label-not-recording']." &nbsp;";
-		}
+		echo "<img src='resources/images/".(($recording == "true") ? "recording.png" : "not_recording.png")."' style='width: 16px; height: 16px; border: none;' align='absmiddle' title=\"".$text['label-'.(($recording == "true") ? 'recording' : 'not-recording')]."\">&nbsp;&nbsp;";
+
 		if (permission_exists('conference_active_lock')) {
 			if ($locked == "true") {
 				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\" value='".$text['label-unlock']."'>\n";
