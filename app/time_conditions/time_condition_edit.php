@@ -524,6 +524,26 @@ require_once "resources/paging.php";
 				$x++;
 			}
 			unset($result);
+
+		//get the last action and anti-action
+			//echo "<pre>\n";
+			//print_r($details);
+			//$detail_anti_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
+			foreach($details as $group) {
+				foreach ($group as $row) {
+					if ($row['dialplan_detail_tag'] == 'action') {
+						//echo $row['dialplan_detail_tag']." ".$row['dialplan_detail_type'].":".$row['dialplan_detail_data']."\n";
+						$detail_action = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data'];
+					}
+					if ($row['dialplan_detail_tag'] == 'anti-action') {
+						//echo $row['dialplan_detail_tag']." ".$row['dialplan_detail_type'].":".$row['dialplan_detail_data']."\n";
+						$detail_anti_action = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data'];
+					}
+				}
+			}
+			//echo "</pre>\n";
+			//exit;
+
 		//blank row
 			foreach($details as $group => $row) {
 				//set the array key for the empty row
@@ -822,26 +842,47 @@ require_once "resources/paging.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-action']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
-	switch_select_destination("dialplan", $action_1, "action_1", $action_1, "", "");
-	echo "</td>\n";
-	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-action-alternate']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
-	switch_select_destination("dialplan", $anti_action_1, "anti_action_1", $anti_action_1, "", "");
-	echo "	<div id='desc_anti_action_data_1'></div>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	$x = 0;
+	foreach($details as $group) {
+		foreach ($group as $row) {
+			if ($row['dialplan_detail_tag'] == 'action' && $row['dialplan_detail_type'] != 'set') {
+				echo "<tr>\n";
+				echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+				echo "    ".$text['label-action']."\n";
+				echo "</td>\n";
+				echo "<td class='vtable' align='left'>\n";
+				//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
+				//switch_select_destination("dialplan", $action_1, "action_1", $action_1, "", "");
+
+				//echo $row['dialplan_detail_tag']." ".$row['dialplan_detail_type'].":".$row['dialplan_detail_data']."\n";
+				$data = $row['dialplan_detail_data'];
+				$label = explode("XML", $data);
+				$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
+				$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
+				switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][action]", $detail_action, "width: 60%;", 'action');
+				echo "</td>\n";
+				echo "</tr>\n";
+			}
+			if ($row['dialplan_detail_tag'] == 'anti-action' && $row['dialplan_detail_type'] != 'set') {
+				echo "<tr>\n";
+				echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+				echo "    ".$text['label-action-alternate']."\n";
+				echo "</td>\n";
+				echo "<td class='vtable' align='left'>\n";
+				//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
+				//switch_select_destination("dialplan", $anti_action_1, "anti_action_1", $anti_action_1, "", "");
+
+				$label = explode("XML", $row['dialplan_detail_data']);
+				$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
+				$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
+				switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][anti_action]", $detail_action, "width: 60%;", 'action');
+				echo "</td>\n";
+				echo "</tr>\n";
+			}
+		}
+		$x++;
+	}
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
@@ -869,13 +910,13 @@ require_once "resources/paging.php";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled'>\n";
 	if ($dialplan_enabled == "true") {
-		echo "    <option value='true' SELECTED >".$text['label-true']."</option>\n";
+		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
 	}
 	else {
 		echo "    <option value='true'>".$text['label-true']."</option>\n";
 	}
 	if ($dialplan_enabled == "false") {
-		echo "    <option value='false' SELECTED >".$text['label-false']."</option>\n";
+		echo "    <option value='false' selected='selected'>".$text['label-false']."</option>\n";
 	}
 	else {
 		echo "    <option value='false'>".$text['label-false']."</option>\n";
