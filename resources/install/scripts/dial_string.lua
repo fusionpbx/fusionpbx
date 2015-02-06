@@ -51,6 +51,7 @@ if ( session:ready() ) then
 	sip_from_host = session:getVariable("sip_from_host");
 	direction = session:getVariable("direction"); --in, out, both
 	extension = tostring(session:getVariable("extension")); --true, false
+	user_name = tostring(session:getVariable("user_name"));
 	context = session:getVariable("context");
 	dial_string = tostring(session:getVariable("dial_string"));
 	if (dial_string == "nil") then dial_string = ""; end
@@ -195,14 +196,28 @@ if ( session:ready() ) then
 						session:streamFile(sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/voicemail/vm-saved.wav");
 					end
 				end
-			--clear the cache
-				if (db_extension ~= nil) then
-					api:execute("memcache", "delete directory:"..db_extension.."@"..context);
-				end
 		else
 			session:streamFile("phrase:voicemail_fail_auth:#");
 			session:hangup("NORMAL_CLEARING");
 			return;
+		end
+
+	--clear the cache
+		if (user_name ~= nil) then
+			cmd = "delete directory:"..user_name.."@"..context;
+			result = api:execute("memcache", cmd);
+			if (debug["var"]) then
+				freeswitch.consoleLog("NOTICE", "[dial_string] memcache ".. cmd .. "\n");
+				freeswitch.consoleLog("NOTICE", "[dial_string] result: ".. result .. "\n");
+			end
+		end
+		if (db_extension ~= nil) then
+			cmd = "delete directory:"..db_extension.."@"..context;
+			result = api:execute("memcache", cmd);
+			if (debug["var"]) then
+				freeswitch.consoleLog("NOTICE", "[dial_string] memcache ".. cmd .. "\n");
+				freeswitch.consoleLog("NOTICE", "[dial_string] result: ".. result .. "\n");
+			end
 		end
 
 	--log to the console
