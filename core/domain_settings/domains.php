@@ -103,26 +103,19 @@ else {
 		$order = check_str($_GET["order"]);
 	}
 
-//show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
 //show the header and the search
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
-	echo "		<form method='get' action=''>\n";
-	echo "		<td width='50%' align='right'>\n";
+	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['header-domains']."</b></td>\n";
+	echo "		<td width='50%' align='right' valign='top'>\n";
+	echo "			<form method='get' action=''>\n";
 	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
+	echo "			</form>\n";
 	echo "		</td>\n";
-	echo "		</form>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
+	echo "		<td align='left' valign='top' colspan='2'>\n";
 	echo "			".$text['description-domains']."<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -136,7 +129,6 @@ else {
 		$sql .= " 	or domain_description like '%".$search."%' ";
 		$sql .= ") ";
 	}
-	if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 	$prep_statement = $db->prepare($sql);
 	if ($prep_statement) {
 	$prep_statement->execute();
@@ -169,20 +161,25 @@ else {
 		$sql .= "order by domain_name asc ";
 	}
 	else {
-		$sql .= "order by $order_by $order ";
+		$sql .= "order by ".$order_by." ".$order." ";
 	}
-	$sql .= " limit $rows_per_page offset $offset ";
+	$sql .= " limit ".$rows_per_page." offset ".$offset." ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	$result_count = count($result);
 	unset ($prep_statement, $sql);
+
+	foreach ($result as $domain) {
+		$domains[$domain['domain_uuid']]['name'] = $domain['domain_name'];
+		$domains[$domain['domain_uuid']]['parent_uuid'] = $domain['domain_parent_uuid'];
+		$domains[$domain['domain_uuid']]['enabled'] = $domain['domain_enabled'];
+		$domains[$domain['domain_uuid']]['description'] = $domain['domain_description'];
+	}
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('domain_name', $text['label-domain'], $order_by, $order);
@@ -195,36 +192,54 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	if ($result_count > 0) {
-		foreach($result as $row) {
-			$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$row['domain_uuid']."'" : null;
-			echo "<tr ".$tr_link.">\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			echo "		<a href='domain_edit.php?id=".$row['domain_uuid']."'>".$row['domain_name']."</a>";
-			echo "	</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('domain_edit')) {
-				echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$row['domain_uuid']."&domain_change=true'>".$text['label-manage']."</a>";
-			}
-			echo "	</td>";
-			echo "	<td valign='top' class='row_stylebg'>".$row['domain_description']."&nbsp;</td>\n";
-			echo "	<td class='list_control_icons'>";
-			if (permission_exists('domain_edit')) {
-				echo "<a href='domain_edit.php?id=".$row['domain_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
-			}
-			if (permission_exists('domain_delete')) {
-				if ($_SESSION["groups"][0]["domain_uuid"] != $row['domain_uuid'] && $result_count > 1) {
-					echo "<a href='domain_delete.php?id=".$row['domain_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+	if (count($domains) > 0) {
+
+		function get_child_domains($domain_parent_uuid) {
+			global $domains, $indent;
+			global $c, $row_style, $text, $v_link_label_edit, $v_link_label_delete;
+			foreach ($domains as $domain_uuid => $domain) {
+				if ($domain['parent_uuid'] == $domain_parent_uuid) {
+
+					$tr_link = (permission_exists('domain_edit')) ? "href='domain_edit.php?id=".$domain_uuid."'" : null;
+					echo "<tr ".$tr_link.">\n";
+					echo "	<td valign='top' class='".$row_style[$c]."' ".(($indent != 0) ? "style='padding-left: ".($indent * 20)."px;'" : null).">";
+					echo "		<a href='domain_edit.php?id=".$domain_uuid."'>".$domain['name']."</a>";
+					if ($domain['enabled'] != '' && $domain['enabled'] != 'true') {
+						echo "	<span style='color: #aaa; font-size: 80%;'>&nbsp;&nbsp;(".$text['label-disabled'].")</span>";
+					}
+					echo "	</td>\n";
+					echo "	<td valign='top' class='".$row_style[$c]."'>";
+					if (permission_exists('domain_edit')) {
+						echo "<a href='".PROJECT_PATH."/core/domain_settings/domains.php?domain_uuid=".$domain_uuid."&domain_change=true'>".$text['label-manage']."</a>";
+					}
+					echo "	</td>";
+					echo "	<td valign='top' class='row_stylebg'>".$domain['description']."&nbsp;</td>\n";
+					echo "	<td class='list_control_icons'>";
+					if (permission_exists('domain_edit')) {
+						echo "<a href='domain_edit.php?id=".$domain_uuid."' alt='".$text['button-edit']."'>".$v_link_label_edit."</a>";
+					}
+					if (permission_exists('domain_delete')) {
+						if ($_SESSION["groups"][0]["domain_uuid"] != $domain_uuid && count($domains) > 1) {
+							echo "<a href='domain_delete.php?id=".$domain_uuid."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
+						}
+						else {
+							echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
+						}
+					}
+					echo "	</td>\n";
+					echo "</tr>\n";
+					$c = ($c == 0) ? 1 : 0;
+
+					$indent++;
+					get_child_domains($domain_uuid);
+					$indent--;
 				}
-				else {
-					echo "<span onclick=\"alert('You cannot delete your own domain.\\n\\nPlease login with a user account under a different domain, then try again.');\">".$v_link_label_delete."</span>";
-				}
 			}
-			echo "	</td>\n";
-			echo "</tr>\n";
-			if ($c==0) { $c=1; } else { $c=0; }
-		} //end foreach
-		unset($sql, $result, $row_count);
+		}
+
+		$indent = 0;
+		get_child_domains();
+
 	} //end if results
 
 	echo "<tr>\n";
@@ -244,14 +259,6 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "<br /><br />";
 
 //include the footer

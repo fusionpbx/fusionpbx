@@ -50,7 +50,11 @@ else {
 //get http post variables and set them to php variables
 	if (count($_POST) > 0) {
 		$domain_name = strtolower(check_str($_POST["domain_name"]));
+		$domain_parent_uuid = check_str($_POST["domain_parent_uuid"]);
+		$domain_enabled = check_str($_POST["domain_enabled"]);
 		$domain_description = check_str($_POST["domain_description"]);
+
+		$domain_parent_uuid = ($domain_parent_uuid == '') ? 'null' : "'".$domain_parent_uuid."'"; // fix null
 	}
 
 if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -80,7 +84,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if ($_POST["persistformvar"] != "true") {
 			if ($action == "add" && permission_exists('domain_add')) {
 				$sql = "select count(*) as num_rows from v_domains ";
-				$sql .= "where domain_name = '$domain_name' ";
+				$sql .= "where domain_name = '".$domain_name."' ";
 				$prep_statement = $db->prepare($sql);
 				if ($prep_statement) {
 				$prep_statement->execute();
@@ -90,13 +94,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$sql .= "(";
 						$sql .= "domain_uuid, ";
 						$sql .= "domain_name, ";
+						$sql .= "domain_parent_uuid, ";
+						$sql .= "domain_enabled, ";
 						$sql .= "domain_description ";
 						$sql .= ")";
 						$sql .= "values ";
 						$sql .= "(";
 						$sql .= "'".uuid()."', ";
-						$sql .= "'$domain_name', ";
-						$sql .= "'$domain_description' ";
+						$sql .= "'".$domain_name."', ";
+						$sql .= $domain_parent_uuid.", ";
+						$sql .= "'".$domain_enabled."', ";
+						$sql .= "'".$domain_description."' ";
 						$sql .= ")";
 						$db->exec(check_sql($sql));
 						unset($sql);
@@ -120,6 +128,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				// update domain name, description
 				$sql = "update v_domains set ";
 				$sql .= "domain_name = '".$domain_name."', ";
+				$sql .= "domain_parent_uuid = ".$domain_parent_uuid.", ";
+				$sql .= "domain_enabled = '".$domain_enabled."', ";
 				$sql .= "domain_description = '".$domain_description."' ";
 				$sql .= "where domain_uuid = '".$domain_uuid."' ";
 				$db->exec(check_sql($sql));
@@ -550,6 +560,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$domain_name = strtolower($row["domain_name"]);
+			$domain_parent_uuid = $row["domain_parent_uuid"];
+			$domain_enabled = $row["domain_enabled"];
 			$domain_description = $row["domain_description"];
 		}
 		unset ($prep_statement);
@@ -565,16 +577,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //show the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>";
+	echo "<td align='left' valign='top' width='30%' nowrap='nowrap'><b>";
 	if ($action == "update") {
 		echo $text['header-domain-edit'];
 	}
@@ -582,7 +588,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo $text['header-domain-add'];
 	}
 	echo "</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='domains.php'\" value='".$text['button-back']."'>\n";
 	if (permission_exists('domain_export')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-export']."' onclick=\"window.location='".PROJECT_PATH."/app/domain_export/index.php?id=".$domain_uuid."'\" value='".$text['button-export']."'>\n";
@@ -604,10 +610,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-name'].":\n";
+	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"$domain_name\">\n";
+	echo "	<input class='formfld' type='text' name='domain_name' maxlength='255' value=\"".$domain_name."\">\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
 	echo "</td>\n";
@@ -615,33 +621,83 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-description'].":\n";
+	echo "	".$text['label-parent_domain']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"$domain_description\">\n";
+	echo "	<select class='formfld' name='domain_parent_uuid'>\n";
+	echo "		<option value=''></option>\n";
+	$sql = "select * from v_domains order by domain_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	if (count($result) > 0) {
+
+		function get_child_domains($parent_uuid) {
+			global $result, $indent, $domain_parent_uuid, $domain_name;
+			foreach ($result as $row) {
+				if ($row['domain_parent_uuid'] == $parent_uuid && $row['domain_name'] != $domain_name && ($row['domain_enabled'] == 'true' || $row['domain_enabled'] == '')) {
+					$selected = ($domain_parent_uuid == $row['domain_uuid']) ? "selected='selected'" : null;
+					echo "<option value='".$row['domain_uuid']."' ".$selected.">".(str_repeat("&nbsp;",($indent * 5))).$row['domain_name']."</option>\n";
+					$indent++;
+					get_child_domains($row['domain_uuid']);
+					$indent--;
+				}
+			}
+		}
+
+		$indent = 0;
+		get_child_domains();
+
+	}
+	unset ($prep_statement, $result, $sql);
+	echo "	</select>\n";
+	echo "	<br />\n";
+	echo $text['description-parent_domain']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-enabled']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<select class='formfld' name='domain_enabled'>\n";
+	echo "		<option value='true' ".(($domain_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+	echo "		<option value='false' ".(($domain_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+	echo "	</select>\n";
+	echo "<br />\n";
+	echo $text['description-domain_enabled']."\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-description']."\n";
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<input class='formfld' type='text' name='domain_description' maxlength='255' value=\"".$domain_description."\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
+
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='domain_uuid' value='$domain_uuid'>\n";
+		echo "		<input type='hidden' name='domain_uuid' value='$domain_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br />";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
 	echo "</form>";
 
 	if ($action == "update") {
+		echo "<br /><br />";
 		require "domain_settings.php";
 	}
-	echo "			<br /><br /><br />";
-	echo "		</td>";
-	echo "	</tr>";
-	echo "</table>";
+
 
 //include the footer
 	require_once "resources/footer.php";
