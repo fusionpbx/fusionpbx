@@ -595,7 +595,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "<div id='div_groups' ".(($contact_shared != 'true') ? "style='display: none;'" : null).">\n";
 			echo "<table border='0' cellpadding='0' cellspacing='0' width='100%'>\n";
 			echo "<tr>";
-			echo "	<td width='30%' class='vncell' valign='top'>".$text['label-groups'].":</td>";
+			echo "	<td width='30%' class='vncell' valign='top'>".$text['label-groups']."</td>";
 			echo "	<td width='70%' class='vtable'>";
 			$sql = "select ";
 			$sql .= "g.*, ";
@@ -605,7 +605,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "v_contact_groups as cg ";
 			$sql .= "where ";
 			$sql .= "cg.group_uuid = g.group_uuid ";
-			$sql .= "and g.domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and cg.domain_uuid = '".$domain_uuid."' ";
 			$sql .= "and cg.contact_uuid = '".$contact_uuid."' ";
 			$sql .= "and cg.group_uuid <> '".$_SESSION["user_uuid"]."' ";
@@ -637,6 +636,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			if (permission_exists('contact_group_add') || if_group("superadmin")) {
 				$sql = "select * from v_groups ";
 				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "or domain_uuid is null ";
 				if (sizeof($assigned_groups) > 0) {
 					$sql .= "and group_uuid not in ('".implode("','",$assigned_groups)."') ";
 				}
