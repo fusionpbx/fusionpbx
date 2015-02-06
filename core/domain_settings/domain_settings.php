@@ -98,11 +98,6 @@ if (sizeof($_REQUEST) > 1) {
 	echo "<input type='hidden' name='action' id='action' value=''>";
 	echo "<input type='hidden' name='domain_uuid' value='".$domain_uuid."'>";
 
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-
 //prepare to page the results
 	$sql = "select count(*) as num_rows from v_domain_settings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -148,7 +143,6 @@ if (sizeof($_REQUEST) > 1) {
 	$row_style["1"] = "row_style1";
 
 //show the content
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	if ($result_count > 0) {
@@ -158,8 +152,9 @@ if (sizeof($_REQUEST) > 1) {
 				$c = 0;
 				echo "<tr>\n";
 				echo "	<td colspan='7' align='left'>\n";
-				echo "		<br />\n";
-				echo "		<br />\n";
+				if ($previous_category != '') {
+					echo "	<br /><br />\n";
+				}
 				echo "		<b>\n";
 				if (strtolower($row['domain_setting_category']) == "cdr") {
 					echo "		CDR";
@@ -290,15 +285,6 @@ if (sizeof($_REQUEST) > 1) {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-
 	echo "</form>";
 
 	echo "<br /><br />";

@@ -170,10 +170,10 @@
 	$text['label-enabled']['pt-pt'] = "Habilitado";
 	$text['label-enabled']['fr-fr'] = "Actif";
 
-	$text['description-enabled']['en-us'] = "Set the status of this default setting.";
-	$text['description-enabled']['es-cl'] = "Configure el estado de esta configuración predeterminada.";
-	$text['description-enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
-	$text['description-enabled']['fr-fr'] = "Choisir l'état de ce paramètre";
+	$text['description-setting_enabled']['en-us'] = "Set the status of this default setting.";
+	$text['description-setting_enabled']['es-cl'] = "Configure el estado de esta configuración predeterminada.";
+	$text['description-setting_enabled']['pt-pt'] = "Escolha o estado desta definição por omissão.";
+	$text['description-setting_enabled']['fr-fr'] = "Choisir l'état de ce paramètre";
 
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";
@@ -269,5 +269,25 @@
 	$text['message-required']['es-cl'] = "Por favor indique: ";
 	$text['message-required']['pt-pt'] = "Por favor indique: ";
 	$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
+
+	$text['description-domain_enabled']['en-us'] = "Set the status of the domain.";
+	$text['description-domain_enabled']['es-cl'] = "Ajuste el estado del dominio.";
+	$text['description-domain_enabled']['pt-pt'] = "Definir o estado do domínio.";
+	$text['description-domain_enabled']['fr-fr'] = "Régler le statut du domaine.";
+
+	$text['label-parent_domain']['en-us'] = "Parent Domain";
+	$text['label-parent_domain']['es-cl'] = "Dominio de los Padres";
+	$text['label-parent_domain']['pt-pt'] = "Domínio Parent";
+	$text['label-parent_domain']['fr-fr'] = "Domaine Parent";
+
+	$text['description-parent_domain']['en-us'] = "Set the parent domain.";
+	$text['description-parent_domain']['es-cl'] = "Establecer el dominio principal.";
+	$text['description-parent_domain']['pt-pt'] = "Defina o domínio pai.";
+	$text['description-parent_domain']['fr-fr'] = "Réglez le domaine parent.";
+
+	$text['label-disabled']['en-us'] = "Disabled";
+	$text['label-disabled']['es-cl'] = "Discapacitado";
+	$text['label-disabled']['pt-pt'] = "Inválido";
+	$text['label-disabled']['fr-fr'] = "Non Permis";
 
 ?>
