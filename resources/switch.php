@@ -2735,20 +2735,20 @@ if (!function_exists('save_call_center_xml')) {
 							$dialplan->dialplan_detail_add();
 							unset($dialplan);
 
-              if (strlen($queue_cid_prefix) > 0) {
-                       $dialplan = new dialplan;
-                       $dialplan->domain_uuid = $domain_uuid;
-                       $dialplan->dialplan_uuid = $dialplan_uuid;
-                       $dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-                       $dialplan->dialplan_detail_type = 'set';
-                       $dialplan->dialplan_detail_data = "effective_caller_id_name=".$queue_cid_prefix."-\${caller_id_name}";
-                       $dialplan->dialplan_detail_break = '';
-                       $dialplan->dialplan_detail_inline = '';
-                       $dialplan->dialplan_detail_group = '2';
-                       $dialplan->dialplan_detail_order = '040';
-                       $dialplan->dialplan_detail_add();
-                       unset($dialplan);
-              }
+							if (strlen($queue_cid_prefix) > 0) {
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'set';
+								$dialplan->dialplan_detail_data = "effective_caller_id_name=".$queue_cid_prefix."-\${caller_id_name}";
+								$dialplan->dialplan_detail_break = '';
+								$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '040';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
+							}
 
 							$dialplan = new dialplan;
 							$dialplan->domain_uuid = $domain_uuid;
