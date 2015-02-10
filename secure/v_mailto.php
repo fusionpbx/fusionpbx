@@ -38,20 +38,22 @@
 //includes
 	if (!defined('STDIN')) { include "root.php"; }
 	require_once "resources/require.php";
-function rip_tags($string) {
-	// ----- remove HTML TAGs -----
-	$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-	// ----- remove control characters -----
-       
-	$string = str_replace("\r", '', $string);    // --- replace with empty space
-	$string = str_replace("\n", ' ', $string);   // --- replace with space
-	$string = str_replace("\t", ' ', $string);   // --- replace with space
+//define a function to remove html tags
+	function rip_tags($string) {
+		// ----- remove HTML TAGs -----
+		$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
-	// ----- remove multiple spaces -----
-	$string = trim(preg_replace('/ {2,}/', ' ', $string));
-	return $string;
-}
+		// ----- remove control characters -----
+		   
+		$string = str_replace("\r", '', $string);    // --- replace with empty space
+		$string = str_replace("\n", ' ', $string);   // --- replace with space
+		$string = str_replace("\t", ' ', $string);   // --- replace with space
+
+		// ----- remove multiple spaces -----
+		$string = trim(preg_replace('/ {2,}/', ' ', $string));
+		return $string;
+	}
 
 //set init settings
 	ini_set('max_execution_time',1800); //30 minutes
