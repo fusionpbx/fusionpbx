@@ -286,7 +286,7 @@ if (count($_POST) > 0 && $_POST["persistform"] != "1") {
 		}
 		if (strlen($password) > 0 && $confirm_password == $password) {
 			//salt used with the password to create a one way hash
-				$salt = generate_password('20', '4');
+				$salt = uuid();
 			//set the password
 				$sql .= "password = '".md5($salt.$password)."', ";
 				$sql .= "salt = '".$salt."', ";
