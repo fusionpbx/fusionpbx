@@ -47,12 +47,16 @@
 					session:say(message_number, default_language, "NUMBER", "pronounced");
 				end
 			end
-		--say the message date
-			if (session:ready()) then
-				if (string.len(dtmf_digits) == 0) then
+
+        --say the message date
+            if (session:ready()) then
+                if (string.len(dtmf_digits) == 0) then
+                    if (current_time_zone ~= nil) then
+                        session:execute("set", "timezone="..current_time_zone.."");
+                    end
 					session:say(created_epoch, default_language, "CURRENT_DATE_TIME", "pronounced");
-				end
-			end
+                end
+            end
 		--play the message
 			if (session:ready()) then
 				if (string.len(dtmf_digits) == 0) then
