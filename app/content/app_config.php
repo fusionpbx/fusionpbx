@@ -103,8 +103,8 @@
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = "v_rss";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "rssid";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "rss_id";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][0] = "rssid";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][1] = "rss_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
@@ -233,8 +233,8 @@
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = "v_rss_sub";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "rsssubid";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "rss_sub_id";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][0] = "rsssubid";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][1] = "rss_sub_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
@@ -352,8 +352,8 @@
 		$z = 0; //field array index
 		$apps[$x]['db'][$y]['table'] = "v_rss_sub_category";
 		$apps[$x]['db'][$y]['fields'][$z]['name']['text'] = "id";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "rsssubcategoryid";
-		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][] = "rss_sub_category_id";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][0] = "rsssubcategoryid";
+		$apps[$x]['db'][$y]['fields'][$z]['name']['deprecated'][1] = "rss_sub_category_id";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['pgsql'] = "serial";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['sqlite'] = "integer";
 		$apps[$x]['db'][$y]['fields'][$z]['type']['mysql'] = "INT NOT NULL AUTO_INCREMENT";
