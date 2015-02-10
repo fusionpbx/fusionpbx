@@ -110,7 +110,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	}
 
 	//salt used with the password to create a one way hash
-	$salt = generate_password('20', '4');
+	$salt = uuid();
 
 	//prepare the uuids
 	$user_uuid = uuid();
