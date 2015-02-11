@@ -27,7 +27,6 @@
 require_once "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-
 if (permission_exists('xml_cdr_view')) {
 	//access granted
 }
@@ -40,13 +39,9 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-//import xml_cdr files
-	require_once "v_xml_cdr_import.php";
-
 //additional includes
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
-
 
 //xml cdr include
 	$rows_per_page = 100;
