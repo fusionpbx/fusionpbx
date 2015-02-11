@@ -40,16 +40,29 @@ require_once "resources/paging.php";
 	$language = new text;
 	$text = $language->get();
 
-//set the variables
-	$order_by = check_str($_GET["order_by"]);
-	$order = check_str($_GET["order"]);
+//set the action as an add or an update
+	if (isset($_REQUEST["id"])) {
+		$action = "update";
+		$dialplan_uuid = check_str($_REQUEST["id"]);
+	}
+	else {
+		$action = "add";
+	}
 
-//get the post form variables and se them to php variables
-	$action = 'add';
+//get the app uuid
+	$app_uuid = check_str($_REQUEST["app_uuid"]);
+
+//get the http post values and set them as php variables
 	if (count($_POST) > 0) {
 		$dialplan_name = check_str($_POST["dialplan_name"]);
 		$dialplan_number = check_str($_POST["dialplan_number"]);
 		$dialplan_order = check_str($_POST["dialplan_order"]);
+		$dialplan_continue = check_str($_POST["dialplan_continue"]);
+		$dialplan_details = $_POST["dialplan_details"];
+		if (strlen($dialplan_continue) == 0) { $dialplan_continue = "false"; }
+		$dialplan_context = check_str($_POST["dialplan_context"]);
+		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
+		$dialplan_description = check_str($_POST["dialplan_description"]);
 
 		$action_1 = check_str($_POST["action_1"]);
 		$action_1_array = explode(":", $action_1);
@@ -60,18 +73,23 @@ require_once "resources/paging.php";
 		$anti_action_1_array = explode(":", $anti_action_1);
 		$anti_action_application_1 = array_shift($anti_action_1_array);
 		$anti_action_data_1 = join(':', $anti_action_1_array);
-
-		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
-		$dialplan_description = check_str($_POST["dialplan_description"]);
 	}
 
-//process submitted data
+//prcoess the HTTP POST
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
+		
+		if ($action == "update") {
+			$dialplan_uuid = check_str($_POST["dialplan_uuid"]);
+		}
+
 		//check for all required data
-			if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
-			if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
-			if (strlen($dialplan_number) == 0) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
-			if (strlen($action_1) == 0) { $msg .= $text['label-required-action']."<br>\n"; }
+			$msg = '';
+			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
+			if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
+			if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
+			if (strlen($dialplan_context) == 0) { $msg .= $text['message-required'].$text['label-context']."<br>\n"; }
+			if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			//if (strlen($dialplan_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
 				require_once "resources/persist_form_var.php";
@@ -85,363 +103,74 @@ require_once "resources/paging.php";
 				return;
 			}
 
-		//add the time condition
-			if (strlen($_GET['id']) == 0) {
-				//start the atomic transaction
-					$count = $db->exec("BEGIN;"); //returns affected rows
+		//remove the invalid characters from the dialplan name
+			$dialplan_name = $_POST["dialplan_name"];
+			$dialplan_name = str_replace(" ", "_", $dialplan_name);
+			$dialplan_name = str_replace("/", "", $dialplan_name);
 
-				//add the main dialplan include entry
-					$dialplan_uuid = uuid();
-					$sql = "insert into v_dialplans ";
-					$sql .= "(";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "app_uuid, ";
-					$sql .= "dialplan_name, ";
-					$sql .= "dialplan_number, ";
-					$sql .= "dialplan_order, ";
-					$sql .= "dialplan_continue, ";
-					$sql .= "dialplan_context, ";
-					$sql .= "dialplan_enabled, ";
-					$sql .= "dialplan_description ";
-					$sql .= ") ";
-					$sql .= "values ";
-					$sql .= "(";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$dialplan_uuid."', ";
-					$sql .= "'4b821450-926b-175a-af93-a03c441818b1', ";
-					$sql .= "'".$dialplan_name."', ";
-					$sql .= "'".$dialplan_number."', ";
-					$sql .= "'".$dialplan_order."', ";
-					$sql .= "'true', ";
-					$sql .= "'".$_SESSION['context']."', ";
-					$sql .= "'".$dialplan_enabled."', ";
-					$sql .= "'".$dialplan_description."' ";
-					$sql .= ")";
-
-					//execute query
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-				//initialize dialplan detail group and order numbers
-					$dialplan_detail_group = 0;
-					$dialplan_detail_order = 0;
-
-				//check if custom conditions defined
-					$custom_conditions_defined = false;
-					foreach ($_REQUEST['variable'] as $cond_var) {
-						if ($cond_var != '') { $custom_conditions_defined = true; }
+		//build the array
+			if (strlen($row["dialplan_uuid"]) > 0) {
+				$array['dialplan_uuid'] = $_POST["dialplan_uuid"];
+			}
+			if (isset($_POST["domain_uuid"])) {
+				$array['domain_uuid'] = $_POST['domain_uuid'];
+			}
+			else {
+				$array['domain_uuid'] = $_SESSION['domain_uuid'];
+			}
+			$array['dialplan_name'] = $dialplan_name;
+			$array['dialplan_number'] = $_POST["dialplan_number"];
+			$array['dialplan_context'] = $_POST["dialplan_context"];
+			$array['dialplan_continue'] = $_POST["dialplan_continue"];
+			$array['dialplan_order'] = $_POST["dialplan_order"];
+			$array['dialplan_enabled'] = $_POST["dialplan_enabled"];
+			$array['dialplan_description'] = $_POST["dialplan_description"];
+			$x = 0;
+			foreach ($_POST["dialplan_details"] as $row) {
+				if (strlen($row["dialplan_detail_tag"]) > 0) {
+					if (strlen($row["dialplan_detail_uuid"]) > 0) {
+						$array['dialplan_details'][$x]['dialplan_detail_uuid'] = $row["dialplan_detail_uuid"];
 					}
+					$array['dialplan_details'][$x]['domain_uuid'] = $array['domain_uuid'];
+					$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
+					$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+					$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
+					$array['dialplan_details'][$x]['dialplan_detail_break'] =  $row["dialplan_detail_break"];
+					$array['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
+					$array['dialplan_details'][$x]['dialplan_detail_group'] = $row["dialplan_detail_group"];
+					$array['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
+				}
+				$x++;
+			}
 
-					if ($custom_conditions_defined) {
+		//add or update the database
+			if ($_POST["persistformvar"] != "true") {
+				$orm = new orm;
+				$orm->name('dialplans');
+				$orm->uuid($dialplan_uuid);
+				$orm->save($array);
+				//$message = $orm->message;
+			}
 
-						//build insert query for custom conditions
-						$sql = "insert into v_dialplan_details ";
-						$sql .= "( ";
-						$sql .= "domain_uuid, ";
-						$sql .= "dialplan_uuid, ";
-						$sql .= "dialplan_detail_uuid, ";
-						$sql .= "dialplan_detail_tag, ";
-						$sql .= "dialplan_detail_type, ";
-						$sql .= "dialplan_detail_data, ";
-						$sql .= "dialplan_detail_break, ";
-						$sql .= "dialplan_detail_inline, ";
-						$sql .= "dialplan_detail_group, ";
-						$sql .= "dialplan_detail_order ";
-						$sql .= ") ";
-						$sql .= "values ";
+		//clear the cache
+			$cache = new cache;
+			//$cache->delete("dialplan:".$dialplan_context);
+			$cache->delete("dialplan:".$_SESSION["context"]);
 
-						//add destination number condition
-						$dialplan_detail_group++;
-						$dialplan_detail_order += 10;
-						$sql .= "( ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$dialplan_uuid."', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'condition', ";
-						$sql .= "'destination_number', ";
-						$sql .= "'^".$dialplan_number."$', ";
-						$sql .= "'never', ";
-						$sql .= "null, ";
-						$sql .= "'".$dialplan_detail_group."', ";
-						$sql .= "'".$dialplan_detail_order."' ";
-						$sql .= ")";
+		//synchronize the xml config
+			save_dialplan_xml();
 
-						//add custom conditions
-						foreach ($_REQUEST['variable'] as $cond_num => $cond_var) {
-							if ($cond_var != '') {
-								$scope = $_REQUEST['scope'][$cond_num];
-								$cond_start = $_REQUEST[$cond_var][$cond_num]['start'];
-								$cond_stop = $_REQUEST[$cond_var][$cond_num]['stop'];
+		//set the message
+			if ($action == "add") {
+				$_SESSION['message'] = $text['message-add'];
+			}
+			else if ($action == "update") {
+				$_SESSION['message'] = $text['message-update'];
+			}
+			header("Location: time_condition_edit.php?id=".$dialplan_uuid.(($app_uuid != '') ? "&app_uuid=".$app_uuid : null));
+			return;
 
-								//handle time of day
-									if ($cond_var == 'time-of-day' && $cond_start['hour'] != '') {
-										//format condition start
-											if ($cond_start['notation'] == 'PM') {
-												$cond_start_hour = ($cond_start['hour'] != 12) ? $cond_start['hour'] += 12 : $cond_start['hour'];
-											}
-											else if ($cond_start['notation'] == 'AM') {
-												$cond_start_hour = ($cond_start['hour'] == 12) ? $cond_start['hour'] -= 12 : $cond_start['hour'];
-											}
-											$cond_start_hour = number_pad($cond_start_hour,2);
-											$cond_start_minute = $cond_start['minute'];
-											$cond_start = $cond_start_hour.':'.$cond_start_minute;
-
-										//format condition stop
-											if ($cond_start != '' && $scope == 'range') {
-												if ($cond_stop['notation'] == 'PM') {
-													$cond_stop_hour = ($cond_stop['hour'] != 12) ? $cond_stop['hour'] += 12 : $cond_stop['hour'];
-												}
-												else if ($cond_stop['notation'] == 'AM') {
-													$cond_stop_hour = ($cond_stop['hour'] == 12) ? $cond_stop['hour'] -= 12 : $cond_stop['hour'];
-												}
-												$cond_stop_hour = number_pad($cond_stop_hour,2);
-												$cond_stop_minute = $cond_stop['minute'];
-												$cond_stop = $cond_stop_hour.':'.$cond_stop_minute;
-											}
-											else {
-												unset($cond_stop);
-											}
-
-										$cond_value = $cond_start.(($cond_stop != '') ? '-'.$cond_stop : null);
-									}
-								//handle all other variables
-									else {
-										if ($cond_start != '') {
-											$cond_value = $cond_start;
-											if ($scope == 'range' && $cond_stop != '') {
-												$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
-												$cond_value .= $range_indicator.$cond_stop;
-											}
-										}
-									}
-
-								//add condition to query string
-								$dialplan_detail_order += 10;
-								$sql .= ", ( ";
-								$sql .= "'".$domain_uuid."', ";
-								$sql .= "'".$dialplan_uuid."', ";
-								$sql .= "'".uuid()."', ";
-								$sql .= "'condition', ";
-								$sql .= "'".$cond_var."', ";
-								$sql .= "'".$cond_value."', ";
-								$sql .= "'never', ";
-								$sql .= "null, ";
-								$sql .= "'".$dialplan_detail_group."', ";
-								$sql .= "'".$dialplan_detail_order."' ";
-								$sql .= ") ";
-							}
-						}
-
-						//add condition action
-						$dialplan_detail_order += 10;
-						$sql .= ", ( ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$dialplan_uuid."', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'action', ";
-						$sql .= "'set', ";
-						$sql .= "'time_condition=true', ";
-						$sql .= "null, ";
-						$sql .= "'true', ";
-						$sql .= "'".$dialplan_detail_group."', ";
-						$sql .= "'".$dialplan_detail_order."' ";
-						$sql .= ") ";
-
-						//execute query
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
-
-				//add to query for preset conditions (if any)
-					if (sizeof($_REQUEST['preset']) > 0) {
-
-						//build insert query for preset conditions
-						$sql = "insert into v_dialplan_details ";
-						$sql .= "( ";
-						$sql .= "domain_uuid, ";
-						$sql .= "dialplan_uuid, ";
-						$sql .= "dialplan_detail_uuid, ";
-						$sql .= "dialplan_detail_tag, ";
-						$sql .= "dialplan_detail_type, ";
-						$sql .= "dialplan_detail_data, ";
-						$sql .= "dialplan_detail_break, ";
-						$sql .= "dialplan_detail_inline, ";
-						$sql .= "dialplan_detail_group, ";
-						$sql .= "dialplan_detail_order ";
-						$sql .= ") ";
-						$sql .= "values ";
-
-						//get preset condition variables
-						foreach ($_SESSION['time_conditions']['preset'] as $json) {
-							$presets[] = json_decode($json, true);
-						}
-
-						foreach ($_REQUEST['preset'] as $index => $preset_number) {
-
-							//increment group and order number
-							$dialplan_detail_group++;
-							$dialplan_detail_order = 0;
-
-							//add destination number condition
-							$dialplan_detail_order += 10;
-							$sql .= ($index != 0) ? "," : null;
-							$sql .= " ( ";
-							$sql .= "'".$domain_uuid."', ";
-							$sql .= "'".$dialplan_uuid."', ";
-							$sql .= "'".uuid()."', ";
-							$sql .= "'condition', ";
-							$sql .= "'destination_number', ";
-							$sql .= "'^".$dialplan_number."$', ";
-							$sql .= "'never', ";
-							$sql .= "null, ";
-							$sql .= "'".$dialplan_detail_group."', ";
-							$sql .= "'".$dialplan_detail_order."' ";
-							$sql .= ") ";
-
-							foreach ($presets[$preset_number] as $preset_name => $preset) {
-								foreach ($preset['variables'] as $cond_var => $cond_value) {
-									//add preset condition to query string
-									$dialplan_detail_order += 10;
-									$sql .= ", ( ";
-									$sql .= "'".$domain_uuid."', ";
-									$sql .= "'".$dialplan_uuid."', ";
-									$sql .= "'".uuid()."', ";
-									$sql .= "'condition', ";
-									$sql .= "'".$cond_var."', ";
-									$sql .= "'".$cond_value."', ";
-									$sql .= "'never', ";
-									$sql .= "null, ";
-									$sql .= "'".$dialplan_detail_group."', ";
-									$sql .= "'".$dialplan_detail_order."' ";
-									$sql .= ") ";
-								}
-							}
-
-							//add condition action
-							$dialplan_detail_order += 10;
-							$sql .= ", ( ";
-							$sql .= "'".$domain_uuid."', ";
-							$sql .= "'".$dialplan_uuid."', ";
-							$sql .= "'".uuid()."', ";
-							$sql .= "'action', ";
-							$sql .= "'set', ";
-							$sql .= "'time_condition=true', ";
-							$sql .= "null, ";
-							$sql .= "'true', ";
-							$sql .= "'".$dialplan_detail_group."', ";
-							$sql .= "'".$dialplan_detail_order."' ";
-							$sql .= ") ";
-						}
-
-						//execute query
-						$db->exec(check_sql($sql));
-						unset($sql);
-					}
-
-				//increment group number, reset order number
-					$dialplan_detail_group = 100;
-					$dialplan_detail_order = 0;
-
-				//add to query for main action and anti-action condition
-
-					//build insert query for custom conditions
-					$sql = "insert into v_dialplan_details ";
-					$sql .= "( ";
-					$sql .= "domain_uuid, ";
-					$sql .= "dialplan_uuid, ";
-					$sql .= "dialplan_detail_uuid, ";
-					$sql .= "dialplan_detail_tag, ";
-					$sql .= "dialplan_detail_type, ";
-					$sql .= "dialplan_detail_data, ";
-					$sql .= "dialplan_detail_break, ";
-					$sql .= "dialplan_detail_inline, ";
-					$sql .= "dialplan_detail_group, ";
-					$sql .= "dialplan_detail_order ";
-					$sql .= ") ";
-					$sql .= "values ";
-
-					//add destination number condition
-					$dialplan_detail_order += 10;
-					$sql .= "( ";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$dialplan_uuid."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'condition', ";
-					$sql .= "'destination_number', ";
-					$sql .= "'^".$dialplan_number."$', ";
-					$sql .= "null, ";
-					$sql .= "null, ";
-					$sql .= "'".$dialplan_detail_group."', ";
-					$sql .= "'".$dialplan_detail_order."' ";
-					$sql .= ") ";
-
-					//add time condition met check
-					$dialplan_detail_order += 10;
-					$sql .= ", ( ";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$dialplan_uuid."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'condition', ";
-					$sql .= "'".'${time_condition}'."', ";
-					$sql .= "'^true$', ";
-					$sql .= "null, ";
-					$sql .= "null, ";
-					$sql .= "'".$dialplan_detail_group."', ";
-					$sql .= "'".$dialplan_detail_order."' ";
-					$sql .= ") ";
-
-					//add main action
-					$dialplan_detail_order += 10;
-					$sql .= ", ( ";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$dialplan_uuid."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'action', ";
-					$sql .= "'".$action_application_1."', ";
-					$sql .= "'".$action_data_1."', ";
-					$sql .= "null, ";
-					$sql .= "null, ";
-					$sql .= "'".$dialplan_detail_group."', ";
-					$sql .= "'".$dialplan_detail_order."' ";
-					$sql .= ") ";
-
-					//add anti-action (if defined)
-					if (strlen($anti_action_application_1) > 0) {
-						$dialplan_detail_order += 10;
-						$sql .= ", ( ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$dialplan_uuid."', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'anti-action', ";
-						$sql .= "'".$anti_action_application_1."', ";
-						$sql .= "'".$anti_action_data_1."', ";
-						$sql .= "null, ";
-						$sql .= "null, ";
-						$sql .= "'".$dialplan_detail_group."', ";
-						$sql .= "'".$dialplan_detail_order."' ";
-						$sql .= ") ";
-					}
-					//execute query
-					$db->exec(check_sql($sql));
-					unset($sql);
-
-				//commit the atomic transaction
-					$count = $db->exec("COMMIT;"); //returns affected rows
-
-				//synchronize the xml config
-					save_dialplan_xml();
-
-				//clear the cache
-					$cache = new cache;
-					$cache->delete("dialplan:".$_SESSION["context"]);
-
-				//redirect the browser
-					$_SESSION["message"] = $text['message-add'];
-					header("Location: ".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1");
-					return;
-			} //end - add the time condition
-	} //end if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
+	} //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //get the information to pre-populate the form
 	if (strlen($_GET['id']) > 0) {
@@ -559,6 +288,7 @@ require_once "resources/paging.php";
 					$details[$group][$x]['dialplan_detail_inline'] = '';
 					$details[$group][$x]['dialplan_detail_group'] = $group;
 					$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
+					$details[$group][$x]['preset'] = 'false';
 			}
 	}
 
@@ -594,43 +324,43 @@ require_once "resources/paging.php";
 		}
 	}
 
-
-function is_preset($presets, $times) {
-	if ($_GET['debug'] == 'true') {
-		echo "<p style='background-color: #E8D8C1;'>\n";
-		echo "<br />\n";
-		echo "<br />\n";
-	}
-	$preset_keys = array();
-	foreach ($presets as $row) {
+//add a function to check the time to see if its is a preset time
+	function is_preset($presets, $times) {
 		if ($_GET['debug'] == 'true') {
-			echo "<table>\n";
-		}
-		$match = true;
-		foreach ($row as $k => $v) {
-			if ($_GET['debug'] == 'true') {
-				echo "<tr>\n";
-				echo "<td>".$k."</td><td>".$row[$k]."</td><td>".$k."</td><td>".$times[$k]."</td>";
-			}
-			if ($row[$k] == $times[$k]) {
-				if ($_GET['debug'] == 'true') { echo "<td>match</td>"; }
-			}
-			else {
-				if ($_GET['debug'] == 'true') { echo "<td>no match</td>"; }
-				$match = false;
-			}
-			if ($_GET['debug'] == 'true') {
-				echo "</tr>\n";
-			}
-		}
-		if ($_GET['debug'] == 'true') {
-			echo "</table>\n";
+			echo "<p style='background-color: #E8D8C1;'>\n";
+			echo "<br />\n";
 			echo "<br />\n";
 		}
-		if ($match) { return true; }
+		$preset_keys = array();
+		foreach ($presets as $row) {
+			if ($_GET['debug'] == 'true') {
+				echo "<table>\n";
+			}
+			$match = true;
+			foreach ($row as $k => $v) {
+				if ($_GET['debug'] == 'true') {
+					echo "<tr>\n";
+					echo "<td>".$k."</td><td>".$row[$k]."</td><td>".$k."</td><td>".$times[$k]."</td>";
+				}
+				if ($row[$k] == $times[$k]) {
+					if ($_GET['debug'] == 'true') { echo "<td>match</td>"; }
+				}
+				else {
+					if ($_GET['debug'] == 'true') { echo "<td>no match</td>"; }
+					$match = false;
+				}
+				if ($_GET['debug'] == 'true') {
+					echo "</tr>\n";
+				}
+			}
+			if ($_GET['debug'] == 'true') {
+				echo "</table>\n";
+				echo "<br />\n";
+			}
+			if ($match) { return true; }
+		}
+		return false;
 	}
-	return false;
-}
 
 //set preset to true or false on dialplan_times array
 	$x = 0;
