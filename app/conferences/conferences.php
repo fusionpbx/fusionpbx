@@ -47,26 +47,19 @@ else {
 	$order = $_GET["order"];
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td align='left' width='50%' nowrap><b>".$text['title']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description']." \n";
-	if (permission_exists('conference_active_advanced_view')) {
-		echo "			Show <a href='".PROJECT_PATH."/app/conferences_active/conferences_active.php'>".$text['title-2']."</a> ".$text['description-2']."<br /><br />\n";
+	echo "		<td valign='top'><b>".$text['title']."</b></td>\n";
+	echo "		<td valign='top' align='right'>\n";
+	if (permission_exists('conference_active_view')) {
+		echo "		<input type='button' class='btn' alt='".$text['button-view_active']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php';\" value='".$text['button-view_active']."'>\n";
 	}
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "<br />\n";
+	echo $text['description'];
+	echo "<br /><br />\n";
 
 	//prepare to page the results
 		if (if_group("superadmin") || if_group("admin")) {
@@ -98,9 +91,9 @@ else {
 		$rows_per_page = 10;
 		$param = "";
 		$page = $_GET['page'];
-		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; } 
-		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page); 
-		$offset = $rows_per_page * $page; 
+		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
+		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
+		$offset = $rows_per_page * $page;
 
 	//get the list
 		if (if_group("superadmin") || if_group("admin")) {
@@ -127,17 +120,15 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('conference_name', $text['table-name'], $order_by, $order);
 	echo th_order_by('conference_extension', $text['table-extension'], $order_by, $order);
 	echo th_order_by('conference_profile', $text['table-profile'], $order_by, $order);
-	//echo th_order_by('conference_flags', 'Flags', $order_by, $order);
 	echo th_order_by('conference_order', $text['table-order'], $order_by, $order);
 	echo th_order_by('conference_enabled', $text['table-enabled'], $order_by, $order);
 	echo th_order_by('conference_description', $text['table-description'], $order_by, $order);
-	echo "<td align='right' width='42'>\n";
+	echo "<td class='list_control_icons'>\n";
 	if (permission_exists('conference_add')) {
 		echo "	<a href='conference_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
@@ -145,28 +136,28 @@ else {
 		echo "	&nbsp;\n";
 	}
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
 			$conference_name = $row['conference_name'];
 			$conference_name = str_replace("-", " ", $conference_name);
-			echo "<tr >\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$conference_name."&nbsp;</td>\n";
+			$tr_link = "href='conference_edit.php?id=".$row['conference_uuid']."'";
+			echo "<tr ".$tr_link.">\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'><a href='conference_edit.php?id=".$row['conference_uuid']."'>".$conference_name."</a>&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_extension']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_profile']."&nbsp;</td>\n";
-			//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_flags']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_order']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['conference_enabled']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-'.$row['conference_enabled']]."&nbsp;</td>\n";
 			echo "	<td valign='top' class='row_stylebg' width='35%'>".$row['conference_description']."&nbsp;</td>\n";
-			echo "	<td valign='top' align='right'>\n";
+			echo "	<td class='list_control_icons'>";
 			if (permission_exists('conference_edit')) {
-				echo "		<a href='conference_edit.php?id=".$row['conference_uuid']."' alt='edit'>$v_link_label_edit</a>\n";
+				echo 	"<a href='conference_edit.php?id=".$row['conference_uuid']."' alt='edit'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('conference_delete')) {
-				echo "		<a href='conference_delete.php?id=".$row['conference_uuid']."' alt='delete' onclick=\"return confirm('Do you really want to delete this?')\">$v_link_label_delete</a>\n";
+				echo 	"<a href='conference_delete.php?id=".$row['conference_uuid']."' alt='delete' onclick=\"return confirm('".$text['confirm-delete-2']."')\">$v_link_label_delete</a>";
 			}
-			echo "	</td>\n";
+			echo 	"</td>\n";
 			echo "</tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
@@ -179,7 +170,7 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
-	echo "		<td width='33.3%' align='right'>\n";
+	echo "		<td class='list_control_icons'>\n";
 	if (permission_exists('conference_add')) {
 		echo "			<a href='conference_edit.php' alt='add'>$v_link_label_add</a>\n";
 	}
@@ -193,14 +184,6 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "<br /><br />";
 
 //include the footer

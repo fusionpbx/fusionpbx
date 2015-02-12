@@ -27,7 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('conference_active_view')) {
+if (permission_exists('conference_interactive_view')) {
 	//access granted
 }
 else {
@@ -120,7 +120,7 @@ else {
 
 		echo "<img src='resources/images/".(($recording == "true") ? "recording.png" : "not_recording.png")."' style='width: 16px; height: 16px; border: none;' align='absmiddle' title=\"".$text['label-'.(($recording == "true") ? 'recording' : 'not-recording')]."\">&nbsp;&nbsp;";
 
-		if (permission_exists('conference_active_lock')) {
+		if (permission_exists('conference_interactive_lock')) {
 			if ($locked == "true") {
 				echo "		<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=unlock');\" value='".$text['label-unlock']."'>\n";
 			}
@@ -153,7 +153,7 @@ else {
 		echo "<th>".$text['label-speak']."</th>\n";
 		echo "<th>".$text['label-talking']."</th>\n";
 		echo "<th>".$text['label-last-talk']."</th>\n";
-		if (permission_exists('conference_active_video')) {
+		if (permission_exists('conference_interactive_video')) {
 			echo "<th>".$text['label-video']."</th>\n";
 		}
 		echo "<th>".$text['label-floor']."</th>\n";
@@ -213,7 +213,7 @@ else {
 					echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-no']."</td>\n";
 				}
 				echo "<td valign='top' class='".$row_style[$c]."'>$last_talking_formatted</td>\n";
-				if (permission_exists('conference_active_video')) {
+				if (permission_exists('conference_interactive_video')) {
 					if ($flag_has_video == "true") {
 						echo "<td valign='top' class='".$row_style[$c]."'>".$text['label-yes']."</td>\n";
 					}
@@ -229,27 +229,27 @@ else {
 				}
 				echo "<td valign='top' class='".$row_style[$c]."' style='text-align:right;'>\n";
 				//energy
-					if (permission_exists('conference_active_energy')) {
+					if (permission_exists('conference_interactive_energy')) {
 						echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\" value='+".$text['label-energy']."'>\n";
 						echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\" value='-".$text['label-energy']."'>\n";
 						//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\">+".$text['label-energy']."</a>&nbsp;\n";
 						//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=energy&id=".$id."');\">-".$text['label-energy']."</a>&nbsp;\n";
 					}
 				//volume
-					if (permission_exists('conference_active_volume')) {
+					if (permission_exists('conference_interactive_volume')) {
 						echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."%&data=volume_in&id=".$id."');\" value='+".$text['label-volume']."'>\n";
 						echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_in&id=".$id."');\" value='-".$text['label-volume']."'>\n";
 						//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."%&data=volume_in&id=".$id."');\">+".$text['label-volume']."</a>&nbsp;\n";
 						//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_in&id=".$id."');\">-".$text['label-volume']."</a>&nbsp;\n";
 					}
-					if (permission_exists('conference_active_gain')) {
+					if (permission_exists('conference_interactive_gain')) {
 						echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\" value='+".$text['label-gain']."'>\n";
 						echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\" value='-".$text['label-gain']."'>\n";
 						//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=up&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\">+".$text['label-gain']."</a>&nbsp;\n";
 						//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?direction=down&cmd=conference&name=".$conference_name."&data=volume_out&id=".$id."');\">-".$text['label-gain']."</a>&nbsp;\n";
 					}
 				//mute and unmute
-					if (permission_exists('conference_active_mute')) {
+					if (permission_exists('conference_interactive_mute')) {
 						if ($flag_can_speak == "true") {
 							echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=mute&id=".$id."');\" value='".$text['label-mute']."'>\n";
 							//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('');\">".$text['label-mute']."</a>&nbsp;\n";
@@ -260,7 +260,7 @@ else {
 						}
 					}
 				//deaf and undeaf
-					if (permission_exists('conferences_active_deaf')) {
+					if (permission_exists('conference_interactive_deaf')) {
 						if ($flag_can_hear == "true") {
 							echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=deaf&id=".$id."');\" value='".$text['label-deaf']."'>\n";
 							//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=deaf&id=".$id."');\">".$text['label-deaf']."</a>&nbsp;\n";
@@ -271,7 +271,7 @@ else {
 						}
 					}
 				//kick someone from the conference
-					if (permission_exists('conference_active_kick')) {
+					if (permission_exists('conference_interactive_kick')) {
 						echo "	<input type='button' class='btn' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick&id=".$id."&uuid=".$uuid."');\" value='".$text['label-kick']."'>\n";
 						//echo "	<a href='javascript:void(0);' onclick=\"send_cmd('conference_exec.php?cmd=conference&name=".$conference_name."&data=kick&id=".$id."&uuid=".$uuid."');\">".$text['label-kick']."</a>&nbsp;\n";
 					}
@@ -282,5 +282,6 @@ else {
 			if ($c==0) { $c=1; } else { $c=0; }
 		}
 		echo "</table>\n";
+		echo "<br /><br />";
 	}
 ?>

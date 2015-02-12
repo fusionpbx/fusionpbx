@@ -27,7 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('conference_active_view')) {
+if (permission_exists('conference_interactive_view')) {
 	//access granted
 }
 else {
@@ -111,23 +111,21 @@ var record_count = 0;
 </script>
 
 <?php
-echo "<div align='center'>";
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
-echo "	<td align='left'><b>".$text['label-interactive']."</b><br>\n";
+echo "	<td align='left'>";
+echo "		<b>".$text['label-interactive']."</b><br><br>\n";
 echo "		".$text['description-interactive']."\n";
 echo "	</td>\n";
 echo "	</tr>\n";
-echo "</table>\n";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "	<tr class='border'>\n";
+echo "	<tr>\n";
 echo "	<td align=\"left\">\n";
+echo "		<br>\n";
 echo "		<div id=\"ajax_reponse\"></div>\n";
 echo "		<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
 echo "	</td>";
 echo "	</tr>";
 echo "</table>";
-echo "</div>";
 
 //show the header
 	require_once "resources/footer.php";
