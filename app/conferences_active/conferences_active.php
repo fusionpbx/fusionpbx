@@ -27,7 +27,7 @@
 include "root.php";
 require_once "resources/require.php";
 require_once "resources/check_auth.php";
-if (permission_exists('conference_active_advanced_view')) {
+if (permission_exists('conference_active_view')) {
 	//access granted
 }
 else {
@@ -91,27 +91,20 @@ else if (window.attachEvent) {
 </script>
 
 <?php
-echo "<div align='center'>";
-
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 echo "  <tr>\n";
-echo "	<td align='left'><b>".$text['label-active']."</b><br>\n";
+echo "	<td align='left'><b>".$text['label-active']."</b><br><br>\n";
 echo "		".$text['description-active']."\n";
 echo "	</td>\n";
 echo "  </tr>\n";
 echo "</table>\n";
+echo "<br>\n";
 
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\">\n";
-
-echo "	<div id=\"ajax_reponse\">\n";
-echo "	</div>\n";
-
-echo "	</td>";
-echo "	</tr>";
+echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+echo "<tr>\n";
+echo "	<td align=\"left\"><div id=\"ajax_reponse\"></div></td>";
+echo "</tr>";
 echo "</table>";
-echo "</div>";
 
 require_once "resources/footer.php";
 ?>

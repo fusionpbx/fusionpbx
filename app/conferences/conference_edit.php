@@ -319,37 +319,37 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	echo "<td align='left' nowrap='nowrap' valign='top'>";
 	if ($action == "add") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['label-conference-add']."</b></td>\n";
+		echo "<b>".$text['label-conference-add']."</b>";
 	}
 	if ($action == "update") {
-		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['label-conference-edit']."</b></td>\n";
+		echo "<b>".$text['label-conference-edit']."</b>";
 	}
-	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='back' onclick=\"window.location='conferences.php'\" value='".$text['button-back']."'></td>\n";
+	echo "	<br /><br />";
+	echo 	$text['description'];
+	echo "	<br /><br />";
+	echo "	</td>\n";
+	echo "	<td align='right' valign='top'>";
+	echo "		<input type='button' class='btn' name='' alt='back' onclick=\"window.location='conferences.php'\" value='".$text['button-back']."'>";
+	if (permission_exists('conference_active_view')) {
+		echo "	<input type='button' class='btn' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php?c=".str_replace(" ", "-", $conference_name)."';\" value='".$text['button-view']."'>\n";
+	}
+	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	</td>\n";
 	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td align='left' colspan='2'>\n";
-	echo "".$text['description']." \n";
-	echo "Click on <a href='".PROJECT_PATH."/app/conferences_active/conference_interactive.php?c=".str_replace(" ", "-", $conference_name)."'>".$text['title-3']."</a> \n";
-	echo "".$text['description-3']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo "</table>\n";
+
+	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-name'].":\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
+	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_name' maxlength='255' value=\"$conference_name\">\n";
 	echo "<br />\n";
 	echo "".$text['description-name']."\n";
@@ -358,7 +358,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-extension'].":\n";
+	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_extension' maxlength='255' value=\"$conference_extension\">\n";
@@ -369,7 +369,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-pin'].":\n";
+	echo "	".$text['label-pin']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_pin_number' maxlength='255' value=\"$conference_pin_number\">\n";
@@ -381,7 +381,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (if_group("admin") || if_group("superadmin")) {
 		if ($action == "update") {
 			echo "	<tr>";
-			echo "		<td class='vncell' valign='top'>User List:</td>";
+			echo "		<td class='vncell' valign='top'>".$text['label-user_list']."</td>";
 			echo "		<td class='vtable'>";
 
 			echo "			<table width='52%'>\n";
@@ -410,7 +410,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "and user_enabled = 'true' ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
-			echo "			<select name=\"user_uuid\" class='frm'>\n";
+			echo "			<select name=\"user_uuid\" class='formfld'>\n";
 			echo "			<option value=\"\"></option>\n";
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach($result as $field) {
@@ -429,7 +429,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['table-profile'].":\n";
+	echo "	".$text['table-profile']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='conference_profile'>\n";
@@ -447,7 +447,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	Flags:\n";
+	echo "	".$text['label-flags']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_flags' maxlength='255' value=\"$conference_flags\">\n";
@@ -458,7 +458,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-order'].":\n";
+	echo "	".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='conference_order' class='formfld'>\n";
@@ -480,7 +480,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['table-enabled'].":\n";
+	echo "	".$text['table-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='conference_enabled'>\n";
@@ -505,7 +505,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-description'].":\n";
+	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='conference_description' maxlength='255' value=\"$conference_description\">\n";
@@ -514,22 +514,17 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "	<tr>\n";
-	echo "		<td colspan='2' align='right'>\n";
+	echo "<tr>\n";
+	echo "	<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
-		echo "				<input type='hidden' name='conference_uuid' value='$conference_uuid'>\n";
+		echo "	<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
+		echo "	<input type='hidden' name='conference_uuid' value='$conference_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
-	echo "		</td>\n";
-	echo "	</tr>";
+	echo "		<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "	</td>\n";
+	echo "</tr>";
 	echo "</table>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";

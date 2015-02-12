@@ -53,29 +53,20 @@ else {
 	$order = $_GET["order"];
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-conference-centers']."</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'><b>".$text['title-conference-centers']."</b></td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
 	if (permission_exists('conference_active_advanced_view')) {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-view']."' onclick=\"window.location='".PROJECT_PATH."/app/conferences_active/conferences_active.php'\" value='".$text['button-view']."'>\n";
 	}
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-rooms']."' onclick=\"window.location='conference_rooms.php'\" value='".$text['button-rooms']."'>\n";
 	echo "</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-conference-centers']."\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
+	echo "</tr>\n";
 	echo "</table>\n";
 	echo "<br />\n";
+	echo $text['description-conference-centers']."\n";
+	echo "<br /><br />\n";
 
 	//prepare to page the results
 		if (if_group("superadmin") || if_group("admin")) {
@@ -141,7 +132,6 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('conference_center_name', $text['label-name'], $order_by, $order);
@@ -208,15 +198,7 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
+	echo "<br />";
 
 //include the footer
 	require_once "resources/footer.php";

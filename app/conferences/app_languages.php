@@ -11,20 +11,20 @@
 	$text['description']['pt-pt'] = "As conferências são utilizadas para configurar salas de conferência com um nome, descrição e número pin opcional.";
 	$text['description']['fr-fr'] = "Ce menu est utilisé pour créer des salles de conférence avec un nom, une description et en option un code PIN.";
 
-	$text['title-2']['en-us'] = "Active Conferences";
-	$text['title-2']['es-cl'] = "Conferencias Activas";
-	$text['title-2']['pt-pt'] = "Conferências Activas";
-	$text['title-2']['fr-fr'] = "Conférences actives";
+	$text['label-active_conferences']['en-us'] = "Active Conferences";
+	$text['label-active_conferences']['es-cl'] = "Conferencias Activas";
+	$text['label-active_conferences']['pt-pt'] = "Conferências Activas";
+	$text['label-active_conferences']['fr-fr'] = "Conférences actives";
 
-	$text['title-3']['en-us'] = "Active Conference";
-	$text['title-3']['es-cl'] = "Conferencia Activa";
-	$text['title-3']['pt-pt'] = "Conferência Activa";
-	$text['title-3']['fr-fr'] = "Conférence active";
+	$text['button-view_active']['en-us'] = "View Active";
+	$text['button-view_active']['es-cl'] = "Ver Activo";
+	$text['button-view_active']['pt-pt'] = "Ver Ativo";
+	$text['button-view_active']['fr-fr'] = "Voir Active";
 
-	$text['description-2']['en-us'] = "and then select a conference to monitor and interact with it.";
-	$text['description-2']['es-cl'] = "y luego seleccionar una conferencia para monitorear e interacuar con ella.";
-	$text['description-2']['pt-pt'] = "e selecione uma conferência para monitorizar e poder interagir.";
-	$text['description-2']['fr-fr'] = "et ensuite sélectionner la conférence à superviser et à gérer.";
+	$text['button-view']['en-us'] = "View";
+	$text['button-view']['es-cl'] = "Ver";
+	$text['button-view']['pt-pt'] = "Ver";
+	$text['button-view']['fr-fr'] = "Voir";
 
 	$text['table-name']['en-us'] = "Name";
 	$text['table-name']['es-cl'] = "Nombre";
@@ -197,5 +197,25 @@
 	$text['description-flags']['es-cl'] = "Flags opcionales de conferencia. Ejemplo: mute|deaf|waste|moderator";
 	$text['description-flags']['pt-pt'] = "Flags opcionais de conferências. Exemplos: mute|deaf|waste|moderator";
 	$text['description-flags']['fr-fr'] = "Flags Optionnels de la conférence. exemple: mute|deaf|waste|moderator";
+
+	$text['label-true']['en-us'] = "True";
+	$text['label-true']['es-cl'] = "Verdadero";
+	$text['label-true']['pt-pt'] = "Sim";
+	$text['label-true']['fr-fr'] = "Oui";
+
+	$text['label-false']['en-us'] = "False";
+	$text['label-false']['es-cl'] = "Falso";
+	$text['label-false']['pt-pt'] = "Não";
+	$text['label-false']['fr-fr'] = "Non";
+
+	$text['label-user_list']['en-us'] = "User List";
+	$text['label-user_list']['es-cl'] = "Lista de usuarios";
+	$text['label-user_list']['pt-pt'] = "Lista de usuários";
+	$text['label-user_list']['fr-fr'] = "Liste des utilisateurs";
+
+	$text['label-flags']['en-us'] = "Flags";
+	$text['label-flags']['es-cl'] = "Banderas";
+	$text['label-flags']['pt-pt'] = "Bandeiras";
+	$text['label-flags']['fr-fr'] = "Drapeaux";
 
 ?>
