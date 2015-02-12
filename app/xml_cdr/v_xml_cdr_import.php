@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -25,9 +25,7 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
-
 //check the permission
-
 	if(defined('STDIN')) {
 		$document_root = str_replace("\\", "/", $_SERVER["PHP_SELF"]);
 		preg_match("/^(.*)\/app\/.*$/", $document_root, $matches);
@@ -57,10 +55,11 @@
 //set pdo attribute that enables exception handling
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-
+//add rating functions if the billing is installed
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		require_once "app/billing/resources/functions/rating.php";
 	}
+
 //define the process_xml_cdr function
 	function process_xml_cdr($db, $leg, $xml_string) {
 		//set global variable
@@ -306,7 +305,6 @@
 								(strlen($_SESSION['billing']['currency']['text'])?$_SESSION['billing']['currency']['text']:'USD')
 							);
 
-
 							// Actually, internal calls have 0 cost
 							$lcr_rate = 0; $lcr_first_increment = 0; $lcr_second_increment = 0;
 							unset($db2->sql);
@@ -530,7 +528,7 @@
 	$xml_cdr_dir = $_SESSION['switch']['log']['dir'].'/xml_cdr';
 	$dir_handle = opendir($xml_cdr_dir);
 	$x = 0;
-	while($file=readdir($dir_handle)) {
+	while($file = readdir($dir_handle)) {
 		if ($file != '.' && $file != '..') {
 			if ( !is_dir($xml_cdr_dir . '/' . $file) ) {
 				//get the leg of the call
