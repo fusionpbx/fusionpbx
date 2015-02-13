@@ -22,6 +22,7 @@
 
  Contributor(s):
  Mark J Crane <markjcrane@fusionpbx.com>
+ Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 //define the conference center class
@@ -36,6 +37,7 @@
 		private $fields;
 		public $search;
 		public $count;
+		public $created_by;
 
 		public function room_count() {
 			//get the room count
@@ -49,6 +51,11 @@
 				if (isset($this->search)) {
 					$sql .= "and r.meeting_uuid = '".$this->meeting_uuid."' ";
 				}
+
+				if (isset($this->created_by)) {
+					$sql .= "and created_by = '".$this->created_by."' ";
+				}
+
 				$prep_statement = $this->db->prepare(check_sql($sql));
 				if ($prep_statement) {
 					$prep_statement->execute();
@@ -79,6 +86,9 @@
 				//}
 				if (isset($this->search)) {
 					$sql .= "and r.meeting_uuid = '".$this->meeting_uuid."' ";
+				}
+				if (isset($this->created_by)) {
+					$sql .= "and r.created_by = '".$this->created_by."' ";
 				}
 				if (strlen($this->order_by) == 0) {
 					$sql .= "order by r.description, r.meeting_uuid asc ";
@@ -136,6 +146,7 @@
 	$conference_center->domain_uuid = $_SESSION['domain_uuid'];
 	$conference_center->rows_per_page = 150;
 	$conference_center->offset = 0;
+	$conference_center->created_by = uuid;
 	$conference_center->order_by = $order_by;
 	$conference_center->order = $order;
 	$result = $conference_center->rooms();
