@@ -17,5 +17,6 @@
 	$apps[$x]['menu'][$y]['path'] = "/app/conference_centers/conference_centers.php";
 	$apps[$x]['menu'][$y]['groups'][] = "superadmin";
 	$apps[$x]['menu'][$y]['groups'][] = "admin";
+	$apps[$x]['menu'][$y]['groups'][] = "user";
 
 ?>
