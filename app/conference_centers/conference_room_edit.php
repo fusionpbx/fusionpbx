@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -573,6 +574,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "		</td>";
 	echo "	</tr>";
 
+	if (if_group("superadmin") || if_group("admin")) {
+
 	echo "	<tr>";
 	echo "		<td class='vncell' valign='top'>".$text['label-users']."</td>";
 	echo "		<td class='vtable' align='left'>";
@@ -621,6 +624,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "			".$text['description-users']."\n";
 	echo "		</td>";
 	echo "	</tr>";
+
+	}
 
 	if (permission_exists('conference_room_profile')) {
 		echo "<tr>\n";
