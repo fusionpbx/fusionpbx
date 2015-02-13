@@ -723,7 +723,9 @@
 
 				--send the call to the conference
 					cmd = meeting_uuid.."-"..domain_name.."@"..profile.."+flags{".. flags .."}";
+					freeswitch.consoleLog("INFO","[conference center] conference " .. cmd .. "\n");
 					session:execute("conference", cmd);
 			end
 		end
 	end
+

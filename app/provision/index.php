@@ -202,15 +202,11 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 					echo 'Authorization Required';
 					exit;
 				} else {
-					syslog(LOG_INFO, "user received: ".$_SERVER['PHP_AUTH_USER']);
-					syslog(LOG_INFO, "password received: ".$_SERVER['PHP_AUTH_PW']);
 					if ($_SERVER['PHP_AUTH_USER'] == $provision["http_auth_username"] && $_SERVER['PHP_AUTH_PW'] == $provision["http_auth_password"]) {
 						//authorized
-						syslog(LOG_INFO, "sucess");
 					}
 					else {
 						//access denied
-						syslog(LOG_INFO, "denied");
 						header('WWW-Authenticate: Basic realm="'.$_SESSION['domain_name']." ".date('r').'"');
 						unset($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
 						usleep(rand(1000000,3000000));//1-3 seconds.
