@@ -353,7 +353,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	".$text['label-extension'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "  <input class='formfld' type='number' name='ivr_menu_extension' maxlength='255' min='0' step='1' value='$ivr_menu_extension' required='required'>\n";
+	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='$ivr_menu_extension' required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-extension']."\n";
 	echo "</td>\n";
@@ -374,6 +374,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	tb.type='text';\n";
 		echo "	tb.name=obj.name;\n";
 		echo "	tb.setAttribute('class', 'formfld');\n";
+		echo "	tb.setAttribute('style', 'width: 380px;');\n";
 		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
 		echo "	tbb=document.createElement('INPUT');\n";
 		echo "	tbb.setAttribute('class', 'btn');\n";
@@ -396,30 +397,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "\n";
 	}
 	if (if_group("superadmin")) {
-		echo "		<select name='ivr_menu_greet_long' class='formfld' onchange='changeToInput(this);'>\n";
+		echo "	<select name='ivr_menu_greet_long' class='formfld' style='width: 400px;' onchange='changeToInput(this);'>\n";
 	}
 	else {
-		echo "		<select name='ivr_menu_greet_long' class='formfld'>\n";
+		echo "	<select name='ivr_menu_greet_long' class='formfld' style='width: 400px;'>\n";
 	}
-	//select
-		if (if_group("superadmin")) {
-			if (!$tmp_selected) {
-				echo "<optgroup label='selected'>\n";
-				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long)) {
-					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
-				} elseif (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
-					echo "		<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
-				}
-				echo "</optgroup>\n";
-			}
-			unset($tmp_selected);
-		}
 	//misc optgroup
 		if (if_group("superadmin")) {
 			echo "<optgroup label='misc'>\n";
-			echo "		<option value='phrase:'>phrase:</option>\n";
-			echo "		<option value='say:'>say:</option>\n";
-			echo "		<option value='tone_stream:'>tone_stream:</option>\n";
+			echo "	<option value='phrase:'>phrase:</option>\n";
+			echo "	<option value='say:'>say:</option>\n";
+			echo "	<option value='tone_stream:'>tone_stream:</option>\n";
 			echo "</optgroup>\n";
 		}
 	//recordings
@@ -435,10 +423,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					else {
 						if ($ivr_menu_greet_long == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($ivr_menu_greet_long) > 0) {
 							$tmp_selected = true;
-							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected=\"selected\">".$file."</option>\n";
+							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected=\"selected\">".$file."</option>\n";
 						}
 						else {
-							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
+							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
 						}
 					}
 				}
@@ -446,6 +434,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			closedir($dh);
 			echo "</optgroup>\n";
 		}
+	//phrases
+		echo "<optgroup label='phrases'>\n";
+		$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			if ($ivr_menu_greet_long == "phrase:".$row["phrase_name"].".".$domain_uuid) {
+				$tmp_selected = true;
+				echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+			} else {
+				echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+			}
+		}
+		unset ($prep_statement);
+		echo "</optgroup>\n";
 	//sounds
 		$dir_path = $_SESSION['switch']['sounds']['dir'];
 		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
@@ -457,13 +461,26 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				if ($ivr_menu_greet_long == $key) {
 					$tmp_selected = true;
-					echo "		<option value='$key' selected='selected'>$key</option>\n";
+					echo "	<option value='$key' selected='selected'>$key</option>\n";
 				} else {
-					echo "		<option value='$key'>$key</option>\n";
+					echo "	<option value='$key'>$key</option>\n";
 				}
 			}
 		}
 		echo "</optgroup>\n";
+	//select
+		if (if_group("superadmin")) {
+			if (!$tmp_selected) {
+				echo "<optgroup label='selected'>\n";
+				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long)) {
+					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+				} elseif (substr($ivr_menu_greet_long, -3) == "wav" || substr($ivr_menu_greet_long, -3) == "mp3") {
+					echo "	<option value='".$ivr_menu_greet_long."' selected='selected'>".$ivr_menu_greet_long."</option>\n";
+				}
+				echo "</optgroup>\n";
+			}
+			unset($tmp_selected);
+		}
 	echo "	</select>\n";
 	echo "	<br />\n";
 	echo $text['description-greet_long']."\n";
@@ -477,14 +494,19 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 
 	echo "\n";
-	echo "		<select name='ivr_menu_greet_short' class='formfld' onchange='changeToInput(this);'>\n";
-	echo "		<option></option>\n";
+	if (if_group("superadmin")) {
+		echo "<select name='ivr_menu_greet_short' class='formfld' style='width: 400px;' onchange='changeToInput(this);'>\n";
+	}
+	else {
+		echo "<select name='ivr_menu_greet_short' class='formfld' style='width: 400px;'>\n";
+	}
+	echo "	<option></option>\n";
 	//misc
 		if (if_group("superadmin")) {
 			echo "<optgroup label='misc'>\n";
-			echo "		<option value='phrase:'>phrase:</option>\n";
-			echo "		<option value='say:'>say:</option>\n";
-			echo "		<option value='tone_stream:'>tone_stream:</option>\n";
+			echo "	<option value='phrase:'>phrase:</option>\n";
+			echo "	<option value='say:'>say:</option>\n";
+			echo "	<option value='tone_stream:'>tone_stream:</option>\n";
 			echo "</optgroup>\n";
 		}
 	//recordings
@@ -500,10 +522,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					else {
 						if ($ivr_menu_greet_short == $_SESSION['switch']['recordings']['dir']."/".$file && strlen($ivr_menu_greet_short) > 0) {
 							$tmp_selected = true;
-							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
+							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."' selected='selected'>".$file."</option>\n";
 						}
 						else {
-							echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
+							echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$file."'>".$file."</option>\n";
 						}
 					}
 				}
@@ -511,6 +533,22 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			closedir($dh);
 			echo "</optgroup>\n";
 		}
+	//phrases
+		echo "<optgroup label='phrases'>\n";
+		$sql = "select * from v_phrases where domain_uuid = '".$domain_uuid."' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach ($result as &$row) {
+			if ($ivr_menu_greet_short == "phrase:".$row["phrase_name"].".".$domain_uuid) {
+				$tmp_selected = true;
+				echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."' selected='selected'>".$row["phrase_name"]."</option>\n";
+			} else {
+				echo "	<option value='phrase:".$row["phrase_name"].".".$domain_uuid."'>".$row["phrase_name"]."</option>\n";
+			}
+		}
+		unset ($prep_statement);
+		echo "</optgroup>\n";
 	//sounds
 		$dir_path = $_SESSION['switch']['sounds']['dir'];
 		recur_sounds_dir($_SESSION['switch']['sounds']['dir']);
@@ -522,9 +560,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 				if ($ivr_menu_greet_short == $key) {
 					$tmp_selected = true;
-					echo "		<option value='$key' selected='selected'>$key</option>\n";
+					echo "	<option value='$key' selected='selected'>$key</option>\n";
 				} else {
-					echo "		<option value='$key'>$key</option>\n";
+					echo "	<option value='$key'>$key</option>\n";
 				}
 			}
 		}
@@ -534,17 +572,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			if (!$tmp_selected && strlen($ivr_menu_greet_short) > 0) {
 				echo "<optgroup label='selected'>\n";
 				if (file_exists($_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_short)) {
-					echo "		<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
+					echo "	<option value='".$_SESSION['switch']['recordings']['dir']."/".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
 				} elseif (substr($ivr_menu_greet_short, -3) == "wav" || substr($ivr_menu_greet_short, -3) == "mp3") {
-					echo "		<option value='".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
+					echo "	<option value='".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
 				} else {
-					echo "		<option value='".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
+					echo "	<option value='".$ivr_menu_greet_short."' selected='selected'>".$ivr_menu_greet_short."</option>\n";
 				}
 				echo "</optgroup>\n";
 			}
 			unset($tmp_selected);
 		}
-	echo "		</select>\n";
+	echo "	</select>\n";
 
 	echo "<br />\n";
 	echo $text['description-greet_short']."\n";
