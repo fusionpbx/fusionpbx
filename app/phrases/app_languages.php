@@ -1,28 +1,4 @@
 <?php
-/*
-	FusionPBX
-	Version: MPL 1.1
-
-	The contents of this file are subject to the Mozilla Public License Version
-	1.1 (the "License"); you may not use this file except in compliance with
-	the License. You may obtain a copy of the License at
-	http://www.mozilla.org/MPL/
-
-	Software distributed under the License is distributed on an "AS IS" basis,
-	WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
-	for the specific language governing rights and limitations under the
-	License.
-
-	The Original Code is FusionPBX
-
-	The Initial Developer of the Original Code is
-	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
-	the Initial Developer. All Rights Reserved.
-
-	Contributor(s):
-	Mark J Crane <markjcrane@fusionpbx.com>
-*/
 
 	$text['title_phrases']['en-us'] = "Phrases";
 	$text['title_phrases']['es-cl'] = "Grabaciones";
@@ -80,44 +56,44 @@
 	$text['description-language']['fr-fr'] = "Langue utilisée dans la phrase.";
 
 	$text['label-structure']['en-us'] = "Structure";
-	$text['label-structure']['es-cl'] = "";
-	$text['label-structure']['pt-pt'] = "";
-	$text['label-structure']['fr-fr'] = "";
+	$text['label-structure']['es-cl'] = "Estructura";
+	$text['label-structure']['pt-pt'] = "Estrutura";
+	$text['label-structure']['fr-fr'] = "Structure";
 
 	$text['description-structure']['en-us'] = "Define the various components that make up the phrase.";
-	$text['description-structure']['es-cl'] = "";
-	$text['description-structure']['pt-pt'] = "";
-	$text['description-structure']['fr-fr'] = "";
+	$text['description-structure']['es-cl'] = "Definir los diversos componentes que componen la frase.";
+	$text['description-structure']['pt-pt'] = "Definir os vários componentes que compõem a frase.";
+	$text['description-structure']['fr-fr'] = "Définir les différents éléments qui composent la phrase.";
 
 	$text['label-function']['en-us'] = "Function";
-	$text['label-function']['es-cl'] = "";
-	$text['label-function']['pt-pt'] = "";
-	$text['label-function']['fr-fr'] = "";
+	$text['label-function']['es-cl'] = "Función";
+	$text['label-function']['pt-pt'] = "Função";
+	$text['label-function']['fr-fr'] = "Fonction";
 
 	$text['label-file']['en-us'] = "File";
-	$text['label-file']['es-cl'] = "";
-	$text['label-file']['pt-pt'] = "";
-	$text['label-file']['fr-fr'] = "";
+	$text['label-file']['es-cl'] = "Expediente";
+	$text['label-file']['pt-pt'] = "Arquivo";
+	$text['label-file']['fr-fr'] = "Fichier";
 
 	$text['label-order']['en-us'] = "Order";
 	$text['label-order']['es-cl'] = "Orden";
 	$text['label-order']['pt-pt'] = "Ordem";
 	$text['label-order']['fr-fr'] = "Ordre";
 
-	$text['label-play_file']['en-us'] = "Play File";
-	$text['label-play_file']['es-cl'] = "";
-	$text['label-play_file']['pt-pt'] = "";
-	$text['label-play_file']['fr-fr'] = "";
+	$text['label-play']['en-us'] = "Play";
+	$text['label-play']['es-cl'] = "Jugar";
+	$text['label-play']['pt-pt'] = "Jogar";
+	$text['label-play']['fr-fr'] = "Jouer";
 
 	$text['label-say']['en-us'] = "Say";
-	$text['label-say']['es-cl'] = "";
-	$text['label-say']['pt-pt'] = "";
-	$text['label-say']['fr-fr'] = "";
+	$text['label-say']['es-cl'] = "Decir";
+	$text['label-say']['pt-pt'] = "Dizer";
+	$text['label-say']['fr-fr'] = "Dire";
 
 	$text['label-execute']['en-us'] = "Execute";
-	$text['label-execute']['es-cl'] = "";
-	$text['label-execute']['pt-pt'] = "";
-	$text['label-execute']['fr-fr'] = "";
+	$text['label-execute']['es-cl'] = "Ejecutar";
+	$text['label-execute']['pt-pt'] = "Executar";
+	$text['label-execute']['fr-fr'] = "Exécuter";
 
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";
