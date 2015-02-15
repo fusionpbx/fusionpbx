@@ -350,13 +350,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 		echo "<b>".$text['label-edit-add-recent']."</b>";
 		echo "<br><br>";
-		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0'>\n";
+		echo "<table class='tr_hover' width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<th style='width: 25px;'>&nbsp;</th>\n";
 		echo th_order_by('caller_id_name', $text['label-name'], $order_by, $order);
 		echo th_order_by('caller_id_number', $text['label-number'], $order_by, $order);
 		echo th_order_by('start_stamp', $text['label-called-on'], $order_by, $order);
 		echo th_order_by('duration', $text['label-duration'], $order_by, $order);
 		echo "<td>&nbsp;</td>\n";
+		echo "</tr>";
 		$c = 0;
 		$row_style["0"] = "row_style0";
 		$row_style["1"] = "row_style1";
@@ -422,15 +423,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				}
 			} //end foreach
 			unset($sql, $result, $row_count);
-		} //end if results
 
-		echo "<tr>\n";
-		echo "</tr>\n";
-		echo "</table>";
-		echo "<br><br>";
+			echo "</table>";
+			echo "<br><br>";
+
+		} //end if results
+		else {
+			echo "</table>";
+			echo "<br><br>";
+			echo "<br><br>";
+		}
+
 	}
 // end of Display Last 5-10 Calls
-
 
 //include the footer
 	require_once "resources/footer.php";

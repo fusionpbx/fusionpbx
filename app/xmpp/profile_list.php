@@ -67,3 +67,4 @@ if ($c==0) { $c=1; } else { $c=0; }
 </td>
 </tr>
 </table>
+<br><br>
