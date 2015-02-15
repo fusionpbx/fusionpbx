@@ -80,21 +80,15 @@ else {
 	require_once "resources/paging.php";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-voicemail_messages']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-voicemail_message']."<br />\n";
-	echo "		</td>\n";
+	echo "		<td width='50%' align='left' nowrap='nowrap' valign='top'>";
+	echo "			<b>".$text['title-voicemail_messages']."</b>";
+	echo "			<br><br>";
+	echo "			".$text['description-voicemail_message'];
+	echo "			<br><br>";
+	echO "		</td>\n";
+	echo "		<td width='50%' align='right' valign='top'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
 
@@ -103,19 +97,16 @@ else {
 	$row_style["1"] = "row_style1";
 	$row_style["2"] = "row_style2";
 
-	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 //set the table header
 	$table_header = "<tr>\n";
 	$table_header .= th_order_by('created_epoch', $text['label-created_epoch'], $order_by, $order);
-	//$table_header .= th_order_by('read_epoch', $text['label-read_epoch'], $order_by, $order);
 	$table_header .= th_order_by('caller_id_name', $text['label-caller_id_name'], $order_by, $order);
 	$table_header .= th_order_by('caller_id_number', $text['label-caller_id_number'], $order_by, $order);
 	$table_header .= "<th>".$text['label-tools']."</th>\n";
 	$table_header .= th_order_by('message_length', $text['label-message_length'], $order_by, $order, null, "style='text-align: right;'");
 	$table_header .= "<th style='text-align: right;'>".$text['label-message_size']."</th>\n";
-	//$table_header .= th_order_by('message_priority', $text['label-message_priority'], $order_by, $order);
 	$table_header .= "<td align='right' width='21'>\n";
 	$table_header .= "	&nbsp;\n";
 	$table_header .= "</td>\n";
@@ -128,7 +119,10 @@ else {
 			if ($previous_voicemail_id != $field['voicemail_id']) {
 				echo "<tr>\n";
 				echo "	<td colspan='3' align='left'>\n";
-				echo "		<br /><br /><br /><br />\n";
+				echo "		<br>";
+				if ($previous_voicemail_id != '') {
+					echo "	<br /><br /><br />\n";
+				}
 				echo "		<b>".$text['label-mailbox'].": ".$field['voicemail_id']." </b><br />&nbsp;\n";
 				echo "	</td>\n";
 				echo "	<td colspan='3' valign='bottom' align='right'>\n";
@@ -149,7 +143,6 @@ else {
 				echo "<td valign='top' class='".$row_style[$c]."' style=\"".$style."\" nowrap=\"nowrap\">";
 				echo "	".$row['created_date'];
 				echo "</td>\n";
-				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['read_epoch']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_name']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['caller_id_number']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style["2"]." tr_link_void'>";
@@ -166,9 +159,7 @@ else {
 					echo "<a href=\"voicemail_messages.php?action=download&type=vm&t=bin&id=".$row['voicemail_id']."&voicemail_uuid=".$row['voicemail_uuid']."&uuid=".$row['voicemail_message_uuid']."\" title='".$text['label-download']."'>".$v_link_label_download."</a>";
 				echo "	</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['message_length_label']."&nbsp;</td>\n";
-				//echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style."\">".$row['message_status']."&nbsp;</td>\n";
 				echo "	<td valign='top' class='".$row_style[$c]."' style=\"".$style." text-align: right;\">".$row['file_size_label']."</td>\n";
-				//echo "	<td valign='top' class='".$row_style[$c]."'>".$row['message_priority']."&nbsp;</td>\n";
 				echo "	<td class='list_control_icon'>\n";
 				if (permission_exists('voicemail_message_delete')) {
 					echo "		<a href='voicemail_message_delete.php?voicemail_uuid=".$row['voicemail_uuid']."&id=".$row['voicemail_message_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>\n";
@@ -199,13 +190,6 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "<br /><br />";
 
 //include the footer
