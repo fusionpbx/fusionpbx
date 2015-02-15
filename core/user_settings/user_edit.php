@@ -472,22 +472,17 @@ else {
 	echo "		".$text['description-timezone']."<br />\n";
 	echo "	</td>\n";
 	echo "	</tr>\n";
-	echo "	</table>";
+	echo "</table>";
 	echo "<br>";
 
-	echo "<div class='' style='padding:10px;'>\n";
 	echo "<table $table_width>";
 	echo "	<tr>";
-	echo "		<td colspan='2' align='right'>";
+	echo "		<td align='right'>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
 
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "</form>";
 
 //include the footer

@@ -158,12 +158,6 @@ require_once "resources/check_auth.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	echo "<tr>\n";
-	echo "<td colspan='2'>\n";
-	echo "	<br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='id' value='$ring_group_uuid'>\n";
