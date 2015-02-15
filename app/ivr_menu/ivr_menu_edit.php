@@ -316,32 +316,29 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "}\n";
 	echo "</script>";
 
-	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
-	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td align='left' width='30%' nowrap='nowrap' align='left'><b>".$text['header-ivr_menu']."</b></td>\n";
-	echo "	<td width='70%' align='right'>\n";
+	echo "	<td align='left' valign='top'>";
+	echo "		<b>".$text['header-ivr_menu']."</b>";
+	echo "		<br><br>";
+	echo "		".$text['description-ivr_menu'];
+	echo "		<br><br>";
+	echo "	</td>\n";
+	echo "	<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='ivr_menus.php'\" value='".$text['button-back']."'>\n";
 	echo "		<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"if (confirm('".$text['confirm-copy']."')){window.location='ivr_menu_copy.php?id=".$ivr_menu_uuid."';}\" value='".$text['button-copy']."'>\n";
 	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2' align='left'>".$text['description-ivr_menu']."</td>\n";
-	echo "</tr>\n";
+	echo "</table>";
 
+	echo "<form method='post' name='frm' action=''>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-name'].":\n";
+	echo "<td width='30%' class='vncellreq' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-name']."\n";
 	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
+	echo "<td width='70%' class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='ivr_menu_name' maxlength='255' value=\"$ivr_menu_name\" required='required'>\n";
 	echo "<br />\n";
 	echo $text['description-name']."\n";
@@ -350,7 +347,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-extension'].":\n";
+	echo "	".$text['label-extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='ivr_menu_extension' maxlength='255' value='$ivr_menu_extension' required='required'>\n";
@@ -361,7 +358,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-greet_long'].":\n";
+	echo "	".$text['label-greet_long']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -489,17 +486,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-greet_short'].":\n";
+	echo "	".$text['label-greet_short']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
-	echo "\n";
-	if (if_group("superadmin")) {
-		echo "<select name='ivr_menu_greet_short' class='formfld' style='width: 400px;' onchange='changeToInput(this);'>\n";
-	}
-	else {
-		echo "<select name='ivr_menu_greet_short' class='formfld' style='width: 400px;'>\n";
-	}
+	echo "<select name='ivr_menu_greet_short' class='formfld' style='width: 400px;' ".((if_group("superadmin")) ? "onchange='changeToInput(this);'" : null).">\n";
 	echo "	<option></option>\n";
 	//misc
 		if (if_group("superadmin")) {
@@ -590,7 +581,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-options'].":</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-options']."</td>";
 	echo "		<td class='vtable' align='left'>";
 	echo "			<table width='59%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "				<tr>\n";
@@ -642,9 +633,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "				</tr>\n";
 		}
 	}
-unset($sql, $result);
+	unset($sql, $result);
 
-for ($c = 0; $c < 1; $c++) {
+	for ($c = 0; $c < 1; $c++) {
 		echo "				<tr>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' style='width:70px' type='text' name='ivr_menu_options[".$c."][ivr_menu_option_digits]' maxlength='255' value='$ivr_menu_option_digits'>\n";
@@ -686,14 +677,14 @@ for ($c = 0; $c < 1; $c++) {
 	}
 	echo "			</table>\n";
 
-	echo "			".$text['description-destinations']."\n";
+	echo "			".$text['description-options']."\n";
 	echo "			<br />\n";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-timeout'].":\n";
+	echo "	".$text['label-timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='number' name='ivr_menu_timeout' maxlength='255' min='1' step='1' value='$ivr_menu_timeout' required='required'>\n";
@@ -704,7 +695,7 @@ for ($c = 0; $c < 1; $c++) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-exit_action'].":\n";
+	echo "    ".$text['label-exit_action']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	//switch_select_destination(select_type, select_label, select_name, select_value, select_style, action);
@@ -716,7 +707,7 @@ for ($c = 0; $c < 1; $c++) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-direct_dial'].":\n";
+	echo "	".$text['label-direct_dial']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ivr_menu_direct_dial'>\n";
@@ -740,7 +731,7 @@ for ($c = 0; $c < 1; $c++) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	 ".$text['label-ring_back'].":\n";
+	echo "	 ".$text['label-ring_back']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 
@@ -803,7 +794,7 @@ for ($c = 0; $c < 1; $c++) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-caller_id_name_prefix'].":\n";
+	echo "	".$text['label-caller_id_name_prefix']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='ivr_menu_cid_prefix' maxlength='255' value=\"$ivr_menu_cid_prefix\">\n";
@@ -830,7 +821,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-invalid_sound'].":\n";
+		echo "	".$text['label-invalid_sound']."\n";
 		echo "</td>\n";
 		echo "<td width=\"70%\" class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_invalid_sound' maxlength='255' value=\"$ivr_menu_invalid_sound\" required='required'>\n";
@@ -841,7 +832,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-exit_sound'].":\n";
+		echo "	".$text['label-exit_sound']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_exit_sound' maxlength='255' value=\"$ivr_menu_exit_sound\">\n";
@@ -852,7 +843,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-comfirm_macro'].":\n";
+		echo "	".$text['label-comfirm_macro']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_macro' maxlength='255' value=\"$ivr_menu_confirm_macro\">\n";
@@ -863,7 +854,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-comfirm_key'].":\n";
+		echo "	".$text['label-comfirm_key']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_confirm_key' maxlength='255' value=\"$ivr_menu_confirm_key\">\n";
@@ -874,7 +865,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-tts_engine'].":\n";
+		echo "	".$text['label-tts_engine']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_tts_engine' maxlength='255' value=\"$ivr_menu_tts_engine\">\n";
@@ -885,7 +876,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-tts_voice'].":\n";
+		echo "	".$text['label-tts_voice']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='ivr_menu_tts_voice' maxlength='255' value=\"$ivr_menu_tts_voice\">\n";
@@ -896,7 +887,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-comfirm_attempts'].":\n";
+		echo "	".$text['label-comfirm_attempts']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='number' name='ivr_menu_confirm_attempts' maxlength='255' min='1' step='1' value='$ivr_menu_confirm_attempts' required='required'>\n";
@@ -907,7 +898,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-inter-digit_timeout'].":\n";
+		echo "	".$text['label-inter-digit_timeout']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='number' name='ivr_menu_inter_digit_timeout' maxlength='255' min='1' step='1' value='$ivr_menu_inter_digit_timeout' required='required'>\n";
@@ -918,7 +909,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-max_failures'].":\n";
+		echo "	".$text['label-max_failures']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='number' name='ivr_menu_max_failures' maxlength='255' min='0' step='1' value='$ivr_menu_max_failures' required='required'>\n";
@@ -929,7 +920,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-max_timeouts'].":\n";
+		echo "	".$text['label-max_timeouts']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='number' name='ivr_menu_max_timeouts' maxlength='255' min='0' step='1' value='$ivr_menu_max_timeouts' required='required'>\n";
@@ -940,7 +931,7 @@ for ($c = 0; $c < 1; $c++) {
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	".$text['label-digit_length'].":\n";
+		echo "	".$text['label-digit_length']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "  <input class='formfld' type='number' name='ivr_menu_digit_len' maxlength='255' min='1' step='1' value='$ivr_menu_digit_len' required='required'>\n";
@@ -957,7 +948,7 @@ for ($c = 0; $c < 1; $c++) {
 	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width=\"30%\" class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-enabled'].":\n";
+	echo "	".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td width=\"70%\" class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='ivr_menu_enabled'>\n";
@@ -981,7 +972,7 @@ for ($c = 0; $c < 1; $c++) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-description'].":\n";
+	echo "	".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='ivr_menu_description' maxlength='255' value=\"$ivr_menu_description\">\n";
@@ -998,12 +989,10 @@ for ($c = 0; $c < 1; $c++) {
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br>";
+
 	echo "</form>";
 
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";

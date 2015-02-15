@@ -59,7 +59,7 @@ else {
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
-	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>\n";
+	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"document.location='devices.php'\" value='".$text['button-back']."'>&nbsp;&nbsp;&nbsp;&nbsp;";
 	echo "			<input type='text' class='txt' style='width: 150px' name='search' value='".$search."'>";
 	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</form>\n";

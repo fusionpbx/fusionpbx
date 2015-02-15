@@ -141,10 +141,12 @@
 	$text['label-tts_voice']['fr-fr'] = "Voix TTS";
 
 	$text['label-comfirm_attempts']['en-us'] = "Confirm Attempts";
+	$text['label-comfirm_attempts']['es-cl'] = "confirme intentos";
 	$text['label-comfirm_attempts']['pt-pt'] = "Confirmar Tentativas";
 	$text['label-comfirm_attempts']['fr-fr'] = "Essais de Confirmation";
 
 	$text['label-inter-digit_timeout']['en-us'] = "Inter-Digit Timeout";
+	$text['label-inter-digit_timeout']['es-cl'] = "Inter-Digit Tiempo de espera";
 	$text['label-inter-digit_timeout']['pt-pt'] = "Timeout Entre-Dígitos";
 	$text['label-inter-digit_timeout']['fr-fr'] = "Timeout Inter-Digit";
 
@@ -182,6 +184,11 @@
 	$text['label-options']['es-cl'] = "Opciones";
 	$text['label-options']['pt-pt'] = "Opções";
 	$text['label-options']['fr-fr'] = "Options";
+
+	$text['description-options']['en-us'] = "Define caller options for the IVR menu.";
+	$text['description-options']['es-cl'] = "Definir opções de chamadas para o menu IVR.";
+	$text['description-options']['pt-pt'] = "Definir opções de chamadas para o menu IVR.";
+	$text['description-options']['fr-fr'] = "Définir les options de l'appelant pour le menu IVR.";
 
 	$text['label-destination']['en-us'] = "Destination";
 	$text['label-destination']['es-cl'] = "Destino";
@@ -349,6 +356,7 @@
 	$text['button-advanced']['fr-fr'] = "Afficher les paramètres avancés";
 
 	$text['button-back']['en-us'] = "Back";
+	$text['button-back']['es-cl'] = "espalda";
 	$text['button-back']['pt-pt'] = "Voltar";
 	$text['button-back']['fr-fr'] = "Retour";
 

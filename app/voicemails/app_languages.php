@@ -16,6 +16,16 @@
 		$text['description-voicemail']['pt-pt'] = "Definições do Correio de Voz";
 		$text['description-voicemail']['fr-fr'] = "Configuration messagerie.";
 
+		$text['title-voicemail_option']['en-us'] = "Voicemail Option";
+		$text['title-voicemail_option']['es-cl'] = "Opción de correo de voz";
+		$text['title-voicemail_option']['pt-pt'] = "Voicemail Opção";
+		$text['title-voicemail_option']['fr-fr'] = "Option de messagerie vocale";
+
+		$text['header-voicemail_option']['en-us'] = "Voicemail Option";
+		$text['header-voicemail_option']['es-cl'] = "Opción de correo de voz";
+		$text['header-voicemail_option']['pt-pt'] = "Voicemail Opção";
+		$text['header-voicemail_option']['fr-fr'] = "Option de messagerie vocale";
+
 		$text['label-voicemail_id']['en-us'] = "Voicemail ID";
 		$text['label-voicemail_id']['es-cl'] = "ID de correo de voz";
 		$text['label-voicemail_id']['pt-pt'] = "ID de Correio de Voz";
@@ -102,9 +112,9 @@
 		$text['label-voicemail_description']['fr-fr'] = "Description";
 
 		$text['description-voicemail_description']['en-us'] = "Enter the description.";
-		$text['description-voicemail_description']['es-cl'] = "Ingrese una descripción";
-		$text['description-voicemail_description']['pt-pt'] = "Introduza a descrição";
-		$text['description-voicemail_description']['fr-fr'] = "";
+		$text['description-voicemail_description']['es-cl'] = "Ingrese una descripción.";
+		$text['description-voicemail_description']['pt-pt'] = "Introduza a descrição.";
+		$text['description-voicemail_description']['fr-fr'] = "Entrez la description.";
 
 		$text['label-count']['en-us'] = "Count";
 		$text['label-count']['es-cl'] = "Conteo";
@@ -155,6 +165,36 @@
 		$text['label-greetings']['es-cl'] = "Bienvenida";
 		$text['label-greetings']['pt-pt'] = "Saudações";
 		$text['label-greetings']['fr-fr'] = "Salutations";
+
+		$text['label-description']['en-us'] = "Description";
+		$text['label-description']['es-cl'] = "Descripción";
+		$text['label-description']['pt-pt'] = "Descrição";
+		$text['label-description']['fr-fr'] = "Description";
+
+		$text['label-option']['en-us'] = "Option";
+		$text['label-option']['es-cl'] = "Opción";
+		$text['label-option']['pt-pt'] = "Opção";
+		$text['label-option']['fr-fr'] = "Option";
+
+		$text['label-options']['en-us'] = "Options";
+		$text['label-options']['es-cl'] = "Opciones";
+		$text['label-options']['pt-pt'] = "Opções";
+		$text['label-options']['fr-fr'] = "Options";
+
+		$text['description-options']['en-us'] = "Define caller options for the voicemail greeting.";
+		$text['description-options']['es-cl'] = "Definir opciones del llamador para el saludo del correo de voz.";
+		$text['description-options']['pt-pt'] = "Definir opções de chamadas para a saudação de correio de voz.";
+		$text['description-options']['fr-fr'] = "Définir les options de l'appelant pour le message d'accueil.";
+
+		$text['label-destination']['en-us'] = "Destination";
+		$text['label-destination']['es-cl'] = "Destino";
+		$text['label-destination']['pt-pt'] = "Destino";
+		$text['label-destination']['fr-fr'] = "Destination";
+
+		$text['label-order']['en-us'] = "Order";
+		$text['label-order']['es-cl'] = "Orden";
+		$text['label-order']['pt-pt'] = "Ordem";
+		$text['label-order']['fr-fr'] = "Ordre";
 
 		$text['button-greetings']['en-us'] = "Greetings";
 		$text['button-greetings']['es-cl'] = "Bienvenida";
