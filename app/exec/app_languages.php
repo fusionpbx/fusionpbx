@@ -26,6 +26,11 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
+	$text['title-command']['en-us'] = "Command";
+	$text['title-command']['es-cl'] = "Comando";
+	$text['title-command']['pt-pt'] = "Comando";
+	$text['title-command']['fr-fr'] = "Commande";
+
 	$text['label-execute']['en-us'] = "Execute Command";
 	$text['label-execute']['es-cl'] = "Ejecutar Comando";
 	$text['label-execute']['pt-pt'] = "Executar Comando";
@@ -36,7 +41,7 @@
 	$text['description-execute']['pt-pt'] = "Oferece uma maneira fácil de executar comandos de sistema, PHP, e switch.";
 	$text['description-execute']['fr-fr'] = "Fournir un moyen pour executer des commandes système, PHP et freeswitch. ";
 
-	$text['label-shell']['en-us'] = "Shell command";
+	$text['label-shell']['en-us'] = "Shell";
 	$text['label-shell']['es-cl'] = "Terminal de Comandos";
 	$text['label-shell']['pt-pt'] = "Comando Shell";
 	$text['label-shell']['fr-fr'] = "Commande Shell";
@@ -46,7 +51,7 @@
 	$text['description-shell']['pt-pt'] = "Comandos do sistema.";
 	$text['description-shell']['fr-fr'] = "Commande Système";
 
-	$text['label-php']['en-us'] = "PHP command";
+	$text['label-php']['en-us'] = "PHP";
 	$text['label-php']['es-cl'] = "Comando PHP";
 	$text['label-php']['pt-pt'] = "Comandos PHP";
 	$text['label-php']['fr-fr'] = "Commande PHP";
@@ -56,7 +61,7 @@
 	$text['description-php']['pt-pt'] = "Utilize a ligação seguinte como referência para o PHP: <a href='http://php.net/manual/en/index.php' target='_blank'>PHP Manual";
 	$text['description-php']['fr-fr'] = "Utiliser le lien suivant comme référence pour le PHP: <a href='http://php.net/manual/fr/index.php' target='_blank'>Manuel PHP";
 
-	$text['label-switch']['en-us'] = "Switch Command";
+	$text['label-switch']['en-us'] = "Switch";
 	$text['label-switch']['es-cl'] = "Comando de switch";
 	$text['label-switch']['pt-pt'] = "Comando Freeswitch";
 	$text['label-switch']['fr-fr'] = "Commande CLI Freeswitch";

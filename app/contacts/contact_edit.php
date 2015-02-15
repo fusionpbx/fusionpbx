@@ -711,6 +711,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "</tr>\n";
 	echo "</table>\n";
+	echo "<br><br>";
 	echo "</form>";
 
 //include the footer

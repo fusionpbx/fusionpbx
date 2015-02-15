@@ -198,7 +198,7 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "<br />";
+	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";

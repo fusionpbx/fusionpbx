@@ -112,6 +112,7 @@ function send_cmd(url) {
 
 <?php
 echo "	<div id='ajax_response'></div>\n";
+echo "<br><br>";
 
 require_once "resources/footer.php";
 ?>

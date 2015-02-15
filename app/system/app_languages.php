@@ -26,6 +26,16 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
+	$text['title-sys-status']['en-us'] = "System Status";
+	$text['title-sys-status']['es-cl'] = "Estado del Sistema";
+	$text['title-sys-status']['pt-pt'] = "Status do Sistema";
+	$text['title-sys-status']['fr-fr'] = "État du Système";
+
+	$text['header-sys-status']['en-us'] = "System Status";
+	$text['header-sys-status']['es-cl'] = "Estado del Sistema";
+	$text['header-sys-status']['pt-pt'] = "Status do Sistema";
+	$text['header-sys-status']['fr-fr'] = "État du Système";
+
 	$text['title-sys-info']['en-us'] = "System Information";
 	$text['title-sys-info']['es-cl'] = "Información de Sistema";
 	$text['title-sys-info']['pt-pt'] = "Informação do Sistema";

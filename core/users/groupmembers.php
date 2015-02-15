@@ -69,17 +69,41 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td align='left'>\n";
-	echo "			<span  class=\"\" height='50'><b>".$text['header-group_members'].$group_name."</b></span>";
+	echo "		<td width='100%' align='left' valign='top'>\n";
+	echo "			<b>".$text['header-group_members'].$group_name."</b>";
 	echo "		</td>\n";
-	echo "		<td align='right' nowrap='nowrap'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'>";
-	echo "			&nbsp;&nbsp;&nbsp;\n";
-	echo "		</td>\n";
+	echo "		<td align='right' nowrap='nowrap' valign='middle'>\n";
+	echo "			<input type='button' class='btn' style='margin-right: 15px;' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'>";
+	echo "		</td>";
+	if (permission_exists('group_member_add')) {
+		echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
+		echo "			<form method='post' action='groupmemberadd.php'>";
+		$sql = "SELECT * FROM v_users ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "order by username ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		echo "			<select name=\"user_uuid\" style='width: 200px;' class='formfld'>\n";
+		echo "				<option value=\"\"></option>\n";
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach($result as $field) {
+			$username = $field['username'];
+			if (if_group_members($db, $group_name, $field['user_uuid']) && !in_array($field['user_uuid'], $group_users)) {
+				echo "		<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
+			}
+		}
+		echo "			</select>";
+		unset($sql, $result);
+		echo "			<input type='hidden' name='group_name' value='$group_name'>";
+		echo "			<input type='submit' class='btn' value='".$text['button-add_member']."'>";
+		echo "			</form>";
+		echo "		</td>\n";
+	}
 	echo "	</tr>\n";
 	echo "</table>\n";
+	echo "<br>";
 
 	$sql = "SELECT u.user_uuid, u.username, g.group_user_uuid FROM v_group_users as g, v_users as u ";
 	$sql .= "where g.user_uuid = u.user_uuid ";
@@ -122,42 +146,7 @@ else {
 	$strlist .= "</table>\n";
 	echo $strlist;
 
-	echo "<br>";
-
-	echo "<form method='post' action='groupmemberadd.php'>";
-	echo "<table width='250'>";
-	echo "	<tr>";
-	echo "		<td width='60%' align='right'>";
-
-	$sql = "SELECT * FROM v_users ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "order by username ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-
-	echo "<select name=\"user_uuid\" style='width: 200px;' class='formfld'>\n";
-	echo "<option value=\"\"></option>\n";
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $field) {
-		$username = $field['username'];
-		if (if_group_members($db, $group_name, $field['user_uuid']) && !in_array($field['user_uuid'], $group_users)) {
-			echo "<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
-		}
-	}
-	echo "</select>";
-	unset($sql, $result);
-
-	echo "		</td>";
-	echo "		<td align='right'>";
-	if (permission_exists('group_member_add')) {
-		echo "          <input type='hidden' name='group_name' value='$group_name'>";
-		echo "          <input type='submit' class='btn' value='".$text['button-add_member']."'>";
-	}
-	echo "      </td>";
-	echo "	</tr>";
-	echo "</table>";
 	echo "<br><br>";
-	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

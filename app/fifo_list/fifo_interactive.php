@@ -125,14 +125,18 @@ var record_count = 0;
 <?php
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "	<td align='left'><b>".$text['header-queue']."</b><br>\n";
+echo "	<td align='left'>";
+echo "		<b>".$text['header-queue']."</b>";
+echo "		<br><br>\n";
 echo "		".$text['description-queue']."\n";
 echo "	</td>\n";
 echo "	</tr>\n";
 echo "</table>\n";
+echo "<br>";
 
 echo "<div id=\"ajax_reponse\"></div>\n";
 echo "<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
+echo "<br><br>";
 
 require_once "resources/footer.php";
 ?>

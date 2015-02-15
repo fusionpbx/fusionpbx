@@ -48,7 +48,8 @@ require_once "resources/paging.php";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\">".$text['title']."</span><br /><br />\n";
+	echo "			<span class=\"title\">".$text['title']."</span>";
+	echo "			<br /><br />\n";
 	echo "			".$text['description']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
@@ -195,12 +196,6 @@ require_once "resources/paging.php";
 	echo "</tr>\n";
 	echo "</table>";
 	echo "<br><br>";
-	echo "<br><br>";
-	echo "<br><br>";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
 
 //show the footer
 	require_once "resources/footer.php";

@@ -363,6 +363,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	tb.type='text';\n";
 		echo "	tb.name=obj.name;\n";
 		echo "	tb.setAttribute('class', 'formfld');\n";
+		echo "	tb.setAttribute('style', 'width: 350px;');\n";
 		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
 		echo "	tbb=document.createElement('INPUT');\n";
 		echo "	tbb.setAttribute('class', 'btn');\n";
@@ -505,13 +506,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
-		echo "				<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
+		echo "		<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
+		echo "		<input type='hidden' name='conference_center_uuid' value='$conference_center_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
 
 //include the footer

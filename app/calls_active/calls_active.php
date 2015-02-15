@@ -113,10 +113,13 @@ var destination;
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
-echo "	<td align='left'><b>".$text['title']."</b><br>\n";
+echo "	<td align='left'>";
+echo "		<b>".$text['title']."</b>";
+echo "		<br><br>\n";
 echo "		".$text['description']."\n";
+echo "		<br><br>\n";
 echo "	</td>\n";
-echo "	<td align='right'>\n";
+echo "	<td align='right' valign='top'>\n";
 
 echo "		<table>\n";
 echo "		<td align='left' valign='middle'>\n";
@@ -133,14 +136,9 @@ echo "	</td>\n";
 echo "	</tr>\n";
 echo "</table>\n";
 
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "	<tr class='border'>\n";
-echo "	<td align=\"left\">\n";
-echo "		<div id=\"ajax_reponse\"></div>\n";
-echo "		<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
-echo "	</td>";
-echo "	</tr>";
-echo "</table>";
+echo "<div id=\"ajax_reponse\"></div>\n";
+echo "<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</div>\n";
+echo "<br><br><br>";
 
 echo "<script type=\"text/javascript\">\n";
 echo "<!--\n";

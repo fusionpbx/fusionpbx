@@ -317,19 +317,23 @@ require_once "resources/require.php";
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
-	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\"><b>".$text['header-group_permissions'].$group_name."</b></td>\n";
-	echo "		<td width='50%' align=\"right\">\n";
-	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
+	echo "		<td width='50%' align=\"left\" nowrap=\"nowrap\" valign='top'>";
+	echo "			<b>".$text['header-group_permissions'].$group_name."</b>";
+	echo "			<br><br>";
+	echo "		</td>\n";
+	echo "		<td width='50%' align=\"right\" valign='top'>\n";
+	echo "			<input type='button' class='btn' alt='".$text['button-back']."' onclick=\"window.location='groups.php'\" value='".$text['button-back']."'> ";
 	echo "			<input type='button' class='btn' alt='".$text['button-copy']."' onclick='copy_group();' value='".$text['button-copy']."'>";
+	echo "			<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align=\"left\" colspan='2'>\n";
-	echo "			".$text['description-group_permissions']."<br /><br />\n";
+	echo "			".$text['description-group_permissions']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-	echo "<br />\n";
+	echo "<br /><br />\n";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";
@@ -340,8 +344,9 @@ require_once "resources/require.php";
 			$app_name = $app['name'];
 			$description = $app['description']['en-us'];
 
-			echo "<strong>".$app_name."</strong><br />\n";
-			echo $description."<br /><br />\n";
+			echo "<b>".$app_name."</b><br />\n";
+			if ($description != '') { echo $description."<br />\n"; }
+			echo "<br>";
 
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "	<tr>\n";
@@ -363,11 +368,12 @@ require_once "resources/require.php";
 			}
 
 			echo "	<tr>\n";
-			echo "		<td colspan='3' align='right' style='padding-top: 5px;'><input type='submit' name='submit' class='btn' value='".$text['button-save']."'></td>\n";
+			echo "		<td colspan='3' align='right' style='padding-top: 15px;'><input type='submit' name='submit' class='btn' value='".$text['button-save']."'></td>\n";
 			echo "	</tr>\n";
 			echo "</table>";
 			echo "<br />\n";
 		} //end foreach
+		echo "<br>";
 		unset($sql, $result, $row_count);
 
 		echo "<script>\n";

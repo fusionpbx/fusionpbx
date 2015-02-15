@@ -26,6 +26,11 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
+	$text['title-moh']['en-us'] = "Music on Hold";
+	$text['title-moh']['es-cl'] = "Musica en Espera";
+	$text['title-moh']['pt-pt'] = "Música em Espera";
+	$text['title-moh']['fr-fr'] = "Musique de Garde";
+
 	$text['label-moh']['en-us'] = "Music on Hold";
 	$text['label-moh']['es-cl'] = "Musica en Espera";
 	$text['label-moh']['pt-pt'] = "Música em Espera";

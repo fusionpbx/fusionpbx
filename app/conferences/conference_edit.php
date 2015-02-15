@@ -520,10 +520,12 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<input type='hidden' name='dialplan_uuid' value=\"$dialplan_uuid\">\n";
 		echo "	<input type='hidden' name='conference_uuid' value='$conference_uuid'>\n";
 	}
-	echo "		<br><input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "		<br>";
+	echo "		<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "	</td>\n";
 	echo "</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
 
 //include the footer

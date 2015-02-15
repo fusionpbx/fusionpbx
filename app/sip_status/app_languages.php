@@ -26,6 +26,16 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
+	$text['title-sip-status']['en-us'] = "SIP Status";
+	$text['title-sip-status']['es-cl'] = "SIP Estado";
+	$text['title-sip-status']['pt-pt'] = "SIP Estado";
+	$text['title-sip-status']['fr-fr'] = "SIP État";
+
+	$text['header-sip-status']['en-us'] = "SIP Status";
+	$text['header-sip-status']['es-cl'] = "SIP Estado";
+	$text['header-sip-status']['pt-pt'] = "SIP Estado";
+	$text['header-sip-status']['fr-fr'] = "SIP État";
+
 	$text['error-event-socket']['en-us'] = "Connection to Event Socket failed.";
 	$text['error-event-socket']['es-cl'] = "Conexión a Socket de Eventos fallida.";
 	$text['error-event-socket']['pt-pt'] = "A ligação ao Event Socket falhou.";
