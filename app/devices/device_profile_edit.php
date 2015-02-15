@@ -52,10 +52,8 @@ require_once "resources/require.php";
 	if (count($_POST) > 0) {
 		//echo "<textarea>"; print_r($_POST); echo "</textarea>"; exit;
 		$device_profile_name = check_str($_POST["device_profile_name"]);
-		$device_profile_domain_uuid = check_str($_POST["domain_uuid"]);
 		$device_profile_enabled = check_str($_POST["device_profile_enabled"]);
 		$device_profile_description = check_str($_POST["device_profile_description"]);
-
 		$device_key_category = check_str($_POST["device_key_category"]);
 		$device_key_id = check_str($_POST["device_key_id"]);
 		$device_key_type = check_str($_POST["device_key_type"]);
@@ -63,6 +61,14 @@ require_once "resources/require.php";
 		$device_key_value = check_str($_POST["device_key_value"]);
 		$device_key_extension = check_str($_POST["device_key_extension"]);
 		$device_key_label = check_str($_POST["device_key_label"]);
+
+		//allow the domain_uuid to be changed only with the device_profile_domain permission
+		if (permission_exists('device_profile_domain')) {
+			$domain_uuid = check_str($_POST["domain_uuid"]);
+		}
+		else {
+			$_POST["domain_uuid"] = $_SESSION['domain_uuid'];
+		}
 	}
 
 //add or update the database
@@ -130,13 +136,11 @@ require_once "resources/require.php";
 							$device_profile_uuid = $response['uuid'];
 						}
 					}
-/*
-// necessary?
+
 				//write the provision files
 					if (strlen($_SESSION['switch']['provision']['dir']) > 0) {
 						require_once "app/provision/provision_write.php";
 					}
-*/
 
 				//set the message
 					if (!isset($_SESSION['message'])) {
