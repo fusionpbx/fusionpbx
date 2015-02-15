@@ -106,7 +106,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan_detail_break = 'on-true';
 					} else {
 						$dialplan_detail_break = '';
-					}						
+					}
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break);
 				//set the hold music
 					//if (strlen($hold_music) > 0) {
@@ -163,7 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 						$dialplan_detail_break = 'on-true';
 					} else {
 						$dialplan_detail_break = '';
-					}						
+					}
 					dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data, $dialplan_detail_break);
 				//set the hold music
 					//if (strlen($hold_music) > 0) {
@@ -313,7 +313,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "		".$text['label-name'].":\n";
+	echo "		".$text['label-name']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input class='formfld' style='width: 60%;' type='text' name='extension_name' maxlength='255' value=\"$extension_name\" required='required'>\n";
@@ -324,7 +324,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "	<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-extension'].":\n";
+	echo "	".$text['label-extension']."\n";
 	echo "	</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
 	echo "		<input class='formfld' style='width: 60%;' type='number' name='queue_extension_number' maxlength='255' min='0' step='1' value=\"$queue_extension_number\" required='required'>\n";
@@ -335,7 +335,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-order'].":\n";
+	echo "    ".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_order' class='formfld'>\n";
@@ -354,7 +354,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-enabled'].":\n";
+	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='dialplan_enabled'>\n";
@@ -378,7 +378,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-description'].":\n";
+	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
@@ -399,7 +399,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-agent_queue_extension'].":\n";
+	echo "    ".$text['label-agent_queue_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='number' name='agent_queue_extension_number' maxlength='255' min='0' step='1' value=\"$agent_queue_extension_number\">\n";
@@ -410,7 +410,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-agent_loginout_extension'].":\n";
+	echo "    ".$text['label-agent_loginout_extension']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' style='width: 60%;' type='number' name='agent_login_logout_extension_number' maxlength='255' min='0' step='1' value=\"$agent_login_logout_extension_number\">\n";

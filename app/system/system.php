@@ -77,7 +77,7 @@ echo "<br />";
 	if (permission_exists('system_view_info')) {
 		echo "<tr>\n";
 		echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-		echo "		Version: \n";
+		echo "		Version\n";
 		echo "	</td>\n";
 		echo "	<td class=\"row_style1\">\n";
 		echo "		".software_version()."\n";
@@ -105,7 +105,7 @@ echo "<br />";
 		if (strlen($tmp_result) > 0) {
 			echo "<tr>\n";
 			echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-			echo "		Uptime: \n";
+			echo "		Uptime\n";
 			echo "	</td>\n";
 			echo "	<td class=\"row_style1\">\n";
 			echo "		".$tmp_result." \n";
@@ -116,7 +116,7 @@ echo "<br />";
 	}
 	echo "<tr>\n";
 	echo "	<td width='20%' class=\"vncell\" style='text-align: left;'>\n";
-	echo "		Date: \n";
+	echo "		Date\n";
 	echo "	</td>\n";
 	echo "	<td class=\"row_style1\">\n";
 	echo "		".date('r')." \n";
@@ -352,7 +352,7 @@ echo "<br />";
 				if (is_array($mc_status) && sizeof($mc_status) > 0) {
 					foreach($mc_status as $mc_field => $mc_value) {
 						echo "<tr>\n";
-						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$mc_field.": </td>\n";
+						echo "	<td width='20%' class='vncell' style='text-align: left;'>".$mc_field."</td>\n";
 						echo "	<td class='row_style1'>".$mc_value."</td>\n";
 						echo "</tr>\n";
 					}

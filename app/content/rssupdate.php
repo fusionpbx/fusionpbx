@@ -176,24 +176,24 @@ else {
 	echo "</tr>\n";
 
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>Category:</td>";
+	//echo "		<td class='vncellreq'>Category</td>";
 	//echo "		<td class='vtable'><input type='text' class='formfld' name='rss_category' value='$rss_category'></td>";
 	//echo "	</tr>";
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq' nowrap>Sub Category:</td>";
+	//echo "		<td class='vncellreq' nowrap>Sub Category</td>";
 	//echo "		<td class='vtable'><input type='text' class='formfld' name='rss_sub_category' value='$rss_sub_category'></td>";
 	//echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncellreq' nowrap>".$text['label-title'].":</td>";
+	echo "		<td width='30%' class='vncellreq' nowrap>".$text['label-title']."</td>";
 	echo "		<td width='70%' class='vtable' width='100%'><input type='text' class='formfld' name='rss_title' value='$rss_title'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-link'].":</td>";
+	echo "		<td class='vncellreq'>".$text['label-link']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='rss_link' value='$rss_link'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-group'].":</td>";
+	echo "		<td class='vncellreq'>".$text['label-group']."</td>";
 	echo "		<td class='vtable'>";
 	//echo "            <input type='text' class='formfld' name='menuparentid' value='$menuparentid'>";
 
@@ -254,7 +254,7 @@ else {
 	*/
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-type'].":</td>";
+	echo "		<td class='vncellreq'>".$text['label-type']."</td>";
 	echo "		<td class='vtable'>";
 	echo "            <select name=\"rss_optional_1\" class='formfld'>\n";
 	if ($rss_optional_1 == "text/html") { echo "<option value=\"text/html\" selected>text/html</option>\n"; }
@@ -268,7 +268,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-order'].":\n";
+	echo "    ".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='rss_order' class='formfld'>\n";
@@ -310,11 +310,11 @@ else {
 	echo "	</tr>";
 
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>Image:</td>";
+	//echo "		<td class='vncellreq'>Image</td>";
 	//echo "		<td class='vtable'><input type='text' name='rss_img' value='$rss_img'></td>";
 	//echo "	</tr>";
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>Priority:</td>";
+	//echo "		<td class='vncellreq'>Priority</td>";
 	//echo "		<td class='vtable'>";
 	//echo "            <input type='text' name='rss_optional_1' value='$rss_optional_1'>";
 	//echo "            <select name=\"rss_optional_1\" class='formfld'>\n";
@@ -327,7 +327,7 @@ else {
 	//echo "        </td>";
 	//echo "	</tr>";
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>Status:</td>";
+	//echo "		<td class='vncellreq'>Status</td>";
 	//echo "		<td class='vtable'>";
 	//echo "            <input type='text' name='rss_optional_2' value='$rss_optional_2'>";
 	//echo "            <select name=\"rss_optional_2\" class=\"formfld\">\n";
@@ -348,19 +348,19 @@ else {
 	//echo "        </td>";
 	//echo "	</tr>";
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>Optional 3:</td>";
+	//echo "		<td class='vncellreq'>Optional 3</td>";
 	//echo "		<td class='vtable'><input type='text' class='formfld' name='rss_optional_3' value='$rss_optional_3'></td>";
 	//echo "	</tr>";
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>Optional 4:</td>";
+	//echo "		<td class='vncellreq'>Optional 4</td>";
 	//echo "		<td class='vtable'><input type='text' class='formfld' name='rss_optional_4' value='$rss_optional_4'></td>";
 	//echo "	</tr>";
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>rss_optional_5:</td>";
+	//echo "		<td class='vncellreq'>rss_optional_5</td>";
 	//echo "		<td class='vtable'><input type='text' class='formfld' name='rss_optional_5' value='$rss_optional_5'></td>";
 	//echo "	</tr>";
 	//echo "	<tr>";
-	//echo "		<td class='vncellreq'>rss_add_date:</td>";
+	//echo "		<td class='vncellreq'>rss_add_date</td>";
 	//echo "		<td class='vtable'><input type='text' class='formfld' name='rss_add_date' value='$rss_add_date'></td>";
 	//echo "	</tr>";
 

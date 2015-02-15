@@ -670,7 +670,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		if (if_group("superadmin") || (if_group("admin") && $billing_app_exists)) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "    ".$text['label-accountcode'].":\n";
+			echo "    ".$text['label-accountcode']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			if ($billing_app_exists) {
@@ -696,7 +696,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				if ($action == "add") { $accountcode = $_SESSION['domain_name']; }
 				echo "<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$accountcode."\">\n";
 			}
-                
+
 			echo "<br />\n";
 			echo $text['description-accountcode']."\n";
 			echo "</td>\n";

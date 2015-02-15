@@ -343,15 +343,15 @@ else {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-title'].":</td>";
+	echo "		<td class='vncellreq'>".$text['label-title']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_title' value='$menu_item_title'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-link'].":</td>";
+	echo "		<td class='vncellreq'>".$text['label-link']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_link' value='$menu_item_link'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncellreq'>".$text['label-category'].":</td>";
+	echo "		<td class='vncellreq'>".$text['label-category']."</td>";
 	echo "		<td class='vtable'>";
 	echo "            <select name=\"menu_item_category\" class='formfld'>\n";
 	if ($menu_item_category == "internal") { echo "<option value=\"internal\" selected>".$text['option-internal']."</option>\n"; } else { echo "<option value=\"internal\">".$text['option-internal']."</option>\n"; }
@@ -362,7 +362,7 @@ else {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-parent_menu'].":</td>";
+	echo "		<td class='vncell'>".$text['label-parent_menu']."</td>";
 	echo "		<td class='vtable'>";
 	$sql = "SELECT * FROM v_menu_items ";
 	$sql .= "where menu_uuid = '$menu_uuid' ";
@@ -386,7 +386,7 @@ else {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-groups'].":</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-groups']."</td>";
 	echo "		<td class='vtable'>";
 
 	echo "<table width='52%'>\n";
@@ -441,7 +441,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-protected'].":\n";
+	echo "    ".$text['label-protected']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='menu_item_protected'>\n";
@@ -466,14 +466,14 @@ else {
 	if ($action == "update") {
 		if ($menu_item_parent_uuid == "") {
 			echo "	<tr>";
-			echo "		<td class='vncell'>".$text['label-menu_order'].":</td>";
+			echo "		<td class='vncell'>".$text['label-menu_order']."</td>";
 			echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_order' value='$menu_item_order'></td>";
 			echo "	</tr>";
 		}
 	}
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-description'].":</td>";
+	echo "		<td class='vncell'>".$text['label-description']."</td>";
 	echo "		<td class='vtable'><input type='text' class='formfld' name='menu_item_description' value='$menu_item_description'></td>";
 	echo "	</tr>";
 

@@ -189,7 +189,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-name_value_name'].":\n";
+	echo "	".$text['label-name_value_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='data_types_name' maxlength='255' value=\"$data_types_name\">\n";
@@ -200,7 +200,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-name_value_value'].":\n";
+	echo "	".$text['label-name_value_value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='data_types_value' maxlength='255' value=\"$data_types_value\">\n";

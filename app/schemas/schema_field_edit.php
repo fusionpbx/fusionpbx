@@ -226,7 +226,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_label'].":\n";
+	echo "	".$text['label-field_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_label' maxlength='255' value=\"$field_label\">\n";
@@ -237,7 +237,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_name'].":\n";
+	echo "	".$text['label-field_name']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_name' maxlength='255' value=\"$field_name\">\n";
@@ -248,7 +248,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_type'].":\n";
+	echo "	".$text['label-field_type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_type'>\n";
@@ -369,7 +369,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_value'].":\n";
+	echo "	".$text['label-field_value']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_value' maxlength='255' value=\"$field_value\">\n";
@@ -380,7 +380,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_visibility'].":\n";
+	echo "	".$text['label-field_visibility']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_list_hidden'>\n";
@@ -405,7 +405,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_search_by'].":\n";
+	echo "	".$text['label-field_search_by']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_search_by'>\n";
@@ -430,7 +430,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_column'].":\n";
+	echo "	".$text['label-field_column']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_column' maxlength='255' value=\"$field_column\">\n";
@@ -441,7 +441,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_required'].":\n";
+	echo "	".$text['label-field_required']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='field_required'>\n";
@@ -466,7 +466,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_order'].":\n";
+	echo "	".$text['label-field_order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='field_order' maxlength='255' value='$field_order'>\n";
@@ -477,7 +477,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_tab_order'].":\n";
+	echo "	".$text['label-field_tab_order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "  <input class='formfld' type='text' name='field_order_tab' maxlength='255' value='$field_order_tab'>\n";
@@ -488,7 +488,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap=\"nowrap\">\n";
-	echo "	".$text['label-field_description'].":\n";
+	echo "	".$text['label-field_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='field_description' maxlength='255' value=\"$field_description\">\n";

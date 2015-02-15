@@ -392,7 +392,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-import_delimiter'].":\n";
+	echo "    ".$text['label-import_delimiter']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' style='width:40px;' name='data_delimiter'>\n";
@@ -406,7 +406,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-import_enclosure'].":\n";
+	echo "    ".$text['label-import_enclosure']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' style='width:40px;' name='data_enclosure'>\n";
@@ -420,7 +420,7 @@ else {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "			".$text['label-import_file_upload'].":\n";
+	echo "			".$text['label-import_file_upload']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" id=\"ulfile\">\n";

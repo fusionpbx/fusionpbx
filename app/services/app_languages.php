@@ -66,10 +66,10 @@
 	$text['description']['pt-pt'] = "Mostra uma lista dos processos e oferece a possibilidade de os arrancar e parar.";
 	$text['description']['fr-fr'] = "Affiche la liste des processus et permet de les démarrer et les arrêter.";
 
-	$text['label-name']['en-us'] = "Name:";
-	$text['label-name']['es-cl'] = "Nombre:";
-	$text['label-name']['pt-pt'] = "Nome:";
-	$text['label-name']['fr-fr'] = "Nom:";
+	$text['label-name']['en-us'] = "Name";
+	$text['label-name']['es-cl'] = "Nombre";
+	$text['label-name']['pt-pt'] = "Nome";
+	$text['label-name']['fr-fr'] = "Nom";
 
 	$text['message-starting']['en-us'] = "Starting Service";
 	$text['message-starting']['es-cl'] = "Servicio de Inicio";
@@ -86,50 +86,50 @@
 	$text['description-name']['pt-pt'] = "Introduza o nome do serviço.";
 	$text['description-name']['fr-fr'] = "Entrer le nom du service.";
 
-	$text['label-type']['en-us'] = "Type:";
-	$text['label-type']['es-cl'] = "Tipo:";
-	$text['label-type']['pt-pt'] = "Tipo:";
-	$text['label-type']['fr-fr'] = "Type:";
+	$text['label-type']['en-us'] = "Type";
+	$text['label-type']['es-cl'] = "Tipo";
+	$text['label-type']['pt-pt'] = "Tipo";
+	$text['label-type']['fr-fr'] = "Type";
 
 	$text['description-type']['en-us'] = "Select the service type.";
 	$text['description-type']['es-cl'] = "Seleccione el tipo de servicio.";
 	$text['description-type']['pt-pt'] = "Seleccione o tipo de serviço.";
 	$text['description-type']['fr-fr'] = "Choisir le type de service.";
 
-	$text['label-data']['en-us'] = "Data:";
-	$text['label-data']['es-cl'] = "Datos:";
-	$text['label-data']['pt-pt'] = "Dados:";
-	$text['label-data']['fr-fr'] = "Données:";
+	$text['label-data']['en-us'] = "Data";
+	$text['label-data']['es-cl'] = "Datos";
+	$text['label-data']['pt-pt'] = "Dados";
+	$text['label-data']['fr-fr'] = "Données";
 
 	$text['description-data']['en-us'] = "Enter the service data.";
 	$text['description-data']['es-cl'] = "Ingrese los datos del servicio.";
 	$text['description-data']['pt-pt'] = "Introduza os dados do serviço.";
 	$text['description-data']['fr-fr'] = "Entrer les données du service.";
 
-	$text['label-start']['en-us'] = "Start Command:";
-	$text['label-start']['es-cl'] = "Comando para Iniciar:";
-	$text['label-start']['pt-pt'] = "Comando para Iniciar:";
-	$text['label-start']['fr-fr'] = "Commande démarrage:";
+	$text['label-start']['en-us'] = "Start Command";
+	$text['label-start']['es-cl'] = "Comando para Iniciar";
+	$text['label-start']['pt-pt'] = "Comando para Iniciar";
+	$text['label-start']['fr-fr'] = "Commande démarrage";
 
 	$text['description-start']['en-us'] = "Enter the command to start the service.";
 	$text['description-start']['es-cl'] = "Ingrese el comando para iniciar el servicio.";
 	$text['description-start']['pt-pt'] = "Introduza o comando para arrancar o serviço.";
 	$text['description-start']['fr-fr'] = "Entrer la commande pour démarrer le service.";
 
-	$text['label-stop']['en-us'] = "Stop Command:";
-	$text['label-stop']['es-cl'] = "Comando para Detener:";
-	$text['label-stop']['pt-pt'] = "Comando para Parar:";
-	$text['label-stop']['fr-fr'] = "Comande d'arrêt:";
+	$text['label-stop']['en-us'] = "Stop Command";
+	$text['label-stop']['es-cl'] = "Comando para Detener";
+	$text['label-stop']['pt-pt'] = "Comando para Parar";
+	$text['label-stop']['fr-fr'] = "Comande d'arrêt";
 
 	$text['description-stop']['en-us'] = "Enter the command to stop the service.";
 	$text['description-stop']['es-cl'] = "Ingrese el comando para detener el servicio.";
 	$text['description-stop']['pt-pt'] = "Introduza o comando para parar o serviço.";
 	$text['description-stop']['fr-fr'] = "Entrer la commande pour arrêter le service.";
 
-	$text['label-description']['en-us'] = "Description:";
-	$text['label-description']['es-cl'] = "Descripción:";
-	$text['label-description']['pt-pt'] = "Descrição:";
-	$text['label-description']['fr-fr'] = "Description:";
+	$text['label-description']['en-us'] = "Description";
+	$text['label-description']['es-cl'] = "Descripción";
+	$text['label-description']['pt-pt'] = "Descrição";
+	$text['label-description']['fr-fr'] = "Description";
 
 	$text['description-description']['en-us'] = "Enter the service description.";
 	$text['description-description']['es-cl'] = "Ingrese una descripción del servicio.";

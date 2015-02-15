@@ -162,7 +162,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "			".$text['label-name'].":\n";
+	echo "			".$text['label-name']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			$name &nbsp;\n";
@@ -171,7 +171,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "			".$text['label-category'].":\n";
+	echo "			".$text['label-category']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			$category &nbsp;\n";
@@ -180,7 +180,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "			".$text['label-subcategory'].":\n";
+	echo "			".$text['label-subcategory']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "			$subcategory &nbsp;\n";
@@ -189,7 +189,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "			".$text['label-version'].":\n";
+	echo "			".$text['label-version']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "				$version &nbsp;\n";
@@ -198,7 +198,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "			".$text['label-description'].":\n";
+	echo "			".$text['label-description']."\n";
 	echo "		</td>\n";
 	echo "		<td class='vtable' align='left'>\n";
 	echo "				$description &nbsp;\n";

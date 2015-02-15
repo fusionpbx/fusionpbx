@@ -126,7 +126,7 @@
 	$text['description-timeout_destination']['fr-fr'] = "";
 	$text['description-timeout_destination']['pt-pt'] = "Escolha destino no caso de timeout no grupo.";
 
-	$text['description-user_list']['en-us'] = "Assign the users that are assigned to this ring group. ";
+	$text['description-user_list']['en-us'] = "Assign the users that are assigned to this ring group.";
 	$text['description-user_list']['es-cl'] = "Define los usuarios que serán asignados a este grupo de llamado";
 	$text['description-user_list']['fr-fr'] = "Associer les utilisateurs à ce groupe de sonnerie. ";
 	$text['description-user_list']['pt-pt'] = "Associar utilizadores ao grupo.";
@@ -141,10 +141,10 @@
 	$text['header-ring-group-forward']['fr-fr'] = "Renvoi du groupe de sonnerie";
 	$text['header-ring-group-forward']['pt-pt'] = "Encaminhar Grupo";
 
-	$text['label-call-forward']['en-us'] = "Call Forward:";
+	$text['label-call-forward']['en-us'] = "Call Forward";
 	$text['label-call-forward']['es-cl'] = "Desvío de llamados";
-	$text['label-call-forward']['fr-fr'] = "Renvoi d'Appel:";
-	$text['label-call-forward']['pt-pt'] = "Encaminhar Chamada:";
+	$text['label-call-forward']['fr-fr'] = "Renvoi d'Appel";
+	$text['label-call-forward']['pt-pt'] = "Encaminhar Chamada";
 
 	$text['label-cid-name-prefix']['en-us'] = "CID Name Prefix";
 	$text['label-cid-name-prefix']['es-cl'] = "CID Nombre Prefijo";
@@ -166,10 +166,10 @@
 	$text['label-delay']['fr-fr'] = "Délais";
 	$text['label-delay']['pt-pt'] = "Atraso";
 
-	$text['label-description']['en-us'] = "Description:";
+	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";
-	$text['label-description']['fr-fr'] = "Description:";
-	$text['label-description']['pt-pt'] = "Descrição:";
+	$text['label-description']['fr-fr'] = "Description";
+	$text['label-description']['pt-pt'] = "Descrição";
 
 	$text['label-destination_delay']['en-us'] = "Delay";
 	$text['label-destination_delay']['es-cl'] = "Retraso";
@@ -231,10 +231,10 @@
 	$text['label-extension']['fr-fr'] = "Extension";
 	$text['label-extension']['pt-pt'] = "Extensão";
 
-	$text['label-forward_destination']['en-us'] = "Number:";
+	$text['label-forward_destination']['en-us'] = "Number";
 	$text['label-forward_destination']['es-cl'] = "Número";
-	$text['label-forward_destination']['fr-fr'] = "Numéro:";
-	$text['label-forward_destination']['pt-pt'] = "Número:";
+	$text['label-forward_destination']['fr-fr'] = "Numéro";
+	$text['label-forward_destination']['pt-pt'] = "Número";
 
 	$text['label-name']['en-us'] = "Name";
 	$text['label-name']['es-cl'] = "Nombre";
