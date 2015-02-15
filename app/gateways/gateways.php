@@ -83,13 +83,7 @@ else {
 	}
 
 //show the content
-	echo "<br />";
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['title-gateways']."</b></td>\n";
 	echo "		<td align='right'>";
@@ -146,7 +140,6 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('gateway', $text['label-gateway'], $order_by, $order);
@@ -244,16 +237,8 @@ else {
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>";
-	echo "</div>";
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
+	echo "<br><br>";
 
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
 
 //include the footer
 	require_once "resources/footer.php";
