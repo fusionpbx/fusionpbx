@@ -152,18 +152,11 @@ else {
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
-			$device_mac_address = $row[device_mac_address];
-			$device_mac_address = substr($device_mac_address, 0,2).'-'.substr($device_mac_address, 2,2).'-'.substr($device_mac_address, 4,2).'-'.substr($device_mac_address, 6,2).'-'.substr($device_mac_address, 8,2).'-'.substr($device_mac_address, 10,2);
-
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
-			if (permission_exists('device_edit')) {
-				echo "<a href='device_edit.php?id=".$row['device_uuid']."'>".$row['device_mac_address']."</a>";
-			}
-			else {
-				echo $row['device_mac_address'];
-			}
+			$device_mac_address = substr($row['device_mac_address'], 0,2).'-'.substr($row['device_mac_address'], 2,2).'-'.substr($row['device_mac_address'], 4,2).'-'.substr($row['device_mac_address'], 6,2).'-'.substr($row['device_mac_address'], 8,2).'-'.substr($row['device_mac_address'], 10,2);
+			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a>" : $device_mac_address;
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['device_vendor']."&nbsp;</td>\n";
