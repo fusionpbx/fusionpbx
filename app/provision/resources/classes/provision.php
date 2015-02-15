@@ -185,8 +185,7 @@ include "root.php";
 									$device_firmware_version = $row["device_firmware_version"];
 									$device_provision_enable = $row["device_provision_enable"];
 									$device_template = $row["device_template"];
-									$device_username = $row["device_username"];
-									$device_password = $row["device_password"];
+									$device_profile_uuid = $row["device_profile_uuid"];
 									$device_description = $row["device_description"];
 							}
 						//}
@@ -208,8 +207,7 @@ include "root.php";
 								$device_firmware_version = $row["device_firmware_version"];
 								$device_provision_enable = $row["device_provision_enable"];
 								$device_template = $row["device_template"];
-								$device_username = $row["device_username"];
-								$device_password = $row["device_password"];
+								$device_profile_uuid = $row["device_profile_uuid"];
 								$device_description = $row["device_description"];
 							}
 						}
@@ -382,16 +380,23 @@ include "root.php";
 
 				//get the provisioning information from device keys table
 					$sql = "SELECT * FROM v_device_keys ";
-					$sql .= "WHERE device_uuid = '".$device_uuid."' ";
+					$sql .= "WHERE (";
+					$sql .= "device_uuid = '".$device_uuid."' ";
+					if (strlen($device_profile_uuid) > 0) {
+						$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
+					}
+					$sql .= ") ";
 					$sql .= "AND domain_uuid = '".$domain_uuid."' ";
-					$sql .= "ORDER BY device_key_id asc ";
+					$sql .= "ORDER BY device_key_id asc, device_uuid desc";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
-					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 				//assign the keys array
-					$view->assign("keys", $result);
+					$view->assign("keys", $device_keys);
+
 				//set the variables
-					foreach($result as $row) {
+					foreach($device_keys as $row) {
 						//set the variables
 							$device_key_category = $row['device_key_category'];
 							$device_key_id = $row['device_key_id']; //1
