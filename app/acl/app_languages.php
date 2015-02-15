@@ -1,15 +1,25 @@
 <?php
 
 	//Access Control List
-		$text['title-acl']['en-us'] = 'Access Control List';
+		$text['title-access_control_list']['en-us'] = 'Access Control List';
+		$text['title-access_control_list']['es-cl'] = '';
+		$text['title-access_control_list']['pt-pt'] = '';
+		$text['title-access_control_list']['fr-fr'] = '';
+
+		$text['title-acl']['en-us'] = 'ACL';
 		$text['title-acl']['es-cl'] = '';
 		$text['title-acl']['pt-pt'] = '';
 		$text['title-acl']['fr-fr'] = '';
 
-		$text['title-acl']['en-us'] = 'Acl';
-		$text['title-acl']['es-cl'] = '';
-		$text['title-acl']['pt-pt'] = '';
-		$text['title-acl']['fr-fr'] = '';
+		$text['header-access_control_list']['en-us'] = 'Access Control List';
+		$text['header-access_control_list']['es-cl'] = '';
+		$text['header-access_control_list']['pt-pt'] = '';
+		$text['header-access_control_list']['fr-fr'] = '';
+
+		$text['header-acl']['en-us'] = 'ACL';
+		$text['header-acl']['es-cl'] = '';
+		$text['header-acl']['pt-pt'] = '';
+		$text['header-acl']['fr-fr'] = '';
 
 		$text['description-acl']['en-us'] = 'Access control list can allow or deny ranges of IP addresses.';
 		$text['description-acl']['es-cl'] = '';
