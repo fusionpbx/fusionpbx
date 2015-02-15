@@ -247,6 +247,7 @@ if (count($_POST)>0 && check_str($_POST["persistform"]) != "1") {
 	echo "			<b>".$text['header-user_add']."</b>\n";
 	echo "			<br><br>\n";
 	echo "			".$text['description-user_add']."\n";
+	echo "			<br><br>\n";
 	echo "		</td>\n";
 	echo "		<td width='20%' valign='top' align='right'>\n";
 	echo "			<input type='button' class='btn' name='back' alt='".$text['button-back']."' onclick=\"document.location.href='index.php';\" value='".$text['button-back']."'>\n";

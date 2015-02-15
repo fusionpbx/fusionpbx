@@ -1113,6 +1113,7 @@ require_once "resources/require.php";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
 
 //show the footer
