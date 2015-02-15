@@ -57,14 +57,6 @@ if (count($_POST)>0) {
 
 	require_once "resources/header.php";
 
-	echo "<div align='center'>";
-	echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
-
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "      <br>";
-
-
 	$sql = "";
 	$sql .= "select * from v_rss_sub ";
 	$sql .= "where ";
@@ -114,9 +106,9 @@ if (count($_POST)>0) {
 	$row_style["1"] = "background-color: #FFFFFF;";
 
 	echo "<b>".$text['label-search']."</b><br>";
-	echo "<div align='left'>\n";
+
 	echo "<table border='0' cellpadding='1' cellspacing='1'>\n";
-	echo "<tr><td colspan='100%'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>";
+	echo "	<tr><td colspan='100%'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>";
 
 	if ($result_count == 0) { //no results
 		echo "<tr><td>&nbsp;</td></tr>";
@@ -124,18 +116,18 @@ if (count($_POST)>0) {
 	else { //received results
 
 		echo "<tr>";
-		  echo "<th nowrap>&nbsp; &nbsp; ".$text['label-sub-id']."&nbsp; &nbsp; </th>";
-		  echo "<th nowrap>&nbsp; &nbsp; ".$text['label-id']."&nbsp; &nbsp; </th>";
-		  echo "<th nowrap>&nbsp; &nbsp; ".$text['label-title']."&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; Link&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_description&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_1&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_2&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_3&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_4&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_5&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_add_date&nbsp; &nbsp; </th>";
-		  //echo "<th nowrap>&nbsp; &nbsp; rss_sub_add_user&nbsp; &nbsp; </th>";
+			echo "<th nowrap>&nbsp; &nbsp; ".$text['label-sub-id']."&nbsp; &nbsp; </th>";
+			echo "<th nowrap>&nbsp; &nbsp; ".$text['label-id']."&nbsp; &nbsp; </th>";
+			echo "<th nowrap>&nbsp; &nbsp; ".$text['label-title']."&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; Link&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_description&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_1&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_2&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_3&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_4&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_optional_5&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_add_date&nbsp; &nbsp; </th>";
+			//echo "<th nowrap>&nbsp; &nbsp; rss_sub_add_user&nbsp; &nbsp; </th>";
 		echo "</tr>";
 		echo "<tr><td colspan='100%'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 
@@ -155,26 +147,16 @@ if (count($_POST)>0) {
 				//echo "<td valign='top'>".$row[rss_sub_add_date]."</td>";
 				//echo "<td valign='top'>".$row[rss_sub_add_user]."</td>";
 			echo "</tr>";
-
 			echo "<tr><td colspan='100%'><img src='/images/spacer.gif' width='100%' height='1' style='background-color: #BBBBBB;'></td></tr>\n";
 			if ($c==0) { $c=1; } else { $c=0; }
 		} //end foreach
 		unset($sql, $result, $row_count);
 
-		echo "</table>\n";
-		echo "</div>\n";
-
-
-		echo "  <br><br>";
-		echo "  </td>\n";
-		echo "</tr>\n";
-
 	} //end if results
 
 	echo "</table>\n";
-	echo "</div>";
-
 	echo "<br><br>";
+
 	require_once "resources/footer.php";
 
 	unset ($result_count);
@@ -183,82 +165,68 @@ if (count($_POST)>0) {
 	unset ($val);
 	unset ($c);
 
-	}
-	else {
+}
+else {
 
-		echo "\n";    require_once "resources/header.php";
-	echo "<div align='center'>";
-	echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
-
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "      <br>";
-
+	require_once "resources/header.php";
 
 	echo "<form method='post' action=''>";
 	echo "<table>";
-	  echo "	<tr>";
-	  echo "		<td>".$text['label-sub-id']."</td>";
-	  echo "		<td><input type='text' class='txt' name='rss_sub_uuid'></td>";
-	  echo "	</tr>";
-	  echo "	<tr>";
-	  echo "		<td>".$text['label-id']."</td>";
-	  echo "		<td><input type='text' class='txt' name='rss_uuid'></td>";
-	  echo "	</tr>";
-	  echo "	<tr>";
-	  echo "		<td>".$text['label-sub-title']."</td>";
-	  echo "		<td><input type='text' class='txt' name='rss_sub_title'></td>";
-	  echo "	</tr>";
-	  echo "	<tr>";
-	  echo "		<td>".$text['label-sub-link']."</td>";
-	  echo "		<td><input type='text' class='txt' name='rss_sub_link'></td>";
-	  echo "	</tr>";
-	  echo "	<tr>";
-	  echo "		<td>".$text['label-sub-desc']."</td>";
-	  echo "		<td><input type='text' class='txt' name='rss_sub_description'></td>";
-	  echo "	</tr>";
-	  //echo "	<tr>";
-	  //echo "		<td>rss_sub_optional_1</td>";
-	  //echo "		<td><input type='text' class='txt' name='rss_sub_optional_1'></td>";
-	  //echo "	</tr>";
-	  //echo "	<tr>";
-	  //echo "		<td>rss_sub_optional_2</td>";
-	  //echo "		<td><input type='text' class='txt' name='rss_sub_optional_2'></td>";
-	  //echo "	</tr>";
-	  //echo "	<tr>";
-	  //echo "		<td>rss_sub_optional_3</td>";
-	  //echo "		<td><input type='text' class='txt' name='rss_sub_optional_3'></td>";
-	  //echo "	</tr>";
-	  //echo "	<tr>";
-	  //echo "		<td>rss_sub_optional_4</td>";
-	  //echo "		<td><input type='text' class='txt' name='rss_sub_optional_4'></td>";
-	  //echo "	</tr>";
-	  //echo "	<tr>";
-	  //echo "		<td>rss_sub_optional_5</td>";
-	  //echo "		<td><input type='text' class='txt' name='rss_sub_optional_5'></td>";
-	  //echo "	</tr>";
-	  //echo "	<tr>";
-	  //echo "		<td>rss_sub_add_date</td>";
-	  //echo "		<td><input type='text' class='txt' name='rss_sub_add_date'></td>";
-	  //echo "	</tr>";
-	  //echo "	<tr>";
-	  //echo "		<td>rss_sub_add_user</td>";
-	  //echo "		<td><input type='text' class='txt' name='rss_sub_add_user'></td>";
-	  //echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>".$text['label-sub-id']."</td>";
+	echo "		<td><input type='text' class='txt' name='rss_sub_uuid'></td>";
+	echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>".$text['label-id']."</td>";
+	echo "		<td><input type='text' class='txt' name='rss_uuid'></td>";
+	echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>".$text['label-sub-title']."</td>";
+	echo "		<td><input type='text' class='txt' name='rss_sub_title'></td>";
+	echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>".$text['label-sub-link']."</td>";
+	echo "		<td><input type='text' class='txt' name='rss_sub_link'></td>";
+	echo "	</tr>";
+	echo "	<tr>";
+	echo "		<td>".$text['label-sub-desc']."</td>";
+	echo "		<td><input type='text' class='txt' name='rss_sub_description'></td>";
+	echo "	</tr>";
+	//echo "	<tr>";
+	//echo "		<td>rss_sub_optional_1</td>";
+	//echo "		<td><input type='text' class='txt' name='rss_sub_optional_1'></td>";
+	//echo "	</tr>";
+	//echo "	<tr>";
+	//echo "		<td>rss_sub_optional_2</td>";
+	//echo "		<td><input type='text' class='txt' name='rss_sub_optional_2'></td>";
+	//echo "	</tr>";
+	//echo "	<tr>";
+	//echo "		<td>rss_sub_optional_3</td>";
+	//echo "		<td><input type='text' class='txt' name='rss_sub_optional_3'></td>";
+	//echo "	</tr>";
+	//echo "	<tr>";
+	//echo "		<td>rss_sub_optional_4</td>";
+	//echo "		<td><input type='text' class='txt' name='rss_sub_optional_4'></td>";
+	//echo "	</tr>";
+	//echo "	<tr>";
+	//echo "		<td>rss_sub_optional_5</td>";
+	//echo "		<td><input type='text' class='txt' name='rss_sub_optional_5'></td>";
+	//echo "	</tr>";
+	//echo "	<tr>";
+	//echo "		<td>rss_sub_add_date</td>";
+	//echo "		<td><input type='text' class='txt' name='rss_sub_add_date'></td>";
+	//echo "	</tr>";
+	//echo "	<tr>";
+	//echo "		<td>rss_sub_add_user</td>";
+	//echo "		<td><input type='text' class='txt' name='rss_sub_add_user'></td>";
+	//echo "	</tr>";
 	echo "	<tr>";
 	echo "		<td colspan='2' align='right'><input type='submit' name='submit' class='btn' value='".$text['button-search']."'></td>";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
 
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
-
-
-require_once "resources/footer.php";
+	require_once "resources/footer.php";
 
 } //end if not post
 ?>

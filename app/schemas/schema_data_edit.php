@@ -544,8 +544,7 @@ else {
 	echo "  </tr>\n";
 	echo "</table>\n";
 
-//begin the div and table that will hold the html form
-	echo "<div align='center'>";
+//begin the table that will hold the html form
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='10'>\n";
 
 //determine if a file should be uploaded
@@ -971,7 +970,6 @@ else {
 			}
 	}
 	echo "</table>\n";
-	echo "</div>\n";
 
 require_once "resources/footer.php";
 ?>

@@ -147,12 +147,6 @@ require_once "resources/check_auth.php";
 	require_once "resources/header.php";
 
 //begin the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "      <br>";
-
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
@@ -161,10 +155,9 @@ require_once "resources/check_auth.php";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
-
 	echo "<br />\n";
 
-	echo "	<table border='0' width='100%' cellpadding=\"0\" cellspacing=\"0\">\n";
+	echo "<table border='0' width='100%' cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%'>\n";
 	echo "			&nbsp;";
@@ -180,7 +173,8 @@ require_once "resources/check_auth.php";
 		echo "		</td>\n";
 	}
 	echo "	</tr>\n";
-	echo "	</table><br><br>\n";
+	echo "</table>";
+	echo "<br><br>\n";
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";
@@ -275,24 +269,15 @@ require_once "resources/check_auth.php";
 	} //end if results
 	echo "</table>\n";
 
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
 	echo "		<td width='33.3%' align='center' nowrap>$paging_controls</td>\n";
 	echo "		<td class='list_control_icons'>";
 	echo "		</td>\n";
 	echo "	</tr>\n";
-	echo "	</table>\n";
-
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "</div>";
-
-	echo "<br>\n";
-	echo "<br>\n";
-	echo "<br>\n";
-	echo "<br>\n";
+	echo "</table>\n";
+	echo "<br><br>\n";
 
 //include the footer
 	require_once "resources/footer.php";

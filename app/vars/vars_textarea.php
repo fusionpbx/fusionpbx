@@ -91,8 +91,6 @@ if ($_GET['a'] == "default" && permission_exists('var_edit')) {
 
 ?>
 
-<div align='center'>
-
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td>
@@ -159,7 +157,6 @@ if ($_GET['a'] == "default" && permission_exists('var_edit')) {
 		</td>
 	</tr>
 </table>
-</div>
 
 <?php
 	require_once "resources/footer.php";

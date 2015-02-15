@@ -94,8 +94,7 @@ else {
 	echo "	</script>";
 
 //show the header
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td colspan='2' align='left' nowrap=\"nowrap\"><b>".$text['label-execute']."</b></td>\n";
 	echo "</tr>\n";
@@ -196,7 +195,6 @@ else {
 	echo "</form>";
 
 	echo "</table>";
-	echo "</div>";
 
 //show the footer
 	require_once "resources/footer.php";

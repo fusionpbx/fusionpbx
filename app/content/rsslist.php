@@ -47,11 +47,6 @@ $order_by = $_GET["order_by"];
 $order = $_GET["order"];
 
 
-	echo "<div align='center'>";
-	echo "<table border='0' width='100%' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-
 	echo "<table width='100%'>";
 	echo "<tr>";
 	echo "<td align='left'>";
@@ -87,7 +82,6 @@ $order = $_GET["order"];
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='left'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='2' cellspacing='0'>\n";
 	echo "<tr>";
 	echo th_order_by('rss_title', $text['label-title'], $order_by, $order);
@@ -179,17 +173,11 @@ $order = $_GET["order"];
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
-	echo "</div>\n";
+	echo "<br><br>";
 
-	echo "  <br>";
-	echo "  </td>\n";
-	echo "</tr>\n";
-	echo "</table>\n";
 	//echo "<input type='button' class='btn' name='' onclick=\"window.location='rsssearch.php'\" value='Search'>&nbsp; &nbsp;\n";
 	//echo "<input type='button' class='btn' name='' onclick=\"window.location='rssadd.php'\" value='Add $module_title'>&nbsp; &nbsp;\n";
-	echo "</div>";
 
-	echo "<br><br>";
 	require_once "resources/footer.php";
 
 	unset ($result_count);

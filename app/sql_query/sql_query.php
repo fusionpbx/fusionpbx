@@ -65,8 +65,6 @@ else {
 		echo "    });\n";
 		echo "    </script>";
 
-	echo "<div align='center'>";
-
 	echo "<form method='post' target='frame' action='sql_query_result.php' >";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
@@ -158,8 +156,6 @@ else {
 	echo "	</tr>";
 	echo "</table><br>";
 	echo "</form>";
-
-	echo "</div>";
 
 	echo "<iframe id='frame' height='400' FRAMEBORDER='0' name='frame' style='width: 100%; background-color : #FFFFFF; border: 1px solid #c0c0c0;'></iframe>\n";
 

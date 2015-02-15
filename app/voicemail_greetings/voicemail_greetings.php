@@ -228,12 +228,6 @@ else {
 	echo "</script>";
 
 	echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frm\" onSubmit=\"\">\n";
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br>";
-
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' nowrap>\n";
@@ -378,18 +372,10 @@ else {
 	echo "		<td width='33.3%' align='right'>&nbsp;</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
+	echo "	<br><br>";
 
-	echo "</td>\n";
-	echo "</tr>\n";
-	echo "</table>";
-	echo "</div>";
 	echo "<input type='hidden' name='id' value='$voicemail_id'>\n";
 	echo "</form>";
-
-	echo "<br>\n";
-	echo "<br>\n";
-	echo "<br>\n";
-	echo "<br>\n";
 
 //include the footer
 	require_once "resources/footer.php";
