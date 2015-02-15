@@ -347,7 +347,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<tr>\n";
 	echo "	<td class='vtable' align='left' nowrap='nowrap'>\n";
 	echo "		<select name='phrase_detail_function' class='formfld' onchange=\"if (this.selectedIndex == 2) { changeToInput(getElementById('phrase_detail_data')); }\">\n";
-	echo "			<option value=''></option>\n";
 	echo "			<option value='play-file'>".$text['label-play']."</option>\n";
 	if (if_group("superadmin")) {
 		echo "		<option value='execute'>".$text['label-execute']."</option>\n";
