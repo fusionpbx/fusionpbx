@@ -237,50 +237,50 @@
 		$text['description-device_description']['fr-fr'] = "Entrez la description.";
 
 	//profiles
-		$text['title-profiles']['en-us'] = "Key Profiles";
-		$text['title-profiles']['es-cl'] = "Perfiles Clave";
-		$text['title-profiles']['pt-pt'] = "Perfis-Chave";
-		$text['title-profiles']['fr-fr'] = "Profils Clés";
+		$text['title-profiles']['en-us'] = "Profiles";
+		$text['title-profiles']['es-cl'] = "Perfiles";
+		$text['title-profiles']['pt-pt'] = "Perfis";
+		$text['title-profiles']['fr-fr'] = "Profils";
 
-		$text['title-profile']['en-us'] = "Key Profile";
-		$text['title-profile']['es-cl'] = "Perfil Clave";
-		$text['title-profile']['pt-pt'] = "Perfil Chave";
-		$text['title-profile']['fr-fr'] = "Profil Clés";
+		$text['title-profile']['en-us'] = "Profile";
+		$text['title-profile']['es-cl'] = "Perfil";
+		$text['title-profile']['pt-pt'] = "Perfil";
+		$text['title-profile']['fr-fr'] = "Profil";
 
-		$text['header-profiles']['en-us'] = "Key Profiles";
-		$text['header-profiles']['es-cl'] = "Perfiles Clave";
-		$text['header-profiles']['pt-pt'] = "Perfis-Chave";
-		$text['header-profiles']['fr-fr'] = "Profils Clés";
+		$text['header-profiles']['en-us'] = "Profiles";
+		$text['header-profiles']['es-cl'] = "Perfiles";
+		$text['header-profiles']['pt-pt'] = "Perfis";
+		$text['header-profiles']['fr-fr'] = "Profils";
 
 		$text['description-profiles']['en-us'] = "Define a set of keys as a profile.  Any changes to the profile effect all devices assigned to the profile.";
 		$text['description-profiles']['es-cl'] = "Definir un conjunto de claves como un perfil. Cualquier cambio en el perfil de efectos todos los dispositivos asignados al perfil.";
 		$text['description-profiles']['pt-pt'] = "Defina um conjunto de chaves como um perfil. Quaisquer mudanças no perfil de todos os dispositivos de efeito atribuído ao perfil.";
 		$text['description-profiles']['fr-fr'] = "Définir un ensemble de touches comme un profil. Toute modification apportée à l'effet de profil tous les appareils affectés au profil.";
 
-		$text['header-profile']['en-us'] = "Key Profile";
-		$text['header-profile']['es-cl'] = "Perfil Clave";
-		$text['header-profile']['pt-pt'] = "Perfil Chave";
-		$text['header-profile']['fr-fr'] = "Profil Clés";
+		$text['header-profile']['en-us'] = "Profile";
+		$text['header-profile']['es-cl'] = "Perfil";
+		$text['header-profile']['pt-pt'] = "Perfil";
+		$text['header-profile']['fr-fr'] = "Profil";
 
 		$text['description-profile']['en-us'] = "Define the assignments for this key profile.";
 		$text['description-profile']['es-cl'] = "Definir las asignaciones para este perfil de llave.";
 		$text['description-profile']['pt-pt'] = "Definir as atribuições para esse perfil de chave.";
 		$text['description-profile']['fr-fr'] = "Définir les missions pour ce profil de clé.";
 
-		$text['label-profile']['en-us'] = "Key Profile";
-		$text['label-profile']['es-cl'] = "Perfil Clave";
-		$text['label-profile']['pt-pt'] = "Perfil Chave";
-		$text['label-profile']['fr-fr'] = "Profil Clés";
+		$text['label-profile']['en-us'] = "Profile";
+		$text['label-profile']['es-cl'] = "Perfil";
+		$text['label-profile']['pt-pt'] = "Perfil";
+		$text['label-profile']['fr-fr'] = "Profil";
 
 		$text['description-profile2']['en-us'] = "Select a Key Profile and/or define custom keys below.";
 		$text['description-profile2']['es-cl'] = "Seleccione un perfil de llave y / o definir teclas personalizadas a continuación.";
 		$text['description-profile2']['pt-pt'] = "Selecione um perfil Key e / ou definir chaves personalizados abaixo.";
 		$text['description-profile2']['fr-fr'] = "Sélectionnez un profil à clé et / ou définir des touches personnalisées ci-dessous.";
 
-		$text['button-profiles']['en-us'] = "Key Profiles";
-		$text['button-profiles']['es-cl'] = "Perfiles Clave";
-		$text['button-profiles']['pt-pt'] = "Perfis-Chave";
-		$text['button-profiles']['fr-fr'] = "Profils Clés";
+		$text['button-profiles']['en-us'] = "Profiles";
+		$text['button-profiles']['es-cl'] = "Perfiles";
+		$text['button-profiles']['pt-pt'] = "Perfis";
+		$text['button-profiles']['fr-fr'] = "Profils";
 
 		$text['label-profile_name']['en-us'] = "Name";
 		$text['label-profile_name']['es-cl'] = "Nombre";
