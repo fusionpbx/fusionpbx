@@ -357,7 +357,7 @@ if (count($_POST)>0) {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "			<br><br>";
+	echo "			<br>";
 	echo "			<input type='submit' name='import' class='btn' value='".$text['button-import']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";

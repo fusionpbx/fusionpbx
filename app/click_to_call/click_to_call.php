@@ -406,7 +406,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
-	echo "		<br><br>";
+	echo "		<br>";
 	echo "		<input type=\"submit\" class='btn' value=\"".$text['button-call']."\">\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
