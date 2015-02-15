@@ -203,7 +203,7 @@ echo "		<td class='vncell'>".$text['label-network_addr']."</td>";
 echo "		<td class='vtable'><input type='text' class='formfld' name='network_addr' value='$network_addr'></td>";
 echo "	</tr>";
 echo "	<tr>";
-echo "		<td colspan='2' align='right'><input type='submit' name='submit' class='btn' value='".$text['button-search']."'></td>";
+echo "		<td colspan='2' align='right'><br><input type='submit' name='submit' class='btn' value='".$text['button-search']."'></td>";
 echo "	</tr>";
 echo "</table>";
 
