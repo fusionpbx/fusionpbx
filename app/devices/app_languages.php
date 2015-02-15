@@ -262,10 +262,10 @@
 		$text['header-profile']['pt-pt'] = "Perfil";
 		$text['header-profile']['fr-fr'] = "Profil";
 
-		$text['description-profile']['en-us'] = "Define the assignments for this profile.";
-		$text['description-profile']['es-cl'] = "Definir las asignaciones para este perfil.";
-		$text['description-profile']['pt-pt'] = "Definir as atribuições para esse perfil.";
-		$text['description-profile']['fr-fr'] = "Définir les missions pour ce profil.";
+		$text['description-profile']['en-us'] = "Define the settings for this profile.";
+		$text['description-profile']['es-cl'] = "Definir la configuración de este perfil.";
+		$text['description-profile']['pt-pt'] = "Defina as configurações para este perfil.";
+		$text['description-profile']['fr-fr'] = "Définir les paramètres de ce profil.";
 
 		$text['label-profile']['en-us'] = "Profile";
 		$text['label-profile']['es-cl'] = "Perfil";
