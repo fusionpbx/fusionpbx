@@ -511,7 +511,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				foreach($details as $group) {
 
 					if ($x != 0) {
-						echo "<tr><td colspan='7'><br></td></tr>";
+						echo "<tr><td colspan='7'><br><br></td></tr>";
 					}
 
 					echo "<tr>\n";

@@ -51,6 +51,7 @@ else {
 	echo "<td width='50%' nowrap='nowrap' align='left'><b>".$text['title']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr></table>\n";
+	echo "<br>";
 
 	$sql = "select * from v_call_broadcasts ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";

@@ -180,6 +180,7 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "<br><br>";
 
 //show the footer
 	require_once "resources/footer.php";

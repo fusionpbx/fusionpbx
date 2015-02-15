@@ -761,16 +761,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			<span class=\"vexpl\">\n";
+	echo "			<br />";
 	echo "			".$text['description-dialplan-inbound-add']."\n";
-	echo "		</span>\n";
-	echo "		<br />\n";
+	echo "			<br />\n";
 	echo "			</span>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>";
-
-	echo "<br />\n";
 	echo "<br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";

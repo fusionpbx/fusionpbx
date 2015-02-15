@@ -373,6 +373,7 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
 
 

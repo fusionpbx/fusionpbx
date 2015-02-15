@@ -589,14 +589,11 @@ function type_onchange(dialplan_detail_type) {
 	echo "	</tr>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' colspan='2'>\n";
-	echo "			<span class=\"vexpl\">\n";
-	echo "				".$text['description-outbound-routes']."\n";
-	echo "			</span>\n";
+	echo "			<br>";
+	echo "			".$text['description-outbound-routes']."\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>";
-
-	echo "<br />\n";
 	echo "<br />\n";
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
@@ -615,6 +612,7 @@ function type_onchange(dialplan_detail_type) {
 		echo "	tb.type='text';\n";
 		echo "	tb.name=obj.name;\n";
 		echo "	tb.setAttribute('class', 'formfld');\n";
+		echo "	tb.setAttribute('style', 'width: 400px;');\n";
 		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
 		echo "	tbb=document.createElement('INPUT');\n";
 		echo "	tbb.setAttribute('class', 'btn');\n";
@@ -665,7 +663,7 @@ function type_onchange(dialplan_detail_type) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
-	echo "<select name=\"gateway\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
+	echo "<select name=\"gateway\" id=\"gateway\" class=\"formfld\" $onchange>\n";
 	echo "<option value=''></option>\n";
 	echo "<optgroup label='".$text['label-gateway']."'>";
 	$previous_domain_uuid = '';
@@ -725,7 +723,7 @@ function type_onchange(dialplan_detail_type) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
-	echo "<select name=\"gateway_2\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
+	echo "<select name=\"gateway_2\" id=\"gateway\" class=\"formfld\" $onchange>\n";
 	echo "<option value=''></option>\n";
 	echo "<optgroup label='".$text['label-sip-gateway']."'>";
 	$previous_domain_uuid = '';
@@ -785,7 +783,7 @@ function type_onchange(dialplan_detail_type) {
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
-	echo "<select name=\"gateway_3\" id=\"gateway\" class=\"formfld\" $onchange style='width: 60%;'>\n";
+	echo "<select name=\"gateway_3\" id=\"gateway\" class=\"formfld\" $onchange>\n";
 	echo "<option value=''></option>\n";
 	echo "<optgroup label='".$text['label-sip-gateway']."'>";
 	$previous_domain_uuid = '';
@@ -832,7 +830,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "  <td align='left' class=\"vtable\">";
 
 	echo "    <div id=\"dialplan_expression_box\" >\n";
-	echo "        <textarea name=\"dialplan_expression\" id=\"dialplan_expression\" class=\"formfld\" style='width: 60%;' cols=\"30\" rows=\"4\" wrap=\"off\"></textarea>\n";
+	echo "        <textarea name=\"dialplan_expression\" id=\"dialplan_expression\" class=\"formfld\" cols=\"30\" rows=\"4\" style='width: 350px;' wrap=\"off\"></textarea>\n";
 	echo "        <br>\n";
 	echo "    </div>\n";
 
@@ -842,7 +840,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "        <br />".$text['description-enter-custom-outbound-prefix'].".\n";
 	echo "    </div>\n";
 
-	echo "    <select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"update_dialplan_expression()\" class='formfld' style='width: 60%;'>\n";
+	echo "    <select name='dialplan_expression_select' id='dialplan_expression_select' onchange=\"update_dialplan_expression()\" class='formfld'>\n";
 	echo "    <option></option>\n";
 	echo "    <option value='^(\\d{2})\$'>".$text['label-2d']."</option>\n";
 	echo "    <option value='^(\\d{3})\$'>".$text['label-3d']."</option>\n";
@@ -886,7 +884,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    ".$text['label-prefix']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' style='width: 60%;' type='text' name='prefix_number' maxlength='255' value=\"$prefix_number\">\n";
+	echo "    <input class='formfld' type='text' name='prefix_number' maxlength='255' value=\"$prefix_number\">\n";
 	echo "<br />\n";
 	echo $text['description-enter-prefix']."\n";
 	echo "</td>\n";
@@ -897,7 +895,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    ".$text['label-limit']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' style='width: 60%;' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
+	echo "    <input class='formfld' type='text' name='limit' maxlength='255' value=\"$limit\">\n";
 	echo "<br />\n";
 	echo $text['description-limit']."\n";
 	echo "</td>\n";
@@ -908,7 +906,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    ".$text['label-accountcode']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' style='width: 60%;' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
+	echo "    <input class='formfld' type='text' name='accountcode' maxlength='255' value=\"$accountcode\">\n";
 	echo "<br />\n";
 	echo $text['description-accountcode']."\n";
 	echo "</td>\n";
@@ -919,7 +917,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    ".$text['label-toll_allow']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='toll_allow_enabled' style='width: 60%;'>\n";
+	echo "	<select class='formfld' name='toll_allow_enabled'>\n";
 	echo "		<option value='true'                 >".$text['label-true']."</option>\n";
 	echo "		<option value='false' selected='true'>".$text['label-false']."</option>\n";
 	echo "	</select>\n";
@@ -933,7 +931,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select name='dialplan_order' class='formfld' style='width: 60%;'>\n";
+	echo "	<select name='dialplan_order' class='formfld'>\n";
 	//echo "		<option></option>\n";
 	if (strlen(htmlspecialchars($dialplan_order))> 0) {
 		echo "		<option selected='yes' value='".htmlspecialchars($dialplan_order)."'>".htmlspecialchars($dialplan_order)."</option>\n";
@@ -956,7 +954,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    ".$text['label-enabled']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "    <select class='formfld' name='dialplan_enabled' style='width: 60%;'>\n";
+	echo "    <select class='formfld' name='dialplan_enabled'>\n";
 	//echo "    <option value=''></option>\n";
 	if ($dialplan_enabled == "true") {
 		echo "    <option value='true' selected='selected'>".$text['label-true']."</option>\n";
@@ -981,7 +979,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "    ".$text['label-description']."\n";
 	echo "</td>\n";
 	echo "<td colspan='4' class='vtable' align='left'>\n";
-	echo "    <input class='formfld' style='width: 60%;' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
+	echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"$dialplan_description\">\n";
 	echo "<br />\n";
 	echo $text['description-description']."\n";
 	echo "</td>\n";
