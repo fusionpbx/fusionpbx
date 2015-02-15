@@ -190,6 +190,4 @@
 	$text['button-advanced']['pt-pt'] = "Avançadas";
 	$text['button-advanced']['fr-fr'] = "Afficher les paramètres avancés";
 
-
-
 ?>
