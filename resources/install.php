@@ -1412,7 +1412,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 	if ($_POST["install_step"] == "") {
 		echo "<div id='page' align='center'>\n";
 		echo "<form method='post' name='frm' action=''>\n";
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		//echo "<tr>\n";
 		//echo "<td colspan='2' align='left' width='30%' nowrap><b>Installation</b></td>\n";
@@ -1781,7 +1781,7 @@ EOL;
 	if ($_POST["install_step"] == "2" && $_POST["db_type"] == "sqlite") {
 		echo "<div id='page' align='center'>\n";
 		echo "<form method='post' name='frm' action=''>\n";
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		echo "<tr>\n";
 		echo "<td align='left' width='30%' nowrap><b>Installation: Step 2 - SQLite</b></td>\n";
@@ -1840,7 +1840,7 @@ EOL;
 		//echo "However if preferred the database can be created manually with the <a href='". echo PROJECT_PATH; ."/resources/install/sql/mysql.sql' target='_blank'>mysql.sql</a> script. ";
 		echo "<div id='page' align='center'>\n";
 		echo "<form method='post' name='frm' action=''>\n";
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		echo "<tr>\n";
 		echo "<td align='left' width='30%' nowrap><b>Installation: Step 2 - MySQL</b></td>\n";
@@ -1952,7 +1952,7 @@ EOL;
 
 		echo "<div id='page' align='center'>\n";
 		echo "<form method='post' name='frm' action=''>\n";
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 		echo "<tr>\n";
 		echo "<td align='left' width='30%' nowrap><b>Installation: Step 2 - Postgres</b></td>\n";

@@ -128,13 +128,7 @@ else {
 	}
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br>";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-call_center_agent_status']."</b></td>\n";
 	echo "<td width='50%' align='right'>\n";
@@ -154,7 +148,6 @@ else {
 	$row_style["1"] = "row_style1";
 
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<th>".$text['label-agent']."</th>\n";
@@ -209,16 +202,9 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
 	echo "<br><br>";
-	echo "<br><br>";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "</form>\n";
-	echo "<br><br>";
+
 
 //show the footer
 	require_once "resources/footer.php";

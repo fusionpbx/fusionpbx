@@ -522,7 +522,7 @@ else {
 	echo "<br>";
 	echo "<br>";
 
-	echo "<table $table_width cellpadding='6' cellspacing='0'>";
+	echo "<table $table_width cellpadding='0' cellspacing='0'>";
 	echo "	<tr>\n";
 	echo "	<th class='th' colspan='2' align='left'>".$text['label-additional_info']."</th>\n";
 	echo "	</tr>\n";
@@ -715,11 +715,12 @@ else {
 	echo "		<td colspan='2' align='right'><br>";
 	echo "			<input type='hidden' name='id' value=\"$user_uuid\">";
 	echo "			<input type='hidden' name='username_old' value=\"$username\">";
+	echo "			<br><br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
-
+	echo "<br><br>";
 	echo "</form>";
 
 //include the footer

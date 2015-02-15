@@ -212,15 +212,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$document['title'] = $text['title-dialplan_detail'];
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "      <br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap=\"nowrap\"><span class=\"title\">".$text['header-dialplan_detail']."</span></td>\n";
 	echo "<td width='70%' align='right'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=".$app_uuid."';\" value='".$text['button-back']."'></td>\n";
@@ -476,18 +469,18 @@ function replace_param(obj){
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
-	echo "				<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
-	echo "				<input type='hidden' name='app_uuid' value='$app_uuid'>\n";
+	echo "			<input type='hidden' name='dialplan_uuid' value='$dialplan_uuid'>\n";
+	echo "			<input type='hidden' name='app_uuid' value='$app_uuid'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='dialplan_detail_uuid' value='$dialplan_detail_uuid'>\n";
+		echo "		<input type='hidden' name='dialplan_detail_uuid' value='$dialplan_detail_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br><br>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>\n";
+	echo "<br><br>";
 	echo "</form>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";

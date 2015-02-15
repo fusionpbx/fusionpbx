@@ -111,9 +111,7 @@ var destination;
 <?php
 
 
-echo "<div align='center'>";
-
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "	<tr>\n";
 echo "	<td align='left'><b>".$text['title']."</b><br>\n";
 echo "		".$text['description']."\n";
@@ -143,8 +141,6 @@ echo "		<div id=\"time_stamp\" style=\"visibility:hidden\">".date('Y-m-d-s')."</
 echo "	</td>";
 echo "	</tr>";
 echo "</table>";
-
-echo "</div>\n";
 
 echo "<script type=\"text/javascript\">\n";
 echo "<!--\n";

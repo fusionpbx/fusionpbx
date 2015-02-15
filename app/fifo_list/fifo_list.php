@@ -92,9 +92,7 @@ else if (window.attachEvent) {
 </script>
 
 <?php
-echo "<div align='center'>";
-
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "  <tr>\n";
 echo "	<td align='left'><b>".$text['header-active_queues']."</b><br>\n";
 echo "		".$text['description-active_queues']."\n";
@@ -102,17 +100,8 @@ echo "	</td>\n";
 echo "  </tr>\n";
 echo "</table>\n";
 
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\">\n";
-
-echo "	<div id=\"ajax_reponse\">\n";
-echo "	</div>\n";
-
-echo "	</td>";
-echo "	</tr>";
-echo "</table>";
-echo "</div>";
+echo "<div id=\"ajax_reponse\">\n";
+echo "</div>\n";
 
 require_once "resources/footer.php";
 ?>

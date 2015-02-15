@@ -69,9 +69,7 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
-
-	echo "<table width='100%' cellpadding='6' cellspacing='1'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
 	echo "			<span  class=\"\" height='50'><b>".$text['header-group_members'].$group_name."</b></span>";
@@ -126,9 +124,8 @@ else {
 
 	echo "<br>";
 
-	echo "  <div align='center'>";
-	echo "  <form method='post' action='groupmemberadd.php'>";
-	echo "  <table width='250'>";
+	echo "<form method='post' action='groupmemberadd.php'>";
+	echo "<table width='250'>";
 	echo "	<tr>";
 	echo "		<td width='60%' align='right'>";
 
@@ -158,10 +155,9 @@ else {
 	}
 	echo "      </td>";
 	echo "	</tr>";
-	echo "  </table>";
-	echo "  </form>";
-	echo "  </div>";
+	echo "</table>";
 	echo "<br><br>";
+	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";

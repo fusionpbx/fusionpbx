@@ -248,7 +248,7 @@ if (strlen($_GET["id"]) > 0) {
 
 //set the title and description of the table
 	echo "<br />\n";
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "  <tr>\n";
 	echo "	<td align='left' valign='top'><strong>$schema_label</strong><br>\n";
 	echo "		$schema_description\n";

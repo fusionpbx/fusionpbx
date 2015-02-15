@@ -162,7 +162,7 @@ else {
 			echo "<tr>\n";
 			echo "<td width='33%' style='vertical-align: top;'>\n";
 
-				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 				echo "			".$text['label-direction']."\n";
@@ -253,7 +253,7 @@ else {
 					$style['caller_id_number'] = 'display: none;';
 				}
 
-				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 				echo "			".$text['label-source']."\n";
@@ -292,7 +292,7 @@ else {
 			echo "</td>";
 			echo "<td width='34%' style='vertical-align: top;'>\n";
 
-				echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 				echo "			".$text['label-start_range']."\n";

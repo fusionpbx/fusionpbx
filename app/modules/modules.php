@@ -93,13 +93,7 @@ if (strlen($_GET["a"]) > 0) {
 	}
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "      <br>";
-
-	echo "<table width='100%' border='0'><tr>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'><tr>\n";
 	echo "<td align='left' nowrap><b>".$text['header-modules']."</b></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -111,7 +105,6 @@ if (strlen($_GET["a"]) > 0) {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$tmp_module_header = "\n";
 	$tmp_module_header .= "<tr>\n";
@@ -219,14 +212,6 @@ if (strlen($_GET["a"]) > 0) {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
-	echo "<br><br>";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "<br><br>";
 
 //show the footer

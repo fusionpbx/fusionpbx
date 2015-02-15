@@ -80,9 +80,7 @@ require_once "resources/require.php";
 	$document['title'] = $text['title-group_add'];
 
 //show the content
-	echo "<div align='center'>";
-
-	echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
 	echo "			<b>".$text['header-group_add']."</b>\n";
@@ -98,7 +96,7 @@ require_once "resources/require.php";
 	echo "<br>";
 
 	echo "<form name='login' METHOD=\"POST\" action=\"groupadd.php\">\n";
-	echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq'>\n";
 	echo $text['label-group_name']."\n";
@@ -122,15 +120,14 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "<td align=\"right\">\n";
 	echo "  <input type=\"hidden\" name=\"path\" value=\"$path\">\n";
+	echo "	<br><br>";
 	echo "  <input type=\"submit\" class='btn' value=\"".$text['button-save']."\">\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-	echo "</table>\n";
-	echo "</form>";
-	echo "</div>";
 
+	echo "</table>\n";
 	echo "<br><br>";
-	echo "<br><br>";
+	echo "</form>";
 
 //include the footer
 	include "resources/footer.php";

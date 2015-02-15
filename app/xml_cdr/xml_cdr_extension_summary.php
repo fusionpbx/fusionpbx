@@ -158,7 +158,6 @@ require_once "resources/require.php";
 	unset ($sql, $prep_statement, $result, $row_count);
 
 //page title and description
-	echo "<div align='center'>";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%' nowrap='nowrap' style='vertical-align: top;'>\n";
@@ -177,7 +176,7 @@ require_once "resources/require.php";
 		echo "	<tr>\n";
 		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
-		echo "			<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 		echo "						".$text['label-start_date_time']."\n";
@@ -191,7 +190,7 @@ require_once "resources/require.php";
 		echo "		</td>";
 		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
-		echo "			<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 		echo "						".$text['label-end_date_time']."\n";
@@ -205,7 +204,7 @@ require_once "resources/require.php";
 		echo "		</td>";
 		echo "		<td width='25%' style='vertical-align: top;'>\n";
 
-		echo "			<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "				<tr>\n";
 		echo "					<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 		echo "						".$text['label-include_internal']."\n";
@@ -221,7 +220,7 @@ require_once "resources/require.php";
 
 		echo "		</td>";
         echo "          <td width='25%' style='vertical-align: top;'>\n";
-        echo "                  <table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+        echo "                  <table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
         echo "                          <tr>\n";
         echo "                                  <td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
         echo "                                          ".$text['label-preset']."\n";
@@ -311,8 +310,6 @@ require_once "resources/require.php";
 	}
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br><br>";
 	echo "<br><br>";
 
 //show the footer

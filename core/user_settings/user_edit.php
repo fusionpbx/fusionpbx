@@ -283,13 +283,9 @@ else {
 //show the content
 	$table_width ='width="100%"';
 	echo "<form method='post' action=''>";
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr>\n";
-	echo "<td>\n";
 
-	echo "<table $table_width cellpadding='3' cellspacing='0' border='0'>";
-	echo "<td align='left' width='90%' nowrap><b>".$text['title']."</b></td>\n";
+	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
+	echo "<td align='left' width='100%' nowrap><b>".$text['title']."</b></td>\n";
 	echo "<td nowrap='nowrap'>\n";
 	echo "	<input type='button' class='btn' onclick=\"window.location='".$_SESSION['login']['destination']['url']."'\" value='".$text['button-back']."'>";
 	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>";
@@ -304,7 +300,7 @@ else {
 
 	echo "<br />\n";
 
-	echo "<table $table_width cellpadding='6' cellspacing='0' border='0'>";
+	echo "<table $table_width cellpadding='0' cellspacing='0' border='0'>";
 	echo "<tr>\n";
 	echo "	<th class='th' colspan='2' align='left'>".$text['table-title']."</th>\n";
 	echo "</tr>\n";
@@ -329,7 +325,7 @@ else {
 	echo "<br>";
 	echo "<br>";
 
-	echo "<table $table_width cellpadding='6' cellspacing='0'>";
+	echo "<table $table_width cellpadding='0' cellspacing='0'>";
 	echo "	<tr>\n";
 	echo "	<th class='th' colspan='2' align='left'>".$text['table2-title']."</th>\n";
 	echo "	</tr>\n";

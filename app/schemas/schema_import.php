@@ -209,8 +209,7 @@ if (count($_POST)>0) {
 				require_once "resources/header.php";
 				$document['title'] = $text['title-import_results'];
 
-			echo "<div align='center'>\n";
-			echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
 			echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-import_results']."</b></td>\n";
 			echo "<td width='70%' align='right' valign='top'>\n";
@@ -292,7 +291,7 @@ if (count($_POST)>0) {
 			echo "		</td>\n";
 			echo "	</tr>";
 			echo "	</table>";
-			echo "</div>\n";
+			echo "<br><br>";
 
 			//show the footer
 				require_once "resources/footer.php";
@@ -305,8 +304,7 @@ if (count($_POST)>0) {
 	$document['title'] = $text['title-import'];
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap='nowrap' align='left' valign='top'><b>".$text['header-import']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
@@ -315,14 +313,8 @@ if (count($_POST)>0) {
 	echo "</tr>\n";
 	echo "</table>\n";
 
-	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
@@ -365,16 +357,12 @@ if (count($_POST)>0) {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
+	echo "			<br><br>";
 	echo "			<input type='submit' name='import' class='btn' value='".$text['button-import']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
-
+	echo "<br><br>";
 	echo "</form>";
 
 require_once "resources/footer.php";
