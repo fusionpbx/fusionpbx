@@ -46,7 +46,7 @@ else {
 
 //additional includes
 	require_once "resources/header.php";
-	$documentu['title'] = $text['title-acl']
+	$documentu['title'] = $text['title-acl'];
 	require_once "resources/paging.php";
 
 //show the content
