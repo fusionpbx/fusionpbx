@@ -70,6 +70,7 @@ else {
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 	<script language="javascript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/flot/jquery.flot.js"></script>
+	<div align='center'>
 	<table>
 		<tr>
 			<td align='left'>
@@ -80,6 +81,7 @@ else {
 			</td>
 		</tr>
 	</table>
+	</div>
 	<script type="text/javascript">
 	$(function () {
 		var datasets = {
