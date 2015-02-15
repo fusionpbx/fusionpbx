@@ -167,7 +167,7 @@ require_once "resources/check_auth.php";
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	echo "			<input type='hidden' name='id' value='$ring_group_uuid'>\n";
-	echo "			<br><br>";
+	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";

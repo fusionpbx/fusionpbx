@@ -474,7 +474,7 @@ function replace_param(obj){
 	if ($action == "update") {
 		echo "		<input type='hidden' name='dialplan_detail_uuid' value='$dialplan_detail_uuid'>\n";
 	}
-	echo "			<br><br>";
+	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
