@@ -712,7 +712,7 @@ else {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td colspan='2' align='right'><br>";
+	echo "		<td colspan='2' align='right'>";
 	echo "			<input type='hidden' name='id' value=\"$user_uuid\">";
 	echo "			<input type='hidden' name='username_old' value=\"$username\">";
 	echo "			<br>";

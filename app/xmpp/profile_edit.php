@@ -268,7 +268,7 @@ function show_advanced_config() {
 	<tr>
 		<td colspan='2' align='right'>
 			<input type='hidden' name='profile_id' value='<?php echo $profile['xmpp_profile_uuid']; ?>'>
-			<br><br>
+			<br>
 			<input type='submit' name='submit' class='btn' value='<?php echo $text['button-save']?>'>
 		</td>
 	</tr>
