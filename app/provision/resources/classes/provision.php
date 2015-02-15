@@ -390,7 +390,21 @@ include "root.php";
 					$sql .= "ORDER BY device_key_id asc, device_uuid desc";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
-					$device_keys = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+					$results = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+				//rebuild the array to allow profile keys to be overridden by keys assigned to this device
+					foreach($results as $row) {
+						//set the id using the key id using this id helps to eliminate duplicate keys
+							$id = $row['device_key_id'];
+						//set the variables
+							$device_keys[$id]['device_key_category'] = $row['device_key_category'];
+							$device_keys[$id]['device_key_id'] = $row['device_key_id']; //1
+							$device_keys[$id]['device_key_type'] = $row['device_key_type']; //line
+							$device_keys[$id]['device_key_line'] = $row['device_key_line'];
+							$device_keys[$id]['device_key_value'] = $row['device_key_value']; //1
+							$device_keys[$id]['device_key_extension'] = $row['device_key_extension'];
+							$device_keys[$id]['device_key_label'] = $row['device_key_label']; //label
+					}
 
 				//assign the keys array
 					$view->assign("keys", $device_keys);
