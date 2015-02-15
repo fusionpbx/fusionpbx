@@ -24,8 +24,5 @@
 	Ken Rice <krice@tollfreegateway.com>
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
-echo "<div align='center'>\n";
-echo "<table><tr><td>\n";
-echo $error . "\n";
-echo "</td></tr></table>\n";
+echo "<div align='center'>".$error."</div>\n";
 ?>

@@ -42,11 +42,6 @@ $order = $_GET["order"];
 $field_name = $_REQUEST["field_name"];
 $field_value = $_REQUEST["field_value"];
 
-echo "<div align='center'>";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-echo "<tr class='border'>\n";
-echo "	<td align=\"center\">\n";
-
 //page title and description
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<form method='post' action=''>";
@@ -145,7 +140,6 @@ echo "	<td align=\"center\">\n";
 	$row_style["1"] = "row_style1";
 
 //show the data
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
@@ -224,14 +218,6 @@ echo "	<td align=\"center\">\n";
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
 	echo "<br><br>";
-	echo "<br><br>";
-
-echo "</td>";
-echo "</tr>";
-echo "</table>";
-echo "</div>";
-echo "<br><br>";
 
 ?>

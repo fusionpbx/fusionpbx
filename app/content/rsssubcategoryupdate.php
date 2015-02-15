@@ -86,13 +86,6 @@ else {
 }
 
 require_once "resources/header.php";
-echo "<div align='center'>";
-echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
-
-echo "<tr class='border'>\n";
-echo "	<td align=\"left\">\n";
-echo "      <br>";
-
 
 echo "<form method='post' action=''>";
 echo "<table>";
@@ -119,18 +112,13 @@ echo "	</tr>";
 echo "	<tr>";
 echo "		<td colspan='2' align='right'>";
 echo "     <input type='hidden' name='rss_sub_category_uuid' value='$rss_sub_category_uuid'>";
+echo "		<br><br>";
 echo "     <input type='submit' name='submit' value='".$text['button-update']."'>";
 echo "		</td>";
 echo "	</tr>";
 echo "</table>";
+echo "<br><br>";
 echo "</form>";
-
-
-echo "	</td>";
-echo "	</tr>";
-echo "</table>";
-echo "</div>";
-
 
   require_once "resources/footer.php";
 ?>

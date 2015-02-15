@@ -94,7 +94,6 @@ function sf() { document.forms[0].savetopath.focus(); }
 	});
 </script>
 
-<div align='center'>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
    <tr>
      <td class="" >
@@ -157,7 +156,6 @@ function sf() { document.forms[0].savetopath.focus(); }
 </td>
 </tr>
 </table>
-</div>
 
 <?php
 	require_once "resources/footer.php";

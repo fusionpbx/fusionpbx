@@ -44,13 +44,7 @@ else {
 	}
 
 //begin content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br>";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='50%' nowrap='nowrap' align='left'><b>".$text['header-option_list']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
@@ -162,14 +156,6 @@ else {
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</table>";
-
-	echo "<br><br>";
-	echo "<br><br>";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "<br><br>";
 
 ?>

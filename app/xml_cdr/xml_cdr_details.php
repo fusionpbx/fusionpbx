@@ -166,7 +166,6 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left'><b>".$text['label-summary']."</b>&nbsp;</td>\n";
@@ -222,16 +221,12 @@ else {
 	echo "	<td valign='top' class='".$row_style[$c]."'>".$duration."</td>\n";
 	echo "	<td valign='top' class='".$row_style[$c]."'>".$hangup_cause."</td>\n";
 	echo "</table>";
-	echo "</div>";
-
-//breaking space
 	echo "<br /><br />\n";
 
 //channel data loop
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left'><b>".$text['label-channel']."</b>&nbsp;</td>\n";
@@ -253,16 +248,12 @@ else {
 		if ($c==0) { $c=1; } else { $c=0; }
 	}
 	echo "</table>";
-	echo "</div>";
-
-//breaking space
 	echo "<br /><br />\n";
 
 //variable loop
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "	<td align='left'><b>Variables</b>&nbsp;</td>\n";
@@ -317,16 +308,12 @@ else {
 		if ($c==0) { $c=1; } else { $c=0; }
 	}
 	echo "</table>";
-	echo "</div>";
-
-//breaking space
 	echo "<br /><br />\n";
 
 //app_log
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
-	echo "<div align='center'>\n";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left'><b>".$text['label-application-log']."</b>&nbsp;</td>\n";
@@ -351,9 +338,6 @@ else {
 		if ($c==0) { $c=1; } else { $c=0; }
 	}
 	echo "</table>";
-	echo "</div>";
-
-//breaking space
 	echo "<br /><br />\n";
 
 //call flow
@@ -524,12 +508,6 @@ else {
 		echo "</tr>\n";
 		echo "</table>";
 	}
-
-//testing
-	//echo "<pre>\n";
-	//echo htmlentities($xml_string);
-	//print_r($xml);
-	//echo "</pre>\n";
 
 //get the footer
 	require_once "resources/footer.php";

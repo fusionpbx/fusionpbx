@@ -65,7 +65,7 @@ if (count($_POST)>0 && $_POST["persistform"] == "0") {
 	if (strlen($msg) > 0) {
 		require_once "resources/persist_form.php";
 		require_once "resources/header.php";
-		echo "<div align='center' style='' >";
+		echo "<div align='center'>";
 		echo "<table>";
 		echo "<tr>";
 		echo "<td>";

@@ -43,10 +43,9 @@ else {
 	$document['title'] = $text['title-user_manager'];
 
 //show the user list
-	echo "<div align='center'>";
 	echo "	<table width='100%' border='0'>";
 	echo "		<tr>";
-	echo "		<td align='left' width='100%'>";
+	echo "			<td align='left' width='100%'>";
 	require_once "users.php";
 	echo "				<br />";
 	echo "				<br />";
@@ -54,7 +53,6 @@ else {
 	echo "			</td>";
 	echo "		</tr>";
 	echo "	</table>";
-	echo "</div>";
 
 //include the footer
 	include "resources/footer.php";

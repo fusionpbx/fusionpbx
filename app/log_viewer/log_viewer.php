@@ -71,9 +71,6 @@ if (permission_exists('log_download')) {
 
 require_once "resources/header.php";
 
-echo "<br />\n";
-echo "<div align='center'>\n";
-
 echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 echo "	<tr>\n";
 echo "		<td align=\"left\" valign='middle' width='100%' style='padding-right: 15px;' nowrap>\n";
@@ -281,8 +278,6 @@ if (permission_exists('log_view')) {
 echo "		</td>";
 echo "	</tr>\n";
 echo "</table>\n";
-echo "</div>\n";
 
 require_once "resources/footer.php";
-
 ?>

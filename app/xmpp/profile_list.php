@@ -1,6 +1,4 @@
-<div align='center'>
-
-<table width="100%" border="0" cellpadding="6" cellspacing="0">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
 	<td align='left'><b><?php echo $text['header-xmpp']?></b><br>
 		<?php echo $text['description-xmpp-list']?>
@@ -69,4 +67,3 @@ if ($c==0) { $c=1; } else { $c=0; }
 </td>
 </tr>
 </table>
-</div>
