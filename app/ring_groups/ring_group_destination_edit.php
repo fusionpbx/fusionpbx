@@ -202,7 +202,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_number'].":\n";
+	echo "	".$text['label-destination_number']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_number' maxlength='255' value=\"$destination_number\">\n";
@@ -213,7 +213,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_delay'].":\n";
+	echo "	".$text['label-destination_delay']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	destination_select('destination_delay', $destination_delay, '0');
@@ -225,7 +225,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-destination_timeout'].":\n";
+	echo "	".$text['label-destination_timeout']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	destination_select('destination_timeout', $destination_timeout, '30');
@@ -238,7 +238,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if (permission_exists('ring_group_prompt')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-destination_prompt'].":\n";
+		echo "	".$text['label-destination_prompt']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "					<select class='formfld' name='destination_prompt'>\n";

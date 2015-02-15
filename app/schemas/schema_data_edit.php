@@ -632,7 +632,7 @@ else {
 								else {
 									echo "<td valign='top' align='left' class='vncell' style='padding-top:3px;' nowrap='nowrap'>\n";
 								}
-								echo "".$row['field_label'].": \n";
+								echo "".$row['field_label']."\n";
 								echo "</td>\n";
 							}
 						}

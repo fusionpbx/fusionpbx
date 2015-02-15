@@ -90,7 +90,7 @@ if (count($_POST)>0) {
 	echo "<form method='post' action=''>";
 	echo "<table width='100%' border='0'>";
 	echo "	<tr>";
-	echo "		<td>Name:</td>";
+	echo "		<td>Name</td>";
 	echo "		<td><input type='text' class='txt' name='clip_name'></td>";
 	echo "	</tr>";
 

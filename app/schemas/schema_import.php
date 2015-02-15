@@ -326,7 +326,7 @@ if (count($_POST)>0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-import_data'].":\n";
+	echo "    ".$text['label-import_data']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <textarea name='data' id='data' rows='7' class='formfld' style='width: 100%;' wrap='off'>$data</textarea>\n";
@@ -337,7 +337,7 @@ if (count($_POST)>0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-import_delimiter'].":\n";
+	echo "    ".$text['label-import_delimiter']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' style='width: 100px;' name='data_delimiter'>\n";
@@ -351,7 +351,7 @@ if (count($_POST)>0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-import_enclosure'].":\n";
+	echo "    ".$text['label-import_enclosure']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' style='width: 150px;' name='data_enclosure'>\n";

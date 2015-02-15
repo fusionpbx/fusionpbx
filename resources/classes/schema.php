@@ -822,7 +822,7 @@ include "root.php";
 						}
 						else {
 							if ($format == "text") {
-								$response .= "	".$text['label-schema'].":\n";
+								$response .= "	".$text['label-schema']."\n";
 							}
 							//$db->beginTransaction();
 							$update_array = explode(";", $sql_update);

@@ -97,29 +97,29 @@ else {
 	echo "<form method='post' action=''>";
 	echo "<table border='0' width='100%'>";
 	echo "	<tr>";
-	echo "		<td>Name:</td>";
+	echo "		<td>Name</td>";
 	echo "		<td><input type='text' class='txt' name='clip_name' value='$clip_name'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td>Folder:</td>";
+	echo "		<td>Folder</td>";
 	echo "		<td><input type='text' class='txt'  name='clip_folder' value='$clip_folder'></td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td colspan='2'>Before Selection:<br>";
+	echo "		<td colspan='2'>Before Selection<br>";
 	echo "		  <textarea  class='txt' name='clip_text_start'>$clip_text_start</textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td colspan='2'>After Selection:<br>";
+	echo "		<td colspan='2'>After Selection<br>";
 	echo "		  <textarea  class='txt' name='clip_text_end'>$clip_text_end</textarea>";
 	echo "		</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td colspan='2'>Notes:<br>";
+	echo "		<td colspan='2'>Notes<br>";
 	echo "		  <textarea  class='txt' name='clip_desc'>$clip_desc</textarea>";
 	echo "		</td>";
 	echo "	</tr>";

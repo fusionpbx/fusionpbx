@@ -418,7 +418,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		if (permission_exists('dialplan_domain')) {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-			echo "	".$text['label-domain'].":\n";
+			echo "	".$text['label-domain']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "    <select class='formfld' name='domain_uuid'>\n";

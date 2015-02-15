@@ -99,7 +99,7 @@ require_once "resources/functions.php";
 	$install_template_name = $_POST["install_template_name"];
 
 //clean up the values
-	if (strlen($install_switch_base_dir) > 0) { 
+	if (strlen($install_switch_base_dir) > 0) {
 		$install_switch_base_dir = realpath($install_switch_base_dir);
 		$install_switch_base_dir = str_replace("\\", "/", $install_switch_base_dir);
 	}
@@ -197,7 +197,7 @@ require_once "resources/functions.php";
 				//old
 				//if (file_exists('/usr/share/freeswitch/scripts')) {
 				//	$switch_scripts_dir = '/usr/share/freeswitch/scripts';
-				//}	
+				//}
 				//new
 				if (file_exists('/usr/share/freeswitch/grammar')) {
 					$switch_grammar_dir = '/usr/share/freeswitch/grammar';
@@ -253,7 +253,7 @@ require_once "resources/functions.php";
 							$switch_sounds_dir = '/usr/local/share/freeswitch/sounds';
 				}
 				elseif (file_exists('/data/freeswitch')) {
-					//FreeBSD embedded 
+					//FreeBSD embedded
 						//set the default db_path
 							if (strlen($db_path) == 0) {
 								$db_path = '/data/db/fusionpbx';
@@ -368,7 +368,7 @@ if ($_POST["install_step"] == "2" && count($_POST)>0 && strlen($_POST["persistfo
 		}
 		else {
 			if (strlen($admin_password) < 5) {
-				$msg .= "Please provide an Admin Password that is 5 or more characters.<br>\n"; 
+				$msg .= "Please provide an Admin Password that is 5 or more characters.<br>\n";
 			}
 		}
 	//define the step to return to
@@ -573,7 +573,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 				}
 				unset ($file_contents, $sql);
 				$db_tmp->commit();
-				
+
 			//set the file permissions
 				chmod($db_path.'/'.$db_name, 0777);
 		}
@@ -1438,7 +1438,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "	Database Type:\n";
+		echo "	Database Type\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<select name='db_type' id='db_type' class='formfld' id='form_tag' onchange='db_type_onchange();'>\n";
@@ -1453,7 +1453,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	Username:\n";
+		echo "	Username\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='admin_username' maxlength='255' value=\"$admin_username\"><br />\n";
@@ -1463,7 +1463,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	Password:\n";
+		echo "	Password\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='admin_password' maxlength='255' value=\"$admin_password\"><br />\n";
@@ -1473,7 +1473,7 @@ if ($_POST["install_step"] == "3" && count($_POST) > 0 && strlen($_POST["persist
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	Country:\n";
+		echo "	Country\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<select id='install_default_country' name='install_default_country' class='formfld' style=''>\n";
@@ -1707,7 +1707,7 @@ echo <<<EOL
 <option value="UG">Uganda</option>
 <option value="UA">Ukraine</option>
 <option value="AE">United Arab Emirates</option>
-<option value="GB">United Kingdom</option>		
+<option value="GB">United Kingdom</option>
 <option value="US" selected='selected'>United States</option>
 <option value="UM">United States Minor Outlying Islands</option>
 <option value="UY">Uruguay</option>
@@ -1729,7 +1729,7 @@ EOL;
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		
+
 		echo "	<tr>\n";
 		echo "	<td width='20%' class=\"vncellreq\" align='left' nowrap='nowrap'>\n";
 		echo "		Theme: \n";
@@ -1790,7 +1790,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' 'valign='top' align='left' nowrap>\n";
-		echo "	Database Filename:\n";
+		echo "	Database Filename\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='db_name' maxlength='255' value=\"$db_name\"><br />\n";
@@ -1801,7 +1801,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' 'valign='top' align='left' nowrap>\n";
-		echo "	Database Directory:\n";
+		echo "	Database Directory\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "	<input class='formfld' type='text' name='db_path' maxlength='255' value=\"$db_path\"><br />\n";
@@ -1849,7 +1849,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Host:\n";
+		echo "		Database Host\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_host' maxlength='255' value=\"$db_host\"><br />\n";
@@ -1860,7 +1860,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		Database Port:\n";
+		echo "		Database Port\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_port' maxlength='255' value=\"$db_port\"><br />\n";
@@ -1871,7 +1871,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Name:\n";
+		echo "		Database Name\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_name' maxlength='255' value=\"$db_name\"><br />\n";
@@ -1882,7 +1882,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Username:\n";
+		echo "		Database Username\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_username' maxlength='255' value=\"$db_username\"><br />\n";
@@ -1893,7 +1893,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Password:\n";
+		echo "		Database Password\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_password' maxlength='255' value=\"$db_password\"><br />\n";
@@ -1904,7 +1904,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		Create Database Username:\n";
+		echo "		Create Database Username\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_create_username' maxlength='255' value=\"$db_create_username\"><br />\n";
@@ -1915,7 +1915,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		Create Database Password:\n";
+		echo "		Create Database Password\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_create_password' maxlength='255' value=\"$db_create_password\"><br />\n";
@@ -1961,7 +1961,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Host:\n";
+		echo "		Database Host\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_host' maxlength='255' value=\"$db_host\"><br />\n";
@@ -1972,7 +1972,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		Database Port:\n";
+		echo "		Database Port\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_port' maxlength='255' value=\"$db_port\"><br />\n";
@@ -1983,7 +1983,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Name:\n";
+		echo "		Database Name\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_name' maxlength='255' value=\"$db_name\"><br />\n";
@@ -1994,7 +1994,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Username:\n";
+		echo "		Database Username\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_username' maxlength='255' value=\"$db_username\"><br />\n";
@@ -2005,7 +2005,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-		echo "		Database Password:\n";
+		echo "		Database Password\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_password' maxlength='255' value=\"$db_password\"><br />\n";
@@ -2016,7 +2016,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		Create Database Username:\n";
+		echo "		Create Database Username\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_create_username' maxlength='255' value=\"$db_create_username\"><br />\n";
@@ -2028,7 +2028,7 @@ EOL;
 
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		echo "		Create Database Password:\n";
+		echo "		Create Database Password\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "		<input class='formfld' type='text' name='db_create_password' maxlength='255' value=\"$db_create_password\"><br />\n";
@@ -2047,7 +2047,7 @@ EOL;
 		echo "			<input type='hidden' name='install_backup_dir' value='$install_backup_dir'>\n";
 		echo "			<input type='hidden' name='install_step' value='3'>\n";
 		echo "			<input type='hidden' name='install_template_name' value='$install_template_name'>\n";
-		echo "			<input type='hidden' name='install_default_country' value='$install_default_country'>\n";		
+		echo "			<input type='hidden' name='install_default_country' value='$install_default_country'>\n";
 		echo "			<input type='submit' name='submit' class='btn' value='Install'>\n";
 		echo "		</td>\n";
 		echo "	</tr>";

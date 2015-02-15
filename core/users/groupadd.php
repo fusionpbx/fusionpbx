@@ -101,7 +101,7 @@ require_once "resources/require.php";
 	echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='30%' class='vncellreq'>\n";
-	echo $text['label-group_name'].":\n";
+	echo $text['label-group_name']."\n";
 	echo "</td>\n";
 	echo "<td width='70%' align='left' class='vtable'>\n";
 	echo "  <input type=\"text\" class='formfld' name=\"group_name\">\n";
@@ -110,7 +110,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq'>\n";
-	echo $text['label-group_description'].":\n";
+	echo $text['label-group_description']."\n";
 	echo "</td>\n";
 	echo "<td align='left' class='vtable'>\n";
 	echo "<textarea name='group_description' class='formfld'></textarea>\n";

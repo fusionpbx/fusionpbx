@@ -234,7 +234,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-tag'].":\n";
+	echo "    ".$text['label-tag']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select name='dialplan_detail_tag' class='formfld' id='form_tag'>\n";
@@ -253,7 +253,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-order'].":\n";
+	echo "    ".$text['label-order']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplan_detail_order' class='formfld'>\n";
@@ -314,7 +314,7 @@ function replace_param(obj){
 <?php
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-type'].":\n";
+	echo "    ".$text['label-type']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "<select name='dialplan_detail_type' id='dialplan_detail_type' class='formfld' onchange='change_to_input(this);'>\n";
@@ -376,7 +376,7 @@ function replace_param(obj){
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-data'].":\n";
+	echo "    ".$text['label-data']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <input class='formfld' type='text' name='dialplan_detail_data' value=\"".htmlspecialchars($dialplan_detail_data)."\">\n";
@@ -387,7 +387,7 @@ function replace_param(obj){
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "    ".$text['label-group'].":\n";
+	echo "    ".$text['label-group']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "              <select name='dialplan_detail_group' class='formfld'>\n";
@@ -410,7 +410,7 @@ function replace_param(obj){
 		if ($dialplan_detail_tag == "condition") {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-			echo "    ".$text['label-break'].":\n";
+			echo "    ".$text['label-break']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "              <select name='dialplan_detail_break' class='formfld'>\n";
@@ -449,7 +449,7 @@ function replace_param(obj){
 		if ($dialplan_detail_tag == "action") {
 			echo "<tr>\n";
 			echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-			echo "    ".$text['label-inline'].":\n";
+			echo "    ".$text['label-inline']."\n";
 			echo "</td>\n";
 			echo "<td class='vtable' align='left'>\n";
 			echo "              <select name='dialplan_detail_inline' class='formfld'>\n";

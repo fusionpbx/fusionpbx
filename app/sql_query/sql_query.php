@@ -119,7 +119,7 @@ else {
 	*/
 
 
-	echo "			".$text['label-table'].": \n";
+	echo "			".$text['label-table']."\n";
 	echo "			<select name='table_name' class='formfld' style='width: auto;'>\n";
 	echo "			<option value=''></option>\n";
 	if ($db_type == "sqlite") {
