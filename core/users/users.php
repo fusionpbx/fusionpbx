@@ -46,9 +46,9 @@ $field_value = $_REQUEST["field_value"];
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<form method='post' action=''>";
 	echo "<tr>\n";
-	echo "<td align='left' width='90%' nowrap><b>".$text['header-user_manager']."</b></td>\n";
-	echo "<td align='right' nowrap='nowrap'>".$text['label-search_by'].":&nbsp;</td>";
-	echo "<td align='left'>\n";
+	echo "<td align='left' width='90%' nowrap='nowrap' valign='top'><b>".$text['header-user_manager']."</b></td>\n";
+	echo "<td align='right' nowrap='nowrap' valign='middle'>".$text['label-search_by']."&nbsp;</td>";
+	echo "<td align='left' valign='top'>\n";
 	echo "	<select name='field_name' style='width:150px' class='formfld'>\n";
 	echo "	<option value=''></option>\n";
 	if ($field_name == "username") {

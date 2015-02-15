@@ -435,65 +435,15 @@ else {
 	}
 	echo "		</td>\n";
 	echo "		<td valign=\"bottom\" align='right' class=\"label\" nowrap>\n";
-	echo "			<br />\n";
 	echo "			<input name=\"type\" type=\"hidden\" value=\"csv\">\n";
+	echo "			<br />\n";
 	echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	</table>\n";
+	echo "<br><br>";
 	echo "</form>";
 
 //include the footer
 	require_once "resources/footer.php";
-
-/*
-[Suffix]
-[MiddleName]
-[Department]
-[JobTitle]
-[Account]
-[Anniversary]
-[AssistantsName]
-[BillingInformation]
-[Birthday]
-[Categories]
-[Children]
-[DirectoryServer]
-[EmailDisplayName]
-[Email2Address]
-[Email2DisplayName]
-[Email3Address]
-[Email3DisplayName]
-[Gender]
-[GovernmentIDNumber]
-[Hobby]
-[Initials]
-[InternetFreeBusy]
-[Keywords]
-[Language1]
-[Location]
-[ManagersName]
-[Mileage]
-[OfficeLocation]
-[OrganizationalIDNumber]
-[POBox]
-[Priority]
-[Private]
-[Profession]
-[ReferredBy]
-[Sensitivity]
-[Spouse]
-[User 1]
-[User 2]
-[User 3]
-[User 4]
-
-['Callback'];
-['CarPhone'];
-['ISDN'];
-['RadioPhone'];
-['TTYTDDPhone'];
-['Telex'];
-['AssistantsPhone'];
-*/
 ?>

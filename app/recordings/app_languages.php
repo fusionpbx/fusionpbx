@@ -41,7 +41,12 @@
 	$text['description']['pt-pt'] = "Para fazer uma gravação marque *732 ou crie um ficheiro WAV de 16bit 8khz/16khz e copie-o para a seguinte directoria e actualize a página para o ouvir. Clique em \'Filename\' para descarregá-lo ou em \'Recording Name\' para ouvir o áudio.";
 	$text['description']['fr-fr'] = "Pour créer un guide vocal, composer le *732 ou créer un fichier audio WAV 16bit 8khz/16khz Mono et ensuite le copier dans le répertoire qui suit. Rafraîchir ensuite cette page pour le voir apparaitre.";
 
-	$text['label-upload']['en-us'] = "File to upload";
+	$text['header']['en-us'] = "Upload Recording";
+	$text['header']['es-cl'] = "Subir Grabación";
+	$text['header']['pt-pt'] = "Carregar Gravações";
+	$text['header']['fr-fr'] = "Télécharger Enregistrement";
+
+	$text['label-upload']['en-us'] = "File Path";
 	$text['label-upload']['es-cl'] = "Archivo a subir";
 	$text['label-upload']['pt-pt'] = "Ficheiro a carregar";
 	$text['label-upload']['fr-fr'] = "Fichier à déposer";

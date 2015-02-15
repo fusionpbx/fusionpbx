@@ -57,13 +57,13 @@ require_once "resources/require.php";
 	}
 
 //show the content
-	echo "<div class='' style='padding:0px;'>\n";
-	echo "<table width='100%'>";
-	echo "<td>";
-
-	echo "<table width='100%' border='0'><tr>";
-	echo "<td width='50%'><b>".$text['header-group_manager']."</b><br><br></td>";
-	echo "<td width='50%' align='right'>";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>";
+	echo "<tr>";
+	echo "<td width='50%' valign='top'>";
+	echo "	<b>".$text['header-group_manager']."</b>";
+	echo "	<br><br>";
+	echo "</td>";
+	echo "<td width='50%' align='right' valign='top'>";
 	if (permission_exists('user_view')) {
 		echo "  <input type='button' class='btn' onclick=\"window.location='index.php'\" value='".$text['header-user_manager']."'>";
 	}
@@ -71,7 +71,9 @@ require_once "resources/require.php";
 		echo "	<input type='button' class='btn' alt='".$text['button-restore']."' onclick=\"window.location='permissions_default.php'\" value='".$text['button-restore']."'>";
 	}
 	echo "</td>\n";
-	echo "</tr></table>";
+	echo "</tr>";
+	echo "</table>";
+	echo "<br>";
 
 	$sql = "SELECT * FROM v_groups ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";

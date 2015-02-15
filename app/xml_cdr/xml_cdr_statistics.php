@@ -219,6 +219,7 @@ else {
 		$i++;
 	}
 	echo "</table>\n";
+	echo "<br><br>";
 
 //show the footer
 	require_once "resources/footer.php";

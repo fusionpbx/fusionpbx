@@ -312,6 +312,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<input type='hidden' name='extension_uuid' maxlength='255' value=\"$extension_uuid\">\n";
 	}
 
+	echo "<tr>\n";
+	echo "<td colspan='2' align='right'>\n";
+	echo "	<br>";
+	echo "	<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "</td>\n";
+	echo "</tr>\n";
+
 	echo "</table>";
 	echo "<br><br>";
 	echo "</form>";

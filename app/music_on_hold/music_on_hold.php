@@ -242,23 +242,22 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 
 //include the header
 	require_once "resources/header.php";
+	$document['title'] = $text['title-moh'];
 
 //show the title and description
 	echo "<script language='JavaScript' type='text/javascript' src='".PROJECT_PATH."/resources/javascript/reset_file_input.js'></script>\n";
 
-	echo "<br />\n";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\"><strong>".$text['label-moh']."</strong></span><br />\n";
+	echo "			<b>".$text['label-moh']."</b>";
+	echo "			<br /><br />\n";
 	echo "			".$text['desc-moh']."\n";
 	echo "			<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>\n";
-	echo "\n";
-	echo "<br><br>\n";
-	echo "\n";
+	echo "<br>\n";
 
 //show the upload form
 	if (permission_exists('music_on_hold_add')) {
@@ -266,13 +265,13 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "<br><br>\n";
 		echo "<form action='' method='POST' enctype='multipart/form-data' name='frmUpload' id='frmUpload' onSubmit=''>\n";
 		echo "<input name='type' type='hidden' value='moh'>\n";
-		echo "<table cellpadding='0' cellspacing='0' width='600' style='border: none;'>\n";
+		echo "<table cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "	<tr>\n";
-		echo "		<td width='100%' style='padding-right: 5px;' nowrap>\n";
-		echo "			".$text['label-file-path']."<br>\n";
-		echo "			<input name='upload_file' type='file' class='formfld fileinput' style='width: 85%; margin-right: 3px;' id='upload_file'><input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file');\">\n";
+		echo "		<td style='padding-right: 15px;' nowrap>\n";
+		echo "			".$text['label-file-path'];
+		echo "			<input name='upload_file' type='file' class='formfld fileinput' style='width: 300px; margin-right: 3px;' id='upload_file'><input type='button' class='btn' value='".$text['button-clear']."' onclick=\"reset_file_input('upload_file');\">\n";
 		echo "		</td>\n";
-		echo "		<td style='padding-right: 5px;' nowrap>".$text['label-sampling']."<br>\n";
+		echo "		<td style='padding-right: 15px;' nowrap>".$text['label-sampling']."";
 		echo "			<select id='upload_sampling_rate' name='upload_sampling_rate' class='formfld' style='width: auto;'>\n";
 		echo "				<option value='8'>8 kHz</option>\n";
 		echo "				<option value='16'>16 kHz</option>\n";
@@ -280,7 +279,7 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "				<option value='48'>48 kHz</option>\n";
 		echo "			</select>\n";
 		echo "		</td>\n";
-		echo "		<td nowrap>".$text['label-category']."<br>\n";
+		echo "		<td nowrap>".$text['label-category']."";
 		echo "			<select id='upload_category' name='upload_category' class='formfld' style='width: auto;' onchange=\"if (this.options[this.selectedIndex].value == '_NEW_CAT_') { this.style.display='none'; document.getElementById('upload_category_new').style.display=''; document.getElementById('upload_category_return').style.display=''; document.getElementById('upload_category_new').focus(); }\">\n";
 		if (permission_exists('music_on_hold_default_add')) {
 			echo "				<option value='' style='font-style: italic;'>".$text['opt-default']."</option>\n";
@@ -315,10 +314,8 @@ if ($_GET['act'] == "del" && permission_exists('music_on_hold_delete')) {
 		echo "			</select>\n";
 		echo "			<input class='formfld' style='width: 150px; display: none;' type='text' name='upload_category_new' id='upload_category_new' maxlength='255' value=''>";
 		echo "		</td>\n";
-		echo "		<td>&nbsp;<br>\n";
-		echo "			<input id='upload_category_return' type='button' class='button' style='display: none;' value='&#9665;' onclick=\"this.style.display='none'; document.getElementById('upload_category_new').style.display='none'; document.getElementById('upload_category_new').value=''; document.getElementById('upload_category').style.display=''; document.getElementById('upload_category').selectedIndex = 0;\" title='".$text['message-click-select']."'>";
-		echo "		</td>\n";
-		echo "		<td style='padding-left: 5px;'>&nbsp;<br>\n";
+		echo "		<td><input id='upload_category_return' type='button' class='button' style='display: none; margin-left: 3px;' value='&#9665;' onclick=\"this.style.display='none'; document.getElementById('upload_category_new').style.display='none'; document.getElementById('upload_category_new').value=''; document.getElementById('upload_category').style.display=''; document.getElementById('upload_category').selectedIndex = 0;\" title='".$text['message-click-select']."'></td>\n";
+		echo "		<td style='padding-left: 15px;'>\n";
 		echo "			<input name='submit' type='submit' class='btn' id='upload' value='".$text['button-upload']."'>\n";
 		echo "		</td>\n";
 		echo "	</tr>\n";

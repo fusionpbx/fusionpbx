@@ -69,13 +69,14 @@ else {
 
 require_once "resources/header.php";
 $document['title'] = $text['title-traffic_graph'];
+
 ?>
-<table width='100%'>
+<table cellpadding='0' cellspacing='0' border='0' width='100%'>
 <tr>
-<td align='left'>
+<td align='left' valign='top'>
 	<p class="pgtitle"><b><?=$text['header-traffic_graph']?></b></p>
 </td>
-<td align='right'>
+<td align='right' valign='top'>
 	<form name="form1" action="status_graph.php" method="get" style="">
 	<?=$text['label-interface']?>:
 	<select name="interface" class="formfld" style="width:100px; z-index: -10;" onchange="document.form1.submit()">
@@ -134,6 +135,7 @@ $document['title'] = $text['title-traffic_graph'];
 		<?=$text['description-no_svg']?>
 	</object>
 </div>
+<br><br>
 
 <?php
 require_once "resources/footer.php";

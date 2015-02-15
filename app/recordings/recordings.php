@@ -150,31 +150,26 @@ require_once "resources/check_auth.php";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left'>\n";
-	echo "			<span class=\"title\"><strong>".$text['title']."</strong></span><br />\n";
+	echo "			<b>".$text['title']."</b>";
+	echo "			<br /><br />\n";
 	echo "			".stripslashes($text['description'])."\n";
+	echo "			<br /><br />\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "</table>";
 	echo "<br />\n";
 
-	echo "<table border='0' width='100%' cellpadding=\"0\" cellspacing=\"0\">\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' width='50%'>\n";
-	echo "			&nbsp;";
-	echo "		</td>\n";
 	if (permission_exists('recording_upload')) {
-		echo "		<td valign=\"top\" align='right' class=\"label\" nowrap>\n";
-		echo "			<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
-		echo "			<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
-		echo "			".$text['label-upload']."\n";
-		echo "			<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" style=\"width: 260px;\" id=\"ulfile\">\n";
-		echo "			<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
-		echo "			</form>";
-		echo "		</td>\n";
+		echo "<b>".$text['header']."</b>";
+		echo "<br><br>";
+		echo "<form action=\"\" method=\"POST\" enctype=\"multipart/form-data\" name=\"frmUpload\" onSubmit=\"\">\n";
+		echo "<input name=\"type\" type=\"hidden\" value=\"rec\">\n";
+		echo "".$text['label-upload']."\n";
+		echo "<input name=\"ulfile\" type=\"file\" class=\"formfld fileinput\" style=\"width: 260px;\" id=\"ulfile\">\n";
+		echo "<input name=\"submit\" type=\"submit\"  class=\"btn\" id=\"upload\" value=\"".$text['button-upload']."\">\n";
+		echo "</form>";
+		echo "<br><br>\n";
 	}
-	echo "	</tr>\n";
-	echo "</table>";
-	echo "<br><br>\n";
 
 	$sql = "select * from v_recordings ";
 	$sql .= "where domain_uuid = '$domain_uuid' ";

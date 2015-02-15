@@ -43,16 +43,7 @@ else {
 	$document['title'] = $text['title-user_manager'];
 
 //show the user list
-	echo "	<table width='100%' border='0'>";
-	echo "		<tr>";
-	echo "			<td align='left' width='100%'>";
 	require_once "users.php";
-	echo "				<br />";
-	echo "				<br />";
-	echo "				<br />";
-	echo "			</td>";
-	echo "		</tr>";
-	echo "	</table>";
 
 //include the footer
 	include "resources/footer.php";

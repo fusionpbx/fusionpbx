@@ -56,17 +56,10 @@ require_once "resources/paging.php";
 	}
 
 //show the content
-	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='50%' align='left' nowrap><b>".$text['header-apps']."</b></td>\n";
-	echo "		<td width='50%' align='right'>&nbsp;</td>\n";
-	echo "	</tr>\n";
-	echo "	<tr>\n";
-	echo "		<td align='left' colspan='2'>\n";
-	echo "			".$text['description-apps']."<br /><br />\n";
-	echo "		</td>\n";
-	echo "	</tr>\n";
-	echo "</table>\n";
+	echo "<b>".$text['header-apps']."</b>\n";
+	echo "<br /><br />\n";
+	echo $text['description-apps'];
+	echo "<br /><br />\n";
 
 	$c = 0;
 	$row_style["0"] = "row_style0";

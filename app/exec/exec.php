@@ -48,6 +48,7 @@ else {
 
 //show the header
 	require_once "resources/header.php";
+	$document['title'] = $text['title-command'];
 
 //edit area
 	echo "	<script language=\"javascript\" type=\"text/javascript\" src=\"".PROJECT_PATH."/resources/edit_area/edit_area_full.js\"></script>\n";
@@ -94,19 +95,15 @@ else {
 	echo "	</script>";
 
 //show the header
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2' align='left' nowrap=\"nowrap\"><b>".$text['label-execute']."</b></td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "	<td align=\"left\" colspan='2'>\n";
-	echo "		".$text['description-execute']."\n";
-	echo "	<br />\n";
-	echo "	<br />\n";
-	echo "	</td>\n";
-	echo "</tr>\n";
+	echo "<b>".$text['label-execute']."</b>\n";
+	echo "<br><br>";
+	echo $text['description-execute']."\n";
+	echo "<br><br>";
+
 
 //show the result
+	echo "<form method='post' name='frm' action=''>\n";
+	echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	if (count($_POST)>0) {
 		echo "	<tr>\n";
 		echo "		<td colspan='2' align=\"left\">\n";
@@ -149,15 +146,13 @@ else {
 	}
 
 //html form
-	echo "<form method='post' name='frm' action=''>\n";
-
 	if (permission_exists('exec_command_line')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-shell']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='shell_cmd' id='shell_cmd' rows='2' class='formfld' style='width: 100%;' wrap='off'>$shell_cmd</textarea\n";
+		echo "	<textarea name='shell_cmd' id='shell_cmd' rows='2' class='formfld' style='width: 100%;' wrap='off'>$shell_cmd</textarea>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-shell']."\n";
 		echo "</td>\n";
@@ -169,7 +164,7 @@ else {
 		echo "	".$text['label-php']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='php_cmd' id='php_cmd' rows='7' class='formfld' style='width: 100%;' wrap='off'>$php_cmd</textarea\n";
+		echo "	<textarea name='php_cmd' id='php_cmd' rows='7' class='formfld' style='width: 100%;' wrap='off'>$php_cmd</textarea>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-php']."</a>\n";
 		echo "</td>\n";
@@ -181,7 +176,7 @@ else {
 		echo "	".$text['label-switch']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<textarea name='switch_cmd' id='switch_cmd' rows='2' class='formfld' style='width: 100%;' wrap='off'>$switch_cmd</textarea\n";
+		echo "	<textarea name='switch_cmd' id='switch_cmd' rows='2' class='formfld' style='width: 100%;' wrap='off'>$switch_cmd</textarea>\n";
 		echo "	<br />\n";
 		echo "	".$text['description-switch']."\n";
 		echo "</td>\n";
@@ -189,12 +184,13 @@ else {
 	}
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
+	echo "			<br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-execute']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
-	echo "</form>";
-
 	echo "</table>";
+	echo "<br><br>";
+	echo "</form>";
 
 //show the footer
 	require_once "resources/footer.php";

@@ -261,7 +261,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	echo "<form name='frm' id='frm' method='post' action=''>";
 	echo "<input type='hidden' name='action' id='action' value=''>";
 
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'>";
 	echo "			<b>".$text['header-default_settings']."</b>";
@@ -439,8 +439,10 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
+
 			$previous_category = $row['default_setting_category'];
-			if ($c==0) { $c=1; } else { $c=0; }
+			$c = ($c == 0) ? 1 : 0;
+
 		} //end foreach
 		unset($sql, $result, $row_count);
 	} //end if results
@@ -468,11 +470,9 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 	echo "</table>";
 	echo "<br />";
 	echo $paging_controls;
-	echo "<br /><br />";
+	echo "<br /><br /><br />";
 
 	echo "</form>";
-
-	echo "<br /><br />";
 
 	// check or uncheck all category checkboxes
 	if (sizeof($subcat_ids) > 0) {

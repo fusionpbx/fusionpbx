@@ -72,6 +72,7 @@ if ($_GET['a'] == "download") {
 
 //show the content
 	require_once "resources/header.php";
+	$document['title'] = $text['title-sip-status'];
 
 	$msg = $_GET["savemsg"];
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
@@ -99,7 +100,7 @@ if ($_GET['a'] == "download") {
 	$gateways = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	unset ($prep_statement, $sql);
 
-//get the  sip profiles
+//get the sip profiles
 	$sql = "select sip_profile_name from v_sip_profiles ";
 	$sql .= "order by sip_profile_name asc ";
 	$prep_statement = $db->prepare(check_sql($sql));
@@ -117,17 +118,23 @@ if ($_GET['a'] == "download") {
 		catch(Exception $e) {
 			echo $e->getMessage();
 		}
-		echo "<br />\n";
-		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 10px;'>\n";
+		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 		echo "<tr>\n";
 		echo "<td width='50%'>\n";
-		echo "  <b><a href='javascript:void(0);' onclick=\"$('#sofia_status').slideToggle();\">".$text['title-sofia-status']."</a></b> \n";
+		echo "	<b>".$text['header-sip-status']."</b>";
+		echo "	<br><br>";
 		echo "</td>\n";
 		echo "<td width='50%' align='right'>\n";
 		echo "  <input type='button' class='btn' value='".$text['button-flush_memcache']."' onclick=\"document.location.href='cmd.php?cmd=api+memcache+flush';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-reload_acl']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadacl';\" />\n";
 		echo "  <input type='button' class='btn' value='".$text['button-reload_xml']."' onclick=\"document.location.href='cmd.php?cmd=api+reloadxml';\" />\n";
 		echo "</td>\n";
+		echo "</tr>\n";
+		echo "</table>\n";
+
+		echo "<table width='100%' cellpadding='0' cellspacing='0' border='0' style='margin-bottom: 10px;'>\n";
+		echo "<tr>\n";
+		echo "<td><b><a href='javascript:void(0);' onclick=\"$('#sofia_status').slideToggle();\">".$text['title-sofia-status']."</a></b></td>\n";
 		echo "</tr>\n";
 		echo "</table>\n";
 

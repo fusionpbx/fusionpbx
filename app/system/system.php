@@ -43,9 +43,7 @@ else {
 	$text = $language->get();
 
 require_once "resources/header.php";
-
-echo "<br />";
-echo "<br />";
+$document['title'] = $text['title-sys-status'];
 
 // OS Support
 //
@@ -70,7 +68,10 @@ echo "<br />";
 //
 
 //system information
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"7\" cellspacing=\"0\">\n";
+	echo "<b>".$text['header-sys-status']."</b>";
+	echo "<br><br>";
+
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 	echo "<tr>\n";
 	echo "	<th class='th' colspan='2' align='left'>".$text['title-sys-info']."</th>\n";
 	echo "</tr>\n";
@@ -123,11 +124,7 @@ echo "<br />";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
-
-	echo "<br />";
-	echo "<br />";
-	echo "<br />\n";
-
+	echo "<br /><br>";
 
 //memory information
 	if (permission_exists('system_view_ram')) {
@@ -154,9 +151,7 @@ echo "<br />";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
-				echo "<br />";
-				echo "<br />";
-				echo "<br />";
+				echo "<br /><br />";
 			}
 		}
 
@@ -183,9 +178,7 @@ echo "<br />";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
-				echo "<br />";
-				echo "<br />";
-				echo "<br />";
+				echo "<br /><br />";
 			}
 		}
 	}
@@ -223,9 +216,7 @@ echo "<br />";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
-				echo "<br />";
-				echo "<br />";
-				echo "<br />";
+				echo "<br /><br />";
 			}
 		}
 
@@ -252,9 +243,7 @@ echo "<br />";
 				echo "	</td>\n";
 				echo "</tr>\n";
 				echo "</table>\n";
-				echo "<br />";
-				echo "<br />";
-				echo "<br />";
+				echo "<br /><br />";
 			}
 		}
 	}
@@ -319,11 +308,8 @@ echo "<br />";
 			echo "	</td>\n";
 			echo "</tr>\n";
 			echo "</table>\n";
-			echo "\n";
 		}
-		echo "<br />";
-		echo "<br />";
-		echo "<br />";
+		echo "<br /><br />";
 	}
 
 //memcache information
@@ -372,7 +358,7 @@ echo "<br />";
 		}
 
 		echo "</table>\n";
-		echo "<br /><br /><br />\n";
+		echo "<br /><br />\n";
 
 	}
 
