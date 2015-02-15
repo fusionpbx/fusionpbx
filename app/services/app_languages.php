@@ -26,6 +26,21 @@
 	Philippe Rioual <bhouba@gmail.com>
 */
 
+	$text['title-services']['en-us'] = "Services";
+	$text['title-services']['es-cl'] = "Servicios";
+	$text['title-services']['pt-pt'] = "Serviços";
+	$text['title-services']['fr-fr'] = "Services";
+
+	$text['header-services']['en-us'] = "Services";
+	$text['header-services']['es-cl'] = "Servicios";
+	$text['header-services']['pt-pt'] = "Serviços";
+	$text['header-services']['fr-fr'] = "Services";
+
+	$text['description-services']['en-us'] = "Shows a list of processes, the status of the process and provides control to start and stop the process.";
+	$text['description-services']['es-cl'] = "Muestra una lista de los procesos, el estado del proceso y proporciona un control para iniciar y detener el proceso.";
+	$text['description-services']['pt-pt'] = "Mostra uma lista de processos, o estado do processo e proporciona um controlo para iniciar e parar o processo.";
+	$text['description-services']['fr-fr'] = "Affiche une liste des processus, l'état du processus et fournit un contrôle pour démarrer et arrêter le processus.";
+
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar esto?";
 	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
@@ -71,6 +86,36 @@
 	$text['label-name']['pt-pt'] = "Nome";
 	$text['label-name']['fr-fr'] = "Nom";
 
+	$text['label-status']['en-us'] = "Status";
+	$text['label-status']['es-cl'] = "Estado";
+	$text['label-status']['pt-pt'] = "Estado";
+	$text['label-status']['fr-fr'] = "Statut";
+
+	$text['label-action']['en-us'] = "Action";
+	$text['label-action']['es-cl'] = "Acción";
+	$text['label-action']['pt-pt'] = "Ação";
+	$text['label-action']['fr-fr'] = "Action";
+
+	$text['label-running']['en-us'] = "Running";
+	$text['label-running']['es-cl'] = "Runcionamiento";
+	$text['label-running']['pt-pt'] = "Funcionamento";
+	$text['label-running']['fr-fr'] = "Fonctionnement";
+
+	$text['label-stopped']['en-us'] = "Stopped";
+	$text['label-stopped']['es-cl'] = "Detenido";
+	$text['label-stopped']['pt-pt'] = "Parou";
+	$text['label-stopped']['fr-fr'] = "Arrêtée";
+
+	$text['label-start']['en-us'] = "Start";
+	$text['label-start']['es-cl'] = "Comienzo";
+	$text['label-start']['pt-pt'] = "Começo";
+	$text['label-start']['fr-fr'] = "Début";
+
+	$text['label-stop']['en-us'] = "Stop";
+	$text['label-stop']['es-cl'] = "Deténgase";
+	$text['label-stop']['pt-pt'] = "Pare";
+	$text['label-stop']['fr-fr'] = "Arrêtez";
+
 	$text['message-starting']['en-us'] = "Starting Service";
 	$text['message-starting']['es-cl'] = "Servicio de Inicio";
 	$text['message-starting']['pt-pt'] = "A Iniciar Serviço";
@@ -106,25 +151,25 @@
 	$text['description-data']['pt-pt'] = "Introduza os dados do serviço.";
 	$text['description-data']['fr-fr'] = "Entrer les données du service.";
 
-	$text['label-start']['en-us'] = "Start Command";
-	$text['label-start']['es-cl'] = "Comando para Iniciar";
-	$text['label-start']['pt-pt'] = "Comando para Iniciar";
-	$text['label-start']['fr-fr'] = "Commande démarrage";
+	$text['label-start_command']['en-us'] = "Start Command";
+	$text['label-start_command']['es-cl'] = "Comando para Iniciar";
+	$text['label-start_command']['pt-pt'] = "Comando para Iniciar";
+	$text['label-start_command']['fr-fr'] = "Commande démarrage";
 
-	$text['description-start']['en-us'] = "Enter the command to start the service.";
-	$text['description-start']['es-cl'] = "Ingrese el comando para iniciar el servicio.";
-	$text['description-start']['pt-pt'] = "Introduza o comando para arrancar o serviço.";
-	$text['description-start']['fr-fr'] = "Entrer la commande pour démarrer le service.";
+	$text['description-start_command']['en-us'] = "Enter the command to start the service.";
+	$text['description-start_command']['es-cl'] = "Ingrese el comando para iniciar el servicio.";
+	$text['description-start_command']['pt-pt'] = "Introduza o comando para arrancar o serviço.";
+	$text['description-start_command']['fr-fr'] = "Entrer la commande pour démarrer le service.";
 
-	$text['label-stop']['en-us'] = "Stop Command";
-	$text['label-stop']['es-cl'] = "Comando para Detener";
-	$text['label-stop']['pt-pt'] = "Comando para Parar";
-	$text['label-stop']['fr-fr'] = "Comande d'arrêt";
+	$text['label-stop_command']['en-us'] = "Stop Command";
+	$text['label-stop_command']['es-cl'] = "Comando para Detener";
+	$text['label-stop_command']['pt-pt'] = "Comando para Parar";
+	$text['label-stop_command']['fr-fr'] = "Comande d'arrêt";
 
-	$text['description-stop']['en-us'] = "Enter the command to stop the service.";
-	$text['description-stop']['es-cl'] = "Ingrese el comando para detener el servicio.";
-	$text['description-stop']['pt-pt'] = "Introduza o comando para parar o serviço.";
-	$text['description-stop']['fr-fr'] = "Entrer la commande pour arrêter le service.";
+	$text['description-stop_command']['en-us'] = "Enter the command to stop the service.";
+	$text['description-stop_command']['es-cl'] = "Ingrese el comando para detener el servicio.";
+	$text['description-stop_command']['pt-pt'] = "Introduza o comando para parar o serviço.";
+	$text['description-stop_command']['fr-fr'] = "Entrer la commande pour arrêter le service.";
 
 	$text['label-description']['en-us'] = "Description";
 	$text['label-description']['es-cl'] = "Descripción";
@@ -135,5 +180,15 @@
 	$text['description-description']['es-cl'] = "Ingrese una descripción del servicio.";
 	$text['description-description']['pt-pt'] = "Introduza a descrição do serviço.";
 	$text['description-description']['fr-fr'] = "Entrer la description du service.";
+
+	$text['button-delete']['en-us'] = "Delete";
+	$text['button-delete']['es-cl'] = "Eliminar";
+	$text['button-delete']['pt-pt'] = "Remover";
+	$text['button-delete']['fr-fr'] = "Supprimer";
+
+	$text['button-edit']['en-us'] = "Edit";
+	$text['button-edit']['es-cl'] = "Editar";
+	$text['button-edit']['pt-pt'] = "Editar";
+	$text['button-edit']['fr-fr'] = "Editer";
 
 ?>

@@ -241,23 +241,23 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-start']."\n";
+	echo "	".$text['label-start_command']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='service_cmd_start' maxlength='255' value=\"$service_cmd_start\">\n";
 	echo "<br />\n";
-	echo $text['description-start']."\n";
+	echo $text['description-start_command']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-stop']."\n";
+	echo "	".$text['label-stop_command']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='service_cmd_stop' maxlength='255' value=\"$service_cmd_stop\">\n";
 	echo "<br />\n";
-	echo $text['description-stop']."\n";
+	echo $text['description-stop_command']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
