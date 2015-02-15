@@ -159,17 +159,8 @@ else {
 		//--- End: Edit Area -------------------------------------------------------
 	}
 
-	echo "<div align='center'>";
-	echo "<table border='0' width='100%' cellpadding='0' cellspacing='0'>\n";
-
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\" width='100%'>\n";
-	//echo "      <br>";
-
-
 	echo "<form method='post' action=''>";
-	echo "<table width='100%' cellpadding='6' cellspacing='0'>";
-
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>";
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap valign='top'><b>".$text['label-content-edit']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'><input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='rsslist.php'\" value='".$text['button-back']."'><br /><br /></td>\n";
@@ -370,10 +361,12 @@ else {
 	//echo "<input type=\"button\" value=\"Load\" onclick=\"ajaxLoad('rss_description', ajaxresponse);\" />";
 
 	echo "          <input type='hidden' name='rss_uuid' value='$rss_uuid'>";
+	echo "			<br><br>";
 	echo "          <input type='submit' class='btn' name='submit' value='".$text['button-save']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
 
 	if ($rss_optional_1 == "text/javascript") {
@@ -381,11 +374,6 @@ else {
 		echo "  document.getElementById('rss_description').innerHTML = ajaxresponse;\n";
 		echo "</script>\n";
 	}
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 
   require_once "resources/footer.php";

@@ -312,7 +312,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<form method='post' name='frm' action=''>\n";
 	echo "<input type='hidden' name='app_uuid' value='".$app_uuid."'>\n";
 
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">\n";
+	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='30%'>\n";
 	echo"			<span class=\"title\">".$text['title-dialplan_edit']."</span><br />\n";
@@ -332,11 +332,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "<br />\n";
 
-	echo "<table width='100%'  border='0' cellpadding='0' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='50%' style='vertical-align: top;'>\n";
 
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 		echo "    ".$text['label-name']."\n";
@@ -389,7 +389,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>";
 	echo "<td width='50%' style='vertical-align: top;'>\n";
 
-		echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+		echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "<tr>\n";
 		echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap' width='30%'>\n";
 		echo "    ".$text['label-order']."\n";

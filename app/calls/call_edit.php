@@ -488,14 +488,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</script>\n";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'>\n";
 	echo "	<b>".$text['title']."</b>\n";
@@ -756,16 +750,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	if ($action == "update") {
 		echo "				<input type='hidden' name='id' value='$extension_uuid'>\n";
 	}
+	echo "<br><br>";
 	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";

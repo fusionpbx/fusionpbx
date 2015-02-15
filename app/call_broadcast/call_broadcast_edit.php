@@ -238,17 +238,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //begin content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' nowrap='nowrap'><b>".$text['label-call-broadcast']."</b></td>\n";
@@ -273,7 +264,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "".$text['description-name']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
-
 
 	if (if_group("superadmin")){
 		echo "<tr>\n";
@@ -469,15 +459,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
+	echo "			<br><br>";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-	echo "<br />\n";
-	echo "<br />\n";
-	echo "<br />\n";
 
 	/*
 	if ($action == "update") {
@@ -630,11 +618,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</form>";
 	}
 	*/
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 require_once "resources/footer.php";
 ?>

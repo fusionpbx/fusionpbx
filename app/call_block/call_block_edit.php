@@ -227,17 +227,10 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	}\n";
 	echo "</script>";
 
-	echo "<div align='center'>";
 	// Show last 5-10 calls first, with add button
 
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "	  <br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	if ($action == "add") {
 		echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['label-edit-add']."</b></td>\n";
@@ -331,18 +324,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='call_block_uuid' value='$call_block_uuid'>\n";
+		echo "		<input type='hidden' name='call_block_uuid' value='$call_block_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br><br>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div><br><br>";
 
 
 //get recent calls from the db (if not editing an existing call block record)
@@ -437,6 +427,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "<tr>\n";
 		echo "</tr>\n";
 		echo "</table>";
+		echo "<br><br>";
 	}
 // end of Display Last 5-10 Calls
 

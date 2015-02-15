@@ -101,14 +101,8 @@ if (count($_POST)>0) {
 	require_once "resources/wysiwyg.php";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "      <br>";
-
 	echo "<form method='post' action=''>";
-	echo "<table width='100%'>";
+	echo "<table cellpadding='0' cellspacing='0' width='100%'>";
 	echo "	<tr>";
 	echo "		<td nowrap>".$text['label-title']."</td>";
 	echo "		<td width='100%'><input type='text' class='txt' name='rss_sub_title'></td>";
@@ -159,16 +153,13 @@ if (count($_POST)>0) {
 	//echo "	</tr>";    echo "	<tr>";
 	echo "		<td colspan='2' align='right'>";
 	echo "		    <input type='hidden' name='rss_uuid' value='$rss_uuid'>";
-	echo "          <input type='submit' name='submit' class='btn' value='".text['button-add-title']."'>";
+	echo "			<br><br>";
+	echo "          <input type='submit' name='submit' class='btn' value='".$text['button-add-title']."'>";
 	echo "      </td>";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //show the footer
 	require_once "resources/footer.php";

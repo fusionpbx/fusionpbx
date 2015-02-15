@@ -133,13 +133,8 @@ if (count($_POST)>0) {
 		//--- End: Edit Area -------------------------------------------------------
 	}
 
-	echo "<div align='center'>";
-	echo "<table border='0' width='100%' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\" width='100%'>\n";
-
 	echo "<form method='post' action=''>";
-	echo "<table width='100%' cellpadding='6' cellspacing='0'>";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>";
 
 	echo "<tr>\n";
 	echo "<td width='30%' nowrap valign='top'><b>Content Add</b></td>\n";
@@ -332,17 +327,13 @@ if (count($_POST)>0) {
 
 	echo "	<tr>";
 	echo "		<td class='' colspan='2' align='right'>";
+	echo "			<br><br>";
 	echo "          <input type='submit' class='btn' name='submit' value='".$text['button-add-title']." $module_title'>\n";
 	echo "      </td>";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 
 require_once "resources/footer.php";

@@ -320,15 +320,8 @@ require_once "resources/header.php";
 $document['title'] = $text['title-notifications'];
 
 // show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
 	echo "<form method='post' name='frm' action=''>\n";
-
-	echo "<table cellpadding='6' cellspacing='0' width='100%' border='0'>\n";
+	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' nowrap='nowrap'><b>".$text['header-notifications']."</b><br><br></td>\n";
 	echo "		<td align='right'>";
@@ -358,7 +351,7 @@ $document['title'] = $text['title-notifications'];
 	echo "</table>\n";
 
 	echo "<div id='notification_channels' ".(($setting["project_notifications"] != 'true') ? "style='display: none;'" : null).">\n";
-		echo "<table cellpadding='6' cellspacing='0' width='100%' border='0'>\n";
+		echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 
 		echo "	<tr>\n";
 		echo "		<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
@@ -415,7 +408,7 @@ $document['title'] = $text['title-notifications'];
 		echo "</table>\n";
 	echo "</div>\n";
 
-	echo "<table cellpadding='6' cellspacing='0' width='100%' border='0'>\n";
+	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
 	echo 			$text['label-project_notification_method']."\n";
@@ -447,7 +440,7 @@ $document['title'] = $text['title-notifications'];
 	echo "	</tr>\n";
 	echo "</table>\n";
 
-	echo "<table cellpadding='6' cellspacing='0' width='100%' border='0'>\n";
+	echo "<table cellpadding='0' cellspacing='0' width='100%' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='right'>\n";
 	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
@@ -457,12 +450,6 @@ $document['title'] = $text['title-notifications'];
 	echo "</table>\n";
 
 	echo "</form>\n";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
 
 // include the footer
 	require_once "resources/footer.php";

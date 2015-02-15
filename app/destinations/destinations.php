@@ -48,13 +48,7 @@ else {
 	$text = $language->get();
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br />";
-
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-destinations']."</b></td>\n";
 	echo "			<form method='get' action=''>\n";
@@ -128,7 +122,6 @@ else {
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
 
-	echo "<div align='center'>\n";
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order);
@@ -175,14 +168,6 @@ else {
 	echo "</tr>\n";
 
 	echo "</table>";
-	echo "</div>";
-	echo "<br /><br />";
-	echo "<br /><br />";
-
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
 	echo "<br /><br />";
 
 //include the footer

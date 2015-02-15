@@ -45,14 +45,9 @@ else {
 //begin the content
 	require_once "resources/header.php";
 	require_once "resources/paging.php";
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"center\">\n";
-	echo "		<br>";
 
 	if ($is_included != "true") {
-		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"6\" cellspacing=\"0\">\n";
+		echo "		<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 		echo "		<tr>\n";
 		echo "		<td align='left'><b>".$text['title']."</b><br>\n";
 		echo "			".$text['description-2']."\n";
@@ -175,12 +170,7 @@ else {
 		echo "</tr>\n";
 	}
 	echo "</table>";
-
-	echo "</table>";
-	echo "</div>";
-	echo "<br>";
-	echo "<br>";
-	echo "<br>";
+	echo "<br><br>";
 
 	if ($is_included != "true") {
 		require_once "resources/footer.php";

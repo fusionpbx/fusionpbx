@@ -124,7 +124,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				return;
 
 			} //if ($action == "update")
-		} //if ($_POST["persistformvar"] != "true") 
+		} //if ($_POST["persistformvar"] != "true")
 } //(count($_POST)>0 && strlen($_POST["persistformvar"]) == 0)
 
 //pre-populate the form
@@ -149,15 +149,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	require_once "resources/header.php";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['title-acl_node']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
@@ -173,13 +166,13 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<select class='formfld' name='node_type'>\n";
 	echo "	<option value=''></option>\n";
-	if ($node_type == "allow") { 
+	if ($node_type == "allow") {
 		echo "	<option value='allow' selected='selected'>".$text['label-allow']."</option>\n";
 	}
 	else {
 		echo "	<option value='allow'>".$text['label-allow']."</option>\n";
 	}
-	if ($node_type == "deny") { 
+	if ($node_type == "deny") {
 		echo "	<option value='deny' selected='selected'>".$text['label-deny']."</option>\n";
 	}
 	else {
@@ -215,18 +208,15 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='acl_node_uuid' value='$acl_node_uuid'>\n";
+		echo "		<input type='hidden' name='acl_node_uuid' value='$acl_node_uuid'>\n";
 	}
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<br><br>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
 	require_once "resources/footer.php";

@@ -318,14 +318,8 @@ else {
 		$document['title'] = $text['title-menu_item-add'];
 	}
 
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' action=''>";
-	echo "<table width='100%' cellpadding='6' cellspacing='0'>";
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>";
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap><b>";
 	if ($action == "update") {
@@ -486,10 +480,11 @@ else {
 		echo "			</td>\n";
 		echo "			<td align='right'>";
 		if ($action == "update") {
-			echo "				<input type='hidden' name='menu_item_uuid' value='$menu_item_uuid'>";
+			echo "			<input type='hidden' name='menu_item_uuid' value='$menu_item_uuid'>";
 		}
 		echo "				<input type='hidden' name='menu_uuid' value='$menu_uuid'>";
 		echo "				<input type='hidden' name='menu_item_uuid' value='$menu_item_uuid'>";
+		echo "				<br><br>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 		echo "			</td>";
 		echo "			</tr>";
@@ -498,12 +493,8 @@ else {
 		echo "	</tr>";
 	}
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //include the footer
   require_once "resources/footer.php";

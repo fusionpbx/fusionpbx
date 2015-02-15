@@ -176,14 +176,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	$document['title'] = $text['title-schema'];
 
 //show the content
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' action=''>\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%' border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-schema']."</b></td>\n";
 	echo "<td width='70%' align='right'>\n";
@@ -303,23 +297,20 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<tr>\n";
 	echo "		<td colspan='2' align='right'>\n";
 	if ($action == "update") {
-		echo "				<input type='hidden' name='schema_uuid' value='$schema_uuid'>\n";
+		echo "		<input type='hidden' name='schema_uuid' value='$schema_uuid'>\n";
 	}
-	echo "				<input type='hidden' name='schema_captcha' value='$schema_captcha'>\n";
-	echo "				<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
+	echo "			<input type='hidden' name='schema_captcha' value='$schema_captcha'>\n";
+	echo "			<br><br>";
+	echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
-	echo "</div>";
+	echo "<br><br>";
 	echo "</form>";
 
 	if ($action == "update") {
 		require "schema_fields.php";
 	}
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
 
 
 //show the footer

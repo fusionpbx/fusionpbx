@@ -244,7 +244,7 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 	echo "	<br />";
 
 	echo "<form>\n";
-	echo "<table border='0' width='100%' cellpadding='6' cellspacing='0'\n";
+	echo "<table border='0' width='100%' cellpadding='0' cellspacing='0'\n";
 	echo "<tr>\n";
 	echo "	<td class='vncellreq' width='40%'>".$text['label-src-caller-id-nam']."</td>\n";
 	echo "	<td class='vtable' align='left'>\n";
@@ -406,10 +406,12 @@ if (is_array($_REQUEST) && !empty($_REQUEST['src']) && !empty($_REQUEST['dest'])
 
 	echo "<tr>\n";
 	echo "	<td colspan='2' align='right'>\n";
+	echo "		<br><br>";
 	echo "		<input type=\"submit\" class='btn' value=\"".$text['button-call']."\">\n";
 	echo "	</td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
+	echo "<br><br>";
 	echo "</form>";
 
 //show the footer

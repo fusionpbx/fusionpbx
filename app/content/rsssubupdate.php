@@ -138,14 +138,8 @@ else {
 	require_once "resources/wysiwyg.php";
 
 //show the content
-	echo "<div align='center'>";
-	echo "<table border='0' cellpadding='0' cellspacing='2'>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "      <br>";
-
 	echo "<form method='post' action=''>";
-	echo "<table width='100%'>";
+	echo "<table cellpadding='0' cellspacing='0' width='100%'>";
 	//echo "	<tr>";
 	//echo "		<td>rss_uuid</td>";
 	//echo "		<td><input type='text' name='rss_uuid' class='txt' value='$rss_uuid'></td>";
@@ -190,16 +184,13 @@ else {
 	echo "		    <input type='hidden' name='rss_uuid' value='$rss_uuid'>";
 	echo "		    <input type='hidden' name='persistform' value='0'>";
 	echo "          <input type='hidden' name='rss_sub_uuid' value='$rss_sub_uuid'>";
+	echo "			<br><br>";
 	echo "          <input type='submit' name='submit' class='btn' value='".$text['button-update']."'>";
 	echo "		</td>";
 	echo "	</tr>";
 	echo "</table>";
+	echo "<br><br>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //show the footer
   require_once "resources/footer.php";

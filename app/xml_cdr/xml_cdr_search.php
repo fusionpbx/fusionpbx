@@ -54,13 +54,9 @@ echo "		}";
 echo "	}";
 echo "</script>";
 
-echo "<div align='center'>";
 echo "<form method='post' action='xml_cdr.php'>\n";
-echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-echo "	<tr class='border'>\n";
-echo "		<td align=\"left\">\n";
 
-echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
+echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
 echo "		<td width='30%' nowrap valign='top'><b>Advanced Search</b></td>\n";
 echo "		<td width='70%' align='right' valign='top'>";
@@ -75,7 +71,7 @@ echo "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 echo "	<tr>\n";
 echo "		<td width='50%' style='vertical-align: top;'>\n";
 
-echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
+echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>\n";
 echo "		<td width='30%' class='vncell' valign='top' nowrap='nowrap'>\n";
 echo "			".$text['label-direction']."\n";
@@ -169,7 +165,7 @@ echo "</table>";
 echo "		</td>";
 echo "		<td width='50%' style='vertical-align: top;'>\n";
 
-echo "<table width='100%' cellpadding='6' cellspacing='0'>\n";
+echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 echo "	<tr>";
 echo "		<td width='30%' class='vncell'>".$text['label-billsec']."</td>";
 echo "		<td width='70%' class='vtable'><input type='text' class='formfld' name='billsec' value='$billsec'></td>";
@@ -214,12 +210,9 @@ echo "</table>";
 echo "		</td>";
 echo "	</tr>";
 echo "</table>";
+echo "<br><br>";
 
-echo "		</td>";
-echo "	</tr>";
-echo "</table>";
 echo "</form>";
-echo "</div>";
 
 require_once "resources/footer.php";
 

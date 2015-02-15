@@ -12,15 +12,8 @@ function show_advanced_config() {
 }
 </script>
 
-<div align='center'>
-<table width='100%' border='0' cellpadding='0' cellspacing='2'>
-<tr class='border'>
-<td align=\"left\">
-	<br>
 	<form method='post' name='ifrm' action=''>
-
-	<div align='center'>
-	<table width='100%'  border='0' cellpadding='6' cellspacing='0'>
+	<table width='100%' border='0' cellpadding='0' cellspacing='0'>
 	<tr>
 		<td colspan='2'>
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -274,14 +267,11 @@ function show_advanced_config() {
 	</tr>
 	<tr>
 		<td colspan='2' align='right'>
-				<input type='hidden' name='profile_id' value='<?php echo $profile['xmpp_profile_uuid']; ?>'>
-				<input type='submit' name='submit' class='btn' value='<?php echo $text['button-save']?>'>
+			<input type='hidden' name='profile_id' value='<?php echo $profile['xmpp_profile_uuid']; ?>'>
+			<br><br>
+			<input type='submit' name='submit' class='btn' value='<?php echo $text['button-save']?>'>
 		</td>
 	</tr>
 	</table>
+	<br><br>
 	</form>
-
-</td>
-</tr>
-</table>
-</div>
