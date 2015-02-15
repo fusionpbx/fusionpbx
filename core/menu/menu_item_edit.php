@@ -484,7 +484,7 @@ else {
 		}
 		echo "				<input type='hidden' name='menu_uuid' value='$menu_uuid'>";
 		echo "				<input type='hidden' name='menu_item_uuid' value='$menu_item_uuid'>";
-		echo "				<br><br>";
+		echo "				<br>";
 		echo "				<input type='submit' class='btn' name='submit' value='".$text['button-save']."'>\n";
 		echo "			</td>";
 		echo "			</tr>";
