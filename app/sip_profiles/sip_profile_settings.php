@@ -41,7 +41,7 @@ require_once "resources/paging.php";
 	$order = ($_GET["order"] != '') ? $_GET["order"] : 'asc';
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td align='left' width='50%' nowrap='nowrap'><b>".$text['header_settings']."</b></td>\n";
 	echo "		<td width='50%' align='right'>&nbsp;</td>\n";

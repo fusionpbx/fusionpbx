@@ -82,7 +82,7 @@ require_once "resources/paging.php";
 	$row_style["1"] = "row_style1";
 
 //show the content
-	echo "<table width='100%' border='0'>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
 	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['label-contact_settings']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
