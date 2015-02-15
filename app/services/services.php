@@ -39,6 +39,7 @@ else {
 	$text = $language->get();
 
 require_once "resources/header.php";
+$document['title'] = $text['title-services'];
 require_once "resources/paging.php";
 
 $order_by = check_str($_GET["order_by"]);
@@ -88,12 +89,12 @@ if (strlen($_GET["a"]) > 0) {
 
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "<tr>\n";
-	echo "<td width='50%' align='left' nowrap='nowrap'><b>Services</b></td>\n";
+	echo "<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-services']."</b></td>\n";
 	echo "<td width='50%' align='right'>&nbsp;</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='left' colspan='2'>\n";
-	echo "Shows a list of processes, the status of the process and provides control to start and stop the process.<br /><br />\n";
+	echo $text['description-services']."<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "</tr></table>\n";
@@ -127,10 +128,10 @@ if (strlen($_GET["a"]) > 0) {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('service_name', 'Name', $order_by, $order);
-	echo "<th>Status</th>\n";
-	echo "<th>Action</th>\n";
-	echo th_order_by('service_description', 'Description', $order_by, $order);
+	echo th_order_by('service_name', $text['label-name'], $order_by, $order);
+	echo "<th>".$text['label-status']."</th>\n";
+	echo "<th>".$text['label-action']."</th>\n";
+	echo th_order_by('service_description', $text['label-description'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	if (permission_exists('service_add')) {
 		echo "<a href='service_edit.php' alt='add'>$v_link_label_add</a>";
@@ -154,47 +155,47 @@ if (strlen($_GET["a"]) > 0) {
 			if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
 				$pid = file_get_contents($row[service_data]);
 				if (is_process_running($pid)) {
-					echo "<strong>Running</strong>";
+					echo "<strong>".$text['label-running']."</strong>";
 				}
 				else {
-					echo "<strong>Stopped</strong>";
+					echo "<strong>".$text['label-stopped']."</strong>";
 				}
 			}
 			if ($row[service_type] == "file") {
 				$service_data = $row[service_data];
 				if (file_exists($service_data)) {
-					echo "<strong>Running</strong>";
+					echo "<strong>".$text['label-running']."</strong>";
 				}
 				else {
-					echo "<strong>Stopped</strong>";
+					echo "<strong>".$text['label-stopped']."</strong>";
 				}
 			}
 			echo "</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>\n";
 			if ($row[service_type] == "pid" || $row[service_type] == "pid_file") {
 				if (is_process_running($pid)) {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>Stop</a>";
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>".$text['label-stop']."</a>";
 				}
 				else {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>".$text['label-start']."</a>";
 				}
 			}
 			if ($row[service_type] == "file") {
 				if (file_exists($service_data)) {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>Stop</a>";
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=stop' alt='stop'>".$text['label-stop']."</a>";
 				}
 				else {
-					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>Start</a>";
+					echo "		<a href='services.php?id=".$row[service_uuid]."&a=start' alt='start'>".$text['label-start']."</a>";
 				}
 			}
 			echo "</td>\n";
 			echo "	<td valign='top' class='row_stylebg'>".$row[service_description]."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			if (permission_exists('service_edit')) {
-				echo "<a href='service_edit.php?id=".$row[service_uuid]."' alt='edit'>$v_link_label_edit</a>";
+				echo "<a href='service_edit.php?id=".$row[service_uuid]."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			}
 			if (permission_exists('service_delete')) {
-				echo "<a href='service_delete.php?id=".$row[service_uuid]."' alt='delete' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo "<a href='service_delete.php?id=".$row[service_uuid]."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
