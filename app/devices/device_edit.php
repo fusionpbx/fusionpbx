@@ -98,6 +98,8 @@ require_once "resources/require.php";
 			$user_id = check_str($_POST["user_id"]);
 			$auth_id = check_str($_POST["auth_id"]);
 			$password = check_str($_POST["password"]);
+		//profile
+			$device_profile_uuid = check_str($_POST["device_profile_uuid"]);
 		//keys
 			$device_key_category = check_str($_POST["device_key_category"]);
 			$device_key_id = check_str($_POST["device_key_id"]);
@@ -277,6 +279,7 @@ require_once "resources/require.php";
 			$device_firmware_version = $row["device_firmware_version"];
 			$device_provision_enable = $row["device_provision_enable"];
 			$device_template = $row["device_template"];
+			$device_profile_uuid = $row["device_profile_uuid"];
 			$device_description = $row["device_description"];
 		}
 		unset ($prep_statement);
@@ -312,7 +315,7 @@ require_once "resources/require.php";
 	$sql .= "ORDER by ";
 	$sql .= "CASE device_key_category ";
 	$sql .= "WHEN 'line' THEN 1 ";
-	$sql .= "WHEN 'memort' THEN 2 ";
+	$sql .= "WHEN 'memory' THEN 2 ";
 	$sql .= "WHEN 'programmable' THEN 3 ";
 	$sql .= "WHEN 'expansion' THEN 4 ";
 	$sql .= "ELSE 100 END, ";
@@ -406,18 +409,16 @@ require_once "resources/require.php";
 	</script>
 <?php
 //show the content
-	echo "<div align='center'>";
-	echo "<table width='100%' border='0' cellpadding='0' cellspacing=''>\n";
-	echo "<tr class='border'>\n";
-	echo "	<td align=\"left\">\n";
-	echo "		<br>";
-
 	echo "<form method='post' name='frm' id='frm' action='' onsubmit=\"check_mac_duplicate(document.getElementById('device_mac_address').value, '".$device_uuid."'); return false;\">\n";
-	echo "<div align='center'>\n";
-	echo "<table width='100%'  border='0' cellpadding='6' cellspacing='0'>\n";
+	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<td align='left' width='30%' nowrap='nowrap'><b>".$text['header-device']."</b></td>\n";
-	echo "<td width='70%' align='right'>\n";
+	echo "<td align='left' width='30%' nowrap='nowrap' valign='top'>";
+	echo "	<b>".$text['header-device']."</b>";
+	echo "	<br><br>";
+	echo "	".$text['description-device'];
+	echo "	<br><br>";
+	echo "</td>\n";
+	echo "<td width='70%' align='right' valign='top'>\n";
 	echo "	<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='devices.php'\" value='".$text['button-back']."'>\n";
 	if ($action != "add") {
 		echo "	<input type='button' class='btn' name='' alt='".$text['button-copy']."' onclick=\"var new_mac = prompt('".$text['message_device']."'); if (new_mac != null) { window.location='device_copy.php?id=".$device_uuid."&mac=' + new_mac; }\" value='".$text['button-copy']."'>\n";
@@ -427,14 +428,8 @@ require_once "resources/require.php";
 	echo "</tr>\n";
 
 	echo "<tr>\n";
-	echo "<td colspan='2' align='left'>\n";
-	echo $text['description-device']."<br /><br />\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
 	echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_mac_address'].":\n";
+	echo "	".$text['label-device_mac_address']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_mac_address' id='device_mac_address' maxlength='255' value=\"$device_mac_address\" pattern='^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$' required='required'>\n";
@@ -447,7 +442,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_label'].":\n";
+	echo "	".$text['label-device_label']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_label' maxlength='255' value=\"$device_label\">\n";
@@ -458,7 +453,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-	echo "	".$text['label-device_template'].":\n";
+	echo "	".$text['label-device_template']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$device = new device;
@@ -500,7 +495,7 @@ require_once "resources/require.php";
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' valign='top'>".$text['label-lines'].":</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-lines']."</td>";
 	echo "		<td class='vtable' align='left'>";
 	echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "			<tr>\n";
@@ -614,10 +609,35 @@ require_once "resources/require.php";
 	echo "	</tr>";
 
 	if (permission_exists('device_key_add') || permission_exists('device_key_edit')) {
+		//device profile
+		$sql = "select * from v_device_profiles ";
+		$sql .= "where (domain_uuid = '".$domain_uuid."' or domain_uuid is null) ";
+		$sql .= "order by device_profile_name asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		$result_count = count($result);
+		unset ($prep_statement, $sql);
+		if ($result_count > 0) {
+			echo "	<tr>";
+			echo "		<td class='vncell' valign='top'>".$text['label-profile']."</td>";
+			echo "		<td class='vtable' align='left'>";
+			echo "			<select class='formfld' name='device_profile_uuid'>\n";
+			echo "				<option value=''></option>\n";
+			foreach($result as $row) {
+				echo "			<option value='".$row['device_profile_uuid']."' ".(($row['device_profile_uuid'] == $device_profile_uuid) ? "selected='selected'" : null).">".$row['device_profile_name']." ".(($row['domain_uuid'] == '') ? "&nbsp;&nbsp;(".$text['select-global'].")" : null)."</option>\n";
+			}
+			echo "			</select>\n";
+			echo "			<br>".$text['description-profile2']."\n";
+			echo "		</td>";
+			echo "	</tr>";
+		}
+
+		//custom keys
 		echo "	<tr>";
-		echo "		<td class='vncell' valign='top'>".$text['label-keys'].":</td>";
+		echo "		<td class='vncell' valign='top'>".$text['label-keys']."</td>";
 		echo "		<td class='vtable' align='left'>";
-		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_category']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_key_id']."</td>\n";
@@ -856,23 +876,12 @@ require_once "resources/require.php";
 
 				<?php
 				echo "</td>\n";
-				$selected = "selected='selected'";
 				echo "<td class='vtable' valign='top' align='left' nowrap='nowrap'>\n";
 				echo "	<select class='formfld' style='width: 45px;' name='device_keys[".$x."][device_key_line]'>\n";
-				echo "	<option value=''></option>\n";
-				echo "	<option value='0' ".($row['device_key_line'] == "0" ? $selected:"").">0</option>\n";
-				echo "	<option value='1' ".($row['device_key_line'] == "1" ? $selected:"").">1</option>\n";
-				echo "	<option value='2' ".($row['device_key_line'] == "2" ? $selected:"").">2</option>\n";
-				echo "	<option value='3' ".($row['device_key_line'] == "3" ? $selected:"").">3</option>\n";
-				echo "	<option value='4' ".($row['device_key_line'] == "4" ? $selected:"").">4</option>\n";
-				echo "	<option value='5' ".($row['device_key_line'] == "5" ? $selected:"").">5</option>\n";
-				echo "	<option value='6' ".($row['device_key_line'] == "6" ? $selected:"").">6</option>\n";
-				echo "	<option value='7' ".($row['device_key_line'] == "7" ? $selected:"").">7</option>\n";
-				echo "	<option value='8' ".($row['device_key_line'] == "8" ? $selected:"").">8</option>\n";
-				echo "	<option value='9' ".($row['device_key_line'] == "9" ? $selected:"").">9</option>\n";
-				echo "	<option value='10' ".($row['device_key_line'] == "10" ? $selected:"").">10</option>\n";
-				echo "	<option value='11' ".($row['device_key_line'] == "11" ? $selected:"").">11</option>\n";
-				echo "	<option value='12' ".($row['device_key_line'] == "12" ? $selected:"").">12</option>\n";
+				echo "		<option value=''></option>\n";
+				for ($l = 0; $l <= 12; $l++) {
+					echo "	<option value='".$l."' ".(($row['device_key_line'] == $l) ? "selected='selected'" : null).">".$l."</option>\n";
+				}
 				echo "	</select>\n";
 				echo "</td>\n";
 
@@ -913,9 +922,9 @@ require_once "resources/require.php";
 //device settings
 	if (permission_exists('device_setting_add')) {
 		echo "	<tr>";
-		echo "		<td class='vncell' valign='top'>".$text['label-settings'].":</td>";
+		echo "		<td class='vncell' valign='top'>".$text['label-settings']."</td>";
 		echo "		<td class='vtable' align='left'>";
-		echo "			<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
+		echo "			<table border='0' cellpadding='0' cellspacing='0'>\n";
 		echo "			<tr>\n";
 		echo "				<td class='vtable'>".$text['label-device_setting_name']."</td>\n";
 		echo "				<td class='vtable'>".$text['label-device_setting_value']."</td>\n";
@@ -1001,7 +1010,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_vendor'].":\n";
+	echo "	".$text['label-device_vendor']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_vendor' maxlength='255' value=\"$device_vendor\">\n";
@@ -1012,7 +1021,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_model'].":\n";
+	echo "	".$text['label-device_model']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_model' maxlength='255' value=\"$device_model\">\n";
@@ -1023,7 +1032,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_firmware_version'].":\n";
+	echo "	".$text['label-device_firmware_version']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_firmware_version' maxlength='255' value=\"$device_firmware_version\">\n";
@@ -1032,34 +1041,10 @@ require_once "resources/require.php";
 	echo "</td>\n";
 	echo "</tr>\n";
 
-	/*
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_username'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_username' maxlength='255' value=\"$device_username\">\n";
-	echo "<br />\n";
-	echo $text['description-device_username']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_password'].":\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "	<input class='formfld' type='text' name='device_password' maxlength='255' value=\"$device_password\">\n";
-	echo "<br />\n";
-	echo $text['description-device_password']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-	*/
-
 	if (permission_exists('device_domain')) {
 		echo "<tr>\n";
 		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-		echo "	".$text['label-domain'].":\n";
+		echo "	".$text['label-domain']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='domain_uuid'>\n";
@@ -1086,7 +1071,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_provision_enable'].":\n";
+	echo "	".$text['label-device_provision_enable']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "    <select class='formfld' name='device_provision_enable'>\n";
@@ -1110,7 +1095,7 @@ require_once "resources/require.php";
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-device_description'].":\n";
+	echo "	".$text['label-device_description']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='device_description' maxlength='255' value=\"$device_description\">\n";
@@ -1123,16 +1108,12 @@ require_once "resources/require.php";
 	if ($action == "update") {
 		echo "		<input type='hidden' name='device_uuid' value='$device_uuid'>\n";
 	}
+	echo "			<br>";
 	echo "			<input type='submit' class='btn' value='".$text['button-save']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>";
 	echo "</table>";
 	echo "</form>";
-
-	echo "	</td>";
-	echo "	</tr>";
-	echo "</table>";
-	echo "</div>";
 
 //show the footer
 	require_once "resources/footer.php";

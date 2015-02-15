@@ -76,7 +76,7 @@
 		$text['description-device_model']['pt-pt'] = "Introduza o nome do modelo ou número.";
 		$text['description-device_model']['fr-fr'] = "Entrer le nom ou le numéro du modèle";
 
-		$text['label-device_firmware_version']['en-us'] = "Firmware Version";
+		$text['label-device_firmware_version']['en-us'] = "Firmware";
 		$text['label-device_firmware_version']['es-cl'] = "Versión de Firmware";
 		$text['label-device_firmware_version']['pt-pt'] = "Versão do Firmware";
 		$text['label-device_firmware_version']['fr-fr'] = "Version Firmware";
@@ -235,6 +235,88 @@
 		$text['description-device_description']['es-cl'] = "Ingrese una descripción";
 		$text['description-device_description']['pt-pt'] = "Introduza a descrição.";
 		$text['description-device_description']['fr-fr'] = "Entrez la description.";
+
+	//profiles
+		$text['title-profiles']['en-us'] = "Key Profiles";
+		$text['title-profiles']['es-cl'] = "Perfiles Clave";
+		$text['title-profiles']['pt-pt'] = "Perfis-Chave";
+		$text['title-profiles']['fr-fr'] = "Profils Clés";
+
+		$text['title-profile']['en-us'] = "Key Profile";
+		$text['title-profile']['es-cl'] = "Perfil Clave";
+		$text['title-profile']['pt-pt'] = "Perfil Chave";
+		$text['title-profile']['fr-fr'] = "Profil Clés";
+
+		$text['header-profiles']['en-us'] = "Key Profiles";
+		$text['header-profiles']['es-cl'] = "Perfiles Clave";
+		$text['header-profiles']['pt-pt'] = "Perfis-Chave";
+		$text['header-profiles']['fr-fr'] = "Profils Clés";
+
+		$text['description-profiles']['en-us'] = "Define a set of keys as a profile.  Any changes to the profile effect all devices assigned to the profile.";
+		$text['description-profiles']['es-cl'] = "Definir un conjunto de claves como un perfil. Cualquier cambio en el perfil de efectos todos los dispositivos asignados al perfil.";
+		$text['description-profiles']['pt-pt'] = "Defina um conjunto de chaves como um perfil. Quaisquer mudanças no perfil de todos os dispositivos de efeito atribuído ao perfil.";
+		$text['description-profiles']['fr-fr'] = "Définir un ensemble de touches comme un profil. Toute modification apportée à l'effet de profil tous les appareils affectés au profil.";
+
+		$text['header-profile']['en-us'] = "Key Profile";
+		$text['header-profile']['es-cl'] = "Perfil Clave";
+		$text['header-profile']['pt-pt'] = "Perfil Chave";
+		$text['header-profile']['fr-fr'] = "Profil Clés";
+
+		$text['description-profile']['en-us'] = "Define the assignments for this key profile.";
+		$text['description-profile']['es-cl'] = "Definir las asignaciones para este perfil de llave.";
+		$text['description-profile']['pt-pt'] = "Definir as atribuições para esse perfil de chave.";
+		$text['description-profile']['fr-fr'] = "Définir les missions pour ce profil de clé.";
+
+		$text['label-profile']['en-us'] = "Key Profile";
+		$text['label-profile']['es-cl'] = "Perfil Clave";
+		$text['label-profile']['pt-pt'] = "Perfil Chave";
+		$text['label-profile']['fr-fr'] = "Profil Clés";
+
+		$text['description-profile2']['en-us'] = "Select a Key Profile and/or define custom keys below.";
+		$text['description-profile2']['es-cl'] = "Seleccione un perfil de llave y / o definir teclas personalizadas a continuación.";
+		$text['description-profile2']['pt-pt'] = "Selecione um perfil Key e / ou definir chaves personalizados abaixo.";
+		$text['description-profile2']['fr-fr'] = "Sélectionnez un profil à clé et / ou définir des touches personnalisées ci-dessous.";
+
+		$text['button-profiles']['en-us'] = "Key Profiles";
+		$text['button-profiles']['es-cl'] = "Perfiles Clave";
+		$text['button-profiles']['pt-pt'] = "Perfis-Chave";
+		$text['button-profiles']['fr-fr'] = "Profils Clés";
+
+		$text['label-profile_name']['en-us'] = "Name";
+		$text['label-profile_name']['es-cl'] = "Nombre";
+		$text['label-profile_name']['pt-pt'] = "Nome";
+		$text['label-profile_name']['fr-fr'] = "Nom";
+
+		$text['description-profile_name']['en-us'] = "Enter a name to identify this profile.";
+		$text['description-profile_name']['es-cl'] = "Introduzca un nombre para identificar este perfil.";
+		$text['description-profile_name']['pt-pt'] = "Digite um nome para identificar este perfil.";
+		$text['description-profile_name']['fr-fr'] = "Entrez un nom pour identifier ce profil.";
+
+		$text['label-profile_domain']['en-us'] = "Domain";
+		$text['label-profile_domain']['es-cl'] = "Dominio";
+		$text['label-profile_domain']['pt-pt'] = "Domínio";
+		$text['label-profile_domain']['fr-fr'] = "Domaine";
+
+		$text['label-profile_enabled']['en-us'] = "Enabled";
+		$text['label-profile_enabled']['es-cl'] = "Activado";
+		$text['label-profile_enabled']['pt-pt'] = "Activado";
+		$text['label-profile_enabled']['fr-fr'] = "Actif";
+
+		$text['description-profile_enabled']['en-us'] = "Select the current state of this profile.";
+		$text['description-profile_enabled']['es-cl'] = "Seleccione el estado actual de este perfil.";
+		$text['description-profile_enabled']['pt-pt'] = "Selecione o estado atual deste perfil.";
+		$text['description-profile_enabled']['fr-fr'] = "Sélectionnez l'état actuel de ce profil.";
+
+		$text['label-profile_description']['en-us'] = "Description";
+		$text['label-profile_description']['es-cl'] = "Descripción";
+		$text['label-profile_description']['pt-pt'] = "Descrição";
+		$text['label-profile_description']['fr-fr'] = "Description";
+
+		$text['description-profile_description']['en-us'] = "Additional details about this profile.";
+		$text['description-profile_description']['es-cl'] = "Detalles adicionales acerca de este perfil.";
+		$text['description-profile_description']['pt-pt'] = "Detalhes adicionais sobre este perfil.";
+		$text['description-profile_description']['fr-fr'] = "Des détails supplémentaires sur ce profil.";
+
 
 	//keys
 		$text['label-keys']['en-us'] = "Keys";

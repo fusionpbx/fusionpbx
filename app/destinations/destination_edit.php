@@ -244,7 +244,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "accountcode=".$destination_accountcode;
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
-	
+
 								//increment the dialplan detail order
 								$dialplan_detail_order = $dialplan_detail_order + 10;
 							}
@@ -291,10 +291,10 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$dialplan["dialplan_details"][$y]["dialplan_detail_data"] = "tone_detect_hits=1";
 								$dialplan["dialplan_details"][$y]["dialplan_detail_order"] = $dialplan_detail_order;
 								$y++;
-		
+
 							//increment the dialplan detail order
 								$dialplan_detail_order = $dialplan_detail_order + 10;
-		
+
 							// execute on tone detect
 								$dialplan["dialplan_details"][$y]["domain_uuid"] = $domain_uuid;
 								$dialplan["dialplan_details"][$y]["dialplan_detail_tag"] = "action";
@@ -724,12 +724,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-accountcode'].":\n";
+	echo "	".$text['label-account_code'].":\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	echo "	<input class='formfld' type='text' name='destination_accountcode' maxlength='255' value=\"$destination_accountcode\">\n";
 	echo "<br />\n";
-	echo $text['description-accountcode']."\n";
+	echo $text['description-account_code']."\n";
 	if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/billing/app_config.php")){
 		echo " ".$text['billing-warning'];
 	}

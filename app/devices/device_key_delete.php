@@ -41,20 +41,26 @@ else {
 	if (count($_GET)>0) {
 		$id = check_str($_GET["id"]);
 		$device_uuid = check_str($_GET["device_uuid"]);
+		$device_profile_uuid = check_str($_GET["device_profile_uuid"]);
 	}
 
 if (strlen($id)>0) {
 	//delete device_key
 		$sql = "delete from v_device_keys ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and device_key_uuid = '$id' ";
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and device_key_uuid = '".$id."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
 }
 
 $_SESSION["message"] = $text['message-delete'];
-header("Location: device_edit.php?id=".$device_uuid);
+if ($device_uuid != '') {
+	header("Location: device_edit.php?id=".$device_uuid);
+}
+else if ($device_profile_uuid != '') {
+	header("Location: device_profile_edit.php?id=".$device_profile_uuid);
+}
 return;
 
 ?>
