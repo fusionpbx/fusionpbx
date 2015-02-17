@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -57,6 +57,8 @@ foreach ($activity as $extension => $fields) {
 $groups = array_unique($groups);
 sort($groups);
 
+$onhover_pause_refresh = " onmouseover='refresh_stop();' onmouseout='refresh_start();'";
+
 echo "<table width='100%'>";
 echo "	<tr>";
 echo "		<td valign='top' align='left' width='50%' nowrap>";
@@ -84,33 +86,60 @@ if (sizeof($_SESSION['user']['extensions']) > 0) {
 	$status_options[5]['style'] = "op_btn_status_logged_out";
 
 	foreach ($status_options as $status_option) {
-		echo "	<input type='button' id='".$status_option['style']."' class='btn' value=\"".$status_option['label']."\" onclick=\"send_cmd('index.php?status='+escape('".$status_option['status']."'));\">\n";
+		echo "	<input type='button' id='".$status_option['style']."' class='btn' value=\"".$status_option['label']."\" onclick=\"send_cmd('index.php?status='+escape('".$status_option['status']."'));\" ".$onhover_pause_refresh.">\n";
 	}
 }
 
 echo "		</td>";
 echo "		<td valign='top' align='right' width='50%' nowrap>";
+echo "			<table cellpadding='0' cellspacing='0' border='0'>";
+echo "				<tr>";
+echo "					<td valign='middle' nowrap='nowrap' style='padding-right: 15px' id='refresh_state'>";
+echo "						<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' onclick='refresh_stop();' alt=\"".$text['label-refresh_pause']."\" title=\"".$text['label-refresh_pause']."\">";
+echo "					</td>";
+
+if (permission_exists('operator_panel_eavesdrop')) {
+	echo "				<td valign='top' nowrap='nowrap'>";
+	if (sizeof($_SESSION['user']['extensions']) > 1) {
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".(($_REQUEST['eavesdrop_dest'] == '') ? $_SESSION['user']['extensions'][0] : $_REQUEST['eavesdrop_dest'])."\">";
+		echo "				<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 0px 5px; cursor: help;' title='".$text['description-eavesdrop_destination']."' align='absmiddle' ".$onhover_pause_refresh.">";
+		echo "				<select class='formfld' style='margin-right: 5px;' align='absmiddle' onchange=\"document.getElementById('eavesdrop_dest').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' xonblur='refresh_start();'>\n";
+		foreach ($_SESSION['user']['extensions'] as $user_extension) {
+			echo "				<option value='".$user_extension."' ".(($_REQUEST['eavesdrop_dest'] == $user_extension) ? "selected" : null).">".$user_extension."</option>\n";
+		}
+		echo "				</select>\n";
+	}
+	else if (sizeof($_SESSION['user']['extensions']) == 1) {
+		echo "				<input type='hidden' id='eavesdrop_dest' value=\"".$_SESSION['user']['extensions'][0]."\">";
+	}
+	echo "				</td>";
+}
 
 if (sizeof($groups) > 0) {
-	echo "		<input type='hidden' id='group' value=\"".$_REQUEST['group']."\">";
+	echo "				<td valign='top' nowrap='nowrap'>";
+	echo "					<input type='hidden' id='group' value=\"".$_REQUEST['group']."\">";
 	if (sizeof($groups) > 5) {
 		//show select box
-		echo "	<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' onblur='refresh_start();'>\n";
-		echo "		<option value='' ".(($_REQUEST['group'] == '') ? "selected" : null).">".$text['label-call_group']."</option>";
-		echo "		<option value=''>".$text['button-all']."</option>";
+		echo "				<select class='formfld' onchange=\"document.getElementById('group').value = this.options[this.selectedIndex].value; refresh_start();\" onfocus='refresh_stop();' xonblur='refresh_start();'>\n";
+		echo "					<option value='' ".(($_REQUEST['group'] == '') ? "selected" : null).">".$text['label-call_group']."</option>";
+		echo "					<option value=''>".$text['button-all']."</option>";
 		foreach ($groups as $group) {
-			echo "	<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
+			echo "				<option value='".$group."' ".(($_REQUEST['group'] == $group) ? "selected" : null).">".$group."</option>\n";
 		}
-		echo "	</select>\n";
+		echo "				</select>\n";
 	}
 	else {
 		//show buttons
-		echo "	<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\">";
+		echo "				<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$text['button-all']."\" onclick=\"document.getElementById('group').value = '';\" ".$onhover_pause_refresh.">";
 		foreach ($groups as $group) {
-			echo "	<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\">";
+			echo "			<input type='button' class='btn' title=\"".$text['label-call_group']."\" value=\"".$group."\" ".(($_REQUEST['group'] == $group) ? "disabled='disabled'" : null)." onclick=\"document.getElementById('group').value = this.value;\">";
 		}
 	}
+	echo "				</td>";
 }
+
+echo "				</tr>";
+echo "			</table>";
 
 echo "		</td>";
 echo "	</tr>";
@@ -256,7 +285,7 @@ foreach ($activity as $extension => $ext) {
 	$block .= "		</td>";
 	$block .= "		<td class='op_ext_info ".$style."'>";
 	if ($dir_icon != '') {
-		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px;' draggable='false'>";
+		$block .= "			<img src='resources/images/".$dir_icon.".png' align='right' style='margin-top: 3px; margin-right: 1px; width: 12px; height: 12px; cursor: help;' draggable='false' alt=\"".$text['label-call_direction']."\" title=\"".$text['label-call_direction']."\" ".$onhover_pause_refresh.">";
 	}
 	$block .= "			<span class='op_user_info'>";
 	if ($ext['effective_caller_id_name'] != '' && $ext['effective_caller_id_name'] != $extension) {
@@ -275,15 +304,15 @@ foreach ($activity as $extension => $ext) {
 			$call_identifier_record = $ext['call_uuid'];
 			$rec_file = $_SESSION['switch']['recordings']['dir']."/archive/".date("Y")."/".date("M")."/".date("d")."/".$call_identifier_record.".wav";
 			if (file_exists($rec_file)) {
-				$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\">";
+				$block .= 		"<img src='resources/images/recording.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: help;' title=\"".$text['label-recording']."\" ".$onhover_pause_refresh.">";
 			}
 			else {
-				$block .= 		"<img src='resources/images/record.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title=\"".$text['label-record']."\" onclick=\"record_call('".$call_identifier_record."');\">";
+				$block .= 		"<img src='resources/images/record.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title=\"".$text['label-record']."\" onclick=\"record_call('".$call_identifier_record."');\" ".$onhover_pause_refresh.">";
 			}
 		}
 		//eavesdrop
-		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && !in_array($extension, $_SESSION['user']['extensions'])) {
-			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$extension."','".$call_identifier."');\">";
+		if (permission_exists('operator_panel_eavesdrop') && $ext_state == 'active' && sizeof($_SESSION['user']['extensions']) > 0 && !in_array($extension, $_SESSION['user']['extensions'])) {
+			$block .= 			"<img src='resources/images/eavesdrop.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-eavesdrop']."' onclick=\"eavesdrop_call('".$extension."','".$call_identifier."');\" ".$onhover_pause_refresh.">";
 		}
 		//kill
 		if (in_array($extension, $_SESSION['user']['extensions']) || permission_exists('operator_panel_kill')) {
@@ -296,7 +325,7 @@ foreach ($activity as $extension => $ext) {
 			else {
 				$call_identifier_kill = $call_identifier;
 			}
-			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-kill']."' onclick=\"kill_call('".$call_identifier_kill."');\">";
+			$block .= 			"<img src='resources/images/kill.png' style='width: 12px; height: 12px; border: none; margin: 4px 0px 0px 5px; cursor: pointer;' title='".$text['label-kill']."' onclick=\"kill_call('".$call_identifier_kill."');\" ".$onhover_pause_refresh.">";
 		}
 		$block .= "			</td></tr></table>";
 		$block .= "			<strong>".$call_name."</strong><br>".$call_number;
