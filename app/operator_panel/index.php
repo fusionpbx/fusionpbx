@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -119,6 +119,7 @@ require_once "resources/header.php";
 		url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 		url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 		url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
+		url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 		<?php
 		if (isset($_GET['debug'])) {
 			echo "url += '&debug';";
@@ -192,14 +193,17 @@ require_once "resources/header.php";
 //refresh controls
 	function refresh_stop() {
 		clearInterval(interval_timer_id);
+		document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_paused.png' style='width: 16px; height: 16px; border: none; margin-top: 1px; cursor: pointer;' onclick='refresh_start();' alt=\"<?=$text['label-refresh_enable']?>\" title=\"<?=$text['label-refresh_enable']?>\">";
 	}
 
 	function refresh_start() {
+		if (document.getElementById('refresh_state')) { document.getElementById('refresh_state').innerHTML = "<img src='resources/images/refresh_active.gif' style='width: 16px; height: 16px; border: none; margin-top: 3px; cursor: pointer;' alt=\"<?=$text['label-refresh_pause']?>\" title=\"<?=$text['label-refresh_pause']?>\">"; }
 		interval_timer_id = setInterval( function() {
 			url = source_url;
 			url += '&vd_ext_from=' + document.getElementById('vd_ext_from').value;
 			url += '&vd_ext_to=' + document.getElementById('vd_ext_to').value;
 			url += '&group=' + ((document.getElementById('group')) ? document.getElementById('group').value : '');
+			url += '&eavesdrop_dest=' + ((document.getElementById('eavesdrop_dest')) ? document.getElementById('eavesdrop_dest').value : '');
 			<?php
 			if (isset($_GET['debug'])) {
 				echo "url += '&debug';";
@@ -286,7 +290,7 @@ require_once "resources/header.php";
 	}
 
 	function get_eavesdrop_cmd(ext, chan_uuid) {
-		cmd = "bgapi originate {origination_caller_id_name=<?=$text['label-eavesdrop']?>,origination_caller_id_number=" + ext + "}user/<?=$_SESSION['user']['extensions'][0]?>@<?=$_SESSION['domain_name']?> &eavesdrop(" + chan_uuid + ")";
+		cmd = "bgapi originate {origination_caller_id_name=<?=$text['label-eavesdrop']?>,origination_caller_id_number=" + ext + "}user/"+(document.getElementById('eavesdrop_dest').value)+"@<?=$_SESSION['domain_name']?> &eavesdrop(" + chan_uuid + ")";
 		return cmd;
 	}
 

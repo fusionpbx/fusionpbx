@@ -776,7 +776,7 @@ function format_string ($format, $data) {
 	}
 
 //browser detection without browscap.ini dependency
-	function http_user_agent() {
+	function http_user_agent($info = '') {
 		$u_agent = $_SERVER['HTTP_USER_AGENT'];
 		$bname = 'Unknown';
 		$platform = 'Unknown';
@@ -851,13 +851,21 @@ function format_string ($format, $data) {
 		// check if we have a number
 			if ($version==null || $version=="") {$version="?";}
 
-		return array(
-			'userAgent' => $u_agent,
-			'name'      => $bname,
-			'version'   => $version,
-			'platform'  => $platform,
-			'pattern'    => $pattern
-		);
+		switch ($info) {
+			case "agent": return $u_agent; break;
+			case "name": return $bname; break;
+			case "version": return $version; break;
+			case "platform": return $platform; break;
+			case "pattern": return $pattern; break;
+			default :
+				return array(
+					'userAgent' => $u_agent,
+					'name' => $bname,
+					'version' => $version,
+					'platform' => $platform,
+					'pattern' => $pattern
+				);
+		}
 	}
 
 //tail php function for non posix systems

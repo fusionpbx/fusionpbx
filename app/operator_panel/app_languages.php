@@ -60,6 +60,11 @@
 	$text['label-eavesdrop']['pt-pt'] = "Bisbilhotar";
 	$text['label-eavesdrop']['fr-fr'] = "Espionner";
 
+	$text['description-eavesdrop_destination']['en-us'] = "Select the Eavesdrop Destination";
+	$text['description-eavesdrop_destination']['es-cl'] = "Seleccione el Eavesdrop Destino";
+	$text['description-eavesdrop_destination']['pt-pt'] = "Selecione o Eavesdrop Destino";
+	$text['description-eavesdrop_destination']['fr-fr'] = "Sélectionnez le Eavesdrop Destinations";
+
 	$text['label-kill']['en-us'] = "Kill";
 	$text['label-kill']['es-cl'] = "Finalizar Llamada";
 	$text['label-kill']['pt-pt'] = "Chamada Final";
@@ -79,5 +84,20 @@
 	$text['button-all']['es-cl'] = "Todos";
 	$text['button-all']['pt-pt'] = "Tudo";
 	$text['button-all']['fr-fr'] = "Tous";
+
+	$text['label-refresh_pause']['en-us'] = "Pause Refresh";
+	$text['label-refresh_pause']['es-cl'] = "Actualizar Pausa";
+	$text['label-refresh_pause']['pt-pt'] = "Pausa Atualizar";
+	$text['label-refresh_pause']['fr-fr'] = "Pause Actualiser";
+
+	$text['label-refresh_enable']['en-us'] = "Enable Refresh";
+	$text['label-refresh_enable']['es-cl'] = "Activar Actualizar";
+	$text['label-refresh_enable']['pt-pt'] = "Habilitar Atualização";
+	$text['label-refresh_enable']['fr-fr'] = "Activer Actualiser";
+
+	$text['label-call_direction']['en-us'] = "Call Direction";
+	$text['label-call_direction']['es-cl'] = "Dirección de la llamada";
+	$text['label-call_direction']['pt-pt'] = "Direção da chamada";
+	$text['label-call_direction']['fr-fr'] = "Sens de l'appel";
 
 ?>
