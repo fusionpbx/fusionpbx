@@ -293,7 +293,7 @@ if (!$included) {
 			//logo
 			$display_logo = false;
 			if (!isset($_SESSION['fax']['cover_logo']['text'])) {
-				$logo = PROJECT_PATH."/app/fax/logo.jpg";
+				$logo = PROJECT_PATH."/app/fax/resources/images/logo.jpg";
 				$display_logo = true;
 			}
 			else if (isset($_SESSION['fax']['cover_logo']['text']) && $_SESSION['fax']['cover_logo']['text'] != '') {
