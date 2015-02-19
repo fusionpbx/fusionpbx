@@ -708,7 +708,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	".$text['label-destination-number']."\n";
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
-		echo "	<input class='formfld' type='number' name='fax_destination_number' maxlength='255' min='0' step='1' value=\"$fax_destination_number\">\n";
+		echo "	<input class='formfld' type='text' name='fax_destination_number' maxlength='255' min='0' step='1' value=\"$fax_destination_number\">\n";
 		echo "<br />\n";
 		echo " ".$text['description-destination-number']."\n";
 		echo "</td>\n";
