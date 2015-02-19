@@ -100,7 +100,7 @@ else {
 	echo "<tr>\n";
 	echo "<td width='30%' align='left' valign='top' nowrap='nowrap'><b>".$text['title2']."</b></td>\n";
 	echo "<td width='70%' align='right' valign='top'>\n";
-	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php'\" value='".$text['button-back']."'>\n";
+	echo "	<input type='button' class='btn' name='' alt='back' onclick=\"window.location='xml_cdr.php".(($_SESSION['xml_cdr']['last_query'] != '') ? "?".$_SESSION['xml_cdr']['last_query'] : null)."'\" value='".$text['button-back']."'>\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
@@ -235,8 +235,8 @@ else {
 
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "<th>Name</th>\n";
-	echo "<th>Value</th>\n";
+	echo "<th>".$text['label-name']."</th>\n";
+	echo "<th>".$text['label-value']."</th>\n";
 	echo "</tr>\n";
 	foreach($array["channel_data"] as $key => $value) {
 		$value = urldecode($value);
@@ -255,7 +255,7 @@ else {
 	$row_style["1"] = "row_style1";
 	echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo "	<td align='left'><b>Variables</b>&nbsp;</td>\n";
+	echo "	<td align='left'><b>".$text['label-variables']."</b>&nbsp;</td>\n";
 	echo "<td></td>\n";
 	echo "</tr>\n";
 	echo "</table>\n";
@@ -353,7 +353,7 @@ else {
 			echo "	<table width='95%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
 			echo "			<td><b>".$text['label-call-flow']."</b>&nbsp;</td>\n";
-			echo "			<td></td>\n";
+			echo "			<td>&nbsp;</td>\n";
 			echo "		</tr>\n";
 			echo "	</table>\n";
 
@@ -379,7 +379,7 @@ else {
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
 			echo "			<td><b>".$text['label-call-flow-2']."</b>&nbsp;</td>\n";
-			echo "			<td></td>\n";
+			echo "			<td>&nbsp;</td>\n";
 			echo "		</tr>\n";
 			echo "</table>\n";
 
@@ -405,7 +405,7 @@ else {
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
 			echo "			<td><b>".$text['label-call-flow-3']."</b>&nbsp;</td>\n";
-			echo "			<td></td>\n";
+			echo "			<td>&nbsp;</td>\n";
 			echo "		</tr>\n";
 			echo "</table>\n";
 
@@ -432,7 +432,7 @@ else {
 			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "		<tr>\n";
 			echo "			<td><b>".$text['label-call-flow-4']."</b>&nbsp;</td>\n";
-			echo "			<td></td>\n";
+			echo "			<td>&nbsp;</td>\n";
 			echo "		</tr>\n";
 			echo "</table>\n";
 
@@ -450,8 +450,8 @@ else {
 					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".wordwrap($value,75,"<br />\n", TRUE)."&nbsp;</td>\n";
 				}
 				else {
-					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."</td>\n";
-					echo "			<td>\n";
+					echo "			<td valign='top' align='left' class='".$row_style[$c]."'>".$key."&nbsp;</td>\n";
+					echo "			<td class='".$row_style[$c]."'>\n";
 					echo "				<table width='100%'>\n";
 					foreach($child["originatee_caller_profile"] as $key => $value) {
 						//print_r($tmp_child);
