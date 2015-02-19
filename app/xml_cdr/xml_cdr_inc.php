@@ -45,8 +45,6 @@ else {
 
 //get post or get variables from http
 	if (count($_REQUEST) > 0) {
-		$order_by = check_str($_REQUEST["order_by"]);
-		$order = check_str($_REQUEST["order"]);
 		$cdr_id = check_str($_REQUEST["cdr_id"]);
 		$missed = check_str($_REQUEST["missed"]);
 		$direction = check_str($_REQUEST["direction"]);
@@ -73,6 +71,9 @@ else {
 		$write_codec = check_str($_REQUEST["write_codec"]);
 		$remote_media_ip = check_str($_REQUEST["remote_media_ip"]);
 		$network_addr = check_str($_REQUEST["network_addr"]);
+		$bridge_uuid = check_str($_REQUEST["network_addr"]);
+		$order_by = check_str($_REQUEST["order_by"]);
+		$order = check_str($_REQUEST["order"]);
 	}
 
 //build the sql where string
@@ -172,11 +173,12 @@ else {
 	}
 
 //set the param variable which is used with paging
-	$param = "&missed=".$missed;
+	$param = "&cdr_id=".$cdr_id;
+	$param .= "&missed=".$missed;
+	$param .= "&direction=".$direction;
 	$param .= "&caller_id_name=".$caller_id_name;
-	$param .= "&start_stamp=".$start_stamp;
-	$param .= "&hangup_cause=".$hangup_cause;
 	$param .= "&caller_id_number=".$caller_id_number;
+	$param .= "&caller_extension_uuid=".$caller_extension_uuid;
 	$param .= "&destination_number=".$destination_number;
 	$param .= "&context=".$context;
 	$param .= "&start_stamp_begin=".$start_stamp_begin;
@@ -189,18 +191,17 @@ else {
 	$param .= "&stop_epoch=".$stop_epoch;
 	$param .= "&duration=".$duration;
 	$param .= "&billsec=".$billsec;
+	$param .= "&hangup_cause=".$hangup_cause;
 	$param .= "&uuid=".$uuid;
-	$param .= "&bridge_uuid=".$bridge_uuid;
+	$param .= "&bleg_uuid=".$bleg_uuid;
 	$param .= "&accountcode=".$accountcode;
 	$param .= "&read_codec=".$read_codec;
 	$param .= "&write_codec=".$write_codec;
 	$param .= "&remote_media_ip=".$remote_media_ip;
 	$param .= "&network_addr=".$network_addr;
+	$param .= "&bridge_uuid=".$bridge_uuid;
 	if (isset($order_by)) {
-		$param .= "&order_by=".$order_by;
-	}
-	if (isset($order)) {
-		$param .= "&order=".$order;
+		$param .= "&order_by=".$order_by."&order=".$order;
 	}
 
 //create the sql query to get the xml cdr records

@@ -184,7 +184,7 @@
 	$text['label-average']['es-cl'] = "Promedio";
 	$text['label-average']['pt-pt'] = "Média";
 	$text['label-average']['fr-fr'] = "Moyenne";
-	
+
     $text['label-preset']['en-us'] = 'Quick Select';
     $text['label-preset']['es-cl'] = 'Quick Select';
     $text['label-preset']['pt-pt'] = 'Quick Select';
@@ -275,15 +275,15 @@
 	$text['table-direction']['pt-pt'] = "Direcção";
 	$text['table-direction']['fr-fr'] = "Direction";
 
-	$text['table-name']['en-us'] = "Name (play)";
-	$text['table-name']['es-cl'] = "Nombre (Reproducir)";
-	$text['table-name']['pt-pt'] = "Nome (tocar)";
-	$text['table-name']['fr-fr'] = "Nom (jouer)";
+	$text['table-name']['en-us'] = "Name";
+	$text['table-name']['es-cl'] = "Nombre";
+	$text['table-name']['pt-pt'] = "Nome";
+	$text['table-name']['fr-fr'] = "Nom";
 
-	$text['table-download']['en-us'] = "Number (download)";
-	$text['table-download']['es-cl'] = "Número (descargar)";
-	$text['table-download']['pt-pt'] = "Número (descarregar)";
-	$text['table-download']['fr-fr'] = "Numéro (télécharger)";
+	$text['table-download']['en-us'] = "Number";
+	$text['table-download']['es-cl'] = "Número";
+	$text['table-download']['pt-pt'] = "Número";
+	$text['table-download']['fr-fr'] = "Numéro";
 
 	$text['table-end']['en-us'] = "End";
 	$text['table-end']['es-cl'] = "Fin";
@@ -562,30 +562,50 @@
 	$text['option-false']['es-cl'] = "Falso";
 	$text['option-false']['pt-pt'] = "Não";
 	$text['option-false']['fr-fr'] = "Non";
-	
+
     $text['option-default']['en-us'] = "Default";
     $text['option-default']['es-cl'] = "Default";
     $text['option-default']['pt-pt'] = "Default";
     $text['option-default']['fr-fr'] = "Default";
+
     $text['option-last_hour']['en-us'] = "Last Hour";
     $text['option-last_hour']['es-cl'] = "Last Hour";
     $text['option-last_hour']['pt-pt'] = "Last Hour";
     $text['option-last_hour']['fr-fr'] = "Last Hour";
+
     $text['option-today']['en-us'] = "Today";
     $text['option-today']['es-cl'] = "Today";
     $text['option-today']['pt-pt'] = "Today";
     $text['option-today']['fr-fr'] = "Today";
+
     $text['option-yesterday']['en-us'] = "Yesterday";
     $text['option-yesterday']['es-cl'] = "Yesterday";
     $text['option-yesterday']['pt-pt'] = "Yesterday";
     $text['option-yesterday']['fr-fr'] = "Yesterday";
+
     $text['option-this_month']['en-us'] = "This Month";
     $text['option-this_month']['es-cl'] = "This Month";
     $text['option-this_month']['pt-pt'] = "This Month";
     $text['option-this_month']['fr-fr'] = "This Month";
+
     $text['option-this_year']['en-us'] = "This Year";
     $text['option-this_year']['es-cl'] = "This Year";
     $text['option-this_year']['pt-pt'] = "This Year";
     $text['option-this_year']['fr-fr'] = "This Year";
+
+	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
+	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar el número?";
+	$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
+	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
+
+	$text['button-delete']['en-us'] = "Delete";
+	$text['button-delete']['es-cl'] = "Eliminar";
+	$text['button-delete']['pt-pt'] = "Remover";
+	$text['button-delete']['fr-fr'] = "Supprimer";
+
+	$text['message-delete']['en-us'] = "Delete Completed";
+	$text['message-delete']['es-cl'] = "Eliminación Completada";
+	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
+	$text['message-delete']['fr-fr'] = "Supprimé";
 
 ?>
