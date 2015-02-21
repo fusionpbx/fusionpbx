@@ -84,9 +84,12 @@ if (count($_GET)>0) {
 		unset($sql);
 	}
 
+//synchronize configuration
+	save_call_center_xml();
 
-$_SESSION["message"] = $text['message-delete'];
-header("Location: call_center_agents.php");
-return;
+//redirect the browser
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: call_center_agents.php");
+	return;
 
 ?>
