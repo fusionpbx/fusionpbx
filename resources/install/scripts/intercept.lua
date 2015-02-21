@@ -149,16 +149,18 @@ end
 
 --intercept a call that is ringing
 	if (uuid) then
-		if (hostname == call_hostname) then
-			session:execute("intercept", uuid);
-		else
-			session:execute("export", "sip_h_X-intercept_uuid="..uuid);
-			session:execute("export", "sip_h_X-domain_uuid="..domain_uuid);
-			session:execute("export", "sip_h_X-domain_name="..domain_name);
-			session:execute("export", "sip_h_X-callee_num="..callee_num);
-			port = freeswitch.getGlobalVariable(sofia_profile_name.."_sip_port");
-			session:execute("bridge", "sofia/"..sofia_profile_name.."/**@"..call_hostname..":"..port);
-			freeswitch.consoleLog("NOTICE", "Send call to other host.... \n");
+		if (session:getVariable("billmsec") == nil) then
+			if (hostname == call_hostname) then
+				session:execute("intercept", uuid);
+			else
+				session:execute("export", "sip_h_X-intercept_uuid="..uuid);
+				session:execute("export", "sip_h_X-domain_uuid="..domain_uuid);
+				session:execute("export", "sip_h_X-domain_name="..domain_name);
+				session:execute("export", "sip_h_X-callee_num="..callee_num);
+				port = freeswitch.getGlobalVariable(sofia_profile_name.."_sip_port");
+				session:execute("bridge", "sofia/"..sofia_profile_name.."/**@"..call_hostname..":"..port);
+				freeswitch.consoleLog("NOTICE", "Send call to other host.... \n");
+			end
 		end
 	end
 
