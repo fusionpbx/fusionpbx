@@ -88,7 +88,7 @@ if (strlen($id) > 0) {
 		$cache = new cache;
 		$cache->delete("memcache delete dialplan:".$_SESSION["context"]);
 
-	//syncrhonize configuration
+	//synchronize configuration
 		save_dialplan_xml();
 
 	//apply settings reminder
