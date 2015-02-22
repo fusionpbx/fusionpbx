@@ -33,7 +33,7 @@
 
 --direct dial
 	direct_dial = {}
-	direct_dial["enabled"] = "true";
+	direct_dial["enabled"] = "false";
 	direct_dial["max_digits"] = 4;
 
 --debug
@@ -43,7 +43,7 @@
 --get the argv values
 	script_name = argv[1];
 	voicemail_action = argv[2];
-	
+
 --starting values
 	dtmf_digits = '';
 	timeouts = 0;
