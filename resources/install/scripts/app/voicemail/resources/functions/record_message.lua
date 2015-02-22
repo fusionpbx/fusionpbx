@@ -35,13 +35,20 @@
 				end
 			end
 
-		--direct dial
+		--voicemail ivr options
+			if (session:ready()) then
+				if (dtmf_digits == nil) then
+					dtmf_digits = session:getDigits(max_digits, "#", 1000);
+				else
+					dtmf_digits = dtmf_digits .. session:getDigits(max_digits, "#", 1000);	
+				end
+			end
 			if (dtmf_digits) then
 				if (string.len(dtmf_digits) > 0) then
 					if (session:ready()) then
 						if (direct_dial["enabled"] == "true") then
 							if (string.len(dtmf_digits) < max_digits) then
-								dtmf_digits = dtmf_digits .. session:getDigits(direct_dial["max_digits"], "#", 5000);
+								dtmf_digits = dtmf_digits .. session:getDigits(direct_dial["max_digits"], "#", 3000);
 							end
 						end
 					end
@@ -57,7 +64,71 @@
 							--do not allow dialing numbers prefixed with *
 							session:hangup();
 						else
-							session:transfer(dtmf_digits, "XML", context);
+							--get the voicemail options
+								sql = [[SELECT * FROM v_voicemail_options WHERE voicemail_uuid = ']] .. voicemail_uuid ..[[' ORDER BY voicemail_option_order asc ]];
+								if (debug["sql"]) then
+									freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
+								end
+								count = 0;
+								status = dbh:query(sql, function(row)
+									--check for matching options
+										if (tonumber(row.voicemail_option_digits) ~= nil) then
+											row.voicemail_option_digits = "^"..row.voicemail_option_digits.."$";
+										end
+										if (api:execute("regex", "m:~"..dtmf_digits.."~"..row.voicemail_option_digits) == "true") then
+											if (row.voicemail_option_action == "menu-exec-app") then
+												--get the action and data
+													pos = string.find(row.voicemail_option_param, " ", 0, true);
+													action = string.sub( row.voicemail_option_param, 0, pos-1);
+													data = string.sub( row.voicemail_option_param, pos+1);
+					
+												--check if the option uses a regex
+													regex = string.find(row.voicemail_option_digits, "(", 0, true);
+													if (regex) then
+														--get the regex result
+															result = trim(api:execute("regex", "m:~"..digits.."~"..row.voicemail_option_digits.."~$1"));
+															if (debug["regex"]) then
+																freeswitch.consoleLog("notice", "[voicemail] regex m:~"..digits.."~"..row.voicemail_option_digits.."~$1\n");
+																freeswitch.consoleLog("notice", "[voicemail] result: "..result.."\n");
+															end
+					
+														--replace the $1 and the domain name
+															data = data:gsub("$1", result);
+															data = data:gsub("${domain_name}", domain_name);
+													end --if regex
+											end --if menu-exex-app
+										end --if regex match
+					
+									--execute
+										if (action) then
+											if (string.len(action) > 0) then
+												--send to the log
+													if (debug["action"]) then
+														freeswitch.consoleLog("notice", "[voicemail] action: " .. action .. " data: ".. data .. "\n");
+													end
+												--run the action
+													session:execute(action, data);
+											end
+										end
+	
+									--clear the variables
+										action = "";
+										data = "";
+		
+									--inrement the option count
+										count = count + 1;
+								end); --end results
+
+							--direct dial
+								if (session:ready()) then
+									if (direct_dial["enabled"] == "true" and count == 0) then
+										if (string.len(dtmf_digits) < max_digits) then
+											dtmf_digits = dtmf_digits .. session:getDigits(direct_dial["max_digits"], "#", 5000);
+											session:transfer(dtmf_digits.." XML "..context);
+										end
+									end
+								end				
+			
 						end
 					end
 				end
@@ -76,7 +147,7 @@
 			silence_threshold = 30;
 			silence_seconds = 5;
 			mkdir(voicemail_dir.."/"..voicemail_id);
-			if (vm_message_ext == "mp3" and trim(api:execute("module_exists", "mod_shout")) == "false") then
+			if (vm_message_ext == "mp3") then
 				--make the recording
 					--session:execute("record", "vlc://#standard{access=file,mux=mp3,dst="..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.."}");
 					result = session:recordFile(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid..".wav", max_len_seconds, silence_threshold, silence_seconds);
