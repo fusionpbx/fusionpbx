@@ -75,13 +75,13 @@
                     end
                 end
 			--to listen to new message
-				if (session:ready()) then
+				if (session:ready() and new_messages ~= '0') then
 					if (string.len(dtmf_digits) == 0) then
 						dtmf_digits = macro(session, "listen_to_new_messages", 1, 100, '');
 					end
 				end
 			--to listen to saved message
-				if (session:ready()) then
+				if (session:ready() and saved_messages ~= '0') then
 					if (string.len(dtmf_digits) == 0) then
 						dtmf_digits = macro(session, "listen_to_saved_messages", 1, 100, '');
 					end
