@@ -114,12 +114,12 @@ else {
 		//test to see if it is in the inbox or sent directory.
 		if ($_GET['type'] == "fax_inbox") {
 			if (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']))) {
-				$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
+				$tmp_faxdownload_file = $fax_dir.'/'.check_str($_GET['ext']).'/inbox/'.check_str($_GET['filename']);
 			}
 		}
 		else if ($_GET['type'] == "fax_sent") {
 			if  (file_exists($fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']))) {
-				$tmp_faxdownload_file = "".$fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
+				$tmp_faxdownload_file = $fax_dir.'/'.check_str($_GET['ext']).'/sent/'.check_str($_GET['filename']);
 			}
 		}
 		//let's see if we found it.
@@ -128,7 +128,6 @@ else {
 			if ($_GET['t'] == "bin") {
 				header("Content-Type: application/force-download");
 				header("Content-Type: application/octet-stream");
-				header("Content-Type: application/download");
 				header("Content-Description: File Transfer");
 				header('Content-Disposition: attachment; filename="'.check_str($_GET['filename']).'"');
 			}
