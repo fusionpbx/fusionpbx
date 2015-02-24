@@ -66,15 +66,35 @@
 		$text['description-voicemail_mail_to']['pt-pt'] = "Introduza o endereço de email para enviar o correio de voz.";
 		$text['description-voicemail_mail_to']['fr-fr'] = "Choisir un courriel lié à cette messagerie vocale.";
 
-		$text['label-voicemail_attach_file']['en-us'] = "Attach File";
-		$text['label-voicemail_attach_file']['es-cl'] = "Adjuntar archivo";
-		$text['label-voicemail_attach_file']['pt-pt'] = "Anexar Ficheiro";
-		$text['label-voicemail_attach_file']['fr-fr'] = "Fichier attaché";
+		$text['label-voicemail_file']['en-us'] = "Voicemail File";
+		$text['label-voicemail_file']['es-cl'] = "Correo de Voz Archivo";
+		$text['label-voicemail_file']['pt-pt'] = "Voicemail Arquivo";
+		$text['label-voicemail_file']['fr-fr'] = "Voicemail Fichier";
 
-		$text['description-voicemail_attach_file']['en-us'] = "Choose whether to attach the file to the email.";
-		$text['description-voicemail_attach_file']['es-cl'] = "Escoja si desea adjuntar un archivo";
-		$text['description-voicemail_attach_file']['pt-pt'] = "Escolha se pretende anexar o ficheiro de voz ao email.";
-		$text['description-voicemail_attach_file']['fr-fr'] = "Attacher le fichier audio au courriel.";
+		$text['option-voicemail_file_attach']['en-us'] = "Audio File Attachment";
+		$text['option-voicemail_file_attach']['es-cl'] = "Archivo Adjunto Audio";
+		$text['option-voicemail_file_attach']['pt-pt'] = "Anexo de arquivo de áudio";
+		$text['option-voicemail_file_attach']['fr-fr'] = "Audio File Attachment";
+
+		$text['option-voicemail_file_link']['en-us'] = "Download Link (No Login Required)";
+		$text['option-voicemail_file_link']['es-cl'] = "Enlace de descarga (No se requiere conexión)";
+		$text['option-voicemail_file_link']['pt-pt'] = "Link para download (Não é necessário login)";
+		$text['option-voicemail_file_link']['fr-fr'] = "Lien de téléchargement (Connexion non requise)";
+
+		$text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
+		$text['option-voicemail_file_listen']['es-cl'] = "Escuchar Link (Se requiere entrar)";
+		$text['option-voicemail_file_listen']['pt-pt'] = "Ouça Link (login requerido)";
+		$text['option-voicemail_file_listen']['fr-fr'] = "Écouter Link (Connexion requise)";
+
+		$text['description-voicemail_file']['en-us'] = "Select a listening option to include with the email notification.";
+		$text['description-voicemail_file']['es-cl'] = "Seleccione qué opción de escucha para incluir en la notificación de correo electrónico.";
+		$text['description-voicemail_file']['pt-pt'] = "Escolha qual opção de escuta para incluir com a notificação de e-mail.";
+		$text['description-voicemail_file']['fr-fr'] = "Sélectionnez quelle option écoute d'inclure à la notification par email.";
+
+		$text['label-voicemail_file_attached']['en-us'] = "Attached";
+		$text['label-voicemail_file_attached']['es-cl'] = "Adjunto";
+		$text['label-voicemail_file_attached']['pt-pt'] = "Ligado";
+		$text['label-voicemail_file_attached']['fr-fr'] = "Attaché";
 
 		$text['label-voicemail_local_after_email']['en-us'] = "Local After Email";
 		$text['label-voicemail_local_after_email']['es-cl'] = "Conservar después de enviar";

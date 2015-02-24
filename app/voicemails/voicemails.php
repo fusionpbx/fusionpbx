@@ -81,7 +81,6 @@ else {
 			$sql .= "and (";
 			$sql .= "	voicemail_id like '%".$search."%' ";
 			$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
-			$sql .= " 	or voicemail_attach_file like '%".$search."%' ";
 			$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
 			$sql .= " 	or voicemail_enabled like '%".$search."%' ";
 			$sql .= " 	or voicemail_description like '%".$search."%' ";
@@ -131,7 +130,6 @@ else {
 			$sql .= "and (";
 			$sql .= "	voicemail_id like '%".$search."%' ";
 			$sql .= " 	or voicemail_mail_to like '%".$search."%' ";
-			$sql .= " 	or voicemail_attach_file like '%".$search."%' ";
 			$sql .= " 	or voicemail_local_after_email like '%".$search."%' ";
 			$sql .= " 	or voicemail_enabled like '%".$search."%' ";
 			$sql .= " 	or voicemail_description like '%".$search."%' ";
@@ -174,7 +172,7 @@ else {
 	echo "<tr>\n";
 	echo th_order_by('voicemail_id', $text['label-voicemail_id'], $order_by, $order);
 	echo th_order_by('voicemail_mail_to', $text['label-voicemail_mail_to'], $order_by, $order);
-	echo th_order_by('voicemail_attach_file', $text['label-voicemail_attach_file'], $order_by, $order);
+	echo th_order_by('voicemail_file', $text['label-voicemail_file_attached'], $order_by, $order);
 	echo th_order_by('voicemail_local_after_email', $text['label-voicemail_local_after_email'], $order_by, $order);
 	echo "<th>".$text['label-tools']."</th>\n";
 	echo th_order_by('voicemail_enabled', $text['label-voicemail_enabled'], $order_by, $order);
@@ -199,7 +197,7 @@ else {
 			}
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['voicemail_mail_to']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['voicemail_attach_file'])."&nbsp;</td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]."'>".(($row['voicemail_file'] == 'attach') ? $text['label-true'] : $text['label-false'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['voicemail_local_after_email'])."&nbsp;</td>\n";
 			echo "	<td valign='middle' class='".$row_style[$c]."' style='white-space: nowrap;'>\n";
 			echo "		<a href='voicemail_messages.php?id=".$row['voicemail_uuid']."'>".$text['label-view']."</a>&nbsp;&nbsp;\n";

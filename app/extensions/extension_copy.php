@@ -181,7 +181,7 @@ else {
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 			foreach ($result as &$row) {
 				$voicemail_mailto = $row["voicemail_mail_to"];
-				$voicemail_attach_file = $row["voicemail_attach_file"];
+				$voicemail_file = $row["voicemail_file"];
 				$voicemail_local_after_email = $row["voicemail_local_after_email"];
 				$voicemail_enabled = $row["voicemail_enabled"];
 			}
@@ -200,7 +200,7 @@ else {
 			$ext->number_alias = $number_alias_new;
 			$ext->voicemail_password = $voicemail_password;
 			$ext->voicemail_mail_to = $voicemail_mailto;
-			$ext->voicemail_attach_file = $voicemail_attach_file;
+			$ext->voicemail_file = $voicemail_file;
 			$ext->voicemail_local_after_email = $voicemail_local_after_email;
 			$ext->voicemail_enabled = $voicemail_enabled;
 			$ext->description = $description;

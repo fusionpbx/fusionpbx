@@ -37,7 +37,7 @@
 				--voicemail_password = row["voicemail_password"];
 				--greeting_id = row["greeting_id"];
 				voicemail_mail_to = row["voicemail_mail_to"];
-				voicemail_attach_file = row["voicemail_attach_file"];
+				voicemail_file = row["voicemail_file"];
 				voicemail_local_after_email = row["voicemail_local_after_email"];
 			end);
 
@@ -45,8 +45,8 @@
 			if (voicemail_local_after_email == nil) then
 				voicemail_local_after_email = "true";
 			end
-			if (voicemail_attach_file == nil) then
-				voicemail_attach_file = "true";
+			if (voicemail_file == nil) then
+				voicemail_file = "listen";
 			end
 
 		--require the email address to send the email
@@ -113,6 +113,13 @@
 					body = body:gsub("${message_duration}", message_length_formatted);
 					body = body:gsub("${account}", id);
 					body = body:gsub("${domain_name}", domain_name);
+					if (voicemail_file == "attach") then
+						body = body:gsub("${message}", "Attached");
+					elseif (voicemail_file == "link") then
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>Download</a>");
+					else
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>Listen</a>");
+					end
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
 					body = body:gsub("&nbsp;", " ");
@@ -123,7 +130,7 @@
 					body = trim(body);
 
 				--send the email
-					if (voicemail_attach_file == "true") then
+					if (voicemail_file == "attach") then
 						if (voicemail_local_after_email == "false") then
 							delete = "true";
 						else
