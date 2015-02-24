@@ -51,6 +51,9 @@
 
 		--require the email address to send the email
 			if (string.len(voicemail_mail_to) > 2) then
+				--include languages file
+					dofile(scripts_dir.."/app/voicemail/app_languages.lua");
+					
 				--get voicemail message details
 					sql = [[SELECT * FROM v_voicemail_messages
 						WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -114,11 +117,11 @@
 					body = body:gsub("${account}", id);
 					body = body:gsub("${domain_name}", domain_name);
 					if (voicemail_file == "attach") then
-						body = body:gsub("${message}", "Attached");
+						body = body:gsub("${message}", text['label-attached'][default_language.."-"..default_dialect]);
 					elseif (voicemail_file == "link") then
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>Download</a>");
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=download&type=vm&t=bin&id="..id.."&voicemail_uuid="..db_voicemail_uuid.."&uuid="..uuid.."&src=email'>"..text['label-download'][default_language.."-"..default_dialect].."</a>");
 					else
-						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>Listen</a>");
+						body = body:gsub("${message}", "<a href='https://"..domain_name.."/app/voicemails/voicemail_messages.php?action=autoplay&id="..db_voicemail_uuid.."&uuid="..uuid.."'>"..text['label-listen'][default_language.."-"..default_dialect].."</a>");
 					end
 					body = body:gsub(" ", "&nbsp;");
 					body = body:gsub("%s+", "");
