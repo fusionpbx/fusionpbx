@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2014 All Rights Reserved.
+	Copyright (C) 2008-2015 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -34,44 +34,6 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 	$row_count = 0;
 	$tmp_array = '';
 	$device_template = '';
-
-//get the domain_name
-	$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
-	$domain_name = $domain_array[0];
-
-//get the domain_uuid
-	$sql = "SELECT * FROM v_domains ";
-	$sql .= "WHERE domain_name = '".$domain_name."' ";
-	$prep_statement = $db->prepare($sql);
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($result as $row) {
-		$domain_uuid = $row["domain_uuid"];
-	}
-	unset($result, $prep_statement);
-
-//build the provision array
-	foreach($_SESSION['provision'] as $key=>$val) {
-		if (strlen($val['var']) > 0) { $value = $val['var']; }
-		if (strlen($val['text']) > 0) { $value = $val['text']; }
-		$provision[$key] = $value;
-		unset($value);
-	}
-
-//check if provisioning has been enabled
-	if ($provision["enabled"] != "true") {
-		echo "access denied 1";
-		exit;
-	}
-
-//send a request to a remote server to validate the MAC address and secret
-	if (strlen($_SERVER['auth_server']) > 0) {
-		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
-		if ($result == "false") {
-			echo "access denied 2";
-			exit;
-		}
-	}
 
 //define PHP variables from the HTTP values
 	$mac = check_str($_REQUEST['mac']);
@@ -100,6 +62,62 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 			echo "invalid mac address";
 			exit;
 		}
+
+//get the domain_name and domain_uuid
+	if ($_SESSION['provision']['http_domain_filter']['text'] == "false") {
+		//get the domain_uuid
+			$sql = "SELECT domain_uuid FROM v_devices ";
+			$sql .= "WHERE device_mac_address = '".$mac."' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach($result as $row) {
+				$domain_uuid = $row["domain_uuid"];
+			}
+			unset($result, $prep_statement);
+
+		//get the domain name
+			$domain_name = $_SESSION['domains'][$domain_uuid]['domain_name'];
+	}
+	else {
+		//get the domain_name
+			//$domain_array = explode(":", $_SERVER["HTTP_HOST"]);
+			//$domain_name = $domain_array[0];
+
+		//get the domain_uuid
+			$sql = "SELECT * FROM v_domains ";
+			$sql .= "WHERE domain_name = '".$domain_name."' ";
+			$prep_statement = $db->prepare($sql);
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach($result as $row) {
+				$domain_uuid = $row["domain_uuid"];
+			}
+			unset($result, $prep_statement);
+	}
+
+//build the provision array
+	foreach($_SESSION['provision'] as $key=>$val) {
+		if (strlen($val['var']) > 0) { $value = $val['var']; }
+		if (strlen($val['text']) > 0) { $value = $val['text']; }
+		$provision[$key] = $value;
+		unset($value);
+	}
+
+//check if provisioning has been enabled
+	if ($provision["enabled"] != "true") {
+		echo "access denied 1";
+		exit;
+	}
+
+//send a request to a remote server to validate the MAC address and secret
+	if (strlen($_SERVER['auth_server']) > 0) {
+		$result = send_http_request($_SERVER['auth_server'], 'mac='.check_str($_REQUEST['mac']).'&secret='.check_str($_REQUEST['secret']));
+		if ($result == "false") {
+			echo "access denied 2";
+			exit;
+		}
+	}
 
 //use the mac address to get the vendor
 	$device_vendor = device::get_vendor($mac);
@@ -154,7 +172,6 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		case "cisco/spa303":
 			syslog(LOG_INFO, "using digest authentication");
 			if (strlen($provision["http_auth_username"]) > 0 && strlen($provision["http_auth_password"]) > 0) {
-			
 				if (empty($_SERVER['PHP_AUTH_DIGEST'])) {
 					header('HTTP/1.1 401 Unauthorized');
 					header('WWW-Authenticate: Digest realm="'.$_SESSION['domain_name'].
@@ -168,11 +185,10 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 						header('HTTP/1.1 401 Unauthorized');
 						header('WWW-Authenticate: Digest realm="'.$_SESSION['domain_name'].
 							'",qop="auth",nonce="'.uniqid().'",opaque="'.md5($_SESSION['domain_name']).'"');
-
 						echo 'Authorization Required';
 						exit;
 					}
-				
+
 					$A1 = md5($provision["http_auth_username"] . ':' . $_SESSION['domain_name'] . ':' . $provision["http_auth_password"]);
 					$A2 = md5($_SERVER['REQUEST_METHOD'].':'.$data['uri']);
 					$valid_response = md5($A1.':'.$data['nonce'].':'.$data['nc'].':'.$data['cnonce'].':'.$data['qop'].':'.$A2);
@@ -188,7 +204,6 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 					}
 				}
 			}
-		
 			break;
 		defaut:
 			syslog(LOG_INFO, "using basic authentication");
@@ -215,7 +230,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 					}
 				}
 			}
-			
+
 			//if password was defined in the system -> variables page then require the password.
 			if (strlen($provision['password']) > 0) {
 				//deny access if the password doesn't match
@@ -224,17 +239,12 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] provision attempt bad password for ".check_str($_REQUEST['mac']));
 					closelog();
-
 					usleep(rand(1000000,3000000));//1-3 seconds.
 					echo "access denied 4";
 					return;
 				}
 			}
-
 	}
-	
-
-
 
 //output template to string for header processing
 	$prov = new provision;
@@ -261,22 +271,19 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		header("Content-Length: ".strlen($file_contents));
 	}
 	echo $file_contents;
-
 	closelog();
-	
+
 	function http_digest_parse($txt){
 		// protect against missing data
 		$needed_parts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
 		$data = array();
 		$keys = implode('|', array_keys($needed_parts));
-
 		preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $txt, $matches, PREG_SET_ORDER);
-
 		foreach ($matches as $m) {
 			$data[$m[1]] = $m[3] ? $m[3] : $m[4];
 			unset($needed_parts[$m[1]]);
 		}
-
 		return $needed_parts ? false : $data;
-}
+	}
+
 ?>
