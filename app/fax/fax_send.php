@@ -862,6 +862,7 @@ if (!$included) {
 		echo "	</tr>";
 		echo "</table>";
 		echo "</form>\n";
+		echo "<br />\n";
 
 	//show the footer
 		require_once "resources/footer.php";
