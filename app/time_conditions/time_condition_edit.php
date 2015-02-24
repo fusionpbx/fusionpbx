@@ -63,17 +63,10 @@ require_once "resources/paging.php";
 		$dialplan_context = check_str($_POST["dialplan_context"]);
 		$dialplan_enabled = check_str($_POST["dialplan_enabled"]);
 		$dialplan_description = check_str($_POST["dialplan_description"]);
-
-		$action_1 = check_str($_POST["action_1"]);
-		$action_1_array = explode(":", $action_1);
-		$action_application_1 = array_shift($action_1_array);
-		$action_data_1 = join(':', $action_1_array);
-
-		$anti_action_1 = check_str($_POST["anti_action_1"]);
-		$anti_action_1_array = explode(":", $anti_action_1);
-		$anti_action_application_1 = array_shift($anti_action_1_array);
-		$anti_action_data_1 = join(':', $anti_action_1_array);
 	}
+
+//set the default_context
+	$dialplan_context = $_SESSION['context'];
 
 //prcoess the HTTP POST
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
@@ -84,11 +77,11 @@ require_once "resources/paging.php";
 
 		//check for all required data
 			$msg = '';
-			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']."<br>\n"; }
-			if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']."<br>\n"; }
-			if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']."<br>\n"; }
-			if (strlen($dialplan_context) == 0) { $msg .= $text['message-required'].$text['label-context']."<br>\n"; }
-			if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']."<br>\n"; }
+			if (strlen($dialplan_name) == 0) { $msg .= $text['message-required'].$text['label-name']." ".__line__."<br>\n"; }
+			if (strlen($dialplan_order) == 0) { $msg .= $text['message-required'].$text['label-order']." ".__line__."<br>\n"; }
+			if (strlen($dialplan_continue) == 0) { $msg .= $text['message-required'].$text['label-continue']." ".__line__."<br>\n"; }
+			if (strlen($dialplan_context) == 0) { $msg .= $text['message-required'].$text['label-context']." ".__line__."<br>\n"; }
+			if (strlen($dialplan_enabled) == 0) { $msg .= $text['message-required'].$text['label-enabled']." ".__line__."<br>\n"; }
 			//if (strlen($dialplan_description) == 0) { $msg .= $text['message-required'].$text['label-description']."<br>\n"; }
 			if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				require_once "resources/header.php";
@@ -102,6 +95,128 @@ require_once "resources/paging.php";
 				require_once "resources/footer.php";
 				return;
 			}
+
+		//remove submit from the post array
+			unset($_POST["submit"]);
+
+		//get the detail_type and detail_data
+			$x = 0;
+			$action_exists = false;
+			//foreach ($dialplan_details as $row) {
+			$first_time = true;
+			foreach ($_POST["dialplan_details"] as $row) {
+					$time_array = explode(',', 'year,mon,mday,wday,yday,week,mweek,hour,minute,minute-of-day,time-of-day,date-time');
+					if (in_array($row["dialplan_detail_type"], $time_array)) {
+						//$dialplan_times[$group][$type] = $data;
+						//$dialplan_times[$group]['group'] = $group;
+						if (strlen($row["dialplan_detail_data"]) == 0) {
+							if ($first_time) {
+								$_POST["dialplan_details"][$x]['dialplan_detail_tag'] = 'condition';
+								$_POST["dialplan_details"][$x]['dialplan_detail_type'] = 'destination_number';
+								$_POST["dialplan_details"][$x]['dialplan_detail_data'] = '^'.$_POST["dialplan_number"].'$';
+								$_POST["dialplan_details"][$x]['dialplan_detail_group'] = '0';
+								$_POST["dialplan_details"][$x]['dialplan_detail_order'] = '10';
+								$_POST["dialplan_details"][$x]['dialplan_detail_break'] = 'never';
+								$x++;
+								$_POST["dialplan_details"][$x]['dialplan_detail_tag'] = 'action';
+								$_POST["dialplan_details"][$x]['dialplan_detail_type'] = 'set';
+								$_POST["dialplan_details"][$x]['dialplan_detail_data'] = 'time_condition=true';
+								$_POST["dialplan_details"][$x]['dialplan_detail_inline'] = 'true';
+								$_POST["dialplan_details"][$x]['dialplan_detail_group'] = '0';
+								$_POST["dialplan_details"][$x]['dialplan_detail_order'] = '30';
+								$x++;
+
+							}
+							$first_time = false;
+
+							if ($row["scope"] == 'range') {
+								$data = $row[$row["dialplan_detail_type"]][stop];
+							}
+							else {
+								$data = $row[$row["dialplan_detail_type"]][start];
+							}
+							$_POST["dialplan_details"][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
+							$_POST["dialplan_details"][$x]['dialplan_detail_data'] = $data;
+							$_POST["dialplan_details"][$x]['dialplan_detail_tag'] = 'condition';
+							$_POST["dialplan_details"][$x]['dialplan_detail_group'] = '0';
+							$_POST["dialplan_details"][$x]['dialplan_detail_order'] = '20';
+							$_POST["dialplan_details"][$x]['dialplan_detail_break'] = 'never';
+							$x++;
+							unset($data);
+
+							
+							//unset rows scope and the array with start and stop
+							unset($_POST["dialplan_details"][$x]['scope']);
+							unset($_POST["dialplan_details"][$x][$row["dialplan_detail_type"]]);
+						}
+					}
+					if (strlen($row['action']) > 0) {
+						//get the application and data
+							$action_array = explode(":", $row['action']);
+							$action_application = array_shift($action_array);
+							$action_data = join(':', $action_array);
+
+						//add the action
+							$_POST["dialplan_details"][$x]['dialplan_detail_type'] = $action_application;
+							$_POST["dialplan_details"][$x]['dialplan_detail_data'] = $action_data;
+							$_POST["dialplan_details"][$x]['dialplan_detail_tag'] = 'action';
+							$_POST["dialplan_details"][$x]['dialplan_detail_group'] = '100';
+							$_POST["dialplan_details"][$x]['dialplan_detail_order'] = '30';
+
+						//unset the empty row
+							if (strlen($row["dialplan_detail_data"]) == 0) {
+								unset($_POST["dialplan_details"][100]);
+							}
+
+						//set to true if the action exists
+							$action_exists = true;
+
+					}
+					if (strlen($row['anti_action']) > 0) {
+						//get the application and data
+							$anti_action_array = explode(":", $row['anti_action']);
+							$anti_action_application = array_shift($anti_action_array);
+							$anti_action_data = join(':', $anti_action_array);
+
+						//add the action
+							$_POST["dialplan_details"][$x]['dialplan_detail_type'] = $anti_action_application;
+							$_POST["dialplan_details"][$x]['dialplan_detail_data'] = $anti_action_data;
+							$_POST["dialplan_details"][$x]['dialplan_detail_tag'] = 'anti-action';
+							$_POST["dialplan_details"][$x]['dialplan_detail_group'] = '100';
+							$_POST["dialplan_details"][$x]['dialplan_detail_order'] = '40';
+
+						//unset the empty row
+							if (strlen($row["dialplan_detail_data"]) == 0) {
+								unset($_POST["dialplan_details"][110]);
+							}
+
+						//set to true if the action exists
+							$action_exists = true;
+
+					}
+
+				//increment the row
+					$x++;
+			}
+
+		//if the action exists then
+			if ($action_exists) {
+				$_POST["dialplan_details"][$x]['dialplan_detail_tag'] = 'condition';
+				$_POST["dialplan_details"][$x]['dialplan_detail_type'] = 'destination_number';
+				$_POST["dialplan_details"][$x]['dialplan_detail_data'] = '^'.$_POST["dialplan_number"].'$';
+				$_POST["dialplan_details"][$x]['dialplan_detail_group'] = '100';
+				$_POST["dialplan_details"][$x]['dialplan_detail_order'] = '10';
+				$x++;
+				$_POST["dialplan_details"][$x]['dialplan_detail_tag'] = 'condition';
+				$_POST["dialplan_details"][$x]['dialplan_detail_type'] = '${time_condition}';
+				$_POST["dialplan_details"][$x]['dialplan_detail_data'] = '^true$';
+				$_POST["dialplan_details"][$x]['dialplan_detail_group'] = '100';
+				$_POST["dialplan_details"][$x]['dialplan_detail_order'] = '20';
+			}
+
+//echo "<pre>\n";
+//print_r($_POST);
+//echo __line__."</pre>\n";
 
 		//remove the invalid characters from the dialplan name
 			$dialplan_name = $_POST["dialplan_name"];
@@ -120,11 +235,12 @@ require_once "resources/paging.php";
 			}
 			$array['dialplan_name'] = $dialplan_name;
 			$array['dialplan_number'] = $_POST["dialplan_number"];
-			$array['dialplan_context'] = $_POST["dialplan_context"];
+			$array['dialplan_context'] = $dialplan_context;
 			$array['dialplan_continue'] = $_POST["dialplan_continue"];
 			$array['dialplan_order'] = $_POST["dialplan_order"];
 			$array['dialplan_enabled'] = $_POST["dialplan_enabled"];
 			$array['dialplan_description'] = $_POST["dialplan_description"];
+			$array['app_uuid'] = '4b821450-926b-175a-af93-a03c441818b1';
 			$x = 0;
 			foreach ($_POST["dialplan_details"] as $row) {
 				if (strlen($row["dialplan_detail_tag"]) > 0) {
@@ -142,15 +258,22 @@ require_once "resources/paging.php";
 				}
 				$x++;
 			}
-
+echo "<pre>\n";
+print_r($array);
+echo __line__."</pre>\n";
 		//add or update the database
 			if ($_POST["persistformvar"] != "true") {
 				$orm = new orm;
 				$orm->name('dialplans');
 				$orm->uuid($dialplan_uuid);
 				$orm->save($array);
-				//$message = $orm->message;
+$message = $orm->message;
+echo "<pre>\n";
+print_r($message);
+echo "</pre>\n";
+
 			}
+exit;
 
 		//clear the cache
 			$cache = new cache;
@@ -388,6 +511,30 @@ require_once "resources/paging.php";
 		echo "</pre>\n";
 	}
 
+//set default values when adding a time condition
+	if (count($details) == 0) {
+		//$details[0]['domain_uuid'] = $domain_uuid;
+		$group = 0;
+		$details[$group][0]['dialplan_detail_tag'] = 'condition';
+		$details[$group][0]['dialplan_detail_type'] = 'wday';
+		$details[$group][0]['wday']['start'] = '2';
+		$details[$group][0]['wday']['stop'] = '6';
+		$details[$group][0]['dialplan_detail_data'] = '2-6';
+		$details[$group][0]['dialplan_detail_group'] = '0';
+		$details[$group][0]['dialplan_detail_order'] = '10';
+		$dialplan_times[$group]['preset'] = 'false';
+		$group++;
+		$details[$group][0]['dialplan_detail_tag'] = 'condition';
+		$details[$group][0]['dialplan_detail_type'] = 'hour';
+		$details[$group][0]['hour']['start'] = '8';
+		$details[$group][0]['hour']['stop'] = '17';
+		$details[$group][0]['dialplan_detail_data'] = '8-17';
+		$details[$group][0]['dialplan_detail_group'] = '1';
+		$details[$group][0]['dialplan_detail_order'] = '20';
+		$dialplan_times[$group]['preset'] = 'false';
+		unset($group);
+	}
+
 ?>
 
 <script type="text/javascript">
@@ -405,6 +552,7 @@ require_once "resources/paging.php";
 	$time_condition_vars["time-of-day"] = $text['label-time-of-day'];
 	$time_condition_vars["date-time"] = $text['label-date-and-time'];
 	?>
+
 	function hide_var_options(row_num) {
 		<?php
 		foreach ($time_condition_vars as $var_name => $var_label) {
@@ -504,16 +652,25 @@ require_once "resources/paging.php";
 	echo "			<td></td>\n";
 	echo "		</tr>\n";
 
+//echo "<pre>\n";
+//print_r($details);
+//echo "</pre>\n";
 	$x = 0;
 	foreach($details as $detail_group) {
+
 		foreach ($detail_group as $row) {
+//echo "<pre>\n";
+//print_r($row);
+//echo "</pre>\n";
+//echo __line__; exit;
 			if ($row['dialplan_detail_tag'] == 'condition') {
+
 				$type = $row['dialplan_detail_type'];
 				$data = $row['dialplan_detail_data'];
 				$group = $row['dialplan_detail_group'];
+				$dialplan_times[$group]['preset'] =='false';
 
 				if ($dialplan_times[$group]['preset'] == 'false' && $type != "destination_number") {
-					$domain_uuid = $row['domain_uuid'];
 					$dialplan_uuid = $row['dialplan_uuid'];
 					$dialplan_detail_uuid = $row['dialplan_detail_uuid'];
 					$dialplan_detail_tag = $row['dialplan_detail_tag'];
@@ -534,7 +691,7 @@ require_once "resources/paging.php";
 
 					//time condition
 					echo "		<td>\n";
-					echo "			<select class='formfld' name='dialplan_details[".$x."][dialplan_detail_type' id='variable_".$x."' onchange=\"hide_var_options('".$x."'); show_var_option('".$x."', this.options[this.selectedIndex].value);\">\n";
+					echo "			<select class='formfld' name='dialplan_details[".$x."][dialplan_detail_type]' id='variable_".$x."_disabled' onchange=\"hide_var_options('".$x."'); show_var_option('".$x."', this.options[this.selectedIndex].value);\">\n";
 					echo "				<option value=''></option>\n";
 					foreach ($time_condition_vars as $var_name => $var_label) {
 						if ($var_name == $dialplan_detail_type) {
@@ -545,6 +702,7 @@ require_once "resources/paging.php";
 						}
 					}
 					echo "			</select>\n";
+
 					echo "		</td>\n";
 
 					//single or range
@@ -565,127 +723,124 @@ require_once "resources/paging.php";
 
 					//$dialplan_detail_data
 					echo "		<td>\n";
-					//echo $dialplan_detail_type." ".$detail_data[0]." :: ".$detail_data[1]."<br />";
-					//foreach ($time_condition_vars as $var_name => $var_label) {
-						//switch ($var_name) {
-						switch ($dialplan_detail_type) {
-							case "minute-of-day" :
-								echo "<span id='var_minute-of-day_options_".$x."' style='display: none;'>\n";
-								echo "	<input type='number' class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' name='dialplan_details[".$x."][minute-of-day][start]' id='minute-of-day_".$x."_start' value='".$detail_data[0]."'>\n";
-								if (strlen($detail_data[1]) > 0) {
-									echo "	<span id='minute-of-day_".$x."_stop' style='display: inline;'>\n";
-									echo "		&nbsp;<strong>~</strong>&nbsp;\n";
-									echo "		<input type='number' class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' name='dialplan_details[".$x."][minute-of-day][stop]' value='".$detail_data[1]."'>\n";
-									echo "	</span>\n";
+
+					//switch ($var_name) {
+					switch ($dialplan_detail_type) {
+						case "minute-of-day" :
+							echo "<span id='var_minute-of-day_options_".$x."' style='display: none;'>\n";
+							echo "	<input type='number' class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' name='dialplan_details[".$x."][minute-of-day][start]' id='minute-of-day_".$x."_start' value='".$detail_data[0]."'>\n";
+							if (strlen($detail_data[1]) > 0) {
+								echo "	<span id='minute-of-day_".$x."_stop' style='display: inline;'>\n";
+								echo "		&nbsp;<strong>~</strong>&nbsp;\n";
+								echo "		<input type='number' class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' name='dialplan_details[".$x."][minute-of-day][stop]' value='".$detail_data[1]."'>\n";
+								echo "	</span>\n";
+							}
+							echo "</span>\n";
+							break;
+						case "time-of-day" :
+							echo "<span id='var_time-of-day_options_".$x."' style='display: inline;'>\n";
+							echo "	<select class='formfld' name='dialplan_details[".$x."][time-of-day][start][hour]' id='time-of-day_".$x."_start_hour' onchange=\"if (document.getElementById('time-of-day_".$x."_start_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_start_minute').selectedIndex = 1; } if (document.getElementById('time-of-day_".$x."_stop_hour').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_stop_hour').selectedIndex = this.selectedIndex; document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex = 1; }\">\n";
+							echo "		<option value=''>Hour</option>\n";
+							for ($h = 1; $h <= 12; $h++) {
+								if ($detail_data[0] == $h) {
+									echo "	<option value='".$h."' selected='selected'>".$h."</option>\n";
 								}
-								echo "</span>\n";
-								break;
-							case "time-of-day" :
-								echo "<span id='var_time-of-day_options_".$x."' style='display: inline;'>\n";
-								echo "	<select class='formfld' name='dialplan_details[".$x."][time-of-day][start][hour]' id='time-of-day_".$x."_start_hour' onchange=\"if (document.getElementById('time-of-day_".$x."_start_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_start_minute').selectedIndex = 1; } if (document.getElementById('time-of-day_".$x."_stop_hour').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_stop_hour').selectedIndex = this.selectedIndex; document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex = 1; }\">\n";
-								echo "		<option value=''>Hour</option>\n";
+								else {
+									echo "	<option value='".$h."'>".$h."</option>\n";
+								}
+							}
+							echo "	</select>\n";
+							echo "	<select class='formfld' name='dialplan_details[".$x."][time-of-day][start][minute]' id='time-of-day_".$x."_start_minute' onchange=\"if (document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex = this.selectedIndex; }\">\n";
+							echo "		<option value='00'>Minute</option>\n";
+							for ($m = 0; $m < 60; $m++) {
+								if ($detail_data[1] == $m) {
+									echo "	<option value='".number_pad($m,2)."' selected='selected'>".number_pad($m,2)."</option>\n";
+								}
+								else {
+									echo "	<option value='".number_pad($m,2)."'>".number_pad($m,2)."</option>\n";
+								}
+							}
+							echo "	</select>\n";
+							echo "	<select class='formfld' name='dialplan_details[".$x."][time-of-day][start][notation]' id='time-of-day_".$x."_start_notation'>\n";
+							echo "		<option value='AM'>AM</option>\n";
+							echo "		<option value='PM'>PM</option>\n";
+							echo "	</select>\n";
+							if (strlen($detail_data[1]) > 0) {
+								echo "	<span id='time-of-day_".$x."_stop' style='display: inline;'>\n";
+								echo "		&nbsp;~&nbsp;";
+								echo "		<select class='formfld' name='dialplan_details[".$x."][time-of-day][stop][hour]' id='time-of-day_".$x."_stop_hour' onchange=\"if (document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex = 1; }\">\n";
+								echo "			<option value=''>Hour</option>\n";
 								for ($h = 1; $h <= 12; $h++) {
-									if ($detail_data[0] == $h) {
-										echo "	<option value='".$h."' selected='selected'>".$h."</option>\n";
-									}
-									else {
-										echo "	<option value='".$h."'>".$h."</option>\n";
-									}
+									echo "		<option value='".$h."'>".$h."</option>\n";
 								}
-								echo "	</select>\n";
-								echo "	<select class='formfld' name='dialplan_details[".$x."][time-of-day][start][minute]' id='time-of-day_".$x."_start_minute' onchange=\"if (document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex = this.selectedIndex; }\">\n";
-								echo "		<option value='00'>Minute</option>\n";
+								echo "		</select>\n";
+								echo "		<select class='formfld' name='dialplan_details[".$x."][time-of-day][stop][minute]' id='time-of-day_".$x."_stop_minute'>\n";
+								echo "			<option value='00'>Minute</option>\n";
 								for ($m = 0; $m < 60; $m++) {
 									if ($detail_data[1] == $m) {
-										echo "	<option value='".number_pad($m,2)."' selected='selected'>".number_pad($m,2)."</option>\n";
+										echo "	<option value='".number_pad($m,2)."' selected='selected'>".number_pad($m,2)."/option>\n";
 									}
 									else {
 										echo "	<option value='".number_pad($m,2)."'>".number_pad($m,2)."</option>\n";
 									}
 								}
-								echo "	</select>\n";
-								echo "	<select class='formfld' name='dialplan_details[".$x."][time-of-day][start][notation]' id='time-of-day_".$x."_start_notation'>\n";
-								echo "		<option value='AM'>AM</option>\n";
-								echo "		<option value='PM'>PM</option>\n";
-								echo "	</select>\n";
-								if (strlen($detail_data[1]) > 0) {
-									echo "	<span id='time-of-day_".$x."_stop' style='display: inline;'>\n";
-									echo "		&nbsp;~&nbsp;";
-									echo "		<select class='formfld' name='dialplan_details[".$x."][time-of-day][stop][hour]' id='time-of-day_".$x."_stop_hour' onchange=\"if (document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$x."_stop_minute').selectedIndex = 1; }\">\n";
-									echo "			<option value=''>Hour</option>\n";
-									for ($h = 1; $h <= 12; $h++) {
-										echo "		<option value='".$h."'>".$h."</option>\n";
-									}
-									echo "		</select>\n";
-									echo "		<select class='formfld' name='dialplan_details[".$x."][time-of-day][stop][minute]' id='time-of-day_".$x."_stop_minute'>\n";
-									echo "			<option value='00'>Minute</option>\n";
-									for ($m = 0; $m < 60; $m++) {
-										if ($detail_data[1] == $m) {
-											echo "	<option value='".number_pad($m,2)."' selected='selected'>".number_pad($m,2)."</option>\n";
-										}
-										else {
-											echo "	<option value='".number_pad($m,2)."'>".number_pad($m,2)."</option>\n";
-										}
-									}
-									echo "		</select>\n";
-									echo "		<select class='formfld' name='dialplan_details[".$x."][time-of-day][stop][notation]' id='time-of-day_".$x."_stop_notation'>\n";
-									echo "			<option value='AM'>AM</option>\n";
-									echo "			<option value='PM'>PM</option>\n";
-									echo "		</select>\n";
-									echo "	</span>\n";
+								echo "		</select>\n";
+								echo "		<select class='formfld' name='dialplan_details[".$x."][time-of-day][stop][notation]' id='time-of-day_".$x."_stop_notation'>\n";
+								echo "			<option value='AM'>AM</option>\n";
+								echo "			<option value='PM'>PM</option>\n";
+								echo "		</select>\n";
+								echo "	</span>\n";
+							}
+							echo "</span>\n";
+							break;
+						case "date-time" :
+							echo "<span id='var_date-time_options_".$x."' style='display: none;'>\n";
+							echo "	<input type='text' class='formfld' style='min-width: 115px; max-width: 115px;' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}\" name='dialplan_details[".$x."][date-time][start]' value='".$detail_data[1]."' id='date-time_".$x."_start'>\n";
+							if (strlen($detail_data[1]) > 0) {
+								echo "	<span id='date-time_".$x."_stop' style='display: inline;'>\n";
+								echo "		&nbsp;<strong>~</strong>&nbsp;\n";
+								echo "		<input type='text' class='formfld' style='min-width: 115px; max-width: 115px;' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}\" name='dialplan_details[".$x."][date-time][stop]'>\n";
+								echo "	</span>\n";
+							}
+							echo "</span>\n";
+							break;
+						default:
+							$var_name = $dialplan_detail_type;
+							echo "<span id='var_".$var_name."_options_".$x."' style='display: inline;'>\n";
+							echo "	<select class='formfld' name='dialplan_details[".$x."][".$var_name."][start]' id='".$var_name."_".$x."_start' onchange=\"if (document.getElementById('".$var_name."_".$x."_stop').selectedIndex == 0) { document.getElementById('".$var_name."_".$x."_stop').selectedIndex = this.selectedIndex; }\">\n";
+							foreach ($var_option_select[$var_name] as $var_option_select_value => $var_option_select_label) {
+								if ($var_option_select_value == $detail_data[0]) {
+									echo "	<option value='".$var_option_select_value."' selected='selected'>".$var_option_select_label."</option>\n";
 								}
-								echo "</span>\n";
-								break;
-							case "date-time" :
-								echo "<span id='var_date-time_options_".$x."' style='display: none;'>\n";
-								echo "	<input type='text' class='formfld' style='min-width: 115px; max-width: 115px;' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}\" name='dialplan_details[".$x."][date-time][start]' value='".$detail_data[1]."' id='date-time_".$x."_start'>\n";
-								if (strlen($detail_data[1]) > 0) {
-									echo "	<span id='date-time_".$x."_stop' style='display: inline;'>\n";
-									echo "		&nbsp;<strong>~</strong>&nbsp;\n";
-									echo "		<input type='text' class='formfld' style='min-width: 115px; max-width: 115px;' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}\" name='dialplan_details[".$x."][date-time][stop]'>\n";
-									echo "	</span>\n";
+								else {
+									echo "	<option value='".$var_option_select_value."'>".$var_option_select_label."</option>\n";
 								}
-								echo "</span>\n";
-								break;
-							default:
-								$var_name = $dialplan_detail_type;
-								echo "<span id='var_".$var_name."_options_".$x."' style='display: inline;'>\n";
-								echo "	<select class='formfld' name='dialplan_details[".$x."][".$var_name."][start]' id='".$var_name."_".$x."_start' onchange=\"if (document.getElementById('".$var_name."_".$x."_stop').selectedIndex == 0) { document.getElementById('".$var_name."_".$x."_stop').selectedIndex = this.selectedIndex; }\">\n";
+							}
+							echo "	</select>\n";
+							if (strlen($detail_data[1]) > 0) {
+								echo "	<span id='".$var_name."_".$x."_stop' style='display: inline;'>\n";
+								echo "		&nbsp;<strong>~</strong>&nbsp;\n";
+								echo "		<select class='formfld' name='dialplan_details[".$x."][".$var_name."][stop]' id='".$var_name."_".$x."_stop-real'>\n";
+								echo "			<option value=''></option>\n";
 								foreach ($var_option_select[$var_name] as $var_option_select_value => $var_option_select_label) {
-									if ($var_option_select_value == $detail_data[0]) {
-										echo "	<option value='".$var_option_select_value."' selected='selected'>".$var_option_select_label."</option>\n";
+									if ($var_option_select_value == $detail_data[1]) {
+										echo "		<option value='".$dialplan_detail_data."' selected='selected'>".$var_option_select_label."</option>\n";
 									}
 									else {
-										echo "	<option value='".$var_option_select_value."'>".$var_option_select_label."</option>\n";
+										echo "		<option value='".$dialplan_detail_data."'>".$var_option_select_label."</option>\n";
 									}
 								}
-								echo "	</select>\n";
-								if (strlen($detail_data[1]) > 0) {
-									echo "	<span id='".$var_name."_".$x."_stop' style='display: inline;'>\n";
-									echo "		&nbsp;<strong>~</strong>&nbsp;\n";
-									echo "		<select class='formfld' name='dialplan_details[".$x."][".$var_name."][stop]' id='".$var_name."_".$x."_stop-real'>\n";
-									echo "			<option value=''></option>\n";
-									foreach ($var_option_select[$var_name] as $var_option_select_value => $var_option_select_label) {
-										if ($var_option_select_value == $detail_data[1]) {
-											echo "		<option value='".$dialplan_detail_data."' selected='selected'>".$var_option_select_label."</option>\n";
-										}
-										else {
-											echo "		<option value='".$dialplan_detail_data."'>".$var_option_select_label."</option>\n";
-										}
-									}
-									echo "		</select>\n";
-								}
-								echo "	</span>\n";
-								echo "</span>\n";
-						}
-					//}
+								echo "		</select>\n";
+							}
+							echo "	</span>\n";
+							echo "</span>\n";
+					}
 
 					echo "		</td>\n";
 					echo "	</tr>\n";
 				} // if (in_array($type, $array))
 			} // if ($row['dialplan_detail_tag'] == 'condition')
 		} // foreach ($detail_group as $row)
-		//echo "<tr><td>&nbsp;</td></tr>\n";
 		$x++;
 	} // foreach($details as $detail_group)
 
@@ -794,34 +949,35 @@ require_once "resources/paging.php";
 
 	//add destinations
 	if (strlen($_GET['id']) == 0) {
-				echo "<tr>\n";
-				echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-				echo "    ".$text['label-action']."\n";
-				echo "</td>\n";
-				echo "<td class='vtable' align='left'>\n";
-				//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
-				switch_select_destination("dialplan", $action_1, "action_1", $action_1, "", "");
-				echo "</td>\n";
-				echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+		echo "    ".$text['label-action']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
+		switch_select_destination("dialplan", $action_1, "dialplan_details[100][action]", "$detail_action", "", "");
+		echo "</td>\n";
+		echo "</tr>\n";
 
-				echo "<tr>\n";
-				echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-				echo "    ".$text['label-action-alternate']."\n";
-				echo "</td>\n";
-				echo "<td class='vtable' align='left'>\n";
-				//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
-				switch_select_destination("dialplan", $anti_action_1, "anti_action_1", $anti_action_1, "", "");
-				echo "</td>\n";
-				echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+		echo "    ".$text['label-action-alternate']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		//switch_select_destination(select_type, select_label, select_name, select_value, select_style, $action);
+		switch_select_destination("dialplan", $anti_action_1, "dialplan_details[110][anti_action]", "$detail_anti_action ", "", "");
+		echo "</td>\n";
+		echo "</tr>\n";
 	}
 
 	//edit destinations
+	$action_exists = false;
 	$x = 0;
 	foreach($details as $group) {
 		foreach ($group as $row) {
 			if ($row['dialplan_detail_tag'] == 'action' && $row['dialplan_detail_type'] != 'set') {
 				echo "<tr>\n";
-				echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
+				echo "<td class='vncellreq' valign='top' align='left' nowrap='nowrap'>\n";
 				echo "    ".$text['label-action']."\n";
 				echo "</td>\n";
 				echo "<td class='vtable' align='left'>\n";
@@ -830,13 +986,14 @@ require_once "resources/paging.php";
 				$label = explode("XML", $data);
 				$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
 				$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
-				switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][action]", $detail_action, "width: 60%;", 'action');
+				switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."]['action']", $detail_action, "width: 60%;", 'action');
 				echo "</td>\n";
 				echo "</tr>\n";
+				$action_exists = true;
 			}
 			if ($row['dialplan_detail_tag'] == 'anti-action' && $row['dialplan_detail_type'] != 'set') {
 				echo "<tr>\n";
-				echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+				echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
 				echo "    ".$text['label-action-alternate']."\n";
 				echo "</td>\n";
 				echo "<td class='vtable' align='left'>\n";
@@ -844,9 +1001,10 @@ require_once "resources/paging.php";
 				$label = explode("XML", $row['dialplan_detail_data']);
 				$divider = ($row['dialplan_detail_type'] != '') ? ":" : null;
 				$detail_action = $row['dialplan_detail_type'].$divider.$row['dialplan_detail_data'];
-				switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."][anti_action]", $detail_action, "width: 60%;", 'action');
+				switch_select_destination("dialplan", $label[0], "dialplan_details[".$x."]['anti_action']", $detail_anti_action, "width: 60%;", 'action');
 				echo "</td>\n";
 				echo "</tr>\n";
+				$action_exists = true;
 			}
 		}
 		$x++;
