@@ -57,7 +57,7 @@ else {
 			$greeting_id = check_str($_POST["greeting_id"]);
 			$voicemail_options = $_POST["voicemail_options"];
 			$voicemail_mail_to = check_str($_POST["voicemail_mail_to"]);
-			$voicemail_attach_file = check_str($_POST["voicemail_attach_file"]);
+			$voicemail_file = check_str($_POST["voicemail_file"]);
 			$voicemail_local_after_email = check_str($_POST["voicemail_local_after_email"]);
 			$voicemail_enabled = check_str($_POST["voicemail_enabled"]);
 			$voicemail_description = check_str($_POST["voicemail_description"]);
@@ -119,16 +119,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 	//check for all required data
-		//if (strlen($domain_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-domain_uuid']."<br>\n"; }
-		//if (strlen($voicemail_uuid) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_uuid']."<br>\n"; }
-		//if (strlen($voicemail_id) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_id']."<br>\n"; }
-		//if (strlen($voicemail_password) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_password']."<br>\n"; }
-		//if (strlen($greeting_id) == 0) { $msg .= $text['message-required']." ".$text['label-greeting_id']."<br>\n"; }
-		//if (strlen($voicemail_mail_to) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_mail_to']."<br>\n"; }
-		//if (strlen($voicemail_attach_file) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_attach_file']."<br>\n"; }
-		//if (strlen($voicemail_local_after_email) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_local_after_email']."<br>\n"; }
-		//if (strlen($voicemail_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_enabled']."<br>\n"; }
-		//if (strlen($voicemail_description) == 0) { $msg .= $text['message-required']." ".$text['label-voicemail_description']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -155,7 +145,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "greeting_id, ";
 				}
 				$sql .= "voicemail_mail_to, ";
-				$sql .= "voicemail_attach_file, ";
+				$sql .= "voicemail_file, ";
 				$sql .= "voicemail_local_after_email, ";
 				$sql .= "voicemail_enabled, ";
 				$sql .= "voicemail_description ";
@@ -170,7 +160,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'".$greeting_id."', ";
 				}
 				$sql .= "'".$voicemail_mail_to."', ";
-				$sql .= "'".$voicemail_attach_file."', ";
+				$sql .= "'".$voicemail_file."', ";
 				$sql .= "'".$voicemail_local_after_email."', ";
 				$sql .= "'".$voicemail_enabled."', ";
 				$sql .= "'".$voicemail_description."' ";
@@ -192,7 +182,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "greeting_id = null, ";
 				}
 				$sql .= "voicemail_mail_to = '".$voicemail_mail_to."', ";
-				$sql .= "voicemail_attach_file = '".$voicemail_attach_file."', ";
+				$sql .= "voicemail_file = '".$voicemail_file."', ";
 				$sql .= "voicemail_local_after_email = '".$voicemail_local_after_email."', ";
 				$sql .= "voicemail_enabled = '".$voicemail_enabled."', ";
 				$sql .= "voicemail_description = '".$voicemail_description."' ";
@@ -273,7 +263,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$voicemail_password = $row["voicemail_password"];
 			$greeting_id = $row["greeting_id"];
 			$voicemail_mail_to = $row["voicemail_mail_to"];
-			$voicemail_attach_file = $row["voicemail_attach_file"];
+			$voicemail_file = $row["voicemail_file"];
 			$voicemail_local_after_email = $row["voicemail_local_after_email"];
 			$voicemail_enabled = $row["voicemail_enabled"];
 			$voicemail_description = $row["voicemail_description"];
@@ -286,7 +276,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
 
 //set defaults
-	if (strlen($voicemail_attach_file) == 0) { $voicemail_attach_file = "true"; }
 	if (strlen($voicemail_local_after_email) == 0) { $voicemail_local_after_email = "true"; }
 	if (strlen($voicemail_enabled) == 0) { $voicemail_enabled = "true"; }
 
@@ -456,25 +445,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	echo "<tr>\n";
 	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "	".$text['label-voicemail_attach_file']."\n";
+	echo "	".$text['label-voicemail_file']."\n";
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
-	echo "	<select class='formfld' name='voicemail_attach_file'>\n";
-	if ($voicemail_attach_file == "true") {
-		echo "	<option value='true' selected='selected'>".$text['label-true']."</option>\n";
-	}
-	else {
-		echo "	<option value='true'>".$text['label-true']."</option>\n";
-	}
-	if ($voicemail_attach_file == "false") {
-		echo "	<option value='false' selected='selected'>".$text['label-false']."</option>\n";
-	}
-	else {
-		echo "	<option value='false'>".$text['label-false']."</option>\n";
-	}
-	echo "	</select>\n";
+	echo "    <select class='formfld' name='voicemail_file'>\n";
+	echo "    	<option value=''>".$text['option-voicemail_file_listen']."</option>\n";
+	echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
+	echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
+	echo "    </select>\n";
 	echo "<br />\n";
-	echo $text['description-voicemail_attach_file']."\n";
+	echo $text['description-voicemail_file']."\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 

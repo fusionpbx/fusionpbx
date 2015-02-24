@@ -25,13 +25,15 @@
 */
 require_once "root.php";
 require_once "resources/require.php";
-require_once "resources/check_auth.php";
-if (permission_exists('voicemail_message_view')) {
-	//access granted
-}
-else {
-	echo "access denied";
-	exit;
+if (!(check_str($_REQUEST["action"]) == "download" && check_str($_REQUEST["src"]) == "email")) {
+	require_once "resources/check_auth.php";
+	if (permission_exists('voicemail_message_view')) {
+		//access granted
+	}
+	else {
+		echo "access denied";
+		exit;
+	}
 }
 
 //add multi-lingual support
@@ -49,15 +51,17 @@ else {
 		$voicemail_id = check_str($_REQUEST["id"]);
 		$voicemail_uuid = check_str($_REQUEST["voicemail_uuid"]);
 		//require_once "resources/classes/voicemail.php";
-		$voicemail = new voicemail;
-		$voicemail->db = $db;
-		$voicemail->domain_uuid = $_SESSION['domain_uuid'];
-		$voicemail->voicemail_id = $voicemail_id;
-		$voicemail->voicemail_uuid = $voicemail_uuid;
-		$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
-		$result = $voicemail->message_download();
-		unset($voicemail);
-		header("Location: voicemail_edit.php?id=".$voicemail_uuid);
+		if ($voicemail_message_uuid != '' && $voicemail_id != '' && $voicemail_uuid != '') {
+			$voicemail = new voicemail;
+			$voicemail->db = $db;
+			$voicemail->domain_uuid = $_SESSION['domain_uuid'];
+			$voicemail->voicemail_id = $voicemail_id;
+			$voicemail->voicemail_uuid = $voicemail_uuid;
+			$voicemail->voicemail_message_uuid = $voicemail_message_uuid;
+			$result = $voicemail->message_download();
+			unset($voicemail);
+			header("Location: voicemail_edit.php?id=".$voicemail_uuid);
+		}
 		exit;
 	}
 
@@ -191,6 +195,11 @@ else {
 
 	echo "</table>";
 	echo "<br /><br />";
+
+//autoplay message
+	if (check_str($_REQUEST["action"]) == "autoplay" && check_str($_REQUEST["uuid"]) != '') {
+		echo "<script>recording_play('".check_str($_REQUEST["uuid"])."');</script>";
+	}
 
 //include the footer
 	require_once "resources/footer.php";

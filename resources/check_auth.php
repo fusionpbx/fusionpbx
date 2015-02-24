@@ -45,7 +45,7 @@ require_once "resources/require.php";
 
 		//if the username is not provided then send to login.php
 			if (strlen(check_str($_REQUEST["username"])) == 0 && strlen(check_str($_REQUEST["key"])) == 0) {
-				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["PHP_SELF"];
+				$target_path = ($_REQUEST["path"] != '') ? $_REQUEST["path"] : $_SERVER["REQUEST_URI"];
 				$_SESSION["message"] = "Invalid Username and/or Password";
 				header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 				exit;

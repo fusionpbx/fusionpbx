@@ -89,6 +89,11 @@
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_attach_file";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
 		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Choose whether to attach the file to the email.";
+		$apps[$x]['db'][$y]['fields'][$z]['deprecated'] = "true";
+		$z++;
+		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_file";
+		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
+		$apps[$x]['db'][$y]['fields'][$z]['description']['en-us'] = "Select a listening option to include with the email notification.";
 		$z++;
 		$apps[$x]['db'][$y]['fields'][$z]['name'] = "voicemail_local_after_email";
 		$apps[$x]['db'][$y]['fields'][$z]['type'] = "text";
