@@ -267,7 +267,6 @@
         else
                 --replace the &#39 back to a single quote
                         XML_STRING = XML_STRING:gsub("&#39;", "'");
-freeswitch.consoleLog("notice", "XML STRING "..XML_STRING.."\n");
                 --send to the console
                         if (debug["cache"]) then
                                 freeswitch.consoleLog("notice", "[xml_handler] configuration:callcenter.conf source: memcache\n");
