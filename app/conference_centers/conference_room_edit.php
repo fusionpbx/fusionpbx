@@ -181,7 +181,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 					if ($row['num_rows'] > 0) {
-						$msg .= "Please provide a unique moderator pin number.<br>\n";
+						$msg .= $text['message-unique_moderator_pin']."<br />\n";
 					}
 				}
 
@@ -197,19 +197,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					$prep_statement->execute();
 					$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 					if ($row['num_rows'] > 0) {
-						$msg .= "Please provide a unique participant pin number.<br>\n";
+						$msg .= $text['message-unique_participant_pin']."<br />\n";
 					}
 				}
 
 			//additional checks
 				if ($moderator_pin == $participant_pin) {
-					$msg .= "Moderator and Participant PIN number must be unique.\n";
+					$msg .= $text['message-non_unique_pin']."<br />\n";
 				}
-				if (strlen($moderator_pin) != $pin_length) {
-					$msg .= "Please provide a moderator PIN number that is the required length.\n";
-				}
-				if (strlen($participant_pin) != $pin_length) {
-					$msg .= "Please provide a participant PIN number that is the required length.\n";
+				if (strlen($moderator_pin) < $pin_length || strlen($participant_pin) < $pin_length) {
+					$msg .= $text['message-minimum_pin_length']." ".$pin_length."<br />\n";
 				}
 		}
 

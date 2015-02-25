@@ -56,7 +56,7 @@
 		$text['description-extension']['pt-pt'] = "Introduza o número da extensão do centro de conferência.";
 		$text['description-extension']['fr-fr'] = "Choisir le numéro de la conférence. ";
 
-		$text['description-pin-length']['en-us'] = "Enter the required PIN length.";
+		$text['description-pin-length']['en-us'] = "Enter the minimum PIN length.";
 		$text['description-pin-length']['es-cl'] = "Ingrese el largo de PIN requerido.";
 		$text['description-pin-length']['pt-pt'] = "Introduza o tamanho do código PIN";
 		$text['description-pin-length']['fr-fr'] = "Choisir la longueur requise pour le code d'authentification.";
@@ -322,6 +322,26 @@
 		$text['button-search']['es-cl'] = "Buscar";
 		$text['button-search']['pt-pt'] = "Pesquisar";
 		$text['button-search']['fr-fr'] = "Chercher";
+
+		$text['message-unique_moderator_pin']['en-us'] = "Please provide a unique Moderator PIN number.";
+		$text['message-unique_moderator_pin']['es-cl'] = "Por favor, proporcione un número único Moderador PIN.";
+		$text['message-unique_moderator_pin']['pt-pt'] = "Por favor, forneça um número único Moderador PIN.";
+		$text['message-unique_moderator_pin']['fr-fr'] = "Se il vous plaît fournir un numéro unique Modérateur PIN.";
+
+		$text['message-unique_participant_pin']['en-us'] = "Please provide a unique Participant PIN number.";
+		$text['message-unique_participant_pin']['es-cl'] = "Por favor ingrese su número PIN participante único.";
+		$text['message-unique_participant_pin']['pt-pt'] = "Por favor, forneça um número PIN Participante único.";
+		$text['message-unique_participant_pin']['fr-fr'] = "Se il vous plaît fournir un numéro unique PIN de participant.";
+
+		$text['message-non_unique_pin']['en-us'] = "Moderator and Participant PIN numbers must be unique.";
+		$text['message-non_unique_pin']['es-cl'] = "Moderador números PIN y participante deben ser únicos.";
+		$text['message-non_unique_pin']['pt-pt'] = "Moderador números e PIN Participante deve ser exclusivo.";
+		$text['message-non_unique_pin']['fr-fr'] = "Numéros de modérateur et de PIN de participant doivent être uniques.";
+
+		$text['message-minimum_pin_length']['en-us'] = "Minimum PIN length required:";
+		$text['message-minimum_pin_length']['es-cl'] = "Longitud PIN mínima requerida:";
+		$text['message-minimum_pin_length']['pt-pt'] = "Comprimento PIN Requisitos mínimos:";
+		$text['message-minimum_pin_length']['fr-fr'] = "Longueur de PIN minimum requis:";
 
 	//Conference Sessions
 		$text['title-conference-sessions']['en-us'] = "Conference Sessions";
