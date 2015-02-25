@@ -338,7 +338,7 @@ include "root.php";
 				//get the provisioning information from device lines table
 					$sql = "SELECT * FROM v_device_lines ";
 					$sql .= "WHERE device_uuid = '".$device_uuid."' ";
-					$sql .= "AND domain_uuid = '".$domain_uuid."' ";
+					//$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -386,7 +386,7 @@ include "root.php";
 						$sql .= "or device_profile_uuid = '".$device_profile_uuid."' ";
 					}
 					$sql .= ") ";
-					$sql .= "AND domain_uuid = '".$domain_uuid."' ";
+					//$sql .= "AND domain_uuid = '".$domain_uuid."' ";
 					$sql .= "ORDER BY device_key_id asc, device_uuid desc";
 					$prep_statement = $this->db->prepare(check_sql($sql));
 					$prep_statement->execute();
