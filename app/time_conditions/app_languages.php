@@ -1,14 +1,14 @@
 <?php
 
-	$text['title-time-condition-add']['en-us'] = "Time Conditions";
-	$text['title-time-condition-add']['es-cl'] = "Condiciones Temporales";
-	$text['title-time-condition-add']['pt-pt'] = "Condições Temporais";
-	$text['title-time-condition-add']['fr-fr'] = "Conditions Temporelles";
+	$text['title-time-conditions']['en-us'] = "Time Conditions";
+	$text['title-time-conditions']['es-cl'] = "Condiciones Temporales";
+	$text['title-time-conditions']['pt-pt'] = "Condições Temporais";
+	$text['title-time-conditions']['fr-fr'] = "Conditions Temporelles";
 
-	$text['description-time-condition-add']['en-us'] = "Time conditions route calls based on time conditions. You can use time conditions to send calls to an IVR Menu, External numbers, Scripts, or other destinations.";
-	$text['description-time-condition-add']['es-cl'] = "Dirije llamadas basado en condiciones temporales. Piede configurar condiciones horarias para enviar llamadas a un IVR, números externos, scripts u otro destino";
-	$text['description-time-condition-add']['pt-pt'] = "As condições temporais encaminham as chamadas com base no tempo. Pode utilizar as condições temporais para enviar chamadas para um menu de IVR, números externos, scripts, ou outros destinos.";
-	$text['description-time-condition-add']['fr-fr'] = "Configurer l'acheminement d'apppel en fonction de conditions temporelles. Ces conditions temporelles permettent de diriger les appels vers un menu SVI, un numéro externe, un script, ou tout autre destination.";
+	$text['description-time-conditions']['en-us'] = "Dynamically route calls to an IVR menu, external numbers, scripts, or other destinations based on time conditions.";
+	$text['description-time-conditions']['es-cl'] = "Ruta dinámicamente llama a un menú IVR, números externos, guiones u otros destinos basados en las condiciones de tiempo.";
+	$text['description-time-conditions']['pt-pt'] = "Rota dinamicamente as chamadas para um menu IVR, números externos, scripts ou outros destinos com base nas condições de tempo.";
+	$text['description-time-conditions']['fr-fr'] = "Dynamiquement acheminer les appels à un menu IVR, numéros externes, scripts, ou d'autres destinations en fonction des conditions de temps.";
 
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['es-cl'] = "Volver";
@@ -64,6 +64,16 @@
 	$text['label-condition_scope']['es-cl'] = "Alcance";
 	$text['label-condition_scope']['pt-pt'] = "Escopo";
 	$text['label-condition_scope']['fr-fr'] = "Portée";
+
+	$text['option-condition_scope_specific']['en-us'] = "Specific";
+	$text['option-condition_scope_specific']['es-cl'] = "Específico";
+	$text['option-condition_scope_specific']['pt-pt'] = "Específico";
+	$text['option-condition_scope_specific']['fr-fr'] = "Spécifique";
+
+	$text['option-condition_scope_range']['en-us'] = "Range";
+	$text['option-condition_scope_range']['es-cl'] = "Alcance";
+	$text['option-condition_scope_range']['pt-pt'] = "Alcance";
+	$text['option-condition_scope_range']['fr-fr'] = "Gamme";
 
 	$text['label-condition_values']['en-us'] = "Value(s)";
 	$text['label-condition_values']['es-cl'] = "";
@@ -184,6 +194,16 @@
 	$text['label-time-of-day']['es-cl'] = "Hora del día";
 	$text['label-time-of-day']['pt-pt'] = "Hora do Dia";
 	$text['label-time-of-day']['fr-fr'] = "Heure de la journée";
+
+	$text['label-time-of-day_minute']['en-us'] = "Minute";
+	$text['label-time-of-day_minute']['es-cl'] = "Minuto";
+	$text['label-time-of-day_minute']['pt-pt'] = "Minuto";
+	$text['label-time-of-day_minute']['fr-fr'] = "Minute";
+
+	$text['label-time-of-day_hour']['en-us'] = "Hour";
+	$text['label-time-of-day_hour']['es-cl'] = "Horas";
+	$text['label-time-of-day_hour']['pt-pt'] = "Horas";
+	$text['label-time-of-day_hour']['fr-fr'] = "Hour";
 
 	$text['label-date-and-time']['en-us'] = "Date & Time";
 	$text['label-date-and-time']['es-cl'] = "Fecha y hora";

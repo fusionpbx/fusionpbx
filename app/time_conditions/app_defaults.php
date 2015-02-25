@@ -3,16 +3,16 @@
 if ($domains_processed == 1) {
 
 	//define holiday presets
-		$preset[] = json_encode(array("new_years_day" => array("variables" => array("mday" => "1", "mon" => "1"))));
-		$preset[] = json_encode(array("martin_luther_king_jr_day" => array("variables" => array("wday" => "2", "mon" => "1", "mweek" => "3"))));
-		$preset[] = json_encode(array("presidents_day" => array("variables" => array("wday" => "2", "mon" => "2", "mweek" => "3"))));
-		$preset[] = json_encode(array("memorial_day" => array("variables" => array("mday" => "25-31", "wday" => "2", "mon" => "5"))));
-		$preset[] = json_encode(array("independence_day" => array("variables" => array("mday" => "4", "mon" => "7"))));
-		$preset[] = json_encode(array("labor_day" => array("variables" => array("wday" => "2", "mon" => "9", "mweek" => "1"))));
-		$preset[] = json_encode(array("columbus_day" => array("variables" => array("wday" => "2", "mon" => "10", "mweek" => "2"))));
-		$preset[] = json_encode(array("veterans_day" => array("variables" => array("mday" => "11", "mon" => "11"))));
-		$preset[] = json_encode(array("thanksgiving_day" => array("variables" => array("wday" => "5-6", "mon" => "11", "mweek" => "4"))));
-		$preset[] = json_encode(array("christmas_day" => array("variables" => array("mday" => "25", "mon" => "12"))));
+		$preset[] = json_encode(array("new_years_day" => array("mday" => "1", "mon" => "1")));
+		$preset[] = json_encode(array("martin_luther_king_jr_day" => array("wday" => "2", "mon" => "1", "mweek" => "3")));
+		$preset[] = json_encode(array("presidents_day" => array("wday" => "2", "mon" => "2", "mweek" => "3")));
+		$preset[] = json_encode(array("memorial_day" => array("mday" => "25-31", "wday" => "2", "mon" => "5")));
+		$preset[] = json_encode(array("independence_day" => array("mday" => "4", "mon" => "7")));
+		$preset[] = json_encode(array("labor_day" => array("wday" => "2", "mon" => "9", "mweek" => "1")));
+		$preset[] = json_encode(array("columbus_day" => array("wday" => "2", "mon" => "10", "mweek" => "2")));
+		$preset[] = json_encode(array("veterans_day" => array("mday" => "11", "mon" => "11")));
+		$preset[] = json_encode(array("thanksgiving_day" => array("wday" => "5-6", "mon" => "11", "mweek" => "4")));
+		$preset[] = json_encode(array("christmas_day" => array("mday" => "25", "mon" => "12")));
 
 	//define array of settings
 		$x = 0;
