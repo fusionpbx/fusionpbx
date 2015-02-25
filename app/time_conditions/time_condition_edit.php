@@ -542,11 +542,6 @@ require_once "resources/paging.php";
 			$result_count = count($result);
 			unset ($prep_statement, $sql);
 
-			$debug_output .= "Select Query...<br><br>";
-			$debug_output .= '<pre>$result ='."\n\n";
-			$debug_output .= print_r($result, true);
-			$debug_output .= "</pre><br><br>";
-
 
 		//load current conditions into array (combined by group), and retrieve action and anti-action
 			$c = 0;
@@ -558,20 +553,8 @@ require_once "resources/paging.php";
 				}
 			}
 
-			$debug_output .= "Rebuild array...<br><br>";
-			$debug_output .= '<pre>$current_conditions ='."\n\n";
-			$debug_output .= print_r($current_conditions, true);
-			$debug_output .= "</pre><br><br>";
-
-			$debug_output .= "Load available presets...<br><br>";
-			$debug_output .= '<pre>$available_presets ='."\n\n";
-			$debug_output .= print_r($available_presets, true);
-			$debug_output .= "</pre><br><br>";
-
 
 		//loop through available presets
-			$debug_output .= 'Loop through $avaialble_presets array,<br>compare variable count and values with $current_conditions array...<br><br><br>';
-
 			foreach ($available_presets as $preset_number => $preset) {
 				foreach ($preset as $preset_name => $preset_variables) {
 					//loop through each condition group
@@ -588,8 +571,6 @@ require_once "resources/paging.php";
 								$current_presets[] = $preset_number;
 								//drop group from array of current conditions
 								unset($current_conditions[$group_number]);
-
-								$debug_output .= "<i>Found!&nbsp;&nbsp;&nbsp;Group ".$group_number." is ".$preset_name."...&nbsp;&nbsp;&nbsp;noted, group unset.</i><br><br>";
 							}
 						}
 					}
@@ -598,11 +579,6 @@ require_once "resources/paging.php";
 
 
 		 //load remaining conditions as custom conditions
-			$debug_output .= "<br><br>Current conditions...<br><br>";
-			$debug_output .= '<pre>$current_conditions ='."\n\n";
-			$debug_output .= print_r($current_conditions, true);
-			$debug_output .= "</pre><br><br>";
-
 			$c = 0;
 			foreach ($current_conditions as $conditions) {
 				foreach ($conditions as $condition_variable => $condition_value) {
@@ -613,14 +589,8 @@ require_once "resources/paging.php";
 			}
 			unset($current_conditions);
 
-			$debug_output .= 'Restructure array into remaining conditions...<br><br>';
-			$debug_output .= '<pre>$custom_conditions ='."\n\n";
-			$debug_output .= print_r($custom_conditions, true);
-			$debug_output .= "</pre><br><br>";
 
-			if (isset($_REQUEST['debug'])) { echo $debug_output; }
 	}
-
 ?>
 
 <script type="text/javascript">
