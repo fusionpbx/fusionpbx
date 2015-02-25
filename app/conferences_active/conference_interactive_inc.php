@@ -159,10 +159,10 @@ else {
 			$caller_id_name = urldecode($caller_id_name);
 			$caller_id_number = $row->caller_id_number;
 
-			//format the seconds
-			$join_time_formatted = sprintf("%02s", floor($join_time/3600)).":".sprintf("%02s",floor($join_time/60)).":".sprintf("%02s",($join_time - (floor($join_time/60))*60));
-			$last_talking_formatted = sprintf("%02s",floor($last_talking/3600)).":".sprintf("%02s",floor($last_talking/60)).":".sprintf("%02s",($last_talking - (floor($last_talking/60))*60));
-$flag_has_video = 'true';
+			//format seconds
+			$join_time_formatted = sprintf('%02d:%02d:%02d', ($join_time/3600), ($join_time/60%60), $join_time%60);
+			$last_talking_formatted = sprintf('%02d:%02d:%02d', ($last_talking/3600), ($last_talking/60%60), $last_talking%60);
+
 			if (strlen($record_path) == 0) {
 				if (permission_exists('conference_interactive_mute')) {
 					$action_mute = ($flag_can_speak == "true") ? 'mute' : 'unmute';
