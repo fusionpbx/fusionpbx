@@ -70,10 +70,10 @@
 	$text['label-function']['pt-pt'] = "Função";
 	$text['label-function']['fr-fr'] = "Fonction";
 
-	$text['label-file']['en-us'] = "File";
-	$text['label-file']['es-cl'] = "Expediente";
-	$text['label-file']['pt-pt'] = "Arquivo";
-	$text['label-file']['fr-fr'] = "Fichier";
+	$text['label-action']['en-us'] = "Action";
+	$text['label-action']['es-cl'] = "Acción";
+	$text['label-action']['pt-pt'] = "Ação";
+	$text['label-action']['fr-fr'] = "Action";
 
 	$text['label-order']['en-us'] = "Order";
 	$text['label-order']['es-cl'] = "Orden";
