@@ -90,12 +90,12 @@
 	$text['label-id']['pt-pt'] = "ID";
 	$text['label-id']['fr-fr'] = "ID";
 
-	$text['label-cid-name']['en-us'] = "Caller ID Name";
+	$text['label-cid-name']['en-us'] = "CID Name";
 	$text['label-cid-name']['es-cl'] = "Nombre de Caller ID";
 	$text['label-cid-name']['pt-pt'] = "Nome do Chamador";
 	$text['label-cid-name']['fr-fr'] = "Nom d'appelant";
 
-	$text['label-cid-num']['en-us'] = "Caller ID Number";
+	$text['label-cid-num']['en-us'] = "CID Number";
 	$text['label-cid-num']['es-cl'] = "Número de Caller ID";
 	$text['label-cid-num']['pt-pt'] = "Número do Chamador";
 	$text['label-cid-num']['fr-fr'] = "Numéro d'appelant";
@@ -105,10 +105,20 @@
 	$text['label-moderator']['pt-pt'] = "Moderador";
 	$text['label-moderator']['fr-fr'] = "Modérateur";
 
+	$text['label-participant']['en-us'] = "Participant";
+	$text['label-participant']['es-cl'] = "Participante";
+	$text['label-participant']['pt-pt'] = "Participante";
+	$text['label-participant']['fr-fr'] = "Participant";
+
 	$text['label-joined']['en-us'] = "Joined";
 	$text['label-joined']['es-cl'] = "Unido";
 	$text['label-joined']['pt-pt'] = "Entrou";
 	$text['label-joined']['fr-fr'] = "a joint";
+
+	$text['label-capabilities']['en-us'] = "Capabilities";
+	$text['label-capabilities']['es-cl'] = "Capacidades";
+	$text['label-capabilities']['pt-pt'] = "Capacidades";
+	$text['label-capabilities']['fr-fr'] = "Capacités";
 
 	$text['label-hear']['en-us'] = "Hear";
 	$text['label-hear']['es-cl'] = "Escuchar";
@@ -120,20 +130,20 @@
 	$text['label-speak']['pt-pt'] = "Falar";
 	$text['label-speak']['fr-fr'] = "parler";
 
+	$text['label-video']['en-us'] = "Video";
+	$text['label-video']['es-cl'] = "Video";
+	$text['label-video']['pt-pt'] = "Vídeo";
+	$text['label-video']['fr-fr'] = "Vidéo";
+
 	$text['label-talking']['en-us'] = "Talking";
 	$text['label-talking']['es-cl'] = "Hablando";
 	$text['label-talking']['pt-pt'] = "Falando";
 	$text['label-talking']['fr-fr'] = "parle";
 
-	$text['label-last-talk']['en-us'] = "Last Talked";
-	$text['label-last-talk']['es-cl'] = "Último Hablando";
-	$text['label-last-talk']['pt-pt'] = "Último a falar";
-	$text['label-last-talk']['fr-fr'] = "dernier parlant";
-
-	$text['label-video']['en-us'] = "Video";
-	$text['label-video']['es-cl'] = "Video";
-	$text['label-video']['pt-pt'] = "Vídeo";
-	$text['label-video']['fr-fr'] = "Vidéo";
+	$text['label-quiet']['en-us'] = "Quiet";
+	$text['label-quiet']['es-cl'] = "Tranquilo";
+	$text['label-quiet']['pt-pt'] = "Tranquilo";
+	$text['label-quiet']['fr-fr'] = "Calme";
 
 	$text['label-floor']['en-us'] = "Has Floor";
 	$text['label-floor']['es-cl'] = "Tiene Piso";
@@ -145,14 +155,14 @@
 	$text['label-tool']['pt-pt'] = "Ferramentas";
 	$text['label-tool']['fr-fr'] = "Outils";
 
-	$text['label-yes']['en-us'] = "yes";
-	$text['label-yes']['es-cl'] = "si";
-	$text['label-yes']['pt-pt'] = "sim";
+	$text['label-yes']['en-us'] = "Yes";
+	$text['label-yes']['es-cl'] = "Si";
+	$text['label-yes']['pt-pt'] = "Sim";
 	$text['label-yes']['fr-fr'] = "Oui";
 
-	$text['label-no']['en-us'] = "no";
-	$text['label-no']['es-cl'] = "no";
-	$text['label-no']['pt-pt'] = "não";
+	$text['label-no']['en-us'] = "No";
+	$text['label-no']['es-cl'] = "No";
+	$text['label-no']['pt-pt'] = "Não";
 	$text['label-no']['fr-fr'] = "Non";
 
 	$text['label-energy']['en-us'] = "Energy";
@@ -185,7 +195,7 @@
 	$text['label-mute-all']['pt-pt'] = "Silenciar tudo";
 	$text['label-mute-all']['fr-fr'] = "tous muets";
 
-	$text['label-mute-all-alt']['en-us'] = "Mute all but moderator.";
+	$text['label-mute-all-alt']['en-us'] = "Mute all Participants.";
 	$text['label-mute-all-alt']['es-cl'] = "Silenciar a todos excepto al moderador.";
 	$text['label-mute-all-alt']['pt-pt'] = "Silenciar tudo menos o moderador.";
 	$text['label-mute-all-alt']['fr-fr'] = "muets sauf le moderateur.";
@@ -194,6 +204,16 @@
 	$text['label-unmute-all']['es-cl'] = "Desilenciar a todos";
 	$text['label-unmute-all']['pt-pt'] = "Todos com som";
 	$text['label-unmute-all']['fr-fr'] = "tous sonore";
+
+	$text['message-click_to_mute']['en-us'] = "Click to mute Member";
+	$text['message-click_to_mute']['es-cl'] = "Haga clic en silencio miembro";
+	$text['message-click_to_mute']['pt-pt'] = "Clique para silenciar Estados";
+	$text['message-click_to_mute']['fr-fr'] = "Cliquez sur muet Membres";
+
+	$text['message-click_to_unmute']['en-us'] = "Click to Unmute Member";
+	$text['message-click_to_unmute']['es-cl'] = "Haga clic para desactivar el silencio miembro";
+	$text['message-click_to_unmute']['pt-pt'] = "Clique para microf Estados";
+	$text['message-click_to_unmute']['fr-fr'] = "Cliquez pour Réactiver membres";
 
 	$text['label-end-conference']['en-us'] = "End Conference";
 	$text['label-end-conference']['es-cl'] = "Terminar Conferencia";
@@ -244,5 +264,12 @@
 	$text['label-participant-pin']['es-cl'] = "Participante PIN";
 	$text['label-participant-pin']['pt-pt'] = "Participante PIN";
 	$text['label-participant-pin']['fr-fr'] = "Code Participant";
+
+	$text['label-members']['en-us'] = "Members";
+	$text['label-members']['es-cl'] = "Miembros";
+	$text['label-members']['pt-pt'] = "Deputados";
+	$text['label-members']['fr-fr'] = "Membres";
+
+
 
 ?>
