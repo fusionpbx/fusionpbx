@@ -37,7 +37,7 @@
 		$favicon = $_SESSION['theme']['favicon']['text'];
 	}
 	else {
-		$favicon = '<!--{project_path}-->/themes/enhanced/favicon.ico';
+		$favicon = '<!--{project_path}-->/themes/minimized/favicon.ico';
         }
 ?>
 <link rel="icon" href="<?php echo $favicon; ?>">
@@ -480,7 +480,7 @@ table td {
 
 table tr.even td {
 	background:#eee;
-	background-image: url('<!--{project_path}-->/themes/enhanced/images/background_cell.gif');
+	background-image: url('<!--{project_path}-->/themes/minimized/images/background_cell.gif');
 	border-bottom: 1px solid #a4aebf;
 	color: #333333;
 }
@@ -533,18 +533,60 @@ legend {
 	padding-right: 2px;
 }
 
-/* begin the menu css*/
-
-	.menu_bar {
-		background-image: url('<!--{project_path}-->/themes/enhanced/images/background_black.png');
-		background-position: 0px -1px;
+#main_content {
+	<?php
+	if (
+		strlen($_SESSION["username"]) > 0 &&
+		(
+			isset($_SESSION['theme']['background_image']) ||
+			$_SESSION['theme']['background_color'][0] != '' ||
+			$_SESSION['theme']['background_color'][1] != ''
+		)) { ?>
+		background-color: #FFFFFF;
+		background-attachment: fixed;
+		opacity: 0.93;
+		filter:alpha(opacity=93);
+		-moz-opacity:0.93;
+		-khtml-opacity: 0.93;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		padding: 4px;
-		-webkit-box-shadow: 0 1px 4px #aaa;
-		-moz-box-shadow: 0 1px 4px #aaa;
-		box-shadow: 0 1px 4px #aaa;
+		-webkit-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		-moz-box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		box-shadow: 0 1px 4px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		padding: 15px 20px 20px 20px;
+	<?php } else { ?>
+		padding: 5px 10px 10px 10px;
+	<?php } ?>
+	text-align: left;
+}
+
+/* begin the menu css*/
+
+	div#menu_bar {
+		position: fixed;
+		top: 0px;
+		left: 0;
+		right: 0;
+		z-index: 10001;
+		text-align: left;
+		opacity: 0.93;
+		filter:alpha(opacity=93);
+		-moz-opacity:0.93;
+		-khtml-opacity: 0.93;
+	}
+
+	#menu_bar_content {
+		background-image: url('<!--{project_path}-->/themes/minimized/images/background_black.png');
+		background-position: 0px -1px;
+		background-color: #000000;
+		background-repeat: repeat-x;
+		-webkit-border-radius: 0px 0px 4px 4px;
+		-moz-border-radius: 0px 0px 4px 4px;
+		border-radius: 0px 0px 4px 4px;
+		-webkit-box-shadow: 0 3px 5px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		-moz-box-shadow: 0 3px 5px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		box-shadow: 0 3px 5px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
 	}
 
 	.menu_bg {
@@ -554,22 +596,15 @@ legend {
 			}
 			else {
 				if (substr($_SERVER['PHP_SELF'], -9) != "login.php") {
-					echo "background-image: url('<!--{project_path}-->/themes/enhanced/images/menu_background.png');";
+					echo "background-image: url('<!--{project_path}-->/themes/minimized/images/menu_background.png');";
 				}
 				else {
-					echo "background-image: url('<!--{project_path}-->/themes/enhanced/images/login_background.png');";
+					echo "background-image: url('<!--{project_path}-->/themes/minimized/images/login_background.png');";
 				}
 			}
 		?>
 		background-repeat: repeat-x;
 		background-attachment: fixed;
-		/*background-color: #FFFFFF;*/
-
-		opacity: 0.9;
-		filter:alpha(opacity=90);
-		-moz-opacity:0.9;
-		-khtml-opacity: 0.9;
-
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;
@@ -580,41 +615,15 @@ legend {
 		padding-right:20px;
 	}
 
-	.main_content {
-		<?php
-		if (
-			strlen($_SESSION["username"]) > 0 &&
-			(
-				isset($_SESSION['theme']['background_image']) ||
-				$_SESSION['theme']['background_color'][0] != '' ||
-				$_SESSION['theme']['background_color'][1] != ''
-			)) { ?>
-			background-color: #FFFFFF;
-			background-attachment: fixed;
-			opacity: 0.93;
-			filter:alpha(opacity=93);
-			-moz-opacity:0.93;
-			-khtml-opacity: 0.93;
-			-webkit-border-radius: 4px;
-			-moz-border-radius: 4px;
-			border-radius: 4px;
-			-webkit-box-shadow: 0 1px 4px #aaa;
-			-moz-box-shadow: 0 1px 4px #aaa;
-			box-shadow: 0 1px 4px #aaa;
-			padding: 20px;
-		<?php } else { ?>
-			padding: 10px;
-		<?php } ?>
-		text-align: left;
-	}
-
 	#menu{
 		width:100%;
 		float:left;
 	}
 
 	#menu a, #menu h2{
-		font:bold 11px/16px arial,helvetica,sans-serif;
+		font-size: 9pt;
+		font-weight: normal;
+		font-family: Arial, Helvetica, sans-serif;
 		display:block;
 		/*border-color:#ccc #888 #555 #bbb;*/
 		white-space:nowrap;
@@ -624,27 +633,15 @@ legend {
 
 	#menu h2{
 		color:#FFFFFF;
-		/*background:#222222 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
-		/*text-transform:uppercase*/
-		<?php
-		if ($_SESSION['domain']['language']['code'] == "en-us") {
-			echo "width:125px;\n";
-		}
-		if ($_SESSION['domain']['language']['code'] == "es-cl") {
-			echo "width:175px;\n";
-		}
-		if ($_SESSION['domain']['language']['code'] == "fr-fr") {
-			echo "width:140px;\n";
-		}
-		if ($_SESSION['domain']['language']['code'] == "pt-pt") {
-			echo "width:175px;\n";
-		}
-		?>
+		font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+		font-weight: normal;
+		font-size: 12pt;
+		margin-top: 1px;
+		height: 25px;
+		letter-spacing: -0.02em;
 	}
 
 	#menu h2 h2{
-		/*background:#4e4b56 url(<!--{project_path}-->/css/images/expand3.gif) no-repeat 100% 100%;*/
-		/*text-transform:uppercase*/
 		padding: 3px;
 	}
 
@@ -665,29 +662,29 @@ legend {
 
 	#menu .menu_sub {
 		display:none;
-		padding-top:10px;
+		top: 31px;
+		padding: 5px 0px 10px 0px;
 		<?php
 		if ($_SESSION['domain']['language']['code'] == "en-us") {
 			echo "width:125px;\n";
 		}
 		if ($_SESSION['domain']['language']['code'] == "es-cl") {
-			echo "width:175px;\n";
+			echo "width:185px;\n";
 		}
 		if ($_SESSION['domain']['language']['code'] == "fr-fr") {
-			echo "width:140px;\n";
+			echo "width:185px;\n";
 		}
 		if ($_SESSION['domain']['language']['code'] == "pt-pt") {
-			echo "width:175px;\n";
+			echo "width:190px;\n";
 		}
 		?>
-		background:#333333;
-		background-color: rgba(20, 20, 20, 0.9);
+		background: #141414;
 		-webkit-border-radius: 0 0 3px 3px;
 		-moz-border-radius: 0 0 3px 3px;
 		border-radius: 0 0 3px 3px;
-		-webkit-box-shadow: 0 2px 3px #aaa;
-		-moz-box-shadow: 0 2px 3px #aaa;
-		box-shadow: 0 2px 3px #aaa;
+		-webkit-box-shadow: 0 2px 3px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		-moz-box-shadow: 0 2px 3px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		box-shadow: 0 2px 3px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
 	}
 
 	#menu a:hover{
@@ -778,21 +775,20 @@ legend {
 	#message_container {
 		z-index: 99998;
 		position: absolute;
-		top: -200px;
+		top: -80px;
 		left: 0;
 		right: 0;
-		height: 30px;
 		filter: alpha(opacity=0);
 		opacity: 0;
 		-moz-opacity:0;
 		-khtml-opacity: 0;
-		padding: 8px 0;
+		padding: 12px 0;
 	}
 
 	#message_text {
 		z-index: 99999;
 		position: absolute;
-		top: -200px;
+		top: -80px;
 		left: 0;
 		right: 0;
 		filter: alpha(opacity=0);
@@ -801,7 +797,7 @@ legend {
 		-khtml-opacity: 0;
 		margin: 0 auto;
 		vertical-align: middle;
-		padding: 8px 0;
+		padding: 12px 0;
 		text-align: center;
 		font-family: arial, san-serif;
 		font-size: 10pt;
@@ -831,17 +827,13 @@ legend {
 		color: <?php echo $_SESSION['theme']['message_alert_color']['text']; ?>;
 	}
 
-	#header_icons {
-		display: inline-block;
-		margin-top: 10px;
-		}
-
 	#logout_icon {
 		filter: alpha(opacity=80);
-		opacity: 0.8;
-		-moz-opacity: 0.8;
-		-khtml-opacity: 0.8;
-		margin-left: 6px;
+		opacity: 0.85;
+		-moz-opacity: 0.85;
+		-khtml-opacity: 0.85;
+		margin-left: 8px;
+		margin-right: 18px;
 	}
 
 	#logout_icon:hover {
@@ -854,9 +846,9 @@ legend {
 
 	#domain_selector_icon {
 		filter: alpha(opacity=80);
-		opacity: 0.8;
-		-moz-opacity: 0.8;
-		-khtml-opacity: 0.8;
+		opacity: 0.85;
+		-moz-opacity: 0.85;
+		-khtml-opacity: 0.85;
 		padding-left: 10px;
 	}
 
@@ -871,17 +863,20 @@ legend {
 	#domain_selector_domain {
 		display: <?php echo ($_SESSION['theme']['domain_visible']['text'] != 'true') ? 'none' : 'inline-block'; ?>;
 		white-space: nowrap;
-		padding: 2px <?php echo ($_SESSION['theme']['domain_background_opacity']['text'] != '' && $_SESSION['theme']['domain_background_opacity']['text'] != 0) ? 7 : 0; ?>px 1px 7px;
-		margin-top: -1px;
-		background-color: rgba(<?php echo hex2rgb($_SESSION['theme']['domain_background_color']['text'],','); ?>, <?php echo ($_SESSION['theme']['domain_background_opacity']['text'] != '') ? $_SESSION['theme']['domain_background_opacity']['text'] : 0; ?>);
-		-webkit-border-radius: 1px;
-		-moz-border-radius: 1px;
-		border-radius: 1px;
+		padding: 2px 0px 1px 7px;
+		margin-top: 2px;
 		font-size: 12px;
-		color: <?php echo $_SESSION['theme']['domain_color']['text']; ?>;
+		opacity: 0.8;
+		-moz-opacity: 0.8;
+		-khtml-opacity: 0.8;
+		color: #fff;
 	}
 
 	#domain_selector_domain:hover {
+		filter: alpha(opacity=100);
+		opacity: 1;
+		-moz-opacity: 1;
+		-khtml-opacity: 1;
 		cursor: pointer;
 	}
 
@@ -907,9 +902,9 @@ legend {
 		font-size: 10pt;
 		overflow: hidden;
 		background-color: #fff;
-		-webkit-box-shadow: 0 0 10px #888;
-		-moz-box-shadow: 0 0 10px #888;
-		box-shadow: 0 0 10px #888;
+		-webkit-box-shadow: 0 0 10px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		-moz-box-shadow: 0 0 10px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
+		box-shadow: 0 0 10px <?php echo ($_SESSION['theme']['login_shadow_color']['text'] != '') ? $_SESSION['theme']['login_shadow_color']['text'] : "#888"; ?>;
 	}
 
 	#domains_header {
@@ -1137,10 +1132,13 @@ legend {
 	<script language="JavaScript" type='text/javascript' src='<?php echo PROJECT_PATH; ?>/resources/rightjs/right-colorpicker-src.js'></script>
 <?php } ?>
 
-<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.11.1.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery-1.8.3.js"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo PROJECT_PATH; ?>/resources/jquery/jquery.autosize.input.js"></script>
+
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
+
+		$("#message_text").mouseover(function() { $(this).hide(); $("#message_container").hide(); });
 
 		$("#domain_selector_domain").click(function() { show_domains(); });
 		$("#domain_selector_icon").click(function() { show_domains(); });
@@ -1192,7 +1190,23 @@ legend {
 	// applies the auto-size jquery script to all text inputs
 	$(document).ready(function() {
 		$("input.txt, textarea.txt, .formfld").autosizeInput();
+
+		//fix menu bar overhang on load
+		var helper_div = $('<div />');
+		$('#page').append(helper_div);
+		inner_width = helper_div.width();
+		helper_div.remove();
+		$('#menu_bar').css({width: inner_width});
 	});
+
+	function resize() {
+		//fix menu bar overhang on window resize
+		var helper_div = $('<div />');
+		$('#page').append(helper_div);
+		inner_width = helper_div.width();
+		helper_div.remove();
+		$('#menu_bar').css({width: inner_width});
+	}
 </script>
 
 <script language="JavaScript" type="text/javascript">
@@ -1211,8 +1225,8 @@ legend {
 			$("#message_text").html(msg);
 			$("#message_container").css({height: $("#message_text").css("height")});
 			$("#message_container").css({width: inner_width});
-			$("#message_text").animate({top: '+=200'}, 0).animate({opacity: 1}, "fast").delay(delay).animate({top: '-=200'}, 1000).animate({opacity: 0});
-			$("#message_container").animate({top: '+=200'}, 0).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(delay).animate({top: '-=200'}, 1000).animate({opacity: 0}, function() {
+			$("#message_text").show().animate({top: '+=80'}, 500).animate({opacity: 1}, 'fast').delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0});
+			$("#message_container").show().animate({top: '+=80'}, 500).animate({opacity: <?php echo $_SESSION['theme']['message_opacity']['text']; ?>}, "fast").delay(delay).animate({top: '-=80'}, 1000).animate({opacity: 0}, function() {
 				$("#message_container").removeClass('message_container_mood_'+mood);
 			});
 		}
@@ -1221,8 +1235,8 @@ legend {
 
 <script type='text/javascript'>
 	// preload images
-	img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/enhanced/images/icon_play.png";
-	img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/enhanced/images/icon_pause.png";
+	img_play = new Image();	img_play.src = "<?php echo PROJECT_PATH; ?>/themes/minimized/images/icon_play.png";
+	img_pause = new Image(); img_pause.src = "<?php echo PROJECT_PATH; ?>/themes/minimized/images/icon_pause.png";
 
 	var recording_audio;
 
@@ -1249,32 +1263,70 @@ legend {
 <?php
 //add multi-lingual support
 	$language = new text;
-	$text = $language->get(null,'themes/enhanced');
+	$text = $language->get(null,'themes/minimized');
 
 // set message_onload
-if (strlen($_SESSION['message']) > 0) {
-	$message_text = addslashes($_SESSION['message']);
-	$message_mood = $_SESSION['message_mood'];
-	$message_delay = $_SESSION['message_delay'];
+	if (strlen($_SESSION['message']) > 0) {
+		$message_text = addslashes($_SESSION['message']);
+		$message_mood = $_SESSION['message_mood'];
+		$message_delay = $_SESSION['message_delay'];
 
-	$onload .= "display_message('".$message_text."'";
-	$onload .= ($message_mood != '') ? ", '".$message_mood."'" : ", 'default'";
-	if ($message_delay != '') {
-		$onload .= ", '".$message_delay."'";
+		$onload .= "display_message('".$message_text."'";
+		$onload .= ($message_mood != '') ? ", '".$message_mood."'" : ", 'default'";
+		if ($message_delay != '') {
+			$onload .= ", '".$message_delay."'";
+		}
+		$onload .= "); ";
+		unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
 	}
-	$onload .= "); ";
-	unset($_SESSION['message'], $_SESSION['message_mood'], $_SESSION['message_delay']);
-}
 ?>
 
-<body onload="<?php echo $onload;?>">
+<body onload="<?php echo $onload;?>" onresize="resize();">
 
 	<div id='message_container' class='message_container_mood_default'></div>
 	<div id='message_text' class='message_container_text_default'></div>
 
+	<?php if (strlen($_SESSION["username"]) > 0) { ?>
+		<div id='menu_bar'>
+			<table id='menu_bar_content' width='90%' cellpadding='0' cellspacing='0' border='0' align="center">
+				<tr>
+					<td style='padding: 5px 20px;'>
+						<?php
+						$logo = (isset($_SESSION['theme']['logo_header']['text'])) ? $_SESSION['theme']['logo_header']['text'] : PROJECT_PATH."/themes/minimized/images/logo_header.png";
+						if (strlen(PROJECT_PATH) > 0) {
+							$logo_link = PROJECT_PATH;
+						}
+						else if (!$default_login) {
+							$logo_link = '/';
+						}
+						?>
+						<a href='<?php echo $logo_link; ?>'><img src='<?php echo $logo; ?>' style='border: none; height: 30px;'></a>
+					</td>
+					<td width="100%"><!--{menu}--></td>
+					<td style='white-space: nowrap;'>
+						<?php
+						//domain selector icon
+						if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+							echo "<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
+						}
+
+						//logout icon
+						if ($_SESSION['username'] != '') {
+							$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
+							echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/minimized/images/icon_logout.png' style='width: 28px; height: 23px; border: none;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
+							unset($username_full);
+						}
+						?>
+					</td>
+				</tr>
+			</table>
+		</div>
+	<?php } ?>
+
 	<?php
 	//logged in show the domains block
 	if (strlen($_SESSION["username"]) > 0 && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
+
 		?>
 		<div id="domains_container">
 			<input type="hidden" id="domains_visible" value="0">
@@ -1305,8 +1357,8 @@ if (strlen($_SESSION['message']) > 0) {
 				</div>
 
 				<script>
-					var domain_names = new Array("<?php echo implode('","', $ary_domain_names)?>");
-					var domain_descs = new Array("<?php echo implode('","', $ary_domain_descs)?>");
+					var domain_names = new Array("<?=implode('","', $ary_domain_names)?>");
+					var domain_descs = new Array("<?=implode('","', $ary_domain_descs)?>");
 
 					function domain_search(criteria) {
 						for (var x = 0; x < domain_names.length; x++) {
@@ -1438,50 +1490,15 @@ if (strlen($_SESSION['message']) > 0) {
 	?>
 
 	<div id="page" align='center'>
+
 		<?php if (!$default_login) { ?>
 			<table width='90%' border='0' cellpadding='0' cellspacing='0'>
 				<tr>
-					<td align='left' valign='top'>
+					<td id="page_body" align='left' valign='top'>
 						<table border='0' cellpadding='0' cellspacing='0' width='100%' style='margin-top: 10px;'>
 							<tr>
-								<td>
-									<?php
-									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php") {
-										if (isset($_SESSION['theme']['logo']['text'])){
-											$logo = $_SESSION['theme']['logo']['text'];
-										}
-										else {
-											$logo = PROJECT_PATH."/themes/enhanced/images/logo.png";
-										}
-										if (strlen(PROJECT_PATH) > 0) {
-											echo "<a href='".PROJECT_PATH."'><img src='$logo' /></a>";
-										}
-										else {
-											if (!$default_login) {
-												echo "<a href='/'><img src='$logo' /></a>";
-											}
-										}
-									}
-									?>
-								</td>
 								<td width='100%' style='padding-right: 15px;' align='right' valign='middle'>
 									<?php
-									echo "<span id='header_icons'>";
-
-								//domain selector icon
-									if ($_SESSION["username"] != '' && permission_exists("domain_select") && count($_SESSION['domains']) > 1) {
-										echo "<span id='domain_selector_domain'>".$_SESSION['domain_name']."</span><img id='domain_selector_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_domain_selector.png' style='width: 28px; height: 23px; border: none;' title='".$_SESSION['domain_name']." &#10;".$text['theme-label-open_selector']."' align='absmiddle'>";
-									}
-
-								//logout icon
-									if ($_SESSION['username'] != '') {
-										$username_full = $_SESSION['username'].((count($_SESSION['domains']) > 1) ? "@".$_SESSION["user_context"] : null);
-										echo "<a href='".PROJECT_PATH."/logout.php' onclick=\"return confirm('".$text['theme-confirm-logout']."');\"><img id='logout_icon' src='".PROJECT_PATH."/themes/enhanced/images/icon_logout.png' style='width: 28px; height: 23px; border: none;' title='".$text['theme-label-logout']." ".$username_full."' align='absmiddle'></a>";
-										unset($username_full);
-									}
-
-									echo "</span>\n";
-
 								// login form
 									if ($_SERVER['PHP_SELF'] != PROJECT_PATH."/resources/install.php" && !$default_login) {
 										if (strlen($_SESSION["username"]) == 0) {
@@ -1545,25 +1562,16 @@ if (strlen($_SESSION['message']) > 0) {
 				if (strlen($_SESSION["username"]) > 0) {
 					?>
 					<tr>
-						<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
-					</tr>
-					<tr>
-						<td class='menu_bar' height='30px'>
-							<!--{menu}-->
-						</td>
-					</tr>
-					<tr>
-						<td height='9px'><img src='<!--{project_path}-->/themes/enhanced/images/blank.gif'></td>
+						<td><img src='<!--{project_path}-->/themes/minimized/images/blank.gif' style='width: 1px; height: 15px; border: none;'></td>
 					</tr>
 					<?php
 				}
 				?>
 				<tr>
-					<td valign='top' align='center' width='100%'>
+					<td valign='top' align='center' width='100%' style='padding-top: 25px'>
 						<table cellpadding='0' cellspacing='1' border='0' width='100%' style='margin-bottom: 60px;'>
-
 							<tr>
-								<td class='main_content' valign='top' align='center'>
+								<td id='main_content' valign='top' align='center'>
 									<!--{body}-->
 								</td>
 							</tr>
