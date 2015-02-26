@@ -107,7 +107,7 @@ else {
 	echo "<td class='list_control_icons'>";
 	echo "&nbsp;\n";
 	echo "</td>\n";
-	echo "<tr>\n";
+	echo "</tr>\n";
 
 	if ($result_count > 0) {
 		foreach($result as $row) {
