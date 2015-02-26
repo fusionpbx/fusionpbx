@@ -119,7 +119,7 @@ else {
 			echo "	<td valign='top' class='row_stylebg tr_link_void' style='white-space: nowrap; vertical-align: top;'>";
 			echo "		<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?uuid=".$row['call_uuid']."'>".$text['label-reference_cdr']."</a>";
 			echo "		".($caller_id_name != '') ? "&nbsp;&nbsp;".$caller_id_name." (".format_phone($caller_id_number).")" : $caller_id_number;
-			echo 		"&nbsp;&nbsp;<span style='font-size: 150%; line-height: 10px;'>&#10513;</span>&nbsp;&nbsp;".$destination_number;
+			echo 		"&nbsp;&nbsp;<span style='font-size: 150%; line-height: 10px;'>&#8674;</span>&nbsp;&nbsp;".$destination_number;
 			echo "	</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo "<a href='email_view.php?id=".$row['email_uuid']."' alt='".$text['label-message_view']."'>$v_link_label_view</a>";
