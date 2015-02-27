@@ -271,6 +271,24 @@ else {
 				echo "				<option value=''></option>\n";
 				$sql = "select extension_uuid, extension, number_alias from v_extensions ";
 				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+
+				if (!(if_group("admin") || if_group("superadmin"))) {
+					if (count($_SESSION['user']['extension']) > 0) {
+						$sql .= "and (";
+						$x = 0;
+						foreach($_SESSION['user']['extension'] as $row) {
+							if ($x > 0) { $sql .= "or "; }
+							$sql .= "extension = '".$row['user']."' ";
+							$x++;
+						}
+						$sql .= ")";
+					}
+					else {
+						//used to hide any results when a user has not been assigned an extension
+						$sql .= "and extension = 'disabled' ";
+					}
+				}
+
 				$sql .= "order by ";
 				$sql .= "extension asc ";
 				$sql .= ", number_alias asc ";
@@ -284,7 +302,9 @@ else {
 				unset ($prep_statement);
 				echo "			</select>\n";
 				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
-				echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
+				if ((if_group("admin") || if_group("superadmin"))) {
+					echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
+				}
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
