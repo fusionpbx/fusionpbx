@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 
 require_once "root.php";
@@ -61,6 +62,24 @@ require_once "resources/require.php";
 	$sql .= "where ";
 	$sql .= "enabled = 'true' ";
 	$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+
+	if (!(if_group("admin") || if_group("superadmin"))) {
+		if (count($_SESSION['user']['extension']) > 0) {
+			$sql .= "and (";
+			$x = 0;
+			foreach($_SESSION['user']['extension'] as $row) {
+				if ($x > 0) { $sql .= "or "; }
+				$sql .= "extension = '".$row['user']."' ";
+				$x++;
+			}
+			$sql .= ")";
+		}
+		else {
+			//used to hide any results when a user has not been assigned an extension
+			$sql .= "and extension = 'disabled' ";
+		}
+	}
+
 	$sql .= "order by ";
 	$sql .= "extension asc";
 	$prep_statement = $db->prepare(check_sql($sql));
