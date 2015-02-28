@@ -388,7 +388,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "mwi_account, ";
 							}
 							$sql .= "sip_bypass_media, ";
-							$sql .= "dial_string, ";
+							if (permission_exists('extension_dial_string')) {
+								$sql .= "dial_string, ";
+							}
 							$sql .= "enabled, ";
 							$sql .= "description ";
 							$sql .= ")";
@@ -446,7 +448,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$sql .= "'$mwi_account', ";
 							}
 							$sql .= "'$sip_bypass_media', ";
-							$sql .= "'$dial_string', ";
+							if (permission_exists('extension_dial_string')) {
+								$sql .= "'$dial_string', ";
+							}
 							if (permission_exists('extension_enabled')) {
 								$sql .= "'$enabled', ";
 							}
@@ -587,7 +591,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					$sql .= "mwi_account = '$mwi_account', ";
 					$sql .= "sip_bypass_media = '$sip_bypass_media', ";
-					$sql .= "dial_string = '$dial_string', ";
+					if (permission_exists('extension_dial_string')) {
+						$sql .= "dial_string = '$dial_string', ";
+					}
 					if (permission_exists('extension_enabled')) {
 						$sql .= "enabled = '$enabled', ";
 					}
@@ -1772,16 +1778,18 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</tr>\n";
 	}
 
-	echo "<tr>\n";
-	echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
-	echo "    ".$text['label-dial_string']."\n";
-	echo "</td>\n";
-	echo "<td class='vtable' align='left'>\n";
-	echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"$dial_string\">\n";
-	echo "<br />\n";
-	echo $text['description-dial_string']."\n";
-	echo "</td>\n";
-	echo "</tr>\n";
+	if (permission_exists('extension_dial_string')) {
+		echo "<tr>\n";
+		echo "<td class='vncell' valign='top' align='left' nowrap='nowrap'>\n";
+		echo "    ".$text['label-dial_string']."\n";
+		echo "</td>\n";
+		echo "<td class='vtable' align='left'>\n";
+		echo "    <input class='formfld' type='text' name='dial_string' maxlength='4096' value=\"$dial_string\">\n";
+		echo "<br />\n";
+		echo $text['description-dial_string']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+	}
 
 	echo "	</table>\n";
 	echo "	</div>";
