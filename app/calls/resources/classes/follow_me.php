@@ -37,6 +37,7 @@ include "root.php";
 		public $cid_number_prefix;
 		public $accountcode;
 		public $follow_me_enabled;
+		public $follow_me_caller_id_uuid;
 		private $extension;
 
 		public $destination_data_1;
@@ -85,6 +86,9 @@ include "root.php";
 				if (strlen($this->cid_number_prefix) > 0) {
 					$sql .= "cid_number_prefix, ";
 				}
+				if (strlen($this->follow_me_caller_id_uuid) > 0) {
+					$sql .= "follow_me_caller_id_uuid, ";
+				}
 				$sql .= "follow_me_enabled ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -94,6 +98,9 @@ include "root.php";
 				$sql .= "'$this->cid_name_prefix', ";
 				if (strlen($this->cid_number_prefix) > 0) {
 					$sql .= "'$this->cid_number_prefix', ";
+				}
+				if (strlen($this->follow_me_caller_id_uuid) > 0) {
+					$sql .= "'$this->follow_me_caller_id_uuid', ";
 				}
 				$sql .= "'$this->follow_me_enabled' ";
 				$sql .= ")";
@@ -112,6 +119,7 @@ include "root.php";
 				$sql = "update v_follow_me set ";
 				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
 				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
+				$sql .= "follow_me_caller_id_uuid = '$this->follow_me_caller_id_uuid', ";
 				$sql .= "cid_number_prefix = '$this->cid_number_prefix' ";
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
@@ -324,19 +332,37 @@ include "root.php";
 						$dial_string .= ",extension_uuid=".$this->extension_uuid;
 						$dial_string .= ",group_confirm_key=exec,group_confirm_file=lua confirm.lua";
 
+						$dial_string_caller_id_name = "\${caller_id_name}";
+						$dial_string_caller_id_number = "\${caller_id_number}";
+
+						if (strlen($this->follow_me_caller_id_uuid) > 0){
+	$sql_caller = "select destination_number, destination_description from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->follow_me_caller_id_uuid'";
+							$prep_statement_caller = $db->prepare($sql_caller);
+							if ($prep_statement_caller) {
+								$prep_statement_caller->execute();
+								$row_caller = $prep_statement_caller->fetch(PDO::FETCH_ASSOC);
+								if (strlen($row_caller['destination_description']) > 0) {
+									$dial_string_caller_id_name = $row_caller['destination_description'];
+								}
+								if (strlen($row_caller['destination_number']) > 0) {
+									$dial_string_caller_id_number = $row_caller['destination_number'];
+								}
+							}
+						}
+
 						if (strlen($this->cid_name_prefix) > 0) {
-							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#\${caller_id_name}";
+							$dial_string .= ",origination_caller_id_name=".$this->cid_name_prefix."#$dial_string_caller_id_name";
 						}
 						else {
-							$dial_string .= ",origination_caller_id_name=\${caller_id_name}";
+							$dial_string .= ",origination_caller_id_name=$dial_string_caller_id_name";
 						}
 
 						if (strlen($this->cid_number_prefix) > 0) {
 							//$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."";
-							$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."#\${caller_id_number}";
+						$dial_string .= ",origination_caller_id_number=".$this->cid_number_prefix."#dial_string_caller_id_number";
 						}
 						else {
-							$dial_string .= ",origination_caller_id_number=\${caller_id_number}";
+							$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
 						}
 
 						if (strlen($this->accountcode) > 0) {
@@ -352,7 +378,7 @@ include "root.php";
 								//set the dial string
 								if (strlen($_SESSION['domain']['dial_string']['text']) == 0) {
 									$dial_string .= "[";
-									$dial_string .= "outbound_caller_id_number=\${caller_id_number},";
+									$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number,";
 									$dial_string .= "presence_id=".$row["follow_me_destination"]."@".$_SESSION['domain_name'].",";
 									if ($row["follow_me_prompt"] == "1") {
 										$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";
@@ -376,7 +402,7 @@ include "root.php";
 							}
 							else {
 								$dial_string .= "[";
-								$dial_string .= "outbound_caller_id_number=\${outbound_caller_id_number},";
+								$dial_string .= "outbound_caller_id_number=$dial_string_caller_id_number,";
 								$dial_string .= "presence_id=".$this->extension."@".$_SESSION['domain_name'].",";
 								if ($row["follow_me_prompt"] == "1") {
 									$dial_string .= "group_confirm_key=exec,group_confirm_file=lua confirm.lua,confirm=true,";

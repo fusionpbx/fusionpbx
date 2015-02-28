@@ -22,6 +22,7 @@
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
+	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 */
 require_once "root.php";
 require_once "resources/require.php";
@@ -123,6 +124,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$cid_name_prefix = check_str($_POST["cid_name_prefix"]);
 			$cid_number_prefix = check_str($_POST["cid_number_prefix"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
+			$follow_me_caller_id_uuid = check_str($_POST["follow_me_caller_id_uuid"]);
 
 			$destination_data_1 = check_str($_POST["destination_data_1"]);
 			$destination_delay_1 = check_str($_POST["destination_delay_1"]);
@@ -274,6 +276,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$follow_me->cid_name_prefix = $cid_name_prefix;
 			$follow_me->cid_number_prefix = $cid_number_prefix;
 			$follow_me->follow_me_enabled = $follow_me_enabled;
+			$follow_me->follow_me_caller_id_uuid = $follow_me_caller_id_uuid;
 
 			$follow_me->destination_data_1 = $destination_data_1;
 			$follow_me->destination_type_1 = $destination_type_1;
@@ -395,6 +398,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$cid_name_prefix = $row["cid_name_prefix"];
 		$cid_number_prefix = $row["cid_number_prefix"];
 		$follow_me_enabled = $row["follow_me_enabled"];
+		$follow_me_caller_id_uuid = $row["follow_me_caller_id_uuid"];
 
 		$sql = "select * from v_follow_me_destinations ";
 		$sql .= "where follow_me_uuid = '$follow_me_uuid' ";
@@ -561,10 +565,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</td>\n";
 	echo "<td class='vtable' align='left'>\n";
 	$on_click = "document.getElementById('forward_all_disabled').checked=true;";
-	$on_click .= "document.getElementById('dnd_disabled').checked=true;";
+	$on_click .= "document.getElementById('dnd_disabled').checked=true; document.getElementById('follow_me_caller_id_uuid').focus();";
 	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$on_click\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
+	echo "&nbsp;&nbsp;&nbsp;";
+	$sql_follow_me = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+	$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
+	$prep_statement_follow_me->execute();
+	$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
+	if (count($result_follow_me) > 0) {
+		echo "  <select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
+		echo "  <option></option>\n";
+		foreach ($result_follow_me as &$row_follow_me) {
+			$selected = $row_follow_me["destination_uuid"]==$follow_me_caller_id_uuid?"selected='selected' ":"";
+			if (strlen($row_follow_me["dialplan_uuid"]) == 0) {
+				echo "          <option value='".$row_follow_me["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
+			}                                
+			else { 
+				echo "          <option value='".$row_follow_me["destination_uuid"]."' $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
+			}
+		}
+		echo "          </select>\n";
+	}
 	echo "<br />\n";
 	echo "<br />\n";
 	echo "</td>\n";
