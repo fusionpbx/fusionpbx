@@ -526,26 +526,29 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_all_destination' id='forward_all_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_all_destination."\">\n";
-	echo "&nbsp;&nbsp;&nbsp;";
-	$sql_forward = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
-	$prep_statement_forward = $db->prepare(check_sql($sql_forward));
-	$prep_statement_forward->execute();
-	$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
-	if (count($result_forward) > 0) {
-		echo "  <select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
-		echo "  <option></option>\n";
-		foreach ($result_forward as &$row_forward) {
-			$selected = $row_forward["destination_uuid"]==$forward_caller_id_uuid?"selected='selected' ":"";
-			if (strlen($row_forward["dialplan_uuid"]) == 0) {
-				echo "          <option value='".$row_forward["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
-			}                                
-			else { 
-				echo "          <option value='".$row_forward["destination_uuid"]."' $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
+
+	if (permission_exists('follow_me_cid_set')) {
+		echo "&nbsp;&nbsp;&nbsp;";
+		$sql_forward = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+		$prep_statement_forward = $db->prepare(check_sql($sql_forward));
+		$prep_statement_forward->execute();
+		$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result_forward) > 0) {
+			echo "  <select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
+			echo "  <option></option>\n";
+			foreach ($result_forward as &$row_forward) {
+				$selected = $row_forward["destination_uuid"]==$forward_caller_id_uuid?"selected='selected' ":"";
+				if (strlen($row_forward["dialplan_uuid"]) == 0) {
+					echo "          <option value='".$row_forward["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
+				}                                
+				else { 
+					echo "          <option value='".$row_forward["destination_uuid"]."' $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
+				}
 			}
+			echo "          </select>\n";
 		}
-		echo "          </select>\n";
+		unset ($sql_forward, $prep_statement_forward, $result_forward, $row_forward);
 	}
-	unset ($sql_forward, $prep_statement_forward, $result_forward, $row_forward);
 
 	echo "</td>\n";
 	echo "</tr>\n";
@@ -594,26 +597,30 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "	<label for='follow_me_disabled'><input type='radio' name='follow_me_enabled' id='follow_me_disabled' onclick=\"\" value='false' ".(($follow_me_enabled == "false" || $follow_me_enabled == "") ? "checked='checked'" : null)." /> ".$text['label-disabled']."</label> \n";
 	echo "	<label for='follow_me_enabled'><input type='radio' name='follow_me_enabled' id='follow_me_enabled' onclick=\"$on_click\" value='true' ".(($follow_me_enabled == "true") ? "checked='checked'" : null)."/> ".$text['label-enabled']."</label> \n";
 	unset($on_click);
-	echo "&nbsp;&nbsp;&nbsp;";
-	$sql_follow_me = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
-	$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
-	$prep_statement_follow_me->execute();
-	$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
-	if (count($result_follow_me) > 0) {
-		echo "  <select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
-		echo "  <option></option>\n";
-		foreach ($result_follow_me as &$row_follow_me) {
-			$selected = $row_follow_me["destination_uuid"]==$follow_me_caller_id_uuid?"selected='selected' ":"";
-			if (strlen($row_follow_me["dialplan_uuid"]) == 0) {
-				echo "          <option value='".$row_follow_me["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
-			}                                
-			else { 
-				echo "          <option value='".$row_follow_me["destination_uuid"]."' $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
+
+	if (permission_exists('follow_me_cid_set')) {
+		echo "&nbsp;&nbsp;&nbsp;";
+		$sql_follow_me = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+		$prep_statement_follow_me = $db->prepare(check_sql($sql_follow_me));
+		$prep_statement_follow_me->execute();
+		$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
+		if (count($result_follow_me) > 0) {
+			echo "  <select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
+			echo "  <option></option>\n";
+			foreach ($result_follow_me as &$row_follow_me) {
+				$selected = $row_follow_me["destination_uuid"]==$follow_me_caller_id_uuid?"selected='selected' ":"";
+				if (strlen($row_follow_me["dialplan_uuid"]) == 0) {
+					echo "          <option value='".$row_follow_me["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
+				}                                
+				else { 
+					echo "          <option value='".$row_follow_me["destination_uuid"]."' $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
+				}
 			}
+			echo "          </select>\n";
 		}
-		echo "          </select>\n";
+		unset ($sql_follow_me, $prep_statement_follow_me, $result_follow_me, $row_follow_me);
 	}
-	unset ($sql_follow_me, $prep_statement_follow_me, $result_follow_me, $row_follow_me);
+
 	echo "<br />\n";
 	echo "<br />\n";
 	echo "</td>\n";
