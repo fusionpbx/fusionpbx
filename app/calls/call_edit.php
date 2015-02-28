@@ -103,6 +103,7 @@ else {
 			$forward_no_answer_destination = $row["forward_no_answer_destination"];
 			$forward_no_answer_enabled = $row["forward_no_answer_enabled"];
 			$follow_me_uuid = $row["follow_me_uuid"];
+			$forward_caller_id_uuid = $row["forward_caller_id_uuid"];
 			break; //limit to 1 row
 		}
 		if (strlen($do_not_disturb) == 0) {
@@ -121,6 +122,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$forward_busy_destination = check_str($_POST["forward_busy_destination"]);
 			$forward_no_answer_enabled = check_str($_POST["forward_no_answer_enabled"]);
 			$forward_no_answer_destination = check_str($_POST["forward_no_answer_destination"]);
+			$forward_caller_id_uuid = check_str($_POST["forward_caller_id_uuid"]);
 			$cid_name_prefix = check_str($_POST["cid_name_prefix"]);
 			$cid_number_prefix = check_str($_POST["cid_number_prefix"]);
 			$follow_me_enabled = check_str($_POST["follow_me_enabled"]);
@@ -239,6 +241,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$call_forward->accountcode = $accountcode;
 			$call_forward->forward_all_destination = $forward_all_destination;
 			$call_forward->forward_all_enabled = $forward_all_enabled;
+			$call_forward->forward_caller_id_uuid = $forward_caller_id_uuid;
 			//$call_forward->set();
 			//unset($call_forward);
 		}
@@ -367,7 +370,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "forward_busy_destination = '".$forward_busy_destination."', ";
 		$sql .= "forward_busy_enabled = '".$forward_busy_enabled."', ";
 		$sql .= "forward_no_answer_destination = '".$forward_no_answer_destination."', ";
-		$sql .= "forward_no_answer_enabled = '".$forward_no_answer_enabled."' ";
+		$sql .= "forward_no_answer_enabled = '".$forward_no_answer_enabled."', ";
+		$sql .= "forward_caller_id_uuid = '".$forward_caller_id_uuid."' ";
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and extension_uuid = '".$extension_uuid."'";
 		$db->exec(check_sql($sql));
@@ -522,6 +526,27 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_all_destination' id='forward_all_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_all_destination."\">\n";
+	echo "&nbsp;&nbsp;&nbsp;";
+	$sql_forward = "select destination_uuid, destination_number, destination_description from v_destinations where domain_uuid = '$domain_uuid' and destination_type = 'inbound' order by destination_number asc ";
+	$prep_statement_forward = $db->prepare(check_sql($sql_forward));
+	$prep_statement_forward->execute();
+	$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
+	if (count($result_forward) > 0) {
+		echo "  <select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
+		echo "  <option></option>\n";
+		foreach ($result_forward as &$row_forward) {
+			$selected = $row_forward["destination_uuid"]==$forward_caller_id_uuid?"selected='selected' ":"";
+			if (strlen($row_forward["dialplan_uuid"]) == 0) {
+				echo "          <option value='".$row_forward["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
+			}                                
+			else { 
+				echo "          <option value='".$row_forward["destination_uuid"]."' $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
+			}
+		}
+		echo "          </select>\n";
+	}
+	unset ($sql_forward, $prep_statement_forward, $result_forward, $row_forward);
+
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -588,6 +613,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		}
 		echo "          </select>\n";
 	}
+	unset ($sql_follow_me, $prep_statement_follow_me, $result_follow_me, $row_follow_me);
 	echo "<br />\n";
 	echo "<br />\n";
 	echo "</td>\n";
