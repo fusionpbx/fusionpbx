@@ -75,6 +75,10 @@
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "user";
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = "follow_me_cid_set";
+		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+		$apps[$x]['permissions'][$y]['groups'][] = "admin";
+		$y++;
 
 	//schema details
 		$y = 0; //table array index
