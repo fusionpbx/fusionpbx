@@ -1196,7 +1196,8 @@ legend {
 </script>
 
 <script language="JavaScript" type="text/javascript">
-	function display_message(msg, mood, delay = <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?>) {
+	function display_message(msg, mood, delay) {
+		delay = (typeof delay  === "undefined") ? <?php echo (1000 * (float) $_SESSION['theme']['message_delay']['text']); ?> : delay;
 		mood = typeof mood !== 'undefined' ? mood : 'default';
 		if (msg != '') {
 			// insert temp div to get width w/o scroll bar
@@ -1231,16 +1232,16 @@ legend {
 
 		if (recording_audio.paused) {
 			recording_audio.play();
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<?=str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause)?>";
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo str_replace("class='list_control_icon'", "class='list_control_icon' style='opacity: 1;'", $v_link_label_pause); ?>";
 		}
 		else {
 			recording_audio.pause();
-			document.getElementById('recording_button_'+recording_id).innerHTML = "<?=$v_link_label_play?>";
+			document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
 		}
 	}
 
 	function recording_reset(recording_id) {
-		document.getElementById('recording_button_'+recording_id).innerHTML = "<?=$v_link_label_play?>";
+		document.getElementById('recording_button_'+recording_id).innerHTML = "<?php echo $v_link_label_play; ?>";
 	}
 </script>
 
