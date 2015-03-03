@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -466,7 +466,7 @@ else {
 					if (strlen($limit) > 0) {
 						$dialplan_detail_tag = 'action'; //condition, action, antiaction
 						$dialplan_detail_type = 'limit';
-						$dialplan_detail_data = "hash \${domain} outbound ".$limit." !USER_BUSY";
+						$dialplan_detail_data = "hash \${domain_name} outbound ".$limit." !USER_BUSY";
 						$dialplan_detail_order = '055';
 						$dialplan_detail_group = '';
 						dialplan_detail_add($_SESSION['domain_uuid'], $dialplan_uuid, $dialplan_detail_tag, $dialplan_detail_order, $dialplan_detail_group, $dialplan_detail_type, $dialplan_detail_data);
@@ -695,7 +695,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "	<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
-	echo "	<option value=\"transfer:\$1 XML \${domain}\">transfer</option>\n";
+	echo "	<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
@@ -755,7 +755,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
-	echo "	<option value=\"transfer:\$1 XML \${domain}\">transfer</option>\n";
+	echo "	<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";
@@ -815,7 +815,7 @@ function type_onchange(dialplan_detail_type) {
 	echo "<optgroup label='".$text['label-add-options']."'>";
 	echo "	<option value=\"enum\">enum</option>\n";
 	echo "	<option value=\"freetdm\">freetdm</option>\n";
-	echo "	<option value=\"transfer:\$1 XML \${domain}\">transfer</option>\n";
+	echo "	<option value=\"transfer:\$1 XML \${domain_name}\">transfer</option>\n";
 	echo "	<option value=\"xmpp\">xmpp</option>\n";
 	echo "</optgroup>";
 	echo "</select>\n";

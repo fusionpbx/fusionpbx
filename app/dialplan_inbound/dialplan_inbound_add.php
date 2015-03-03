@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2013
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -389,7 +389,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'$dialplan_detail_uuid', ";
 			$sql .= "'action', ";
 			$sql .= "'limit', ";
-			$sql .= "'hash \${domain} inbound ".$limit." !USER_BUSY', ";
+			$sql .= "'hash \${domain_name} inbound ".$limit." !USER_BUSY', ";
 			$sql .= "'65' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
