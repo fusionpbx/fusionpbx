@@ -299,7 +299,7 @@ function event_socket_request($fp, $cmd) {
 		    fputs($fp, $value."\n");
 		}
 		fputs($fp, "\n"); //second line feed to end the headers
-		
+
 		usleep(100); //allow time for reponse
 
 		$response = "";
@@ -915,7 +915,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					echo "</optgroup>\n";
 				}
 			}
-		
+
 
 	//xmpp
 		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/xmpp/app_config.php")) {
@@ -1639,7 +1639,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					if (strlen($select_label) > 0) {
 						echo "		<option value='".$select_value."' selected='selected'>".$select_label."</option>\n";
 					}
-					else {
+					else if (strlen($select_value) > 0) {
 						echo "		<option value='".$select_value."' selected='selected'>".trim($select_value,":")."</option>\n";
 					}
 				}
