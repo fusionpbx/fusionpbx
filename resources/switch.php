@@ -454,7 +454,12 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		echo "		<select name='".$select_name."' id='".$select_id."' class='formfld' style='".$select_style."'>\n";
 	}
 
-	echo "		<option></option>\n";
+	if ($select_label != '' && $select_value == '') {
+		echo "		<option value='' selected='selected'>".$select_label."</option>\n";
+	}
+	else {
+		echo "		<option></option>\n";
+	}
 
 	//list call center queues
 		if (file_exists($_SERVER['DOCUMENT_ROOT'].PROJECT_PATH."/app/call_center/app_config.php")) {
@@ -1636,7 +1641,7 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 				}
 			//selected
 				if (!$selection_found) {
-					if (strlen($select_label) > 0) {
+					if (strlen($select_label) > 0 && $select_value != '') {
 						echo "		<option value='".$select_value."' selected='selected'>".$select_label."</option>\n";
 					}
 					else if (strlen($select_value) > 0) {
