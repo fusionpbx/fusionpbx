@@ -455,10 +455,11 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 	}
 
 	if ($select_label != '' && $select_value == '') {
-		echo "		<option value='' selected='selected'>".$select_label."</option>\n";
+		echo "		<option value=''>".$select_label."</option>\n";
+		echo "		<option value='' disabled='disabled'></option>\n";
 	}
 	else {
-		echo "		<option></option>\n";
+		echo "		<option value=''></option>\n";
 	}
 
 	//list call center queues
