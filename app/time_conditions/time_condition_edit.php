@@ -864,7 +864,6 @@ echo "	".$text['label-presets']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
 
-$preset_group_id = 0;
 foreach ($available_presets as $preset_number => $preset) {
 	foreach ($preset as $preset_name => $preset_variables) {
 		$checked = (is_array($current_presets) && $current_presets[$preset_number] != '') ? "checked='checked'" : null;
@@ -872,7 +871,7 @@ foreach ($available_presets as $preset_number => $preset) {
 			$preset_group_id = $current_presets[$preset_number];
 		}
 		else {
-			$preset_group_id = $preset_number * 5 + 5;
+			$preset_group_id = $preset_number * 5 + 100;
 		}
 		echo "<input type='checkbox' name='preset[".$preset_number."]' id='preset_".$preset_number."' value='".$preset_group_id."' ".$checked."> <a href='javascript:void(0);' onclick=\"$('#preset_fields_".$preset_group_id."').slideToggle(400);\">".$text['label-preset_'.$preset_name]."</a><br>\n";
 		echo "<div id='preset_fields_".$preset_group_id."' style='display: none; margin: 4px 0px 0px 20px;'>";
