@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2012
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -41,50 +41,47 @@ else {
 //get the id
 	$user_uuid = check_str($_GET["id"]);
 
-//get the username from v_users
-	$sql = "select * from v_users ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "and user_uuid = '$user_uuid' ";
-	$sql .= "and user_enabled = 'true' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
-		$username = $row["username"];
-		break; //limit to 1 row
-	}
-	unset ($prep_statement);
+//validate the uuid
+	if (is_uuid($user_uuid)) {
+		//get the username from v_users
+			$sql = "select * from v_users ";
+			$sql .= "where user_uuid = '$user_uuid' ";
+			$sql .= "and domain_uuid = '$domain_uuid' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			foreach ($result as &$row) {
+				$username = $row["username"];
+			}
+			unset ($prep_statement);
 
-//required to be a superadmin to delete a member of the superadmin group
-	$superadmin_list = superadmin_list($db);
-	if (if_superadmin($superadmin_list, $user_uuid)) {
-		if (!if_group("superadmin")) {
-			//access denied - do not delete the user
-			header("Location: index.php");
-			return;
-		}
-	}
+		//required to be a superadmin to delete a member of the superadmin group
+			$superadmin_list = superadmin_list($db);
+			if (if_superadmin($superadmin_list, $user_uuid)) {
+				if (!if_group("superadmin")) {
+					//access denied - do not delete the user
+					header("Location: index.php");
+					return;
+				}
+			}
 
-//delete the user
-	$sql_delete = "delete from v_users ";
-	$sql_delete .= "where domain_uuid = '$domain_uuid' ";
-	$sql_delete .= "and user_uuid = '$user_uuid' ";
-	if (!$db->exec($sql_delete)) {
-		//echo $db->errorCode() . "<br>";
-		$info = $db->errorInfo();
-		print_r($info);
-		// $info[0] == $db->errorCode() unified error code
-		// $info[1] is the driver specific error code
-		// $info[2] is the driver specific error string
-	}
+		//delete the groups the user is assigned to
+			$sql = "delete from v_group_users ";
+			$sql .= "where user_uuid = '$user_uuid' ";
+			$sql .= "and domain_uuid = '$domain_uuid' ";
+			if (!$db->exec($sql)) {
+				$info = $db->errorInfo();
+				print_r($info);
+			}
 
-//delete the groups the user is assigned to
-	$sql_delete = "delete from v_group_users ";
-	$sql_delete .= "where domain_uuid = '$domain_uuid' ";
-	$sql_delete .= "and user_uuid = '$user_uuid' ";
-	if (!$db->exec($sql_delete)) {
-		$info = $db->errorInfo();
-		print_r($info);
+		//delete the user
+			$sql = "delete from v_users ";
+			$sql .= "where user_uuid = '$user_uuid' ";
+			$sql .= "and domain_uuid = '$domain_uuid' ";
+			if (!$db->exec($sql)) {
+				$info = $db->errorInfo();
+				print_r($info);
+			}
 	}
 
 //redirect the user
