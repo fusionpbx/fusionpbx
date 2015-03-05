@@ -245,45 +245,10 @@ require_once "resources/header.php";
 					$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
 					$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
 
-					//handle time of day
-					if ($cond_var == 'time-of-day' && $cond_start['hour'] != '') {
-// 						//format condition start
-// 							if ($cond_start['notation'] == 'PM') {
-// 								$cond_start_hour = ($cond_start['hour'] != 12) ? $cond_start['hour'] += 12 : $cond_start['hour'];
-// 							}
-// 							else if ($cond_start['notation'] == 'AM') {
-// 								$cond_start_hour = ($cond_start['hour'] == 12) ? $cond_start['hour'] -= 12 : $cond_start['hour'];
-// 							}
-// 							$cond_start_hour = number_pad($cond_start_hour,2);
-// 							$cond_start_minute = $cond_start['minute'];
-// 							$cond_start = $cond_start_hour.':'.$cond_start_minute;
-
-// 						//format condition stop
-// 							if ($cond_start != '' && $scope == 'range') {
-// 								if ($cond_stop['notation'] == 'PM') {
-// 									$cond_stop_hour = ($cond_stop['hour'] != 12) ? $cond_stop['hour'] += 12 : $cond_stop['hour'];
-// 								}
-// 								else if ($cond_stop['notation'] == 'AM') {
-// 									$cond_stop_hour = ($cond_stop['hour'] == 12) ? $cond_stop['hour'] -= 12 : $cond_stop['hour'];
-// 								}
-// 								$cond_stop_hour = number_pad($cond_stop_hour,2);
-// 								$cond_stop_minute = $cond_stop['minute'];
-// 								$cond_stop = $cond_stop_hour.':'.$cond_stop_minute;
-// 							}
-// 							else {
-// 								unset($cond_stop);
-// 							}
-
-// 						$cond_value = $cond_start.(($cond_stop != '') ? '-'.$cond_stop : null);
-					}
-
-					//handle all other variables
-					else {
-						$cond_value = $cond_start;
-						if ($cond_stop != '') {
-							$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
-							$cond_value .= $range_indicator.$cond_stop;
-						}
+					$cond_value = $cond_start;
+					if ($cond_stop != '') {
+						$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
+						$cond_value .= $range_indicator.$cond_stop;
 					}
 
 					if (!$group_conditions_exist[$group_id]) {
@@ -556,7 +521,7 @@ require_once "resources/header.php";
 		$time_condition_vars["hour"] = $text['label-hour-of-day'];
 		$time_condition_vars["minute"] = $text['label-minute-of-hour'];
 		//$time_condition_vars["minute-of-day"] = $text['label-minute-of-day'];
-		//$time_condition_vars["time-of-day"] = $text['label-time-of-day'];
+		$time_condition_vars["time-of-day"] = $text['label-time-of-day'];
 		$time_condition_vars["date-time"] = $text['label-date-and-time'];
 		foreach ($time_condition_vars as $var_name => $var_label) {
 			echo "html += \"	<option value='".$var_name."' ".(($custom_conditions[$c]['var'] == $var_name) ? "selected='selected'" : null).">".$var_label."</option>\";";
@@ -589,12 +554,7 @@ require_once "resources/header.php";
 	function load_value_fields(group_id, condition_id, condition_var) {
 
 		if (condition_var != '') {
-
-			if (condition_var == 'time-of-day') {
-				//2-3 select boxes for both start and stop, ugh
-				clear_value_fields(group_id, condition_id);
-			}
-			else if (condition_var == 'date-time') {
+			if (condition_var == 'date-time') {
 				//change selects to text inputs
 				clear_value_fields(group_id, condition_id);
 				change_to_input(document.getElementById('value_' + group_id + '_' + condition_id + '_start'));
@@ -683,9 +643,18 @@ require_once "resources/header.php";
 						break;
 
 					case 'minute': //minutes of hour
-						for (m = 1; m <= 59; m++) {
+						for (m = 0; m <= 59; m++) {
 							sel_start.options[sel_start.options.length] = new Option(pad(m, 2), m); //pad function defined below
 							sel_stop.options[sel_stop.options.length] = new Option(pad(m, 2), m);
+						}
+						break;
+
+					case 'time-of-day': //time of day
+						for (h = 0; h <= 23; h++) {
+							for (m = 0; m <= 55; m += 5) {
+								sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2) + ':' + pad(m, 2));
+								sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ':' + pad(m, 2) + ' PM' : h + ':' + pad(m, 2) + ' AM') : '12:' + pad(m, 2) + ' AM'), pad(h, 2)  + ':' + pad(m, 2));
+							}
 						}
 						break;
 
