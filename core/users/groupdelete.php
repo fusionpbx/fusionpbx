@@ -42,9 +42,9 @@ require_once "resources/require.php";
 //validate the uuid
 	if (is_uuid($group_uuid)) {
 		//get the group from v_groups
-			$sql = "select * from v_groups ";
+			$sql = "select group_name from v_groups ";
 			$sql .= "where group_uuid = '".$group_uuid."' ";
-			$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null) ";
+			$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null); ";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
