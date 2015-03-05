@@ -43,19 +43,16 @@ else {
 //get the http values and set them as variables
 	$group_name = check_str($_GET["group_name"]);
 	$user_uuid = check_str($_GET["user_uuid"]);
+	$group_uuid = check_str($_GET["group_uuid"]);
 
 //delete the group membership
 	$sql_delete = "delete from v_group_users ";
 	$sql_delete .= "where domain_uuid = '$domain_uuid' ";
 	$sql_delete .= "and user_uuid = '$user_uuid' ";
-	$sql_delete .= "and group_name = '$group_name' ";
+	$sql_delete .= "and group_uuid = '$group_uuid' ";
 	if (!$db->exec($sql_delete)) {
-		//echo $db->errorCode() . "<br>";
 		$info = $db->errorInfo();
 		print_r($info);
-		// $info[0] == $db->errorCode() unified error code
-		// $info[1] is the driver specific error code
-		// $info[2] is the driver specific error string
 	}
 	else {
 		//$log_type = 'group'; $log_status='remove'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." removed from group: ".$group_name;

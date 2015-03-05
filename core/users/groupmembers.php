@@ -60,6 +60,37 @@ else {
 	}
 	//$exampledatareturned = example("apples", 1);
 
+//get the group from v_groups
+	$sql = "select * from v_groups ";
+	$sql .= "where group_uuid = '".$group_uuid."' ";
+	$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null) ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($groups as &$row) {
+		$group_name = $row["group_name"];
+	}
+	unset ($prep_statement);
+
+//get the the users array
+	if (permission_exists('group_member_add')) {
+		$sql = "SELECT * FROM v_users ";
+		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "order by username ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	}
+
+//get the groups users
+	$sql = "SELECT u.user_uuid, u.username, g.group_user_uuid, g.group_uuid FROM v_group_users as g, v_users as u ";
+	$sql .= "where g.user_uuid = u.user_uuid ";
+	$sql .= "and g.domain_uuid = '$domain_uuid' ";
+	$sql .= "and g.group_name = '$group_name' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //include the header
 	require_once "resources/header.php";
 	$document['title'] = $text['title-group_members'];
@@ -80,22 +111,17 @@ else {
 	if (permission_exists('group_member_add')) {
 		echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 		echo "			<form method='post' action='groupmemberadd.php'>";
-		$sql = "SELECT * FROM v_users ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "order by username ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
 		echo "			<select name=\"user_uuid\" style='width: 200px;' class='formfld'>\n";
 		echo "				<option value=\"\"></option>\n";
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach($result as $field) {
+		foreach($users as $field) {
 			$username = $field['username'];
 			if (if_group_members($db, $group_name, $field['user_uuid']) && !in_array($field['user_uuid'], $group_users)) {
 				echo "		<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
 			}
 		}
+		unset($sql, $users);
 		echo "			</select>";
-		unset($sql, $result);
+		echo "			<input type='hidden' name='group_uuid' value='$group_uuid'>";
 		echo "			<input type='hidden' name='group_name' value='$group_name'>";
 		echo "			<input type='submit' class='btn' value='".$text['button-add_member']."'>";
 		echo "			</form>";
@@ -104,13 +130,6 @@ else {
 	echo "	</tr>\n";
 	echo "</table>\n";
 	echo "<br>";
-
-	$sql = "SELECT u.user_uuid, u.username, g.group_user_uuid FROM v_group_users as g, v_users as u ";
-	$sql .= "where g.user_uuid = u.user_uuid ";
-	$sql .= "and g.domain_uuid = '$domain_uuid' ";
-	$sql .= "and g.group_name = '$group_name' ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
 
 	$strlist = "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	$strlist .= "<tr>\n";
@@ -122,17 +141,17 @@ else {
 	$strlist .= "</tr>\n";
 
 	$count = 0;
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 	foreach ($result as &$row) {
 		$group_user_uuid = $row["group_user_uuid"];
 		$username = $row["username"];
 		$user_uuid = $row["user_uuid"];
+		$group_uuid = $row["group_uuid"];
 		$strlist .= "<tr'>";
 		$strlist .= "<td align=\"left\"  class='".$row_style[$c]."' nowrap> &nbsp; $username &nbsp; </td>\n";
 		$strlist .= "<td align=\"left\"  class='".$row_style[$c]."' nowrap> &nbsp; </td>\n";
 		$strlist .= "<td class='list_control_icons' style='width: 25px;'>";
 		if (permission_exists('group_member_delete')) {
-			$strlist .= "<a href='groupmemberdelete.php?user_uuid=$user_uuid&group_name=$group_name' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
+			$strlist .= "<a href='groupmemberdelete.php?user_uuid=$user_uuid&group_name=$group_name&group_uuid=$group_uuid' onclick=\"return confirm('".$text['confirm-delete']."')\" alt='".$text['button-delete']."'>$v_link_label_delete</a>";
 		}
 		$strlist .= "</td>\n";
 		$strlist .= "</tr>\n";
@@ -145,7 +164,6 @@ else {
 
 	$strlist .= "</table>\n";
 	echo $strlist;
-
 	echo "<br><br>";
 
 //include the footer
