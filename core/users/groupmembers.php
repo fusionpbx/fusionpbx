@@ -45,13 +45,14 @@ else {
 	$text = $language->get();
 
 //get the http value and set as a variable
+	$group_uuid = $_GET["group_uuid"];
 	$group_name = $_GET["group_name"];
 
 //define the if group members function
-	function if_group_members($db, $group_name, $user_uuid) {
+	function if_group_members($db, $group_uuid, $user_uuid) {
 		$sql = "select * from v_group_users ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
-		$sql .= "and group_name = '$group_name' ";
+		$sql .= "and group_uuid = '$group_uuid' ";
 		$sql .= "and user_uuid = '$user_uuid' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -86,7 +87,7 @@ else {
 	$sql = "SELECT u.user_uuid, u.username, g.group_user_uuid, g.group_uuid FROM v_group_users as g, v_users as u ";
 	$sql .= "where g.user_uuid = u.user_uuid ";
 	$sql .= "and g.domain_uuid = '$domain_uuid' ";
-	$sql .= "and g.group_name = '$group_name' ";
+	$sql .= "and g.group_uuid = '$group_uuid' ";
 	$prep_statement = $db->prepare(check_sql($sql));
 	$prep_statement->execute();
 	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -115,7 +116,7 @@ else {
 		echo "				<option value=\"\"></option>\n";
 		foreach($users as $field) {
 			$username = $field['username'];
-			if (if_group_members($db, $group_name, $field['user_uuid']) && !in_array($field['user_uuid'], $group_users)) {
+			if (if_group_members($db, $group_uuid, $field['user_uuid']) && !in_array($field['user_uuid'], $group_users)) {
 				echo "		<option value='".$field['user_uuid']."'>".$field['username']."</option>\n";
 			}
 		}
