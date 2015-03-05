@@ -75,6 +75,6 @@ else {
 	}
 
 //redirect the user
-	header("Location: groupmembers.php?group_name=$group_name");
+	header("Location: groupmembers.php?group_uuid=$group_uuid&group_name=$group_name");
 
 ?>
