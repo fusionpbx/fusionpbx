@@ -10,6 +10,11 @@
 	$text['description-time-conditions']['pt-pt'] = "Rota dinamicamente as chamadas para um menu IVR, números externos, scripts ou outros destinos com base nas condições de tempo.";
 	$text['description-time-conditions']['fr-fr'] = "Dynamiquement acheminer les appels à un menu IVR, numéros externes, scripts, ou d'autres destinations en fonction des conditions de temps.";
 
+	$text['button-advanced']['en-us'] = "Advanced";
+	$text['button-advanced']['es-cl'] = "Avanzado";
+	$text['button-advanced']['pt-pt'] = "Avancé";
+	$text['button-advanced']['fr-fr'] = "Avançado";
+
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['es-cl'] = "Volver";
 	$text['button-back']['pt-pt'] = "Voltar";
@@ -45,47 +50,52 @@
 	$text['description-template']['pt-pt'] = "Os templates oferecem uma lista condições temporais.";
 	$text['description-template']['fr-fr'] = "Le modèle fourni une liste de présélection.";
 
-	$text['label-conditions']['en-us'] = "Conditions";
-	$text['label-conditions']['es-cl'] = "Condiciones";
-	$text['label-conditions']['pt-pt'] = "Condições";
-	$text['label-conditions']['fr-fr'] = "Conditions";
+	$text['label-custom']['en-us'] = "Custom";
+	$text['label-custom']['es-cl'] = "Costumbre";
+	$text['label-custom']['pt-pt'] = "Personalizado";
+	$text['label-custom']['fr-fr'] = "Coutume";
 
-	$text['description-conditions']['en-us'] = "Define conditions for the Action.";
-	$text['description-conditions']['es-cl'] = "Definir condiciones para la Acción.";
-	$text['description-conditions']['pt-pt'] = "Definir condições para a ação.";
-	$text['description-conditions']['fr-fr'] = "Définir les conditions pour l'action.";
+	$text['label-conditions']['en-us'] = "Conditions";
+	$text['label-conditions']['es-cl'] = "Condición";
+	$text['label-conditions']['pt-pt'] = "Condição";
+	$text['label-conditions']['fr-fr'] = "état";
+
+	$text['label-condition']['en-us'] = "Condition";
+	$text['label-condition']['es-cl'] = "Condiciones";
+	$text['label-condition']['pt-pt'] = "Condições";
+	$text['label-condition']['fr-fr'] = "état";
+
+	$text['label-label']['en-us'] = "Label";
+	$text['label-label']['es-cl'] = "Etiqueta";
+	$text['label-label']['pt-pt'] = "Etiqueta";
+	$text['label-label']['fr-fr'] = "étiquette";
+
+	$text['description-conditions']['en-us'] = "Define custom conditions necessary to execute the destination selected above.";
+	$text['description-conditions']['es-cl'] = "Definir las condiciones personalizados necesarios para ejecutar el destino seleccionado anteriormente.";
+	$text['description-conditions']['pt-pt'] = "Definir condições personalizadas necessárias para executar o destino selecionado acima.";
+	$text['description-conditions']['fr-fr'] = "Définir les conditions nécessaires pour exécuter la destination sélectionnée ci-dessus personnalisés.";
 
 	$text['label-condition_parameter']['en-us'] = "Parameter";
 	$text['label-condition_parameter']['es-cl'] = "Parámetro";
 	$text['label-condition_parameter']['pt-pt'] = "Parâmetro";
 	$text['label-condition_parameter']['fr-fr'] = "Paramètre";
 
-	$text['label-condition_scope']['en-us'] = "Scope";
-	$text['label-condition_scope']['es-cl'] = "Alcance";
-	$text['label-condition_scope']['pt-pt'] = "Escopo";
-	$text['label-condition_scope']['fr-fr'] = "Portée";
+	$text['label-condition_value']['en-us'] = "Value";
+	$text['label-condition_value']['es-cl'] = "Valor";
+	$text['label-condition_value']['pt-pt'] = "Valor";
+	$text['label-condition_value']['fr-fr'] = "Valeur";
 
-	$text['option-condition_scope_specific']['en-us'] = "Specific";
-	$text['option-condition_scope_specific']['es-cl'] = "Específico";
-	$text['option-condition_scope_specific']['pt-pt'] = "Específico";
-	$text['option-condition_scope_specific']['fr-fr'] = "Spécifique";
-
-	$text['option-condition_scope_range']['en-us'] = "Range";
-	$text['option-condition_scope_range']['es-cl'] = "Alcance";
-	$text['option-condition_scope_range']['pt-pt'] = "Alcance";
-	$text['option-condition_scope_range']['fr-fr'] = "Gamme";
-
-	$text['label-condition_values']['en-us'] = "Value(s)";
-	$text['label-condition_values']['es-cl'] = "";
-	$text['label-condition_values']['pt-pt'] = "";
-	$text['label-condition_values']['fr-fr'] = "";
+	$text['label-condition_range']['en-us'] = "Range";
+	$text['label-condition_range']['es-cl'] = "Rango";
+	$text['label-condition_range']['pt-pt'] = "Range";
+	$text['label-condition_range']['fr-fr'] = "Range";
 
 	$text['label-presets']['en-us'] = "Presets";
-	$text['label-presets']['es-cl'] = "Valor(s)";
-	$text['label-presets']['pt-pt'] = "Preço(s)";
-	$text['label-presets']['fr-fr'] = "Valeur (s)";
+	$text['label-presets']['es-cl'] = "Presets";
+	$text['label-presets']['pt-pt'] = "Presets";
+	$text['label-presets']['fr-fr'] = "Présélections";
 
-	$text['description-presets']['en-us'] = "Pre-defined conditions.";
+	$text['description-presets']['en-us'] = "Select or customize pre-defined conditions necessary to execute the selected destination(s).";
 	$text['description-presets']['es-cl'] = "Las condiciones pre-definida.";
 	$text['description-presets']['pt-pt'] = "Condições pré-definidas.";
 	$text['description-presets']['fr-fr'] = "Conditions pré-définies.";
@@ -220,15 +230,15 @@
 	$text['label-false']['pt-pt'] = "Não";
 	$text['label-false']['fr-fr'] = "Non";
 
-	$text['label-action']['en-us'] = "Action";
-	$text['label-action']['es-cl'] = "Acción cuando sea Verdadeo";
-	$text['label-action']['pt-pt'] = "Acção quando Verdadeiro";
-	$text['label-action']['fr-fr'] = "Action quand Vrai";
+	$text['label-select_destination']['en-us'] = "Select Destination";
+	$text['label-select_destination']['es-cl'] = "Seleccione Destino";
+	$text['label-select_destination']['pt-pt'] = "Selecione um Destino";
+	$text['label-select_destination']['fr-fr'] = "Choisissez une Destination";
 
-	$text['label-action-alternate']['en-us'] = "Alternate Action";
-	$text['label-action-alternate']['es-cl'] = "Acción cuando sea Falso";
-	$text['label-action-alternate']['pt-pt'] = "Acção quando Falso";
-	$text['label-action-alternate']['fr-fr'] = "Action quand Faux";
+	$text['label-alternate-destination']['en-us'] = "Alternate Destination";
+	$text['label-alternate-destination']['es-cl'] = "Destino Alternativo";
+	$text['label-alternate-destination']['pt-pt'] = "Destino Alternativo";
+	$text['label-alternate-destination']['fr-fr'] = "Autre Destinations";
 
 	$text['label-order']['en-us'] = "Order";
 	$text['label-order']['es-cl'] = "Orden";
@@ -260,7 +270,7 @@
 	$text['label-required-dialplan_number']['pt-pt'] = "Por favor indique: Número da Extensão";
 	$text['label-required-dialplan_number']['fr-fr'] = "Merci d'indiquer: Numéro de l'extension";
 
-	$text['label-required-action']['en-us'] = "Please provide: Action";
+	$text['label-required-action']['en-us'] = "Please provide: Destination";
 	$text['label-required-action']['es-cl'] = "Por favor indique: Acción cuando sea Verdadeo";
 	$text['label-required-action']['pt-pt'] = "Por favor indique: Acção quando Verdadeiro";
 	$text['label-required-action']['fr-fr'] = "Merci d'indiquer: Action quand Vrai";

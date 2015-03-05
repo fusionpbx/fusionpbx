@@ -34,7 +34,6 @@ else {
 	exit;
 }
 require_once "resources/header.php";
-require_once "resources/paging.php";
 
 
 //add multi-lingual support
@@ -61,11 +60,6 @@ require_once "resources/paging.php";
 		$dialplan_number = check_str($_POST["dialplan_number"]);
 		$dialplan_order = check_str($_POST["dialplan_order"]);
 
-		$dialplan_action = check_str($_POST["dialplan_action"]);
-		$dialplan_action_array = explode(":", $dialplan_action);
-		$dialplan_action_app = array_shift($dialplan_action_array);
-		$dialplan_action_data = join(':', $dialplan_action_array);
-
 		$dialplan_anti_action = check_str($_POST["dialplan_anti_action"]);
 		$dialplan_anti_action_array = explode(":", $dialplan_anti_action);
 		$dialplan_anti_action_app = array_shift($dialplan_anti_action_array);
@@ -78,9 +72,9 @@ require_once "resources/paging.php";
 	if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		if (strlen($domain_uuid) == 0) { $msg .= $text['label-required-domain_uuid']."<br>\n"; }
-		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
-		if (strlen($dialplan_number) == 0) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
-		if (strlen($dialplan_action) == 0) { $msg .= $text['label-required-action']."<br>\n"; }
+ 		if (strlen($dialplan_name) == 0) { $msg .= $text['label-required-dialplan_name']."<br>\n"; }
+ 		if (strlen($dialplan_number) == 0) { $msg .= $text['label-required-dialplan_number']."<br>\n"; }
+ 		//if (strlen($dialplan_action) == 0) { $msg .= $text['label-required-action']."<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -101,6 +95,7 @@ require_once "resources/paging.php";
 
 	//start the atomic transaction
 		$count = $db->exec("BEGIN;"); //returns affected rows
+
 
 	//process main dialplan entry
 		if ($action == "add") {
@@ -169,224 +164,55 @@ require_once "resources/paging.php";
 		$dialplan_detail_order = 0;
 
 
-	//check if custom conditions defined
-		$custom_conditions_defined = false;
-		foreach ($_REQUEST['variable'] as $cond_var) {
-			if ($cond_var != '') { $custom_conditions_defined = true; }
+	//clean up array
+		//remove presets not checked, restructure variable array
+		foreach ($_REQUEST['variable']['preset'] as $group_id => $conditions) {
+			if (!in_array($group_id, $_REQUEST['preset'])) {
+				unset($_REQUEST['variable']['preset'][$group_id]);
+				unset($_REQUEST['value'][$group_id]);
+				unset($_REQUEST['dialplan_action'][$group_id]);
+				continue;
+			}
+			$_REQUEST['variable'][$group_id] = $conditions;
 		}
+		foreach ($_REQUEST['variable']['custom'] as $group_id => $conditions) {
+			$_REQUEST['variable'][$group_id] = $conditions;
+		}
+		unset($_REQUEST['variable']['custom'], $_REQUEST['variable']['preset']);
 
-		if ($custom_conditions_defined) {
-
-			//build insert query for custom conditions
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "( ";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_break, ";
-			$sql .= "dialplan_detail_inline, ";
-			$sql .= "dialplan_detail_group, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
-
-			//add destination number condition
-			$dialplan_detail_order += 10;
-			$sql .= "( ";
-			$sql .= "'".$domain_uuid."', ";
-			$sql .= "'".$dialplan_uuid."', ";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'condition', ";
-			$sql .= "'destination_number', ";
-			$sql .= "'^".$dialplan_number."$', ";
-			$sql .= "'never', ";
-			$sql .= "null, ";
-			$sql .= "'".$dialplan_detail_group."', ";
-			$sql .= "'".$dialplan_detail_order."' ";
-			$sql .= ")";
-
-			//add custom conditions
-			foreach ($_REQUEST['variable'] as $cond_num => $cond_var) {
-				if ($cond_var != '') {
-					$scope = $_REQUEST['scope'][$cond_num];
-					$cond_start = $_REQUEST[$cond_var][$cond_num]['start'];
-					$cond_stop = $_REQUEST[$cond_var][$cond_num]['stop'];
-
-					//handle time of day
-						if ($cond_var == 'time-of-day' && $cond_start['hour'] != '') {
-							//format condition start
-								if ($cond_start['notation'] == 'PM') {
-									$cond_start_hour = ($cond_start['hour'] != 12) ? $cond_start['hour'] += 12 : $cond_start['hour'];
-								}
-								else if ($cond_start['notation'] == 'AM') {
-									$cond_start_hour = ($cond_start['hour'] == 12) ? $cond_start['hour'] -= 12 : $cond_start['hour'];
-								}
-								$cond_start_hour = number_pad($cond_start_hour,2);
-								$cond_start_minute = $cond_start['minute'];
-								$cond_start = $cond_start_hour.':'.$cond_start_minute;
-
-							//format condition stop
-								if ($cond_start != '' && $scope == 'range') {
-									if ($cond_stop['notation'] == 'PM') {
-										$cond_stop_hour = ($cond_stop['hour'] != 12) ? $cond_stop['hour'] += 12 : $cond_stop['hour'];
-									}
-									else if ($cond_stop['notation'] == 'AM') {
-										$cond_stop_hour = ($cond_stop['hour'] == 12) ? $cond_stop['hour'] -= 12 : $cond_stop['hour'];
-									}
-									$cond_stop_hour = number_pad($cond_stop_hour,2);
-									$cond_stop_minute = $cond_stop['minute'];
-									$cond_stop = $cond_stop_hour.':'.$cond_stop_minute;
-								}
-								else {
-									unset($cond_stop);
-								}
-
-							$cond_value = $cond_start.(($cond_stop != '') ? '-'.$cond_stop : null);
-						}
-					//handle all other variables
-						else {
-							if ($cond_start != '') {
-								$cond_value = $cond_start;
-								if ($scope == 'range' && $cond_stop != '') {
-									$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
-									$cond_value .= $range_indicator.$cond_stop;
-								}
-							}
-						}
-
-					//add condition to query string
-					$dialplan_detail_order += 10;
-					$sql .= ", ( ";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$dialplan_uuid."', ";
-					$sql .= "'".uuid()."', ";
-					$sql .= "'condition', ";
-					$sql .= "'".$cond_var."', ";
-					$sql .= "'".$cond_value."', ";
-					$sql .= "'never', ";
-					$sql .= "null, ";
-					$sql .= "'".$dialplan_detail_group."', ";
-					$sql .= "'".$dialplan_detail_order."' ";
-					$sql .= ") ";
+		//remove invalid conditions and values by checking conditions
+		foreach ($_REQUEST['variable'] as $group_id => $conditions) {
+			foreach ($conditions as $condition_id => $condition_variable) {
+				if ($condition_variable == '' || $_REQUEST['value'][$group_id][$condition_id] == '') {
+					unset($_REQUEST['variable'][$group_id][$condition_id]);
+					unset($_REQUEST['value'][$group_id][$condition_id]);
 				}
 			}
-
-			//add condition action
-			$dialplan_detail_order += 10;
-			$sql .= ", ( ";
-			$sql .= "'".$domain_uuid."', ";
-			$sql .= "'".$dialplan_uuid."', ";
-			$sql .= "'".uuid()."', ";
-			$sql .= "'action', ";
-			$sql .= "'set', ";
-			$sql .= "'time_condition=true', ";
-			$sql .= "null, ";
-			$sql .= "'true', ";
-			$sql .= "'".$dialplan_detail_group."', ";
-			$sql .= "'".$dialplan_detail_order."' ";
-			$sql .= ") ";
-
-			//execute query
-			$db->exec(check_sql($sql));
-			unset($sql);
-
 		}
 
-
-	//add to query for preset conditions (if any)
-		if (sizeof($_REQUEST['preset']) > 0) {
-
-			//build insert query for preset conditions
-			$sql = "insert into v_dialplan_details ";
-			$sql .= "( ";
-			$sql .= "domain_uuid, ";
-			$sql .= "dialplan_uuid, ";
-			$sql .= "dialplan_detail_uuid, ";
-			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_type, ";
-			$sql .= "dialplan_detail_data, ";
-			$sql .= "dialplan_detail_break, ";
-			$sql .= "dialplan_detail_inline, ";
-			$sql .= "dialplan_detail_group, ";
-			$sql .= "dialplan_detail_order ";
-			$sql .= ") ";
-			$sql .= "values ";
-
-			foreach ($_REQUEST['preset'] as $index => $preset_number) {
-
-				//increment group and order number
-				$dialplan_detail_group += 10;
-				$dialplan_detail_order = 0;
-
-				//add destination number condition
-				$dialplan_detail_order += 10;
-				$sql .= ($index != 0) ? "," : null;
-				$sql .= " ( ";
-				$sql .= "'".$domain_uuid."', ";
-				$sql .= "'".$dialplan_uuid."', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'condition', ";
-				$sql .= "'destination_number', ";
-				$sql .= "'^".$dialplan_number."$', ";
-				$sql .= "'never', ";
-				$sql .= "null, ";
-				$sql .= "'".$dialplan_detail_group."', ";
-				$sql .= "'".$dialplan_detail_order."' ";
-				$sql .= ") ";
-
-				foreach ($available_presets[$preset_number] as $preset_name => $preset_variables) {
-					foreach ($preset_variables as $cond_var => $cond_value) {
-						//add preset condition to query string
-						$dialplan_detail_order += 10;
-						$sql .= ", ( ";
-						$sql .= "'".$domain_uuid."', ";
-						$sql .= "'".$dialplan_uuid."', ";
-						$sql .= "'".uuid()."', ";
-						$sql .= "'condition', ";
-						$sql .= "'".$cond_var."', ";
-						$sql .= "'".$cond_value."', ";
-						$sql .= "'never', ";
-						$sql .= "null, ";
-						$sql .= "'".$dialplan_detail_group."', ";
-						$sql .= "'".$dialplan_detail_order."' ";
-						$sql .= ") ";
-					}
+		//remove invalid conditions and values by checking start value
+		foreach ($_REQUEST['value'] as $group_id => $values) {
+			foreach ($values as $value_id => $value_range) {
+				if ($value_range['start'] == '') {
+					unset($_REQUEST['value'][$group_id][$value_id]);
+					unset($_REQUEST['variable'][$group_id][$condition_id]);
 				}
-
-				//add condition action
-				$dialplan_detail_order += 10;
-				$sql .= ", ( ";
-				$sql .= "'".$domain_uuid."', ";
-				$sql .= "'".$dialplan_uuid."', ";
-				$sql .= "'".uuid()."', ";
-				$sql .= "'action', ";
-				$sql .= "'set', ";
-				$sql .= "'time_condition=true', ";
-				$sql .= "null, ";
-				$sql .= "'true', ";
-				$sql .= "'".$dialplan_detail_group."', ";
-				$sql .= "'".$dialplan_detail_order."' ";
-				$sql .= ") ";
-
 			}
+		}
 
-			//execute query
-			$db->exec(check_sql($sql));
-			unset($sql);
-
+		//remove any empty groups (where conditions no longer exist)
+		foreach ($_REQUEST['variable'] as $group_id => $conditions) {
+			if (sizeof($conditions) == 0) {
+				unset($_REQUEST['variable'][$group_id]);
+				unset($_REQUEST['dialplan_action'][$group_id]);
+			}
 		}
 
 
-	//increment group number, reset order number
-		$dialplan_detail_group = 999;
-		$dialplan_detail_order = 0;
+	//process conditions
+		$conditions_exist = false;
 
-	//add to query for main action and anti-action condition
-
-		//build insert query for custom conditions
+		//begin insert query for custom and preset conditions
 		$sql = "insert into v_dialplan_details ";
 		$sql .= "( ";
 		$sql .= "domain_uuid, ";
@@ -402,53 +228,186 @@ require_once "resources/paging.php";
 		$sql .= ") ";
 		$sql .= "values ";
 
-		//add destination number condition
-		$dialplan_detail_order += 10;
-		$sql .= "( ";
-		$sql .= "'".$domain_uuid."', ";
-		$sql .= "'".$dialplan_uuid."', ";
-		$sql .= "'".uuid()."', ";
-		$sql .= "'condition', ";
-		$sql .= "'destination_number', ";
-		$sql .= "'^".$dialplan_number."$', ";
-		$sql .= "null, ";
-		$sql .= "null, ";
-		$sql .= "'".$dialplan_detail_group."', ";
-		$sql .= "'".$dialplan_detail_order."' ";
-		$sql .= ") ";
+		//add conditions
+		foreach ($_REQUEST['variable'] as $group_id => $conditions) {
 
-		//add time condition met check
-		$dialplan_detail_order += 10;
-		$sql .= ", ( ";
-		$sql .= "'".$domain_uuid."', ";
-		$sql .= "'".$dialplan_uuid."', ";
-		$sql .= "'".uuid()."', ";
-		$sql .= "'condition', ";
-		$sql .= "'".'${time_condition}'."', ";
-		$sql .= "'^true$', ";
-		$sql .= "null, ";
-		$sql .= "null, ";
-		$sql .= "'".$dialplan_detail_group."', ";
-		$sql .= "'".$dialplan_detail_order."' ";
-		$sql .= ") ";
+			$group_conditions_exist[$group_id] = false;
 
-		//add main action
-		$dialplan_detail_order += 10;
-		$sql .= ", ( ";
-		$sql .= "'".$domain_uuid."', ";
-		$sql .= "'".$dialplan_uuid."', ";
-		$sql .= "'".uuid()."', ";
-		$sql .= "'action', ";
-		$sql .= "'".$dialplan_action_app."', ";
-		$sql .= "'".$dialplan_action_data."', ";
-		$sql .= "null, ";
-		$sql .= "null, ";
-		$sql .= "'".$dialplan_detail_group."', ";
-		$sql .= "'".$dialplan_detail_order."' ";
-		$sql .= ") ";
+			//determine if preset
+			$is_preset = (in_array($group_id, $_REQUEST['preset'])) ? true : false;
 
-		//add anti-action (if defined)
+			//set group and order number
+			$dialplan_detail_group = $group_id;
+			$dialplan_detail_order = 0;
+
+			foreach ($conditions as $cond_num => $cond_var) {
+				if ($cond_var != '') {
+					$cond_start = $_REQUEST['value'][$group_id][$cond_num]['start'];
+					$cond_stop = $_REQUEST['value'][$group_id][$cond_num]['stop'];
+
+					//handle time of day
+					if ($cond_var == 'time-of-day' && $cond_start['hour'] != '') {
+// 						//format condition start
+// 							if ($cond_start['notation'] == 'PM') {
+// 								$cond_start_hour = ($cond_start['hour'] != 12) ? $cond_start['hour'] += 12 : $cond_start['hour'];
+// 							}
+// 							else if ($cond_start['notation'] == 'AM') {
+// 								$cond_start_hour = ($cond_start['hour'] == 12) ? $cond_start['hour'] -= 12 : $cond_start['hour'];
+// 							}
+// 							$cond_start_hour = number_pad($cond_start_hour,2);
+// 							$cond_start_minute = $cond_start['minute'];
+// 							$cond_start = $cond_start_hour.':'.$cond_start_minute;
+
+// 						//format condition stop
+// 							if ($cond_start != '' && $scope == 'range') {
+// 								if ($cond_stop['notation'] == 'PM') {
+// 									$cond_stop_hour = ($cond_stop['hour'] != 12) ? $cond_stop['hour'] += 12 : $cond_stop['hour'];
+// 								}
+// 								else if ($cond_stop['notation'] == 'AM') {
+// 									$cond_stop_hour = ($cond_stop['hour'] == 12) ? $cond_stop['hour'] -= 12 : $cond_stop['hour'];
+// 								}
+// 								$cond_stop_hour = number_pad($cond_stop_hour,2);
+// 								$cond_stop_minute = $cond_stop['minute'];
+// 								$cond_stop = $cond_stop_hour.':'.$cond_stop_minute;
+// 							}
+// 							else {
+// 								unset($cond_stop);
+// 							}
+
+// 						$cond_value = $cond_start.(($cond_stop != '') ? '-'.$cond_stop : null);
+					}
+
+					//handle all other variables
+					else {
+						$cond_value = $cond_start;
+						if ($cond_stop != '') {
+							$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
+							$cond_value .= $range_indicator.$cond_stop;
+						}
+					}
+
+					if (!$group_conditions_exist[$group_id]) {
+						//add destination number condition
+						$dialplan_detail_order += 10;
+						$sql .= ($conditions_exist) ? ", ( " : "( ";
+						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$dialplan_uuid."', ";
+						$sql .= "'".uuid()."', ";
+						$sql .= "'condition', ";
+						$sql .= "'destination_number', ";
+						$sql .= "'^".$dialplan_number."$', ";
+						$sql .= "'never', ";
+						$sql .= "null, ";
+						$sql .= "'".$dialplan_detail_group."', ";
+						$sql .= "'".$dialplan_detail_order."' ";
+						$sql .= ") ";
+					}
+
+					//add condition to query string
+					$dialplan_detail_order += 10;
+					$sql .= ", ( ";
+					$sql .= "'".$domain_uuid."', ";
+					$sql .= "'".$dialplan_uuid."', ";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'condition', ";
+					$sql .= "'".$cond_var."', ";
+					$sql .= "'".$cond_value."', ";
+					$sql .= "'never', ";
+					$sql .= "null, ";
+					$sql .= "'".$dialplan_detail_group."', ";
+					$sql .= "'".$dialplan_detail_order."' ";
+					$sql .= ") ";
+
+					$conditions_exist = true;
+					$group_conditions_exist[$group_id] = true;
+				} //if
+			} //for each
+
+
+			//continue adding to query only if conditions exist in current group
+			if ($group_conditions_exist[$group_id]) {
+
+				//determine group action app and data
+				$dialplan_action = check_str($_REQUEST["dialplan_action"][$group_id]);
+				if ($dialplan_action == '') {
+					if ($is_preset) {
+						$dialplan_action = check_str($_REQUEST['default_preset_action']);
+					}
+				}
+
+				if ($dialplan_action != '') {
+					//if preset, set log variable
+					if ($is_preset) {
+						foreach ($_REQUEST['preset'] as $preset_number => $preset_group_id) {
+							if ($group_id == $preset_group_id) {
+								foreach ($available_presets[$preset_number] as $available_preset_name => $meh) {
+									$dialplan_detail_order += 10;
+									$sql .= ", ( ";
+									$sql .= "'".$domain_uuid."', ";
+									$sql .= "'".$dialplan_uuid."', ";
+									$sql .= "'".uuid()."', ";
+									$sql .= "'action', ";
+									$sql .= "'set', ";
+									$sql .= "'preset=".$available_preset_name."', ";
+									$sql .= "null, ";
+									$sql .= "'true', ";
+									$sql .= "'".$dialplan_detail_group."', ";
+									$sql .= "'".$dialplan_detail_order."' ";
+									$sql .= ") ";
+								}
+							}
+						}
+					}
+
+					//parse group app and data
+					$dialplan_action_array = explode(":", $dialplan_action);
+					$dialplan_action_app = array_shift($dialplan_action_array);
+					$dialplan_action_data = join(':', $dialplan_action_array);
+
+					//add group action to query
+					$dialplan_detail_order += 10;
+					$sql .= ", ( ";
+					$sql .= "'".$domain_uuid."', ";
+					$sql .= "'".$dialplan_uuid."', ";
+					$sql .= "'".uuid()."', ";
+					$sql .= "'action', ";
+					$sql .= "'".$dialplan_action_app."', ";
+					$sql .= "'".$dialplan_action_data."', ";
+					$sql .= "null, ";
+					$sql .= "null, ";
+					$sql .= "'".$dialplan_detail_group."', ";
+					$sql .= "'".$dialplan_detail_order."' ";
+					$sql .= ") ";
+				}
+
+			}
+
+		} //for each
+
+
+	//add to query for default anti-action (if defined)
 		if (strlen($dialplan_anti_action_app) > 0) {
+
+			//increment group number, reset order number
+			$dialplan_detail_group = 999;
+			$dialplan_detail_order = 0;
+
+			//add destination number condition
+			$dialplan_detail_order += 10;
+			$sql .= ", ( ";
+			$sql .= "'".$domain_uuid."', ";
+			$sql .= "'".$dialplan_uuid."', ";
+			$sql .= "'".uuid()."', ";
+			$sql .= "'condition', ";
+			$sql .= "'destination_number', ";
+			$sql .= "'^".$dialplan_number."$', ";
+			$sql .= "null, ";
+			$sql .= "null, ";
+			$sql .= "'".$dialplan_detail_group."', ";
+			$sql .= "'".$dialplan_detail_order."' ";
+			$sql .= ") ";
+
+			//add anti-action
 			$dialplan_detail_order += 10;
 			$sql .= ", ( ";
 			$sql .= "'".$domain_uuid."', ";
@@ -462,13 +421,14 @@ require_once "resources/paging.php";
 			$sql .= "'".$dialplan_detail_group."', ";
 			$sql .= "'".$dialplan_detail_order."' ";
 			$sql .= ") ";
+
 		}
 
-		//execute query
-		$db->exec(check_sql($sql));
-		unset($sql);
-
-
+	//execute query
+		if ($conditions_exist) {
+			$db->exec(check_sql($sql));
+			unset($sql);
+		}
 
 	//commit the atomic transaction
 		$count = $db->exec("COMMIT;"); //returns affected rows
@@ -528,7 +488,7 @@ require_once "resources/paging.php";
 			$sql .= "	) ";
 			$sql .= "	or ( ";
 			$sql .= "		dialplan_detail_tag = 'action' ";
-			$sql .= "		and dialplan_detail_group = '999' ";
+			$sql .= "		and dialplan_detail_data not like 'preset=%' ";
 			$sql .= "	) ";
 			$sql .= "	or ( ";
 			$sql .= "		dialplan_detail_tag = 'anti-action' ";
@@ -548,7 +508,7 @@ require_once "resources/paging.php";
 			foreach ($result as $row) {
 				switch ($row['dialplan_detail_tag']) {
 					case 'condition': $current_conditions[$row['dialplan_detail_group']][$row['dialplan_detail_type']] = $row['dialplan_detail_data']; break;
-					case 'action': $dialplan_action = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data']; break;
+					case 'action': $dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data']; break;
 					case 'anti-action': $dialplan_anti_action = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data']; break;
 				}
 			}
@@ -558,84 +518,220 @@ require_once "resources/paging.php";
 			foreach ($available_presets as $preset_number => $preset) {
 				foreach ($preset as $preset_name => $preset_variables) {
 					//loop through each condition group
-					foreach ($current_conditions as $group_number => $condition_variables) {
-						//compare variable count
-						if (sizeof($preset_variables) == sizeof($condition_variables)) {
-							$matches = 0;
-							foreach ($condition_variables as $condition_variable_name => $condition_variable_value) {
-								//count matching variable values
-								if ($preset_variables[$condition_variable_name] == $condition_variable_value) { $matches++; }
-							}
-							//if all variables match, then condition is a preset
-							if ($matches == sizeof($preset_variables)) {
-								$current_presets[] = $preset_number;
-								//drop group from array of current conditions
-								unset($current_conditions[$group_number]);
-							}
+					foreach ($current_conditions as $group_id => $condition_variables) {
+						$matches = 0;
+						foreach ($condition_variables as $condition_variable_name => $condition_variable_value) {
+							//count matching variable values
+							if ($preset_variables[$condition_variable_name] == $condition_variable_value) { $matches++; }
+						}
+						//if all preset variables found, then condition is a preset
+						if ($matches == sizeof($preset_variables)) {
+							$current_presets[$preset_number] = $group_id;
 						}
 					}
 				}
 			}
 
-
-		 //load remaining conditions as custom conditions
-			$c = 0;
-			foreach ($current_conditions as $conditions) {
-				foreach ($conditions as $condition_variable => $condition_value) {
-					$custom_conditions[$c]['var'] = $condition_variable;
-					$custom_conditions[$c]['val'] = $condition_value;
-					$c++;
-				}
-			}
-			unset($current_conditions);
-
-
 	}
+
 ?>
 
 <script type="text/javascript">
-	<?php
-	$time_condition_vars["year"] = $text['label-year'];
-	$time_condition_vars["mon"] = $text['label-month'];
-	$time_condition_vars["mday"] = $text['label-day-of-month'];
-	$time_condition_vars["wday"] = $text['label-day-of-week'];
-	//$time_condition_vars["yday"] = $text['label-day-of-year'];
-	$time_condition_vars["week"] = $text['label-week-of-year'];
-	$time_condition_vars["mweek"] = $text['label-week-of-month'];
-	$time_condition_vars["hour"] = $text['label-hour-of-day'];
-	$time_condition_vars["minute"] = $text['label-minute-of-hour'];
-	//$time_condition_vars["minute-of-day"] = $text['label-minute-of-day'];
-	$time_condition_vars["time-of-day"] = $text['label-time-of-day'];
-	$time_condition_vars["date-time"] = $text['label-date-and-time'];
-	?>
-	function hide_var_options(row_num) {
+
+	function add_condition(group_id, type) {
+		condition_id = Math.floor((Math.random() * 1000) + 1);
+		html = "<table cellpadding='0' cellspacing='0' border='0' style='margin-top: 3px;' width='100%'>";
+		html += "	<tr>";
+		html += "		<td style='vertical-align: middle; white-space: nowrap;' width='100%' nowrap>";
+		html += "			<select class='formfld' style='width: 120px;' name='variable[" + type + "][" + group_id + "][" + condition_id + "]' id='variable_" + group_id + "_" + condition_id + "' onchange=\"load_value_fields(" + group_id + ", " + condition_id + ", this.options[this.selectedIndex].value);\">";
+		html += "				<option value=''></option>";
 		<?php
+		$time_condition_vars["year"] = $text['label-year'];
+		$time_condition_vars["mon"] = $text['label-month'];
+		$time_condition_vars["mday"] = $text['label-day-of-month'];
+		$time_condition_vars["wday"] = $text['label-day-of-week'];
+		//$time_condition_vars["yday"] = $text['label-day-of-year'];
+		$time_condition_vars["week"] = $text['label-week-of-year'];
+		$time_condition_vars["mweek"] = $text['label-week-of-month'];
+		$time_condition_vars["hour"] = $text['label-hour-of-day'];
+		$time_condition_vars["minute"] = $text['label-minute-of-hour'];
+		//$time_condition_vars["minute-of-day"] = $text['label-minute-of-day'];
+		//$time_condition_vars["time-of-day"] = $text['label-time-of-day'];
+		$time_condition_vars["date-time"] = $text['label-date-and-time'];
 		foreach ($time_condition_vars as $var_name => $var_label) {
-			echo "document.getElementById('var_".$var_name."_options_' + row_num).style.display = 'none';\n";
-			echo "document.getElementById('".$var_name."_' + row_num + '_stop').style.display = 'none';\n";
+			echo "html += \"	<option value='".$var_name."' ".(($custom_conditions[$c]['var'] == $var_name) ? "selected='selected'" : null).">".$var_label."</option>\";";
 		}
 		?>
+		html += "			</select>";
+		html += "			<select class='formfld' style='width: 120px;' name='value[" + group_id + "][" + condition_id + "][start]' id='value_" + group_id + "_" + condition_id + "_start'></select>";
+		html += "			&nbsp;~&nbsp;";
+		html += "			<select class='formfld' style='width: 120px; margin-right: 2px;' name='value[" + group_id + "][" + condition_id + "][stop]' id='value_" + group_id + "_" + condition_id + "_stop'></select>";
+		html += "		</td>";
+		html += "		<td style='vertical-align: middle; text-align: right;'>";
+		html += "			<a href='javascript:void(0);' onclick='delete_condition(" + group_id + ", " + condition_id + ");'><?=$v_link_label_delete?></a>";
+		html += "		</td>";
+		html += "	</tr>";
+		html += "</table>";
+
+		var temp_div = document.createElement('div');
+		temp_div.id = "condition_" + group_id + "_" + condition_id;
+		temp_div.innerHTML = html;
+		document.getElementById('group_'+group_id).appendChild(temp_div);
+
+		return condition_id;
 	}
 
-	function show_var_option(row_num, var_name) {
-		if (var_name != '') {
-			// show start
-			document.getElementById('var_' + var_name + '_options_' + row_num).style.display = '';
-			// show stop if scope is range
-			scope_obj = document.getElementById('scope_' + row_num);
-			scope_value = scope_obj.options[scope_obj.selectedIndex].value;
-			if (scope_value == 'range') { document.getElementById(var_name + '_' + row_num + '_stop').style.display = 'inline'; }
-		}
+	function delete_condition(group_id, condition_id) {
+		var c = document.getElementById('condition_' + group_id + '_' + condition_id);
+		c.parentNode.removeChild(c);
 	}
 
-	function toggle_var_stops(row_num, scope) {
-		display = (scope == 'range') ? 'inline' : 'none';
-		<?php
-		foreach ($time_condition_vars as $var_name => $var_label) {
-			echo "document.getElementById('".$var_name."_' + row_num + '_stop').style.display = display;\n";
+	function load_value_fields(group_id, condition_id, condition_var) {
+
+		if (condition_var != '') {
+
+			if (condition_var == 'time-of-day') {
+				//2-3 select boxes for both start and stop, ugh
+				clear_value_fields(group_id, condition_id);
+			}
+			else if (condition_var == 'date-time') {
+				//change selects to text inputs
+				clear_value_fields(group_id, condition_id);
+				change_to_input(document.getElementById('value_' + group_id + '_' + condition_id + '_start'));
+				change_to_input(document.getElementById('value_' + group_id + '_' + condition_id + '_stop'));
+			}
+			else {
+				//get start and stop selects (necessary to do this before the select check below)
+				sel_start = document.getElementById('value_' + group_id + '_' + condition_id + '_start');
+				sel_stop = document.getElementById('value_' + group_id + '_' + condition_id + '_stop');
+
+				//change inputs to selects (if necessary)
+				if (!$(sel_start).is("select")) { change_to_select(sel_start); }
+				if (!$(sel_stop).is("select")) { change_to_select(sel_stop); }
+
+				//get start and stop selects (necessary to do this again)
+				sel_start = document.getElementById('value_' + group_id + '_' + condition_id + '_start');
+				sel_stop = document.getElementById('value_' + group_id + '_' + condition_id + '_stop');
+
+				//clear options from start and stop selects
+				clear_value_fields(group_id, condition_id);
+
+				//add blank option to top of stop select
+				sel_stop.options[sel_stop.options.length] = new Option('', '');
+
+				//load options for condition variable selected
+				switch (condition_var) {
+
+					case 'year': //years
+						for (y = <?=date('Y')?>; y <= <?=(date('Y') + 10)?>; y++) {
+							sel_start.options[sel_start.options.length] = new Option(y, y);
+							sel_stop.options[sel_stop.options.length] = new Option(y, y);
+						}
+						break;
+
+					case 'mon': //month names
+						<?php
+						for ($m = 1; $m <= 12; $m++) {
+							echo "sel_start.options[sel_start.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('F', strtotime('2015-'.number_pad($m,2).'-01'))."', ".$m.");\n";
+						}
+						?>
+						break;
+
+					case 'yday': //days of year
+						for (d = 1; d <= 366; d++) {
+							sel_start.options[sel_start.options.length] = new Option(d, d);
+							sel_stop.options[sel_stop.options.length] = new Option(d, d);
+						}
+						break;
+
+					case 'mday': //days of month
+						for (d = 1; d <= 31; d++) {
+							sel_start.options[sel_start.options.length] = new Option(d, d);
+							sel_stop.options[sel_stop.options.length] = new Option(d, d);
+						}
+						break;
+
+					case 'wday': //week days
+						<?php
+						for ($d = 1; $d <= 7; $d++) {
+							echo "sel_start.options[sel_start.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
+							echo "sel_stop.options[sel_stop.options.length] = new Option('".date('l', strtotime('Sunday +'.($d-1).' days'))."', ".$d.");\n";
+						}
+						?>
+						break;
+
+					case 'week': //weeks of year
+						for (w = 1; w <= 53; w++) {
+							sel_start.options[sel_start.options.length] = new Option(w, w);
+							sel_stop.options[sel_stop.options.length] = new Option(w, w);
+						}
+						break;
+
+					case 'mweek': //weeks of month
+						for (w = 1; w <= 5; w++) {
+							sel_start.options[sel_start.options.length] = new Option(w, w);
+							sel_stop.options[sel_stop.options.length] = new Option(w, w);
+						}
+						break;
+
+					case 'hour': //hours of day
+						for (h = 0; h <= 23; h++) {
+							sel_start.options[sel_start.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
+							sel_stop.options[sel_stop.options.length] = new Option(((h != 0) ? ((h >= 12) ? ((h == 12) ? h : (h - 12)) + ' PM' : h + ' AM') : '12 AM'), h);
+						}
+						break;
+
+					case 'minute': //minutes of hour
+						for (m = 1; m <= 59; m++) {
+							sel_start.options[sel_start.options.length] = new Option(pad(m, 2), m); //pad function defined below
+							sel_stop.options[sel_stop.options.length] = new Option(pad(m, 2), m);
+						}
+						break;
+
+				}
+
+			}
 		}
-		?>
+		else {
+			clear_value_fields(group_id, condition_id);
+		}
+
 	}
+
+	function clear_value_fields(group_id, condition_id) {
+		document.getElementById('value_' + group_id + '_' + condition_id + '_start').options.length = 0;
+		document.getElementById('value_' + group_id + '_' + condition_id + '_stop').options.length = 0;
+	}
+
+	function pad(subject, max_width, pad_str) {
+		pad_str = pad_str || '0';
+		subject = subject + '';
+		return subject.length >= max_width ? subject : new Array(max_width - subject.length + 1).join(pad_str) + subject;
+	}
+
+	function change_to_input(obj) {
+		tb = document.createElement('INPUT');
+		tb.type = 'text';
+		tb.name = obj.name;
+		tb.id = obj.id;
+		tb.className = 'formfld';
+		tb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px; text-align: center;');
+		tb.setAttribute('data-calendar', "{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}");
+		obj.parentNode.insertBefore(tb, obj);
+		obj.parentNode.removeChild(obj);
+	}
+
+	function change_to_select(obj) {
+		sb = document.createElement('SELECT');
+		sb.name = obj.name;
+		sb.id = obj.id;
+		sb.className = 'formfld';
+		sb.setAttribute('style', 'width: 120px; min-width: 120px; max-width: 120px;');
+		obj.parentNode.insertBefore(sb, obj);
+		obj.parentNode.removeChild(obj);
+	}
+
 </script>
 
 <?php
@@ -649,7 +745,10 @@ echo "			<br /><br />\n";
 echo "			".$text['description-time-conditions']."\n";
 echo "		</td>\n";
 echo "		<td align='right' valign='top'>\n";
-echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
+echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
+if (if_group("superadmin") && $action == 'update') {
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-advanced']."'>\n";
+}
 echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 echo "		</td>\n";
 echo "	</tr>\n";
@@ -682,257 +781,179 @@ echo "	".$text['description-extension']."<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
-echo "<tr>\n";
-echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "	".$text['label-conditions']."\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-//define select box options for each time condition variable (where appropriate)
-for ($y = date('Y'); $y <= (date('Y') + 10); $y++) { $var_option_select['year'][$y] = $y; } //years
-for ($m = 1; $m <= 12; $m++) { $var_option_select['mon'][$m] = date('F', strtotime('2015-'.number_pad($m,2).'-01')); } //month names
-for ($d = 1; $d <= 366; $d++) { $var_option_select['yday'][$d] = $d; } //days of year
-for ($d = 1; $d <= 31; $d++) { $var_option_select['mday'][$d] = $d; } //days of month
-for ($d = 1; $d <= 7; $d++) { $var_option_select['wday'][$d] = date('l', strtotime('Sunday +'.($d-1).' days')); } //week days
-for ($w = 1; $w <= 53; $w++) { $var_option_select['week'][$w] = $w; } //weeks of year
-for ($w = 1; $w <= 5; $w++) { $var_option_select['mweek'][$w] = $w; } //weeks of month
-for ($h = 0; $h <= 23; $h++) { $var_option_select['hour'][$h] = (($h) ? (($h >= 12) ? (($h == 12) ? $h : ($h-12)).' PM' : $h.' AM') : '12 AM'); } //hours of day
-for ($m = 0; $m <= 59; $m++) { $var_option_select['minute'][$m] = number_pad($m,2); } //minutes of hour
-//output condition fields
-echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
-echo "		<tr>\n";
-echo "			<td class='vtable'>".$text['label-condition_parameter']."</td>\n";
-echo "			<td class='vtable'>".$text['label-condition_scope']."</td>\n";
-echo "			<td class='vtable'>".$text['label-condition_values']."</td>\n";
-echo "			<td></td>\n";
-echo "		</tr>\n";
+function add_custom_condition($group_id, $dialplan_action = '') {
+	global $text, $v_link_label_add;
+	echo "<tr>\n";
+	echo "<td class='vncell' valign='top' align='left' nowrap>\n";
+	echo "	".$text['label-custom'];
+	echo "</td>\n";
+	echo "<td class='vtable' align='left'>\n";
+	echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
+	echo "		<tr>\n";
+	echo "			<td class='vtable' style='width: 108px;'>".$text['label-condition']."</td>\n";
+	echo "			<td class='vtable' style='width: 125px;'>".$text['label-condition_value']."</td>\n";
+	echo "			<td class='vtable' style='width: 114px;'>".$text['label-condition_range']."</td>\n";
+	echo "			<td style='text-align: right;'><a href='javascript:void(0);' onclick=\"add_condition(".$group_id.",'custom');\">".$v_link_label_add."</a></td>\n";
+	echo "		</tr>\n";
+	echo "		<tr>";
+	echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$group_id."'></td>";
+	echo "		</tr>";
+	echo "		<tr>";
+	echo "			<td colspan='4' style='padding-top: 10px;'>";
+						switch_select_destination("dialplan", $text['label-select_destination'], "dialplan_action[".$group_id."]", $dialplan_action, 'width: 300px;', '');
+	echo "			</td>";
+	echo "		</tr>";
+	echo "	</table>";
+	echo "	<br />";
+	echo "	".$text['description-conditions'];
+	echo "</td>\n";
+	echo "</tr>\n";
+}
 
-$max_conditions = (is_array($custom_conditions)) ? sizeof($custom_conditions)+2 : 4;
-for ($c = 0; $c <= ($max_conditions - 1); $c++) {
-
-	echo "	<tr>\n";
-
-	echo "		<td>\n";
-	echo "			<select class='formfld' name='variable[".$c."]' id='variable_".$c."' onchange=\"hide_var_options('".$c."'); show_var_option('".$c."', this.options[this.selectedIndex].value);\">\n";
-	echo "				<option value=''></option>\n";
-	foreach ($time_condition_vars as $var_name => $var_label) {
-		echo "				<option value='".$var_name."' ".(($custom_conditions[$c]['var'] == $var_name) ? "selected='selected'" : null).">".$var_label."</option>\n";
-	}
-	echo "			</select>\n";
-	echo "		</td>\n";
-
-	//specific or range
-	$range_indicator = ($custom_conditions[$c]['var'] == 'date-time') ? '~' : '-';
-	$detail_data = explode($range_indicator, $custom_conditions[$c]['val']);
-	echo "		<td>\n";
-	echo "			<select class='formfld' name='scope[".$c."]' id='scope_".$c."' onchange=\"toggle_var_stops('".$c."', this.options[this.selectedIndex].value);\">\n";
-	echo "				<option value='specific' ".((sizeof($detail_data) == 1) ? "selected='selected'" : null).">".$text['option-condition_scope_specific']."</option>\n";
-	echo "				<option value='range' ".((sizeof($detail_data) != 1) ? "selected='selected'" : null).">".$text['option-condition_scope_range']."</option>\n";
-	echo "			</select>\n";
-	echo "		</td>\n";
-
-	echo "		<td>\n";
-
-	//variables and values
-	foreach ($time_condition_vars as $var_name => $var_label) {
-		switch ($var_name) {
-			case "minute-of-day" :
-				echo "<span id='var_minute-of-day_options_".$c."' style='display: ".(($custom_conditions[$c]['var'] == $var_name) ? 'inline' : 'none').";'>\n";
-				echo "	<input type='number' class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' name='minute-of-day[".$c."][start]' id='minute-of-day_".$c."_start' value=\"".(($custom_conditions[$c]['var'] == $var_name) ? $detail_data[0] : null)."\">\n";
-				echo "	<span id='minute-of-day_".$c."_stop' style='display: ".(($custom_conditions[$c]['var'] == $var_name && $detail_data[1] != '') ? 'inline' : 'none').";'>\n";
-				echo "		&nbsp;<strong>~</strong>&nbsp;\n";
-				echo "		<input type='number' class='formfld' style='width: 50px; min-width: 50px; max-width: 50px;' name='minute-of-day[".$c."][stop]' value=\"".(($custom_conditions[$c]['var'] == $var_name) ? $detail_data[1] : null)."\">\n";
-				echo "	</span>\n";
-				echo "</span>\n";
-				break;
-			case "time-of-day" :
-				//split out hours and minutes, determine am/pm value, then adjust hours accordingly
-				if ($custom_conditions[$c]['var'] == $var_name && $detail_data[0] != '') {
-					$detail_data_tmp = explode(':', $detail_data[0]);
-					$detail_data_tmp[0] = (int) $detail_data_tmp[0];
-					if ($detail_data_tmp[0] != 0) {
-						if ($detail_data_tmp[0] >= 12) {
-							$detail_data['start_hour'] = ($detail_data_tmp[0] > 12) ? $detail_data_tmp[0] - 12 : $detail_data_tmp[0];
-							$detail_data['start_notation'] = 'PM';
-						}
-						else {
-							$detail_data['start_hour'] = $detail_data_tmp[0];
-							$detail_data['start_notation'] = 'AM';
-						}
-					}
-					else {
-						$detail_data['start_hour'] = '12';
-						$detail_data['start_notation'] = 'AM';
-					}
-					$detail_data['start_minute'] = (int) $detail_data_tmp[1];
-					unset($detail_data_tmp);
+$largest_group_id = 0;
+if ($action == 'update') {
+	foreach ($current_conditions as $group_id => $conditions) {
+		if (is_array($current_presets) && !in_array($group_id, $current_presets)) {
+			add_custom_condition($group_id, $dialplan_actions[$group_id]);
+			foreach ($conditions as $cond_var => $cond_val) {
+				$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
+				$tmp = explode($range_indicator, $cond_val);
+				$cond_val_start = $tmp[0];
+				$cond_val_stop = $tmp[1];
+				unset($tmp);
+				echo "<script>";
+				echo "	condition_id = add_condition(".$group_id.",'custom');\n";
+				echo "	$('#variable_".$group_id."_' + condition_id + ' option[value=\"".$cond_var."\"]').prop('selected', true);\n";
+				if ($cond_var == 'date-time') {
+					echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_start'));\n";
+					echo "	change_to_input(document.getElementById('value_".$group_id."_' + condition_id + '_stop'));\n";
+					echo "	$('#value_".$group_id."_' + condition_id + '_start').val('".$cond_val_start."');\n";
+					echo "	$('#value_".$group_id."_' + condition_id + '_stop').val('".$cond_val_stop."');\n";
 				}
-				echo "<span id='var_time-of-day_options_".$c."' style='display: ".(($custom_conditions[$c]['var'] == $var_name) ? 'inline' : 'none').";'>\n";
-				echo "	<select class='formfld' name='time-of-day[".$c."][start][hour]' id='time-of-day_".$c."_start_hour' onchange=\"if (document.getElementById('time-of-day_".$c."_start_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$c."_start_minute').selectedIndex = 1; } if (document.getElementById('time-of-day_".$c."_stop_hour').selectedIndex == 0) { document.getElementById('time-of-day_".$c."_stop_hour').selectedIndex = this.selectedIndex; document.getElementById('time-of-day_".$c."_stop_minute').selectedIndex = 1; }\">\n";
-				echo "		<option value=''>".$text['label-time-of-day_hour']."</option>\n";
-				for ($h = 1; $h <= 12; $h++) {
-					$selected = ($custom_conditions[$c]['var'] == $var_name && $detail_data['start_hour'] == $h) ? "selected='selected'" : null;
-					echo "	<option value='".$h."' ".$selected.">".$h."</option>\n";
+				else {
+					echo "	load_value_fields(".$group_id.", condition_id, '".$cond_var."');\n";
+					echo "	$('#value_".$group_id."_' + condition_id + '_start option[value=\"".$cond_val_start."\"]').prop('selected', true);\n";
+					echo "	$('#value_".$group_id."_' + condition_id + '_stop option[value=\"".$cond_val_stop."\"]').prop('selected', true);\n";
 				}
-				echo "	</select>\n";
-				echo "	<select class='formfld' name='time-of-day[".$c."][start][minute]' id='time-of-day_".$c."_start_minute' onchange=\"if (document.getElementById('time-of-day_".$c."_stop_minute').selectedIndex == 0 && document.getElementById('time-of-day_".$c."_stop').style.display == 'inline') { document.getElementById('time-of-day_".$c."_stop_minute').selectedIndex = this.selectedIndex; }\">\n";
-				echo "		<option value='00'>".$text['label-time-of-day_minute']."</option>\n";
-				for ($m = 0; $m < 60; $m++) {
-					$selected = ($custom_conditions[$c]['var'] == $var_name && $detail_data['start_minute'] == $m) ? "selected='selected'" : null;
-					echo "	<option value='".number_pad($m,2)."' ".$selected.">".number_pad($m,2)."</option>\n";
-				}
-				echo "	</select>\n";
-				echo "	<select class='formfld' name='time-of-day[".$c."][start][notation]' id='time-of-day_".$c."_start_notation'>\n";
-				echo "		<option value='AM' ".(($detail_data['start_notation'] == 'AM') ? "selected='selected'" : null).">AM</option>\n";
-				echo "		<option value='PM' ".(($detail_data['start_notation'] == 'PM') ? "selected='selected'" : null).">PM</option>\n";
-				echo "	</select>\n";
-				//split out hours and minutes, determine am/pm value, then adjust hours accordingly
-				if ($custom_conditions[$c]['var'] == $var_name && $detail_data[1] != '') {
-					$detail_data_tmp = explode(':', $detail_data[1]);
-					$detail_data_tmp[0] = (int) $detail_data_tmp[0];
-					if ($detail_data_tmp[0] != 0) {
-						if ($detail_data_tmp[0] >= 12) {
-							$detail_data['stop_hour'] = ($detail_data_tmp[0] > 12) ? $detail_data_tmp[0] - 12 : $detail_data_tmp[0];
-							$detail_data['stop_notation'] = 'PM';
-						}
-						else {
-							$detail_data['stop_hour'] = $detail_data_tmp[0];
-							$detail_data['stop_notation'] = 'AM';
-						}
-					}
-					else {
-						$detail_data['stop_hour'] = '12';
-						$detail_data['stop_notation'] = 'AM';
-					}
-					$detail_data['stop_minute'] = (int) $detail_data_tmp[1];
-					unset($detail_data_tmp);
-				}
-				echo "	<span id='time-of-day_".$c."_stop' style='display: ".(($custom_conditions[$c]['var'] == $var_name && $detail_data[1] != '') ? 'inline' : 'none').";'>\n";
-				echo "		&nbsp;~&nbsp;";
-				echo "		<select class='formfld' name='time-of-day[".$c."][stop][hour]' id='time-of-day_".$c."_stop_hour' onchange=\"if (document.getElementById('time-of-day_".$c."_stop_minute').selectedIndex == 0) { document.getElementById('time-of-day_".$c."_stop_minute').selectedIndex = 1; }\">\n";
-				echo "			<option value=''>".$text['label-time-of-day_hour']."</option>\n";
-				for ($h = 1; $h <= 12; $h++) {
-					$selected = ($custom_conditions[$c]['var'] == $var_name && $detail_data['stop_hour'] == $h) ? "selected='selected'" : null;
-					echo "		<option value='".$h."' ".$selected.">".$h."</option>\n";
-				}
-				echo "		</select>\n";
-				echo "		<select class='formfld' name='time-of-day[".$c."][stop][minute]' id='time-of-day_".$c."_stop_minute'>\n";
-				echo "			<option value=''>".$text['label-time-of-day_minute']."</option>\n";
-				for ($m = 0; $m < 60; $m++) {
-					$selected = ($custom_conditions[$c]['var'] == $var_name && $detail_data['stop_minute'] == $m) ? "selected='selected'" : null;
-					echo "		<option value='".number_pad($m,2)."' ".$selected.">".number_pad($m,2)."</option>\n";
-				}
-				echo "		</select>\n";
-				echo "		<select class='formfld' name='time-of-day[".$c."][stop][notation]' id='time-of-day_".$c."_stop_notation'>\n";
-				echo "			<option value='AM' ".(($detail_data['stop_notation'] == 'AM') ? "selected='selected'" : null).">AM</option>\n";
-				echo "			<option value='PM' ".(($detail_data['stop_notation'] == 'PM') ? "selected='selected'" : null).">PM</option>\n";
-				echo "		</select>\n";
-				echo "	</span>\n";
-				echo "</span>\n";
-				break;
-			case "date-time" :
-				echo "<span id='var_date-time_options_".$c."' style='display: ".(($custom_conditions[$c]['var'] == $var_name) ? 'inline' : 'none').";'>\n";
-				echo "	<input type='text' class='formfld' style='min-width: 115px; max-width: 115px;' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}\" name='date-time[".$c."][start]' value=\"".(($custom_conditions[$c]['var'] == $var_name) ? $detail_data[0] : null)."\" id='date-time_".$c."_start'>\n";
-				echo "	<span id='date-time_".$c."_stop' style='display: ".(($custom_conditions[$c]['var'] == $var_name && $detail_data[1] != '') ? 'inline' : 'none').";'>\n";
-				echo "		&nbsp;<strong>~</strong>&nbsp;\n";
-				echo "		<input type='text' class='formfld' style='min-width: 115px; max-width: 115px;' data-calendar=\"{format: '%Y-%m-%d %H:%M', listYears: true, hideOnPick: true, fxName: null, showButtons: true}\" name='date-time[".$c."][stop]' value=\"".(($custom_conditions[$c]['var'] == $var_name) ? $detail_data[1] : null)."\">\n";
-				echo "	</span>\n";
-				echo "</span>\n";
-				break;
-			default:
-				echo "<span id='var_".$var_name."_options_".$c."' style='display: ".(($custom_conditions[$c]['var'] == $var_name) ? 'inline' : 'none').";'>\n";
-				echo "	<select class='formfld' name='".$var_name."[".$c."][start]' id='".$var_name."_".$c."_start' onchange=\"if (document.getElementById('".$var_name."_".$c."_stop').selectedIndex == 0) { document.getElementById('".$var_name."_".$c."_stop').selectedIndex = this.selectedIndex; }\">\n";
-				foreach ($var_option_select[$var_name] as $var_option_select_value => $var_option_select_label) {
-					$selected = ($custom_conditions[$c]['var'] == $var_name && $var_option_select_value == $detail_data[0]) ? "selected='selected'" : null;
-					echo "	<option value='".$var_option_select_value."' ".$selected.">".$var_option_select_label."</option>\n";
-				}
-				echo "	</select>\n";
-				echo "	<span id='".$var_name."_".$c."_stop' style='display: ".(($custom_conditions[$c]['var'] == $var_name && $detail_data[1] != '') ? 'inline' : 'none').";'>\n";
-				echo "		&nbsp;<strong>~</strong>&nbsp;\n";
-				echo "		<select class='formfld' name='".$var_name."[".$c."][stop]' id='".$var_name."_".$c."_stop-real'>\n";
-				echo "			<option value=''></option>\n";
-				foreach ($var_option_select[$var_name] as $var_option_select_value => $var_option_select_label) {
-					$selected = ($custom_conditions[$c]['var'] == $var_name && $var_option_select_value == $detail_data[1]) ? "selected='selected'" : null;
-					echo "		<option value='".$var_option_select_value."' ".$selected.">".$var_option_select_label."</option>\n";
-				}
-				echo "		</select>\n";
-				echo "	</span>\n";
-				echo "</span>\n";
+				echo "</script>";
+			}
 		}
+		//used to determine largest custom group id in use
+		$largest_group_id = ($group_id > $largest_group_id) ? $group_id : $largest_group_id;
 	}
+}
 
-	echo "		</td>\n";
-	echo "	</tr>\n";
+// add first/new set of custom condition fields
+$group_id = ($action == 'update' && $largest_group_id != 0) ? $largest_group_id += 5 : 500;
+add_custom_condition($group_id);
+echo "<script>";
+echo "	add_condition(".$group_id.",'custom');";
+if ($action == 'add' || ($action == 'update' && $largest_group_id == 0)) {
+	echo "	add_condition(".$group_id.",'custom');";
 }
-echo "	</table>\n";
-if ($action == 'add') {
-	echo "<script>\n";
-	//set field values
-		echo "	document.getElementById('variable_0').selectedIndex = 4;\n"; //day of week
-		echo "	document.getElementById('scope_0').selectedIndex = 1;\n"; //range
-		echo "	document.getElementById('wday_0_start').selectedIndex = 1;\n"; //monday
-		echo "	document.getElementById('wday_0_stop-real').selectedIndex = 6;\n"; //friday
-		echo "	document.getElementById('variable_1').selectedIndex = 7;\n"; //hour of day
-		echo "	document.getElementById('scope_1').selectedIndex = 1;\n"; //range
-		echo "	document.getElementById('hour_1_start').selectedIndex = 8;\n"; //8am
-		echo "	document.getElementById('hour_1_stop-real').selectedIndex = 18;\n"; //5pm
-	//display fields
-		echo "	document.getElementById('var_wday_options_0').style.display = '';\n";
-		echo "	document.getElementById('wday_0_stop').style.display = '';\n";
-		echo "	document.getElementById('var_hour_options_1').style.display = '';\n";
-		echo "	document.getElementById('hour_1_stop').style.display = '';\n";
-	echo "</script>\n";
-}
-echo "	<br />";
-echo "	".$text['description-conditions']."<br />\n";
-echo "</td>\n";
-echo "</tr>\n";
+echo "</script>";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-presets']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "	<table cellpadding='0' cellspacing='15' border='0' style='margin: -15px;'>\n";
-echo "		<tr>\n";
-echo "			<td class='vtable' style='border: none; padding: 0px; vertical-align: top; white-space: nowrap;'>\n";
-$preset_count = sizeof($available_presets);
-$presets_per_column = ceil($preset_count / 3);
-$p = 0;
+
+$group_id = 0;
 foreach ($available_presets as $preset_number => $preset) {
 	foreach ($preset as $preset_name => $preset_variables) {
-		$checked = (is_array($current_presets) && in_array($preset_number, $current_presets)) ? "checked='checked'" : null;
-		echo "<label for='preset_".$preset_number."'><input type='checkbox' name='preset[]' id='preset_".$preset_number."' value='".$preset_number."' ".$checked."> ".$text['label-preset_'.$preset_name]."</label><br>\n";
-		$p++;
-		if ($p == $presets_per_column) {
-			echo "	</td>";
-			echo "	<td class='vtable' style='border: none; padding: 0px; vertical-align: top; white-space: nowrap;'>\n";
-			$p = 0;
+		$checked = (is_array($current_presets) && $current_presets[$preset_number] != '') ? "checked='checked'" : null;
+		if ($checked) {
+			$preset_group_id = $current_presets[$preset_number];
+		}
+		else {
+			$preset_group_id = $preset_number * 5;
+		}
+		echo "<input type='checkbox' name='preset[".$preset_number."]' id='preset_".$preset_number."' value='".$preset_group_id."' ".$checked."> <a href='javascript:void(0);' onclick=\"$('#preset_fields_".$preset_group_id."').slideToggle(400);\">".$text['label-preset_'.$preset_name]."</a><br>\n";
+		echo "<div id='preset_fields_".$preset_group_id."' style='display: none; margin: 4px 0px 0px 20px;'>";
+		echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px; margin-bottom: 10px;'>\n";
+		echo "		<tr>\n";
+		echo "			<td class='vtable' style='width: 108px;'>".$text['label-condition']."</td>\n";
+		echo "			<td class='vtable' style='width: 125px;'>".$text['label-condition_value']."</td>\n";
+		echo "			<td class='vtable' style='width: 114px;'>".$text['label-condition_range']."</td>\n";
+		echo "			<td style='text-align: right;'><a href='javascript:void(0);' onclick=\"add_condition(".$preset_group_id.",'preset');\">".$v_link_label_add."</a></td>\n";
+		echo "		</tr>\n";
+		echo "		<tr>";
+		echo "			<td colspan='4' style='white-space: nowrap;' id='group_".$preset_group_id."'></td>";
+		echo "		</tr>";
+		echo "		<tr>";
+		echo "			<td colspan='4' style='padding-top: 10px;'>";
+							switch_select_destination("dialplan", $text['label-select_destination'], "dialplan_action[".$preset_group_id."]", $dialplan_action, 'width: 300px;', '');
+		echo "			</td>";
+		echo "		</tr>";
+		echo "	</table>";
+		echo "	<br />";
+		echo "</div>";
+		if ($action == 'update' && is_array($current_presets) && $current_presets[$preset_number] != '') {
+			//add (potentially customized) preset conditions and populate
+			foreach ($current_conditions[$preset_group_id] as $cond_var => $cond_val) {
+				$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
+				$tmp = explode($range_indicator, $cond_val);
+				$cond_val_start = $tmp[0];
+				$cond_val_stop = $tmp[1];
+				unset($tmp);
+				echo "<script>\n";
+				echo "	condition_id = add_condition(".$preset_group_id.",'preset');\n";
+				echo "	$('#variable_".$preset_group_id."_' + condition_id + ' option[value=\"".$cond_var."\"]').prop('selected', true);\n";
+				if ($cond_var == 'date-time') {
+					echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_start'));\n";
+					echo "	change_to_input(document.getElementById('value_".$preset_group_id."_' + condition_id + '_stop'));\n";
+					echo "	$('#value_".$preset_group_id."_' + condition_id + '_start').val('".$cond_val_start."');\n";
+					echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop').val('".$cond_val_stop."');\n";
+				}
+				else {
+					echo "	load_value_fields(".$preset_group_id.", condition_id, '".$cond_var."');\n";
+					echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$cond_val_start."\"]').prop('selected', true);\n";
+					echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$cond_val_stop."\"]').prop('selected', true);\n";
+				}
+				echo "	$('#dialplan_action_".$preset_group_id." option[value=\"".$dialplan_actions[$preset_group_id]."\"]').prop('selected', true);\n\n";
+				echo "</script>";
+			}
+		}
+		else {
+			//add default preset conditions and populate
+			foreach ($preset_variables as $preset_variable => $preset_value) {
+				$range_indicator = ($preset_variable == 'date-time') ? '~' : '-';
+				$tmp = explode($range_indicator, $preset_value);
+				$preset_value_start = $tmp[0];
+				$preset_value_stop = $tmp[1];
+				unset($tmp);
+				echo "<script>\n";
+				echo "	condition_id = add_condition(".$preset_group_id.",'preset');\n";
+				echo "	$('#variable_".$preset_group_id."_' + condition_id + ' option[value=\"".$preset_variable."\"]').prop('selected', true);\n";
+				echo "	load_value_fields(".$preset_group_id.", condition_id, '".$preset_variable."');\n";
+				echo "	$('#value_".$preset_group_id."_' + condition_id + '_start option[value=\"".$preset_value_start."\"]').prop('selected', true);\n";
+				echo "	$('#value_".$preset_group_id."_' + condition_id + '_stop option[value=\"".$preset_value_stop."\"]').prop('selected', true);\n";
+				echo "</script>\n\n";
+			}
 		}
 	}
 }
-echo "			</td>\n";
-echo "		</tr>\n";
-echo "	</table>\n";
+
 echo "	<br />\n";
+echo "	<table border='0' cellpadding='2' cellspacing='0' style='margin: -2px;'>\n";
+echo "		<tr>";
+echo "			<td>";
+					switch_select_destination("dialplan", $text['label-select_destination'], "default_preset_action", $dialplan_action, 'width: 300px;', '');
+echo "			</td>";
+echo "		</tr>";
+echo "	</table>";
+echo "	<br />";
 echo "	".$text['description-presets']."<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
-echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
-echo "    ".$text['label-action']."\n";
-echo "</td>\n";
-echo "<td class='vtable' align='left'>\n";
-switch_select_destination("dialplan", $dialplan_action, "dialplan_action", $dialplan_action, '', '');
-echo "</td>\n";
-echo "</tr>\n";
-
-echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "    ".$text['label-action-alternate']."\n";
+echo "	".$text['label-alternate-destination']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-switch_select_destination("dialplan", $dialplan_anti_action, "dialplan_anti_action", $dialplan_anti_action, '', '');
+switch_select_destination("dialplan", $dialplan_anti_action, "dialplan_anti_action", $dialplan_anti_action, 'width: 300px;', '');
 echo "	<div id='desc_anti_action_data_1'></div>\n";
 echo "</td>\n";
 echo "</tr>\n";
@@ -958,20 +979,20 @@ echo "<td class='vncellreq' valign='top' align='left' nowrap>\n";
 echo "    ".$text['label-enabled']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-echo "    <select class='formfld' name='dialplan_enabled'>\n";
-echo "    	<option value='true' ".(($dialplan_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
-echo "   	<option value='false' ".(($dialplan_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
-echo "    </select>\n";
+echo "<select class='formfld' name='dialplan_enabled'>\n";
+echo "	<option value='true' ".(($dialplan_enabled == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+echo "	<option value='false' ".(($dialplan_enabled == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
+echo "</select>\n";
 echo "<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-echo "    ".$text['label-description']."\n";
+echo "	".$text['label-description']."\n";
 echo "</td>\n";
 echo "<td colspan='4' class='vtable' align='left'>\n";
-echo "    <input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".$dialplan_description."\">\n";
+echo "	<input class='formfld' type='text' name='dialplan_description' maxlength='255' value=\"".$dialplan_description."\">\n";
 echo "<br />\n";
 echo "</td>\n";
 echo "</tr>\n";
