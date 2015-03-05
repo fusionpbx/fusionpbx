@@ -41,38 +41,38 @@ else {
 	}
 
 //get the http values and set them as variables
+	$group_uuid = check_str($_POST["group_uuid"]);
 	$group_name = check_str($_POST["group_name"]);
 	$user_uuid = check_str($_POST["user_uuid"]);
 
-if (strlen($user_uuid) > 0  && strlen($group_name) > 0)   {
-	$sql_insert = "insert into v_group_users ";
-	$sql_insert .= "(";
-	$sql_insert .= "group_user_uuid, ";
-	$sql_insert .= "domain_uuid, ";
-	$sql_insert .= "group_name, ";
-	$sql_insert .= "user_uuid ";
-	$sql_insert .= ")";
-	$sql_insert .= "values ";
-	$sql_insert .= "(";
-	$sql_insert .= "'".uuid()."', ";
-	$sql_insert .= "'$domain_uuid', ";
-	$sql_insert .= "'$group_name', ";
-	$sql_insert .= "'$user_uuid' ";
-	$sql_insert .= ")";
-	if (!$db->exec($sql_insert)) {
-		//echo $db->errorCode() . "<br>";
-		$info = $db->errorInfo();
-		print_r($info);
-		// $info[0] == $db->errorCode() unified error code
-		// $info[1] is the driver specific error code
-		// $info[2] is the driver specific error string
+//add the user to the group
+	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0)   {
+		$sql = "insert into v_group_users ";
+		$sql .= "(";
+		$sql .= "group_user_uuid, ";
+		$sql .= "domain_uuid, ";
+		$sql .= "group_uuid, ";
+		$sql .= "group_name, ";
+		$sql .= "user_uuid ";
+		$sql .= ")";
+		$sql .= "values ";
+		$sql .= "(";
+		$sql .= "'".uuid()."', ";
+		$sql .= "'$domain_uuid', ";
+		$sql .= "'$group_uuid', ";
+		$sql .= "'$group_name', ";
+		$sql .= "'$user_uuid' ";
+		$sql .= ")";
+		if (!$db->exec($sql)) {
+			$info = $db->errorInfo();
+			print_r($info);
+		}
+		else {
+			//log the success
+			//$log_type = 'group'; $log_status='add'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." added to group: ".$group_name;
+			//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
+		}
 	}
-	else {
-		//log the success
-		//$log_type = 'group'; $log_status='add'; $log_add_user=$_SESSION["username"]; $log_desc= "username: ".$username." added to group: ".$group_name;
-		//log_add($db, $log_type, $log_status, $log_desc, $log_add_user, $_SERVER["REMOTE_ADDR"]);
-	}
-}
 
 //redirect the user
 	header("Location: groupmembers.php?group_name=$group_name");
