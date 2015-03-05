@@ -810,10 +810,10 @@ function add_custom_condition($group_id, $dialplan_action = '') {
 	echo "</tr>\n";
 }
 
-$largest_group_id = 0;
 if ($action == 'update') {
+	$largest_group_id = 0;
 	foreach ($current_conditions as $group_id => $conditions) {
-		if (is_array($current_presets) && !in_array($group_id, $current_presets)) {
+		if (!is_array($current_presets) || (is_array($current_presets) && !in_array($group_id, $current_presets))) {
 			add_custom_condition($group_id, $dialplan_actions[$group_id]);
 			foreach ($conditions as $cond_var => $cond_val) {
 				$range_indicator = ($cond_var == 'date-time') ? '~' : '-';
@@ -837,21 +837,26 @@ if ($action == 'update') {
 				}
 				echo "</script>";
 			}
+			//used to determine largest custom group id in use
+			$largest_group_id = ($group_id > $largest_group_id) ? $group_id : $largest_group_id;
 		}
-		//used to determine largest custom group id in use
-		$largest_group_id = ($group_id > $largest_group_id) ? $group_id : $largest_group_id;
 	}
 }
 
 // add first/new set of custom condition fields
-$group_id = ($action == 'update' && $largest_group_id != 0) ? $largest_group_id += 5 : 500;
-add_custom_condition($group_id);
-echo "<script>";
-echo "	add_condition(".$group_id.",'custom');";
-if ($action == 'add' || ($action == 'update' && $largest_group_id == 0)) {
+	if ($action != 'update' || ($action == 'update' && $largest_group_id == 0)) {
+		$group_id = 500;
+	}
+	else {
+		$group_id = $largest_group_id += 5;
+	}
+	add_custom_condition($group_id);
+	echo "<script>";
 	echo "	add_condition(".$group_id.",'custom');";
-}
-echo "</script>";
+	if ($action == 'add' || ($action == 'update' && $largest_group_id == 0)) {
+		echo "	add_condition(".$group_id.",'custom');";
+	}
+	echo "</script>";
 
 echo "<tr>\n";
 echo "<td class='vncell' valign='top' align='left' nowrap>\n";
