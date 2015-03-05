@@ -56,6 +56,15 @@ require_once "resources/require.php";
 		unset($sql);
 	}
 
+//get the groups
+	$sql = "SELECT * FROM v_groups ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$sql .= "or domain_uuid is null ";
+	$sql .= "order by group_name asc ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$groups = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>";
 	echo "<tr>";
@@ -75,13 +84,6 @@ require_once "resources/require.php";
 	echo "</table>";
 	echo "<br>";
 
-	$sql = "SELECT * FROM v_groups ";
-	$sql .= "where domain_uuid = '$domain_uuid' ";
-	$sql .= "or domain_uuid is null ";
-	$sql .= "order by group_name asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-
 	$c = 0;
 	$row_style["0"] = "row_style0";
 	$row_style["1"] = "row_style1";
@@ -100,11 +102,10 @@ require_once "resources/require.php";
 	$strlist .= "</tr>\n";
 
 	$count = 0;
-	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach ($result as &$row) {
+	foreach ($groups as &$row) {
+		$group_uuid = $row["group_uuid"];
 		$group_name = $row["group_name"];
 		$group_protected= $row["group_protected"];
-		$group_uuid = $row["group_uuid"];
 		$group_description = $row["group_description"];
 		if (strlen($group_name) == 0) { $group_name = "&nbsp;"; }
 		if (strlen($group_description) == 0) { $group_description = "&nbsp;"; }
@@ -132,18 +133,18 @@ require_once "resources/require.php";
 			$strlist .= "</td>\n";
 			$strlist .= "<td class='".$row_style[$c]."' nowrap>\n";
 			if (permission_exists('group_add') || if_group("superadmin")) {
-				$strlist .= "<a class='' href='group_permissions.php?group_name=".$group_name."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;";
+				$strlist .= "<a class='' href='group_permissions.php?group_uuid=".$group_uuid."&group_name=".$group_name."' title='".$text['label-group_permissions']."'>".$text['label-group_permissions']."</a>&nbsp;&nbsp;";
 			}
 			if (permission_exists('group_member_view') || if_group("superadmin")) {
-				$strlist .= "<a class='' href='groupmembers.php?group_name=".$group_name."' title='".$text['label-group_members']."'>".$text['label-group_members']."</a>";
+				$strlist .= "<a class='' href='groupmembers.php?group_uuid=".$group_uuid."&group_name=".$group_name."' title='".$text['label-group_members']."'>".$text['label-group_members']."</a>";
 			}
 			$strlist .= "</td>\n";
 			$strlist .= "<td class='".$row_style[$c]."' style=\"padding: 0px; text-align: center;\" align=\"center\" nowrap>\n";
 			if ($group_protected == "true") {
-				$strlist .= "		<input type='checkbox' name='group_protected' checked='checked' value='true' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=false&group_name=".$group_name."';\">\n";
+				$strlist .= "		<input type='checkbox' name='group_protected' checked='checked' value='true' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=false&group_uuid=".$group_uuid."&group_name=".$group_name."';\">\n";
 			}
 			else {
-				$strlist .= "		<input type='checkbox' name='group_protected' value='false' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=true&group_name=".$group_name."';\">\n";
+				$strlist .= "		<input type='checkbox' name='group_protected' value='false' onchange=\"window.location='".PROJECT_PATH."/core/users/groups.php?change=true&group_uuid=".$group_uuid."&group_name=".$group_name."';\">\n";
 			}
 			$strlist .= "</td>\n";
 			$strlist .= "<td class='row_stylebg' nowrap>".$group_description."</td>\n";
