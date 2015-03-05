@@ -45,6 +45,7 @@ require_once "resources/require.php";
 			$sql = "select group_name from v_groups ";
 			$sql .= "where group_uuid = '".$group_uuid."' ";
 			$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null); ";
+			//echo $sql . "\n";
 			$prep_statement = $db->prepare(check_sql($sql));
 			$prep_statement->execute();
 			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
@@ -56,7 +57,8 @@ require_once "resources/require.php";
 		//delete the group users
 			$sql = "delete from v_group_users ";
 			$sql .= "where group_uuid = '".$group_uuid."' ";
-			$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null) ";
+			$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null); ";
+			//echo $sql . "\n";
 			if (!$db->exec($sql)) {
 				$error = $db->errorInfo();
 				print_r($error);
@@ -66,7 +68,8 @@ require_once "resources/require.php";
 			if (strlen($group_name) > 0) {
 				$sql = "delete from v_group_permissions ";
 				$sql .= "where group_name = '".$group_name."' ";
-				$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null) ";
+				$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null); ";
+				//echo $sql . "\n";
 				if (!$db->exec($sql)) {
 					$error = $db->errorInfo();
 					print_r($error);
@@ -76,7 +79,8 @@ require_once "resources/require.php";
 		//delete the group
 			$sql = "delete from v_groups ";
 			$sql .= "where group_uuid = '".$group_uuid."' ";
-			$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null) ";
+			$sql .= "and (domain_uuid = '".$_SESSION['domain_uuid']."' or domain_uuid is null); ";
+			//echo $sql . "\n";
 			if (!$db->exec($sql)) {
 				$error = $db->errorInfo();
 				print_r($error);

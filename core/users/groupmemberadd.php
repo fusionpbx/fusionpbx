@@ -46,7 +46,7 @@ else {
 	$user_uuid = check_str($_POST["user_uuid"]);
 
 //add the user to the group
-	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0)   {
+	if (is_uuid($user_uuid) && is_uuid($group_uuid) && strlen($group_name) > 0) {
 		$sql = "insert into v_group_users ";
 		$sql .= "(";
 		$sql .= "group_user_uuid, ";
