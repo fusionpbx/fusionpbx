@@ -183,7 +183,7 @@ require_once "resources/header.php";
 		//remove invalid conditions and values by checking conditions
 		foreach ($_REQUEST['variable'] as $group_id => $conditions) {
 			foreach ($conditions as $condition_id => $condition_variable) {
-				if ($condition_variable == '' || $_REQUEST['value'][$group_id][$condition_id] == '') {
+				if ($condition_variable == '') {
 					unset($_REQUEST['variable'][$group_id][$condition_id]);
 					unset($_REQUEST['value'][$group_id][$condition_id]);
 				}
@@ -194,8 +194,8 @@ require_once "resources/header.php";
 		foreach ($_REQUEST['value'] as $group_id => $values) {
 			foreach ($values as $value_id => $value_range) {
 				if ($value_range['start'] == '') {
+					unset($_REQUEST['variable'][$group_id][$value_id]);
 					unset($_REQUEST['value'][$group_id][$value_id]);
-					unset($_REQUEST['variable'][$group_id][$condition_id]);
 				}
 			}
 		}
@@ -204,7 +204,20 @@ require_once "resources/header.php";
 		foreach ($_REQUEST['variable'] as $group_id => $conditions) {
 			if (sizeof($conditions) == 0) {
 				unset($_REQUEST['variable'][$group_id]);
+				unset($_REQUEST['value'][$group_id]);
 				unset($_REQUEST['dialplan_action'][$group_id]);
+			}
+		}
+
+		//remove groups where an action (or default_preset_action, if a preset group) isn't defined
+		foreach ($_REQUEST['variable'] as $group_id => $meh) {
+			if ( (in_array($group_id, $preset) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '') || (!in_array($group_id, $preset) && $_REQUEST['dialplan_action'][$group_id] == '') ) {
+				unset($_REQUEST['variable'][$group_id]);
+				unset($_REQUEST['value'][$group_id]);
+				unset($_REQUEST['dialplan_action'][$group_id]);
+				foreach ($_REQUEST['preset'] as $preset_id => $preset_group_id) {
+					if ($group_id == $preset_group_id) { unset($_REQUEST['preset'][$preset_id]); }
+				}
 			}
 		}
 
