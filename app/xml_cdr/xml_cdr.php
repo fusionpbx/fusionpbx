@@ -125,6 +125,9 @@ else {
 	echo "	<table cellpadding='0' cellspacing='0' border='0'>\n";
 	echo "		<tr>\n";
 	echo "			<td style='vertical-align: top;'>\n";
+	if (permission_exists('xml_cdr_all')) {
+		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr.php?showall=true';\">\n";
+	}
 	if (permission_exists('xml_cdr_search_advanced')) {
 		echo "			<input type='button' class='btn' value='".$text['button-advanced_search']."' onclick=\"window.location='xml_cdr_search.php';\">\n";
 	}
@@ -371,6 +374,12 @@ else {
 		echo "<th style='width: 30px; text-align: center; padding: 0px;'><input type='checkbox' onchange=\"(this.checked) ? check('all') : check('none');\"></th>";
 	}
 	echo "<th>&nbsp;</th>\n";
+	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, null, null, $param);
+		//echo "		<th class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
+		//echo "			".$text['label-domain-name']."\n";
+		//echo "		</th>\n";
+	}
 	echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 	echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
 	echo th_order_by('destination_number', $text['label-destination'], $order_by, $order, null, null, $param);
@@ -473,7 +482,14 @@ else {
 				unset($recording_file_path);
 			}
 
-			$tr_link = (if_group("admin") || if_group("superadmin") || if_group("cdr")) ? "href='xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
+			//$tr_link = (if_group("admin") || if_group("superadmin") || if_group("cdr")) ? "href='xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
+			if ((if_group("admin") || if_group("superadmin") || if_group("cdr")) && $_GET['showall']) {
+				$tr_link .= "href='xml_cdr_details.php?uuid=".$row['uuid']."&showall=true'";
+			} elseif (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				$tr_link .= "href='xml_cdr_details.php?uuid=".$row['uuid']."'";
+			} else {
+				$tr_link = null;
+			}
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('xml_cdr_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
@@ -518,7 +534,11 @@ else {
 			else {
 				echo "	<td class='".$row_style[$c]."'>&nbsp;</td>";
 			}
-
+			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>";
+				echo 	$row['domain_name'].'&nbsp;';
+				echo "	</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			echo 	$row['caller_id_name'].'&nbsp;';
 			echo "	</td>\n";
@@ -627,7 +647,7 @@ else {
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."' nowrap='nowrap'>";
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				echo "<a href='xml_cdr_details.php?uuid=".$row['uuid']."'>".$hangup_cause."</a>";
+				echo "<a $tr_link>".$hangup_cause."</a>";
 			}
 			else {
 				echo $hangup_cause;
@@ -635,7 +655,7 @@ else {
 			echo "	</td>\n";
 			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
 				echo "	<td class='list_control_icons tr_link_void'>";
-				echo "		<a href='xml_cdr_details.php?uuid=".$row['uuid']."' title='".$text['button-view']."'>$v_link_label_view</a>";
+				echo "		<a $tr_link title='".$text['button-view']."'>$v_link_label_view</a>"; //CJB
 				if (permission_exists('xml_cdr_delete')) {
 					echo 	"<a href='xml_cdr_delete.php?id[]=".$row['uuid']."&rec[]=".(($recording_file_path != '') ? base64_encode($recording_file_path) : null)."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">".$v_link_label_delete."</a>";
 				}

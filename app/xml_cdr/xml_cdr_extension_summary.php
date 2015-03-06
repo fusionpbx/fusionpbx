@@ -61,8 +61,11 @@ require_once "resources/require.php";
 	$sql .= "v_extensions ";
 	$sql .= "where ";
 	$sql .= "enabled = 'true' ";
-	$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
-
+	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		$sql .= " ";
+	} else {
+		$sql .= "and domain_uuid = '".$_SESSION['domain_uuid']."' ";
+	}
 	if (!(if_group("admin") || if_group("superadmin"))) {
 		if (count($_SESSION['user']['extension']) > 0) {
 			$sql .= "and (";
@@ -109,8 +112,13 @@ require_once "resources/require.php";
 	$sql .= "hangup_cause ";
 	$sql .= "from v_xml_cdr ";
 	$sql .= "where ";
-	$sql .= "domain_uuid = '".$_SESSION['domain_uuid']."' ";
-	$sql .= "and ( ";
+	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		$sql .= " ";
+	} else {
+		$sql .= " domain_uuid = '".$_SESSION['domain_uuid']."' ";
+		$sql .= " and ";
+	}
+	$sql .= "( ";
 	$sql .= "	caller_id_number in ('".$ext_list."') or ";
 	$sql .= "	destination_number in ('".$ext_list."') ";
 	$sql .= ") ";
@@ -260,6 +268,9 @@ require_once "resources/require.php";
 		echo "	</tr>";
 		echo "	<tr>";
 		echo "		<td colspan='4' style='padding-top: 8px;' align='right'>";
+		if (permission_exists('xml_cdr_all')) {
+			echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='xml_cdr_extension_summary.php?showall=true';\">\n";
+		}
 		echo "			<input type='button' class='btn' value='".$text['button-reset']."' onclick=\"document.location.href='xml_cdr_extension_summary.php';\">\n";
 		echo "			<input type='submit' class='btn' name='submit' value='".$text['button-update']."'>\n";
 		echo "		</td>";
