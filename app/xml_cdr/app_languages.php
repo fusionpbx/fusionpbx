@@ -185,10 +185,10 @@
 	$text['label-average']['pt-pt'] = "Média";
 	$text['label-average']['fr-fr'] = "Moyenne";
 
-    $text['label-preset']['en-us'] = 'Quick Select';
-    $text['label-preset']['es-cl'] = 'Quick Select';
-    $text['label-preset']['pt-pt'] = 'Quick Select';
-    $text['label-preset']['fr-fr'] = 'Quick Select';
+	$text['label-preset']['en-us'] = 'Quick Select';
+	$text['label-preset']['es-cl'] = 'Quick Select';
+	$text['label-preset']['pt-pt'] = 'Quick Select';
+	$text['label-preset']['fr-fr'] = 'Quick Select';
 
 	$text['button-export']['en-us'] = 'Export';
 	$text['button-export']['es-cl'] = 'Exportación';
@@ -563,35 +563,35 @@
 	$text['option-false']['pt-pt'] = "Não";
 	$text['option-false']['fr-fr'] = "Non";
 
-    $text['option-default']['en-us'] = "Default";
-    $text['option-default']['es-cl'] = "Default";
-    $text['option-default']['pt-pt'] = "Default";
-    $text['option-default']['fr-fr'] = "Default";
+	$text['option-default']['en-us'] = "Default";
+	$text['option-default']['es-cl'] = "Default";
+	$text['option-default']['pt-pt'] = "Default";
+	$text['option-default']['fr-fr'] = "Default";
 
-    $text['option-last_hour']['en-us'] = "Last Hour";
-    $text['option-last_hour']['es-cl'] = "Last Hour";
-    $text['option-last_hour']['pt-pt'] = "Last Hour";
-    $text['option-last_hour']['fr-fr'] = "Last Hour";
+	$text['option-last_hour']['en-us'] = "Last Hour";
+	$text['option-last_hour']['es-cl'] = "Last Hour";
+	$text['option-last_hour']['pt-pt'] = "Last Hour";
+	$text['option-last_hour']['fr-fr'] = "Last Hour";
 
-    $text['option-today']['en-us'] = "Today";
-    $text['option-today']['es-cl'] = "Today";
-    $text['option-today']['pt-pt'] = "Today";
-    $text['option-today']['fr-fr'] = "Today";
+	$text['option-today']['en-us'] = "Today";
+	$text['option-today']['es-cl'] = "Today";
+	$text['option-today']['pt-pt'] = "Today";
+	$text['option-today']['fr-fr'] = "Today";
 
-    $text['option-yesterday']['en-us'] = "Yesterday";
-    $text['option-yesterday']['es-cl'] = "Yesterday";
-    $text['option-yesterday']['pt-pt'] = "Yesterday";
-    $text['option-yesterday']['fr-fr'] = "Yesterday";
+	$text['option-yesterday']['en-us'] = "Yesterday";
+	$text['option-yesterday']['es-cl'] = "Yesterday";
+	$text['option-yesterday']['pt-pt'] = "Yesterday";
+	$text['option-yesterday']['fr-fr'] = "Yesterday";
 
-    $text['option-this_month']['en-us'] = "This Month";
-    $text['option-this_month']['es-cl'] = "This Month";
-    $text['option-this_month']['pt-pt'] = "This Month";
-    $text['option-this_month']['fr-fr'] = "This Month";
+	$text['option-this_month']['en-us'] = "This Month";
+	$text['option-this_month']['es-cl'] = "This Month";
+	$text['option-this_month']['pt-pt'] = "This Month";
+	$text['option-this_month']['fr-fr'] = "This Month";
 
-    $text['option-this_year']['en-us'] = "This Year";
-    $text['option-this_year']['es-cl'] = "This Year";
-    $text['option-this_year']['pt-pt'] = "This Year";
-    $text['option-this_year']['fr-fr'] = "This Year";
+	$text['option-this_year']['en-us'] = "This Year";
+	$text['option-this_year']['es-cl'] = "This Year";
+	$text['option-this_year']['pt-pt'] = "This Year";
+	$text['option-this_year']['fr-fr'] = "This Year";
 
 	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
 	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar el número?";
@@ -608,4 +608,13 @@
 	$text['message-delete']['pt-pt'] = "Remoção Efectuada";
 	$text['message-delete']['fr-fr'] = "Supprimé";
 
+	$text['button-show_all']['en-us'] = "Show All";
+	$text['button-show_all']['es-cl'] = "Mostrar Todos";
+	$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+	$text['button-show_all']['fr-fr'] = "Montrer Tout";
+
+	$text['label-domain-name']['en-us'] = "Domain Name";
+	$text['label-domain-name']['es-cl'] = "Nombre de Dominio";
+	$text['label-domain-name']['pt-pt'] = "Nome de Domínio";
+	$text['label-domain-name']['fr-fr'] = "Nom de Domaine";
 ?>

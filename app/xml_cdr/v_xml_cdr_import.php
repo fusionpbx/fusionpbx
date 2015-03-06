@@ -38,6 +38,7 @@
 	else {
 		include "root.php";
 		require_once "resources/require.php";
+		require_once "resources/pdo.php";
 	}
 
 //set debug

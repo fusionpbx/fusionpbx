@@ -200,6 +200,9 @@ else {
 	$param .= "&remote_media_ip=".$remote_media_ip;
 	$param .= "&network_addr=".$network_addr;
 	$param .= "&bridge_uuid=".$bridge_uuid;
+	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		$param .= "&showall=" . $_GET['showall'];
+	}
 	if (isset($order_by)) {
 		$param .= "&order_by=".$order_by."&order=".$order;
 	}
@@ -277,7 +280,16 @@ else {
 		$sql .= "rtp_audio_in_mos, ";
 	}
 	$sql .= "(answer_epoch - start_epoch) as tta ";
-	$sql .= "from v_xml_cdr where domain_uuid = '".$domain_uuid."' ".$sql_where;
+	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		$sql .= ", domain_name ";
+	}
+	$sql .= "from v_xml_cdr ";
+	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+		if ($sql_where) { $sql .= "where "; }
+	} else {
+		$sql .= "where domain_uuid = '".$domain_uuid."' ";
+	}
+	$sql .= $sql_where;
 	if (strlen($order_by)> 0) { $sql .= " order by ".$order_by." ".$order." "; }
 	if ($rows_per_page == 0) {
 		$sql .= " limit ".$_SESSION['cdr']['limit']['numeric']." offset 0 ";
