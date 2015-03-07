@@ -66,6 +66,24 @@
 		//set global variable
 			global $debug;
 
+		//fix the xml by escaping the contents of <sip_full_from>
+			preg_match("/<sip_full_from>(.*)<\/sip_full_from>/", $xml_string, $matches);
+			$match_result = str_replace("<", "&lt;", $matches[1]);
+			$match_result = str_replace(">", "&gt;", $match_result);
+			$xml_string = str_replace($matches[1], $match_result, $xml_string);
+
+		//fix the xml by escaping the contents of <sip_full_to>
+			preg_match("/<sip_full_to>(.*)<\/sip_full_to>/", $xml_string, $matches);
+			$match_result = str_replace("<", "&lt;", $matches[1]);
+			$match_result = str_replace(">", "&gt;", $match_result);
+			$xml_string = str_replace($matches[1], $match_result, $xml_string);
+
+		//fix the xml by escaping the contents of <caller_id>
+			preg_match("/<caller_id>(.*)<\/caller_id>/", $xml_string, $matches);
+			$match_result = str_replace("<", "&lt;", $matches[1]);
+			$match_result = str_replace(">", "&gt;", $match_result);
+			$xml_string = str_replace($matches[1], $match_result, $xml_string);
+
 		//parse the xml to get the call detail record info
 			try {
 				$xml = simplexml_load_string($xml_string);
