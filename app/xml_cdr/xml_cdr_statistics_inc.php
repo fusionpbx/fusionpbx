@@ -38,7 +38,8 @@ else {
 	if (!if_group("admin") && !if_group("superadmin")) {
 		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = '' 
 		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
-		$sql_where = "where domain_uuid = '$domain_uuid' and ( ";
+
+		$sql_where = "where domain_uuid = '".$_SESSION["domain_uuid"]."' and ( ";
 		if (count($_SESSION['user']['extension']) > 0) {
 			$x = 0;
 			foreach($_SESSION['user']['extension'] as $row) {
@@ -60,7 +61,7 @@ else {
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 			$sql_where = "";
 		} else {
-			$sql_where = "where domain_uuid = '$domain_uuid' ";
+			$sql_where = "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
 		}
 	}
 
@@ -81,7 +82,7 @@ else {
 			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 				$where = "where ";
 			} else {
-				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 			}
 		}
 		$sql = " select count(*) as count from v_xml_cdr ";
@@ -107,9 +108,9 @@ else {
 		global $db;
 		if (strlen($where) == 0) {
 			if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-				$where .= "where ";
+				$where = "where ";
 			} else {
-				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 			}
 		}
 		$sql = " select sum(billsec) as seconds from v_xml_cdr ";
@@ -158,7 +159,7 @@ else {
 
 		//answer / seizure ratio
 		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-			$where .= "where ";
+			$where = "where ";
 		} else {
 			$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 		}
@@ -186,7 +187,7 @@ else {
 	$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
 	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24);
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$where .= "where ";
+		$where = "where ";
 	} else {
 		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 	}
@@ -211,7 +212,7 @@ else {
 	$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
 	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24*7);
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$where .= "where ";
+		$where = "where ";
 	} else {
 		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and ";
 	}
@@ -236,7 +237,7 @@ else {
 	$stats[$i]['avg_sec'] = $stats[$i]['seconds'] / $stats[$i]['volume'];
 	$stats[$i]['avg_min'] = ($stats[$i]['volume'] - $stats[$i]['missed']) / (60*24*30);
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
-		$where .= "where ";
+		$where = "where ";
 	} else {
 		$where = "where domain_uuid = '".$_SESSION['domain_uuid']."' and";
 	}
