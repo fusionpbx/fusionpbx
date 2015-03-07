@@ -970,4 +970,8 @@
 		$text['description-description']['pt-pt'] = "Introduza uma descrição, caso queira.";
 		$text['description-description']['fr-fr'] = "Entrez une description, si vous le souhaitez.";
 
+		$text['label-domain-name']['en-us'] = "Domain Name";
+		$text['label-domain-name']['es-cl'] = "Nombre de Dominio";
+		$text['label-domain-name']['pt-pt'] = "Nome de Domínio";
+		$text['label-domain-name']['fr-fr'] = "Nom de Domaine";
 ?>

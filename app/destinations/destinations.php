@@ -53,11 +53,9 @@ else {
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-destinations']."</b></td>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
-	//SCJB
 	if (permission_exists('destination_show_all')) {
 		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?showall=true';\">\n";
 	}
-	//ECJB
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</td>\n";
@@ -168,7 +166,7 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['showall'] && permission_exists('destination_show_all')) {
 				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."</td>\n";
-			}	
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_type'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".$row['destination_number']."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."</td>\n";

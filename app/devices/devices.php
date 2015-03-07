@@ -58,6 +58,9 @@ else {
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
+	if (permission_exists('destination_show_all')) {
+		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?showall=true';\">\n";
+	}
 	if (permission_exists('device_profile_view')) {
 		echo "		<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
@@ -71,15 +74,27 @@ else {
 
 	//prepare to page the results
 		$sql = "select count(*) as num_rows from v_devices ";
-		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+		if ($_GET['showall'] && permission_exists('device_show_all')) {
+			if (strlen($search) > 0) {
+				$sql .= "where ";
+			}
+		} else {
+			$sql .= "where (";
+			$sql .= "	domain_uuid = '$domain_uuid' ";
+			if (permission_exists('device_show_all')) {
+				$sql .= "	or domain_uuid is null ";
+			}
+			$sql .= ") ";
+			$sql .= "and ";
+		}
 		if (strlen($search) > 0) {
-			$sql .= "and (";
+			$sql .= "(";
 			$sql .= "	device_mac_address like '%".$search."%' ";
-			$sql .= " 	or device_label like '%".$search."%' ";
-			$sql .= " 	or device_vendor like '%".$search."%' ";
-			$sql .= " 	or device_provision_enable like '%".$search."%' ";
-			$sql .= " 	or device_template like '%".$search."%' ";
-			$sql .= " 	or device_description like '%".$search."%' ";
+			$sql .= "	or device_label like '%".$search."%' ";
+			$sql .= "	or device_vendor like '%".$search."%' ";
+			$sql .= "	or device_provision_enable like '%".$search."%' ";
+			$sql .= "	or device_template like '%".$search."%' ";
+			$sql .= "	or device_description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		$prep_statement = $db->prepare($sql);
@@ -104,15 +119,27 @@ else {
 
 	//get the list
 		$sql = "select * from v_devices ";
-		$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
+		if ($_GET['showall'] && permission_exists('device_show_all')) {
+			if (strlen($search) > 0) {
+				$sql .= "where ";
+			}
+		} else {
+			$sql .= "where (";
+			$sql .= "	domain_uuid = '$domain_uuid' ";
+			if (permission_exists('device_show_all')) {
+				$sql .= "	or domain_uuid is null ";
+			}
+			$sql .= ") ";
+			$sql .= "and ";
+		}
 		if (strlen($search) > 0) {
-			$sql .= "and (";
+			$sql .= "(";
 			$sql .= "	device_mac_address like '%".$search."%' ";
-			$sql .= " 	or device_label like '%".$search."%' ";
-			$sql .= " 	or device_vendor like '%".$search."%' ";
-			$sql .= " 	or device_provision_enable like '%".$search."%' ";
-			$sql .= " 	or device_template like '%".$search."%' ";
-			$sql .= " 	or device_description like '%".$search."%' ";
+			$sql .= "	or device_label like '%".$search."%' ";
+			$sql .= "	or device_vendor like '%".$search."%' ";
+			$sql .= "	or device_provision_enable like '%".$search."%' ";
+			$sql .= "	or device_template like '%".$search."%' ";
+			$sql .= "	or device_description like '%".$search."%' ";
 			$sql .= ") ";
 		}
 		if (strlen($order_by) == 0) {
@@ -135,6 +162,9 @@ else {
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
 	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
+	if ($_GET['showall'] && permission_exists('device_show_all')) {
+		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, $param);
+	}
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
@@ -154,6 +184,9 @@ else {
 		foreach($result as $row) {
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
+			if ($_GET['showall'] && permission_exists('device_show_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_uuid']."</td>\n";
+			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			$device_mac_address = substr($row['device_mac_address'], 0,2).'-'.substr($row['device_mac_address'], 2,2).'-'.substr($row['device_mac_address'], 4,2).'-'.substr($row['device_mac_address'], 6,2).'-'.substr($row['device_mac_address'], 8,2).'-'.substr($row['device_mac_address'], 10,2);
 			echo (permission_exists('device_edit')) ? "<a href='device_edit.php?id=".$row['device_uuid']."'>".$device_mac_address."</a>" : $device_mac_address;
