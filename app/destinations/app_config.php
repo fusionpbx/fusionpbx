@@ -42,6 +42,10 @@
 		$apps[$x]['permissions'][$y]['name'] = 'destination_domain';
 		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
 		$y++;
+		$apps[$x]['permissions'][$y]['name'] = 'destination_show_all';
+		$apps[$x]['permissions'][$y]['groups'][] = 'superadmin';
+		$y++;
+
 
 	//schema details
 		$y = 0; //table array index

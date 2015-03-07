@@ -53,6 +53,11 @@ else {
 	echo "		<td width='50%' align='left' nowrap='nowrap'><b>".$text['header-destinations']."</b></td>\n";
 	echo "			<form method='get' action=''>\n";
 	echo "			<td width='50%' align='right'>\n";
+	//SCJB
+	if (permission_exists('destination_show_all')) {
+		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?showall=true';\">\n";
+	}
+	//ECJB
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
 	echo "			</td>\n";
@@ -67,9 +72,18 @@ else {
 
 	//prepare to page the results
 		$sql = " select count(*) as num_rows from v_destinations ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
+			if (strlen($search) > 0) {
+				$sql .= "where ";
+			}
+		} else {
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			if (strlen($search) > 0) {
+				$sql .= " and ";
+			}
+		}
 		if (strlen($search) > 0) {
-			$sql .= "and (";
+			$sql .= " (";
 			$sql .= "	destination_type like '%".$search."%' ";
 			$sql .= " 	or destination_number like '%".$search."%' ";
 			$sql .= " 	or destination_context like '%".$search."%' ";
@@ -100,9 +114,20 @@ else {
 
 	//get the  list
 		$sql = "select * from v_destinations ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		if ($_GET['showall'] && permission_exists('destination_show_all')) {
+			$sql .= " join v_domains on v_domains.domain_uuid = v_destinations.domain_uuid ";
+			$param = "&showall=" . $_GET['showall'];
+			if (strlen($search) > 0) {
+				$sql .= " where ";
+			}
+		} else {
+			$sql .= "where domain_uuid = '$domain_uuid' ";
+			if (strlen($search) > 0) {
+				$sql .= " and ";
+			}
+		}
 		if (strlen($search) > 0) {
-			$sql .= "and (";
+			$sql .= " (";
 			$sql .= "	destination_type like '%".$search."%' ";
 			$sql .= " 	or destination_number like '%".$search."%' ";
 			$sql .= " 	or destination_context like '%".$search."%' ";
@@ -124,6 +149,9 @@ else {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
+	if ($_GET['showall'] && permission_exists('destination_show_all')) {
+		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, $param);
+	}
 	echo th_order_by('destination_type', $text['label-destination_type'], $order_by, $order);
 	echo th_order_by('destination_number', $text['label-destination_number'], $order_by, $order);
 	echo th_order_by('destination_context', $text['label-destination_context'], $order_by, $order);
@@ -138,6 +166,9 @@ else {
 		foreach($result as $row) {
 			$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
+			if ($_GET['showall'] && permission_exists('destination_show_all')) {
+				echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['domain_name'])."</td>\n";
+			}	
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_type'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".$row['destination_number']."</a></td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['destination_context']."</td>\n";
@@ -154,7 +185,11 @@ else {
 	} //end if results
 
 	echo "<tr>\n";
-	echo "<td colspan='6' align='left'>\n";
+	if ($_GET['showall'] && permission_exists('destination_show_all')) {
+		echo "<td colspan='7' align='left'>\n";
+	} else {
+		echo "<td colspan='6' align='left'>\n";
+	}
 	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
 	echo "	<tr>\n";
 	echo "		<td width='33.3%' nowrap>&nbsp;</td>\n";
