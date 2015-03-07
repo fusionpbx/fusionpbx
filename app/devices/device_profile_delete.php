@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012 All Rights Reserved.
+	Copyright (C) 2008-2015 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -38,42 +38,35 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
+	if (isset($_GET["id"])) {
+		$id = $_GET["id"];
 	}
 
 //delete the data and subdata
-	if (strlen($id) > 0) {
+	if (is_uuid($id)) {
 
 		//delete device profile keys
 			$sql = "delete from v_device_keys ";
 			$sql .= "where device_profile_uuid = '".$id."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$db->exec($sql);
 			unset($sql);
 
 		//delete device profile
 			$sql = "delete from v_device_profiles ";
 			$sql .= "where device_profile_uuid = '".$id."' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$db->exec($sql);
 			unset($sql);
 
 		//remove device profile uuid from any assigned devices
 			$sql = "update v_devices set ";
 			$sql .= "device_profile_uuid = null ";
 			$sql .= "where device_profile_uuid = '".$id."' ";
-			$db->exec(check_sql($sql));
+			$db->exec($sql);
 			unset($sql);
 	}
 
-/*
-// necessary?
-
 //write the provision files
 	require_once "app/provision/provision_write.php";
-
-*/
 
 //set the message and redirect the user
 	$_SESSION["message"] = $text['message-delete'];

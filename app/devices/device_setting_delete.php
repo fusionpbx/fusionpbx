@@ -38,23 +38,25 @@ else {
 	$language = new text;
 	$text = $language->get();
 
-if (count($_GET)>0) {
-	$id = check_str($_GET["id"]);
-	$device_uuid = check_str($_GET["device_uuid"]);
-}
+//get the id
+	if (isset($_GET["id"])) {
+		$id = $_GET["id"];
+		$device_uuid = $_GET["device_uuid"];
+	}
 
-if (strlen($id)>0) {
-	//delete device_setting
+//delete device settings
+	if (is_uuid($id)) {
 		$sql = "delete from v_device_settings ";
 		$sql .= "where device_uuid = '$device_uuid' ";
 		$sql .= "and device_setting_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
-}
+	}
 
-$_SESSION["message"] = $text['message-delete'];
-header("Location: device_edit.php?id=".$device_uuid);
-return;
+//send a redirect
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: device_edit.php?id=".$device_uuid);
+	return;
 
 ?>

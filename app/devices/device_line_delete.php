@@ -38,23 +38,24 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (count($_GET)>0) {
-		$id = check_str($_GET["id"]);
-		$device_uuid = check_str($_GET["device_uuid"]);
+	if (isset($_GET["id"])) {
+		$id = $_GET["id"];
+		$device_uuid = $_GET["device_uuid"];
 	}
 
-if (strlen($id)>0) {
-	//delete device_line
+//delete device_line
+	if (is_uuid($id)) {
 		$sql = "delete from v_device_lines ";
-		$sql .= "where domain_uuid = '$domain_uuid' ";
+		$sql .= "where (domain_uuid = '".$_SESSION["domain_uuid"]."' or domain_uuid is null) ";
 		$sql .= "and device_line_uuid = '$id' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
 		unset($sql);
-}
+	}
 
-$_SESSION["message"] = $text['message-delete'];
-header("Location: device_edit.php?id=".$device_uuid);
-return;
+//send a redirect
+	$_SESSION["message"] = $text['message-delete'];
+	header("Location: device_edit.php?id=".$device_uuid);
+	return;
 
 ?>
