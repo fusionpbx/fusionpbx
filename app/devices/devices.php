@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012 All Rights Reserved.
+	Copyright (C) 2008-2015 All Rights Reserved.
 
 	Contributor(s):
 	Mark J Crane <markjcrane@fusionpbx.com>
@@ -58,8 +58,11 @@ else {
 	echo "		</td>\n";
 	echo "		<td align='right' nowrap='nowrap' valign='top'>\n";
 	echo "			<form method='get' action=''>\n";
-	if (permission_exists('destination_show_all')) {
+	if (permission_exists('device_show_all')) {
 		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='devices.php?showall=true';\">\n";
+		if ($_GET['showall'] == 'true') {
+			echo "			<input type='hidden' name='showall' value='true'>";
+		}
 	}
 	if (permission_exists('device_profile_view')) {
 		echo "		<input type='button' class='btn' value='".$text['button-profiles']."' onclick=\"document.location.href='device_profiles.php';\">&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -85,7 +88,9 @@ else {
 				$sql .= "	or domain_uuid is null ";
 			}
 			$sql .= ") ";
-			$sql .= "and ";
+			if (strlen($search) > 0) {
+				$sql .= "and ";
+			}
 		}
 		if (strlen($search) > 0) {
 			$sql .= "(";
@@ -130,7 +135,9 @@ else {
 				$sql .= "	or domain_uuid is null ";
 			}
 			$sql .= ") ";
-			$sql .= "and ";
+			if (strlen($search) > 0) {
+				$sql .= "and ";
+			}
 		}
 		if (strlen($search) > 0) {
 			$sql .= "(";
@@ -185,7 +192,7 @@ else {
 			$tr_link = (permission_exists('device_edit')) ? "href='device_edit.php?id=".$row['device_uuid']."'" : null;
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['showall'] && permission_exists('device_show_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_uuid']."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$_SESSION['domains'][$row['domain_uuid']]['domain_name']."</td>\n";
 			}
 			echo "	<td valign='top' class='".$row_style[$c]."'>";
 			$device_mac_address = substr($row['device_mac_address'], 0,2).'-'.substr($row['device_mac_address'], 2,2).'-'.substr($row['device_mac_address'], 4,2).'-'.substr($row['device_mac_address'], 6,2).'-'.substr($row['device_mac_address'], 8,2).'-'.substr($row['device_mac_address'], 10,2);
@@ -230,4 +237,5 @@ else {
 
 //include the footer
 	require_once "resources/footer.php";
+
 ?>
