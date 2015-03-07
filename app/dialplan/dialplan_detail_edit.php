@@ -163,7 +163,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				else {
 					$sql .= "dialplan_detail_group = '$dialplan_detail_group' ";
 				}
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
+				$sql .= "where (domain_uuid = '".$_SESSION['domain_uuid']."' or  domain_uuid is null) ";
 				$sql .= "and dialplan_detail_uuid = '$dialplan_detail_uuid'";
 				$db->exec(check_sql($sql));
 				unset($sql);
