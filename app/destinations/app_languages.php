@@ -275,4 +275,14 @@ $text["billing-warning"]["es-cl"] = "Si está utilizando la aplicación de factu
 $text["billing-warning"]["pt-pt"] = "Se você estiver usando o aplicativo de faturamento fusionpbx, certifique-se de adicionar variáveis accountcode e carrier";
 $text["billing-warning"]["fr-fr"] = "Si vous utilisez l'application de facturation fusionpbx, assurez-vous d'ajouter des variables de accountcode et carrier";
 
+$text['button-show_all']['en-us'] = "Show All";
+$text['button-show_all']['es-cl'] = "Mostrar Todos";
+$text['button-show_all']['pt-pt'] = "Mostrar Todos";
+$text['button-show_all']['fr-fr'] = "Montrer Tout";
+
+$text['label-domain-name']['en-us'] = "Domain Name";
+$text['label-domain-name']['es-cl'] = "Nombre de Dominio";
+$text['label-domain-name']['pt-pt'] = "Nome de Domínio";
+$text['label-domain-name']['fr-fr'] = "Nom de Domaine";
+
 ?>
