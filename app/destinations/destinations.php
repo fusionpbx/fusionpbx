@@ -77,11 +77,11 @@ else {
 		} else {
 			$sql .= "where domain_uuid = '$domain_uuid' ";
 			if (strlen($search) > 0) {
-				$sql .= " and ";
+				$sql .= "and ";
 			}
 		}
 		if (strlen($search) > 0) {
-			$sql .= " (";
+			$sql .= "(";
 			$sql .= "	destination_type like '%".$search."%' ";
 			$sql .= " 	or destination_number like '%".$search."%' ";
 			$sql .= " 	or destination_context like '%".$search."%' ";

@@ -161,10 +161,10 @@ else {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
 	if ($_GET['showall'] && permission_exists('device_show_all')) {
 		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, $param);
 	}
+	echo th_order_by('device_mac_address', $text['label-device_mac_address'], $order_by, $order);
 	echo th_order_by('device_label', $text['label-device_label'], $order_by, $order);
 	echo th_order_by('device_vendor', $text['label-device_vendor'], $order_by, $order);
 	echo th_order_by('device_provision_enable', $text['label-device_provision_enable'], $order_by, $order);
