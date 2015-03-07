@@ -77,101 +77,101 @@ else {
 	}
 	unset ($prep_statement);
 
-	//copy the dialplan
-		$dialplan_uuid = uuid();
-		$sql = "insert into v_dialplans ";
-		$sql .= "(";
-		$sql .= "domain_uuid, ";
-		$sql .= "dialplan_uuid, ";
-		$sql .= "app_uuid, ";
-		$sql .= "dialplan_name, ";
-		$sql .= "dialplan_order, ";
-		$sql .= "dialplan_continue, ";
-		$sql .= "dialplan_context, ";
-		$sql .= "dialplan_enabled, ";
-		$sql .= "dialplan_description ";
-		$sql .= ")";
-		$sql .= "values ";
-		$sql .= "(";
-		$sql .= "'".$domain_uuid."', ";
-		$sql .= "'$dialplan_uuid', ";
-		$sql .= "'$app_uuid', ";
-		$sql .= "'".$dialplan_name."-copy', ";
-		$sql .= "'$dialplan_order', ";
-		$sql .= "'$dialplan_continue', ";
-		$sql .= "'$dialplan_context', ";
-		$sql .= "'$dialplan_enabled', ";
-		$sql .= "'$dialplan_description' ";
-		$sql .= ")";
-		$db->exec(check_sql($sql));
-		unset($sql);
+//copy the dialplan
+	$dialplan_uuid = uuid();
+	$sql = "insert into v_dialplans ";
+	$sql .= "(";
+	$sql .= "domain_uuid, ";
+	$sql .= "dialplan_uuid, ";
+	$sql .= "app_uuid, ";
+	$sql .= "dialplan_name, ";
+	$sql .= "dialplan_order, ";
+	$sql .= "dialplan_continue, ";
+	$sql .= "dialplan_context, ";
+	$sql .= "dialplan_enabled, ";
+	$sql .= "dialplan_description ";
+	$sql .= ")";
+	$sql .= "values ";
+	$sql .= "(";
+	$sql .= "'".$domain_uuid."', ";
+	$sql .= "'$dialplan_uuid', ";
+	$sql .= "'$app_uuid', ";
+	$sql .= "'".$dialplan_name."-copy', ";
+	$sql .= "'$dialplan_order', ";
+	$sql .= "'$dialplan_continue', ";
+	$sql .= "'$dialplan_context', ";
+	$sql .= "'$dialplan_enabled', ";
+	$sql .= "'$dialplan_description' ";
+	$sql .= ")";
+	$db->exec(check_sql($sql));
+	unset($sql);
 
-	//get the the dialplan details
-		$sql = "select * from v_dialplan_details ";
-		$sql .= "where dialplan_uuid = '$database_dialplan_uuid' ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-		foreach ($result as &$row) {
-			//set the variables
-				$domain_uuid = $row["domain_uuid"];
-				$dialplan_detail_tag = $row["dialplan_detail_tag"];
-				$dialplan_detail_order = $row["dialplan_detail_order"];
-				$dialplan_detail_type = $row["dialplan_detail_type"];
-				$dialplan_detail_data = $row["dialplan_detail_data"];
-				$dialplan_detail_break = $row["dialplan_detail_break"];
-				$dialplan_detail_inline = $row["dialplan_detail_inline"];
-				$dialplan_detail_group = $row["dialplan_detail_group"];
+//get the the dialplan details
+	$sql = "select * from v_dialplan_details ";
+	$sql .= "where dialplan_uuid = '$database_dialplan_uuid' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		//set the variables
+			$domain_uuid = $row["domain_uuid"];
+			$dialplan_detail_tag = $row["dialplan_detail_tag"];
+			$dialplan_detail_order = $row["dialplan_detail_order"];
+			$dialplan_detail_type = $row["dialplan_detail_type"];
+			$dialplan_detail_data = $row["dialplan_detail_data"];
+			$dialplan_detail_break = $row["dialplan_detail_break"];
+			$dialplan_detail_inline = $row["dialplan_detail_inline"];
+			$dialplan_detail_group = $row["dialplan_detail_group"];
 
-			//copy the dialplan details
-				$dialplan_detail_uuid = uuid();
-				$sql = "insert into v_dialplan_details ";
-				$sql .= "(";
-				$sql .= "domain_uuid, ";
-				$sql .= "dialplan_uuid, ";
-				$sql .= "dialplan_detail_uuid, ";
-				$sql .= "dialplan_detail_tag, ";
-				$sql .= "dialplan_detail_order, ";
-				$sql .= "dialplan_detail_type, ";
-				$sql .= "dialplan_detail_data, ";
-				$sql .= "dialplan_detail_break, ";
-				$sql .= "dialplan_detail_inline, ";
-				$sql .= "dialplan_detail_group ";
-				$sql .= ")";
-				$sql .= "values ";
-				$sql .= "(";
-				$sql .= "'".$domain_uuid."', ";
-				$sql .= "'".$dialplan_uuid."', ";
-				$sql .= "'".$dialplan_detail_uuid."', ";
-				$sql .= "'".check_str($dialplan_detail_tag)."', ";
-				$sql .= "'".check_str($dialplan_detail_order)."', ";
-				$sql .= "'".check_str($dialplan_detail_type)."', ";
-				$sql .= "'".check_str($dialplan_detail_data)."', ";
-				$sql .= "'".$dialplan_detail_break."', ";
-				$sql .= "'".$dialplan_detail_inline."', ";
-				if (strlen($dialplan_detail_group) == 0) {
-					$sql .= "'".$dialplan_detail_group."' ";
-				}
-				else {
-					$sql .= "'".$dialplan_detail_group."' ";
-				}
-				$sql .= ")";
-				$db->exec(check_sql($sql));
-				unset($sql);
-		}
-		unset ($prep_statement);
+		//copy the dialplan details
+			$dialplan_detail_uuid = uuid();
+			$sql = "insert into v_dialplan_details ";
+			$sql .= "(";
+			$sql .= "domain_uuid, ";
+			$sql .= "dialplan_uuid, ";
+			$sql .= "dialplan_detail_uuid, ";
+			$sql .= "dialplan_detail_tag, ";
+			$sql .= "dialplan_detail_order, ";
+			$sql .= "dialplan_detail_type, ";
+			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_break, ";
+			$sql .= "dialplan_detail_inline, ";
+			$sql .= "dialplan_detail_group ";
+			$sql .= ")";
+			$sql .= "values ";
+			$sql .= "(";
+			$sql .= "'".$domain_uuid."', ";
+			$sql .= "'".$dialplan_uuid."', ";
+			$sql .= "'".$dialplan_detail_uuid."', ";
+			$sql .= "'".check_str($dialplan_detail_tag)."', ";
+			$sql .= "'".check_str($dialplan_detail_order)."', ";
+			$sql .= "'".check_str($dialplan_detail_type)."', ";
+			$sql .= "'".check_str($dialplan_detail_data)."', ";
+			$sql .= "'".$dialplan_detail_break."', ";
+			$sql .= "'".$dialplan_detail_inline."', ";
+			if (strlen($dialplan_detail_group) == 0) {
+				$sql .= "'".$dialplan_detail_group."' ";
+			}
+			else {
+				$sql .= "'".$dialplan_detail_group."' ";
+			}
+			$sql .= ")";
+			$db->exec(check_sql($sql));
+			unset($sql);
+	}
+	unset ($prep_statement);
 
-	//synchronize the xml config
-		save_dialplan_xml();
+//synchronize the xml config
+	save_dialplan_xml();
 
-	//delete the dialplan context from memcache
-		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
-		if ($fp) {
-			$switch_cmd = "memcache delete dialplan:".$dialplan_context;
-			$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
-		}
+//delete the dialplan context from memcache
+	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+	if ($fp) {
+		$switch_cmd = "memcache delete dialplan:".$dialplan_context;
+		$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+	}
 
-
+//send a redirect
 	$_SESSION["message"] = $text['message-copy'];
 	switch ($app_uuid) {
 		case "c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4": //inbound routes
