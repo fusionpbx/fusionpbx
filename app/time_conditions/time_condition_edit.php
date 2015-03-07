@@ -391,7 +391,7 @@ require_once "resources/header.php";
 			$sql .= "'".$domain_uuid."', ";
 			$sql .= "'".$dialplan_uuid."', ";
 			$sql .= "'".uuid()."', ";
-			$sql .= "'anti-action', ";
+			$sql .= "'action', ";
 			$sql .= "'".$dialplan_anti_action_app."', ";
 			$sql .= "'".$dialplan_anti_action_data."', ";
 			$sql .= "null, ";
