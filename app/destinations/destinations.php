@@ -167,7 +167,7 @@ else {
 			$tr_link = "href='destination_edit.php?id=".$row['destination_uuid']."'";
 			echo "<tr ".$tr_link.">\n";
 			if ($_GET['showall'] && permission_exists('destination_show_all')) {
-				echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['domain_name'])."</td>\n";
+				echo "	<td valign='top' class='".$row_style[$c]."'>".$row['domain_name']."</td>\n";
 			}	
 			echo "	<td valign='top' class='".$row_style[$c]."'>".ucwords($row['destination_type'])."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'><a href='destination_edit.php?id=".$row['destination_uuid']."'>".$row['destination_number']."</a></td>\n";
