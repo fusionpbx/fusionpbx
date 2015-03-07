@@ -211,7 +211,7 @@ require_once "resources/header.php";
 
 		//remove groups where an action (or default_preset_action, if a preset group) isn't defined
 		foreach ($_REQUEST['variable'] as $group_id => $meh) {
-			if ( (in_array($group_id, $preset) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '') || (!in_array($group_id, $preset) && $_REQUEST['dialplan_action'][$group_id] == '') ) {
+			if ( (in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '' && $_REQUEST['default_preset_action'] == '') || (!in_array($group_id, $_REQUEST['preset']) && $_REQUEST['dialplan_action'][$group_id] == '') ) {
 				unset($_REQUEST['variable'][$group_id]);
 				unset($_REQUEST['value'][$group_id]);
 				unset($_REQUEST['dialplan_action'][$group_id]);
@@ -468,10 +468,6 @@ require_once "resources/header.php";
 			$sql .= "		dialplan_detail_tag = 'action' ";
 			$sql .= "		and dialplan_detail_data not like 'preset=%' ";
 			$sql .= "	) ";
-			$sql .= "	or ( ";
-			$sql .= "		dialplan_detail_tag = 'anti-action' ";
-			$sql .= "		and dialplan_detail_group = '999' ";
-			$sql .= "	) ";
 			$sql .= ") ";
 			$sql .= "order by dialplan_detail_group asc, dialplan_detail_order asc";
 			$prep_statement = $db->prepare(check_sql($sql));
@@ -484,10 +480,16 @@ require_once "resources/header.php";
 		//load current conditions into array (combined by group), and retrieve action and anti-action
 			$c = 0;
 			foreach ($result as $row) {
-				switch ($row['dialplan_detail_tag']) {
-					case 'condition': $current_conditions[$row['dialplan_detail_group']][$row['dialplan_detail_type']] = $row['dialplan_detail_data']; break;
-					case 'action': $dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data']; break;
-					case 'anti-action': $dialplan_anti_action = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data']; break;
+				if ($row['dialplan_detail_tag'] == 'action') {
+					if ($row['dialplan_detail_group'] == '999') {
+						$dialplan_anti_action = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data'];
+					}
+					else {
+						$dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data'];
+					}
+				}
+				else if ($row['dialplan_detail_tag'] == 'condition') {
+					$current_conditions[$row['dialplan_detail_group']][$row['dialplan_detail_type']] = $row['dialplan_detail_data'];
 				}
 			}
 
