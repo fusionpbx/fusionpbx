@@ -38,39 +38,35 @@ else {
 	$text = $language->get();
 
 //get the id
-	if (count($_GET) > 0) {
-		$id = check_str($_GET["id"]);
+	if (isset($_GET["id"])) {
+		$id = $_GET["id"];
 	}
 
-//delete the data and subdata
-	if (strlen($id) > 0) {
+//delete the data and sub-data
+	if (is_uuid($id)) {
 
 		//delete device_lines
 			$sql = "delete from v_device_lines ";
 			$sql .= "where device_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$db->exec($sql);
 			unset($sql);
 
 		//delete device_keys
 			$sql = "delete from v_device_keys ";
 			$sql .= "where device_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$db->exec($sql);
 			unset($sql);
 
 		//delete device_settings
 			$sql = "delete from v_device_settings ";
 			$sql .= "where device_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$db->exec($sql);
 			unset($sql);
 
 		//delete the device
 			$sql = "delete from v_devices ";
 			$sql .= "where device_uuid = '$id' ";
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
+			$db->exec($sql);
 			unset($sql);
 	}
 
