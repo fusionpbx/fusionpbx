@@ -27,6 +27,7 @@
 	expire = {}
 	expire["directory"] = "3600";
 	expire["dialplan"] = "3600";
+	expire["languages"] = "3600";
 	expire["sofia.conf"] = "3600";
 	load_balancing = false;
 
