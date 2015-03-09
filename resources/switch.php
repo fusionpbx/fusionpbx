@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -1364,6 +1364,9 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 					case "mon":
 						$time_array[$row['dialplan_uuid']] = $row['dialplan_detail_type'];
 						break;
+					case "time-of-day":
+						$time_array[$row['dialplan_uuid']] = $row['dialplan_detail_type'];
+						break;
 					case "yday":
 						$time_array[$row['dialplan_uuid']] = $row['dialplan_detail_type'];
 						break;
@@ -2297,6 +2300,9 @@ function save_dialplan_xml() {
 												$type = 'time';
 												break;
 											case "mon":
+												$type = 'time';
+												break;
+											case "time-of-day":
 												$type = 'time';
 												break;
 											case "yday":
