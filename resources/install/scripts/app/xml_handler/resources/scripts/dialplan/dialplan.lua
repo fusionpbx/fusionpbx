@@ -181,6 +181,8 @@
 								condition_type = 'time';
 							elseif (dialplan_detail_type == "mon") then 
 								condition_type = 'time';
+							elseif (dialplan_detail_type == "time-of-day") then 
+								condition_type = 'time';
 							elseif (dialplan_detail_type == "yday") then 
 								condition_type = 'time';
 							elseif (dialplan_detail_type == "year") then 
