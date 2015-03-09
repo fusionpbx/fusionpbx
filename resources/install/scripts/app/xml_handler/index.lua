@@ -113,3 +113,6 @@
 	if (XML_REQUEST["section"] == "dialplan") then
 		dofile(scripts_dir.."/app/xml_handler/resources/scripts/dialplan/dialplan.lua");
 	end
+	if (XML_REQUEST["section"] == "languages") then
+		dofile(scripts_dir.."/app/xml_handler/resources/scripts/languages/languages.lua");
+	end
