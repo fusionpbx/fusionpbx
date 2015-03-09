@@ -274,7 +274,7 @@ require_once "resources/header.php";
 						$sql .= "'condition', ";
 						$sql .= "'destination_number', ";
 						$sql .= "'^".$dialplan_number."$', ";
-						$sql .= "'never', ";
+						$sql .= "null, ";
 						$sql .= "null, ";
 						$sql .= "'".$dialplan_detail_group."', ";
 						$sql .= "'".$dialplan_detail_order."' ";
