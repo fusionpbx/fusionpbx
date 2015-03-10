@@ -89,75 +89,84 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	//add or update the database
 	if ($_POST["persistformvar"] != "true") {
 		if ($action == "add" && permission_exists('phrase_add')) {
-			$phrase_uuid = uuid();
-			$sql = "insert into v_phrases ";
-			$sql .= "( ";
-			$sql .= "domain_uuid, ";
-			$sql .= "phrase_uuid, ";
-			$sql .= "phrase_name, ";
-			$sql .= "phrase_language, ";
-			$sql .= "phrase_enabled, ";
-			$sql .= "phrase_description ";
-			$sql .= ") ";
-			$sql .= "values ";
-			$sql .= "( ";
-			$sql .= "'".$domain_uuid."', ";
-			$sql .= "'".$phrase_uuid."', ";
-			$sql .= "'".$phrase_name."', ";
-			$sql .= "'".$phrase_language."', ";
-			$sql .= "'".$phrase_enabled."', ";
-			$sql .= "'".$phrase_description."' ";
-			$sql .= ") ";
-			//echo $sql."<br><br>";
-			$db->exec(check_sql($sql));
-			unset($sql);
+			//add the phrase to the database
+				$phrase_uuid = uuid();
+				$sql = "insert into v_phrases ";
+				$sql .= "( ";
+				$sql .= "domain_uuid, ";
+				$sql .= "phrase_uuid, ";
+				$sql .= "phrase_name, ";
+				$sql .= "phrase_language, ";
+				$sql .= "phrase_enabled, ";
+				$sql .= "phrase_description ";
+				$sql .= ") ";
+				$sql .= "values ";
+				$sql .= "( ";
+				$sql .= "'".$domain_uuid."', ";
+				$sql .= "'".$phrase_uuid."', ";
+				$sql .= "'".$phrase_name."', ";
+				$sql .= "'".$phrase_language."', ";
+				$sql .= "'".$phrase_enabled."', ";
+				$sql .= "'".$phrase_description."' ";
+				$sql .= ") ";
+				//echo $sql."<br><br>";
+				$db->exec(check_sql($sql));
+				unset($sql);
 
-			if ($_POST['phrase_detail_function'] != '') {
-				$_POST['phrase_detail_tag'] = 'action'; // default, for now
-				$_POST['phrase_detail_group'] = "0"; // one group, for now
+				if ($_POST['phrase_detail_function'] != '') {
+					$_POST['phrase_detail_tag'] = 'action'; // default, for now
+					$_POST['phrase_detail_group'] = "0"; // one group, for now
 
-				if ($_POST['phrase_detail_data'] != '') {
-					$phrase_detail_uuid = uuid();
-					$sql = "insert into v_phrase_details ";
-					$sql .= "( ";
-					$sql .= "phrase_detail_uuid, ";
-					$sql .= "phrase_uuid, ";
-					$sql .= "domain_uuid, ";
-					$sql .= "phrase_detail_order, ";
-					$sql .= "phrase_detail_tag, ";
-					$sql .= "phrase_detail_pattern, ";
-					$sql .= "phrase_detail_function, ";
-					$sql .= "phrase_detail_data, ";
-					$sql .= "phrase_detail_method, ";
-					$sql .= "phrase_detail_type, ";
-					$sql .= "phrase_detail_group ";
-					$sql .= " ) ";
-					$sql .= "values ";
-					$sql .= "( ";
-					$sql .= "'".$phrase_detail_uuid."', ";
-					$sql .= "'".$phrase_uuid."', ";
-					$sql .= "'".$domain_uuid."', ";
-					$sql .= "'".$_POST['phrase_detail_order']."', ";
-					$sql .= "'".$_POST['phrase_detail_tag']."', ";
-					$sql .= "'".$_POST['phrase_detail_pattern']."', ";
-					$sql .= "'".$_POST['phrase_detail_function']."', ";
-					$sql .= "'".$_POST['phrase_detail_data']."', ";
-					$sql .= "'".$_POST['phrase_detail_method']."', ";
-					$sql .= "'".$_POST['phrase_detail_type']."', ";
-					$sql .= "'".$_POST['phrase_detail_group']."' ";
-					$sql .= ") ";
-					//echo $sql."<br><br>";
-					$db->exec(check_sql($sql));
-					unset($sql);
+					if ($_POST['phrase_detail_data'] != '') {
+						$phrase_detail_uuid = uuid();
+						$sql = "insert into v_phrase_details ";
+						$sql .= "( ";
+						$sql .= "phrase_detail_uuid, ";
+						$sql .= "phrase_uuid, ";
+						$sql .= "domain_uuid, ";
+						$sql .= "phrase_detail_order, ";
+						$sql .= "phrase_detail_tag, ";
+						$sql .= "phrase_detail_pattern, ";
+						$sql .= "phrase_detail_function, ";
+						$sql .= "phrase_detail_data, ";
+						$sql .= "phrase_detail_method, ";
+						$sql .= "phrase_detail_type, ";
+						$sql .= "phrase_detail_group ";
+						$sql .= " ) ";
+						$sql .= "values ";
+						$sql .= "( ";
+						$sql .= "'".$phrase_detail_uuid."', ";
+						$sql .= "'".$phrase_uuid."', ";
+						$sql .= "'".$domain_uuid."', ";
+						$sql .= "'".$_POST['phrase_detail_order']."', ";
+						$sql .= "'".$_POST['phrase_detail_tag']."', ";
+						$sql .= "'".$_POST['phrase_detail_pattern']."', ";
+						$sql .= "'".$_POST['phrase_detail_function']."', ";
+						$sql .= "'".$_POST['phrase_detail_data']."', ";
+						$sql .= "'".$_POST['phrase_detail_method']."', ";
+						$sql .= "'".$_POST['phrase_detail_type']."', ";
+						$sql .= "'".$_POST['phrase_detail_group']."' ";
+						$sql .= ") ";
+						//echo $sql."<br><br>";
+						$db->exec(check_sql($sql));
+						unset($sql);
+					}
 				}
-			}
 
-			save_phrases_xml();
+			//save the xml to the file system if the phrase directory is set
+				save_phrases_xml();
 
-			$_SESSION["message"] = $text['message-add'];
-			header("Location: phrase_edit.php?id=".$phrase_uuid);
-			return;
+			//delete the phrase from memcache
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd .= "memcache delete languages:".$phrase_language;
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
 
+			//send a redirect
+				$_SESSION["message"] = $text['message-add'];
+				header("Location: phrase_edit.php?id=".$phrase_uuid);
+				return;
 		} //if ($action == "add")
 
 		if ($action == "update" && permission_exists('phrase_edit')) {
@@ -212,8 +221,17 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 				}
 
+			//save the xml to the file system if the phrase directory is set
 				save_phrases_xml();
 
+			//delete the phrase from memcache
+				$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
+				if ($fp) {
+					$switch_cmd .= "memcache delete languages:".$phrase_language;
+					$switch_result = event_socket_request($fp, 'api '.$switch_cmd);
+				}
+
+			//send a redirect
 				$_SESSION["message"] = $text['message-update'];
 				header("Location: phrase_edit.php?id=".$phrase_uuid);
 				return;
