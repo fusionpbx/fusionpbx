@@ -203,7 +203,7 @@
 	$text['description-destination-number']['pt-pt'] = "Introduza o número de fax para onde pretende enviar.";
 	$text['description-destination-number']['fr-fr'] = "Entrez le numéro de télécopie de destination.";
 
-	$text['description-email']['en-us'] = "Enter the email address to send the FAX to.";
+	$text['description-email']['en-us'] = "Enter a delivery address for inbound faxes.";
 	$text['description-email']['es-cl'] = "Ingrese la dirección de email para enviar el fax.";
 	$text['description-email']['pt-pt'] = "Introduza o endereço de email para enviar o fax.";
 	$text['description-email']['fr-fr'] = "Choisir un courriel où envoyer le Fax.";
