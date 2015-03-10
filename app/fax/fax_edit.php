@@ -118,7 +118,6 @@ else {
 		$fax_email_inbound_subject_tag = check_str($_POST["fax_email_inbound_subject_tag"]);
 		$fax_email_outbound_subject_tag = check_str($_POST["fax_email_outbound_subject_tag"]);
 		$fax_email_outbound_authorized_senders = $_POST["fax_email_outbound_authorized_senders"];
-		//$fax_pin_number = check_str($_POST["fax_pin_number"]);
 		$fax_caller_id_name = check_str($_POST["fax_caller_id_name"]);
 		$fax_caller_id_number = check_str($_POST["fax_caller_id_number"]);
 		$fax_forward_number = check_str($_POST["fax_forward_number"]);
@@ -198,12 +197,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	//check for all required data
 		if (strlen($fax_extension) == 0) { $msg .= "".$text['confirm-ext']."<br>\n"; }
 		if (strlen($fax_name) == 0) { $msg .= "".$text['confirm-fax']."<br>\n"; }
-		//if (strlen($fax_email) == 0) { $msg .= "Please provide: Email<br>\n"; }
-		//if (strlen($fax_pin_number) == 0) { $msg .= "Please provide: Pin Number<br>\n"; }
-		//if (strlen($fax_caller_id_name) == 0) { $msg .= "Please provide: Caller ID Name<br>\n"; }
-		//if (strlen($fax_caller_id_number) == 0) { $msg .= "Please provide: Caller ID Number<br>\n"; }
-		//if (strlen($fax_forward_number) == 0) { $msg .= "Please provide: Forward Number<br>\n"; }
-		//if (strlen($fax_description) == 0) { $msg .= "Please provide: Description<br>\n"; }
 		if (strlen($msg) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			require_once "resources/header.php";
 			require_once "resources/persist_form_var.php";
@@ -261,18 +254,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number, ";
 					$sql .= "fax_name, ";
 					$sql .= "fax_email, ";
-					$sql .= "fax_email_connection_type, ";
-					$sql .= "fax_email_connection_host, ";
-					$sql .= "fax_email_connection_port, ";
-					$sql .= "fax_email_connection_security, ";
-					$sql .= "fax_email_connection_validate, ";
-					$sql .= "fax_email_connection_username, ";
-					$sql .= "fax_email_connection_password, ";
-					$sql .= "fax_email_connection_mailbox, ";
-					$sql .= "fax_email_inbound_subject_tag, ";
-					$sql .= "fax_email_outbound_subject_tag, ";
-					$sql .= "fax_email_outbound_authorized_senders, ";
-					//$sql .= "fax_pin_number, ";
+					if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
+						$sql .= "fax_email_connection_type, ";
+						$sql .= "fax_email_connection_host, ";
+						$sql .= "fax_email_connection_port, ";
+						$sql .= "fax_email_connection_security, ";
+						$sql .= "fax_email_connection_validate, ";
+						$sql .= "fax_email_connection_username, ";
+						$sql .= "fax_email_connection_password, ";
+						$sql .= "fax_email_connection_mailbox, ";
+						$sql .= "fax_email_inbound_subject_tag, ";
+						$sql .= "fax_email_outbound_subject_tag, ";
+						$sql .= "fax_email_outbound_authorized_senders, ";
+					}
 					$sql .= "fax_caller_id_name, ";
 					$sql .= "fax_caller_id_number, ";
 					if (strlen($fax_forward_number) > 0) {
@@ -290,18 +284,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "'$fax_destination_number', ";
 					$sql .= "'$fax_name', ";
 					$sql .= "'$fax_email', ";
-					$sql .= "'$fax_email_connection_type', ";
-					$sql .= "'$fax_email_connection_host', ";
-					$sql .= "'$fax_email_connection_port', ";
-					$sql .= "'$fax_email_connection_security', ";
-					$sql .= "'$fax_email_connection_validate', ";
-					$sql .= "'$fax_email_connection_username', ";
-					$sql .= "'$fax_email_connection_password', ";
-					$sql .= "'$fax_email_connection_mailbox', ";
-					$sql .= "'$fax_email_inbound_subject_tag', ";
-					$sql .= "'$fax_email_outbound_subject_tag', ";
-					$sql .= "'$fax_email_outbound_authorized_senders', ";
-					//$sql .= "'$fax_pin_number', ";
+					if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
+						$sql .= "'$fax_email_connection_type', ";
+						$sql .= "'$fax_email_connection_host', ";
+						$sql .= "'$fax_email_connection_port', ";
+						$sql .= "'$fax_email_connection_security', ";
+						$sql .= "'$fax_email_connection_validate', ";
+						$sql .= "'$fax_email_connection_username', ";
+						$sql .= "'$fax_email_connection_password', ";
+						$sql .= "'$fax_email_connection_mailbox', ";
+						$sql .= "'$fax_email_inbound_subject_tag', ";
+						$sql .= "'$fax_email_outbound_subject_tag', ";
+						$sql .= "'$fax_email_outbound_authorized_senders', ";
+					}
 					$sql .= "'$fax_caller_id_name', ";
 					$sql .= "'$fax_caller_id_number', ";
 					if (strlen($fax_forward_number) > 0) {
@@ -328,18 +323,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					$sql .= "fax_destination_number = '$fax_destination_number', ";
 					$sql .= "fax_name = '$fax_name', ";
 					$sql .= "fax_email = '$fax_email', ";
-					$sql .= "fax_email_connection_type = '$fax_email_connection_type', ";
-					$sql .= "fax_email_connection_host = '$fax_email_connection_host', ";
-					$sql .= "fax_email_connection_port = '$fax_email_connection_port', ";
-					$sql .= "fax_email_connection_security = '$fax_email_connection_security', ";
-					$sql .= "fax_email_connection_validate = '$fax_email_connection_validate', ";
-					$sql .= "fax_email_connection_username = '$fax_email_connection_username', ";
-					$sql .= "fax_email_connection_password = '$fax_email_connection_password', ";
-					$sql .= "fax_email_connection_mailbox = '$fax_email_connection_mailbox', ";
-					$sql .= "fax_email_inbound_subject_tag = '$fax_email_inbound_subject_tag', ";
-					$sql .= "fax_email_outbound_subject_tag = '$fax_email_outbound_subject_tag', ";
-					$sql .= "fax_email_outbound_authorized_senders = '$fax_email_outbound_authorized_senders', ";
-					//$sql .= "fax_pin_number = '$fax_pin_number', ";
+					if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
+						$sql .= "fax_email_connection_type = '$fax_email_connection_type', ";
+						$sql .= "fax_email_connection_host = '$fax_email_connection_host', ";
+						$sql .= "fax_email_connection_port = '$fax_email_connection_port', ";
+						$sql .= "fax_email_connection_security = '$fax_email_connection_security', ";
+						$sql .= "fax_email_connection_validate = '$fax_email_connection_validate', ";
+						$sql .= "fax_email_connection_username = '$fax_email_connection_username', ";
+						$sql .= "fax_email_connection_password = '$fax_email_connection_password', ";
+						$sql .= "fax_email_connection_mailbox = '$fax_email_connection_mailbox', ";
+						$sql .= "fax_email_inbound_subject_tag = '$fax_email_inbound_subject_tag', ";
+						$sql .= "fax_email_outbound_subject_tag = '$fax_email_outbound_subject_tag', ";
+						$sql .= "fax_email_outbound_authorized_senders = '$fax_email_outbound_authorized_senders', ";
+					}
 					$sql .= "fax_caller_id_name = '$fax_caller_id_name', ";
 					$sql .= "fax_caller_id_number = '$fax_caller_id_number', ";
 					if (strlen($fax_forward_number) > 0) {
@@ -576,7 +572,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$fax_email_inbound_subject_tag = $row["fax_email_inbound_subject_tag"];
 			$fax_email_outbound_subject_tag = $row["fax_email_outbound_subject_tag"];
 			$fax_email_outbound_authorized_senders = $row["fax_email_outbound_authorized_senders"];
-			//$fax_pin_number = $row["fax_pin_number"];
 			$fax_caller_id_name = $row["fax_caller_id_name"];
 			$fax_caller_id_number = $row["fax_caller_id_number"];
 			$fax_forward_number = $row["fax_forward_number"];
@@ -728,17 +723,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "</tr>\n";
 
-		//echo "<tr>\n";
-		//echo "<td class='vncell' valign='top' align='left' nowrap>\n";
-		//echo "	".$text['label-pin']."\n";
-		//echo "</td>\n";
-		//echo "<td class='vtable' align='left'>\n";
-		//echo "	<input class='formfld' type='text' name='fax_pin_number' maxlength='255' value=\"$fax_pin_number\">\n";
-		//echo "<br />\n";
-		//echo "".$text['description-pin']."\n";
-		//echo "</td>\n";
-		//echo "</tr>\n";
-
 		echo "<tr>\n";
 		echo "<td width='30%' class='vncell' valign='top' align='left' nowrap>\n";
 		echo "	".$text['label-caller-id-name']."\n";
@@ -846,7 +830,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "	<input type='hidden' name='fax_name' value=\"$fax_name\">\n";
 			echo "	<input type='hidden' name='fax_extension' value=\"$fax_extension\">\n";
 			echo "	<input type='hidden' name='fax_destination_number' value=\"$fax_destination_number\">\n";
-			//echo "	<input type='hidden' name='fax_pin_number' value=\"$fax_pin_number\">\n";
 			echo "	<input type='hidden' name='fax_caller_id_name' value=\"$fax_caller_id_name\">\n";
 			echo "	<input type='hidden' name='fax_caller_id_number' value=\"$fax_caller_id_number\">\n";
 			echo "	<input type='hidden' name='fax_forward_number' value=\"".((is_numeric($fax_forward_number)) ? format_phone($fax_forward_number) : $fax_forward_number)."\">\n";
@@ -861,7 +844,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	echo "</table>";
 	echo "<br />\n";
 
-	if (function_exists("imap_open") && file_exists("fax_box_remote.php")) {
+	if (function_exists("imap_open") && file_exists("fax_box_remote.php") && (if_group("admin") || if_group("superadmin"))) {
 
 		echo "<div id='advanced_email_connection' ".(($fax_email_connection_host == '') ? "style='display: none;'" : null).">\n";
 
