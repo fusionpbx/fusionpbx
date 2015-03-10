@@ -463,7 +463,7 @@
 										else
 											--not found: user is available
 											if (user_exists == "true") then
-												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name.."dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
+												dial_string = "["..group_confirm.."sip_invite_domain="..domain_name..",dialed_extension=" .. destination_number .. ",extension_uuid="..extension_uuid.."]user/" .. destination_number .. "@" .. domain_name;
 												session:execute("bridge", dial_string);
 											elseif (tonumber(destination_number) == nil) then
 												--sip uri
