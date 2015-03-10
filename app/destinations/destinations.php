@@ -55,6 +55,9 @@ else {
 	echo "			<td width='50%' align='right'>\n";
 	if (permission_exists('destination_show_all')) {
 		echo "			<input type='button' class='btn' value='".$text['button-show_all']."' onclick=\"window.location='destinations.php?showall=true';\">\n";
+		if ($_GET['showall'] == 'true') {
+				echo "                  <input type='hidden' name='showall' value='true'>";
+		}
 	}
 	echo "				<input type='text' class='txt' style='width: 150px' name='search' value='$search'>";
 	echo "				<input type='submit' class='btn' name='submit' value='".$text['button-search']."'>";
