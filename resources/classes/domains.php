@@ -190,11 +190,7 @@
 				}
 
 			//set the context
-				if (count($_SESSION["domains"]) > 1) {
-					$_SESSION["context"] = $_SESSION["domain_name"];
-				} else {
-					$_SESSION["context"] = 'default';
-				}
+				$_SESSION["context"] = $_SESSION["domain_name"];
 
 			//recordings add the domain to the path if there is more than one domains
 				if (count($_SESSION["domains"]) > 1) {
@@ -289,12 +285,7 @@
 						$domain_name = $row["domain_name"];
 
 					//get the context
-						if ($domain_count == 1) {
-							$context = "default";
-						}
-						else {
-							$context = $domain_name;
-						}
+						$context = $domain_name;
 
 					//show the domain when display_type is set to text
 						if ($display_type == "text") {
