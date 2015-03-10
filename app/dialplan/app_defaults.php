@@ -120,7 +120,7 @@
 			$dialplan = new dialplan;
 			$dialplan->domain_uuid = $domain_uuid;
 			$dialplan->dialplan_order = $dialplan_order;
-			$dialplan->default_context = $context;
+			$dialplan->default_context = $domain_name;
 			if ($display_type == "text") {
 				$dialplan->display_type = 'text';
 			}
