@@ -284,13 +284,18 @@ input.txt, .formfld {
 	-moz-transition: width 0.25s;
 	-webkit-transition: width 0.25s;
 	max-width: 500px;
-}
+	}
 
 input.txt:focus, .formfld:focus {
 	-webkit-box-shadow: 0 0 5px #cddaf0;
 	-moz-box-shadow: 0 0 5px #cddaf0;
 	box-shadow: 0 0 5px #cddaf0;
 	}
+
+/* removes spinners (increment/decrement controls) inside input fields */
+input[type=number] { -moz-appearance: textfield; }
+::-webkit-inner-spin-button { -webkit-appearance: none; }
+::-webkit-outer-spin-button { -webkit-appearance: none; }
 
 select.formfld {
 	height: 27px;
