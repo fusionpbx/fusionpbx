@@ -464,7 +464,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "	<textarea class='formfld' style='width: 100%; height: 80px; font-family: courier; white-space: nowrap; overflow: auto;' name='default_setting_value' wrap='off'>".$default_setting_value."</textarea>\n";
 	}
 	else {
-		echo "	<input class='formfld' type='text' name='default_setting_value' maxlength='255' value=\"".$default_setting_value."\">\n";
+		echo "	<input class='formfld' type='text' name='default_setting_value' value=\"".htmlspecialchars($default_setting_value)."\">\n";
 	}
 	echo "<br />\n";
 	echo $text['description-value']."\n";
