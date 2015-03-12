@@ -422,7 +422,7 @@ if (permission_exists("domain_select") && permission_exists("domain_setting_add"
 			elseif ($category == "provision" && $subcategory == "password" && $name == "var" ) {
 				echo "		******** &nbsp;\n";
 			} else {
-				echo "		".substr($row['default_setting_value'],0,58);
+				echo "		".htmlspecialchars(substr($row['default_setting_value'],0,58));
 			}
 			echo "		&nbsp;\n";
 			echo "	</td>\n";
