@@ -47,85 +47,103 @@ else {
 	$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 
 //get the http post values and set them as php variables
-	if (count($_POST)>0) {
+	if (count($_POST) > 0) {
 		//include the dnd php class
 		include PROJECT_PATH."/app/calls/resources/classes/do_not_disturb.php";
-
 		foreach($_POST['agents'] as $row) {
-			if (strlen($row['status']) > 0) {
+			if (strlen($row['agent_status']) > 0) {
 				//agent set status
 					if ($fp) {
 						//set the user_status
 							$sql  = "update v_users set ";
-							$sql .= "user_status = '".$row['status']."' ";
+							$sql .= "user_status = '".$row['agent_status']."' ";
 							$sql .= "where domain_uuid = '$domain_uuid' ";
-							$sql .= "and username = '".$row['name']."' ";
+							$sql .= "and call_center_agent_uuid = '".$row['id']."' ";
 							$prep_statement = $db->prepare(check_sql($sql));
 							$prep_statement->execute();
 						//set the call center status
-							if ($row['status'] == "Do Not Disturb") {
+							if ($row['agent_status'] == "Do Not Disturb") {
 								//set the default dnd action
 									$dnd_action = "add";
 								//set the call center status to Logged Out
-									$cmd = "api callcenter_config agent set status ".$row['name']."@".$_SESSION['domains'][$domain_uuid]['domain_name']." 'Logged Out'";
+									$cmd = "api callcenter_config agent set status ".$row['agent_name']."@".$_SESSION['domains'][$domain_uuid]['domain_name']." 'Logged Out'";
 							}
 							else {
-								$cmd = "api callcenter_config agent set status ".$row['name']."@".$_SESSION['domains'][$domain_uuid]['domain_name']." '".$row['status']."'";
+								$cmd = "api callcenter_config agent set status ".$row['agent_name']."@".$_SESSION['domains'][$domain_uuid]['domain_name']." '".$row['agent_status']."'";
 							}
-							//echo $cmd."<br />\n";
 							$response = event_socket_request($fp, $cmd);
 							usleep(200);
 					}
 
 				//loop through the list of assigned extensions
-					foreach ($_SESSION['user']['extension'] as &$sub_row) {
-						//update dnd
-							$dnd = new do_not_disturb;
-							//$dnd->debug = false;
-							$dnd->domain_uuid = $domain_uuid;
-							$dnd->domain_name = $_SESSION['domain_name'];
-							$dnd->extension = $sub_row["user"];
-							if ($row['status'] == "Do Not Disturb") {
-								$dnd->enabled = "true";
-							}
-							else {
-								$dnd->enabled = "false";
-							}
-							$dnd->set();
-							unset($dnd);
-					}
-					unset ($prep_statement);
+					//foreach ($_SESSION['user']['extension'] as &$sub_row) {
+					//	//update dnd
+					//		$dnd = new do_not_disturb;
+					//		//$dnd->debug = false;
+					//		$dnd->domain_uuid = $domain_uuid;
+					//		$dnd->domain_name = $_SESSION['domain_name'];
+					//		$dnd->extension = $sub_row["user"];
+					//		if ($row['status'] == "Do Not Disturb") {
+					//			$dnd->enabled = "true";
+					//		}
+					//		else {
+					//			$dnd->enabled = "false";
+					//		}
+					//		$dnd->set();
+					//		unset($dnd);
+					//}
+					//unset ($prep_statement);
 			}
 		}
 	}
 
+//get the agents from the database
+	$sql = "select * from v_call_center_agents ";
+	$sql .= "where domain_uuid = '$domain_uuid' ";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$agents = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
 //get the agent list from event socket
 	$switch_cmd = 'callcenter_config agent list';
 	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
-	$agent_array = csv_to_named_array($event_socket_str, '|');
-//set the status on the user_array by using the extension as the key
-	foreach ($agent_array as $row) {
-		if (count($_SESSION['domains']) == 1) {
-			//get the extension status from the call center agent list
-			preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
-			$extension = $matches[1];
-			$user_array[$extension]['username'] = $tmp[0];
-			if ($user_array[$extension]['user_status'] != "Do Not Disturb") {
-				$user_array[$extension]['user_status'] = $row['status'];
-			}
-		} else {
-			$tmp = explode('@',$row["name"]);
-			if ($tmp[1] == $_SESSION['domain_name']) {
-				//get the extension status from the call center agent list
-				preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
-				$extension = $matches[1];
-				$user_array[$extension]['username'] = $tmp[0];
-				if ($user_array[$extension]['user_status'] != "Do Not Disturb") {
-					$user_array[$extension]['user_status'] = $row['status'];
+	$call_center_agents = csv_to_named_array($event_socket_str, '|');
+
+//get the agent status from mod_callcenter and update the agent status in the agents array 
+	foreach ($agents as &$row) {
+		//add the domain name
+			$row['domain_name'] = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+		//update the agent status
+			foreach ($call_center_agents as &$r) {
+				if ($r['name'] == $row[agent_name].'@'.$row['domain_name']) {
+					$row['agent_status'] = $r['status'];
 				}
 			}
-		}
 	}
+
+//set the status on the user_array by using the extension as the key
+	//foreach ($call_center_agents as $row) {
+	//	if (count($_SESSION['domains']) == 1) {
+	//		//get the extension status from the call center agent list
+	//		preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
+	//		$extension = $matches[1];
+	//		$user_array[$extension]['username'] = $tmp[0];
+	//		if ($user_array[$extension]['user_status'] != "Do Not Disturb") {
+	//			$user_array[$extension]['user_status'] = $row['status'];
+	//		}
+	//	} else {
+	//		$tmp = explode('@',$row["name"]);
+	//		if ($tmp[1] == $_SESSION['domain_name']) {
+	//			//get the extension status from the call center agent list
+	//			preg_match('/user\/(\d{2,7})/', $row['contact'], $matches);
+	//			$extension = $matches[1];
+	//			$user_array[$extension]['username'] = $tmp[0];
+	//			if ($user_array[$extension]['user_status'] != "Do Not Disturb") {
+	//				$user_array[$extension]['user_status'] = $row['status'];
+	//			}
+	//		}
+	//	}
+	//}
 
 //show the content
 	echo "<table width='100%' cellpadding='0' cellspacing='0' border='0'>\n";
@@ -154,26 +172,24 @@ else {
 	echo "<th>".$text['label-status']."</th>\n";
 	echo "<th>".$text['label-options']."</th>\n";
 	echo "<tr>\n";
-
 	$x = 0;
-	foreach($agent_array as $row) {
-		$tmp = explode('@',$row["name"]);
-		$agent_name = $tmp[0];
+	foreach($agents as $row) {
 		$str = '';
 		$str .= "<tr >\n";
-		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['name']."&nbsp;</td>\n";
-		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['status']."&nbsp;</td>\n";
+		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_name']."&nbsp;</td>\n";
+		$str .= "	<td valign='top' class='".$row_style[$c]."'>".$row['agent_status']."&nbsp;</td>\n";
 		$str .= "	<td valign='top' class='".$row_style[$c]."'>";
-		$str .= "		<input type='hidden' name='agents[".$x."][name]' id='agent_".$x."_name' value='".$agent_name."'>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_available' value='Available'><label for='agent_".$x."_status_available'>".$text['option-available']."</label>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_logged_out' value='Logged Out'><label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_on_break' value='On Break'><label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>\n";
-		$str .= "		<input type='radio' name='agents[".$x."][status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>".$text['option-do_not_disturb']."</label>\n";
+		$str .= "		<input type='hidden' name='agents[".$x."][agent_name]' id='agent_".$x."_name' value='".$row['agent_name']."'>\n";
+		$str .= "		<input type='hidden' name='agents[".$x."][id]' id='agent_".$x."_name' value='".$row['call_center_agent_uuid']."'>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_no_change' value='' checked='checked'><label for='agent_".$x."_status_no_change'>".$text['option-no_change']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_available' value='Available'><label for='agent_".$x."_status_available'>".$text['option-available']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_logged_out' value='Logged Out'><label for='agent_".$x."_status_logged_out'>".$text['option-logged_out']."</label>\n";
+		$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_on_break' value='On Break'><label for='agent_".$x."_status_on_break'>".$text['option-on_break']."</label>\n";
+		//$str .= "		<input type='radio' name='agents[".$x."][agent_status]' id='agent_".$x."_status_dnd' value='Do Not Disturb'><label for='agent_".$x."_status_dnd'>".$text['option-do_not_disturb']."</label>\n";
 		$str .= "	</td>\n";
 		$str .= "</tr>\n";
 		if (count($_SESSION['domains']) > 1) {
-			if ($tmp[1] == $_SESSION['domain_name']) {
+			if ($row['domain_name'] == $_SESSION['domain_name']) {
 				echo $str;
 				if ($c==0) { $c=1; } else { $c=0; }
 			}
@@ -205,7 +221,7 @@ else {
 	echo "<br><br>";
 	echo "</form>\n";
 
-
 //show the footer
 	require_once "resources/footer.php";
+
 ?>
