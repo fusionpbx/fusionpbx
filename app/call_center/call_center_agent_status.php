@@ -48,6 +48,7 @@ else {
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
+
 		//include the dnd php class
 		include PROJECT_PATH."/app/calls/resources/classes/do_not_disturb.php";
 		foreach($_POST['agents'] as $row) {
@@ -59,6 +60,7 @@ else {
 							$sql .= "user_status = '".$row['agent_status']."' ";
 							$sql .= "where domain_uuid = '$domain_uuid' ";
 							$sql .= "and call_center_agent_uuid = '".$row['id']."' ";
+							//echo $sql."\n";
 							$prep_statement = $db->prepare(check_sql($sql));
 							$prep_statement->execute();
 						//set the call center status
@@ -72,6 +74,7 @@ else {
 								$cmd = "api callcenter_config agent set status ".$row['agent_name']."@".$_SESSION['domains'][$domain_uuid]['domain_name']." '".$row['agent_status']."'";
 							}
 							$response = event_socket_request($fp, $cmd);
+							//echo $cmd."\n";
 							usleep(200);
 					}
 
@@ -108,18 +111,29 @@ else {
 	$switch_cmd = 'callcenter_config agent list';
 	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 	$call_center_agents = csv_to_named_array($event_socket_str, '|');
+	//echo "<pre>\n";
+	//print_r($agents);
+	//echo "</pre>\n";
 
-//get the agent status from mod_callcenter and update the agent status in the agents array 
-	foreach ($agents as &$row) {
+//get the agent status from mod_callcenter and update the agent status in the agents array
+	$x = 0;
+	foreach ($agents as $row) {
 		//add the domain name
-			$row['domain_name'] = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+			$domain_name = $_SESSION['domains'][$row['domain_uuid']]['domain_name'];
+			$agents[$x]['domain_name'] = $domain_name;
 		//update the agent status
-			foreach ($call_center_agents as &$r) {
-				if ($r['name'] == $row[agent_name].'@'.$row['domain_name']) {
-					$row['agent_status'] = $r['status'];
+			foreach ($call_center_agents as $r) {
+				if ($r['name'] == $row[agent_name].'@'.$domain_name) {
+					$agents[$x]['agent_status'] = $r['status'];
 				}
 			}
+		//increment x
+			$x++;
+		
 	}
+	//echo "<pre>\n";
+	//print_r($call_center_agents);
+	//echo "</pre>\n";
 
 //set the status on the user_array by using the extension as the key
 	//foreach ($call_center_agents as $row) {
