@@ -102,6 +102,12 @@
 		end
 	end
 
+--set the ringback
+	if (ivr_menu_ringback) then
+		session:setVariable("ringback", ivr_menu_ringback);
+		session:setVariable("transfer_ringback", ivr_menu_ringback);
+	end
+
 --get the sounds dir, language, dialect and voice
 	sounds_dir = session:getVariable("sounds_dir");
 	default_language = session:getVariable("default_language");
