@@ -112,7 +112,7 @@ else {
 	$event_socket_str = trim(event_socket_request($fp, 'api '.$switch_cmd));
 	$call_center_agents = csv_to_named_array($event_socket_str, '|');
 	//echo "<pre>\n";
-	//print_r($agents);
+	//print_r($call_center_agents);
 	//echo "</pre>\n";
 
 //get the agent status from mod_callcenter and update the agent status in the agents array
@@ -132,7 +132,7 @@ else {
 		
 	}
 	//echo "<pre>\n";
-	//print_r($call_center_agents);
+	//print_r($agents);
 	//echo "</pre>\n";
 
 //set the status on the user_array by using the extension as the key
