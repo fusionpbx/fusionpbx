@@ -127,9 +127,7 @@ else {
 	if (strlen($remote_media_ip) > 0) { $sql_where_ands[] = "remote_media_ip like '%".$remote_media_ip."%'"; }
 	if (strlen($network_addr) > 0) { $sql_where_ands[] = "network_addr like '%".$network_addr."%'"; }
 
-	//example sql
-		// select caller_id_number, destination_number from v_xml_cdr where domain_uuid = ''
-		// and (caller_id_number = '1001' or destination_number = '1001' or destination_number = '*991001')
+	//if not admin or superadmin, only show own calls
 	if (!permission_exists('xml_cdr_domain')) {
 		if (count($_SESSION['user']['extension']) > 0) { // extensions are assigned to this user
 			// create simple user extension array
@@ -164,6 +162,9 @@ else {
 			if (sizeof($sql_where_ors) > 0) {
 				$sql_where_ands[] = "( ".implode(" or ", $sql_where_ors)." )";
 			}
+		}
+		else {
+			$sql_where_ands[] = "1 <> 1"; //disable viewing of cdr records by users with no assigned extensions
 		}
 	}
 
