@@ -62,19 +62,6 @@ else {
 	echo "}\n";
 	echo "</script>\n";
 
-//javascript to toggle input/select boxes
-	echo "<script type='text/javascript'>";
-	echo "	function toggle(field) {";
-	echo "		if (field == 'source') {";
-	echo "			document.getElementById('caller_extension_uuid').selectedIndex = 0;";
-	echo "			document.getElementById('caller_id_number').value = '';";
-	echo "			$('#caller_extension_uuid').toggle();";
-	echo "			$('#caller_id_number').toggle();";
-	echo "			if ($('#caller_id_number').is(':visible')) { $('#caller_id_number').focus(); } else { $('#caller_extension_uuid').focus(); }";
-	echo "		}";
-	echo "	}";
-	echo "</script>";
-
 //javascript to toggle export select box
 	echo "<script language='javascript' type='text/javascript'>";
 	echo "	var fade_speed = 400;";
@@ -256,58 +243,13 @@ else {
 			echo "</td>";
 			echo "<td width='33%' style='vertical-align: top;'>\n";
 
-				// set visibility of Source field(s)
-				if ($caller_extension_uuid == '' && $caller_id_number != '') {
-					$style['caller_extension_uuid'] = 'display: none;';
-				}
-				else {
-					$style['caller_id_number'] = 'display: none;';
-				}
-
 				echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 				echo "	<tr>\n";
 				echo "		<td class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
 				echo "			".$text['label-source']."\n";
 				echo "		</td>\n";
 				echo "		<td class='vtable' width='70%' align='left' style='white-space: nowrap;'>\n";
-				echo "			<select class='formfld' style='".$style['caller_extension_uuid']."' name='caller_extension_uuid' id='caller_extension_uuid'>\n";
-				echo "				<option value=''></option>\n";
-				$sql = "select extension_uuid, extension, number_alias from v_extensions ";
-				$sql .= "where domain_uuid = '".$_SESSION['domain_uuid']."' ";
-
-				if (!(if_group("admin") || if_group("superadmin"))) {
-					if (count($_SESSION['user']['extension']) > 0) {
-						$sql .= "and (";
-						$x = 0;
-						foreach($_SESSION['user']['extension'] as $row) {
-							if ($x > 0) { $sql .= "or "; }
-							$sql .= "extension = '".$row['user']."' ";
-							$x++;
-						}
-						$sql .= ")";
-					}
-					else {
-						//used to hide any results when a user has not been assigned an extension
-						$sql .= "and extension = 'disabled' ";
-					}
-				}
-
-				$sql .= "order by ";
-				$sql .= "extension asc ";
-				$sql .= ", number_alias asc ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement -> execute();
-				$result_e = $prep_statement -> fetchAll(PDO::FETCH_NAMED);
-				foreach ($result_e as &$row) {
-					$selected = ($row['extension_uuid'] == $caller_extension_uuid) ? "selected" : null;
-					echo "			<option value='".$row['extension_uuid']."' ".$selected.">".((is_numeric($row['extension'])) ? $row['extension'] : $row['number_alias']." (".$row['extension'].")")."</option>\n";
-				}
-				unset ($prep_statement);
-				echo "			</select>\n";
 				echo "			<input type='text' class='formfld' style='".$style['caller_id_number']."' name='caller_id_number' id='caller_id_number' value='".$caller_id_number."'>\n";
-				if ((if_group("admin") || if_group("superadmin"))) {
-					echo "			<input type='button' id='btn_toggle_source' class='btn' name='' alt='".$text['button-back']."' value='&#9665;' onclick=\"toggle('source');\">\n";
-				}
 				echo "		</td>\n";
 				echo "	</tr>\n";
 				echo "	<tr>\n";
@@ -376,9 +318,6 @@ else {
 	echo "<th>&nbsp;</th>\n";
 	if ($_GET['showall'] && permission_exists('xml_cdr_all')) {
 		echo th_order_by('domain_name', $text['label-domain-name'], $order_by, $order, null, null, $param);
-		//echo "		<th class='vncell' valign='top' nowrap='nowrap' width='30%'>\n";
-		//echo "			".$text['label-domain-name']."\n";
-		//echo "		</th>\n";
 	}
 	echo th_order_by('caller_id_name', $text['label-cid-name'], $order_by, $order, null, null, $param);
 	echo th_order_by('caller_id_number', $text['label-source'], $order_by, $order, null, null, $param);
@@ -419,7 +358,7 @@ else {
 		$path_mod = "";
 	}
 	if ($result_count > 0) {
-		foreach($result as $row) {
+		foreach($result as $index => $row) {
 			$tmp_year = date("Y", strtotime($row['start_stamp']));
 			$tmp_month = date("M", strtotime($row['start_stamp']));
 			$tmp_day = date("d", strtotime($row['start_stamp']));
@@ -482,7 +421,6 @@ else {
 				unset($recording_file_path);
 			}
 
-			//$tr_link = (if_group("admin") || if_group("superadmin") || if_group("cdr")) ? "href='xml_cdr_details.php?uuid=".$row['uuid']."'" : null;
 			if ((if_group("admin") || if_group("superadmin") || if_group("cdr")) && $_GET['showall']) {
 				$tr_link .= "href='xml_cdr_details.php?uuid=".$row['uuid']."&showall=true'";
 			} elseif (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
@@ -493,10 +431,10 @@ else {
 			echo "<tr ".$tr_link.">\n";
 			if (permission_exists('xml_cdr_delete')) {
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' style='text-align: center; vertical-align: middle; padding: 0px;'>";
-				echo "		<input type='checkbox' name='id[]' id='checkbox_".$row['uuid']."' value='".$row['uuid']."'>";
-				echo "		<input type='hidden' name='rec[]' value='".base64_encode($recording_file_path)."'>";
-				$xml_ids[] = 'checkbox_'.$row['uuid'];
+				echo "		<input type='checkbox' name='id[".$index."]' id='checkbox_".$row['uuid']."' value='".$row['uuid']."' onclick=\"(this.checked) ? document.getElementById('recording_".$row['uuid']."').value='".base64_encode($recording_file_path)."' : document.getElementById('recording_".$row['uuid']."').value='';\">";
+				echo "		<input type='hidden' name='rec[".$index."]' id='recording_".$row['uuid']."'>";
 				echo "	</td>";
+				$xml_ids[] = 'checkbox_'.$row['uuid'];
 			}
 			if (
 				file_exists($_SERVER["DOCUMENT_ROOT"]."/themes/".$_SESSION['domain']['template']['name']."/images/icon_cdr_inbound_missed.png") &&

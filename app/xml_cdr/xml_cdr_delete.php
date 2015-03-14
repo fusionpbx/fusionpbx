@@ -54,7 +54,7 @@ if (sizeof($_REQUEST) > 0) {
 			$prep_statement->execute();
 			unset($sql, $prep_statement);
 			//delete recording, if any
-			if (file_exists($_SESSION['switch']['recordings']['dir'].base64_decode($recording_file_path[$index]))) {
+			if ($recording_file_path[$index] != '' && file_exists($_SESSION['switch']['recordings']['dir'].base64_decode($recording_file_path[$index]))) {
 				@unlink($_SESSION['switch']['recordings']['dir'].base64_decode($recording_file_path[$index]));
 			}
 		}
