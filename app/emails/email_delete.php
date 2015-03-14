@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Copyright (C) 2008-2012
+	Copyright (C) 2008-2015
 	All Rights Reserved.
 
 	Contributor(s):
@@ -50,7 +50,9 @@ else {
 		unset($sql, $prep_statement);
 
 	//set message
-		$_SESSION["message"] = $text['message-delete'];
+		if ($_SESSION["message"] == '') {
+			$_SESSION["message"] = $text['message-delete'];
+		}
 	}
 
 //redirect user
