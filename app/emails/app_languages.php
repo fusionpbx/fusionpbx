@@ -65,6 +65,21 @@ $text['label-status_failed']['es-cl'] = "Fracasado";
 $text['label-status_failed']['pt-pt'] = "Fracassado";
 $text['label-status_failed']['fr-fr'] = "Manqué";
 
+$text['label-from']['en-us'] = "From";
+$text['label-from']['es-cl'] = "Desde";
+$text['label-from']['pt-pt'] = "A Partir De";
+$text['label-from']['fr-fr'] = "A Partir De";
+
+$text['label-to']['en-us'] = "To";
+$text['label-to']['es-cl'] = "Final";
+$text['label-to']['pt-pt'] = "Final";
+$text['label-to']['fr-fr'] = "Fin";
+
+$text['label-subject']['en-us'] = "Subject";
+$text['label-subject']['es-cl'] = "Sujeto";
+$text['label-subject']['pt-pt'] = "Assunto";
+$text['label-subject']['fr-fr'] = "Sujet";
+
 $text['label-message']['en-us'] = "Message";
 $text['label-message']['es-cl'] = "Mensaje";
 $text['label-message']['pt-pt'] = "Mensagem";
@@ -80,9 +95,59 @@ $text['label-attachment']['es-cl'] = "Accesorio";
 $text['label-attachment']['pt-pt'] = "Acessório";
 $text['label-attachment']['fr-fr'] = "Attachement";
 
-$text['label-attachment_download']['en-us'] = "Download";
-$text['label-attachment_download']['es-cl'] = "Descargar";
-$text['label-attachment_download']['pt-pt'] = "Descarregar";
-$text['label-attachment_download']['fr-fr'] = "Télécharger";
+$text['label-download']['en-us'] = "Download";
+$text['label-download']['es-cl'] = "Descargar";
+$text['label-download']['pt-pt'] = "Descarregar";
+$text['label-download']['fr-fr'] = "Télécharger";
+
+$text['label-resend']['en-us'] = "Resend";
+$text['label-resend']['es-cl'] = "Vuelva a Enviar";
+$text['label-resend']['pt-pt'] = "Reenviar";
+$text['label-resend']['fr-fr'] = "Renvoyer";
+
+$text['message-invalid_email']['en-us'] = "Invalid Email";
+$text['message-invalid_email']['es-cl'] = "No Válida de Correo Electrónico";
+$text['message-invalid_email']['pt-pt'] = "E-mail Inválido";
+$text['message-invalid_email']['fr-fr'] = "Email Valide";
+
+$text['message-decoding_error']['en-us'] = "MIME Message Decoding Error";
+$text['message-decoding_error']['es-cl'] = "MIME Mensaje Decodificación de error";
+$text['message-decoding_error']['pt-pt'] = "MIME Mensagem Decoding erro";
+$text['message-decoding_error']['fr-fr'] = "MIME message Décodage Erreur";
+
+$text['title-view_email']['en-us'] = "View Email";
+$text['title-view_email']['es-cl'] = "Ver Email";
+$text['title-view_email']['pt-pt'] = "Ver Email";
+$text['title-view_email']['fr-fr'] = "Visualiser Courriel";
+
+$text['header-view_email']['en-us'] = "View Email";
+$text['header-view_email']['es-cl'] = "Ver Email";
+$text['header-view_email']['pt-pt'] = "Ver Email";
+$text['header-view_email']['fr-fr'] = "Visualiser Courriel";
+
+$text['button-back']['en-us'] = "Back";
+$text['button-back']['es-cl'] = "Volver";
+$text['button-back']['pt-pt'] = "Voltar";
+$text['button-back']['fr-fr'] = "Retour";
+
+$text['button-download']['en-us'] = "Download";
+$text['button-download']['es-cl'] = "Descargar";
+$text['button-download']['pt-pt'] = "Descarregar";
+$text['button-download']['fr-fr'] = "Télécharger";
+
+$text['button-resend']['en-us'] = "Resend";
+$text['button-resend']['es-cl'] = "Vuelva a Enviar";
+$text['button-resend']['pt-pt'] = "Reenviar";
+$text['button-resend']['fr-fr'] = "Renvoyer";
+
+$text['message-message_resent']['en-us'] = "Message Resent";
+$text['message-message_resent']['es-cl'] = "Mensaje Resent";
+$text['message-message_resent']['pt-pt'] = "Mensagem Reenviada";
+$text['message-message_resent']['fr-fr'] = "Renvoyer un Message";
+
+$text['message-resend_failed']['en-us'] = "Resend Failed";
+$text['message-resend_failed']['es-cl'] = "Vuelva a enviar Error";
+$text['message-resend_failed']['pt-pt'] = "Reenviar Falha";
+$text['message-resend_failed']['fr-fr'] = "Renvoyer Échec";
 
 ?>

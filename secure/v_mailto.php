@@ -45,7 +45,7 @@
 		$string = preg_replace ('/<[^>]*>/', ' ', $string);
 
 		// ----- remove control characters -----
-		   
+
 		$string = str_replace("\r", '', $string);    // --- replace with empty space
 		$string = str_replace("\n", ' ', $string);   // --- replace with space
 		$string = str_replace("\t", ' ', $string);   // --- replace with space
@@ -60,9 +60,11 @@
 	ini_set('memory_limit', '128M');
 
 //listen for standard input
-	$fd = fopen("php://stdin", "r");
-	$msg = file_get_contents ("php://stdin");
-	fclose($fd);
+	if ($msg == '') {
+		$fd = fopen("php://stdin", "r");
+		$msg = file_get_contents ("php://stdin");
+		fclose($fd);
+	}
 
 //save output to
 	$fp = fopen(sys_get_temp_dir()."/mailer-app.log", "w");

@@ -18,9 +18,82 @@ else {
 	$order_by = ($_GET["order_by"] != '') ? $_GET["order_by"] : 'sent_date';
 	$order = ($_GET["order"] != '') ? $_GET["order"] : 'desc';
 
-//get the fax_uuid
-	if (count($_GET) > 0) {
-		$email_uuid = check_str($_GET["id"]);
+//download email
+	if ($_REQUEST['a'] == 'download' && permission_exists('email_download')) {
+		$email_uuid = check_str($_REQUEST["id"]);
+
+		$msg_found = false;
+
+		if ($email_uuid != '') {
+			$sql = "select call_uuid, email from v_emails ";
+			$sql .= "where email_uuid = '".$email_uuid."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$result_count = count($result);
+			if ($result_count > 0) {
+				foreach($result as $row) {
+					$call_uuid = $row['call_uuid'];
+					$email = $row['email'];
+					$msg_found = true;
+					break;
+				}
+			}
+			unset ($prep_statement, $sql, $result, $result_count);
+		}
+
+		if ($msg_found) {
+			header("Content-Type: message/rfc822");
+			header('Content-Disposition: attachment; filename="'.$call_uuid.'.eml"');
+			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+			header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+			header("Content-Length: ".strlen($email));
+			echo $email;
+			exit;
+		}
+	}
+
+//resend email
+	if ($_REQUEST['a'] == 'resend' && permission_exists('email_resend')) {
+		$email_uuid = check_str($_REQUEST["id"]);
+
+		$msg_found = false;
+
+		if ($email_uuid != '') {
+			$sql = "select email from v_emails ";
+			$sql .= "where email_uuid = '".$email_uuid."' ";
+			$sql .= "and domain_uuid = '".$domain_uuid."' ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+			$result_count = count($result);
+			if ($result_count > 0) {
+				foreach($result as $row) {
+					$email = $row['email'];
+					$msg_found = true;
+					break;
+				}
+			}
+			unset ($prep_statement, $sql, $result, $result_count);
+		}
+
+		if ($msg_found) {
+			$msg = $email;
+			require_once "secure/v_mailto.php";
+			if ($mailer_error == '') {
+				$_SESSION["message"] = $text['message-message_resent'];
+				header("Location: email_delete.php?id=".$email_uuid);
+			}
+			else {
+				$_SESSION["message_mood"] = 'negative';
+				$_SESSION["message_delay"] = '4'; //sec
+				$_SESSION["message"] = $text['message-resend_failed'].": ".$mailer_error;
+				header("Location: emails.php");
+			}
+		}
+
+		exit;
 	}
 
 //additional includes
@@ -83,7 +156,6 @@ else {
 	echo th_order_by('type', $text['label-type'], $order_by, $order);
 	echo th_order_by('status', $text['label-status'], $order_by, $order);
 	echo "<th>".$text['label-message']."</th>\n";
-	echo "<th>".$text['label-attachment']."</th>\n";
 	echo "<th>".$text['label-reference']."</th>\n";
 	echo "<td class='list_control_icons'>&nbsp;</td>\n";
 	echo "</tr>\n";
@@ -114,17 +186,24 @@ else {
 			echo "	</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-type_'.$row['type']]."</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$text['label-status_'.$row['status']]."</td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]."'><a href=''>".$text['label-message_view']."</a></td>\n";
-			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href=''>".$text['label-attachment_download']."</a></td>\n";
+			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'>";
+			echo "		<a href='email_view.php?id=".$row['email_uuid']."'>".$text['label-message_view']."</a>&nbsp;&nbsp;";
+			if (permission_exists('email_download')) {
+				echo "	<a href='?id=".$row['email_uuid']."&a=download'>".$text['label-download']."</a>&nbsp;&nbsp;";
+			}
+			if (permission_exists('email_resend')) {
+				echo "	<a href='?id=".$row['email_uuid']."&a=resend'>".$text['label-resend']."</a>";
+			}
+			echo "	</td>\n";
 			echo "	<td valign='top' class='row_stylebg tr_link_void' style='white-space: nowrap; vertical-align: top;'>";
 			echo "		<a href='".PROJECT_PATH."/app/xml_cdr/xml_cdr_details.php?uuid=".$row['call_uuid']."'>".$text['label-reference_cdr']."</a>";
 			echo "		".($caller_id_name != '') ? "&nbsp;&nbsp;".$caller_id_name." (".format_phone($caller_id_number).")" : $caller_id_number;
 			echo 		"&nbsp;&nbsp;<span style='font-size: 150%; line-height: 10px;'>&#8674;</span>&nbsp;&nbsp;".$destination_number;
 			echo "	</td>\n";
 			echo "	<td class='list_control_icons'>";
-			echo "<a href='email_view.php?id=".$row['email_uuid']."' alt='".$text['label-message_view']."'>$v_link_label_view</a>";
+			echo 		"<a href='email_view.php?id=".$row['email_uuid']."' alt='".$text['label-message_view']."'>$v_link_label_view</a>";
 			if (permission_exists('email_delete')) {
-				echo "<a href='email_delete.php?id=".$row['email_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
+				echo 	"<a href='email_delete.php?id=".$row['email_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
 			}
 			echo "	</td>\n";
 			echo "</tr>\n";
