@@ -44,7 +44,8 @@ else {
 	if ($dialplan_uuid != '' && $dialplan_enabled != '') {
 		$sql = "update v_dialplans set ";
 		$sql .= "dialplan_enabled = '".$dialplan_enabled."' ";
-		$sql .= "where dialplan_uuid = '".$dialplan_uuid."'";
+		$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+		$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 		$db->exec(check_sql($sql));
 		unset($sql);
 		$_SESSION["message"] = $text['message-update'];
@@ -96,15 +97,7 @@ else {
 	//get the number of rows in the dialplan
 	$sql = "select count(*) as num_rows from v_dialplans ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
-	if (strlen($app_uuid) == 0) {
-		//hide inbound routes
-			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
-		//hide outbound routes
-			$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-	}
-	else {
-		$sql .= "and app_uuid = '".$app_uuid."' ";
-	}
+	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 	if (strlen($search) > 0) {
 		$sql .= "and (";
 		$sql .= " 	dialplan_context like '%".$search."%' ";
@@ -141,15 +134,7 @@ else {
 
 	$sql = "select * from v_dialplans ";
 	$sql .= "where (domain_uuid = '$domain_uuid' or domain_uuid is null) ";
-	if (strlen($app_uuid) == 0) {
-		//hide inbound routes
-			$sql .= "and app_uuid <> 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4' ";
-		//hide outbound routes
-			$sql .= "and app_uuid <> '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3' ";
-	}
-	else {
-		$sql .= "and app_uuid = '".$app_uuid."' ";
-	}
+	$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1' ";
 	if (strlen($search) > 0) {
 		$sql .= "and (";
 		$sql .= " 	dialplan_context like '%".$search."%' ";
