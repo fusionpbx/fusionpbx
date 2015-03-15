@@ -5,10 +5,25 @@
 	$text['title-time-conditions']['pt-pt'] = "Condições Temporais";
 	$text['title-time-conditions']['fr-fr'] = "Conditions Temporelles";
 
-	$text['description-time-conditions']['en-us'] = "Dynamically route calls to an IVR menu, external numbers, scripts, or other destinations based on time conditions.";
-	$text['description-time-conditions']['es-cl'] = "Ruta dinámicamente llama a un menú IVR, números externos, guiones u otros destinos basados en las condiciones de tiempo.";
-	$text['description-time-conditions']['pt-pt'] = "Rota dinamicamente as chamadas para um menu IVR, números externos, scripts ou outros destinos com base nas condições de tempo.";
-	$text['description-time-conditions']['fr-fr'] = "Dynamiquement acheminer les appels à un menu IVR, numéros externes, scripts, ou d'autres destinations en fonction des conditions de temps.";
+	$text['header-time_conditions']['en-us'] = "Time Conditions";
+	$text['header-time_conditions']['es-cl'] = "Condiciones de Tiempo";
+	$text['header-time_conditions']['pt-pt'] = "Condições Temporais";
+	$text['header-time_conditions']['fr-fr'] = "Conditions Temporelles";
+
+	$text['description-time_conditions']['en-us'] = "Dynamically route calls to an IVR menu, external numbers, scripts, or other destinations based on time conditions.";
+	$text['description-time_conditions']['es-cl'] = "Ruta dinámicamente llama a un menú IVR, números externos, guiones u otros destinos basados en las condiciones de tiempo.";
+	$text['description-time_conditions']['pt-pt'] = "Rota dinamicamente as chamadas para um menu IVR, números externos, scripts ou outros destinos com base nas condições de tempo.";
+	$text['description-time_conditions']['fr-fr'] = "Dynamiquement acheminer les appels à un menu IVR, numéros externes, scripts, ou d'autres destinations en fonction des conditions de temps.";
+
+	$text['label-number']['en-us'] = "Number";
+	$text['label-number']['es-cl'] = "Número";
+	$text['label-number']['pt-pt'] = "Número";
+	$text['label-number']['fr-fr'] = "Numéro";
+
+	$text['label-context']['en-us'] = "Context";
+	$text['label-context']['es-cl'] = "Contexto";
+	$text['label-context']['pt-pt'] = "Contexto";
+	$text['label-context']['fr-fr'] = "Contexte";
 
 	$text['button-advanced']['en-us'] = "Advanced";
 	$text['button-advanced']['es-cl'] = "Avanzado";
