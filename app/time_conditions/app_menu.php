@@ -14,7 +14,7 @@
 	$apps[$x]['menu'][0]['uuid'] = "67aede56-8623-df2d-6338-ecfbde5825f7";
 	$apps[$x]['menu'][0]['parent_uuid'] = "fd29e39c-c936-f5fc-8e2b-611681b266b5";
 	$apps[$x]['menu'][0]['category'] = "internal";
-	$apps[$x]['menu'][0]['path'] = "/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1";
+	$apps[$x]['menu'][0]['path'] = "/app/time_conditions/time_conditions.php";
 	$apps[$x]['menu'][0]['groups'][] = "admin";
 	$apps[$x]['menu'][0]['groups'][] = "superadmin";
 
