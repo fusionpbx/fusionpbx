@@ -132,10 +132,8 @@ require_once "resources/header.php";
 				//execute query
 				$db->exec(check_sql($sql));
 				unset($sql);
-
 		}
 		else if ($action == "update") {
-
 			//update main dialplan entry
 				$sql = "update v_dialplans set ";
 				$sql .= "dialplan_name = '".$dialplan_name."', ";
@@ -155,14 +153,11 @@ require_once "resources/header.php";
 				$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
 				$db->query($sql);
 				unset($sql);
-
 		}
-
 
 	//initialize dialplan detail group and order numbers
 		$dialplan_detail_group = 0;
 		$dialplan_detail_order = 0;
-
 
 	//clean up array
 		//remove presets not checked, restructure variable array
@@ -220,7 +215,6 @@ require_once "resources/header.php";
 				}
 			}
 		}
-
 
 	//process conditions
 		$conditions_exist = false;
@@ -434,7 +428,6 @@ require_once "resources/header.php";
 //get existing data to pre-populate form
 	if ($dialplan_uuid != '' && $_POST["persistformvar"] != "true") {
 
-
 		//get main dialplan entry
 			$orm = new orm;
 			$orm->name('dialplans');
@@ -453,7 +446,6 @@ require_once "resources/header.php";
 				$dialplan_description = $row["dialplan_description"];
 			}
 			unset ($prep_statement);
-
 
 		//get dialplan detail conditions
 			$sql = "select dialplan_detail_group, dialplan_detail_tag, dialplan_detail_type, dialplan_detail_data from v_dialplan_details ";
@@ -476,7 +468,6 @@ require_once "resources/header.php";
 			$result_count = count($result);
 			unset ($prep_statement, $sql);
 
-
 		//load current conditions into array (combined by group), and retrieve action and anti-action
 			$c = 0;
 			foreach ($result as $row) {
@@ -492,7 +483,6 @@ require_once "resources/header.php";
 					$current_conditions[$row['dialplan_detail_group']][$row['dialplan_detail_type']] = $row['dialplan_detail_data'];
 				}
 			}
-
 
 		//loop through available presets
 			foreach ($available_presets as $preset_number => $preset) {
@@ -729,9 +719,9 @@ echo "			<br /><br />\n";
 echo "			".$text['description-time_conditions']."\n";
 echo "		</td>\n";
 echo "		<td align='right' valign='top'>\n";
-echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/dialplan/dialplans.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
+echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='".PROJECT_PATH."/app/time_conditions/time_conditions.php?app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-back']."'>\n";
 if (if_group("superadmin") && $action == 'update') {
-	echo "		<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"document.location.href='".PROJECT_PATH."/app/dialplan/dialplan_edit.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-advanced']."'>\n";
+	echo "		<input type='button' class='btn' name='' alt='".$text['button-advanced']."' onclick=\"document.location.href='".PROJECT_PATH."/app/time_conditions/time_conditions.php?id=".$dialplan_uuid."&app_uuid=4b821450-926b-175a-af93-a03c441818b1'\" value='".$text['button-advanced']."'>\n";
 }
 echo "			<input type='submit' name='submit' class='btn' value='".$text['button-save']."'>\n";
 echo "		</td>\n";

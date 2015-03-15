@@ -30,6 +30,11 @@
 	$text['button-advanced']['pt-pt'] = "Avancé";
 	$text['button-advanced']['fr-fr'] = "Avançado";
 
+	$text['button-search']['en-us'] = "Search";
+	$text['button-search']['es-cl'] = "Buscar";
+	$text['button-search']['pt-pt'] = "Pesquisar";
+	$text['button-search']['fr-fr'] = "Chercher";
+
 	$text['button-back']['en-us'] = "Back";
 	$text['button-back']['es-cl'] = "Volver";
 	$text['button-back']['pt-pt'] = "Voltar";
