@@ -2284,41 +2284,21 @@ function save_dialplan_xml() {
 											$group = $row2['dialplan_detail_group'];
 										//get the generic type
 											switch ($row2['dialplan_detail_type']) {
-											case "hour":
-												$type = 'time';
-												break;
-											case "minute":
-												$type = 'time';
-												break;
-											case "minute-of-day":
-												$type = 'time';
-												break;
-											case "mday":
-												$type = 'time';
-												break;
-											case "mweek":
-												$type = 'time';
-												break;
-											case "mon":
-												$type = 'time';
-												break;
-											case "time-of-day":
-												$type = 'time';
-												break;
-											case "yday":
-												$type = 'time';
-												break;
-											case "year":
-												$type = 'time';
-												break;
-											case "wday":
-												$type = 'time';
-												break;
-											case "week":
-												$type = 'time';
-												break;
-											default:
-												$type = 'default';
+												case "hour":
+												case "minute":
+												case "minute-of-day":
+												case "time-of-day":
+												case "mday":
+												case "mweek":
+												case "mon":
+												case "yday":
+												case "year":
+												case "wday":
+												case "week":
+													$type = 'time';
+													break;
+												default:
+													$type = 'default';
 											}
 
 										//add the conditions to the details array
