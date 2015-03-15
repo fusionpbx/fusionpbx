@@ -293,8 +293,11 @@
 
 				--loop through the voicemail destinations
 					for key,row in pairs(destinations) do
+						--get a new uuid
+							voicemail_message_uuid = api:execute("create_uuid");
 						--save the message to the voicemail messages
 							if (tonumber(message_length) > 2) then
+								caller_id_name = string.gsub(caller_id_name,"'","''");
 								local sql = {}
 								table.insert(sql, "INSERT INTO v_voicemail_messages ");
 								table.insert(sql, "(");
@@ -310,15 +313,15 @@
 								table.insert(sql, ") ");
 								table.insert(sql, "VALUES ");
 								table.insert(sql, "( ");
-								table.insert(sql, "'".. uuid .."', ");
-								table.insert(sql, "'".. domain_uuid .."', ");
-								table.insert(sql, "'".. row.voicemail_uuid_copy .."', ");
-								table.insert(sql, "'".. start_epoch .."', ");
-								table.insert(sql, "'".. caller_id_name .."', ");
-								table.insert(sql, "'".. caller_id_number .."', ");
-								table.insert(sql, "'".. message_length .."' ");
-								--table.insert(sql, "'".. message_status .."', ");
-								--table.insert(sql, "'".. message_priority .."' ");
+								table.insert(sql, "'"..voicemail_message_uuid.."', ");
+								table.insert(sql, "'"..domain_uuid.."', ");
+								table.insert(sql, "'"..row.voicemail_uuid_copy.."', ");
+								table.insert(sql, "'"..start_epoch.."', ");
+								table.insert(sql, "'"..caller_id_name.."', ");
+								table.insert(sql, "'"..caller_id_number.."', ");
+								table.insert(sql, "'"..message_length.."' ");
+								--table.insert(sql, "'"..message_status.."', ");
+								--table.insert(sql, "'"..message_priority.."' ");
 								table.insert(sql, ") ");
 								sql = table.concat(sql, "\n");
 								if (debug["sql"]) then
@@ -364,7 +367,7 @@
 
 						--copy the voicemail to each destination
 							if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
-								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..uuid.."."..vm_message_ext);
+								os.execute("cp "..voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext.." "..voicemail_dir.."/"..voicemail_id_copy.."/msg_"..voicemail_message_uuid.."."..vm_message_ext);
 							end
 
 						--set the message waiting event
@@ -378,9 +381,14 @@
 
 						--send the email with the voicemail recording attached
 							if (tonumber(message_length) > 2) then
-								send_email(voicemail_id_copy, uuid);
+								send_email(voicemail_id_copy, voicemail_message_uuid);
 							end
 					end
+				
+				--remove initial recording file
+					if (file_exists(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext)) then
+						os.remove(voicemail_dir.."/"..voicemail_id.."/msg_"..uuid.."."..vm_message_ext);
+					end					
 
 			else
 				--voicemail not enabled or does not exist

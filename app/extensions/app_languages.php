@@ -65,7 +65,7 @@ $text['label-voicemail_mail_to']['es-cl'] = "Enviar correo de voz a";
 $text['label-voicemail_mail_to']['pt-pt'] = "Enviar correio de voz para";
 $text['label-voicemail_mail_to']['fr-fr'] = "Courriel destination";
 
-$text['label-voicemail_local_after_email']['en-us'] = "VM Keep Local After Email";
+$text['label-voicemail_local_after_email']['en-us'] = "Voicemail Keep Local";
 $text['label-voicemail_local_after_email']['es-cl'] = "Mantener Mensaje de Voz despues de enviar por Email";
 $text['label-voicemail_local_after_email']['pt-pt'] = "Manter mensagem de correio de voz depois de enviado o email";
 $text['label-voicemail_local_after_email']['fr-fr'] = "Message gardé en local après courriel";
@@ -380,10 +380,10 @@ $text['description-voicemail_mail_to']['es-cl'] = "Ingrese una dirección de cor
 $text['description-voicemail_mail_to']['pt-pt'] = "Introduza o endereço de email para enviar o correio de voz (opcional).";
 $text['description-voicemail_mail_to']['fr-fr'] = "Insérer le courriel où sera envoyé le message de notification (optionnel).";
 
-$text['description-voicemail_local_after_email']['en-us'] = "Keep local file after sending the email.";
-$text['description-voicemail_local_after_email']['es-cl'] = "Mantener el archivo de forma local despues de enviar por correo electrónico.";
-$text['description-voicemail_local_after_email']['pt-pt'] = "Manter o ficheiro local depois de enviar o email.";
-$text['description-voicemail_local_after_email']['fr-fr'] = "Conserver ou non le message sur la messagerie vocale après l'envoi du courriel.";
+$text['description-voicemail_local_after_email']['en-us'] = "Choose whether to keep the voicemail in the system after sending the email notification.";
+$text['description-voicemail_local_after_email']['es-cl'] = "Escoja si desea mantener el buzón de voz en el sistema después de enviar la notificación por correo electrónico.";
+$text['description-voicemail_local_after_email']['pt-pt'] = "Escolha se quer manter o correio de voz no sistema após o envio da notificação de e-mail.";
+$text['description-voicemail_local_after_email']['fr-fr'] = "Choisissez si vous voulez garder la messagerie vocale dans le système après l'envoi de la notification par email.";
 
 $text['description-voicemail_enabled']['en-us'] = "Enable/disable voicemail for this extension.";
 $text['description-voicemail_enabled']['es-cl'] = "Activar/desactivar el correo de voz para esta extensión.";

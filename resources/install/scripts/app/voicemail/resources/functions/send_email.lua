@@ -133,13 +133,13 @@
 					body = trim(body);
 
 				--send the email
+					file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 					if (voicemail_file == "attach") then
 						if (voicemail_local_after_email == "false") then
 							delete = "true";
 						else
 							delete = "false";
 						end
-						file = voicemail_dir.."/"..id.."/msg_"..uuid.."."..vm_message_ext;
 						cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." "..headers.." '"..subject.."' '"..body.."' '"..file.."' "..delete;
 					else
 						cmd = "luarun email.lua "..voicemail_mail_to.." "..voicemail_mail_to.." "..headers.." '"..subject.."' '"..body.."'";
@@ -152,8 +152,8 @@
 			end
 
 		--whether to keep the voicemail message and details local after email
-			if (voicemail_mail_to) then
-				if (voicemail_local_after_email == "false" and string.len(voicemail_mail_to) > 0) then
+			if (string.len(voicemail_mail_to) > 2) then
+				if (voicemail_local_after_email == "false") then
 					--delete the voicemail message details
 						sql = [[DELETE FROM v_voicemail_messages
 							WHERE domain_uuid = ']] .. domain_uuid ..[['
@@ -163,6 +163,10 @@
 							freeswitch.consoleLog("notice", "[voicemail] SQL: " .. sql .. "\n");
 						end
 						status = dbh:query(sql);
+					--delete voicemail recording file
+						if (file_exists(file)) then
+							os.remove(file);
+						end	
 					--set message waiting indicator
 						message_waiting(id, domain_uuid);
 					--clear the variable

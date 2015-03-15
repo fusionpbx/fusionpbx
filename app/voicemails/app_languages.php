@@ -96,15 +96,15 @@
 		$text['label-voicemail_file_attached']['pt-pt'] = "Ligado";
 		$text['label-voicemail_file_attached']['fr-fr'] = "Attaché";
 
-		$text['label-voicemail_local_after_email']['en-us'] = "Local After Email";
+		$text['label-voicemail_local_after_email']['en-us'] = "Keep Local";
 		$text['label-voicemail_local_after_email']['es-cl'] = "Conservar después de enviar";
 		$text['label-voicemail_local_after_email']['pt-pt'] = "Conservar Mensagem de Voz";
 		$text['label-voicemail_local_after_email']['fr-fr'] = "Conserver le message";
 
-		$text['description-voicemail_local_after_email']['en-us'] = "Choose to keep the voicemail file after sending the email.";
-		$text['description-voicemail_local_after_email']['es-cl'] = "Indique si desea conservar el archivo despues de enviarlo por correo.";
-		$text['description-voicemail_local_after_email']['pt-pt'] = "Escolha se pretende manter o ficheiro de correio de voz depois de enviar email.";
-		$text['description-voicemail_local_after_email']['fr-fr'] = "Garder le message vocal dans la boite vocale après l'envoi du courriel.";
+		$text['description-voicemail_local_after_email']['en-us'] = "Choose whether to keep the voicemail in the system after sending the email notification.";
+		$text['description-voicemail_local_after_email']['es-cl'] = "Escoja si desea mantener el buzón de voz en el sistema después de enviar la notificación por correo electrónico.";
+		$text['description-voicemail_local_after_email']['pt-pt'] = "Escolha se quer manter o correio de voz no sistema após o envio da notificação de e-mail.";
+		$text['description-voicemail_local_after_email']['fr-fr'] = "Choisissez si vous voulez garder la messagerie vocale dans le système après l'envoi de la notification par email.";
 
 		$text['label-forward_destinations']['en-us'] = "Forward Destinations";
 		$text['label-forward_destinations']['es-cl'] = "Destinos Adelante";
