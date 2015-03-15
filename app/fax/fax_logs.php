@@ -62,7 +62,7 @@ else {
 
 	//prepare to page the results
 		$rows_per_page = 100;
-		$param = "";
+		$param = "&id=".$fax_uuid;
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
@@ -147,19 +147,9 @@ else {
 		unset($sql, $result, $row_count);
 	} //end if results
 
-	echo "<tr>\n";
-	echo "<td colspan='21' align='left'>\n";
-	echo "	<table width='100%' cellpadding='0' cellspacing='0'>\n";
-	echo "	<tr>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "		<td width='33.3%' align='center' nowrap='nowrap'>$paging_controls</td>\n";
-	echo "		<td width='33.3%' nowrap='nowrap'>&nbsp;</td>\n";
-	echo "	</tr>\n";
- 	echo "	</table>\n";
-	echo "</td>\n";
-	echo "</tr>\n";
-
 	echo "</table>";
+	echo "<br /><br />";
+	echo "<div style='text-align: center;'>".$paging_controls."</div>";
 	echo "<br /><br />";
 
 //include the footer
