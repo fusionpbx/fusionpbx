@@ -108,7 +108,7 @@ require_once "resources/paging.php";
 			echo "<tr ".$tr_link." ".(($row['email_primary']) ? "style='font-weight: bold;'" : null).">\n";
 			echo "	<td valign='top' class='".$row_style[$c]."'>".$row['email_label']."&nbsp;</td>\n";
 			echo "	<td valign='top' class='".$row_style[$c]." tr_link_void'><a href='mailto:".$row['email_address']."'>".$row['email_address']."&nbsp;</td>\n";
-			echo "	<td valign='top' class='row_stylebg'>".$row['address_description']."&nbsp;</td>\n";
+			echo "	<td valign='top' class='row_stylebg'>".$row['email_description']."&nbsp;</td>\n";
 			echo "	<td class='list_control_icons'>";
 			echo 		"<a href='contact_email_edit.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_email_uuid']."' alt='".$text['button-edit']."'>$v_link_label_edit</a>";
 			echo 		"<a href='contact_email_delete.php?contact_uuid=".$row['contact_uuid']."&id=".$row['contact_email_uuid']."' alt='".$text['button-delete']."' onclick=\"return confirm('".$text['confirm-delete']."')\">$v_link_label_delete</a>";
