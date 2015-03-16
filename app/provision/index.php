@@ -47,7 +47,7 @@ openlog("fusion-provisioning", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		//set the http user agent
 			//$_SERVER['HTTP_USER_AGENT'] = "Yealink SIP-T38G  38.70.0.125 00:15:65:00:00:00";
 		//Yealink: 17 digit mac appended to the user agent, so check for a space exactly 17 digits before the end.
-			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,6)) == "vp530p") {
+			if (strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,7)) == "yealink" || strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,5)) == "vp530") {
 				$mac = substr($_SERVER['HTTP_USER_AGENT'],-17);
 				$mac = preg_replace("#[^a-fA-F0-9./]#", "", $mac);
 			}
