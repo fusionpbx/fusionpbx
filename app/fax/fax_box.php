@@ -315,6 +315,7 @@ else {
 						echo "   </table>\n";
 						echo "  </td>\n";
 						echo "</tr>\n";
+						$c = ($c) ? 0 : 1;
 					}
 				}
 		}
@@ -451,7 +452,7 @@ else {
 						echo "   </table>\n";
 						echo "  </td>\n";
 						echo "</tr>\n";
-						if ($c==0) { $c=1; } else { $c=0; }
+						$c = ($c) ? 0 : 1;
 					} //check if the file is a .tif file
 				}
 		}
