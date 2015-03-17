@@ -17,7 +17,7 @@
 
 	The Initial Developer of the Original Code is
 	Mark J Crane <markjcrane@fusionpbx.com>
-	Portions created by the Initial Developer are Copyright (C) 2008-2014
+	Portions created by the Initial Developer are Copyright (C) 2008-2015
 	the Initial Developer. All Rights Reserved.
 
 	Contributor(s):
@@ -34,7 +34,8 @@ require_once "resources/require.php";
 	session_start();
 
 //if the username session is not set the check username and password
-	if (strlen($_SESSION["username"]) == 0) {
+	 if (strlen($_SESSION['username']) == 0) {
+
 		//clear the menu
 			$_SESSION["menu"] = "";
 
@@ -109,15 +110,11 @@ require_once "resources/require.php";
 					$bd = ldap_bind($ad,$username."@".$domain_name,check_str($_REQUEST["password"]));
 					if ($bd) {
 						//echo "success\n";
-						$auth_failed = false;
-					}
-					else {
-						//echo "failed\n";
-						$auth_failed = true;
+						$_SESSION['username'] = $username;
 					}
 
 				//check to see if the user exists
-					if (!$auth_failed) {
+					 if (strlen($_SESSION['username']) > 0) {
 						$sql = "select * from v_users ";
 						$sql .= "where username=:username ";
 						if (count($_SESSION["domains"]) > 1) {
@@ -188,13 +185,14 @@ require_once "resources/require.php";
 						}
 					}
 			}
+
 		//database authentication
-			else {
+			if (strlen($_SESSION['username']) == 0) {
 				//check the username and password if they don't match then redirect to the login
 					$sql = "select * from v_users ";
-					if (strlen($_REQUEST["key"]) > 30) {
-						$sql .= "where api_key=:key ";
-						//$sql .= "and api_key='".$key."' ";
+					if (strlen($key) > 30) {
+						//$sql .= "where api_key=:key ";
+						$sql .= "where api_key='".$key."' ";
 					}
 					else {
 						$sql .= "where username=:username ";
@@ -213,7 +211,7 @@ require_once "resources/require.php";
 					if ($_SESSION["user"]["unique"]["text"] != "global") {
 						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 					}
-					if (strlen($_REQUEST["key"]) > 30) {
+					if (strlen($key) > 30) {
 						$prep_statement->bindParam(':key', $key);
 					}
 					else {
@@ -221,41 +219,37 @@ require_once "resources/require.php";
 					}
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-					if (count($result) == 0) {
-						$auth_failed = true;
-					}
-					else {
-						if (isset($_REQUEST["key"])) {
-							$auth_failed = false;
-						}
-						else {
-							foreach ($result as &$row) {
-								//get the domain uuid
-									$domain_uuid = $row["domain_uuid"];
-								//set the domain session variables
-									$_SESSION["domain_uuid"] = $domain_uuid;
-									$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
-								//set the setting arrays
-									$domain = new domains();
-									$domain->db = $db;
-									$domain->set();
-								//get the salt from the database
-									$salt = $row["salt"];
-								//if salt is not defined then use the default salt for backwards compatibility
-									if (strlen($salt) == 0) {
-										$salt = 'e3.7d.12';
-									}
-								//compare the password provided by the user with the one in the database
-									if (md5($salt.check_str($_REQUEST["password"])) != $row["password"]) {
-										$auth_failed = true;
-									}
-								//end the loop
-									break;
-							}
+					if (count($result) > 0) {
+						foreach ($result as &$row) {
+							//get the domain uuid
+								$domain_uuid = $row["domain_uuid"];
+							//set the domain session variables
+								$_SESSION["domain_uuid"] = $domain_uuid;
+								$_SESSION["domain_name"] = $_SESSION['domains'][$domain_uuid]['domain_name'];
+							//set the setting arrays
+								$domain = new domains();
+								$domain->db = $db;
+								$domain->set();
+							//get the salt from the database
+								$salt = $row["salt"];
+							//if salt is not defined then use the default salt for backwards compatibility
+								if (strlen($salt) == 0) {
+									$salt = 'e3.7d.12';
+								}
+							//compare the password provided by the user with the one in the database
+								if (md5($salt.check_str($_REQUEST["password"])) == $row["password"]) {
+									 $_SESSION['username'] = $row["username"];
+								} elseif (strlen($_REQUEST["key"]) >  30 && $_REQUEST["key"] == $row["api_key"]) {
+									$_SESSION['username'] = $row["username"];
+								} else {
+									unset($result);
+								}
+							//end the loop
+								break;
 						}
 					}
 			}
-			if ($auth_failed) {
+			if (strlen($_SESSION['username']) == 0) {
 				//log the failed auth attempt to the system, to be available for fail2ban.
 					openlog('FusionPBX', LOG_NDELAY, LOG_AUTH);
 					syslog(LOG_WARNING, '['.$_SERVER['REMOTE_ADDR']."] authentication failed for ".check_str($_REQUEST["username"]));
@@ -266,24 +260,25 @@ require_once "resources/require.php";
 					header("Location: ".PROJECT_PATH."/login.php?path=".urlencode($target_path));
 					exit;
 			}
-			foreach ($result as &$row) {
-				//allow the user to choose a template only if the template has not been assigned by the superadmin
-					if (strlen($_SESSION['domain']['template']['name']) == 0) {
-						$_SESSION['domain']['template']['name'] = $row["user_template_name"];
-					}
-				//user defined time zone
-					$_SESSION["time_zone"]["user"] = '';
-					if (strlen($row["user_time_zone"]) > 0) {
-						//user defined time zone
-						$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
-					}
-				// add session variables
-					$_SESSION["user_uuid"] = $row["user_uuid"];
-					$_SESSION["username"] = $row["username"];
-				// user session array
-					$_SESSION["user"]["username"] = $row["username"];
-					$_SESSION["user"]["user_uuid"] = $row["user_uuid"];
-					$_SESSION["user"]["contact_uuid"] = $row["contact_uuid"];
+			else {
+				foreach ($result as &$row) {
+					//allow the user to choose a template only if the template has not been assigned by the superadmin
+						if (strlen($_SESSION['domain']['template']['name']) == 0) {
+							$_SESSION['domain']['template']['name'] = $row["user_template_name"];
+						}
+					//user defined time zone
+						$_SESSION["time_zone"]["user"] = '';
+						if (strlen($row["user_time_zone"]) > 0) {
+							//user defined time zone
+							$_SESSION["time_zone"]["user"] = $row["user_time_zone"];
+						}
+					// add session variables
+						$_SESSION["user_uuid"] = $row["user_uuid"];
+					// user session array
+						$_SESSION["user"]["username"] = $row["username"];
+						$_SESSION["user"]["user_uuid"] = $row["user_uuid"];
+						$_SESSION["user"]["contact_uuid"] = $row["contact_uuid"];
+				}
 			}
 
 		//get the groups assigned to the user and then set the groups in $_SESSION["groups"]
