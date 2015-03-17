@@ -305,4 +305,13 @@
 	$text['message-add']['fr-fr'] = "Ajouté";
 	$text['message-add']['pt-pt'] = "Adição Efectuada";
 
+	$text['confirm-delete']['en-us'] = "Do you really want to delete this?";
+	$text['confirm-delete']['es-cl'] = "¿Realmente desea eliminar este?";
+	$text['confirm-delete']['pt-pt'] = "Deseja realmente remover isto?";
+	$text['confirm-delete']['fr-fr'] = "Voulez-vous vraiment supprimer cela?";
+
+	$text['message-delete']['en-us'] = "Delete Completed";
+	$text['message-delete']['es-cl'] = "Eliminar Completado";
+	$text['message-delete']['pt-pt'] = "Apagar Concluído";
+	$text['message-delete']['fr-fr'] = "Supprimer Terminé";
 ?>

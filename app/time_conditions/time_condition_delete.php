@@ -51,13 +51,12 @@ else {
 					$dialplan_uuid = check_str($dialplan_uuid);
 
 				//get the dialplan data
-					$sql = "select * from v_dialplans ";
+					$sql = "select dialplan_context from v_dialplans ";
 					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
 					$prep_statement = $db->prepare(check_sql($sql));
 					$prep_statement->execute();
 					$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 					foreach ($result as &$row) {
-						$database_dialplan_uuid = $row["dialplan_uuid"];
 						$dialplan_contexts[] = $row["dialplan_context"];
 					}
 					unset($prep_statement);
@@ -72,14 +71,15 @@ else {
 
 				//delete child data
 					$sql = "delete from v_dialplan_details ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
-					$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1'; ";
+					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+					$sql .= "and domain_uuid = '".$domain_uuid."'; ";
 					$db->query($sql);
 					unset($sql);
 
 				//delete parent data
 					$sql = "delete from v_dialplans ";
-					$sql .= "where dialplan_uuid = '".$dialplan_uuid."'; ";
+					$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+					$sql .= "and domain_uuid = '".$domain_uuid."' ";
 					$sql .= "and app_uuid = '4b821450-926b-175a-af93-a03c441818b1'; ";
 					$db->query($sql);
 					unset($sql);
