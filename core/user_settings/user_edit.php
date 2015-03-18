@@ -308,16 +308,16 @@ else {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncellreq' align='left'>".$text['label-username']."</td>";
+	echo "		<td width='30%' class='vncellreq' align='left' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable' align='left'>$username</td>";
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell' align='left'>".$text['label-password']."</td>";
+	echo "		<td class='vncell' align='left' valign='top'>".$text['label-password']."</td>";
 	echo "		<td class='vtable' align='left'><input type='password' autocomplete='off' class='formfld' name='password' value=\"\"></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell' align='left'>".$text['label-confirm-password']."</td>";
+	echo "		<td class='vncell' align='left' valign='top'>".$text['label-confirm-password']."</td>";
 	echo "		<td class='vtable' align='left'><input type='password' autocomplete='off' class='formfld' name='confirm_password' value=\"\"></td>";
 	echo "	</tr>";
 
@@ -337,7 +337,7 @@ else {
 	}
 	else {
 		echo "	<tr>\n";
-		echo "	<td width='30%' class=\"vncell\">\n";
+		echo "	<td width='30%' class=\"vncell\" valign='top'>\n";
 		echo "		".$text['label-status']."\n";
 		echo "	</td>\n";
 		echo "	<td width='70%' class=\"vtable\" align='left'>\n";
@@ -415,7 +415,7 @@ else {
 		*/
 
 	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\">\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 	echo "		".$text['label-user_language']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
@@ -441,7 +441,7 @@ else {
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\">\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 	echo "		".$text['label-time']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
