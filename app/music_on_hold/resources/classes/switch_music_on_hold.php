@@ -82,7 +82,12 @@ include "root.php";
 						else {
 							$moh_value = "local_stream://".$moh_name;
 						}
-						$select .= "		<option value='".$moh_value."' ".(($this->select_value == $moh_value)?'selected="selected"':null).">".(str_replace('_', ' ', $moh_name))."</option>\n";
+						$options[$moh_value] = str_replace('_', ' ', $moh_name);
+				}
+				if (sizeof($options) > 0) {
+					foreach($options as $moh_value => $moh_name) {
+						$select .= "<option value='".$moh_value."' ".(($this->select_value == $moh_value) ? 'selected="selected"' : null).">".$moh_name."</option>\n";
+					}
 				}
 			//recordings
 				if($dh = opendir($_SESSION['switch']['recordings']['dir']."/")) {
