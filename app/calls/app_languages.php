@@ -222,4 +222,9 @@
 	$text['table-description']['pt-pt'] = "Descrição";
 	$text['table-description']['fr-fr'] = "Description";
 
+	$text['label-select-cid-number']['en-us'] = "Select Caller ID Number";
+	$text['label-select-cid-number']['es-cl'] = "Seleccione Llamadas Número de Identificación";
+	$text['label-select-cid-number']['pt-pt'] = "Selecione Caller ID Number";
+	$text['label-select-cid-number']['fr-fr'] = "Sélectionnez Caller ID Number";
+
 ?>

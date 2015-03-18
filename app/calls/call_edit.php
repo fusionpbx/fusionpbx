@@ -455,7 +455,6 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	}
 
 //prepare the autocomplete
-	echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-1.8.3.js\"></script>\n";
 	echo "<script src=\"".PROJECT_PATH."/resources/jquery/jquery-ui-1.9.2.min.js\"></script>\n";
 	echo "<link rel=\"stylesheet\" href=\"".PROJECT_PATH."/resources/jquery/jquery-ui.css\" />\n";
 	echo "<script type=\"text/javascript\">\n";
@@ -534,18 +533,14 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement_forward->execute();
 		$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result_forward) > 0) {
-			echo "  <select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
-			echo "  <option></option>\n";
+			echo "<select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
+			echo "	<option>".$text['label-select-cid-number']."</option>\n";
+			echo "  <option disabled='disabled'></option>\n";
 			foreach ($result_forward as &$row_forward) {
-				$selected = $row_forward["destination_uuid"]==$forward_caller_id_uuid?"selected='selected' ":"";
-				if (strlen($row_forward["dialplan_uuid"]) == 0) {
-					echo "          <option value='".$row_forward["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
-				}                                
-				else { 
-					echo "          <option value='".$row_forward["destination_uuid"]."' $selected>".$row_forward["destination_number"]." ".$row_forward["destination_description"]."</option>\n";
-				}
+				$selected = $row_forward["destination_uuid"] == $forward_caller_id_uuid ? "selected='selected' " : '';
+				echo "<option value='".$row_forward["destination_uuid"]."' ".$selected.">".format_phone($row_forward["destination_number"])." : ".$row_forward["destination_description"]."</option>\n";
 			}
-			echo "          </select>\n";
+			echo "</select>\n";
 		}
 		unset ($sql_forward, $prep_statement_forward, $result_forward, $row_forward);
 	}
@@ -565,7 +560,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_busy_destination' id='forward_busy_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_busy_destination."\">\n";
-	echo " <br />".$text['description-on-busy'].".\n";
+	echo "	<br />".$text['description-on-busy'].".\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -581,7 +576,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($on_click);
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "	<input class='formfld' type='text' name='forward_no_answer_destination' id='forward_no_answer_destination' maxlength='255' placeholder=\"".$text['label-destination']."\" value=\"".$forward_no_answer_destination."\">\n";
-	echo " <br />".$text['description-no_answer'].".\n";
+	echo "	<br />".$text['description-no_answer'].".\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -605,24 +600,19 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$prep_statement_follow_me->execute();
 		$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result_follow_me) > 0) {
-			echo "  <select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
-			echo "  <option></option>\n";
+			echo "<select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
+			echo "	<option>".$text['label-select-cid-number']."</option>\n";
+			echo "	<option disabled='disabled'></option>\n";
 			foreach ($result_follow_me as &$row_follow_me) {
-				$selected = $row_follow_me["destination_uuid"]==$follow_me_caller_id_uuid?"selected='selected' ":"";
-				if (strlen($row_follow_me["dialplan_uuid"]) == 0) {
-					echo "          <option value='".$row_follow_me["destination_uuid"]."' style=\"font-weight:bold;\" $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
-				}                                
-				else { 
-					echo "          <option value='".$row_follow_me["destination_uuid"]."' $selected>".$row_follow_me["destination_number"]." ".$row_follow_me["destination_description"]."</option>\n";
-				}
+				$selected = $row_follow_me["destination_uuid"] == $follow_me_caller_id_uuid ? "selected='selected'" : '';
+				echo "<option value='".$row_follow_me["destination_uuid"]."' ".$selected.">".format_phone($row_follow_me["destination_number"])." : ".$row_follow_me["destination_description"]."</option>\n";
 			}
-			echo "          </select>\n";
+			echo "</select>\n";
 		}
 		unset ($sql_follow_me, $prep_statement_follow_me, $result_follow_me, $row_follow_me);
 	}
 
-	echo "<br />\n";
-	echo "<br />\n";
+	echo "	<br /><br />\n";
 	echo "</td>\n";
 	echo "</tr>\n";
 
@@ -644,7 +634,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	// 1st destination
 	echo "		<tr>\n";
-	echo "			<td><input class='formfld' type='text' name='destination_data_1' id='destination_data_1' maxlength='255' value=\"".$destination_data_1."\"></td>\n";
+	echo "			<td><input class='formfld' style='min-width: 135px;' type='text' name='destination_data_1' id='destination_data_1' maxlength='255' value=\"".$destination_data_1."\"></td>\n";
 	echo "			<td>\n";
 							destination_select('destination_delay_1', $destination_delay_1, '0');
 	echo "			</td>\n";
@@ -664,7 +654,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	// 2nd destination
 	echo "		<tr>\n";
-	echo "			<td><input class='formfld' type='text' name='destination_data_2' id='destination_data_2' maxlength='255' value=\"".$destination_data_2."\"></td>\n";
+	echo "			<td><input class='formfld' style='min-width: 135px;' type='text' name='destination_data_2' id='destination_data_2' maxlength='255' value=\"".$destination_data_2."\"></td>\n";
 	echo "			<td>\n";
 						destination_select('destination_delay_2', $destination_delay_2, '0');
 	echo "			</td>\n";
@@ -684,7 +674,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	// 3rd destination
 	echo "		<tr>\n";
-	echo "			<td><input class='formfld' type='text' name='destination_data_3' id='destination_data_3' maxlength='255' value=\"".$destination_data_3."\"></td>\n";
+	echo "			<td><input class='formfld' style='min-width: 135px;' type='text' name='destination_data_3' id='destination_data_3' maxlength='255' value=\"".$destination_data_3."\"></td>\n";
 	echo "			<td>\n";
 						destination_select('destination_delay_3', $destination_delay_3, '0');
 	echo "			</td>\n";
@@ -704,7 +694,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	// 4th destination
 	echo "		<tr>\n";
-	echo "			<td><input class='formfld' type='text' name='destination_data_4' id='destination_data_4' maxlength='255' value=\"".$destination_data_4."\"></td>\n";
+	echo "			<td><input class='formfld' style='min-width: 135px;' type='text' name='destination_data_4' id='destination_data_4' maxlength='255' value=\"".$destination_data_4."\"></td>\n";
 	echo "			<td>\n";
 						destination_select('destination_delay_4', $destination_delay_4, '0');
 	echo "			</td>\n";
@@ -724,7 +714,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 
 	// 5th destination
 	echo "		<tr>\n";
-	echo "			<td><input class='formfld' type='text' name='destination_data_5' id='destination_data_5' maxlength='255' value=\"".$destination_data_5."\"></td>\n";
+	echo "			<td><input class='formfld' style='min-width: 135px;' type='text' name='destination_data_5' id='destination_data_5' maxlength='255' value=\"".$destination_data_5."\"></td>\n";
 	echo "			<td>\n";
 						destination_select('destination_delay_5', $destination_delay_5, '0');
 	echo "			</td>\n";
