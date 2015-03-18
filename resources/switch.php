@@ -320,10 +320,10 @@ function event_socket_request($fp, $cmd) {
 				}
 			}
 
-			usleep(50); //allow time for reponse
+			usleep(20); //allow time for reponse
 
 			//prevent an endless loop //optional because of script timeout
-			if ($i > 3000) { break; }
+			if ($i > 2000) { break; }
 
 			if ($content_length > 0) { //is content_length set
 				//stop reading if all content has been read.
@@ -2763,8 +2763,8 @@ if (!function_exists('save_switch_xml')) {
 			save_dialplan_xml();
 		}
 		if (is_readable($_SESSION['switch']['extensions']['dir'])) {
-			if (file_exists(PROJECT_PATH."/app/extensions/resources/classes/extension.php")) {
-				require_once PROJECT_PATH."app/extensions/resources/classes/extension.php";
+			if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/resources/classes/extension.php")) {
+				require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."app/extensions/resources/classes/extension.php";
 				$extension = new extension;
 				$extension->xml();
 			}

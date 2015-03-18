@@ -511,7 +511,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							save_dialplan_xml();
 						}
 						if (is_readable($_SESSION['switch']['extensions']['dir'])) {
-							require_once PROJECT_PATH."app/extensions/resources/classes/extension.php";
+							require_once $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/app/extensions/resources/classes/extension.php";
 							$extension = new extension;
 							$extension->xml();
 						}
