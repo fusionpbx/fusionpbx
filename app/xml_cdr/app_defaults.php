@@ -73,6 +73,13 @@
 					$array[$x]['default_setting_enabled'] = 'true';
 					$array[$x]['default_setting_description'] = '';
 					$x++;
+					$array[$x]['default_setting_category'] = 'cdr';
+					$array[$x]['default_setting_subcategory'] = 'http_enabled';
+					$array[$x]['default_setting_name'] = 'boolean';
+					$array[$x]['default_setting_value'] = 'true';
+					$array[$x]['default_setting_enabled'] = 'true';
+					$array[$x]['default_setting_description'] = '';
+					$x++;
 					$orm = new orm;
 					$orm->name('default_settings');
 					foreach ($array as $index => $null) {
