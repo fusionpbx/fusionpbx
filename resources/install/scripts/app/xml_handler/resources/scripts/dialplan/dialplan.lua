@@ -261,8 +261,8 @@
 									domain_name = domains[domain_uuid];
 									table.insert(xml, [[					<action application="set" data="call_direction=inbound"/>]]);
 									table.insert(xml, [[					<action application="set" data="domain_uuid=]] .. domain_uuid .. [["/>]]);
-									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);			
-									table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);			
+									table.insert(xml, [[					<action application="set" data="domain_name=]] .. domain_name .. [["/>]]);
+									table.insert(xml, [[					<action application="set" data="domain=]] .. domain_name .. [["/>]]);
 									first_action = false;
 								end
 							end
