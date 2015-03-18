@@ -483,7 +483,7 @@
 				print_r ($_POST["cdr"]);
 			}
 		//authentication for xml cdr http post
-			if (strlen($_SESSION["xml_cdr"]["http_enabled"]) == 0) {
+			if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true" && strlen($_SESSION["xml_cdr"]["username"]) == 0) {
 				//get the contents of xml_cdr.conf.xml
 					$conf_xml_string = file_get_contents($_SESSION['switch']['conf']['dir'].'/autoload_configs/xml_cdr.conf.xml');
 
@@ -494,34 +494,35 @@
 					catch(Exception $e) {
 						echo $e->getMessage();
 					}
-					$_SESSION["xml_cdr"]["http_enabled"] = false;
 					foreach ($conf_xml->settings->param as $row) {
 						if ($row->attributes()->name == "cred") {
 							$auth_array = explode(":", $row->attributes()->value);
-							$_SESSION["xml_cdr"]["username"] = $auth_array[0];
-							$_SESSION["xml_cdr"]["password"] = $auth_array[1];
-							//echo "username: ".$_SESSION["xml_cdr"]["username"]."<br />\n";
-							//echo "password: ".$_SESSION["xml_cdr"]["password"]."<br />\n";
+							//echo "username: ".$auth_array[0]."<br />\n";
+							//echo "password: ".$auth_array[1]."<br />\n";
 						}
 						if ($row->attributes()->name == "url") {
-							$_SESSION["xml_cdr"]["http_enabled"] = true;
+							//check name is equal to url
 						}
 					}
 			}
 
 		//if http enabled is set to false then deny access
-			if (!$_SESSION["xml_cdr"]["http_enabled"]) {
+			if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "false") {
 				echo "access denied<br />\n";
 				return;
 			}
 
 		//check for the correct username and password
-			if ($_SESSION["xml_cdr"]["username"] == $_SERVER["PHP_AUTH_USER"] && $_SESSION["xml_cdr"]["password"] == $_SERVER["PHP_AUTH_PW"]) {
-				//echo "access granted<br />\n";
-			}
-			else {
-				echo "access denied<br />\n";
-				return;
+			if ($_SESSION["cdr"]["http_enabled"]["boolean"] == "true") {
+				if ($auth_array[0] == $_SERVER["PHP_AUTH_USER"] && $auth_array[1] == $_SERVER["PHP_AUTH_PW"]) {
+					//echo "access granted<br />\n";
+					$_SESSION["xml_cdr"]["username"] = $auth_array[0];
+					$_SESSION["xml_cdr"]["password"] = $auth_array[1];
+				}
+				else {
+					echo "access denied<br />\n";
+					return;
+				}
 			}
 		//loop through all attribues
 			//foreach($xml->settings->param[1]->attributes() as $a => $b) {
