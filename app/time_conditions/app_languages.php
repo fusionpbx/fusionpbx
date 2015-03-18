@@ -115,10 +115,10 @@
 	$text['label-presets']['pt-pt'] = "Presets";
 	$text['label-presets']['fr-fr'] = "Présélections";
 
-	$text['description-presets']['en-us'] = "Select or customize pre-defined conditions necessary to execute the selected destination(s).";
-	$text['description-presets']['es-cl'] = "Las condiciones pre-definida.";
-	$text['description-presets']['pt-pt'] = "Condições pré-definidas.";
-	$text['description-presets']['fr-fr'] = "Conditions pré-définies.";
+	$text['description-presets']['en-us'] = "Select pre-defined conditions, and the default destination for all checked.  Click the preset name to further customize the conditions and/or destination for each.";
+	$text['description-presets']['es-cl'] = "Seleccione condiciones predefinidas, y el destino predeterminado para todos marcada. Haga clic en el nombre del preset para personalizar aún más las condiciones y / o destino de cada uno.";
+	$text['description-presets']['pt-pt'] = "Selecione as condições pré-definidas, e o destino padrão para todos marcada. Clique no nome da predefinição para personalizar ainda mais as condições e / ou destino para cada um.";
+	$text['description-presets']['fr-fr'] = "Sélectionnez les conditions pré-définies, et la destination par défaut pour tous les bagages. Cliquez sur le nom de la présélection pour personnaliser davantage les conditions et / ou pour chaque destination.";
 
 	$text['label-preset_new_years_day']['en-us'] = "New Year's Day";
 	$text['label-preset_new_years_day']['es-cl'] = "Año Nuevo";
