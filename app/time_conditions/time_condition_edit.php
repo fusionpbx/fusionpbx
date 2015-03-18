@@ -332,9 +332,15 @@ require_once "resources/header.php";
 					}
 
 					//parse group app and data
-					$dialplan_action_array = explode(":", $dialplan_action);
-					$dialplan_action_app = array_shift($dialplan_action_array);
-					$dialplan_action_data = join(':', $dialplan_action_array);
+					if (substr_count($dialplan_action, ":") > 0) {
+						$dialplan_action_array = explode(":", $dialplan_action);
+						$dialplan_action_app = array_shift($dialplan_action_array);
+						$dialplan_action_data = join(':', $dialplan_action_array);
+					}
+					else {
+						$dialplan_action_app = $dialplan_action;
+						$dialplan_action_data = '';
+					}
 
 					//add group action to query
 					$dialplan_detail_order += 10;
@@ -473,10 +479,10 @@ require_once "resources/header.php";
 			foreach ($result as $row) {
 				if ($row['dialplan_detail_tag'] == 'action') {
 					if ($row['dialplan_detail_group'] == '999') {
-						$dialplan_anti_action = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data'];
+						$dialplan_anti_action = $row['dialplan_detail_type'].(($row['dialplan_detail_data'] != '') ? ':'.$row['dialplan_detail_data'] : null);
 					}
 					else {
-						$dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].':'.$row['dialplan_detail_data'];
+						$dialplan_actions[$row['dialplan_detail_group']] = $row['dialplan_detail_type'].(($row['dialplan_detail_data'] != '') ? ':'.$row['dialplan_detail_data'] : null);
 					}
 				}
 				else if ($row['dialplan_detail_tag'] == 'condition') {
@@ -774,7 +780,7 @@ function add_custom_condition($group_id, $dialplan_action = '') {
 	echo "		</tr>";
 	echo "		<tr>";
 	echo "			<td colspan='4' style='padding-top: 10px;'>";
-						switch_select_destination("dialplan", $text['label-select_destination'], "dialplan_action[".$group_id."]", $dialplan_action, 'width: 300px;', '');
+						switch_select_destination("dialplan", '', "dialplan_action[".$group_id."]", $dialplan_action, 'width: 300px;', '');
 	echo "			</td>";
 	echo "		</tr>";
 	echo "	</table>";
@@ -931,7 +937,7 @@ echo "<td class='vncell' valign='top' align='left' nowrap>\n";
 echo "	".$text['label-alternate-destination']."\n";
 echo "</td>\n";
 echo "<td class='vtable' align='left'>\n";
-switch_select_destination("dialplan", $dialplan_anti_action, "dialplan_anti_action", $dialplan_anti_action, 'width: 300px;', '');
+		switch_select_destination("dialplan", ' ', "dialplan_anti_action", $dialplan_anti_action, 'width: 300px;', '');
 echo "	<div id='desc_anti_action_data_1'></div>\n";
 echo "</td>\n";
 echo "</tr>\n";
