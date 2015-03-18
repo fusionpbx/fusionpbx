@@ -148,9 +148,9 @@ require_once "resources/require.php";
 								$sql .= ") ";
 								$sql .= "values ";
 								$sql .= "(";
-								$sql .= "'$domain_uuid', ";
-								$sql .= "'$user_uuid', ";
-								$sql .= "'$contact_uuid', ";
+								$sql .= "'".$domain_uuid."', ";
+								$sql .= "'".$user_uuid."', ";
+								$sql .= "'".$contact_uuid."', ";
 								$sql .= "'".strtolower($username)."', ";
 								$sql .= "'".md5($salt.$password)."', ";
 								$sql .= "'".$salt."', ";
@@ -158,7 +158,7 @@ require_once "resources/require.php";
 								$sql .= "'".strtolower($username)."', ";
 								$sql .= "'true' ";
 								$sql .= ")";
-								//$db->exec(check_sql($sql));
+								$db->exec(check_sql($sql));
 								unset($sql);
 
 							//add the user to group user
@@ -173,11 +173,11 @@ require_once "resources/require.php";
 								$sql .= "values ";
 								$sql .= "(";
 								$sql .= "'".uuid()."', ";
-								$sql .= "'$domain_uuid', ";
-								$sql .= "'$group_name', ";
-								$sql .= "'$user_uuid' ";
+								$sql .= "'".$domain_uuid."', ";
+								$sql .= "'".$group_name."', ";
+								$sql .= "'".$user_uuid."' ";
 								$sql .= ")";
-								//$db->exec(check_sql($sql));
+								$db->exec(check_sql($sql));
 								unset($sql);
 						}
 					}
