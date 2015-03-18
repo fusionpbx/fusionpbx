@@ -86,9 +86,7 @@ include "root.php";
 				if (strlen($this->cid_number_prefix) > 0) {
 					$sql .= "cid_number_prefix, ";
 				}
-				if (strlen($this->follow_me_caller_id_uuid) > 0) {
-					$sql .= "follow_me_caller_id_uuid, ";
-				}
+				$sql .= "follow_me_caller_id_uuid, ";
 				$sql .= "follow_me_enabled ";
 				$sql .= ")";
 				$sql .= "values ";
@@ -101,6 +99,9 @@ include "root.php";
 				}
 				if (strlen($this->follow_me_caller_id_uuid) > 0) {
 					$sql .= "'$this->follow_me_caller_id_uuid', ";
+				}
+				else {
+					$sql .= 'null, ';
 				}
 				$sql .= "'$this->follow_me_enabled' ";
 				$sql .= ")";
@@ -119,7 +120,12 @@ include "root.php";
 				$sql = "update v_follow_me set ";
 				$sql .= "follow_me_enabled = '$this->follow_me_enabled', ";
 				$sql .= "cid_name_prefix = '$this->cid_name_prefix', ";
-				$sql .= "follow_me_caller_id_uuid = '$this->follow_me_caller_id_uuid', ";
+				if (strlen($this->follow_me_caller_id_uuid) > 0) {
+					$sql .= "follow_me_caller_id_uuid = '$this->follow_me_caller_id_uuid', ";
+				}
+				else {
+					$sql .= "follow_me_caller_id_uuid = null, ";
+				}
 				$sql .= "cid_number_prefix = '$this->cid_number_prefix' ";
 				$sql .= "where domain_uuid = '$this->domain_uuid' ";
 				$sql .= "and follow_me_uuid = '$this->follow_me_uuid' ";
@@ -336,7 +342,7 @@ include "root.php";
 						$dial_string_caller_id_number = "\${caller_id_number}";
 
 						if (strlen($this->follow_me_caller_id_uuid) > 0){
-	$sql_caller = "select destination_number, destination_description from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->follow_me_caller_id_uuid'";
+							$sql_caller = "select destination_number, destination_description from v_destinations where domain_uuid = '$this->domain_uuid' and destination_type = 'inbound' and destination_uuid = '$this->follow_me_caller_id_uuid'";
 							$prep_statement_caller = $db->prepare($sql_caller);
 							if ($prep_statement_caller) {
 								$prep_statement_caller->execute();
