@@ -61,6 +61,9 @@
 		if f~=nil then io.close(f) return true else return false end
 	end
 
+--prepare the api object
+	api = freeswitch.API();
+
 --get the ivr menu from the database
 	sql = [[SELECT * FROM v_ivr_menus 
 		WHERE ivr_menu_uuid = ']] .. ivr_menu_uuid ..[['
@@ -104,8 +107,10 @@
 
 --set the ringback
 	if (ivr_menu_ringback) then
-		session:setVariable("ringback", ivr_menu_ringback);
-		session:setVariable("transfer_ringback", ivr_menu_ringback);
+		ringback = string.gsub(ivr_menu_ringback, "^${*(.-)%}*$", "%1");
+		ringback = api:executeString("global_getvar "..ringback);
+		session:setVariable("ringback", ringback);
+		session:setVariable("transfer_ringback", ringback);
 	end
 
 --get the sounds dir, language, dialect and voice
@@ -146,9 +151,6 @@
 		ivr_menu_greet_short = ivr_menu_greet_long;
 	end
 	ivr_menu_invalid_entry = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/"..ivr_menu_invalid_sound;
-
---prepare the api object
-	api = freeswitch.API();
 
 --define the ivr menu
 	function menu()
