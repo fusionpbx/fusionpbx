@@ -434,7 +434,7 @@ else {
 	echo "</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncellreq'>".$text['label-username']."</td>";
+	echo "		<td width='30%' class='vncellreq' valign='top'>".$text['label-username']."</td>";
 	echo "		<td width='70%' class='vtable'>";
 	if (if_group("admin") || if_group("superadmin")) {
 		echo "		<input type='txt' autocomplete='off' class='formfld' name='username' value='".$username."' required='required'>";
@@ -446,11 +446,11 @@ else {
 	echo "	</tr>";
 
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-password']."</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-password']."</td>";
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='password' id='password' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 	echo "	<tr>";
-	echo "		<td class='vncell'>".$text['label-confirm_password']."</td>";
+	echo "		<td class='vncell' valign='top'>".$text['label-confirm_password']."</td>";
 	echo "		<td class='vtable'><input type='password' autocomplete='off' class='formfld' name='confirm_password' id='confirmpassword' value='' onfocus='compare_passwords();' onkeyup='compare_passwords();' onblur='compare_passwords();'></td>";
 	echo "	</tr>";
 
@@ -528,7 +528,7 @@ else {
 	echo "	</tr>\n";
 
 	echo "	<tr>";
-	echo "		<td width='30%' class='vncell'>".$text['label-contact']."</td>";
+	echo "		<td width='30%' class='vncell' valign='top'>".$text['label-contact']."</td>";
 	echo "		<td width='70%' class='vtable'>\n";
 	$sql = " select contact_uuid, contact_organization, contact_name_given, contact_name_family from v_contacts ";
 	$sql .= " where domain_uuid = '".$_SESSION['domain_uuid']."' ";
@@ -574,7 +574,7 @@ else {
 	}
 	else {
 		echo "	<tr>\n";
-		echo "	<td width='20%' class=\"vncell\">\n";
+		echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 		echo "		".$text['label-status']."\n";
 		echo "	</td>\n";
 		echo "	<td class=\"vtable\">\n";
@@ -619,19 +619,24 @@ else {
 	}
 
 	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\">\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 	echo "		".$text['label-user_language']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
 	echo "		<select id='user_language' name='user_language' class='formfld' style=''>\n";
 	echo "		<option value=''></option>\n";
-	foreach ($languages as $key => $value) {
-		if ($key == $user_settings['domain']['language']['code']) {
-			echo "		<option value='$key' selected='selected'>$key</option>\n";
-		}
-		else {
-			echo "		<option value='$key'>$key</option>\n";
-		}
+	//get all language codes from database
+	$sql = "select * from v_languages order by language asc";
+	$prep_statement = $db->prepare(check_sql($sql));
+	$prep_statement->execute();
+	$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+	foreach ($result as &$row) {
+		$language_codes[$row["code"]] = $row["language"];
+	}
+	unset($prep_statement, $result, $row);
+	foreach ($_SESSION['app']['languages'] as $code) {
+		$selected = ($code == $user_settings['domain']['language']['code']) ? "selected='selected'" : null;
+		echo "	<option value='".$code."' ".$selected.">".$language_codes[$code]." [".$code."]</option>\n";
 	}
 	echo "		</select>\n";
 	echo "		<br />\n";
@@ -640,7 +645,7 @@ else {
 	echo "	</tr>\n";
 
 	echo "	<tr>\n";
-	echo "	<td width='20%' class=\"vncell\">\n";
+	echo "	<td width='20%' class=\"vncell\" valign='top'>\n";
 	echo "		".$text['label-time_zone']."\n";
 	echo "	</td>\n";
 	echo "	<td class=\"vtable\" align='left'>\n";
@@ -676,7 +681,7 @@ else {
 
 	if (file_exists($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/api/app_config.php')) {
 		echo "	<tr>";
-		echo "		<td class='vncell'>".$text['label-api_key']."</td>";
+		echo "		<td class='vncell' valign='top'>".$text['label-api_key']."</td>";
 		echo "		<td class='vtable'>\n";
 		echo "			<input type=\"text\" class='formfld' name=\"api_key\" id='api_key' value=\"".$api_key."\" >";
 		echo "			<input type='button' class='btn' value='".$text['button-generate']."' onclick=\"getElementById('api_key').value='".uuid()."';\">";
