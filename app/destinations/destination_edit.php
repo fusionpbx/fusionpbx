@@ -99,8 +99,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		$msg = '';
 		if (strlen($destination_type) == 0) { $msg .= $text['message-required']." ".$text['label-destination_type']."<br>\n"; }
 		if (strlen($destination_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_number']."<br>\n"; }
-		//if (strlen($destination_caller_id_name) == 0) { $msg .= $text['message-required']." ".$text['label-destination_caller_id_name']."<br>\n"; }
-		//if (strlen($destination_caller_id_number) == 0) { $msg .= $text['message-required']." ".$text['label-destination_caller_id_number']."<br>\n"; }
 		if (strlen($destination_context) == 0) { $msg .= $text['message-required']." ".$text['label-destination_context']."<br>\n"; }
 		if (strlen($destination_enabled) == 0) { $msg .= $text['message-required']." ".$text['label-destination_enabled']."<br>\n"; }
 
@@ -146,6 +144,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 			//add or update the dialplan if the destination number is set
 				if ($add_dialplan) {
+
 					//get the array
 						$dialplan_details = $_POST["dialplan_details"];
 
@@ -363,7 +362,6 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						}
 						$orm->save($dialplan);
 						$dialplan_response = $orm->message;
-						//print_r($dialplan_response);
 
 					//synchronize the xml config
 						save_dialplan_xml();
@@ -373,6 +371,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						$cache->delete("dialplan:".$destination_context);
 
 				} //add or update the dialplan if the destination number is set
+				else {
+
+					//remove empty dialplan details from POST array so doesn't attempt to insert below
+					unset($_POST["dialplan_details"]);
+
+				}
 
 			//get the destination_uuid
 				if (strlen($dialplan_response['uuid']) > 0) {
