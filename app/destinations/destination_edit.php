@@ -152,19 +152,16 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 						unset($_POST["dialplan_details"]);
 
 					//array cleanup
-						$x = 0;
-						foreach ($dialplan_details as $row) {
+						foreach ($dialplan_details as $index => $row) {
 							//unset the empty row
 								if (strlen($row["dialplan_detail_data"]) == 0) {
-									unset($dialplan_details[$x]);
+									unset($dialplan_details[$index]);
 								}
-							//increment the row
-								$x++;
 						}
 
 					//check to see if the dialplan exists
 						if (strlen($dialplan_uuid) > 0) {
-							$sql = "select dialplan_uuid from v_dialplans ";
+							$sql = "select dialplan_uuid, dialplan_name, dialplan_description from v_dialplans ";
 							$sql .= "where domain_uuid = '".$domain_uuid."' ";
 							$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
 							$prep_statement = $db->prepare($sql);
@@ -173,6 +170,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 								$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
 								if (strlen($row['dialplan_uuid']) > 0) {
 									$dialplan_uuid = $row['dialplan_uuid'];
+									$dialplan_name = $row['dialplan_name'];
+									$dialplan_description = $row['dialplan_description'];
 								}
 								else {
 									$dialplan_uuid = "";
@@ -190,13 +189,13 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 							$dialplan["dialplan_uuid"] = $dialplan_uuid;
 						}
 						$dialplan["domain_uuid"] = $domain_uuid;
-						$dialplan["dialplan_name"] = format_phone($destination_number);
+						$dialplan["dialplan_name"] = ($dialplan_name != '') ? $dialplan_name : format_phone($destination_number);
 						$dialplan["dialplan_number"] = $destination_number;
 						$dialplan["dialplan_context"] = $destination_context;
 						$dialplan["dialplan_continue"] = "false";
 						$dialplan["dialplan_order"] = "100";
 						$dialplan["dialplan_enabled"] = $destination_enabled;
-						$dialplan["dialplan_description"] = $destination_description;
+						$dialplan["dialplan_description"] = ($dialplan_description != '') ? $dialplan_description : $destination_description;
 						$dialplan_detail_order = 10;
 
 						//add the public condition
