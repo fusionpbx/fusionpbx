@@ -371,7 +371,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "forward_busy_enabled = '".$forward_busy_enabled."', ";
 		$sql .= "forward_no_answer_destination = '".$forward_no_answer_destination."', ";
 		$sql .= "forward_no_answer_enabled = '".$forward_no_answer_enabled."', ";
-		$sql .= "forward_caller_id_uuid = '".$forward_caller_id_uuid."' ";
+		$sql .= "forward_caller_id_uuid = ".(($forward_caller_id_uuid != '') ? "'".$forward_caller_id_uuid."' " : "null ");
 		$sql .= "where domain_uuid = '".$domain_uuid."' ";
 		$sql .= "and extension_uuid = '".$extension_uuid."'";
 		$db->exec(check_sql($sql));
@@ -534,8 +534,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result_forward = $prep_statement_forward->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result_forward) > 0) {
 			echo "<select name='forward_caller_id_uuid' id='forward_caller_id_uuid' class='formfld' >\n";
-			echo "	<option>".$text['label-select-cid-number']."</option>\n";
-			echo "  <option disabled='disabled'></option>\n";
+			echo "	<option value=''>".$text['label-select-cid-number']."</option>\n";
+			echo "  <option value='' disabled='disabled'></option>\n";
 			foreach ($result_forward as &$row_forward) {
 				$selected = $row_forward["destination_uuid"] == $forward_caller_id_uuid ? "selected='selected' " : '';
 				echo "<option value='".$row_forward["destination_uuid"]."' ".$selected.">".format_phone($row_forward["destination_number"])." : ".$row_forward["destination_description"]."</option>\n";
@@ -601,8 +601,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$result_follow_me = $prep_statement_follow_me->fetchAll(PDO::FETCH_ASSOC);
 		if (count($result_follow_me) > 0) {
 			echo "<select name='follow_me_caller_id_uuid' id='follow_me_caller_id_uuid' class='formfld' >\n";
-			echo "	<option>".$text['label-select-cid-number']."</option>\n";
-			echo "	<option disabled='disabled'></option>\n";
+			echo "	<option value=''>".$text['label-select-cid-number']."</option>\n";
+			echo "	<option value='' disabled='disabled'></option>\n";
 			foreach ($result_follow_me as &$row_follow_me) {
 				$selected = $row_follow_me["destination_uuid"] == $follow_me_caller_id_uuid ? "selected='selected'" : '';
 				echo "<option value='".$row_follow_me["destination_uuid"]."' ".$selected.">".format_phone($row_follow_me["destination_number"])." : ".$row_follow_me["destination_description"]."</option>\n";
