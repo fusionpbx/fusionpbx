@@ -99,17 +99,18 @@ require_once "resources/require.php";
 			}
 
 		//ldap authentication
-			if ($_SESSION["ldap"]["authentication"]["boolean"] == "true") {
+			if ($_SESSION["ldap"]["enabled"]["boolean"] == "true") {
 				//use ldap to validate the user credentials
 					if (strlen(check_str($_REQUEST["domain_name"])) > 0) {
 						$domain_name = check_str($_REQUEST["domain_name"]);
 					}
-					$ad = ldap_connect("ldap://".$_SESSION["ldap"]["server_host"]["text"].":".$_SESSION["ldap"]["server_port"]["numeric"])
-						or die("Couldn't connect to AD!");
-					ldap_set_option($ad, LDAP_OPT_PROTOCOL_VERSION, 3);
-					$bd = ldap_bind($ad,$username."@".$domain_name,check_str($_REQUEST["password"]));
-					if ($bd) {
-						//echo "success\n";
+					//ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
+					$connect = ldap_connect($_SESSION["ldap"]["server_host"]["text"], $_SESSION["ldap"]["server_port"]["numeric"])
+						or die("Could not connect to the LDAP server.");
+					$bind_dn = $_SESSION["ldap"]["user_attribute"]["text"]."=".$_REQUEST["password"].",".$_SESSION["ldap"]["user_dn"]["text"];
+
+					$bind = ldap_bind($connect, $bind_dn, $_SESSION["ldap"]["bind_password"]["text"]);
+					if ($bind) {
 						$_SESSION['username'] = $username;
 					}
 
@@ -117,20 +118,16 @@ require_once "resources/require.php";
 					 if (strlen($_SESSION['username']) > 0) {
 						$sql = "select * from v_users ";
 						$sql .= "where username=:username ";
-						if (count($_SESSION["domains"]) > 1) {
-							$sql .= "and domain_uuid=:domain_uuid ";
-						}
+						$sql .= "and domain_uuid=:domain_uuid ";
 						$prep_statement = $db->prepare(check_sql($sql));
-						if (count($_SESSION["domains"]) > 1) {
-							$prep_statement->bindParam(':domain_uuid', $domain_uuid);
-						}
+						$prep_statement->bindParam(':domain_uuid', $domain_uuid);
 						$prep_statement->bindParam(':username', $username);
 						$prep_statement->execute();
 						$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 						if (count($result) == 0) {
 							//salt used with the password to create a one way hash
-								$salt = generate_password('20', '4');
-								$password = generate_password('20', '4');
+								$salt = generate_password('32', '4');
+								$password = generate_password('32', '4');
 
 							//prepare the uuids
 								$user_uuid = uuid();
@@ -161,7 +158,7 @@ require_once "resources/require.php";
 								$sql .= "'".strtolower($username)."', ";
 								$sql .= "'true' ";
 								$sql .= ")";
-								$db->exec(check_sql($sql));
+								//$db->exec(check_sql($sql));
 								unset($sql);
 
 							//add the user to group user
@@ -180,7 +177,7 @@ require_once "resources/require.php";
 								$sql .= "'$group_name', ";
 								$sql .= "'$user_uuid' ";
 								$sql .= ")";
-								$db->exec(check_sql($sql));
+								//$db->exec(check_sql($sql));
 								unset($sql);
 						}
 					}
