@@ -198,7 +198,7 @@ else {
 	echo "	</td>\n";
 	echo "	<td align='right' valign='top' width='50%'>\n";
 	echo "		<form method='GET' name='frm_search' action=''>\n";
-	echo "			<input class='formfld' style='text-align: right;' type='text' name='search_all' value=\"".$search_all."\">\n";
+	echo "			<input class='formfld' style='text-align: right;' type='text' name='search_all' id='search_all' value=\"".$search_all."\">\n";
 	echo "			<input class='btn' type='submit' name='submit' value=\"".$text['button-search']."\">\n";
 	if (permission_exists('contact_add')) {
 		echo 		"<input type='button' class='btn' alt='".$text['button-import']."' onclick=\"window.location='contact_import.php'\" value='".$text['button-import']."'>\n";
@@ -269,6 +269,8 @@ else {
 
 	echo $paging_controls;
 	echo "<br /><br />";
+
+	echo "<script>document.getElementById('search_all').focus();</script>";
 
 //include the footer
 	require_once "resources/footer.php";
