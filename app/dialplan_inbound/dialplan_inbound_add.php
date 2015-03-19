@@ -194,6 +194,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "dialplan_detail_tag, ";
 		$sql .= "dialplan_detail_type, ";
 		$sql .= "dialplan_detail_data, ";
+		$sql .= "dialplan_detail_group, ";
 		$sql .= "dialplan_detail_order ";
 		$sql .= ") ";
 		$sql .= "values ";
@@ -204,6 +205,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'condition', ";
 		$sql .= "'context', ";
 		$sql .= "'public', ";
+		$sql .= "'0', ";
 		$sql .= "'10' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
@@ -219,6 +221,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "dialplan_detail_tag, ";
 		$sql .= "dialplan_detail_type, ";
 		$sql .= "dialplan_detail_data, ";
+		$sql .= "dialplan_detail_group, ";
 		$sql .= "dialplan_detail_order ";
 		$sql .= ") ";
 		$sql .= "values ";
@@ -229,6 +232,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'condition', ";
 		$sql .= "'$condition_field_1', ";
 		$sql .= "'$condition_expression_1', ";
+		$sql .= "'0', ";
 		$sql .= "'20' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
@@ -245,6 +249,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -255,6 +260,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'condition', ";
 			$sql .= "'$condition_field_2', ";
 			$sql .= "'$condition_expression_2', ";
+			$sql .= "'0', ";
 			$sql .= "'30' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -272,6 +278,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -282,6 +289,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'export', ";
 			$sql .= "'alert_info=http://www.notused.com;info=alert-external;x-line-id=0', ";
+			$sql .= "'0', ";
 			$sql .= "'45' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -299,6 +307,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -309,6 +318,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'call_direction=inbound', ";
+			$sql .= "'0', ";
 			$sql .= "'50' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -326,6 +336,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -336,6 +347,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'accountcode=$destination_accountcode', ";
+			$sql .= "'0', ";
 			$sql .= "'55' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -353,6 +365,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -363,6 +376,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'carrier=$destination_carrier', ";
+			$sql .= "'0', ";
 			$sql .= "'60' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -380,6 +394,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -390,6 +405,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'limit', ";
 			$sql .= "'hash \${domain_name} inbound ".$limit." !USER_BUSY', ";
+			$sql .= "'0', ";
 			$sql .= "'65' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -407,6 +423,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -417,6 +434,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'set', ";
 			$sql .= "'effective_caller_id_number=".$redial_outbound_prefix."\${caller_id_number}', ";
+			$sql .= "'0', ";
 			$sql .= "'70' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -455,6 +473,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "dialplan_detail_tag, ";
 				$sql .= "dialplan_detail_type, ";
 				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_group, ";
 				$sql .= "dialplan_detail_order ";
 				$sql .= ") ";
 				$sql .= "values ";
@@ -465,6 +484,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'action', ";
 				$sql .= "'set', ";
 				$sql .= "'codec_string=PCMU,PCMA', ";
+				$sql .= "'0', ";
 				$sql .= "'73' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -480,6 +500,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "dialplan_detail_tag, ";
 				$sql .= "dialplan_detail_type, ";
 				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_group, ";
 				$sql .= "dialplan_detail_order ";
 				$sql .= ") ";
 				$sql .= "values ";
@@ -490,6 +511,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'action', ";
 				$sql .= "'set', ";
 				$sql .= "'tone_detect_hits=1', ";
+				$sql .= "'0', ";
 				$sql .= "'75' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -505,6 +527,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "dialplan_detail_tag, ";
 				$sql .= "dialplan_detail_type, ";
 				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_group, ";
 				$sql .= "dialplan_detail_order ";
 				$sql .= ") ";
 				$sql .= "values ";
@@ -515,6 +538,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'action', ";
 				$sql .= "'set', ";
 				$sql .= "'execute_on_tone_detect=transfer ".$fax_extension." XML ".$_SESSION["context"]."', ";
+				$sql .= "'0', ";
 				$sql .= "'80' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -530,6 +554,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "dialplan_detail_tag, ";
 				$sql .= "dialplan_detail_type, ";
 				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_group, ";
 				$sql .= "dialplan_detail_order ";
 				$sql .= ") ";
 				$sql .= "values ";
@@ -540,6 +565,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'action', ";
 				$sql .= "'tone_detect', ";
 				$sql .= "'fax 1100 r +5000', ";
+				$sql .= "'0', ";
 				$sql .= "'85' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -555,6 +581,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "dialplan_detail_tag, ";
 				$sql .= "dialplan_detail_type, ";
 				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_group, ";
 				$sql .= "dialplan_detail_order ";
 				$sql .= ") ";
 				$sql .= "values ";
@@ -565,6 +592,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'action', ";
 				$sql .= "'sleep', ";
 				$sql .= "'3000', ";
+				$sql .= "'0', ";
 				$sql .= "'90' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -580,6 +608,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "dialplan_detail_tag, ";
 				$sql .= "dialplan_detail_type, ";
 				$sql .= "dialplan_detail_data, ";
+				$sql .= "dialplan_detail_group, ";
 				$sql .= "dialplan_detail_order ";
 				$sql .= ") ";
 				$sql .= "values ";
@@ -590,6 +619,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				$sql .= "'action', ";
 				$sql .= "'export', ";
 				$sql .= "'codec_string=\${ep_codec_string}', ";
+				$sql .= "'0', ";
 				$sql .= "'93' ";
 				$sql .= ")";
 				$db->exec(check_sql($sql));
@@ -612,6 +642,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -622,6 +653,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'answer', ";
 			$sql .= "'', ";
+			$sql .= "'0', ";
 			$sql .= "'95' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
@@ -639,6 +671,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "dialplan_detail_tag, ";
 		$sql .= "dialplan_detail_type, ";
 		$sql .= "dialplan_detail_data, ";
+		$sql .= "dialplan_detail_group, ";
 		$sql .= "dialplan_detail_order ";
 		$sql .= ") ";
 		$sql .= "values ";
@@ -649,6 +682,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		$sql .= "'action', ";
 		$sql .= "'$action_application_1', ";
 		$sql .= "'$action_data_1', ";
+		$sql .= "'0', ";
 		$sql .= "'100' ";
 		$sql .= ")";
 		$db->exec(check_sql($sql));
@@ -665,6 +699,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "dialplan_detail_tag, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
+			$sql .= "dialplan_detail_group, ";
 			$sql .= "dialplan_detail_order ";
 			$sql .= ") ";
 			$sql .= "values ";
@@ -675,6 +710,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 			$sql .= "'action', ";
 			$sql .= "'$action_application_2', ";
 			$sql .= "'$action_data_2', ";
+			$sql .= "'0', ";
 			$sql .= "'105' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));

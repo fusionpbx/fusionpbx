@@ -134,9 +134,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$array['dialplan_details'][$x]['dialplan_detail_tag'] = $row["dialplan_detail_tag"];
 				$array['dialplan_details'][$x]['dialplan_detail_type'] = $row["dialplan_detail_type"];
 				$array['dialplan_details'][$x]['dialplan_detail_data'] = $row["dialplan_detail_data"];
-				$array['dialplan_details'][$x]['dialplan_detail_break'] =  $row["dialplan_detail_break"];
+				$array['dialplan_details'][$x]['dialplan_detail_break'] = $row["dialplan_detail_break"];
 				$array['dialplan_details'][$x]['dialplan_detail_inline'] = $row["dialplan_detail_inline"];
-				$array['dialplan_details'][$x]['dialplan_detail_group'] = $row["dialplan_detail_group"];
+				$array['dialplan_details'][$x]['dialplan_detail_group'] = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
 				$array['dialplan_details'][$x]['dialplan_detail_order'] = $row["dialplan_detail_order"];
 			}
 			$x++;
@@ -270,6 +270,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 				$details[$group][$x]['dialplan_detail_group'] = $group;
 				$details[$group][$x]['dialplan_detail_order'] = $dialplan_detail_order;
 		}
+	//sort the details array by group number
+		ksort($details);
 
 //show the header
 	require_once "resources/header.php";
