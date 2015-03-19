@@ -32,7 +32,8 @@ else {
 	echo "	<tr>\n";
 	echo "		<td width='50%' align='left' valign='top' nowrap='nowrap'><b>".$text['title-fax_logs']."</b></td>\n";
 	echo "		<td width='50%' align='right'>\n";
-	echo "			<input type='button' class='btn' name='' alt='back' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>\n";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-back']."' onclick=\"window.location='fax.php'\" value='".$text['button-back']."'>";
+	echo "			<input type='button' class='btn' name='' alt='".$text['button-refresh']."' onclick=\"document.location.reload();\" value='".$text['button-refresh']."'>\n";
 	echo "		</td>\n";
 	echo "	</tr>\n";
 	echo "	<tr>\n";
@@ -47,7 +48,6 @@ else {
 		$sql = "select count(*) as num_rows from v_fax_logs ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and fax_uuid = '$fax_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
 		$prep_statement = $db->prepare($sql);
 		if ($prep_statement) {
 		$prep_statement->execute();
@@ -61,8 +61,8 @@ else {
 		}
 
 	//prepare to page the results
-		$rows_per_page = 100;
-		$param = "&id=".$fax_uuid;
+		$rows_per_page = 50;
+		$param = "&id=".$fax_uuid."&order_by=".$order_by."&order=".$order;
 		$page = $_GET['page'];
 		if (strlen($page) == 0) { $page = 0; $_GET['page'] = 0; }
 		list($paging_controls, $rows_per_page, $var3) = paging($num_rows, $param, $rows_per_page);
@@ -72,7 +72,7 @@ else {
 		$sql = "select * from v_fax_logs ";
 		$sql .= "where domain_uuid = '$domain_uuid' ";
 		$sql .= "and fax_uuid = '$fax_uuid' ";
-		if (strlen($order_by)> 0) { $sql .= "order by $order_by $order "; }
+		$sql .= (strlen($order_by) > 0) ? "order by ".$order_by." ".$order." " : "order by fax_epoch desc ";
 		$sql .= "limit $rows_per_page offset $offset ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -86,23 +86,23 @@ else {
 
 	echo "<table class='tr_hover' width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
 	echo "<tr>\n";
-	echo th_order_by('fax_success', $text['label-fax_success'], $order_by, $order);
-	echo th_order_by('fax_result_code', $text['label-fax_result_code'], $order_by, $order);
-	echo th_order_by('fax_result_text', $text['label-fax_result_text'], $order_by, $order);
-	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order);
-	echo th_order_by('fax_ecm_used', $text['label-fax_ecm_used'], $order_by, $order);
-	echo th_order_by('fax_local_station_id', $text['label-fax_local_station_id'], $order_by, $order);
+	echo th_order_by('fax_success', $text['label-fax_success'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_result_code', $text['label-fax_result_code'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_result_text', $text['label-fax_result_text'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_file', $text['label-fax_file'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_ecm_used', $text['label-fax_ecm_used'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_local_station_id', $text['label-fax_local_station_id'], $order_by, $order, null, null, "&id=".$fax_uuid);
 	//echo th_order_by('fax_document_transferred_pages', $text['label-fax_document_transferred_pages'], $order_by, $order);
 	//echo th_order_by('fax_document_total_pages', $text['label-fax_document_total_pages'], $order_by, $order);
 	//echo th_order_by('fax_image_resolution', $text['label-fax_image_resolution'], $order_by, $order);
 	//echo th_order_by('fax_image_size', $text['label-fax_image_size'], $order_by, $order);
-	echo th_order_by('fax_bad_rows', $text['label-fax_bad_rows'], $order_by, $order);
-	echo th_order_by('fax_transfer_rate', $text['label-fax_transfer_rate'], $order_by, $order);
-	echo th_order_by('fax_retry_attempts', $text['label-fax_retry_attempts'], $order_by, $order);
+	echo th_order_by('fax_bad_rows', $text['label-fax_bad_rows'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_transfer_rate', $text['label-fax_transfer_rate'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_retry_attempts', $text['label-fax_retry_attempts'], $order_by, $order, null, null, "&id=".$fax_uuid);
 	//echo th_order_by('fax_retry_limit', $text['label-fax_retry_limit'], $order_by, $order);
 	//echo th_order_by('fax_retry_sleep', $text['label-fax_retry_sleep'], $order_by, $order);
-	echo th_order_by('fax_uri', $text['label-fax_destination'], $order_by, $order);
-	echo th_order_by('fax_date', $text['label-fax_date'], $order_by, $order);
+	echo th_order_by('fax_uri', $text['label-fax_destination'], $order_by, $order, null, null, "&id=".$fax_uuid);
+	echo th_order_by('fax_epoch', $text['label-fax_date'], $order_by, $order, null, null, "&id=".$fax_uuid);
 	//echo th_order_by('fax_epoch', $text['label-fax_epoch'], $order_by, $order);
 	echo "<td class='list_control_icons'>";
 	echo "&nbsp;\n";
