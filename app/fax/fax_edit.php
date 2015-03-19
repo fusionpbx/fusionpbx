@@ -558,6 +558,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 		foreach ($result as &$row) {
 			$dialplan_uuid = $row["dialplan_uuid"];
 			$fax_extension = $row["fax_extension"];
+			$fax_accountcode = $row["accountcode"];
 			$fax_destination_number = $row["fax_destination_number"];
 			$fax_name = $row["fax_name"];
 			$fax_email = $row["fax_email"];
@@ -679,7 +680,7 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 					if (($action == "add") && ($row_accountcode['type_value'] == $_SESSION['domain_name'])){
 						$selected='selected="selected"';
 					}
-					elseif ($row_accountcode['type_value'] == $accountcode){
+					elseif ($row_accountcode['type_value'] == $fax_accountcode){
 						$selected='selected="selected"';
 					}
 					echo "<option value=\"".$row_accountcode['type_value']."\" $selected>".$row_accountcode['type_value']."</option>\n";
@@ -688,8 +689,8 @@ if (count($_POST)>0 && strlen($_POST["persistformvar"]) == 0) {
 				echo "</select>";
 			}
 			else {
-				if ($action == "add") { $accountcode = $_SESSION['domain_name']; }
-				echo "<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$accountcode."\">\n";
+				if ($action == "add") { $fax_accountcode = $_SESSION['domain_name']; }
+				echo "<input class='formfld' type='text' name='accountcode' maxlength='255' value=\"".$fax_accountcode."\">\n";
 			}
 
 			echo "<br />\n";
