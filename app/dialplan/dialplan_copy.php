@@ -121,7 +121,7 @@ else {
 			$dialplan_detail_data = $row["dialplan_detail_data"];
 			$dialplan_detail_break = $row["dialplan_detail_break"];
 			$dialplan_detail_inline = $row["dialplan_detail_inline"];
-			$dialplan_detail_group = $row["dialplan_detail_group"];
+			$dialplan_detail_group = ($row["dialplan_detail_group"] != '') ? $row["dialplan_detail_group"] : '0';
 
 		//copy the dialplan details
 			$dialplan_detail_uuid = uuid();
@@ -131,12 +131,12 @@ else {
 			$sql .= "dialplan_uuid, ";
 			$sql .= "dialplan_detail_uuid, ";
 			$sql .= "dialplan_detail_tag, ";
-			$sql .= "dialplan_detail_order, ";
 			$sql .= "dialplan_detail_type, ";
 			$sql .= "dialplan_detail_data, ";
 			$sql .= "dialplan_detail_break, ";
 			$sql .= "dialplan_detail_inline, ";
-			$sql .= "dialplan_detail_group ";
+			$sql .= "dialplan_detail_group, ";
+			$sql .= "dialplan_detail_order ";
 			$sql .= ")";
 			$sql .= "values ";
 			$sql .= "(";
@@ -144,17 +144,12 @@ else {
 			$sql .= "'".$dialplan_uuid."', ";
 			$sql .= "'".$dialplan_detail_uuid."', ";
 			$sql .= "'".check_str($dialplan_detail_tag)."', ";
-			$sql .= "'".check_str($dialplan_detail_order)."', ";
 			$sql .= "'".check_str($dialplan_detail_type)."', ";
 			$sql .= "'".check_str($dialplan_detail_data)."', ";
 			$sql .= "'".$dialplan_detail_break."', ";
 			$sql .= "'".$dialplan_detail_inline."', ";
-			if (strlen($dialplan_detail_group) == 0) {
-				$sql .= "'".$dialplan_detail_group."' ";
-			}
-			else {
-				$sql .= "'".$dialplan_detail_group."' ";
-			}
+			$sql .= "'".check_str($dialplan_detail_group)."', ";
+			$sql .= "'".check_str($dialplan_detail_order)."' ";
 			$sql .= ")";
 			$db->exec(check_sql($sql));
 			unset($sql);
