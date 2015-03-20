@@ -32,6 +32,48 @@ if ($domains_processed == 1) {
 		$db->exec(check_sql($sql));
 		unset($sql);
 
+	//define array of settings
+		$x = 0;
+		$array[$x]['default_setting_category'] = 'voicemail';
+		$array[$x]['default_setting_subcategory'] = 'voicemail_file';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'attach';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Define whether to attach voicemail files to email notifications, or only include a link.';
+		$x++;
+		$array[$x]['default_setting_category'] = 'voicemail';
+		$array[$x]['default_setting_subcategory'] = 'keep_local';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = 'Define whether to keep voicemail files on the local system after sending attached via email.';
+		$x++;
+
+	//iterate and add each, if necessary
+		foreach ($array as $index => $default_settings) {
+
+		//add the default setting
+			$sql = "select count(*) as num_rows from v_default_settings ";
+			$sql .= "where default_setting_category = '".$default_settings['default_setting_category']."' ";
+			$sql .= "and default_setting_subcategory = '".$default_settings['default_setting_subcategory']."' ";
+			$sql .= "and default_setting_name = '".$default_settings['default_setting_name']."' ";
+			$prep_statement = $db->prepare($sql);
+			if ($prep_statement) {
+				$prep_statement->execute();
+				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
+				unset($prep_statement);
+				if ($row['num_rows'] == 0) {
+					$orm = new orm;
+					$orm->name('default_settings');
+					$orm->save($array[$index]);
+					$message = $orm->message;
+					//print_r($message);
+				}
+				unset($row);
+			}
+
+		}
+
 }
 
 ?>

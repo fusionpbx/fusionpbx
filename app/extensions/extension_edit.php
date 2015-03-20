@@ -707,7 +707,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
 		$extension_uuid = check_str($_GET["id"]);
 		$sql = "select * from v_extensions ";
-		$sql .= "where extension_uuid = '$extension_uuid' ";
+		$sql .= "where extension_uuid = '".$extension_uuid."' ";
 		$sql .= "and domain_uuid = '".$domain_uuid."' ";
 		$prep_statement = $db->prepare(check_sql($sql));
 		$prep_statement->execute();
@@ -746,40 +746,41 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			$description = $row["description"];
 		}
 		unset ($prep_statement);
-	}
 
-//get the voicemail data
-	if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
-		//get the voicemails
-			$sql = "select * from v_voicemails ";
-			$sql .= "where domain_uuid = '".$domain_uuid."' ";
-			if (is_numeric($extension)) {
-				$sql .= "and voicemail_id = '$extension' ";
-			}
-			else {
-				$sql .= "and voicemail_id = '$number_alias' ";
-			}
-			$prep_statement = $db->prepare(check_sql($sql));
-			$prep_statement->execute();
-			$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-			foreach ($result as &$row) {
-				$voicemail_password = $row["voicemail_password"];
-				//$greeting_id = $row["greeting_id"];
-				$voicemail_mail_to = $row["voicemail_mail_to"];
+	//get the voicemail data
+		if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/voicemails')) {
+			//get the voicemails
+				$sql = "select * from v_voicemails ";
+				$sql .= "where domain_uuid = '".$domain_uuid."' ";
+				$sql .= "and voicemail_id = '".((is_numeric($extension)) ? $extension : $number_alias)."' ";
+				$prep_statement = $db->prepare(check_sql($sql));
+				$prep_statement->execute();
+				$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+				foreach ($result as &$row) {
+					$voicemail_password = $row["voicemail_password"];
+					$voicemail_mail_to = $row["voicemail_mail_to"];
+					$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
+					$voicemail_file = $row["voicemail_file"];
+					$voicemail_local_after_email = $row["voicemail_local_after_email"];
+					$voicemail_enabled = $row["voicemail_enabled"];
+				}
+				unset ($prep_statement);
+			//clean the variables
+				$voicemail_password = str_replace("#", "", $voicemail_password);
 				$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
-				$voicemail_file = $row["voicemail_file"];
-				$voicemail_local_after_email = $row["voicemail_local_after_email"];
-				$voicemail_enabled = $row["voicemail_enabled"];
-			}
-			unset ($prep_statement);
-		//clean the variables
-			$voicemail_password = str_replace("#", "", $voicemail_password);
-			$voicemail_mail_to = str_replace(" ", "", $voicemail_mail_to);
+		}
+
+	}
+	else {
+		$voicemail_file = $_SESSION['voicemail']['voicemail_file']['text'];
+		$voicemail_local_after_email = $_SESSION['voicemail']['keep_local']['boolean'];
 	}
 
 //set the defaults
 	if (strlen($limit_max) == 0) { $limit_max = '5'; }
 	if (strlen($call_timeout) == 0) { $call_timeout = '30'; }
+
+
 
 //begin the page content
 	require_once "resources/header.php";
@@ -1301,36 +1302,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 			echo "		<td class='vtable'>";
 			echo "			<select id='line_number' name='line_number' class='formfld' style='width: auto;' onchange=\"$onchange\">\n";
 			echo "			<option value=''></option>\n";
-			echo "			<option value='1'>1</option>\n";
-			echo "			<option value='2'>2</option>\n";
-			echo "			<option value='3'>3</option>\n";
-			echo "			<option value='4'>4</option>\n";
-			echo "			<option value='5'>5</option>\n";
-			echo "			<option value='6'>6</option>\n";
-			echo "			<option value='7'>7</option>\n";
-			echo "			<option value='8'>8</option>\n";
-			echo "			<option value='9'>9</option>\n";
-			echo "			<option value='10'>10</option>\n";
-			echo "			<option value='11'>11</option>\n";
-			echo "			<option value='12'>12</option>\n";
-			echo "			<option value='13'>13</option>\n";
-			echo "			<option value='14'>14</option>\n";
-			echo "			<option value='15'>15</option>\n";
-			echo "			<option value='16'>16</option>\n";
-			echo "			<option value='17'>17</option>\n";
-			echo "			<option value='18'>18</option>\n";
-			echo "			<option value='19'>19</option>\n";
-			echo "			<option value='20'>20</option>\n";
-			echo "			<option value='21'>21</option>\n";
-			echo "			<option value='22'>22</option>\n";
-			echo "			<option value='23'>23</option>\n";
-			echo "			<option value='24'>24</option>\n";
-			echo "			<option value='25'>25</option>\n";
-			echo "			<option value='26'>26</option>\n";
-			echo "			<option value='27'>27</option>\n";
-			echo "			<option value='28'>28</option>\n";
-			echo "			<option value='29'>29</option>\n";
-			echo "			<option value='30'>30</option>\n";
+			for ($n = 1; $n <=30; $n++) {
+				echo "		<option value='".$n."'>".$n."</option>\n";
+			}
 			echo "			</select>\n";
 			echo "		</td>\n";
 
@@ -1487,7 +1461,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='voicemail_file' id='voicemail_file' onchange=\"if (this.selectedIndex != 2) { document.getElementById('voicemail_local_after_email').selectedIndex = 0; }\">\n";
-		echo "    	<option value=''>".$text['option-voicemail_file_listen']."</option>\n";
+		echo "    	<option value='' ".(($voicemail_file == "listen") ? "selected='selected'" : null).">".$text['option-voicemail_file_listen']."</option>\n";
 		echo "    	<option value='link' ".(($voicemail_file == "link") ? "selected='selected'" : null).">".$text['option-voicemail_file_link']."</option>\n";
 		echo "    	<option value='attach' ".(($voicemail_file == "attach") ? "selected='selected'" : null).">".$text['option-voicemail_file_attach']."</option>\n";
 		echo "    </select>\n";
@@ -1502,18 +1476,8 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 		echo "</td>\n";
 		echo "<td class='vtable' align='left'>\n";
 		echo "    <select class='formfld' name='voicemail_local_after_email' id='voicemail_local_after_email' onchange=\"if (this.selectedIndex == 1) { document.getElementById('voicemail_file').selectedIndex = 2; }\">\n";
-		if ($voicemail_local_after_email == "true") {
-			echo "    <option value='true' selected >".$text['label-true']."</option>\n";
-		}
-		else {
-			echo "    <option value='true'>".$text['label-true']."</option>\n";
-		}
-		if ($voicemail_local_after_email == "false") {
-			echo "    <option value='false' selected >".$text['label-false']."</option>\n";
-		}
-		else {
-			echo "    <option value='false'>".$text['label-false']."</option>\n";
-		}
+		echo "    	<option value='true' ".(($voicemail_local_after_email == "true") ? "selected='selected'" : null).">".$text['label-true']."</option>\n";
+		echo "    	<option value='false' ".(($voicemail_local_after_email == "false") ? "selected='selected'" : null).">".$text['label-false']."</option>\n";
 		echo "    </select>\n";
 		echo "<br />\n";
 		echo $text['description-voicemail_local_after_email']."\n";
