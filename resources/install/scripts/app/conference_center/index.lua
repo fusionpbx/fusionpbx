@@ -1,6 +1,6 @@
 --	conference_center/index.lua
 --	Part of FusionPBX
---	Copyright (C) 2013 - 2014 Mark J Crane <markjcrane@fusionpbx.com>
+--	Copyright (C) 2013 - 2015 Mark J Crane <markjcrane@fusionpbx.com>
 --	All rights reserved.
 --
 --	Redistribution and use in source and binary forms, with or without
@@ -365,7 +365,7 @@
 				AND conference_center_extension = ']] .. destination_number .. [[']];
 			status = dbh:query(sql, function(row)
 				conference_center_uuid = string.lower(row["conference_center_uuid"]);
-				conference_center_greeting = string.lower(row["conference_center_greeting"]);
+				conference_center_greeting = row["conference_center_greeting"];
 			end);
 			if (conference_center_greeting == '') then
 				conference_center_greeting = sounds_dir.."/"..default_language.."/"..default_dialect.."/"..default_voice.."/conference/conf-pin.wav";
