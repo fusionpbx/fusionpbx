@@ -106,12 +106,17 @@
 	end
 
 --set the ringback
-	if (ivr_menu_ringback) then
-		ringback = string.gsub(ivr_menu_ringback, "^${*(.-)%}*$", "%1");
-		ringback = api:executeString("global_getvar "..ringback);
-		session:setVariable("ringback", ringback);
-		session:setVariable("transfer_ringback", ringback);
+	if (ivr_menu_ringback == nil) then
+		ivr_menu_ringback = "us-ring";
+	else
+		if (string.len(trim(ivr_menu_ringback)) == 0) then
+			ivr_menu_ringback = "us-ring";
+		end
 	end
+	ringback = string.gsub(ivr_menu_ringback, "^${*(.-)%}*$", "%1");
+	ringback = api:executeString("global_getvar "..ringback);
+	session:setVariable("ringback", ringback);
+	session:setVariable("transfer_ringback", ringback);
 
 --get the sounds dir, language, dialect and voice
 	sounds_dir = session:getVariable("sounds_dir");
