@@ -238,4 +238,21 @@
 		$text['message-required']['pt-pt'] = "Por favor indique: ";
 		$text['message-required']['fr-fr'] = "Merci d'indiquer: ";
 
+//------ app specific ------
+
+		$text['option-voicemail_file_attach']['en-us'] = "Audio File Attachment";
+		$text['option-voicemail_file_attach']['es-cl'] = "Archivo Adjunto Audio";
+		$text['option-voicemail_file_attach']['pt-pt'] = "Anexo de arquivo de áudio";
+		$text['option-voicemail_file_attach']['fr-fr'] = "Audio File Attachment";
+
+		$text['option-voicemail_file_link']['en-us'] = "Download Link (No Login Required)";
+		$text['option-voicemail_file_link']['es-cl'] = "Enlace de descarga (No se requiere conexión)";
+		$text['option-voicemail_file_link']['pt-pt'] = "Link para download (Não é necessário login)";
+		$text['option-voicemail_file_link']['fr-fr'] = "Lien de téléchargement (Connexion non requise)";
+
+		$text['option-voicemail_file_listen']['en-us'] = "Listen Link (Login Required)";
+		$text['option-voicemail_file_listen']['es-cl'] = "Escuchar Link (Se requiere entrar)";
+		$text['option-voicemail_file_listen']['pt-pt'] = "Ouça Link (login requerido)";
+		$text['option-voicemail_file_listen']['fr-fr'] = "Écouter Link (Connexion requise)";
+
 ?>
