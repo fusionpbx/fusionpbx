@@ -421,11 +421,10 @@ else {
 				unset($recording_file_path);
 			}
 
-			if ((if_group("admin") || if_group("superadmin") || if_group("cdr")) && $_GET['showall']) {
-				$tr_link .= "href='xml_cdr_details.php?uuid=".$row['uuid']."&showall=true'";
-			} elseif (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
-				$tr_link .= "href='xml_cdr_details.php?uuid=".$row['uuid']."'";
-			} else {
+			if (if_group("admin") || if_group("superadmin") || if_group("cdr")) {
+				$tr_link = "href='xml_cdr_details.php?uuid=".$row['uuid'].(($_GET['showall']) ? "&showall=true" : null)."'";
+			}
+			else {
 				$tr_link = null;
 			}
 			echo "<tr ".$tr_link.">\n";
