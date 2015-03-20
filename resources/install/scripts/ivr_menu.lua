@@ -105,18 +105,30 @@
 		end
 	end
 
---set the ringback
-	if (ivr_menu_ringback == nil) then
-		ivr_menu_ringback = "us-ring";
-	else
-		if (string.len(trim(ivr_menu_ringback)) == 0) then
-			ivr_menu_ringback = "us-ring";
-		end
+--set ringback
+	if (ivr_menu_ringback == "${uk-ring}") then
+		ivr_menu_ringback = "tone_stream://%(400,200,400,450);%(400,2200,400,450);loops=-1";
 	end
-	ringback = string.gsub(ivr_menu_ringback, "^${*(.-)%}*$", "%1");
-	ringback = api:executeString("global_getvar "..ringback);
-	session:setVariable("ringback", ringback);
-	session:setVariable("transfer_ringback", ringback);
+	if (ivr_menu_ringback == "${us-ring}") then
+		ivr_menu_ringback = "tone_stream://%(2000,4000,440.0,480.0);loops=-1";
+	end
+	if (ivr_menu_ringback == "${pt-ring}") then
+		ivr_menu_ringback = "tone_stream://%(1000,5000,400.0,0.0);loops=-1";
+	end
+	if (ivr_menu_ringback == "${fr-ring}") then
+		ivr_menu_ringback = "tone_stream://%(1500,3500,440.0,0.0);loops=-1";
+	end
+	if (ivr_menu_ringback == "${rs-ring}") then
+		ivr_menu_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
+	end
+	if (ivr_menu_ringback == "${it-ring}") then
+		ivr_menu_ringback = "tone_stream://%(1000,4000,425.0,0.0);loops=-1";
+	end
+	if (ivr_menu_ringback == nil or ivr_menu_ringback == "") then
+		ivr_menu_ringback = "local_stream://default";
+	end
+	session:setVariable("ringback", ivr_menu_ringback);
+	session:setVariable("transfer_ringback", ivr_menu_ringback);
 
 --get the sounds dir, language, dialect and voice
 	sounds_dir = session:getVariable("sounds_dir");
