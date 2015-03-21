@@ -40,56 +40,63 @@
 		}
 		*/
 
-		//add cdr -> format and cdr -> storage to default settings
-			$sql = "select count(*) as num_rows from v_default_settings ";
-			$sql .= "where default_setting_category = 'cdr' ";
-			$sql .= "and default_setting_subcategory = 'format' ";
-			$sql .= "and default_setting_name = 'text' ";
-			$prep_statement = $db->prepare($sql);
-			if ($prep_statement) {
-				$prep_statement->execute();
-				$row = $prep_statement->fetch(PDO::FETCH_ASSOC);
-				unset($prep_statement);
-				if ($row['num_rows'] == 0) {
-					$x = 0;
-					$array[$x]['default_setting_category'] = 'cdr';
-					$array[$x]['default_setting_subcategory'] = 'format';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = 'json';
-					$array[$x]['default_setting_enabled'] = 'true';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'cdr';
-					$array[$x]['default_setting_subcategory'] = 'storage';
-					$array[$x]['default_setting_name'] = 'text';
-					$array[$x]['default_setting_value'] = 'db';
-					$array[$x]['default_setting_enabled'] = 'true';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'cdr';
-					$array[$x]['default_setting_subcategory'] = 'limit';
-					$array[$x]['default_setting_name'] = 'numeric';
-					$array[$x]['default_setting_value'] = '800';
-					$array[$x]['default_setting_enabled'] = 'true';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$array[$x]['default_setting_category'] = 'cdr';
-					$array[$x]['default_setting_subcategory'] = 'http_enabled';
-					$array[$x]['default_setting_name'] = 'boolean';
-					$array[$x]['default_setting_value'] = 'true';
-					$array[$x]['default_setting_enabled'] = 'true';
-					$array[$x]['default_setting_description'] = '';
-					$x++;
-					$orm = new orm;
-					$orm->name('default_settings');
-					foreach ($array as $index => $null) {
-						$orm->save($array[$index]);
-					}
-					$message = $orm->message;
-					//print_r($message);
+		//add CDR settings to default settings
+		$x = 0;
+		$array[$x]['default_setting_category'] = 'cdr';
+		$array[$x]['default_setting_subcategory'] = 'format';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'json';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'cdr';
+		$array[$x]['default_setting_subcategory'] = 'storage';
+		$array[$x]['default_setting_name'] = 'text';
+		$array[$x]['default_setting_value'] = 'db';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'cdr';
+		$array[$x]['default_setting_subcategory'] = 'limit';
+		$array[$x]['default_setting_name'] = 'numeric';
+		$array[$x]['default_setting_value'] = '800';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
+		$array[$x]['default_setting_category'] = 'cdr';
+		$array[$x]['default_setting_subcategory'] = 'http_enabled';
+		$array[$x]['default_setting_name'] = 'boolean';
+		$array[$x]['default_setting_value'] = 'true';
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+
+		$sql = "select * from v_default_settings ";
+		$sql .= "where default_setting_category = 'cdr' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$default_settings = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+
+		$x = 0;
+		foreach ($array as $row) {
+			$found = false;
+			foreach ($default_settings as $field) {
+				if ($row['default_setting_subcategory'] == $field['default_setting_subcategory']) {
+					$found = true;
+					$break;
 				}
-				unset($row);
 			}
+			if (!$found) {
+				$orm = new orm;
+				$orm->name('default_settings');
+				$orm->save($array[$x]);
+				$message = $orm->message;
+			}
+			$x++;
+		}
+
+
+
+
 	}
 
 ?>
