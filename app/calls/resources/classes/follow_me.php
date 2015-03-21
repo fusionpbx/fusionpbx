@@ -25,6 +25,7 @@
 	Luis Daniel Lucio Quiroz <dlucio@okay.com.mx>
 	Salvatore Caruso <salvatore.caruso@nems.it>
 	Riccardo Granchi <riccardo.granchi@nems.it>
+	Errol Samuels <voiptology@gmail.com>
 */
 include "root.php";
 
@@ -372,7 +373,7 @@ include "root.php";
 						}
 
 						if (strlen($this->accountcode) > 0) {
-							$dial_string .= ",accountcode=".$this->accountcode;
+							$dial_string .= ",sip_h_X-accountcode=".$this->accountcode;
 						}
 						$dial_string .= "}";
 						$x = 0;
