@@ -86,7 +86,7 @@ include "root.php";
 							if (strlen($row_caller['destination_number']) > 0) {
 								$dial_string_caller_id_number = $row_caller['destination_number'];
 								$dial_string .= ",origination_caller_id_number=$dial_string_caller_id_number";
-								$dial_string .= ",outbound_caller_id_number=$dial_string_caller_id_number";			
+								$dial_string .= ",outbound_caller_id_number=$dial_string_caller_id_number";
 							}
 						}
 					}
@@ -96,13 +96,19 @@ include "root.php";
 						$dial_string .= "user/".$this->forward_all_destination."@".$_SESSION['domain_name'];
 					}
 					else {
-						$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $this->forward_all_destination);
-						//if (strlen($bridge[0]) > 0) {
-						//	$dial_string .= $bridge[0];
-						//}
-						//else {
+						if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
+							$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $this->forward_all_destination);
+							$dial_string .= $bridge[0];
+						}
+						elseif ($_SESSION['domain']['bridge']['text'] == "lcr") {
+							$dial_string .= "lcr/".$_SESSION['lcr']['profile']['text']."/".$_SESSION['domain_name']."/".$this->forward_all_destination;
+						}
+						elseif ($_SESSION['domain']['bridge']['text'] === "loopback") {
 							$dial_string .= "loopback/".$this->forward_all_destination;
-						//}
+						}
+						else {
+							$dial_string .= "loopback/".$this->forward_all_destination;
+						}
 					}
 					$this->dial_string = $dial_string;
 				}
