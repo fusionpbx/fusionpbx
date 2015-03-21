@@ -84,6 +84,12 @@
 			$match_result = str_replace(">", "&gt;", $match_result);
 			$xml_string = str_replace($matches[1], $match_result, $xml_string);
 
+		//fix the xml by escaping the contents of <sip_invite_record_route>
+			preg_match("/<sip_invite_record_route>(.*)<\/sip_invite_record_route>/", $xml_string, $matches);
+			$match_result = str_replace("<", "&lt;", $matches[1]);
+			$match_result = str_replace(">", "&gt;", $match_result);
+			$xml_string = str_replace($matches[1], $match_result, $xml_string);
+
 		//parse the xml to get the call detail record info
 			try {
 				$xml = simplexml_load_string($xml_string);
