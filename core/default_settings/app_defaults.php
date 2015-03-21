@@ -24,7 +24,7 @@
 	Mark J Crane <markjcrane@fusionpbx.com>
 */
 
-//proccess this only one time
+//process this only one time
 if ($domains_processed == 1) {
 
 	//ensure that the language code is set
