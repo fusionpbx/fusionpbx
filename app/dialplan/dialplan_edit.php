@@ -51,16 +51,18 @@ else {
 	$text = $language->get();
 
 //set the action as an add or an update
-	if (isset($_REQUEST["id"])) {
+	if (is_uuid($_REQUEST["id"])) {
 		$action = "update";
-		$dialplan_uuid = check_str($_REQUEST["id"]);
+		$dialplan_uuid = $_REQUEST["id"];
 	}
 	else {
 		$action = "add";
 	}
 
 //get the app uuid
-	$app_uuid = check_str($_REQUEST["app_uuid"]);
+	if (is_uuid($_REQUEST["app_uuid"])) {
+		$app_uuid = $_REQUEST["app_uuid"];
+	}
 
 //get the http post values and set them as php variables
 	if (count($_POST) > 0) {
@@ -172,12 +174,11 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 //pre-populate the form
 	if (count($_GET) > 0 && $_POST["persistformvar"] != "true") {
-		$dialplan_uuid = $_GET["id"];
-		$orm = new orm;
-		$orm->name('dialplans');
-		$orm->uuid($dialplan_uuid);
-		$result = $orm->find()->get();
-		//$message = $orm->message;
+		$sql = "select * from v_dialplans ";
+		$sql .= "where dialplan_uuid = '$dialplan_uuid' ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$result = $prep_statement->fetchAll(PDO::FETCH_NAMED);
 		foreach ($result as &$row) {
 			$domain_uuid = $row["domain_uuid"];
 			//$app_uuid = $row["app_uuid"];
