@@ -417,7 +417,7 @@ include "root.php";
 								$dial_string .= "leg_delay_start=".$row["follow_me_delay"].",";
 								$dial_string .= "leg_timeout=".$row["follow_me_timeout"]."]";
 								if (is_numeric($row["follow_me_destination"])) {
-									if ($_SESSION['domain']['bridge']['text'] == "outbound") {
+									if ($_SESSION['domain']['bridge']['text'] == "outbound" || $_SESSION['domain']['bridge']['text'] == "bridge") {
 										$bridge = outbound_route_to_bridge ($_SESSION['domain_uuid'], $row["follow_me_destination"]);
 										$dial_string .= $bridge[0].",";
 									}
@@ -425,7 +425,7 @@ include "root.php";
 										$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
 									}
 									elseif ($_SESSION['domain']['bridge']['text'] == "lcr") {
-										$dial_string .= "lcr/".$_SESSION['lcr']['profile']['text']."/".$_SESSION['domain_name'];
+										$dial_string .= "lcr/".$_SESSION['lcr']['profile']['text']."/".$_SESSION['domain_name']."/".$row["follow_me_destination"];
 									}
 									else {
 										$dial_string .= "loopback/".$row["follow_me_destination"]."/".$_SESSION['domain_name'];
