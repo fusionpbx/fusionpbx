@@ -2172,436 +2172,436 @@ if (!function_exists('save_call_center_xml')) {
 	function save_call_center_xml() {
 		global $db, $domain_uuid;
 
-		//include the classes
-		include "app/dialplan/resources/classes/dialplan.php";
+		if (strlen($_SESSION['switch']['call_center']['dir']) > 0) {
+			//include the classes
+			include "app/dialplan/resources/classes/dialplan.php";
 
-		$sql = "select * from v_call_center_queues ";
-		$prep_statement = $db->prepare(check_sql($sql));
-		$prep_statement->execute();
-		$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-		$result_count = count($result);
-		unset ($prep_statement, $sql);
-		if ($result_count > 0) { //found results
-			foreach($result as $row) {
-				//set the variables
-					$call_center_queue_uuid = $row["call_center_queue_uuid"];
-					$domain_uuid = $row["domain_uuid"];
-					$dialplan_uuid = $row["dialplan_uuid"];
-					$queue_name = check_str($row["queue_name"]);
-					$queue_extension = $row["queue_extension"];
-					$queue_strategy = $row["queue_strategy"];
-					$queue_moh_sound = $row["queue_moh_sound"];
-					$queue_record_template = $row["queue_record_template"];
-					$queue_time_base_score = $row["queue_time_base_score"];
-					$queue_max_wait_time = $row["queue_max_wait_time"];
-					$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
-					$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
-					$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
-					$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
-					$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
-					$queue_timeout_action = $row["queue_timeout_action"];
-					$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
-					$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
-					$queue_cid_prefix = $row["queue_cid_prefix"];
-					$queue_announce_sound = $row["queue_announce_sound"];
-					$queue_announce_frequency = $row["queue_announce_frequency"];
-					$queue_description = check_str($row["queue_description"]);
+			$sql = "select * from v_call_center_queues ";
+			$prep_statement = $db->prepare(check_sql($sql));
+			$prep_statement->execute();
+			$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+			$result_count = count($result);
+			unset ($prep_statement, $sql);
+			if ($result_count > 0) {
+				foreach($result as $row) {
+					//set the variables
+						$call_center_queue_uuid = $row["call_center_queue_uuid"];
+						$domain_uuid = $row["domain_uuid"];
+						$dialplan_uuid = $row["dialplan_uuid"];
+						$queue_name = check_str($row["queue_name"]);
+						$queue_extension = $row["queue_extension"];
+						$queue_strategy = $row["queue_strategy"];
+						$queue_moh_sound = $row["queue_moh_sound"];
+						$queue_record_template = $row["queue_record_template"];
+						$queue_time_base_score = $row["queue_time_base_score"];
+						$queue_max_wait_time = $row["queue_max_wait_time"];
+						$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
+						$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
+						$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
+						$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
+						$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
+						$queue_timeout_action = $row["queue_timeout_action"];
+						$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
+						$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
+						$queue_cid_prefix = $row["queue_cid_prefix"];
+						$queue_announce_sound = $row["queue_announce_sound"];
+						$queue_announce_frequency = $row["queue_announce_frequency"];
+						$queue_description = check_str($row["queue_description"]);
 
-				//replace space with an underscore
-					$queue_name = str_replace(" ", "_", $queue_name);
+					//replace space with an underscore
+						$queue_name = str_replace(" ", "_", $queue_name);
 
-				//add each Queue to the dialplan
-					if (strlen($row['call_center_queue_uuid']) > 0) {
-						$action = 'add'; //set default action to add
-						$i = 0;
+					//add each Queue to the dialplan
+						if (strlen($row['call_center_queue_uuid']) > 0) {
+							$action = 'add'; //set default action to add
+							$i = 0;
 
-						//determine the action add or update
-						if (strlen($dialplan_uuid) > 0) {
-							$sql = "select * from v_dialplans ";
-							$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
-							$prep_statement_2 = $db->prepare($sql);
-							$prep_statement_2->execute();
-							while($row2 = $prep_statement_2->fetch(PDO::FETCH_ASSOC)) {
-								$action = 'update';
+							//determine the action add or update
+							if (strlen($dialplan_uuid) > 0) {
+								$sql = "select * from v_dialplans ";
+								$sql .= "where dialplan_uuid = '".$dialplan_uuid."' ";
+								$prep_statement_2 = $db->prepare($sql);
+								$prep_statement_2->execute();
+								while($row2 = $prep_statement_2->fetch(PDO::FETCH_ASSOC)) {
+									$action = 'update';
+								}
+								unset ($sql, $prep_statement_2);
 							}
-							unset ($sql, $prep_statement_2);
-						}
 
-						if ($action == 'add') {
-							//create queue entry in the dialplan
-								$dialplan_name = $queue_name;
-								$dialplan_order ='210';
-								$dialplan_context = $_SESSION['context'];
-								$dialplan_enabled = 'true';
-								$dialplan_description = $queue_description;
-								$app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
-								$dialplan_uuid = uuid();
-								dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
+							if ($action == 'add') {
+								//create queue entry in the dialplan
+									$dialplan_name = $queue_name;
+									$dialplan_order ='210';
+									$dialplan_context = $_SESSION['context'];
+									$dialplan_enabled = 'true';
+									$dialplan_description = $queue_description;
+									$app_uuid = '95788e50-9500-079e-2807-fd530b0ea370';
+									$dialplan_uuid = uuid();
+									dialplan_add($domain_uuid, $dialplan_uuid, $dialplan_name, $dialplan_order, $dialplan_context, $dialplan_enabled, $dialplan_description, $app_uuid);
 
-							//add the dialplan_uuid to the call center table
-								$sql = "update v_call_center_queues set ";
-								$sql .= "dialplan_uuid = '$dialplan_uuid' ";
-								$sql .= "where domain_uuid = '$domain_uuid' ";
-								$sql .= "and call_center_queue_uuid = '".$row['call_center_queue_uuid']."' ";
-								$db->exec(check_sql($sql));
-								unset($sql);
-						}
-						if ($action == 'update') {
-							//add the dialplan_uuid to the call center table
-								$sql = "update v_dialplans set ";
-								$sql .= "dialplan_name = '".$queue_name."', ";
-								$sql .= "dialplan_description = '".$queue_description."' ";
-								$sql .= "where domain_uuid = '".$domain_uuid."' ";
-								$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
-								$db->exec(check_sql($sql));
-								unset($sql);
+								//add the dialplan_uuid to the call center table
+									$sql = "update v_call_center_queues set ";
+									$sql .= "dialplan_uuid = '$dialplan_uuid' ";
+									$sql .= "where domain_uuid = '$domain_uuid' ";
+									$sql .= "and call_center_queue_uuid = '".$row['call_center_queue_uuid']."' ";
+									$db->exec(check_sql($sql));
+									unset($sql);
+							}
+							if ($action == 'update') {
+								//add the dialplan_uuid to the call center table
+									$sql = "update v_dialplans set ";
+									$sql .= "dialplan_name = '".$queue_name."', ";
+									$sql .= "dialplan_description = '".$queue_description."' ";
+									$sql .= "where domain_uuid = '".$domain_uuid."' ";
+									$sql .= "and dialplan_uuid = '".$dialplan_uuid."' ";
+									$db->exec(check_sql($sql));
+									unset($sql);
 
-							//add the dialplan_uuid to the call center table
-								$sql = "delete from v_dialplan_details ";
-								$sql .= "where domain_uuid = '$domain_uuid' ";
-								$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
-								$db->exec(check_sql($sql));
-								unset($sql);
-						}
+								//add the dialplan_uuid to the call center table
+									$sql = "delete from v_dialplan_details ";
+									$sql .= "where domain_uuid = '$domain_uuid' ";
+									$sql .= "and dialplan_uuid = '$dialplan_uuid' ";
+									$db->exec(check_sql($sql));
+									unset($sql);
+							}
 
-						//group 1
-							$dialplan = new dialplan;
-							$dialplan->domain_uuid = $domain_uuid;
-							$dialplan->dialplan_uuid = $dialplan_uuid;
-							$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
-							$dialplan->dialplan_detail_type = '${caller_id_name}';
-							$dialplan->dialplan_detail_data = '^([^#]+#)(.*)$';
-							$dialplan->dialplan_detail_break = 'never';
-							$dialplan->dialplan_detail_inline = '';
-							$dialplan->dialplan_detail_group = '1';
-							$dialplan->dialplan_detail_order = '010';
-							$dialplan->dialplan_detail_add();
-							unset($dialplan);
+							//group 1
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = '${caller_id_name}';
+								$dialplan->dialplan_detail_data = '^([^#]+#)(.*)$';
+								$dialplan->dialplan_detail_break = 'never';
+								$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '1';
+								$dialplan->dialplan_detail_order = '010';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
 
-							$dialplan = new dialplan;
-							$dialplan->domain_uuid = $domain_uuid;
-							$dialplan->dialplan_uuid = $dialplan_uuid;
-							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan->dialplan_detail_type = 'set';
-							$dialplan->dialplan_detail_data = 'caller_id_name=$2';
-							$dialplan->dialplan_detail_break = '';
-							$dialplan->dialplan_detail_inline = '';
-							$dialplan->dialplan_detail_group = '1';
-							$dialplan->dialplan_detail_order = '020';
-							$dialplan->dialplan_detail_add();
-							unset($dialplan);
-
-						//group 2
-							$dialplan = new dialplan;
-							$dialplan->domain_uuid = $domain_uuid;
-							$dialplan->dialplan_uuid = $dialplan_uuid;
-							$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
-							$dialplan->dialplan_detail_type = 'destination_number';
-							$dialplan->dialplan_detail_data = '^'.$row['queue_extension'].'$';
-							$dialplan->dialplan_detail_break = '';
-							$dialplan->dialplan_detail_inline = '';
-							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '010';
-							$dialplan->dialplan_detail_add();
-							unset($dialplan);
-
-							$dialplan = new dialplan;
-							$dialplan->domain_uuid = $domain_uuid;
-							$dialplan->dialplan_uuid = $dialplan_uuid;
-							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan->dialplan_detail_type = 'answer';
-							$dialplan->dialplan_detail_data = '';
-							$dialplan->dialplan_detail_break = '';
-							$dialplan->dialplan_detail_inline = '';
-							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '020';
-							$dialplan->dialplan_detail_add();
-							unset($dialplan);
-
-							$dialplan = new dialplan;
-							$dialplan->domain_uuid = $domain_uuid;
-							$dialplan->dialplan_uuid = $dialplan_uuid;
-							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan->dialplan_detail_type = 'set';
-							$dialplan->dialplan_detail_data = 'hangup_after_bridge=true';
-							$dialplan->dialplan_detail_break = '';
-							$dialplan->dialplan_detail_inline = '';
-							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '030';
-							$dialplan->dialplan_detail_add();
-							unset($dialplan);
-
-							if (strlen($queue_cid_prefix) > 0) {
 								$dialplan = new dialplan;
 								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
 								$dialplan->dialplan_detail_type = 'set';
-								$dialplan->dialplan_detail_data = "effective_caller_id_name=".$queue_cid_prefix."-\${caller_id_name}";
+								$dialplan->dialplan_detail_data = 'caller_id_name=$2';
+								$dialplan->dialplan_detail_break = '';
+								$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '1';
+								$dialplan->dialplan_detail_order = '020';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
+
+							//group 2
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'condition'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'destination_number';
+								$dialplan->dialplan_detail_data = '^'.$row['queue_extension'].'$';
 								$dialplan->dialplan_detail_break = '';
 								$dialplan->dialplan_detail_inline = '';
 								$dialplan->dialplan_detail_group = '2';
-								$dialplan->dialplan_detail_order = '040';
+								$dialplan->dialplan_detail_order = '010';
 								$dialplan->dialplan_detail_add();
 								unset($dialplan);
-							}
 
-							$dialplan = new dialplan;
-							$dialplan->domain_uuid = $domain_uuid;
-							$dialplan->dialplan_uuid = $dialplan_uuid;
-							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan->dialplan_detail_type = 'callcenter';
-							$dialplan->dialplan_detail_data = $queue_name."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
-							$dialplan->dialplan_detail_break = '';
-							$dialplan->dialplan_detail_inline = '';
-							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '050';
-							$dialplan->dialplan_detail_add();
-							unset($dialplan);
-
-							if (strlen($queue_timeout_action) > 0) {
-								$action_array = explode(":",$queue_timeout_action);
 								$dialplan = new dialplan;
 								$dialplan->domain_uuid = $domain_uuid;
 								$dialplan->dialplan_uuid = $dialplan_uuid;
 								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-								$dialplan->dialplan_detail_type = $action_array[0];
-								$dialplan->dialplan_detail_data = substr($queue_timeout_action, strlen($action_array[0])+1, strlen($queue_timeout_action));
+								$dialplan->dialplan_detail_type = 'answer';
+								$dialplan->dialplan_detail_data = '';
 								$dialplan->dialplan_detail_break = '';
 								$dialplan->dialplan_detail_inline = '';
 								$dialplan->dialplan_detail_group = '2';
-								$dialplan->dialplan_detail_order = '060';
+								$dialplan->dialplan_detail_order = '020';
 								$dialplan->dialplan_detail_add();
 								unset($dialplan);
-							}
 
-							$dialplan = new dialplan;
-							$dialplan->domain_uuid = $domain_uuid;
-							$dialplan->dialplan_uuid = $dialplan_uuid;
-							$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
-							$dialplan->dialplan_detail_type = 'hangup';
-							$dialplan->dialplan_detail_data = '';
-							$dialplan->dialplan_detail_break = '';
-							$dialplan->dialplan_detail_inline = '';
-							$dialplan->dialplan_detail_group = '2';
-							$dialplan->dialplan_detail_order = '070';
-							$dialplan->dialplan_detail_add();
-							unset($dialplan);
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'set';
+								$dialplan->dialplan_detail_data = 'hangup_after_bridge=true';
+								$dialplan->dialplan_detail_break = '';
+								$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '030';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
 
-						//synchronize the xml config
-							save_dialplan_xml();
+								if (strlen($queue_cid_prefix) > 0) {
+									$dialplan = new dialplan;
+									$dialplan->domain_uuid = $domain_uuid;
+									$dialplan->dialplan_uuid = $dialplan_uuid;
+									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+									$dialplan->dialplan_detail_type = 'set';
+									$dialplan->dialplan_detail_data = "effective_caller_id_name=".$queue_cid_prefix."-\${caller_id_name}";
+									$dialplan->dialplan_detail_break = '';
+									$dialplan->dialplan_detail_inline = '';
+									$dialplan->dialplan_detail_group = '2';
+									$dialplan->dialplan_detail_order = '040';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
+								}
 
-						//unset variables
-							unset($action);
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'callcenter';
+								$dialplan->dialplan_detail_data = $queue_name."@".$_SESSION['domains'][$domain_uuid]['domain_name'];
+								$dialplan->dialplan_detail_break = '';
+								$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '050';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
 
-					} //end if strlen call_center_queue_uuid; add the call center queue to the dialplan
-			}
+								if (strlen($queue_timeout_action) > 0) {
+									$action_array = explode(":",$queue_timeout_action);
+									$dialplan = new dialplan;
+									$dialplan->domain_uuid = $domain_uuid;
+									$dialplan->dialplan_uuid = $dialplan_uuid;
+									$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+									$dialplan->dialplan_detail_type = $action_array[0];
+									$dialplan->dialplan_detail_data = substr($queue_timeout_action, strlen($action_array[0])+1, strlen($queue_timeout_action));
+									$dialplan->dialplan_detail_break = '';
+									$dialplan->dialplan_detail_inline = '';
+									$dialplan->dialplan_detail_group = '2';
+									$dialplan->dialplan_detail_order = '060';
+									$dialplan->dialplan_detail_add();
+									unset($dialplan);
+								}
 
-			//prepare Queue XML string
-				$v_queues = '';
-				$sql = "select * from v_call_center_queues ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				$x=0;
-				foreach ($result as &$row) {
-					$queue_name = $row["queue_name"];
-					$queue_extension = $row["queue_extension"];
-					$queue_strategy = $row["queue_strategy"];
-					$queue_moh_sound = $row["queue_moh_sound"];
-					$queue_record_template = $row["queue_record_template"];
-					$queue_time_base_score = $row["queue_time_base_score"];
-					$queue_max_wait_time = $row["queue_max_wait_time"];
-					$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
-					$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
-					$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
-					$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
-					$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
-					$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
-					$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
-					$queue_announce_sound = $row["queue_announce_sound"];
-					$queue_announce_frequency = $row ["queue_announce_frequency"];
-					$queue_description = $row["queue_description"];
-					if ($x > 0) {
-						$v_queues .= "\n";
-						$v_queues .= "		";
-					}
-					$v_queues .= "<queue name=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\">\n";
-					$v_queues .= "			<param name=\"strategy\" value=\"$queue_strategy\"/>\n";
-					if (strlen($queue_moh_sound) == 0) {
-						$v_queues .= "			<param name=\"moh-sound\" value=\"local_stream://default\"/>\n";
-					}
-					else {
-						if (substr($queue_moh_sound, 0, 15) == 'local_stream://') {
-							$v_queues .= "			<param name=\"moh-sound\" value=\"".$queue_moh_sound."\"/>\n";
+								$dialplan = new dialplan;
+								$dialplan->domain_uuid = $domain_uuid;
+								$dialplan->dialplan_uuid = $dialplan_uuid;
+								$dialplan->dialplan_detail_tag = 'action'; //condition, action, antiaction
+								$dialplan->dialplan_detail_type = 'hangup';
+								$dialplan->dialplan_detail_data = '';
+								$dialplan->dialplan_detail_break = '';
+								$dialplan->dialplan_detail_inline = '';
+								$dialplan->dialplan_detail_group = '2';
+								$dialplan->dialplan_detail_order = '070';
+								$dialplan->dialplan_detail_add();
+								unset($dialplan);
+
+							//synchronize the xml config
+								save_dialplan_xml();
+
+							//unset variables
+								unset($action);
+
+						} //end if strlen call_center_queue_uuid; add the call center queue to the dialplan
+				}
+
+				//prepare Queue XML string
+					$v_queues = '';
+					$sql = "select * from v_call_center_queues ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					$x=0;
+					foreach ($result as &$row) {
+						$queue_name = $row["queue_name"];
+						$queue_extension = $row["queue_extension"];
+						$queue_strategy = $row["queue_strategy"];
+						$queue_moh_sound = $row["queue_moh_sound"];
+						$queue_record_template = $row["queue_record_template"];
+						$queue_time_base_score = $row["queue_time_base_score"];
+						$queue_max_wait_time = $row["queue_max_wait_time"];
+						$queue_max_wait_time_with_no_agent = $row["queue_max_wait_time_with_no_agent"];
+						$queue_tier_rules_apply = $row["queue_tier_rules_apply"];
+						$queue_tier_rule_wait_second = $row["queue_tier_rule_wait_second"];
+						$queue_tier_rule_wait_multiply_level = $row["queue_tier_rule_wait_multiply_level"];
+						$queue_tier_rule_no_agent_no_wait = $row["queue_tier_rule_no_agent_no_wait"];
+						$queue_discard_abandoned_after = $row["queue_discard_abandoned_after"];
+						$queue_abandoned_resume_allowed = $row["queue_abandoned_resume_allowed"];
+						$queue_announce_sound = $row["queue_announce_sound"];
+						$queue_announce_frequency = $row ["queue_announce_frequency"];
+						$queue_description = $row["queue_description"];
+						if ($x > 0) {
+							$v_queues .= "\n";
+							$v_queues .= "		";
 						}
-						elseif (substr($queue_moh_sound, 0, 2) == '${' && substr($queue_moh_sound, -5) == 'ring}') {
-							$v_queues .= "			<param name=\"moh-sound\" value=\"tone_stream://".$queue_moh_sound.";loops=-1\"/>\n";
+						$v_queues .= "<queue name=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\">\n";
+						$v_queues .= "			<param name=\"strategy\" value=\"$queue_strategy\"/>\n";
+						if (strlen($queue_moh_sound) == 0) {
+							$v_queues .= "			<param name=\"moh-sound\" value=\"local_stream://default\"/>\n";
 						}
 						else {
-							$v_queues .= "			<param name=\"moh-sound\" value=\"".$queue_moh_sound."\"/>\n";
-						}
-					}
-					if (strlen($queue_record_template) > 0) {
-						$v_queues .= "			<param name=\"record-template\" value=\"$queue_record_template\"/>\n";
-					}
-					$v_queues .= "			<param name=\"time-base-score\" value=\"$queue_time_base_score\"/>\n";
-					$v_queues .= "			<param name=\"max-wait-time\" value=\"$queue_max_wait_time\"/>\n";
-					$v_queues .= "			<param name=\"max-wait-time-with-no-agent\" value=\"$queue_max_wait_time_with_no_agent\"/>\n";
-					$v_queues .= "			<param name=\"max-wait-time-with-no-agent-time-reached\" value=\"$queue_max_wait_time_with_no_agent_time_reached\"/>\n";
-					$v_queues .= "			<param name=\"tier-rules-apply\" value=\"$queue_tier_rules_apply\"/>\n";
-					$v_queues .= "			<param name=\"tier-rule-wait-second\" value=\"$queue_tier_rule_wait_second\"/>\n";
-					$v_queues .= "			<param name=\"tier-rule-wait-multiply-level\" value=\"$queue_tier_rule_wait_multiply_level\"/>\n";
-					$v_queues .= "			<param name=\"tier-rule-no-agent-no-wait\" value=\"$queue_tier_rule_no_agent_no_wait\"/>\n";
-					$v_queues .= "			<param name=\"discard-abandoned-after\" value=\"$queue_discard_abandoned_after\"/>\n";
-					$v_queues .= "			<param name=\"abandoned-resume-allowed\" value=\"$queue_abandoned_resume_allowed\"/>\n";
-					$v_queues .= "			<param name=\"announce-sound\" value=\"$queue_announce_sound\"/>\n";
-					$v_queues .= "			<param name=\"announce-frequency\" value=\"$queue_announce_frequency\"/>\n";
-					$v_queues .= "		</queue>";
-					$x++;
-				}
-				unset ($prep_statement);
-
-			//prepare Agent XML string
-				$v_agents = '';
-				$sql = "select * from v_call_center_agents ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				$x=0;
-				foreach ($result as &$row) {
-					//get the values from the db and set as php variables
-						$agent_name = $row["agent_name"];
-						$agent_type = $row["agent_type"];
-						$agent_call_timeout = $row["agent_call_timeout"];
-						$agent_contact = $row["agent_contact"];
-						$agent_status = $row["agent_status"];
-						$agent_no_answer_delay_time = $row["agent_no_answer_delay_time"];
-						$agent_max_no_answer = $row["agent_max_no_answer"];
-						$agent_wrap_up_time = $row["agent_wrap_up_time"];
-						$agent_reject_delay_time = $row["agent_reject_delay_time"];
-						$agent_busy_delay_time = $row["agent_busy_delay_time"];
-						if ($x > 0) {
-							$v_agents .= "\n";
-							$v_agents .= "		";
-
-						}
-
-					//get and then set the complete agent_contact with the call_timeout and when necessary confirm
-						//$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
-						//if you change this variable also change app/call_center/call_center_agent_edit.php
-						$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
-						if(strstr($agent_contact, '}') === FALSE) {
-							//not found
-							if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
-								//add the call_timeout
-								$tmp_agent_contact = "{call_timeout=".$agent_call_timeout."}".$agent_contact;
+							if (substr($queue_moh_sound, 0, 15) == 'local_stream://') {
+								$v_queues .= "			<param name=\"moh-sound\" value=\"".$queue_moh_sound."\"/>\n";
+							}
+							elseif (substr($queue_moh_sound, 0, 2) == '${' && substr($queue_moh_sound, -5) == 'ring}') {
+								$v_queues .= "			<param name=\"moh-sound\" value=\"tone_stream://".$queue_moh_sound.";loops=-1\"/>\n";
 							}
 							else {
-								//add the call_timeout and confirm
-								$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
-								$tmp_agent_contact = "{".$tmp_confirm.",call_timeout=".$agent_call_timeout."}".$agent_contact;
+								$v_queues .= "			<param name=\"moh-sound\" value=\"".$queue_moh_sound."\"/>\n";
 							}
 						}
-						else {
-							//found
-							if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
+						if (strlen($queue_record_template) > 0) {
+							$v_queues .= "			<param name=\"record-template\" value=\"$queue_record_template\"/>\n";
+						}
+						$v_queues .= "			<param name=\"time-base-score\" value=\"$queue_time_base_score\"/>\n";
+						$v_queues .= "			<param name=\"max-wait-time\" value=\"$queue_max_wait_time\"/>\n";
+						$v_queues .= "			<param name=\"max-wait-time-with-no-agent\" value=\"$queue_max_wait_time_with_no_agent\"/>\n";
+						$v_queues .= "			<param name=\"max-wait-time-with-no-agent-time-reached\" value=\"$queue_max_wait_time_with_no_agent_time_reached\"/>\n";
+						$v_queues .= "			<param name=\"tier-rules-apply\" value=\"$queue_tier_rules_apply\"/>\n";
+						$v_queues .= "			<param name=\"tier-rule-wait-second\" value=\"$queue_tier_rule_wait_second\"/>\n";
+						$v_queues .= "			<param name=\"tier-rule-wait-multiply-level\" value=\"$queue_tier_rule_wait_multiply_level\"/>\n";
+						$v_queues .= "			<param name=\"tier-rule-no-agent-no-wait\" value=\"$queue_tier_rule_no_agent_no_wait\"/>\n";
+						$v_queues .= "			<param name=\"discard-abandoned-after\" value=\"$queue_discard_abandoned_after\"/>\n";
+						$v_queues .= "			<param name=\"abandoned-resume-allowed\" value=\"$queue_abandoned_resume_allowed\"/>\n";
+						$v_queues .= "			<param name=\"announce-sound\" value=\"$queue_announce_sound\"/>\n";
+						$v_queues .= "			<param name=\"announce-frequency\" value=\"$queue_announce_frequency\"/>\n";
+						$v_queues .= "		</queue>";
+						$x++;
+					}
+					unset ($prep_statement);
+
+				//prepare Agent XML string
+					$v_agents = '';
+					$sql = "select * from v_call_center_agents ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					$x=0;
+					foreach ($result as &$row) {
+						//get the values from the db and set as php variables
+							$agent_name = $row["agent_name"];
+							$agent_type = $row["agent_type"];
+							$agent_call_timeout = $row["agent_call_timeout"];
+							$agent_contact = $row["agent_contact"];
+							$agent_status = $row["agent_status"];
+							$agent_no_answer_delay_time = $row["agent_no_answer_delay_time"];
+							$agent_max_no_answer = $row["agent_max_no_answer"];
+							$agent_wrap_up_time = $row["agent_wrap_up_time"];
+							$agent_reject_delay_time = $row["agent_reject_delay_time"];
+							$agent_busy_delay_time = $row["agent_busy_delay_time"];
+							if ($x > 0) {
+								$v_agents .= "\n";
+								$v_agents .= "		";
+							}
+
+						//get and then set the complete agent_contact with the call_timeout and when necessary confirm
+							//$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1";
+							//if you change this variable also change app/call_center/call_center_agent_edit.php
+							$tmp_confirm = "group_confirm_file=custom/press_1_to_accept_this_call.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=".$agent_call_timeout;
+							if(strstr($agent_contact, '}') === FALSE) {
 								//not found
-								if(stristr($agent_contact, 'call_timeout') === FALSE) {
+								if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
 									//add the call_timeout
-									$tmp_pos = strrpos($agent_contact, "}");
-									$tmp_first = substr($agent_contact, 0, $tmp_pos);
-									$tmp_last = substr($agent_contact, $tmp_pos);
-									$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
+									$tmp_agent_contact = "{call_timeout=".$agent_call_timeout."}".$agent_contact;
 								}
 								else {
-									//the string has the call timeout
-									$tmp_agent_contact = $agent_contact;
+									//add the call_timeout and confirm
+									$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
+									$tmp_agent_contact = "{".$tmp_confirm.",call_timeout=".$agent_call_timeout."}".$agent_contact;
 								}
 							}
 							else {
 								//found
-								$tmp_pos = strrpos($agent_contact, "}");
-								$tmp_first = substr($agent_contact, 0, $tmp_pos);
-								$tmp_last = substr($agent_contact, $tmp_pos);
-								if(stristr($agent_contact, 'call_timeout') === FALSE) {
-									//add the call_timeout and confirm
-									$tmp_agent_contact = $tmp_first.','.$tmp_confirm.',call_timeout='.$agent_call_timeout.$tmp_last;
+								if(stristr($agent_contact, 'sofia/gateway') === FALSE) {
+									//not found
+									if(stristr($agent_contact, 'call_timeout') === FALSE) {
+										//add the call_timeout
+										$tmp_pos = strrpos($agent_contact, "}");
+										$tmp_first = substr($agent_contact, 0, $tmp_pos);
+										$tmp_last = substr($agent_contact, $tmp_pos);
+										$tmp_agent_contact = $tmp_first.',call_timeout='.$agent_call_timeout.$tmp_last;
+									}
+									else {
+										//the string has the call timeout
+										$tmp_agent_contact = $agent_contact;
+									}
 								}
 								else {
-									//add confirm
-									$tmp_agent_contact = $tmp_first.','.$tmp_confirm.$tmp_last;
+									//found
+									$tmp_pos = strrpos($agent_contact, "}");
+									$tmp_first = substr($agent_contact, 0, $tmp_pos);
+									$tmp_last = substr($agent_contact, $tmp_pos);
+									if(stristr($agent_contact, 'call_timeout') === FALSE) {
+										//add the call_timeout and confirm
+										$tmp_agent_contact = $tmp_first.','.$tmp_confirm.',call_timeout='.$agent_call_timeout.$tmp_last;
+									}
+									else {
+										//add confirm
+										$tmp_agent_contact = $tmp_first.','.$tmp_confirm.$tmp_last;
+									}
 								}
 							}
-						}
 
-					$v_agents .= "<agent ";
-					$v_agents .= "name=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" ";
-					$v_agents .= "type=\"$agent_type\" ";
-					$v_agents .= "contact=\"$tmp_agent_contact\" ";
-					$v_agents .= "status=\"$agent_status\" ";
-					$v_agents .= "no-answer-delay-time=\"$agent_no_answer_delay_time\" ";
-					$v_agents .= "max-no-answer=\"$agent_max_no_answer\" ";
-					$v_agents .= "wrap-up-time=\"$agent_wrap_up_time\" ";
-					$v_agents .= "reject-delay-time=\"$agent_reject_delay_time\" ";
-					$v_agents .= "busy-delay-time=\"$agent_busy_delay_time\" ";
-					$v_agents .= "/>";
-					$x++;
-				}
-				unset ($prep_statement);
-
-			//prepare Tier XML string
-				$v_tiers = '';
-				$sql = "select * from v_call_center_tiers ";
-				$prep_statement = $db->prepare(check_sql($sql));
-				$prep_statement->execute();
-				$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
-				$x=0;
-				foreach ($result as &$row) {
-					$agent_name = $row["agent_name"];
-					$queue_name = $row["queue_name"];
-					$tier_level = $row["tier_level"];
-					$tier_position = $row["tier_position"];
-					if ($x > 0) {
-						$v_tiers .= "\n";
-						$v_tiers .= "		";
+						$v_agents .= "<agent ";
+						$v_agents .= "name=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" ";
+						$v_agents .= "type=\"$agent_type\" ";
+						$v_agents .= "contact=\"$tmp_agent_contact\" ";
+						$v_agents .= "status=\"$agent_status\" ";
+						$v_agents .= "no-answer-delay-time=\"$agent_no_answer_delay_time\" ";
+						$v_agents .= "max-no-answer=\"$agent_max_no_answer\" ";
+						$v_agents .= "wrap-up-time=\"$agent_wrap_up_time\" ";
+						$v_agents .= "reject-delay-time=\"$agent_reject_delay_time\" ";
+						$v_agents .= "busy-delay-time=\"$agent_busy_delay_time\" ";
+						$v_agents .= "/>";
+						$x++;
 					}
-					$v_tiers .= "<tier agent=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" queue=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" level=\"$tier_level\" position=\"$tier_position\"/>";
-					$x++;
-				}
+					unset ($prep_statement);
 
-			//set the path
-				if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
-					$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
-				}
-				else {
-					$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
-				}
+				//prepare Tier XML string
+					$v_tiers = '';
+					$sql = "select * from v_call_center_tiers ";
+					$prep_statement = $db->prepare(check_sql($sql));
+					$prep_statement->execute();
+					$result = $prep_statement->fetchAll(PDO::FETCH_ASSOC);
+					$x=0;
+					foreach ($result as &$row) {
+						$agent_name = $row["agent_name"];
+						$queue_name = $row["queue_name"];
+						$tier_level = $row["tier_level"];
+						$tier_position = $row["tier_position"];
+						if ($x > 0) {
+							$v_tiers .= "\n";
+							$v_tiers .= "		";
+						}
+						$v_tiers .= "<tier agent=\"$agent_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" queue=\"$queue_name@".$_SESSION['domains'][$row["domain_uuid"]]['domain_name']."\" level=\"$tier_level\" position=\"$tier_position\"/>";
+						$x++;
+					}
 
-			//get the contents of the template
-				$file_contents = file_get_contents($path."/autoload_configs/callcenter.conf.xml");
+				//set the path
+					if (file_exists('/usr/share/examples/fusionpbx/resources/templates/conf')) {
+						$path = "/usr/share/examples/fusionpbx/resources/templates/conf";
+					}
+					else {
+						$path = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH."/resources/templates/conf";
+					}
 
-			//add the Call Center Queues, Agents and Tiers to the XML config
-				$file_contents = str_replace("{v_queues}", $v_queues, $file_contents);
-				unset ($v_queues);
+				//get the contents of the template
+					$file_contents = file_get_contents($path."/autoload_configs/callcenter.conf.xml");
 
-				$file_contents = str_replace("{v_agents}", $v_agents, $file_contents);
-				unset ($v_agents);
+				//add the Call Center Queues, Agents and Tiers to the XML config
+					$file_contents = str_replace("{v_queues}", $v_queues, $file_contents);
+					unset ($v_queues);
 
-				$file_contents = str_replace("{v_tiers}", $v_tiers, $file_contents);
-				unset ($v_tiers);
+					$file_contents = str_replace("{v_agents}", $v_agents, $file_contents);
+					unset ($v_agents);
 
-			//write the XML config file
-				$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/callcenter.conf.xml","w");
-				fwrite($fout, $file_contents);
-				fclose($fout);
+					$file_contents = str_replace("{v_tiers}", $v_tiers, $file_contents);
+					unset ($v_tiers);
 
-			//save the dialplan xml files
-				save_dialplan_xml();
+				//write the XML config file
+					$fout = fopen($_SESSION['switch']['conf']['dir']."/autoload_configs/callcenter.conf.xml","w");
+					fwrite($fout, $file_contents);
+					fclose($fout);
 
-			//apply settings
-				$_SESSION["reload_xml"] = true;
+				//save the dialplan xml files
+					save_dialplan_xml();
 
+				//apply settings
+					$_SESSION["reload_xml"] = true;
+			}
 		}
 	}
 }
