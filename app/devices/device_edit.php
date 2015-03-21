@@ -80,8 +80,7 @@ require_once "resources/require.php";
 	if (count($_POST) > 0) {
 		//devices
 			$device_mac_address = check_str($_POST["device_mac_address"]);
-			$device_mac_address = strtolower($device_mac_address);
-			$device_mac_address = preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address);
+			$device_mac_address = strtolower(preg_replace('#[^a-fA-F0-9./]#', '', $device_mac_address));
 			$_POST["device_mac_address"] = $device_mac_address;
 			$device_label = check_str($_POST["device_label"]);
 			$device_vendor = check_str($_POST["device_vendor"]);
