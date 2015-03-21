@@ -392,7 +392,7 @@ function ListFiles($dir) {
 	}
 }
 
-function switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='') {
+function switch_select_destination($select_type, $select_label, $select_name, $select_value, $select_style, $action='', $onchange='') {
 	//select_type can be ivr, dialplan, call_center_contact or bridge
 	global $text, $config, $db, $domain_uuid;
 
@@ -411,6 +411,10 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		echo "	tb.className='formfld';\n";
 		echo "	tb.setAttribute('id', '".$select_id."');\n";
 		echo "	tb.setAttribute('style', '".$select_style."');\n";
+		if ($onchange != '') {
+			echo "	tb.setAttribute('onchange', \"".$onchange."\");\n";
+			echo "	tb.setAttribute('onkeyup', \"".$onchange."\");\n";
+		}
 		echo "	tb.value=obj.options[obj.selectedIndex].value;\n";
 		echo "	document.getElementById('btn_select_to_input_".$select_id."').style.visibility = 'hidden';\n";
 		echo "	tbb=document.createElement('INPUT');\n";
@@ -431,6 +435,9 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 		echo "	obj[0].parentNode.removeChild(obj[1]);\n";
 		echo "	obj[0].parentNode.removeChild(obj[2]);\n";
 		echo "	document.getElementById('btn_select_to_input_".$select_id."').style.visibility = 'visible';\n";
+		if ($onchange != '') {
+			echo "	".$onchange.";\n";
+		}
 		echo "}\n";
 		echo "</script>\n";
 		echo "\n";
@@ -439,21 +446,19 @@ function switch_select_destination($select_type, $select_label, $select_name, $s
 	//default selection found to false
 		$selection_found = false;
 
-	echo "	<select name='".$select_name."' id='".$select_id."' class='formfld' style='".$select_style."'>\n";
+	echo "	<select name='".$select_name."' id='".$select_id."' class='formfld' style='".$select_style."' onchange=\"".$onchange."\">\n";
 
 	//display a default select label (specified explicitly or from the language file) if no selected value is passed in
-		if ($select_value == '') {
-			if ($select_label != '') {
-				$options[] = "<option value=''>".$select_label."</option>";
-				$options[] = "<option value='' disabled='disabled'></option>";
-			}
-			else if ($select_label == '' && $text['label-select_destination'] != '') {
-				$options[] = "<option value=''>".$text['label-select_destination']."</option>";
-				$options[] = "<option value='' disabled='disabled'></option>";
-			}
-			else {
-				$options[] = "<option value=''></option>";
-			}
+		if ($select_value == '' && $select_label != '' && $select_label != ' ') {
+			$options[] = "<option value=''>".$select_label."</option>";
+			$options[] = "<option value='' disabled='disabled'></option>";
+		}
+		else if ($select_value == '' && $select_label == '' && $text['label-select_destination'] != '') {
+			$options[] = "<option value=''>".$text['label-select_destination']."</option>";
+			$options[] = "<option value='' disabled='disabled'></option>";
+		}
+		else {
+			$options[] = "<option value=''></option>";
 		}
 
 	//call center queues

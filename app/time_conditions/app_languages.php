@@ -70,10 +70,10 @@
 	$text['description-template']['pt-pt'] = "Os templates oferecem uma lista condições temporais.";
 	$text['description-template']['fr-fr'] = "Le modèle fourni une liste de présélection.";
 
-	$text['label-custom']['en-us'] = "Custom";
-	$text['label-custom']['es-cl'] = "Costumbre";
-	$text['label-custom']['pt-pt'] = "Personalizado";
-	$text['label-custom']['fr-fr'] = "Coutume";
+	$text['label-settings']['en-us'] = "Settings";
+	$text['label-settings']['es-cl'] = "Ajustes";
+	$text['label-settings']['pt-pt'] = "Definições";
+	$text['label-settings']['fr-fr'] = "Paramètres";
 
 	$text['label-conditions']['en-us'] = "Conditions";
 	$text['label-conditions']['es-cl'] = "Condición";
@@ -90,10 +90,10 @@
 	$text['label-label']['pt-pt'] = "Etiqueta";
 	$text['label-label']['fr-fr'] = "étiquette";
 
-	$text['description-conditions']['en-us'] = "Define custom conditions necessary to execute the destination selected above.";
-	$text['description-conditions']['es-cl'] = "Definir las condiciones personalizados necesarios para ejecutar el destino seleccionado anteriormente.";
-	$text['description-conditions']['pt-pt'] = "Definir condições personalizadas necessárias para executar o destino selecionado acima.";
-	$text['description-conditions']['fr-fr'] = "Définir les conditions nécessaires pour exécuter la destination sélectionnée ci-dessus personnalisés.";
+	$text['description-settings']['en-us'] = "Define custom conditions necessary to execute the destination selected above.";
+	$text['description-settings']['es-cl'] = "Definir las condiciones personalizados necesarios para ejecutar el destino seleccionado anteriormente.";
+	$text['description-settings']['pt-pt'] = "Definir condições personalizadas necessárias para executar o destino selecionado acima.";
+	$text['description-settings']['fr-fr'] = "Définir les conditions nécessaires pour exécuter la destination sélectionnée ci-dessus personnalisés.";
 
 	$text['label-condition_parameter']['en-us'] = "Parameter";
 	$text['label-condition_parameter']['es-cl'] = "Parámetro";
@@ -115,10 +115,15 @@
 	$text['label-presets']['pt-pt'] = "Presets";
 	$text['label-presets']['fr-fr'] = "Présélections";
 
-	$text['description-presets']['en-us'] = "Select pre-defined conditions, and the default destination for all checked.  Click the preset name to further customize the conditions and/or destination for each.";
-	$text['description-presets']['es-cl'] = "Seleccione condiciones predefinidas, y el destino predeterminado para todos marcada. Haga clic en el nombre del preset para personalizar aún más las condiciones y / o destino de cada uno.";
-	$text['description-presets']['pt-pt'] = "Selecione as condições pré-definidas, e o destino padrão para todos marcada. Clique no nome da predefinição para personalizar ainda mais as condições e / ou destino para cada um.";
-	$text['description-presets']['fr-fr'] = "Sélectionnez les conditions pré-définies, et la destination par défaut pour tous les bagages. Cliquez sur le nom de la présélection pour personnaliser davantage les conditions et / ou pour chaque destination.";
+	$text['description-presets']['en-us'] = "Select from available presets. Click a preset name to further customize the conditions and/or destination of each.";
+	$text['description-presets']['es-cl'] = "Choisissez parmi préréglages disponibles. Cliquez sur un nom prédéfini pour personnaliser davantage les conditions et/ou la destination de chacun.";
+	$text['description-presets']['pt-pt'] = "Selecione a partir de predefinições disponíveis. Clique em um nome pré-definido para personalizar ainda mais as condições e/ou destino de cada um.";
+	$text['description-presets']['fr-fr'] = "Choisissez parmi préréglages disponibles. Cliquez sur un nom prédéfini pour personnaliser davantage les conditions et/ou la destination de chacun.";
+
+	$text['description-presets_advanced']['en-us'] = "Select a Default Destination above to be <i>applied</i> to each preset checked (without a destination already defined).";
+	$text['description-presets_advanced']['es-cl'] = "Seleccione un destino predeterminado por encima de ser <i>apliqué</i> para cada preset facturado (sin destino ya definido).";
+	$text['description-presets_advanced']['pt-pt'] = "Selecione um destino padrão acima para ser <i>aplicado</i> para cada predefinição marcada (sem um destino já definido).";
+	$text['description-presets_advanced']['fr-fr'] = "Sélectionnez une destination par défaut ci-dessus pour être <i>appliqué</i> pour chaque preset vérifié (sans destination déjà défini).";
 
 	$text['label-preset_new_years_day']['en-us'] = "New Year's Day";
 	$text['label-preset_new_years_day']['es-cl'] = "Año Nuevo";
@@ -255,6 +260,11 @@
 	$text['label-select_destination']['pt-pt'] = "Selecione um Destino";
 	$text['label-select_destination']['fr-fr'] = "Choisissez une Destination";
 
+	$text['label-select_default_destination']['en-us'] = "Select Default Destination";
+	$text['label-select_default_destination']['es-cl'] = "Seleccionar Destino Predeterminado";
+	$text['label-select_default_destination']['pt-pt'] = "Selecione Padrão Destino";
+	$text['label-select_default_destination']['fr-fr'] = "Sélectionnez Par défaut Destinations";
+
 	$text['label-alternate-destination']['en-us'] = "Alternate Destination";
 	$text['label-alternate-destination']['es-cl'] = "Destino Alternativo";
 	$text['label-alternate-destination']['pt-pt'] = "Destino Alternativo";
@@ -300,6 +310,11 @@
 	$text['message-update']['pt-pt'] = "Actualização Efectuada";
 	$text['message-update']['fr-fr'] = "Mis à jour";
 
+	$text['message-alternate_destination_required']['en-us'] = "Alternate Destination Required";
+	$text['message-alternate_destination_required']['es-cl'] = "Destino Alternativo Requerido";
+	$text['message-alternate_destination_required']['pt-pt'] = "Destino Alternativo Obrigatório";
+	$text['message-alternate_destination_required']['fr-fr'] = "Autre Destination Requise";
+
 	$text['message-add']['en-us'] = "Add Complete";
 	$text['message-add']['es-cl'] = "Agregar Completado";
 	$text['message-add']['fr-fr'] = "Ajouté";
@@ -313,5 +328,5 @@
 	$text['message-delete']['en-us'] = "Delete Completed";
 	$text['message-delete']['es-cl'] = "Eliminar Completado";
 	$text['message-delete']['pt-pt'] = "Apagar Concluído";
-	$text['message-delete']['fr-fr'] = "Supprimer Terminé";
+	$text['message-delete']['fr-fr'] = "Supprimer Terminé"
 ?>
