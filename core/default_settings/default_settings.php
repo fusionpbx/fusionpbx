@@ -331,11 +331,9 @@ else {
 				echo "		<b>\n";
 				if (strtolower($row['default_setting_category']) == "api") {
 					echo "		API";
-				}
-				if (strtolower($row['default_setting_category']) == "cdr") {
+				} elseif (strtolower($row['default_setting_category']) == "cdr") {
 					echo "		CDR";
-				}
-				elseif (strtolower($row['default_setting_category']) == "ldap") {
+				} elseif (strtolower($row['default_setting_category']) == "ldap") {
 					echo "		LDAP";
 				}
 				else {
