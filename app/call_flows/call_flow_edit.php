@@ -75,12 +75,7 @@ else {
 
 		//set the context for users that are not in the superadmin group
 			if (!if_group("superadmin")) {
-				if (count($_SESSION["domains"]) > 1) {
-					$call_flow_context = $_SESSION['domain_name'];
-				}
-				else {
-					$call_flow_context = "default";
-				}
+				$call_flow_context = $_SESSION['domain_name'];
 			}
 
 	}
@@ -406,12 +401,7 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 
 	//set the context for users that are not in the superadmin group
 		if (strlen($call_flow_context) == 0) {
-			if (count($_SESSION["domains"]) > 1) {
-				$call_flow_context = $_SESSION['domain_name'];
-			}
-			else {
-				$call_flow_context = "default";
-			}
+			$call_flow_context = $_SESSION['domain_name'];
 		}
 
 //show the header
